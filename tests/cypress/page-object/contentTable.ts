@@ -1,16 +1,17 @@
-import {Table} from '@jahia/cypress';
+import {Table, TableRow} from '@jahia/cypress';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
-    getRowByLabel(label: string): Chainable {
-        return cy.contains('[data-cm-role="table-content-list-row"]', label)
+    getRowByLabel(label: string): TableRow {
+        const elem = cy.contains('[data-cm-role="table-content-list-row"]', label)
             .first()
             .scrollIntoView()
             .should('be.visible');
+        return new TableRow(elem);
     }
 
     selectRowByLabel(label: string, isSelected = true): Chainable {
-        return this.getRowByLabel(label)
+        return this.getRowByLabel(label).get()
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click()
             .should('have.attr', 'aria-checked', Boolean(isSelected).toString());

@@ -1,0 +1,82 @@
+mutation createDeleteContent {
+    jcr {
+        content: mutateNode(pathOrId: "/sites/jContentSite-delete/contents") {
+            addChild(name: "test-deleteContents", primaryNodeType: "jnt:contentFolder") {
+                addChildrenBatch(
+                    nodes: [
+                        {
+                            name: "test-delete1"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 1" }]
+                        }
+                        {
+                            name: "test-delete2"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 2" }]
+                        }
+                        {
+                            name: "content-folder1"
+                            primaryNodeType: "jnt:contentFolder"
+                            children: [
+                                {
+                                    name: "test-delete3"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 4" }]
+                                }
+                                {
+                                    name: "test-delete4"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 5" }]
+                                }
+                            ]
+                        }
+                    ]
+                ) {
+                    uuid
+                }
+            }
+        }
+
+        pages: mutateNode(pathOrId: "/sites/jContentSite-delete/home") {
+            addChildrenBatch(nodes: [
+                {
+                    name: "test-pageDelete1",
+                    primaryNodeType: "jnt:page",
+                    properties: [
+                        { name: "jcr:title", language: "en", value: "Page test 1" },
+                        { name: "j:templateName", value: "default" }
+                    ]
+                    children: [
+                        {
+                            name: "test-subpage1"
+                            primaryNodeType: "jnt:page"
+                            properties: [
+                                { name: "jcr:title", language: "en", value: "Subpage test 1" },
+                                { name: "j:templateName", value: "default" }
+                            ]
+                        }
+                        {
+                            name: "test-subpage2"
+                            primaryNodeType: "jnt:page"
+                            properties: [
+                                { name: "jcr:title", language: "en", value: "Subpage test 2" },
+                                { name: "j:templateName", value: "default" }
+                            ]
+                        }
+                    ]
+                }
+                {
+                    name: "test-pageDelete2"
+                    primaryNodeType: "jnt:page"
+                    properties: [
+                        { name: "jcr:title", language: "en", value: "Page test 2" },
+                        { name: "j:templateName", value: "default" }
+                    ]
+                }
+            ]) {
+                uuid
+            }
+
+        }
+    }
+}

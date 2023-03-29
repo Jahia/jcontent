@@ -1,15 +1,18 @@
-import {isMarkedForDeletion} from '../JContent.utils';
+import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import React from 'react';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
+import React, {useContext} from 'react';
+import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
+import Delete from './Delete';
+import {ComponentRendererContext} from '@jahia/ui-extender';
 
 function checkAction(node) {
     return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node);
 }
 
 export const DeleteActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
+    const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
 
     const res = useNodeChecks(
@@ -24,6 +27,10 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
         }
     );
 
+    const onExit = () => {
+        componentRenderer.destroy('deleteDialog');
+    };
+
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
     }
@@ -37,17 +44,12 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
             buttonProps={{...buttonProps, color: 'danger'}}
             enabled={isVisible}
             onClick={() => {
-                if (res.node) {
-                    window.authoringApi.deleteContent(res.node.uuid, res.node.path, res.node.displayName, ['jnt:content'], ['nt:base'], false, false);
-                } else if (res.nodes) {
-                    window.authoringApi.deleteContents(res.nodes.map(node => ({
-                        uuid: node.uuid,
-                        path: node.path,
-                        displayName: node.displayName,
-                        nodeTypes: ['jnt:content'],
-                        inheritedNodeTypes: ['nt:base']
-                    })), false, false);
-                }
+                componentRenderer.render('deleteDialog', Delete, {
+                    dialogType: 'mark',
+                    node: res.node,
+                    nodes: res.nodes,
+                    onExit: onExit
+                });
             }}
         />
     );

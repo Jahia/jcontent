@@ -86,8 +86,7 @@ export class File extends BasePage {
     markForDeletion() : File {
         cy.get(this.selector).should('be.visible').trigger('mouseover').rightclick();
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('delete');
-        cy.get('textarea.x-form-textarea').type('Deleting ' + this.fileName + ' file automatically');
-        cy.contains('.x-btn-text', 'Yes').click();
+        cy.get('[data-sel-role="delete-mark-button"]').click();
         return this;
     }
 
@@ -95,8 +94,7 @@ export class File extends BasePage {
         // Delete the folder we just created permanently
         cy.get(this.selector).should('be.visible').trigger('mouseover').rightclick();
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('deletePermanently');
-        cy.contains('.x-btn-text', 'Yes').click();
-        cy.get(this.selector).should('not.exist');
+        cy.get('[data-sel-role="delete-permanently-button"]').click();
         return this;
     }
 }

@@ -1,0 +1,9 @@
+.margins.margins {
+    width: 100%;
+    max-width: 500px;
+    margin-top: var(--spacing-medium);
+
+    span {
+        color: var(--color-danger);
+    }
+}

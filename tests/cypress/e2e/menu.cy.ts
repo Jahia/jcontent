@@ -17,7 +17,7 @@ describe('Menu tests', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
         jcontent.getTable().getRowByIndex(1).contextMenu().select('Delete');
 
-        cy.contains('.x-btn-text', 'No').click();
+        cy.get('[data-sel-role="cancel-button"]').click();
     });
 
     it('Can download file', function () {

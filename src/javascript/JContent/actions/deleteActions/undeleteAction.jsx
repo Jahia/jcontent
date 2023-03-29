@@ -1,15 +1,18 @@
-import {ellipsizeText, hasMixin} from '../JContent.utils';
+import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import React from 'react';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
+import React, {useContext} from 'react';
+import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
+import {ComponentRendererContext} from '@jahia/ui-extender';
+import Delete from './Delete';
 
 function checkAction(node) {
-    return hasMixin(node, 'jmix:markedForDeletionRoot');
+    return node.operationsSupport.markForDeletion && isMarkedForDeletion(node);
 }
 
-export const UndeleteActionComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
+export const UndeleteActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
+    const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
 
     const res = useNodeChecks(
@@ -24,6 +27,10 @@ export const UndeleteActionComponent = ({path, paths, render: Render, loading: L
         }
     );
 
+    const onExit = () => {
+        componentRenderer.destroy('undeleteDialog');
+    };
+
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
     }
@@ -34,13 +41,15 @@ export const UndeleteActionComponent = ({path, paths, render: Render, loading: L
         <Render
             {...others}
             isVisible={isVisible}
+            buttonProps={{...buttonProps, color: 'danger'}}
             enabled={isVisible}
             onClick={() => {
-                if (res.node) {
-                    window.authoringApi.undeleteContent(res.node.uuid, res.node.path, (res.node.displayName ? ellipsizeText(res.node.displayName, 100) : ''), res.node.name);
-                } else if (res.nodes) {
-                    window.authoringApi.undeleteContents(res.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})));
-                }
+                componentRenderer.render('undeleteDialog', Delete, {
+                    dialogType: 'undelete',
+                    node: res.node,
+                    nodes: res.nodes,
+                    onExit: onExit
+                });
             }}
         />
     );
@@ -50,6 +59,8 @@ UndeleteActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    buttonProps: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

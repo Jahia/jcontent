@@ -71,7 +71,7 @@ export const InfoTable = ({paths}) => {
             )}
             <div className="flexFluid flexRow_between">
                 <Typography variant="heading" weight="semiBold">{t('jcontent:label.contentManager.deleteAction.details')}</Typography>
-                <Button icon={<Reload/>} label={t('jcontent:label.contentManager.refresh')} onClick={refetch}/>
+                <Button icon={<Reload/>} label={t('jcontent:label.contentManager.refresh')} onClick={() => refetch()}/>
             </div>
             <Table aria-labelledby="tableTitle"
                    data-cm-role="table-content-list"

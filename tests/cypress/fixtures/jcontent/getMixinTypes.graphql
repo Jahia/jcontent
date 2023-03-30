@@ -1,0 +1,16 @@
+query getMixinTypes($path:String!) {
+    jcr {
+        nodeByPath(path:$path) {
+            mixinTypes {
+                name
+            }
+            children {
+                nodes {
+                    mixinTypes {
+                        name
+                    }
+                }
+            }
+        }
+    }
+}

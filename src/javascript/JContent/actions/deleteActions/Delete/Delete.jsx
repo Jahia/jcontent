@@ -53,6 +53,7 @@ const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title, p
                 </DialogContent>
                 <DialogActions>
                     <Button size="big"
+                            data-sel-role="close-button"
                             label={t('jcontent:label.contentManager.editImage.close')}
                             onClick={onClose}/>
                 </DialogActions>

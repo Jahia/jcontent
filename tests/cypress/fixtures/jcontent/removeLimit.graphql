@@ -2,7 +2,7 @@ mutation($path: String!) {
     jcr {
         mutateNode(pathOrId: $path) {
             removeMixins(mixins: ["jmix:listSizeLimit"])
-            mutateChildren(names: "test-1") {
+            mutateChildren(names: ["test-1"]) {
                 delete
             }
         }

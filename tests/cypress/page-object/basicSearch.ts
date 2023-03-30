@@ -12,7 +12,7 @@ import {
 import {JContent} from './jcontent';
 
 export class BasicSearch extends BasePage {
-    jcontent: JContent
+    jcontent: JContent;
 
     constructor(jcontent: JContent) {
         super();
@@ -31,7 +31,7 @@ export class BasicSearch extends BasePage {
 
     searchTerm(value: string): BasicSearch {
         if (value) {
-            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear().type(value);
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear().type(value, {force: true});
         } else {
             getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear();
         }
@@ -57,7 +57,8 @@ export class BasicSearch extends BasePage {
 
     verifyTotalCount(expectedTotalCount: number): BasicSearch {
         if (expectedTotalCount === 0) {
-            getComponent(Pagination, null, el => expect(el).to.not.exist);
+            // getComponent seems to have issues with 'not exist' assertions
+            cy.get('.moonstone-tablePagination').should('not.exist');
         } else {
             getComponent(Pagination, null, el => expect(el).to.be.visible)
                 .getTotalRows()

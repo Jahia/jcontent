@@ -5,13 +5,8 @@ describe('Page composer', () => {
 
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-
-        cy.login();
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({mutationFile: 'jcontent/enablePageComposer.graphql'});
-        jcontent = JContent
-            .visit('jcontentSite', 'en', 'pages/home')
-            .switchToPageComposer();
     });
 
     after(() => {
@@ -20,7 +15,10 @@ describe('Page composer', () => {
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce('JSESSIONID');
+        cy.loginEditor();
+        jcontent = JContent
+            .visit('jcontentSite', 'en', 'pages/home')
+            .switchToPageComposer();
     });
 
     describe('boxes and header', function () {
@@ -64,7 +62,7 @@ describe('Page composer', () => {
                 variables: {path: '/sites/jcontentSite/home/landing', values: ['jnt:event']}
             });
 
-            jcontent.refresh();
+            JContent.visit('jcontentSite', 'en', 'pages/home');
 
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.assertHasNoButtonForType('New content');
@@ -78,7 +76,7 @@ describe('Page composer', () => {
                 variables: {path: '/sites/jcontentSite/home/landing', values: ['jnt:banner', 'jnt:event']}
             });
 
-            jcontent.refresh();
+            JContent.visit('jcontentSite', 'en', 'pages/home');
 
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.assertHasNoButtonForType('New content');
@@ -95,7 +93,7 @@ describe('Page composer', () => {
                 }
             });
 
-            jcontent.refresh();
+            JContent.visit('jcontentSite', 'en', 'pages/home');
 
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.getButton('New content');
@@ -133,54 +131,51 @@ describe('Page composer', () => {
     });
 
     describe('list limit', function () {
-        beforeEach(function () {
+        function removeLimit() {
             cy.apollo({
                 mutationFile: 'jcontent/removeLimit.graphql',
                 variables: {path: '/sites/jcontentSite/home/landing'},
                 errorPolicy: 'ignore'
             });
+        }
+
+        before(() => {
+            removeLimit();
         });
 
-        afterEach(function () {
-            cy.apollo({
-                mutationFile: 'jcontent/removeLimit.graphql',
-                variables: {path: '/sites/jcontentSite/home/landing'},
-                errorPolicy: 'ignore'
-            });
+        after(() => {
+            removeLimit();
         });
 
-        it('should not show create button when limit is reached', function () {
+        it('should show buttons before removing limit', () => {
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.getButton('New content');
+        });
 
+        it('Set limit to landing section - graphql mutation', () => {
             cy.apollo({
                 mutationFile: 'jcontent/setLimit.graphql',
                 variables: {path: '/sites/jcontentSite/home/landing'}
             });
-
-            jcontent.refresh();
-
-            const buttons2 = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons2.assertHasNoButton();
         });
 
-        it('should not show paste button when limit is reached', function () {
-            const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons.getButton('New content');
+        it('should not show create button after adding limit', {retries: 3}, () => {
+            jcontent.refresh(); // It takes a couple of refreshes before buttons disappear, add retries
+            jcontent.getModule('/sites/jcontentSite/home/landing')
+                .getCreateButtons()
+                .assertHasNoButton();
+        })
 
-            cy.apollo({
-                mutationFile: 'jcontent/setLimit.graphql',
-                variables: {path: '/sites/jcontentSite/home/landing'}
-            });
+        it('should not show paste button when limit is reached', () => {
+            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1')
+                .contextMenu()
+                .select('Copy');
 
-            jcontent.refresh();
-
-            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
-            menu.select('Copy');
-
-            const buttons2 = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons2.assertHasNoButton();
-        });
+            cy.log('Assert no paste buttons after copy');
+            jcontent.getModule('/sites/jcontentSite/home/landing')
+                .getCreateButtons()
+                .assertHasNoButton();
+        })
     });
 
     // Tests to be added when content-editor is moved here

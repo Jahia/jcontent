@@ -83,3 +83,5 @@ export const allColumnData = [
 ];
 
 export const reducedColumnData = allColumnData.filter(c => c.id !== 'type');
+
+export const deletionInfoColumnData = allColumnData.filter(c => ['name', 'status', 'type', 'publicationStatus'].includes(c.id)).map(c => ({...c, sortable: false}));

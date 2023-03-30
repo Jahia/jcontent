@@ -16,6 +16,7 @@ import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHan
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from '~/JContent/ContentTree/ContentTree.constants';
 import {booleanValue} from '~/JContent/JContent.utils';
+import {DeletionInfoQueryHandler} from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -198,5 +199,11 @@ export const jContentAccordionItems = registry => {
         appsTarget: 'jcontent',
         isEnabled: siteKey => siteKey !== 'systemsite',
         requiredSitePermission: JContentConstants.accordionPermissions.additionalAccordionAccess
+    });
+
+    registry.add('accordionItem', 'deletionInfo', {
+        tableConfig: {
+            queryHandler: DeletionInfoQueryHandler
+        }
     });
 };

@@ -2,7 +2,7 @@ import {BaseComponent, BasePage, Button, getComponent, getComponentByRole, getEl
 import {JContent} from './jcontent';
 
 export class CreateContent extends BasePage {
-    jcontent: JContent
+    jcontent: JContent;
 
     constructor(jcontent: JContent) {
         super();
@@ -20,9 +20,9 @@ export class CreateContent extends BasePage {
 }
 
 export class ContentTypeSelector extends BaseComponent {
-    static defaultSelector = 'div[aria-labelledby="dialog-createNewContent"]'
+    static defaultSelector = 'div[aria-labelledby="dialog-createNewContent"]';
 
-    searchInput = getComponentByRole(MUIInput, 'content-type-dialog-input', this)
+    searchInput = getComponentByRole(MUIInput, 'content-type-dialog-input', this);
 
     searchForContentType(contentType: string): ContentTypeSelector {
         this.searchInput.type(contentType);

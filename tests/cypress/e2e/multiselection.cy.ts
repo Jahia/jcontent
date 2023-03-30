@@ -3,7 +3,7 @@ import {Button, getComponentBySelector} from '@jahia/cypress';
 
 describe('Multi-selection tests', () => {
     beforeEach(function () {
-        cy.login(); // Edit in chief
+        cy.loginEditor(); // Edit in chief
     });
 
     afterEach(function () {

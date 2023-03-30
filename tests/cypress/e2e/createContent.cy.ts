@@ -5,11 +5,9 @@ describe('Create content tests', {retries: 10}, () => {
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.login(); // Edit in chief
 
-        JContent.visit('jcontentSite', 'en', 'content-folders/contents');
+        cy.loginEditor(); // Edit in chief
     });
 
     after(function () {
@@ -18,7 +16,8 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce('JSESSIONID');
+        cy.loginEditor();
+        JContent.visit('jcontentSite', 'en', 'content-folders/contents');
         jcontent = new JContent();
         jcontent.selectAccordion('content-folders');
     });

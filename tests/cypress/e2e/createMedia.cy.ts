@@ -5,11 +5,7 @@ describe('Create media tests', () => {
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.login(); // Edit in chief
-
-        JContent.visit('jcontentSite', 'en', 'media/files');
     });
 
     after(function () {
@@ -18,7 +14,8 @@ describe('Create media tests', () => {
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce('JSESSIONID');
+        cy.loginEditor();
+        JContent.visit('jcontentSite', 'en', 'media/files');
         jcontent = new JContent();
         jcontent.selectAccordion('media');
     });

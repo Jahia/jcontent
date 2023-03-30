@@ -3,10 +3,10 @@ import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
     getRowByLabel(label: string): TableRow {
-        return new TableRow(cy.contains('[data-cm-role="table-content-list-row"]', label)
-            .first()
-            .scrollIntoView()
-            .should('be.visible'));
+        cy.contains('[data-cm-role="table-content-list-row"]', label).first().as('rowByLabel');
+        cy.get('@rowByLabel').scrollIntoView();
+        cy.get('@rowByLabel').should('be.visible');
+        return new TableRow(cy.get('@rowByLabel'));
     }
 
     selectRowByLabel(label: string, isSelected = true): Chainable {

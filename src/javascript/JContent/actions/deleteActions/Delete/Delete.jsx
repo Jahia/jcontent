@@ -13,10 +13,11 @@ import {
     MarkForDeletionMutation,
     UndeleteMutation
 } from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
+import InfoTable from './InfoTable';
 import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 
-const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title}) => {
+const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title, paths}) => {
     const {t} = useTranslation('jcontent');
     if (isLoading || data?.jcr.nodesByPath.length === 0) {
         return (
@@ -94,6 +95,7 @@ const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title}) 
             {title}
             <DialogContent>
                 <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: getLabel()}}/>
+                <InfoTable paths={paths}/>
             </DialogContent>
             <DialogActions>
                 <Button size="big"
@@ -121,7 +123,8 @@ DeleteContent.propTypes = {
     onClose: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     onAction: PropTypes.func.isRequired,
-    title: PropTypes.object
+    title: PropTypes.object,
+    paths: PropTypes.array.isRequired
 };
 
 const getMutation = dialogType => {
@@ -178,6 +181,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
     return (
         <>
             <Dialog fullWidth
+                    maxWidth="xl"
                     open={open}
                     aria-labelledby="form-dialog-title"
                     data-sel-role={`delete-${dialogType}-dialog`}
@@ -186,6 +190,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             >
                 <DeleteContent data={data}
                                isLoading={loading}
+                               paths={paths}
                                dialogType={dialogType}
                                title={
                                    <DialogTitle>

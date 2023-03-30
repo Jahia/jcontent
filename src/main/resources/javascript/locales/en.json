@@ -431,7 +431,8 @@
             "title": "Cannot be undeleted",
             "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
           }
-        }
+        },
+        "details": "DETAILS"
       }
     },
     "ok": "OK",

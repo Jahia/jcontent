@@ -57,7 +57,7 @@ export class BasicSearch extends BasePage {
 
     verifyTotalCount(expectedTotalCount: number): BasicSearch {
         if (expectedTotalCount === 0) {
-            // getComponent seems to have issues with 'not exist' assertions
+            // GetComponent seems to have issues with 'not exist' assertions
             cy.get('.moonstone-tablePagination').should('not.exist');
         } else {
             getComponent(Pagination, null, el => expect(el).to.be.visible)

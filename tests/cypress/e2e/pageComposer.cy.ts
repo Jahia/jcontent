@@ -164,7 +164,7 @@ describe('Page composer', () => {
             jcontent.getModule('/sites/jcontentSite/home/landing')
                 .getCreateButtons()
                 .assertHasNoButton();
-        })
+        });
 
         it('should not show paste button when limit is reached', () => {
             jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1')
@@ -175,7 +175,7 @@ describe('Page composer', () => {
             jcontent.getModule('/sites/jcontentSite/home/landing')
                 .getCreateButtons()
                 .assertHasNoButton();
-        })
+        });
     });
 
     // Tests to be added when content-editor is moved here

@@ -6,7 +6,6 @@ import {useTable} from 'react-table';
 import {
     deletionInfoColumnData,
     useExpandedControlled,
-    useRowSelection,
     useSort
 } from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {Button, Loader, Table, TableBody, TableRow, Typography, Reload} from '@jahia/moonstone';
@@ -55,7 +54,6 @@ export const InfoTable = ({paths}) => {
                 }
             }
         },
-        useRowSelection,
         useSort,
         useExpandedControlled
     );

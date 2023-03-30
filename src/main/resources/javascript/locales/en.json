@@ -389,6 +389,18 @@
       },
       "deleteAction": {
         "loading": "Loading information or performing actions",
+        "info": {
+          "title": "Deletion information",
+          "text1": "The deletion is a two step process:",
+          "text1-1": "First you mark the items for deletion. This operation will mark all the sub items, including pages, for deletion.",
+          "text1-1-1": "At this stage, it is still possible to undo the operation, and undelete the items, so they are not marked for deletion anymore.",
+          "text1-2": "Then you proceed to the actual deletion:",
+          "text1-2-1": "If the items were previously published, you will need to “Publish the deletion”, so that the items are deleted in both live and edit.",
+          "text1-2-2": "If the items were not previously published, the option is then “Delete permanently”.",
+          "text1-2-3": "These operations cannot be undone, and the deleted items cannot be recovered.",
+          "text2": "The second step of the process (the actual deletion), and the undeletion, need to be performed on the item that was first marked for deletion. You cannot mark a page for deletion, and then permanently delete a single item of the page. In such a case, you need to undelete the page, and then proceed to the full deletion of the content item before marking the page for deletion again.",
+          "text3": "It is possible to see if the items marked for deletion are referenced by other contents (e.g. a link might exist to a page marked for deletion). You can use the Recycle bin to verify, and update, such references. Not doing so can create broken links/references."
+        },
         "mark": {
           "title": "Mark for deletion",
           "item": "You are about to delete <span>{{name}}</span>",

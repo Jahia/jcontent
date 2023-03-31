@@ -57,7 +57,7 @@
     "copy-to-clipboard": "^3.0.8",
     "dayjs": "^1.10.6",
     "ellipsize": "^0.1.0",
-    "graphql": "^15.4.0",
+    "graphql": "^16.6.0",
     "graphql-tag": "^2.11.0",
     "i18next": "^19.0.3",
     "image-extensions": "^1.1.0",
@@ -95,7 +95,7 @@
     "xlsx": "^0.17.0"
   },
   "resolutions": {
-    "graphql": "15.4.0",
+    "graphql": "16.6.0",
     "@jahia/data-helper/graphql": "^15.4.0",
     "three": "^0.125.0",
     "underscore": "1.12.1",

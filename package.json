@@ -44,7 +44,7 @@
     "@jahia/data-helper": "^1.0.7",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
-    "@jahia/jahia-reporter": "^1.0.3",
+    "@jahia/jahia-reporter": "^1.1.1",
     "@jahia/moonstone": "^2.5.3",
     "@jahia/react-material": "^3.0.5",
     "@jahia/ui-extender": "^1.0.0",

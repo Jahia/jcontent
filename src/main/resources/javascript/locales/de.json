@@ -382,6 +382,18 @@
       },
       "deleteAction": {
         "loading": "Loading information or performing actions",
+        "info": {
+          "title": "Löschinformation",
+          "text1": "Die Löschung ist ein zweistufiger Prozess:",
+          "text1-1": "Zuerst werden Elemente zur Löschung markiert. Diese Aktion markiert auch alle Unterelemente zur Löschung (inklusive Seiten).",
+          "text1-1-1": "Zu diesem Zeitpunkt ist es noch immer möglich, die Aktion rückgängig zu machen und die Elemente wiederherzustellen. Somit sind sie nicht länger zur Löschung markiert.",
+          "text1-2": "Danach kann zur wirklichen Löschung weitergegangen werden:",
+          "text1-2-1": "Wenn die Elemente veröffentlicht sind, muss auch die Löschung veröffentlicht werden, um sicherzustellen, dass die Elemente in Bearbeitung und Live entfernt werden.",
+          "text1-2-2": "Wenn die Elemente nicht veröffentlicht sind, ist der zweite Schritt \"Löschen (endgültig)\".",
+          "text1-2-3": "Diese Aktionen können nicht rückgängig gemacht werden, gelöschte Elemente können nicht wiederhergestellt werden.",
+          "text2": "Die zweite Stufe des Prozesse (die wirkliche Löschung), und die Wiederherstellung, müssen an dem Element durchgeführt werden, das zuerst zur Löschung markiert wurde. Es ist nicht möglich, eine Seite zur Löschung zu markieren, und dann ein Unterelement der Seite endgültig zu löschen. In diesem Fall ist es notwendig, die Seite wiederherzustellen und den gesamten Löschprozess für das Unterelement durchzuführen.",
+          "text3": "Es ist möglich, Referenzen auf das Element im Status \"Zur Löschung markiert\" zu überprüfen (zB. ein Link, der zu einer Seite führt, die zur Löschung markiert wurde). Mit dem Papierkorb können Referenzen verifiziert und aktualisiert werden. Wird das nicht getan, können zerstörte Links und Referenzen entstehen."
+        },
         "mark": {
           "title": "Zur Löschung markiert",
           "item": "Sie sind dabei, <span>{{name}}</span> zu löschen.",

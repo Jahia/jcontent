@@ -55,7 +55,7 @@
     "compare-versions": "^5.0.1",
     "connected-react-router": "^4.4.1",
     "copy-to-clipboard": "^3.0.8",
-    "dayjs": "^1.10.6",
+    "dayjs": "^1.11.7",
     "ellipsize": "^0.1.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",

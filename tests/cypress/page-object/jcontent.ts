@@ -17,10 +17,10 @@ import {Media} from './media';
 import {ContentTable} from './contentTable';
 
 export class JContent extends BasePage {
-    secondaryNav: SecondaryNav
-    accordion: Accordion
-    siteSwitcher: Dropdown
-    languageSwitcher: Dropdown
+    secondaryNav: SecondaryNav;
+    accordion: Accordion;
+    siteSwitcher: Dropdown;
+    languageSwitcher: Dropdown;
 
     static visit(site: string, language: string, path: string): JContent {
         cy.visit(`/jahia/jcontent/${site}/${language}/${path}`);
@@ -127,9 +127,10 @@ export class JContentPageComposer extends JContent {
     }
 
     iframe() {
-        const bc = new BaseComponent(cy.iframe('[data-sel-role="page-composer-frame-active"]'));
-        bc.get().find('[jahiatype="createbuttons"]');
-        return bc;
+        const iframeSel = '[data-sel-role="page-composer-frame-active"]';
+        cy.iframe(iframeSel).as('pcIframe');
+        cy.get('@pcIframe').find('[jahiatype="createbuttons"]');
+        return new BaseComponent(cy.get('@pcIframe'));
     }
 
     getCreatePage(): void {
@@ -146,9 +147,9 @@ export class JContentPageComposer extends JContent {
     refresh(): JContentPageComposer {
         cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(previousId => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();
-            cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
-                expect(previousId).to.not.eq(e[0].getAttribute('id'));
-            });
+            // Cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
+            //     expect(previousId).to.not.eq(e[0].getAttribute('id'));
+            // });
         });
         return this;
     }

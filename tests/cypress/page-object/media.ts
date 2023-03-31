@@ -10,7 +10,7 @@ import {Folder} from './folder';
 import {File} from './file';
 
 export class Media extends BasePage {
-    jcontent: JContent
+    jcontent: JContent;
 
     constructor(jcontent: JContent) {
         super();

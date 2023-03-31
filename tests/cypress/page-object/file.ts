@@ -3,11 +3,11 @@ import {Media} from './media';
 import * as path from 'path';
 
 export class File extends BasePage {
-    media: Media
-    fileName : string
-    htmlEscapedFileName : string
-    urlEscapedFileName : string
-    selector : string
+    media: Media;
+    fileName : string;
+    htmlEscapedFileName : string;
+    urlEscapedFileName : string;
+    selector : string;
 
     constructor(media: Media, fileName : string, htmlEscapedFileName? : string, urlEscapedFileName? : string) {
         super();
@@ -41,7 +41,7 @@ export class File extends BasePage {
     }
 
     download() : File {
-        cy.get(this.selector).should('be.visible').trigger('mouseover').rightclick({force: true});
+        cy.get(this.selector).should('be.visible').rightclick({force: true});
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('downloadFile');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
@@ -74,9 +74,10 @@ export class File extends BasePage {
     }
 
     rename(newFileName : string) : File {
-        cy.get(this.selector).should('be.visible').trigger('mouseover').rightclick();
+        cy.get(this.selector).should('be.visible').rightclick({force: true});
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('rename');
-        cy.get('input#folder-name').clear().type(newFileName);
+        cy.get('input#folder-name').clear();
+        cy.get('input#folder-name').type(newFileName);
         getComponentByAttr(Button, 'data-cm-role', 'create-folder-as-confirm').get().click();
         this.fileName = newFileName;
         this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
@@ -84,7 +85,7 @@ export class File extends BasePage {
     }
 
     markForDeletion() : File {
-        cy.get(this.selector).should('be.visible').trigger('mouseover').rightclick();
+        cy.get(this.selector).should('be.visible').rightclick({force: true});
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();
         return this;
@@ -92,7 +93,7 @@ export class File extends BasePage {
 
     deletePermanently() : File {
         // Delete the folder we just created permanently
-        cy.get(this.selector).should('be.visible').trigger('mouseover').rightclick();
+        cy.get(this.selector).should('be.visible').rightclick({force: true});
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('deletePermanently');
         cy.get('[data-sel-role="delete-permanently-button"]').click();
         return this;

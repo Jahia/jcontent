@@ -6,11 +6,7 @@ describe('Search tests', () => {
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.login(); // Edit in chief
-
-        JContent.visit('jcontentSite', 'en', 'content-folders/contents');
     });
 
     after(function () {
@@ -19,7 +15,8 @@ describe('Search tests', () => {
     });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce('JSESSIONID');
+        cy.loginEditor();
+        JContent.visit('jcontentSite', 'en', 'content-folders/contents');
         jcontent = new JContent();
         jcontent.selectAccordion('content-folders');
         basicSearch = jcontent.getBasicSearch().openSearch().reset();

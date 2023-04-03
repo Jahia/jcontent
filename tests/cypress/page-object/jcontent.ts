@@ -118,6 +118,26 @@ export class JContent extends BasePage {
         cy.get('.moonstone-header button[data-sel-role="clearClipboard"]').click();
         return this;
     }
+
+    rightClickMenu(operation: string, elementName: string) {
+        return cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick().then(() => {
+            cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find(`li[data-sel-role="${operation}"]`).click();
+        });
+    };
+
+    paste() {
+        return cy.get('span:contains("Paste"):not(:contains("Paste "))').click()
+    };
+
+    checkUserCanNotPaste() {
+        cy.get('span:contains("Paste"):not(:contains("Pasteur"))').should('have.length', 0);
+    };
+
+    checkUserCanNotCut(elementName: string) {
+        cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick().then(() => {
+            cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find('li[data-sel-role="cut"]').should('not.exist');
+        });
+    };
 }
 
 export class JContentPageComposer extends JContent {

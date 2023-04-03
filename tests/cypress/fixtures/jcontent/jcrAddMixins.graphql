@@ -1,0 +1,7 @@
+mutation($pathOrId: String!, $mixins: [String]!){
+  jcr{
+    mutateNode(pathOrId: $pathOrId){
+      addMixins(mixins: $mixins)
+    }
+  }
+}

@@ -120,9 +120,8 @@ export class JContent extends BasePage {
     }
 
     rightClickMenu(operation: string, elementName: string) {
-        return cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick().then(() => {
-            cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find(`li[data-sel-role="${operation}"]`).click();
-        });
+        cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
+        return cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find(`li[data-sel-role="${operation}"]`).click();
     }
 
     paste() {
@@ -134,9 +133,8 @@ export class JContent extends BasePage {
     }
 
     checkUserCanNotCut(elementName: string) {
-        cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick().then(() => {
-            cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find('li[data-sel-role="cut"]').should('not.exist');
-        });
+        cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
+        cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find('li[data-sel-role="cut"]').should('not.exist');
     }
 }
 

@@ -14,7 +14,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         GraphqlUtils.getNodeId('/sites/systemsite/categories/companies/media', 'category');
         cy.get('@category').then(categ => {
             GraphqlUtils.setProperties('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:defaultCategory', [`${categ}`], 'en');
-        })
+        });
 
         // Set a category translation
         GraphqlUtils.setProperty('/sites/systemsite/categories/companies/media', 'jcr:title', 'Média', 'fr');
@@ -31,7 +31,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         cy.log('Verify editor can copy/paste');
         cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
         jcontent.rightClickMenu('copy', 'Taber').then(() => {
-            cy.get('#message-id').contains('Taber' + ' is in the clipboard');
+            cy.get('#message-id').contains('Taber is in the clipboard');
         });
         cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
         jcontent.paste().then(() => {
@@ -43,7 +43,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
                 cy.get('span[aria-label="Media"]').should('exist');
                 cy.visit(`/jahia/content-editor/fr/edit/${taber}`);
                 cy.get('span[aria-label="Média"]').should('exist');
-            })
+            });
 
             GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
         });
@@ -51,14 +51,14 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         cy.log('Verify editor can cut/paste');
         cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
         jcontent.rightClickMenu('cut', 'Taber').then(() => {
-            cy.get('#message-id').contains('Taber' + ' is in the clipboard');
+            cy.get('#message-id').contains('Taber is in the clipboard');
         });
         cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
         jcontent.paste().then(() => {
             cy.get('td:contains("Taber")').should('exist');
 
             jcontent.rightClickMenu('cut', 'Taber').then(() => {
-                cy.get('#message-id').contains('Taber' + ' is in the clipboard');
+                cy.get('#message-id').contains('Taber is in the clipboard');
             });
             cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople?params');
             jcontent.paste();

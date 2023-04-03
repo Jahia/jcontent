@@ -227,7 +227,7 @@
         "noViewAvailable": "Keine Vorschau verfügbar",
         "noContentSelected": "Wählen Sie einen Content, um die Vorschau zu aktivieren",
         "paste": "Einfügen",
-        "pasteReference": "Als referenz einfügen",
+        "pasteReference": "Als Referenz einfügen",
         "delete": "Löschen",
         "translate": "Übersetzen",
         "emptyMessage": "Laden...",
@@ -391,7 +391,7 @@
           "text1-2-1": "Wenn die Elemente veröffentlicht sind, muss auch die Löschung veröffentlicht werden, um sicherzustellen, dass die Elemente in Bearbeitung und Live entfernt werden.",
           "text1-2-2": "Wenn die Elemente nicht veröffentlicht sind, ist der zweite Schritt \"Löschen (endgültig)\".",
           "text1-2-3": "Diese Aktionen können nicht rückgängig gemacht werden, gelöschte Elemente können nicht wiederhergestellt werden.",
-          "text2": "Die zweite Stufe des Prozesse (die wirkliche Löschung), und die Wiederherstellung, müssen an dem Element durchgeführt werden, das zuerst zur Löschung markiert wurde. Es ist nicht möglich, eine Seite zur Löschung zu markieren, und dann ein Unterelement der Seite endgültig zu löschen. In diesem Fall ist es notwendig, die Seite wiederherzustellen und den gesamten Löschprozess für das Unterelement durchzuführen.",
+          "text2": "Die zweite Stufe des Prozesses (die wirkliche Löschung), und die Wiederherstellung, müssen an dem Element durchgeführt werden, das zuerst zur Löschung markiert wurde. Es ist nicht möglich, eine Seite zur Löschung zu markieren, und dann ein Unterelement der Seite endgültig zu löschen. In diesem Fall ist es notwendig, die Seite wiederherzustellen und den gesamten Löschprozess für das Unterelement durchzuführen.",
           "text3": "Es ist möglich, Referenzen auf das Element im Status \"Zur Löschung markiert\" zu überprüfen (zB. ein Link, der zu einer Seite führt, die zur Löschung markiert wurde). Mit dem Papierkorb können Referenzen verifiziert und aktualisiert werden. Wird das nicht getan, können zerstörte Links und Referenzen entstehen."
         },
         "mark": {

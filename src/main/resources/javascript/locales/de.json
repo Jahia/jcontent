@@ -409,20 +409,20 @@
           "action": "{{count}} Element(e) zu löschen"
         },
         "undelete": {
-          "title": "Undelete",
-          "item": "Do you really want to undelete <span>{{name}}</span> ?",
-          "items": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{pages}} pages</span> ?",
-          "itemsOnly": "Do you really want to undelete <span>{{count}} items</span> ?",
-          "action": "Undelete {{count}} items"
+          "title": "Wiederherstellen",
+          "item": "Möchten Sie wirklich <span>{{name}}</span> wiederherstellen?",
+          "items": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen, darunter <span>{{pages}} Seite(n)</span> ?",
+          "itemsOnly": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen?",
+          "action": " {{count}} Element(e) wiederherstellen"
         },
         "locked":{
           "permanently": {
-            "title": "Cannot be deleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "title": "Löschung nicht möglich",
+            "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde."
           },
           "undelete": {
-            "title": "Cannot be undeleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "title": "Wiederherstellung nicht möglich",
+            "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde."
           }
         }
       }

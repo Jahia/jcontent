@@ -52,7 +52,6 @@ import {CreateFolderActionComponent} from './actions/createFolderAction';
 import {ZipActionComponent} from './actions/zipUnzip/zipAction';
 import {UnzipActionComponent} from './actions/zipUnzip/unzipAction';
 import {SearchActionComponent} from './actions/searchAction';
-import {MenuLabelActionComponent} from './actions/menuLabelAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
@@ -389,19 +388,19 @@ export const jContentActions = registry => {
 
     registry.add('action', 'actionsLabel', {
         targets: ['narrowHeaderMenu:0', 'narrowHeaderSelectionMenu:0'],
-        label: 'jcontent:label.contentManager.actions.menuLabel.actions',
-        component: MenuLabelActionComponent
+        buttonLabel: 'jcontent:label.contentManager.actions.menuLabel.actions',
+        isTitle: true
     });
 
     registry.add('action', 'moreActionsLabel', {
         targets: ['narrowHeaderMenu:10.5'],
-        label: 'jcontent:label.contentManager.actions.menuLabel.moreActions',
-        component: MenuLabelActionComponent
+        buttonLabel: 'jcontent:label.contentManager.actions.menuLabel.moreActions',
+        isTitle: true
     });
 
     registry.add('action', 'publicationActionsLabel', {
         targets: ['narrowHeaderSelectionMenu:10.5'],
-        label: 'jcontent:label.contentManager.actions.menuLabel.publication',
-        component: MenuLabelActionComponent
+        buttonLabel: 'jcontent:label.contentManager.actions.menuLabel.publication',
+        isTitle: true
     });
 };

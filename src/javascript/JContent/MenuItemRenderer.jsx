@@ -3,12 +3,19 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {MenuItem, Separator} from '@jahia/moonstone';
 
-export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
+export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle}) => {
     const {t} = useTranslation('jcontent');
     const [hover, setHover] = useState(false);
 
     if (isSeparator) {
         return <Separator invisible="firstOrLastChild"/>;
+    }
+
+    // eslint-disable-next-line react/no-danger
+    const label = <span dangerouslySetInnerHTML={{__html: t(buttonLabel, buttonLabelParams)}}/>;
+
+    if (isTitle) {
+        return <MenuItem variant="title" label={label}/>;
     }
 
     const onEnter = e => {
@@ -25,9 +32,6 @@ export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, men
     if (menuContext) {
         h = h || menuState.isInMenu;
     }
-
-    // eslint-disable-next-line react/no-danger
-    const label = <span dangerouslySetInnerHTML={{__html: t(buttonLabel, buttonLabelParams)}}/>;
 
     const isDisabled = enabled === false;
 
@@ -57,6 +61,7 @@ MenuItemRenderer.propTypes = {
     buttonIcon: PropTypes.object,
     enabled: PropTypes.bool,
     isSeparator: PropTypes.bool,
+    isTitle: PropTypes.bool,
 
     /**
      * Function to call when the menu item is clicked

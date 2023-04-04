@@ -42,6 +42,7 @@
       "fileUpload": {
         "nothingToDisplay": "Nichts anzuzeigen",
         "nothingToDisplay2": "Nicht-auswählbare Elemente werden in dieser Anzeige nicht gelistet",
+        "locked": "This empty folder is locked",
         "selectMessage": "Datei von meinem Computer wählen",
         "uploadingActionMessage": "Es gibt Fehler, die Ihre Aufmerksamkeit benötigen",
         "or": "oder",

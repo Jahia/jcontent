@@ -56,7 +56,8 @@ export const FileUploadActionComponent = props => {
     const res = useNodeChecks(
         {path},
         {
-            ...constraintsByType[uploadType || 'upload']
+            ...constraintsByType[uploadType || 'upload'],
+            getLockInfo: true
         }
     );
 
@@ -86,7 +87,7 @@ export const FileUploadActionComponent = props => {
         <Render
             {...props}
             isVisible={isVisible}
-            enabled={isVisible}
+            enabled={isVisible && !res.node?.lockOwner}
             onClick={handleClick}
         />
     );

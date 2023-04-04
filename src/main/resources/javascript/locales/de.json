@@ -287,7 +287,13 @@
         "error": {
           "loading": "Fehler beim Abrufen der Aktionsdaten: {{details}}"
         },
-        "locate": "Finden"
+        "locate": "Finden",
+        "openInLive": "Live",
+        "menuLabel": {
+          "actions": "Aktionen",
+          "moreActions": "Weitere Aktionen",
+          "publication": "Veröffentlichung"
+        }
       },
       "browseFolders": "Ordner durchsuchen",
       "selection": {

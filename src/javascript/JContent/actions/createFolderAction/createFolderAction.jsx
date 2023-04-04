@@ -30,7 +30,7 @@ export const CreateFolderActionComponent = ({path, createFolderType, render: Ren
         {
             ...constraintsByType[createFolderType || 'contentFolder'],
             getLockInfo: true
-        },
+        }
     );
 
     if (res.loading) {

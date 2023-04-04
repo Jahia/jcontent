@@ -8,13 +8,12 @@ import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import styles from './EmptyDropZone.scss';
 import clsx from 'clsx';
-import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 
 const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
     const currentState = useSelector(state => ({
         site: state.site,
         language: state.language,
-        path: state.jcontent.path,
+        path: state.jcontent.path
     }), shallowEqual);
     const {t} = useTranslation('jcontent');
 
@@ -25,7 +24,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
         requiredSitePermission: [ACTION_PERMISSIONS.uploadFilesAction, ACTION_PERMISSIONS.importAction]
     });
 
-    // check lock status for node
+    // Check lock status for node
     const nodeInfo = useNodeInfo(
         {path: currentState.path},
         {getLockInfo: true, getIsNodeTypes: ['jmix:markedForDeletion']},

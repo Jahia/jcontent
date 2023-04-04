@@ -28,7 +28,8 @@ export const CreateFolderActionComponent = ({path, createFolderType, render: Ren
     const res = useNodeChecks(
         {path},
         {
-            ...constraintsByType[createFolderType || 'contentFolder']
+            ...constraintsByType[createFolderType || 'contentFolder'],
+            getLockInfo: true
         }
     );
 
@@ -43,6 +44,7 @@ export const CreateFolderActionComponent = ({path, createFolderType, render: Ren
     return (
         <Render
             {...others}
+            enabled={!res.node?.lockOwner}
             isVisible={res.checksResult}
             onClick={() => {
                 componentRenderer.render('createFolderDialog', CreateFolderDialog, {path, contentType: nodeType[createFolderType || 'contentFolder'], onExit});

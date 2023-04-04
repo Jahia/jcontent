@@ -1,0 +1,7 @@
+mutation($pathOrId: String!, $mixins: [String]!){
+  jcr{
+    mutateNode(pathOrId: $pathOrId){
+      removeMixins(mixins: $mixins)
+    }
+  }
+}

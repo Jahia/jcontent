@@ -4,7 +4,12 @@
     margin-top: var(--spacing-medium);
 
     span {
+        display: block;
+
         color: var(--color-danger);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 }
 

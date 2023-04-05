@@ -4,8 +4,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
-const shared = require("./webpack.shared")
 const moonstone = require("@jahia/moonstone/dist/rulesconfig-wp");
+const getModuleFederationConfig = require('@jahia/webpack-config/getModuleFederationConfig');
+const packageJson = require('./package.json');
 
 module.exports = (env, argv) => {
     let config = {
@@ -93,21 +94,15 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
-            new ModuleFederationPlugin({
-                name: "jcontent",
-                library: { type: "assign", name: "appShell.remotes.jcontent" },
-                filename: "remoteEntry.js",
+            new ModuleFederationPlugin(getModuleFederationConfig(packageJson, {
                 exposes: {
                     '.': './src/javascript/shared',
-                    './init': './src/javascript/init',
                     './JContent/actions': './src/javascript/JContent/actions/index'
                 },
                 remotes: {
-                    '@jahia/app-shell': 'appShellRemote',
                     '@jahia/jahia-ui-root': 'appShell.remotes.jahiaUi'
                 },
-                shared
-            }),
+            }, Object.keys(packageJson.dependencies))),
             new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),
             new CopyWebpackPlugin({patterns: [{from: './package.json', to: ''}]}),
             new CaseSensitivePathsPlugin()

@@ -16,104 +16,76 @@ import {
 import InfoTable from './InfoTable';
 import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
+import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 
-const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title, paths}) => {
+const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
-    if (isLoading || data?.jcr.nodesByPath.length === 0) {
-        return (
-            <>
-                {title}
-                <DialogContent>
-                    <DialogContentText className={styles.margins}>
-                        {t('jcontent:label.contentManager.deleteAction.loading')}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button size="big"
-                            label={t('jcontent:label.contentManager.editImage.close')}
-                            onClick={onClose}/>
-                </DialogActions>
-            </>
-        );
+
+    const firstNode = data?.jcr?.nodesByPath[0];
+    const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + node.pages.pageInfo.totalCount + 1), 0);
+    const pages = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
+    const locked = firstNode?.isMarkedForDeletion && !firstNode?.isMarkedForDeletionRoot;
+
+    let label;
+    if (locked) {
+        label = t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
+            name: firstNode?.displayName,
+            parentName: firstNode?.rootDeletionInfo[0].displayName
+        });
+    } else if (count === 0) {
+        label = t('jcontent:label.contentManager.deleteAction.loading');
+    } else if (count === 1) {
+        label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
+            name: firstNode?.displayName
+        });
+    } else if (pages === 0) {
+        label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.itemsOnly`, {count});
+    } else {
+        label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.items`, {count, pages});
     }
 
-    if (data?.jcr?.nodesByPath[0].isMarkedForDeletion && !data?.jcr?.nodesByPath[0].isMarkedForDeletionRoot) {
-        return (
-            <>
-                <DialogTitle>{t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.title`)}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText className={styles.margins}
-                                       dangerouslySetInnerHTML={{
-                                           __html: t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
-                                               name: data?.jcr?.nodesByPath[0].displayName,
-                                               parentName: data?.jcr?.nodesByPath[0].rootDeletionInfo[0].displayName
-                                           })
-                                       }}
-                    />
-                </DialogContent>
+    return (
+        <>
+            {isMutationLoading && <TransparentLoaderOverlay/>}
+            <DialogTitle>
+                {t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`)}
+                <Button className={styles.button}
+                        icon={<SvgInformation/>}
+                        variant="ghost"
+                        onClick={() => {
+                            setInfoOpen(true);
+                        }}
+                />
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: label}}/>
+                {!locked && <InfoTable paths={paths}/>}
+            </DialogContent>
+            {(locked || isLoading || count === 0) ? (
                 <DialogActions>
                     <Button size="big"
                             data-sel-role="close-button"
                             label={t('jcontent:label.contentManager.editImage.close')}
                             onClick={onClose}/>
                 </DialogActions>
-            </>
-        );
-    }
-
-    function getCount() {
-        return data?.jcr?.nodesByPath.reduce((count, node) => count + (node.content.pageInfo.totalCount + node.pages.pageInfo.totalCount), 0) + data?.jcr?.nodesByPath.length;
-    }
-
-    function getPages() {
-        return data?.jcr?.nodesByPath.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
-    }
-
-    const isSingleNodeDeletion = data?.jcr?.nodesByPath.length === 1 && data?.jcr?.nodesByPath[0].pages.pageInfo.totalCount === 0 && data?.jcr?.nodesByPath[0].content.pageInfo.totalCount === 0;
-
-    function getLabel() {
-        if (isSingleNodeDeletion) {
-            return t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
-                name: data?.jcr?.nodesByPath[0].displayName
-            });
-        }
-
-        if (getPages() === 0) {
-            return t(`jcontent:label.contentManager.deleteAction.${dialogType}.itemsOnly`, {
-                count: getCount(),
-                pages: getPages()
-            });
-        }
-
-        return t(`jcontent:label.contentManager.deleteAction.${dialogType}.items`, {
-            count: getCount(),
-            pages: getPages()
-        });
-    }
-
-    return (
-        <>
-            {title}
-            <DialogContent>
-                <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: getLabel()}}/>
-                <InfoTable paths={paths}/>
-            </DialogContent>
-            <DialogActions>
-                <Button size="big"
-                        data-sel-role="cancel-button"
-                        label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
-                        onClick={onClose}/>
-                <Button size="big"
-                        color="danger"
-                        data-sel-role={`delete-${dialogType}-button`}
-                        label={(isSingleNodeDeletion ?
-                            t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) :
-                            t(`jcontent:label.contentManager.deleteAction.${dialogType}.action`, {
-                                count: getCount()
-                            }))}
-                        onClick={onAction}
-                />
-            </DialogActions>
+            ) : (
+                <DialogActions>
+                    <Button size="big"
+                            isDisabled={isMutationLoading}
+                            data-sel-role="cancel-button"
+                            label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
+                            onClick={onClose}/>
+                    <Button size="big"
+                            isDisabled={isMutationLoading}
+                            color="danger"
+                            data-sel-role={`delete-${dialogType}-button`}
+                            label={(count === 1 ?
+                                t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) :
+                                t(`jcontent:label.contentManager.deleteAction.${dialogType}.action`, {count}))}
+                            onClick={onAction}
+                    />
+                </DialogActions>
+            )}
         </>
     );
 };
@@ -123,8 +95,9 @@ DeleteContent.propTypes = {
     dialogType: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    isMutationLoading: PropTypes.bool.isRequired,
     onAction: PropTypes.func.isRequired,
-    title: PropTypes.object,
+    setInfoOpen: PropTypes.func.isRequired,
     paths: PropTypes.array.isRequired
 };
 
@@ -143,7 +116,6 @@ const getMutation = dialogType => {
 const Delete = ({dialogType, node, nodes, onExit}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
-    const {t} = useTranslation('jcontent');
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
         language: state.language
@@ -159,7 +131,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         fetchPolicy: 'network-only'
     });
 
-    const [mutation] = useMutation(getMutation(dialogType));
+    const [mutation, {loading: mutationLoading}] = useMutation(getMutation(dialogType));
 
     if (error) {
         console.log(error);
@@ -191,20 +163,10 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             >
                 <DeleteContent data={data}
                                isLoading={loading}
+                               isMutationLoading={mutationLoading}
                                paths={paths}
                                dialogType={dialogType}
-                               title={
-                                   <DialogTitle>
-                                       { t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) }
-                                       <Button className={styles.button}
-                                               icon={<SvgInformation/>}
-                                               variant="ghost"
-                                               onClick={() => {
-                                                   setInfoOpen(true);
-                                               }}
-                                       />
-                                   </DialogTitle>
-                               }
+                               setInfoOpen={setInfoOpen}
                                onClose={() => setOpen(false)}
                                onAction={handleMutation}/>
             </Dialog>

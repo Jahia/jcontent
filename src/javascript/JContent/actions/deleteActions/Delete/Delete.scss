@@ -1,13 +1,15 @@
 .margins.margins {
+    display: inline-flex;
     width: 100%;
-    max-width: 500px;
     margin-top: var(--spacing-medium);
 
+    white-space: pre;
+
     span {
-        display: block;
+        flex: 0 1 auto;
+        max-width: 500px;
 
         color: var(--color-danger);
-        white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
     }

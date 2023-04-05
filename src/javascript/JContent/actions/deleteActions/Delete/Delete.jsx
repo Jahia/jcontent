@@ -29,7 +29,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
 
     let label;
     if (locked) {
-        const labelChoice = count > 1 ? `${dialogType}.contents` : `${dialogType}.content`
+        const labelChoice = count > 1 ? `${dialogType}.contents` : `${dialogType}.content`;
         label = t(`jcontent:label.contentManager.deleteAction.locked.${labelChoice}`, {
             count: count,
             name: data.jcr.nodesByPath.map(n => getName(n)).join(', '),

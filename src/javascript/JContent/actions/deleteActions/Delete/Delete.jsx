@@ -129,7 +129,6 @@ const getMutation = dialogType => {
 const Delete = ({dialogType, node, nodes, onExit}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
-    const {t} = useTranslation('jcontent');
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
         language: state.language

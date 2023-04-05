@@ -92,7 +92,7 @@ describe('delete tests', () => {
             .select('Undelete');
 
         cy.log('Verify dialog opens and cannot be marked for deletion');
-        const dialogCss = '[data-sel-role$="delete-undelete-dialog"]';
+        const dialogCss = '[data-sel-role="delete-undelete-dialog"]';
         cy.get(dialogCss)
             .should('contain', 'Cannot be undeleted')
             .find('[data-sel-role="close-button"]')

@@ -92,9 +92,9 @@ describe('delete tests', () => {
             .select('Undelete');
 
         cy.log('Verify dialog opens and cannot be marked for deletion');
-        const dialogCss = '[data-sel-role$="undelete-dialog"]';
+        const dialogCss = '[data-sel-role="delete-undelete-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'Cannot be undeleted')
+            .should('contain', 'cannot currently be undeleted')
             .find('[data-sel-role="close-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -148,7 +148,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and cannot be deleted permanently');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'Cannot be deleted')
+            .should('contain', 'cannot currently be deleted')
             .find('[data-sel-role="close-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');

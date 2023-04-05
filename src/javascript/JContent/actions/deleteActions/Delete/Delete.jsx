@@ -16,6 +16,7 @@ import {
 import InfoTable from './InfoTable';
 import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
+import {getName} from '~/JContent';
 import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
@@ -29,7 +30,8 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
     let label;
     if (locked) {
         label = t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
-            name: firstNode?.displayName,
+            count: count,
+            name: data.jcr.nodesByPath.map(n => getName(n)).join(', '),
             parentName: firstNode?.rootDeletionInfo[0].displayName
         });
     } else if (count === 0) {

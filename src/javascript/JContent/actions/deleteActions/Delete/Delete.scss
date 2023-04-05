@@ -6,7 +6,7 @@
     white-space: pre;
 
     span {
-        flex: 1;
+        flex: 0 1 auto;
         max-width: 500px;
 
         color: var(--color-danger);

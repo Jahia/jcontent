@@ -426,11 +426,13 @@
         "locked":{
           "permanently": {
             "title": "Cannot be deleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
+            "contents": "{{count}} items <strong>{{name}}</strong> cannot currently be deleted on their own. Please undelete, or permanently delete, their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
           },
           "undelete": {
             "title": "Cannot be undeleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
+            "contents": "{{count}} items <strong>{{name}}</strong> cannot currently be undeleted on their own. Please undelete their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
           }
         },
         "details": "DETAILS"

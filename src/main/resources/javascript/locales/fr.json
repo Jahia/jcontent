@@ -420,12 +420,12 @@
           "permanently": {
             "title": "Impossible de supprimer",
             "content": "L’élément <strong>{{name}}</strong> ne peut actuellement être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "contents": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content_plural": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           },
           "undelete": {
             "title": "Impossible d'annuler la suppression",
             "content": "Il n’est actuellement pas possible d’annuler la seule suppression de l’élément <strong>{{name}}</strong>. Merci d’annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "contents": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content_plural": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           }
         }
       }

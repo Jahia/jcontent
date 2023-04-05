@@ -21,16 +21,22 @@ import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
 
+    const firstNode = data?.jcr?.nodesByPath[0];
     const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + node.pages.pageInfo.totalCount + 1), 0);
     const pages = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
-    const locked = data?.jcr?.nodesByPath[0].isMarkedForDeletion && !data?.jcr?.nodesByPath[0].isMarkedForDeletionRoot;
+    const locked = firstNode?.isMarkedForDeletion && !firstNode?.isMarkedForDeletionRoot;
 
     let label;
-    if (count === 0) {
+    if (locked) {
+        label = t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
+            name: firstNode?.displayName,
+            parentName: firstNode?.rootDeletionInfo[0].displayName
+        });
+    } else if (count === 0) {
         label = t('jcontent:label.contentManager.deleteAction.loading');
     } else if (count === 1) {
         label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
-            name: data?.jcr?.nodesByPath[0].displayName
+            name: firstNode?.displayName
         });
     } else if (pages === 0) {
         label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.itemsOnly`, {count});
@@ -52,27 +58,8 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                 />
             </DialogTitle>
             <DialogContent>
-                {!locked && (isLoading || count === 0) && (
-                    <DialogContentText className={styles.margins}>
-                        {t('jcontent:label.contentManager.deleteAction.loading')}
-                    </DialogContentText>
-                )}
-                {locked && (
-                    <DialogContentText className={styles.margins}
-                                       dangerouslySetInnerHTML={{
-                                           __html: t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
-                                               name: data?.jcr?.nodesByPath[0].displayName,
-                                               parentName: data?.jcr?.nodesByPath[0].rootDeletionInfo[0].displayName
-                                           })
-                                       }}
-                    />
-                )}
-                {!locked && !isLoading && count > 0 && (
-                    <>
-                        <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: label}}/>
-                        <InfoTable paths={paths}/>
-                    </>
-                )}
+                <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: label}}/>
+                {!locked && <InfoTable paths={paths}/>}
             </DialogContent>
             {(locked || isLoading || count === 0) ? (
                 <DialogActions>

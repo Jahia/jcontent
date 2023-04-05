@@ -148,7 +148,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and cannot be deleted permanently');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'Cannot be deleted')
+            .should('contain', 'cannot currently be deleted')
             .find('[data-sel-role="close-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');

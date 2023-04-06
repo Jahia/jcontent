@@ -1,4 +1,5 @@
 import {BaseTreeQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
+import gql from 'graphql-tag';
 
 export const DeletionInfoQueryHandler = {
     ...BaseTreeQueryHandler,
@@ -11,6 +12,30 @@ export const DeletionInfoQueryHandler = {
         selectableTypes,
         hideRoot: false
     }),
+
+    getFragments() {
+        return [
+            {
+                variables: {
+                    language: 'String!'
+                },
+                applyFor: 'node',
+                gql: gql`fragment UsagesFragment on JCRNode {
+                    usages: references(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}) {
+                        nodes {
+                            node {
+                                ...NodeCacheRequiredFields
+                                visible: isNodeType(type: {types: ["jnt:workflowTask"], multi: NONE})
+                            }
+                        }
+                        pageInfo {
+                            nodesCount
+                        }
+                    }
+                }`
+            }
+        ];
+    },
 
     getQueryVariables({lang, uilang}) {
         return {

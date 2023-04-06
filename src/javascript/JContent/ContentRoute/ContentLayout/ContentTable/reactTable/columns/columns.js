@@ -9,6 +9,7 @@ import {
     CellVisibleActions
 } from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
+import {CellUsages} from '../components/cells/CellUsages';
 
 export const allColumnData = [
     {
@@ -79,9 +80,17 @@ export const allColumnData = [
         Header: '',
         Cell: CellVisibleActions,
         width: '60px'
+    },
+    {
+        id: 'usages',
+        label: 'jcontent:label.contentManager.deleteAction.infoTable.headerLabel',
+        Header: Header,
+        Cell: CellUsages,
+        sortable: false,
+        width: '100px'
     }
 ];
 
-export const reducedColumnData = allColumnData.filter(c => c.id !== 'type');
-
-export const deletionInfoColumnData = allColumnData.filter(c => ['name', 'status', 'type', 'publicationStatus'].includes(c.id)).map(c => ({...c, sortable: false}));
+export const mainColumnData = allColumnData.filter(c => !['usages'].includes(c.id));
+export const reducedColumnData = allColumnData.filter(c => !['type', 'usages'].includes(c.id));
+export const deletionInfoColumnData = allColumnData.filter(c => ['name', 'status', 'type', 'publicationStatus', 'usages'].includes(c.id)).map(c => ({...c, sortable: false}));

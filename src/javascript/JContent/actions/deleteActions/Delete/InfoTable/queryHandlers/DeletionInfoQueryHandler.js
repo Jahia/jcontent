@@ -16,9 +16,6 @@ export const DeletionInfoQueryHandler = {
     getFragments() {
         return [
             {
-                variables: {
-                    language: 'String!'
-                },
                 applyFor: 'node',
                 gql: gql`fragment UsagesFragment on JCRNode {
                     usages: references(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}) {

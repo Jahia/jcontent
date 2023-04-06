@@ -287,7 +287,13 @@
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
         },
-        "locate": "Localiser"
+        "locate": "Localiser",
+        "openInLive": "Live",
+        "menuLabel": {
+          "actions": "Actions",
+          "moreActions": "Plus d'actions",
+          "publication": "Publication"
+        }
       },
       "browseFolders": "Parcourir les répertoires",
       "selection": {

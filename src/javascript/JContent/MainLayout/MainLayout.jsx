@@ -1,17 +1,17 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import styles from './MainLayout.scss';
+import {ResizeContext, useResize} from './ResizeObserver';
+import {LayoutContent} from '@jahia/moonstone';
 
-export const MainLayout = ({header, children}) => (
-    <main className={clsx(styles.root, 'flexCol')}>
-        { header &&
-        header}
-        <div className={clsx(styles.content, 'flexCol_nowrap')}>
-            {children}
-        </div>
-    </main>
-);
+export const MainLayout = ({header, children}) => {
+    const {ref, width} = useResize();
+
+    return (
+        <ResizeContext.Provider value={width}>
+            <LayoutContent ref={ref} hasPadding content={children} header={header}/>
+        </ResizeContext.Provider>
+    );
+};
 
 MainLayout.propTypes = {
     header: PropTypes.node,

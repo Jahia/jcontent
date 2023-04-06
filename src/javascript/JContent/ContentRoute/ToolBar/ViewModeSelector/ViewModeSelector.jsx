@@ -58,6 +58,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     return (
         <>
             <Dropdown className={classes.dropdown}
+                      size="small"
                       data={tableViewDropdownData(t, viewMode, allButtons)}
                       data-sel-role="sel-view-mode-dropdown"
                       label={t(`jcontent:label.contentManager.view.${viewMode}`)}

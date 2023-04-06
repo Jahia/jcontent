@@ -1,5 +1,5 @@
 import React from 'react';
-import {ButtonGroup, Separator} from '@jahia/moonstone';
+import {ButtonGroup, ChevronDown, Separator} from '@jahia/moonstone';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
@@ -41,7 +41,7 @@ export const MainActionBar = () => {
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction isMediumLabel actionKey={publishAction} path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
-                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
+                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
             </ButtonGroup>
             <DisplayAction actionKey="publishDeletion" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel}/>
             <DisplayAction actionKey="deletePermanently" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel}/>

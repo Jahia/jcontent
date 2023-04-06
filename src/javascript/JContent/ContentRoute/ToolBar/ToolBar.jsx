@@ -7,7 +7,7 @@ import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import styles from './ToolBar.scss';
-import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonstone';
+import {Button, ButtonGroup, Cancel, ChevronDown, Separator, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
@@ -62,7 +62,7 @@ export const ToolBar = () => {
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
                     {publishAction && <DisplayAction actionKey={publishAction} {...context} isMediumLabel render={ButtonRendererShortLabel}/>}
-                    <DisplayAction menuUseElementAnchor actionKey="publishMenu" {...context} render={ButtonRendererNoLabel}/>
+                    <DisplayAction menuUseElementAnchor actionKey="publishMenu" {...context} render={ButtonRendererNoLabel} buttonProps={{icon: <ChevronDown/>}}/>
                 </ButtonGroup>
                 <DisplayAction actionKey="publishDeletion" {...context} render={ButtonRendererShortLabel}/>
                 <DisplayAction actionKey="deletePermanently" {...context} render={ButtonRendererShortLabel}/>

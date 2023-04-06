@@ -5,7 +5,7 @@ import {
     AddFolder,
     Archive,
     ChevronDown,
-    ClearPaste,
+    ClearPaste, Cloud,
     CloudDownload,
     CloudUpload,
     Copy,
@@ -65,7 +65,7 @@ import {ClearClipboardActionComponent} from '~/JContent/actions';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
-        buttonIcon: <ChevronDown/>,
+        buttonIconEnd: <ChevronDown/>,
         menuRenderer: MenuRenderer,
         menuItemRenderer: MenuItemRenderer
     });
@@ -115,6 +115,7 @@ export const jContentActions = registry => {
         component: FileUploadActionComponent
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
+        buttonIcon: <Cloud/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         targets: ['contentActions:6', 'selectedContentActions:1'],
         menuTarget: 'publishMenu',

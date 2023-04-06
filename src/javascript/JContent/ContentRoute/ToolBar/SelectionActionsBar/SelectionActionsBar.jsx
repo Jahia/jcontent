@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNodeInfo} from '@jahia/data-helper';
-import {ButtonGroup, Separator} from '@jahia/moonstone';
+import {ButtonGroup, ChevronDown, Separator} from '@jahia/moonstone';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
@@ -39,6 +39,7 @@ export const SelectionActionsBar = ({paths, clear}) => {
                                    render={ButtonRendererShortLabel}/>}
                 <DisplayAction menuUseElementAnchor
                                actionKey="publishMenu"
+                               buttonProps={{icon: <ChevronDown/>}}
                                {...context}
                                render={ButtonRendererNoLabel}/>
             </ButtonGroup>

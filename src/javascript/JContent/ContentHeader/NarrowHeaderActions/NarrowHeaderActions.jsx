@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
-import {ButtonGroup} from '@jahia/moonstone';
+import {ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {Selection} from '../../ContentRoute/ToolBar/SelectionActionsBar/Selection';
 
@@ -13,10 +12,7 @@ export const NarrowHeaderActions = ({previewSelection, selection, path, clear}) 
     const context = {path: path};
 
     return selection.length === 0 && (
-        <ButtonGroup size="default" variant="ghost">
-            <DisplayAction menuUseElementAnchor actionKey="narrowHeaderMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost', icon: null}} {...context}/>;
-            <DisplayAction menuUseElementAnchor actionKey="narrowHeaderMenu" render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost'}} {...context}/>;
-        </ButtonGroup>
+        <DisplayAction menuUseElementAnchor actionKey="narrowHeaderMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost'}} {...context}/>
     );
 };
 
@@ -33,10 +29,7 @@ export const NarrowHeaderSelectionActions = ({selection, clear}) => {
     return (
         <>
             <Selection paths={selection} clear={clear}/>
-            <ButtonGroup size="default" variant="ghost">
-                <DisplayAction menuUseElementAnchor actionKey="narrowHeaderSelectionMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost', icon: null}} {...context}/>
-                <DisplayAction menuUseElementAnchor actionKey="narrowHeaderSelectionMenu" render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost'}} {...context}/>
-            </ButtonGroup>
+            <DisplayAction menuUseElementAnchor actionKey="narrowHeaderSelectionMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost'}} {...context}/>
         </>
     );
 };

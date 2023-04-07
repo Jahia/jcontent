@@ -91,4 +91,4 @@ export const usages = {
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];
-export const deletionInfoColumnData = [publicationStatus, name, status, type, usages];
+export const deletionInfoColumnData = [publicationStatus, name, status, type, usages].map(c => ({...c, sortable: false}));

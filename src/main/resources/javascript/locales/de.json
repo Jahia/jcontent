@@ -388,6 +388,11 @@
         "pages": "Unter-Seiten {{count}}"
       },
       "deleteAction": {
+        "infoTable": {
+          "headerLabel": "Verwendungen",
+          "usage": "{{count}} Verwendung",
+          "usage_plural": "{{count}} Verwendungen"
+        },
         "loading": "Loading information or performing actions",
         "info": {
           "title": "Löschinformation",

@@ -388,6 +388,12 @@
         "pages": "Sous-pages {{count}}"
       },
       "deleteAction": {
+        "infoTable": {
+          "headerLabel": "Utilisations",
+          "usage": "{{count}} utilisation",
+          "usage_plural": "{{count}} utilisations",
+          "usageZero": "-"
+        },
         "loading": "Loading information or performing actions",
         "info": {
           "title": "A propos de la suppression",

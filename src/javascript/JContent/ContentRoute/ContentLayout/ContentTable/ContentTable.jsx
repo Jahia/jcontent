@@ -17,7 +17,7 @@ import {Table, TableBody, TablePagination} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeader';
-import {allColumnData, reducedColumnData} from './reactTable/columns';
+import {mainColumnData, reducedColumnData} from './reactTable/columns';
 import ContentTableWrapper from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
@@ -76,7 +76,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         prepareRow
     } = useTable(
         {
-            columns: allColumnData,
+            columns: mainColumnData,
             data: rows,
             isExpanded: row => tableOpenPaths.indexOf(row.path) > -1,
             onExpand: (id, value) => {
@@ -121,7 +121,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
     };
 
-    let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
+    let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : mainColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;

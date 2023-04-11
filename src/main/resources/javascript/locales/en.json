@@ -410,23 +410,31 @@
         "mark": {
           "title": "Mark for deletion",
           "item": "You are about to delete <span>{{name}}</span>",
-          "items": "You are about to delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>",
+          "items": "You are about to delete <span>{{count}} items</span>, including <span>{{pages}} page(s)</span>",
+          "filesAndFolders": "You are about to delete <span>{{count}} items</span>, including <span>{{folders}} folder(s)</span>",
           "itemsOnly": "You are about to delete <span>{{count}} items</span>",
           "action": "Mark {{count}} items for deletion"
         },
         "permanently": {
           "title": "Delete permanently",
           "item": "You are about to permanently delete <span>{{name}}</span>. <strong>This operation cannot be undone.</strong>",
-          "items": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>. <strong>This operation cannot be undone.</strong>",
+          "items": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{pages}} page(s)</span>. <strong>This operation cannot be undone.</strong>",
+          "filesAndFolders": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{folders}} folder(s)</span>. <strong>This operation cannot be undone.</strong>",
           "itemsOnly": "You are about to permanently delete <span>{{count}} items</span>. <strong>This operation cannot be undone.</strong>",
           "action": "Delete {{count}} items permanently"
         },
         "undelete": {
           "title": "Undelete",
           "item": "Do you really want to undelete <span>{{name}}</span> ?",
-          "items": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{pages}} pages</span> ?",
+          "items": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{pages}} page(s)</span> ?",
+          "filesAndFolders": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{folders}} folder(s)</span> ?",
           "itemsOnly": "Do you really want to undelete <span>{{count}} items</span> ?",
           "action": "Undelete {{count}} items"
+        },
+        "hasUsages": {
+          "single": "This item is currently referenced by other items. Deleting it will create broken references.",
+          "some": "Some of these items are currently referenced by other items. Deleting them will create broken references.",
+          "tooMany": "The system could not verify if the items to be deleted are currently referenced by other items (too many items to verify). You can manually verify the usages of all items in the table below."
         },
         "locked":{
           "permanently": {

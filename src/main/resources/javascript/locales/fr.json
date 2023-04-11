@@ -42,7 +42,7 @@
       "fileUpload": {
         "nothingToDisplay": "Rien à afficher",
         "nothingToDisplay2": "Les éléments non selectionables n'apparaissent pas dans cette vue",
-        "locked": "Ce dossier vide est vérouillé",
+        "locked": "Ce dossier vide est vérrouillé",
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
         "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
         "or": "ou",
@@ -404,23 +404,31 @@
         "mark": {
           "title": "Marquer pour suppression",
           "item": "Vous allez supprimer <span>{{name}}</span>",
-          "items": "Vous allez supprimer <span>{{count}} éléments</span>, dont <span>{{pages}} pages</span>",
+          "items": "Vous allez supprimer <span>{{count}} éléments</span>, dont <span>{{pages}} page(s)</span>",
+          "filesAndFolders": "Vous allez supprimer <span>{{count}} éléments</span>, dont <span>{{folders}} dossier(s)</span>",
           "itemsOnly": "Vous allez supprimer <span>{{count}} éléments</span>",
           "action": "Marquer {{count}} éléments pour suppression"
         },
         "permanently": {
           "title": "Supprimer définitivement",
           "item": "Vous allez supprimer définitivement <span>{{name}}</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
-          "items": "Vous allez supprimer définitivement <span>{{count}} éléments</span>, dont <span>{{pages}} pages</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
+          "items": "Vous allez supprimer définitivement <span>{{count}} éléments</span>, dont <span>{{pages}} page(s)</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
+          "filesAndFolders": "Vous allez supprimer définitivement <span>{{count}} éléments</span>, dont <span>{{folders}} dossier(s)</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
           "itemsOnly": "Vous allez supprimer définitivement <span>{{count}} éléments</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
           "action": "Supprimer {{count}} éléments définitivement"
         },
         "undelete": {
           "title": "Annuler la suppression",
           "item": "Souhaitez-vous annuler la suppression de <span>{{name}}</span> ?",
-          "items": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span>, dont <span>{{pages}} pages</span> ?",
+          "items": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span>, dont <span>{{pages}} page(s)</span> ?",
+          "filesAndFolders": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span>, dont <span>{{folders}} dossier(s)</span> ?",
           "itemsOnly": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span> ?",
           "action": "Annuler la suppression de {{count}} éléments"
+        },
+        "hasUsages": {
+          "single": "Cet élément est actuellement utilisé par d’autres contenus. Le supprimer engendrera des références cassées.",
+          "some": "Certains de ces éléments sont actuellement utilisés par d’autres contenus. Leur suppression engendrera des références cassées.",
+          "tooMany": "Le système n'a pas pu vérifier si les éléments à supprimer sont actuellement utilisés par d’autres contenus (trop d'éléments à vérifier). Vous pouvez vérifier les utilisations manuellement dans le tableau ci-dessous."
         },
         "locked":{
           "permanently": {

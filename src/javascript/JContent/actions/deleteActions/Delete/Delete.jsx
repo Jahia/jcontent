@@ -19,13 +19,18 @@ import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {getName} from '~/JContent';
 import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 
+const checkUsages = p => p?.usages?.nodes?.length > 0;
+
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
 
     const firstNode = data?.jcr?.nodesByPath[0];
-    const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + node.pages.pageInfo.totalCount + 1), 0);
     const pages = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
+    const folders = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.folders.pageInfo.totalCount + (node.isFolder ? 1 : 0)), 0);
+    const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + node.pages.pageInfo.totalCount + (!node.isPage && !node.isFolder ? 1 : 0)), 0) + pages + folders;
     const locked = firstNode?.isMarkedForDeletion && !firstNode?.isMarkedForDeletionRoot;
+    const hasUsages = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsage, node) => hasUsage || checkUsages(node) || node.allDescendants.nodes.some(checkUsages), false);
+    const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsage, node) => hasUsage || node.allDescendants.nodes.length === 100, false);
 
     let label;
     if (locked) {
@@ -34,14 +39,16 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
             name: data.jcr.nodesByPath.map(n => getName(n)).join(', '),
             parentName: firstNode?.rootDeletionInfo[0].displayName
         });
-    } else if (count === 0) {
+    } else if (!count) {
         label = t('jcontent:label.contentManager.deleteAction.loading');
     } else if (count === 1) {
         label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
             name: firstNode?.displayName
         });
-    } else if (pages === 0) {
+    } else if (pages === 0 && folders === 0) {
         label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.itemsOnly`, {count});
+    } else if (pages === 0) {
+        label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.filesAndFolders`, {count, folders});
     } else {
         label = t(`jcontent:label.contentManager.deleteAction.${dialogType}.items`, {count, pages});
     }
@@ -61,6 +68,9 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
             </DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: label}}/>
+                {hasUsages && count === 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
+                {hasUsages && count > 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
+                {!hasUsages && usagesOverflow && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
                 {!locked && <InfoTable paths={paths}/>}
             </DialogContent>
             {(locked || isLoading || count === 0) ? (
@@ -128,7 +138,8 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         variables: {
             siteKey: `/sites/${siteKey}`,
             language: language,
-            paths: paths
+            paths: paths,
+            getUsages: dialogType !== 'undelete'
         },
         fetchPolicy: 'network-only'
     });

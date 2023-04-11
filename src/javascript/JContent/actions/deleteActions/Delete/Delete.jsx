@@ -19,8 +19,6 @@ import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {getName} from '~/JContent';
 import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 
-const checkUsages = p => p?.usages?.nodes?.length > 0;
-
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
 
@@ -29,8 +27,8 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
     const folders = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.folders.pageInfo.totalCount + (node.isFolder ? 1 : 0)), 0);
     const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + node.pages.pageInfo.totalCount + (!node.isPage && !node.isFolder ? 1 : 0)), 0) + pages + folders;
     const locked = firstNode?.isMarkedForDeletion && !firstNode?.isMarkedForDeletionRoot;
-    const hasUsages = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsage, node) => hasUsage || checkUsages(node) || node.allDescendants.nodes.some(checkUsages), false);
-    const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsage, node) => hasUsage || node.allDescendants.nodes.length === 100, false);
+    const hasUsages = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsages, node) => hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usages?.nodes?.length > 0), false);
+    const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((isOverflow, node) => isOverflow || node.allDescendants.nodes.length === 100, false);
 
     let label;
     if (locked) {

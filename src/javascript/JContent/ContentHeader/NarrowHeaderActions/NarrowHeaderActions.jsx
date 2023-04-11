@@ -19,7 +19,7 @@ export const NarrowHeaderActions = ({previewSelection, selection, path, clear}) 
 NarrowHeaderActions.propTypes = {
     previewSelection: PropTypes.number,
     selection: PropTypes.array.isRequired,
-    path: PropTypes.string.isRequired,
+    path: PropTypes.string,
     clear: PropTypes.func.isRequired
 };
 

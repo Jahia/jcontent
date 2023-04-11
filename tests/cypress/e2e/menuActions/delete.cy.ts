@@ -58,7 +58,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and can be mark for deletion');
         const dialogCss = '[data-sel-role="delete-mark-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to delete 3 items, including 3 pages')
+            .should('contain', 'You are about to delete 3 items, including 3 page(s)')
             .find('[data-sel-role="delete-mark-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -113,7 +113,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and can be undeleted');
         const dialogCss = '[data-sel-role="delete-undelete-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'Do you really want to undelete 3 items, including 3 pages')
+            .should('contain', 'Do you really want to undelete 3 items, including 3 page(s)')
             .find('[data-sel-role="delete-undelete-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -167,7 +167,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and can be deleted');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete 3 items, including 3 pages')
+            .should('contain', 'You are about to permanently delete 3 items, including 3 page(s)')
             .find('[data-sel-role="delete-permanently-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');

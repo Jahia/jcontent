@@ -3,7 +3,7 @@ import {BaseTreeQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryH
 export const DeletionInfoQueryHandler = {
     ...BaseTreeQueryHandler,
 
-    getTreeParams: ({paths, openPaths = [], openableTypes = ['jnt:content', 'jnt:page'], selectableTypes = []}) => ({
+    getTreeParams: ({paths, openPaths = [], openableTypes = ['jnt:content', 'jnt:page', 'jnt:file', 'jnt:folder'], selectableTypes = []}) => ({
         rootPaths: paths,
         openPaths: [...new Set([...openPaths])],
         selectedPaths: [],

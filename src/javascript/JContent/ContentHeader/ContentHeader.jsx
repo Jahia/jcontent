@@ -20,6 +20,12 @@ import {NarrowHeaderActions} from './NarrowHeaderActions';
 
 const NARROW_HEADER_WIDTH = 750;
 
+let extractNodeInfo = function (node, loading) {
+    const nodeType = node?.primaryNodeType;
+    const title = ((!loading && node && node.displayName) || 'Loading ...');
+    return {nodePath: node?.path, nodeType, title};
+};
+
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
@@ -34,52 +40,51 @@ const ContentHeader = () => {
     }), shallowEqual);
 
     const width = useContext(ResizeContext);
+    const narrow = width !== 0 && width <= NARROW_HEADER_WIDTH;
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
 
     const viewSelector = registry.get('accordionItem', mode)?.tableConfig?.viewSelector;
 
     const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {getPrimaryNodeType: true, getDisplayName: true});
-    const nodeType = node?.primaryNodeType;
-    const title = inSearchMode ?
-        t('label.contentManager.title.search') :
-        ((!loading && node && node.displayName) || 'Loading ...');
-
-    const clearSearchFunc = () => {
-        const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
-        dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
-    };
 
     let clear = () => dispatch(cmClearSelection());
 
-    if (width !== 0 && width <= NARROW_HEADER_WIDTH) {
-        return inSearchMode ? (
+    if (inSearchMode) {
+        const clearSearchFunc = () => {
+            const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
+            dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
+        };
+
+        return narrow ? (
             <Header
                 backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
-                title={title}
-                toolbarLeft={!previewSelection && selection.length > 0 ? <NarrowHeaderActions path={node?.path} previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar/>}
+                title={t('label.contentManager.title.search')}
+                toolbarLeft={!previewSelection && selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar/>}
             />
         ) : (
             <Header
-                title={title}
-                mainActions={<MainActionBar/>}
-                breadcrumb={<ContentPath/>}
-                contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
-                status={<ContentStatuses/>}
-                toolbarLeft={<NarrowHeaderActions path={node?.path} previewSelection={previewSelection} selection={selection} clear={clear}/>}
-                toolbarRight={viewSelector}
+                backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
+                mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
+                title={t('label.contentManager.title.search')}
+                toolbarLeft={<SearchControlBar/>}
+                toolbarRight={!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
             />
         );
     }
 
-    return inSearchMode ? (
+    const {nodePath, nodeType, title} = extractNodeInfo(node, loading);
+
+    return narrow ? (
         <Header
-            backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
-            mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
             title={title}
-            toolbarLeft={<SearchControlBar/>}
-            toolbarRight={!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
+            mainActions={<MainActionBar/>}
+            breadcrumb={<ContentPath/>}
+            contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
+            status={<ContentStatuses/>}
+            toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
+            toolbarRight={viewSelector}
         />
     ) : (
         <Header

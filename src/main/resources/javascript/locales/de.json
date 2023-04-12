@@ -410,6 +410,7 @@
           "title": "Zur Löschung markiert",
           "item": "Sie sind dabei, <span>{{name}}</span> zu löschen.",
           "items": "Sie sind dabei, <span>{{count}} Element(e)</span> zu löschen, darunter <span>{{pages}} Seite(n)</span>.",
+          "filesAndFolders": "Sie sind dabei, <span>{{count}} Element(e)</span> zu löschen, darunter <span>{{folders}} Ordner</span>.",
           "itemsOnly": "Sie sind dabei, <span>{{count}} Element(e)</span> zu löschen.",
           "action": "{{count}} Element(e) zur Löschung markiert"
         },
@@ -417,6 +418,7 @@
           "title": "Löschen",
           "item": "Sie sind dabei, die Löschung von <span>{{name}}</span> zu veröffentlichen. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
           "items": "Sie sind dabei, die Löschung von <span>{{count}} Element(e)</span> zu veröffentlichen, darunter <span>{{pages}} Seite(n)</span>. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
+          "filesAndFolders": "Sie sind dabei, die Löschung von <span>{{count}} Element(e)</span> zu veröffentlichen, darunter <span>{{folders}} Ordner</span>. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
           "itemsOnly": "Sie sind dabei, die Löschung von <span>{{count}} Element(e)</span> zu veröffentlichen. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
           "action": "{{count}} Element(e) zu löschen"
         },
@@ -424,8 +426,14 @@
           "title": "Wiederherstellen",
           "item": "Möchten Sie wirklich <span>{{name}}</span> wiederherstellen?",
           "items": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen, darunter <span>{{pages}} Seite(n)</span> ?",
+          "filesAndFolders": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen, darunter <span>{{folders}} Ordner</span> ?",
           "itemsOnly": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen?",
           "action": " {{count}} Element(e) wiederherstellen"
+        },
+        "hasUsages": {
+          "single": "This item is currently referenced by other items. Deleting it will create broken references.",
+          "some": "Some of these items are currently referenced by other items. Deleting them will create broken references.",
+          "tooMany": "The system could not verify if the items to be deleted are currently referenced by other items (too many items to verify). You can manually verify the usages of all items in the table below."
         },
         "locked":{
           "permanently": {

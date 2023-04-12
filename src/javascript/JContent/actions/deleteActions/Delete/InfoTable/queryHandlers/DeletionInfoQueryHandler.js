@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 export const DeletionInfoQueryHandler = {
     ...BaseTreeQueryHandler,
 
-    getTreeParams: ({paths, openPaths = [], openableTypes = ['jnt:content', 'jnt:page'], selectableTypes = []}) => ({
+    getTreeParams: ({paths, openPaths = [], openableTypes = ['jnt:content', 'jnt:page', 'jnt:file', 'jnt:folder'], selectableTypes = []}) => ({
         rootPaths: paths,
         openPaths: [...new Set([...openPaths])],
         selectedPaths: [],

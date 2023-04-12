@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 import {useSelector} from 'react-redux';
 import {useTable} from 'react-table';
-import {
-    deletionInfoColumnData,
-    useExpandedControlled,
-    useSort
-} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+import {name, publicationStatus, status, type, useExpandedControlled, useSort, Header} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {Button, Loader, Table, TableBody, TableRow, Typography, Reload} from '@jahia/moonstone';
 import ContentListHeader from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';
 import clsx from 'clsx';
@@ -16,8 +12,32 @@ import styles from '~/JContent/ContentRoute/ContentLayout/ContentLayout.scss';
 import tableStyles from './InfoTable.scss';
 import EmptyTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/EmptyTable';
 import {useTranslation} from 'react-i18next';
+import {CellUsages} from './CellUsages';
+import {CellExport} from './CellExport';
 
-export const InfoTable = ({paths}) => {
+const usages = {
+    id: 'usages',
+    label: 'jcontent:label.contentManager.deleteAction.infoTable.headerLabel',
+    Header: Header,
+    Cell: CellUsages,
+    sortable: false,
+    width: '100px'
+};
+
+const exportAction = {
+    id: 'exportAction',
+    Header: '',
+    Cell: CellExport,
+    width: '150px'
+};
+
+const columns = {
+    mark: [publicationStatus, name, status, type, usages, exportAction].map(c => ({...c, sortable: false})),
+    permanently: [publicationStatus, name, status, type, usages, exportAction].map(c => ({...c, sortable: false})),
+    undelete: [publicationStatus, name, status, type, usages].map(c => ({...c, sortable: false}))
+};
+
+export const InfoTable = ({paths, dialogType}) => {
     const {t} = useTranslation('jcontent');
     const [openPaths, setOpenPaths] = useState([]);
     const options = useSelector(state => ({
@@ -42,7 +62,7 @@ export const InfoTable = ({paths}) => {
         prepareRow
     } = useTable(
         {
-            columns: deletionInfoColumnData,
+            columns: columns[dialogType],
             data: result.nodes,
             isExpanded: row => openPaths.indexOf(row.path) > -1,
             onExpand: (id, value) => {
@@ -99,5 +119,6 @@ export const InfoTable = ({paths}) => {
 };
 
 InfoTable.propTypes = {
-    paths: PropTypes.array.isRequired
+    paths: PropTypes.array.isRequired,
+    dialogType: PropTypes.string.isRequired
 };

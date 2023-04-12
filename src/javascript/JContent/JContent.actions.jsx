@@ -288,6 +288,7 @@ export const jContentActions = registry => {
     registry.add('action', 'downloadAsZip', {
         buttonIcon: <Archive/>,
         buttonLabel: 'jcontent:label.contentManager.downloadAsZip',
+        buttonLabelShort: 'jcontent:label.contentManager.downloadFile.download',
         targets: ['contentActions:4.21', 'selectedContentActions', 'narrowHeaderMenu:14', 'narrowHeaderSelectionMenu:1'],
         showOnNodeTypes: ['jnt:file', 'jnt:folder'],
         component: DownloadAsZipActionComponent

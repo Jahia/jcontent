@@ -9,7 +9,6 @@ import {
     CellVisibleActions
 } from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
-import {CellUsages} from '../components/cells/CellUsages';
 
 export const publicationStatus = {
     id: 'publicationStatus',
@@ -80,15 +79,6 @@ export const visibleActions = {
     Cell: CellVisibleActions,
     width: '60px'
 };
-export const usages = {
-    id: 'usages',
-    label: 'jcontent:label.contentManager.deleteAction.infoTable.headerLabel',
-    Header: Header,
-    Cell: CellUsages,
-    sortable: false,
-    width: '100px'
-};
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];
-export const deletionInfoColumnData = [publicationStatus, name, status, type, usages].map(c => ({...c, sortable: false}));

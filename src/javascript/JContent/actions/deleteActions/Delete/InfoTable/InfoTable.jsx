@@ -21,7 +21,7 @@ const usages = {
     Header: Header,
     Cell: CellUsages,
     sortable: false,
-    width: '100px'
+    width: '150px'
 };
 
 const exportAction = {

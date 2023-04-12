@@ -180,7 +180,7 @@ describe('delete tests', () => {
         jcontent.switchToSubpages();
 
         jcontent.getTable()
-            .getRowByLabel('Page test 1')
+            .getRowByLabel('Page test 2')
             .contextMenu()
             .select('Delete');
 

@@ -405,7 +405,7 @@
           "text1-2-2": "Si les éléments n’ont jamais été publiés, dans ce cas vous devez utiliser l’option “Supprimer définitivement”.",
           "text1-2-3": "Ces opérations ne peuvent pas être annulées : les éléments ainsi supprimés ne peuvent pas être restaurés.",
           "text2": "La seconde étape du processus de suppression (la suppression définitive), ainsi que l’annulation de la suppression, doit être faite sur l’élément initialement marqué pour suppression. Vous ne pouvez pas marquer une page pour suppression, et ensuite supprimer définitivement uniquement un contenu de la page. Dans ce cas, vous devez annuler la suppression de la page, procéder à la suppression en deux étapes du contenu en question, et ensuite marquer de nouveau la page pour suppression.",
-          "text3": "Il est possible que des éléments marqués pour suppression soient référencés par d’autres éléments (par exemple, un lien peut exister vers une page marquée pour suppression). Vous pouvez alors utiliser la corbeille afin de vérifier, et mettre à jour, de telles références. Ne pas faire ce travail peut casser des liens ou des références."
+          "text3": "Il est possible que des éléments marqués pour suppression soient référencés par d’autres éléments (par exemple, un lien peut exister vers une page marquée pour suppression). Il est conseillé de mettre à jour les références dans ces cas-là. Ne pas faire ce travail peut casser des liens ou des références."
         },
         "mark": {
           "title": "Marquer pour suppression",

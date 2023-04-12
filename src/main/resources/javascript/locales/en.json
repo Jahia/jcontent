@@ -411,7 +411,7 @@
           "text1-2-2": "If the items were not previously published, the option is then “Delete permanently”.",
           "text1-2-3": "These operations cannot be undone, and the deleted items cannot be recovered.",
           "text2": "The second step of the process (the actual deletion), and the undeletion, need to be performed on the item that was first marked for deletion. You cannot mark a page for deletion, and then permanently delete a single item of the page. In such a case, you need to undelete the page, and then proceed to the full deletion of the content item before marking the page for deletion again.",
-          "text3": "It is possible to see if the items marked for deletion are referenced by other contents (e.g. a link might exist to a page marked for deletion). You can use the Recycle bin to verify, and update, such references. Not doing so can create broken links/references."
+          "text3": "It is possible to see if the items marked for deletion are referenced by other contents (e.g. a link might exist to a page marked for deletion). In such cases, it is advised to update the references. Not doing so can create broken links/references."
         },
         "mark": {
           "title": "Mark for deletion",

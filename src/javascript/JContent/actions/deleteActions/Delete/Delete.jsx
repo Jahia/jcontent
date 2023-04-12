@@ -79,7 +79,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                 {hasUsages && count === 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
                 {hasUsages && count > 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
                 {!hasUsages && usagesOverflow && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
-                {!locked && <InfoTable paths={paths}/>}
+                {!locked && <InfoTable paths={paths} dialogType={dialogType}/>}
             </DialogContent>
             {(locked || isLoading || count === 0) ? (
                 <DialogActions>

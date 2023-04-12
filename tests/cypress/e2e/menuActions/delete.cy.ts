@@ -150,7 +150,7 @@ describe('delete tests', () => {
 
     it('Can delete root node permanently', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        switchToSubpages(3);
+        jcontent.switchToSubpages();
 
         cy.log('Can delete root node permanently');
         jcontent.getTable()

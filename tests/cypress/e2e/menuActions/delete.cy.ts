@@ -18,12 +18,6 @@ describe('delete tests', () => {
         cy.logout();
     });
 
-    const switchToSubpages = count => {
-        cy.get('button[data-cm-view-type="pages"]')
-            .should('contain', count)// Need to wait until data is loaded i.e. count is visible
-            .click({force: true});
-    };
-
     const markForDeletionMutation = path => {
         return gql`mutation MarkForDeletionMutation {
             jcr { markNodeForDeletion(pathOrId: "${path}") }
@@ -32,7 +26,7 @@ describe('delete tests', () => {
 
     it('Can cancel mark for deletion', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        switchToSubpages(3);
+        jcontent.switchToSubpages();
 
         jcontent.getTable()
             .getRowByLabel('Page test 1')
@@ -48,7 +42,7 @@ describe('delete tests', () => {
 
     it('Can mark root and subnodes for deletion', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        switchToSubpages(3);
+        jcontent.switchToSubpages();
 
         jcontent.getTable()
             .getRowByLabel('Page test 1')
@@ -83,7 +77,7 @@ describe('delete tests', () => {
 
     it('Cannot undelete non-root node', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
-        switchToSubpages(2);
+        jcontent.switchToSubpages();
 
         cy.log('Undelete non-root node');
         jcontent.getTable()
@@ -102,7 +96,7 @@ describe('delete tests', () => {
 
     it('Can undelete root node', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        switchToSubpages(3);
+        jcontent.switchToSubpages();
 
         cy.log('Undelete root node');
         jcontent.getTable()
@@ -137,7 +131,7 @@ describe('delete tests', () => {
 
     it('Cannot delete subnodes permanently', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
-        switchToSubpages(2);
+        jcontent.switchToSubpages();
 
         cy.log('Cannot delete subnodes permanently');
         jcontent.getTable()
@@ -179,5 +173,32 @@ describe('delete tests', () => {
         }).should(resp => {
             expect(resp?.data.jcr.nodeByPath).to.be.null;
         });
+    });
+
+    it('Shows export button', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToSubpages();
+
+        jcontent.getTable()
+            .getRowByLabel('Page test 1')
+            .contextMenu()
+            .select('Delete');
+
+        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .find('[data-sel-role="exportPage"]');
+    });
+
+    it('Shows download zip button', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'media/files');
+        jcontent.switchToListMode();
+        jcontent.getTable()
+            .getRowByLabel('test-folderDelete1')
+            .contextMenu()
+            .select('Delete');
+
+        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .find('[data-sel-role="downloadAsZip"]');
     });
 });

@@ -80,6 +80,13 @@ export class JContent extends BasePage {
         return this;
     }
 
+    switchToSubpages(): JContent {
+        cy.get('button[data-cm-view-type="pages"]')
+            .should('contain', '(')// Need to wait until data is loaded i.e. count is visible
+            .click({force: true});
+        return this;
+    }
+
     switchToMode(name: string): JContent {
         getComponentByRole(Dropdown, 'sel-view-mode-dropdown').select(name).get().should('contain', name);
         return this;

@@ -78,5 +78,28 @@ mutation createDeleteContent {
             }
 
         }
+
+        media: mutateNode(pathOrId: "/sites/jContentSite-delete/files") {
+            addChildrenBatch(nodes: [
+                {
+                    name: "test-folderDelete1",
+                    primaryNodeType: "jnt:folder",
+                    children: [
+                        {
+                            name: "test-subfolder1"
+                            primaryNodeType: "jnt:folder"
+                        }
+                        {
+                            name: "test-subfolder2"
+                            primaryNodeType: "jnt:folder"
+                        }
+                    ]
+                }
+            ]) {
+                uuid
+            }
+
+        }
+
     }
 }

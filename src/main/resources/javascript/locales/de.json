@@ -431,9 +431,9 @@
           "action": " {{count}} Element(e) wiederherstellen"
         },
         "hasUsages": {
-          "single": "This item is currently referenced by other items. Deleting it will create broken references.",
-          "some": "Some of these items are currently referenced by other items. Deleting them will create broken references.",
-          "tooMany": "The system could not verify if the items to be deleted are currently referenced by other items (too many items to verify). You can manually verify the usages of all items in the table below."
+          "single": "Dieses Element wird aktuell durch andere Elemente referenziert. Die Löschung dieses Elements erzeugt zerstörte Referenzen.",
+          "some": "Einige dieser Elemente werden aktuell durch andere Elemente referenziert. Die Löschung dieser Elemente erzeugt zerstörte Referenzen.",
+          "tooMany": "Das System konnte nicht verifizieren, ob die zu löschenden Elemente aktuell durch andere Elemente referenziert werden (Anzahl zur Verifizierung ist zu groß). Sie können die Verwendung der aufgelisteten Elemente manuell verifizieren."
         },
         "locked":{
           "permanently": {

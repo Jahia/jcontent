@@ -394,7 +394,7 @@
           "usage_plural": "{{count}} utilisations",
           "usageZero": "-"
         },
-        "loading": "Loading information or performing actions",
+        "loading": "Chargement...",
         "info": {
           "title": "A propos de la suppression",
           "text1": "La suppression se fait en deux étapes :",

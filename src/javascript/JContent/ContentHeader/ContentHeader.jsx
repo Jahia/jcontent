@@ -68,8 +68,12 @@ const ContentHeader = () => {
                 backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
-                toolbarLeft={<SearchControlBar/>}
-                toolbarRight={!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
+                toolbarLeft={
+                    <>
+                        {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
+                        {selection.length === 0 && <SearchControlBar/>}
+                    </>
+                }
             />
         );
     }
@@ -93,13 +97,13 @@ const ContentHeader = () => {
             breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={<ContentStatuses/>}
-            toolbarLeft={<BrowseControlBar isShowingActions={selection.length === 0}/>}
-            toolbarRight={
+            toolbarLeft={
                 <>
-                    {viewSelector}
                     {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
+                    <BrowseControlBar isShowingActions={selection.length === 0}/>
                 </>
             }
+            toolbarRight={viewSelector}
         />
     );
 };

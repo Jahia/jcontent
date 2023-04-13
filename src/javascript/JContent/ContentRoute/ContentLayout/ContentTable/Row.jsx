@@ -92,9 +92,9 @@ Row.propTypes = {
     doubleClickNavigation: PropTypes.func,
     tableConfig: PropTypes.shape({
         dnd: PropTypes.shape({
-            canDrag: PropTypes.bool,
-            canDrop: PropTypes.bool,
-            canDropFile: PropTypes.bool
+            canDrag: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+            canDrop: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+            canDropFile: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
         })
     }).isRequired,
     index: PropTypes.number

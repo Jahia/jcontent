@@ -24,7 +24,7 @@ let getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t})
         return t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
             count: count,
             name: data.jcr.nodesByPath.map(n => getName(n)).join(', '),
-            parentName: firstNode?.rootDeletionInfo[0].displayName
+            parentName: firstNode && getName(firstNode?.rootDeletionInfo[0])
         });
     }
 
@@ -34,7 +34,7 @@ let getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t})
 
     if (count === 1) {
         return t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
-            name: firstNode?.displayName
+            name: firstNode && getName(firstNode)
         });
     }
 
@@ -75,7 +75,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                 />
             </DialogTitle>
             <DialogContent>
-                <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: label}}/>
+                <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
                 {hasUsages && count === 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
                 {hasUsages && count > 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
                 {!hasUsages && usagesOverflow && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}

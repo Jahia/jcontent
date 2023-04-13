@@ -20,21 +20,22 @@ export function useNodeDrag({dragSource}) {
             getPrimaryNodeType: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+            getLockInfo: true
         }
     );
 
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({
         type: 'node',
         item: dragSource,
-        canDrag: () => Boolean(res.checksResult),
+        canDrag: () => Boolean(res.checksResult) && !res.node?.lockOwner,
         collect: monitor => ({
             dragging: monitor.isDragging()
         })
     }) : ({
         type: 'nodes',
         item: res.nodes,
-        canDrag: () => res.checksResult && selection.indexOf(dragSource.path) > -1,
+        canDrag: () => res.checksResult && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
         collect: monitor => ({
             dragClasses: monitor.isDragging() ? [styles.drag] : []
         })

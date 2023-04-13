@@ -1,10 +1,6 @@
-.margins.margins {
-    display: inline-flex;
-    flex-wrap: wrap;
+.content.content {
     width: 100%;
     margin-top: var(--spacing-medium);
-
-    white-space: pre;
 
     span {
         flex: 0 1 auto;

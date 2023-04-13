@@ -152,7 +152,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         fetchPolicy: 'network-only'
     });
 
-    const [mutation, {loading: mutationLoading}] = useMutation(getMutation(dialogType));
+    const [mutation, {called: mutationLoading}] = useMutation(getMutation(dialogType));
 
     if (error) {
         console.log(error);

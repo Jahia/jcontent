@@ -13,7 +13,7 @@ export const CellUsages = ({cell, column, row}) => {
 
     return (
         <TableBodyCell key={row.id + column.id}
-                       className={clsx('flexRow', styles.usages)}
+                       className={clsx('flexRow', usagesCount === 0 ? styles.usages : '')}
                        {...cell.getCellProps()}
                        width={column.width}
                        data-cm-role={'table-content-list-cell-' + column.id}

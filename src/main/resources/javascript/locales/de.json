@@ -393,7 +393,7 @@
           "usage": "{{count}} Verwendung",
           "usage_plural": "{{count}} Verwendungen"
         },
-        "loading": "Loading information or performing actions",
+        "loading": "Laden...",
         "info": {
           "title": "Löschinformation",
           "text1": "Die Löschung ist ein zweistufiger Prozess:",

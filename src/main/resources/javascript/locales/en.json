@@ -400,7 +400,7 @@
           "usage_plural": "{{count}} usages",
           "usageZero": "-"
         },
-        "loading": "Loading information or performing actions",
+        "loading": "Loading...",
         "info": {
           "title": "Deletion information",
           "text1": "The deletion is a two step process:",

@@ -23,6 +23,6 @@ export const Selection = ({paths, clear}) => {
 };
 
 Selection.propTypes = {
-    paths: PropTypes.string.isRequired,
+    paths: PropTypes.array.isRequired,
     clear: PropTypes.func.isRequired
 };

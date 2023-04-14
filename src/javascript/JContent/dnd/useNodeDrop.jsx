@@ -60,7 +60,8 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
         {
             requiredPermission: 'jcr:addChildNodes',
             getChildNodeTypes: true,
-            getContributeTypesRestrictions: true
+            getContributeTypesRestrictions: true,
+            getLockInfo: true
         }
     );
 
@@ -69,7 +70,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
     const [props, drop] = useDrop(() => ({
         accept: ['node', 'nodes'],
         collect: monitor => ({
-            isCanDrop: (monitor.canDrop() && monitor.isOver({shallow: true})),
+            isCanDrop: monitor.canDrop(),
             insertPosition,
             destParent
         }),
@@ -110,7 +111,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
         canDrop: (dragSource, monitor) => {
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
-            return dropTarget && res.node &&
+            return dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner &&
                 (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))) &&
                 !isDescendantOrSelf(destParent.path, dragSource.path) &&
                 nodeTypeCheck(res.node, nodes).checkResult;

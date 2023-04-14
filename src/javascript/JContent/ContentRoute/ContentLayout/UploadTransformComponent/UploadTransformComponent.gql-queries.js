@@ -23,6 +23,9 @@ export const UploadRequirementsQuery = gql`
                 path
                 hasPermission(permissionName: $permission)
                 acceptsFiles: isNodeType(type:{multi:ANY, types:$permittedNodeTypes})
+                lockOwner: property(name: "jcr:lockOwner") {
+                    value
+                }
                 site {
                     uuid
                     workspace

@@ -87,8 +87,7 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
         },
         skip: !uploadType
     });
-
-    const allowDrop = !loading && !error && data?.jcr?.results?.hasPermission && data?.jcr?.results?.site?.hasPermission && data?.jcr?.results?.acceptsFiles;
+    const allowDrop = !loading && !error && data?.jcr?.results?.hasPermission && data?.jcr?.results?.site?.hasPermission && data?.jcr?.results?.acceptsFiles && !data?.jcr?.results?.lockOwner;
 
     const client = useApolloClient();
     const dispatch = useDispatch();
@@ -133,10 +132,10 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
             asyncScanAndUpload().then(() => {
             });
         },
-        canDrop: () => allowDrop,
+        canDrop: (item, monitor) => allowDrop && monitor.isOver({shallow: true}),
         collect: monitor => ({
             isOver: monitor.isOver({shallow: true}),
-            isCanDrop: (monitor.canDrop() && monitor.isOver({shallow: true}))
+            isCanDrop: monitor.canDrop()
         })
     }), [client, dispatch, uploadFilter, uploadPath, uploadType, uploadMaxSize, uploadMinSize, allowDrop]);
 }

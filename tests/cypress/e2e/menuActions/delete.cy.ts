@@ -191,7 +191,6 @@ describe('delete tests', () => {
         cy.get(dialogCss).should('not.exist');
     });
 
-
     it('Shows export button', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.switchToSubpages();

@@ -30,6 +30,16 @@ mutation createDeleteContent {
                                 }
                             ]
                         }
+                        {
+                            name: "test-delete3"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 3" }]
+                        }
+                        {
+                            name: "test-delete3-ref"
+                            primaryNodeType: "jnt:contentReference"
+                            properties: [{ name: "j:node", language: "en", value: "/sites/jContentSite-delete/contents/test-deleteContents/test-delete3", type: REFERENCE }]
+                        }
                     ]
                 ) {
                     uuid

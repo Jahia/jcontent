@@ -175,6 +175,23 @@ describe('delete tests', () => {
         });
     });
 
+    it('show warning when content is referenced', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+
+        jcontent.getTable()
+            .getRowByLabel('test 3')
+            .contextMenu()
+            .select('Delete');
+
+        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .find('[data-sel-role="cancel-button"]')
+            .click();
+        cy.contains('This item is currently referenced by other items.');
+        cy.get(dialogCss).should('not.exist');
+    });
+
+
     it('Shows export button', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.switchToSubpages();

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import clsx from 'clsx';
-import styles from './Cells.scss';
 
 export const CellUsages = ({cell, column, row}) => {
     const {t} = useTranslation('jcontent');
@@ -13,7 +12,7 @@ export const CellUsages = ({cell, column, row}) => {
 
     return (
         <TableBodyCell key={row.id + column.id}
-                       className={clsx('flexRow', usagesCount === 0 ? styles.usages : '')}
+                       className={clsx('flexRow')}
                        {...cell.getCellProps()}
                        width={column.width}
                        data-cm-role={'table-content-list-cell-' + column.id}

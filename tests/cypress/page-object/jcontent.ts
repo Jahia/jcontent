@@ -170,7 +170,7 @@ export class JContentPageComposer extends JContent {
     }
 
     refresh(): JContentPageComposer {
-        cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(previousId => {
+        cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(() => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();
             // Cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
             //     expect(previousId).to.not.eq(e[0].getAttribute('id'));

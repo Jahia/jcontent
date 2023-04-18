@@ -1,0 +1,76 @@
+mutation createLockContent {
+    jcr {
+        content: mutateNode(pathOrId: "/sites/jContentSite-lock/contents") {
+            addChildrenBatch(nodes: [
+                {
+                    name: "test-contentItemLock1"
+                    primaryNodeType: "jnt:article"
+                    children: [{
+                        name: "my-paragraph",
+                        primaryNodeType: "jnt:paragraph",
+                        properties: [{name: "body", language: "en", value: "my paragraph 1"}]
+                    }]
+                }
+                {
+                    name: "content-folderLock1"
+                    primaryNodeType: "jnt:contentFolder"
+                    children: [
+                        {
+                            name: "test-delete3"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 4" }]
+                        }
+                    ]
+                }
+                {
+                    name: "content-emptyFolderLock1"
+                    primaryNodeType: "jnt:contentFolder"
+                }
+            ]) {
+                uuid
+            }
+        }
+
+        page: mutateNode(pathOrId: "/sites/jContentSite-lock/home") {
+            addChildrenBatch(nodes: [
+                {
+                    name: "test-pageLock1",
+                    primaryNodeType: "jnt:page",
+                    properties: [
+                        { name: "jcr:title", language: "en", value: "Page test 1" },
+                        { name: "j:templateName", value: "default" }
+                    ]
+                }
+            ]) {
+                uuid
+            }
+
+        }
+
+        media: mutateNode(pathOrId: "/sites/jContentSite-lock/files") {
+            addChildrenBatch(nodes: [
+                {
+                    name: "test-mediaFolderLock1",
+                    primaryNodeType: "jnt:folder",
+                    children: [
+                        {
+                            name: "test-subfolder1"
+                            primaryNodeType: "jnt:folder"
+                        }
+                        {
+                            name: "test-subfolder2"
+                            primaryNodeType: "jnt:folder"
+                        }
+                    ]
+                }
+                {
+                    name: "test-emptyMediaFolderLock1",
+                    primaryNodeType: "jnt:folder",
+                }
+            ]) {
+                uuid
+            }
+        }
+
+    }
+}

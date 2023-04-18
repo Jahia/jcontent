@@ -29,7 +29,7 @@ export const NarrowHeaderSelectionActions = ({selection, clear}) => {
     return (
         <>
             <Selection paths={selection} clear={clear}/>
-            <DisplayAction menuUseElementAnchor actionKey="narrowHeaderSelectionMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost'}} {...context}/>
+            <DisplayAction menuUseElementAnchor actionKey="narrowHeaderSelectionMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost'}} lalal="" {...context}/>
         </>
     );
 };

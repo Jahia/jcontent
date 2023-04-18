@@ -79,7 +79,7 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
     // If node type is "jnt:file" use specific viewer
     if (data && data.nodeByPath && data.nodeByPath.lastModified && data.nodeByPath.isFile) {
         let file = getFile(workspace, data);
-        if (isPDF(data.nodeByPath.path)) {
+        if (isPDF(data.nodeByPath)) {
             return (
                 <div className={styles.previewContainer} data-sel-role="preview-type-pdf">
                     <PDFViewer file={file} isFullScreen={fullScreen}/>
@@ -87,7 +87,7 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
             );
         }
 
-        if (isBrowserImage(data.nodeByPath.path)) {
+        if (isBrowserImage(data.nodeByPath)) {
             return (
                 <div className={classNames(styles.previewContainer, styles.mediaContainer)}
                      data-sel-role="preview-type-image"

@@ -51,7 +51,7 @@ export const FileCard = ({
 
     let contextualMenu = useRef();
 
-    const isImage = isBrowserImage(node.path);
+    const isImage = isBrowserImage(node);
     const isPreviewSelected = selection === undefined ? (previewSelection && previewSelection === node.path) : selection.find(value => value === node.uuid) !== undefined;
 
     // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout

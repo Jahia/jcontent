@@ -1,5 +1,6 @@
 import {JContent} from '../page-object/jcontent';
 import {GraphqlUtils} from '../utils/graphqlUtils';
+import {Collapsible, getComponentBySelector} from '@jahia/cypress';
 
 const jcontent = new JContent();
 
@@ -37,12 +38,13 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         jcontent.paste().then(() => {
             cy.get('td:contains("Taber")').should('exist');
 
-            GraphqlUtils.getNodeId('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'Taber');
+            GraphqlUtils.getNodeId('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber', 'Taber');
             cy.get('@Taber').then(taber => {
                 cy.visit(`/jahia/content-editor/en/edit/${taber}`);
-                cy.get('span[aria-label="Media"]').should('exist');
+                getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="Classification"]').expand();
+                cy.get('.moonstone-tag span').contains('Media').should('exist');
                 cy.visit(`/jahia/content-editor/fr/edit/${taber}`);
-                cy.get('span[aria-label="Média"]').should('exist');
+                cy.get('.moonstone-tag span').contains('Média').should('exist');
             });
 
             GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');

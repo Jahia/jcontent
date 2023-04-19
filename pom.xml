@@ -152,7 +152,24 @@
                             <arguments>${yarn.arguments}</arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>sync-pom</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>sync-pom</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean frontend:yarn@sync-pom verify</preparationGoals>
+                    <completionGoals>frontend:yarn@sync-pom</completionGoals>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>

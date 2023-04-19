@@ -158,7 +158,7 @@ export const jContentActions = registry => {
     registry.add('action', 'publishDeletion', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishDeletion',
-        targets: ['contentActions:4', 'selectedContentActions:4', 'narrowHeaderSelectionMenu:4', 'narrowHeaderMenu:14'],
+        targets: ['contentActions:4', 'selectedContentActions:4', 'narrowHeaderSelectionMenu:14', 'narrowHeaderMenu:14'],
         component: PublishDeletionActionComponent
     });
     registry.add('action', 'unpublish', {
@@ -364,7 +364,7 @@ export const jContentActions = registry => {
     registry.add('action', 'clearClipboard', {
         buttonIcon: <ClearPaste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.clear',
-        targets: ['headerPrimaryActions:14'],
+        targets: ['headerPrimaryActions:14', 'narrowHeaderMenu:14'],
         component: ClearClipboardActionComponent
     });
 
@@ -385,7 +385,9 @@ export const jContentActions = registry => {
         menuTarget: 'narrowHeaderSelectionMenu',
         menuItemProps: {
             isShowIcons: true
-        }
+        },
+        isMenuPreload: true,
+        visibilityPredicate: menuState => menuState.loadedItems.filter(item => !(item.startsWith('actionsLabel-') || item.startsWith('publicationActionsLabel-'))).length > 0
     });
 
     registry.add('action', 'actionsLabel', {

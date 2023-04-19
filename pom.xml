@@ -154,6 +154,7 @@
                     </execution>
                     <execution>
                         <id>sync-pom</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>yarn</goal>
                         </goals>

@@ -9,7 +9,7 @@ if (sitesService.getSiteByKey("SITEKEY") == null) {
             serverName("localhost").
             title("SITEKEY").
             templateSet("dx-base-demo-templates").
-            modulesToDeploy(new String[]{"event", "bootstrap3-components"}).
+            modulesToDeploy(new String[]{"event", "bootstrap3-components", "article"}).
             locale("en").build())
 }
 

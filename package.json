@@ -1,6 +1,6 @@
 {
   "name": "@jahia/jcontent",
-  "version": "2.7.0",
+  "version": "2.11.0-SNAPSHOT",
   "scripts": {
     "build": "yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
@@ -17,7 +17,8 @@
     "lint:scss": "stylelint \"./src/**/*.scss\"",
     "lint:scss:fix": "yarn lint:scss --fix",
     "lint": "yarn lint:scss && yarn lint:js",
-    "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix"
+    "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix",
+    "sync-pom": "sync-pom-version --use-yarn"
   },
   "description": "jContent for Jahia",
   "main": "index.js",
@@ -140,6 +141,7 @@
     "sass-loader": "^13.0.0",
     "style-loader": "^1.2.1",
     "stylelint": "^13.2.0",
+    "sync-pom-version-to-package": "^1.6.1",
     "webpack": "^5.10.0",
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-cli": "^4.2.0"

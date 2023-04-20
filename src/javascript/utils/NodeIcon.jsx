@@ -4,6 +4,7 @@ import {
     File,
     FileCode,
     FileCompresed,
+    FileDoc,
     FileExcel,
     FileFont,
     FileImage,
@@ -36,103 +37,173 @@ export const NodeIcon = ({node, ...props}) => {
     }
 
     if (node.primaryNodeType.name === 'jnt:file') {
-        switch (node.path.split('.').pop().toLowerCase()) {
-            case 'avif':
-            case 'png':
-            case 'jpeg':
-            case 'jpg':
-            case 'gif':
-            case 'svg':
-            case 'img':
-            case 'webp':
+        if (node.content !== undefined || node.resourceChildren !== undefined) {
+            let mimetype = node.content === undefined ? node.resourceChildren.nodes.pop().mimeType.value : node.content.mimeType.value;
+            if (mimetype.startsWith('image/')) {
                 return (
                     <FileImage color="purple" {...props}/>
                 );
+            }
 
-            case 'avi':
-            case 'mp4':
-            case 'mkv':
-            case 'mpg':
-            case 'wmv':
-            case 'mpeg':
-            case 'mov':
-            case 'webm':
-            case 'video':
+            if (mimetype.startsWith('video/')) {
                 return (
                     <FileVideo color="purple" {...props}/>
                 );
+            }
 
-            case 'mp3':
-            case 'aac':
-            case 'ogg':
-            case 'flac':
-            case 'aiff':
-            case 'sound':
+            if (mimetype.startsWith('audio/')) {
                 return (
                     <FileSound color="purple" {...props}/>
                 );
+            }
 
-            case 'pdf':
+            if (mimetype.indexOf('pdf') > 0) {
                 return (
                     <FilePdf color="red" {...props}/>
                 );
+            }
 
-            case 'gz':
-            case 'tgz':
-            case 'tar.gz':
-            case 'jar':
-            case 'rar':
-            case 'zip':
+            if (mimetype.indexOf('zip') > 0 || mimetype.indexOf('archive') > 0) {
                 return (
                     <FileCompresed {...props}/>
                 );
+            }
 
-            case 'docx':
-            case 'doc':
-                return (
-                    <FileWord color="blue" {...props}/>
-                );
-
-            case 'xlsx':
-            case 'xls':
-                return (
-                    <FileExcel color="green" {...props}/>
-                );
-
-            case 'pptx':
-            case 'ppt':
+            if (mimetype.indexOf('presentation') > 0) {
                 return (
                     <FilePowerPoint color="yellow" {...props}/>
                 );
+            }
 
-            case 'css':
-            case 'js':
-            case 'java':
-            case 'html':
+            if (mimetype.indexOf('spreadsheet') > 0 || mimetype.indexOf('sheet') > 0) {
                 return (
-                    <FileCode {...props}/>
+                    <FileExcel color="green" {...props}/>
                 );
+            }
 
-            case 'txt':
-            case 'csv':
-            case 'text':
+            if (mimetype.indexOf('document') > 0) {
                 return (
-                    <FileText {...props}/>
+                    <FileDoc color="blue" {...props}/>
                 );
+            }
 
-            case 'ttf':
-            case 'otf':
-            case 'eot':
-            case 'woff':
-            case 'woff2':
-                return (
-                    <FileFont {...props}/>
-                );
+            if (mimetype.startsWith('text/')) {
+                switch (mimetype.split('/').pop().toLowerCase()) {
+                    case 'css':
+                    case 'js':
+                    case 'jsx':
+                    case 'java':
+                    case 'html':
+                    case 'xml':
+                        return (
+                            <FileCode {...props}/>
+                        );
 
-            default:
-                return (
-                    <File {...props}/>
-                );
+                    default:
+                        return (
+                            <FileText {...props}/>
+                        );
+                }
+            }
+        } else {
+            switch (node.path.split('.').pop().toLowerCase()) {
+                case 'avif':
+                case 'png':
+                case 'jpeg':
+                case 'jpg':
+                case 'gif':
+                case 'svg':
+                case 'img':
+                case 'webp':
+                    return (
+                        <FileImage color="purple" {...props}/>
+                    );
+
+                case 'avi':
+                case 'mp4':
+                case 'mkv':
+                case 'mpg':
+                case 'wmv':
+                case 'mpeg':
+                case 'mov':
+                case 'webm':
+                case 'video':
+                    return (
+                        <FileVideo color="purple" {...props}/>
+                    );
+
+                case 'mp3':
+                case 'aac':
+                case 'ogg':
+                case 'flac':
+                case 'aiff':
+                case 'sound':
+                    return (
+                        <FileSound color="purple" {...props}/>
+                    );
+
+                case 'pdf':
+                    return (
+                        <FilePdf color="red" {...props}/>
+                    );
+
+                case 'gz':
+                case 'tgz':
+                case 'tar.gz':
+                case 'jar':
+                case 'rar':
+                case 'zip':
+                    return (
+                        <FileCompresed {...props}/>
+                    );
+
+                case 'docx':
+                case 'doc':
+                    return (
+                        <FileWord color="blue" {...props}/>
+                    );
+
+                case 'xlsx':
+                case 'xls':
+                    return (
+                        <FileExcel color="green" {...props}/>
+                    );
+
+                case 'pptx':
+                case 'ppt':
+                    return (
+                        <FilePowerPoint color="yellow" {...props}/>
+                    );
+
+                case 'css':
+                case 'js':
+                case 'java':
+                case 'html':
+                    return (
+                        <FileCode {...props}/>
+                    );
+
+                case 'txt':
+                case 'csv':
+                case 'text':
+                    return (
+                        <FileText {...props}/>
+                    );
+
+                case 'ttf':
+                case 'otf':
+                case 'eot':
+                case 'woff':
+                case 'woff2':
+                    return (
+                        <FileFont {...props}/>
+                    );
+
+                default:
+                    return (
+                        <File {...props}/>
+                    );
+            }
         }
     }
 
@@ -144,7 +215,9 @@ export const NodeIcon = ({node, ...props}) => {
 NodeIcon.propTypes = {
     node: PropTypes.shape({
         path: PropTypes.string,
-        primaryNodeType: PropTypes.object
+        primaryNodeType: PropTypes.object,
+        content: PropTypes.object,
+        resourceChildren: PropTypes.object
     }).isRequired
 };
 

@@ -1322,16 +1322,14 @@
     enzyme-adapter-react-16 "^1.12.1"
     identity-obj-proxy "^3.0.0"
 
-"@jahia/ui-extender@^1.0.0":
-  version "1.0.6"
-  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-1.0.6.tgz#d64b1df970bf674696298b5c996c2b9a7966755d"
-  integrity sha512-fBiBVk1heIgCtAD7DxH2ucuJ1Wc5zFDJd1bnTPgUOLcrKU3ayqpiroEFTealVJAWiFSDzQnPLn36L9Y4fW/jbw==
+"@jahia/ui-extender@^1.0.7":
+  version "1.0.7"
+  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-1.0.7.tgz#d76243c7878482b385950771a70a93732d9577d1"
+  integrity sha512-9xHdXU6FNbakbESjff6uuGmcorDMWOhOjfRnIRNliUphgSBNoeraeGhT7OrazPawzzrM0TAQiZft+K6/8W5xzQ==
   dependencies:
     prop-types "^15.6.1"
     react "^16.12.0"
     react-iframe "^1.8.0"
-    react-redux "^7.2.0"
-    redux "^4.0.5"
     rxjs "^6.5.3"
 
 "@jahia/webpack-config@^1.0.0":
@@ -8540,7 +8538,7 @@ redux-thunk@^2.3.0:
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.4.2.tgz#b9d05d11994b99f7a91ea223e8b04cf0afa5ef3b"
   integrity sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==
 
-redux@^4.0.0, redux@^4.0.5, redux@^4.1.2, redux@^4.2.0, redux@^4.2.1:
+redux@^4.0.0, redux@^4.1.2, redux@^4.2.0, redux@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.1.tgz#c08f4306826c49b5e9dc901dee0452ea8fce6197"
   integrity sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==

@@ -1,6 +1,6 @@
 import imageExtensions from 'image-extensions';
 import JContentConstants from '~/JContent/JContent.constants';
-
+import mime from 'mime'
 const imageExtensionSet = new Set(imageExtensions);
 
 export const isBrowserImage = function (node) {
@@ -51,8 +51,17 @@ export const isPDF = function (node) {
     return false;
 };
 
-export const getFileType = function (filename) {
-    return filename.split('.').pop().toLowerCase();
+export const getFileType = function (node) {
+    if (node.isFile) {
+        let mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
+        if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
+            return node.path.split('.').pop().toLowerCase();
+        }
+        else if (mimetype === 'audio/mpeg') {
+            return 'mp3'
+        }
+        return mime.getExtension(mimetype)
+    }
 };
 
 export const flattenTree = function (rows) {

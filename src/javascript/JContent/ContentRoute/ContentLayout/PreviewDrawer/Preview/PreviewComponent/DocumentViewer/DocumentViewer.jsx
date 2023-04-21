@@ -11,7 +11,7 @@ export const DocumentViewer = ({isFullScreen, file, type}) => {
         switch (type) {
             // List of files compatible with react-file-viewer
             case 'docx':
-            case 'xslx':
+            case 'xlsx':
             case 'csv':
             case 'mp4':
             case 'webm':

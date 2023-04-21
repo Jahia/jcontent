@@ -97,7 +97,7 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
             );
         }
 
-        const type = getFileType(data.nodeByPath.path);
+        const type = getFileType(data.nodeByPath);
         // Media compatible with react-file-viewer
         const isMedia = (type === 'mp4' || type === 'webm');
         return (

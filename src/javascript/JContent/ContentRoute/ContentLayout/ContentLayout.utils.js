@@ -1,6 +1,6 @@
 import imageExtensions from 'image-extensions';
 import JContentConstants from '~/JContent/JContent.constants';
-import mime from 'mime'
+import mime from 'mime';
 const imageExtensionSet = new Set(imageExtensions);
 
 export const isBrowserImage = function (node) {
@@ -57,10 +57,12 @@ export const getFileType = function (node) {
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
             return node.path.split('.').pop().toLowerCase();
         }
-        else if (mimetype === 'audio/mpeg') {
-            return 'mp3'
+
+        if (mimetype === 'audio/mpeg') {
+            return 'mp3';
         }
-        return mime.getExtension(mimetype)
+
+        return mime.getExtension(mimetype);
     }
 };
 

@@ -178,7 +178,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Package>org.jahia.modules.graphql.provider.dxm;version="2.19.0-SNAPSHOT",${jahia.plugin.projectPackageImport},*</Import-Package>
+                        <Import-Package>org.jahia.modules.graphql.provider.dxm;version="2.19.0",${jahia.plugin.projectPackageImport},*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

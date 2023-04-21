@@ -11,6 +11,7 @@ export const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: St
                     setValue(value: $mimeType)
                 }
             }
+            createVersion
             uuid
         }
     }
@@ -19,7 +20,6 @@ export const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: St
 export const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeType: String!, $fileHandle: String!) {
     jcr {
         mutateNode(pathOrId: $path) {
-            initialVersion: createVersion(versionType: INITIAL_VERSION)
             mutateChildren(names: ["jcr:content"]) {
                 content: mutateProperty(name: "jcr:data") {
                     setValue(type: BINARY, value: $fileHandle)
@@ -28,7 +28,7 @@ export const updateFileContent = gql`mutation updateFileContent($path: String!, 
                     setValue(value: $mimeType)
                 }
             }
-            subsequentVersion: createVersion(versionType: SUBSEQUENT_VERSION)
+            createVersion
             uuid
         }
     }

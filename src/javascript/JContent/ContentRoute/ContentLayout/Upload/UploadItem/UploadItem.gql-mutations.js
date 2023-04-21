@@ -11,6 +11,7 @@ export const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: St
                     setValue(value: $mimeType)
                 }
             }
+            createVersion
             uuid
         }
     }
@@ -27,6 +28,7 @@ export const updateFileContent = gql`mutation updateFileContent($path: String!, 
                     setValue(value: $mimeType)
                 }
             }
+            createVersion
             uuid
         }
     }

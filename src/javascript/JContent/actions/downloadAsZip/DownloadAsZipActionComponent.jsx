@@ -38,7 +38,7 @@ export const DownloadAsZipActionComponent = ({path, paths, render: Render, loadi
             enabled={isVisible}
             onClick={() => {
                 let nodes = res.node ? [res.node] : res.nodes;
-                const filesToZip = `${btoa(JSON.stringify(nodes.map(node => node.path)))}`;
+                const filesToZip = `${btoa(unescape(encodeURIComponent(JSON.stringify(nodes.map(node => node.path)))))}`;
                 const zipPath = `${res.node ? res.node.path : res.nodes[0].parent.path}.zip`;
                 window.open(`${window.contextJsParameters.contextPath}/cms/export/default${zipPath}?filesToZip=${nodes.length === 1 ? '' : filesToZip}`);
             }}

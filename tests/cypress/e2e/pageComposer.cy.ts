@@ -179,9 +179,9 @@ describe('Page composer', () => {
     });
 
     describe('selection', function () {
-        const item1 = "/sites/jcontentSite/home/area-main/test-content1";
-        const item2 = "/sites/jcontentSite/home/area-main/test-content2";
-        const item3 = "/sites/jcontentSite/home/area-main/test-content3";
+        const item1 = "/sites/jcontentSite/home/area-main/test-content4";
+        const item2 = "/sites/jcontentSite/home/area-main/test-content5";
+        const item3 = "/sites/jcontentSite/home/area-main/lookForMeSystemName";
 
         it('Selects and unselects one item', () => {
             jcontent.getSelectionInfo().should('not.exist');

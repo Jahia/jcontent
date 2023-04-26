@@ -95,7 +95,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         return () => {
             currentDocument.removeEventListener('click', clearSelection);
         };
-    }, [selection, dispatch, currentDocument, clearSelection()]);
+    }, [selection, dispatch, currentDocument, clearSelection]);
 
     useEffect(() => {
         const placeholders = [];

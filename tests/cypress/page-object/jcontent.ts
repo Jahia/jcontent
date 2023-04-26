@@ -245,7 +245,7 @@ class PageComposerModule extends BaseComponent {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
-    click() {
-        this.get().click();
+    click(clickOptions?) {
+        this.get().click(clickOptions);
     }
 }

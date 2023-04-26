@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ContextualMenu, registry} from '@jahia/ui-extender';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
@@ -9,6 +9,8 @@ import {updateProperty} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-m
 import {useQuery} from 'react-apollo';
 import {BoxesQuery} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-queries';
 import {hasMixin, isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
+import {batchActions} from 'redux-batched-actions';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -28,6 +30,7 @@ const getModuleElement = (currentDocument, target) => {
 
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const [inlineEditor] = registry.find({type: 'inline-editor'});
+    const dispatch = useDispatch();
 
     const {language, displayLanguage, selection, path} = useSelector(state => ({
         language: state.language,
@@ -36,6 +39,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         selection: state.jcontent.selection
     }), shallowEqual);
 
+    // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
+    // It helps determine box visibility and header visibility.
     const [currentElement, setCurrentElement] = useState();
     const disableHover = useRef(false);
     const [placeholders, setPlaceholders] = useState([]);
@@ -60,8 +65,37 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         }
     }, [setCurrentElement, currentDocument]);
 
+    const onClick = useCallback(event => {
+        event.stopPropagation();
+        const element = getModuleElement(currentDocument, event.currentTarget);
+        const path = element.getAttribute('path');
+
+        if (selection.includes(path)) {
+            dispatch(cmRemoveSelection(path));
+        } else if (event.metaKey || event.ctrlKey) {
+            dispatch(cmAddSelection(path));
+        } else {
+            dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
+        }
+    }, [selection, currentDocument]);
+
+    const clearSelection = useCallback(() => {
+        if (selection.length === 1) {
+            dispatch(cmClearSelection());
+        }
+    }, [selection, dispatch]);
+
     const rootElement = useRef();
     const contextualMenu = useRef();
+
+    // Clear selection when clicking outside any module
+    useEffect(() => {
+        currentDocument.addEventListener('click', clearSelection);
+
+        return () => {
+            currentDocument.removeEventListener('click', clearSelection);
+        };
+    }, [selection, dispatch, currentDocument, clearSelection()]);
 
     useEffect(() => {
         const placeholders = [];
@@ -160,7 +194,9 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          node={node}
-                         isVisible={element === currentElement}
+                         isVisible={element === currentElement || selection.includes(node.path)}
+                         isCurrent={element === currentElement}
+                         isHeaderDisplayed={(selection.length === 1 && currentElement === null) || element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
@@ -171,6 +207,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          addIntervalCallback={addIntervalCallback}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
+                         onClick={onClick}
                          onSaved={onSaved}
                     />
                 ))}

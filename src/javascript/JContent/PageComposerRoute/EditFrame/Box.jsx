@@ -37,9 +37,12 @@ export const Box = React.memo(({
     addIntervalCallback,
     onMouseOver,
     onMouseOut,
+    onClick,
     onSaved,
     rootElementRef,
-    currentFrameRef
+    currentFrameRef,
+    isHeaderDisplayed,
+    isCurrent
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
@@ -47,12 +50,14 @@ export const Box = React.memo(({
     useEffect(() => {
         element.addEventListener('mouseover', onMouseOver);
         element.addEventListener('mouseout', onMouseOut);
+        element.addEventListener('click', onClick);
 
         return () => {
             element.removeEventListener('mouseover', onMouseOver);
             element.removeEventListener('mouseout', onMouseOut);
+            element.removeEventListener('click', onClick);
         };
-    }, [element, node, onMouseOut, onMouseOver]);
+    }, [element, node, onMouseOut, onMouseOver, onClick]);
 
     element.dataset.current = isVisible;
 
@@ -135,24 +140,26 @@ export const Box = React.memo(({
                  style={currentOffset}
             >
                 <div className={styles.rel}>
+                    {isHeaderDisplayed && (
                     <div className={clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)}
                          jahiatype="header" // eslint-disable-line react/no-unknown-property
-                         data-current="true"
+                         data-current={isCurrent}
                          data-jahia-id={element.getAttribute('id')}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
+                         onClick={onClick}
                     >
                         <div className={clsx(styles.header, 'flexRow_nowrap', 'alignCenter')}>
                             {type === 'existingNode' && (
-                                <div ref={drag} className={clsx(editStyles.enablePointerEvents, styles.dragHandle, 'flexRow_center', 'alignCenter')}>
-                                    <HandleDrag size="default"/>
-                                </div>
-                            )}
+                            <div ref={drag} className={clsx(editStyles.enablePointerEvents, styles.dragHandle, 'flexRow_center', 'alignCenter')}>
+                                <HandleDrag size="default"/>
+                            </div>
+                                    )}
                             {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef}/>}
                         </div>
                     </div>
+                        )}
                 </div>
-
             </div>
         </>
     );
@@ -179,7 +186,13 @@ Box.propTypes = {
 
     onMouseOut: PropTypes.func,
 
+    onClick: PropTypes.func,
+
     rootElementRef: PropTypes.any,
 
-    currentFrameRef: PropTypes.any
+    currentFrameRef: PropTypes.any,
+
+    isHeaderDisplayed: PropTypes.bool,
+
+    isCurrent: PropTypes.bool
 };

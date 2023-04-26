@@ -152,6 +152,10 @@ export class JContent extends BasePage {
         cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
         cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find('li[data-sel-role="cut"]').should('not.exist');
     }
+
+    getSelectionInfo() {
+        return cy.get('p[data-cm-role="selection-infos"]');
+    }
 }
 
 export class JContentPageComposer extends JContent {
@@ -239,5 +243,9 @@ class PageComposerModule extends BaseComponent {
     contextMenu(): Menu {
         this.get().rightclick();
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+    }
+
+    click() {
+        this.get().click();
     }
 }

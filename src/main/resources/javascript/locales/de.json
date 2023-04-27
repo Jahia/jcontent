@@ -447,9 +447,22 @@
             "content_plural": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde."
           }
         }
+      },
+      "links": {
+        "external": {
+          "title": "Externer Link",
+          "content": "Sie verlassen Jahia. Wollen Sie die externe URL in einem neuen Tab öffnen ?"
+        },
+        "internal": {
+          "title": "Link zu einer anderen Site",
+          "content": "Sie öffnen einen Link zu einer anderen Site: {{site}}. Wollen Sie die Vorschau in einem neuen Tab öffnen ?"
+        },
+        "open": "Öffnen"
       }
     },
     "ok": "OK",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "no": "Nein",
+    "yes": "Ja"
   }
 }

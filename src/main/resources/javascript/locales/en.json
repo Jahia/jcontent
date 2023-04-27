@@ -455,9 +455,22 @@
           }
         },
         "details": "DETAILS"
+      },
+      "links":{
+        "external": {
+          "title": "External link",
+          "content": "You are leaving Jahia. Do you want to open the external URL in a new tab ?"
+        },
+        "internal": {
+          "title": "Link to another site",
+          "content": "You are opening a link to a different website: {{site}}. Do you want to open the preview in a new tab ?"
+        },
+        "open": "Open"
       }
     },
     "ok": "OK",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "no": "No",
+    "yes": "Yes"
   }
 }

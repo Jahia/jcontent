@@ -448,9 +448,22 @@
             "content_plural": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           }
         }
+      },
+      "links": {
+        "external": {
+          "title": "Lien externe",
+          "content": "Vous quittez Jahia. Voulez-vous ouvrir le lien externe dans un nouvel onglet ?"
+        },
+        "internal": {
+          "title": "Lien vers un autre site",
+          "content": "Vous ouvrez un lien vers un autre site: {{site}}. Voulez vous ouvrir l'aperçu dans un nouvel onglet ?"
+        },
+        "open": "Ouvrir"
       }
     },
     "ok": "OK",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "no": "Non",
+    "yes": "Oui"
   }
 }

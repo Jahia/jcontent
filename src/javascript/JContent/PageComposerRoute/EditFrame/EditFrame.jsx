@@ -16,6 +16,7 @@ import {Infos} from './Infos';
 import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
 import {useDragDropManager} from 'react-dnd';
+import {LinkInterceptor} from './LinkInterceptor';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -226,6 +227,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>
+            {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && !isPreview && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div className={styles.root}>

@@ -35,7 +35,8 @@ export const accordionPropType = PropTypes.shape({
             canDrop: PropTypes.bool,
             canDropFile: PropTypes.bool,
             canReorder: PropTypes.bool
-        })
+        }),
+        showContextMenuOnRootPath: PropTypes.bool
     }).isRequired
 });
 
@@ -171,6 +172,14 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onOpenItem={object => dispatch(openPathAction(object.id))}
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
+            {item.treeConfig.showContextMenuOnRootPath &&
+            <div
+                style={{
+                   minHeight: '100%'
+                }}
+                data-cm-role="rootpath-context-menu-holder"
+                onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
+             />}
         </React.Fragment>
     );
 };

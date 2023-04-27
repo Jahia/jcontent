@@ -116,7 +116,7 @@ export const FileCard = ({
                         </Typography>}
                     {node.isFile &&
                         <Typography variant="caption" component="p">
-                            <FileSize node={node}/>
+                            <FileSize node={node}/> {`${node.content.mimeType.value}`}
                         </Typography>}
                     {showSubNodes &&
                         <Typography variant="caption" component="p">

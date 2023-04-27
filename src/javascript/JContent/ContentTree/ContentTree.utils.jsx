@@ -5,11 +5,15 @@ import {isMarkedForDeletion} from '../JContent.utils';
 import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
-import {DefaultEntry, Section} from '@jahia/moonstone';
+import {DefaultEntry, Link, Section} from '@jahia/moonstone';
 
 export function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {
         return <Section/>;
+    }
+
+    if (['jnt:nodeLink', 'jnt:externalLink'].includes(node.primaryNodeType.name)) {
+        return <Link/>;
     }
 
     const Icon = getIcon(node.primaryNodeType.name);

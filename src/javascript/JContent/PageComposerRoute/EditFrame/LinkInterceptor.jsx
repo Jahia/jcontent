@@ -43,7 +43,7 @@ export const LinkInterceptor = ({document}) => {
     }, [document, site, setModal]);
 
     const handleClose = useCallback(() => {
-        setModal({...modal, isOpen: false});
+        setModal(modal => ({...modal, isOpen: false}));
     }, [setModal]);
 
     const openLink = () => {

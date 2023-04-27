@@ -185,8 +185,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         <div ref={rootElement}>
             <ContextualMenu
                 setOpenRef={contextualMenu}
-                actionKey={selection.length <= 1 || selection.indexOf(currentPath) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
+                actionKey={selection.length === 0 ? 'contentMenu' : 'selectedContentMenu'}
+                {...selection.length === 0 ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))

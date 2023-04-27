@@ -246,6 +246,6 @@ class PageComposerModule extends BaseComponent {
     }
 
     click(clickOptions?) {
-        this.get().click(clickOptions);
+        this.get().scrollIntoView().click(clickOptions);
     }
 }

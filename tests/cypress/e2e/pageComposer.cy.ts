@@ -179,9 +179,9 @@ describe('Page composer', () => {
     });
 
     describe('selection', function () {
-        const item1 = "/sites/jcontentSite/home/area-main/test-content4";
-        const item2 = "/sites/jcontentSite/home/area-main/test-content5";
-        const item3 = "/sites/jcontentSite/home/area-main/lookForMeSystemName";
+        const item1 = '/sites/jcontentSite/home/area-main/test-content4';
+        const item2 = '/sites/jcontentSite/home/area-main/test-content5';
+        const item3 = '/sites/jcontentSite/home/area-main/lookForMeSystemName';
 
         it('Selects and unselects one item', () => {
             jcontent.getSelectionInfo().should('not.exist');
@@ -208,13 +208,13 @@ describe('Page composer', () => {
 
             // Unselect by clicking
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '2 items selected');
+            jcontent.getSelectionInfo().should('be.visible').should('have.text', '2 items selected');
 
             module = jcontent.getModule(item2);
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '1 items selected');
+            jcontent.getSelectionInfo().should('be.visible').should('have.text', '1 item selected');
 
-            jcontent.getModule(item1);
+            module = jcontent.getModule(item1);
             module.click();
             jcontent.getSelectionInfo().should('not.exist');
         });
@@ -233,6 +233,22 @@ describe('Page composer', () => {
             module.click();
             jcontent.getSelectionInfo().should('have.text', '1 item selected');
         });
+
+        it('Clears selection when unselected', () => {
+            jcontent.getSelectionInfo().should('not.exist');
+            let module = jcontent.getModule(item1);
+            module.click();
+            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+
+            module.parentFrame.get().find('div[data-current="true"]').should('exist');
+
+            jcontent.getSelectionInfo().next().next().click();
+
+            // For some reason clearing of selection does not refresh iframe contents in the test browser like it does
+            // in a real one. So this test is not a complete one.
+            jcontent.refresh();
+            // module.parentFrame.get().find('div[data-current="true"]').should('not.exist');
+        })
     });
 
     // Tests to be added when content-editor is moved here

@@ -9,6 +9,7 @@ import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
 import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
+import {Portal} from './Portal';
 
 function getBoundingBox(element) {
     const rect = getCoords(element);
@@ -29,7 +30,6 @@ const reposition = function (element, currentOffset, setCurrentOffset) {
 
 export const Box = React.memo(({
     node,
-    isVisible,
     element,
     entries,
     language,
@@ -42,7 +42,9 @@ export const Box = React.memo(({
     rootElementRef,
     currentFrameRef,
     isHeaderDisplayed,
-    isCurrent
+    isCurrent,
+    isSelected,
+    isActionsHidden
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
@@ -59,7 +61,7 @@ export const Box = React.memo(({
         };
     }, [element, node, onMouseOut, onMouseOver, onClick]);
 
-    element.dataset.current = isVisible;
+    element.dataset.current = isCurrent;
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -122,7 +124,7 @@ export const Box = React.memo(({
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, currentOffset, element, setCurrentOffset]);
 
-    if (!isVisible) {
+    if (!isCurrent && !isSelected) {
         return false;
     }
 
@@ -133,6 +135,30 @@ export const Box = React.memo(({
     const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
+    // Display current header through portal to be able to always position it on top of existing selection(s)
+    const headerProps = isCurrent ? {className: clsx(styles.absolute, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents), style: {...currentOffset, top: currentOffset.top - 32, height: 32}} : {className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)};
+    const Header = (
+        <div {...headerProps}
+             jahiatype="header" // eslint-disable-line react/no-unknown-property
+             data-current={isCurrent}
+             data-jahia-id={element.getAttribute('id')}
+             onMouseOver={onMouseOver}
+             onMouseOut={onMouseOut}
+             onClick={onClick}
+        >
+            <div className={clsx(styles.header, 'flexRow_nowrap', 'alignCenter')}>
+                {type === 'existingNode' && !isActionsHidden && (
+                    <div ref={drag} className={clsx(editStyles.enablePointerEvents, styles.dragHandle, 'flexRow_center', 'alignCenter')}>
+                        <HandleDrag size="default"/>
+                    </div>
+                )}
+                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef}/>}
+            </div>
+        </div>
+    );
+
+    const ResolvedHeader = isCurrent ? <Portal target={rootElementRef.current}>{Header}</Portal> : Header;
+
     return (
         <>
             <div ref={rootDiv}
@@ -140,25 +166,7 @@ export const Box = React.memo(({
                  style={currentOffset}
             >
                 <div className={styles.rel}>
-                    {isHeaderDisplayed && (
-                    <div className={clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)}
-                         jahiatype="header" // eslint-disable-line react/no-unknown-property
-                         data-current={isCurrent}
-                         data-jahia-id={element.getAttribute('id')}
-                         onMouseOver={onMouseOver}
-                         onMouseOut={onMouseOut}
-                         onClick={onClick}
-                    >
-                        <div className={clsx(styles.header, 'flexRow_nowrap', 'alignCenter')}>
-                            {type === 'existingNode' && (
-                            <div ref={drag} className={clsx(editStyles.enablePointerEvents, styles.dragHandle, 'flexRow_center', 'alignCenter')}>
-                                <HandleDrag size="default"/>
-                            </div>
-                                    )}
-                            {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef}/>}
-                        </div>
-                    </div>
-                        )}
+                    {isHeaderDisplayed && ResolvedHeader}
                 </div>
             </div>
         </>
@@ -166,8 +174,6 @@ export const Box = React.memo(({
 });
 
 Box.propTypes = {
-    isVisible: PropTypes.bool,
-
     element: PropTypes.any,
 
     node: PropTypes.any,
@@ -194,5 +200,9 @@ Box.propTypes = {
 
     isHeaderDisplayed: PropTypes.bool,
 
-    isCurrent: PropTypes.bool
+    isCurrent: PropTypes.bool,
+
+    isSelected: PropTypes.bool,
+
+    isActionsHidden: PropTypes.bool
 };

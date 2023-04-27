@@ -236,7 +236,7 @@ describe('Page composer', () => {
 
         it('Clears selection when unselected', () => {
             jcontent.getSelectionInfo().should('not.exist');
-            let module = jcontent.getModule(item1);
+            const module = jcontent.getModule(item1);
             module.click();
             jcontent.getSelectionInfo().should('have.text', '1 item selected');
 
@@ -247,8 +247,8 @@ describe('Page composer', () => {
             // For some reason clearing of selection does not refresh iframe contents in the test browser like it does
             // in a real one. So this test is not a complete one.
             jcontent.refresh();
-            // module.parentFrame.get().find('div[data-current="true"]').should('not.exist');
-        })
+            // Doesn't work: module.parentFrame.get().find('div[data-current="true"]').should('not.exist');
+        });
     });
 
     // Tests to be added when content-editor is moved here

@@ -8,7 +8,7 @@ import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 
-export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef}) => {
+export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden}) => {
     // eslint-disable-next-line react/prop-types
     const wrap = Renderer => ({onClick, ...props}) => (
         <Renderer
@@ -41,20 +41,24 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
                              language={language}
                              renderedStatuses={['locked', 'warning', 'workInProgress', 'published', 'modified', 'markedForDeletion']}/>
 
-            <DisplayAction
-                actionKey="edit"
-                path={node.path}
-                render={displayLabels ? WrappedButtonRenderer : WrappedButtonRendererNoLabel}
-                buttonProps={{variant: 'ghost', size: 'small'}}
-            />
+            {!isActionsHidden && (
+                <>
+                    <DisplayAction
+                        actionKey="edit"
+                        path={node.path}
+                        render={displayLabels ? WrappedButtonRenderer : WrappedButtonRendererNoLabel}
+                        buttonProps={{variant: 'ghost', size: 'small'}}
+                    />
 
-            <DisplayAction
-                actionKey="contentMenu"
-                path={node.path}
-                menuFilter={value => !includes(['edit'], value.key)}
-                render={WrappedButtonRendererNoLabel}
-                buttonProps={{variant: 'ghost', size: 'small'}}
-            />
+                    <DisplayAction
+                        actionKey="contentMenu"
+                        path={node.path}
+                        menuFilter={value => !includes(['edit'], value.key)}
+                        render={WrappedButtonRendererNoLabel}
+                        buttonProps={{variant: 'ghost', size: 'small'}}
+                    />
+                </>
+            )}
         </>
     );
 };
@@ -68,5 +72,7 @@ DefaultBar.propTypes = {
 
     width: PropTypes.number,
 
-    currentFrameRef: PropTypes.any
+    currentFrameRef: PropTypes.any,
+
+    isActionsHidden: PropTypes.bool
 };

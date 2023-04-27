@@ -66,18 +66,19 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     }, [setCurrentElement, currentDocument]);
 
     const onClick = useCallback(event => {
-        event.stopPropagation();
         const element = getModuleElement(currentDocument, event.currentTarget);
         const path = element.getAttribute('path');
+        const isSelected = selection.includes(path);
+        event.stopPropagation();
 
-        if (selection.includes(path)) {
+        if (isSelected) {
             dispatch(cmRemoveSelection(path));
         } else if (event.metaKey || event.ctrlKey) {
             dispatch(cmAddSelection(path));
         } else {
             dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
         }
-    }, [selection, currentDocument]);
+    }, [selection, currentDocument, dispatch]);
 
     const clearSelection = useCallback(() => {
         if (selection.length === 1) {
@@ -194,9 +195,10 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          node={node}
-                         isVisible={element === currentElement || selection.includes(node.path)}
                          isCurrent={element === currentElement}
-                         isHeaderDisplayed={(selection.length === 1 && currentElement === null) || element === currentElement}
+                         isSelected={selection.includes(node.path)}
+                         isHeaderDisplayed={(selection.length === 1 && (selection.includes(node.path) || currentElement === null)) || element === currentElement}
+                         isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}

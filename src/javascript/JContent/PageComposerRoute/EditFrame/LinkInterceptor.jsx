@@ -76,11 +76,13 @@ export const LinkInterceptor = ({document}) => {
                         color="default"
                         size="big"
                         label={t('label.cancel')}
+                        data-sel-role="cancel"
                         onClick={handleClose}/>
                 <Button variant="default"
                         color="accent"
                         size="big"
                         label={t('label.contentManager.links.open')}
+                        data-sel-role="open"
                         onClick={openLink}/>
             </DialogActions>
         </Dialog>

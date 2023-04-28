@@ -82,6 +82,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             return;
         }
 
+        event.preventDefault();
         event.stopPropagation();
 
         if (isSelected) {

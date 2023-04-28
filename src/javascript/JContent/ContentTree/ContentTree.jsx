@@ -180,9 +180,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
             />
             {item.treeConfig.showContextMenuOnRootPath &&
                 <div
-                    style={{
-                        flex: '2 0 50px'
-                    }}
+                    className="flexFluid"
                     data-cm-role="rootpath-context-menu-holder"
                     onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
                 />}

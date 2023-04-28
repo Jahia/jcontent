@@ -1,9 +1,14 @@
 import {useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {cmClearSelection} from '../../redux/selection.redux';
 
 export const useKeyboardNavigation = ({listLength, onSelectionChange}) => {
     const mainPanelRef = useRef(null);
 
     const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
+
+    const dispatch = useDispatch();
+    let clear = () => dispatch(cmClearSelection());
 
     const handleKeyboardNavigation = event => {
         // Right arrow code: 39, Down arrow code: 40
@@ -14,6 +19,8 @@ export const useKeyboardNavigation = ({listLength, onSelectionChange}) => {
         } else if (selectedItemIndex !== 0 && (event.keyCode === 37 || event.keyCode === 38)) {
             setSelectedItemIndex(selectedItemIndex - 1);
             onSelectionChange(selectedItemIndex - 1);
+        } else if (event.key === 'Escape' || event.keyCode === 27) {
+            clear();
         }
     };
 

@@ -43,4 +43,22 @@ describe('Multi-selection tests', () => {
         checkSelectionCount(1);
         checkToolbar();
     });
+
+    it('Can select items in list mode and clear selection', () => {
+        const jcontent = JContent.visit('digitall', 'en', 'media/files');
+        jcontent.switchToListMode();
+
+        cy.log('selection: 1');
+        jcontent.getTable().selectRowByLabel('images');
+        checkSelectionCount(1);
+        checkToolbar();
+
+        cy.log('selection: 2');
+        jcontent.getTable().selectRowByLabel('video');
+        checkSelectionCount(2);
+        checkToolbar();
+
+        jcontent.getTable().get().type('{esc}')
+        cy.get('[data-cm-role="selection-infos"]').should('not.exist')
+    });
 });

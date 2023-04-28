@@ -1,5 +1,5 @@
 import {JContent} from '../page-object';
-import {Button, getComponentBySelector} from '@jahia/cypress';
+import {Button, getComponent, getComponentBySelector, Menu} from '@jahia/cypress';
 
 describe('Multi-selection tests', () => {
     beforeEach(function () {
@@ -57,7 +57,12 @@ describe('Multi-selection tests', () => {
 
         jcontent.getTable().selectRowByLabel('images');
         jcontent.getTable().selectRowByLabel('video');
-        jcontent.getSelectionDropdown().select('images');
+        checkToolbar();
+        checkSelectionCount(2);
+        const selectionDropdown = jcontent.getSelectionDropdown();
+        selectionDropdown.get().find('.moonstone-dropdown').click({force: true})
+        selectionDropdown.get().find('.moonstone-menu').should('be.visible')
+        getComponent(Menu, selectionDropdown).select('images')
         checkToolbar();
         checkSelectionCount(1);
     });

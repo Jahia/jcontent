@@ -151,11 +151,23 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     let contextualMenu = useRef();
 
     return (
-        <React.Fragment>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            justifyContent: "stretch",
+            height: "100%"
+        }}>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
                       itemComponent={ItemComponent}
-                      data={convertPathsToTree({treeEntries, selected: path, isReversed, contentMenu: contextualMenuAction, itemProps: {item}})}
+                      data={convertPathsToTree({
+                          treeEntries,
+                          selected: path,
+                          isReversed,
+                          contentMenu: contextualMenuAction,
+                          itemProps: {item}
+                      })}
                       openedItems={openPaths}
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
@@ -173,14 +185,14 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
             {item.treeConfig.showContextMenuOnRootPath &&
-            <div
-                style={{
-                   minHeight: '100%'
-                }}
-                data-cm-role="rootpath-context-menu-holder"
-                onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
-             />}
-        </React.Fragment>
+                <div
+                    style={{
+                        flex: "2 0 50px",
+                    }}
+                    data-cm-role="rootpath-context-menu-holder"
+                    onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
+                />}
+        </div>
     );
 };
 

@@ -6,10 +6,6 @@ describe('Multi-selection tests', () => {
         cy.loginEditor(); // Edit in chief
     });
 
-    afterEach(function () {
-        cy.logout();
-    });
-
     const checkToolbar = () => {
         getComponentBySelector(Button,
             '[role="toolbar"] [data-sel-role="publishAll"]',
@@ -18,10 +14,21 @@ describe('Multi-selection tests', () => {
     };
 
     const checkSelectionCount = count => {
-        cy.get('[data-cm-role="selection-infos"]')
-            .should('have.attr', 'data-cm-selection-size')
+        cy.get('[data-sel-role="selection-infos"]')
+            .should('have.attr', 'data-sel-selection-size')
             .and('equal', count.toString());
     };
+
+    it('Can clear selection', () => {
+        const jcontent = JContent.visit('digitall', 'en', 'media/files');
+        jcontent.switchToListMode();
+
+        jcontent.getTable().selectRowByLabel('images');
+        jcontent.getTable().selectRowByLabel('video');
+        jcontent.clearSelection();
+        cy.get('[data-sel-role="selection-infos"]').should('not.exist');
+        jcontent.getTable().selectRowByLabel('images');
+    });
 
     it('Can select/de-select items in list mode', () => {
         const jcontent = JContent.visit('digitall', 'en', 'media/files');
@@ -43,4 +50,16 @@ describe('Multi-selection tests', () => {
         checkSelectionCount(1);
         checkToolbar();
     });
+
+    it('Can select/de-select items in dropdown', () => {
+        const jcontent = JContent.visit('digitall', 'en', 'media/files');
+        jcontent.switchToListMode();
+
+        jcontent.getTable().selectRowByLabel('images');
+        jcontent.getTable().selectRowByLabel('video');
+        jcontent.getSelectionDropdown().select('images');
+        checkToolbar();
+        checkSelectionCount(1);
+    });
+
 });

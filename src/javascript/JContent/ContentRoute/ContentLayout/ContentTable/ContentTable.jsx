@@ -1,9 +1,15 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
+import {
+    CM_DRAWER_STATES,
+    cmCloseTablePaths,
+    cmGoto,
+    cmOpenPaths,
+    cmOpenTablePaths
+} from '~/JContent/redux/JContent.redux';
 import {extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
@@ -44,15 +50,9 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         sort: state.jcontent.sort
     }), shallowEqual);
 
-    const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
-    const setPath = (siteKey, path, mode, params) => {
-        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
-        dispatch(cmGoto({path, params}));
-    };
-
-    const setMode = mode => dispatch(cmGoto({mode}));
-    const setCurrentPage = page => dispatch(cmSetPage(page - 1));
-    const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
+    const onPreviewSelect = useCallback(previewSelection => dispatch(cmSetPreviewSelection(previewSelection)), [dispatch]);
+    const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);
+    const setPageSize = useCallback(pageSize => dispatch(cmSetPageSize(pageSize)), [dispatch]);
 
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
     const {
@@ -108,18 +108,22 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         }
     }, [rows, selection, dispatch, paths]);
 
-    const doubleClickNavigation = node => {
+    const doubleClickNavigation = useCallback(node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
             const params = getCanDisplayItemParams(node);
             newMode = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params))?.key;
             if (newMode) {
-                setMode(newMode);
+                dispatch(cmGoto({mode: newMode}));
             }
         }
 
-        setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
-    };
+        dispatch(cmOpenPaths(extractPaths(siteKey, node.path, newMode)));
+        dispatch(cmGoto({
+            path: node.path,
+            params: {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'}
+        }));
+    }, [mode, dispatch, siteKey]);
 
     let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : mainColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;

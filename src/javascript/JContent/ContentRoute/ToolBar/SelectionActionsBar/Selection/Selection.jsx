@@ -10,7 +10,7 @@ export const Selection = ({paths, clear}) => {
     const [data, setData] = useState([{}]);
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {nodes} = useNodeInfo({paths}, {getDisplayName: true});
+    const {nodes, loading} = useNodeInfo({paths}, {getDisplayName: true});
 
     const fillData = () => {
         setData(nodes.map(node => ({
@@ -21,10 +21,13 @@ export const Selection = ({paths, clear}) => {
     return (
         <div className="flexRow">
             <Dropdown label={t('jcontent:label.contentManager.selection.itemsSelected', {count: paths.length})}
+                      data-sel-role="selection-infos"
+                      data-sel-selection-size={paths.length}
                       hasSearch={false}
                       size="small"
                       data={data}
                       values={paths}
+                      isDisabled={loading}
                       onFocus={fillData}
                       onBlur={() => {
                           // Required function to have onFocus work properly
@@ -33,7 +36,7 @@ export const Selection = ({paths, clear}) => {
                           dispatch(cmSwitchSelection(item.value));
                       }}
             />
-            <Button icon={<Cancel/>} label={t('label.contentManager.selection.clearMultipleSelection')} variant="ghost" size="default" onClick={clear}/>
+            <Button icon={<Cancel/>} label={t('label.contentManager.selection.clearMultipleSelection')} variant="ghost" size="default" onClick={clear} data-sel-role="clearSelection"/>
         </div>
     );
 };

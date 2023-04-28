@@ -45,7 +45,7 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
         language: state.language
     }), shallowEqual);
     const {data} = useQuery(GetLinkData, {
-        variables: {path: node.path, language}
+        variables: {path: node?.path, language}
     });
 
     if (!node) {

@@ -176,7 +176,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onOpenItem={object => dispatch(openPathAction(object.id))}
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
-            <LinkDialog {...linkDialogProps}/>
+            {linkDialogProps.node && <LinkDialog {...linkDialogProps}/>}
         </React.Fragment>
     );
 };

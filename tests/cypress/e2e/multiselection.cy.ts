@@ -60,9 +60,8 @@ describe('Multi-selection tests', () => {
         checkToolbar();
         checkSelectionCount(2);
         const selectionDropdown = jcontent.getSelectionDropdown();
-        selectionDropdown.get().find('.moonstone-dropdown').click({force: true});
-        selectionDropdown.get().find('.moonstone-menu').should('be.visible');
-        getComponent(Menu, selectionDropdown).select('images');
+        selectionDropdown.get().should('not.be.disabled');
+        selectionDropdown.select('images');
         checkToolbar();
         checkSelectionCount(1);
     });

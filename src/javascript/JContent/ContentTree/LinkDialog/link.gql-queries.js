@@ -10,8 +10,8 @@ export const GetLinkData = gql`
                     refNode {
                         ...NodeCacheRequiredFields
                         displayName(language: $language)
-                        path
                         linkSite: site {
+                            ...NodeCacheRequiredFields
                             sitekey
                             displayName(language: $language)
                         }

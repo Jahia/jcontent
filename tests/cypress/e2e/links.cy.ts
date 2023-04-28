@@ -54,8 +54,14 @@ describe('Links in jcontent', () => {
         cy.get(dialogCss)
             .should('contain', 'Internal link')
             .and('contain', '/sites/jcontentSite/home')
-            .and('not.contain', 'of the site')
+            .and('not.contain', 'of the site');
+
+        // Generation of registry action takes a bit of time and makes this test a bit flaky; add wait
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        cy.get(dialogCss)
             .find('[data-sel-role="edit"]')
+            .should('contain', 'Edit')
             .click();
 
         cy.log('Verify edit dialog is opened');
@@ -75,8 +81,14 @@ describe('Links in jcontent', () => {
         cy.get(dialogCss)
             .should('contain', 'Internal link')
             .and('contain', '/sites/jcontentSite2/home')
-            .and('contain', 'of the site')
+            .and('contain', 'of the site');
+
+        // Generation of registry action takes a bit of time and makes this test a bit flaky; add wait
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        cy.get(dialogCss)
             .find('[data-sel-role="edit"]')
+            .should('contain', 'Edit')
             .click();
 
         cy.log('Verify edit dialog is opened');
@@ -95,8 +107,14 @@ describe('Links in jcontent', () => {
         const dialogCss = '[data-sel-role="link-content-dialog"]';
         cy.get(dialogCss)
             .should('contain', 'External link')
-            .and('contain', 'www.google.com')
+            .and('contain', 'www.google.com');
+
+        // Generation of registry action takes a bit of time and makes this test a bit flaky; add wait
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        cy.get(dialogCss)
             .find('[data-sel-role="edit"]')
+            .should('contain', 'Edit')
             .click();
 
         cy.log('Verify edit dialog is opened');

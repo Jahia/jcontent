@@ -451,11 +451,20 @@
       "links": {
         "external": {
           "title": "Externer Link",
-          "content": "Sie verlassen Jahia. Wollen Sie die externe URL in einem neuen Tab öffnen ?"
+          "content": "Sie verlassen Jahia. Wollen Sie die externe URL in einem neuen Tab öffnen ?",
+          "editDialog": {
+            "title": "Externer link",
+            "body": "Der Link führt zu einer externen URL"
+          }
         },
         "internal": {
           "title": "Link zu einer anderen Site",
-          "content": "Sie öffnen einen Link zu einer anderen Site: {{site}}. Wollen Sie die Vorschau in einem neuen Tab öffnen ?"
+          "content": "Sie öffnen einen Link zu einer anderen Site: {{site}}. Wollen Sie die Vorschau in einem neuen Tab öffnen ?",
+          "editDialog": {
+            "title": "Interne link",
+            "body": "Der Link führt zu",
+            "ofSite": "auf der site"
+          }
         },
         "open": "Öffnen"
       }

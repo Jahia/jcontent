@@ -126,7 +126,8 @@ export const jContentAccordionItems = registry => {
             rootLabel: 'jcontent:label.contentManager.browsePages',
             dnd: {
                 canDrag: showPageComposer, canDrop: showPageComposer, canReorder: showPageComposer
-            }
+            },
+            showContextMenuOnRootPath: true
         },
         tableConfig: {
             queryHandler: PagesQueryHandler,

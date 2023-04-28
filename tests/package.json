@@ -18,6 +18,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@jahia/content-editor-cypress": "^4.2.0-tests.9",
     "@jahia/cypress": "^2.0.0",
     "@jahia/jahia-reporter": "^1.0.30",
     "@types/node": "^18.11.18",

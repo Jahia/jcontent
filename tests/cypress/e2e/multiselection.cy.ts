@@ -58,7 +58,7 @@ describe('Multi-selection tests', () => {
         checkSelectionCount(2);
         checkToolbar();
 
-        jcontent.getTable().get().type('{esc}')
-        cy.get('[data-cm-role="selection-infos"]').should('not.exist')
+        jcontent.getTable().get().type('{esc}');
+        cy.get('[data-cm-role="selection-infos"]').should('not.exist');
     });
 });

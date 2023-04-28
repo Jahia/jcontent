@@ -151,14 +151,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     let contextualMenu = useRef();
 
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            justifyContent: 'stretch',
-            height: '100%'
-        }}
-        >
+        <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
                       itemComponent={ItemComponent}
@@ -193,7 +186,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                     data-cm-role="rootpath-context-menu-holder"
                     onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
                 />}
-        </div>
+        </React.Fragment>
     );
 };
 

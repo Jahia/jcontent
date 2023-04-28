@@ -31,7 +31,7 @@ const getModuleElement = (currentDocument, target) => {
 const disallowSelection = element => {
     const tags = ['A', 'BUTTON', 'VIDEO'];
 
-    return tags.includes(element.tagName) || element.closest('a') !== null|| element.ownerDocument.getSelection().type === 'Range';
+    return tags.includes(element.tagName) || element.closest('a') !== null || element.ownerDocument.getSelection().type === 'Range';
 };
 
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {

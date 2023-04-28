@@ -43,7 +43,7 @@ mutation {
                         properties:  { name: "j:node"  value: "/sites/jcontentSite2/home" type: REFERENCE }
                     }
                     {
-                        name: "external-link-nav"
+                        name: "external2-link-nav"
                         primaryNodeType: "jnt:externalLink"
                         properties: { name: "j:url"  value: "www.google.com" }
                     }

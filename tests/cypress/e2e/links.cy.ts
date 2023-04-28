@@ -89,7 +89,7 @@ describe('Links in jcontent', () => {
     it('Should open link modal when clicking on external link from left navigation', () => {
         const pageAccordion = jcontent.getAccordionItem('pages');
         pageAccordion.expandTreeItem('home');
-        pageAccordion.getTreeItem('external-link-nav').click();
+        pageAccordion.getTreeItem('external2-link-nav').click();
 
         cy.log('Click on edit button');
         const dialogCss = '[data-sel-role="link-content-dialog"]';
@@ -102,7 +102,7 @@ describe('Links in jcontent', () => {
         cy.log('Verify edit dialog is opened');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
-            .and('contain', 'external-link-nav');
+            .and('contain', 'external2-link-nav');
         getComponentByRole(Button, 'backButton').click();
     });
 });

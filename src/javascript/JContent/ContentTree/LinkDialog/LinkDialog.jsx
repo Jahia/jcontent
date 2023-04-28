@@ -44,7 +44,7 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
         siteKey: state.site,
         language: state.language
     }), shallowEqual);
-    const {data} = useQuery(GetLinkData, {
+    const {data, loading} = useQuery(GetLinkData, {
         variables: {path: node?.path, language}
     });
 
@@ -67,7 +67,7 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
             <DialogTitle className={styles.dialogTitle}>
                 {t(`jcontent:label.contentManager.links.${linkType}.editDialog.title`)}
             </DialogTitle>
-            <DialogContentComp node={node} data={data} t={t} siteKey={siteKey} className={styles.dialogContent}/>
+            {!loading && <DialogContentComp node={node} data={data} t={t} siteKey={siteKey} className={styles.dialogContent}/>}
             <DialogActions className={styles.dialogActions}>
                 <Button
                     data-sel-role="cancel-button"

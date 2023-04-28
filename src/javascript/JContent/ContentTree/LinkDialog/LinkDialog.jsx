@@ -81,7 +81,7 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
                     path={node.path}
                     render={ButtonRenderer}
                     buttonProps={{color: 'accent', size: 'big'}}
-                    onClick={onClose}
+                    renderOnClick={onClose}
                 />
             </DialogActions>
         </Dialog>

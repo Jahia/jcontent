@@ -75,9 +75,10 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         const element = getModuleElement(currentDocument, event.currentTarget);
         const path = element.getAttribute('path');
         const isSelected = selection.includes(path);
+        const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
 
         // Do not handle selection if the target element can be interacted with
-        if (disallowSelection(event.target)) {
+        if (disallowSelection(event.target) && !isMultipleSelectionMode) {
             return;
         }
 
@@ -85,7 +86,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
         if (isSelected) {
             dispatch(cmRemoveSelection(path));
-        } else if (event.metaKey || event.ctrlKey) {
+        } else if (isMultipleSelectionMode) {
             dispatch(cmAddSelection(path));
         } else {
             dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));

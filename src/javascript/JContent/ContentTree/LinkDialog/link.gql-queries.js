@@ -11,6 +11,10 @@ export const GetLinkData = gql`
                         ...NodeCacheRequiredFields
                         displayName(language: $language)
                         path
+                        linkSite: site {
+                            sitekey
+                            displayName(language: $language)
+                        }
                     }
                 }
                 externalLink: property(name:"j:url") {

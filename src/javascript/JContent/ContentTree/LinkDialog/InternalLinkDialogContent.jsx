@@ -5,9 +5,8 @@ import {Typography} from '@jahia/moonstone';
 import styles from '~/JContent/ContentTree/LinkDialog/LinkDialog.scss';
 
 export const InternalLinkDialogContent = ({node, data, t, siteKey, ...otherProps}) => {
-    const {displayName, path} = data?.jcr.nodeByPath?.internalLink?.refNode || {};
-    const refNodePath = path || '';
-    const isSameSite = refNodePath.startsWith(`/sites/${siteKey}/`);
+    const {displayName, path, linkSite} = data?.jcr.nodeByPath?.internalLink?.refNode || {};
+    const isSameSite = linkSite?.sitekey === siteKey;
 
     return (
         <DialogContent {...otherProps}>
@@ -17,12 +16,12 @@ export const InternalLinkDialogContent = ({node, data, t, siteKey, ...otherProps
                 {!isSameSite && (
                     <>
                         {t('jcontent:label.contentManager.links.internal.editDialog.ofSite')}&nbsp;
-                        <Typography variant="subheading" component="span" weight="bold">{siteKey}</Typography>
+                        <Typography variant="subheading" component="span" weight="bold">{linkSite?.displayName}</Typography>
                     </>
                 )}
             </Typography>
             <br/>
-            <Typography variant="subheading" className={styles.url}>{refNodePath}</Typography>
+            <Typography variant="subheading" className={styles.url}>{path || ''}</Typography>
         </DialogContent>
     );
 };

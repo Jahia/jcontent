@@ -184,65 +184,65 @@ describe('Page composer', () => {
         const item3 = '/sites/jcontentSite/home/area-main/lookForMeSystemName';
 
         it('Selects and unselects one item', () => {
-            jcontent.getSelectionInfo().should('not.exist');
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
             module.click();
-            jcontent.getSelectionInfo().should('not.exist');
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 
         it('Selects all items with meta key', () => {
-            jcontent.getSelectionInfo().should('not.exist');
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
             module.click({metaKey: true});
-            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item2);
             module.click({metaKey: true});
-            jcontent.getSelectionInfo().should('have.text', '2 items selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
             module = jcontent.getModule(item3);
             module.click({metaKey: true});
-            jcontent.getSelectionInfo().should('have.text', '3 items selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '3 items selected');
 
             // Unselect by clicking
             module.click();
-            jcontent.getSelectionInfo().should('be.visible').should('have.text', '2 items selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
             module = jcontent.getModule(item2);
             module.click();
-            jcontent.getSelectionInfo().should('be.visible').should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item1);
             module.click();
-            jcontent.getSelectionInfo().should('not.exist');
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 
         it('Always selects one item without meta key', () => {
-            jcontent.getSelectionInfo().should('not.exist');
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item2);
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item3);
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
         });
 
         it('Clears selection when unselected', () => {
-            jcontent.getSelectionInfo().should('not.exist');
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
             module.click();
-            jcontent.getSelectionInfo().should('have.text', '1 item selected');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module.parentFrame.get().find('div[data-current="true"]').should('exist');
 
-            jcontent.getSelectionInfo().next().next().click();
+            jcontent.clearSelection();
 
             // For some reason clearing of selection does not refresh iframe contents in the test browser like it does
             // in a real one. So this test is not a complete one.

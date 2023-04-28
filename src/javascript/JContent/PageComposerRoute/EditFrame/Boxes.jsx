@@ -28,6 +28,22 @@ const getModuleElement = (currentDocument, target) => {
     return element;
 };
 
+const disallowSelection = element => {
+    const tags = ['A', 'BUTTON', 'VIDEO'];
+
+    if (tags.includes(element.tagName) || element.ownerDocument.getSelection().type === 'Range') {
+        return true;
+    }
+
+    tags.forEach(tag => {
+        if (element.closest(tag.toLocaleLowerCase())) {
+            return true;
+        }
+    });
+
+    return false;
+};
+
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const [inlineEditor] = registry.find({type: 'inline-editor'});
     const dispatch = useDispatch();
@@ -69,6 +85,12 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         const element = getModuleElement(currentDocument, event.currentTarget);
         const path = element.getAttribute('path');
         const isSelected = selection.includes(path);
+
+        // Do not handle selection if the target element can be interacted with
+        if (disallowSelection(event.target)) {
+            return;
+        }
+
         event.stopPropagation();
 
         if (isSelected) {

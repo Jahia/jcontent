@@ -28,6 +28,8 @@ const reposition = function (element, currentOffset, setCurrentOffset) {
     }
 };
 
+const HEADER_HEIGHT = 32;
+
 export const Box = React.memo(({
     node,
     element,
@@ -136,7 +138,12 @@ export const Box = React.memo(({
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
-    const headerProps = isCurrent ? {className: clsx(styles.absolute, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents), style: {...currentOffset, top: currentOffset.top - 32, height: 32}} : {className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)};
+    const headerProps = isCurrent ? {
+        className: clsx(styles.absolute, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents),
+        style: {...currentOffset, top: currentOffset.top - HEADER_HEIGHT, height: HEADER_HEIGHT}
+    } : {
+        className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
+    };
     const Header = (
         <div {...headerProps}
              jahiatype="header" // eslint-disable-line react/no-unknown-property
@@ -165,7 +172,7 @@ export const Box = React.memo(({
                  className={styles.root}
                  style={currentOffset}
             >
-                <div className={styles.rel}>
+                <div className={clsx(styles.rel, isHeaderDisplayed ? styles.relHeader : styles.relNoHeader)}>
                     {isHeaderDisplayed && ResolvedHeader}
                 </div>
             </div>

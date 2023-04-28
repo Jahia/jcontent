@@ -32,7 +32,7 @@ describe('Menu tests', () => {
         getComponentByRole(Button, 'download-cancel').click();
     });
 
-    it.only('Can create a page at same level as home', () => {
+    it('Can create a page at same level as home', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
         const navAccordion = jcontent.getSecondaryNavAccordion();
         navAccordion.click('pages');

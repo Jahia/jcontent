@@ -36,7 +36,7 @@ export const Selection = ({paths, clear}) => {
                           dispatch(cmSwitchSelection(item.value));
                       }}
             />
-            <Button icon={<Cancel/>} label={t('label.contentManager.selection.clearMultipleSelection')} variant="ghost" size="default" onClick={clear} data-sel-role="clearSelection"/>
+            <Button icon={<Cancel/>} label={t('label.contentManager.selection.clearMultipleSelection')} variant="ghost" size="default" data-sel-role="clearSelection" onClick={clear}/>
         </div>
     );
 };

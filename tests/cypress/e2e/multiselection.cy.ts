@@ -61,5 +61,4 @@ describe('Multi-selection tests', () => {
         checkToolbar();
         checkSelectionCount(1);
     });
-
 });

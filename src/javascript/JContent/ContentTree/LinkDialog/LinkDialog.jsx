@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import {shallowEqual, useSelector} from 'react-redux';
 import {Dialog, DialogActions, DialogTitle} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {DisplayAction, registry} from '@jahia/ui-extender';
+import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer} from '~/utils/getButtonRenderer';
 import {useQuery} from '@apollo/react-hooks';
 import {GetLinkData} from '~/JContent/ContentTree/LinkDialog/link.gql-queries';
@@ -33,24 +34,23 @@ export const useLinkDialog = () => {
         openLinkDialog,
         node,
         isOpen,
-        onClose,
+        onClose
     };
 };
 
 export const LinkDialog = ({node, isOpen, onClose}) => {
-    if (!node) {
-        return <></>;
-    }
-
     const {t} = useTranslation('jcontent');
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
         language: state.language
     }), shallowEqual);
-    const {data, error, loading} = useQuery(GetLinkData, {
+    const {data} = useQuery(GetLinkData, {
         variables: {path: node.path, language}
     });
-    const action = registry.get('action', 'edit');
+
+    if (!node) {
+        return <></>;
+    }
 
     const linkType = getLinkType(node);
     const DialogContentComp = (linkType === 'external') ?
@@ -86,4 +86,12 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
             </DialogActions>
         </Dialog>
     );
+};
+
+LinkDialog.propTypes = {
+    node: {
+        path: PropTypes.string
+    },
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired
 };

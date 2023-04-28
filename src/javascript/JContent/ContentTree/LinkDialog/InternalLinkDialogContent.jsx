@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {DialogContent} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
 import styles from '~/JContent/ContentTree/LinkDialog/LinkDialog.scss';
@@ -24,4 +25,11 @@ export const InternalLinkDialogContent = ({node, data, t, siteKey, ...otherProps
             <Typography variant="subheading" className={styles.url}>{refNodePath}</Typography>
         </DialogContent>
     );
+};
+
+InternalLinkDialogContent.propTypes = {
+    node: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired
 };

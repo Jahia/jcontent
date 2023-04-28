@@ -152,12 +152,13 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
     return (
         <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch",
-            justifyContent: "stretch",
-            height: "100%"
-        }}>
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            justifyContent: 'stretch',
+            height: '100%'
+        }}
+        >
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
                       itemComponent={ItemComponent}
@@ -187,7 +188,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
             {item.treeConfig.showContextMenuOnRootPath &&
                 <div
                     style={{
-                        flex: "2 0 50px",
+                        flex: '2 0 50px'
                     }}
                     data-cm-role="rootpath-context-menu-holder"
                     onContextMenu={event => contextualMenu.current(event, {path: rootPath})}

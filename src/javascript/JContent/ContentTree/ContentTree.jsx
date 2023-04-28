@@ -36,7 +36,8 @@ export const accordionPropType = PropTypes.shape({
             canDrop: PropTypes.bool,
             canDropFile: PropTypes.bool,
             canReorder: PropTypes.bool
-        })
+        }),
+        showContextMenuOnRootPath: PropTypes.bool
     }).isRequired
 });
 
@@ -156,7 +157,13 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
                       itemComponent={ItemComponent}
-                      data={convertPathsToTree({treeEntries, selected: path, isReversed, contentMenu: contextualMenuAction, itemProps: {item}})}
+                      data={convertPathsToTree({
+                          treeEntries,
+                          selected: path,
+                          isReversed,
+                          contentMenu: contextualMenuAction,
+                          itemProps: {item}
+                      })}
                       openedItems={openPaths}
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
@@ -177,6 +184,12 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
             {linkDialogProps.node && <LinkDialog {...linkDialogProps}/>}
+            {item.treeConfig.showContextMenuOnRootPath &&
+                <div
+                    className="flexFluid"
+                    data-cm-role="rootpath-context-menu-holder"
+                    onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
+                />}
         </React.Fragment>
     );
 };

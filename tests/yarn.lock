@@ -113,6 +113,11 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@jahia/content-editor-cypress@^4.2.0-tests.9":
+  version "4.2.0-tests.9"
+  resolved "https://npm.jahia.com/@jahia%2fcontent-editor-cypress/-/content-editor-cypress-4.2.0-tests.9.tgz#1d899ce2a78638e7847eccf5c13c242681be1eb7"
+  integrity sha512-aJN0Z62EPs82AbiCU9wqEgmzxrZdu3nWm06GpTvMh05FYdv6DeF86bml2IldehGBn8NJCIIy26vA88GL6OJQKw==
+
 "@jahia/cypress@^2.0.0":
   version "2.0.0"
   resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-2.0.0.tgz#19cfd880e765b43648ccafc9704abf4a93f738cc"

@@ -7,7 +7,7 @@ import styles from '~/JContent/ContentTree/LinkDialog/LinkDialog.scss';
 export const InternalLinkDialogContent = ({node, data, t, siteKey, ...otherProps}) => {
     const {displayName, path} = data?.jcr.nodeByPath?.internalLink?.refNode || {};
     const refNodePath = path || '';
-    const isSameSite = refNodePath.startsWith(`/sites/${siteKey}`);
+    const isSameSite = refNodePath.startsWith(`/sites/${siteKey}/`);
 
     return (
         <DialogContent {...otherProps}>

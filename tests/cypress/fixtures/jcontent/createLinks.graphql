@@ -1,6 +1,6 @@
 mutation {
     jcr {
-        mutateNode(pathOrId: "/sites/jcontentSite/home/area-main") {
+        content: mutateNode(pathOrId: "/sites/jcontentSite/home/area-main") {
             addChildrenBatch(
                 nodes: [
                     {
@@ -23,6 +23,29 @@ mutation {
                                 properties: { name: "j:url"  value: "www.google.com" }
                             }
                         ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+        page: mutateNode(pathOrId: "/sites/jcontentSite/home") {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "internal-link-nav"
+                        primaryNodeType: "jnt:nodeLink"
+                        properties:  { name: "j:node" value: "/sites/jcontentSite/home" type: REFERENCE }
+                    }
+                    {
+                        name: "other-site-link-nav"
+                        primaryNodeType: "jnt:nodeLink"
+                        properties:  { name: "j:node"  value: "/sites/jcontentSite2/home" type: REFERENCE }
+                    }
+                    {
+                        name: "external-link-nav"
+                        primaryNodeType: "jnt:externalLink"
+                        properties: { name: "j:url"  value: "www.google.com" }
                     }
                 ]
             ) {

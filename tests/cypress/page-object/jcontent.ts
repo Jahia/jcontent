@@ -15,6 +15,7 @@ import {BasicSearch} from './basicSearch';
 import {CreateContent} from './createContent';
 import {Media} from './media';
 import {ContentTable} from './contentTable';
+import {AccordionItem} from './accordionItem';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -41,6 +42,10 @@ export class JContent extends BasePage {
         }
 
         return this.accordion;
+    }
+
+    getAccordionItem(itemName: string): AccordionItem {
+        return new AccordionItem(this.getSecondaryNavAccordion(), itemName);
     }
 
     getSiteSwitcher(): Dropdown {

@@ -1,23 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Cancel, Typography} from '@jahia/moonstone';
-import styles from '~/JContent/ContentRoute/ToolBar/ToolBar.scss';
+import {Button, Cancel, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
+import {useDispatch} from 'react-redux';
+import {cmSwitchSelection} from '../../../../redux/selection.redux';
+import {useNodeInfo} from '@jahia/data-helper';
 
 export const Selection = ({paths, clear}) => {
+    const [data, setData] = useState([{}]);
     const {t} = useTranslation('jcontent');
+    const dispatch = useDispatch();
+    const {nodes, loading} = useNodeInfo({paths}, {getDisplayName: true});
+
+    const fillData = () => {
+        setData(nodes.map(node => ({
+            label: node.displayName, value: node.path
+        })));
+    };
 
     return (
         <div className="flexRow">
-            <Typography variant="caption"
-                        data-cm-role="selection-infos"
-                        data-cm-selection-size={paths.length}
-                        className={`${styles.selection}`}
-            >
-                {t('jcontent:label.contentManager.selection.itemsSelected', {count: paths.length})}
-            </Typography>
-            <div className={styles.spacer}/>
-            <Button icon={<Cancel/>} variant="ghost" size="default" onClick={clear}/>
+            <Dropdown label={t('jcontent:label.contentManager.selection.itemsSelected', {count: paths.length})}
+                      data-sel-role="selection-infos"
+                      data-sel-selection-size={paths.length}
+                      hasSearch={false}
+                      size="small"
+                      data={data}
+                      values={paths}
+                      isDisabled={loading}
+                      onFocus={fillData}
+                      onBlur={() => {
+                          // Required function to have onFocus work properly
+                      }}
+                      onChange={(e, item) => {
+                          dispatch(cmSwitchSelection(item.value));
+                      }}
+            />
+            <Button icon={<Cancel/>} label={t('label.contentManager.selection.clearMultipleSelection')} variant="ghost" size="default" data-sel-role="clearSelection" onClick={clear}/>
         </div>
     );
 };

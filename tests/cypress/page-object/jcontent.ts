@@ -126,6 +126,15 @@ export class JContent extends BasePage {
         return this;
     }
 
+    getSelectionDropdown(): Dropdown {
+        return getComponentByRole(Dropdown, 'selection-infos');
+    }
+
+    clearSelection(): JContent {
+        cy.get('.moonstone-header button[data-sel-role="clearSelection"]').click();
+        return this;
+    }
+
     rightClickMenu(operation: string, elementName: string) {
         cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
         return cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find(`li[data-sel-role="${operation}"]`).click();

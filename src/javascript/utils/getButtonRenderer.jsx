@@ -44,10 +44,11 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
                     disabled={enabled === false || isDisabled}
                     onClick={e => {
                         e.stopPropagation();
-                        // call any onClick handler on the rendering side before calling onClick from the action side
+                        // Call any onClick handler on the rendering side before calling onClick from the action side
                         if (typeof renderOnClick === 'function') {
                             renderOnClick();
                         }
+
                         onClick(props, e);
                     }}
                     {...defaultButtonProps}
@@ -68,6 +69,7 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
         enabled: PropTypes.bool,
         isDisabled: PropTypes.bool,
         onClick: PropTypes.func,
+        renderOnClick: PropTypes.func,
         buttonProps: PropTypes.object
     };
 

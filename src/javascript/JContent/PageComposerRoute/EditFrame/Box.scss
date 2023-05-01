@@ -10,12 +10,8 @@ $color-accent: rgb(0, 160, 227);
 
 .rel {
     position: relative;
-    top: -34px;
-    left: 0;
 
     display: block;
-    width: calc(100% + 4px);
-    height: calc(100% + 36px);
 
     margin-left: -2px;
 
@@ -24,10 +20,40 @@ $color-accent: rgb(0, 160, 227);
     box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }
 
+.relHeader {
+    top: -34px;
+    left: 0;
+
+    width: calc(100% + 4px);
+    height: calc(100% + 36px);
+}
+
+.relNoHeader {
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
 .sticky {
     position: sticky;
     top: 0;
     left: 0;
+
+    width: 100%;
+    height: 32px;
+
+    background-color: var(--color-light);
+
+    pointer-events: all;
+
+    overflow: hidden;
+}
+
+.absolute {
+    position: absolute;
+    z-index: 15000;
 
     width: 100%;
     height: 32px;

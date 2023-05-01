@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ContextualMenu, registry} from '@jahia/ui-extender';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
@@ -9,6 +9,8 @@ import {updateProperty} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-m
 import {useQuery} from 'react-apollo';
 import {BoxesQuery} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-queries';
 import {hasMixin, isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
+import {batchActions} from 'redux-batched-actions';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -26,8 +28,15 @@ const getModuleElement = (currentDocument, target) => {
     return element;
 };
 
+const disallowSelection = element => {
+    const tags = ['A', 'BUTTON', 'VIDEO'];
+
+    return tags.includes(element.tagName) || element.closest('a') !== null || element.ownerDocument.getSelection().type === 'Range';
+};
+
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const [inlineEditor] = registry.find({type: 'inline-editor'});
+    const dispatch = useDispatch();
 
     const {language, displayLanguage, selection, path} = useSelector(state => ({
         language: state.language,
@@ -36,6 +45,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         selection: state.jcontent.selection
     }), shallowEqual);
 
+    // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
+    // It helps determine box visibility and header visibility.
     const [currentElement, setCurrentElement] = useState();
     const disableHover = useRef(false);
     const [placeholders, setPlaceholders] = useState([]);
@@ -60,8 +71,46 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         }
     }, [setCurrentElement, currentDocument]);
 
+    const onClick = useCallback(event => {
+        const element = getModuleElement(currentDocument, event.currentTarget);
+        const path = element.getAttribute('path');
+        const isSelected = selection.includes(path);
+        const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
+
+        // Do not handle selection if the target element can be interacted with
+        if (disallowSelection(event.target) && !isMultipleSelectionMode) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (isSelected) {
+            dispatch(cmRemoveSelection(path));
+        } else if (isMultipleSelectionMode) {
+            dispatch(cmAddSelection(path));
+        } else {
+            dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
+        }
+    }, [selection, currentDocument, dispatch]);
+
+    const clearSelection = useCallback(() => {
+        if (selection.length === 1) {
+            dispatch(cmClearSelection());
+        }
+    }, [selection, dispatch]);
+
     const rootElement = useRef();
     const contextualMenu = useRef();
+
+    // Clear selection when clicking outside any module
+    useEffect(() => {
+        currentDocument.addEventListener('click', clearSelection);
+
+        return () => {
+            currentDocument.removeEventListener('click', clearSelection);
+        };
+    }, [selection, dispatch, currentDocument, clearSelection]);
 
     useEffect(() => {
         const placeholders = [];
@@ -151,8 +200,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         <div ref={rootElement}>
             <ContextualMenu
                 setOpenRef={contextualMenu}
-                actionKey={selection.length <= 1 || selection.indexOf(currentPath) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
+                actionKey={selection.length === 0 ? 'contentMenu' : 'selectedContentMenu'}
+                {...selection.length === 0 ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
@@ -160,7 +209,10 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          node={node}
-                         isVisible={element === currentElement}
+                         isCurrent={element === currentElement}
+                         isSelected={selection.includes(node.path)}
+                         isHeaderDisplayed={(selection.length === 1 && (selection.includes(node.path) || currentElement === null)) || element === currentElement}
+                         isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
@@ -171,6 +223,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          addIntervalCallback={addIntervalCallback}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
+                         onClick={onClick}
                          onSaved={onSaved}
                     />
                 ))}

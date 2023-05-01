@@ -98,15 +98,35 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     );
 
     useEffect(() => {
-        const removeSelection = path => dispatch(cmRemoveSelection(path));
-
-        if (selection.length > 0) {
-            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
+        if (selection.length > 0 && !isLoading) {
+            const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
             if (toRemove.length > 0) {
-                removeSelection(toRemove);
+                dispatch(cmRemoveSelection(toRemove));
             }
         }
-    }, [rows, selection, dispatch, paths]);
+
+        function pathExistsInTree(path, tree) {
+            if (Array.isArray(tree)) {
+                for (let i = 0; i < tree.length; i++) {
+                    if (pathExistsInTree(path, tree[i])) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            if (tree.path === path) {
+                return true;
+            }
+
+            if (tree.subRows) {
+                return pathExistsInTree(path, tree.subRows);
+            }
+
+            return false;
+        }
+    }, [rows, selection, dispatch, paths, isLoading]);
 
     const doubleClickNavigation = useCallback(node => {
         let newMode = mode;

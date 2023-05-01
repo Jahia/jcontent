@@ -6,7 +6,21 @@ import {ellipsizeText} from '~/JContent/JContent.utils';
 
 export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {}) => {
     const ButtonRenderer = props => {
-        const {buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, buttonIconEnd, actionKey, enabled, isDisabled, onClick, buttonProps} = props;
+        const {
+            buttonLabelNamespace,
+            buttonLabelShort,
+            buttonLabel,
+            isVisible,
+            buttonLabelParams,
+            buttonIcon,
+            buttonIconEnd,
+            actionKey,
+            enabled,
+            isDisabled,
+            onClick,
+            renderOnClick,
+            buttonProps
+        } = props;
         const {t} = useTranslation(buttonLabelNamespace);
 
         let label = buttonLabel;
@@ -30,6 +44,11 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
                     disabled={enabled === false || isDisabled}
                     onClick={e => {
                         e.stopPropagation();
+                        // Call any onClick handler on the rendering side before calling onClick from the action side
+                        if (typeof renderOnClick === 'function') {
+                            renderOnClick();
+                        }
+
                         onClick(props, e);
                     }}
                     {...defaultButtonProps}
@@ -50,6 +69,7 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
         enabled: PropTypes.bool,
         isDisabled: PropTypes.bool,
         onClick: PropTypes.func,
+        renderOnClick: PropTypes.func,
         buttonProps: PropTypes.object
     };
 

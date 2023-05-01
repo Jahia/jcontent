@@ -14,6 +14,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
+import {LinkDialog, useLinkDialog} from '~/JContent/ContentTree/LinkDialog';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -103,6 +104,7 @@ ItemComponent.propTypes = {
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
     const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
+    const {openLinkDialog, ...linkDialogProps} = useLinkDialog();
     const rootPath = item.getRootPath(siteKey);
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
@@ -171,13 +173,17 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           }
                       }}
                       onClickItem={object => {
-                          if (object.treeItemProps.node.isTreeSelectable) {
+                          const {node} = object.treeItemProps;
+                          if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
+                              openLinkDialog(node);
+                          } else if (node.isTreeSelectable) {
                               dispatch(setPathAction(object.id, {sub: false}));
                           }
                       }}
                       onOpenItem={object => dispatch(openPathAction(object.id))}
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
+            {linkDialogProps.node && <LinkDialog {...linkDialogProps}/>}
             {item.treeConfig.showContextMenuOnRootPath &&
                 <div
                     className="flexFluid"

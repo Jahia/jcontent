@@ -452,11 +452,20 @@
       "links": {
         "external": {
           "title": "Lien externe",
-          "content": "Vous quittez Jahia. Voulez-vous ouvrir le lien externe dans un nouvel onglet ?"
+          "content": "Vous quittez Jahia. Voulez-vous ouvrir le lien externe dans un nouvel onglet ?",
+          "editDialog": {
+            "title": "Lien externe",
+            "body": "Le lien redirige vers une URL externe à Jahia"
+          }
         },
         "internal": {
           "title": "Lien vers un autre site",
-          "content": "Vous ouvrez un lien vers un autre site: {{site}}. Voulez vous ouvrir l'aperçu dans un nouvel onglet ?"
+          "content": "Vous ouvrez un lien vers un autre site: {{site}}. Voulez vous ouvrir l'aperçu dans un nouvel onglet ?",
+          "editDialog": {
+            "title": "Lien interne",
+            "body": "Le lien redirige vers",
+            "ofSite": "du site"
+          }
         },
         "open": "Ouvrir"
       }

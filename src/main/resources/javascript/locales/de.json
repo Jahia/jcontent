@@ -302,7 +302,8 @@
         "items": "{{count}} Element",
         "items_plural": "{{count}} Elemente",
         "clearMultipleSelection": "Auswahl aufheben",
-        "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
+        "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar",
+        "removed": "Zuvor selektierte Elemente, die nicht in dieser Ansicht angezeigt werden können, wurden von der Selektion entfernt"
       },
       "editImage": {
         "action": "Bild-Editor",

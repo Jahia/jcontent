@@ -11,6 +11,9 @@ import {BoxesQuery} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-queri
 import {hasMixin, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
+import {pathExistsInTree} from '../../JContent.utils';
+import {useTranslation} from 'react-i18next';
+import {useNotifications} from '@jahia/react-material';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -35,6 +38,8 @@ const disallowSelection = element => {
 };
 
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
+    const {t} = useTranslation('jcontent');
+    const {notify} = useNotifications();
     const [inlineEditor] = registry.find({type: 'inline-editor'});
     const dispatch = useDispatch();
 
@@ -148,6 +153,15 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             }
         });
 
+        // Removes invisible selections
+        if (selection.length > 0) {
+            const toRemove = selection.filter(path => !pathExistsInTree(path, modules, node => node.dataset.jahiaPath));
+            if (toRemove.length > 0) {
+                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton']);
+                dispatch(cmRemoveSelection(toRemove));
+            }
+        }
+
         setModules(modules);
 
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
@@ -161,7 +175,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
             event.preventDefault();
         });
-    }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver]);
+    }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
 
     const paths = [...new Set([
         ...modules.map(m => m.dataset.jahiaPath),

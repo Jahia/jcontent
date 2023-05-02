@@ -216,3 +216,25 @@ export const getAccordionItems = (accordionItemTarget, accordionItemProps) => {
 export const getName = node => {
     return (node.displayName && ellipsizeText(node.displayName, 50)) || node.name;
 };
+
+export const pathExistsInTree = (path, tree, pathAccessor) => {
+    if (Array.isArray(tree)) {
+        for (let i = 0; i < tree.length; i++) {
+            if (pathExistsInTree(path, tree[i], pathAccessor)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    if ((pathAccessor && pathAccessor(tree) === path) || tree.path === path) {
+        return true;
+    }
+
+    if (tree.subRows) {
+        return pathExistsInTree(path, tree.subRows, pathAccessor);
+    }
+
+    return false;
+};

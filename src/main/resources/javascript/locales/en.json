@@ -305,7 +305,8 @@
         "items": "{{count}} item",
         "items_plural": "{{count}} items",
         "clearMultipleSelection": "Clear selection",
-        "emptyContextMenu": "No actions available for those items"
+        "emptyContextMenu": "No actions available for those items",
+        "removed": "{{count}} previously selected items have been removed from the selection, as they are not displayed in this view"
       },
       "editImage": {
         "action": "Image editor",

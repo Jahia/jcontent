@@ -31,9 +31,12 @@ import {cmSetSort} from '~/JContent/redux/sort.redux';
 import {Row} from '~/JContent/ContentRoute/ContentLayout/ContentTable/Row';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import styles from './ContentTable.scss';
+import {pathExistsInTree} from '../../../JContent.utils';
+import {useNotifications} from '@jahia/react-material';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const {t} = useTranslation('jcontent');
+    const {notify} = useNotifications();
     const dispatch = useDispatch();
 
     const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(state => ({
@@ -98,15 +101,14 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     );
 
     useEffect(() => {
-        const removeSelection = path => dispatch(cmRemoveSelection(path));
-
-        if (selection.length > 0) {
-            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
+        if (selection.length > 0 && !isLoading) {
+            const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
             if (toRemove.length > 0) {
-                removeSelection(toRemove);
+                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton']);
+                dispatch(cmRemoveSelection(toRemove));
             }
         }
-    }, [rows, selection, dispatch, paths]);
+    }, [rows, selection, dispatch, paths, isLoading, notify, t]);
 
     const doubleClickNavigation = useCallback(node => {
         let newMode = mode;

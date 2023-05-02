@@ -102,15 +102,20 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
     const rootElement = useRef();
     const contextualMenu = useRef();
-
-    // Clear selection when clicking outside any module
+    const handleKeyboardNavigation = useCallback(event => {
+        if (event.key === 'Escape' || event.keyCode === 27) {
+            dispatch(cmClearSelection());
+        }
+    }, [dispatch]);
+    // Clear selection when clicking outside any module or if pressing escape key
     useEffect(() => {
         currentDocument.addEventListener('click', clearSelection);
-
+        currentDocument.addEventListener('keydown', handleKeyboardNavigation)
         return () => {
             currentDocument.removeEventListener('click', clearSelection);
+            currentDocument.removeEventListener('keydown', handleKeyboardNavigation)
         };
-    }, [selection, dispatch, currentDocument, clearSelection]);
+    }, [selection, dispatch, currentDocument, clearSelection, handleKeyboardNavigation]);
 
     useEffect(() => {
         const placeholders = [];

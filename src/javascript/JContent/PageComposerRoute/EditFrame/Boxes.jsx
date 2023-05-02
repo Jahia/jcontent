@@ -110,10 +110,10 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     // Clear selection when clicking outside any module or if pressing escape key
     useEffect(() => {
         currentDocument.addEventListener('click', clearSelection);
-        currentDocument.addEventListener('keydown', handleKeyboardNavigation)
+        currentDocument.addEventListener('keydown', handleKeyboardNavigation);
         return () => {
             currentDocument.removeEventListener('click', clearSelection);
-            currentDocument.removeEventListener('keydown', handleKeyboardNavigation)
+            currentDocument.removeEventListener('keydown', handleKeyboardNavigation);
         };
     }, [selection, dispatch, currentDocument, clearSelection, handleKeyboardNavigation]);
 

@@ -461,9 +461,9 @@
           "title": "Link zu einer anderen Site",
           "content": "Sie öffnen einen Link zu einer anderen Site: {{site}}. Wollen Sie die Vorschau in einem neuen Tab öffnen ?",
           "editDialog": {
-            "title": "Interne link",
+            "title": "Interner Link",
             "body": "Der Link führt zu",
-            "ofSite": "auf der site"
+            "ofSite": "auf der Site"
           }
         },
         "open": "Öffnen"

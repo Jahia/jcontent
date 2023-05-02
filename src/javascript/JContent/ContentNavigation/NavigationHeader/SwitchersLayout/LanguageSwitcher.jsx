@@ -45,8 +45,11 @@ const LanguageSwitcher = () => {
         return null;
     }
 
-    return (data.length === 1) ?
-        <Typography isUpperCase className={styles.label} variant="caption">{lang}</Typography> :
+    return (data.length === 1) ? (
+        <div className={styles.label}>
+            <Typography isUpperCase variant="body">{lang}</Typography>
+        </div>
+    ) : (
         <Dropdown
             data-cm-role="language-switcher"
             className={styles.languageSwitcher}
@@ -57,7 +60,8 @@ const LanguageSwitcher = () => {
                 onSelectLanguageHandler(item.value);
                 return true;
             }}
-        />;
+        />
+    );
 };
 
 export default LanguageSwitcher;

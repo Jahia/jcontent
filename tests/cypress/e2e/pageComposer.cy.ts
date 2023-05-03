@@ -255,7 +255,7 @@ describe('Page composer', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             // Select absolute area
             const module = jcontent.getModule(absoluteArea);
-            module.click();
+            module.click('top');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             // Check selection in structured mode

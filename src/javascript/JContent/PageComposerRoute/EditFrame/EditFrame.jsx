@@ -17,6 +17,7 @@ import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
 import {useDragDropManager} from 'react-dnd';
 import {LinkInterceptor} from './LinkInterceptor';
+import {Tooltip} from '@material-ui/core';
 import {batchActions} from 'redux-batched-actions';
 
 function addEventListeners(target, manager, iframeRef) {
@@ -191,7 +192,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             if (!isPreview && path === framePath && locale === language && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
-                iframe.current.ownerDocument.querySelectorAll('style[styleloader]').forEach(s => {
+                iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {
                     const clone = s.cloneNode(true);
                     clone.textContent = prefixCssSelectors(clone.textContent, '.' + styles.root);
                     currentDocument.adoptNode(clone);
@@ -213,6 +214,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 
     return (
         <>
+            <Tooltip title=""><span/></Tooltip>
             <DeviceContainer enabled={isDeviceView} device={device} setDevice={setDevice}>
                 <iframe ref={iframe}
                         width="100%"
@@ -234,7 +236,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && !isPreview && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
-                    <div className={styles.root}>
+                    <div id="jahia-portal-root" className={styles.root}>
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
                                addIntervalCallback={addIntervalCallback}

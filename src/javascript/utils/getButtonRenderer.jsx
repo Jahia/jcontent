@@ -3,8 +3,9 @@ import {Button} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {ellipsizeText} from '~/JContent/JContent.utils';
+import {Tooltip} from '@material-ui/core';
 
-export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {}) => {
+export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultButtonProps, defaultTooltipProps} = {}) => {
     const ButtonRenderer = props => {
         const {
             buttonLabelNamespace,
@@ -19,7 +20,8 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
             isDisabled,
             onClick,
             renderOnClick,
-            buttonProps
+            buttonProps,
+            tooltipProps
         } = props;
         const {t} = useTranslation(buttonLabelNamespace);
 
@@ -36,7 +38,11 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
             label = ellipsizeText(label, ellipsis);
         }
 
-        return (isVisible !== false &&
+        if (isVisible === false) {
+            return false;
+        }
+
+        const button = (
             <Button data-sel-role={actionKey}
                     label={label}
                     icon={buttonIcon}
@@ -55,6 +61,16 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
                     {...buttonProps}
             />
         );
+
+        if (showTooltip) {
+            return (
+                <Tooltip title={label} {...defaultTooltipProps} {...tooltipProps}>
+                    {button}
+                </Tooltip>
+            );
+        }
+
+        return button;
     };
 
     ButtonRenderer.propTypes = {
@@ -70,7 +86,8 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
         isDisabled: PropTypes.bool,
         onClick: PropTypes.func,
         renderOnClick: PropTypes.func,
-        buttonProps: PropTypes.object
+        buttonProps: PropTypes.object,
+        tooltipProps: PropTypes.object
     };
 
     return ButtonRenderer;

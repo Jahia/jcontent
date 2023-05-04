@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import styles from './EditFrame.scss';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
 } from '~/JContent/eventHandlerRegistry';
-import {isDescendantOrSelf} from '~/JContent/JContent.utils';
+import {isDescendantOrSelf, extractPaths} from '~/JContent/JContent.utils';
 import {useApolloClient} from 'react-apollo';
 import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import {useDragDropManager} from 'react-dnd';
 import {LinkInterceptor} from './LinkInterceptor';
 import {Tooltip} from '@material-ui/core';
+import {batchActions} from 'redux-batched-actions';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -100,7 +101,10 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             const currentDocument = iframe.current.contentDocument;
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
             if (framePath && framePath !== path) {
-                dispatch(cmGoto({path: framePath}));
+                dispatch(batchActions([
+                    cmGoto({path: framePath}),
+                    cmOpenPaths(extractPaths(site, framePath.substring(0, framePath.lastIndexOf('/'))))
+                ]));
             }
 
             setCurrentDocument(currentDocument);

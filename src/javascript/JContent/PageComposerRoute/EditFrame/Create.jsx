@@ -11,7 +11,7 @@ import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
 import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
 
-const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default'}});
+const ButtonRenderer = getButtonRenderer({showTooltip: true, defaultButtonProps: {color: 'default'}});
 
 function getBoundingBox(element) {
     const rect = getCoords(element);
@@ -71,6 +71,8 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
         };
     }, [isCanDrop, element]);
 
+    const tooltipProps = {enterDelay: 800, PopperProps: {container: element.ownerDocument.getElementById('jahia-portal-root')}};
+
     return !anyDragging && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
@@ -81,9 +83,9 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
         >
-            {nodes.length === 0 && (<DisplayAction actionKey="createContent" path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>)}
-            <DisplayAction actionKey="paste" path={parentPath} loading={() => false} render={ButtonRenderer}/>
-            <DisplayAction actionKey="pasteReference" path={parentPath} loading={() => false} render={ButtonRenderer}/>
+            {nodes.length === 0 && (<DisplayAction actionKey="createContent" tooltipProps={tooltipProps} path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>)}
+            <DisplayAction actionKey="paste" tooltipProps={tooltipProps} path={parentPath} loading={() => false} render={ButtonRenderer}/>
+            <DisplayAction actionKey="pasteReference" tooltipProps={tooltipProps} path={parentPath} loading={() => false} render={ButtonRenderer}/>
         </div>
     );
 });

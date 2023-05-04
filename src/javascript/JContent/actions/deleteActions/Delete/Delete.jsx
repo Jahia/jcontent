@@ -18,6 +18,7 @@ import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {getName} from '~/JContent';
 import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
+import {isPathChildOfAnotherPath} from '../../../JContent.utils';
 
 let getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t}) => {
     if (locked) {
@@ -140,7 +141,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         siteKey: state.site,
         language: state.language
     }), shallowEqual);
-    const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => path.startsWith(parentPath) && path.length > parentPath.length) === undefined));
+    const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
     const {data, error, loading} = useQuery(DeleteQueries, {
         variables: {

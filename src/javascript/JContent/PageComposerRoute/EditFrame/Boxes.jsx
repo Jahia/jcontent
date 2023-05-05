@@ -162,7 +162,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         if (selection.length > 0) {
             const toRemove = selection.filter(path => !pathExistsInTree(path, modules, node => node.dataset.jahiaPath));
             if (toRemove.length > 0) {
-                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton']);
+                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
                 dispatch(cmRemoveSelection(toRemove));
             }
         }

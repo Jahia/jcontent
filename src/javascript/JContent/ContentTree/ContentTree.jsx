@@ -151,6 +151,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     });
 
     let contextualMenu = useRef();
+    let rootContextualMenu = useRef();
 
     return (
         <React.Fragment>
@@ -184,12 +185,15 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
             {linkDialogProps.node && <LinkDialog {...linkDialogProps}/>}
-            {item.treeConfig.showContextMenuOnRootPath &&
-                <div
-                    className="flexFluid"
-                    data-cm-role="rootpath-context-menu-holder"
-                    onContextMenu={event => contextualMenu.current(event, {path: rootPath})}
-                />}
+            {item.treeConfig.showContextMenuOnRootPath && (
+                <>
+                    <ContextualMenu setOpenRef={rootContextualMenu} actionKey="rootContentMenu"/>
+                    <div
+                        className="flexFluid"
+                        data-cm-role="rootpath-context-menu-holder"
+                        onContextMenu={event => rootContextualMenu.current(event, {path: rootPath})}
+                    />
+                </>)}
         </React.Fragment>
     );
 };

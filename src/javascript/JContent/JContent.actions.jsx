@@ -185,6 +185,16 @@ export const jContentActions = registry => {
             isShowIcons: true
         }
     });
+
+    registry.add('action', 'rootContentMenu', menuActionWithRenderer, {
+        buttonIcon: <MoreVert/>,
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
+        menuTarget: 'rootContentActions',
+        menuItemProps: {
+            isShowIcons: true
+        }
+    });
+
     registry.add('action', 'selectedContentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
@@ -204,14 +214,14 @@ export const jContentActions = registry => {
     registry.add('action', 'paste', {
         buttonIcon: <Paste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.paste',
-        targets: ['headerPrimaryActions:10', 'contentActions:3.91', 'narrowHeaderMenu:4'],
+        targets: ['headerPrimaryActions:10', 'contentActions:3.91', 'rootContentActions:3.91', 'narrowHeaderMenu:4'],
         component: PasteActionComponent
     });
     registry.add('action', 'pasteReference', {
         buttonIcon: <Paste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.pasteReference',
         referenceTypes: ['jnt:contentReference'],
-        targets: ['headerPrimaryActions:10.1', 'contentActions:3.92'],
+        targets: ['headerPrimaryActions:10.1', 'contentActions:3.92', 'rootContentActions:3.92'],
         component: PasteActionComponent
     });
     registry.add('action', 'cut', {
@@ -352,7 +362,7 @@ export const jContentActions = registry => {
     });
 
     registry.add('action', 'contentActionsSeparator1', {
-        targets: ['contentActions:0'],
+        targets: ['contentActions:0', 'rootContentActions:0'],
         isSeparator: true
     });
 

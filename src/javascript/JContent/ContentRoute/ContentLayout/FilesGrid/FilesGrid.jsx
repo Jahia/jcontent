@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
@@ -7,8 +7,8 @@ import {TablePagination, Typography} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '~/JContent/redux/pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
-import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
+import {cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/redux/preview.redux';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import classNames from 'clsx';
 import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
@@ -17,10 +17,12 @@ import styles from './FilesGrid.scss';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import clsx from 'clsx';
 import {registry} from '@jahia/ui-extender';
+import {batchActions} from 'redux-batched-actions';
+import {cmClearSelection} from '../../../redux/selection.redux';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
-    const {mode, path, pagination, gridMode, siteKey, uilang, lang, previewSelection} = useSelector(state => ({
+    const {mode, path, pagination, gridMode, siteKey, uilang, lang, previewSelection, previewState, selection} = useSelector(state => ({
         mode: state.jcontent.mode,
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
@@ -28,11 +30,13 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         siteKey: state.site,
         uilang: state.uilang,
         lang: state.lang,
-        previewSelection: state.jcontent.previewSelection
+        selection: state.jcontent.selection,
+        previewSelection: state.jcontent.previewSelection,
+        previewState: state.jcontent.previewState
     }), shallowEqual);
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
-    const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection.path));
+    const onPreviewSelect = previewSelection => dispatch(batchActions([cmSetPreviewSelection(previewSelection.path), cmSetPreviewState(CM_DRAWER_STATES.SHOW)]));
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
     const setPath = (siteKey, path, mode) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
@@ -52,6 +56,13 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
             return onPreviewSelect(row);
         }
     });
+
+    // This is temporary fix, see https://jira.jahia.org/browse/BACKLOG-13981 for final feature
+    useEffect(() => {
+        if (selection.length > 0) {
+            dispatch(cmClearSelection());
+        }
+    }, [selection, dispatch]);
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
@@ -94,7 +105,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   uilang={uilang}
                                   lang={lang}
                                   siteKey={siteKey}
-                                  previewSelection={previewSelection}
+                                  previewSelection={CM_DRAWER_STATES.SHOW === previewState ? previewSelection : null}
                                   index={index}
                                   node={node}
                                   setPath={setPath}

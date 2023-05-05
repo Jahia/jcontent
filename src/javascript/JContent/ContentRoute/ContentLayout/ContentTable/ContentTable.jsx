@@ -104,7 +104,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         if (selection.length > 0 && !isLoading) {
             const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
             if (toRemove.length > 0) {
-                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton']);
+                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
                 dispatch(cmRemoveSelection(toRemove));
             }
         }

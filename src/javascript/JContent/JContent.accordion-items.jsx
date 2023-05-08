@@ -127,7 +127,7 @@ export const jContentAccordionItems = registry => {
             dnd: {
                 canDrag: showPageComposer, canDrop: showPageComposer, canReorder: showPageComposer
             },
-            showContextMenuOnRootPath: true
+            showContextMenuOnRootPath: booleanValue(contextJsParameters.config.jcontent?.showPageComposer)
         },
         tableConfig: {
             queryHandler: PagesQueryHandler,

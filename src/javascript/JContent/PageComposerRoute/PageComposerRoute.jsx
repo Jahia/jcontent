@@ -12,15 +12,15 @@ export const PageComposerRoute = () => {
     const viewMode = useSelector(state => state.jcontent.tableView.viewMode);
 
     const path = useSelector(state => state.jcontent.path);
-    const res = useNodeInfo({path}, {getIsNodeTypes: ['jnt:page', 'jnt:mainResource']});
+    const nodeTypes = ['jnt:page', 'jmix:mainResource'];
+    const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
 
     if (res.loading) {
         return false;
     }
 
-    const pageComposer =
-        (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode) &&
-        (res.node['jnt:page'] || res.node['jnt:mainResource']);
+    const pageComposer = nodeTypes.some(nt => res.node[nt]) &&
+        (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
 
     if (pageComposer) {
         return (

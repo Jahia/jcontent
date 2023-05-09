@@ -73,7 +73,7 @@
     "react-dnd": "^15.1.2",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^16",
-    "react-dropzone": "^5.1.0",
+    "react-dropzone": "^14.2.3",
     "react-file-viewer": "^1.2.1",
     "react-i18next": "^11.2.7",
     "react-iframe": "^1.2.0",

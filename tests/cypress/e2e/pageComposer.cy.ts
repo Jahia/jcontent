@@ -296,6 +296,8 @@ describe('Page composer', () => {
 
             module.contextMenu().get().find('span').contains('2 items selected');
 
+            module.click();
+
             jcontent.clearSelection();
 
             module.contextMenu().get().find('span').contains('Add to selection');

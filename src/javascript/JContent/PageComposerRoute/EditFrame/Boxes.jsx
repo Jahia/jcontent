@@ -220,6 +220,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             <ContextualMenu
                 setOpenRef={contextualMenu}
                 actionKey={selection.length === 0 ? 'contentMenu' : 'selectedContentMenu'}
+                currentPath={currentPath}
                 {...selection.length === 0 ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 

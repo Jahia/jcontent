@@ -52,6 +52,7 @@ import {CreateFolderActionComponent} from './actions/createFolderAction';
 import {ZipActionComponent} from './actions/zipUnzip/zipAction';
 import {UnzipActionComponent} from './actions/zipUnzip/unzipAction';
 import {SearchActionComponent} from './actions/searchAction';
+import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
@@ -416,5 +417,10 @@ export const jContentActions = registry => {
         targets: ['narrowHeaderSelectionMenu:10.5'],
         buttonLabel: 'jcontent:label.contentManager.actions.menuLabel.publication',
         isTitle: true
+    });
+
+    registry.add('action', 'selectionAction', {
+        targets: ['contentActions:0', 'selectedContentActions:0'],
+        component: SelectionActionComponent
     });
 };

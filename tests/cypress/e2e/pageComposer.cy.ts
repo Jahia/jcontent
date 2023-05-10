@@ -281,6 +281,27 @@ describe('Page composer', () => {
             jcontent.switchToMode('Page Composer');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
         });
+
+        it('Allows to select with right click', () => {
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
+            let module = jcontent.getModule(item1);
+            module.contextMenu().select('Add to selection');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
+
+            module.contextMenu().get().find('span').contains('1 item selected');
+
+            module = jcontent.getModule(item2);
+            module.contextMenu().select('Add to selection');
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
+
+            module.contextMenu().get().find('span').contains('2 items selected');
+
+            module.contextMenu().select('Copy');
+
+            jcontent.clearSelection();
+
+            module.contextMenu().get().find('span').contains('Add to selection');
+        });
     });
 
     // Tests to be added when content-editor is moved here

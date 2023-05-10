@@ -470,6 +470,14 @@
           }
         },
         "open": "Ouvrir"
+      },
+      "contentPath": {
+        "dialog": {
+          "title": "La vue Page Composer n'est pas disponible",
+          "body": "L'élément cliqué ne peut être affiché dans la vue Page Composer.",
+          "listView": "Ouvrir en vue liste",
+          "parentPage": "Afficher la page parente"
+        }
       }
     },
     "ok": "OK",

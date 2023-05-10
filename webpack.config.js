@@ -34,6 +34,11 @@ module.exports = (env, argv) => {
                     type: 'javascript/auto'
                 },
                 {
+                    test: /\.js$/,
+                    enforce: "pre",
+                    use: ["source-map-loader"],
+                },
+                {
                     test: /\.jsx?$/,
                     include: [path.join(__dirname, 'src')],
                     use: {

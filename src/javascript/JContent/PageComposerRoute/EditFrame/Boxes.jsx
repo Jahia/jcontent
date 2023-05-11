@@ -215,13 +215,21 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         depth: m.dataset.jahiaPath.split('/').length
     })), [modules]);
 
+    let pathObject;
+
+    if (selection.length > 0 && selection.includes(currentPath)) {
+        pathObject = selection.length === 1 ? {path: selection[0]} : {paths: selection};
+        pathObject.actionKey = 'selectedContentMenu';
+    } else {
+        pathObject = {path: currentPath, actionKey: 'contentMenu'};
+    }
+
     return (
         <div ref={rootElement}>
             <ContextualMenu
                 setOpenRef={contextualMenu}
-                actionKey={selection.length === 0 ? 'contentMenu' : 'selectedContentMenu'}
                 currentPath={currentPath}
-                {...selection.length === 0 ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
+                {...pathObject}
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))

@@ -72,12 +72,12 @@ const ContentPathContainer = () => {
         <>
             <ContentPath items={items} onItemClick={handleNavigation}/>
             <ContentPathDialog isOpen={currentItem}
-                               handleParentPage={() => {
+                               handleParentNavigation={() => {
                                    dispatch(cmGoto({mode, path: currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))}));
                                    setCurrentItem(null);
                                }}
                                handleClose={() => setCurrentItem(null)}
-                               handleListView={() => {
+                               handleListNavigation={() => {
                                    dispatch(batchActions([setTableViewMode(JContentConstants.tableView.viewMode.FLAT), cmGoto({mode, path: currentItem.path})]));
                                    window.localStorage.setItem(JContentConstants.localStorageKeys.viewMode, JContentConstants.tableView.viewMode.FLAT);
                                    setCurrentItem(null);

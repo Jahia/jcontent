@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
 import styles from './ContentPathDialog.scss';
 
-export const ContentPathDialog = ({isOpen, handleClose, handleListView, handleParentPage}) => {
+export const ContentPathDialog = ({isOpen, handleClose, handleListNavigation, handleParentNavigation}) => {
     const {t} = useTranslation('jcontent');
     return (
         <Dialog open={isOpen}
@@ -21,8 +21,8 @@ export const ContentPathDialog = ({isOpen, handleClose, handleListView, handlePa
             </DialogContent>
             <DialogActions>
                 <Button label={t('jcontent:label.cancel')} size="big" data-cm-role="breadcrumb-cancel" onClick={handleClose}/>
-                <Button label={t('jcontent:label.contentManager.contentPath.dialog.listView')} size="big" data-cm-role="breadcrumb-view-list" onClick={handleListView}/>
-                <Button label={t('jcontent:label.contentManager.contentPath.dialog.parentPage')} size="big" color="accent" data-cm-role="breadcrumb-view-parent" onClick={handleParentPage}/>
+                <Button label={t('jcontent:label.contentManager.contentPath.dialog.listView')} size="big" data-cm-role="breadcrumb-view-list" onClick={handleListNavigation}/>
+                <Button label={t('jcontent:label.contentManager.contentPath.dialog.parentPage')} size="big" color="accent" data-cm-role="breadcrumb-view-parent" onClick={handleParentNavigation}/>
             </DialogActions>
         </Dialog>
     );
@@ -30,8 +30,8 @@ export const ContentPathDialog = ({isOpen, handleClose, handleListView, handlePa
 
 ContentPathDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
-    handleListView: PropTypes.func.isRequired,
-    handleParentPage: PropTypes.func.isRequired,
+    handleListNavigation: PropTypes.func.isRequired,
+    handleParentNavigation: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired
 };
 

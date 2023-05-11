@@ -20,7 +20,7 @@ export const ContentPathDialog = ({isOpen, handleClose, handleListView, handlePa
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button label={t('jcontent:label.contentManager.cancel')} size="big" data-cm-role="breadcrumb-cancel" onClick={handleClose}/>
+                <Button label={t('jcontent:label.cancel')} size="big" data-cm-role="breadcrumb-cancel" onClick={handleClose}/>
                 <Button label={t('jcontent:label.contentManager.contentPath.dialog.listView')} size="big" data-cm-role="breadcrumb-view-list" onClick={handleListView}/>
                 <Button label={t('jcontent:label.contentManager.contentPath.dialog.parentPage')} size="big" color="accent" data-cm-role="breadcrumb-view-parent" onClick={handleParentPage}/>
             </DialogActions>

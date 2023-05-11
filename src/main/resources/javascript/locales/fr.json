@@ -304,7 +304,7 @@
         "clearMultipleSelection": "Vider la sélection",
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments",
         "removed": "{{count}} éléments précédemment sélectionnés ont été enlevés de la sélection, car non affichés dans cette vue",
-        "addTo": "Zur Selektion hinzufügen"
+        "addTo": "Ajouter à la sélection"
       },
       "editImage": {
         "action": "Editeur d'images",

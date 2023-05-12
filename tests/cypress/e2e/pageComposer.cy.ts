@@ -284,16 +284,16 @@ describe('Page composer', () => {
 
         it('Allows to select with right click', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-            let module = jcontent.getModule(item1);
+            const module = jcontent.getModule(item1);
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module.contextMenu().get().find('span').contains('1 item selected');
         });
 
-        it('Allows to select with right click additional item', () => {
+        it('Allows to select with right click', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-            let module = jcontent.getModule(item2);
+            const module = jcontent.getModule(item2);
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 

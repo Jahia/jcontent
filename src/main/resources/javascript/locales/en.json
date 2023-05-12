@@ -477,6 +477,13 @@
           }
         },
         "open": "Open"
+      },
+      "textMenu": {
+        "editDialog": {
+          "title": "Menu label",
+          "body": "Menu labels are used to organize pages and cannot be displayed in the current view. Switch to list view instead",
+          "openInList": "Open in list view"
+        }
       }
     },
     "ok": "OK",

@@ -1,5 +1,5 @@
-import React from 'react';
-import {useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import ContentRoute from '../ContentRoute';
 import MainLayout from '../MainLayout';
 import ContentHeader from '../ContentHeader';
@@ -7,6 +7,7 @@ import JContentConstants from '../JContent.constants';
 import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
 import {EditFrame} from './EditFrame';
 import {useNodeInfo} from '@jahia/data-helper';
+import {setTableViewMode} from '../redux/tableView.redux';
 
 export const PageComposerRoute = () => {
     const viewMode = useSelector(state => state.jcontent.tableView.viewMode);
@@ -15,12 +16,21 @@ export const PageComposerRoute = () => {
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
     const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
 
+    const dispatch = useDispatch();
+
+    const shouldSwitchMode = !res.loading && !nodeTypes.some(nt => res.node[nt]);
+
+    useEffect(() => {
+        if (shouldSwitchMode) {
+            dispatch(setTableViewMode(JContentConstants.tableView.viewMode.FLAT));
+        }
+    }, [shouldSwitchMode, dispatch]);
+
     if (res.loading) {
         return false;
     }
 
-    const pageComposer = nodeTypes.some(nt => res.node[nt]) &&
-        (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
+    const pageComposer = (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
 
     if (pageComposer) {
         return (

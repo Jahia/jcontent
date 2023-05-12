@@ -290,7 +290,7 @@ describe('Page composer', () => {
 
             module.contextMenu().get().find('span').contains('1 item selected');
 
-            module = jcontent.getModule(item2);
+            module = jcontent.getModule(item3);
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 

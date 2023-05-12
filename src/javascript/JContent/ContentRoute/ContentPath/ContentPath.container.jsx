@@ -78,8 +78,7 @@ const ContentPathContainer = () => {
                                }}
                                handleClose={() => setCurrentItem(null)}
                                handleListNavigation={() => {
-                                   dispatch(batchActions([setTableViewMode(JContentConstants.tableView.viewMode.FLAT), cmGoto({mode, path: currentItem.path})]));
-                                   window.localStorage.setItem(JContentConstants.localStorageKeys.viewMode, JContentConstants.tableView.viewMode.FLAT);
+                                   dispatch(cmGoto({mode, path: currentItem.path}));
                                    setCurrentItem(null);
                                }}
             />

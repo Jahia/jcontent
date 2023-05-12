@@ -294,6 +294,7 @@ describe('Page composer', () => {
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
+            module = jcontent.getModule(item1);
             module.contextMenu().get().find('span').contains('2 items selected');
         });
     });

@@ -1322,10 +1322,10 @@
     enzyme-adapter-react-16 "^1.12.1"
     identity-obj-proxy "^3.0.0"
 
-"@jahia/ui-extender@^1.0.7":
-  version "1.0.7"
-  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-1.0.7.tgz#d76243c7878482b385950771a70a93732d9577d1"
-  integrity sha512-9xHdXU6FNbakbESjff6uuGmcorDMWOhOjfRnIRNliUphgSBNoeraeGhT7OrazPawzzrM0TAQiZft+K6/8W5xzQ==
+"@jahia/ui-extender@^1.0.9":
+  version "1.0.9"
+  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-1.0.9.tgz#1b140481c96f5a9e2cf2e591d6114c55a4b7da6c"
+  integrity sha512-ymGDQ0KQRJmFS7JJF7gBLZ5BuyvBrICyjqMNr4ewIAwcakOrbEiEDhpYr2NjJnsCIrnv9+otUg+heu9xO7fclA==
   dependencies:
     prop-types "^15.6.1"
     react "^16.12.0"
@@ -5535,7 +5535,7 @@ i18next@^19.0.3:
   dependencies:
     "@babel/runtime" "^7.12.0"
 
-iconv-lite@0.6.3:
+iconv-lite@0.6.3, iconv-lite@^0.6.3:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
   integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
@@ -9101,10 +9101,19 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-"source-map-js@>=0.6.2 <2.0.0":
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
+
+source-map-loader@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/source-map-loader/-/source-map-loader-4.0.1.tgz#72f00d05f5d1f90f80974eda781cbd7107c125f2"
+  integrity sha512-oqXpzDIByKONVY8g1NUPOTQhe0UTU5bWUl32GSkqK2LjJj0HmwTMVKxcUip0RgAYhY1mqgOxjbQM48a0mmeNfA==
+  dependencies:
+    abab "^2.0.6"
+    iconv-lite "^0.6.3"
+    source-map-js "^1.0.2"
 
 source-map-resolve@^0.5.0:
   version "0.5.3"

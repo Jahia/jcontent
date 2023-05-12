@@ -21,11 +21,12 @@ describe('SimplePathEntry', () => {
 
     it('should handle clicks', () => {
         const handler = jest.fn();
-        const wrapper = shallow(<SimplePathEntry item={{path: '/a/b/c'}} onItemClick={handler}/>);
+        const item = {path: '/a/b/c'};
+        const wrapper = shallow(<SimplePathEntry item={item} onItemClick={handler}/>);
 
         wrapper.find(BreadcrumbItem).invoke('onClick')();
 
         expect(handler).toHaveBeenCalledTimes(1);
-        expect(handler).toHaveBeenCalledWith('/a/b/c');
+        expect(handler).toHaveBeenCalledWith(item);
     });
 });

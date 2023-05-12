@@ -64,7 +64,7 @@ describe('ContentPathContainer', () => {
             }
         }));
 
-        const wrapper = shallow(<ContentPathContainer/>);
+        const wrapper = shallow(<ContentPathContainer/>).find('ContentPath');
         expect(wrapper.type()).toBe(ContentPath);
         expect(wrapper.prop('items')).toEqual(ancestors);
         expect(wrapper.prop('onItemClick')).toBeDefined();
@@ -81,8 +81,8 @@ describe('ContentPathContainer', () => {
             }
         }));
 
-        const wrapper = shallow(<ContentPathContainer/>);
-        wrapper.invoke('onItemClick')('/x/y/z');
+        const wrapper = shallow(<ContentPathContainer/>).find('ContentPath');
+        wrapper.invoke('onItemClick')({path: '/x/y/z'});
 
         expect(dispatch).toHaveBeenCalledTimes(1);
         expect(cmGoto).toHaveBeenCalledWith({mode: 'foo', path: '/x/y/z'});
@@ -114,7 +114,7 @@ describe('ContentPathContainer', () => {
             }
         }));
 
-        const wrapper = shallow(<ContentPathContainer/>);
+        const wrapper = shallow(<ContentPathContainer/>).find('ContentPath');
         expect(wrapper.prop('items')).toEqual(ancestors.slice(1));
     });
 });

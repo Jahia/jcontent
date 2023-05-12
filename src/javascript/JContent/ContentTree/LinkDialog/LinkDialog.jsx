@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useSelector} from 'react-redux';
 import {Dialog, DialogActions, DialogTitle} from '@material-ui/core';
@@ -15,28 +15,6 @@ import styles from './LinkDialog.scss';
 function getLinkType(node) {
     return (node.primaryNodeType.name === 'jnt:externalLink') ? 'external' : 'internal';
 }
-
-export const useLinkDialog = () => {
-    const [isOpen, setOpen] = useState(false);
-    const [node, setNode] = useState();
-
-    const openLinkDialog = node => {
-        setOpen(true);
-        setNode(node);
-    };
-
-    const onClose = () => {
-        setOpen(false);
-        setNode();
-    };
-
-    return {
-        openLinkDialog,
-        node,
-        isOpen,
-        onClose
-    };
-};
 
 export const LinkDialog = ({node, isOpen, onClose}) => {
     const {t} = useTranslation('jcontent');

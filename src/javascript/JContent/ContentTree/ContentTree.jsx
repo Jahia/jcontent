@@ -14,7 +14,8 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
-import {LinkDialog, useLinkDialog} from '~/JContent/ContentTree/LinkDialog';
+import {LinkDialog, useNodeDialog} from '~/JContent/ContentTree/LinkDialog';
+import {TextMenuDialog} from './LinkDialog/TextMenuDialog';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -47,7 +48,7 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
         dropTarget: node,
         orderable: item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canReorder),
         entries: treeEntries,
-        refetchQueries: ['PickerQuery__DisplayName_IsTreeSelectable_LockInfo_MixinTypes_ParentNodeWithName_PickerPrimaryNodeTypeName_PublicationStatus']
+        refetchQueries: ['PickerQuery__DisplayName_LockInfo_MixinTypes_ParentNodeWithName_PickerPrimaryNodeTypeName_PublicationStatus']
     });
     const [{isCanDrop: isCanDropFile}, dropFile] = useFileDrop({
         uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD,
@@ -103,8 +104,9 @@ ItemComponent.propTypes = {
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
-    const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
-    const {openLinkDialog, ...linkDialogProps} = useLinkDialog();
+    const {lang, siteKey, path, openPaths, viewMode} = useSelector(selector, shallowEqual);
+    const {openDialog: openLinkDialog, ...linkDialogProps} = useNodeDialog();
+    const {openDialog: openTextMenuDialog, ...textMenuDialogProps} = useNodeDialog();
     const rootPath = item.getRootPath(siteKey);
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
@@ -112,7 +114,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     const useTreeEntriesOptionsJson = {
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.isTreeSelectable, lockInfo, PickerItemsFragment.parentNode, displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, PickerItemsFragment.parentNode, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
@@ -175,9 +177,11 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       }}
                       onClickItem={object => {
                           const {node} = object.treeItemProps;
-                          if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
+                          if (node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageComposer') {
+                              openTextMenuDialog(node);
+                          } else if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
                               openLinkDialog(node);
-                          } else if (node.isTreeSelectable) {
+                          } else {
                               dispatch(setPathAction(object.id, {sub: false}));
                           }
                       }}
@@ -185,6 +189,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
             {linkDialogProps.node && <LinkDialog {...linkDialogProps}/>}
+            {textMenuDialogProps.node && <TextMenuDialog {...textMenuDialogProps} setPathAction={setPathAction}/>}
             {item.treeConfig.showContextMenuOnRootPath && (
                 <>
                     <ContextualMenu setOpenRef={rootContextualMenu} actionKey="rootContentMenu"/>
@@ -215,7 +220,8 @@ ContentTree.defaultProps = {
         siteKey: state.site,
         lang: state.language,
         path: state.jcontent.path,
-        openPaths: state.jcontent.openPaths
+        openPaths: state.jcontent.openPaths,
+        viewMode: state.jcontent.tableView.viewMode
     }),
     refetcherType: refetchTypes.CONTENT_TREE,
     setPathAction: (path, params) => cmGoto({path, params}),

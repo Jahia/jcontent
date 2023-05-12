@@ -6,9 +6,6 @@ import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPath from './ContentPath';
 import {ContentPathDialog} from './ContentPathDialog';
-import {batchActions} from 'redux-batched-actions';
-import {setTableViewMode} from '../../redux/tableView.redux';
-import JContentConstants from '../../JContent.constants';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;

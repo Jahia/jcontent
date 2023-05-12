@@ -23,6 +23,7 @@ export const PageComposerRoute = () => {
     useEffect(() => {
         if (shouldSwitchMode) {
             dispatch(setTableViewMode(JContentConstants.tableView.viewMode.FLAT));
+            window.localStorage.setItem(JContentConstants.localStorageKeys.viewMode, JContentConstants.tableView.viewMode.FLAT);
         }
     }, [shouldSwitchMode, dispatch]);
 

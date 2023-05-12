@@ -25,7 +25,7 @@ const CompositePathEntry = ({items, onItemClick}) => {
                   transformElOrigin={{vertical: 'top', horizontal: 'left'}}
                   onClose={handleMenuClose}
             >
-                {items.map(item => <MenuItem key={item.uuid} label={item.displayName || item.uuid} data-sel-role="breadcrumb-menu-item" onClick={() => onItemClick(item.path)}/>)}
+                {items.map(item => <MenuItem key={item.uuid} label={item.displayName || item.uuid} data-sel-role="breadcrumb-menu-item" onClick={() => onItemClick(item)}/>)}
             </Menu>
         </div>;
 };

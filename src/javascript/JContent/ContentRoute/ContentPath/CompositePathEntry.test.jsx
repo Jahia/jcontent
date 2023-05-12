@@ -78,7 +78,7 @@ describe('CompositePathEntry', () => {
         wrapper.find(MenuItem).forEach(element => element.invoke('onClick')());
 
         expect(handler).toHaveBeenCalledTimes(items.length);
-        expect(handler.mock.calls[0][0]).toBe(items[0].path);
-        expect(handler.mock.calls[1][0]).toBe(items[1].path);
+        expect(handler.mock.calls[0][0].path).toBe(items[0].path);
+        expect(handler.mock.calls[1][0].path).toBe(items[1].path);
     });
 });

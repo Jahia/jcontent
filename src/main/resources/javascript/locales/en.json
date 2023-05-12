@@ -478,6 +478,14 @@
         },
         "open": "Open"
       },
+      "contentPath": {
+        "dialog": {
+          "title": "Page Composer view not available",
+          "body": "The element you clicked on cannot be displayed with the Page Composer view.",
+          "listView": "Open in list view",
+          "parentPage": "Display the parent page"
+        }
+      },
       "textMenu": {
         "editDialog": {
           "title": "Menu label",

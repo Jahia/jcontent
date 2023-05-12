@@ -1,10 +1,11 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPath from './ContentPath';
+import {ContentPathDialog} from './ContentPathDialog';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;
@@ -39,6 +40,7 @@ function getItems(node = {}) {
 
 const ContentPathContainer = () => {
     const dispatch = useDispatch();
+    const [currentItem, setCurrentItem] = useState(null);
 
     const {mode, language, path} = useSelector(state => ({
         mode: state.jcontent.mode,
@@ -50,8 +52,12 @@ const ContentPathContainer = () => {
         variables: {path, language}
     });
 
-    const handleNavigation = path => {
-        dispatch(cmGoto({mode, path}));
+    const handleNavigation = item => {
+        if (item.primaryNodeType?.name === 'jnt:contentList') {
+            setCurrentItem(item);
+        } else {
+            dispatch(cmGoto({mode, path: item.path}));
+        }
     };
 
     if (error) {
@@ -59,7 +65,22 @@ const ContentPathContainer = () => {
     }
 
     const items = useMemo(() => getItems((data?.jcr?.node || {})), [data?.jcr?.node]);
-    return <ContentPath items={items} onItemClick={handleNavigation}/>;
+    return (
+        <>
+            <ContentPath items={items} onItemClick={handleNavigation}/>
+            <ContentPathDialog isOpen={currentItem}
+                               handleParentNavigation={() => {
+                                   dispatch(cmGoto({mode, path: currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))}));
+                                   setCurrentItem(null);
+                               }}
+                               handleClose={() => setCurrentItem(null)}
+                               handleListNavigation={() => {
+                                   dispatch(cmGoto({mode, path: currentItem.path}));
+                                   setCurrentItem(null);
+                               }}
+            />
+        </>
+    );
 };
 
 export default ContentPathContainer;

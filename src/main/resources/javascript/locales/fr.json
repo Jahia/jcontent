@@ -478,6 +478,13 @@
           "listView": "Ouvrir en vue liste",
           "parentPage": "Afficher la page parente"
         }
+      },
+      "textMenu": {
+        "editDialog": {
+          "title": "Titres de menu",
+          "body": "Les titres de menu sont utilisés pour organiser les pages, et ne peuvent être affichés dans la vue actuelle. Néanmoins ils peuvent être affichés en vue liste.",
+          "openInList": "Ouvrir en vue liste"
+        }
       }
     },
     "ok": "OK",

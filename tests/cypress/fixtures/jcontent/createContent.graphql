@@ -1,63 +1,97 @@
 mutation {
     jcr {
         mutateNode(pathOrId: "/sites/jcontentSite/home") {
-            addChild(name: "area-main", primaryNodeType: "jnt:contentList") {
-                addChildrenBatch(
-                    nodes: [
-                        {
-                            name: "test-content1"
-                            primaryNodeType: "jnt:bigText"
-                            properties: [{ name: "text", language: "en", value: "test 1" }]
-                        }
-                        {
-                            name: "test-content2"
-                            primaryNodeType: "jnt:bigText"
-                            properties: [{ name: "text", language: "en", value: "test 2" }]
-                        }
-                        {
-                            name: "test-content3"
-                            primaryNodeType: "jnt:bigText"
-                            properties: [{ name: "text", language: "en", value: "test 3" }]
-                        }
-                        {
-                            name: "test-content4"
-                            primaryNodeType: "jnt:event"
-                            properties: [
-                                { name: "body", language: "en", value: "test event 1" }
-                            ]
-                        }
-                        {
-                            name: "test-content5"
-                            primaryNodeType: "jnt:event"
-                            properties: [
-                                { name: "body", language: "en", value: "test event 2" }
-                            ]
-                        }
-                        {
-                            name: "lookForMeSystemName"
-                            primaryNodeType: "jnt:bigText"
-                            properties: [
-                                {
-                                    name: "text"
-                                    language: "en"
-                                    value: "Very Rich text to find with system name"
-                                }
-                            ]
-                        }
-                        {
-                            name: "lookForMeTag"
-                            primaryNodeType: "jnt:bigText"
-                            mixins: ["jmix:tagged"]
-                            properties: [
-                                { name: "text", language: "en", value: "Very Rich text to find with tag" }
-                                { name: "j:tagList", language: "en", values: ["tagToLookFor"] }
-                            ]
-                        }
-                    ]
-                ) {
-                    uuid
-                }
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "area-main"
+                        primaryNodeType: "jnt:contentList"
+                        children: [
+                            {
+                                name: "test-content1"
+                                primaryNodeType: "jnt:bigText"
+                                properties: [{ name: "text", language: "en", value: "test 1" }]
+                            }
+                            {
+                                name: "test-content2"
+                                primaryNodeType: "jnt:bigText"
+                                properties: [{ name: "text", language: "en", value: "test 2" }]
+                            }
+                            {
+                                name: "test-content3"
+                                primaryNodeType: "jnt:bigText"
+                                properties: [{ name: "text", language: "en", value: "test 3" }]
+                            }
+                            {
+                                name: "test-content4"
+                                primaryNodeType: "jnt:event"
+                                properties: [
+                                    { name: "body", language: "en", value: "test event 1" }
+                                ]
+                            }
+                            {
+                                name: "test-content5"
+                                primaryNodeType: "jnt:event"
+                                properties: [
+                                    { name: "body", language: "en", value: "test event 2" }
+                                ]
+                            }
+                            {
+                                name: "lookForMeSystemName"
+                                primaryNodeType: "jnt:bigText"
+                                properties: [
+                                    {
+                                        name: "text"
+                                        language: "en"
+                                        value: "Very Rich text to find with system name"
+                                    }
+                                ]
+                            }
+                            {
+                                name: "lookForMeTag"
+                                primaryNodeType: "jnt:bigText"
+                                mixins: ["jmix:tagged"]
+                                properties: [
+                                    { name: "text", language: "en", value: "Very Rich text to find with tag" }
+                                    { name: "j:tagList", language: "en", values: ["tagToLookFor"] }
+                                ]
+                            }
+                        ]
+                    }
+                    {
+                        name: "external-link"
+                        primaryNodeType: "jnt:externalLink"
+                        properties: [
+                            { name: "j:url", value: "http://www.google.com" }
+                        ]
+                    }
+                    {
+                        name: "internal-link"
+                        primaryNodeType: "jnt:nodeLink"
+                        properties: [
+                            { name: "j:node", value: "/sites/jcontentSite/home", type: REFERENCE }
+                            { name: "jcr:title", language: "en", value: "internal-xxx" }
+                        ]
+                    }
+                    {
+                        name: "menu"
+                        primaryNodeType: "jnt:navMenuText"
+                        children: [
+                            {
+                                name: "submenu1"
+                                primaryNodeType: "jnt:navMenuText"
+                            }
+                            {
+                                name: "submenu2"
+                                primaryNodeType: "jnt:navMenuText"
+                            }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
             }
         }
     }
 }
+

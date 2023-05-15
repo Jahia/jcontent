@@ -73,6 +73,20 @@ mutation {
                             { name: "jcr:title", language: "en", value: "internal-xxx" }
                         ]
                     }
+                    {
+                        name: "menu"
+                        primaryNodeType: "jnt:navMenuText"
+                        children: [
+                            {
+                                name: "submenu1"
+                                primaryNodeType: "jnt:navMenuText"
+                            }
+                            {
+                                name: "submenu2"
+                                primaryNodeType: "jnt:navMenuText"
+                            }
+                        ]
+                    }
                 ]
             ) {
                 uuid

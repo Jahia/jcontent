@@ -296,6 +296,12 @@ describe('Page composer', () => {
 
             module = jcontent.getModule(item1);
             module.contextMenu().get().find('span').contains('2 items selected');
+
+            module.contextMenu().select('Copy');
+
+            jcontent.clearSelection();
+
+            module.contextMenu().get().find('span').contains('Add to selection');
         });
     });
 

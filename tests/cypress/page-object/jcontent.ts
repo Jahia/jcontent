@@ -242,7 +242,7 @@ class PageComposerModule extends BaseComponent {
     }
 
     contextMenu(): Menu {
-        this.get().rightclick();
+        this.get().rightclick({force: true});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

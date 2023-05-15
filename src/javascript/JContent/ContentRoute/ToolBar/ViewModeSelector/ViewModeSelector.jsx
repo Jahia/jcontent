@@ -7,6 +7,8 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '~/JContent/redux/tableView.redux';
 import classes from './ViewModeSelector.scss';
 import {booleanValue} from '~/JContent/JContent.utils';
+import {useQuery} from '@apollo/react-hooks';
+import {GetContentType} from './ViewModeSelector.gql-queries';
 
 const localStorage = window.localStorage;
 
@@ -41,11 +43,19 @@ const tableViewDropdownData = (t, viewMode, allButtons) => {
 
 export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
-    const valid = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
-
-    let {mode, viewMode} = useSelector(selector, shallowEqual);
-
     const dispatch = useDispatch();
+    const {mode, viewMode, path} = useSelector(selector, shallowEqual);
+    const {data, error, loading} = useQuery(GetContentType, {
+        variables: {path: path},
+        skip: !path // Skips if path is not defined
+    });
+
+    let showPCAndPreviewSelector = false;
+
+    if (!loading && !error && data?.jcr?.node?.primaryNodeType) {
+        showPCAndPreviewSelector = mode === JContentConstants.mode.PAGES && booleanValue(contextJsParameters.config.jcontent?.showPageComposer) && data.jcr.node.primaryNodeType.name !== 'jnt:contentList';
+    }
+
     const onChange = vm => dispatch(setTableViewModeAction(vm));
 
     const handleChange = selectedViewMode => {
@@ -53,7 +63,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
         localStorage.setItem(VIEW_MODE, selectedViewMode);
     };
 
-    const allButtons = (mode === JContentConstants.mode.PAGES && valid) ? pagesButtons : buttons;
+    const allButtons = showPCAndPreviewSelector ? pagesButtons : buttons;
 
     return (
         <>
@@ -72,7 +82,8 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
 
 const selector = state => ({
     mode: state.jcontent.mode,
-    viewMode: state.jcontent.tableView.viewMode
+    viewMode: state.jcontent.tableView.viewMode,
+    path: state.jcontent.path
 });
 
 ViewModeSelector.propTypes = {

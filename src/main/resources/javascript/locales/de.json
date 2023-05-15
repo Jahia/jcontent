@@ -472,10 +472,10 @@
       },
       "contentPath": {
         "dialog": {
-          "title": "Page Composer view not available",
-          "body": "The element you clicked on cannot be displayed with the Page Composer view.",
-          "listView": "Open in list view",
-          "parentPage": "Display the parent page"
+          "title": "Page Composer Ansicht nicht verfügbar",
+          "body": "Das selektierte Element kann nicht in der Page Composer Ansicht angezeigt werden.",
+          "listView": "In Listenansicht öffnen",
+          "parentPage": "Übergeordnete Seite anzeigen"
         }
       }
     },

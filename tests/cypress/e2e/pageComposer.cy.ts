@@ -288,7 +288,7 @@ describe('Page composer', () => {
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
-            // Module.contextMenu().get().find('span').contains('1 item selected');
+            module.contextMenu().get().find('span').contains('1 item selected');
 
             module = jcontent.getModule(item3);
             module.contextMenu().select('Add to selection');

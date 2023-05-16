@@ -1,7 +1,7 @@
 .layout {
-  max-width: 100%;
-
-  & > :global(.moonstone-layoutContent_withPadding) {
     max-width: 100%;
-  }
+
+    & > :global(.moonstone-layoutContent_withPadding) {
+        max-width: 100%;
+    }
 }

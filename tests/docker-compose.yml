@@ -4,10 +4,17 @@ services:
         image: '${JAHIA_IMAGE}'
         container_name: jahia
         environment:
-            - JAHIA_LICENSE=${JAHIA_LICENSE}
-            - SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
-            - MAX_RAM_PERCENTAGE=95
-            - JPDA=true
+            JAHIA_LICENSE: ${JAHIA_LICENSE}
+            SUPER_USER_PASSWORD: ${JAHIA_PASSWORD}
+            PROCESSING_SERVER: 'true'
+            MAX_RAM_PERCENTAGE: 95
+            JAHIA_PROPERTIES: ${JAHIA_PROPERTIES}
+            CATALINA_OPTS: ${CATALINA_OPTS}
+            RESTORE_MODULE_STATES: 'false'
+            NEXUS_USERNAME: ${NEXUS_USERNAME}
+            NEXUS_PASSWORD: ${NEXUS_PASSWORD}
+            TZ: ${TIMEZONE}
+            JPDA: 'true'
         ports:
             - '8000:8000'
             - '8080:8080'
@@ -25,12 +32,16 @@ services:
         depends_on:
             - jahia
         environment:
-            - JAHIA_LICENSE=${JAHIA_LICENSE}
-            - MANIFEST=${MANIFEST}
-            - SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
-            - JAHIA_URL=http://jahia:8080
-            - NEXUS_USERNAME=${NEXUS_USERNAME}
-            - NEXUS_PASSWORD=${NEXUS_PASSWORD}
+            JAHIA_LICENSE: ${JAHIA_LICENSE}
+            MANIFEST: ${MANIFEST}
+            JAHIA_USERNAME: ${JAHIA_USERNAME}
+            JAHIA_PASSWORD: ${JAHIA_PASSWORD}
+            JAHIA_URL: ${JAHIA_URL}
+            JAHIA_HOST: ${JAHIA_HOST}
+            JAHIA_PORT: ${JAHIA_PORT}
+            NEXUS_USERNAME: ${NEXUS_USERNAME}
+            NEXUS_PASSWORD: ${NEXUS_PASSWORD}
+            SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
         networks:
             - stack
 networks:

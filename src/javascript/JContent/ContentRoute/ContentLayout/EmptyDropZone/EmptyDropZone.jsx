@@ -35,7 +35,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
         return 'Loading...';
     }
 
-    if (nodeInfo.node.lockOwner) {
+    if (nodeInfo.node?.lockOwner) {
         let lockReason = '';
         if (nodeInfo.node['jmix:markedForDeletion']) {
             lockReason = t('label.contentManager.contentStatus.markedForDeletion');

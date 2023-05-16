@@ -12,6 +12,9 @@ echo " == Using JAHIA_URL= ${JAHIA_URL}"
 echo " == Using Node version: $(node -v)"
 echo " == Using yarn version: $(yarn -v)"
 
+echo " == License: "
+echo $JAHIA_LICENSE | base64 --decode
+
 echo " == Waiting for Jahia to startup"
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${JAHIA_URL}/cms/login)" != "200" ]];
   do sleep 5;

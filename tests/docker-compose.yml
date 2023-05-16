@@ -4,6 +4,7 @@ services:
         image: '${JAHIA_IMAGE}'
         container_name: jahia
         environment:
+            - JAHIA_LICENSE=${JAHIA_LICENSE}
             - SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
             - MAX_RAM_PERCENTAGE=95
             - JPDA=true

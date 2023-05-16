@@ -12,18 +12,6 @@ echo " == Using JAHIA_URL= ${JAHIA_URL}"
 echo " == Using Node version: $(node -v)"
 echo " == Using yarn version: $(yarn -v)"
 
-echo "$(date +'%d %B %Y - %k:%M') [LICENSE] == Check if license exists in env variable (JAHIA_LICENSE) =="
-if [[ -z ${JAHIA_LICENSE} ]]; then
-    echo "$(date +'%d %B %Y - %k:%M') [LICENSE] == Jahia license does not exist, checking if there is a license file in /tmp/license.xml =="
-    if [[ -f /tmp/license.xml ]]; then
-        echo "$(date +'%d %B %Y - %k:%M') [LICENSE] ==  License found in /tmp/license.xml, base64ing it"
-        export JAHIA_LICENSE=$(base64 /tmp/license.xml)
-    else
-        echo "$(date +'%d %B %Y - %k:%M') [LICENSE]  == STARTUP FAILURE, unable to find license =="
-        exit 1
-    fi
-fi
-
 echo " == License: "
 echo $JAHIA_LICENSE | base64 --decode
 

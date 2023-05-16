@@ -13,6 +13,14 @@ describe('Lock tests', () => {
         cy.loginEditor(); // Edit in chief
     });
 
+    afterEach(function () {
+        cy.logout();
+    });
+
+    after(function () {
+        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
+    });
+
     function lockNode(path) {
         cy.apollo({
             mutation: gql`mutation lockNode {
@@ -39,11 +47,6 @@ describe('Lock tests', () => {
             expect(resp?.data.jcr.nodeByPath).to.be.null;
         });
     }
-
-    after(function () {
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
-        cy.logout();
-    });
 
     it('Has empty folder page on locked page', () => {
         lockNode(`/sites/${siteKey}/home/test-pageLock1`);

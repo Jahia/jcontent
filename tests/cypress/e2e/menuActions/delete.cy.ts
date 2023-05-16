@@ -13,9 +13,12 @@ describe('delete tests', () => {
         cy.loginEditor(); // Edit in chief
     });
 
+    afterEach(function () {
+        cy.logout();
+    });
+
     after(function () {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
-        cy.logout();
     });
 
     const markForDeletionMutation = path => {

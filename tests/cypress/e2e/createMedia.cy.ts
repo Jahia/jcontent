@@ -8,8 +8,11 @@ describe('Create media tests', () => {
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
     });
 
-    after(function () {
+    afterEach(function () {
         cy.logout();
+    });
+
+    after(function () {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
     });
 

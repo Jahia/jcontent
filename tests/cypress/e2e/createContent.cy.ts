@@ -10,8 +10,11 @@ describe('Create content tests', {retries: 10}, () => {
         cy.loginEditor(); // Edit in chief
     });
 
-    after(function () {
+    afterEach(function () {
         cy.logout();
+    });
+
+    after(function () {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
     });
 

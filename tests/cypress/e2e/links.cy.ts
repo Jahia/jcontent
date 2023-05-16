@@ -18,6 +18,10 @@ describe('Links in jcontent', () => {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite2'});
     });
 
+    afterEach(function () {
+        cy.logout();
+    });
+
     beforeEach(() => {
         cy.login();
         jcontent = JContent

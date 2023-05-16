@@ -11,8 +11,11 @@ describe('Page composer', () => {
     });
 
     after(() => {
-        cy.logout();
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+    });
+
+    afterEach(function () {
+        cy.logout();
     });
 
     beforeEach(() => {

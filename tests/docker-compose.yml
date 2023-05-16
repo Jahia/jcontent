@@ -25,6 +25,7 @@ services:
         depends_on:
             - jahia
         environment:
+            - JAHIA_LICENSE=${JAHIA_LICENSE}
             - MANIFEST=${MANIFEST}
             - SUPER_USER_PASSWORD=${SUPER_USER_PASSWORD}
             - JAHIA_URL=http://jahia:8080

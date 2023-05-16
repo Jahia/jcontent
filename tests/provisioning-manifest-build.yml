@@ -3,11 +3,8 @@
 - installBundle:
     - 'mvn:org.jahia.modules/content-editor'
     - 'mvn:org.jahia.modules/graphql-dxm-provider/2.19.0-SNAPSHOT'
-  autoStart: true
-  uninstallPreviousVersion: true
-
-- installBundle:
     - 'mvn:org.jahia.modules/press/3.1.0'
+    - 'mvn:org.jahia.modules/article/3.0.0'
     - 'mvn:org.jahia.modules/person/3.2.0'
     - 'mvn:org.jahia.modules/news/3.4.0'
     - 'mvn:org.jahia.modules/font-awesome/6.1.5'

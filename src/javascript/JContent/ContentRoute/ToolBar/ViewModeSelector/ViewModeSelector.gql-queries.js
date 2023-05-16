@@ -6,9 +6,7 @@ export const GetContentType = gql`
         jcr {
             node: nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
-                primaryNodeType {
-                    name
-                }
+                isDisplayableNode
             }
         }
     }

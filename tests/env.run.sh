@@ -9,6 +9,7 @@ START_TIME=$SECONDS
 
 echo " == Using MANIFEST: ${MANIFEST}"
 echo " == Using JAHIA_URL= ${JAHIA_URL}"
+echo " == Using JAHIA_LICENSE= ${JAHIA_LICENSE}"
 echo " == Using Node version: $(node -v)"
 echo " == Using yarn version: $(yarn -v)"
 echo " == License: "

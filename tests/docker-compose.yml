@@ -5,7 +5,7 @@ services:
         container_name: jahia
         environment:
             JAHIA_LICENSE: ${JAHIA_LICENSE}
-            SUPER_USER_PASSWORD: ${JAHIA_PASSWORD}
+            SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
             PROCESSING_SERVER: 'true'
             MAX_RAM_PERCENTAGE: 95
             JAHIA_PROPERTIES: ${JAHIA_PROPERTIES}

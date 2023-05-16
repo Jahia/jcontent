@@ -13,6 +13,10 @@ describe('Lock tests', () => {
         cy.loginEditor(); // Edit in chief
     });
 
+    afterEach(function () {
+        cy.logout();
+    });
+
     function lockNode(path) {
         cy.apollo({
             mutation: gql`mutation lockNode {

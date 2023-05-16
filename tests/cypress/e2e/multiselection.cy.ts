@@ -6,6 +6,10 @@ describe('Multi-selection tests', () => {
         cy.loginEditor(); // Edit in chief
     });
 
+    afterEach(function () {
+        cy.logout();
+    });
+
     const checkToolbar = () => {
         getComponentBySelector(Button,
             '[role="toolbar"] [data-sel-role="publishAll"]',

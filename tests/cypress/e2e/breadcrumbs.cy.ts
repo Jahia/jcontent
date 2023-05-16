@@ -10,6 +10,10 @@ describe('Breadcrumb navigation test', () => {
         cy.loginEditor();
     });
 
+    afterEach(function () {
+        cy.logout();
+    });
+
     it('Handles area and parent page navigation correctly', () => {
         let jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         jcontent.switchToPageComposer();

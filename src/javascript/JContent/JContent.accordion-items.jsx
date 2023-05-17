@@ -10,13 +10,17 @@ import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTa
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
 import {PagesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/PagesQueryHandler';
-import {ContentFoldersQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentFoldersQueryHandler';
+import {
+    ContentFoldersQueryHandler
+} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentFoldersQueryHandler';
 import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/FilesQueryHandler';
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from '~/JContent/ContentTree/ContentTree.constants';
 import {booleanValue} from '~/JContent/JContent.utils';
-import {DeletionInfoQueryHandler} from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
+import {
+    DeletionInfoQueryHandler
+} from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -29,7 +33,7 @@ export const jContentAccordionItems = registry => {
 
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: (v, item) => (
-            <AccordionItem key={v.id} id={v.id} label={v.label} icon={v.icon}>
+            <AccordionItem key={v.id} {...v}>
                 <ContentTree item={item} contextualMenuAction="contentMenu"/>
             </AccordionItem>
         ),
@@ -69,7 +73,7 @@ export const jContentAccordionItems = registry => {
 
     const renderDefaultApps = registry.add('accordionItem', 'renderDefaultApps', {
         render: (v, item) => (
-            <AccordionItem key={v.id} id={v.id} label={v.label} icon={v.icon}>
+            <AccordionItem key={v.id} {...v}>
                 <AdditionalAppsTree target={item.appsTarget} item={item}/>
             </AccordionItem>
         ),

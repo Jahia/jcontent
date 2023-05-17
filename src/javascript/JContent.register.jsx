@@ -28,7 +28,7 @@ window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
 
 export default function () {
-    const CmmNavItem = () => {
+    const JContentNavItem = props => {
         const history = useHistory();
         const {t} = useTranslation('jcontent');
         const {site, language, path, mode, params, pathname} = useSelector(state => ({
@@ -56,7 +56,7 @@ export default function () {
 
         return (
             <PrimaryNavItem key="/jcontent"
-                            role="jcontent-menu-item"
+                            {...props}
                             isSelected={pathname.startsWith('/jcontent') && pathname.split('/').length > 3}
                             label={t('label.name')}
                             icon={<Collections/>}
@@ -66,10 +66,10 @@ export default function () {
         );
     };
 
-    registry.add('primary-nav-item', 'jcontentGroupItem', {
+    registry.add('primary-nav-item', 'jcontent', {
         targets: ['nav-root-top:2'],
         requiredPermission: 'jContentAccess',
-        render: () => <CmmNavItem/>
+        render: () => <JContentNavItem/>
     });
 
     registry.add('route', 'route-jcontent', {

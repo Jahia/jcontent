@@ -11,9 +11,11 @@ describe('Accordion with 3 accordion items', () => {
 
     let props = {
         mode: JContentConstants.mode.PAGES,
+        accordionItemTarget: 'test',
         accordionItems: [
             {
                 key: JContentConstants.mode.PAGES,
+                targets: [{id: 'test', priority: 1}],
                 icon: <File/>,
                 label: 'label.contentManager.navigation.pages',
                 rootPath: '/sites/{site}',
@@ -23,6 +25,7 @@ describe('Accordion with 3 accordion items', () => {
             },
             {
                 key: JContentConstants.mode.CONTENT_FOLDERS,
+                targets: [{id: 'test', priority: 2}],
                 icon: <FolderSpecial/>,
                 label: 'label.contentManager.navigation.contentFolders',
                 rootPath: '/sites/{site}/contents',
@@ -32,6 +35,7 @@ describe('Accordion with 3 accordion items', () => {
             },
             {
                 key: JContentConstants.mode.MEDIA,
+                targets: [{id: 'test', priority: 3}],
                 icon: <Collections/>,
                 label: 'label.contentManager.navigation.media',
                 rootPath: '/sites/{site}/files',

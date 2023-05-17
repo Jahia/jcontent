@@ -6,6 +6,7 @@ import {useAdminRouteTreeStructure} from '@jahia/jahia-ui-root';
 import {useNodeInfo} from '@jahia/data-helper';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
+import {getRegistryTarget} from '../JContent.utils';
 
 export const AdditionalAppsTree = ({item, target}) => {
     const {site, path} = useSelector(state => ({site: state.site, path: state.jcontent.path}), shallowEqual);
@@ -51,7 +52,9 @@ export const AdditionalAppsTree = ({item, target}) => {
             isSelectable: route.isSelectable,
             iconStart: route.icon,
             treeItemProps: {
-                'data-sel-role': route.key
+                'data-sel-role': route.key,
+                'registry-key': route.type + ':' + route.key,
+                'registry-target': getRegistryTarget(route, target)
             }
         }))
         .getData();

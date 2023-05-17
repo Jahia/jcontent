@@ -248,3 +248,8 @@ export const isPathChildOfAnotherPath = (child, parent) => {
     const childTokens = child.split('/').filter(i => i.length);
     return parentTokens.every((t, i) => childTokens[i] === t);
 };
+
+export const getRegistryTarget = function (item, target) {
+    const foundTarget = item.targets.find(t => t.id === target || t.id.startsWith(target + '-'));
+    return foundTarget.id + ':' + foundTarget.priority;
+};

@@ -31,6 +31,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
 
     return (
         <ContentNavigation header={header}
+                           accordionItemTarget={accordionItemTarget}
                            accordionItems={accordionItems}
                            mode={mode}
                            siteKey={siteKey}

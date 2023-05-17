@@ -5,6 +5,9 @@ import {Button, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './LinkDialog.scss';
 import {useDispatch} from 'react-redux';
+import {batchActions} from 'redux-batched-actions';
+import {setTableViewMode} from '~/JContent/redux/tableView.redux';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const TextMenuDialog = ({node, isOpen, onClose, setPathAction}) => {
     const {t} = useTranslation('jcontent');
@@ -44,7 +47,7 @@ export const TextMenuDialog = ({node, isOpen, onClose, setPathAction}) => {
                     color="accent"
                     label={t('jcontent:label.contentManager.textMenu.editDialog.openInList')}
                     onClick={() => {
-                        dispatch(setPathAction(node.path, {sub: false}));
+                        dispatch(batchActions([setTableViewMode(JContentConstants.tableView.viewMode.FLAT), setPathAction(node.path, {sub: false})]));
                         onClose();
                     }}
                 />

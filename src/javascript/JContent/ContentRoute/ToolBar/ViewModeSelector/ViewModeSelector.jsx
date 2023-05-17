@@ -52,8 +52,8 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
 
     let showPCAndPreviewSelector = false;
 
-    if (!loading && !error && data?.jcr?.node?.primaryNodeType) {
-        showPCAndPreviewSelector = mode === JContentConstants.mode.PAGES && booleanValue(contextJsParameters.config.jcontent?.showPageComposer) && data.jcr.node.primaryNodeType.name !== 'jnt:contentList';
+    if (!loading && !error && data?.jcr?.node) {
+        showPCAndPreviewSelector = mode === JContentConstants.mode.PAGES && booleanValue(contextJsParameters.config.jcontent?.showPageComposer) && data.jcr.node.isDisplayableNode;
     }
 
     const onChange = vm => dispatch(setTableViewModeAction(vm));

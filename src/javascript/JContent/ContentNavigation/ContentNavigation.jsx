@@ -20,8 +20,8 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
                         id: accordionItem.key,
                         label: t(accordionItem.label),
                         icon: accordionItem.icon,
-                        'registry-key': accordionItem.type + ':' + accordionItem.key,
-                        'registry-target': getRegistryTarget(accordionItem, accordionItemTarget)
+                        'data-registry-key': accordionItem.type + ':' + accordionItem.key,
+                        'data-registry-target': getRegistryTarget(accordionItem, accordionItemTarget)
                     };
                     return accordionItem.component ? <accordionItem.component key={accordionItem.key} {...props}/> : accordionItem.render(props, accordionItem);
                 })}

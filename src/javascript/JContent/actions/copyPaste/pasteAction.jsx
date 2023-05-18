@@ -34,12 +34,15 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
-    const copyPaste = useSelector(state => state.jcontent.copyPaste);
+    const {copyPaste, language} = useSelector(state => ({
+        language: state.language,
+        copyPaste: state.jcontent.copyPaste
+    }));
 
     const refreshTree = useRefreshTreeAfterMove();
 
     const res = useNodeChecks(
-        {path},
+        {path, language},
         {
             requiredPermission: 'jcr:addChildNodes',
             requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Cancel, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {cmSwitchSelection} from '../../../../redux/selection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
 
@@ -10,7 +10,8 @@ export const Selection = ({paths, clear}) => {
     const [data, setData] = useState([{}]);
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {nodes, loading} = useNodeInfo({paths}, {getDisplayName: true});
+    const language = useSelector(state => state.language);
+    const {nodes, loading} = useNodeInfo({paths, language}, {getDisplayName: true});
 
     const fillData = () => {
         setData(nodes.map(node => ({

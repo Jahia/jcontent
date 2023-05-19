@@ -46,7 +46,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
             getSubNodesCount: true,
-            getIsNodeTypes: ['jmix:listSizeLimit'],
+            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'],
             getProperties: ['limit']
         }
     );

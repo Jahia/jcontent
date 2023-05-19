@@ -26,7 +26,8 @@ export function useNodeTypeCheck() {
         const childNodeTypes = target.allowedChildNodeTypes.map(t => t.name);
         const contributeTypesProperty = target.contributeTypes ||
             (target.ancestors && target.ancestors.length > 0 && target.ancestors[target.ancestors.length - 1].contributeTypes);
-        const contributeTypes = contributeTypesProperty ? contributeTypesProperty.values : [];
+        const targetIsContentTypeRestrictCapable = ['jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'].find(type => target[type]) !== undefined;
+        const contributeTypes = (targetIsContentTypeRestrictCapable && contributeTypesProperty) ? contributeTypesProperty.values : [];
 
         if (contributeTypes.length === 0 && childNodeTypes.length === 0) {
             return {loading: false, checkResult: false};

@@ -45,7 +45,6 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
             requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
-            hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText'],
             getSubNodesCount: true,
             getIsNodeTypes: ['jmix:listSizeLimit'],
             getProperties: ['limit']

@@ -304,6 +304,25 @@ describe('Page composer', () => {
 
             module.contextMenu().get().find('span').contains('Add to selection');
         });
+
+        it('Can use selection and refresh without issues', () => {
+            // Tests https://jira.jahia.org/browse/BACKLOG-20987
+            // Note that in some cases it may be possible to just refresh and not be able to select anything,
+            // but it appears to be a different issue as we don't get 'language is required' exception from useNodeInfo
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
+            let module = jcontent.getModule(item2);
+            module.click();
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
+
+            module = jcontent.getModule(item3);
+            module.contextMenu().select('Copy');
+
+            jcontent.clearSelection();
+            jcontent.refresh();
+
+            module.click();
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
+        });
     });
 
     it('Click on links should open modal', () => {

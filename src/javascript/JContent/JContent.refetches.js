@@ -10,7 +10,8 @@ import {registry} from '@jahia/ui-extender';
 
 export const refetchTypes = {
     CONTENT_DATA: 'CONTENT_DATA',
-    CONTENT_TREE: 'CONTENT_TREE'
+    CONTENT_TREE: 'CONTENT_TREE',
+    PAGE_COMPOSER_BOXES: 'PAGE_COMPOSER_BOXES'
 };
 
 export const setRefetcher = (name, refetcherData) => {

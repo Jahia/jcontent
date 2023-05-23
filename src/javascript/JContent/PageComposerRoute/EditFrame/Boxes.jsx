@@ -14,6 +14,7 @@ import {batchActions} from 'redux-batched-actions';
 import {pathExistsInTree} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -187,7 +188,14 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
 
-    const {data} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, errorPolicy: 'all'});
+    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, errorPolicy: 'all'});
+
+    useEffect(() => {
+        setRefetcher(refetchTypes.PAGE_COMPOSER_BOXES, {refetch: refetch});
+        return () => {
+            unsetRefetcher(refetchTypes.PAGE_COMPOSER_BOXES);
+        };
+    });
 
     const nodes = data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {});
 

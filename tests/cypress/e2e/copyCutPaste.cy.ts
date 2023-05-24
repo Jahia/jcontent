@@ -1,6 +1,6 @@
 import {JContent} from '../page-object/jcontent';
 import {GraphqlUtils} from '../utils/graphqlUtils';
-import {Collapsible, getComponentBySelector} from '@jahia/cypress';
+import {Collapsible, getComponentBySelector, Menu} from '@jahia/cypress';
 
 const jcontent = new JContent();
 
@@ -23,6 +23,16 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         // Create contentFolders
         GraphqlUtils.addNode('/sites/digitall/contents', 'jnt:contentFolder', 'testFolder1');
         GraphqlUtils.addNode('/sites/digitall/contents', 'jnt:contentFolder', 'testFolder2');
+    });
+
+    after('Delete metadata', () => {
+        GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder1');
+        GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder2');
+        GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:tagList', 'en');
+        GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:keywords', 'en');
+        GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:defaultCategory', 'en');
+        GraphqlUtils.setProperty('/sites/systemsite/categories/companies/media', 'jcr:title', 'Media', 'fr');
+        GraphqlUtils.removeMixins('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', ['jmix:tagged', 'jmix:keywords', 'jmix:categorized'], ['jdmix:socialIcons']);
     });
 
     it('Editor can copy cut and paste with jcontent (metadata included)', () => {
@@ -99,13 +109,19 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         });
     });
 
-    after('Delete metadata', () => {
-        GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder1');
-        GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder2');
-        GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:tagList', 'en');
-        GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:keywords', 'en');
-        GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:defaultCategory', 'en');
-        GraphqlUtils.setProperty('/sites/systemsite/categories/companies/media', 'jcr:title', 'Media', 'fr');
-        GraphqlUtils.removeMixins('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', ['jmix:tagged', 'jmix:keywords', 'jmix:categorized'], ['jdmix:socialIcons']);
+    it('Does not display paste as reference action on a page', () => {
+        cy.login();
+
+        const jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        const item = jcontent.getAccordionItem('pages');
+        item.expandTreeItem('home');
+        item.getTreeItem('about').rightclick();
+        let menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.select('Copy');
+        item.getTreeItem('newsroom').rightclick();
+        menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.get().find('span').contains('Paste as reference').should('not.exist');
+
+        cy.logout();
     });
 });

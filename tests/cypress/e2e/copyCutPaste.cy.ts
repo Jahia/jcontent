@@ -112,7 +112,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
     it('Does not display paste as reference action on a page', () => {
         cy.login();
 
-        const jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        JContent.visit('digitall', 'en', 'pages/home');
         const item = jcontent.getAccordionItem('pages');
         item.expandTreeItem('home');
         item.getTreeItem('about').rightclick();

@@ -6,7 +6,7 @@ import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {getNewCounter, removeFileExtension} from '~/JContent/JContent.utils';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useDispatch} from 'react-redux';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';

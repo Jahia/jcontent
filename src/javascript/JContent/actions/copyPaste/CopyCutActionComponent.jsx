@@ -1,5 +1,5 @@
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
 import {getName, hasMixin} from '~/JContent/JContent.utils';

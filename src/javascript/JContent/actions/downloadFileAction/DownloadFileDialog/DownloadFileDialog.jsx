@@ -4,7 +4,7 @@ import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/co
 import styles from './DownloadFileDialog.scss';
 import {Button, Chip, Copy, Dropdown, Folder, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {
     FileInfoQuery,
     FileInfoQueryLive

@@ -2,7 +2,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 
 export const LockActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();

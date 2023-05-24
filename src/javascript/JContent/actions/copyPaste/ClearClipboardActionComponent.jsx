@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 import {copypasteClear} from './copyPaste.redux';

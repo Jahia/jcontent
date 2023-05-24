@@ -74,13 +74,12 @@ export class Upload extends React.Component {
         let {uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
 
         return (
-            <React.Fragment>
-                <Snackbar open={uploads.length > 0} classes={{root: styles.snackBar}}>
-                    <React.Fragment>
-                        <UploadHeader status={this.uploadStatus()}/>
-                        <div className={styles.snackBarScroll}>
-                            {uploads.map((upload, index) => (
-                                <UploadItem
+            <Snackbar open={uploads.length > 0} classes={{root: styles.snackBar}}>
+                <React.Fragment>
+                    <UploadHeader status={this.uploadStatus()}/>
+                    <div className={styles.snackBarScroll}>
+                        {uploads.map((upload, index) => (
+                            <UploadItem
                                     key={upload.id}
                                     index={index}
                                     updateUploadsStatus={this.updateUploadsStatus}
@@ -90,17 +89,16 @@ export class Upload extends React.Component {
                                     {...upload}
                                 />
                             ))}
-                        </div>
-                        <Button isReversed
-                                variant="ghost"
-                                size="small"
-                                data-cm-role="upload-close-button"
-                                icon={<Close/>}
-                                className={styles.closeButton}
-                                onClick={this.handleCloseSnackBar}/>
-                    </React.Fragment>
-                </Snackbar>
-            </React.Fragment>
+                    </div>
+                    <Button isReversed
+                            variant="ghost"
+                            size="small"
+                            data-cm-role="upload-close-button"
+                            icon={<Close/>}
+                            className={styles.closeButton}
+                            onClick={this.handleCloseSnackBar}/>
+                </React.Fragment>
+            </Snackbar>
         );
     }
 

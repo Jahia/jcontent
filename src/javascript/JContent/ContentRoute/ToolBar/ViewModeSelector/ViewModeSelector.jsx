@@ -7,7 +7,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '~/JContent/redux/tableView.redux';
 import classes from './ViewModeSelector.scss';
 import {booleanValue} from '~/JContent/JContent.utils';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {GetContentType} from './ViewModeSelector.gql-queries';
 
 const localStorage = window.localStorage;
@@ -66,17 +66,15 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const allButtons = showPCAndPreviewSelector ? pagesButtons : buttons;
 
     return (
-        <>
-            <Dropdown className={classes.dropdown}
-                      size="small"
-                      data={tableViewDropdownData(t, viewMode, allButtons)}
-                      data-sel-role="sel-view-mode-dropdown"
-                      label={t(`jcontent:label.contentManager.view.${viewMode}`)}
-                      value={viewMode}
-                      icon={icons[viewMode]}
-                      onChange={(e, item) => handleChange(item.value)}
+        <Dropdown className={classes.dropdown}
+                  size="small"
+                  data={tableViewDropdownData(t, viewMode, allButtons)}
+                  data-sel-role="sel-view-mode-dropdown"
+                  label={t(`jcontent:label.contentManager.view.${viewMode}`)}
+                  value={viewMode}
+                  icon={icons[viewMode]}
+                  onChange={(e, item) => handleChange(item.value)}
             />
-        </>
     );
 };
 

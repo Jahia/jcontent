@@ -4,7 +4,7 @@ import {cmSetPreviewSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTableViewType} from '~/JContent/redux/tableView.redux';
 import {batchActions} from 'redux-batched-actions';

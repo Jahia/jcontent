@@ -1,4 +1,4 @@
-import {useApolloClient, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useQuery} from '@apollo/client';
 import {
     UploadRequirementsQuery
 } from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-queries';

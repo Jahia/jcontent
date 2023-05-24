@@ -40,17 +40,15 @@ export const Deleted = ({element, addIntervalCallback}) => {
     const showLabel = currentOffset.width > 250 && currentOffset.height > 120;
 
     return (
-        <>
-            <div ref={ref}
-                 className={clsx(styles.root)}
-                 style={currentOffset}
-            >
-                <div className={styles.label}>
-                    <Delete size="big" style={{width: iconWidth, height: iconHeight}}/>
-                    {showLabel && <Typography variant="subheading" weight="bold">{t('label.contentManager.contentStatus.deleted')}</Typography>}
-                </div>
+        <div ref={ref}
+             className={clsx(styles.root)}
+             style={currentOffset}
+        >
+            <div className={styles.label}>
+                <Delete size="big" style={{width: iconWidth, height: iconHeight}}/>
+                {showLabel && <Typography variant="subheading" weight="bold">{t('label.contentManager.contentStatus.deleted')}</Typography>}
             </div>
-        </>
+        </div>
     );
 };
 

@@ -52,7 +52,7 @@ export const ImageEditorDialog = ({
             <DialogTitle disableTypography id="form-dialog-title" classes={{root: 'flexRow alignCenter'}}>
                 <Typography variant="heading">{t('jcontent:label.contentManager.editAction')} {name}</Typography>
                 <div className={styles.contentStatuses}>
-                    {<ContentStatuses nodePath={path}/>}
+                    <ContentStatuses nodePath={path}/>
                     {changesFeedback && <Chip className={styles.chip} icon={<Edit/>} label={changesFeedback} color="warning"/> }
                 </div>
             </DialogTitle>

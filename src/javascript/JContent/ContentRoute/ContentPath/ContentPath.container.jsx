@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {GetContentPath} from './ContentPath.gql-queries';

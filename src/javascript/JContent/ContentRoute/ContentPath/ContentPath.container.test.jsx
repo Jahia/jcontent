@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {shallow} from '@jahia/test-framework';
 
 import {GetContentPath} from './ContentPath.gql-queries';
@@ -17,7 +17,7 @@ jest.mock('react-redux', () => ({
     useSelector: jest.fn()
 }));
 
-jest.mock('@apollo/react-hooks', () => ({
+jest.mock('@apollo/client', () => ({
     useQuery: jest.fn().mockReturnValue({})
 }));
 

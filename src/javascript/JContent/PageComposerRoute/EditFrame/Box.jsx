@@ -167,16 +167,14 @@ export const Box = React.memo(({
     const ResolvedHeader = isCurrent ? <Portal target={rootElementRef.current}>{Header}</Portal> : Header;
 
     return (
-        <>
-            <div ref={rootDiv}
-                 className={styles.root}
-                 style={currentOffset}
-            >
-                <div className={clsx(styles.rel, isHeaderDisplayed ? styles.relHeader : styles.relNoHeader)}>
-                    {isHeaderDisplayed && ResolvedHeader}
-                </div>
+        <div ref={rootDiv}
+             className={styles.root}
+             style={currentOffset}
+        >
+            <div className={clsx(styles.rel, isHeaderDisplayed ? styles.relHeader : styles.relNoHeader)}>
+                {isHeaderDisplayed && ResolvedHeader}
             </div>
-        </>
+        </div>
     );
 });
 

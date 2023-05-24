@@ -3,7 +3,7 @@ import {CreateFolderQuery} from './CreateFolderDialog.gql-queries';
 import {CreateFolderMutation} from './CreateFolderDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
-import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import styles from './CreateFolderDialog.scss';
 import {Button} from '@jahia/moonstone';

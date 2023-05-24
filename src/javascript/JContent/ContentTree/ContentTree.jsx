@@ -77,10 +77,9 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     }, [depth]);
 
     return (
-        <>
-            <li ref={ref}
-                {...props}
-                className={clsx([
+        <li ref={ref}
+            {...props}
+            className={clsx([
                     {
                         'moonstone-drag': dragging,
                         'moonstone-drop_listItem': (isCanDrop || isCanDropFile) && !insertPosition,
@@ -88,10 +87,9 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
                         'moonstone-order_after': isCanDrop && insertPosition === 'insertAfter'
                     }
                 ])}
-            >
-                {children}
-            </li>
-        </>
+        >
+            {children}
+        </li>
     );
 };
 

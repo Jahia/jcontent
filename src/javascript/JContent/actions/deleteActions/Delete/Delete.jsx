@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import styles from './Delete.scss';
-import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {shallowEqual, useSelector} from 'react-redux';
 import {DeleteQueries} from './delete.gql-queries';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';

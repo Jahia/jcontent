@@ -3,7 +3,7 @@ import {RenameQuery} from './RenameDialog.gql-queries';
 import {RenameMutation} from './RenameDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
-import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import styles from './RenameDialog.scss';
 import {Button} from '@jahia/moonstone';

@@ -8,7 +8,7 @@ import styles from './SearchInput.scss';
 
 let timeOut;
 
-const SearchInput = function () {
+const SearchInput = () => {
     const dispatch = useDispatch();
     const {searchTerms, searchContentType, searchPath} = useSelector(state => ({
         searchTerms: state.jcontent.params.searchTerms,

@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {withNotifications} from '@jahia/react-material';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';

@@ -8,7 +8,7 @@ import {setLocalStorage} from './localStorageHandler';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import React from 'react';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';

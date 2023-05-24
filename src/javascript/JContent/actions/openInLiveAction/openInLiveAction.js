@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {OpenInLiveActionQuery} from '~/JContent/actions/openInLiveAction/openInLiveAction.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
 import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';

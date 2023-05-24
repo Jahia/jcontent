@@ -1,4 +1,4 @@
-import {JContent} from "../page-object";
+import {JContent} from '../page-object';
 
 describe('Registry labels test', () => {
     before(function () {
@@ -6,7 +6,7 @@ describe('Registry labels test', () => {
     });
 
     after(function () {
-       cy.logout();
+        cy.logout();
     });
 
     it('Shows labels on required elements', () => {
@@ -25,7 +25,6 @@ describe('Registry labels test', () => {
             .should('exist')
             .invoke('attr', 'data-registry-target')
             .should('eq', 'nav-root-top:2');
-
 
         cy.get('li[data-sel-role="home"]').rightclick();
         cy.get('li[data-registry-key="action:createPage"]')

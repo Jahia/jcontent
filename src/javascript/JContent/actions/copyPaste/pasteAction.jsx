@@ -40,18 +40,23 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
     }));
 
     const refreshTree = useRefreshTreeAfterMove();
+    const nodeChecksProps = {
+        requiredPermission: 'jcr:addChildNodes',
+        requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],
+        getChildNodeTypes: true,
+        getContributeTypesRestrictions: true,
+        getSubNodesCount: true,
+        getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'],
+        getProperties: ['limit']
+    };
+
+    if (others.hideOnNodeTypes) {
+        nodeChecksProps.hideOnNodeTypes = others.hideOnNodeTypes;
+    }
 
     const res = useNodeChecks(
         {path, language},
-        {
-            requiredPermission: 'jcr:addChildNodes',
-            requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],
-            getChildNodeTypes: true,
-            getContributeTypesRestrictions: true,
-            getSubNodesCount: true,
-            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'],
-            getProperties: ['limit']
-        }
+        nodeChecksProps
     );
 
     const nodeTypeCheck = useNodeTypeCheck();

@@ -221,6 +221,7 @@ export const jContentActions = registry => {
     registry.add('action', 'pasteReference', {
         buttonIcon: <Paste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.pasteReference',
+        hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText'],
         referenceTypes: ['jnt:contentReference'],
         targets: ['headerPrimaryActions:10.1', 'contentActions:3.92'],
         component: PasteActionComponent

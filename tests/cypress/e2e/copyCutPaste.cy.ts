@@ -124,4 +124,20 @@ describe('Copy Cut and Paste tests with jcontent', () => {
 
         cy.logout();
     });
+
+    it('Should display paste action on a page', () => {
+        cy.login();
+
+        JContent.visit('digitall', 'en', 'pages/home');
+        const item = jcontent.getAccordionItem('pages');
+        item.expandTreeItem('home');
+        item.getTreeItem('investors').rightclick();
+        let menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.select('Copy');
+        item.getTreeItem('our-companies').rightclick();
+        menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.get().find('span').contains('Paste').should('exist');
+
+        cy.logout();
+    });
 });

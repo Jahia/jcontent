@@ -36,7 +36,7 @@ const constraintsByType = {
         requiredSitePermission: [ACTION_PERMISSIONS.replaceWithAction]
     },
     import: {
-        showOnNodeTypes: ['jnt:contentFolder'],
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:category'],
         requiredPermission: 'jcr:addChildNodes',
         requiredSitePermission: [ACTION_PERMISSIONS.importAction]
     },

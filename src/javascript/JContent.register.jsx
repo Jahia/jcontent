@@ -1,7 +1,7 @@
 import React from 'react';
 import {registry} from '@jahia/ui-extender';
 import {useHistory} from 'react-router-dom';
-import {Collections, PrimaryNavItem} from '@jahia/moonstone';
+import {Collections, PrimaryNavItem, Tag} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
 import {jContentRoutes} from './JContent/JContent.routes';
@@ -23,6 +23,7 @@ import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
+import CatManApp from './CatManApp';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -61,7 +62,40 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                history.push(buildUrl({site, language, mode: mode || defaultMode, path, params}));
+                                history.push(buildUrl({site, language, mode: mode === 'catMan' ? defaultMode : (mode || defaultMode), path, params}));
+                            }}/>
+        );
+    };
+
+    const CatManNavItem = props => {
+        const history = useHistory();
+        const {t} = useTranslation('jcontent');
+        const {language, catManPath, pathname} = useSelector(state => ({
+            language: state.language,
+            catManPath: state.jcontent.catManPath,
+            pathname: state.router.location.pathname
+        }), shallowEqual);
+
+        let accordions = registry.find({type: 'accordionItem', target: 'catMan'});
+        const permissions = useNodeChecks({
+            path: '/sites/systemsite/categories',
+            language: language
+        }, {
+            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))]
+        });
+
+        if (permissions.loading) {
+            return null;
+        }
+
+        return (
+            <PrimaryNavItem key="/catMan"
+                            {...props}
+                            isSelected={pathname.startsWith('/catMan')}
+                            label={t('label.name')}
+                            icon={<Tag/>}
+                            onClick={() => {
+                                history.push(`/catMan/${language}${accordions[0].getUrlPathPart('systemsite', catManPath)}`);
                             }}/>
         );
     };
@@ -72,10 +106,22 @@ export default function () {
         render: () => <JContentNavItem/>
     });
 
+    registry.add('primary-nav-item', 'catMan', {
+        targets: ['nav-root-top:4.1'],
+        requiredPermission: 'jContentAccess',
+        render: () => <CatManNavItem/>
+    });
+
     registry.add('route', 'route-jcontent', {
         targets: ['main:2'],
         path: '/jcontent/:siteKey/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
         render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
+    });
+
+    registry.add('route', 'route-catMan', {
+        targets: ['main:3'],
+        path: '/catMan/:lang', // Catch everything that's jcontent and let the app resolve correct view
+        render: () => <CatManApp/>
     });
 
     registry.add('app', 'dnd', {

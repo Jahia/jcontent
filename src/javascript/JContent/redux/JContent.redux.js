@@ -25,6 +25,17 @@ const extractParamsFromUrl = (pathname, search) => {
         return {site, language, mode, path, params};
     }
 
+    if (pathname.startsWith('/catMan')) {
+        let [, , language, ...pathElements] = pathname.split('/');
+        let registryItem = registry.get('accordionItem', 'catMan');
+        pathElements.splice(0, 0, 'categories');
+        let path = ((registryItem && registryItem.getPath && registryItem.getPath('systemsite', pathElements)) || ('/' + pathElements.join('/')));
+
+        path = decodeURIComponent(path);
+        let params = deserializeQueryString(search);
+        return {site: 'systemsite', language, mode: 'catMan', path, params};
+    }
+
     return {site: '', language: '', mode: '', path: '', params: {}};
 };
 
@@ -74,6 +85,21 @@ export const cmGoto = data => (
     }
 );
 
+export const cmGotoCatMan = data => (
+    (dispatch, getStore) => {
+        const {language, jcontent: {catManPath}} = getStore();
+        let registryItem = registry.get('accordionItem', 'catMan');
+        let path = data.path || catManPath;
+        if (registryItem && registryItem.getUrlPathPart) {
+            path = registryItem.getUrlPathPart('systemsite', path, registryItem);
+        }
+
+        // Special chars in folder naming
+        path = path.replace(/[^/]/g, encodeURIComponent);
+        dispatch(push(`/catMan/${language}${path}`));
+    }
+);
+
 export const replaceOpenedPath = data => (
     dispatch => {
         dispatch(cmReplaceOpenedPaths(data));
@@ -115,6 +141,10 @@ export const jContentRedux = registry => {
         [cmCloseTablePaths]: (state, action) => _.difference(state, action.payload)
     }, []);
 
+    const catManPathReducer = handleActions({
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
+    }, '/');
+
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'preSearchModeMemo', {targets: ['jcontent'], reducer: preSearchModeMemoReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
@@ -123,6 +153,8 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'tableOpenPaths', {targets: ['jcontent'], reducer: tableOpenPathsReducer});
     registry.add('redux-reducer', 'jContentSite', {targets: ['site:2'], reducer: siteReducer});
     registry.add('redux-reducer', 'jContentLanguage', {targets: ['language:2'], reducer: languageReducer});
+
+    registry.add('redux-reducer', 'catManPath', {targets: ['jcontent'], reducer: catManPathReducer});
 
     const reducersArray = registry.find({type: 'redux-reducer', target: 'jcontent'});
     const reducerObj = {};

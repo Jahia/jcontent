@@ -21,12 +21,8 @@ const excludedActions = [
     'fileUpload'
 ];
 
-export const BrowseControlBar = ({isShowingActions}) => {
-    const {path, siteKey, selection} = useSelector(state => ({
-        path: state.jcontent.path,
-        siteKey: state.site,
-        selection: state.jcontent.selection
-    }), shallowEqual);
+export const BrowseControlBar = ({isShowingActions, selector}) => {
+    const {path, siteKey, selection} = useSelector(selector, shallowEqual);
 
     const contentActions = useMemo(() => [
         ...registry.find({type: 'action', target: 'headerPrimaryActions'}).map(action => action.key),
@@ -60,7 +56,17 @@ export const BrowseControlBar = ({isShowingActions}) => {
 };
 
 BrowseControlBar.propTypes = {
-    isShowingActions: PropTypes.bool.isRequired
+    isShowingActions: PropTypes.bool,
+    selector: PropTypes.func
+};
+
+BrowseControlBar.defaultProps = {
+    isShowingActions: true,
+    selector: state => ({
+        path: state.jcontent.path,
+        siteKey: state.site,
+        selection: state.jcontent.selection
+    })
 };
 
 export default BrowseControlBar;

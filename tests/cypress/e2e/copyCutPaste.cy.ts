@@ -50,6 +50,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
                 cy.get('td:contains("Taber")').should('exist');
 
                 GraphqlUtils.getNodeId('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber', 'Taber');
+                // eslint-disable-next-line max-nested-callbacks
                 cy.get('@Taber').then(taber => {
                     cy.visit(`/jahia/content-editor/en/edit/${taber}`);
                     getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="Classification"]').expand();
@@ -70,6 +71,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             jcontent.paste().then(() => {
                 cy.get('td:contains("Taber")').should('exist');
 
+                // eslint-disable-next-line max-nested-callbacks
                 jcontent.rightClickMenu('cut', 'Taber').then(() => {
                     cy.get('#message-id').contains('Taber is in the clipboard');
                 });
@@ -103,6 +105,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.visit('/jahia/jcontent/digitall/en/content-folders/contents?params');
             jcontent.rightClickMenu('copy', 'testFolder2').then(() => {
                 cy.visit('/jahia/jcontent/digitall/en/content-folders/contents/testFolder1');
+                // eslint-disable-next-line max-nested-callbacks
                 jcontent.paste().then(() => {
                     cy.get('td:contains("testFolder2")').should('exist');
                     GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder1/testFolder2');

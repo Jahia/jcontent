@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Mutation, useApolloClient} from 'react-apollo';
+import {useApolloClient} from '@apollo/client';
+import {Mutation} from '@apollo/react-components';
 import ImageEditorDialog from './ImageEditorDialog';
 import {getImageMutation} from './ImageEditorDialog.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';

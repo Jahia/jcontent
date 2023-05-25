@@ -8,7 +8,7 @@ import {
     unregisterContentModificationEventHandler
 } from '~/JContent/eventHandlerRegistry';
 import {isDescendantOrSelf, extractPaths} from '~/JContent/JContent.utils';
-import {useApolloClient} from 'react-apollo';
+import {useApolloClient} from '@apollo/client';
 import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
 import {Portal} from './Portal';

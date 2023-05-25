@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 
 import ContentStatuses from './ContentStatuses';
 import {GetContentStatuses} from './ContentStatuses.gql-queries';

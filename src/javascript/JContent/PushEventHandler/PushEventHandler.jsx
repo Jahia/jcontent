@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {registerPushEventHandler, unregisterPushEventHandler} from '../eventHandlerRegistry';
 import {triggerRefetchAll} from '../JContent.refetches';
-import {useApolloClient} from 'react-apollo';
+import {useApolloClient} from '@apollo/client';
 
 /**
  * Renderless component that registers listeners for push events, sent by the Atmosphere Framework after content actions

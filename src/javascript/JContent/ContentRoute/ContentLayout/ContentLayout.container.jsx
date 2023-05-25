@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {useApolloClient} from 'react-apollo';
+import {useApolloClient} from '@apollo/client';
 import {mixinTypes} from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
 import {

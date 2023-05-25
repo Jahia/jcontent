@@ -1,4 +1,4 @@
-import {useLazyQuery} from '@apollo/react-hooks';
+import {useLazyQuery} from '@apollo/client';
 import gql from 'graphql-tag';
 import * as _ from 'lodash';
 import {useCallback} from 'react';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useSelector} from 'react-redux';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import SiteContentTypesQuery from './BasicSearch.gql-queries';
 import {extractAndFormatContentTypeData} from './BasicSearch.utils';
 import BasicSearch from './BasicSearch';

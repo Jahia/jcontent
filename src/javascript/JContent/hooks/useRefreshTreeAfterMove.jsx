@@ -1,4 +1,4 @@
-import {useApolloClient} from 'react-apollo';
+import {useApolloClient} from '@apollo/client';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';

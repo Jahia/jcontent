@@ -17,32 +17,31 @@ export const ContentLayout = ({mode, path, previewState, filesMode, previewSelec
     const contextualMenu = useRef();
     const previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
     return (
-        <>
-            <div className={styles.root}>
-                <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
-                <div
+        <div className={styles.root}>
+            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
+            <div
                     className={classNames(styles.content)}
                     style={{
                         marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                     }}
                     onContextMenu={event => contextualMenu.current(event)}
-                >
-                    <Paper className={styles.contentPaper}>
-                        <ErrorBoundary key={filesMode}>
-                            {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
-                                <FilesGrid totalCount={totalCount}
-                                           rows={rows}
-                                           isContentNotFound={isContentNotFound}
-                                           isLoading={isLoading}/> :
-                                <ContentTable totalCount={totalCount}
-                                              rows={rows}
-                                              isContentNotFound={isContentNotFound}
-                                              isStructured={isStructured}
-                                              isLoading={isLoading}/>}
-                        </ErrorBoundary>
-                    </Paper>
-                </div>
-                <Drawer
+            >
+                <Paper className={styles.contentPaper}>
+                    <ErrorBoundary key={filesMode}>
+                        {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
+                            <FilesGrid totalCount={totalCount}
+                                       rows={rows}
+                                       isContentNotFound={isContentNotFound}
+                                       isLoading={isLoading}/> :
+                            <ContentTable totalCount={totalCount}
+                                          rows={rows}
+                                          isContentNotFound={isContentNotFound}
+                                          isStructured={isStructured}
+                                          isLoading={isLoading}/>}
+                    </ErrorBoundary>
+                </Paper>
+            </div>
+            <Drawer
                     data-cm-role="preview-drawer"
                     variant="persistent"
                     anchor="right"
@@ -54,15 +53,14 @@ export const ContentLayout = ({mode, path, previewState, filesMode, previewSelec
                             [styles.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
                         })
                     }}
-                >
-                    {previewOpen && (
-                        <ErrorBoundary key={previewSelection}>
-                            <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
-                        </ErrorBoundary>
+            >
+                {previewOpen && (
+                <ErrorBoundary key={previewSelection}>
+                    <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
+                </ErrorBoundary>
                     )}
-                </Drawer>
-            </div>
-        </>
+            </Drawer>
+        </div>
     );
 };
 

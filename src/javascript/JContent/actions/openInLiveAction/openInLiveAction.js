@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {OpenInLiveActionQuery} from '~/JContent/actions/openInLiveAction/openInLiveAction.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
 import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -35,7 +35,7 @@ export const OpenInLiveActionComponent = ({
         res.data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' ||
         res.data.jcr.result.publicationInfo.status === 'UNPUBLISHED' ||
         (!res.data.jcr.result.previewAvailable && res.data.jcr.result.displayableNode === null)) {
-        return <></>;
+        return false;
     }
 
     if (!res.data.jcr.result.previewAvailable && res.data.jcr.result.displayableNode.previewAvailable) {

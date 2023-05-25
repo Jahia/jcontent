@@ -6,7 +6,7 @@ import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer} from '~/utils/getButtonRenderer';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {GetLinkData} from '~/JContent/ContentTree/LinkDialog/link.gql-queries';
 import {ExternalLinkDialogContent} from './ExternalLinkDialogContent';
 import {InternalLinkDialogContent} from './InternalLinkDialogContent';
@@ -27,7 +27,7 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
     });
 
     if (!node) {
-        return <></>;
+        return false;
     }
 
     const linkType = getLinkType(node);

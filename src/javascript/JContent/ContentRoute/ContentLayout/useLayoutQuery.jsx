@@ -1,4 +1,4 @@
-import {useQuery} from 'react-apollo';
+import {useQuery} from '@apollo/client';
 import {registry} from '@jahia/ui-extender';
 import {replaceFragmentsInDocument, useTreeEntries} from '@jahia/data-helper';
 import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';

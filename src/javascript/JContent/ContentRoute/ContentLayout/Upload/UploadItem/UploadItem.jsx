@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {Button, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
-import {withApollo} from 'react-apollo';
+import {withApollo} from '@apollo/react-hoc';
 import {uploadStatuses} from '../Upload.constants';
 import {withTranslation} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';

@@ -5,7 +5,7 @@ import JContentConstants from '../JContent.constants';
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
 
 export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {

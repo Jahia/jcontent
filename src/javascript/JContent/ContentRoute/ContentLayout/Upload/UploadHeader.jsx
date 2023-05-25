@@ -5,7 +5,7 @@ import {Check, Information, Loader, Typography} from '@jahia/moonstone';
 import {Trans, useTranslation} from 'react-i18next';
 import styles from './UploadHeader.scss';
 
-export function UploadHeader({status}) {
+export const UploadHeader = ({status}) => {
     const {t} = useTranslation('jcontent');
     if (!status) {
         return null;
@@ -61,7 +61,7 @@ export function UploadHeader({status}) {
             </Typography>
         </div>
     );
-}
+};
 
 UploadHeader.propTypes = {
     status: PropTypes.object

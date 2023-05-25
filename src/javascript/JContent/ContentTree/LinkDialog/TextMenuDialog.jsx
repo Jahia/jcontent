@@ -14,7 +14,7 @@ export const TextMenuDialog = ({node, isOpen, onClose, setPathAction}) => {
     const dispatch = useDispatch();
 
     if (!node) {
-        return <></>;
+        return false;
     }
 
     return (

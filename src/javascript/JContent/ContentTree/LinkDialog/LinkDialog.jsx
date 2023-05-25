@@ -27,7 +27,7 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
     });
 
     if (!node) {
-        return <></>;
+        return false;
     }
 
     const linkType = getLinkType(node);

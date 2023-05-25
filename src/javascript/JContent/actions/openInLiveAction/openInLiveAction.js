@@ -35,7 +35,7 @@ export const OpenInLiveActionComponent = ({
         res.data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' ||
         res.data.jcr.result.publicationInfo.status === 'UNPUBLISHED' ||
         (!res.data.jcr.result.previewAvailable && res.data.jcr.result.displayableNode === null)) {
-        return <></>;
+        return false;
     }
 
     if (!res.data.jcr.result.previewAvailable && res.data.jcr.result.displayableNode.previewAvailable) {

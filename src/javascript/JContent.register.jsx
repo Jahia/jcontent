@@ -97,7 +97,8 @@ export default function () {
                             label={t('label.name')}
                             icon={<Tag/>}
                             onClick={() => {
-                                history.push(`/catMan/${language}${accordions[0].getUrlPathPart('systemsite', catManPath)}`);
+                                let urlPathPart = accordions[0].getUrlPathPart('systemsite', catManPath);
+                                history.push(`/catMan/${language}${urlPathPart === '' ? '/' : urlPathPart}`);
                             }}/>
         );
     };

@@ -242,7 +242,7 @@ export const jContentAccordionItems = registry => {
             if (path.startsWith(sitePath + '/')) {
                 path = path.substring(sitePath.length);
             } else {
-                path = '';
+                path = '/';
             }
 
             return path;

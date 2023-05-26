@@ -28,6 +28,11 @@ export class JContent extends BasePage {
         return new JContent();
     }
 
+    static visitCatMan(language: string): CategoryManager {
+        cy.visit(`/jahia/catMan/${language}/`);
+        return new CategoryManager(new JContent());
+    }
+
     getSecondaryNav(): SecondaryNav {
         if (!this.secondaryNav) {
             this.secondaryNav = getComponent(SecondaryNav);
@@ -249,4 +254,17 @@ class PageComposerModule extends BaseComponent {
     click(clickOptions?) {
         this.get().scrollIntoView().click(clickOptions);
     }
+}
+
+
+export class CategoryManager extends JContent {
+    constructor(base: JContent) {
+        super();
+        Object.assign(this, base);
+    }
+
+    getCreateCategory(): void {
+        cy.get('.moonstone-header button[data-sel-role="jnt:category"]').click();
+    }
+
 }

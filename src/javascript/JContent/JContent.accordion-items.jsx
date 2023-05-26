@@ -219,7 +219,7 @@ export const jContentAccordionItems = registry => {
         targets: ['catMan:10'],
         icon: <Tag/>,
         label: 'Categories',
-        rootPath: '/sites/systemsite/categories/',
+        rootPath: '/sites/systemsite/categories',
         render: (v, item) => (
             <AccordionItem key={v.id} {...v}>
                 <ContentTree item={item}

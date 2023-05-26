@@ -91,7 +91,7 @@ export const FileCard = ({
 
             {isImage ?
                 <div
-                    className={clsx(styles.cardPreviewAndIcon)}
+                    className={clsx(styles.cardPreviewAndIcon, {[styles.smallImage]: node.width && node.width.value < 200})}
                     style={{backgroundImage: `url("${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2")`}}
                 /> :
                 <div className={styles.cardPreviewAndIcon}>

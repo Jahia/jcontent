@@ -51,6 +51,10 @@
 
         color: var(--color-gray40);
     }
+
+    &.smallImage {
+        background-size: auto;
+    }
 }
 
 .nameAndActions {

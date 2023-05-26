@@ -44,7 +44,7 @@ describe('Category Manager', () => {
         cy.contains('Test Category 2').should('be.visible');
     });
 
-    it.only('Contains only expected actions in primary header action', () => {
+    it('Contains only expected actions in primary header action', () => {
         const accordionItem = catMan.getAccordionItem('catMan');
         accordionItem.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('Test Category 1').should('be.visible');

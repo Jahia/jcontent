@@ -39,7 +39,7 @@ export const QueryHandlersFragments = {
                     markForDeletion
                     publication
                 }
-                aggregatedPublicationInfo(language: $language) {
+                aggregatedPublicationInfo(language: $language, references:false, subNodes:false) {
                     publicationStatus
                     existsInLive
                 }

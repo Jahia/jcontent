@@ -8,14 +8,13 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Te
 import styles from './CreateFolderDialog.scss';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const CreateFolderDialog = ({path, contentType, onExit}) => {
     const [open, setOpen] = useState(true);
     const [name, updateName] = useState('');
 
     const {t} = useTranslation('jcontent');
-
-    const invalidRegex = /[\\/:*?"<>|%]/g;
 
     const client = useApolloClient();
     const {loading, data} = useQuery(CreateFolderQuery, {
@@ -53,7 +52,7 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
     };
 
     const isNameAvailable = (data?.jcr?.nodeByPath?.children?.nodes || []).find(node => node.name === name) === undefined;
-    const isNameValid = name.match(invalidRegex) === null;
+    const isNameValid = name.match(JContentConstants.namingInvalidCharactersRegexp) === null;
     let errMsg = '';
 
     if (!isNameAvailable) {
@@ -79,7 +78,7 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
                 <TextField
                     fullWidth
                     autoFocus
-                    inputProps={{maxLength: 32}}
+                    inputProps={{maxLength: contextJsParameters.config.maxNameSize}}
                     error={Boolean(errMsg)}
                     value={name}
                     id="folder-name"

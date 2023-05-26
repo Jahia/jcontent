@@ -44,7 +44,9 @@ export function useNodeTypeCheck() {
         let shouldCallQuery = !contentTypesResult.called || !_.isEqual(variables, contentTypesResult.variables);
 
         if (shouldCallQuery) {
-            loadContentTypes({variables});
+            setTimeout(() => {
+                loadContentTypes({variables});
+            });
         }
 
         if (contentTypesResult.loading || shouldCallQuery) {

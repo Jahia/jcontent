@@ -256,7 +256,6 @@ class PageComposerModule extends BaseComponent {
     }
 }
 
-
 export class CategoryManager extends JContent {
     constructor(base: JContent) {
         super();
@@ -266,5 +265,4 @@ export class CategoryManager extends JContent {
     getCreateCategory(): void {
         cy.get('.moonstone-header button[data-sel-role="jnt:category"]').click();
     }
-
 }

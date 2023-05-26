@@ -10,6 +10,6 @@ export const CategoriesQueryHandler = {
             groups: ['jnt:category'],
             groupingType: 'START'
         }
-    }),
+    })
 
 };

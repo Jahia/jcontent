@@ -487,6 +487,9 @@
         }
       }
     },
+    "categoryManager": {
+      "noSubCategory": "Pas de sous-catégorie"
+    },
     "ok": "OK",
     "cancel": "Annuler",
     "no": "Non",

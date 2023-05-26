@@ -11,10 +11,10 @@ const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
 };
 
-const checkAction = node => node.operationsSupport.markForDeletion &&
+const checkAction = node => (node['jnt:category'] || node.primaryNodeType?.name === 'jnt:category') || (node.operationsSupport.markForDeletion &&
     isMarkedForDeletion(node) &&
     node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
-    (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
+    (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive));
 
 export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);

@@ -90,13 +90,14 @@ export const cmGotoCatMan = data => (
         const {language, jcontent: {catManPath}} = getStore();
         let registryItem = registry.get('accordionItem', 'catMan');
         let path = data.path || catManPath;
+        let lang = data.language || language;
         if (registryItem && registryItem.getUrlPathPart) {
             path = registryItem.getUrlPathPart('systemsite', path, registryItem);
         }
 
         // Special chars in folder naming
         path = path.replace(/[^/]/g, encodeURIComponent);
-        dispatch(push(`/catMan/${language}${path}`));
+        dispatch(push(`/catMan/${lang}${path}`));
     }
 );
 
@@ -144,6 +145,12 @@ export const jContentRedux = registry => {
     const catManPathReducer = handleActions({
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
     }, '/');
+    let siteReducerCatMan = handleActions({
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site : state
+    }, '');
+    let languageReducerCatMan = handleActions({
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language : state
+    }, '');
 
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'preSearchModeMemo', {targets: ['jcontent'], reducer: preSearchModeMemoReducer});
@@ -155,6 +162,8 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'jContentLanguage', {targets: ['language:2'], reducer: languageReducer});
 
     registry.add('redux-reducer', 'catManPath', {targets: ['jcontent'], reducer: catManPathReducer});
+    registry.add('redux-reducer', 'catManSite', {targets: ['site:2'], reducer: siteReducerCatMan});
+    registry.add('redux-reducer', 'catManLanguage', {targets: ['language:2'], reducer: languageReducerCatMan});
 
     const reducersArray = registry.find({type: 'redux-reducer', target: 'jcontent'});
     const reducerObj = {};

@@ -8,6 +8,7 @@ import './colors.scss';
 import {cmClearSelection} from './redux/selection.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import ContentNavigationContainer from './ContentNavigation';
+import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 
 export const CatMan = () => {
     const item = registry.get('accordionItem', 'catMan');
@@ -32,7 +33,11 @@ export const CatMan = () => {
         language: state.language
     });
     const handleNavigationAction = (mode, path) => {
-        console.log('catMan navigation', mode, path);
+        dispatch(cmGotoCatMan({mode, path}));
+    };
+
+    const handleSwitchLanguageAction = language => {
+        dispatch(cmGotoCatMan({language}));
     };
 
     return (
@@ -40,7 +45,8 @@ export const CatMan = () => {
             navigation={<ContentNavigationContainer accordionItemTarget="catMan"
                                                     selector={selector}
                                                     handleNavigationAction={handleNavigationAction}
-                                                    header={<NavigationHeader isDisplayLanguageSwitcher={false}
+                                                    header={<NavigationHeader isDisplaySiteSwitcher={false}
+                                                                              setLanguageAction={handleSwitchLanguageAction}
                                                                               logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
             content={
                 <LoaderSuspense>

@@ -136,7 +136,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return (
             <>
                 {tableHeader}
-                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop}/>
+                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop} selector={selector}/>
             </>
         );
     }
@@ -208,6 +208,7 @@ ContentTable.defaultProps = {
         mode: state.jcontent.mode,
         previewSelection: state.jcontent.previewSelection,
         siteKey: state.site,
+        site: state.site,
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
         previewState: state.jcontent.previewState,

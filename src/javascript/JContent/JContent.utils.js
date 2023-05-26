@@ -45,6 +45,10 @@ export const isMarkedForDeletion = node => {
     return hasMixin(node, 'jmix:markedForDeletion');
 };
 
+export const isAutoPublished = node => {
+    return hasMixin(node, 'jmix:autoPublish');
+};
+
 export const isWorkInProgress = (node, lang) => {
     if (node.wipStatus) {
         switch (node.wipStatus.value) {

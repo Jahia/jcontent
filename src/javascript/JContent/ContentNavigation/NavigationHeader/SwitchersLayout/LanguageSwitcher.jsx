@@ -6,8 +6,9 @@ import {useSiteInfo} from '@jahia/data-helper';
 import {Dropdown, Typography} from '@jahia/moonstone';
 import styles from './LanguageSwitcher.scss';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import PropTypes from 'prop-types';
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = ({setLanguageAction}) => {
     const {siteKey, lang} = useSelector(state => ({
         siteKey: state.site,
         lang: state.language
@@ -19,7 +20,7 @@ const LanguageSwitcher = () => {
     const notificationContext = useNotifications();
     const onSelectLanguageHandler = lang => {
         console.debug(`%c  Switching language to: ${lang}`, 'color: #6B5CA5');
-        dispatch(cmGoto({language: lang}));
+        dispatch(setLanguageAction(lang));
     };
 
     if (error) {
@@ -34,7 +35,8 @@ const LanguageSwitcher = () => {
             <Dropdown isDisabled
                       data={[{label: 'none', value: 'none'}]}
                       className={styles.languageSwitcher}
-                      onChange={() => {}}
+                      onChange={() => {
+                      }}
             />
         );
     }
@@ -64,4 +66,11 @@ const LanguageSwitcher = () => {
     );
 };
 
+LanguageSwitcher.propTypes = {
+    setLanguageAction: PropTypes.func
+};
+
+LanguageSwitcher.defaultProps = {
+    setLanguageAction: lang => cmGoto({language: lang})
+};
 export default LanguageSwitcher;

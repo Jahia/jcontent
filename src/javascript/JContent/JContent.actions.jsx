@@ -120,6 +120,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         targets: ['contentActions:6', 'selectedContentActions:1'],
         menuTarget: 'publishMenu',
+        hideOnNodeTypes: ['jnt:category'],
         isMenuPreload: true
     });
     registry.add('action', 'publish', {
@@ -292,7 +293,7 @@ export const jContentActions = registry => {
     registry.add('action', 'export', {
         buttonIcon: <Upload/>,
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
-        targets: ['contentActions:4.2', 'narrowHeaderMenu:13', 'headerPrimaryActions:4'],
+        targets: ['contentActions:4.2', 'narrowHeaderMenu:13', 'selectedContentActions:2'],
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
         requiredSitePermission: [ACTION_PERMISSIONS.exportAction],
         component: ExportActionComponent

@@ -19,6 +19,18 @@ import {NarrowHeaderActions} from './NarrowHeaderActions';
 
 const NARROW_HEADER_WIDTH = 750;
 
+const excludedActions = [
+    'subContents',
+    'edit',
+    'editPage',
+    'publishMenu',
+    'publishDeletion',
+    'createFolder',
+    'createContentFolder',
+    'createContent',
+    'fileUpload'
+];
+
 let extractNodeInfo = function (node, loading) {
     const nodeType = node?.primaryNodeType;
     const title = ((!loading && node && node.displayName) || 'Loading ...');
@@ -102,6 +114,7 @@ const CategoriesHeader = () => {
                 <>
                     {selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
                     <BrowseControlBar isShowingActions={selection.length === 0}
+                                      actionsToExcludeFromMenu={excludedActions}
                                       selector={state => ({
                         path: state.jcontent.catManPath,
                         siteKey: state.site,

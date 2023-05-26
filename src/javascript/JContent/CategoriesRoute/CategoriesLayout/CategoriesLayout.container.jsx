@@ -9,6 +9,7 @@ import styles from '../../ContentRoute/ContentLayout/ContentLayout.scss';
 import JContentConstants from '~/JContent/JContent.constants';
 import CategoriesLayout from '~/JContent/CategoriesRoute/CategoriesLayout/CategoriesLayout';
 import {registry} from '@jahia/ui-extender';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 
 export const CategoriesLayoutContainer = () => {
     const {t} = useTranslation('jcontent');
@@ -40,7 +41,17 @@ export const CategoriesLayoutContainer = () => {
         tableView: {viewMode: JContentConstants.tableView.viewMode.FLAT}
     }));
 
-    const {isStructured, result, error, loading} = useLayoutQuery(options);
+    const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);
+
+    useEffect(() => {
+        setRefetcher(refetchTypes.CONTENT_DATA, {
+            refetch: refetch
+        });
+
+        return () => {
+            unsetRefetcher(refetchTypes.CONTENT_DATA);
+        };
+    });
 
     const autoExpand = useRef({path: '', level: 1, type: ''});
     useEffect(() => {

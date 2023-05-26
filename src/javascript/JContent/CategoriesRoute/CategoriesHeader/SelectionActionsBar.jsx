@@ -16,7 +16,7 @@ export const SelectionActionsBar = ({paths, clear}) => {
                 <DisplayActions
                     target="selectedContentActions"
                     {...context}
-                    filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
+                    filter={action => action.key.indexOf('publish') === -1}
                     buttonProps={{size: 'default', variant: 'ghost'}}
                     render={ButtonRenderer}
                 />

@@ -21,13 +21,13 @@ const excludedActions = [
     'fileUpload'
 ];
 
-export const BrowseControlBar = ({isShowingActions, selector}) => {
+export const BrowseControlBar = ({isShowingActions, selector, actionsToExcludeFromMenu}) => {
     const {path, siteKey, selection} = useSelector(selector, shallowEqual);
 
     const contentActions = useMemo(() => [
         ...registry.find({type: 'action', target: 'headerPrimaryActions'}).map(action => action.key),
-        ...excludedActions
-    ], []);
+        ...actionsToExcludeFromMenu
+    ], [actionsToExcludeFromMenu]);
     const isRootNode = (path === ('/sites/' + siteKey));
     const editPath = selection && selection.length === 1 ? selection[0] : path;
 
@@ -57,7 +57,8 @@ export const BrowseControlBar = ({isShowingActions, selector}) => {
 
 BrowseControlBar.propTypes = {
     isShowingActions: PropTypes.bool,
-    selector: PropTypes.func
+    selector: PropTypes.func,
+    actionsToExcludeFromMenu: PropTypes.array
 };
 
 BrowseControlBar.defaultProps = {
@@ -66,7 +67,8 @@ BrowseControlBar.defaultProps = {
         path: state.jcontent.path,
         siteKey: state.site,
         selection: state.jcontent.selection
-    })
+    }),
+    actionsToExcludeFromMenu: excludedActions
 };
 
 export default BrowseControlBar;

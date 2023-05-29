@@ -1,7 +1,6 @@
 import {CategoryManager, JContent} from '../page-object';
 
-
-const accordionItemName = 'category'
+const accordionItemName = 'category';
 describe('Category Manager', () => {
     let catMan: CategoryManager;
 
@@ -57,15 +56,15 @@ describe('Category Manager', () => {
     });
 
     it('Performs a simple search at the root level', () => {
-        let basicSearch = catMan.getBasicSearch().openSearch().reset(true);
-        basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Root Test Category','Test Category 1','Test Category 2']).verifyTotalCount(3)
-    })
+        const basicSearch = catMan.getBasicSearch().openSearch().reset(true);
+        basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Root Test Category', 'Test Category 1', 'Test Category 2']).verifyTotalCount(3);
+    });
 
     it('Performs a simple search at the specified level', () => {
         const accordionItem = catMan.getAccordionItem(accordionItemName).click();
         accordionItem.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('Test Category 1').should('be.visible');
-        let basicSearch = catMan.getBasicSearch().openSearch().reset(true);
-        basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Test Category 1','Test Category 2']).verifyTotalCount(2)
+        const basicSearch = catMan.getBasicSearch().openSearch().reset(true);
+        basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Test Category 1', 'Test Category 2']).verifyTotalCount(2);
     });
 });

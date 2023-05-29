@@ -69,7 +69,7 @@ const CategoriesHeader = () => {
                 backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
-                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar/>}
+                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar actionKey="searchCatMan"/>}
             />
         ) : (
             <Header
@@ -79,7 +79,7 @@ const CategoriesHeader = () => {
                 toolbarLeft={
                     <>
                         {selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
-                        {selection.length === 0 && <SearchControlBar/>}
+                        {selection.length === 0 && <SearchControlBar actionKey="searchCatMan"/>}
                     </>
                 }
             />

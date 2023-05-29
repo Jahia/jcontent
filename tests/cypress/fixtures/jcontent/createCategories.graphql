@@ -1,0 +1,32 @@
+mutation {
+    jcr {
+        mutateNode(pathOrId: "/sites/systemsite/categories") {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "rootTestCategory"
+                        primaryNodeType: "jnt:category"
+                        properties: [{ name: "jcr:title", language: "en", value: "Root Test Category" }]
+                        children: [
+                            {
+                                name: "test-category1"
+                                primaryNodeType: "jnt:category"
+                                properties: [{ name: "jcr:title", language: "en", value: "Test Category 1" }]
+                                children: [
+                                    {
+                                        name: "test-category2"
+                                        primaryNodeType: "jnt:category"
+                                        properties: [{ name: "jcr:title", language: "en", value: "Test Category 2" }]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+    }
+}
+

@@ -8,13 +8,13 @@ import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import styles from './EmptyDropZone.scss';
 import clsx from 'clsx';
+import {DisplayAction} from '@jahia/ui-extender';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
 
-const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
-    const currentState = useSelector(state => ({
-        site: state.site,
-        language: state.language,
-        path: state.jcontent.path
-    }), shallowEqual);
+const ButtonRenderer = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {className: styles.button, size: 'big'}});
+
+const EmptyDropZone = ({component: Component, isCanDrop, uploadType, selector}) => {
+    const currentState = useSelector(selector, shallowEqual);
     const {t} = useTranslation('jcontent');
 
     const permissions = useNodeChecks({
@@ -54,6 +54,15 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
         );
     }
 
+    if (currentState.mode === 'catMan') {
+        return (
+            <Component data-type="emptyZone" className={styles.emptyZone}>
+                <Typography variant="heading">{t('jcontent:label.categoryManager.noSubCategory')}</Typography>
+                <DisplayAction actionKey="createContent" render={ButtonRenderer} path={currentState.path} nodeTypes={['jnt:category']}/>
+            </Component>
+        );
+    }
+
     if (uploadType === JContentConstants.mode.UPLOAD && permissions.node.site.uploadFilesAction) {
         return (
             <Component data-type="upload" className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
@@ -85,7 +94,17 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
 EmptyDropZone.propTypes = {
     component: PropTypes.string.isRequired,
     uploadType: PropTypes.string,
-    isCanDrop: PropTypes.bool
+    isCanDrop: PropTypes.bool,
+    selector: PropTypes.func
+};
+
+EmptyDropZone.defaultProps = {
+    selector: state => ({
+        site: state.site,
+        language: state.language,
+        path: state.jcontent.path,
+        mode: state.jcontent.mode
+    })
 };
 
 export default EmptyDropZone;

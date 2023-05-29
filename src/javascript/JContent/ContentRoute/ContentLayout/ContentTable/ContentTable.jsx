@@ -34,24 +34,12 @@ import styles from './ContentTable.scss';
 import {pathExistsInTree} from '../../../JContent.utils';
 import {useNotifications} from '@jahia/react-material';
 
-export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
+export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, columns, selector}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(state => ({
-        mode: state.jcontent.mode,
-        previewSelection: state.jcontent.previewSelection,
-        siteKey: state.site,
-        path: state.jcontent.path,
-        pagination: state.jcontent.pagination,
-        previewState: state.jcontent.previewState,
-        selection: state.jcontent.selection,
-        tableView: state.jcontent.tableView,
-        searchTerms: state.jcontent.params.searchTerms,
-        tableOpenPaths: state.jcontent.tableOpenPaths,
-        sort: state.jcontent.sort
-    }), shallowEqual);
+    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
 
     const onPreviewSelect = useCallback(previewSelection => dispatch(cmSetPreviewSelection(previewSelection)), [dispatch]);
     const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);
@@ -79,7 +67,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         prepareRow
     } = useTable(
         {
-            columns: mainColumnData,
+            columns: columns,
             data: rows,
             isExpanded: row => tableOpenPaths.indexOf(row.path) > -1,
             onExpand: (id, value) => {
@@ -101,7 +89,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     );
 
     useEffect(() => {
-        if (selection.length > 0 && !isLoading) {
+        if (selection.length > 0 && !isLoading && rows?.length > 0) {
             const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
             if (toRemove.length > 0) {
                 notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
@@ -148,7 +136,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return (
             <>
                 {tableHeader}
-                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop}/>
+                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop} selector={selector}/>
             </>
         );
     }
@@ -210,7 +198,27 @@ ContentTable.propTypes = {
     isLoading: PropTypes.bool,
     isStructured: PropTypes.bool,
     rows: PropTypes.array.isRequired,
-    totalCount: PropTypes.number.isRequired
+    totalCount: PropTypes.number.isRequired,
+    selector: PropTypes.func,
+    columns: PropTypes.array
+};
+
+ContentTable.defaultProps = {
+    selector: state => ({
+        mode: state.jcontent.mode,
+        previewSelection: state.jcontent.previewSelection,
+        siteKey: state.site,
+        site: state.site,
+        path: state.jcontent.path,
+        pagination: state.jcontent.pagination,
+        previewState: state.jcontent.previewState,
+        selection: state.jcontent.selection,
+        tableView: state.jcontent.tableView,
+        searchTerms: state.jcontent.params.searchTerms,
+        tableOpenPaths: state.jcontent.tableOpenPaths,
+        sort: state.jcontent.sort
+    }),
+    columns: mainColumnData
 };
 
 export default ContentTable;

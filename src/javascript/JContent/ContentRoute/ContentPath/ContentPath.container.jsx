@@ -6,6 +6,7 @@ import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPath from './ContentPath';
 import {ContentPathDialog} from './ContentPathDialog';
+import PropTypes from 'prop-types';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;
@@ -38,15 +39,11 @@ function getItems(node = {}) {
     return ancestors;
 }
 
-const ContentPathContainer = () => {
+const ContentPathContainer = ({setPathAction, selector}) => {
     const dispatch = useDispatch();
     const [currentItem, setCurrentItem] = useState(null);
 
-    const {mode, language, path} = useSelector(state => ({
-        mode: state.jcontent.mode,
-        path: state.jcontent.path,
-        language: state.language
-    }), shallowEqual);
+    const {mode, language, path} = useSelector(selector, shallowEqual);
 
     const {data, error} = useQuery(GetContentPath, {
         variables: {path, language}
@@ -56,7 +53,7 @@ const ContentPathContainer = () => {
         if (item.primaryNodeType?.name === 'jnt:contentList') {
             setCurrentItem(item);
         } else {
-            dispatch(cmGoto({mode, path: item.path}));
+            dispatch(setPathAction(mode, item.path));
         }
     };
 
@@ -70,17 +67,31 @@ const ContentPathContainer = () => {
             <ContentPath items={items} onItemClick={handleNavigation}/>
             <ContentPathDialog isOpen={currentItem}
                                handleParentNavigation={() => {
-                                   dispatch(cmGoto({mode, path: currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))}));
+                                   dispatch(setPathAction(mode, currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))));
                                    setCurrentItem(null);
                                }}
                                handleClose={() => setCurrentItem(null)}
                                handleListNavigation={() => {
-                                   dispatch(cmGoto({mode, path: currentItem.path}));
+                                   dispatch(setPathAction(mode, currentItem.path));
                                    setCurrentItem(null);
                                }}
             />
         </>
     );
+};
+
+ContentPathContainer.propTypes = {
+    selector: PropTypes.func,
+    setPathAction: PropTypes.func
+};
+
+ContentPathContainer.defaultProps = {
+    selector: state => ({
+        mode: state.jcontent.mode,
+        path: state.jcontent.path,
+        language: state.language
+    }),
+    setPathAction: (mode, path) => cmGoto({mode, path})
 };
 
 export default ContentPathContainer;

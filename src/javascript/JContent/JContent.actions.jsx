@@ -30,28 +30,28 @@ import {
     Upload,
     Visibility
 } from '@jahia/moonstone';
-import {FileUploadActionComponent} from './actions/fileUploadAction';
+import {FileUploadActionComponent} from '~/JContent/actions';
 import {
     DeleteActionComponent,
     DeletePermanentlyActionComponent,
     UndeleteActionComponent
-} from './actions/deleteActions';
-import {PublishActionComponent} from './actions/publishAction';
-import {PublishDeletionActionComponent} from './actions/publishDeletionAction';
-import {PreviewActionComponent} from './actions/previewAction';
-import {PasteActionComponent} from './actions/copyPaste/pasteAction';
-import {CopyCutActionComponent} from './actions/copyPaste/CopyCutActionComponent';
-import {LockActionComponent} from './actions/lockAction';
-import {UnlockActionComponent} from './actions/unlockAction';
-import {ClearAllLocksActionComponent} from './actions/clearAllLocksAction';
-import {LocateActionComponent} from './actions/locateAction';
-import {SubContentsActionComponent} from './actions/subContentsAction';
-import {ExportActionComponent} from './actions/exportAction';
-import {DownloadFileActionComponent} from './actions/downloadFileAction';
-import {CreateFolderActionComponent} from './actions/createFolderAction';
-import {ZipActionComponent} from './actions/zipUnzip/zipAction';
-import {UnzipActionComponent} from './actions/zipUnzip/unzipAction';
-import {SearchActionComponent} from './actions/searchAction';
+} from '~/JContent/actions';
+import {PublishActionComponent} from '~/JContent/actions';
+import {PublishDeletionActionComponent} from '~/JContent/actions';
+import {PreviewActionComponent} from '~/JContent/actions';
+import {PasteActionComponent} from '~/JContent/actions';
+import {CopyCutActionComponent} from '~/JContent/actions';
+import {LockActionComponent} from '~/JContent/actions';
+import {UnlockActionComponent} from '~/JContent/actions';
+import {ClearAllLocksActionComponent} from '~/JContent/actions';
+import {LocateActionComponent} from '~/JContent/actions';
+import {SubContentsActionComponent} from '~/JContent/actions';
+import {ExportActionComponent} from '~/JContent/actions';
+import {DownloadFileActionComponent} from '~/JContent/actions';
+import {CreateFolderActionComponent} from '~/JContent/actions';
+import {ZipActionComponent} from '~/JContent/actions';
+import {UnzipActionComponent} from '~/JContent/actions';
+import {SearchActionComponent} from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
@@ -120,6 +120,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         targets: ['contentActions:6', 'selectedContentActions:1'],
         menuTarget: 'publishMenu',
+        hideOnNodeTypes: ['jnt:category'],
         isMenuPreload: true
     });
     registry.add('action', 'publish', {
@@ -221,7 +222,7 @@ export const jContentActions = registry => {
     registry.add('action', 'pasteReference', {
         buttonIcon: <Paste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.pasteReference',
-        hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText'],
+        hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:category'],
         referenceTypes: ['jnt:contentReference'],
         targets: ['headerPrimaryActions:10.1', 'contentActions:3.92'],
         component: PasteActionComponent
@@ -292,8 +293,8 @@ export const jContentActions = registry => {
     registry.add('action', 'export', {
         buttonIcon: <Upload/>,
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
-        targets: ['contentActions:4.2', 'narrowHeaderMenu:13'],
-        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
+        targets: ['contentActions:4.2', 'narrowHeaderMenu:13', 'selectedContentActions:2'],
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
         requiredSitePermission: [ACTION_PERMISSIONS.exportAction],
         component: ExportActionComponent
     });
@@ -308,7 +309,7 @@ export const jContentActions = registry => {
     registry.add('action', 'import', {
         buttonIcon: <Download/>,
         buttonLabel: 'jcontent:label.contentManager.import.action',
-        targets: ['contentActions:4.3', 'createMenuActions:3.5', 'narrowHeaderMenu:4', 'narrowHeaderSelectionMenu:4'],
+        targets: ['contentActions:4.3', 'createMenuActions:3.5', 'narrowHeaderMenu:4', 'narrowHeaderSelectionMenu:4', 'headerPrimaryActions:4'],
         uploadType: 'import',
         component: FileUploadActionComponent
     });

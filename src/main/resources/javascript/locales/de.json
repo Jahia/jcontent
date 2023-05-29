@@ -486,6 +486,9 @@
         }
       }
     },
+    "categoryManager": {
+      "noSubCategory": "Keine Unterkategorie"
+    },
     "ok": "OK",
     "cancel": "Abbrechen",
     "no": "Nein",

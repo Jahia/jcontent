@@ -18,7 +18,7 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
             types: ['jnt:file', 'jnt:folder', 'jnt:content', 'jnt:contentFolder']
         },
         getPrimaryNodeType: true,
-        hideOnNodeTypes: ['jnt:virtualsite']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:category']
     });
 
     if (res.loading) {

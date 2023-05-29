@@ -11,7 +11,7 @@ export const PreviewActionComponent = ({path, render: Render, loading: Loading, 
     const res = useNodeChecks(
         {path},
         {
-            hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder', 'jnt:virtualsite', 'jnt:navMenuText']
+            hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder', 'jnt:virtualsite', 'jnt:navMenuText', 'jnt:category']
         }
     );
 

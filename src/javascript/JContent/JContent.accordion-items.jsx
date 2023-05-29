@@ -1,5 +1,5 @@
 import React from 'react';
-import {AccordionItem, Collections, FolderSpecial, Grain, Page} from '@jahia/moonstone';
+import {AccordionItem, Collections, FolderSpecial, Grain, Page, Tag} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import PageComposerRoute from './PageComposerRoute';
@@ -21,6 +21,9 @@ import {booleanValue} from '~/JContent/JContent.utils';
 import {
     DeletionInfoQueryHandler
 } from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
+import {CategoriesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/CategoriesQueryHandler';
+import CategoriesRoute from '~/JContent/CategoriesRoute/CategoriesRoute';
+import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -209,6 +212,61 @@ export const jContentAccordionItems = registry => {
     registry.add('accordionItem', 'deletionInfo', {
         tableConfig: {
             queryHandler: DeletionInfoQueryHandler
+        }
+    });
+
+    registry.add('accordionItem', 'catMan', renderDefaultContentTrees, {
+        targets: ['catMan:10'],
+        icon: <Tag/>,
+        label: 'Categories',
+        rootPath: '/sites/systemsite/categories',
+        render: (v, item) => (
+            <AccordionItem key={v.id} {...v}>
+                <ContentTree item={item}
+                             contextualMenuAction="contentMenu"
+                             selector={state => ({
+                    siteKey: 'systemsite',
+                    lang: state.language,
+                    path: state.jcontent.catManPath,
+                    openPaths: state.jcontent.openPaths,
+                    viewMode: JContentConstants.tableView.viewMode.FLAT
+                })}
+                             setPathAction={(path, params) => cmGotoCatMan({path, params})}/>
+            </AccordionItem>
+        ),
+        routeComponent: CategoriesRoute,
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? /^\/sites\/systemsite\/categories\/.*/.test(selectionNode.path) : /^\/sites\/systemsite\/categories((\/.*)|$)/.test(folderNode.path),
+        getUrlPathPart(site, path) {
+            let sitePath = '/sites/systemsite/categories';
+
+            if (path.startsWith(sitePath + '/')) {
+                path = path.substring(sitePath.length);
+            } else {
+                path = '/';
+            }
+
+            return path;
+        },
+        requiredSitePermission: undefined,
+        treeConfig: {
+            selectableTypes: ['jnt:category'],
+            openableTypes: ['jnt:category'],
+            rootLabel: 'Categories',
+            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
+            dnd: {
+                canDrag: true, canDrop: true, canDropFile: false
+            }
+        },
+        tableConfig: {
+            queryHandler: CategoriesQueryHandler,
+            typeFilter: ['jnt:category'],
+            viewSelector: undefined,
+            uploadType: JContentConstants.mode.IMPORT,
+            dnd: {
+                canDrag: true, canDrop: true, canDropFile: true
+            },
+            defaultSort: {orderBy: 'displayName', order: 'ASC'},
+            columns: ['name']
         }
     });
 };

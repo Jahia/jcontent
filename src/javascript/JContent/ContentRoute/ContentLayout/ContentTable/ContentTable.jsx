@@ -89,7 +89,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     );
 
     useEffect(() => {
-        if (selection.length > 0 && !isLoading) {
+        if (selection.length > 0 && !isLoading && rows?.length > 0) {
             const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
             if (toRemove.length > 0) {
                 notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);

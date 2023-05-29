@@ -53,7 +53,7 @@ SearchControlBar.propTypes = {
     actionKey: PropTypes.string
 };
 
-SearchControlBar.defaultProp = {
+SearchControlBar.defaultProps = {
     actionKey: 'search'
 };
 

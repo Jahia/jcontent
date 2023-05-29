@@ -7,7 +7,7 @@ import styles from './BasicSearch.scss';
 import SearchLocation from '../SearchLocation';
 import {findSelectedContentType} from './BasicSearch.utils';
 
-export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContentType}, searchFormSetters: {setSearchPath, setSearchTerms, setSearchContentType}, contentTypeData, performSearch}) => {
+export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContentType}, searchFormSetters: {setSearchPath, setSearchTerms, setSearchContentType}, contentTypeData, performSearch, isShowingOnlySearchInput}) => {
     const {t} = useTranslation('jcontent');
 
     const defaultContentType = {
@@ -24,9 +24,9 @@ export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContent
 
     return (
         <>
-            <div className={styles.fieldset}>
+            {!isShowingOnlySearchInput && <div className={styles.fieldset}>
                 <SearchLocation searchPath={searchPath} setSearchPath={setSearchPath}/>
-            </div>
+            </div>}
             <div className={styles.fieldset}>
                 <Typography variant="caption" weight="semiBold" className={styles.label}>
                     {t('label.contentManager.search.searchKeyword')}
@@ -46,7 +46,7 @@ export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContent
                        }}
                 />
             </div>
-            <div className={styles.fieldset}>
+            {!isShowingOnlySearchInput && <div className={styles.fieldset}>
                 <Typography variant="caption" weight="semiBold" className={styles.label}>
                     {t('label.contentManager.search.type')}
                 </Typography>
@@ -59,7 +59,7 @@ export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContent
                           data-sel-role="content-type-dropdown"
                           onChange={(e, item) => setSearchContentType(item.value)}
                 />
-            </div>
+            </div>}
         </>
     );
 };
@@ -68,7 +68,12 @@ BasicSearch.propTypes = {
     searchForm: PropTypes.object.isRequired,
     searchFormSetters: PropTypes.object.isRequired,
     contentTypeData: PropTypes.array.isRequired,
-    performSearch: PropTypes.func.isRequired
+    performSearch: PropTypes.func.isRequired,
+    isShowingOnlySearchInput: PropTypes.bool
 };
+
+BasicSearch.defaultProps ={
+    isShowingOnlySearchInput: false
+}
 
 export default BasicSearch;

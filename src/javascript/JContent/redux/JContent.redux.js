@@ -6,6 +6,7 @@ import rison from 'rison';
 import queryString from 'query-string';
 import {push} from 'connected-react-router';
 import {combineReducers} from 'redux';
+import JContentConstants from "~/JContent/JContent.constants";
 
 export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
@@ -26,14 +27,14 @@ const extractParamsFromUrl = (pathname, search) => {
     }
 
     if (pathname.startsWith('/catMan')) {
-        let [, , language, ...pathElements] = pathname.split('/');
-        let registryItem = registry.get('accordionItem', 'catMan');
+        let [, , language, mode, ...pathElements] = pathname.split('/');
+        let registryItem = registry.get('accordionItem', 'category');
         pathElements.splice(0, 0, 'categories');
         let path = ((registryItem && registryItem.getPath && registryItem.getPath('systemsite', pathElements)) || ('/' + pathElements.join('/')));
 
         path = decodeURIComponent(path);
         let params = deserializeQueryString(search);
-        return {site: 'systemsite', language, mode: 'catMan', path, params};
+        return {site: 'systemsite', language, mode: mode, path, params};
     }
 
     return {site: '', language: '', mode: '', path: '', params: {}};
@@ -87,17 +88,19 @@ export const cmGoto = data => (
 
 export const cmGotoCatMan = data => (
     (dispatch, getStore) => {
-        const {language, jcontent: {catManPath}} = getStore();
-        let registryItem = registry.get('accordionItem', 'catMan');
+        const {language, jcontent: {catManPath, params}} = getStore();
+        let registryItem = registry.get('accordionItem', 'category');
         let path = data.path || catManPath;
         let lang = data.language || language;
         if (registryItem && registryItem.getUrlPathPart) {
             path = registryItem.getUrlPathPart('systemsite', path, registryItem);
         }
-
+        let dataMode = data.mode === JContentConstants.mode.SEARCH ? 'search':'category'
         // Special chars in folder naming
         path = path.replace(/[^/]/g, encodeURIComponent);
-        dispatch(push(`/catMan/${lang}${path}`));
+        let paramsData = data.params || params
+        let queryString = _.isEmpty(paramsData) ? '' : PARAMS_KEY + rison.encode_uri(paramsData);
+        dispatch(push(`/catMan/${lang}/${dataMode}${path}${queryString}`));
     }
 );
 
@@ -122,7 +125,7 @@ export const jContentRedux = registry => {
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
     }, currentValueFromUrl.path);
     const paramsReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params : state
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') || action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params : state
     }, currentValueFromUrl.params);
     let siteReducer = handleActions({
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site : state
@@ -145,6 +148,9 @@ export const jContentRedux = registry => {
     const catManPathReducer = handleActions({
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
     }, '/');
+    const catManModeReducer = handleActions({
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode : state
+    }, currentValueFromUrl.mode);
     let siteReducerCatMan = handleActions({
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/catMan/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site : state
     }, '');
@@ -162,6 +168,7 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'jContentLanguage', {targets: ['language:2'], reducer: languageReducer});
 
     registry.add('redux-reducer', 'catManPath', {targets: ['jcontent'], reducer: catManPathReducer});
+    registry.add('redux-reducer', 'catManMode', {targets: ['jcontent'], reducer: catManModeReducer});
     registry.add('redux-reducer', 'catManSite', {targets: ['site:2'], reducer: siteReducerCatMan});
     registry.add('redux-reducer', 'catManLanguage', {targets: ['language:2'], reducer: languageReducerCatMan});
 

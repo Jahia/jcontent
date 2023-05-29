@@ -7,7 +7,7 @@ import styles from './SearchDialog.scss';
 import AdvancedSearch from './AdvancedSearch';
 import BasicSearch from './BasicSearch';
 
-const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleClose}) => {
+const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleClose, isShowingOnlySearchInput}) => {
     const {t} = useTranslation('jcontent');
 
     return (
@@ -16,7 +16,7 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                 <Typography isUpperCase variant="subheading">
                     {t('label.contentManager.title.search')}
                 </Typography>
-                <div>
+                {!isShowingOnlySearchInput && <div>
                     <Typography variant="caption">
                         {t('label.contentManager.search.advanced')}
                     </Typography>
@@ -27,7 +27,7 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                         onChange={toggleAdvancedSearch}
                     />}
                                       label={isAdvancedSearch ? 'On' : 'Off'}/>
-                </div>
+                </div>}
             </div>
             <Separator/>
             <div className={styles.dialogContent}>
@@ -39,6 +39,7 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                     <BasicSearch searchForm={searchForm}
                                  searchFormSetters={searchFormSetters}
                                  performSearch={performSearch}
+                                 isShowingOnlySearchInput={isShowingOnlySearchInput}
                     />}
             </div>
             <Separator/>
@@ -66,7 +67,8 @@ SearchDialog.propTypes = {
     isAdvancedSearch: PropTypes.bool.isRequired,
     toggleAdvancedSearch: PropTypes.func.isRequired,
     performSearch: PropTypes.func.isRequired,
-    handleClose: PropTypes.func.isRequired
+    handleClose: PropTypes.func.isRequired,
+    isShowingOnlySearchInput: PropTypes.bool.isRequired
 };
 
 export default SearchDialog;

@@ -1,5 +1,4 @@
 import React from 'react';
-import {Separator} from '@jahia/moonstone';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {shallowEqual, useSelector} from 'react-redux';
@@ -14,8 +13,7 @@ export const MainActionBar = () => {
 
     return (
         <div className={styles.root}>
-            <DisplayAction actionKey="search" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
-            <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
+            <DisplayAction actionKey="searchCatMan" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
         </div>
     );
 };

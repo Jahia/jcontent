@@ -29,7 +29,7 @@ export class JContent extends BasePage {
     }
 
     static visitCatMan(language: string): CategoryManager {
-        cy.visit(`/jahia/catMan/${language}/`);
+        cy.visit(`/jahia/catMan/${language}/category/`);
         return new CategoryManager(new JContent());
     }
 

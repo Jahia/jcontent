@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import {Button, Close, Search} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './SearchInput.scss';
 
@@ -10,10 +10,9 @@ let timeOut;
 
 const SearchInput = () => {
     const dispatch = useDispatch();
-    const {searchTerms, searchContentType, searchPath} = useSelector(state => ({
+    const {searchTerms, searchPath} = useSelector(state => ({
         searchTerms: state.jcontent.params.searchTerms,
-        searchPath: state.jcontent.params.searchPath,
-        searchContentType: state.jcontent.params.searchContentType
+        searchPath: state.jcontent.params.searchPath
     }), shallowEqual);
     const [t, setT] = useState(searchTerms);
 
@@ -33,10 +32,10 @@ const SearchInput = () => {
             searchParams = {
                 searchPath: searchPath,
                 searchTerms: searchForValue,
-                searchContentType: searchContentType
+                searchContentType: 'jnt:category'
             };
 
-            dispatch(cmGoto({mode, params: searchParams}));
+            dispatch(cmGotoCatMan({mode, params: searchParams}));
         }, time);
     };
 

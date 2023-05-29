@@ -5,14 +5,10 @@ import {cmGoto, cmPreSearchModeMemo} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchDialog from './SearchDialog';
 
-const SearchDialogContainer = ({isOpen, handleClose}) => {
+const SearchDialogContainer = ({isOpen, handleClose, selector, isShowingOnlySearchInput, searchAction}) => {
     const dispatch = useDispatch();
 
-    const {params, mode, path} = useSelector(state => ({
-        params: state.jcontent.params,
-        mode: state.jcontent.mode,
-        path: state.jcontent.path
-    }), shallowEqual);
+    const {params, mode, path} = useSelector(selector, shallowEqual);
 
     useEffect(() => {
         if (mode !== JContentConstants.mode.SQL2SEARCH && mode !== JContentConstants.mode.SEARCH) {
@@ -48,25 +44,34 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
     };
 
     const performSearch = () => {
-        let mode;
-        let searchParams;
-        if (isAdvancedSearch) {
-            searchParams = {
-                searchPath: searchPath,
-                sql2SearchFrom: sql2SearchFrom,
-                sql2SearchWhere: sql2SearchWhere
-            };
-            mode = JContentConstants.mode.SQL2SEARCH;
+        if (searchAction === undefined) {
+            let mode;
+            let searchParams;
+            if (isAdvancedSearch) {
+                searchParams = {
+                    searchPath: searchPath,
+                    sql2SearchFrom: sql2SearchFrom,
+                    sql2SearchWhere: sql2SearchWhere
+                };
+                mode = JContentConstants.mode.SQL2SEARCH;
+            } else {
+                searchParams = {
+                    searchPath: searchPath,
+                    searchTerms: searchTerms,
+                    searchContentType: searchContentType
+                };
+                mode = JContentConstants.mode.SEARCH;
+            }
+
+            dispatch(cmGoto({mode, params: searchParams}));
         } else {
-            searchParams = {
+            searchAction({
                 searchPath: searchPath,
                 searchTerms: searchTerms,
                 searchContentType: searchContentType
-            };
-            mode = JContentConstants.mode.SEARCH;
+            }, dispatch);
         }
 
-        dispatch(cmGoto({mode, params: searchParams}));
         handleClose();
     };
 
@@ -81,13 +86,26 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
                       isAdvancedSearch={isAdvancedSearch}
                       toggleAdvancedSearch={toggleAdvancedSearch}
                       performSearch={performSearch}
-                      handleClose={handleClose}/>
+                      handleClose={handleClose}
+                      isShowingOnlySearchInput={isShowingOnlySearchInput}/>
     );
 };
 
 SearchDialogContainer.propTypes = {
     isOpen: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func.isRequired
+    handleClose: PropTypes.func.isRequired,
+    selector: PropTypes.func,
+    isShowingOnlySearchInput: PropTypes.bool,
+    searchAction: PropTypes.func
+};
+
+SearchDialogContainer.defaultProps = {
+    selector: state => ({
+        params: state.jcontent.params,
+        mode: state.jcontent.mode,
+        path: state.jcontent.path
+    }),
+    isShowingOnlySearchInput: false
 };
 
 export default SearchDialogContainer;

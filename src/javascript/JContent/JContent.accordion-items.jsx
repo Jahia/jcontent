@@ -215,8 +215,8 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', 'catMan', renderDefaultContentTrees, {
-        targets: ['catMan:10'],
+    registry.add('accordionItem', 'category', renderDefaultContentTrees, {
+        targets: ['catMan:1'],
         icon: <Tag/>,
         label: 'Categories',
         rootPath: '/sites/systemsite/categories',
@@ -225,12 +225,13 @@ export const jContentAccordionItems = registry => {
                 <ContentTree item={item}
                              contextualMenuAction="contentMenu"
                              selector={state => ({
-                    siteKey: 'systemsite',
-                    lang: state.language,
-                    path: state.jcontent.catManPath,
-                    openPaths: state.jcontent.openPaths,
-                    viewMode: JContentConstants.tableView.viewMode.FLAT
-                })}
+                                 siteKey: 'systemsite',
+                                 lang: state.language,
+                                 path: state.jcontent.catManPath,
+                                 mode: state.jcontent.catManMode,
+                                 openPaths: state.jcontent.openPaths,
+                                 viewMode: JContentConstants.tableView.viewMode.FLAT
+                             })}
                              setPathAction={(path, params) => cmGotoCatMan({path, params})}/>
             </AccordionItem>
         ),

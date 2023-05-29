@@ -92,7 +92,11 @@ export class BasicSearch extends BasePage {
         return this;
     }
 
-    reset(): BasicSearch {
+    reset(termOnly = false): BasicSearch {
+        if (termOnly) {
+            return this.searchTerm('');
+        }
+
         return this.searchTerm('').searchInCurrentPath().selectContentType('Any content');
     }
 }

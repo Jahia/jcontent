@@ -36,7 +36,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType, selector}) 
     }
 
     if (nodeInfo.node?.lockOwner) {
-        let lockReason = '';
+        let lockReason;
         if (nodeInfo.node['jmix:markedForDeletion']) {
             lockReason = t('label.contentManager.contentStatus.markedForDeletion');
         } else {
@@ -54,7 +54,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType, selector}) 
         );
     }
 
-    if (currentState.mode === 'catMan') {
+    if (currentState.mode === 'category') {
         return (
             <Component data-type="emptyZone" className={styles.emptyZone}>
                 <Typography variant="heading">{t('jcontent:label.categoryManager.noSubCategory')}</Typography>

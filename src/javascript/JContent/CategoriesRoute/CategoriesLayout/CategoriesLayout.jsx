@@ -25,7 +25,7 @@ export const CategoriesLayout = ({
 }) => {
     const contextualMenu = useRef();
     const selector = state => ({
-        mode: 'catMan',
+        mode: state.jcontent.catManMode,
         previewSelection: [],
         siteKey: 'systemsite',
         path: state.jcontent.catManPath,

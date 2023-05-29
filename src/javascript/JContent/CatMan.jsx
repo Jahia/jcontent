@@ -11,7 +11,7 @@ import ContentNavigationContainer from './ContentNavigation';
 import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 
 export const CatMan = () => {
-    const item = registry.get('accordionItem', 'catMan');
+    const item = registry.get('accordionItem', 'category');
     const dispatch = useDispatch();
     const clear = useCallback(() => dispatch(cmClearSelection()), [dispatch]);
     const handleKeyboardNavigation = useCallback(event => {
@@ -28,7 +28,7 @@ export const CatMan = () => {
     }, [handleKeyboardNavigation]);
 
     const selector = state => ({
-        mode: 'catMan',
+        mode: state.jcontent.catManMode,
         siteKey: 'systemsite',
         language: state.language
     });
@@ -55,12 +55,12 @@ export const CatMan = () => {
                             {item && (
                                 item.routeComponent ? (
                                     <Route key={item.key}
-                                           path={'/catMan/:lang/*'}
+                                           path={'/catMan/:lang/:mode/*'}
                                            render={p =>
                                                <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
                                     />
                                 ) : (<Route key={item.key}
-                                            path={'/catMan/:lang/*'}
+                                            path={'/catMan/:lang/:mode/*'}
                                             render={props =>
                                                 <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
                                     />

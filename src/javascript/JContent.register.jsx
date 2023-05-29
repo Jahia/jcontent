@@ -64,7 +64,7 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                history.push(buildUrl({site, language, mode: mode === 'catMan' ? defaultMode : (mode || defaultMode), path, params}));
+                                history.push(buildUrl({site, language, mode: mode || defaultMode, path, params}));
                             }}/>
         );
     };
@@ -75,6 +75,7 @@ export default function () {
         const {language, catManPath, pathname} = useSelector(state => ({
             language: state.language,
             catManPath: state.jcontent.catManPath,
+            mode: state.jcontent.catManMode,
             pathname: state.router.location.pathname
         }), shallowEqual);
 
@@ -98,7 +99,7 @@ export default function () {
                             icon={<Tag/>}
                             onClick={() => {
                                 let urlPathPart = accordions[0].getUrlPathPart('systemsite', catManPath);
-                                history.push(`/catMan/${language}${urlPathPart === '' ? '/' : urlPathPart}`);
+                                history.push(`/catMan/${language}/category${urlPathPart === '' ? '/' : urlPathPart}`);
                             }}/>
         );
     };
@@ -124,7 +125,7 @@ export default function () {
 
         registry.add('route', 'route-catMan', {
             targets: ['main:3'],
-            path: '/catMan/:lang', // Catch everything that's jcontent and let the app resolve correct view
+            path: '/catMan/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
             render: () => <CatManApp/>
         });
     }
@@ -132,7 +133,9 @@ export default function () {
     registry.add('app', 'dnd', {
         targets: ['root:2'],
         render: next => (
-            <DndProvider debugMode={(!process.env.NODE_ENV || process.env.NODE_ENV === 'development')} backend={HTML5Backend}>
+            <DndProvider debugMode={(!process.env.NODE_ENV || process.env.NODE_ENV === 'development')}
+                         backend={HTML5Backend}
+            >
                 <DragLayer/>
                 {next}
             </DndProvider>

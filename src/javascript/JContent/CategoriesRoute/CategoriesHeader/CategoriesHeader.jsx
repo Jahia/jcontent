@@ -41,7 +41,7 @@ const CategoriesHeader = () => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, preSearchModeMemo, path, language, displayLanguage, selection, previewSelection} = useSelector(state => ({
-        mode: state.jcontent.mode === JContentConstants.mode.SEARCH ? JContentConstants.mode.SEARCH : 'catMan',
+        mode: state.jcontent.catManMode,
         preSearchModeMemo: state.jcontent.preSearchModeMemo,
         path: state.jcontent.catManPath,
         language: state.language,
@@ -52,7 +52,7 @@ const CategoriesHeader = () => {
     const width = useContext(ResizeContext);
     const narrow = width !== 0 && width <= NARROW_HEADER_WIDTH;
 
-    const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
+    const inSearchMode = JContentConstants.mode.SEARCH === mode;
 
     const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {getPrimaryNodeType: true, getDisplayName: true});
 
@@ -69,7 +69,7 @@ const CategoriesHeader = () => {
                 backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
-                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar/>}
+                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar actionKey="searchCatMan"/>}
             />
         ) : (
             <Header
@@ -79,7 +79,7 @@ const CategoriesHeader = () => {
                 toolbarLeft={
                     <>
                         {selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
-                        {selection.length === 0 && <SearchControlBar/>}
+                        {selection.length === 0 && <SearchControlBar actionKey="searchCatMan"/>}
                     </>
                 }
             />
@@ -89,7 +89,7 @@ const CategoriesHeader = () => {
     const {nodePath, nodeType, title} = extractNodeInfo(node, loading);
 
     const selector = state => ({
-        mode: 'catMan',
+        mode: state.jcontent.catManMode,
         path: state.jcontent.catManPath,
         language: state.language,
         site: state.site

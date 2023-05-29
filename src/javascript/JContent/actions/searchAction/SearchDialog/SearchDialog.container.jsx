@@ -44,13 +44,7 @@ const SearchDialogContainer = ({isOpen, handleClose, selector, isShowingOnlySear
     };
 
     const performSearch = () => {
-        if (searchAction !== undefined) {
-            searchAction({
-                searchPath: searchPath,
-                searchTerms: searchTerms,
-                searchContentType: searchContentType
-            }, dispatch)
-        } else {
+        if (searchAction === undefined) {
             let mode;
             let searchParams;
             if (isAdvancedSearch) {
@@ -70,7 +64,14 @@ const SearchDialogContainer = ({isOpen, handleClose, selector, isShowingOnlySear
             }
 
             dispatch(cmGoto({mode, params: searchParams}));
+        } else {
+            searchAction({
+                searchPath: searchPath,
+                searchTerms: searchTerms,
+                searchContentType: searchContentType
+            }, dispatch);
         }
+
         handleClose();
     };
 
@@ -105,6 +106,6 @@ SearchDialogContainer.defaultProps = {
         path: state.jcontent.path
     }),
     isShowingOnlySearchInput: false
-}
+};
 
 export default SearchDialogContainer;

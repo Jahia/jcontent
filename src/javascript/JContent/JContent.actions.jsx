@@ -63,8 +63,8 @@ import {RenameActionComponent} from '~/JContent/actions/renameAction';
 import {DownloadAsZipActionComponent} from '~/JContent/actions/downloadAsZip';
 import {OpenInLiveActionComponent} from '~/JContent/actions/openInLiveAction/openInLiveAction';
 import {ClearClipboardActionComponent} from '~/JContent/actions';
-import JContentConstants from "~/JContent/JContent.constants";
-import {cmGotoCatMan} from "~/JContent/redux/JContent.redux";
+import JContentConstants from '~/JContent/JContent.constants';
+import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -356,10 +356,10 @@ export const jContentActions = registry => {
         buttonIcon: <Search/>,
         buttonLabel: 'jcontent:label.contentManager.search.search',
         targets: [],
-        selector: (state) => ({
+        selector: state => ({
             path: state.jcontent.catManPath,
             params: state.jcontent.params,
-            mode: state.jcontent.mode,
+            mode: state.jcontent.mode
         }),
         isShowingOnlySearchInput: true,
         searchAction: (params, dispatch) => {

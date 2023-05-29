@@ -24,9 +24,10 @@ export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContent
 
     return (
         <>
-            {!isShowingOnlySearchInput && <div className={styles.fieldset}>
-                <SearchLocation searchPath={searchPath} setSearchPath={setSearchPath}/>
-            </div>}
+            {!isShowingOnlySearchInput &&
+                <div className={styles.fieldset}>
+                    <SearchLocation searchPath={searchPath} setSearchPath={setSearchPath}/>
+                </div>}
             <div className={styles.fieldset}>
                 <Typography variant="caption" weight="semiBold" className={styles.label}>
                     {t('label.contentManager.search.searchKeyword')}
@@ -46,20 +47,21 @@ export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContent
                        }}
                 />
             </div>
-            {!isShowingOnlySearchInput && <div className={styles.fieldset}>
-                <Typography variant="caption" weight="semiBold" className={styles.label}>
-                    {t('label.contentManager.search.type')}
-                </Typography>
-                <Dropdown data={contentTypeSelectData}
-                          size="medium"
-                          icon={selectedContentType && selectedContentType.iconStart}
-                          label={selectedContentType && selectedContentType.label}
-                          value={searchContentType}
-                          className={styles.dropdown}
-                          data-sel-role="content-type-dropdown"
-                          onChange={(e, item) => setSearchContentType(item.value)}
-                />
-            </div>}
+            {!isShowingOnlySearchInput &&
+                <div className={styles.fieldset}>
+                    <Typography variant="caption" weight="semiBold" className={styles.label}>
+                        {t('label.contentManager.search.type')}
+                    </Typography>
+                    <Dropdown data={contentTypeSelectData}
+                              size="medium"
+                              icon={selectedContentType && selectedContentType.iconStart}
+                              label={selectedContentType && selectedContentType.label}
+                              value={searchContentType}
+                              className={styles.dropdown}
+                              data-sel-role="content-type-dropdown"
+                              onChange={(e, item) => setSearchContentType(item.value)}
+                    />
+                </div>}
         </>
     );
 };
@@ -72,8 +74,8 @@ BasicSearch.propTypes = {
     isShowingOnlySearchInput: PropTypes.bool
 };
 
-BasicSearch.defaultProps ={
+BasicSearch.defaultProps = {
     isShowingOnlySearchInput: false
-}
+};
 
 export default BasicSearch;

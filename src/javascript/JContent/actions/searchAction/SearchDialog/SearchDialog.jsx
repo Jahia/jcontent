@@ -16,18 +16,21 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                 <Typography isUpperCase variant="subheading">
                     {t('label.contentManager.title.search')}
                 </Typography>
-                {!isShowingOnlySearchInput && <div>
-                    <Typography variant="caption">
-                        {t('label.contentManager.search.advanced')}
-                    </Typography>
-                    <FormControlLabel control={<Switch
-                        checked={isAdvancedSearch}
-                        color="primary"
-                        inputProps={{'aria-label': 'advancedSearchSwitch'}}
-                        onChange={toggleAdvancedSearch}
-                    />}
-                                      label={isAdvancedSearch ? 'On' : 'Off'}/>
-                </div>}
+                {!isShowingOnlySearchInput &&
+                    <div>
+                        <Typography variant="caption">
+                            {t('label.contentManager.search.advanced')}
+                        </Typography>
+                        <FormControlLabel control={
+                            <Switch
+                            checked={isAdvancedSearch}
+                            color="primary"
+                            inputProps={{'aria-label': 'advancedSearchSwitch'}}
+                            onChange={toggleAdvancedSearch}
+                        />
+}
+                                          label={isAdvancedSearch ? 'On' : 'Off'}/>
+                    </div>}
             </div>
             <Separator/>
             <div className={styles.dialogContent}>

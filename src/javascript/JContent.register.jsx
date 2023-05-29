@@ -134,7 +134,8 @@ export default function () {
         targets: ['root:2'],
         render: next => (
             <DndProvider debugMode={(!process.env.NODE_ENV || process.env.NODE_ENV === 'development')}
-                         backend={HTML5Backend}>
+                         backend={HTML5Backend}
+            >
                 <DragLayer/>
                 {next}
             </DndProvider>

@@ -6,7 +6,7 @@ import rison from 'rison';
 import queryString from 'query-string';
 import {push} from 'connected-react-router';
 import {combineReducers} from 'redux';
-import JContentConstants from "~/JContent/JContent.constants";
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
@@ -95,10 +95,11 @@ export const cmGotoCatMan = data => (
         if (registryItem && registryItem.getUrlPathPart) {
             path = registryItem.getUrlPathPart('systemsite', path, registryItem);
         }
-        let dataMode = data.mode === JContentConstants.mode.SEARCH ? 'search':'category'
+
+        let dataMode = data.mode === JContentConstants.mode.SEARCH ? 'search' : 'category';
         // Special chars in folder naming
         path = path.replace(/[^/]/g, encodeURIComponent);
-        let paramsData = data.params || params
+        let paramsData = data.params || params;
         let queryString = _.isEmpty(paramsData) ? '' : PARAMS_KEY + rison.encode_uri(paramsData);
         dispatch(push(`/catMan/${lang}/${dataMode}${path}${queryString}`));
     }

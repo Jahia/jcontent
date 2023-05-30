@@ -66,6 +66,7 @@
         "uploaded": "Uploaded",
         "wrongInput": "Invalid file format",
         "exists": "File already exists",
+        "fileNameSizeExceedLimit": "File name exceeds {{maxNameSize}} characters",
         "folderExists": "A file exists with that name, cannot create a folder",
         "cannotStore": "Could not upload file: file exceeds {{maxUploadSize}}MB",
         "uploading": "Uploading...",
@@ -81,7 +82,8 @@
         "dialogRename": "Rename",
         "replaceWith": "Replace with",
         "edit": "Edit",
-        "drop": "Drop your file(s) and folder(s) here"
+        "drop": "Drop your file(s) and folder(s) here",
+        "invalidChars": "Invalid characters:  \/:*?\"<>|%"
       },
       "import": {
         "dropMessage": "Drag and drop a file to import",

@@ -5,25 +5,12 @@ import * as path from 'path';
 export class File extends BasePage {
     media: Media;
     fileName : string;
-    htmlEscapedFileName : string;
-    urlEscapedFileName : string;
     selector : string;
 
-    constructor(media: Media, fileName : string, htmlEscapedFileName? : string, urlEscapedFileName? : string) {
+    constructor(media: Media, fileName : string) {
         super();
         this.media = media;
         this.fileName = fileName;
-        if (htmlEscapedFileName) {
-            this.htmlEscapedFileName = htmlEscapedFileName;
-        } else {
-            this.htmlEscapedFileName = fileName;
-        }
-
-        if (urlEscapedFileName) {
-            this.urlEscapedFileName = urlEscapedFileName;
-        } else {
-            this.urlEscapedFileName = fileName;
-        }
     }
 
     dndUpload(selector : string) : File {
@@ -36,7 +23,7 @@ export class File extends BasePage {
         // The wait is very important otherwise the upload will never complete
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
-        this.selector = 'div[data-sel-role-card="' + this.htmlEscapedFileName + '"]';
+        this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
         return this;
     }
 
@@ -56,7 +43,7 @@ export class File extends BasePage {
             cy.log(result.stdout);
         });
 
-        cy.task('readFileMaybe', path.join(downloadsFolder, this.urlEscapedFileName)).then(result => {
+        cy.task('readFileMaybe', path.join(downloadsFolder, this.fileName)).then(result => {
             if (result) {
                 cy.log('Found expected file with contents', result);
             } else {
@@ -79,6 +66,17 @@ export class File extends BasePage {
         cy.get('input#folder-name').clear();
         cy.get('input#folder-name').type(newFileName);
         getComponentByAttr(Button, 'data-cm-role', 'create-folder-as-confirm').get().click();
+        this.fileName = newFileName;
+        this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
+        return this;
+    }
+
+    renameAfterUpload(newFileName : string) : File {
+        getComponentByAttr(Button, 'data-cm-role', 'upload-rename').get().click();
+        getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().should('be.disabled');
+        cy.get('input#rename-dialog-text').clear();
+        cy.get('input#rename-dialog-text').type(newFileName);
+        getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().click();
         this.fileName = newFileName;
         this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
         return this;

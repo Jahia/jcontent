@@ -1,6 +1,7 @@
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {createActions, handleActions} from 'redux-actions';
 import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const {fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue} =
     createActions('FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE');
@@ -104,6 +105,14 @@ export const fileuploadRedux = registry => {
 
     registry.add('fileUpload', 'default', {
         handleUpload: ({path, file, filename, client}) => {
+            if (filename.length > contextJsParameters.config.maxNameSize) {
+                throw new Error('FILE_NAME_SIZE');
+            }
+
+            if (filename.match(JContentConstants.namingInvalidCharactersRegexp)) {
+                throw new Error('FILE_NAME_INVALID');
+            }
+
             return client.mutate({
                 mutation: uploadFile,
                 variables: {

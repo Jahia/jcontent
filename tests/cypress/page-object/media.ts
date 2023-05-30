@@ -37,8 +37,8 @@ export class Media extends BasePage {
         return this;
     }
 
-    createFile(fileName : string, htmlEscapedFileName? : string, urlEscapedFileName? : string) : File {
-        return new File(this, fileName, htmlEscapedFileName, urlEscapedFileName);
+    createFile(fileName : string) : File {
+        return new File(this, fileName);
     }
 }
 

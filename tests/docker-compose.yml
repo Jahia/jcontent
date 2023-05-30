@@ -42,6 +42,7 @@ services:
             NEXUS_USERNAME: ${NEXUS_USERNAME}
             NEXUS_PASSWORD: ${NEXUS_PASSWORD}
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
+            SKIP_TESTS: ${SKIP_TESTS:-false}
         networks:
             - stack
 networks:

@@ -178,8 +178,8 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
             paths.forEach(path => client.cache.flushNodeEntryByPath(path));
             triggerRefetchAll();
-            setOpen(false)
-        })
+            setOpen(false);
+        });
     };
 
     return (

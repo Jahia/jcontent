@@ -38,6 +38,8 @@ const disallowSelection = element => {
     return tags.includes(element.tagName) || element.closest('a') !== null || element.ownerDocument.getSelection().type === 'Range';
 };
 
+let timeout;
+
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
@@ -62,7 +64,11 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
         if (!disableHover.current) {
-            setCurrentElement(getModuleElement(currentDocument, event.currentTarget));
+            const target = event.currentTarget;
+            window.clearTimeout(timeout);
+            timeout = window.setTimeout(() => {
+                setCurrentElement(getModuleElement(currentDocument, target));
+            }, 100);
         }
     }, [setCurrentElement, currentDocument]);
 
@@ -73,6 +79,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             !event.target.closest('#menuHolder')
         ) {
             disableHover.current = false;
+            window.clearTimeout(timeout);
             setCurrentElement(null);
         }
     }, [setCurrentElement, currentDocument]);

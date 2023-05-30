@@ -1,4 +1,4 @@
-import {BasePage, Button, getComponentByAttr, getComponentByRole, getElement, Menu} from '@jahia/cypress';
+import {BasePage, Button, getComponentByAttr, getComponentByRole, Menu} from '@jahia/cypress';
 import {Media} from './media';
 import * as path from 'path';
 
@@ -73,7 +73,7 @@ export class File extends BasePage {
 
     renameAfterUpload(newFileName : string) : File {
         getComponentByAttr(Button, 'data-cm-role', 'upload-rename').get().click();
-        getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().should('be.disabled')
+        getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().should('be.disabled');
         cy.get('input#rename-dialog-text').clear();
         cy.get('input#rename-dialog-text').type(newFileName);
         getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().click();

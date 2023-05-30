@@ -65,7 +65,7 @@ const ContentPathContainer = ({setPathAction, selector}) => {
     return (
         <>
             <ContentPath items={items} onItemClick={handleNavigation}/>
-            <ContentPathDialog isOpen={currentItem}
+            <ContentPathDialog isOpen={Boolean(currentItem)}
                                handleParentNavigation={() => {
                                    dispatch(setPathAction(mode, currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))));
                                    setCurrentItem(null);

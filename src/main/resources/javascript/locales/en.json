@@ -458,7 +458,8 @@
             "content_plural": "{{count}} items <strong>{{name}}</strong> cannot currently be undeleted on their own. Please undelete their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
           }
         },
-        "details": "DETAILS"
+        "details": "DETAILS",
+        "error": "Could not perform the requested operation on selected content. Closing dialog and refreshing data."
       },
       "links":{
         "external": {

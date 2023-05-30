@@ -489,7 +489,8 @@
       }
     },
     "categoryManager": {
-      "noSubCategory": "Keine Unterkategorie"
+      "noSubCategory": "Keine Unterkategorie",
+      "name": "Kategorie-Manager"
     },
     "ok": "OK",
     "cancel": "Abbrechen",

@@ -497,7 +497,8 @@
       }
     },
     "categoryManager": {
-      "noSubCategory": "No sub-category"
+      "noSubCategory": "No sub-category",
+      "name": "Category Manager"
     },
     "ok": "OK",
     "cancel": "Cancel",

@@ -28,7 +28,8 @@ export const FileCard = ({
     mode,
     selection,
     tableConfig,
-    contextualMenuAction
+    contextualMenuAction,
+    onDoubleClick
 }) => {
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
@@ -57,8 +58,10 @@ export const FileCard = ({
     // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout
     // let rowNumber = Math.floor(index / 2) + 1;
     // let columnNumber = (index % 2) + 1;
-    let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
-    let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
+    const encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
+    const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
+
+    const dblClick = onDoubleClick ? onDoubleClick : allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode));
 
     return (
         <div
@@ -85,7 +88,7 @@ export const FileCard = ({
                     onPreviewSelect(node);
                 }
             }}
-            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
+            onDoubleClick={dblClick}
         >
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction} path={node.path}/>}
 
@@ -138,6 +141,7 @@ FileCard.propTypes = {
     onPreviewSelect: PropTypes.func.isRequired,
     previewSelection: PropTypes.string,
     setPath: PropTypes.func.isRequired,
+    onDoubleClick: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired,

@@ -92,11 +92,21 @@ describe('Create media tests', () => {
     it('Can upload, rename and delete special characters file', function () {
         jcontent.getMedia()
             .open()
-            // Hopefully we can simplify this once https://jira.jahia.org/browse/QA-14553 is fixed
-            .createFile('\'"[](){}*|/.txt', '\\27 \\22%5B%5D(){}%2A%7C\\20 \\2E txt', '\'_[](){}__ .txt_')
+            .createFile('\'"[](){}*|/.txt')
             .dndUpload('div[data-sel-role-card=bootstrap]')
+            .renameAfterUpload('testdnd-rename.txt')
             .download()
-            .rename('testdnd-rename.txt')
+            .markForDeletion()
+            .deletePermanently();
+    });
+
+    it('Can upload, rename and delete file with too much characters in filename', function () {
+        jcontent.getMedia()
+            .open()
+            .createFile('long_long_long_long_long_long_long_long_long_long_long_long_filename.txt')
+            .dndUpload('div[data-sel-role-card=bootstrap]')
+            .renameAfterUpload('short_filename.txt')
+            .download()
             .markForDeletion()
             .deletePermanently();
     });

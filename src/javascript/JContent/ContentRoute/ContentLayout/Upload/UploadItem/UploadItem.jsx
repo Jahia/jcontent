@@ -91,6 +91,7 @@ export class UploadItem extends React.Component {
                             error={Boolean(errMsg)}
                             label={t('jcontent:label.contentManager.fileUpload.newName')}
                             type="text"
+                            id="rename-dialog-text"
                             name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
                             helperText={errMsg}
                             defaultValue={file ? file.name : entry.name}
@@ -98,8 +99,8 @@ export class UploadItem extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} size="big" onClick={() => this.setState({anchorEl: null})}/>
-                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')} size="big" color="accent" isDisabled={Boolean(errMsg)} data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}/>
+                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} data-cm-role="rename-dialog-cancel" size="big" onClick={() => this.setState({anchorEl: null})}/>
+                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')} data-cm-role="rename-dialog" size="big" color="accent" isDisabled={Boolean(errMsg)} onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}/>
                     </DialogActions>
                 </Dialog>
             </div>

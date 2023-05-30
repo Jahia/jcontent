@@ -79,16 +79,20 @@ if [[ $INSTALLED_MODULE_VERSION == "UNKNOWN" ]]; then
   exit 1
 fi
 
-echo "$(date +'%d %B %Y - %k:%M') == Run tests =="
-yarn e2e:ci
-if [[ $? -eq 0 ]]; then
-  echo "$(date +'%d %B %Y - %k:%M') == Full execution successful =="
-  echo "success" > ./results/test_success
-  yarn report:merge; yarn report:html
-  exit 0
+if [[ "${SKIP_TESTS}" == "true" ]]; then
+  echo "$(date +'%d %B %Y - %k:%M') == Skipping tests =="
 else
-  echo "$(date +'%d %B %Y - %k:%M') == One or more failed tests =="
-  echo "failure" > ./results/test_failure
-  yarn report:merge; yarn report:html
-  exit 1
+  echo "$(date +'%d %B %Y - %k:%M') == Run tests =="
+  yarn e2e:ci
+  if [[ $? -eq 0 ]]; then
+    echo "$(date +'%d %B %Y - %k:%M') == Full execution successful =="
+    echo "success" > ./results/test_success
+    yarn report:merge; yarn report:html
+    exit 0
+  else
+    echo "$(date +'%d %B %Y - %k:%M') == One or more failed tests =="
+    echo "failure" > ./results/test_failure
+    yarn report:merge; yarn report:html
+    exit 1
+  fi
 fi

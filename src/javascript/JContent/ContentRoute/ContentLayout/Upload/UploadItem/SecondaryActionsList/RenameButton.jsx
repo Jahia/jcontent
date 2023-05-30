@@ -12,6 +12,7 @@ const RenameButton = ({showRenameDialog}) => {
             isReversed
             size="big"
             className={styles.actionButton}
+            data-cm-role="upload-rename"
             component="a"
             variant="ghost"
             label={t('jcontent:label.contentManager.fileUpload.rename')}

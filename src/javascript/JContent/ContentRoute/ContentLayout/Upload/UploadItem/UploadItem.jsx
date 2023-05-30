@@ -173,7 +173,6 @@ export class UploadItem extends React.Component {
 }
 
 UploadItem.propTypes = {
-    classes: PropTypes.object.isRequired,
     updateUploadsStatus: PropTypes.func.isRequired,
     file: PropTypes.object,
     entry: PropTypes.object,

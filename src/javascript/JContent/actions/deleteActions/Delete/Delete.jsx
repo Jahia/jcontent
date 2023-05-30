@@ -143,6 +143,9 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
     }), shallowEqual);
     const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
+
+    const [mutation, {called: mutationLoading}] = useMutation(getMutation(dialogType));
+
     const {data, error, loading} = useQuery(DeleteQueries, {
         variables: {
             siteKey: `/sites/${siteKey}`,
@@ -150,10 +153,9 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             paths: paths,
             getUsages: dialogType !== 'undelete'
         },
+        skip: mutationLoading,
         fetchPolicy: 'network-only'
     });
-
-    const [mutation, {called: mutationLoading}] = useMutation(getMutation(dialogType));
 
     if (error) {
         console.log(error);

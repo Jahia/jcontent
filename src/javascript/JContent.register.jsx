@@ -25,6 +25,7 @@ import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
 import {booleanValue} from '~/JContent/JContent.utils';
+import JContentConstants from "~/JContent/JContent.constants";
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -39,7 +40,7 @@ export default function () {
             site: state.site,
             path: state.jcontent.path,
             mode: state.jcontent.mode,
-            params: state.jcontent.params,
+            params: '',
             pathname: state.router.location.pathname
         }), shallowEqual);
 
@@ -64,7 +65,8 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                history.push(buildUrl({site, language, mode: mode || defaultMode, path, params}));
+                                let mode1 = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? defaultMode : mode;
+                                history.push(buildUrl({site, language, mode: mode1, path, params}));
                             }}/>
         );
     };

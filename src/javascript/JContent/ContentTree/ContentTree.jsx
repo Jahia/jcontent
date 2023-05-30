@@ -166,7 +166,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           itemProps: {item}
                       })}
                       openedItems={openPaths}
-                      selectedItems={[path]}
+                      selectedItems={[path.endsWith('/') ? path.slice(0, -1) : path]}
                       onContextMenuItem={(object, event) => {
                           event.stopPropagation();
                           if (contextualMenuAction) {

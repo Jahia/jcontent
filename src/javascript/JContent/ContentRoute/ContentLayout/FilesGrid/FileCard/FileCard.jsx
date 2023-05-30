@@ -141,7 +141,7 @@ FileCard.propTypes = {
     onPreviewSelect: PropTypes.func.isRequired,
     previewSelection: PropTypes.string,
     setPath: PropTypes.func.isRequired,
-    onDoubleClick: PropTypes.func.isRequired,
+    onDoubleClick: PropTypes.func,
     siteKey: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired,

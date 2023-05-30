@@ -19,6 +19,7 @@ import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {getName} from '~/JContent';
 import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 import {isPathChildOfAnotherPath} from '../../../JContent.utils';
+import {useNotifications} from '@jahia/react-material';
 
 let getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t}) => {
     if (locked) {
@@ -143,7 +144,8 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
     }), shallowEqual);
     const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
-
+    const notificationContext = useNotifications();
+    const {t} = useTranslation('jcontent');
     const [mutation, {called: mutationLoading}] = useMutation(getMutation(dialogType));
 
     const {data, error, loading} = useQuery(DeleteQueries, {
@@ -172,6 +174,11 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         }).then(() => {
             paths.forEach(path => client.cache.flushNodeEntryByPath(path));
             triggerRefetchAll();
+        }).catch(() => {
+            notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
+            paths.forEach(path => client.cache.flushNodeEntryByPath(path));
+            triggerRefetchAll();
+            setOpen(false);
         });
     };
 

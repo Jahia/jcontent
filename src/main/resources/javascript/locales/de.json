@@ -450,7 +450,8 @@
             "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde.",
             "content_plural": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde."
           }
-        }
+        },
+        "error": "Die angeforderte Operation konnte am ausgewählten Content nicht durchgeführt werden. Dialog wird geschlossen und Daten werden neu geladen."
       },
       "links": {
         "external": {

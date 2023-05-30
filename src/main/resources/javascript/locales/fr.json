@@ -451,7 +451,8 @@
             "content": "Il n’est actuellement pas possible d’annuler la seule suppression de l’élément <strong>{{name}}</strong>. Merci d’annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
             "content_plural": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           }
-        }
+        },
+        "error": "Impossible d'exécuter l'opération demandée. Fermeture de la fenêtre et rafraîchissement des données."
       },
       "links": {
         "external": {

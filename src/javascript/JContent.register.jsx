@@ -25,7 +25,7 @@ import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
 import {booleanValue} from '~/JContent/JContent.utils';
-import JContentConstants from "~/JContent/JContent.constants";
+import JContentConstants from '~/JContent/JContent.constants';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;

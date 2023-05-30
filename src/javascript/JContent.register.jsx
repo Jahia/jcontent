@@ -95,7 +95,7 @@ export default function () {
             <PrimaryNavItem key="/catMan"
                             {...props}
                             isSelected={pathname.startsWith('/catMan')}
-                            label={t('label.name')}
+                            label={t('label.categoryManager.name')}
                             icon={<Tag/>}
                             onClick={() => {
                                 let urlPathPart = accordions[0].getUrlPathPart('systemsite', catManPath);

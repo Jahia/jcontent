@@ -491,7 +491,8 @@
       }
     },
     "categoryManager": {
-      "noSubCategory": "Pas de sous-catégorie"
+      "noSubCategory": "Pas de sous-catégorie",
+      "name":"Gestionnaire de Catégories"
     },
     "ok": "OK",
     "cancel": "Annuler",

@@ -237,6 +237,9 @@ class PageComposerModule extends BaseComponent {
 
     getHeader() {
         this.hover();
+        this.get().invoke('attr', 'id').then(id => {
+            this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
+        });
         return getComponent(PageComposerModuleHeader, this.parentFrame);
     }
 
@@ -247,6 +250,7 @@ class PageComposerModule extends BaseComponent {
     }
 
     contextMenu(): Menu {
+        this.getHeader();
         this.get().rightclick({force: true});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }

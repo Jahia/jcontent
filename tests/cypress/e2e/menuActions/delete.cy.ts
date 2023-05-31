@@ -123,10 +123,30 @@ describe('delete tests', () => {
         });
     });
 
-    it('Mark nodes for deletion - gql', () => {
+    it('It refreshes table and show notification when there is an error during deletion', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToSubpages();
+
+        jcontent.getTable()
+            .getRowByLabel('Page test 1')
+            .contextMenu()
+            .select('Delete');
+
+        cy.log('Verify dialog opens and can be mark for deletion');
+        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .should('contain', 'You are about to delete 3 items, including 3 page(s)');
+
         cy.apollo({
             mutation: markForDeletionMutation(`/sites/${siteKey}/home/test-pageDelete1`)
         });
+
+        cy.get(dialogCss).find('[data-sel-role="delete-mark-button"]').click();
+        cy.get(dialogCss).should('not.exist');
+        cy.contains('Could not perform the requested operation on selected content. Closing dialog and refreshing data.');
+        cy.get('[role="alertdialog"]').find('button').click();
+        cy.contains('[data-cm-role="table-content-list-row"]', 'Page test 1').first().as('pageTest1Row');
+        cy.get('@pageTest1Row').find('[data-cm-role="publication-info"]').should('have.attr', 'data-cm-value', 'NOT_PUBLISHED').and('contain', 'Marked for deletion by root on ');
     });
 
     it('Cannot delete subnodes permanently', () => {

@@ -29,7 +29,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         gridMode: state.jcontent.filesGrid.mode,
         siteKey: state.site,
         uilang: state.uilang,
-        lang: state.lang,
+        lang: state.language,
         selection: state.jcontent.selection,
         previewSelection: state.jcontent.previewSelection,
         previewState: state.jcontent.previewState

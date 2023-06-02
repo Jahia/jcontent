@@ -84,7 +84,7 @@ export const FileCard = ({
                 }
             }}
             onClick={() => {
-                if (!node.notSelectableForPreview && onPreviewSelect) {
+                if (!node.notSelectableForPreview) {
                     onPreviewSelect(node);
                 }
             }}
@@ -138,7 +138,7 @@ export const FileCard = ({
 FileCard.propTypes = {
     mode: PropTypes.string.isRequired,
     node: PropTypes.object.isRequired,
-    onPreviewSelect: PropTypes.func,
+    onPreviewSelect: PropTypes.func.isRequired,
     previewSelection: PropTypes.string,
     setPath: PropTypes.func.isRequired,
     onDoubleClick: PropTypes.func,

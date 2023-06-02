@@ -1412,10 +1412,10 @@
     enzyme-adapter-react-16 "^1.12.1"
     identity-obj-proxy "^3.0.0"
 
-"@jahia/ui-extender@^1.1.0":
-  version "1.1.0"
-  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-1.1.0.tgz#845d3d57d82335f8c4128016b2c696a88a6c69a4"
-  integrity sha512-N//oM7kx4wu1um+U2Zy5z24joCL4NrWInH8zoguq8e66GcWSkjb7AwMAOhsxYQRIZmIHsPE2G+YmtKqt6imhVw==
+"@jahia/ui-extender@^1.0.10":
+  version "1.0.10"
+  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-1.0.10.tgz#b6c0e9062c2365cfd6deac7de7cdf1e06768120e"
+  integrity sha512-UajIK2y+WrA8kSQdORvoSvuEfdIa/fFmaijCYRPmtO1BK487cFaEGpIl3NDKj/zfAQiYqm/yTjZiaw26SDlRgA==
   dependencies:
     prop-types "^15.6.1"
     react "^16.12.0"
@@ -2576,13 +2576,6 @@
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@wry/trie/-/trie-0.3.2.tgz#a06f235dc184bd26396ba456711f69f8c35097e6"
   integrity sha512-yRTyhWSls2OY/pYLfwff867r8ekooZ4UI+/gxot5Wj8EFwSf2rG+n+Mo/6LoLQm1TKA4GRj2+LCpbfS937dClQ==
-  dependencies:
-    tslib "^2.3.0"
-
-"@wry/trie@^0.4.0":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@wry/trie/-/trie-0.4.3.tgz#077d52c22365871bf3ffcbab8e95cb8bc5689af4"
-  integrity sha512-I6bHwH0fSf6RqQcnnXLJKhkSXG45MFral3GxPaY4uAl0LYDZM+YDVDAiU9bYwjTuysy1S0IeecWtmq1SZA3M1w==
   dependencies:
     tslib "^2.3.0"
 

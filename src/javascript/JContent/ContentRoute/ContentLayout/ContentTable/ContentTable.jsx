@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
@@ -44,14 +44,12 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const onPreviewSelect = useCallback(previewSelection => dispatch(cmSetPreviewSelection(previewSelection)), [dispatch]);
     const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);
     const setPageSize = useCallback(pageSize => dispatch(cmSetPageSize(pageSize)), [dispatch]);
+    const mainPanelRef = useRef(null);
+    const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
 
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
-    const {
-        mainPanelRef,
-        handleKeyboardNavigation,
-        setFocusOnMainContainer,
-        setSelectedItemIndex
-    } = useKeyboardNavigation({
+    const handleKeyboardNavigation = useKeyboardNavigation({
+        selectedItemIndex, setSelectedItemIndex,
         listLength: paths.length,
         onSelectionChange: index => {
             if (isPreviewOpened) {
@@ -148,7 +146,9 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                                  reference={mainPanelRef}
                                  uploadType={tableConfig?.uploadType}
                                  onKeyDown={handleKeyboardNavigation}
-                                 onClick={setFocusOnMainContainer}
+                                 onClick={() => {
+                                     mainPanelRef.current.focus();
+                                 }}
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"

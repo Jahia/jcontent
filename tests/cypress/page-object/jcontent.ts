@@ -16,6 +16,7 @@ import {CreateContent} from './createContent';
 import {Media} from './media';
 import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
+import {ContentGrid} from './contentGrid';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -73,6 +74,10 @@ export class JContent extends BasePage {
         return getComponent(ContentTable, null, el => expect(el).to.be.visible);
     }
 
+    getGrid(): ContentGrid {
+        return getComponent(ContentGrid, null, el => expect(el).to.be.visible);
+    }
+
     getBasicSearch(): BasicSearch {
         return new BasicSearch(this);
     }
@@ -103,7 +108,7 @@ export class JContent extends BasePage {
     }
 
     switchToGridMode(): JContent {
-        this.switchToMode('grid');
+        this.switchToMode('Thumbnails');
         return this;
     }
 

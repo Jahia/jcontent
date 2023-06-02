@@ -13,34 +13,22 @@ import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {flattenTree} from './ContentLayout.utils';
 import styles from './ContentLayout.scss';
 
-export const ContentLayout = ({
-    mode,
-    path,
-    previewState,
-    filesMode,
-    previewSelection,
-    rows,
-    isContentNotFound,
-    totalCount,
-    isLoading,
-    isStructured
-}) => {
+export const ContentLayout = ({mode, path, previewState, filesMode, previewSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const contextualMenu = useRef();
-    const isGrid = mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID;
-    const previewOpen = !isGrid && previewState >= CM_DRAWER_STATES.SHOW;
+    const previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
     return (
         <div className={styles.root}>
             <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
             <div
-                className={classNames(styles.content)}
-                style={{
-                    marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
-                }}
-                onContextMenu={event => contextualMenu.current(event)}
+                    className={classNames(styles.content)}
+                    style={{
+                        marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
+                    }}
+                    onContextMenu={event => contextualMenu.current(event)}
             >
                 <Paper className={styles.contentPaper}>
                     <ErrorBoundary key={filesMode}>
-                        {isGrid ?
+                        {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
                             <FilesGrid totalCount={totalCount}
                                        rows={rows}
                                        isContentNotFound={isContentNotFound}
@@ -54,23 +42,23 @@ export const ContentLayout = ({
                 </Paper>
             </div>
             <Drawer
-                data-cm-role="preview-drawer"
-                variant="persistent"
-                anchor="right"
-                open={previewOpen}
-                classes={{
-                    root: classNames(styles.previewDrawer, {[styles.previewDrawerHidden]: !previewOpen}),
-                    paper: classNames({
-                        [styles.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
-                        [styles.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
-                    })
-                }}
+                    data-cm-role="preview-drawer"
+                    variant="persistent"
+                    anchor="right"
+                    open={previewOpen}
+                    classes={{
+                        root: classNames(styles.previewDrawer, {[styles.previewDrawerHidden]: !previewOpen}),
+                        paper: classNames({
+                            [styles.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
+                            [styles.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
+                        })
+                    }}
             >
                 {previewOpen && (
-                    <ErrorBoundary key={previewSelection}>
-                        <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
-                    </ErrorBoundary>
-                )}
+                <ErrorBoundary key={previewSelection}>
+                    <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
+                </ErrorBoundary>
+                    )}
             </Drawer>
         </div>
     );

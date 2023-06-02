@@ -84,7 +84,7 @@ export const FileCard = ({
                 }
             }}
             onClick={() => {
-                if (!node.notSelectableForPreview && onPreviewSelect) {
+                if (onPreviewSelect) {
                     onPreviewSelect(node);
                 }
             }}

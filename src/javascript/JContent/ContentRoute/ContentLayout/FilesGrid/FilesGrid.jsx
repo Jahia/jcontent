@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
@@ -10,12 +10,12 @@ import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 import {cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/redux/preview.redux';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import classNames from 'clsx';
+import clsx from 'clsx';
 import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
-import clsx from 'clsx';
 import {registry} from '@jahia/ui-extender';
 import {batchActions} from 'redux-batched-actions';
 import {cmClearSelection} from '../../../redux/selection.redux';
@@ -43,17 +43,20 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         dispatch(cmGoto({path: path}));
     };
 
-    const {
-        mainPanelRef,
-        handleKeyboardNavigation,
-        setFocusOnMainContainer,
-        setSelectedItemIndex
-    } = useKeyboardNavigation({
+    const mainPanelRef = useRef(null);
+    const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
+
+    const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+
+    const handleKeyboardNavigation = useKeyboardNavigation({
+        selectedItemIndex, setSelectedItemIndex,
         listLength: rows.length,
         onSelectionChange: index => {
-            const row = rows[index];
-            document.querySelector(`[data-sel-role-card="${row.name}"]`).scrollIntoView(true);
-            return onPreviewSelect(row);
+            if (isPreviewOpened) {
+                const row = rows[index];
+                document.querySelector(`[data-sel-role-card="${row.name}"]`).scrollIntoView(true);
+                return onPreviewSelect(row);
+            }
         }
     });
 
@@ -96,7 +99,9 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                  data-cm-role="grid-content-list"
                  tabIndex="1"
                  onKeyDown={handleKeyboardNavigation}
-                 onClick={setFocusOnMainContainer}
+                 onClick={() => {
+                     mainPanelRef.current.focus();
+                 }}
             >
                 <Paper className={classNames(styles.defaultGrid, styles.detailedGrid)}>
                     {rows.map((node, index) => (
@@ -105,15 +110,17 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   uilang={uilang}
                                   lang={lang}
                                   siteKey={siteKey}
-                                  previewSelection={CM_DRAWER_STATES.SHOW === previewState ? previewSelection : null}
+                                  previewSelection={isPreviewOpened ? previewSelection : null}
                                   index={index}
                                   node={node}
                                   setPath={setPath}
                                   contextualMenuAction="contentMenu"
                                   tableConfig={tableConfig}
                                   onPreviewSelect={(...args) => {
-                                      setSelectedItemIndex(index);
-                                      onPreviewSelect(...args);
+                                      if (isPreviewOpened && !node.notSelectableForPreview) {
+                                          setSelectedItemIndex(index);
+                                          onPreviewSelect(...args);
+                                      }
                                   }}
                         />
                     ))}

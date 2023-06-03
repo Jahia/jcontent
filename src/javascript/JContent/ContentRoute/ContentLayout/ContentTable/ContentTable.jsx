@@ -33,6 +33,7 @@ import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import styles from './ContentTable.scss';
 import {pathExistsInTree} from '../../../JContent.utils';
 import {useNotifications} from '@jahia/react-material';
+import {TableViewModeChangeCounter} from '../../ToolBar/ViewModeSelector/tableViewChangeCounter';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, columns, selector}) => {
     const {t} = useTranslation('jcontent');
@@ -90,9 +91,16 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         if (selection.length > 0 && !isLoading && rows?.length > 0) {
             const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
             if (toRemove.length > 0) {
-                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
+                if (TableViewModeChangeCounter.modeChanged) {
+                    notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
+                }
+
                 dispatch(cmRemoveSelection(toRemove));
             }
+
+            TableViewModeChangeCounter.resetModeChanged();
+        } else if (!isLoading && rows?.length > 0) {
+            TableViewModeChangeCounter.resetModeChanged();
         }
     }, [rows, selection, dispatch, paths, isLoading, notify, t]);
 

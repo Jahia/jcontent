@@ -9,6 +9,7 @@ import classes from './ViewModeSelector.scss';
 import {booleanValue} from '~/JContent/JContent.utils';
 import {useQuery} from '@apollo/client';
 import {GetContentType} from './ViewModeSelector.gql-queries';
+import {TableViewModeChangeCounter} from './tableViewChangeCounter';
 
 const localStorage = window.localStorage;
 
@@ -59,6 +60,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const onChange = vm => dispatch(setTableViewModeAction(vm));
 
     const handleChange = selectedViewMode => {
+        TableViewModeChangeCounter.increment();
         onChange(selectedViewMode);
         localStorage.setItem(VIEW_MODE, selectedViewMode);
     };

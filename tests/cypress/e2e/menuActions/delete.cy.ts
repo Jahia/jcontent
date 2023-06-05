@@ -270,7 +270,7 @@ describe('delete tests', () => {
         jcontent.checkSelectionCount(0);
     });
 
-    it.only('Delete permanently a newly created content folder and clear selection', function () {
+    it('Delete permanently a newly created content folder and clear selection', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
         jcontent.getAccordionItem('content-folders').expandTreeItem('test-deleteContents');
         jcontent.getHeaderActionButton('createContentFolder').click();

@@ -15,7 +15,7 @@ import {pathExistsInTree} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
-import {TableViewModeChangeCounter} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeCounter';
+import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -171,7 +171,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         if (selection.length > 0) {
             const toRemove = selection.filter(path => !pathExistsInTree(path, modules, node => node.dataset.jahiaPath));
             if (toRemove.length > 0) {
-                if (TableViewModeChangeCounter.modeChanged) {
+                if (TableViewModeChangeTracker.modeChanged) {
                     notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
                 }
 
@@ -179,7 +179,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             }
         }
 
-        TableViewModeChangeCounter.resetModeChanged();
+        TableViewModeChangeTracker.resetChanged();
 
         setModules(modules);
 

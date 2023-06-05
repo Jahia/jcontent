@@ -5,7 +5,7 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {Button} from '@jahia/moonstone';
 import styles from './Delete.scss';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {DeleteQueries} from './delete.gql-queries';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {
@@ -20,6 +20,7 @@ import {getName} from '~/JContent';
 import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 import {isPathChildOfAnotherPath} from '../../../JContent.utils';
 import {useNotifications} from '@jahia/react-material';
+import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 
 let getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t}) => {
     if (locked) {
@@ -78,9 +79,12 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
             </DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
-                {hasUsages && count === 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
-                {hasUsages && count > 1 && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
-                {!hasUsages && usagesOverflow && <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
+                {hasUsages && count === 1 &&
+                    <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
+                {hasUsages && count > 1 &&
+                    <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
+                {!hasUsages && usagesOverflow &&
+                    <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
                 {!locked && <InfoTable paths={paths} dialogType={dialogType}/>}
             </DialogContent>
             {(locked || isLoading || count === 0) ? (
@@ -142,6 +146,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         siteKey: state.site,
         language: state.language
     }), shallowEqual);
+    const dispatch = useDispatch();
     const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
     const notificationContext = useNotifications();
@@ -173,6 +178,12 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             setOpen(false);
         }).then(() => {
             paths.forEach(path => client.cache.flushNodeEntryByPath(path));
+            if (dialogType === 'permanently') {
+                paths.forEach(path => {
+                    dispatch(cmRemoveSelection(path));
+                });
+            }
+
             triggerRefetchAll();
         }).catch(() => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);

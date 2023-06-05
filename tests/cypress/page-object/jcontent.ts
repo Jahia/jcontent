@@ -150,6 +150,20 @@ export class JContent extends BasePage {
         return this;
     }
 
+    checkSelectionCount(count: number): void {
+        if (count === 0) {
+            cy.get('[data-sel-role="selection-infos"]', {timeout: 5000}).should('not.exist');
+        } else {
+            cy.get('[data-sel-role="selection-infos"]')
+                .should('have.attr', 'data-sel-selection-size')
+                .and('equal', count.toString());
+        }
+    }
+
+    getHeaderActionButton(role: string): Button {
+        return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
+    }
+
     rightClickMenu(operation: string, elementName: string) {
         cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
         return cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find(`li[data-sel-role="${operation}"]`).click();

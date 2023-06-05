@@ -193,6 +193,7 @@ describe('delete tests', () => {
         }).should(resp => {
             expect(resp?.data.jcr.nodeByPath).to.be.null;
         });
+        jcontent.checkSelectionCount(0);
     });
 
     it('show warning when content is referenced', function () {
@@ -236,5 +237,68 @@ describe('delete tests', () => {
         const dialogCss = '[data-sel-role="delete-mark-dialog"]';
         cy.get(dialogCss)
             .find('[data-sel-role="downloadAsZip"]');
+    });
+
+    it('Can delete root node permanently and refresh selection', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToSubpages();
+
+        cy.log('Can delete root node permanently');
+        jcontent.getTable()
+            .getRowByLabel('Page test 2')
+            .contextMenu()
+            .select('Add to selection');
+
+        jcontent.checkSelectionCount(1);
+        jcontent.getHeaderActionButton('delete').click();
+        cy.log('Verify dialog opens and can be deleted');
+        let dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .should('contain', 'You are about to delete Page test 2')
+            .find('[data-sel-role="delete-mark-button"]')
+            .click();
+        cy.get(dialogCss).should('not.exist');
+        jcontent.checkSelectionCount(1);
+        jcontent.getHeaderActionButton('deletePermanently').click();
+        cy.log('Verify dialog opens and can be deleted');
+        dialogCss = '[data-sel-role="delete-permanently-dialog"]';
+        cy.get(dialogCss)
+            .should('contain', 'You are about to permanently delete Page test 2')
+            .find('[data-sel-role="delete-permanently-button"]')
+            .click();
+        cy.get(dialogCss).should('not.exist');
+        jcontent.checkSelectionCount(0);
+    });
+
+    it('Delete permanently a newly created content folder and clear selection', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+        jcontent.getAccordionItem('content-folders').expandTreeItem('test-deleteContents');
+        jcontent.getHeaderActionButton('createContentFolder').click();
+        cy.get('#folder-name').type('test-parent-folder');
+        cy.get('[data-cm-role="create-folder-as-confirm"]').click();
+        jcontent.getAccordionItem('content-folders').getTreeItem('test-parent-folder').should('be.visible').click();
+        jcontent.getHeaderActionButton('createContentFolder').click();
+        cy.get('#folder-name').type('Soon to be deleted');
+        cy.get('[data-cm-role="create-folder-as-confirm"]').click();
+        jcontent.getTable().selectRowByLabel('Soon to be deleted');
+        jcontent.checkSelectionCount(1);
+        jcontent.getHeaderActionButton('delete').click();
+        cy.log('Verify dialog opens and can be deleted');
+        let dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .should('contain', 'You are about to delete Soon to be deleted')
+            .find('[data-sel-role="delete-mark-button"]')
+            .click();
+        cy.get(dialogCss).should('not.exist');
+        jcontent.checkSelectionCount(1);
+        jcontent.getHeaderActionButton('deletePermanently').click();
+        cy.log('Verify dialog opens and can be deleted');
+        dialogCss = '[data-sel-role="delete-permanently-dialog"]';
+        cy.get(dialogCss)
+            .should('contain', 'You are about to permanently delete Soon to be deleted')
+            .find('[data-sel-role="delete-permanently-button"]')
+            .click();
+        cy.get(dialogCss).should('not.exist');
+        jcontent.checkSelectionCount(0);
     });
 });

@@ -32,7 +32,6 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
     };
 
     it('Can clear selection', () => {
-
         jcontent.getTable().selectRowByLabel('images');
         jcontent.getTable().selectRowByLabel('video');
         jcontent.clearSelection();

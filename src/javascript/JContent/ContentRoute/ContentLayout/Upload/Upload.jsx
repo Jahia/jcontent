@@ -17,7 +17,7 @@ import UploadHeader from './UploadHeader';
 import {batchActions} from 'redux-batched-actions';
 import styles from './Upload.scss';
 
-const SNACKBAR_CLOSE_TIMEOUT = 5000;
+const SNACKBAR_CLOSE_TIMEOUT = 8000;
 
 export class Upload extends React.Component {
     constructor(props) {

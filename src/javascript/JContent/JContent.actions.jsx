@@ -208,6 +208,15 @@ export const jContentActions = registry => {
             isShowIcons: true
         }
     });
+    registry.add('action', 'notSelectedContentMenu', menuActionWithRenderer, {
+        buttonIcon: <MoreVert/>,
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
+        menuTarget: 'notSelectedContentMenu',
+        menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',
+        menuItemProps: {
+            isShowIcons: true
+        }
+    });
     registry.add('action', 'copy', {
         buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.copy',
@@ -440,7 +449,7 @@ export const jContentActions = registry => {
     });
 
     registry.add('action', 'selectionAction', {
-        targets: ['contentActions:0', 'selectedContentActions:0'],
+        targets: ['notSelectedContentMenu:-10', 'selectedContentActions:-10'],
         component: SelectionActionComponent
     });
 };

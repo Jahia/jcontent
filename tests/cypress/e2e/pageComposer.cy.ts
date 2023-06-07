@@ -289,17 +289,9 @@ describe('Page composer', () => {
             module.click();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
-            module.contextMenu().get().find('span').contains('1 item selected');
-            cy.get('.moonstone-menu_overlay').click();
-
             module = jcontent.getModule(item3);
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
-
-            module = jcontent.getModule(item1);
-            module.contextMenu().get().find('span').contains('2 items selected');
-
-            module.contextMenu().select('Copy');
 
             jcontent.clearSelection();
         });

@@ -286,24 +286,14 @@ describe('Page composer', () => {
         it('Allows to select with right click', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
-            module.contextMenu().select('Add to selection');
+            module.click();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-
-            module.contextMenu().get().find('span').contains('1 item selected');
-            cy.get('.moonstone-menu_overlay').click();
 
             module = jcontent.getModule(item3);
             module.contextMenu().select('Add to selection');
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
-            module = jcontent.getModule(item1);
-            module.contextMenu().get().find('span').contains('2 items selected');
-
-            module.contextMenu().select('Copy');
-
             jcontent.clearSelection();
-
-            module.contextMenu().get().find('span').contains('Add to selection');
         });
 
         it('Can use selection and refresh without issues', () => {
@@ -316,7 +306,6 @@ describe('Page composer', () => {
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item3);
-            module.contextMenu().select('Copy');
 
             jcontent.clearSelection();
             jcontent.refresh();

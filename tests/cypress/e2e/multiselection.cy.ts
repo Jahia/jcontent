@@ -1,9 +1,21 @@
 import {JContent} from '../page-object';
 import {Button, getComponentBySelector} from '@jahia/cypress';
 
-describe('Multi-selection tests', () => {
-    beforeEach(function () {
+describe('Multi-selection tests', {testIsolation: false}, () => {
+    let jcontent;
+
+    before(function () {
         cy.loginEditor(); // Edit in chief
+        jcontent = JContent.visit('digitall', 'en', 'media/files');
+        jcontent.switchToListMode();
+    });
+
+    afterEach(() => {
+        cy.get('body').then(body => {
+            if (body.find('.moonstone-header button[data-sel-role="clearSelection"]').length) {
+                jcontent.clearSelection();
+            }
+        });
     });
 
     const checkToolbar = () => {
@@ -20,9 +32,6 @@ describe('Multi-selection tests', () => {
     };
 
     it('Can clear selection', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'media/files');
-        jcontent.switchToListMode();
-
         jcontent.getTable().selectRowByLabel('images');
         jcontent.getTable().selectRowByLabel('video');
         jcontent.clearSelection();
@@ -31,9 +40,6 @@ describe('Multi-selection tests', () => {
     });
 
     it('Can select/de-select items in list mode', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'media/files');
-        jcontent.switchToListMode();
-
         cy.log('selection: 1');
         jcontent.getTable().selectRowByLabel('images');
         checkSelectionCount(1);
@@ -52,9 +58,6 @@ describe('Multi-selection tests', () => {
     });
 
     it('Can select/de-select items in dropdown', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'media/files');
-        jcontent.switchToListMode();
-
         jcontent.getTable().selectRowByLabel('images');
         jcontent.getTable().selectRowByLabel('video');
         checkToolbar();
@@ -64,16 +67,33 @@ describe('Multi-selection tests', () => {
         selectionDropdown.select('images');
         checkToolbar();
         checkSelectionCount(1);
+        cy.get('.moonstone-menu_overlay').click();
     });
 
     it('Can select items in list mode and clear selection', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'media/files');
-        jcontent.switchToListMode();
-
         jcontent.getTable().selectRowByLabel('images');
         jcontent.getTable().selectRowByLabel('video');
         jcontent.getTable().get().type('{esc}');
 
         cy.get('[data-cm-role="selection-infos"]').should('not.exist');
+    });
+
+    it('Can select items with right-click', () => {
+        jcontent.getTable().selectRowByLabel('images');
+        jcontent.getTable().getRowByLabel('video').contextMenu().select('Add to selection');
+
+        checkToolbar();
+        checkSelectionCount(2);
+    });
+
+    it('should not show "add to selection" if nothing is selected', () => {
+        jcontent.getTable().getRowByLabel('video').contextMenu().should('not.contain', 'Add to selection');
+        cy.get('.moonstone-menu_overlay').click();
+    });
+
+    it('should show number of items selected in conrtext menu', () => {
+        jcontent.getTable().selectRowByLabel('images');
+        jcontent.getTable().getRowByLabel('images').contextMenu().should('contain', '1 item selected');
+        cy.get('.moonstone-menu_overlay').click();
     });
 });

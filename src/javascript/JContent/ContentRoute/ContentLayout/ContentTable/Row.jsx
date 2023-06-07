@@ -73,7 +73,7 @@ export const Row = ({
         >
             <ContextualMenu
                 setOpenRef={contextualMenu}
-                actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
+                actionKey={selection.length === 0 ? 'contentMenu' : (selection.indexOf(node.path) === -1 ? 'notSelectedContentMenu' : 'selectedContentMenu')}
                 currentPath={node.path}
                 path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
                 paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}

@@ -238,9 +238,13 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
     let pathObject;
 
-    if (selection.length > 0 && selection.includes(currentPath)) {
-        pathObject = selection.length === 1 ? {path: selection[0]} : {paths: selection};
-        pathObject.actionKey = 'selectedContentMenu';
+    if (selection.length > 0) {
+        if (selection.includes(currentPath)) {
+            pathObject = selection.length === 1 ? {path: selection[0]} : {paths: selection};
+            pathObject.actionKey = 'selectedContentMenu';
+        } else {
+            pathObject = {path: currentPath, actionKey: 'notSelectedContentMenu'};
+        }
     } else {
         pathObject = {path: currentPath, actionKey: 'contentMenu'};
     }

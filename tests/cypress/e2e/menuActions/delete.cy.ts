@@ -245,9 +245,7 @@ describe('delete tests', () => {
 
         cy.log('Can delete root node permanently');
         jcontent.getTable()
-            .getRowByLabel('Page test 2')
-            .contextMenu()
-            .select('Add to selection');
+            .selectRowByLabel('Page test 2');
 
         jcontent.checkSelectionCount(1);
         jcontent.getHeaderActionButton('delete').click();

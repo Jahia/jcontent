@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
@@ -7,32 +7,14 @@ import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {ACTION_PERMISSIONS} from './actions.constants';
 
-const Upload = React.memo(({actionKey, uploadType, uploadHandler}) => {
-    const inputRef = useRef();
-    return (
-        <input ref={inputRef}
-               id={'file-upload-input-' + actionKey}
-               type="file"
-               multiple={uploadType !== 'replaceWith'}
-               style={{position: 'fixed', top: -3000, left: -3000}}
-               onInput={e => {
-                   if (uploadHandler) {
-                       uploadHandler(e.target.files);
-                   }
-
-                   inputRef.current.value = '';
-               }}
-        />
-    );
-});
+const Upload = React.memo(() => (
+    <input id="file-upload-input"
+           type="file"
+           style={{position: 'fixed', top: -3000, left: -3000}}
+    />
+));
 
 Upload.displayName = 'Upload';
-
-Upload.propTypes = {
-    actionKey: PropTypes.string.isRequired,
-    uploadType: PropTypes.string,
-    uploadHandler: PropTypes.func.isRequired
-};
 
 const constraintsByType = {
     upload: {
@@ -71,15 +53,9 @@ export const FileUploadActionComponent = props => {
     );
 
     useEffect(() => {
-        const uploadHandler = files => {
-            onFilesSelected({
-                acceptedFiles: [...files].map(file => ({file, path})),
-                dispatchBatch,
-                type: uploadType
-            });
-        };
-
-        componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType, uploadHandler});
+        if (!document.getElementById('file-upload-input')) {
+            componentRenderer.render('upload', Upload);
+        }
     }, [id, componentRenderer, uploadType, dispatchBatch, path]);
 
     if (res.loading) {
@@ -87,7 +63,23 @@ export const FileUploadActionComponent = props => {
     }
 
     const handleClick = () => {
-        document.getElementById('file-upload-input-' + id).click();
+        const elementById = document.getElementById('file-upload-input');
+        if (uploadType !== 'replaceWith') {
+            elementById.setAttribute('multiple', 'true');
+        } else {
+            elementById.removeAttribute('multiple');
+        }
+
+        elementById.oninput = e => {
+            onFilesSelected({
+                acceptedFiles: [...e.target.files].map(file => ({file, path})),
+                dispatchBatch,
+                type: uploadType
+            });
+            elementById.value = '';
+        };
+
+        elementById.click();
     };
 
     const isVisible = res.checksResult;

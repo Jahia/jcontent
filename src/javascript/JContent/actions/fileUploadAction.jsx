@@ -10,16 +10,17 @@ import {ACTION_PERMISSIONS} from './actions.constants';
 const Upload = React.memo(({actionKey, uploadType, uploadHandler}) => {
     const inputRef = useRef();
     return (
-        <input id={'file-upload-input-' + actionKey}
+        <input ref={inputRef}
+               id={'file-upload-input-' + actionKey}
                type="file"
-               ref={inputRef}
                multiple={uploadType !== 'replaceWith'}
                style={{position: 'fixed', top: -3000, left: -3000}}
                onInput={e => {
                    if (uploadHandler) {
                        uploadHandler(e.target.files);
                    }
-                   inputRef.current.value = ''
+
+                   inputRef.current.value = '';
                }}
         />
     );
@@ -70,21 +71,20 @@ export const FileUploadActionComponent = props => {
     );
 
     useEffect(() => {
-        const uploadHandler = (files) => {
+        const uploadHandler = files => {
             onFilesSelected({
                 acceptedFiles: [...files].map(file => ({file, path})),
                 dispatchBatch,
                 type: uploadType
             });
         };
+
         componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType, uploadHandler});
-    }, [id, componentRenderer, uploadType, dispatchBatch]);
+    }, [id, componentRenderer, uploadType, dispatchBatch, path]);
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
     }
-
-
 
     const handleClick = () => {
         document.getElementById('file-upload-input-' + id).click();

@@ -39,7 +39,7 @@ const constraintsByType = {
 };
 
 export const FileUploadActionComponent = props => {
-    const {id, path, uploadType, render: Render, loading: Loading} = props;
+    const {path, uploadType, render: Render, loading: Loading} = props;
     const componentRenderer = useContext(ComponentRendererContext);
     const dispatch = useDispatch();
     const dispatchBatch = actions => dispatch(batchActions(actions));
@@ -56,7 +56,7 @@ export const FileUploadActionComponent = props => {
         if (!document.getElementById('file-upload-input')) {
             componentRenderer.render('upload', Upload);
         }
-    }, [id, componentRenderer, uploadType, dispatchBatch, path]);
+    }, [componentRenderer]);
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
@@ -64,10 +64,11 @@ export const FileUploadActionComponent = props => {
 
     const handleClick = () => {
         const elementById = document.getElementById('file-upload-input');
-        if (uploadType !== 'replaceWith') {
-            elementById.setAttribute('multiple', 'true');
-        } else {
+
+        if (uploadType === 'replaceWith') {
             elementById.removeAttribute('multiple');
+        } else {
+            elementById.setAttribute('multiple', 'true');
         }
 
         elementById.oninput = e => {
@@ -95,8 +96,6 @@ export const FileUploadActionComponent = props => {
 };
 
 FileUploadActionComponent.propTypes = {
-    id: PropTypes.string,
-
     path: PropTypes.string,
 
     uploadType: PropTypes.string,

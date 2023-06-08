@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
@@ -7,22 +7,30 @@ import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {ACTION_PERMISSIONS} from './actions.constants';
 
-let currentUploadHandler = null;
-
-const Upload = React.memo(({actionKey, uploadType}) => (
-    <input id={'file-upload-input-' + actionKey}
-           type="file"
-           multiple={uploadType !== 'replaceWith'}
-           style={{position: 'fixed', top: -3000, left: -3000}}
-           onChange={e => currentUploadHandler && currentUploadHandler(e.target.files)}
-    />
-));
+const Upload = React.memo(({actionKey, uploadType, uploadHandler}) => {
+    const inputRef = useRef();
+    return (
+        <input id={'file-upload-input-' + actionKey}
+               type="file"
+               ref={inputRef}
+               multiple={uploadType !== 'replaceWith'}
+               style={{position: 'fixed', top: -3000, left: -3000}}
+               onInput={e => {
+                   if (uploadHandler) {
+                       uploadHandler(e.target.files);
+                   }
+                   inputRef.current.value = ''
+               }}
+        />
+    );
+});
 
 Upload.displayName = 'Upload';
 
 Upload.propTypes = {
     actionKey: PropTypes.string.isRequired,
-    uploadType: PropTypes.string
+    uploadType: PropTypes.string,
+    uploadHandler: PropTypes.func.isRequired
 };
 
 const constraintsByType = {
@@ -62,22 +70,23 @@ export const FileUploadActionComponent = props => {
     );
 
     useEffect(() => {
-        componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType});
-    }, [id, componentRenderer, uploadType]);
-
-    if (res.loading) {
-        return (Loading && <Loading {...props}/>) || false;
-    }
-
-    const handleClick = () => {
-        currentUploadHandler = files => {
+        const uploadHandler = (files) => {
             onFilesSelected({
                 acceptedFiles: [...files].map(file => ({file, path})),
                 dispatchBatch,
                 type: uploadType
             });
         };
+        componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType, uploadHandler});
+    }, [id, componentRenderer, uploadType, dispatchBatch]);
 
+    if (res.loading) {
+        return (Loading && <Loading {...props}/>) || false;
+    }
+
+
+
+    const handleClick = () => {
         document.getElementById('file-upload-input-' + id).click();
     };
 

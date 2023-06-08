@@ -7,23 +7,14 @@ import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {ACTION_PERMISSIONS} from './actions.constants';
 
-let currentUploadHandler = null;
-
-const Upload = React.memo(({actionKey, uploadType}) => (
-    <input id={'file-upload-input-' + actionKey}
+const Upload = React.memo(() => (
+    <input id="file-upload-input"
            type="file"
-           multiple={uploadType !== 'replaceWith'}
            style={{position: 'fixed', top: -3000, left: -3000}}
-           onChange={e => currentUploadHandler && currentUploadHandler(e.target.files)}
     />
 ));
 
 Upload.displayName = 'Upload';
-
-Upload.propTypes = {
-    actionKey: PropTypes.string.isRequired,
-    uploadType: PropTypes.string
-};
 
 const constraintsByType = {
     upload: {
@@ -48,7 +39,7 @@ const constraintsByType = {
 };
 
 export const FileUploadActionComponent = props => {
-    const {id, path, uploadType, render: Render, loading: Loading} = props;
+    const {path, uploadType, render: Render, loading: Loading} = props;
     const componentRenderer = useContext(ComponentRendererContext);
     const dispatch = useDispatch();
     const dispatchBatch = actions => dispatch(batchActions(actions));
@@ -62,23 +53,34 @@ export const FileUploadActionComponent = props => {
     );
 
     useEffect(() => {
-        componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType});
-    }, [id, componentRenderer, uploadType]);
+        if (!document.getElementById('file-upload-input')) {
+            componentRenderer.render('upload', Upload);
+        }
+    }, [componentRenderer]);
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
     }
 
     const handleClick = () => {
-        currentUploadHandler = files => {
+        const elementById = document.getElementById('file-upload-input');
+
+        if (uploadType === 'replaceWith') {
+            elementById.removeAttribute('multiple');
+        } else {
+            elementById.setAttribute('multiple', 'true');
+        }
+
+        elementById.oninput = e => {
             onFilesSelected({
-                acceptedFiles: [...files].map(file => ({file, path})),
+                acceptedFiles: [...e.target.files].map(file => ({file, path})),
                 dispatchBatch,
                 type: uploadType
             });
+            elementById.value = '';
         };
 
-        document.getElementById('file-upload-input-' + id).click();
+        elementById.click();
     };
 
     const isVisible = res.checksResult;
@@ -94,8 +96,6 @@ export const FileUploadActionComponent = props => {
 };
 
 FileUploadActionComponent.propTypes = {
-    id: PropTypes.string,
-
     path: PropTypes.string,
 
     uploadType: PropTypes.string,

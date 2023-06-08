@@ -13,7 +13,7 @@ import {registry} from '@jahia/ui-extender';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './UploadItem.scss';
 
-const UPLOAD_DELAY = 8000;
+const UPLOAD_DELAY = 200;
 
 export class UploadItem extends React.Component {
     constructor(props) {

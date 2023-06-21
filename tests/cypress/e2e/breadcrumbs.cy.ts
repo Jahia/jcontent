@@ -2,6 +2,10 @@ import {JContent} from '../page-object';
 import {Breadcrumb} from '../page-object/breadcrumb';
 
 describe('Breadcrumb navigation test', () => {
+    before(function () {
+        cy.apollo({mutationFile: 'jcontent/enablePageComposer.graphql'});
+    });
+
     beforeEach(function () {
         cy.loginEditor();
     });

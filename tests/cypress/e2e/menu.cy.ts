@@ -7,7 +7,6 @@ describe('Menu tests', () => {
     beforeEach(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.apollo({mutationFile: 'jcontent/enablePageComposer.graphql'});
         cy.loginEditor(); // Edit in chief
     });
 

@@ -9,7 +9,6 @@ describe('Links in jcontent', () => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite2'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({mutationFile: 'jcontent/createLinks.graphql'});
-        cy.apollo({mutationFile: 'jcontent/enablePageComposer.graphql'});
     });
 
     after(function () {

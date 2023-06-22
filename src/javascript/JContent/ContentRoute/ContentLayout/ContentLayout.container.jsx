@@ -13,6 +13,7 @@ import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
 import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
 import ContentLayout from './ContentLayout';
+import {Error404} from '@jahia/jahia-ui-root';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Loader} from '@jahia/moonstone';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
@@ -204,19 +205,7 @@ export const ContentLayoutContainer = () => {
             console.error(message);
         }
 
-        return (
-            <ContentLayout isContentNotFound
-                           mode={mode}
-                           path={path}
-                           filesMode={filesMode}
-                           previewState={previewState}
-                           previewSelection={previewSelection}
-                           rows={[]}
-                           isStructured={isStructured}
-                           isLoading={loading}
-                           totalCount={0}
-            />
-        );
+        return <Error404 label={t('jcontent:label.contentManager.error.missingFolder')}/>;
     }
 
     if (loading) {

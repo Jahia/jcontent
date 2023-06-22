@@ -94,7 +94,8 @@
       },
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
-        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}"
+        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
+        "missingFolder" : "Répertoire non trouver"
       },
       "title": {
         "media": "Média",

@@ -1,10 +1,9 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
-import {OpenInLiveActionQuery} from '~/JContent/actions/openInLiveAction/openInLiveAction.gql-queries';
+import {OpenInLiveActionQuery} from '~/JContent/actions/openInAction/openInLiveAction.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
 import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
-
 export const OpenInLiveActionComponent = ({
     render: Render,
     loading: Loading,
@@ -59,6 +58,6 @@ OpenInLiveActionComponent.propTypes = {
     loading: PropTypes.func
 };
 
-export const openInLiveAction = {
+export const openInAction = {
     component: OpenInLiveActionComponent
 };

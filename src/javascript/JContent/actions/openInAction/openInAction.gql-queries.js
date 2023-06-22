@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
-const OpenInLiveActionQuery = gql`
-    query openInLiveActionQuery($path: String!, $language: String!) {
+const OpenInActionQuery = gql`
+    query openInActionQuery($path: String!, $language: String!) {
         jcr {
             result: nodeByPath(path: $path) {
                 ...NodeCacheRequiredFields
@@ -21,4 +21,4 @@ const OpenInLiveActionQuery = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-export {OpenInLiveActionQuery};
+export {OpenInActionQuery};

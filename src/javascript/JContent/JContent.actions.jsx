@@ -61,7 +61,7 @@ import {EditImageActionComponent} from '~/JContent/actions/editImage';
 import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAction';
 import {RenameActionComponent} from '~/JContent/actions/renameAction';
 import {DownloadAsZipActionComponent} from '~/JContent/actions/downloadAsZip';
-import {OpenInLiveActionComponent} from '~/JContent/actions/openInLiveAction/openInLiveAction';
+import {OpenInLiveActionComponent} from '~/JContent/actions/openInAction/openInAction';
 import {ClearClipboardActionComponent} from '~/JContent/actions';
 import JContentConstants from '~/JContent/JContent.constants';
 import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';

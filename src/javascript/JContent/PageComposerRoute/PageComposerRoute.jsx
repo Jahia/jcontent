@@ -32,9 +32,10 @@ export const PageComposerRoute = () => {
     }
 
     const pageComposer = (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
-    if(res.node === undefined || res.error ) {
-        return <Error404/>
+    if (res.node === undefined || res.error) {
+        return <Error404/>;
     }
+
     if (pageComposer) {
         return (
             <MainLayout header={<ContentHeader/>}>

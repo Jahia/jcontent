@@ -31,7 +31,10 @@ export const MainActionBar = () => {
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
 
             {showPageComposer ? (
-                <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
+                <>
+                    <DisplayAction actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', className: styles.item}}/>
+                    <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
+                </>
             ) : (
                 <>
                     <DisplayAction actionKey="pageComposer" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', className: styles.item}}/>

@@ -17,3 +17,7 @@ export * from './routerAction';
 export * from './subContentsAction';
 export * from './unlockAction';
 export * from './openInAction';
+export * from './openInJcontentAction';
+export * from './renameAction';
+export * from './downloadAsZip';
+export * from './editImage';

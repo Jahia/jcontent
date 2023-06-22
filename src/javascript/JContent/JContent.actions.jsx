@@ -30,39 +30,40 @@ import {
     Upload,
     Visibility
 } from '@jahia/moonstone';
-import {FileUploadActionComponent} from '~/JContent/actions';
 import {
+    ClearAllLocksActionComponent,
+    ClearClipboardActionComponent,
+    CopyCutActionComponent,
+    CreateFolderActionComponent,
     DeleteActionComponent,
     DeletePermanentlyActionComponent,
-    UndeleteActionComponent
+    DownloadAsZipActionComponent,
+    DownloadFileActionComponent,
+    EditImageActionComponent,
+    ExportActionComponent,
+    FileUploadActionComponent,
+    LocateActionComponent,
+    LockActionComponent,
+    OpenInJContentActionComponent,
+    OpenInLiveActionComponent,
+    OpenInPreviewActionComponent,
+    PasteActionComponent,
+    PreviewActionComponent,
+    PublishActionComponent,
+    PublishDeletionActionComponent,
+    RenameActionComponent,
+    SearchActionComponent,
+    SubContentsActionComponent,
+    UndeleteActionComponent,
+    UnlockActionComponent,
+    UnzipActionComponent,
+    ZipActionComponent
 } from '~/JContent/actions';
-import {PublishActionComponent} from '~/JContent/actions';
-import {PublishDeletionActionComponent} from '~/JContent/actions';
-import {PreviewActionComponent} from '~/JContent/actions';
-import {PasteActionComponent} from '~/JContent/actions';
-import {CopyCutActionComponent} from '~/JContent/actions';
-import {LockActionComponent} from '~/JContent/actions';
-import {UnlockActionComponent} from '~/JContent/actions';
-import {ClearAllLocksActionComponent} from '~/JContent/actions';
-import {LocateActionComponent} from '~/JContent/actions';
-import {SubContentsActionComponent} from '~/JContent/actions';
-import {ExportActionComponent} from '~/JContent/actions';
-import {DownloadFileActionComponent} from '~/JContent/actions';
-import {CreateFolderActionComponent} from '~/JContent/actions';
-import {ZipActionComponent} from '~/JContent/actions';
-import {UnzipActionComponent} from '~/JContent/actions';
-import {SearchActionComponent} from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
-import {EditImageActionComponent} from '~/JContent/actions/editImage';
-import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAction';
-import {RenameActionComponent} from '~/JContent/actions/renameAction';
-import {DownloadAsZipActionComponent} from '~/JContent/actions/downloadAsZip';
-import {OpenInLiveActionComponent} from '~/JContent/actions/openInAction/openInAction';
-import {ClearClipboardActionComponent} from '~/JContent/actions';
 import JContentConstants from '~/JContent/JContent.constants';
 import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 
@@ -389,6 +390,13 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.actions.openInLive',
         targets: [],
         component: OpenInLiveActionComponent
+    });
+
+    registry.add('action', 'openInPreview', {
+        buttonIcon: <Visibility/>,
+        buttonLabel: 'jcontent:label.contentManager.actions.openInPreview',
+        targets: [],
+        component: OpenInPreviewActionComponent
     });
 
     registry.add('action', 'contentActionsSeparator1', {

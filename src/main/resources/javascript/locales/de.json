@@ -93,7 +93,8 @@
       },
       "error": {
         "contentUnavailable": "Der angeforderte Inhalt ist nicht verfügbar",
-        "queryingContent": "Fehler während Content-Abfrage: {{details}}"
+        "queryingContent": "Fehler während Content-Abfrage: {{details}}",
+        "missingFolder": "Ordner nicht gefunden"
       },
       "title": {
         "media": "Medien",

@@ -96,7 +96,8 @@
       },
       "error": {
         "contentUnavailable": "The requested content is unavailable",
-        "queryingContent": "Error querying content: {{details}}"
+        "queryingContent": "Error querying content: {{details}}",
+        "missingFolder" : "Folder not found"
       },
       "title": {
         "media": "Media",

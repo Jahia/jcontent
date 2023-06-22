@@ -4,7 +4,7 @@ import ContentRoute from '../ContentRoute';
 import MainLayout from '../MainLayout';
 import ContentHeader from '../ContentHeader';
 import JContentConstants from '../JContent.constants';
-import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
+import {ErrorBoundary, Error404, LoaderSuspense} from '@jahia/jahia-ui-root';
 import {EditFrame} from './EditFrame';
 import {useNodeInfo} from '@jahia/data-helper';
 import {setTableViewMode} from '../redux/tableView.redux';
@@ -18,7 +18,7 @@ export const PageComposerRoute = () => {
 
     const dispatch = useDispatch();
 
-    const shouldSwitchMode = !res.loading && !nodeTypes.some(nt => res.node[nt]);
+    const shouldSwitchMode = !res.loading && res.node !== undefined && !nodeTypes.some(nt => res.node[nt]);
 
     useEffect(() => {
         if (shouldSwitchMode) {
@@ -32,7 +32,9 @@ export const PageComposerRoute = () => {
     }
 
     const pageComposer = (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
-
+    if(res.node === undefined || res.error ) {
+        return <Error404/>
+    }
     if (pageComposer) {
         return (
             <MainLayout header={<ContentHeader/>}>

@@ -1,11 +1,11 @@
-import {JContent} from "../page-object";
+import {JContent} from '../page-object';
 
 describe('Validate error handling', () => {
-
     const sitekey = 'jcontentSiteError';
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: sitekey});
-    })
+        JContent.visit(sitekey, 'en', 'pages/home').switchToPageComposer();
+    });
 
     after(() => {
         cy.logout();
@@ -14,29 +14,28 @@ describe('Validate error handling', () => {
 
     beforeEach(() => {
         cy.loginEditor();
-        JContent.visit(sitekey, 'en', 'pages/home').switchToPageComposer();
     });
 
     it('Displays a 404 when reaching non existing page', () => {
         JContent.visit(sitekey, 'en', 'pages/home/pageerror');
-        cy.get('.moonstone-layoutModule_main').contains('Page not found').should('exist')
-    })
+        cy.get('.moonstone-layoutModule_main').contains('Page not found').should('exist');
+    });
 
     it('Displays a 404 when reaching non existing folder', () => {
         JContent.visit(sitekey, 'en', 'content-folders/contents/foldererror');
-        cy.get('.moonstone-layoutModule_main').contains('Folder not found').should('exist')
-    })
+        cy.get('.moonstone-layoutModule_main').contains('Folder not found').should('exist');
+    });
 
     it('Displays a 404 when reaching non existing page and allow to navigate back to existing page', () => {
-        let jContent = JContent.visit(sitekey, 'en', 'pages/home/pageerror');
-        jContent.getAccordionItem('pages').getTreeItem('home').click({force: true})
-    })
+        const jContent = JContent.visit(sitekey, 'en', 'pages/home/pageerror');
+        jContent.getAccordionItem('pages').getTreeItem('home').click({force: true});
+    });
 
     it('Displays a 404 when reaching non existing site and allow to navigate back to existing page', () => {
-        let jContent = JContent.visit(`${sitekey}error`, 'en', 'pages/home/pageerror');
+        const jContent = JContent.visit(`${sitekey}error`, 'en', 'pages/home/pageerror');
         jContent.getSiteSwitcher();
-        cy.get('[data-cm-role="site-switcher"]').click()
-        cy.get('.moonstone-menu:visible').find('.moonstone-menuItem').contains('.moonstone-typography', sitekey, {matchCase: false}).click()
+        cy.get('[data-cm-role="site-switcher"]').click();
+        cy.get('.moonstone-menu:visible').find('.moonstone-menuItem').contains('.moonstone-typography', sitekey, {matchCase: false}).click();
         jContent.getAccordionItem('pages').getTreeItem('home').click({force: true});
-    })
-})
+    });
+});

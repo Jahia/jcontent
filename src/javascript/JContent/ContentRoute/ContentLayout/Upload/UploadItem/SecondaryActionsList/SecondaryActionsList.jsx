@@ -28,7 +28,7 @@ const SecondaryActionsList = props => {
             );
         }
 
-        if (error === 'FILE_NAME_INVALID') {
+        if (error === 'FILE_NAME_SIZE' || error === 'FILE_NAME_INVALID') {
             return (
                 <>
                     <RenameButton {...props}/>

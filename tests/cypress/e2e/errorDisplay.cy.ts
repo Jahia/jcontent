@@ -4,7 +4,7 @@ describe('Validate error handling', () => {
     const sitekey = 'jcontentSiteError';
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: sitekey});
-        JContent.visit(sitekey, 'en', 'pages/home').switchToPageComposer();
+        JContent.visit(sitekey, 'en', 'pages/home');
     });
 
     after(() => {

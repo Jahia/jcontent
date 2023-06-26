@@ -292,6 +292,7 @@
         },
         "locate": "Localiser",
         "openInLive": "Live",
+        "openInPreview": "Apperçu",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "Plus d'actions",

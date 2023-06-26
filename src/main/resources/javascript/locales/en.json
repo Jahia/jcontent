@@ -295,6 +295,7 @@
         },
         "locate": "Locate",
         "openInLive": "Live",
+        "openInPreview": "Preview",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "More actions",

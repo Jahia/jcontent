@@ -322,8 +322,8 @@ describe('Page composer', () => {
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
             module.doubleClick();
             const contentEditor = new ContentEditor();
-            contentEditor.getSmallTextField('jnt:event_jcr:title', false).get().should('exist')
-            contentEditor.cancel()
+            contentEditor.getSmallTextField('jnt:event_jcr:title', false).get().should('exist');
+            contentEditor.cancel();
         });
     });
 

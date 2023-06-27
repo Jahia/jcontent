@@ -215,5 +215,5 @@ Box.propTypes = {
 
     isActionsHidden: PropTypes.bool,
 
-    onDoubleClick: PropTypes.func,
+    onDoubleClick: PropTypes.func
 };

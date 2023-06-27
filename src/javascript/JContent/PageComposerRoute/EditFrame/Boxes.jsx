@@ -98,6 +98,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             if (disallowSelection(event.target) && !isMultipleSelectionMode) {
                 return;
             }
+
             event.preventDefault();
             event.stopPropagation();
             if (isSelected) {
@@ -115,13 +116,13 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
     let nodes = {};
 
-    const onDoubleClick = useCallback( event => {
+    const onDoubleClick = useCallback(event => {
         event.preventDefault();
         event.stopPropagation();
         const element = getModuleElement(currentDocument, event.currentTarget);
         const path = element.getAttribute('path');
         window.CE_API.edit({uuid: nodes[path].uuid, site: site, lang: language, uilang, isFullscreen: false, configName: 'gwtedit'});
-    },[nodes, site, language, uilang, currentDocument])
+    }, [nodes, site, language, uilang, currentDocument]);
 
     const clearSelection = useCallback(() => {
         if (selection.length === 1) {

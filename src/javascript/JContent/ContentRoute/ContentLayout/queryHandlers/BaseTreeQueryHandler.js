@@ -1,3 +1,5 @@
+import JContentConstants from '~/JContent/JContent.constants';
+
 export const BaseTreeQueryHandler = {
     structureTreeEntries: (treeEntries, {hideRoot}) => {
         const stack = [];
@@ -33,14 +35,14 @@ export const BaseTreeQueryHandler = {
         };
     },
 
-    getTreeParams: ({path, openPaths, openableTypes, selectableTypes, sort, hideRoot}) => ({
+    getTreeParams: ({path, openPaths, openableTypes, selectableTypes, sort, hideRoot, tableView}) => ({
         rootPaths: [path],
         openPaths: [...new Set([path, ...openPaths])],
         selectedPaths: [],
         openableTypes,
         selectableTypes,
         hideRoot: hideRoot !== false,
-        sortBy: sort.orderBy === '' ? null : {
+        sortBy: sort.orderBy === '' || tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED ? null : {
             sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
             fieldName: sort.orderBy === '' ? null : sort.orderBy,
             ignoreCase: true

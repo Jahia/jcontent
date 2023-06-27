@@ -58,7 +58,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             }
         }
     });
-    console.log('Rendering rows', rows);
+
     const {
         getTableProps,
         getTableBodyProps,

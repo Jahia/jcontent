@@ -46,7 +46,8 @@ export const Box = React.memo(({
     isHeaderDisplayed,
     isCurrent,
     isSelected,
-    isActionsHidden
+    isActionsHidden,
+    onDoubleClick
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
@@ -55,13 +56,15 @@ export const Box = React.memo(({
         element.addEventListener('mouseover', onMouseOver);
         element.addEventListener('mouseout', onMouseOut);
         element.addEventListener('click', onClick);
+        element.addEventListener('dblclick', onDoubleClick);
 
         return () => {
             element.removeEventListener('mouseover', onMouseOver);
             element.removeEventListener('mouseout', onMouseOut);
             element.removeEventListener('click', onClick);
+            element.removeEventListener('dblclick', onDoubleClick);
         };
-    }, [element, node, onMouseOut, onMouseOver, onClick]);
+    }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick]);
 
     element.dataset.current = isCurrent;
 
@@ -152,6 +155,7 @@ export const Box = React.memo(({
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
              onClick={onClick}
+             onDoubleClick={onDoubleClick}
         >
             <div className={clsx(styles.header, 'flexRow_nowrap', 'alignCenter')}>
                 {type === 'existingNode' && !isActionsHidden && (
@@ -209,5 +213,7 @@ Box.propTypes = {
 
     isSelected: PropTypes.bool,
 
-    isActionsHidden: PropTypes.bool
+    isActionsHidden: PropTypes.bool,
+
+    onDoubleClick: PropTypes.func
 };

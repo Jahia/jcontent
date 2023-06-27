@@ -47,11 +47,13 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     const [inlineEditor] = registry.find({type: 'inline-editor'});
     const dispatch = useDispatch();
 
-    const {language, displayLanguage, selection, path} = useSelector(state => ({
+    const {language, displayLanguage, selection, path, site, uilang} = useSelector(state => ({
         language: state.language,
         displayLanguage: state.uilang,
         path: state.jcontent.path,
-        selection: state.jcontent.selection
+        selection: state.jcontent.selection,
+        site: state.site,
+        uilang: state.uilang
     }), shallowEqual);
 
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
@@ -91,22 +93,36 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         const isSelected = selection.includes(path);
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
 
-        // Do not handle selection if the target element can be interacted with
-        if (disallowSelection(event.target) && !isMultipleSelectionMode) {
-            return;
-        }
+        if (event.detail === 1) {
+            // Do not handle selection if the target element can be interacted with
+            if (disallowSelection(event.target) && !isMultipleSelectionMode) {
+                return;
+            }
 
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (isSelected) {
-            dispatch(cmRemoveSelection(path));
-        } else if (isMultipleSelectionMode) {
-            dispatch(cmAddSelection(path));
-        } else {
-            dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
+            event.preventDefault();
+            event.stopPropagation();
+            if (isSelected) {
+                dispatch(cmRemoveSelection(path));
+            } else if (isMultipleSelectionMode) {
+                dispatch(cmAddSelection(path));
+            } else {
+                dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
+            }
+        } else if (event.detail === 2) {
+            event.preventDefault();
+            event.stopPropagation();
         }
     }, [selection, currentDocument, dispatch]);
+
+    let nodes = {};
+
+    const onDoubleClick = useCallback(event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const element = getModuleElement(currentDocument, event.currentTarget);
+        const path = element.getAttribute('path');
+        window.CE_API.edit({uuid: nodes[path].uuid, site: site, lang: language, uilang, isFullscreen: false, configName: 'gwtedit'});
+    }, [nodes, site, language, uilang, currentDocument]);
 
     const clearSelection = useCallback(() => {
         if (selection.length === 1) {
@@ -210,7 +226,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         };
     });
 
-    const nodes = data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {});
+    nodes = data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {});
 
     useEffect(() => {
         if (inlineEditor) {
@@ -277,6 +293,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onClick={onClick}
+                         onDoubleClick={onDoubleClick}
                          onSaved={onSaved}
                     />
                 ))}

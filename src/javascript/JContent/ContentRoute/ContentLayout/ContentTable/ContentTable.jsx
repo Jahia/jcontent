@@ -58,6 +58,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             }
         }
     });
+    console.log('Rendering rows', rows);
     const {
         getTableProps,
         getTableBodyProps,
@@ -68,6 +69,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         {
             columns: columns,
             data: rows,
+            isStructured: isStructured,
             isExpanded: row => tableOpenPaths.indexOf(row.path) > -1,
             onExpand: (id, value) => {
                 const node = id.split('.').reduce((p, i) => p.subRows[i], {subRows: rows});

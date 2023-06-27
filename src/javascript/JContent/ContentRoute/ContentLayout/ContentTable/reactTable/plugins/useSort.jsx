@@ -30,23 +30,27 @@ const defaultGetSortProps = (props, {instance, column}) => {
 
 function useInstance(instance) {
     const getInstance = useGetLatest(instance);
-    const {getHooks, flatHeaders} = instance;
+    const {getHooks, flatHeaders, isStructured} = instance;
 
     flatHeaders
         .forEach(column => {
-            column.getSortProps = () => [];
-            if (column.sortable && column.property) {
-                column.sortDirection = 'descending';
-                column.getSortProps = () => getHooks().getSortProps({}, {
-                    instance: getInstance(),
-                    column: column
-                });
+            if (isStructured) {
+                column.sortable = false;
+            } else {
+                column.getSortProps = () => [];
+                if (column.sortable && column.property) {
+                    column.sortDirection = 'descending';
+                    column.getSortProps = () => getHooks().getSortProps({}, {
+                        instance: getInstance(),
+                        column: column
+                    });
 
-                if (column.property === instance.sort.orderBy) {
-                    column.sorted = true;
-                    column.sortDirection = instance.sort.order === DESC ? 'descending' : 'ascending';
-                } else {
-                    column.sorted = false;
+                    if (column.property === instance.sort.orderBy) {
+                        column.sorted = true;
+                        column.sortDirection = instance.sort.order === DESC ? 'descending' : 'ascending';
+                    } else {
+                        column.sorted = false;
+                    }
                 }
             }
         });

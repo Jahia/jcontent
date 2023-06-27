@@ -1,5 +1,6 @@
 import {JContent, JContentPageComposer} from '../page-object';
 import {Dropdown, getComponentByRole} from '@jahia/cypress';
+import {ContentEditor} from '@jahia/content-editor-cypress/dist/page-object';
 
 describe('Page composer', () => {
     let jcontent: JContentPageComposer;
@@ -312,6 +313,17 @@ describe('Page composer', () => {
 
             module.click();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
+        });
+
+        it('Opens Content Editor on double click', () => {
+            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
+            const module = jcontent.getModule(item1);
+            module.click();
+            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
+            module.doubleClick();
+            const contentEditor = new ContentEditor();
+            contentEditor.getSmallTextField('jnt:event_jcr:title', false).get().should('exist')
+            contentEditor.cancel()
         });
     });
 

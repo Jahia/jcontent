@@ -277,6 +277,10 @@ class PageComposerModule extends BaseComponent {
     click(clickOptions?) {
         this.get().scrollIntoView().click(clickOptions);
     }
+
+    doubleClick(clickOptions?) {
+        this.get().scrollIntoView().dblclick(clickOptions);
+    }
 }
 
 export class CategoryManager extends JContent {

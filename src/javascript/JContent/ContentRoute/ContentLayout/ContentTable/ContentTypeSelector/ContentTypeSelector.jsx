@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Tab, TabItem} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
@@ -6,7 +6,6 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {setTableViewType} from '~/JContent/redux/tableView.redux';
 import classes from './ContentTypeSelector.scss';
 import {useTranslation} from 'react-i18next';
-import {batchActions} from 'redux-batched-actions';
 import {cmSetPage} from '~/JContent/redux/pagination.redux';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 
@@ -18,12 +17,26 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
     const {tableView} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
-    const actionsBatch = [];
 
-    // Reset pagination when changing view type in non structured mode to disassociate pagination between two tabs
-    if (!isStructuredView) {
-        actionsBatch.push(reduxActions.setPageAction(0));
-    }
+    const switchToContentTab = useCallback(() => {
+        // Reset pagination when changing view type in non-structured mode to disassociate pagination between two tabs
+        if (!isStructuredView) {
+            dispatch(reduxActions.setPageAction(0));
+        }
+
+        dispatch(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.CONTENT));
+        localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.CONTENT);
+    }, [dispatch, reduxActions, isStructuredView]);
+
+    const switchToSubPages = useCallback(() => {
+        // Reset pagination when changing view type in non-structured mode to disassociate pagination between two tabs
+        if (!isStructuredView) {
+            dispatch(reduxActions.setPageAction(0));
+        }
+
+        dispatch(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.PAGES));
+        localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.PAGES);
+    }, [dispatch, reduxActions, isStructuredView]);
 
     const pages = useLayoutQuery({
         ...useSelector(state => ({
@@ -36,8 +49,6 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
         fetchPolicy: 'cache-and-network'
     });
 
-    const pagesCount = (pages.loading || pages.error) ? 0 : pages?.result?.pageInfo?.totalCount;
-
     const content = useLayoutQuery({
         ...useSelector(state => ({
             ...selector(state),
@@ -49,7 +60,19 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
         fetchPolicy: 'cache-and-network'
     });
 
-    const contentCount = (content.loading || content.error) ? 0 : content?.result?.pageInfo?.totalCount;
+    const pagesCount = (pages.loading || pages.error || content.loading) ? 0 : pages?.result?.pageInfo?.totalCount;
+
+    const contentCount = (content.loading || content.error || pages.loading) ? 0 : content?.result?.pageInfo?.totalCount;
+
+    useEffect(() => {
+        if (!isStructuredView && (pagesCount > 0 || contentCount > 0)) {
+            if (pagesCount > 0 && contentCount === 0) {
+                switchToSubPages();
+            } else if (pagesCount === 0 && contentCount > 0) {
+                switchToContentTab();
+            }
+        }
+    }, [pagesCount, contentCount, switchToContentTab, switchToSubPages, isStructuredView]);
 
     return (
         <Tab className={classes.tabs}>
@@ -58,21 +81,13 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
                      data-cm-view-type={JContentConstants.tableView.viewType.CONTENT}
                      label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount > 0 && !isStructuredView ? `(${contentCount})` : ' '})}
                      size="big"
-                     onClick={() => {
-                         actionsBatch.push(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.CONTENT));
-                         dispatch(batchActions(actionsBatch));
-                         localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.CONTENT);
-                     }}/>
+                     onClick={switchToContentTab}/>
             <TabItem isSelected={JContentConstants.tableView.viewType.PAGES === tableView.viewType}
                      isDisabled={pagesCount === 0}
                      data-cm-view-type={JContentConstants.tableView.viewType.PAGES}
                      label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount > 0 && !isStructuredView ? `(${pagesCount})` : ' '})}
                      size="big"
-                     onClick={() => {
-                         actionsBatch.push(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.PAGES));
-                         dispatch(batchActions(actionsBatch));
-                         localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.PAGES);
-                     }}/>
+                     onClick={switchToSubPages}/>
         </Tab>
     );
 };

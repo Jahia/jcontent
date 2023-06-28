@@ -95,7 +95,7 @@
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
-        "missingFolder" : "Répertoire non trouver"
+        "missingFolder" : "Répertoire non trouvé"
       },
       "title": {
         "media": "Média",

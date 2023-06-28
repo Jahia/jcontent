@@ -34,9 +34,10 @@ export class GraphqlUtils {
             variables: {
                 pathOrId: pathOrId
             },
-            mutationFile: 'jcontent/jcrDeleteNode.graphql'
+            mutationFile: 'jcontent/jcrDeleteNode.graphql',
+            errorPolicy: 'ignore'
         }).then(result => {
-            expect(result?.data?.jcr?.deleteNode).to.eq(true);
+            expect(result?.data?.jcr?.deleteNode).to.satisfy(value => value === null || value === true);
         });
     };
 

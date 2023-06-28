@@ -26,6 +26,37 @@ let extractNodeInfo = function (node, loading) {
     return {nodePath: node?.path, nodeType, title};
 };
 
+function getSearchHeader({dispatch, preSearchModeMemo, narrow, mode, t, previewSelection, selection, clear}) {
+    const clearSearchFunc = () => {
+        const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
+        dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
+    };
+
+    return narrow ? (
+        <Header
+            backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
+            mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
+            title={t('label.contentManager.title.search')}
+            toolbarLeft={!previewSelection && selection.length > 0 ?
+                <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> :
+                <SearchControlBar/>}
+        />
+    ) : (
+        <Header
+            backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
+            mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
+            title={t('label.contentManager.title.search')}
+            toolbarLeft={
+                <>
+                    {!previewSelection && selection.length > 0 &&
+                        <SelectionActionsBar paths={selection} clear={clear}/>}
+                    {selection.length === 0 && <SearchControlBar/>}
+                </>
+            }
+        />
+    );
+}
+
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
@@ -51,34 +82,14 @@ const ContentHeader = () => {
     let clear = () => dispatch(cmClearSelection());
 
     if (inSearchMode) {
-        const clearSearchFunc = () => {
-            const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
-            dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
-        };
-
-        return narrow ? (
-            <Header
-                backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
-                mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
-                title={t('label.contentManager.title.search')}
-                toolbarLeft={!previewSelection && selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar/>}
-            />
-        ) : (
-            <Header
-                backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
-                mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
-                title={t('label.contentManager.title.search')}
-                toolbarLeft={
-                    <>
-                        {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
-                        {selection.length === 0 && <SearchControlBar/>}
-                    </>
-                }
-            />
-        );
+        return getSearchHeader({dispatch, preSearchModeMemo, narrow, mode, t, previewSelection, selection, clear});
     }
 
     const {nodePath, nodeType, title} = extractNodeInfo(node, loading);
+
+    if (!loading && node === undefined) {
+        return null;
+    }
 
     return narrow ? (
         <Header

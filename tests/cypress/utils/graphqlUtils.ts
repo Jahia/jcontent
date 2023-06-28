@@ -37,7 +37,7 @@ export class GraphqlUtils {
             mutationFile: 'jcontent/jcrDeleteNode.graphql',
             errorPolicy: 'ignore'
         }).then(result => {
-            expect(result?.data?.jcr?.deleteNode).to.satisfy((value) => value === null || value === true);
+            expect(result?.data?.jcr?.deleteNode).to.satisfy(value => value === null || value === true);
         });
     };
 

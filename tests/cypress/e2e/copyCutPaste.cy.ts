@@ -50,11 +50,11 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
             jcontent.paste().then(() => {
                 cy.get('td:contains("Taber")').should('exist');
-                jcontent.rightClickMenu('edit', 'Taber').then(taber => {
+                jcontent.rightClickMenu('edit', 'Taber').then(() => {
                     getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="Classification"]').expand();
                     cy.get('.moonstone-tag span').contains('Media').should('exist');
                     const contentEditor = new ContentEditor();
-                    contentEditor.getLanguageSwitcher().select('Français')
+                    contentEditor.getLanguageSwitcher().select('Français');
                     cy.get('.moonstone-tag span').contains('Média').should('exist');
                 });
 

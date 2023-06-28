@@ -72,7 +72,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
                 switchToContentTab();
             }
         }
-    }, [pagesCount, contentCount, switchToContentTab, switchToSubPages, isStructuredView]);
+    }, [pagesCount, contentCount, switchToContentTab, switchToSubPages, isStructuredView, tableView.viewType]);
 
     return (
         <Tab className={classes.tabs}>

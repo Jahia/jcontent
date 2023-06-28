@@ -80,6 +80,10 @@ const ContentHeader = () => {
 
     const {nodePath, nodeType, title} = extractNodeInfo(node, loading);
 
+    if (!loading && node === undefined) {
+        return <></>
+    }
+
     return narrow ? (
         <Header
             title={title}

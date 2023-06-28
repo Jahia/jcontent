@@ -25,10 +25,24 @@ describe('jContent header tests', () => {
     }
 
     it('Should open preview in new tab', () => {
+        const language = 'en';
         cy.window().then(win => {
             cy.stub(win, 'open', url => {
-                expect(url.includes('cms/render/default', `url: ${url}`)).to.be.true;
+                expect(url.includes(`cms/render/default/${language}`, `url: ${url}`)).to.be.true;
                 expect(url.endsWith(`${siteKey}/home.html`), `url: ${url}`).to.be.true;
+            });
+        });
+        jcontent.getHeaderActionButton('openInPreview').click();
+    });
+
+    it.only('Should open preview in french in new tab', () => {
+        const language = 'fr';
+        jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        jcontent.getLanguageSwitcher().select('fr');
+        cy.window().then(win => {
+            cy.stub(win, 'open', url => {
+                expect(url.includes(`cms/render/default/${language}`, `url: ${url}`)).to.be.true;
+                expect(url.endsWith('digitall/home.html'), `url: ${url}`).to.be.true;
             });
         });
         jcontent.getHeaderActionButton('openInPreview').click();

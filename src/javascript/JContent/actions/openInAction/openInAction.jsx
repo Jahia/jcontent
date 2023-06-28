@@ -57,6 +57,8 @@ const OpenInActionComponent = ({
                 let baseUrl = window.contextJsParameters.baseUrl;
                 if (isLive) {
                     baseUrl = baseUrl.replace(/\/default\/[a-zA-Z_]{2,5}/, `/live/${language}`);
+                } else {
+                    baseUrl = baseUrl.replace(/\/default\/[a-zA-Z_]{2,5}/, `/default/${language}`);
                 }
 
                 window.open(`${baseUrl}${urlPath}.html`, '_blank');

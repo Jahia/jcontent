@@ -66,9 +66,9 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
 
     useEffect(() => {
         if (!isStructuredView && (pagesCount > 0 || contentCount > 0)) {
-            if (pagesCount > 0 && contentCount === 0) {
+            if (pagesCount > 0 && contentCount === 0 && JContentConstants.tableView.viewType.PAGES !== tableView.viewType) {
                 switchToSubPages();
-            } else if (pagesCount === 0 && contentCount > 0) {
+            } else if (pagesCount === 0 && contentCount > 0 && JContentConstants.tableView.viewType.CONTENT !== tableView.viewType) {
                 switchToContentTab();
             }
         }

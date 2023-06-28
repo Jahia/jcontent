@@ -41,7 +41,7 @@ const JContentConstants = {
         viewMode: {
             FLAT: 'flatList',
             STRUCTURED: 'structuredView',
-            PAGE_COMPOSER: 'pageComposer',
+            PAGE_COMPOSER: 'pageComposer'
         },
         viewType: {
             CONTENT: 'content',

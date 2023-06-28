@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Dropdown, ViewList, ViewTree, Visibility, WebPage} from '@jahia/moonstone';
+import {Dropdown, ViewList, ViewTree, WebPage} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';

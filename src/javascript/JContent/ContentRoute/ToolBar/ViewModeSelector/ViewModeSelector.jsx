@@ -16,19 +16,17 @@ const localStorage = window.localStorage;
 const FLATLIST = JContentConstants.tableView.viewMode.FLAT;
 const STRUCTUREDVIEW = JContentConstants.tableView.viewMode.STRUCTURED;
 const PAGE_COMPOSER = JContentConstants.tableView.viewMode.PAGE_COMPOSER;
-const PREVIEW = JContentConstants.tableView.viewMode.PREVIEW;
 
 const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
 
 const icons = {
     [PAGE_COMPOSER]: <WebPage/>,
-    [PREVIEW]: <Visibility/>,
     [FLATLIST]: <ViewList/>,
     [STRUCTUREDVIEW]: <ViewTree/>
 };
 
 const buttons = [FLATLIST, STRUCTUREDVIEW];
-const pagesButtons = [PAGE_COMPOSER, PREVIEW, FLATLIST, STRUCTUREDVIEW];
+const pagesButtons = [PAGE_COMPOSER, FLATLIST, STRUCTUREDVIEW];
 
 const tableViewDropdownData = (t, viewMode, allButtons) => {
     return allButtons.map(v => ({

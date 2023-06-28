@@ -1,6 +1,7 @@
 import {JContent} from '../page-object/jcontent';
 import {GraphqlUtils} from '../utils/graphqlUtils';
 import {Collapsible, getComponentBySelector, Menu} from '@jahia/cypress';
+import {ContentEditor} from '@jahia/content-editor-cypress/dist/page-object';
 
 describe('Copy Cut and Paste tests with jcontent', () => {
     describe('Copy paste functionality', function () {
@@ -34,6 +35,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             GraphqlUtils.deleteProperty('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', 'j:defaultCategory', 'en');
             GraphqlUtils.setProperty('/sites/systemsite/categories/companies/media', 'jcr:title', 'Media', 'fr');
             GraphqlUtils.removeMixins('/sites/digitall/home/our-companies/area-main/companies/all-movies/relatedPeople/daniel-taber', ['jmix:tagged', 'jmix:keywords', 'jmix:categorized'], ['jdmix:socialIcons']);
+            GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
         });
 
         it('Editor can copy cut and paste with jcontent (metadata included)', () => {
@@ -48,14 +50,11 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
             jcontent.paste().then(() => {
                 cy.get('td:contains("Taber")').should('exist');
-
-                GraphqlUtils.getNodeId('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber', 'Taber');
-                // eslint-disable-next-line max-nested-callbacks
-                cy.get('@Taber').then(taber => {
-                    cy.visit(`/jahia/content-editor/en/edit/${taber}`);
+                jcontent.rightClickMenu('edit', 'Taber').then(taber => {
                     getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="Classification"]').expand();
                     cy.get('.moonstone-tag span').contains('Media').should('exist');
-                    cy.visit(`/jahia/content-editor/fr/edit/${taber}`);
+                    const contentEditor = new ContentEditor();
+                    contentEditor.getLanguageSwitcher().select('Français')
                     cy.get('.moonstone-tag span').contains('Média').should('exist');
                 });
 

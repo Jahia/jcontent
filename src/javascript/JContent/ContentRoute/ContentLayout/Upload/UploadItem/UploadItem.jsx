@@ -49,8 +49,13 @@ export class UploadItem extends React.Component {
         const {t, file, entry} = this.props;
 
         const fileName = this.getFileName();
+        const isNameSizeValid = fileName && fileName.length <= contextJsParameters.config.maxNameSize;
         const isNameCharsValid = fileName.match(JContentConstants.namingInvalidCharactersRegexp) === null;
         let errMsg = '';
+
+        if (!isNameSizeValid) {
+            errMsg = t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
+        }
 
         if (!isNameCharsValid) {
             errMsg = t('jcontent:label.contentManager.fileUpload.invalidChars');

@@ -5,18 +5,15 @@ describe('Category Manager', () => {
     let catMan: CategoryManager;
 
     before(() => {
-        cy.apollo({mutationFile: 'jcontent/enableCategoryManager.graphql'});
         cy.apollo({mutationFile: 'jcontent/createCategories.graphql'});
     });
 
     after(() => {
-        cy.apollo({mutationFile: 'jcontent/disableCategoryManager.graphql'});
         cy.logout();
     });
 
     beforeEach(() => {
         cy.loginEditor();
-        cy.apollo({mutationFile: 'jcontent/enableCategoryManager.graphql'});
         catMan = JContent.visitCatMan('en');
     });
 

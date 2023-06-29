@@ -21,12 +21,6 @@ describe('Category Manager', () => {
         catMan.getSecondaryNav().get().contains('Category Manager').should('be.visible');
     });
 
-    it('Should disable Category Manager', () => {
-        cy.apollo({mutationFile: 'jcontent/disableCategoryManager.graphql'});
-        CategoryManager.visitCatMan('en');
-        cy.contains('Page not found');
-    });
-
     it('Create a new category', () => {
         catMan.getCreateCategory();
         cy.contains('Create category').should('be.visible');

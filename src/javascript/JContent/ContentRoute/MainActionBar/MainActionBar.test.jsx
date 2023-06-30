@@ -8,9 +8,13 @@ jest.mock('react-redux', () => ({
     useSelector: jest.fn()
 }));
 
-jest.mock('@jahia/data-helper', () => ({
-    useNodeInfo: jest.fn()
-}));
+jest.mock('@jahia/data-helper', () => {
+    const original = jest.requireActual('@jahia/data-helper');
+    return {
+        ...original,
+        useNodeInfo: jest.fn()
+    };
+});
 
 global.contextJsParameters = {config: {jcontent: {showPageComposer: true}}};
 

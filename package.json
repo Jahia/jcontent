@@ -65,7 +65,7 @@
     "i18next": "^19.0.3",
     "image-extensions": "^1.1.0",
     "lodash": "^4.17.21",
-    "mammoth": "^1.4.13",
+    "mammoth": "^1.6.0",
     "mime": "^3.0.0",
     "node-fetch": "^2.6.1",
     "prop-types": "^15.7.2",

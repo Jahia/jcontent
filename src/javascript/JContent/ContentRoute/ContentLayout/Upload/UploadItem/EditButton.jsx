@@ -5,13 +5,15 @@ import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {isImageFile} from '../../ContentLayout.utils';
 import {useTranslation} from 'react-i18next';
+import rison from 'rison';
+import {buildUrl, expandTree} from '~/JContent/JContent.utils';
+import {useApolloClient} from '@apollo/client';
 
 const EditButton = props => {
     const {t} = useTranslation('jcontent');
-    const {status, file, uuid} = props;
-
     const language = useSelector(state => state.language);
-    const url = `${window.contextJsParameters.urlbase}/content-editor/${language}/edit/${uuid}`;
+    const {status, file, uuid} = props;
+    const client = useApolloClient();
 
     if (isImageFile(file.name) && uuid !== null && status === uploadStatuses.UPLOADED) {
         return (
@@ -22,7 +24,11 @@ const EditButton = props => {
                 variant="ghost"
                 size="big"
                 onClick={() => {
-                    window.open(url, '_blank');
+                    expandTree({uuid}, client).then(({mode, parentPath, site}) => {
+                        const hash = rison.encode_uri({contentEditor: [{uuid, lang: language, mode: 'edit', isFullscreen: true}]});
+                        const url = buildUrl({site, language, mode, path: parentPath});
+                        window.open(`${window.contextJsParameters.urlbase}${url}#${hash}`, '_blank');
+                    });
                 }}
             />
         );

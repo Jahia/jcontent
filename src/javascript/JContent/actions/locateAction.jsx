@@ -1,5 +1,4 @@
 import {cmGoto, cmOpenPaths} from '../redux/JContent.redux';
-import {expandTree} from './expandTree';
 import {cmSetPreviewSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
 import React from 'react';
@@ -8,6 +7,7 @@ import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTableViewType} from '~/JContent/redux/tableView.redux';
 import {batchActions} from 'redux-batched-actions';
+import {expandTree} from '~/JContent/JContent.utils';
 
 export const LocateActionComponent = ({path, render: Render, ...others}) => {
     const client = useApolloClient();
@@ -22,9 +22,9 @@ export const LocateActionComponent = ({path, render: Render, ...others}) => {
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                expandTree(path, client).then(({mode, parentPath, viewType, ancestorPaths}) => {
+                expandTree({path}, client).then(({mode, parentPath, viewType, ancestorPaths, site}) => {
                     dispatch(batchActions([
-                        cmGoto({mode: mode, path: parentPath}),
+                        cmGoto({mode: mode, path: parentPath, site}),
                         ...(viewType ? [setTableViewType(viewType)] : []),
                         cmOpenPaths(ancestorPaths),
                         cmSetPreviewSelection(path)

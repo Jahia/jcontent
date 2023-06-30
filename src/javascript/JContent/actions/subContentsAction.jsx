@@ -1,4 +1,3 @@
-import {expandTree} from './expandTree';
 import {cmGoto, cmOpenPaths} from '../redux/JContent.redux';
 import {cmSetPreviewSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
@@ -7,6 +6,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
+import {expandTree} from '~/JContent/JContent.utils';
 
 export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
@@ -36,7 +36,7 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                expandTree(path, client).then(({mode, ancestorPaths}) => {
+                expandTree({path}, client).then(({mode, ancestorPaths}) => {
                     dispatch(cmGoto({mode, path, params: {sub: res.node.primaryNodeType.name !== 'jnt:page' && res.node.primaryNodeType.name !== 'jnt:contentFolder'}}));
                     dispatch(cmOpenPaths(ancestorPaths));
                     dispatch(cmSetPreviewSelection(path));

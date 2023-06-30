@@ -6,7 +6,6 @@ export * from './zipUnzip';
 export * from './clearAllLocksAction';
 export * from './deleteActions';
 export * from './downloadFileAction';
-export * from './expandTree';
 export * from './fileUploadAction';
 export * from './locateAction';
 export * from './lockAction';

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {extractPaths} from '../JContent.utils';
+import {buildUrl, extractPaths} from '../JContent.utils';
 import {createActions, handleActions} from 'redux-actions';
 import {registry} from '@jahia/ui-extender';
 import rison from 'rison';
@@ -11,7 +11,6 @@ import JContentConstants from '~/JContent/JContent.constants';
 export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
-const PARAMS_KEY = '?params=';
 const ROUTER_REDUX_ACTION = '@@router/LOCATION_CHANGE';
 
 const extractParamsFromUrl = (pathname, search) => {
@@ -56,19 +55,6 @@ const deserializeQueryString = search => {
     return {};
 };
 
-export const buildUrl = ({site, language, mode, path, params}) => {
-    let registryItem = registry.get('accordionItem', mode);
-    if (registryItem && registryItem.getUrlPathPart) {
-        path = registryItem.getUrlPathPart(site, path, registryItem);
-    }
-
-    // Special chars in folder naming
-    path = path.replace(/[^/]/g, encodeURIComponent);
-
-    let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + rison.encode_uri(params);
-    return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
-};
-
 export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo, cmReplaceOpenedPaths, cmOpenTablePaths, cmCloseTablePaths} =
     createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS', 'CM_OPEN_TABLE_PATHS', 'CM_CLOSE_TABLE_PATHS');
 
@@ -100,7 +86,7 @@ export const cmGotoCatMan = data => (
         // Special chars in folder naming
         path = path.replace(/[^/]/g, encodeURIComponent);
         let paramsData = data.params || params;
-        let queryString = _.isEmpty(paramsData) ? '' : PARAMS_KEY + rison.encode_uri(paramsData);
+        let queryString = _.isEmpty(paramsData) ? '' : '?params=' + rison.encode_uri(paramsData);
         dispatch(push(`/catMan/${lang}/${dataMode}${path}${queryString}`));
     }
 );

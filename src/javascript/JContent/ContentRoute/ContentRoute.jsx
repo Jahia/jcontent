@@ -14,11 +14,8 @@ export const ContentRoute = () => {
         mode: state.jcontent.mode
     }));
     const res = useNodeInfo({path});
-    if (res.loading) {
-        return false;
-    }
 
-    if (res.node === undefined || res.error) {
+    if (!res.loading && (res.node === undefined || res.error)) {
         if (mode === 'pages') {
             return <Error404/>;
         }

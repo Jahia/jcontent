@@ -8,7 +8,7 @@ import {jContentRoutes} from './JContent/JContent.routes';
 import {jContentActions} from './JContent/JContent.actions';
 import {jContentAccordionItems} from './JContent/JContent.accordion-items';
 import {jContentAppRoot} from './JContent/JContent.app-root';
-import {buildUrl, jContentRedux} from './JContent/redux/JContent.redux';
+import {jContentRedux} from './JContent/redux/JContent.redux';
 import {fileuploadRedux} from './JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {previewRedux} from './JContent/redux/preview.redux';
 import {copypasteRedux} from './JContent/actions/copyPaste/copyPaste.redux';
@@ -24,7 +24,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
-import {booleanValue} from '~/JContent/JContent.utils';
+import {booleanValue, buildUrl} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};

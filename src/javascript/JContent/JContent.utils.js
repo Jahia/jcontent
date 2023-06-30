@@ -5,6 +5,8 @@ import JContentConstants from './JContent.constants';
 import {getIcon} from '@jahia/icons';
 import {Layers} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
+import {GetAncestorsQueryById, GetAncestorsQueryByPath} from '~/JContent/JContentUtils.gql-queries';
+import rison from 'rison';
 
 export const getNewNodePath = (oldPath, oldAncestorPath, newAncestorPath) => {
     if (_.startsWith(oldPath, oldAncestorPath + '/') || oldPath === oldAncestorPath) {
@@ -256,4 +258,32 @@ export const isPathChildOfAnotherPath = (child, parent) => {
 export const getRegistryTarget = function (item, target) {
     const foundTarget = item.targets.find(t => t.id === target || t.id.startsWith(target + '-'));
     return foundTarget.id + ':' + foundTarget.priority;
+};
+
+export const buildUrl = ({site, language, mode, path, params}) => {
+    let registryItem = registry.get('accordionItem', mode);
+    if (registryItem && registryItem.getUrlPathPart) {
+        path = registryItem.getUrlPathPart(site, path, registryItem);
+    }
+
+    // Special chars in folder naming
+    path = path.replace(/[^/]/g, encodeURIComponent);
+
+    let queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);
+    return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
+};
+
+export const expandTree = (variables, client) => {
+    return client.query({query: variables.path ? GetAncestorsQueryByPath : GetAncestorsQueryById, variables}).then(res => {
+        let node = res.data.jcr.node;
+        const params = {selectionNode: node};
+        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params));
+        const mode = acc.key;
+        const site = node.site.name;
+        const parentPath = acc.getPathForItem(node);
+        const viewType = acc.getViewTypeForItem ? acc.getViewTypeForItem(node) : null;
+        const ancestorPaths = _.map(node.ancestors, ancestor => ancestor.path);
+
+        return {mode, parentPath, ancestorPaths, viewType, site};
+    });
 };

@@ -15,9 +15,13 @@ jest.mock('~/JContent/redux/JContent.redux', () => ({
 
 jest.mock('connected-react-router', () => jest.fn(() => {}));
 
-jest.mock('@jahia/data-helper', () => ({
-    useNodeInfo: jest.fn()
-}));
+jest.mock('@jahia/data-helper', () => {
+    const original = jest.requireActual('@jahia/data-helper');
+    return {
+        ...original,
+        useNodeInfo: jest.fn()
+    };
+});
 
 describe('Toolbar', () => {
     it('should not render selection infos when there is no selection', () => {

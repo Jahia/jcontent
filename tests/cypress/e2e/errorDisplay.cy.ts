@@ -3,6 +3,7 @@ import {JContent} from '../page-object';
 describe('Validate error handling', () => {
     const sitekey = 'jcontentSiteError';
     before(() => {
+        cy.loginEditor();
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: sitekey});
         JContent.visit(sitekey, 'en', 'pages/home');
     });

@@ -1,4 +1,4 @@
-import {Table, TableRow} from '@jahia/cypress';
+import {BaseComponent, Table, TableRow} from '@jahia/cypress';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
@@ -14,5 +14,32 @@ export class ContentTable extends Table {
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click()
             .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+    }
+
+    getHeaderByRole(role: string): ColumnHeader {
+        cy.get(`[data-cm-role="table-content-list-header-cell-${role}"]`).first().as('headerByRole');
+        cy.get('@headerByRole').scrollIntoView();
+        cy.get('@headerByRole').should('be.visible');
+        return new ColumnHeader(cy.get('@headerByRole'));
+    }
+}
+
+export class ColumnHeader extends BaseComponent {
+    static defaultSelector = '.columnheader';
+
+    isSortable() {
+        this.get().find('.moonstone-SortIndicator').should('exist').and('be.visible');
+    }
+
+    isSorted() {
+        this.get().find('.moonstone-SortIndicator-sorted').should('exist').and('be.visible');
+    }
+
+    sort() {
+        this.get().find('.moonstone-SortIndicator').should('exist').and('be.visible').click();
+    }
+
+    isNotSortable() {
+        this.get().find('.moonstone-SortIndicator').should('not.exist');
     }
 }

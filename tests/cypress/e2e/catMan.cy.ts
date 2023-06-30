@@ -5,29 +5,20 @@ describe('Category Manager', () => {
     let catMan: CategoryManager;
 
     before(() => {
-        cy.apollo({mutationFile: 'jcontent/enableCategoryManager.graphql'});
         cy.apollo({mutationFile: 'jcontent/createCategories.graphql'});
     });
 
     after(() => {
-        cy.apollo({mutationFile: 'jcontent/disableCategoryManager.graphql'});
         cy.logout();
     });
 
     beforeEach(() => {
         cy.loginEditor();
-        cy.apollo({mutationFile: 'jcontent/enableCategoryManager.graphql'});
         catMan = JContent.visitCatMan('en');
     });
 
     it('Should open Category Manager', () => {
         catMan.getSecondaryNav().get().contains('Category Manager').should('be.visible');
-    });
-
-    it('Should disable Category Manager', () => {
-        cy.apollo({mutationFile: 'jcontent/disableCategoryManager.graphql'});
-        CategoryManager.visitCatMan('en');
-        cy.contains('Page not found');
     });
 
     it('Create a new category', () => {

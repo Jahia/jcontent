@@ -24,14 +24,13 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
-import {booleanValue, buildUrl} from '~/JContent/JContent.utils';
+import {buildUrl} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
 
 export default function () {
-    const showCatMan = booleanValue(contextJsParameters.config.jcontent?.showCatMan);
     const JContentNavItem = props => {
         const history = useHistory();
         const {t} = useTranslation('jcontent');
@@ -118,19 +117,17 @@ export default function () {
         render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
     });
 
-    if (showCatMan) {
-        registry.add('primary-nav-item', 'catMan', {
-            targets: ['nav-root-top:4.1'],
-            requiredPermission: 'jContentAccess',
-            render: () => <CatManNavItem/>
-        });
+    registry.add('primary-nav-item', 'catMan', {
+        targets: ['nav-root-top:4.1'],
+        requiredPermission: 'jContentAccess',
+        render: () => <CatManNavItem/>
+    });
 
-        registry.add('route', 'route-catMan', {
-            targets: ['main:3'],
-            path: '/catMan/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
-            render: () => <CatManApp/>
-        });
-    }
+    registry.add('route', 'route-catMan', {
+        targets: ['main:3'],
+        path: '/catMan/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
+        render: () => <CatManApp/>
+    });
 
     registry.add('app', 'dnd', {
         targets: ['root:2'],

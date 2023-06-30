@@ -5,7 +5,6 @@ describe('Validate error handling', () => {
     before(() => {
         cy.loginEditor();
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: sitekey});
-        JContent.visit(sitekey, 'en', 'pages/home');
     });
 
     after(() => {

@@ -37,6 +37,15 @@ const SecondaryActionsList = props => {
             );
         }
 
+        if (error === 'INVALID_FOLDER_NAME') {
+            return (
+                <>
+                    <RenameButton {...props}/>
+                    <DontUploadButton {...props}/>
+                </>
+            );
+        }
+
         if (error === 'FOLDER_EXISTS') {
             return (
                 <DontUploadButton {...props}/>

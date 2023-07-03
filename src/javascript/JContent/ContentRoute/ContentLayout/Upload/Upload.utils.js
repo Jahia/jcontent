@@ -69,7 +69,20 @@ export const fileIgnored = file => {
     return IGNORED_FILES.find(f => f === file.name);
 };
 
+export const checkFolderNames = async (client, directories) => {
+    const invalidFolderNames = directories.filter(dir => {
+        const reg = /[\\/:*?"<>|%]/g;
+        return reg.test(dir.entry.name);
+    });
+
+    return {
+        invalidFolderNames
+    };
+};
+
 export const createMissingFolders = async (client, directories) => {
+    const {invalidFolderNames} = await checkFolderNames(client, directories);
+
     const foldersChecks = await client.query({
         query: CheckNodeFolder,
         variables: {
@@ -78,11 +91,41 @@ export const createMissingFolders = async (client, directories) => {
         fetchPolicy: 'network-only',
         errorPolicy: 'ignore'
     });
-    const conflicts = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && !n.isNodeType));
-    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && n.isNodeType));
-    const created = directories
-        .filter(dir => !foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name))
-        .filter(dir => !conflicts.find(f => dir.path.startsWith(f.path + '/' + f.entry.name)));
+
+    const conflicts = directories.filter(dir => {
+        const existingNode = foldersChecks.data.jcr.nodesByPath.find(
+            n =>
+                n.path === dir.path + '/' + dir.entry.name && !n.isNodeType
+        );
+
+        return existingNode || invalidFolderNames.includes(dir);
+    });
+
+    const exists = directories.filter(dir => {
+        const existingNode = foldersChecks.data.jcr.nodesByPath.find(
+            n =>
+                n.path === dir.path + '/' + dir.entry.name && n.isNodeType
+        );
+
+        return existingNode && !invalidFolderNames.includes(dir);
+    });
+
+    const created = directories.filter(dir => {
+        const existingNode = foldersChecks.data.jcr.nodesByPath.find(
+            n => n.path === dir.path + '/' + dir.entry.name
+        );
+
+        const isConflict = conflicts.find(f =>
+            dir.path.startsWith(f.path + '/' + f.entry.name)
+        );
+
+        return (
+            !existingNode &&
+            !isConflict &&
+            !invalidFolderNames.includes(dir)
+        );
+    });
+
     await client.mutate({
         mutation: CreateFolders,
         variables: {
@@ -95,6 +138,10 @@ export const createMissingFolders = async (client, directories) => {
     });
 
     return {
-        created, exists, conflicts
+        created,
+        exists,
+        conflicts,
+        invalidFolderNames
     };
 };
+

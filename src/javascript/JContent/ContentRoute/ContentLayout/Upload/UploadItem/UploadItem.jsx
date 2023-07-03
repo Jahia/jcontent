@@ -40,6 +40,7 @@ export class UploadItem extends React.Component {
     // And sometimes the upload item enters the UPLOADING state when the component has already been mounted.
     componentDidUpdate(prevProps) {
         if (this.props.status === uploadStatuses.UPLOADING && prevProps.status !== uploadStatuses.UPLOADING) {
+            // If type folder do something check for conflict and call create folder and not upload file
             this.doUploadAndStatusUpdate();
             this.props.updateUploadsStatus();
         }

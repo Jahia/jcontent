@@ -109,9 +109,11 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                     const {conflicts} = await createMissingFolders(client, directories);
 
                     if (conflicts.length > 0) {
+                        const reg = /[\\/:*?"<>|%]/g;
+
                         const uploads = conflicts.map(dir => ({
                             status: uploadStatuses.HAS_ERROR,
-                            error: 'FOLDER_EXISTS',
+                            error: reg.test(dir.entry.fullPath) ? 'FILE_NAME_INVALID' : 'FOLDER_EXISTS',
                             ...dir,
                             id: v4()
                         }));

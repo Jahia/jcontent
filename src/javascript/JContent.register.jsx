@@ -26,6 +26,7 @@ import hashes from './localesHash!';
 import CatManApp from './CatManApp';
 import {buildUrl} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
+import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -44,18 +45,21 @@ export default function () {
         }), shallowEqual);
 
         let accordions = registry.find({type: 'accordionItem', target: 'jcontent'});
-        const permissions = useNodeChecks({
+        const nodeChecks = useNodeChecks({
             path: `/sites/${site}`,
             language: language
         }, {
-            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))]
+            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))],
+            getSiteLanguages: true
         });
 
-        if (permissions.loading) {
+        if (nodeChecks.loading || !nodeChecks.checksResult) {
             return null;
         }
 
-        let defaultMode = accordions.find(acc => permissions.node?.site[acc.requiredSitePermission])?.key;
+        let defaultMode = accordions.find(acc => nodeChecks.node?.site[acc.requiredSitePermission])?.key;
+
+        const newLanguage = getTargetSiteLanguageForSwitch(nodeChecks.node, language);
 
         return (
             <PrimaryNavItem key="/jcontent"
@@ -64,8 +68,8 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                let mode1 = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? defaultMode : mode;
-                                history.push(buildUrl({site, language, mode: mode1, path, params}));
+                                const newMode = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? defaultMode : mode;
+                                history.push(buildUrl({site, language: newLanguage, mode: newMode, path, params}));
                             }}/>
         );
     };

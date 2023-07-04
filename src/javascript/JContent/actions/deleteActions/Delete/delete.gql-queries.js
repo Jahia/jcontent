@@ -17,7 +17,7 @@ const DeleteUsageFragment = gql`
 `;
 
 const DeleteQueries = gql`
-    query DeleteQueries($paths: [String!]!, $language:String!, $siteKey: String!, $getUsages: Boolean!) {
+    query DeleteQueries($paths: [String!]!, $language:String!, $getUsages: Boolean!) {
     jcr {
         nodesByPath(paths: $paths) {
             ...NodeCacheRequiredFields
@@ -56,7 +56,6 @@ const DeleteQueries = gql`
                 value
             }
             rootDeletionInfo: ancestors(
-                upToPath: $siteKey,
                 fieldFilter: {
                     multi: ALL
                     filters: {

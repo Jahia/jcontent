@@ -114,16 +114,6 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         }
     }, [selection, currentDocument, dispatch]);
 
-    let nodes = {};
-
-    const onDoubleClick = useCallback(event => {
-        event.preventDefault();
-        event.stopPropagation();
-        const element = getModuleElement(currentDocument, event.currentTarget);
-        const path = element.getAttribute('path');
-        window.CE_API.edit({uuid: nodes[path].uuid, site: site, lang: language, uilang, isFullscreen: false, configName: 'gwtedit'});
-    }, [nodes, site, language, uilang, currentDocument]);
-
     const clearSelection = useCallback(() => {
         if (selection.length === 1) {
             dispatch(cmClearSelection());
@@ -226,7 +216,15 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         };
     });
 
-    nodes = data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {});
+    const nodes = useMemo(() => data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {}), [data?.jcr]);
+
+    const onDoubleClick = useCallback(event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const element = getModuleElement(currentDocument, event.currentTarget);
+        const path = element.getAttribute('path');
+        window.CE_API.edit({uuid: nodes[path].uuid, site: site, lang: language, uilang, isFullscreen: false, configName: 'gwtedit'});
+    }, [nodes, site, language, uilang, currentDocument]);
 
     useEffect(() => {
         if (inlineEditor) {

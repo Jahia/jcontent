@@ -5,7 +5,7 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {Button} from '@jahia/moonstone';
 import styles from './Delete.scss';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {DeleteQueries} from './delete.gql-queries';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {
@@ -142,10 +142,7 @@ const getMutation = dialogType => {
 const Delete = ({dialogType, node, nodes, onExit}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
-    const {siteKey, language} = useSelector(state => ({
-        siteKey: state.site,
-        language: state.language
-    }), shallowEqual);
+    const language = useSelector(state => state.language);
     const dispatch = useDispatch();
     const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
@@ -155,7 +152,6 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
 
     const {data, error, loading} = useQuery(DeleteQueries, {
         variables: {
-            siteKey: `/sites/${siteKey}`,
             language: language,
             paths: paths,
             getUsages: dialogType !== 'undelete'

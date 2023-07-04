@@ -4,13 +4,13 @@ import SwitchersLayout from './SwitchersLayout';
 import styles from './NavigationHeader.scss';
 import PropTypes from 'prop-types';
 
-const NavigationHeader = ({isDisplaySwitchers, logo, isDisplaySiteSwitcher, isDisplayLanguageSwitcher, setLanguageAction}) => {
+const NavigationHeader = ({isDisplaySwitchers, logo, isDisplaySiteSwitcher, isDisplayLanguageSwitcher, languageSelector, setLanguageAction}) => {
     return (
         <div className={styles.header}>
             <div className={styles.logo}>
                 {logo}
             </div>
-            {isDisplaySwitchers && <SwitchersLayout isDisplaySiteSwitcher={isDisplaySiteSwitcher} isDisplayLanguageSwitcher={isDisplayLanguageSwitcher} setLanguageAction={setLanguageAction}/>}
+            {isDisplaySwitchers && <SwitchersLayout isDisplaySiteSwitcher={isDisplaySiteSwitcher} isDisplayLanguageSwitcher={isDisplayLanguageSwitcher} languageSelector={languageSelector} setLanguageAction={setLanguageAction}/>}
         </div>
     );
 };
@@ -20,6 +20,7 @@ NavigationHeader.propTypes = {
     logo: PropTypes.element,
     isDisplaySiteSwitcher: PropTypes.bool,
     isDisplayLanguageSwitcher: PropTypes.bool,
+    languageSelector: PropTypes.func,
     setLanguageAction: PropTypes.func
 };
 

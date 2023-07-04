@@ -12,6 +12,7 @@ import {Dropdown} from '@jahia/moonstone';
 import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/redux/preview.redux';
 import styles from './SiteSwitcher.scss';
 import {batchActions} from 'redux-batched-actions';
+import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
 
 const QUERY = gql`
             query SiteNodes($query: String!, $displayLanguage:String!) {
@@ -42,22 +43,6 @@ const getSites = data => {
     let siteNodes = data?.jcr.result?.siteNodes?.filter(s => s.hasPermission) || [];
     // Sort system site to the end of list (by returning null)
     return _.sortBy(siteNodes, s => (s.name === 'systemsite') ? null : s.displayName);
-};
-
-const getTargetSiteLanguageForSwitch = (siteNode, currentLang) => {
-    let newLang = null;
-    let siteLanguages = siteNode.site.languages;
-    for (let i in siteLanguages) {
-        if (Object.prototype.hasOwnProperty.call(siteLanguages, i)) {
-            let lang = siteLanguages[i];
-            if (lang.activeInEdit && lang.language === currentLang) {
-                newLang = currentLang;
-                break;
-            }
-        }
-    }
-
-    return newLang ? newLang : siteNode.site.defaultLanguage;
 };
 
 const SiteSwitcher = ({selector, onSelectAction}) => {

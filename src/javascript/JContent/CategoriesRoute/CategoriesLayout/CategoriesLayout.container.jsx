@@ -39,9 +39,9 @@ export const CategoriesLayoutContainer = () => {
         sort: accordionItem.tableConfig.defaultSort,
         openPaths: state.jcontent.openPaths,
         tableView: {viewMode: JContentConstants.tableView.viewMode.FLAT},
-        searchPath: state.jcontent.params.searchPath,
+        searchPath: state.jcontent.catManParams.searchPath,
         searchContentType: 'jnt:category',
-        searchTerms: state.jcontent.params.searchTerms
+        searchTerms: state.jcontent.catManParams.searchTerms
     }));
 
     const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);

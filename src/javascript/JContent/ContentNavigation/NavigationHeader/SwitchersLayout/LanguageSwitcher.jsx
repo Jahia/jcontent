@@ -8,11 +8,8 @@ import styles from './LanguageSwitcher.scss';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import PropTypes from 'prop-types';
 
-const LanguageSwitcher = ({setLanguageAction}) => {
-    const {siteKey, lang} = useSelector(state => ({
-        siteKey: state.site,
-        lang: state.language
-    }), shallowEqual);
+const LanguageSwitcher = ({setLanguageAction, selector}) => {
+    const {siteKey, lang} = useSelector(selector, shallowEqual);
     const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: lang});
     const {t} = useTranslation('jcontent');
 
@@ -67,10 +64,15 @@ const LanguageSwitcher = ({setLanguageAction}) => {
 };
 
 LanguageSwitcher.propTypes = {
-    setLanguageAction: PropTypes.func
+    setLanguageAction: PropTypes.func,
+    selector: PropTypes.func
 };
 
 LanguageSwitcher.defaultProps = {
-    setLanguageAction: lang => cmGoto({language: lang})
+    setLanguageAction: lang => cmGoto({language: lang}),
+    selector: state => ({
+        siteKey: state.site,
+        lang: state.language
+    })
 };
 export default LanguageSwitcher;

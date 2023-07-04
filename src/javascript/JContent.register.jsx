@@ -82,13 +82,12 @@ export default function () {
 
         let accordions = registry.find({type: 'accordionItem', target: 'catMan'});
         const permissions = useNodeChecks({
-            path: '/sites/systemsite/categories',
-            language: language
+            path: '/sites/systemsite'
         }, {
-            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))]
+            requiredPermission: 'categoryManager'
         });
 
-        if (permissions.loading) {
+        if (permissions.loading || !permissions.checksResult) {
             return null;
         }
 
@@ -126,6 +125,8 @@ export default function () {
     registry.add('route', 'route-catMan', {
         targets: ['main:3'],
         path: '/catMan/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
+        requiredPermission: 'categoryManager',
+        requiredPermissionPath: '/sites/systemsite',
         render: () => <CatManApp/>
     });
 

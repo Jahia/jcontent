@@ -5,12 +5,12 @@ import styles from './SwitchersLayout.scss';
 import {Separator} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 
-const SwitchersLayout = ({isDisplaySiteSwitcher, isDisplayLanguageSwitcher, setLanguageAction}) => {
+const SwitchersLayout = ({isDisplaySiteSwitcher, isDisplayLanguageSwitcher, languageSelector, setLanguageAction}) => {
     return (
         <div className={styles.root}>
             {isDisplaySiteSwitcher && <SiteSwitcher/>}
             {isDisplaySiteSwitcher && isDisplayLanguageSwitcher && <Separator variant="vertical"/>}
-            {isDisplayLanguageSwitcher && <LanguageSwitcher setLanguageAction={setLanguageAction}/>}
+            {isDisplayLanguageSwitcher && <LanguageSwitcher setLanguageAction={setLanguageAction} selector={languageSelector}/>}
         </div>
     );
 };
@@ -18,6 +18,7 @@ const SwitchersLayout = ({isDisplaySiteSwitcher, isDisplayLanguageSwitcher, setL
 SwitchersLayout.propTypes = {
     isDisplaySiteSwitcher: PropTypes.bool,
     isDisplayLanguageSwitcher: PropTypes.bool,
+    languageSelector: PropTypes.func,
     setLanguageAction: PropTypes.func
 };
 

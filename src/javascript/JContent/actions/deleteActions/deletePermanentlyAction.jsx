@@ -41,7 +41,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
+    let isVisible = res.checksResult && (res.node ? checkAction(res.node) : checkActionOnNodes(res));
 
     return (
         <Render

@@ -47,6 +47,9 @@ export const CatMan = () => {
                                                     handleNavigationAction={handleNavigationAction}
                                                     header={<NavigationHeader isDisplaySiteSwitcher={false}
                                                                               setLanguageAction={handleSwitchLanguageAction}
+                                                                              languageSelector={state => ({
+                                                                                  lang: state.language, siteKey: 'systemsite'
+                                                                              })}
                                                                               logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
             content={
                 <LoaderSuspense>

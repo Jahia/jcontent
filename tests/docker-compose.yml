@@ -25,6 +25,7 @@ services:
             - stack
     # Cypress container
     cypress:
+        profiles: ["test"]
         image: '${TESTS_IMAGE}'
         # https://github.com/cypress-io/cypress/issues/350
         ipc: host

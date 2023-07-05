@@ -1,2 +1,8 @@
 - include: 'provisioning.yml'
-- installBundle: 'mvn:org.jahia.modules/jcontent'
+- installBundle:
+    - 'mvn:org.jahia.modules/jcontent'
+    - 'mvn:org.jahia.modules/content-editor'
+    - 'mvn:org.jahia.modules/jahia-page-composer'
+    - 'mvn:org.jahia.modules/jahia-administration'
+    - 'mvn:org.jahia.modules/graphql-dxm-provider'
+    - 'mvn:org.jahia.modules/jahia-ui-root'

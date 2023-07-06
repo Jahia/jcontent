@@ -7,7 +7,7 @@ describe('Create content tests', {retries: 10}, () => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
 
-        cy.loginEditor(); // Edit in chief
+        cy.loginAndStoreSession(); // Edit in chief
     });
 
     after(function () {
@@ -16,7 +16,7 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         JContent.visit('jcontentSite', 'en', 'content-folders/contents');
         jcontent = new JContent();
         jcontent.selectAccordion('content-folders');

@@ -10,7 +10,7 @@ describe('Lock tests', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor(); // Edit in chief
+        cy.loginAndStoreSession(); // Edit in chief
     });
 
     function lockNode(path) {

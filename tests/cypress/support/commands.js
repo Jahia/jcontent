@@ -8,15 +8,5 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-Cypress.Commands.add('loginEditor', () => {
-    cy.session('editor', () => {
-        cy.login(); // Edit in chief
-    }, {
-        validate() {
-            cy.request('/start').its('status').should('eq', 200);
-        }
-    });
-});
-
 import 'cypress-iframe';
 import "cypress-real-events";

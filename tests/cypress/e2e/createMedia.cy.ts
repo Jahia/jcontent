@@ -14,7 +14,7 @@ describe('Create media tests', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         JContent.visit('jcontentSite', 'en', 'media/files');
         jcontent = new JContent();
         jcontent.selectAccordion('media');

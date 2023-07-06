@@ -2,7 +2,7 @@ import {JContent} from '../../page-object';
 
 describe('Lock tests', () => {
     before(() => {
-        cy.loginEditor(); // Edit in chief
+        cy.loginAndStoreSession(); // Edit in chief
     });
 
     after(function () {

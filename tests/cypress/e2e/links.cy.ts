@@ -123,4 +123,23 @@ describe('Links in jcontent', () => {
             .and('contain', 'external2-link-nav');
         getComponentByRole(Button, 'backButton').click();
     });
+
+    it('Open modal when clicking on menu title', function () {
+        const pageAccordion = jcontent.getAccordionItem('pages');
+        pageAccordion.expandTreeItem('home');
+        pageAccordion.getTreeItem('menu-entry').click();
+        cy.get('div[role=dialog]');
+        cy.contains('Menu titles are used to organize pages and cannot be displayed in the current view. Switch to list view instead');
+        getComponentByRole(Button, 'cancel-button').click();
+    });
+
+    it('Open modal when clicking on menu title and can edit entry from list view', function () {
+        const pageAccordion = jcontent.getAccordionItem('pages');
+        pageAccordion.expandTreeItem('home');
+        pageAccordion.getTreeItem('menu-entry').click();
+        cy.get('div[role=dialog]');
+        cy.contains('Menu titles are used to organize pages and cannot be displayed in the current view. Switch to list view instead');
+        getComponentByRole(Button, 'list-view-button').click();
+        jcontent.getTable().getRowByLabel('Sub Menu Entry Page').get().should('be.visible');
+    });
 });

@@ -47,6 +47,21 @@ mutation {
                         primaryNodeType: "jnt:externalLink"
                         properties: { name: "j:url"  value: "www.google.com" }
                     }
+                    {
+                        name: "menu-entry"
+                        primaryNodeType: "jnt:navMenuText"
+                        properties: { name: "jcr:title"  value: "Menu Entry" language: "en" }
+                        children: [
+                            {
+                                name: "sub-menu-entry-page"
+                                primaryNodeType: "jnt:page"
+                                properties: [
+                                    { name: "jcr:title"  value: "Sub Menu Entry Page" language: "en" }
+                                    { name: "j:templateName" value: "2-column" }
+                                ]
+                            }
+                        ]
+                    }
                 ]
             ) {
                 uuid

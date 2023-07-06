@@ -140,6 +140,6 @@ describe('Links in jcontent', () => {
         cy.get('div[role=dialog]');
         cy.contains('Menu titles are used to organize pages and cannot be displayed in the current view. Switch to list view instead');
         getComponentByRole(Button, 'list-view-button').click();
-        jcontent.getTable().getRowByLabel("Sub Menu Entry Page").get().should("be.visible")
+        jcontent.getTable().getRowByLabel('Sub Menu Entry Page').get().should('be.visible');
     });
 });

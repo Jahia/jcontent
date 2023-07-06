@@ -485,8 +485,8 @@
       },
       "textMenu": {
         "editDialog": {
-          "title": "Menü Labels",
-          "body": "Menü Labels werden verwendet, um Seiten zu organisieren und können in dieser Ansicht nicht angezeigt werden. Bitte schalten Sie in die Listenansicht.",
+          "title": "Menütitel",
+          "body": "Menütitel werden verwendet, um Seiten zu organisieren und können in dieser Ansicht nicht angezeigt werden. Bitte schalten Sie in die Listenansicht.",
           "openInList": "In Listenansicht öffnen"
         }
       }

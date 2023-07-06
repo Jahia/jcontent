@@ -13,7 +13,7 @@ describe('Category Manager', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         catMan = JContent.visitCatMan('en');
     });
 

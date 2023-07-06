@@ -7,7 +7,7 @@ describe('Breadcrumb navigation test', () => {
     });
 
     beforeEach(function () {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
     });
 
     it('Handles area and parent page navigation correctly', () => {

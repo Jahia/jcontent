@@ -16,7 +16,7 @@ describe('jContent header tests', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'pages/home');
     });
 

@@ -5,7 +5,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
     let jcontent;
 
     before(function () {
-        cy.loginEditor(); // Edit in chief
+        cy.loginAndStoreSession(); // Edit in chief
         jcontent = JContent.visit('digitall', 'en', 'media/files');
         jcontent.switchToListMode();
     });

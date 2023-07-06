@@ -15,7 +15,7 @@ describe('Search tests', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         JContent.visit('jcontentSite', 'en', 'content-folders/contents');
         jcontent = new JContent();
         jcontent.selectAccordion('content-folders');

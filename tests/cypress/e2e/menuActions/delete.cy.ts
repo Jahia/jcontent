@@ -10,7 +10,7 @@ describe('delete tests', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor(); // Edit in chief
+        cy.loginAndStoreSession(); // Edit in chief
     });
 
     after(function () {

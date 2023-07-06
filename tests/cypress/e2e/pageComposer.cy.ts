@@ -17,7 +17,7 @@ describe('Page composer', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         jcontent = JContent
             .visit('jcontentSite', 'en', 'pages/home')
             .switchToPageComposer();

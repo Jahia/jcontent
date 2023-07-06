@@ -3,7 +3,7 @@ import {JContent} from '../page-object';
 describe('Validate error handling', () => {
     const sitekey = 'jcontentSiteError';
     before(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: sitekey});
     });
 
@@ -13,7 +13,7 @@ describe('Validate error handling', () => {
     });
 
     beforeEach(() => {
-        cy.loginEditor();
+        cy.loginAndStoreSession();
     });
 
     it('Displays a 404 when reaching non existing page', () => {

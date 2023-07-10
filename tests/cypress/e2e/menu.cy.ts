@@ -43,7 +43,7 @@ describe('Menu tests', () => {
         contentEditor.getSmallTextField('jnt:page_jcr:title').get().find('input[type="text"]').should('be.visible')
             .clear({force: true}).type('New Root Level Page', {force: true})
             .should('have.value', 'New Root Level Page');
-        const templateField = contentEditor.getField(Field, 'jnt:page_j:templateName');
+        const templateField = contentEditor.getField(Field, 'jmix:hasTemplateNode_j:templateName');
         templateField.get().click();
         getComponentBySelector(Menu, '[role="listbox"]').select('3 Column');
         contentEditor.save();

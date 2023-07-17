@@ -1,4 +1,4 @@
-import {JContent} from '../page-object/JContent';
+import {JContent} from '../page-object/jcontent';
 
 describe('test jcontent actionbar', () => {
     it('test actionbar', () => {

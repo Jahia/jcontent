@@ -1,5 +1,5 @@
 const JContentConstants = {
-    contentType: 'jmix:editorialContent',
+    contentType: 'jmix:droppableContent',
     namingInvalidCharactersRegexp: /[\\/:*?"<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
     availablePublicationStatuses: {

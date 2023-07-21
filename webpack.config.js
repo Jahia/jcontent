@@ -7,6 +7,15 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const moonstone = require("@jahia/moonstone/dist/rulesconfig-wp");
 const getModuleFederationConfig = require('@jahia/webpack-config/getModuleFederationConfig');
 const packageJson = require('./package.json');
+const {CycloneDxWebpackPlugin} = require('@cyclonedx/webpack-plugin');
+
+/** @type {import('@cyclonedx/webpack-plugin').CycloneDxWebpackPluginOptions} */
+const cycloneDxWebpackPluginOptions = {
+    specVersion: '1.4',
+    rootComponentType: 'library',
+    outputLocation: './bom',
+    validateResults: false
+};
 
 module.exports = (env, argv) => {
     let config = {
@@ -110,7 +119,8 @@ module.exports = (env, argv) => {
             }, Object.keys(packageJson.dependencies))),
             new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),
             new CopyWebpackPlugin({patterns: [{from: './package.json', to: ''}]}),
-            new CaseSensitivePathsPlugin()
+            new CaseSensitivePathsPlugin(),
+            new CycloneDxWebpackPlugin(cycloneDxWebpackPluginOptions)
         ],
         mode: 'development'
     };

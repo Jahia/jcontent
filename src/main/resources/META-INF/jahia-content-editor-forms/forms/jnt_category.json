@@ -1,0 +1,9 @@
+{
+  "nodeType": "jnt:category",
+  "priority": 1.0,
+  "hasPreview": false,
+  "sections": [
+    {"name":  "content", "expanded": true},
+    {"name":  "seo", "hide": true}
+  ]
+}

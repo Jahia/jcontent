@@ -1,0 +1,11 @@
+{
+  "nodeType": "jnt:virtualsite",
+  "priority": 1.0,
+  "hasPreview": false,
+  "sections": [
+    {
+      "name": "listOrdering",
+      "hide": true
+    }
+  ]
+}

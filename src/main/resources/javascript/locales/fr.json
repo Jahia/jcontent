@@ -496,6 +496,370 @@
       "noSubCategory": "Pas de sous-catégorie",
       "name":"Gestionnaire de Catégories"
     },
+    "contentEditor": {
+      "create": {
+        "title": "Créer {{type}}",
+        "createButton": {
+          "name": "Sauvegarder",
+          "createAnother": "Créer un nouveau",
+          "success": "Contenu enregistré avec succès",
+          "error": "Une erreur s'est produite lors de la création du contenu"
+        },
+        "advanced": "Mode avancé"
+      },
+      "edit": {
+        "title": "Éditer le contenu",
+        "contentEdit": "Editer le contenu",
+        "validation": {
+          "required": "Requis",
+          "invalidForm": "Formulaire non valide",
+          "fieldsInError": "Un champ en erreur",
+          "fieldsInError_plural": "{{count}} champs en erreur",
+          "otherLanguages": "Autres langues en erreur"
+        },
+        "action": {
+          "copyLanguage": {
+            "bottomText": "En cliquant sur \"APPLIQUER\" vous remplacerez les valeurs actuelles des champs par celles de la langue choisie.",
+            "btnApply": "Appliquer",
+            "btnCancel": "Annuler",
+            "currentLanguage": "Language courant:",
+            "defaultValue": "Sélectionner une langue",
+            "dialogSubTitle": "\"Copier depuis\" permet de copier le contenu des champs depuis une langue vers la langue courante.",
+            "dialogTitle": "Copier depuis",
+            "listLabel": "Copier depuis",
+            "name": "Copier depuis une langue"
+          },
+          "save": {
+            "name": "Sauvegarder",
+            "success": "Contenu enregistré avec succès",
+            "error": "Une erreur s'est produite lors de l'enregistrement du contenu",
+            "validation": {
+              "modalTitle": "Le contenu n’a pas pu être enregistré",
+              "modalMessage": "Il y a une erreur de validation dans le formulaire.",
+              "modalMessage_plural": "Il y a {{count}} erreurs de validation dans le formulaire.",
+              "modalButton": "OK"
+            }
+          },
+          "goBack": {
+            "name": "Retour à {{parentNodeDisplayName}}",
+            "edit": {
+              "title": "Modifications non sauvegardées",
+              "message": "Vous avez des modifications non sauvegardées. Que souhaitez-vous faire avant de fermer?",
+              "switchLanguage": "Vous avez des modifications non sauvegardées. Que souhaitez-vous faire avant de changer de langue?"
+            },
+            "create": {
+              "title": "Contenu non sauvegardé",
+              "message": "Le contenu n'a pas été sauvegardé. Que souhaitez-vous faire avant de fermer ?",
+              "switchLanguage": "Le contenu n'a pas été sauvegardé en {{langName}}. Que souhaitez-vous faire avant de changer de langue ?"
+            },
+            "alert": "Les modifications que vous avez apportées ne seront pas enregistrées.",
+            "btnContinue": "Annuler",
+            "btnDiscard": "Fermer sans sauvegarder",
+            "btnSave": "Sauvegarder"
+          },
+          "lock": {
+            "deletion": "Vérouillé: Contenu marqué pour suppression",
+            "engine": "Vérouillé par {{userName}}",
+            "user": "Vérouillé par {{userName}}",
+            "validation": "Vérouiller par un workflow de publication",
+            "unknown": "Vérouillé pour une raison inconnue"
+          },
+          "publish": {
+            "name": "Publier maintenant",
+            "namePolling": "Publication",
+            "success": "La publication a été ajoutée à la file d’attente",
+            "error": "Erreur durant la publication"
+          },
+          "startWorkflow": {
+            "name": "Demander une publication"
+          },
+          "moreOptions": "Plus d'options",
+          "fieldMoreOptions": "Plus d'options",
+          "versioningTab": "Versions",
+          "seoTab": "SEO",
+          "visibilityTab": "Visibilité",
+          "historyTab": "Historique",
+          "usagesTab": "Utilisations",
+          "workInProgress": {
+            "chipLabelAllContent": "Travail en cours",
+            "chipLabelLanguages": "WIP - ",
+            "chipLabelField": "Travail en cours",
+            "btnCancel": "Annuler",
+            "btnDone": "Valider",
+            "checkboxLabel": "Travail en cours",
+            "checkboxSubLabel": "Le contenu peut être publié dans toutes les langues.",
+            "clickHere": "cliquez ici.",
+            "dialogTitle": "Travail en cours (WIP)",
+            "dialogSubTitle": "Vous pouvez marquer le contenu comme travail en cours pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
+            "label" : {
+              "mark": "Marquer comme travail en cours",
+              "unmark": "Ne pas marquer comme travail en cours"
+            },
+            "localizedPropertiesOnly": "Propriétés internationalisées seulement",
+            "localizedPropertiesOnlySubText": "Le contenu ne sera pas publiable dans les langues sélectionnées. Les propriétés communes à toutes les langues peuvent cependant faire partie d'une publication.",
+            "allContent": "Toutes les propriétés, dans toutes les langues",
+            "allContentSubText": "Cette option empêche la publication dans toutes les langues."
+          }
+        },
+        "advancedOption": {
+          "technicalInformation": {
+            "contentType": "Type de contenu principal",
+            "details": "Détails",
+            "label": "Informations techniques",
+            "mixinTypes": "Type de contenu complet",
+            "path": "Chemin",
+            "uuid": "UUID"
+          },
+          "usages": {
+            "path": "Emplacement",
+            "none": "Pas d’utilisations",
+            "noneDescription": "Cet élément n’est référencé par aucun autre contenu."
+          }
+        },
+        "sharedLanguages": "Partagé par toutes les langues",
+        "fields": {
+          "actions": {
+            "replace": "Modifier",
+            "newTab": "Editer dans un nouvel onglet",
+            "clear": "Effacer",
+            "selectAll": "Sélectionnez toutes les valeurs",
+            "add": "Ajouter",
+            "previewTab": "Prévisualisé dans un nouvel onglet"
+          },
+          "contentPicker": {
+            "notFoundContent": "Référence cassée",
+            "fileUploadBtn": "Uploader un fichier",
+            "modalTitle": "Sélectionner un contenu",
+            "modalEditorialTitle": "Sélectionner des pages et contenus affichables en pleine page",
+            "modalFileTitle": "Sélectionner un fichier",
+            "modalFolderTitle": "Sélectionner un dossier",
+            "modalCategoryTitle": "Sélectionner une catégorie",
+            "modalImageTitle": "Sélectionner an image",
+            "modalPageTitle": "Sélectionner une page",
+            "modalSiteTitle": "Sélectionner un site",
+            "modalUserTitle": "Sélectionner un utilisateur",
+            "modalUserGroupTitle": "Sélectionner un groupe d'utilisateurs",
+            "modalPDFTitle": "Sélectionner un fichier PDF",
+            "modalVideoTitle": "Sélectionner une vidéo",
+            "itemsFound": "{{totalCount}} éléments trouvés"
+          },
+          "category": {
+            "noMatches": "Aucun résultat correspondant"
+          },
+          "modalCancel": "Annuler",
+          "modalDone": "Sélectionner"
+        },
+        "tagPlaceholder": "Saisir les tags",
+        "createTagPlaceholder": "Taper entrée pour ajouter \"{{tagName}}\"",
+        "errors": {
+          "invalidDate": "La date est mal formatée",
+          "invalidColor": "Veuillez fournir un code couleur valide",
+          "invalidPattern": "La valeur ne correspond pas aux contraintes définies dans le fichier de définition des types de contenu.",
+          "invalidSystemName": "Le nom système ne peut contenir les caractères suivants ‘/:*?\"<>|%’",
+          "required": "",
+          "alreadyExist": "Il y a déjà un objet avec ce nom système, veuillez en choisir un autre",
+          "maxLength": "{{selectorOptions.maxLength}} caractères maximum",
+          "invalidLink": "Le lien {{0}} est rompu",
+          "constraintViolation": "{{0}}"
+        },
+        "tab": {
+          "edit": "Éditer",
+          "advanced": "Options avancées"
+        }
+      },
+      "header":  {
+        "languageSwitcher": {
+          "switchLanguage": "Changer de langue",
+          "addTranslation": {
+            "edit": "Ajouter une traduction",
+            "create": "Créer une traduction"
+          }
+        },
+        "chips": {
+          "unsavedLabel": "Modifications non sauvegardées",
+          "inCountLanguages": "dans {{count}} langues",
+          "inAllLanguages": "dans toutes les langues"
+        }
+      },
+      "error": {
+        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
+        "changeSystemName": "Veuillez choisir un autre nom système",
+        "constraintViolations": "Il y a des erreurs de validation! Corrigez les entrées et sauvegarder à nouveau",
+        "accessDenied": "Certains contenus ne peuvent pas être affichés en raison des autorisations qui ont été appliquées",
+        "cannotOpen": "Content Editor n’a pas pu être ouvert",
+        "notFound": "Le contenu n’existe pas ou vous n’avez pas la permission de le voir"
+      },
+      "preview": {
+        "contentNotFound": "Le contenu ne peut pas être prévisualisé dans la page",
+        "noPreview": "Aucun aperçu disponible",
+        "toggleButtons": {
+          "preview": "Aperçu",
+          "details": "Détails",
+          "off": "Désactivé"
+        },
+        "updateOnSave": "L'aperçu sera mis à jour lors de l'enregistrement"
+      },
+      "CMMActions": {
+        "createNewContent": {
+          "menu": "Nouveau contenu",
+          "newMenu": "Nouveau...",
+          "contentOfType": "Nouveau : {{typeName}}",
+          "labelModal": "Sélectionner Un Type De Contenu",
+          "btnDiscard": "ANNULER",
+          "btnCreate": "CRÉER",
+          "filterLabel": "Rechercher un type de contenu"
+        }
+      },
+      "section":{
+        "fieldSet": {
+          "content": {
+            "displayName": "Contenu"
+          },
+          "system": {
+            "displayName": "Système",
+            "fields": {
+              "systemNameDescription": "{{maxNameSize}} caractères maximum. Utilisé pour construire l'url des pages si aucune vanity URL n'a été définie dans les options avancées",
+              "systemNameDescriptionReadOnly": "Le nom système ne peut pas être modifié.",
+              "systemName": "Nom système",
+              "syncButton": "copier le titre"
+            }
+          }
+        },
+        "listAndOrdering": {
+          "title": "Liste de contenu & ordre",
+          "ordering": "Ordre",
+          "automatic": "Classement automatique",
+          "orderBy": "Trier par",
+          "description": "Activez le classement automatique pour organiser vos sous-contenus en utilisant au maximum trois critères, ou réorganisez vos sous-contenus manuellement, par glisser-déposer."
+        },
+        "listSizeLimit": {
+          "name": "Nombre d'éléments",
+          "description": "Définissez un nombre limite d'éléments qui peuvent être affichés/créés dans cette zone. Désactivez pour enlever la limite. Si la liste contient plus d'éléments que la limite, alors ces éléments ne seront simplement pas affichés, ils ne seront pas supprimés."
+        }
+      },
+      "siteSwitcher": {
+        "allSites": "Tous les Sites"
+      },
+      "publicationStatusBadge": {
+        "publishing": "Publication en cours",
+        "modified": "Modifié",
+        "notPublished": "Non publié",
+        "published": "Live",
+        "warning": "Attention"
+      },
+      "publicationStatusTooltip": {
+        "modified": "Modifié par {{userName}} le {{timestamp}}",
+        "published": "Publié par {{userName}} le {{timestamp}}",
+        "mandatoryLanguageUnpublishable": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
+        "mandatoryLanguageValid": "Le contenu ne sera visible en ligne qu'après publication dans toutes les langues obligatoires.",
+        "conflict": "Un contenu avec le même nom existe déjà en mode live et ne fera pas partie de cette publication",
+        "unknown": "Statut de publication indisponible"
+      },
+      "global": {
+        "noResult": "Aucun résultat trouvé."
+      },
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "gwtTabsDeprecation": {
+        "title": "Ancienne interface",
+        "openLegacy": "Ouvrir l'ancienne interface",
+        "cancel": "Annuler",
+        "warnings": {
+          "content": "Le contenu doit être modifié directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
+          "options": "Les options additionnelles peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
+          "categories": "Les catégorie associées au contenu peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
+          "metadata": "Les métadonnées peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
+          "layout": "Les options de rendu peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour."
+        }
+      },
+      "vanityTab": {
+        "title": "URLs personnalisées",
+        "label": "Les URLs personnalisées peuvent être gérées depuis un écran dédié, accessible depuis le menu aux 3 points verticaux de la barre d'action, ou via le bouton  \"Gérer les URLs personnalisées\" ci-dessous."
+      },
+      "selection": {
+        "itemsSelected": "{{count}} élément sélectionné",
+        "itemsSelected_plural": "{{count}} éléments sélectionnés"
+      },
+      "picker": {
+        "navigation" : {
+          "categories": "Catégories",
+          "sites": "Sites"
+        },
+        "rightPanel": {
+          "actionsCaption": "Les éléments non-sélectionnables ne sont pas affichés dans cette vue",
+          "searchContextOptions" : {
+            "search": "Chercher dans",
+            "allUsers": "Tous les utilisateurs",
+            "globalUsers": "Utilisateurs globaux",
+            "allGroups": "Tous les groupes",
+            "globalGroups": "Groupes globaux"
+          },
+          "tabs": {
+            "pages": "Pages",
+            "contentFolders": "Dossier de contenu"
+          }
+        },
+        "selectors": {
+          "multipleLeftRightSelector": {
+            "addAll": "Tout ajouter",
+            "removeAll": "Tout enlever",
+            "selected": "{{count}} élément sélectionné",
+            "selected_plural": "{{count}} éléments sélectionnés"
+          }
+        }
+      },
+      "readOnly": "Lecture seule",
+      "selectorTypes": {
+        "checkbox": {
+          "displayValue": "Checkbox",
+          "description": "Affiche une checkbox"
+        },
+        "color": {
+          "displayValue": "Color",
+          "description": "Sélectionner une couleur visuellement ou entrer une valeur hexadécimale"
+        },
+        "textArea": {
+          "displayValue": "Text Area",
+          "description": "Textes non-formatés, sur plusieurs lignes."
+        },
+        "richText": {
+          "displayValue": "Rich text",
+          "description": "Textes formatés sur plusieurs lignes (titres, images, liens, ...)"
+        },
+        "dropdown": {
+          "displayValue": "Dropdown",
+          "description": "Sélectionner une/des valeur(s) à partir d'une liste"
+        },
+        "picker": {
+          "displayValue": "Picker",
+          "description": "Choisir des médias, fichiers ou contenus"
+        },
+        "dateTimePicker": {
+          "displayValue": "Date time",
+          "description": "Sélectionner une date et un horaire dans un calendrier"
+        },
+        "datePicker": {
+          "displayValue": "Date",
+          "description": "Sélectionner une date dans un calendrier"
+        },
+        "text": {
+          "displayValue": "Text",
+          "description": "Champ texte"
+        },
+        "category": {
+          "displayValue": "Hierarchical Tree selector",
+          "description": "Sélectionner une valeur à partir de données en arbre"
+        },
+        "tag": {
+          "displayValue": "Tag",
+          "description": "Sélectionner à partir d'une liste ou créer de nouvelles valeurs"
+        },
+        "multipleLeftRightSelector": {
+          "displayValue": "Multiple list",
+          "description": "Sélectionner de nombreuses valeurs à partir d'une liste"
+        }
+      }
+    },
     "ok": "OK",
     "cancel": "Annuler",
     "no": "Non",

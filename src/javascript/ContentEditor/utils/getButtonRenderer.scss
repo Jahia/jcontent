@@ -1,0 +1,15 @@
+.warningBadge {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+
+    color: var(--color-warning);
+
+    border-radius: 50%;
+
+    background-color: var(--color-white);
+}
+
+.pastilleWrapper {
+    position: relative;
+}

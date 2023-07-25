@@ -1,0 +1,35 @@
+.header {
+    height: 120px;
+    padding: var(--spacing-large);
+}
+
+.headerActions {
+    gap: var(--spacing-medium);
+    margin-top: var(--spacing-medium);
+}
+
+.footer {
+    height: 64px;
+    padding: var(--spacing-medium);
+
+    border-top: solid 1px var(--color-gray40);
+}
+
+.body {
+    padding: 0 var(--spacing-large);
+
+    :global(.moonstone-tab) {
+        margin-top: 0;
+    }
+}
+
+.actions {
+    gap: var(--spacing-medium);
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

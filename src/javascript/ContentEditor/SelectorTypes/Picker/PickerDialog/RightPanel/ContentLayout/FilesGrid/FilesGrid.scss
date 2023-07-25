@@ -1,0 +1,40 @@
+.grid.grid {
+    display: flex;
+    flex: 1 1 0;
+
+    outline: none;
+    overflow: hidden;
+
+    transition: opacity 0.1s;
+}
+
+.drop.drop {
+    opacity: 0.5;
+}
+
+.gridEmpty.gridEmpty {
+    flex: 1 1 0;
+    margin: 0 !important;
+}
+
+.defaultGrid.defaultGrid {
+    display: grid;
+    flex: 1;
+    gap: var(--spacing-medium);
+
+    box-shadow: none;
+}
+
+.detailedGrid.detailedGrid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    padding: 0 var(--spacing-medium) var(--spacing-medium);
+}
+
+.empty.empty {
+    margin: var(--spacing-small);
+
+    text-align: center;
+}

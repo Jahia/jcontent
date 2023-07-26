@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
-import {jcontentUtils} from '@jahia/jcontent';
+import * as jcontentUtils from '~/JContent/JContent.utils';
 
 function getSite(selectedItem) {
     const pathElements = selectedItem.split('/');

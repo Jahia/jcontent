@@ -2,7 +2,8 @@ import clsx from 'clsx';
 import styles from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/PickerSelection/Selection.scss';
 import {Typography} from '@jahia/moonstone';
 import React from 'react';
-import {FileSize, NodeIcon} from '@jahia/jcontent';
+import {FileSize} from '~/JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
+import {NodeIcon} from '~/utils';
 import PropTypes from 'prop-types';
 
 export const FilePickerCaption = ({selection}) => (

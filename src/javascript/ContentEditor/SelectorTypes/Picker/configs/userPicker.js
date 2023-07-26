@@ -1,6 +1,7 @@
 import React from 'react';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
-import {reactTable, Sql2SearchQueryHandler} from '@jahia/jcontent';
+import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {FolderUser} from '@jahia/moonstone';
 import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';

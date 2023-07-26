@@ -1,4 +1,4 @@
-import {reactTable} from '@jahia/jcontent';
+import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {CellVisibleActions} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/CellVisibleActions';
 import {FileSizeCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/FileSizeCell';
 import {RelPathCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/RelPathCell';

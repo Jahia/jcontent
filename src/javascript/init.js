@@ -1,5 +1,6 @@
 import {registry} from '@jahia/ui-extender';
 import register from './JContent.register';
+import {register as ceRegister} from './ContentEditor/register';
 import {MoreVert} from '@jahia/moonstone';
 import {Constants} from './ContentEditor/SelectorTypes/Picker/Picker.constants';
 import React from 'react';
@@ -7,7 +8,10 @@ import React from 'react';
 export default function () {
     registry.add('callback', 'jContent', {
         targets: ['jahiaApp-init:1'],
-        callback: register
+        callback: () => {
+            register();
+            ceRegister();
+        }
     });
 
     registry.add('callback', 'updateAccordionTargetsFromPickerConfigurations', {

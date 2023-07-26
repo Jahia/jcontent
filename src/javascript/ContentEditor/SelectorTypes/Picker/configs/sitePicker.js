@@ -3,7 +3,7 @@ import {SiteWeb} from '@jahia/moonstone';
 import {PickerBaseQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
-import {reactTable} from '@jahia/jcontent';
+import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
 const nameColumn = {

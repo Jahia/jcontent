@@ -11,7 +11,7 @@ import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {getBaseSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {GET_SEARCH_CONTEXT} from '../PickerDialog.gql-queries';
 import PropTypes from 'prop-types';
-import {jcontentUtils} from '@jahia/jcontent';
+import * as jcontentUtils from '~/JContent/JContent.utils';
 
 export const Search = ({accordionItemProps}) => {
     const {t} = useTranslation('content-editor');

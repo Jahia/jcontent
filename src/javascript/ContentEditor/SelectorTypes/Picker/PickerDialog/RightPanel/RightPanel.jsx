@@ -12,7 +12,7 @@ import {getButtonRenderer} from '~/ContentEditor/utils';
 import {SelectionCaption, SelectionTable} from './PickerSelection';
 import {Search} from './Search';
 import {PickerSiteSwitcher} from '~/ContentEditor/SelectorTypes/Picker';
-import {jcontentUtils} from '@jahia/jcontent';
+import * as jcontentUtils from '~/JContent/JContent.utils';
 import {replaceFragmentsInDocument} from '@jahia/data-helper';
 import {GET_PICKER_NODE_UUID} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/PickerDialog.gql-queries';
 import {useQuery, useApolloClient} from '@apollo/react-hooks';

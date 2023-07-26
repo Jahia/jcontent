@@ -3,7 +3,8 @@ import {getPagesSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/co
 import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
-import {ContentFoldersQueryHandler, ViewModeSelector} from '@jahia/jcontent';
+import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
+import {ContentFoldersQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {cePickerSetTableViewMode} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {EditorialContentTypeSelector} from './EditorialContentTypeSelector';
 import {PickerPagesQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/editorialPicker/PickerPagesQueryHandler';

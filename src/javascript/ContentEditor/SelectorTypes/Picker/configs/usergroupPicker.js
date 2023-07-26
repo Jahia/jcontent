@@ -3,7 +3,8 @@ import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/config
 import {Group} from '@jahia/moonstone';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
-import {reactTable, Sql2SearchQueryHandler} from '@jahia/jcontent';
+import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {UserGroupPickerFragment} from './usergroupPicker.gql-queries';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 

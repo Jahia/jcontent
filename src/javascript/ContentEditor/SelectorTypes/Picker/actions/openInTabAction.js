@@ -5,7 +5,7 @@ import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {useApolloClient, useQuery} from '@apollo/react-hooks';
 import rison from 'rison-node';
 import {OpenInTabActionQuery} from '~/ContentEditor/SelectorTypes/Picker/actions/openInTabAction.gql-queries';
-import {jcontentUtils} from '@jahia/jcontent';
+import * as jcontentUtils from '~/JContent/JContent.utils';
 
 export const OpenInTabActionComponent = ({render: Render, loading: Loading, path, field, inputContext, ...others}) => {
     const {lang} = useContentEditorContext();

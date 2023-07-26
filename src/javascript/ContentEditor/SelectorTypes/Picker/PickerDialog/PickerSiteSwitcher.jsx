@@ -3,7 +3,8 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {cePickerMode, cePickerOpenPaths, cePickerPath, cePickerSite} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {getDetailedPathArray} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
-import {SiteSwitcher, jcontentUtils} from '@jahia/jcontent';
+import SiteSwitcher from '~/JContent/ContentNavigation/NavigationHeader/SwitchersLayout/SiteSwitcher';
+import * as jcontentUtils from '~/JContent/JContent.utils';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import PropTypes from 'prop-types';
 

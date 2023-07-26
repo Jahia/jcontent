@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import FileCard from './FileCard';
+import {FileCard} from './FileCard';
 import {Grid, Paper} from '@material-ui/core';
 import {TablePagination, Typography} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';

@@ -18,16 +18,16 @@ import {
 } from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {flattenTree, getDetailedPathArray} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
+import * as jcontentUtils from '~/JContent/JContent.utils';
+import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+import {useFileDrop} from '~/JContent/dnd';
 import {
     ContentEmptyDropZone,
     ContentListHeader,
     ContentNotFound,
     ContentTableWrapper,
-    EmptyTable,
-    jcontentUtils,
-    reactTable,
-    useFileDrop
-} from '@jahia/jcontent';
+    EmptyTable
+} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import {registry} from '@jahia/ui-extender';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import {Row} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/ContentLayout/ContentTable/Row';

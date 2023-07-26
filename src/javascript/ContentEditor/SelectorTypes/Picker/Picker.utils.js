@@ -1,6 +1,6 @@
 import React from 'react';
 import {SiteWeb} from '@jahia/moonstone';
-import {NodeIcon} from '@jahia/jcontent';
+import {NodeIcon} from '~/utils/NodeIcon';
 
 export const getPathWithoutFile = fullPath => {
     return fullPath && fullPath.split('/').slice(0, -1).join('/');

@@ -15,7 +15,6 @@ export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQu
 export {NodeIcon} from '../utils/NodeIcon';
 export * as jcontentUtils from '../JContent/JContent.utils';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-export {default as FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard/FileSize';
-export {default as FileCard} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
+export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';

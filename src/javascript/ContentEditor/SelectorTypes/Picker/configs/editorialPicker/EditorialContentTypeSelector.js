@@ -1,6 +1,6 @@
 import {cePickerSetPage, cePickerSetTableViewType} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import React from 'react';
-import {ContentTypeSelector as JContentTypeSelector} from '@jahia/jcontent';
+import {ContentTypeSelector as JContentTypeSelector} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 
 export const EditorialContentTypeSelector = ({pickerConfig}) => {

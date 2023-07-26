@@ -3,7 +3,7 @@ import {TableRow} from '@jahia/moonstone';
 import clsx from 'clsx';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
-import {useFileDrop, useNodeDrop} from '@jahia/jcontent';
+import {useFileDrop, useNodeDrop} from '~/JContent/dnd';
 import styles from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/ContentLayout/ContentTable/ContentTable.scss';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 

@@ -15,7 +15,7 @@ import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/confi
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {useDispatch} from 'react-redux';
 import RightPanel from './RightPanel';
-import {ContentNavigation} from '@jahia/jcontent';
+import ContentNavigation from '~/JContent/ContentNavigation';
 import {SelectionHandler} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/SelectionHandler';
 import {PickerSiteSwitcher} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/PickerSiteSwitcher';
 import clsx from 'clsx';

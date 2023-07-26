@@ -1,7 +1,10 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {FileCard, FilesGridEmptyDropZone, jcontentUtils, useFileDrop} from '@jahia/jcontent';
+import {FileCard} from '~/JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
+import FilesGridEmptyDropZone from '~/JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';
+import * as jContentUtils from '~/JContent/JContent.utils';
+import {useFileDrop} from '~/JContent/dnd';
 import {TablePagination} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import classNames from 'clsx';

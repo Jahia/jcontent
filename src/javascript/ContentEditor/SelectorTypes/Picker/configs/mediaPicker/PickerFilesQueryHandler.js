@@ -1,4 +1,4 @@
-import {FilesQueryHandler} from '@jahia/jcontent';
+import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 
 export const PickerFilesQueryHandler = {
     ...FilesQueryHandler,

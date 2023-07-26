@@ -5,7 +5,7 @@ import {Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './Selection.scss';
 import {SelectionButton} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/PickerSelection/SelectionButton';
-import {NodeIcon} from '@jahia/jcontent';
+import {NodeIcon} from '~/utils';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 
 const DefaultCaptionComponent = ({selection}) => (

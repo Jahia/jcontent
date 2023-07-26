@@ -4,9 +4,9 @@ import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Table, TableBody, TablePagination} from '@jahia/moonstone';
 import {useTable} from 'react-table';
-import {useRowMultipleSelection, useRowSelection} from '~/SelectorTypes/Picker/reactTable/plugins';
-import {allColumnData} from '~/SelectorTypes/Picker/reactTable/columns';
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {useRowMultipleSelection, useRowSelection} from '~/ContentEditor/SelectorTypes/Picker/reactTable/plugins';
+import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {
     cePickerClosePaths,
     cePickerMode,
@@ -15,8 +15,8 @@ import {
     cePickerSetPage,
     cePickerSetPageSize,
     cePickerSetSort
-} from '~/SelectorTypes/Picker/Picker.redux';
-import {flattenTree, getDetailedPathArray} from '~/SelectorTypes/Picker/Picker.utils';
+} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {flattenTree, getDetailedPathArray} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import {
     ContentEmptyDropZone,
@@ -29,8 +29,8 @@ import {
     useFileDrop
 } from '@jahia/jcontent';
 import {registry} from '@jahia/ui-extender';
-import {configPropType} from '~/SelectorTypes/Picker/configs/configPropType';
-import {Row} from '~/SelectorTypes/Picker/PickerDialog/RightPanel/ContentLayout/ContentTable/Row';
+import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
+import {Row} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/ContentLayout/ContentTable/Row';
 import clsx from 'clsx';
 
 const reduxActions = {

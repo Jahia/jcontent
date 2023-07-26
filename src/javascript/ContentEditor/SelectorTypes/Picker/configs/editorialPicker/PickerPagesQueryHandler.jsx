@@ -1,6 +1,6 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {PagesQueryHandler, BaseTreeQueryHandler} from '@jahia/jcontent';
-import {selectableTypeFragment} from '~/SelectorTypes/Picker/configs/queryHandlers';
+import {selectableTypeFragment} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 
 const isPageTypeFn = t => t === 'jnt:page' || t === 'jmix:navMenuItem';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {TableBodyCell} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
-import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
+import {ButtonRendererNoLabel} from '~/ContentEditor/utils/getButtonRenderer';
 import PropTypes from 'prop-types';
 import classes from './Cells.scss';
 

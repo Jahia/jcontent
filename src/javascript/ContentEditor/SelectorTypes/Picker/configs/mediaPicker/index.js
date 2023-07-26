@@ -1,2 +1,2 @@
 export * from './mediaPicker';
-export {FilePickerCaption} from '~/SelectorTypes/Picker/configs/mediaPicker/FilePickerCaption';
+export {FilePickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/mediaPicker/FilePickerCaption';

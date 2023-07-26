@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
 import {FieldContainer} from './Field.container';
-import {registerSelectorTypes} from '~/SelectorTypes';
+import {registerSelectorTypes} from '~/ContentEditor/SelectorTypes';
 import {registry} from '@jahia/ui-extender';
 
 jest.mock('@jahia/jcontent', () => {

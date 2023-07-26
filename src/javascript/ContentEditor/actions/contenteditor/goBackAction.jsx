@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from 'react';
-import {CloseConfirmationDialog} from '~/CloseConfirmationDialog';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {CloseConfirmationDialog} from '~/ContentEditor/CloseConfirmationDialog';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import * as PropTypes from 'prop-types';
-import {Constants} from '~/ContentEditor.constants';
-import {isDirty, useKeydownListener} from '~/utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {isDirty, useKeydownListener} from '~/ContentEditor/utils';
 import {useFormikContext} from 'formik';
 
 export const GoBack = ({render: Render, ...otherProps}) => {

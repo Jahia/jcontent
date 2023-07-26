@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import styles from './IframeViewer.scss';
 import {forceDisplay, removeSiblings} from '../../Preview.utils';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useTranslation} from 'react-i18next';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 export function zoom(iframeDocument, onContentNotFound, editorContext) {
     const isPage = editorContext.nodeData.isPage;

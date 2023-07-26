@@ -1,8 +1,8 @@
 import React from 'react';
 import {Dropdown, Edit, Language} from '@jahia/moonstone';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import styles from './EditPanelLanguageSwitcher.scss';
-import {getCapitalized, useSwitchLanguage} from '~/utils';
+import {getCapitalized, useSwitchLanguage} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
 
 export const EditPanelLanguageSwitcher = () => {

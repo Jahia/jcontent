@@ -1,9 +1,9 @@
 import {useFormikContext} from 'formik';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
+import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {Chip, Edit} from '@jahia/moonstone';
 import React, {useMemo} from 'react';
-import {getFields} from '~/utils';
+import {getFields} from '~/ContentEditor/utils';
 import isEquals from 'react-fast-compare';
 
 export const UnsavedChip = () => {

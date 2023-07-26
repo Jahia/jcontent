@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {openEngineTab} from './engineTabs.utils';
-import {CloseConfirmationDialog} from '~/CloseConfirmationDialog';
+import {CloseConfirmationDialog} from '~/ContentEditor/CloseConfirmationDialog';
 import PropTypes from 'prop-types';
 import {useFormikContext} from 'formik';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
-import {isDirty} from '~/utils';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {isDirty} from '~/ContentEditor/utils';
 
 export const OpenEngineTabs = ({tabs, render: Render, ...otherProps}) => {
     const [open, setOpen] = useState(false);

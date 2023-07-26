@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
-import styles from '~/DesignSystem/OrderableValue/OrderableValue.scss';
+import styles from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue.scss';
 import {Button, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';

@@ -1,4 +1,4 @@
 export * from './editorialPicker';
 export {
     EditorialContentTypeSelector
-} from '~/SelectorTypes/Picker/configs/editorialPicker/EditorialContentTypeSelector';
+} from '~/ContentEditor/SelectorTypes/Picker/configs/editorialPicker/EditorialContentTypeSelector';

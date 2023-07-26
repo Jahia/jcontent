@@ -1,13 +1,13 @@
 import React from 'react';
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
-import {useMediaPickerInputData} from '~/SelectorTypes/Picker/configs/mediaPicker/useMediaPickerInputData';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {useMediaPickerInputData} from '~/ContentEditor/SelectorTypes/Picker/configs/mediaPicker/useMediaPickerInputData';
 import {FileModeSelector} from '@jahia/jcontent';
-import {transformQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
-import {FilePickerCaption} from '~/SelectorTypes/Picker/configs/mediaPicker/FilePickerCaption';
-import {cePickerSetFileViewMode} from '~/SelectorTypes/Picker/Picker.redux';
+import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
+import {FilePickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/mediaPicker/FilePickerCaption';
+import {cePickerSetFileViewMode} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {FileImage} from '@jahia/moonstone';
-import {PickerFilesQueryHandler} from '~/SelectorTypes/Picker/configs/mediaPicker/PickerFilesQueryHandler';
+import {PickerFilesQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/mediaPicker/PickerFilesQueryHandler';
 
 function getMode(state, config) {
     if (state.contenteditor.picker.fileView.mode === '') {

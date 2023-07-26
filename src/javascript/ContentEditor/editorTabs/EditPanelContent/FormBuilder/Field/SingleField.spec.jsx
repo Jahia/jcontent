@@ -3,7 +3,7 @@ import {shallowWithTheme} from '@jahia/test-framework';
 
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import {SingleField} from './SingleField';
-import {TextAreaField} from '~/SelectorTypes/TextAreaField/TextAreaField';
+import {TextAreaField} from '~/ContentEditor/SelectorTypes/TextAreaField/TextAreaField';
 import {FastField, useFormikContext} from 'formik';
 
 jest.mock('react', () => {

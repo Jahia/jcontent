@@ -4,19 +4,19 @@ import {Chip, Language, Typography} from '@jahia/moonstone';
 import clsx from 'clsx';
 import {useTranslation} from 'react-i18next';
 import * as PropTypes from 'prop-types';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {MultipleField} from './MultipleField';
 import {SingleField} from './SingleField';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {buildFlatFieldObject} from './field.utils';
 import {DisplayAction, registry} from '@jahia/ui-extender';
 import {contentEditorHelper} from './contentEditorHelper';
-import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useApolloClient} from '@apollo/react-hooks';
-import {getButtonRenderer} from '~/utils';
+import {getButtonRenderer} from '~/ContentEditor/utils';
 import {useFormikContext} from 'formik';
 import styles from './Field.scss';
-import {ReadOnlyBadge} from '~/ContentEditor/EditPanel/HeaderBadges/ReadOnlyBadge';
+import {ReadOnlyBadge} from '~/ContentEditor/ContentEditor/EditPanel/HeaderBadges/ReadOnlyBadge';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 

@@ -1,6 +1,6 @@
 import {registry} from '@jahia/ui-extender';
 import {registerSystemNameOnChange} from './SystemName.onChange';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 registerSystemNameOnChange(registry);
 const systemNameOnChange = registry.get('selectorType.onChange', 'systemNameSync').onChange;

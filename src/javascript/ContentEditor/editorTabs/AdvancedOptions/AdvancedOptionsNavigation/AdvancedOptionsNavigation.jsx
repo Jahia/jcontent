@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import {useRegisterEngineTabActions} from './useRegisterEngineTabActions';
 import {registerAdvancedOptionsActions} from './registerAdvancedOptionsActions';
 import {useTranslation} from 'react-i18next';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useQuery} from '@apollo/react-hooks';
-import {UsagesCountQuery} from '~/editorTabs/AdvancedOptions/Usages/Usages.gql-queries';
+import {UsagesCountQuery} from '~/ContentEditor/editorTabs/AdvancedOptions/Usages/Usages.gql-queries';
 
 const DEPRECATED_GWT_ACTIONS = ['content', 'layout', 'metadata', 'categories', 'options', 'seo', 'usages', 'channels'];
 

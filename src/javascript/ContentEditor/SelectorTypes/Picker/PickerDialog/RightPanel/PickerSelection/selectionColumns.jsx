@@ -2,9 +2,9 @@ import {Button, Close, TableBodyCell} from '@jahia/moonstone';
 import React from 'react';
 import styles from './Selection.scss';
 import {useDispatch} from 'react-redux';
-import {cePickerRemoveSelection} from '~/SelectorTypes/Picker/Picker.redux';
-import {allColumnData} from '~/SelectorTypes/Picker/reactTable/columns';
-import {rowPropType} from '~/SelectorTypes/Picker/reactTable/columns/rowPropType';
+import {cePickerRemoveSelection} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
+import {rowPropType} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/rowPropType';
 
 const ActionsCell = ({row}) => {
     const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import {getChildrenOrder} from '~/utils';
+import {getChildrenOrder} from '~/ContentEditor/utils/index';
 
 describe('getChildrenOrder', () => {
     it('should not modify anything if there is no Children Order field', () => {

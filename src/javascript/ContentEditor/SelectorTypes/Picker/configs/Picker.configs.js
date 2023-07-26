@@ -1,4 +1,4 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {registerUserPicker} from './userPicker';
 import {registerUsergroupPicker} from './usergroupPicker';
 import {registerCategoryPicker} from './categoryPicker';
@@ -7,9 +7,9 @@ import {registerFolderPicker} from './folderPicker';
 import {registerContentFolderPicker} from './contentFolderPicker';
 import {registerMediaPickers} from './mediaPicker/mediaPicker';
 import {registerEditorialLinkPicker} from './editorialLinkPicker';
-import {registerPagePicker} from '~/SelectorTypes/Picker/configs/pagePicker';
-import {PickerSearchQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {registerEditorialPicker} from '~/SelectorTypes/Picker/configs/editorialPicker/editorialPicker';
+import {registerPagePicker} from '~/ContentEditor/SelectorTypes/Picker/configs/pagePicker';
+import {PickerSearchQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {registerEditorialPicker} from '~/ContentEditor/SelectorTypes/Picker/configs/editorialPicker/editorialPicker';
 
 export const registerPickerConfig = registry => {
     registry.add(Constants.pickerConfig, 'default', {});

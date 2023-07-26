@@ -4,14 +4,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 import {push} from 'connected-react-router';
 
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
-import {cmGoto} from '~/redux/JContent.redux-actions';
-import {CloseConfirmationDialog} from '~/CloseConfirmationDialog';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
+import {cmGoto} from '~/ContentEditor/redux/JContent.redux-actions';
+import {CloseConfirmationDialog} from '~/ContentEditor/CloseConfirmationDialog';
 import {GetContentPath} from './ContentPath.gql-queries';
 import {ContentPathView} from './ContentPathView';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
-import {isDirty} from '~/utils';
+import {isDirty} from '~/ContentEditor/utils';
 
 const findLastIndex = (array, callback) => {
     let lastIndex = -1;

@@ -1,8 +1,8 @@
 import {reactTable} from '@jahia/jcontent';
-import {CellVisibleActions} from '~/SelectorTypes/Picker/reactTable/columns/CellVisibleActions';
-import {FileSizeCell} from '~/SelectorTypes/Picker/reactTable/columns/FileSizeCell';
-import {RelPathCell} from '~/SelectorTypes/Picker/reactTable/columns/RelPathCell';
-import {LocationCell} from '~/SelectorTypes/Picker/reactTable/columns/LocationCell';
+import {CellVisibleActions} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/CellVisibleActions';
+import {FileSizeCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/FileSizeCell';
+import {RelPathCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/RelPathCell';
+import {LocationCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/LocationCell';
 
 export const allColumnData = [
     {

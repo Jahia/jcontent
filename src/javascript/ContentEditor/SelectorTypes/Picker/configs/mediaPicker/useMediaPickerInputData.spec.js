@@ -1,6 +1,6 @@
 import {useMediaPickerInputData} from './useMediaPickerInputData';
 import {setQueryResponseMock} from '@apollo/react-hooks';
-import {useContentEditorContext} from '~/contexts';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 jest.mock('@apollo/react-hooks', () => {
     let queryresponsemock;

@@ -1,5 +1,5 @@
-import {Constants} from '~/ContentEditor.constants';
-import {adaptUpdateRequest} from '~/ContentEditor/updateNode/adaptUpdateRequest';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {adaptUpdateRequest} from '~/ContentEditor/ContentEditor/updateNode/adaptUpdateRequest';
 
 describe('adaptSaveRequest', () => {
     it('should not rename node if system name not changed', () => {

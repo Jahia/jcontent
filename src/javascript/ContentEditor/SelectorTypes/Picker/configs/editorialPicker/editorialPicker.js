@@ -1,12 +1,12 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
-import {getPagesSearchContextData} from '~/SelectorTypes/Picker/configs/getPagesSearchContextData';
-import {transformQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {getPagesSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/configs/getPagesSearchContextData';
+import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import {ContentFoldersQueryHandler, ViewModeSelector} from '@jahia/jcontent';
-import {cePickerSetTableViewMode} from '~/SelectorTypes/Picker/Picker.redux';
+import {cePickerSetTableViewMode} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {EditorialContentTypeSelector} from './EditorialContentTypeSelector';
-import {PickerPagesQueryHandler} from '~/SelectorTypes/Picker/configs/editorialPicker/PickerPagesQueryHandler';
+import {PickerPagesQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/editorialPicker/PickerPagesQueryHandler';
 
 const viewModeSelectorProps = {
     selector: state => ({

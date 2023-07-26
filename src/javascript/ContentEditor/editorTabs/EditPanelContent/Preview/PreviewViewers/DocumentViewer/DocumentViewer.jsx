@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FileIcon} from '@jahia/icons';
 import clsx from 'clsx';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './DocumentViewer.scss';
 
 const FileViewer = React.lazy(() => import(/* webpackChunkName: "reactFileViewer" */ 'react-file-viewer'));

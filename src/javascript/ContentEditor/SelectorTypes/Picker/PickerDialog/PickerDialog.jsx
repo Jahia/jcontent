@@ -9,15 +9,15 @@ import {
     cePickerSetMultiple,
     cePickerSetPage,
     cePickerSetSearchTerm
-} from '~/SelectorTypes/Picker/Picker.redux';
+} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {batchActions} from 'redux-batched-actions';
-import {configPropType} from '~/SelectorTypes/Picker/configs/configPropType';
-import {booleanValue} from '~/SelectorTypes/Picker/Picker.utils';
+import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
+import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {useDispatch} from 'react-redux';
 import RightPanel from './RightPanel';
 import {ContentNavigation} from '@jahia/jcontent';
-import {SelectionHandler} from '~/SelectorTypes/Picker/PickerDialog/SelectionHandler';
-import {PickerSiteSwitcher} from '~/SelectorTypes/Picker/PickerDialog/PickerSiteSwitcher';
+import {SelectionHandler} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/SelectionHandler';
+import {PickerSiteSwitcher} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/PickerSiteSwitcher';
 import clsx from 'clsx';
 
 const Transition = props => (

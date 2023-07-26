@@ -1,6 +1,6 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
-import {PickerTreeQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {PickerTreeQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import {FolderSpecial} from '@jahia/moonstone';
 import React from 'react';
 

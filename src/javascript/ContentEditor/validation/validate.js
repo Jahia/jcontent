@@ -1,6 +1,6 @@
-import {extractRangeConstraints, getDynamicFieldSetNameOfField} from '~/utils';
-import dayjs from '~/date.config';
-import {Constants} from '~/ContentEditor.constants';
+import {extractRangeConstraints, getDynamicFieldSetNameOfField} from '~/ContentEditor/utils';
+import dayjs from '~/ContentEditor/date.config';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const dateFieldValidation = (values, field) => {
     const error = 'invalidDate';

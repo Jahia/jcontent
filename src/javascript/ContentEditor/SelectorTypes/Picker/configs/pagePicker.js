@@ -1,7 +1,7 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
-import {getPagesSearchContextData} from '~/SelectorTypes/Picker/configs/getPagesSearchContextData';
-import {PickerTreeQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {getPagesSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/configs/getPagesSearchContextData';
+import {PickerTreeQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 
 export const registerPagePicker = registry => {
     registry.add(Constants.pickerConfig, 'page', {

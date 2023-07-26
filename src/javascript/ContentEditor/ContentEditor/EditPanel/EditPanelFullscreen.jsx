@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './EditPanel.scss';
 import clsx from 'clsx';
 import {registry} from '@jahia/ui-extender';
 import {LayoutContent} from '@jahia/moonstone';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader';
 
 export const EditPanelFullscreen = ({title}) => {

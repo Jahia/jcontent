@@ -1,8 +1,8 @@
 import {CreateNode} from './createNode.gql-mutation';
-import {getDataToMutate} from '~/utils';
-import {Constants} from '~/ContentEditor.constants';
+import {getDataToMutate} from '~/ContentEditor/utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {registry} from '@jahia/ui-extender';
-import {onServerError} from '~/validation';
+import {onServerError} from '~/ContentEditor/validation';
 import {adaptCreateRequest} from './adaptCreateRequest';
 
 export const createNode = ({

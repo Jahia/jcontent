@@ -1,4 +1,4 @@
-import {extractRangeConstraints} from '~/utils';
+import {extractRangeConstraints} from '~/ContentEditor/utils/index';
 
 describe('extractRangeConstraints', () => {
     it('should extract range constraints', () => {

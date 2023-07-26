@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {PickerDialog} from '~/SelectorTypes/Picker';
-import {useContentEditorApiContext} from '~/contexts/ContentEditorApi/ContentEditorApi.context';
-import {mergeDeep} from '~/SelectorTypes/Picker/Picker.utils';
-import {DefaultPickerConfig} from '~/SelectorTypes/Picker/configs/DefaultPickerConfig';
+import {PickerDialog} from '~/ContentEditor/SelectorTypes/Picker';
+import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
+import {mergeDeep} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {registry} from '@jahia/ui-extender';
 
 export const ContentPickerApi = () => {

@@ -1,7 +1,7 @@
 import {Chip, TableBodyCell, Typography} from '@jahia/moonstone';
 import React from 'react';
 import {DisplayAction} from '@jahia/ui-extender';
-import {ButtonRendererNoLabel} from '~/utils';
+import {ButtonRendererNoLabel} from '~/ContentEditor/utils';
 import styles from './Cells.scss';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';

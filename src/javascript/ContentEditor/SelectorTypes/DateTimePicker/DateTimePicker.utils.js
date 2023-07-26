@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {extractRangeConstraints} from '~/utils';
+import {extractRangeConstraints} from '~/ContentEditor/utils';
 
 const _buildDisableDay = (type, boundary, disableBoundary, datetime, offset) => {
     if (boundary && boundary.length > 0) {

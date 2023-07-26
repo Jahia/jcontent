@@ -3,13 +3,13 @@ import {useTranslation} from 'react-i18next';
 import styles from './Usages.scss';
 import {Table, TableBody, TablePagination, TableRow, Typography} from '@jahia/moonstone';
 import {useTable} from 'react-table';
-import {allColumnData} from '~/SelectorTypes/Picker/reactTable/columns';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {ContentListHeader, reactTable} from '@jahia/jcontent';
 import {useQuery} from '@apollo/react-hooks';
-import {useContentEditorConfigContext} from '~/contexts';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {UsagesQuery} from './Usages.gql-queries';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 const defaultCols = ['publicationStatus', 'name', 'type', 'location'];
 const columns = defaultCols.map(c => (typeof c === 'string') ? allColumnData.find(col => col.id === c) : c);

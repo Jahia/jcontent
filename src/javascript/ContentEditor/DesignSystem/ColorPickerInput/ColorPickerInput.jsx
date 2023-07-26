@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Popover} from '@material-ui/core';
 import {Input} from '@jahia/design-system-kit';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {HexColorPicker} from 'react-colorful';
 import {Button, Palette} from '@jahia/moonstone';
 import styles from './ColorPickerInput.scss';

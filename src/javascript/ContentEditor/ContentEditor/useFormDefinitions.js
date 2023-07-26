@@ -1,8 +1,8 @@
 import {useQuery} from '@apollo/react-hooks';
 import {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorConfigContext} from '~/contexts';
-import {Constants} from '~/ContentEditor.constants';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useSelector} from 'react-redux';
 
 export const useFormDefinition = (query, adapter) => {

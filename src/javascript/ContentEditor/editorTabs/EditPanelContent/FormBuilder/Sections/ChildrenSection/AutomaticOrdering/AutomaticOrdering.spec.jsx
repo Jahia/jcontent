@@ -3,9 +3,9 @@ import {dsGenericTheme} from '@jahia/design-system-kit';
 import React from 'react';
 import {listOrderingFieldSet} from './AutomaticOrdering.spec.data';
 import {AutomaticOrdering} from './AutomaticOrdering';
-import {useContentEditorContext} from '~/contexts';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {adaptSectionToDisplayableRows, getDisplayedRows} from './AutomaticOrdering.utils';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
 
 jest.mock('formik');

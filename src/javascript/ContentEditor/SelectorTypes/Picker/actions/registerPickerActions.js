@@ -1,5 +1,5 @@
 import React from 'react';
-import {unsetFieldAction} from '~/SelectorTypes/actions/unsetFieldAction';
+import {unsetFieldAction} from '~/ContentEditor/SelectorTypes/actions/unsetFieldAction';
 import {Close, Edit, MoreVert, Upload, Visibility} from '@jahia/moonstone';
 import {replaceAction} from './replaceAction';
 import {openInTabAction} from './openInTabAction';

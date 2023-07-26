@@ -1,4 +1,4 @@
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useCallback} from 'react';
 
 export const useEdit = setEditorConfig => {

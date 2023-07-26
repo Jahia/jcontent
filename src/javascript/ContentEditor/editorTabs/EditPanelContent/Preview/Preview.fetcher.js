@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useContentPreview} from '@jahia/data-helper';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
-import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/EditPanel/EditPanel.refetches';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches';
 import {PreviewViewer} from './PreviewViewers';
 import {getPreviewContext} from './Preview.utils';
 import {useTranslation} from 'react-i18next';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 export const PreviewFetcher = React.memo(({onContentNotFound}) => {
     const {t} = useTranslation('content-editor');

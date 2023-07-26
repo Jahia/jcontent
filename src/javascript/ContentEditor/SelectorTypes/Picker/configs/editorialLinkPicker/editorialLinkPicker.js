@@ -1,9 +1,9 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {EditorialLinkContentTypeSelector} from './EditorialLinkContentTypeSelector';
 import {renderer} from '../renderer';
 import React from 'react';
 import {PickerEditorialLinkQueryHandler} from './PickerEditorialLinkQueryHandler';
-import {getPagesSearchContextData} from '~/SelectorTypes/Picker/configs/getPagesSearchContextData';
+import {getPagesSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/configs/getPagesSearchContextData';
 
 export const registerEditorialLinkPicker = registry => {
     registry.add(Constants.pickerConfig, 'editoriallink', {

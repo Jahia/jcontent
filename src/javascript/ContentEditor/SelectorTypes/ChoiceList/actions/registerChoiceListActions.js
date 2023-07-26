@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {unsetFieldAction} from '~/SelectorTypes/actions/unsetFieldAction';
+import {unsetFieldAction} from '~/ContentEditor/SelectorTypes/actions/unsetFieldAction';
 import {Add, Close, MoreVert} from '@jahia/moonstone';
 import {selectAllAction} from './selectAllAction';
 

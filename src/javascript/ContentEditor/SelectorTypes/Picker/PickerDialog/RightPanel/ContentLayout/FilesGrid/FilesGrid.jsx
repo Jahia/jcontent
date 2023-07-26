@@ -16,11 +16,11 @@ import {
     cePickerRemoveSelection,
     cePickerSetPage,
     cePickerSetPageSize
-} from '~/SelectorTypes/Picker/Picker.redux';
-import {getDetailedPathArray} from '~/SelectorTypes/Picker/Picker.utils';
+} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {getDetailedPathArray} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import {registry} from '@jahia/ui-extender';
-import {configPropType} from '~/SelectorTypes/Picker/configs/configPropType';
+import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 
 const reduxActions = {
     setOpenPathAction: path => cePickerOpenPaths(getDetailedPathArray(path)),

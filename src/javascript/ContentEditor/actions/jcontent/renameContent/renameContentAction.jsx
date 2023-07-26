@@ -3,9 +3,9 @@ import {useNodeChecks} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorApiContext} from '~/contexts/ContentEditorApi/ContentEditorApi.context';
-import {RenameLayout} from '~/actions/jcontent/renameContent/RenameLayout';
-import {useRenameFormDefinition} from '~/actions/jcontent/renameContent/useRenameFormDefinition';
+import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
+import {RenameLayout} from '~/ContentEditor/actions/jcontent/renameContent/RenameLayout';
+import {useRenameFormDefinition} from '~/ContentEditor/actions/jcontent/renameContent/useRenameFormDefinition';
 
 export const RenameContent = ({path, editCallback, render: Render, loading: Loading, ...otherProps}) => {
     useTranslation('content-editor');

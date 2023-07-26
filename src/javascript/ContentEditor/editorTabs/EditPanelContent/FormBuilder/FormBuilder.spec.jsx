@@ -4,8 +4,8 @@ import {dsGenericTheme} from '@jahia/design-system-kit';
 
 import {FormBuilder} from './FormBuilder';
 import {useFormikContext} from 'formik';
-import {useContentEditorContext, useContentEditorConfigContext, useContentEditorSectionContext} from '~/contexts';
-import {Constants} from '~/ContentEditor.constants';
+import {useContentEditorContext, useContentEditorConfigContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('connected-react-router', () => ({}));
 jest.mock('formik');

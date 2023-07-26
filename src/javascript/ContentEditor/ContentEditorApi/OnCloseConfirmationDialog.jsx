@@ -1,9 +1,9 @@
 import React, {useImperativeHandle, useState} from 'react';
-import {CloseConfirmationDialog} from '~/CloseConfirmationDialog';
+import {CloseConfirmationDialog} from '~/ContentEditor/CloseConfirmationDialog';
 import {useFormikContext} from 'formik';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
-import {isDirty} from '~/utils';
-import {useContentEditorConfigContext} from '~/contexts';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {isDirty} from '~/ContentEditor/utils';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 
 export const OnCloseConfirmationDialog = React.forwardRef((props, ref) => {
     const [confirmationConfig, setConfirmationConfig] = useState(false);

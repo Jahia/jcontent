@@ -4,9 +4,9 @@ import {DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import styles from './RenameLayout.scss';
 import {Typography} from '@jahia/moonstone';
 import clsx from 'clsx';
-import {EditPanelContent} from '~/editorTabs/EditPanelContent';
+import {EditPanelContent} from '~/ContentEditor/editorTabs/EditPanelContent';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {getButtonRenderer} from '~/utils';
+import {getButtonRenderer} from '~/ContentEditor/utils';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big'},

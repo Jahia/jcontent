@@ -4,7 +4,7 @@ import {dsGenericTheme} from '@jahia/design-system-kit';
 import {ChildrenSection} from './ChildrenSection';
 import {listOrderingFieldSet} from './AutomaticOrdering/AutomaticOrdering.spec.data';
 import {useFormikContext} from 'formik';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('formik');
 jest.mock('~/contexts/ContentEditorSection/ContentEditorSection.context');

@@ -1,23 +1,23 @@
 import React, {useEffect, useRef} from 'react';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {Dialog, IconButton, Slide} from '@material-ui/core';
 import styles from './ContentEditorModal.scss';
 import PropTypes from 'prop-types';
 import {useDispatch} from 'react-redux';
-import {ceSwitchLanguage, ceToggleSections} from '~/registerReducer';
+import {ceSwitchLanguage, ceToggleSections} from '~/ContentEditor/registerReducer';
 import {Button, Close} from '@jahia/moonstone';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 import {OnCloseConfirmationDialog} from './OnCloseConfirmationDialog';
-import {EditPanelCompact} from '~/ContentEditor/EditPanel/EditPanelCompact';
-import {EditPanelFullscreen} from '~/ContentEditor/EditPanel/EditPanelFullscreen';
+import {EditPanelCompact} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelCompact';
+import {EditPanelFullscreen} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelFullscreen';
 import {useApolloClient} from '@apollo/react-hooks';
-import {useCreateFormDefinition} from '~/ContentEditor/useCreateFormDefinition';
-import {useEditFormDefinition} from '~/ContentEditor/useEditFormDefinition';
+import {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';
+import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 import {registry} from '@jahia/ui-extender';
-import {ContentEditorConfigContextProvider, ContentEditorContextProvider} from '~/contexts';
-import {Edit} from '~/ContentEditor/Edit';
-import {Create} from '~/ContentEditor/Create';
+import {ContentEditorConfigContextProvider, ContentEditorContextProvider} from '~/ContentEditor/contexts';
+import {Edit} from '~/ContentEditor/ContentEditor/Edit';
+import {Create} from '~/ContentEditor/ContentEditor/Create';
 
 function triggerEvents(nodeUuid, operator) {
     // Refresh contentEditorEventHandlers

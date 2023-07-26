@@ -7,8 +7,8 @@ import {
     useContentEditorConfigContext,
     useContentEditorContext,
     useContentEditorSectionContext
-} from '~/contexts';
-import {validate} from '~/validation';
+} from '~/ContentEditor/contexts';
+import {validate} from '~/ContentEditor/validation';
 import {updateNode} from './updateNode';
 import {LockManager} from './LockManager';
 import {useTranslation} from 'react-i18next';

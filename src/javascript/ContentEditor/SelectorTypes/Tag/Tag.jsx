@@ -1,12 +1,12 @@
 import {useTranslation} from 'react-i18next';
-import {MultipleInput} from '~/DesignSystem/MultipleInput';
+import {MultipleInput} from '~/ContentEditor/DesignSystem/MultipleInput';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {adaptSelection} from './Tag.utils';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {useApolloClient} from '@apollo/react-hooks';
 import {getSuggestionsTagsQuery} from './Tag.gql-queries';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const Tag = ({field, value, id, onChange, onBlur}) => {
     const {t} = useTranslation('content-editor');

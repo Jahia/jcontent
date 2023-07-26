@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import styles from './EditPanel.scss';
 import clsx from 'clsx';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {Button, Checkbox, Edit, Typography} from '@jahia/moonstone';
-import {getButtonRenderer, truncate} from '~/utils';
+import {getButtonRenderer, truncate} from '~/ContentEditor/utils';
 import {EditPanelLanguageSwitcher} from './EditPanelLanguageSwitcher';
 import {useTranslation} from 'react-i18next';
 import {HeaderBadges} from './HeaderBadges';

@@ -1,5 +1,5 @@
-import {Constants} from '~/ContentEditor.constants';
-import {encodeSystemName} from '~/utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {encodeSystemName} from '~/ContentEditor/utils';
 
 /**
  * This fct allow to adapt/modify the create request data, before sending them to the server

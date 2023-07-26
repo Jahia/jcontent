@@ -1,7 +1,7 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 import {Checkbox} from '@jahia/moonstone';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 
 export const Boolean = ({field, value, id, onChange, onBlur}) => {
     return (

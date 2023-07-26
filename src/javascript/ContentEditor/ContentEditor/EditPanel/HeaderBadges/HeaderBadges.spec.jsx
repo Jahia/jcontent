@@ -1,9 +1,9 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {HeaderBadges} from './HeaderBadges';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 jest.mock('~/contexts/ContentEditor/ContentEditor.context');
 jest.mock('formik');

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Input} from '@jahia/design-system-kit';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {Hidden, Visibility} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 

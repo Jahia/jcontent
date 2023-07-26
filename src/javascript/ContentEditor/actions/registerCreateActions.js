@@ -3,9 +3,9 @@ import {AddCircle, Save} from '@jahia/moonstone';
 
 import {createContentAction} from './jcontent/createContent/createContentAction';
 import {createAction} from './contenteditor/create/createAction';
-import {cmGoto} from '~/redux/JContent.redux-actions';
+import {cmGoto} from '~/ContentEditor/redux/JContent.redux-actions';
 import {batchActions} from 'redux-batched-actions';
-import {booleanValue} from '~/SelectorTypes/Picker/Picker.utils';
+import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 
 export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContent', createContentAction, {

@@ -3,9 +3,9 @@ import {useNotifications} from '@jahia/react-material';
 import {Formik} from 'formik';
 import {EditPanel} from './EditPanel';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 
-import {validate} from '~/validation';
+import {validate} from '~/ContentEditor/validation';
 import {createNode} from './createNode';
 import {useApolloClient} from '@apollo/react-hooks';
 

@@ -1,4 +1,4 @@
-import {resolveSelectorType} from '~/SelectorTypes/resolveSelectorType';
+import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 
 export const getFieldValuesFromDefaultValues = field => {
     const selectorType = resolveSelectorType(field);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {Button} from '@jahia/moonstone';
-import {CeModalError} from '~/ContentEditorApi/ContentEditorError';
+import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError/index';
 import {useTranslation} from 'react-i18next';
 import styles from '../ContentEditorModal.scss';
 import modalStyles from './ContentEditorError.scss';

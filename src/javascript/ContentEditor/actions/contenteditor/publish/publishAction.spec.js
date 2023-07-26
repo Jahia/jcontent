@@ -1,9 +1,9 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {publishAction} from './publishAction';
-import {Constants} from '~/ContentEditor.constants';
-import {usePublicationInfoContext} from '~/contexts/PublicationInfo';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {usePublicationInfoContext} from '~/ContentEditor/contexts/PublicationInfo';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
 
 jest.mock('./publishNode', () => {

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {Dropdown, toIconComponent} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '~/utils';
+import {getButtonRenderer} from '~/ContentEditor/utils';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 

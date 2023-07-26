@@ -5,7 +5,7 @@ import {LockInfoChip} from './LockInfoChip';
 import {WipInfoChip} from './WipInfoChip';
 import {UnsavedChip} from './UnsavedChip';
 import {ReadOnlyBadge} from './ReadOnlyBadge';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './HeaderBadges.scss';
 
 export const HeaderBadges = ({mode}) => (

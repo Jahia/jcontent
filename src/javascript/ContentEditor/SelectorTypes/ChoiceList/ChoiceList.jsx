@@ -1,5 +1,5 @@
 import React from 'react';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 
 import {SingleSelect} from './SingleSelect/SingleSelect';
 import {MultipleSelect} from './MultipleSelect/MultipleSelect';

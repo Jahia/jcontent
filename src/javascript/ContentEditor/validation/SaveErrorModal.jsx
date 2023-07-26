@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 import {Button, Typography, Warning} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {getCapitalized} from '~/utils';
+import {getCapitalized} from '~/ContentEditor/utils';
 import styles from './SaveErrorModal.scss';
 
 export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) => {

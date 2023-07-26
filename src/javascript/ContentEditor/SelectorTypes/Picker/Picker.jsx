@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
-import {ReferenceCard} from '~/DesignSystem/ReferenceCard';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
+import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {mergeDeep, set, toArray} from './Picker.utils';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '~/utils';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {getButtonRenderer} from '~/ContentEditor/utils';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './Picker.scss';
 import {Button} from '@jahia/moonstone';
-import {DefaultPickerConfig} from '~/SelectorTypes/Picker/configs/DefaultPickerConfig';
+import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
-import {OrderableValue} from '~/DesignSystem/OrderableValue/OrderableValue';
-import {useContentEditorConfigContext} from '~/contexts';
+import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 

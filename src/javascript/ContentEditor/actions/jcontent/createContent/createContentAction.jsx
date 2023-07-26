@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux';
 import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorApiContext} from '~/contexts/ContentEditorApi/ContentEditorApi.context';
+import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 
 export const CreateContent = ({contextNodePath, path, showOnNodeTypes, nodeTypes, name, includeSubTypes, isFullscreen, hasBypassChildrenLimit, onCreate, onClosed, render: Render, loading: Loading, ...otherProps}) => {
     const api = useContentEditorApiContext();

@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {cePickerAddSelection, cePickerClearSelection} from '~/SelectorTypes/Picker/Picker.redux';
+import {cePickerAddSelection, cePickerClearSelection} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {useGetLatest} from 'react-table';
 import {batchActions} from 'redux-batched-actions';
 

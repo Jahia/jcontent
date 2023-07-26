@@ -3,7 +3,7 @@ import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import {CloseConfirmationDialog} from './CloseConfirmationDialog';
 import {useFormikContext} from 'formik';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 jest.mock('formik');
 jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => ({useContentEditorContext: jest.fn()}));

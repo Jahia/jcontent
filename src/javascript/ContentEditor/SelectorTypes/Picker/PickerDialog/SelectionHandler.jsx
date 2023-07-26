@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {replaceFragmentsInDocument, useNodeInfo} from '@jahia/data-helper';
 import {useQuery} from '@apollo/react-hooks';
-import {GET_PICKER_NODE} from '~/SelectorTypes/Picker';
+import {GET_PICKER_NODE} from '~/ContentEditor/SelectorTypes/Picker';
 import {
     cePickerMode,
     cePickerModes,
@@ -12,14 +12,14 @@ import {
     cePickerSetSort,
     cePickerSetTableViewType,
     cePickerSite
-} from '~/SelectorTypes/Picker/Picker.redux';
+} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {registry} from '@jahia/ui-extender';
-import {getDetailedPathArray, getPathWithoutFile} from '~/SelectorTypes/Picker/Picker.utils';
+import {getDetailedPathArray, getPathWithoutFile} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import PropTypes from 'prop-types';
-import {configPropType} from '~/SelectorTypes/Picker/configs/configPropType';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {jcontentUtils} from '@jahia/jcontent';
 
 function getSite(selectedItem) {

@@ -13,7 +13,7 @@ import {
 } from '@jahia/moonstone';
 import clsx from 'clsx';
 import styles from './PDFViewer.scss';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 

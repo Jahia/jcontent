@@ -3,7 +3,7 @@ import {shallowWithTheme} from '@jahia/test-framework';
 
 import {Field, showChipField} from './Field';
 import {dsGenericTheme} from '@jahia/design-system-kit';
-import Text from '~/SelectorTypes/Text/Text';
+import Text from '~/ContentEditor/SelectorTypes/Text/Text';
 import {registry} from '@jahia/ui-extender';
 import {setResponseMock} from '@apollo/react-hooks';
 import {useFormikContext} from 'formik';

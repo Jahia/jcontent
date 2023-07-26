@@ -1,4 +1,4 @@
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const setError = (language, constraintViolation, formikActions, fieldName, i18nContext, message) => {
     if (!constraintViolation.locale || language === constraintViolation.locale) {

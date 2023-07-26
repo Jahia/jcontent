@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {useQuery} from '@apollo/react-hooks';
 import {GetCategories} from './category.gql-queries';
 import {useTranslation} from 'react-i18next';
 import {adaptToCategoryTree} from './category.adapter';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Dropdown} from '@jahia/moonstone';
 
 export const Category = ({field, value, id, editorContext, onChange, onBlur}) => {

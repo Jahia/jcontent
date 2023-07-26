@@ -1,13 +1,13 @@
 import React, {useCallback} from 'react';
 import * as PropTypes from 'prop-types';
 import {publishNode} from './publishNode';
-import {Constants} from '~/ContentEditor.constants';
-import {useContentEditorContext, usePublicationInfoContext} from '~/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {useContentEditorContext, usePublicationInfoContext} from '~/ContentEditor/contexts';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useFormikContext} from 'formik';
-import {isDirty} from '~/utils';
+import {isDirty} from '~/ContentEditor/utils';
 
 const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
     const notificationContext = useNotifications();

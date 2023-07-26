@@ -1,5 +1,5 @@
 import {validate} from './validate';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 describe('validate', () => {
     const buildSections = (fieldOptions = {}) => {

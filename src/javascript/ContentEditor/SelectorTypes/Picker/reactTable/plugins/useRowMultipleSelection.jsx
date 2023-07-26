@@ -3,9 +3,9 @@ import {
     cePickerAddSelection,
     cePickerRemoveSelection,
     cePickerSwitchSelection
-} from '~/SelectorTypes/Picker/Picker.redux';
+} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {useGetLatest} from 'react-table';
-import {flattenTree} from '~/SelectorTypes/Picker/Picker.utils';
+import {flattenTree} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 
 export const useRowMultipleSelection = hooks => {
     hooks.getToggleRowSelectedProps = defaultGetToggleRowSelectedProps;

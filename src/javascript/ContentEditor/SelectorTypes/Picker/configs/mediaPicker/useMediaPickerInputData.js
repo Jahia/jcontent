@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/react-hooks';
 import {MediaPickerFilledQuery} from './MediaPicker.gql-queries';
-import {encodeJCRPath} from '~/utils';
-import {useContentEditorContext} from '~/contexts';
+import {encodeJCRPath} from '~/ContentEditor/utils';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 export const useMediaPickerInputData = uuids => {
     const {lang} = useContentEditorContext();

@@ -1,4 +1,4 @@
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {replaceSpecialCharacters} from './SystemName.utils';
 
 export const registerSystemNameOnChange = registry => {

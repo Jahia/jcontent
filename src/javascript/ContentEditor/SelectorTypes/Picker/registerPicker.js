@@ -1,8 +1,8 @@
 import {registerPickerConfig} from './configs/Picker.configs';
 import {registerPickerActions} from './actions/registerPickerActions';
 import {Picker} from './Picker';
-import {registerPickerReducer} from '~/SelectorTypes/Picker/Picker.redux';
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {registerPickerReducer} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 
 /**
  * If picker type is not specified, infer based on field value constraints

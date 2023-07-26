@@ -2,7 +2,7 @@ import {Collapsible} from '@jahia/moonstone';
 import {FieldSet} from '../../FieldSet';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {SectionPropTypes} from '~/ContentEditor.proptypes';
+import {SectionPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 
 const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {

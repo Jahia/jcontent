@@ -1,11 +1,11 @@
 import {SavePropertiesMutation} from './updateNode.gql-mutation';
-import {getChildrenOrder, getDataToMutate} from '~/utils';
+import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
 import {refetchPreview} from '../EditPanel/EditPanel.refetches';
-import {getPreviewPath} from '~/editorTabs/EditPanelContent/Preview/Preview.utils';
-import {PublicationInfoQuery} from '~/contexts/PublicationInfo/PublicationInfo.gql-queries';
-import {Constants} from '~/ContentEditor.constants';
+import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
+import {PublicationInfoQuery} from '~/ContentEditor/contexts/PublicationInfo/PublicationInfo.gql-queries';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {registry} from '@jahia/ui-extender';
-import {onServerError} from '~/validation';
+import {onServerError} from '~/ContentEditor/validation';
 import {adaptUpdateRequest} from './adaptUpdateRequest';
 
 export const updateNode = ({

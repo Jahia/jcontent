@@ -7,8 +7,8 @@ import {ApolloCacheFlushOnGWTSave} from './ApolloCacheFlushOnGWTSave';
 import {ContentEditorSectionContextProvider} from '../ContentEditorSection';
 import {useContentEditorConfigContext} from '../ContentEditorConfig';
 import {shallowEqual, useSelector} from 'react-redux';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
-import {CeModalError} from '~/ContentEditorApi/ContentEditorError';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
+import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const ContentEditorContext = React.createContext({});
 

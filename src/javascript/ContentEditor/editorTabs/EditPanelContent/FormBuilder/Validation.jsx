@@ -1,13 +1,13 @@
 import styles from './Validation.scss';
 import React, {useMemo} from 'react';
 import {useFormikContext} from 'formik';
-import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
-import {ceToggleSections} from '~/registerReducer';
+import {ceToggleSections} from '~/ContentEditor/registerReducer';
 import {Typography, Warning} from '@jahia/moonstone';
 import clsx from 'clsx';
-import {getCapitalized, useSwitchLanguage} from '~/utils';
+import {getCapitalized, useSwitchLanguage} from '~/ContentEditor/utils';
 
 function scrollTo(field) {
     const fieldElement = window.document.querySelector('div[data-sel-content-editor-field="' + field + '"]');

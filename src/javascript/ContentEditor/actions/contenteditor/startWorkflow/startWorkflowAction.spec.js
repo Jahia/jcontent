@@ -1,9 +1,9 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {startWorkflowAction} from './startWorkflowAction';
 import {useFormikContext} from 'formik';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 
 jest.mock('formik');
 jest.mock('~/contexts/ContentEditor/ContentEditor.context');

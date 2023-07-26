@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
-import {cePickerMode, cePickerOpenPaths, cePickerPath, cePickerSite} from '~/SelectorTypes/Picker/Picker.redux';
-import {getDetailedPathArray} from '~/SelectorTypes/Picker/Picker.utils';
+import {cePickerMode, cePickerOpenPaths, cePickerPath, cePickerSite} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {getDetailedPathArray} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import {SiteSwitcher, jcontentUtils} from '@jahia/jcontent';
-import {configPropType} from '~/SelectorTypes/Picker/configs/configPropType';
+import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import PropTypes from 'prop-types';
 
 const switcherSelector = state => ({

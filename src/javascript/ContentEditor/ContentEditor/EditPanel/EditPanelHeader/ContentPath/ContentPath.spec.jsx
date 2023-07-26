@@ -4,12 +4,12 @@ import {useQuery} from '@apollo/react-hooks';
 import {shallow} from '@jahia/test-framework';
 
 import {push} from 'connected-react-router';
-import {cmGoto} from '~/redux/JContent.redux-actions';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {cmGoto} from '~/ContentEditor/redux/JContent.redux-actions';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 
 import {GetContentPath} from './ContentPath.gql-queries';
 import {ContentPath} from './ContentPath';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
 
 jest.mock('connected-react-router', () => ({

@@ -2,9 +2,9 @@ import React from 'react';
 import {shallowWithTheme} from '@jahia/test-framework';
 
 import {dsGenericTheme} from '@jahia/design-system-kit';
-import Text from '~/SelectorTypes/Text/Text';
+import Text from '~/ContentEditor/SelectorTypes/Text/Text';
 import {MultipleField} from './MultipleField';
-import {TextAreaField} from '~/SelectorTypes/TextAreaField/TextAreaField';
+import {TextAreaField} from '~/ContentEditor/SelectorTypes/TextAreaField/TextAreaField';
 import {useFormikContext} from 'formik';
 
 jest.mock('formik');

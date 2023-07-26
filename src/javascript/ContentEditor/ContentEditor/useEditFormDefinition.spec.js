@@ -1,5 +1,5 @@
 import {adaptEditFormData} from './useEditFormDefinition';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('~/SelectorTypes/resolveSelectorType', () => {
     return {

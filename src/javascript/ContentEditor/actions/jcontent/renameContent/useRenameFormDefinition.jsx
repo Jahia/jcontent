@@ -1,4 +1,4 @@
-import {useEditFormDefinition} from '~/ContentEditor/useEditFormDefinition';
+import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 
 export const useRenameFormDefinition = () => {
     const {data, refetch, loading, error, errorMessage} = useEditFormDefinition();

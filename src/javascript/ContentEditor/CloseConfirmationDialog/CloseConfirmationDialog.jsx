@@ -5,7 +5,7 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {SaveButton} from './SaveButton';
 import styles from './CloseConfirmationDialog.scss';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const CloseConfirmationDialog = React.memo(({isOpen, onCloseDialog, actionCallback}) => {
     const {t} = useTranslation('content-editor');

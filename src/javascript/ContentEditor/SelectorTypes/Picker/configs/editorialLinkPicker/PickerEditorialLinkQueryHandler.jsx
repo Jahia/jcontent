@@ -1,5 +1,5 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
-import {PickerTreeQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {PickerTreeQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 
 export const PickerEditorialLinkQueryHandler = {
     ...PickerTreeQueryHandler,

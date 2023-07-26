@@ -1,15 +1,15 @@
 import React, {useContext, useEffect} from 'react';
 import CKEditor from 'ckeditor4-react';
 import * as PropTypes from 'prop-types';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {useQuery} from '@apollo/react-hooks';
 import {getCKEditorConfigurationPath} from './CKEditorConfiguration.gql-queries';
-import {ContentEditorContext, useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {ContentEditorContext, useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {useTranslation} from 'react-i18next';
 import {fillCKEditorPicker, getPickerValue} from './RichText.utils';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import './RichText.scss';
-import {useContentEditorApiContext} from '~/contexts/ContentEditorApi/ContentEditorApi.context';
+import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 
 if (window.CKEDITOR) {
     window.CKEDITOR.focusManager._.blurDelay = 0;

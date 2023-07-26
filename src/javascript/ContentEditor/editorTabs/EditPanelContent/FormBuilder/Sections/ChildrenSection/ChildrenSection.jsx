@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Toggle} from '@jahia/design-system-kit';
-import {SectionPropTypes} from '~/ContentEditor.proptypes';
+import {SectionPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {ManualOrdering} from './ManualOrdering';
 import {useTranslation} from 'react-i18next';
 import {AutomaticOrdering} from './AutomaticOrdering';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {Chip, Collapsible, Language, Typography} from '@jahia/moonstone';
 import {FieldSet} from '../../FieldSet';
 import {useFormikContext} from 'formik';

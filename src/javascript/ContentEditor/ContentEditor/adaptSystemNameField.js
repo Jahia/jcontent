@@ -1,5 +1,5 @@
-import {Constants} from '~/ContentEditor.constants';
-import {decodeSystemName} from '~/utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {decodeSystemName} from '~/ContentEditor/utils';
 
 const isContentOrFileNode = formData => {
     const pattern = '^/sites/[^/]*/(contents|files)$';

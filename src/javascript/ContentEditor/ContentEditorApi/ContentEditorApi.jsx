@@ -2,12 +2,12 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useEdit} from './useEdit';
 import {useCreate} from './useCreate';
 import {ContentEditorModal} from './ContentEditorModal';
-import {useContentEditorApiContext} from '~/contexts/ContentEditorApi/ContentEditorApi.context';
-import {ContentTypeSelectorModal} from '~/ContentTypeSelectorModal';
-import {Constants} from '~/ContentEditor.constants';
+import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
+import {ContentTypeSelectorModal} from '~/ContentEditor/ContentTypeSelectorModal';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useHistory, useLocation} from 'react-router-dom';
 import rison from 'rison-node';
-import {CeModalError} from '~/ContentEditorApi/ContentEditorError';
+import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 function decode(hash) {
     let values = {};

@@ -4,7 +4,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {
     PreviewInTabActionQueryByPath,
     PreviewInTabActionQueryByUuid
-} from '~/SelectorTypes/Picker/actions/previewInTabAction.gql-queries';
+} from '~/ContentEditor/SelectorTypes/Picker/actions/previewInTabAction.gql-queries';
 
 function getPath(data) {
     if (data.jcr.result?.previewAvailable) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {LinearProgress} from '@material-ui/core';
-import {usePublicationInfoContext} from '~/contexts';
+import {usePublicationInfoContext} from '~/ContentEditor/contexts';
 import styles from './PublicationInfoProgress.scss';
 
 export const PublicationInfoProgress = () => {

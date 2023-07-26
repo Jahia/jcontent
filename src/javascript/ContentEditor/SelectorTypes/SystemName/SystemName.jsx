@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
-import {Text} from '~/SelectorTypes/Text';
-import {Constants} from '~/ContentEditor.constants';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
+import {Text} from '~/ContentEditor/SelectorTypes/Text';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {isEqualToSystemName, replaceSpecialCharacters} from './SystemName.utils';
 import {Button, Copy} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';

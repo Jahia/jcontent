@@ -1,7 +1,7 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {Collections} from '@jahia/moonstone';
-import {PickerTreeQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
+import {PickerTreeQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 
 export const registerCategoryPicker = registry => {

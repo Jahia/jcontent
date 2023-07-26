@@ -1,4 +1,4 @@
-import {encodeJCRPath} from '~/utils';
+import {encodeJCRPath} from '~/ContentEditor/utils/index';
 
 describe('encodeJCRPath', () => {
     it('should encode jcr path', () => {

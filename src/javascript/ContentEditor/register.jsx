@@ -2,12 +2,12 @@ import React from 'react';
 import {registry} from '@jahia/ui-extender';
 import {registerActions} from './registerActions';
 import {ContentEditorApi, ContentPickerApi} from './ContentEditorApi';
-import {registerSelectorTypes} from '~/SelectorTypes';
-import {pcNavigateTo} from '~/redux/pagecomposer.redux-actions';
+import {registerSelectorTypes} from '~/ContentEditor/SelectorTypes';
+import {pcNavigateTo} from '~/ContentEditor/redux/pagecomposer.redux-actions';
 import {registerReducer} from './registerReducer';
-import {ContentEditorApiContextProvider} from '~/contexts/ContentEditorApi/ContentEditorApi.context';
-import hashes from './localesHash!';
-import {ContentEditorError} from '~/ContentEditorApi/ContentEditorError';
+import {ContentEditorApiContextProvider} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
+import hashes from './localesHash!.';
+import {ContentEditorError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};

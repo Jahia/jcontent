@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
-import {isDirty} from '~/utils';
+import {isDirty} from '~/ContentEditor/utils';
 import {useHistory} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 

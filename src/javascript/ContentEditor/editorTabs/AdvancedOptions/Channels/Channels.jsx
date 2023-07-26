@@ -1,7 +1,7 @@
 import React from 'react';
-import {useContentEditorSectionContext} from '~/contexts';
-import {Validation} from '~/editorTabs/EditPanelContent/FormBuilder/Validation';
-import {FieldSet} from '~/editorTabs/EditPanelContent/FormBuilder/FieldSet';
+import {useContentEditorSectionContext} from '~/ContentEditor/contexts';
+import {Validation} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Validation';
+import {FieldSet} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet';
 import styles from './Channels.scss';
 
 const filterRegularFieldSets = fieldSets => {

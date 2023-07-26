@@ -1,8 +1,8 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './TechnicalInformation.scss';
-import {InfoPanel} from '~/DesignSystem/InfoPanel';
+import {InfoPanel} from '~/ContentEditor/DesignSystem/InfoPanel';
 
 export const TechnicalInformation = () => {
     const {t} = useTranslation('content-editor');

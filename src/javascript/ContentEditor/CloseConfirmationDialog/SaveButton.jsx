@@ -3,7 +3,7 @@ import {useFormikContext} from 'formik';
 import {Button} from '@jahia/moonstone';
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const SaveButton = ({onCloseDialog, actionCallback}) => {
     const {t} = useTranslation('content-editor');

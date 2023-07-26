@@ -4,7 +4,7 @@ import {Button, Check, Typography} from '@jahia/moonstone';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './WorkInProgressDialog.scss';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const WorkInProgressDialog = ({
     currentLanguage,

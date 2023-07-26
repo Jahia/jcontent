@@ -1,5 +1,5 @@
 import {isEqualToSystemName, replaceSpecialCharacters} from './SystemName.utils';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 describe('SystemName utils', () => {
     let field;

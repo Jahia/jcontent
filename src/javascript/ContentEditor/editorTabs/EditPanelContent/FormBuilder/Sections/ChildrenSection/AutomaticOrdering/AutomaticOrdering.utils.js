@@ -1,4 +1,4 @@
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const orderingFieldsMapping = {
     [Constants.ordering.automaticOrdering.mixin + '_firstField']: {type: 'propField', index: 0, displayNameKey: 'content-editor:label.contentEditor.section.listAndOrdering.orderBy'},

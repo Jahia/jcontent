@@ -1,5 +1,5 @@
 import {adaptSystemNameField} from './adaptSystemNameField';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const t = val => val;
 

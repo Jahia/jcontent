@@ -1,7 +1,7 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 import {FastField, useFormikContext} from 'formik';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 
 export const SingleField = ({inputContext, editorContext, field, onChange, onBlur}) => {
     const FieldComponent = inputContext.selectorType.cmp;

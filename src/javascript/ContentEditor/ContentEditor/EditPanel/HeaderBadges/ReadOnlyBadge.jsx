@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Chip, Visibility} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './ReadOnlyBadge.scss';
-import {useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
+import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 
 export const ReadOnlyBadge = ({isGlobal, readOnly}) => {
     const {t} = useTranslation('content-editor');

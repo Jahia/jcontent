@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Constants} from '~/ContentEditor.constants';
-import {useContentEditorContext} from '~/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {useApolloClient, useQuery} from '@apollo/react-hooks';
 import rison from 'rison-node';
-import {OpenInTabActionQuery} from '~/SelectorTypes/Picker/actions/openInTabAction.gql-queries';
+import {OpenInTabActionQuery} from '~/ContentEditor/SelectorTypes/Picker/actions/openInTabAction.gql-queries';
 import {jcontentUtils} from '@jahia/jcontent';
 
 export const OpenInTabActionComponent = ({render: Render, loading: Loading, path, field, inputContext, ...others}) => {

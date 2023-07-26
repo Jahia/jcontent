@@ -3,8 +3,8 @@ import {FullWidthContent, TwoColumnsContent} from '@jahia/design-system-kit';
 import {FormBuilder} from './FormBuilder';
 import {Preview} from './Preview';
 import {PublicationInfoProgress} from './PublicationInfoProgress';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/contexts';
-import {Constants} from '~/ContentEditor.constants';
+import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './EditPanelContent.scss';
 
 export const EditPanelContent = () => {

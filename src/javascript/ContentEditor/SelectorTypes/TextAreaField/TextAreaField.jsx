@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TextArea} from '~/DesignSystem/TextArea';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {TextArea} from '~/ContentEditor/DesignSystem/TextArea';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 
 export const TextAreaField = ({id, value, field, onChange, onBlur}) => {
     return (

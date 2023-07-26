@@ -1,10 +1,10 @@
 import {adaptSystemNameField} from './adaptSystemNameField';
-import {getFields} from '~/utils/fields.utils';
-import {Constants} from '~/ContentEditor.constants';
-import {adaptSections, getExpandedSections} from '~/ContentEditor/adaptSections';
-import {getFieldValuesFromDefaultValues} from '~/ContentEditor/getFieldValuesFromDefaultValues';
-import {CreateFormQuery} from '~/ContentEditor/create.gql-queries';
-import {useFormDefinition} from '~/ContentEditor/useFormDefinitions';
+import {getFields} from '~/ContentEditor/utils/fields.utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {adaptSections, getExpandedSections} from '~/ContentEditor/ContentEditor/adaptSections';
+import {getFieldValuesFromDefaultValues} from '~/ContentEditor/ContentEditor/getFieldValuesFromDefaultValues';
+import {CreateFormQuery} from '~/ContentEditor/ContentEditor/create.gql-queries';
+import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
 
 // TODO https://jira.jahia.org/browse/TECH-300
 

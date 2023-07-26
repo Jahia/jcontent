@@ -2,8 +2,8 @@ import React from 'react';
 import {File, FileBroken} from '@jahia/moonstone';
 import {useQuery} from '@apollo/react-hooks';
 import {ContentPickerFilledQuery} from './ContentPicker.gql-queries';
-import {encodeJCRPath} from '~/utils';
-import {useContentEditorContext} from '~/contexts';
+import {encodeJCRPath} from '~/ContentEditor/utils';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 const usePickerInputData = uuids => {
     const {lang} = useContentEditorContext();

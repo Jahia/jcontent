@@ -1,11 +1,11 @@
 import React from 'react';
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {reactTable, Sql2SearchQueryHandler} from '@jahia/jcontent';
 import {FolderUser} from '@jahia/moonstone';
-import {transformQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
+import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import {UserPickerFragment} from './userPicker.gql-queries';
-import {NoIconPickerCaption} from '~/SelectorTypes/Picker/configs/NoIconPickerCaption';
+import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
 const PickerUserQueryHandler = transformQueryHandler({
     ...Sql2SearchQueryHandler,

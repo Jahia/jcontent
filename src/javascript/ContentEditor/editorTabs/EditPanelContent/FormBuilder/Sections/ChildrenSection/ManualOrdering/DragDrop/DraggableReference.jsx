@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useDrag} from 'react-dnd';
-import {ReferenceCard} from '~/DesignSystem/ReferenceCard';
+import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {File} from '@jahia/moonstone';
-import {encodeJCRPath} from '~/utils';
+import {encodeJCRPath} from '~/ContentEditor/utils';
 
 export const DraggableReference = ({child}) => {
     const {t} = useTranslation('content-editor');

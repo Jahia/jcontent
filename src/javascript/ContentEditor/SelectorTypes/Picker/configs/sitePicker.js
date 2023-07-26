@@ -1,10 +1,10 @@
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {SiteWeb} from '@jahia/moonstone';
-import {PickerBaseQueryHandler} from '~/SelectorTypes/Picker/configs/queryHandlers';
-import {renderer} from '~/SelectorTypes/Picker/configs/renderer';
+import {PickerBaseQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import {reactTable} from '@jahia/jcontent';
-import {NoIconPickerCaption} from '~/SelectorTypes/Picker/configs/NoIconPickerCaption';
+import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
 const nameColumn = {
     id: 'name',

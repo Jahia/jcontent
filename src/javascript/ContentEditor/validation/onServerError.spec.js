@@ -1,4 +1,4 @@
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {onServerError} from './onServerError';
 
 const t = val => val;

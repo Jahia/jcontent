@@ -1,7 +1,7 @@
 import React from 'react';
 import {tabBarAction} from './tabBarAction';
 import {Edit, Setting} from '@jahia/moonstone';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelContent} from './EditPanelContent';
 import {AdvancedOptions} from './AdvancedOptions';
 

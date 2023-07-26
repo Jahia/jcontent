@@ -1,12 +1,12 @@
-import dayjs from '~/date.config';
-import {getDynamicFieldSets, getFields} from '~/utils';
-import {resolveSelectorType} from '~/SelectorTypes/resolveSelectorType';
+import dayjs from '~/ContentEditor/date.config';
+import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils';
+import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {adaptSystemNameField} from './adaptSystemNameField';
-import {Constants} from '~/ContentEditor.constants';
-import {adaptSections, getExpandedSections} from '~/ContentEditor/adaptSections';
-import {getFieldValuesFromDefaultValues} from '~/ContentEditor/getFieldValuesFromDefaultValues';
-import {EditFormQuery} from '~/ContentEditor/edit.gql-queries';
-import {useFormDefinition} from '~/ContentEditor/useFormDefinitions';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {adaptSections, getExpandedSections} from '~/ContentEditor/ContentEditor/adaptSections';
+import {getFieldValuesFromDefaultValues} from '~/ContentEditor/ContentEditor/getFieldValuesFromDefaultValues';
+import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
+import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
 
 // TODO https://jira.jahia.org/browse/TECH-300
 

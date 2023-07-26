@@ -2,10 +2,10 @@ import {Badge, Paper} from '@jahia/design-system-kit';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import styles from './Preview.scss';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {PreviewFetcher} from './Preview.fetcher';
-import {UpdateOnSaveBadge} from '~/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
-import {LoaderOverlay} from '~/DesignSystem/LoaderOverlay';
+import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 export const Preview = () => {
     const {t} = useTranslation('content-editor');

@@ -1,6 +1,6 @@
 import {createActions, handleActions} from 'redux-actions';
-import {COMBINED_REDUCERS_NAME} from '~/registerReducer';
-import {Constants} from '~/SelectorTypes/Picker/Picker.constants';
+import {COMBINED_REDUCERS_NAME} from '~/ContentEditor/registerReducer';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {toArray} from './Picker.utils';
 
 export const {

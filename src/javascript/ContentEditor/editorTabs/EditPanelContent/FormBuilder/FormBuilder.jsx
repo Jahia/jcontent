@@ -1,14 +1,14 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Form} from 'formik';
-import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
-import {SectionsPropTypes} from '~/ContentEditor.proptypes';
+import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
+import {SectionsPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {ChildrenSection, Section} from './Sections';
 import {useDispatch, useSelector, shallowEqual} from 'react-redux';
-import {ceToggleSections} from '~/registerReducer';
+import {ceToggleSections} from '~/ContentEditor/registerReducer';
 import styles from './FormBuilder.scss';
 import {Validation} from './Validation';
-import {CeModalError} from '~/ContentEditorApi/ContentEditorError';
+import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 const ADVANCED_OPTIONS_SELECTIONS = ['visibility'];
 

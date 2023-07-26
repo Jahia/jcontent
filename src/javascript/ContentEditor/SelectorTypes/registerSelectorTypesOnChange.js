@@ -1,4 +1,4 @@
-import {getFields} from '~/utils/fields.utils';
+import {getFields} from '~/ContentEditor/utils/fields.utils';
 import {FieldConstraints} from './registerSelectorTypesOnChange.gql-queries';
 
 function arrayEquals(arr1, arr2) {

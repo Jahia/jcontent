@@ -3,7 +3,7 @@ import {registry} from '@jahia/ui-extender';
 import {openEngineTabsAction} from './openEngineTabsAction';
 import {getNodeTypes} from './engineTabs.utils';
 import {useQuery} from '@apollo/react-hooks';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const tabShouldBeDisplayed = (advancedOptionsTabs, actionKey) => {
     return advancedOptionsTabs.filter(advancedOptionsTab => {

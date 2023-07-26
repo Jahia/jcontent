@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import {Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './Selection.scss';
-import {SelectionButton} from '~/SelectorTypes/Picker/PickerDialog/RightPanel/PickerSelection/SelectionButton';
+import {SelectionButton} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/PickerSelection/SelectionButton';
 import {NodeIcon} from '@jahia/jcontent';
-import {configPropType} from '~/SelectorTypes/Picker/configs/configPropType';
+import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 
 const DefaultCaptionComponent = ({selection}) => (
     <>

@@ -1,9 +1,9 @@
 import React from 'react';
 import {Chip} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorContext} from '~/contexts/ContentEditor';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {Field} from 'formik';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const getChipContent = (wipInfo, currentLanguage, t) => {
     if (wipInfo.status === Constants.wip.status.ALL_CONTENT) {

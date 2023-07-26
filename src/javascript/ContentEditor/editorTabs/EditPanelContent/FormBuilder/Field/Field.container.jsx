@@ -1,7 +1,7 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
-import {resolveSelectorType} from '~/SelectorTypes/resolveSelectorType';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
+import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {Field} from './Field';
 
 export const FieldContainer = React.memo(({field, inputContext}) => {

@@ -3,9 +3,9 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FastField, useFormikContext} from 'formik';
-import {FieldPropTypes} from '~/ContentEditor.proptypes';
+import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import styles from './MultipleField.scss';
-import {OrderableValue} from '~/DesignSystem/OrderableValue/OrderableValue';
+import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 
 export const MultipleField = ({editorContext, inputContext, field, onChange, onBlur}) => {
     const {values, setFieldValue, setFieldTouched} = useFormikContext();

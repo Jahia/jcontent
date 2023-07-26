@@ -1,9 +1,9 @@
 import {useCallback} from 'react';
-import {validate} from '~/validation';
-import {getDynamicFieldSets, getFields} from '~/utils';
-import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/contexts';
+import {validate} from '~/ContentEditor/validation';
+import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils/index';
+import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
-import {Constants} from '~/ContentEditor.constants';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 function fillValues(newValues, previousValues, fieldsObj, i18nValues, nonI18nValues, dynamicFieldSets) {
     Object.keys(newValues)

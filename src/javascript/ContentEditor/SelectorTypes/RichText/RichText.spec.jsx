@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
 import {RichText} from './RichText';
-import {setQueryResult} from '@apollo/react-hooks';
+import {setQueryResult} from '@apollo/client';
 
 jest.mock('@apollo/react-hooks', () => {
     let queryResultmock;

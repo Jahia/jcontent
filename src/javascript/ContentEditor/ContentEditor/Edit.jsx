@@ -12,7 +12,7 @@ import {validate} from '~/ContentEditor/validation';
 import {updateNode} from './updateNode';
 import {LockManager} from './LockManager';
 import {useTranslation} from 'react-i18next';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 
 export const Edit = () => {
     const notificationContext = useNotifications();

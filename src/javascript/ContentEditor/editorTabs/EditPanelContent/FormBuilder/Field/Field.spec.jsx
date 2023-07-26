@@ -5,7 +5,7 @@ import {Field, showChipField} from './Field';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import Text from '~/ContentEditor/SelectorTypes/Text/Text';
 import {registry} from '@jahia/ui-extender';
-import {setResponseMock} from '@apollo/react-hooks';
+import {setResponseMock} from '@apollo/client';
 import {useFormikContext} from 'formik';
 
 jest.mock('formik');

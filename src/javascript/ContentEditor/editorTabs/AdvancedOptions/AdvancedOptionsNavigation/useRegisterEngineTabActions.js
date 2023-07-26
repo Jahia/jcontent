@@ -2,7 +2,7 @@ import {engineTabsPermissionCheckQuery} from './engineTabs.permission.gql-query'
 import {registry} from '@jahia/ui-extender';
 import {openEngineTabsAction} from './openEngineTabsAction';
 import {getNodeTypes} from './engineTabs.utils';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const tabShouldBeDisplayed = (advancedOptionsTabs, actionKey) => {

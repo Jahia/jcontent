@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {adaptSelection} from './Tag.utils';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {getSuggestionsTagsQuery} from './Tag.gql-queries';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 

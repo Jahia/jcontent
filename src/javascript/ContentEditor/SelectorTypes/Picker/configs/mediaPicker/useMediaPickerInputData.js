@@ -1,4 +1,4 @@
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {MediaPickerFilledQuery} from './MediaPicker.gql-queries';
 import {encodeJCRPath} from '~/ContentEditor/utils';
 import {useContentEditorContext} from '~/ContentEditor/contexts';

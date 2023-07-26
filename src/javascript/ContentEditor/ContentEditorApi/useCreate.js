@@ -1,7 +1,7 @@
 import {flattenNodeTypes, getCreatableNodetypesTree} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useCallback} from 'react';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useSelector} from 'react-redux';
 
 const create = async (setEditorConfig, setContentTypeSelectorConfig, client, data, uilang) => {

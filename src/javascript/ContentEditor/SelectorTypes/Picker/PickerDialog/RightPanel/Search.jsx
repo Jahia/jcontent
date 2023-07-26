@@ -5,7 +5,7 @@ import {cePickerSetSearchPath, cePickerSetSearchTerm} from '~/ContentEditor/Sele
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {registry} from '@jahia/ui-extender';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {batchActions} from 'redux-batched-actions';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {getBaseSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';

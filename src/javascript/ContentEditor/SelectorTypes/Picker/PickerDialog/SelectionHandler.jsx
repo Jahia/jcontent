@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {replaceFragmentsInDocument, useNodeInfo} from '@jahia/data-helper';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {GET_PICKER_NODE} from '~/ContentEditor/SelectorTypes/Picker';
 import {
     cePickerMode,

@@ -1,4 +1,4 @@
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {PublicationInfoQuery} from './PublicationInfo.gql-queries';
 import {useEffect, useState} from 'react';
 

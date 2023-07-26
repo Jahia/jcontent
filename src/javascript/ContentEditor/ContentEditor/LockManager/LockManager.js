@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import {useEffect} from 'react';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {SubscribeToEditorLock} from './lock.gql-subscription';
 import {UnlockEditorMutation} from './lock.gql-mutation';
 

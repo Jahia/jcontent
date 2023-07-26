@@ -1,7 +1,7 @@
 import {OpenInTabActionComponent} from './openInTabAction';
 import {shallow} from '@jahia/test-framework';
 import React from 'react';
-import {setQueryResponseMock} from '@apollo/react-hooks';
+import {setQueryResponseMock} from '@apollo/client';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 jest.mock('@apollo/react-hooks', () => {

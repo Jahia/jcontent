@@ -1,5 +1,5 @@
 import {getTreeOfContentWithRequirements} from './createContent.gql-queries';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {toIconComponent} from '@jahia/moonstone';
 
 // eslint-disable-next-line
@@ -60,7 +60,7 @@ export function flattenNodeTypes(nodeTypes) {
 }
 
 export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
-    const nodeTypesButtonLimit = contextJsParameters.config.contentEditor['createChildrenDirectButtons.limit'];
+    const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
     if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
         return nodeTypes
             .filter(f => f.name !== 'jnt:resource')

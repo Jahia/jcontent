@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import CKEditor from 'ckeditor4-react';
 import * as PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {getCKEditorConfigurationPath} from './CKEditorConfiguration.gql-queries';
 import {ContentEditorContext, useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {useTranslation} from 'react-i18next';

@@ -3,7 +3,7 @@ import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 
 import {Category} from './Category';
-import {setQueryResult} from '@apollo/react-hooks';
+import {setQueryResult} from '@apollo/client';
 
 jest.mock('@apollo/react-hooks', () => {
     let queryResultmock;

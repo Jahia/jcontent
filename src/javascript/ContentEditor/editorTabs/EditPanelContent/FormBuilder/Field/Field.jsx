@@ -12,7 +12,7 @@ import {buildFlatFieldObject} from './field.utils';
 import {DisplayAction, registry} from '@jahia/ui-extender';
 import {contentEditorHelper} from './contentEditorHelper';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {getButtonRenderer} from '~/ContentEditor/utils';
 import {useFormikContext} from 'formik';
 import styles from './Field.scss';

@@ -1,6 +1,6 @@
 import {tabShouldBeDisplayed, useRegisterEngineTabActions} from './useRegisterEngineTabActions';
 import React from 'react';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {registry} from '@jahia/ui-extender';
 import {openEngineTabsAction} from './openEngineTabsAction';
 

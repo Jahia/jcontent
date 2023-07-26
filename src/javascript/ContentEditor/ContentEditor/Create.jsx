@@ -7,7 +7,7 @@ import {useContentEditorConfigContext, useContentEditorContext, useContentEditor
 
 import {validate} from '~/ContentEditor/validation';
 import {createNode} from './createNode';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 
 export const Create = () => {
     const notificationContext = useNotifications();

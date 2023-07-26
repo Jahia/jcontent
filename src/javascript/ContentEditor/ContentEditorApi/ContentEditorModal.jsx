@@ -11,7 +11,7 @@ import {useTranslation} from 'react-i18next';
 import {OnCloseConfirmationDialog} from './OnCloseConfirmationDialog';
 import {EditPanelCompact} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelCompact';
 import {EditPanelFullscreen} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelFullscreen';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';
 import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 import {registry} from '@jahia/ui-extender';

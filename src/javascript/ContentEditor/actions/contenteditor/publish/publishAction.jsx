@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import {publishNode} from './publishNode';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useContentEditorContext, usePublicationInfoContext} from '~/ContentEditor/contexts';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useFormikContext} from 'formik';

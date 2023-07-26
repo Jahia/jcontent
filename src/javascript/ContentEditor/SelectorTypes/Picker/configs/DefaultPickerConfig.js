@@ -1,6 +1,6 @@
 import React from 'react';
 import {File, FileBroken} from '@jahia/moonstone';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {ContentPickerFilledQuery} from './ContentPicker.gql-queries';
 import {encodeJCRPath} from '~/ContentEditor/utils';
 import {useContentEditorContext} from '~/ContentEditor/contexts';

@@ -4,7 +4,7 @@ import {Button, Dropdown, Typography, Warning} from '@jahia/moonstone';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './CopyLanguageDialog.scss';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
 import {getI18nFieldAndValues} from './copyLanguage.utils';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';

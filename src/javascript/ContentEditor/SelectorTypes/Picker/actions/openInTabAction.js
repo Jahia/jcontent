@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
-import {useApolloClient, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useQuery} from '@apollo/client';
 import rison from 'rison-node';
 import {OpenInTabActionQuery} from '~/ContentEditor/SelectorTypes/Picker/actions/openInTabAction.gql-queries';
 import * as jcontentUtils from '~/JContent/JContent.utils';

@@ -1,5 +1,5 @@
 import {DefaultPickerConfig} from './DefaultPickerConfig';
-import {setQueryResponseMock} from '@apollo/react-hooks';
+import {MockProvider} from '@apollo/client/testing';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 jest.mock('@apollo/react-hooks', () => {

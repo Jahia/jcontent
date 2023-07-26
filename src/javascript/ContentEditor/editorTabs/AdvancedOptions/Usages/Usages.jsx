@@ -7,7 +7,7 @@ import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/col
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable'
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery} from '@apollo/client';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {UsagesQuery} from './Usages.gql-queries';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';

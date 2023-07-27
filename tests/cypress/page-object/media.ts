@@ -40,5 +40,11 @@ export class Media extends BasePage {
     createFile(fileName : string) : File {
         return new File(this, fileName);
     }
+
+    switchView(displayMode: 'list' | 'grid') {
+        cy.get('div[data-sel-role="sel-view-mode-dropdown"]').click();
+        cy.get('li[data-sel-role="sel-view-mode-' + displayMode + '"]').click();
+        return this;
+    }
 }
 

@@ -20,11 +20,9 @@ const renderItems = (items, onItemClick) => {
 
 export const ContentPathView = ({items, onItemClick}) => {
     return (items.length > 0) &&
-        <>
-            <Breadcrumb>
+        <Breadcrumb>
                 {renderItems(items, onItemClick)}
-            </Breadcrumb>
-        </>;
+        </Breadcrumb>;
 };
 
 ContentPathView.propTypes = {

@@ -13,7 +13,7 @@ export const TabBar = ({setActiveTab, isDisplayable, value, render: Render, load
     );
 
     if (res.loading) {
-        return (Loading && <Loading {...otherProps}/>) || <></>;
+        return (Loading && <Loading {...otherProps}/>) || null;
     }
 
     return (

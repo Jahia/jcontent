@@ -19,8 +19,7 @@ export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGr
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';
 
-
-// content-editor shared/index.js
+// Content-editor shared/index.js
 export * from '~/ContentEditor/contexts/ContentEditor';
 export * from '~/ContentEditor/contexts/ContentEditorConfig';
 export * from '~/ContentEditor/contexts/ContentEditorApi';

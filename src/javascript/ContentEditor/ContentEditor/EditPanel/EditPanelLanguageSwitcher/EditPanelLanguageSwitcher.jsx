@@ -43,8 +43,7 @@ export const EditPanelLanguageSwitcher = () => {
     const {langLabel, langOptions} = getLanguageOptions();
     // Hide language switcher if site is not multi-language
     return (!siteInfo?.languages || siteInfo.languages.length <= 1) ? null : (
-        <>
-            <Dropdown
+        <Dropdown
                 className={styles.dropdown}
                 icon={<Language/>}
                 data-cm-role="language-switcher"
@@ -58,7 +57,6 @@ export const EditPanelLanguageSwitcher = () => {
                     }
                 }}
             />
-        </>
     );
 };
 

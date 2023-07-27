@@ -21,18 +21,17 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         })
     });
     return (
-        <>
-            <div key={name}
-                 ref={field.readOnly ? null : drop}
-                 className={styles.fieldComponentContainer}
-                 data-sel-content-editor-multiple-generic-field={name}
-                 data-sel-content-editor-field-readonly={field.readOnly}
-            >
-                <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
-                {(field.readOnly || !component) ? (
-                    <div className={styles.draggableCard}>
-                        {component}
-                    </div>
+        <div key={name}
+             ref={field.readOnly ? null : drop}
+             className={styles.fieldComponentContainer}
+             data-sel-content-editor-multiple-generic-field={name}
+             data-sel-content-editor-field-readonly={field.readOnly}
+        >
+            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
+            {(field.readOnly || !component) ? (
+                <div className={styles.draggableCard}>
+                    {component}
+                </div>
                 ) : (
                     <div className={styles.draggableCard}>
                         {!isDragging &&
@@ -50,8 +49,7 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
                         />}
                     </div>
                 )}
-            </div>
-        </>
+        </div>
     );
 };
 

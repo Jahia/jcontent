@@ -53,7 +53,7 @@ export const AutomaticOrdering = ({orderingFieldSet}) => {
         };
 
         if (!field.name.endsWith('Direction')) {
-            inputContext.actionRender = <></>;
+            inputContext.actionRender = null;
         } else if (displayedRows.length > 1) {
             inputContext.actionRender = (
                 <Button variant="ghost"

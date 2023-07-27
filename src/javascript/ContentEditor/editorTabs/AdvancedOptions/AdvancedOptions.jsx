@@ -24,15 +24,13 @@ export const AdvancedOptions = () => {
     };
     const SelectedTabComponent = SelectedTabComponents[activeOption];
     return (
-        <>
-            <div className={styles.container}>
-                <LayoutModule
+        <div className={styles.container}>
+            <LayoutModule
                     navigation={<AdvancedOptionsNavigation activeOption={activeOption}
                                                            setActiveOption={setActiveOption}/>}
                     content={<SelectedTabComponent tab={activeOption} actionKey={`contentEditorGWTTabAction_${activeOption}`}/>}
                     component="div"
                 />
-            </div>
-        </>
+        </div>
     );
 };

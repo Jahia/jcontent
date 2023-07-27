@@ -6,7 +6,6 @@ import ContentTableWrapper from './ContentTableWrapper';
 import ContentTypeSelector from './ContentTypeSelector';
 import EmptyTable from './EmptyTable';
 
-
 export {
     ContentTable,
     ContentEmptyDropZone,
@@ -15,4 +14,4 @@ export {
     ContentTableWrapper,
     ContentTypeSelector,
     EmptyTable
-}
+};

@@ -39,8 +39,7 @@ const MultipleInputComponent = ({classes, creatable, async, readOnly, ...props})
     };
 
     return (
-        <>
-            <Cmp
+        <Cmp
                 isMulti
                 isClearable={false}
                 components={components}
@@ -51,7 +50,6 @@ const MultipleInputComponent = ({classes, creatable, async, readOnly, ...props})
                 isReadOnly={readOnly}
                 onChange={handleChange}
             />
-        </>
     );
 };
 

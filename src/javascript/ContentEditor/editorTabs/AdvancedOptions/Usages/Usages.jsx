@@ -5,7 +5,7 @@ import {Table, TableBody, TablePagination, TableRow, Typography} from '@jahia/mo
 import {useTable} from 'react-table';
 import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable'
+import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {useQuery} from '@apollo/client';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';

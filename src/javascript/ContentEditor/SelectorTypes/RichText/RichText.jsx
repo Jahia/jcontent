@@ -105,8 +105,7 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
     };
 
     return (
-        <>
-            <CKEditor
+        <CKEditor
                 key={'v' + (i18nContext?.memo?.count || 0)}
                 id={id}
                 data={value}
@@ -127,7 +126,6 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
                 onChange={evt => onChange(evt.editor.getData())}
                 onBlur={onBlur}
             />
-        </>
     );
 };
 

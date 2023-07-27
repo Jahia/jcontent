@@ -25,7 +25,7 @@ export const OpenInTabActionComponent = ({render: Render, loading: Loading, path
     });
 
     if (uuid === undefined && (loading || error || !data)) {
-        return <></>;
+        return null;
     }
 
     uuid = uuid === undefined ? data.jcr.result.uuid : uuid;

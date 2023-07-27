@@ -44,7 +44,7 @@ export const FormBuilder = ({mode}) => {
     }, [dispatch, mode, formKey, expandedSections]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!nodeData || !sections || sections.length === 0) {
-        return <></>;
+        return null;
     }
 
     let listOrderingIndex = -1;

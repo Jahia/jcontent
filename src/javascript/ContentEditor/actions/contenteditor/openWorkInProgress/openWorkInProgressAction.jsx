@@ -46,13 +46,11 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
     };
 
     return (
-        <>
-            <Render
+        <Render
                 {...otherProps}
                 buttonLabel={buttonLabel}
                 enabled={!nodeData.lockedAndCannotBeEdited && nodeData.hasWritePermission && !Constants.wip.notAvailableFor.includes(nodeData.primaryNodeType.name)}
                 onClick={singleLanguage ? switchButton : openModal}/>
-        </>
     );
 };
 

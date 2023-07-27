@@ -1,5 +1,5 @@
-import {JContent} from '../page-object/jcontent';
-import {GraphqlUtils} from '../utils/graphqlUtils';
+import {JContent} from '../../page-object/jcontent';
+import {GraphqlUtils} from '../../utils/graphqlUtils';
 import {Collapsible, getComponentBySelector, Menu} from '@jahia/cypress';
 import {ContentEditor} from '@jahia/content-editor-cypress/dist/page-object';
 

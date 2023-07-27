@@ -1,4 +1,4 @@
-import {JContent, BasicSearch} from '../page-object';
+import {JContent, BasicSearch} from '../../page-object';
 
 describe('Search tests', () => {
     let jcontent: JContent;

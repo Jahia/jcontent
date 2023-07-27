@@ -1,4 +1,4 @@
-import {JContent} from '../page-object';
+import {JContent} from '../../page-object';
 
 describe('jContent header tests', () => {
     let jcontent: JContent;

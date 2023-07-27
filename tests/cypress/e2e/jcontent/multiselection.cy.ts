@@ -1,4 +1,4 @@
-import {JContent} from '../page-object';
+import {JContent} from '../../page-object';
 import {Button, getComponentBySelector} from '@jahia/cypress';
 
 describe('Multi-selection tests', {testIsolation: false}, () => {

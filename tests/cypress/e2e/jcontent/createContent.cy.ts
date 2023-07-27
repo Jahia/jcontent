@@ -1,4 +1,4 @@
-import {JContent} from '../page-object';
+import {JContent} from '../../page-object';
 
 describe('Create content tests', {retries: 10}, () => {
     let jcontent: JContent;

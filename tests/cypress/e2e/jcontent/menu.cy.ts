@@ -1,4 +1,4 @@
-import {JContent} from '../page-object';
+import {JContent} from '../../page-object';
 import {Button, getComponentByRole, getComponentBySelector, Menu} from '@jahia/cypress';
 import {ContentEditor} from '@jahia/content-editor-cypress/dist/page-object';
 import {Field} from '@jahia/content-editor-cypress/dist/page-object/fields';

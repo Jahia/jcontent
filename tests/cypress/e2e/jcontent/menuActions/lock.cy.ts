@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object';
+import {JContent} from '../../../page-object';
 import gql from 'graphql-tag';
 
 describe('Lock tests', () => {

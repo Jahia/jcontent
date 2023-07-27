@@ -1,4 +1,4 @@
-import {JContent, JContentPageComposer} from '../page-object';
+import {JContent, JContentPageComposer} from '../../page-object';
 import {Dropdown, getComponentByRole} from '@jahia/cypress';
 import {ContentEditor} from '@jahia/content-editor-cypress/dist/page-object';
 

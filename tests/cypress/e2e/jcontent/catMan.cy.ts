@@ -1,4 +1,4 @@
-import {CategoryManager, JContent} from '../page-object';
+import {CategoryManager, JContent} from '../../page-object';
 
 const accordionItemName = 'category';
 describe('Category Manager', () => {

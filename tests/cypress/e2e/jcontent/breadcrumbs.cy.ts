@@ -1,5 +1,5 @@
-import {JContent} from '../page-object';
-import {Breadcrumb} from '../page-object/breadcrumb';
+import {JContent} from '../../page-object';
+import {Breadcrumb} from '../../page-object/breadcrumb';
 
 describe('Breadcrumb navigation test', () => {
     before(function () {

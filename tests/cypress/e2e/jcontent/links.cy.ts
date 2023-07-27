@@ -1,4 +1,4 @@
-import {JContent, JContentPageComposer} from '../page-object';
+import {JContent, JContentPageComposer} from '../../page-object';
 import {Button, getComponentByRole} from '@jahia/cypress';
 
 describe('Links in jcontent', () => {

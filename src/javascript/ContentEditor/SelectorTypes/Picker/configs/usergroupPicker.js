@@ -31,7 +31,7 @@ const nameColumn = {
 const siteColumn = {
     id: 'site',
     accessor: 'siteInfo.displayName',
-    label: 'content-editor:label.contentEditor.edit.fields.contentPicker.userPicker.site',
+    label: 'jcontent:label.contentEditor.edit.fields.contentPicker.userPicker.site',
     sortable: true,
     property: 'siteInfo.displayName',
     Cell: reactTable.Cell,
@@ -42,7 +42,7 @@ const siteColumn = {
 const providerColumn = {
     id: 'provider',
     accessor: row => row.userGroupFolderAncestors?.map(f => f.path.match(/^.*\/providers\/([^/]+)$/)).filter(f => f).map(f => f[1]).join('') || 'default',
-    label: 'content-editor:label.contentEditor.edit.fields.contentPicker.userPicker.provider',
+    label: 'jcontent:label.contentEditor.edit.fields.contentPicker.userPicker.provider',
     Cell: reactTable.Cell,
     Header: reactTable.Header,
     width: '300px'
@@ -54,10 +54,10 @@ export const registerUsergroupPicker = registry => {
         selectableTypesTable: ['jnt:group'],
         pickerCaptionComponent: NoIconPickerCaption,
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalUserGroupTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalUserGroupTitle'
         },
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalUserGroupTitle',
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalUserGroupTitle',
             displayTree: false,
             displaySiteSwitcher: false
         },
@@ -69,23 +69,23 @@ export const registerUsergroupPicker = registry => {
     registry.add(Constants.ACCORDION_ITEM_NAME, 'picker-usergroup', {
         targets: ['usergroup:50'],
         icon: <Group/>,
-        label: 'content-editor:label.contentEditor.picker.navigation.usergroup',
+        label: 'jcontent:label.contentEditor.picker.navigation.usergroup',
         rootPath: '/',
         canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? /^(\/sites\/[^/]+)?\/groups\/.*/.test(selectionNode.path) : folderNode.path === '/',
         getSearchContextData: ({currentSite, t}) => {
             return [
                 {
-                    label: t('content-editor:label.contentEditor.picker.rightPanel.searchContextOptions.search'),
+                    label: t('jcontent:label.contentEditor.picker.rightPanel.searchContextOptions.search'),
                     searchPath: '',
                     isDisabled: true
                 },
                 {
-                    label: t('content-editor:label.contentEditor.picker.rightPanel.searchContextOptions.allGroups'),
+                    label: t('jcontent:label.contentEditor.picker.rightPanel.searchContextOptions.allGroups'),
                     searchPath: '/',
                     iconStart: <Group/>
                 },
                 {
-                    label: t('content-editor:label.contentEditor.picker.rightPanel.searchContextOptions.globalGroups'),
+                    label: t('jcontent:label.contentEditor.picker.rightPanel.searchContextOptions.globalGroups'),
                     searchPath: '/groups',
                     iconStart: <Group/>
                 },

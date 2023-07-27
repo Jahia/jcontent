@@ -7,7 +7,7 @@ import {getTooltip} from './PublicationInfoBadge.tooltip';
 import {useSelector} from 'react-redux';
 
 export const PublicationInfoBadge = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const publicationInfoContext = usePublicationInfoContext();
     const uilang = useSelector(state => state.uilang);
 

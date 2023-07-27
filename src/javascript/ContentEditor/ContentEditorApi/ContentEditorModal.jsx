@@ -74,7 +74,7 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
                     key="edit"
                     isReversed
                     variant="outlined"
-                    label={t('content-editor:label.contentEditor.edit.contentEdit')}
+                    label={t('jcontent:label.contentEditor.edit.contentEdit')}
                     onClick={() => {
                         updateEditorConfig({
                             isFullscreen: false,
@@ -95,7 +95,7 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
             ]
         };
 
-        notificationContext.notify(t('content-editor:label.contentEditor.create.createButton.success'), predefined, opts);
+        notificationContext.notify(t('jcontent:label.contentEditor.create.createButton.success'), predefined, opts);
     };
 
     mergedConfig.editCallback = ({originalNode, updatedNode}) => {
@@ -106,7 +106,7 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
 
         triggerEvents(updatedNode.uuid, Constants.operators.update);
 
-        notificationContext.notify(t('content-editor:label.contentEditor.edit.action.save.success'), ['closeButton'], {autoHideDuration: 3000});
+        notificationContext.notify(t('jcontent:label.contentEditor.edit.action.save.success'), ['closeButton'], {autoHideDuration: 3000});
     };
 
     mergedConfig.onSavedCallback = ({newNode, language, originalNode, updatedNode}, forceRedirect) => {

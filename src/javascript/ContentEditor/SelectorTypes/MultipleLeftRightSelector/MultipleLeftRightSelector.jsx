@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 const toArray = value => (Array.isArray(value) ? value : [value]);
 
 export const MultipleLeftRightSelector = ({field, onChange, value}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const labelBase = 'label.contentEditor.picker.selectors.multipleLeftRightSelector';
     const arrayValue = value ? toArray(value) : [];
 

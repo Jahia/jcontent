@@ -28,7 +28,7 @@ const RightPanel = ({pickerConfig, isMultiple, accordionItemProps, lang, onClose
         uilang: state.uilang
     }), shallowEqual);
     const selectionExpanded = useState(false);
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const fragments = (pickerConfig?.selectionTable?.getFragments?.() || []);
     const selectionQuery = replaceFragmentsInDocument(GET_PICKER_NODE_UUID, fragments);
@@ -104,7 +104,7 @@ const RightPanel = ({pickerConfig, isMultiple, accordionItemProps, lang, onClose
                     <Button
                         data-sel-picker-dialog-action="cancel"
                         size="big"
-                        label={t('content-editor:label.contentEditor.edit.fields.modalCancel').toUpperCase()}
+                        label={t('jcontent:label.contentEditor.edit.fields.modalCancel').toUpperCase()}
                         onClick={onClose}
                     />
                     <Button
@@ -112,7 +112,7 @@ const RightPanel = ({pickerConfig, isMultiple, accordionItemProps, lang, onClose
                         disabled={selection.length === 0 || (nodes && nodes.length === 0)}
                         color="accent"
                         size="big"
-                        label={t('content-editor:label.contentEditor.edit.fields.modalDone').toUpperCase()}
+                        label={t('jcontent:label.contentEditor.edit.fields.modalDone').toUpperCase()}
                         onClick={selectElement}
                     />
                 </div>

@@ -20,13 +20,13 @@ export const adaptSystemNameField = (rawData, formData, t, primaryNodeType, isCr
         systemNameField.name = Constants.systemName.name;
 
         // Add i18ns label to field / should be in json field definition
-        systemNameField.displayName = t('content-editor:label.contentEditor.section.fieldSet.system.fields.systemName');
+        systemNameField.displayName = t('jcontent:label.contentEditor.section.fieldSet.system.fields.systemName');
 
         // Add description to the field / should be in json field definition, with specific overrides per "read only mixin"
         // Parameterized resource bundles not supported yet
         systemNameField.description = readOnlyByMixin ?
-            t('content-editor:label.contentEditor.section.fieldSet.system.fields.systemNameDescriptionReadOnly') :
-            t('content-editor:label.contentEditor.section.fieldSet.system.fields.systemNameDescription', {maxNameSize: window.contextJsParameters.config.maxNameSize});
+            t('jcontent:label.contentEditor.section.fieldSet.system.fields.systemNameDescriptionReadOnly') :
+            t('jcontent:label.contentEditor.section.fieldSet.system.fields.systemNameDescription', {maxNameSize: window.contextJsParameters.config.maxNameSize});
 
         // Add max name size validation / should be in json field definition
         systemNameField.selectorOptions = [

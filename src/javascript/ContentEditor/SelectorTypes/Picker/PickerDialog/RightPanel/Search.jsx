@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import * as jcontentUtils from '~/JContent/JContent.utils';
 
 export const Search = ({accordionItemProps}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {searchTerms, searchPath, preSearchModeMemo, currentPath, currentSite, language, uilang, mode} = useSelector(state => ({
         mode: state.contenteditor.picker.mode,

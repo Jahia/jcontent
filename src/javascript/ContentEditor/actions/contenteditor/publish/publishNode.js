@@ -18,12 +18,12 @@ export const publishNode = ({
         mutation: PublishNodeMutation
     })
         .then(() => {
-            notificationContext.notify(t('content-editor:label.contentEditor.edit.action.publish.success'), ['closeButton'], {autoHideDuration: 3000});
+            notificationContext.notify(t('jcontent:label.contentEditor.edit.action.publish.success'), ['closeButton'], {autoHideDuration: 3000});
             if (successCallback) {
                 successCallback();
             }
         }, error => {
             console.error(error);
-            notificationContext.notify(t('content-editor:label.contentEditor.edit.action.publish.error'), ['closeButton']);
+            notificationContext.notify(t('jcontent:label.contentEditor.edit.action.publish.error'), ['closeButton']);
         });
 };

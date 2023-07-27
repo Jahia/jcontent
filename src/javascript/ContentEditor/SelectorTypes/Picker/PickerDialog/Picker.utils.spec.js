@@ -19,7 +19,7 @@ jest.mock('@jahia/ui-extender', () => {
                             },
                             selectableTypes: ['nt:folder'],
                             openableTypes: ['nt:folder'],
-                            rootLabelKey: 'content-editor:label.contentEditor.edit.fields.imagePicker.rootLabel',
+                            rootLabelKey: 'jcontent:label.contentEditor.edit.fields.imagePicker.rootLabel',
                             type: 'files'
                         }]
                     }

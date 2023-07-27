@@ -71,7 +71,7 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
                 nodeTypesTree: [nodeType],
                 nodeTypes: [nodeType.name],
                 nodeTypeIcon: nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL),
-                buttonLabel: 'content-editor:label.contentEditor.CMMActions.createNewContent.contentOfType',
+                buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: nodeType.label}
             }));
     }

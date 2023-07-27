@@ -10,10 +10,10 @@ export const registerCategoryPicker = registry => {
         selectableTypesTable: ['jnt:category'],
         accordionMode: `picker-${Constants.ACCORDION_ITEM_TYPES.CATEGORY}`,
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalCategoryTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalCategoryTitle'
         },
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalCategoryTitle',
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalCategoryTitle',
             displayTree: false,
             displaySiteSwitcher: false
         },
@@ -25,7 +25,7 @@ export const registerCategoryPicker = registry => {
     registry.add(Constants.ACCORDION_ITEM_NAME, `picker-${Constants.ACCORDION_ITEM_TYPES.CATEGORY}`, {
         targets: ['category:50'],
         icon: <Collections/>,
-        label: 'content-editor:label.contentEditor.picker.navigation.categories',
+        label: 'jcontent:label.contentEditor.picker.navigation.categories',
         rootPath: '/sites/systemsite/categories',
         canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? /^\/sites\/systemsite\/categories\/.*/.test(selectionNode.path) : /^\/sites\/systemsite\/categories((\/.*)|$)/.test(folderNode.path),
         tableConfig: {

@@ -10,19 +10,19 @@ import clsx from 'clsx';
 const ButtonRenderer = getButtonRenderer({defaultButtonProps: {variant: 'default', size: 'big', color: 'accent'}});
 
 export const DeprecatedOption = ({tab, actionKey}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     return (
         <section className={styles.container}>
             <Typography variant="heading" className={clsx(styles.item, styles.capitalize)}>
-                {tab} - {t('content-editor:label.contentEditor.gwtTabsDeprecation.title')}
+                {tab} - {t('jcontent:label.contentEditor.gwtTabsDeprecation.title')}
             </Typography>
             <Typography className={styles.item}>
-                {t(`content-editor:label.contentEditor.gwtTabsDeprecation.warnings.${tab}`)}
+                {t(`jcontent:label.contentEditor.gwtTabsDeprecation.warnings.${tab}`)}
             </Typography>
             <div className={styles.item}>
                 <DisplayAction actionKey={actionKey}
-                               render={props => <ButtonRenderer {...props} buttonLabel={t('content-editor:label.contentEditor.gwtTabsDeprecation.openLegacy')}/>}
+                               render={props => <ButtonRenderer {...props} buttonLabel={t('jcontent:label.contentEditor.gwtTabsDeprecation.openLegacy')}/>}
                 />
             </div>
         </section>

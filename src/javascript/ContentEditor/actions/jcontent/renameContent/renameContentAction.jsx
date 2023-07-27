@@ -8,7 +8,7 @@ import {RenameLayout} from '~/ContentEditor/actions/jcontent/renameContent/Renam
 import {useRenameFormDefinition} from '~/ContentEditor/actions/jcontent/renameContent/useRenameFormDefinition';
 
 export const RenameContent = ({path, editCallback, render: Render, loading: Loading, ...otherProps}) => {
-    useTranslation('content-editor');
+    useTranslation('jcontent');
     const api = useContentEditorApiContext();
     const language = useSelector(state => state.language);
     const res = useNodeChecks(

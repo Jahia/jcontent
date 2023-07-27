@@ -11,7 +11,7 @@ export const registerEditorialLinkPicker = registry => {
         selectableTypesTable: ['jnt:page', 'jmix:mainResource'],
         showOnlyNodesWithTemplates: true,
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalEditorialTitle',
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalEditorialTitle',
             displayTree: false
         }
     });

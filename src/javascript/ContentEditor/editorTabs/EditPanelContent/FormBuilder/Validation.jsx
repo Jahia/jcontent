@@ -23,7 +23,7 @@ export const Validation = () => {
     const {sections} = useContentEditorSectionContext();
     const {siteInfo, i18nContext, lang} = useContentEditorContext();
     const {formKey} = useContentEditorConfigContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const toggleStates = useSelector(state => state.contenteditor.ceToggleSections);
     const dispatch = useDispatch();
     const switchLanguage = useSwitchLanguage();

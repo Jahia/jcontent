@@ -47,7 +47,7 @@ const StartWorkFlow = ({isMainButton, render: Render, loading: Loading, ...other
                 buttonLabelParams={{language: lang}}
                 // Do not display language in request publication button if there is only one language
                 buttonLabelShort={(siteInfo?.languages.length > 1) ?
-                    '' : 'content-editor:label.contentEditor.edit.action.startWorkflow.shortName'}
+                    '' : 'jcontent:label.contentEditor.edit.action.startWorkflow.shortName'}
                 onClick={() => {
                     window.authoringApi.openPublicationWorkflow(
                         [nodeData.uuid],

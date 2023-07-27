@@ -13,7 +13,7 @@ export const EditContent = ({
     loading: Loading,
     ...otherProps
 }) => {
-    useTranslation('content-editor');
+    useTranslation('jcontent');
     const api = useContentEditorApiContext();
     const language = useSelector(state => state.language);
     const res = useNodeChecks(

@@ -13,7 +13,7 @@ import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditor
 
 export const CreateContent = ({contextNodePath, path, showOnNodeTypes, nodeTypes, name, includeSubTypes, isFullscreen, hasBypassChildrenLimit, onCreate, onClosed, render: Render, loading: Loading, ...otherProps}) => {
     const api = useContentEditorApiContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}));
 
     const res = useNodeChecks(
@@ -47,7 +47,7 @@ export const CreateContent = ({contextNodePath, path, showOnNodeTypes, nodeTypes
 
     if (error) {
         const message = t(
-            'content-editor:label.contentEditor.error.queryingContent',
+            'jcontent:label.contentEditor.error.queryingContent',
             {details: error.message ? error.message : ''}
         );
         console.error(message);

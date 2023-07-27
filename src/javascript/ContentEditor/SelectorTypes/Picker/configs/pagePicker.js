@@ -6,10 +6,10 @@ import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 export const registerPagePicker = registry => {
     registry.add(Constants.pickerConfig, 'page', {
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalPageTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPageTitle'
         },
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalPageTitle',
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPageTitle',
             displayTree: false
         },
         selectionTable: {

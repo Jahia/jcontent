@@ -203,19 +203,19 @@ describe('adaptEditFormData', () => {
     it('should add technicalInfo object', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).technicalInfo).toEqual([
             {
-                label: 'content-editor:label.contentEditor.edit.advancedOption.technicalInformation.contentType',
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType',
                 value: 'ContentType'
             },
             {
-                label: 'content-editor:label.contentEditor.edit.advancedOption.technicalInformation.mixinTypes',
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.mixinTypes',
                 value: 'jcr:contentType; Mixin1; Mixin2'
             },
             {
-                label: 'content-editor:label.contentEditor.edit.advancedOption.technicalInformation.path',
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.path',
                 value: '/site/digitall/home'
             },
             {
-                label: 'content-editor:label.contentEditor.edit.advancedOption.technicalInformation.uuid',
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.uuid',
                 value: 'uuid1'
             }
         ]);

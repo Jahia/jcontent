@@ -18,7 +18,7 @@ import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 
 export const Picker = ({field, value, editorContext, inputContext, onChange, onBlur}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {lang} = useContentEditorConfigContext();
 
     const parsedOptions = {};
@@ -128,7 +128,7 @@ export const Picker = ({field, value, editorContext, inputContext, onChange, onB
                                 data-sel-action="addField"
                                 variant="outlined"
                                 size="big"
-                                label={t('content-editor:label.contentEditor.edit.fields.actions.add')}
+                                label={t('jcontent:label.contentEditor.edit.fields.actions.add')}
                                 onClick={() => setDialogOpen(!isDialogOpen)}
                         />}
                 </div> :

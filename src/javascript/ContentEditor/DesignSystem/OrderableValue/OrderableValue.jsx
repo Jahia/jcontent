@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
         accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.name, index), collect: monitor => {
@@ -44,7 +44,7 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
                             </>}
                         {!isDragging && <Button variant="ghost"
                                                 data-sel-action={`removeField_${index}`}
-                                                aria-label={t('content-editor:label.contentEditor.edit.fields.actions.clear')}
+                                                aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
                                                 icon={<Close/>}
                                                 onClick={() => onFieldRemove(index)}
                         />}

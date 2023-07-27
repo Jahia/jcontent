@@ -18,7 +18,7 @@ if (window.CKEDITOR) {
 CKEditor.displayName = 'CKEditor';
 
 export const RichText = ({field, id, value, onChange, onBlur}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const api = useContentEditorApiContext();
     const {i18nContext} = useContentEditorContext();
     const {lang} = useContentEditorConfigContext();
@@ -39,7 +39,7 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
 
     if (error) {
         const message = t(
-            'content-editor:label.contentEditor.error.queryingContent',
+            'jcontent:label.contentEditor.error.queryingContent',
             {details: editorContext.path}
         );
         return <>{message}</>;

@@ -196,7 +196,7 @@ describe('Field component', () => {
 
             const badgeComponent = cmp.find({
                 label:
-                    'translated_content-editor:label.contentEditor.edit.sharedLanguages'
+                    'translated_jcontent:label.contentEditor.edit.sharedLanguages'
             });
             expect(badgeComponent.exists()).toBe(expectedBadgeRendered);
         };

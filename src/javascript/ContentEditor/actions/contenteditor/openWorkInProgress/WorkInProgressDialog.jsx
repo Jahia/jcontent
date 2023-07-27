@@ -14,7 +14,7 @@ export const WorkInProgressDialog = ({
     onApply,
     languages
 }) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const [wipStatus, setWipStatus] = useState(wipInfo.status !== Constants.wip.status.DISABLED);
 
@@ -72,16 +72,16 @@ export const WorkInProgressDialog = ({
         >
             <DialogTitle id="dialog-language-title">
                 <Typography variant="heading" weight="bold" className={styles.dialogTitle}>
-                    {t('content-editor:label.contentEditor.edit.action.workInProgress.dialogTitle')}
+                    {t('jcontent:label.contentEditor.edit.action.workInProgress.dialogTitle')}
                 </Typography>
                 <Typography className={styles.dialogSubTitle}>
-                    {t('content-editor:label.contentEditor.edit.action.workInProgress.dialogSubTitle')}
+                    {t('jcontent:label.contentEditor.edit.action.workInProgress.dialogSubTitle')}
                     <a
                         className={styles.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         href={window.contextJsParameters.config.wip}
-                    >{t('content-editor:label.contentEditor.edit.action.workInProgress.clickHere')}
+                    >{t('jcontent:label.contentEditor.edit.action.workInProgress.clickHere')}
                     </a>
                 </Typography>
             </DialogTitle>
@@ -97,12 +97,12 @@ export const WorkInProgressDialog = ({
                     </div>
                     <div>
                         <Typography className={styles.label}>
-                            {t('content-editor:label.contentEditor.edit.action.workInProgress.checkboxLabel')}
+                            {t('jcontent:label.contentEditor.edit.action.workInProgress.checkboxLabel')}
                         </Typography>
 
                         {!wipStatus &&
                         <Typography className={styles.label} variant="caption">
-                            {t('content-editor:label.contentEditor.edit.action.workInProgress.checkboxSubLabel')}
+                            {t('jcontent:label.contentEditor.edit.action.workInProgress.checkboxSubLabel')}
                         </Typography>}
                     </div>
                 </div>
@@ -117,7 +117,7 @@ export const WorkInProgressDialog = ({
                             onChange={handleLocalisedOrAllContent}
                         />
                         <Typography className={styles.label}>
-                            {t('content-editor:label.contentEditor.edit.action.workInProgress.localizedPropertiesOnly')}
+                            {t('jcontent:label.contentEditor.edit.action.workInProgress.localizedPropertiesOnly')}
                         </Typography>
                     </div>
                     <div className={styles.languageSelectionContainer}>
@@ -140,7 +140,7 @@ export const WorkInProgressDialog = ({
                             );
                         })}
                         <Typography className={styles.label} variant="caption">
-                            {t('content-editor:label.contentEditor.edit.action.workInProgress.localizedPropertiesOnlySubText')}
+                            {t('jcontent:label.contentEditor.edit.action.workInProgress.localizedPropertiesOnlySubText')}
                         </Typography>
                     </div>
                     <div className={styles.radioButtonEntry}>
@@ -153,10 +153,10 @@ export const WorkInProgressDialog = ({
                         />
                         <div>
                             <Typography className={styles.label}>
-                                {t('content-editor:label.contentEditor.edit.action.workInProgress.allContent')}
+                                {t('jcontent:label.contentEditor.edit.action.workInProgress.allContent')}
                             </Typography>
                             <Typography className={styles.subTextAllContent} variant="caption">
-                                {t('content-editor:label.contentEditor.edit.action.workInProgress.allContentSubText')}
+                                {t('jcontent:label.contentEditor.edit.action.workInProgress.allContentSubText')}
                             </Typography>
                         </div>
                     </div>
@@ -164,14 +164,14 @@ export const WorkInProgressDialog = ({
             </DialogContent>
             <DialogActions className={styles.actions}>
                 <Button
-                    label={t('content-editor:label.contentEditor.edit.action.workInProgress.btnCancel')}
+                    label={t('jcontent:label.contentEditor.edit.action.workInProgress.btnCancel')}
                     size="big"
                     onClick={handleCancel}/>
                 <Button
                     icon={<Check/>}
                     size="big"
                     color="accent"
-                    label={t('content-editor:label.contentEditor.edit.action.workInProgress.btnDone')}
+                    label={t('jcontent:label.contentEditor.edit.action.workInProgress.btnDone')}
                     disabled={isApplyDisabled()}
                     onClick={handleApply}/>
             </DialogActions>

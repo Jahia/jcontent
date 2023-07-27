@@ -7,7 +7,7 @@ import {getCapitalized} from '~/ContentEditor/utils';
 import styles from './SaveErrorModal.scss';
 
 export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const langs = Object.keys(i18nErrors).sort();
 
     const nbOfErrors = Object.keys(i18nErrors).reduce((c, lang) => c + Object.keys(i18nErrors[lang]).length, 0);
@@ -20,7 +20,7 @@ export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) =>
         <ul>
             {i18nErrors.shared && (
                 <Typography component="li">
-                    {t('content-editor:label.contentEditor.edit.sharedLanguages')} :&nbsp;
+                    {t('jcontent:label.contentEditor.edit.sharedLanguages')} :&nbsp;
                     {
                         Object.keys(i18nErrors.shared)
                             .map(k => fields.find(f => f.name === k).displayName)
@@ -52,14 +52,14 @@ export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) =>
             <DialogTitle id="dialog-errorBeforeSave" className={styles.dialogTitle}>
                 <Warning size="big" color="yellow" className={styles.icon}/>
                 <Typography variant="heading">
-                    {t('content-editor:label.contentEditor.edit.action.save.validation.modalTitle')}
+                    {t('jcontent:label.contentEditor.edit.action.save.validation.modalTitle')}
                 </Typography>
             </DialogTitle>
 
             <DialogContent>
                 <DialogContentText>
                     <Typography weight="semiBold">
-                        {t('content-editor:label.contentEditor.edit.action.save.validation.modalMessage', {count: nbOfErrors})}
+                        {t('jcontent:label.contentEditor.edit.action.save.validation.modalMessage', {count: nbOfErrors})}
                     </Typography>
                     {message}
                 </DialogContentText>
@@ -70,7 +70,7 @@ export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) =>
                     size="big"
                     color="accent"
                     data-sel-role="content-type-dialog-cancel"
-                    label={t('content-editor:label.contentEditor.edit.action.save.validation.modalButton')}
+                    label={t('jcontent:label.contentEditor.edit.action.save.validation.modalButton')}
                     onClick={onClose}
                 />
             </DialogActions>

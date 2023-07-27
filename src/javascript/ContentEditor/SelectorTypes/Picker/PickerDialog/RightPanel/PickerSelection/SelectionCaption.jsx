@@ -23,14 +23,14 @@ DefaultCaptionComponent.propTypes = {
 };
 
 const SelectionCaption = ({selection, expanded, pickerConfig, isMultiple}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const isExpanded = expanded[0];
     const CaptionComponent = pickerConfig.pickerCaptionComponent || DefaultCaptionComponent;
     return (
         <div className="flexCol flexFluid alignStart" data-cm-role="selection-caption">
             {selection.length === 0 && (
                 <Typography className={styles.caption} data-sel-role="no-item-selected">
-                    {t('content-editor:label.contentEditor.picker.rightPanel.actionsCaption')}
+                    {t('jcontent:label.contentEditor.picker.rightPanel.actionsCaption')}
                 </Typography>)}
 
             {/* Single selection caption */}
@@ -42,7 +42,7 @@ const SelectionCaption = ({selection, expanded, pickerConfig, isMultiple}) => {
                 <SelectionButton
                     data-sel-role={`${selection.length}-item-selected`}
                     className={clsx({[styles.hidden]: isExpanded})}
-                    label={t('content-editor:label.contentEditor.selection.itemsSelected', {count: selection.length})}
+                    label={t('jcontent:label.contentEditor.selection.itemsSelected', {count: selection.length})}
                     expanded={expanded}
                 />)}
         </div>

@@ -8,7 +8,7 @@ import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Pre
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 export const Preview = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const editorContext = useContentEditorContext();
     const [contentNotFound, setContentNotFound] = useState(false);
     const handleContentNotFound = useCallback(() => setContentNotFound(true), []);
@@ -30,7 +30,7 @@ export const Preview = () => {
                 {contentNotFound &&
                     <div>
                         <Badge
-                            badgeContent={t('content-editor:label.contentEditor.preview.contentNotFound')}
+                            badgeContent={t('jcontent:label.contentEditor.preview.contentNotFound')}
                             variant="normal"
                             color="warning"
                         />
@@ -38,7 +38,7 @@ export const Preview = () => {
                 {editorContext.nodeData.isFolder &&
                     <div>
                         <Badge
-                            badgeContent={t('content-editor:label.contentEditor.preview.noPreview')}
+                            badgeContent={t('jcontent:label.contentEditor.preview.noPreview')}
                             variant="normal"
                             color="warning"
                         />

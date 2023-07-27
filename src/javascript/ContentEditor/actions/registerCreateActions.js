@@ -11,7 +11,7 @@ export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContent', createContentAction, {
         defaultIcon: <AddCircle/>,
         buttonLabel:
-            'content-editor:label.contentEditor.CMMActions.createNewContent.menu',
+            'jcontent:label.contentEditor.CMMActions.createNewContent.menu',
         targets: ['createMenuActions:3', 'contentActions:3', 'headerPrimaryActions:1'],
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
         hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
@@ -37,7 +37,7 @@ export const registerCreateActions = registry => {
 
         registry.add('action', 'createNavMenuItemMenu', registry.get('action', 'menuAction'), {
             buttonIcon: <AddCircle/>,
-            buttonLabel: 'content-editor:label.contentEditor.CMMActions.createNewContent.newMenu',
+            buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.newMenu',
             targets: ['createMenuActions:-1', 'contentActions:-1', 'rootContentActions:-1'],
             menuTarget: 'createNavMenuItemMenu',
             isMenuPreload: true
@@ -56,7 +56,7 @@ export const registerCreateActions = registry => {
 
     // In app actions
     registry.add('action', 'createButton', createAction, {
-        buttonLabel: 'content-editor:label.contentEditor.create.createButton.name',
+        buttonLabel: 'jcontent:label.contentEditor.create.createButton.name',
         buttonIcon: <Save/>,
         color: 'accent',
         variant: 'outlined',

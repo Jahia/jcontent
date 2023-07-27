@@ -37,7 +37,7 @@ export const useFormDefinition = (query, adapter) => {
         return {
             loading,
             error,
-            errorMessage: error && t('content-editor:label.contentEditor.error.queryingContent', {details: (error.message ? error.message : '')})
+            errorMessage: error && t('jcontent:label.contentEditor.error.queryingContent', {details: (error.message ? error.message : '')})
         };
     }
 

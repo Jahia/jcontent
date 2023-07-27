@@ -78,7 +78,7 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
                 value={value}
                 icon={iconName && toIconComponent(iconName)}
                 hasSearch={dropdownData && dropdownData.length >= 5}
-                searchEmptyText={t('content-editor:label.contentEditor.global.noResult')}
+                searchEmptyText={t('jcontent:label.contentEditor.global.noResult')}
                 onChange={(evt, item) => {
                     if (item.value !== value) {
                         onChange(item.value);

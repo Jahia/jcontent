@@ -7,10 +7,10 @@ import React from 'react';
 export const registerFolderPicker = registry => {
     registry.add(Constants.pickerConfig, 'folder', {
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalFolderTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFolderTitle'
         },
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalFolderTitle',
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFolderTitle',
             displayTree: false
         },
         searchContentType: 'jnt:folder',

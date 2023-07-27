@@ -5,19 +5,19 @@ import styles from './TechnicalInformation.scss';
 import {InfoPanel} from '~/ContentEditor/DesignSystem/InfoPanel';
 
 export const TechnicalInformation = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const {details, technicalInfo} = useContentEditorContext();
 
     return (
         <section data-sel-details-section className={styles.container}>
             <InfoPanel
-                panelTitle={t('content-editor:label.contentEditor.edit.advancedOption.technicalInformation.details')}
+                panelTitle={t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.details')}
                 infos={details}
             />
             <InfoPanel
                 panelTitle={t(
-                    'content-editor:label.contentEditor.edit.advancedOption.technicalInformation.label'
+                    'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.label'
                 )}
                 variant="oneColumn"
                 infos={technicalInfo}

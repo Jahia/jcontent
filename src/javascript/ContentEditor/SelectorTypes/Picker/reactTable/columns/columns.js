@@ -69,7 +69,7 @@ export const allColumnData = [
         id: 'location',
         Cell: LocationCell,
         sortable: false,
-        label: 'content-editor:label.contentEditor.edit.advancedOption.usages.path',
+        label: 'jcontent:label.contentEditor.edit.advancedOption.usages.path',
         Header: reactTable.Header,
         width: '300px'
     },

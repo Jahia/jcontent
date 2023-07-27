@@ -15,7 +15,7 @@ import clsx from 'clsx';
 
 export const ChildrenSection = ({section, isExpanded, onClick}) => {
     const {values, handleChange} = useFormikContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const orderingFieldSet = section.fieldSets.find(fs => fs.name === 'jmix:orderedList');
     const automaticallyOrderField = orderingFieldSet?.fields?.find(f => f.name === 'jmix:orderedList_firstField');
@@ -30,7 +30,7 @@ export const ChildrenSection = ({section, isExpanded, onClick}) => {
 
     const sec = {
         isOrderingSection: true,
-        displayName: t('content-editor:label.contentEditor.section.listAndOrdering.title'),
+        displayName: t('jcontent:label.contentEditor.section.listAndOrdering.title'),
         fieldSets: section.fieldSets.filter(f => f.name !== 'jmix:orderedList')
     };
 
@@ -48,9 +48,9 @@ export const ChildrenSection = ({section, isExpanded, onClick}) => {
                                     variant="subheading"
                                     weight="bold"
                         >
-                            {t('content-editor:label.contentEditor.section.listAndOrdering.ordering')}
+                            {t('jcontent:label.contentEditor.section.listAndOrdering.ordering')}
                         </Typography>
-                        <Chip label={t('content-editor:label.contentEditor.edit.sharedLanguages')}
+                        <Chip label={t('jcontent:label.contentEditor.edit.sharedLanguages')}
                               className={styles.badge}
                               icon={<Language/>}
                               color="default"
@@ -77,13 +77,13 @@ export const ChildrenSection = ({section, isExpanded, onClick}) => {
                                         variant="subheading"
                                         weight="bold"
                             >
-                                {t('content-editor:label.contentEditor.section.listAndOrdering.automatic')}
+                                {t('jcontent:label.contentEditor.section.listAndOrdering.automatic')}
                             </Typography>
                             <Typography component="label"
                                         variant="caption"
                                         className={clsx(fieldSetStyles.fieldSetDescription, fieldSetStyles.staticFieldSetDescription)}
                             >
-                                {t('content-editor:label.contentEditor.section.listAndOrdering.description')}
+                                {t('jcontent:label.contentEditor.section.listAndOrdering.description')}
                             </Typography>
                         </div>
                     </div>

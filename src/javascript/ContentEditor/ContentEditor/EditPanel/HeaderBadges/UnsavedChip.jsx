@@ -8,7 +8,7 @@ import isEquals from 'react-fast-compare';
 
 export const UnsavedChip = () => {
     const formik = useFormikContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {i18nContext, lang, siteInfo} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
 
@@ -34,9 +34,9 @@ export const UnsavedChip = () => {
 
     let message;
     if (updatedLanguages.shared || sortedLanguages.length === siteInfo.languages.length) {
-        message = ' ' + t('content-editor:label.contentEditor.header.chips.inAllLanguages');
+        message = ' ' + t('jcontent:label.contentEditor.header.chips.inAllLanguages');
     } else if (sortedLanguages.length >= 4) {
-        message = ' ' + t('content-editor:label.contentEditor.header.chips.inCountLanguages', {count: sortedLanguages.length});
+        message = ' ' + t('jcontent:label.contentEditor.header.chips.inCountLanguages', {count: sortedLanguages.length});
     } else {
         message = ' : ' + sortedLanguages.join(' - ');
     }
@@ -45,7 +45,7 @@ export const UnsavedChip = () => {
         <Chip
             icon={<Edit/>}
             data-sel-role="unsaved-info-chip"
-            label={t('content-editor:label.contentEditor.header.chips.unsavedLabel') + message}
+            label={t('jcontent:label.contentEditor.header.chips.unsavedLabel') + message}
             color="warning"
         />
     );

@@ -26,19 +26,19 @@ export const registerPickerActions = registry => {
 
     registry.add('action', 'replaceContent', replaceAction, {
         buttonIcon: <Edit/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.actions.replace',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.replace',
         targets: ['content-editor/field/Picker:1', 'content-editor/field/MultiplePicker:1']
     });
 
     registry.add('action', 'openInNewTab', openInTabAction, {
         buttonIcon: <Edit/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.actions.newTab',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.newTab',
         targets: ['content-editor/field/Picker:2', 'content-editor/field/MultiplePicker:2']
     });
 
     registry.add('action', 'unsetFieldActionPicker', unsetFieldAction, {
         buttonIcon: <Close/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.actions.clear',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.clear',
         targets: ['content-editor/field/Picker:3']
     });
 
@@ -48,7 +48,7 @@ export const registerPickerActions = registry => {
     };
     registry.add('action', 'upload', fileUploadJContentAction, {
         buttonIcon: <Upload/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.fileUploadBtn',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.fileUploadBtn',
         targets: ['pickerDialogAction:0'],
         contentType: 'jnt:file',
         dataSelRole: 'upload'
@@ -56,7 +56,7 @@ export const registerPickerActions = registry => {
 
     registry.add('action', 'previewInNewTab', previewInTabAction, {
         buttonIcon: <Visibility/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.actions.previewTab',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.previewTab',
         targets: ['content-editor/field/Picker:3', 'content-editor/field/MultiplePicker:3']
     });
 };

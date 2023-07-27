@@ -72,6 +72,6 @@ export const updateNode = ({
         refetchPreview(getPreviewPath(info.updatedNode), language);
         return info;
     }, error => {
-        onServerError(error, actions, i18nContext, language, notificationContext, t, dataToMutate.propFieldNameMapping, 'content-editor:label.contentEditor.edit.action.save.error');
+        onServerError(error, actions, i18nContext, language, notificationContext, t, dataToMutate.propFieldNameMapping, 'jcontent:label.contentEditor.edit.action.save.error');
     });
 };

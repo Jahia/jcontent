@@ -86,7 +86,7 @@ describe('Work in progress Utils', () => {
     });
 
     it('should getChipContent returns label all content when status is all content', () => {
-        const {t} = useTranslation('content-editor');
+        const {t} = useTranslation('jcontent');
         const nodeData = {
             wipInfo: {
                 status: 'ALL_CONTENT',
@@ -95,11 +95,11 @@ describe('Work in progress Utils', () => {
             defaultWipInfo: {status: 'DISABLED', languages: []}
         };
 
-        expect(getChipContent(nodeData.wipInfo, 'en', t)).toBe('translated_content-editor:label.contentEditor.edit.action.workInProgress.chipLabelAllContent');
+        expect(getChipContent(nodeData.wipInfo, 'en', t)).toBe('translated_jcontent:label.contentEditor.edit.action.workInProgress.chipLabelAllContent');
     });
 
     it('should getChipContent returns label for languages when status is languages', () => {
-        const {t} = useTranslation('content-editor');
+        const {t} = useTranslation('jcontent');
         const nodeData = {
             wipInfo: {
                 status: 'LANGUAGES',
@@ -108,6 +108,6 @@ describe('Work in progress Utils', () => {
             defaultWipInfo: {status: 'DISABLED', languages: []}
         };
 
-        expect(getChipContent(nodeData.wipInfo, 'en', t)).toBe('translated_content-editor:label.contentEditor.edit.action.workInProgress.chipLabelLanguagesEN');
+        expect(getChipContent(nodeData.wipInfo, 'en', t)).toBe('translated_jcontent:label.contentEditor.edit.action.workInProgress.chipLabelLanguagesEN');
     });
 });

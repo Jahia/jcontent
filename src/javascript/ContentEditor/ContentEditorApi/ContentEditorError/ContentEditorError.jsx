@@ -44,7 +44,7 @@ const FullScreenError = props => {
 };
 
 const ModalError = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const [isOpen, setOpen] = useState(true);
     const onClose = () => {
         setOpen(false);
@@ -60,16 +60,16 @@ const ModalError = () => {
             onClose={onClose}
         >
             <DialogTitle className={modalStyles.dialogTitle}>
-                {t('content-editor:label.contentEditor.error.cannotOpen')}
+                {t('jcontent:label.contentEditor.error.cannotOpen')}
             </DialogTitle>
             <DialogContent className={modalStyles.dialogContent}>
-                {t('content-editor:label.contentEditor.error.notFound')}
+                {t('jcontent:label.contentEditor.error.notFound')}
             </DialogContent>
             <DialogActions className={modalStyles.dialogActions}>
                 <Button
                     data-sel-role="close-button"
                     size="big"
-                    label={t('content-editor:label.contentEditor.close')}
+                    label={t('jcontent:label.contentEditor.close')}
                     onClick={onClose}
                 />
             </DialogActions>

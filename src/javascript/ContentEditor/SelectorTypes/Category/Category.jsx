@@ -9,7 +9,7 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Dropdown} from '@jahia/moonstone';
 
 export const Category = ({field, value, id, editorContext, onChange, onBlur}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {data, error, loading} = useQuery(GetCategories, {
         variables: {
             path: '/sites/systemsite/categories',
@@ -36,7 +36,7 @@ export const Category = ({field, value, id, editorContext, onChange, onBlur}) =>
 
     if (error) {
         const message = t(
-            'content-editor:label.contentEditor.error.queryingContent',
+            'jcontent:label.contentEditor.error.queryingContent',
             {details: `/sites/systemsite/categories in ${editorContext.lang}`}
         );
         return <>{message}</>;

@@ -6,7 +6,7 @@ import styles from './ReadOnlyBadge.scss';
 import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 
 export const ReadOnlyBadge = ({isGlobal, readOnly}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {nodeData} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
 
@@ -15,7 +15,7 @@ export const ReadOnlyBadge = ({isGlobal, readOnly}) => {
     const badge = (
         <Chip className={styles.badge}
               data-sel-role="read-only-badge"
-              label={t('content-editor:label.contentEditor.readOnly')}
+              label={t('jcontent:label.contentEditor.readOnly')}
               icon={<Visibility/>}
               color="warning"
         />

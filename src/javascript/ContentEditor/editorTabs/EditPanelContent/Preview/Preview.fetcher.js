@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 export const PreviewFetcher = React.memo(({onContentNotFound}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const editorContext = useContentEditorContext();
 
     const previewContext = getPreviewContext(editorContext);
@@ -36,7 +36,7 @@ export const PreviewFetcher = React.memo(({onContentNotFound}) => {
 
     if (error) {
         const message = t(
-            'content-editor:label.contentEditor.error.queryingContent',
+            'jcontent:label.contentEditor.error.queryingContent',
             {details: error.message ? error.message : ''}
         );
         return <>{message}</>;

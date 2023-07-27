@@ -34,7 +34,7 @@ const config = {
 const types = Object.keys(config);
 
 export const PublicationStatus = ({type, tooltip}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const label = t(`label.contentEditor.publicationStatusBadge.${type}`);
     return (
         <Chip label={label} title={tooltip || label} {...config[type]}/>

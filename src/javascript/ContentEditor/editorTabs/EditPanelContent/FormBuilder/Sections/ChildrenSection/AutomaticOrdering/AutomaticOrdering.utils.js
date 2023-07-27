@@ -1,9 +1,9 @@
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const orderingFieldsMapping = {
-    [Constants.ordering.automaticOrdering.mixin + '_firstField']: {type: 'propField', index: 0, displayNameKey: 'content-editor:label.contentEditor.section.listAndOrdering.orderBy'},
-    [Constants.ordering.automaticOrdering.mixin + '_secondField']: {type: 'propField', index: 1, displayNameKey: 'content-editor:label.contentEditor.section.listAndOrdering.orderBy'},
-    [Constants.ordering.automaticOrdering.mixin + '_thirdField']: {type: 'propField', index: 2, displayNameKey: 'content-editor:label.contentEditor.section.listAndOrdering.orderBy'},
+    [Constants.ordering.automaticOrdering.mixin + '_firstField']: {type: 'propField', index: 0, displayNameKey: 'jcontent:label.contentEditor.section.listAndOrdering.orderBy'},
+    [Constants.ordering.automaticOrdering.mixin + '_secondField']: {type: 'propField', index: 1, displayNameKey: 'jcontent:label.contentEditor.section.listAndOrdering.orderBy'},
+    [Constants.ordering.automaticOrdering.mixin + '_thirdField']: {type: 'propField', index: 2, displayNameKey: 'jcontent:label.contentEditor.section.listAndOrdering.orderBy'},
     [Constants.ordering.automaticOrdering.mixin + '_firstDirection']: {type: 'directionField', index: 0},
     [Constants.ordering.automaticOrdering.mixin + '_secondDirection']: {type: 'directionField', index: 1},
     [Constants.ordering.automaticOrdering.mixin + '_thirdDirection']: {type: 'directionField', index: 2}

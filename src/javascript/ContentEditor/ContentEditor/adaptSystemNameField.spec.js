@@ -37,7 +37,7 @@ describe('adaptFormData', () => {
                                     readOnly: false,
                                     selectorOptions: [{
                                         name: 'description-i18n-key',
-                                        value: 'content-editor:label.section.fieldSet.fields.systemNameDescription'
+                                        value: 'jcontent:label.section.fieldSet.fields.systemNameDescription'
                                     }]
                                 }
                             ]
@@ -68,7 +68,7 @@ describe('adaptFormData', () => {
 
     it('sets labels and initial data correctly', () => {
         adaptSystemNameField(rawData, formData, t, 'nt:any', false, true);
-        expect(formData.sections[1].fieldSets[0].fields[0].displayName).toEqual('content-editor:label.contentEditor.section.fieldSet.system.fields.systemName');
+        expect(formData.sections[1].fieldSets[0].fields[0].displayName).toEqual('jcontent:label.contentEditor.section.fieldSet.system.fields.systemName');
         expect(formData.initialValues[Constants.systemName.name]).toEqual(rawData.jcr.result.name);
 
         adaptSystemNameField(rawData, formData, t, 'nt:any', true, true);

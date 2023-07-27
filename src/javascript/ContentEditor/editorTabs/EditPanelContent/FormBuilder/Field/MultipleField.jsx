@@ -9,7 +9,7 @@ import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/Ordera
 
 export const MultipleField = ({editorContext, inputContext, field, onChange, onBlur}) => {
     const {values, setFieldValue, setFieldTouched} = useFormikContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const multipleFieldOnChange = (index, newData) => {
         let updatedValues = [...values[field.name]];
@@ -95,7 +95,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
                     data-sel-action="addField"
                     variant="outlined"
                     size="big"
-                    label={t('content-editor:label.contentEditor.edit.fields.actions.add')}
+                    label={t('jcontent:label.contentEditor.edit.fields.actions.add')}
                     onClick={() => onFieldAdd()}
             />}
         </>

@@ -64,7 +64,7 @@ Renderer.propTypes = {
 };
 
 export const AdvancedOptionsNavigation = ({activeOption, setActiveOption}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     // Engines tabs need the node Data to be registered
     const {tabs, loading, error} = useRegisterEngineTabActions();
@@ -72,7 +72,7 @@ export const AdvancedOptionsNavigation = ({activeOption, setActiveOption}) => {
 
     if (error) {
         const message = t(
-            'content-editor:label.contentEditor.error.queryingContent',
+            'jcontent:label.contentEditor.error.queryingContent',
             {details: error.message ? error.message : ''}
         );
         return <>{message}</>;

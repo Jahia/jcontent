@@ -25,7 +25,7 @@ export const showChipField = (is18nField, wipInfo, currentLanguage) => {
 };
 
 export const Field = ({inputContext, idInput, selectorType, field}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const formik = useFormikContext();
     const editorContext = useContentEditorContext();
     const {count} = useContentEditorConfigContext();
@@ -134,7 +134,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
                                     <Chip
                                         className={styles.badge}
                                         data-sel-content-editor-field-mandatory={Boolean(hasMandatoryError)}
-                                        label={t('content-editor:label.contentEditor.edit.validation.required')}
+                                        label={t('jcontent:label.contentEditor.edit.validation.required')}
                                         color={hasMandatoryError ? 'warning' : 'accent'}
                                     />
                                 )}
@@ -145,7 +145,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
                                     <Chip
                                         className={styles.badge}
                                         data-sel-role="wip-info-chip-field"
-                                        label={t('content-editor:label.contentEditor.edit.action.workInProgress.chipLabelField')}
+                                        label={t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelField')}
                                         color="accent"
                                     />
                                 )}
@@ -153,7 +153,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
                                     <Chip
                                         className={styles.badge}
                                         icon={<Language/>}
-                                        label={t('content-editor:label.contentEditor.edit.sharedLanguages')}
+                                        label={t('jcontent:label.contentEditor.edit.sharedLanguages')}
                                         color="default"
                                     />}
                             </>
@@ -212,7 +212,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
                         {shouldDisplayErrors ?
                             field.errorMessage ?
                                 field.errorMessage :
-                                t(`content-editor:label.contentEditor.edit.errors.${errorName}`, {...buildFlatFieldObject(field), ...errorArgs}) :
+                                t(`jcontent:label.contentEditor.edit.errors.${errorName}`, {...buildFlatFieldObject(field), ...errorArgs}) :
                             ''}&nbsp;
                     </Typography>
                 )}

@@ -8,7 +8,7 @@ import {AdvancedOptions} from './AdvancedOptions';
 export const registerTabBarActions = actionsRegistry => {
     // Tab bar actions
     actionsRegistry.add('action', 'ceEditTab', tabBarAction, {
-        buttonLabel: 'content-editor:label.contentEditor.edit.tab.edit',
+        buttonLabel: 'jcontent:label.contentEditor.edit.tab.edit',
         buttonIcon: <Edit/>,
         targets: ['editHeaderTabsActions:1'],
         value: Constants.editPanel.editTab,
@@ -18,7 +18,7 @@ export const registerTabBarActions = actionsRegistry => {
     });
 
     actionsRegistry.add('action', 'ceAdvancedTab', tabBarAction, {
-        buttonLabel: 'content-editor:label.contentEditor.edit.tab.advanced',
+        buttonLabel: 'jcontent:label.contentEditor.edit.tab.advanced',
         buttonIcon: <Setting/>,
         targets: ['editHeaderTabsActions:2'],
         value: 'advanced',

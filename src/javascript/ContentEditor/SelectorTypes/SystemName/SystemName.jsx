@@ -10,7 +10,7 @@ import styles from './SystemName.scss';
 import {useFormikContext} from 'formik';
 
 export const SystemName = ({field, value, id, editorContext, onChange, onBlur}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const formik = useFormikContext();
     const titleField = Object.keys(formik.values).find(key => key.endsWith('_jcr:title'));
     return (
@@ -31,7 +31,7 @@ export const SystemName = ({field, value, id, editorContext, onChange, onBlur}) 
                     variant="outlined"
                     size="big"
                     color="accent"
-                    label={t('content-editor:label.contentEditor.section.fieldSet.system.fields.syncButton')}
+                    label={t('jcontent:label.contentEditor.section.fieldSet.system.fields.syncButton')}
                     icon={<Copy/>}
                     isDisabled={field.readOnly || isEqualToSystemName(formik.values[titleField], value, field)}
                     onClick={() => {

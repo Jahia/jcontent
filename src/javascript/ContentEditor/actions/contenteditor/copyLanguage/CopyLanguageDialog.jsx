@@ -34,13 +34,13 @@ export const CopyLanguageDialog = ({
         return getI18nFieldAndValues(formAndData);
     };
 
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const handleCancel = () => {
         onCloseDialog();
     };
 
     const defaultOption = {
-        label: t('content-editor:label.contentEditor.edit.action.copyLanguage.defaultValue'),
+        label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),
         value: 'void'
     };
 
@@ -73,15 +73,15 @@ export const CopyLanguageDialog = ({
         >
             <DialogTitle id="dialog-language-title">
                 <Typography isUpperCase variant="heading" weight="bold" className={styles.dialogTitle}>
-                    {t('content-editor:label.contentEditor.edit.action.copyLanguage.dialogTitle')}
+                    {t('jcontent:label.contentEditor.edit.action.copyLanguage.dialogTitle')}
                 </Typography>
                 <Typography variant="subheading" className={styles.dialogSubTitle}>
-                    {t('content-editor:label.contentEditor.edit.action.copyLanguage.dialogSubTitle')}
+                    {t('jcontent:label.contentEditor.edit.action.copyLanguage.dialogSubTitle')}
                 </Typography>
             </DialogTitle>
             <DialogContent className={styles.dialogContent} classes={{root: styles.dialogContent_overflowYVisible}}>
                 <Typography className={styles.copyFromLabel}>
-                    {t('content-editor:label.contentEditor.edit.action.copyLanguage.listLabel')}
+                    {t('jcontent:label.contentEditor.edit.action.copyLanguage.listLabel')}
                 </Typography>
                 <Dropdown
                     className={styles.language}
@@ -99,25 +99,25 @@ export const CopyLanguageDialog = ({
                     onChange={handleOnChange}
                 />
                 <Typography className={styles.label}>
-                    {t('content-editor:label.contentEditor.edit.action.copyLanguage.currentLanguage')}
+                    {t('jcontent:label.contentEditor.edit.action.copyLanguage.currentLanguage')}
                 </Typography>
                 <Typography>{language}</Typography>
             </DialogContent>
             <DialogActions>
                 <Typography className={styles.warningText}>
                     <Warning
-                        className={styles.warningIcon}/> {t('content-editor:label.contentEditor.edit.action.copyLanguage.bottomText')}
+                        className={styles.warningIcon}/> {t('jcontent:label.contentEditor.edit.action.copyLanguage.bottomText')}
                 </Typography>
                 <Button
                     size="big"
                     color="default"
-                    label={t('content-editor:label.contentEditor.edit.action.copyLanguage.btnCancel')}
+                    label={t('jcontent:label.contentEditor.edit.action.copyLanguage.btnCancel')}
                     onClick={handleCancel}
                 />
                 <Button
                     size="big"
                     color="accent"
-                    label={t('content-editor:label.contentEditor.edit.action.copyLanguage.btnApply')}
+                    label={t('jcontent:label.contentEditor.edit.action.copyLanguage.btnApply')}
                     disabled={isApplyDisabled}
                     onClick={handleApply}
                 />

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 export const AutomaticOrdering = ({orderingFieldSet}) => {
     const {values, setFieldValue, setFieldTouched} = useFormikContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const rows = adaptSectionToDisplayableRows(orderingFieldSet, t);
     const [displayedRows, setDisplayedRows] = useState(getDisplayedRows(rows, values));
 
@@ -58,7 +58,7 @@ export const AutomaticOrdering = ({orderingFieldSet}) => {
             inputContext.actionRender = (
                 <Button variant="ghost"
                         data-sel-role={`delete-automatic-ordering-field-${index}`}
-                        aria-label={t('content-editor:label.contentEditor.edit.fields.actions.clear')}
+                        aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
                         icon={<Close/>}
                         disabled={field.readOnly}
                         onClick={() => {
@@ -94,7 +94,7 @@ export const AutomaticOrdering = ({orderingFieldSet}) => {
                     size="big"
                     data-sel-role="add-automatic-ordering-field"
                     isDisabled={!nextRow || nextRow.propField.readOnly}
-                    label={t('content-editor:label.contentEditor.edit.fields.actions.add')}
+                    label={t('jcontent:label.contentEditor.edit.fields.actions.add')}
                     onClick={() => add(nextRow, nextRowIndex)}/>
         </>
     );

@@ -9,7 +9,7 @@ import {filterTree, isOpenableEntry} from './ContentTypeSelectorModal.utils';
 import styles from './ContentTypeSelectorModal.scss';
 
 export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose, onCreateContent}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const [selectedType, setSelectedType] = useState(null);
     const [filter, setFilter] = useState();
 
@@ -20,14 +20,14 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose
         <Dialog classes={{paper: styles.modalRoot}} open={open} aria-labelledby="dialog-createNewContent" onExited={onExited} onClose={onClose}>
             <DialogTitle className={styles.dialogTitle} id="dialog-createNewContent">
                 <Typography variant="heading">
-                    {t('content-editor:label.contentEditor.CMMActions.createNewContent.labelModal')}
+                    {t('jcontent:label.contentEditor.CMMActions.createNewContent.labelModal')}
                 </Typography>
             </DialogTitle>
 
             <Input
                 autoFocus
                 data-sel-role="content-type-dialog-input"
-                placeholder={t('content-editor:label.contentEditor.CMMActions.createNewContent.filterLabel')}
+                placeholder={t('jcontent:label.contentEditor.CMMActions.createNewContent.filterLabel')}
                 className={styles.filterInput}
                 variant={{interactive: <Search/>}}
                 onChange={e => {
@@ -64,7 +64,7 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose
                     data-sel-role="content-type-dialog-cancel"
                     variant="outlined"
                     size="big"
-                    label={t('content-editor:label.contentEditor.CMMActions.createNewContent.btnDiscard')}
+                    label={t('jcontent:label.contentEditor.CMMActions.createNewContent.btnDiscard')}
                     onClick={onClose}
                 />
                 <Button
@@ -72,7 +72,7 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose
                     disabled={!selectedType}
                     color="accent"
                     size="big"
-                    label={t('content-editor:label.contentEditor.CMMActions.createNewContent.btnCreate')}
+                    label={t('jcontent:label.contentEditor.CMMActions.createNewContent.btnCreate')}
                     onClick={() => {
                         onCreateContent(selectedType);
                     }}

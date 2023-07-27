@@ -4,9 +4,9 @@ export const registerMultipleLeftRightSelector = ceRegistry => {
     ceRegistry.add('selectorType', 'MultipleLeftRightSelector', {
         dataType: ['String'],
         cmp: MultipleLeftRightSelector,
-        labelKey: 'content-editor:label.contentEditor.selectorTypes.multipleLeftRightSelector.displayValue',
+        labelKey: 'jcontent:label.contentEditor.selectorTypes.multipleLeftRightSelector.displayValue',
         properties: [
-            {name: 'description', value: 'content-editor:label.contentEditor.selectorTypes.multipleLeftRightSelector.description'},
+            {name: 'description', value: 'jcontent:label.contentEditor.selectorTypes.multipleLeftRightSelector.description'},
             {name: 'iconStart', value: 'MultipleListSelector'}
         ],
         supportMultiple: true,

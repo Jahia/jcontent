@@ -16,13 +16,13 @@ export const registerChoiceListActions = registry => {
 
     registry.add('action', 'unsetFieldActionChoiceList', unsetFieldAction, {
         buttonIcon: <Close/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.actions.clear',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.clear',
         targets: ['content-editor/field/Choicelist:1']
     });
 
     registry.add('action', 'selectAllActionChoiceList', selectAllAction, {
         buttonIcon: <Add/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.fields.actions.selectAll',
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.selectAll',
         targets: ['content-editor/field/Choicelist:2']
     });
 };

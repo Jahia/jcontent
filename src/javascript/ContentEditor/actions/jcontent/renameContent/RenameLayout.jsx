@@ -18,7 +18,7 @@ const accentColorButtonProps = {
 };
 
 export const RenameLayout = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     return (
         <>

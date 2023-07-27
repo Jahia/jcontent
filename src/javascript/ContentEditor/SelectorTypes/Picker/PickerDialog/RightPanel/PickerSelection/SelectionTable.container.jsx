@@ -9,7 +9,7 @@ import {configPropType} from '../../../configs/configPropType';
 
 const SelectionTableContainer = ({selection, expanded, pickerConfig}) => {
     const [isExpanded, setExpanded] = expanded;
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     useEffect(() => {
         if (!selection.length && isExpanded) {
@@ -26,7 +26,7 @@ const SelectionTableContainer = ({selection, expanded, pickerConfig}) => {
         <div className={classProps} aria-expanded={isExpanded} data-cm-role="selection-table-container">
             <SelectionButton
                 data-sel-role={`${selection.length}-item-selected`}
-                label={t('content-editor:label.contentEditor.selection.itemsSelected', {count: selection.length})}
+                label={t('jcontent:label.contentEditor.selection.itemsSelected', {count: selection.length})}
                 expanded={expanded}
             />
             <div className={clsx(styles.selectionTable, {[styles.hidden]: !isExpanded})}>

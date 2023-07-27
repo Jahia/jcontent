@@ -18,7 +18,7 @@ export const WindowListeners = () => {
     const history = useHistory();
     const dirty = isDirty(formik, i18nContext);
     const {closed} = useContentEditorConfigContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     useEffect(() => {
         if (!registered.current && dirty && !closed) {
@@ -27,7 +27,7 @@ export const WindowListeners = () => {
             window.addEventListener('beforeunload', handleBeforeUnloadEvent);
             unblock.current = history.block((location, action) => {
                 if (action === 'POP') {
-                    return t('content-editor:label.contentEditor.edit.action.goBack.alert');
+                    return t('jcontent:label.contentEditor.edit.action.goBack.alert');
                 }
             });
         }

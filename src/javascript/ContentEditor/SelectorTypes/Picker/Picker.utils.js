@@ -92,7 +92,7 @@ export const mergeDeep = (target, ...sources) => {
 export const getBaseSearchContextData = ({t, currentSite, accordion, node, currentPath}) => (
     [
         {
-            label: t('content-editor:label.contentEditor.picker.rightPanel.searchContextOptions.search'),
+            label: t('jcontent:label.contentEditor.picker.rightPanel.searchContextOptions.search'),
             searchPath: '',
             isDisabled: true
         },

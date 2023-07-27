@@ -8,10 +8,10 @@ import styles from './CloseConfirmationDialog.scss';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const CloseConfirmationDialog = React.memo(({isOpen, onCloseDialog, actionCallback}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {mode} = useContentEditorContext();
-    const titleKey = `content-editor:label.contentEditor.edit.action.goBack.${mode}.title`;
-    const messageKey = `content-editor:label.contentEditor.edit.action.goBack.${mode}.message`;
+    const titleKey = `jcontent:label.contentEditor.edit.action.goBack.${mode}.title`;
+    const messageKey = `jcontent:label.contentEditor.edit.action.goBack.${mode}.message`;
     const handleDiscard = () => {
         onCloseDialog();
         actionCallback({discard: true});
@@ -36,13 +36,13 @@ export const CloseConfirmationDialog = React.memo(({isOpen, onCloseDialog, actio
                 <Button
                     size="big"
                     variant="ghost"
-                    label={t('content-editor:label.contentEditor.edit.action.goBack.btnContinue')}
+                    label={t('jcontent:label.contentEditor.edit.action.goBack.btnContinue')}
                     data-sel-role="close-dialog-cancel"
                     onClick={onCloseDialog}
                 />
                 <Button
                     size="big"
-                    label={t('content-editor:label.contentEditor.edit.action.goBack.btnDiscard')}
+                    label={t('jcontent:label.contentEditor.edit.action.goBack.btnDiscard')}
                     data-sel-role="close-dialog-discard"
                     onClick={handleDiscard}
                 />

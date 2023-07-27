@@ -37,7 +37,7 @@ describe('LockInfoBadge.badge', () => {
 
 describe('Lock Utils', () => {
     it('test getBadgeContent', () => {
-        const {t} = useTranslation('content-editor');
+        const {t} = useTranslation('jcontent');
         const nodeDataLockUser = {
             input: {
                 lockedAndCannotBeEdited: true,
@@ -48,7 +48,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_content-editor:label.contentEditor.edit.action.lock.user'
+            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.user'
         };
 
         const nodeDataLockWithWorkFlowLock = {
@@ -64,7 +64,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_content-editor:label.contentEditor.edit.action.lock.validation'
+            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.validation'
         };
 
         const nodeDataUnknownLock = {
@@ -77,7 +77,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_content-editor:label.contentEditor.edit.action.lock.unknown'
+            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.unknown'
         };
 
         const nodeDataDeletion = {
@@ -90,7 +90,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_content-editor:label.contentEditor.edit.action.lock.deletion'
+            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.deletion'
         };
 
         [nodeDataLockUser, nodeDataLockWithWorkFlowLock, nodeDataUnknownLock, nodeDataDeletion].forEach(

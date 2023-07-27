@@ -7,7 +7,7 @@ import {File} from '@jahia/moonstone';
 import {encodeJCRPath} from '~/ContentEditor/utils';
 
 export const DraggableReference = ({child}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const [{isDragging}, drag] = useDrag({
         type: 'REFERENCE_CARD',
@@ -22,7 +22,7 @@ export const DraggableReference = ({child}) => {
             {!isDragging &&
             <ReferenceCard
                 isDraggable
-                emptyLabel={t('content-editor:label.contentEditor.edit.fields.imagePicker.addImage')}
+                emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                 emptyIcon={<File/>}
                 labelledBy={`${child.name}-label`}
                 fieldData={{

@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
 
 const TabItemRenderer = renderProps => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     return (
         <TabItem
             data-sel-role={renderProps.dataSelRole}

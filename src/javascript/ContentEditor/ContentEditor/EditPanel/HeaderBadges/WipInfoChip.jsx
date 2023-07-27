@@ -7,10 +7,10 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const getChipContent = (wipInfo, currentLanguage, t) => {
     if (wipInfo.status === Constants.wip.status.ALL_CONTENT) {
-        return t('content-editor:label.contentEditor.edit.action.workInProgress.chipLabelAllContent');
+        return t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelAllContent');
     }
 
-    return t('content-editor:label.contentEditor.edit.action.workInProgress.chipLabelLanguages') + currentLanguage.toUpperCase();
+    return t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelLanguages') + currentLanguage.toUpperCase();
 };
 
 export const showChipHeader = (wipInfo, currentLanguage) => {
@@ -19,7 +19,7 @@ export const showChipHeader = (wipInfo, currentLanguage) => {
 };
 
 export const WipInfoChip = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const {lang} = useContentEditorContext();
 
     return (

@@ -31,7 +31,7 @@ const accentColorButtonProps = {
 export const EditPanelCompact = ({title, createAnother}) => {
     const {mode} = useContentEditorContext();
     const {updateEditorConfig} = useContentEditorConfigContext();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
     const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;

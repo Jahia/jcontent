@@ -27,10 +27,10 @@ const viewModeSelectorProps = config => ({
 export const registerMediaPickers = registry => {
     registry.add(Constants.pickerConfig, 'file', {
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalFileTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFileTitle'
         },
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalFileTitle'
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFileTitle'
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,
@@ -43,13 +43,13 @@ export const registerMediaPickers = registry => {
 
     registry.add(Constants.pickerConfig, 'image', {
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalImageTitle',
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalImageTitle',
             emptyIcon: <FileImage/>,
             usePickerInputData: useMediaPickerInputData
         },
         pickerDialog: {
             view: 'Thumbnail',
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalImageTitle',
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalImageTitle',
             displayTree: true,
             displaySiteSwitcher: true,
             displaySearch: true
@@ -65,10 +65,10 @@ export const registerMediaPickers = registry => {
 
     registry.add(Constants.pickerConfig, 'pdf', {
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalPDFTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPDFTitle'
         },
         pickerDialog: {
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalPDFTitle'
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPDFTitle'
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,
@@ -106,11 +106,11 @@ export const registerMediaPickers = registry => {
 
     registry.add(Constants.pickerConfig, 'video', {
         pickerInput: {
-            emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalVideoTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalVideoTitle'
         },
         pickerDialog: {
             view: 'Thumbnail',
-            dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalVideoTitle'
+            dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalVideoTitle'
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,

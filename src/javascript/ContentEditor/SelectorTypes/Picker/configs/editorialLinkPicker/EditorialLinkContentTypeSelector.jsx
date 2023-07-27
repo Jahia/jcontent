@@ -10,7 +10,7 @@ import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/confi
 const localStorage = window.localStorage;
 
 export const EditorialLinkContentTypeSelector = ({pickerConfig}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const tableView = useSelector(state => state.contenteditor.picker.tableView);
     const dispatch = useDispatch();
 

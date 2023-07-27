@@ -9,8 +9,8 @@ export const EditPanelLanguageSwitcher = () => {
     const {mode, lang: currentLanguage} = useContentEditorConfigContext();
     const {i18nContext, nodeData, siteInfo} = useContentEditorContext();
     const switchLanguage = useSwitchLanguage();
-    const {t} = useTranslation('content-editor');
-    const labelPrefix = 'content-editor:label.contentEditor.header.languageSwitcher';
+    const {t} = useTranslation('jcontent');
+    const labelPrefix = 'jcontent:label.contentEditor.header.languageSwitcher';
 
     function getLanguageOptions() {
         let langLabel; // Current dropdown selection

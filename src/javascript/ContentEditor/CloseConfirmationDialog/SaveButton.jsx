@@ -6,7 +6,7 @@ import * as PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const SaveButton = ({onCloseDialog, actionCallback}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const formik = useFormikContext();
     const {resetI18nContext} = useContentEditorContext();
     const handleSave = () => {
@@ -34,7 +34,7 @@ export const SaveButton = ({onCloseDialog, actionCallback}) => {
             color="accent"
             size="big"
             isDisabled={disabled}
-            label={t('content-editor:label.contentEditor.edit.action.goBack.btnSave')}
+            label={t('jcontent:label.contentEditor.edit.action.goBack.btnSave')}
             onClick={handleSave}
         />
     );

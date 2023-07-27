@@ -37,15 +37,15 @@ export const DefaultPickerConfig = {
     selectableTypesTable: ['jnt:content', 'jnt:file', 'jnt:page', 'jmix:navMenuItem'],
     showOnlyNodesWithTemplates: false,
     pickerInput: {
-        emptyLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalTitle',
-        notFoundLabel: 'content-editor:label.contentEditor.edit.fields.contentPicker.notFoundContent',
+        emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalTitle',
+        notFoundLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.notFoundContent',
         emptyIcon: <File/>,
         notFoundIcon: <FileBroken/>,
         usePickerInputData
     },
     pickerDialog: {
         view: 'List',
-        dialogTitle: 'content-editor:label.contentEditor.edit.fields.contentPicker.modalTitle',
+        dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalTitle',
         displayTree: true,
         displaySiteSwitcher: true,
         displaySearch: true

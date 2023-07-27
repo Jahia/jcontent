@@ -156,17 +156,17 @@ describe('Automatic ordering component', () => {
         // Should transform section in displayable rows
         expect(rows.length).toBe(3);
         expect(rows[0].propField.name).toBe(Constants.ordering.automaticOrdering.mixin + '_firstField');
-        expect(rows[0].propField.displayName).toBe('content-editor:label.contentEditor.section.listAndOrdering.orderBy');
+        expect(rows[0].propField.displayName).toBe('jcontent:label.contentEditor.section.listAndOrdering.orderBy');
         expect(rows[0].directionField.name).toBe(Constants.ordering.automaticOrdering.mixin + '_firstDirection');
         expect(rows[0].directionField.displayName).toBe('Order direction');
 
         expect(rows[1].propField.name).toBe(Constants.ordering.automaticOrdering.mixin + '_secondField');
-        expect(rows[1].propField.displayName).toBe('content-editor:label.contentEditor.section.listAndOrdering.orderBy');
+        expect(rows[1].propField.displayName).toBe('jcontent:label.contentEditor.section.listAndOrdering.orderBy');
         expect(rows[1].directionField.name).toBe(Constants.ordering.automaticOrdering.mixin + '_secondDirection');
         expect(rows[1].directionField.displayName).toBe('Order direction');
 
         expect(rows[2].propField.name).toBe(Constants.ordering.automaticOrdering.mixin + '_thirdField');
-        expect(rows[2].propField.displayName).toBe('content-editor:label.contentEditor.section.listAndOrdering.orderBy');
+        expect(rows[2].propField.displayName).toBe('jcontent:label.contentEditor.section.listAndOrdering.orderBy');
         expect(rows[2].directionField.name).toBe(Constants.ordering.automaticOrdering.mixin + '_thirdDirection');
         expect(rows[2].directionField.displayName).toBe('Order direction');
 

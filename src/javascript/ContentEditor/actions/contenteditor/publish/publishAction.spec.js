@@ -146,14 +146,14 @@ describe('publish action', () => {
 
     it('should use label when polling is OFF', () => {
         const cmp = shallow(<PublishAction {...defaultProps}/>);
-        expect(cmp.props().buttonLabel).toBe('content-editor:label.contentEditor.edit.action.publish.name');
+        expect(cmp.props().buttonLabel).toBe('jcontent:label.contentEditor.edit.action.publish.name');
     });
 
     it('should use polling label when polling is ON', () => {
         publicationInfoContext.publicationInfoPolling = true;
 
         const cmp = shallow(<PublishAction {...defaultProps}/>);
-        expect(cmp.props().buttonLabel).toBe('content-editor:label.contentEditor.edit.action.publish.namePolling');
+        expect(cmp.props().buttonLabel).toBe('jcontent:label.contentEditor.edit.action.publish.namePolling');
     });
 
     it('should undisplay publish action when you haven\'t the proper permission', () => {

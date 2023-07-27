@@ -15,7 +15,7 @@ export const registerEditActions = actionsRegistry => {
     // Edit action button in JContent; need separate actions for content and pages
     actionsRegistry.add('action', 'edit', editContentAction, {
         buttonIcon: <Edit/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.contentEdit',
+        buttonLabel: 'jcontent:label.contentEditor.edit.contentEdit',
         targets: showPageComposer || showCatMan ? ['contentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1'] : ['contentActions:2', 'narrowHeaderMenu:1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'], // For edit content
         requiredSitePermission: ['editAction'],
@@ -25,7 +25,7 @@ export const registerEditActions = actionsRegistry => {
     // Edit action button in JContent; need separate actions for content and pages
     actionsRegistry.add('action', 'editPage', editContentAction, {
         buttonIcon: <Edit/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.contentEdit',
+        buttonLabel: 'jcontent:label.contentEditor.edit.contentEdit',
         targets: showPageComposer ? ['contentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1'] : ['contentActions:2', 'narrowHeaderMenu:1'],
         showOnNodeTypes: ['jnt:page'], // For edit pages
         requiredSitePermission: ['editPageAction'],
@@ -35,7 +35,7 @@ export const registerEditActions = actionsRegistry => {
     // Edit action button in JContent
     actionsRegistry.add('action', 'quickEdit', editContentAction, {
         buttonIcon: <Edit/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.contentEdit',
+        buttonLabel: 'jcontent:label.contentEditor.edit.contentEdit',
         hideOnNodeTypes: ['jnt:virtualsite'],
         getDisplayName: true,
         isFullscreen: false
@@ -44,7 +44,7 @@ export const registerEditActions = actionsRegistry => {
     // Content-EditorAction
     // Main actions (publish, save and startWorkflow)
     actionsRegistry.add('action', 'submitSave', saveAction, {
-        buttonLabel: 'content-editor:label.contentEditor.edit.action.save.name',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.save.name',
         buttonIcon: <Save/>,
         color: 'accent',
         variant: 'outlined',
@@ -60,7 +60,7 @@ export const registerEditActions = actionsRegistry => {
     });
 
     actionsRegistry.add('action', 'startWorkflowMainButton', startWorkflowAction, {
-        buttonLabel: 'content-editor:label.contentEditor.edit.action.startWorkflow.name',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.startWorkflow.name',
         buttonIcon: <CloudUpload/>,
         targets: ['content-editor/header/main-publish-actions:1'],
         dataSelRole: 'startWorkflowMainButton'
@@ -69,7 +69,7 @@ export const registerEditActions = actionsRegistry => {
     /* 3 dots menu actions (next to tabs) */
     actionsRegistry.add('action', 'content-editor/header/3dots', actionsRegistry.get('action', 'menuAction'), {
         buttonIcon: <MoreVert/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.action.moreOptions',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.moreOptions',
         menuTarget: 'content-editor/header/3dots',
         dataSelRole: '3dotsMenuAction'
     });
@@ -77,7 +77,7 @@ export const registerEditActions = actionsRegistry => {
     /* 3 dots menu actions (for each field) */
     actionsRegistry.add('action', 'content-editor/field/3dots', actionsRegistry.get('action', 'menuAction'), {
         buttonIcon: <MoreVert/>,
-        buttonLabel: 'content-editor:label.contentEditor.edit.action.moreOptions',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.moreOptions',
         menuTarget: 'content-editor/field/3dots',
         dataSelRole: '3dotsMenuAction',
         isMenuPreload: true
@@ -89,7 +89,7 @@ export const registerEditActions = actionsRegistry => {
     });
 
     actionsRegistry.add('action', 'copyLanguageAction', copyLanguageAction, {
-        buttonLabel: 'content-editor:label.contentEditor.edit.action.copyLanguage.name',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.copyLanguage.name',
         targets: ['content-editor/header/3dots:2']
     });
 };

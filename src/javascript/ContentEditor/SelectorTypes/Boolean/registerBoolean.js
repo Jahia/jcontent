@@ -6,9 +6,9 @@ export const registerBoolean = ceRegistry => {
         dataType: ['Boolean'],
         cmp: Boolean,
         containerStyle: styles.container,
-        labelKey: 'content-editor:label.contentEditor.selectorTypes.checkbox.displayValue',
+        labelKey: 'jcontent:label.contentEditor.selectorTypes.checkbox.displayValue',
         properties: [
-            {name: 'description', value: 'content-editor:label.contentEditor.selectorTypes.checkbox.description'},
+            {name: 'description', value: 'jcontent:label.contentEditor.selectorTypes.checkbox.description'},
             {name: 'iconStart', value: 'Boolean'}
         ],
         initValue: field => {

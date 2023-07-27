@@ -16,7 +16,7 @@ export const useContentEditorContext = () => useContext(ContentEditorContext);
 
 export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     const notificationContext = useNotifications();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const [errors, setErrors] = useState(null);
     const contentEditorConfigContext = useContentEditorConfigContext();
     // Get information from page composer to display the preview.

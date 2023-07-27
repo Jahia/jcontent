@@ -125,21 +125,21 @@ const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
 const getTechnicalInfo = (nodeData, t) => {
     return [
         {
-            label: t('content-editor:label.contentEditor.edit.advancedOption.technicalInformation.contentType'),
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType'),
             value: nodeData.primaryNodeType.displayName
         },
         {
-            label: t('content-editor:label.contentEditor.edit.advancedOption.technicalInformation.mixinTypes'), value: [
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.mixinTypes'), value: [
                 nodeData.primaryNodeType.name,
                 ...nodeData.mixinTypes.map(m => m.name)
             ].filter(v => v).join('; ')
         },
         {
-            label: t('content-editor:label.contentEditor.edit.advancedOption.technicalInformation.path'),
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.path'),
             value: nodeData.path
         },
         {
-            label: t('content-editor:label.contentEditor.edit.advancedOption.technicalInformation.uuid'),
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.uuid'),
             value: nodeData.uuid
         }
     ];

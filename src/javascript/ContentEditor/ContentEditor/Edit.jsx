@@ -17,7 +17,7 @@ import {useApolloClient} from '@apollo/client';
 export const Edit = () => {
     const notificationContext = useNotifications();
     const client = useApolloClient();
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const contentEditorConfigContext = useContentEditorConfigContext();
     const {onClosedCallback, editCallback} = contentEditorConfigContext;
     const {lang, nodeData, initialValues, title, i18nContext} = useContentEditorContext();

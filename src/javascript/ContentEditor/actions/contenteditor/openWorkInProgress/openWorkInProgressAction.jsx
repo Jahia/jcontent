@@ -21,7 +21,7 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
         (wipInfo.status === Constants.wip.status.ALL_CONTENT ||
             wipInfo.status === Constants.wip.status.LANGUAGES);
     const buttonLabelKind = isMarkAsWIP ? 'unmark' : 'mark';
-    const buttonLabel = `content-editor:label.contentEditor.edit.action.workInProgress.label.${buttonLabelKind}`;
+    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${buttonLabelKind}`;
 
     const openModal = () => {
         componentRenderer.render(

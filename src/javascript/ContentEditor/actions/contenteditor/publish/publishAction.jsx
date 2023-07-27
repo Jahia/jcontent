@@ -42,8 +42,8 @@ const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
     }
 
     const buttonLabel = publicationInfoPolling ?
-        'content-editor:label.contentEditor.edit.action.publish.namePolling' :
-        'content-editor:label.contentEditor.edit.action.publish.name';
+        'jcontent:label.contentEditor.edit.action.publish.namePolling' :
+        'jcontent:label.contentEditor.edit.action.publish.name';
 
     let onClick = useCallback(() => {
         publishNode({
@@ -68,7 +68,7 @@ const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
             disabled={disabled}
             buttonLabel={buttonLabel}
             buttonLabelShort={(siteInfo?.languages?.length === 1) && !publicationInfoPolling ?
-                'content-editor:label.contentEditor.edit.action.publish.shortName' : ''}
+                'jcontent:label.contentEditor.edit.action.publish.shortName' : ''}
             buttonLabelParams={{language: lang}}
             isVisible={isVisible}
             onClick={onClick}

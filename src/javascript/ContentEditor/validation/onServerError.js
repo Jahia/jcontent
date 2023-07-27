@@ -19,7 +19,7 @@ export const onServerError = (error, formikActions, i18nContext, language, notif
             if (graphQLError.message && graphQLError.message.startsWith('javax.jcr.ItemExistsException')) {
                 // Custom handling for this error, system name is not valid
 
-                notificationContext.notify(t('content-editor:label.contentEditor.error.changeSystemName'), ['closeButton']);
+                notificationContext.notify(t('jcontent:label.contentEditor.error.changeSystemName'), ['closeButton']);
                 notificationErrorMessage = null;
                 formikActions.setFieldError(Constants.systemName.name, 'alreadyExist');
                 formikActions.setFieldTouched(Constants.systemName.name, true, false);
@@ -44,7 +44,7 @@ export const onServerError = (error, formikActions, i18nContext, language, notif
                             }
 
                             formikActions.setFieldTouched(fieldName, true, false);
-                            notificationErrorMessage = t('content-editor:label.contentEditor.error.constraintViolations');
+                            notificationErrorMessage = t('jcontent:label.contentEditor.error.constraintViolations');
                         }
                     }
                 }

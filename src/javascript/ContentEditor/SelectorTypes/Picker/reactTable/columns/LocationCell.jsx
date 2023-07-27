@@ -10,7 +10,7 @@ const MAX_BADGES = 3;
 
 export const LocationCell = ({row, column}) => {
     const {t} = useTranslation();
-    const sortedLanguages = row.original.locales.indexOf(null) >= 0 ? [t('content-editor:label.contentEditor.edit.sharedLanguages')] : row.original.locales.map(l => l.toUpperCase()).sort();
+    const sortedLanguages = row.original.locales.indexOf(null) >= 0 ? [t('jcontent:label.contentEditor.edit.sharedLanguages')] : row.original.locales.map(l => l.toUpperCase()).sort();
     const sortedLanguagesLength = sortedLanguages.length;
     sortedLanguages.splice(MAX_BADGES);
 

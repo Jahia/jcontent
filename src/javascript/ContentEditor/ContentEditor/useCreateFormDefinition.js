@@ -36,7 +36,7 @@ export const adaptCreateFormData = (data, lang, t, contentEditorConfigContext) =
         nodeData,
         details: {},
         technicalInfo: [],
-        title: t('content-editor:label.contentEditor.create.title', {type: data.jcr.nodeTypeByName.displayName}),
+        title: t('jcontent:label.contentEditor.create.title', {type: data.jcr.nodeTypeByName.displayName}),
         nodeTypeDisplayName: data.jcr.nodeTypeByName.displayName,
         nodeTypeName: data.jcr.nodeTypeByName.name
     };

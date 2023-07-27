@@ -16,7 +16,7 @@ const defaultCols = ['publicationStatus', 'name', 'type', 'location'];
 const columns = defaultCols.map(c => (typeof c === 'string') ? allColumnData.find(col => col.id === c) : c);
 
 export const Usages = () => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
 
     const {nodeData} = useContentEditorContext();
     const {lang} = useContentEditorConfigContext();
@@ -64,10 +64,10 @@ export const Usages = () => {
         return (
             <section className={styles.container}>
                 <Typography variant="heading">
-                    {t('content-editor:label.contentEditor.edit.advancedOption.usages.none')}
+                    {t('jcontent:label.contentEditor.edit.advancedOption.usages.none')}
                 </Typography>
                 <Typography variant="body">
-                    {t('content-editor:label.contentEditor.edit.advancedOption.usages.noneDescription')}
+                    {t('jcontent:label.contentEditor.edit.advancedOption.usages.noneDescription')}
                 </Typography>
             </section>
         );

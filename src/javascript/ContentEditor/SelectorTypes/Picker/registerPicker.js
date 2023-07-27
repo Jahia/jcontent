@@ -52,9 +52,9 @@ export const registerPicker = registry => {
     registerPickerConfig(registry);
     registry.add('selectorType', 'Picker', {
         dataType: ['WeakReference'],
-        labelKey: 'content-editor:label.contentEditor.selectorTypes.picker.displayValue',
+        labelKey: 'jcontent:label.contentEditor.selectorTypes.picker.displayValue',
         properties: [
-            {name: 'description', value: 'content-editor:label.contentEditor.selectorTypes.picker.description'},
+            {name: 'description', value: 'jcontent:label.contentEditor.selectorTypes.picker.description'},
             {name: 'iconStart', value: 'WeakReference'}
         ],
         resolver: (options, field) => getPickerSelectorType(registry, options, field)

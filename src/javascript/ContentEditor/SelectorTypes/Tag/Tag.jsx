@@ -9,7 +9,7 @@ import {getSuggestionsTagsQuery} from './Tag.gql-queries';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const Tag = ({field, value, id, onChange, onBlur}) => {
-    const {t} = useTranslation('content-editor');
+    const {t} = useTranslation('jcontent');
     const client = useApolloClient();
     const {site} = useContentEditorContext();
 
@@ -50,8 +50,8 @@ export const Tag = ({field, value, id, onChange, onBlur}) => {
             options={field.data && field.data.values && adaptOptions(field.data.values)}
             value={value && adaptOptions(value)}
             readOnly={field.readOnly}
-            placeholder={t('content-editor:label.contentEditor.edit.tagPlaceholder')}
-            formatCreateLabel={value => t('content-editor:label.contentEditor.edit.createTagPlaceholder', {tagName: value})}
+            placeholder={t('jcontent:label.contentEditor.edit.tagPlaceholder')}
+            formatCreateLabel={value => t('jcontent:label.contentEditor.edit.createTagPlaceholder', {tagName: value})}
             loadOptions={suggestTags}
             onChange={selection => {
                 const newSelection = selection && selection.map(data => data.value);

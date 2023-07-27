@@ -375,7 +375,6 @@
             <id>dev</id>
             <properties>
                 <yarn.arguments>build</yarn.arguments>
-                <maven.test.skip>true</maven.test.skip>
                 <cyclonedx.skip>true</cyclonedx.skip>
             </properties>
         </profile>

@@ -5,27 +5,19 @@ import {Field, showChipField} from './Field';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import Text from '~/ContentEditor/SelectorTypes/Text/Text';
 import {registry} from '@jahia/ui-extender';
-import {setResponseMock} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import {useFormikContext} from 'formik';
 
 jest.mock('formik');
 
 let mockEditorContext;
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => {
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => {
     return {
         useContentEditorContext: () => (mockEditorContext)
     };
 });
 
-jest.mock('@apollo/react-hooks', () => {
-    let responsemock;
-    return {
-        useApolloClient: () => responsemock,
-        setResponseMock: m => {
-            responsemock = m;
-        }
-    };
-});
+jest.mock('@apollo/client');
 
 jest.mock('react', () => {
     return {
@@ -90,7 +82,7 @@ describe('Field component', () => {
             },
             t: i18nKey => i18nKey,
             actionContext: {},
-            input: <></>,
+            input: () => {},
             inputContext: {
                 displayBadges: true,
                 displayActions: true,
@@ -101,7 +93,7 @@ describe('Field component', () => {
         };
 
         result = {data: {forms: {fieldConstraints: []}}};
-        setResponseMock(result);
+        useQuery.mockReturnValue(result);
     });
 
     it('should call onChange from registry', () => {

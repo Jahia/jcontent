@@ -5,7 +5,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 jest.mock('formik');
 describe('HeaderBadges', () => {
     let formik;

@@ -45,7 +45,7 @@ describe('Field component', () => {
             },
             inputContext: {
                 selectorType: {
-                    cmp: () => <></>
+                    cmp: () => {}
                 },
                 editorContext: {}
             },

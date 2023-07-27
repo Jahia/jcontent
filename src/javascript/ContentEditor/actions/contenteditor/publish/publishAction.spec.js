@@ -12,11 +12,11 @@ jest.mock('./publishNode', () => {
     };
 });
 
-jest.mock('~/contexts/PublicationInfo', () => ({usePublicationInfoContext: jest.fn()}));
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context');
+jest.mock('~/ContentEditor/contexts/PublicationInfo', () => ({usePublicationInfoContext: jest.fn()}));
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 jest.mock('formik');
-jest.mock('@apollo/react-hooks');
+jest.mock('@apollo/client');
 
 describe('publish action', () => {
     let defaultProps;

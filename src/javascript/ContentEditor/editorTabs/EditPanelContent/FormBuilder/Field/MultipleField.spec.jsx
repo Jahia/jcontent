@@ -53,7 +53,7 @@ describe('Multiple component', () => {
             },
             inputContext: {
                 selectorType: {
-                    cmp: () => <></>
+                    cmp: () => {}
                 }
             },
             classes: {},

@@ -2,7 +2,7 @@ import {LockManager} from './LockManager';
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     return {
         useApolloClient: jest.fn(() => ({}))
     };

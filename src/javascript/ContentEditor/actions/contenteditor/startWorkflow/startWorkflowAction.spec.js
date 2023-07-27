@@ -6,8 +6,8 @@ import {useFormikContext} from 'formik';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 
 jest.mock('formik');
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 
 describe('startWorkflow action', () => {
     let formik;

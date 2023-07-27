@@ -10,7 +10,7 @@ jest.mock('./engineTabs.utils', () => {
     };
 });
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     return {
         useQuery: jest.fn()
     };
@@ -24,7 +24,7 @@ jest.mock('./engineTabs.permission.gql-query', () => {
     };
 });
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => {
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => {
     return {
         useContentEditorContext: () => ({
             nodeData: {

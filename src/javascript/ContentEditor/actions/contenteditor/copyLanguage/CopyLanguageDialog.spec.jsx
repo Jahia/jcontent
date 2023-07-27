@@ -3,7 +3,7 @@ import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import {CopyLanguageDialog} from './CopyLanguageDialog';
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     let queryresponsemock = {
         client: {
             query: () => {

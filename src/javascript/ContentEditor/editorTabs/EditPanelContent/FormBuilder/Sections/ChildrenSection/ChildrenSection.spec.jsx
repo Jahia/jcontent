@@ -7,7 +7,7 @@ import {useFormikContext} from 'formik';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('formik');
-jest.mock('~/contexts/ContentEditorSection/ContentEditorSection.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
 
 describe('Children section component', () => {
     let props;

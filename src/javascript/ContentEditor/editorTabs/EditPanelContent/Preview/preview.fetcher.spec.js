@@ -16,7 +16,7 @@ jest.mock('@jahia/data-helper', () => {
     };
 });
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => ({
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => ({
     useContentEditorContext: jest.fn()
 }));
 

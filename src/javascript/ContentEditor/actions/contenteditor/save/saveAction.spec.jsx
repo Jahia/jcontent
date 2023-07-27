@@ -12,13 +12,13 @@ jest.mock('react', () => {
     };
 });
 
-jest.mock('~/contexts/PublicationInfo', () => ({usePublicationInfoContext: jest.fn()}));
-jest.mock('~/contexts/ContentEditorSection');
+jest.mock('~/ContentEditor/contexts/PublicationInfo', () => ({usePublicationInfoContext: jest.fn()}));
+jest.mock('~/ContentEditor/contexts/ContentEditorSection');
 jest.mock('formik');
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => ({
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => ({
     useContentEditorContext: jest.fn()
 }));
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context', () => ({
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context', () => ({
     useContentEditorConfigContext: jest.fn()
 }));
 

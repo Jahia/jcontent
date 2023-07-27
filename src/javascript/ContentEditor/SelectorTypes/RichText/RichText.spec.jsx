@@ -4,7 +4,7 @@ import {shallow} from '@jahia/test-framework';
 import {RichText} from './RichText';
 import {setQueryResult} from '@apollo/client';
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     let queryResultmock;
     return {
         useQuery: jest.fn(() => {

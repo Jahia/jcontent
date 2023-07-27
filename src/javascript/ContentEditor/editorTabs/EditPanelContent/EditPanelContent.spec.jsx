@@ -2,7 +2,7 @@ import {EditPanelContent} from './EditPanelContent';
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => {
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => {
     return {
         useContentEditorContext: () => ({
             hasPreview: true,
@@ -12,7 +12,7 @@ jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => {
         })
     };
 });
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
     return {
         useContentEditorConfigContext: () => ({
             mode: 'edit'

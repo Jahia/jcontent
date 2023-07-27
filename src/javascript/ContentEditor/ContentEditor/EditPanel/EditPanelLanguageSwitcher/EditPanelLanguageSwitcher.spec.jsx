@@ -13,7 +13,7 @@ const siteInfo = {
     ]
 };
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => {
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => {
     return {
         useContentEditorContext: () => ({
             i18nContext: {},
@@ -27,7 +27,7 @@ jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => {
 
 jest.mock('formik');
 
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
     return {
         useContentEditorConfigContext: () => ({
             lang: 'fr'

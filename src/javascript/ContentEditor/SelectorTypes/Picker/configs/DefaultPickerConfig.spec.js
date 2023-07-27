@@ -1,15 +1,9 @@
 import {DefaultPickerConfig} from './DefaultPickerConfig';
-import {MockProvider} from '@apollo/client/testing';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
+import {useQuery} from '@apollo/client';
 
-jest.mock('@apollo/react-hooks', () => {
-    let queryresponsemock;
-    return {
-        useQuery: () => queryresponsemock,
-        setQueryResponseMock: r => {
-            queryresponsemock = r;
-        }
-    };
+jest.mock('@apollo/client', () => {
+    return {useQuery: jest.fn()};
 });
 
 jest.mock('../Picker', () => {
@@ -18,7 +12,7 @@ jest.mock('../Picker', () => {
     };
 });
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 
 describe('ContentPicker config', () => {
     describe('usePickerInputData', () => {
@@ -33,39 +27,42 @@ describe('ContentPicker config', () => {
         const usePickerInputData = DefaultPickerConfig.pickerInput.usePickerInputData;
 
         it('should return no data, no error when loading', () => {
-            setQueryResponseMock({loading: true});
+            useQuery.mockImplementation(() => ({loading: true}));
             expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: true, notFound: true});
         });
 
         it('should return no data when there is no uuid given', () => {
-            setQueryResponseMock({loading: false, data: {}});
+            useQuery.mockImplementation(() => ({loading: false, data: {}}));
             expect(usePickerInputData('', {lang: 'fr'})).toEqual({loading: false, notFound: false});
         });
 
         it('should return error when there is error', () => {
-            setQueryResponseMock({loading: false, error: 'oops'});
+            useQuery.mockImplementation(() => ({loading: false, error: 'oops'}));
             expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: false, error: 'oops', notFound: true});
         });
 
         it('should return not found when the resource has been removed', () => {
-            setQueryResponseMock({loading: false, data: undefined, error: undefined});
+            useQuery.mockImplementation(() => ({loading: false, data: undefined, error: undefined}));
             expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: false, notFound: true});
         });
 
         it('should adapt data when graphql return some data', () => {
-            setQueryResponseMock({loading: false, data: {
-                jcr: {
-                    result: [{
-                        uuid: 'this-is-uuid',
-                        displayName: 'a cake',
-                        path: 'florent/bestArticles',
-                        primaryNodeType: {
-                            displayName: 'article',
-                            icon: 'anUrl'
-                        }
-                    }]
+            useQuery.mockImplementation(() => ({
+                loading: false,
+                data: {
+                    jcr: {
+                        result: [{
+                            uuid: 'this-is-uuid',
+                            displayName: 'a cake',
+                            path: 'florent/bestArticles',
+                            primaryNodeType: {
+                                displayName: 'article',
+                                icon: 'anUrl'
+                            }
+                        }]
+                    }
                 }
-            }});
+            }));
 
             expect(usePickerInputData('this-is-uuid', {lang: 'fr'})).toEqual({
                 loading: false,

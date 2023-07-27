@@ -1,7 +1,7 @@
 import {adaptEditFormData} from './useEditFormDefinition';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
-jest.mock('~/SelectorTypes/resolveSelectorType', () => {
+jest.mock('~/ContentEditor/SelectorTypes/resolveSelectorType', () => {
     return {
         resolveSelectorType: ({selectorType}) => {
             if (selectorType === 'Checkbox') {
@@ -17,7 +17,7 @@ jest.mock('~/SelectorTypes/resolveSelectorType', () => {
     };
 });
 
-jest.mock('~/date.config', () => {
+jest.mock('~/ContentEditor/date.config', () => {
     return date => {
         return {
             locale() {

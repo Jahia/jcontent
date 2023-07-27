@@ -4,7 +4,7 @@ import React from 'react';
 import {setQueryResponseMock} from '@apollo/client';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     let queryresponsemock;
     return {
         useApolloClient: jest.fn(),
@@ -15,15 +15,13 @@ jest.mock('@apollo/react-hooks', () => {
     };
 });
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 
-jest.mock('@jahia/jcontent', () => ({
-    jcontentUtils: {
-        expandTree: () => ({
-            then: cb => cb({})
-        }),
-        buildUrl: () => '/jcontent/url'
-    }
+jest.mock('~/JContent/JContent.utils', () => ({
+    expandTree: () => ({
+        then: cb => cb({})
+    }),
+    buildUrl: () => '/jcontent/url'
 }));
 
 const button = () => <button type="button"/>;

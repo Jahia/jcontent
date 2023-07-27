@@ -5,10 +5,15 @@ import {FieldContainer} from './Field.container';
 import {registerSelectorTypes} from '~/ContentEditor/SelectorTypes';
 import {registry} from '@jahia/ui-extender';
 
-jest.mock('@jahia/jcontent', () => {
+jest.mock('~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable', () => ({}));
+jest.mock('~/JContent/ContentRoute/ContentLayout/queryHandlers', () => {
     return {
-        FilesQueryHandler: {},
-        reactTable: {}
+        FilesQueryHandler: {}
+    };
+});
+jest.mock('react-dnd-html5-backend', () => {
+    return {
+        getEmptyImage: jest.fn().mockReturnValue({})
     };
 });
 

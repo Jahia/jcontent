@@ -6,10 +6,15 @@ import {Text} from './Text';
 import {Picker} from './Picker';
 import {ChoiceList} from './ChoiceList';
 
-jest.mock('@jahia/jcontent', () => {
+jest.mock('~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable', () => ({}));
+jest.mock('~/JContent/ContentRoute/ContentLayout/queryHandlers', () => {
     return {
-        FilesQueryHandler: {},
-        reactTable: {}
+        FilesQueryHandler: {}
+    };
+});
+jest.mock('react-dnd-html5-backend', () => {
+    return {
+        getEmptyImage: jest.fn().mockReturnValue({})
     };
 });
 

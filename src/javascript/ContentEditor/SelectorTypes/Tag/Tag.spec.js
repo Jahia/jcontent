@@ -3,7 +3,7 @@ import {shallow} from '@jahia/test-framework';
 
 import {Tag} from './Tag';
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     let queryresponsemock = {
         client: {
             query: () => {

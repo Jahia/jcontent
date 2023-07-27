@@ -9,9 +9,9 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
 
 jest.mock('formik');
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context');
-jest.mock('~/contexts/ContentEditorSection/ContentEditorSection.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
 
 describe('Automatic ordering component', () => {
     let props;

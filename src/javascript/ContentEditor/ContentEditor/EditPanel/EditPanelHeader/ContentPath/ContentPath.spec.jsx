@@ -16,19 +16,19 @@ jest.mock('connected-react-router', () => ({
     push: jest.fn()
 }));
 
-jest.mock('~/redux/JContent.redux-actions', () => ({
+jest.mock('~/ContentEditor/redux/JContent.redux-actions', () => ({
     cmGoto: jest.fn()
 }));
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 
 jest.mock('react-redux', () => ({
     useDispatch: jest.fn(),
     useSelector: jest.fn()
 }));
 
-jest.mock('@apollo/react-hooks', () => ({
+jest.mock('@apollo/client', () => ({
     useQuery: jest.fn().mockReturnValue({})
 }));
 

@@ -6,7 +6,7 @@ import {useFormikContext} from 'formik';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 jest.mock('formik');
-jest.mock('~/contexts/ContentEditor/ContentEditor.context', () => ({useContentEditorContext: jest.fn()}));
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => ({useContentEditorContext: jest.fn()}));
 
 describe('CloseConfirmationDialog', () => {
     let defaultProps;

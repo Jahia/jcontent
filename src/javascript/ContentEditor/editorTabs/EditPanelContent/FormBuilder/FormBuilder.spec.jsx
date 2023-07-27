@@ -9,9 +9,9 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('connected-react-router', () => ({}));
 jest.mock('formik');
-jest.mock('~/contexts/ContentEditorSection/ContentEditorSection.context');
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/contexts/ContentEditorConfig/ContentEditorConfig.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 jest.mock('react-redux', () => ({
     useDispatch: jest.fn(),
     useSelector: jest.fn(() => ({content: true, listOrdering: true}))
@@ -102,7 +102,7 @@ describe('FormBuilder component', () => {
         sectionContext.sections = [];
         const cmp = shallowWithTheme(<FormBuilder mode="create" formKey="dummy-uuid-create"/>, {}, dsGenericTheme);
 
-        expect(cmp.debug()).toBe('<Fragment />');
+        expect(cmp.debug()).toBe('');
     });
 
     it('should display each section', () => {

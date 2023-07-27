@@ -10,7 +10,7 @@ jest.mock('react-redux', () => {
     };
 });
 
-jest.mock('~/contexts/PublicationInfo', () => {
+jest.mock('~/ContentEditor/contexts/PublicationInfo', () => {
     let callCount = 0;
     const contexts = [
         {

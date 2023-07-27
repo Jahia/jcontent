@@ -2,7 +2,7 @@ import {useMediaPickerInputData} from './useMediaPickerInputData';
 import {setQueryResponseMock} from '@apollo/client';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 
-jest.mock('@apollo/react-hooks', () => {
+jest.mock('@apollo/client', () => {
     let queryresponsemock;
     return {
         useQuery: () => queryresponsemock,
@@ -12,7 +12,7 @@ jest.mock('@apollo/react-hooks', () => {
     };
 });
 
-jest.mock('~/contexts/ContentEditor/ContentEditor.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 
 describe('useMediaPickerInputData', () => {
     let contentEditorContext;

@@ -6,7 +6,7 @@ import {
 } from './createContent.utils';
 
 jest.mock('@jahia/moonstone');
-global.contextJsParameters = {config: {contentEditor: {'createChildrenDirectButtons.limit': 3}}};
+global.contextJsParameters = {config: {jcontent: {'createChildrenDirectButtons.limit': 3}}};
 describe('CreateNewContent utils', () => {
     describe('getActions', () => {
         let client;

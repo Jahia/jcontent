@@ -387,7 +387,7 @@
       },
       "view": {
         "flatList": "Liste",
-        "structuredView": "Organisé"
+        "structuredView": "Structure"
       },
       "contentTypeSelector": {
         "contents": "Contenus {{count}}",

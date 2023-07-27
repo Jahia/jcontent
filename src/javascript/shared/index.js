@@ -18,3 +18,15 @@ export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable
 export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';
+
+
+// content-editor shared/index.js
+export * from '~/ContentEditor/contexts/ContentEditor';
+export * from '~/ContentEditor/contexts/ContentEditorConfig';
+export * from '~/ContentEditor/contexts/ContentEditorApi';
+export * from '~/ContentEditor/contexts/ContentEditorSection';
+export * from '~/ContentEditor/utils';
+export * from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
+export * from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
+export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
+export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';

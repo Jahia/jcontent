@@ -46,7 +46,7 @@ describe('Menu tests', () => {
         const templateField = contentEditor.getField(Field, 'jmix:hasTemplateNode_j:templateName');
         templateField.get().click();
         getComponentBySelector(Menu, '[role="listbox"]').select('3 Column');
-        contentEditor.save();
+        contentEditor.create();
         navAccordion.click('pages').getContent().find('[role="tree"]').find('[data-sel-role="new-root-level-page"]').should('be.visible').click();
     });
 });

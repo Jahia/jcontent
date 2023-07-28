@@ -13,7 +13,8 @@ export const TabBar = ({setActiveTab, isDisplayable, value, render: Render, load
     );
 
     if (res.loading) {
-        return (Loading && <Loading {...otherProps}/>) || null;
+        /* eslint-disable react/jsx-no-useless-fragment */
+        return (Loading && <Loading {...otherProps}/>) || <></>;
     }
 
     return (

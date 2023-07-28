@@ -102,7 +102,7 @@ describe('FormBuilder component', () => {
         sectionContext.sections = [];
         const cmp = shallowWithTheme(<FormBuilder mode="create" formKey="dummy-uuid-create"/>, {}, dsGenericTheme);
 
-        expect(cmp.debug()).toBe('');
+        expect(cmp.debug()).toBe('<Fragment />');
     });
 
     it('should display each section', () => {

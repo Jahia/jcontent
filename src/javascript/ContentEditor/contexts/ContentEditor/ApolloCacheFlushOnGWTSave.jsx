@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor/index';
 import {useApolloClient} from '@apollo/client';
 
@@ -20,4 +20,7 @@ export const ApolloCacheFlushOnGWTSave = () => {
             window.contentModificationEventHandlers.splice(window.contentModificationEventHandlers.indexOf(handler), 1);
         };
     });
+
+    /* eslint-disable react/jsx-no-useless-fragment */
+    return <></>;
 };

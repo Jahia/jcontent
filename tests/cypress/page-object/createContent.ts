@@ -1,5 +1,6 @@
 import {BaseComponent, BasePage, Button, getComponent, getComponentByRole, getElement, MUIInput} from '@jahia/cypress';
 import {JContent} from './jcontent';
+import {ContentEditor} from './contentEditor';
 
 export class CreateContent extends BasePage {
     jcontent: JContent;
@@ -38,7 +39,8 @@ export class ContentTypeSelector extends BaseComponent {
         getComponentByRole(Button, 'content-type-dialog-cancel', this).click();
     }
 
-    create(): void {
+    create(): ContentEditor {
         getComponentByRole(Button, 'content-type-dialog-create', this).click();
+        return new ContentEditor();
     }
 }

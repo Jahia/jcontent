@@ -1,6 +1,6 @@
 import {JContent, JContentPageComposer} from '../../page-object';
 import {Dropdown, getComponentByRole} from '@jahia/cypress';
-import {ContentEditor} from '@jahia/content-editor-cypress/dist/page-object';
+import {ContentEditor} from '../../page-object/contentEditor';
 
 describe('Page composer', () => {
     let jcontent: JContentPageComposer;

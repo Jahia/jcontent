@@ -11,6 +11,7 @@
       "cypress",
       "node",
       "@jahia/cypress",
+      "@4tw/cypress-drag-drop",
       "cypress-iframe",
       "cypress-real-events"
     ],

@@ -38,6 +38,7 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: jcontent
+          tests_module_type: "npm"
           
   sbom:
     name: SBOM processing
@@ -115,3 +116,4 @@ jobs:
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+          tests_module_type: "npm"

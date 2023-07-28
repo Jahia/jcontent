@@ -45,6 +45,7 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: jcontent
+          tests_module_type: "npm"
 
   sonar-analysis:
     name: Sonar Analysis

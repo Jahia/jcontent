@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@4tw/cypress-drag-drop@^2.2.1":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@4tw/cypress-drag-drop/-/cypress-drag-drop-2.2.4.tgz#d0e7549a58abfd55060e820c363f9f797ad76ff9"
+  integrity sha512-6mmjJ0SHjciI0JNofdVcN1LYLbvUcUT3oY2O+1HaTlQlpKPlX9kBc040Sik6RYFK7cgWvUNwoDoDoGSKA4IS/g==
+
 "@apollo/client@^3.4.9":
   version "3.6.6"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.6.6.tgz#3fb1f5b11da9a64b51b5a86b62450bee034e7f41"
@@ -25,10 +30,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cypress/request@^2.88.10":
-  version "2.88.10"
-  resolved "https://registry.yarnpkg.com/@cypress/request/-/request-2.88.10.tgz#b66d76b07f860d3a4b8d7a0604d020c662752cce"
-  integrity sha512-Zp7F+R93N0yZyG34GutyTNr+okam7s/Fzc1+i3kcqOP8vk6OuajuE9qZJ6Rs+10/1JFtXFYMdyarnU1rZuJesg==
+"@cypress/request@^2.88.11":
+  version "2.88.11"
+  resolved "https://registry.yarnpkg.com/@cypress/request/-/request-2.88.11.tgz#5a4c7399bc2d7e7ed56e92ce5acb620c8b187047"
+  integrity sha512-M83/wfQ1EkspjkE2lNWNV5ui2Cv7UCv1swW1DqljahbzLVWltcsexQh8jYtuS/vzFXP+HySntGM83ZXA9fn17w==
   dependencies:
     aws-sign2 "~0.7.0"
     aws4 "^1.8.0"
@@ -43,7 +48,7 @@
     json-stringify-safe "~5.0.1"
     mime-types "~2.1.19"
     performance-now "^2.1.0"
-    qs "~6.5.2"
+    qs "~6.10.3"
     safe-buffer "^5.1.2"
     tough-cookie "~2.5.0"
     tunnel-agent "^0.6.0"
@@ -112,11 +117,6 @@
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
-
-"@jahia/content-editor-cypress@^4.2.0-tests.9":
-  version "4.2.0-tests.9"
-  resolved "https://npm.jahia.com/@jahia%2fcontent-editor-cypress/-/content-editor-cypress-4.2.0-tests.9.tgz#1d899ce2a78638e7847eccf5c13c242681be1eb7"
-  integrity sha512-aJN0Z62EPs82AbiCU9wqEgmzxrZdu3nWm06GpTvMh05FYdv6DeF86bml2IldehGBn8NJCIIy26vA88GL6OJQKw==
 
 "@jahia/cypress@^3.14.5":
   version "3.14.5"
@@ -950,10 +950,10 @@ commander@2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
   integrity sha512-6tvAOO+D6OENvRAh524Dh9jcfKTYDQAqvqezbCW82xj5X0pSrcpxtvRKHLG0yBY6SD7PSDrJaj+0AiOcKVd1Xg==
 
-commander@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
-  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
+commander@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
+  integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
 
 common-tags@^1.8.0:
   version "1.8.2"
@@ -1030,10 +1030,22 @@ cypress-multi-reporters@^1.6.2:
     debug "^4.3.4"
     lodash "^4.17.21"
 
+cypress-plugin-config@^1.0.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/cypress-plugin-config/-/cypress-plugin-config-1.2.1.tgz#aa7eaa55ab5ce5e186ab7d0e37cc7e42bfb609b4"
+  integrity sha512-z+bQ7oyfDKun51HiCVNBOR+g38/nYRJ7zVdCZT2/9UozzE8P4iA1zF/yc85ePZLy5NOj/0atutoUPBBR5SqjSQ==
+
 cypress-real-events@^1.7.6:
   version "1.7.6"
   resolved "https://registry.yarnpkg.com/cypress-real-events/-/cypress-real-events-1.7.6.tgz#6f17e0b2ceea1d6dc60f6737d8f84cc517bbbb4c"
   integrity sha512-yP6GnRrbm6HK5q4DH6Nnupz37nOfZu/xn1xFYqsE2o4G73giPWQOdu6375QYpwfU1cvHNCgyD2bQ2hPH9D7NMw==
+
+cypress-slow-down@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/cypress-slow-down/-/cypress-slow-down-1.2.1.tgz#d10c75c2f79240812f4e58824e09d057a2d0e24d"
+  integrity sha512-Pd+nESR+Ca8I+mLGbBrPVMEFvJBWxkJcEdcIUDxSBnMoWI00hiIKxzEgVqCv5c6Oap2OPpnrPLbJBwveCNKLig==
+  dependencies:
+    cypress-plugin-config "^1.0.0"
 
 cypress-terminal-report@^5.0.2:
   version "5.0.2"
@@ -1045,12 +1057,17 @@ cypress-terminal-report@^5.0.2:
     semver "^7.3.5"
     tv4 "^1.3.0"
 
-cypress@^12.9.0:
-  version "12.9.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.9.0.tgz#e6ab43cf329fd7c821ef7645517649d72ccf0a12"
-  integrity sha512-Ofe09LbHKgSqX89Iy1xen2WvpgbvNxDzsWx3mgU1mfILouELeXYGwIib3ItCwoRrRifoQwcBFmY54Vs0zw7QCg==
+cypress-wait-until@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/cypress-wait-until/-/cypress-wait-until-1.7.2.tgz#7f534dd5a11c89b65359e7a0210f20d3dfc22107"
+  integrity sha512-uZ+M8/MqRcpf+FII/UZrU7g1qYZ4aVlHcgyVopnladyoBrpoaMJ4PKZDrdOJ05H5RHbr7s9Tid635X3E+ZLU/Q==
+
+cypress@^12.17.0:
+  version "12.17.2"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.17.2.tgz#040ac55de1e811f6e037d231a2869d5ab8c29c85"
+  integrity sha512-hxWAaWbqQBzzMuadSGSuQg5PDvIGOovm6xm0hIfpCVcORsCAj/gF2p0EvfnJ4f+jK2PCiDgP6D2eeE9/FK4Mjg==
   dependencies:
-    "@cypress/request" "^2.88.10"
+    "@cypress/request" "^2.88.11"
     "@cypress/xvfb" "^1.2.4"
     "@types/node" "^14.14.31"
     "@types/sinonjs__fake-timers" "8.1.1"
@@ -1064,7 +1081,7 @@ cypress@^12.9.0:
     check-more-types "^2.24.0"
     cli-cursor "^3.1.0"
     cli-table3 "~0.6.1"
-    commander "^5.1.0"
+    commander "^6.2.1"
     common-tags "^1.8.0"
     dayjs "^1.10.4"
     debug "^4.3.4"
@@ -1082,12 +1099,12 @@ cypress@^12.9.0:
     listr2 "^3.8.3"
     lodash "^4.17.21"
     log-symbols "^4.0.0"
-    minimist "^1.2.6"
+    minimist "^1.2.8"
     ospath "^1.2.2"
     pretty-bytes "^5.6.0"
     proxy-from-env "1.0.0"
     request-progress "^3.0.0"
-    semver "^7.3.2"
+    semver "^7.5.3"
     supports-color "^8.1.1"
     tmp "~0.2.1"
     untildify "^4.0.0"
@@ -2321,10 +2338,10 @@ minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
-  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
+minimist@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
+  integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
 mkdirp@~1.0.4:
   version "1.0.4"
@@ -2648,10 +2665,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.4.0:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.6.2.tgz#e26d71a18a74c3d0f0597f55f01fb6c06c206032"
-  integrity sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==
+prettier@^2.6.2:
+  version "2.8.8"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
+  integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
@@ -2707,17 +2724,12 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-qs@^6.4.0:
+qs@^6.4.0, qs@~6.10.3:
   version "6.10.5"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.5.tgz#974715920a80ff6a262264acd2c7e6c2a53282b4"
   integrity sha512-O5RlPh0VFtR78y79rgcgKK4wbAI0C5zGVLztOIdpWX6ep368q5Hv6XRxDvXuZ9q3C6v+e3n8UfZZJw7IIG27eQ==
   dependencies:
     side-channel "^1.0.4"
-
-qs@~6.5.2:
-  version "6.5.3"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.3.tgz#3aeeffc91967ef6e35c0e488ef46fb296ab76aad"
-  integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
@@ -2851,6 +2863,13 @@ semver@^7.3.7:
   version "7.3.8"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.8.tgz#07a78feafb3f7b32347d725e33de7e2a2df67798"
   integrity sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==
+  dependencies:
+    lru-cache "^6.0.0"
+
+semver@^7.5.3:
+  version "7.5.4"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
+  integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
   dependencies:
     lru-cache "^6.0.0"
 

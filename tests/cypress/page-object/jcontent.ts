@@ -8,11 +8,15 @@ import {
     getComponentByAttr,
     getComponentByRole,
     getComponentBySelector,
+    getElement,
     Menu,
-    SecondaryNav
+    SecondaryNav,
+    Table,
+    TableRow
 } from '@jahia/cypress';
 import {BasicSearch} from './basicSearch';
 import {CreateContent} from './createContent';
+import {ContentEditor} from './contentEditor';
 import {Media} from './media';
 import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
@@ -52,6 +56,26 @@ export class JContent extends BasePage {
 
     getAccordionItem(itemName: string): AccordionItem {
         return new AccordionItem(this.getSecondaryNavAccordion(), itemName);
+    }
+
+    createContent(contentType: string): ContentEditor {
+        return this.getCreateContent()
+            .open()
+            .getContentTypeSelector()
+            .searchForContentType(contentType)
+            .selectContentType(contentType)
+            .create();
+    }
+
+    editComponentByText(text: string) {
+        const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.contextMenu().select('Edit');
+        return new ContentEditor();
+    }
+
+    viewSubContentComponentByText(text: string) {
+        const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.contextMenu().select('View sub-contents');
     }
 
     getSiteSwitcher(): Dropdown {
@@ -107,8 +131,13 @@ export class JContent extends BasePage {
         return this;
     }
 
-    switchToGridMode(): JContent {
+    switchToThumbnails(): JContent {
         this.switchToMode('Thumbnails');
+        return this;
+    }
+
+    switchToGridMode(): JContent {
+        this.switchToMode('grid');
         return this;
     }
 

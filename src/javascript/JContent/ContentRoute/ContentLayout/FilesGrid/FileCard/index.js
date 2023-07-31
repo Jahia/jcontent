@@ -1,3 +1,4 @@
 import FileCard from './FileCard';
+import FileSize from './FileSize';
 
-export default FileCard;
+export {FileCard, FileSize};

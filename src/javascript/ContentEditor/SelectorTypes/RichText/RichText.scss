@@ -1,0 +1,17 @@
+// CKeditor nuclear bomb override
+:global {
+    .cke_dialog_background_cover,
+    .cke_dialog_container,
+    .cke_combopanel,
+    .cke_panel {
+        z-index: 1300 !important;
+    }
+}
+
+:global(.cke_dialog_background_cover) {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+:global(.cke_inner.cke_reset.cke_maximized) {
+    width: calc(100vw + 1px - 1px) !important;
+}

@@ -1,0 +1,32 @@
+.container.container {
+    position: relative;
+
+    margin-left: 12px;
+
+    :global(.moonstone-checkbox) {
+        margin-left: -24px;
+    }
+
+    :global(.moonstone-checkbox_input) {
+        &[disabled]:hover,
+        &[aria-readonly="true"]:hover {
+            --shadow-color: var(--color-gray);
+            --shadow-size: 1px;
+
+            pointer-events: none;
+
+            &[aria-checked="true"]:hover,
+            &[aria-checked="mixed"]:hover {
+                --shadow-color: var(--color-accent);
+                --shadow-size: 12px;
+
+                border: none;
+            }
+        }
+    }
+
+    :global(.flexFluid) > :global(.moonstone-checkbox) {
+        position: absolute;
+        top: var(--spacing-small);
+    }
+}

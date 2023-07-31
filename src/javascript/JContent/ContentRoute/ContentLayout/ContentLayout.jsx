@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper} from '@material-ui/core';
-import ContentTable from './ContentTable';
+import {ContentTable} from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'clsx';
 import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';

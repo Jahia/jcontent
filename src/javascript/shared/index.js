@@ -15,7 +15,17 @@ export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQu
 export {NodeIcon} from '../utils/NodeIcon';
 export * as jcontentUtils from '../JContent/JContent.utils';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-export {default as FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard/FileSize';
-export {default as FileCard} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
+export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';
+
+// Content-editor shared/index.js
+export * from '~/ContentEditor/contexts/ContentEditor';
+export * from '~/ContentEditor/contexts/ContentEditorConfig';
+export * from '~/ContentEditor/contexts/ContentEditorApi';
+export * from '~/ContentEditor/contexts/ContentEditorSection';
+export * from '~/ContentEditor/utils';
+export * from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
+export * from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
+export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
+export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';

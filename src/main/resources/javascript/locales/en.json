@@ -503,6 +503,374 @@
       "noSubCategory": "No sub-category",
       "name": "Category Manager"
     },
+    "contentEditor": {
+      "create": {
+        "title": "Create {{type}}",
+        "createButton": {
+          "name": "Save",
+          "createAnother": "Create another",
+          "success": "Content successfully created",
+          "error": "An error occurred when creating the content"
+        },
+        "advanced": "Advanced Mode"
+      },
+      "edit": {
+        "title": "Edit content",
+        "contentEdit": "Edit",
+        "validation": {
+          "required": "Required",
+          "invalidForm": "Invalid form",
+          "fieldsInError": "There is one validation error",
+          "fieldsInError_plural": "There are {{count}} validation errors",
+          "otherLanguages": "Other languages in error"
+        },
+        "action": {
+          "copyLanguage": {
+            "bottomText": "When clicking \"APPLY\" you will overwrite all fields with the newly chosen language.",
+            "btnApply": "Apply",
+            "btnCancel": "Cancel",
+            "currentLanguage": "Current language:",
+            "defaultValue": "Unselected",
+            "dialogSubTitle": "\"Copy from\" allows you to copy ALL content fields from another language into the current language.",
+            "dialogTitle": "Copy from",
+            "listLabel": "Copy from",
+            "name": "Copy from languages"
+          },
+          "save": {
+            "name": "Save",
+            "success": "Content successfully saved",
+            "error": "An error occurred when saving the content",
+            "validation": {
+              "modalTitle": "Your content couldn’t be saved",
+              "modalMessage": "There is one validation error in the form.",
+              "modalMessage_plural": "There are {{count}} validation errors in the form.",
+              "modalButton": "OK"
+            }
+          },
+          "goBack": {
+            "name": "Back to {{parentNodeDisplayName}}",
+            "edit": {
+              "title": "Unsaved changes",
+              "message": "There are unsaved changes. What do you want to do with them before closing?"
+            },
+            "create": {
+              "title": "Unsaved content",
+              "message": "The content is not yet saved. What do you want to do before closing?"
+            },
+            "alert": "Changes that you made will not be saved.",
+            "btnContinue": "Cancel",
+            "btnDiscard": "Discard",
+            "btnSave": "Save"
+          },
+          "lock": {
+            "deletion": "Locked: marked for deletion",
+            "engine": "Locked by {{userName}}",
+            "user": "Locked by {{userName}}",
+            "validation": "Locked by a publication workflow",
+            "unknown": "Locked for unknown reason"
+          },
+          "publish": {
+            "name": "Publish now - {{language}}",
+            "shortName": "Publish now",
+            "namePolling": "Publishing",
+            "success": "Publication has been queued",
+            "error": "Error while publishing"
+          },
+          "startWorkflow": {
+            "name": "Request publication - {{language}}",
+            "shortName": "Request publication"
+          },
+          "moreOptions": "More Options",
+          "fieldMoreOptions": "More Options",
+          "versioningTab": "Versioning",
+          "seoTab": "SEO",
+          "visibilityTab": "Visibility",
+          "historyTab": "History",
+          "usagesTab": "Usages",
+          "workInProgress": {
+            "chipLabelAllContent": "Work in progress",
+            "chipLabelLanguages": "WIP - ",
+            "chipLabelField": "Work in progress",
+            "btnCancel": "Cancel",
+            "btnDone": "Done",
+            "checkboxLabel": "Work in progress",
+            "checkboxSubLabel": "The content can be published in all languages.",
+            "clickHere": "click here.",
+            "dialogTitle": "Work in progress (WIP)",
+            "dialogSubTitle": "Mark your content as work in progress to prevent the publication of your content. To find out more about Work in progress ",
+            "label" : {
+              "mark": "Mark as Work in progress",
+              "unmark": "Unmark as Work in progress"
+            },
+            "localizedPropertiesOnly": "Localised properties only in",
+            "localizedPropertiesOnlySubText": "The content won't be publishable in the selected languages. However, properties that are shared by all languages can be part of a publication.",
+            "allContent": "All properties, in all languages",
+            "allContentSubText": "This option prevents publication in any language."
+          }
+        },
+        "advancedOption": {
+          "technicalInformation": {
+            "contentType": "Main content type",
+            "details": "Details",
+            "label": "Technical information",
+            "mixinTypes": "Full content type",
+            "path": "Path",
+            "uuid": "UUID"
+          },
+          "usages": {
+            "path": "Location",
+            "none": "No usages",
+            "noneDescription": "This element is not referenced by any other content."
+          }
+        },
+        "sharedLanguages": "Shared by all languages",
+        "fields": {
+          "actions": {
+            "replace": "Change",
+            "newTab": "Edit in a new tab",
+            "clear": "Clear",
+            "selectAll": "Select all values",
+            "add": "Add",
+            "previewTab": "Preview in a new tab"
+          },
+          "contentPicker": {
+            "notFoundContent": "Broken reference",
+            "fileUploadBtn": "Upload file",
+            "modalTitle": "Select a content",
+            "modalEditorialTitle": "Select pages and contents displayable in full page",
+            "modalFileTitle": "Select a file",
+            "modalFolderTitle": "Select a folder",
+            "modalCategoryTitle": "Select a category",
+            "modalImageTitle": "Select an image",
+            "modalPageTitle": "Select a page",
+            "modalSiteTitle": "Select a site",
+            "modalUserTitle": "Select a user",
+            "modalUserGroupTitle": "Select a group of users",
+            "modalPDFTitle": "Select a PDF file",
+            "modalVideoTitle": "Select a video",
+            "itemsFound": "{{totalCount}} items found",
+            "userPicker": {
+              "site": "Site",
+              "provider": "Provider"
+            }
+          },
+          "category": {
+            "noMatches": "No matches found"
+          },
+          "modalCancel": "Cancel",
+          "modalDone": "Select"
+        },
+        "tagPlaceholder": "Type to add tag",
+        "createTagPlaceholder": "Press enter to add \"{{tagName}}\"",
+        "errors": {
+          "invalidDate": "Please provide a valid date value",
+          "invalidColor": "Please provide a valid color code",
+          "invalidPattern": "The value does not match the constraints defined in the content type definitions file.",
+          "invalidSystemName": "System name cannot consist of special characters such as '/:*?\"<>|%'",
+          "required": "",
+          "alreadyExist": "An item with the same system name already exists, please choose another one.",
+          "maxLength": "{{selectorOptions.maxLength}} characters maximum",
+          "invalidLink": "The link {{0}} is broken",
+          "constraintViolation": "{{0}}"
+        },
+        "tab": {
+          "edit": "Edit",
+          "advanced": "Advanced options"
+        }
+      },
+      "header":  {
+        "languageSwitcher": {
+          "switchLanguage": "Switch language",
+          "addTranslation": {
+            "edit": "Add translation",
+            "create": "Create translation"
+          }
+        },
+        "chips": {
+          "unsavedLabel": "Unsaved changes",
+          "inCountLanguages": "in {{count}} languages",
+          "inAllLanguages": "in all languages"
+        }
+      },
+      "error": {
+        "queryingContent": "Error querying content: {{details}}",
+        "changeSystemName": "Please choose another system name",
+        "constraintViolations": "There are some validation errors! Correct the inputs and save again",
+        "accessDenied": "Some content cannot be displayed because of permissions that were applied",
+        "cannotOpen": "Content Editor could not be opened",
+        "notFound": "The content does not exist or you do not have permission to see it"
+      },
+      "preview": {
+        "contentNotFound": "Content cannot be previewed in the page",
+        "noPreview": "No preview available",
+        "toggleButtons": {
+          "preview": "Preview",
+          "details": "Details",
+          "off": "Off"
+        },
+        "updateOnSave": "Preview will update on save"
+      },
+      "CMMActions": {
+        "createNewContent": {
+          "menu": "New content",
+          "newMenu": "New...",
+          "contentOfType": "New {{typeName}}",
+          "labelModal": "Select Content Type",
+          "btnDiscard": "CANCEL",
+          "btnCreate": "CREATE",
+          "filterLabel": "Search for types of content"
+        }
+      },
+      "section":{
+        "fieldSet": {
+          "content": {
+            "displayName": "Content"
+          },
+          "system": {
+            "displayName": "System",
+            "fields": {
+              "systemNameDescription": "{{maxNameSize}} characters maximum. Used to build the URL for pages if no vanity URL is set in advanced options.",
+              "systemNameDescriptionReadOnly": "The system name cannot be changed.",
+              "systemName": "System name",
+              "syncButton": "copy title"
+            }
+          }
+        },
+        "listAndOrdering": {
+          "title": "Content list & ordering",
+          "ordering": "Ordering",
+          "automatic": "Automatic ordering",
+          "orderBy": "Order by",
+          "description": "Activate automatic list ordering to order your sub-content items using a maximum of three criteria, or reorder your sub-contents items manually, using drag and drop."
+        },
+        "listSizeLimit": {
+          "name": "Number of items",
+          "description": "Set a maximum number of items to be displayed/created in this area. Deactivate to remove any limit. If the list already contains more items than the limit, these items are simply not displayed, they are not deleted."
+        }
+      },
+      "siteSwitcher": {
+        "allSites": "All Sites"
+      },
+      "publicationStatusBadge": {
+        "publishing": "Publication in progress",
+        "published": "Live",
+        "notPublished": "Not published",
+        "modified": "Modified",
+        "warning": "Warning"
+      },
+      "publicationStatusTooltip": {
+        "modified": "Modified by {{userName}} on {{timestamp}}",
+        "published": "Published by {{userName}} on {{timestamp}}",
+        "mandatoryLanguageUnpublishable": "Content cannot be published in the current language because of a missing mandatory property",
+        "mandatoryLanguageValid": "Content will be visible in live once published in all the mandatory languages.",
+        "conflict": "Content with the same name already exists in live and won't be part of this publication",
+        "unknown": "Publication status unavailable"
+      },
+      "global": {
+        "noResult": "No results found."
+      },
+      "cancel": "Cancel",
+      "close": "Close",
+      "gwtTabsDeprecation": {
+        "title": "Legacy interface",
+        "openLegacy": "Open legacy interface",
+        "cancel": "Cancel",
+        "warnings": {
+          "content": "The content shall be edited from the directly Edit tab. However, if you really need to, you can use the legacy interface to edit it. But be aware that this interface will be removed in a future update.",
+          "options": "The additional options can be edited directly from the Edit tab. However, if you really need to, you can use the legacy interface to edit them. But be aware that this interface will be removed in a future update.",
+          "categories": "The categories associated to the content can be edited directly from the Edit tab. However, if you really need to, you can use the legacy interface to edit them. But be aware that this interface will be removed in a future update.",
+          "metadata": "The description, keywords and tag can be edited directly from the Edit tab. However, if you really need to, you can use the legacy interface to edit them. But be aware that this interface will be removed in a future update.",
+          "layout": "The layout options can be edited directly from the Edit tab. However, if you really need to, you can use the legacy interface to edit them. But be aware that this interface will be removed in a future update."
+        }
+      },
+      "vanityTab": {
+        "title": "Vanity URLs",
+        "label": "Vanity URLs can be managed through a dedicated feature, available in the \"3 dots icon\" button in the toolbar, or using the Manage vanity URLs button below."
+      },
+      "selection": {
+        "itemsSelected": "{{count}} item selected",
+        "itemsSelected_plural": "{{count}} items selected"
+      },
+      "picker": {
+        "navigation" : {
+          "categories": "Categories",
+          "sites": "Sites"
+        },
+        "rightPanel": {
+          "actionsCaption": "Non-selectable items are not listed in this view",
+          "searchContextOptions" : {
+            "search": "Search in",
+            "allUsers": "All users",
+            "globalUsers": "Global users",
+            "allGroups": "All groups",
+            "globalGroups": "Global groups"
+          },
+          "tabs": {
+            "pages": "Pages",
+            "contentFolders": "Content Folders"
+          }
+        },
+        "selectors": {
+          "multipleLeftRightSelector": {
+            "addAll": "Add all",
+            "removeAll": "Remove all",
+            "selected": "{{count}} item selected",
+            "selected_plural": "{{count}} items selected"
+          }
+        }
+      },
+      "readOnly": "Read-only",
+      "selectorTypes": {
+        "checkbox": {
+          "displayValue": "Checkbox",
+          "description": "Displays a checkbox"
+        },
+        "color": {
+          "displayValue": "Color",
+          "description": "Enter hexadecimal code or select color visually"
+        },
+        "textArea": {
+          "displayValue": "Text Area",
+          "description": "Multiple lines of unformatted text."
+        },
+        "richText": {
+          "displayValue": "Rich text",
+          "description": "Formatted text (titles, images, links, ..)"
+        },
+        "dropdown": {
+          "displayValue": "Dropdown",
+          "description": "Select value(s) from a list"
+        },
+        "picker": {
+          "displayValue": "Picker",
+          "description": "Pick medias, files or content items"
+        },
+        "dateTimePicker": {
+          "displayValue": "Date time",
+          "description": "Select date and time from a calendar"
+        },
+        "datePicker": {
+          "displayValue": "Date",
+          "description": "Select a date from a calendar"
+        },
+        "text": {
+          "displayValue": "Text",
+          "description": "Simple text input"
+        },
+        "category": {
+          "displayValue": "Hierarchical Tree selector",
+          "description": "Select a value from a tree"
+        },
+        "tag": {
+          "displayValue": "Tag",
+          "description": "Select from a list of existing values or create new ones"
+        },
+        "multipleLeftRightSelector": {
+          "displayValue": "Multiple list",
+          "description": "Alternative to multiple dropdown when there are many values to select"
+        }
+      }
+    },
     "ok": "OK",
     "cancel": "Cancel",
     "no": "No",

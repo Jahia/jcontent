@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Paper} from '@material-ui/core';
-import ContentTable from '~/JContent/ContentRoute/ContentLayout/ContentTable';
+import {ContentTable} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import classNames from 'clsx';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import styles from '~/JContent/ContentRoute/ContentLayout/ContentLayout.scss';

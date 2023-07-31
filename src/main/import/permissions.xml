@@ -18,7 +18,9 @@
                 <deletePageAction jcr:primaryType="jnt:permission"/>
                 <exportPageAction jcr:primaryType="jnt:permission"/>
                 <importPageAction jcr:primaryType="jnt:permission"/>
+                <editPageAction jcr:primaryType="jnt:permission"/>
             </pageTreeActions>
+            <editAction jcr:primaryType="jnt:permission"/>
             <copyAction jcr:primaryType="jnt:permission"/>
             <cutAction jcr:primaryType="jnt:permission"/>
             <pasteAction jcr:primaryType="jnt:permission"/>
@@ -41,4 +43,8 @@
             <additionalAccordionAccess jcr:primaryType="jnt:permission"/>
         </jContentAccordions>
     </jContent>
+    <contentEditor jcr:primaryType="jnt:permission">
+        <canSeeAdvancedOptionsTab jcr:primaryType="jnt:permission"/>
+        <setContentLimitsOnAreas jcr:primaryType="jnt:permission"/>
+    </contentEditor>
 </permissions>

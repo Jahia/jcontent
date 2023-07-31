@@ -16,6 +16,7 @@ graphql.schema.json
 .env
 
 coverage/
+/storybook-static
 
 # macOS
 .DS_Store

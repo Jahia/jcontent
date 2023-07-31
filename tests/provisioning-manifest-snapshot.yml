@@ -1,10 +1,10 @@
 - installBundle:
     - 'mvn:org.jahia.modules/jcontent'
-    - 'mvn:org.jahia.modules/content-editor'
     - 'mvn:org.jahia.modules/jahia-page-composer'
     - 'mvn:org.jahia.modules/jahia-administration'
     - 'mvn:org.jahia.modules/graphql-dxm-provider'
     - 'mvn:org.jahia.modules/jahia-ui-root'
+    - 'mvn:org.jahia.test/content-editor-test-module'
   autoStart: true
   uninstallPreviousVersion: true
 - include: 'provisioning.yml'

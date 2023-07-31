@@ -1,6 +1,6 @@
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
@@ -111,13 +111,18 @@ module.exports = (env, argv) => {
             new ModuleFederationPlugin(getModuleFederationConfig(packageJson, {
                 exposes: {
                     '.': './src/javascript/shared',
-                    './JContent/actions': './src/javascript/JContent/actions/index'
+                    './JContent/actions': './src/javascript/JContent/actions/index',
+                    './init': './src/javascript/init'
                 },
                 remotes: {
-                    '@jahia/jahia-ui-root': 'appShell.remotes.jahiaUi'
+                    '@jahia/jahia-ui-root': 'appShell.remotes.jahiaUi',
+                    '@jahia/app-shell': 'appShellRemote',
                 },
             }, Object.keys(packageJson.dependencies))),
-            new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: [`${path.resolve(__dirname, 'src/main/resources/javascript/apps/')}/**/*`],
+                verbose: false
+            }),
             new CopyWebpackPlugin({patterns: [{from: './package.json', to: ''}]}),
             new CaseSensitivePathsPlugin(),
             new CycloneDxWebpackPlugin(cycloneDxWebpackPluginOptions)

@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         jahia_image: ["jahia/jahia-ee:8", "jahia/jahia-ee-dev:8-SNAPSHOT"]
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: jahia/jahia-modules-action/helper@v2
       - uses: KengoTODA/actions-setup-docker-compose@main

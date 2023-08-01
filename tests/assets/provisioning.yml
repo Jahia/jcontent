@@ -1,8 +1,6 @@
 - addMavenRepository: 'https://store.jahia.com/nexus/content/repositories/jahia-public-app-store@id=JahiaStore'
 - addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/@snapshots@noreleases@id=JahiaPublicSnapshots'
 
-- uninstallBundle: "org.jahia.modules/content-editor/4.6.0.SNAPSHOT"
-
 - installBundle:
     - 'mvn:org.jahia.modules/press/3.1.0'
     - 'mvn:org.jahia.modules/article/3.0.0'
@@ -37,3 +35,7 @@
   site: "digitall"
 
 - executeScript: "script-01-create-categories.groovy"
+
+- uninstallBundle: 
+    - "org.jahia.modules/content-editor/4.6.0.SNAPSHOT"
+    - "org.jahia.modules/jcontent/2.12.0.SNAPSHOT"

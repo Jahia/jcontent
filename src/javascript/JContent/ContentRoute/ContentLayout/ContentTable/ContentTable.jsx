@@ -91,20 +91,42 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     useEffect(() => {
         if (selection.length > 0 && !isLoading && rows?.length > 0) {
-            const toRemove = selection.filter(path => !pathExistsInTree(path, rows));
-            if (toRemove.length > 0) {
-                if (TableViewModeChangeTracker.modeChanged) {
-                    notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
+            const notVisible = selection.filter(path => !pathExistsInTree(path, rows));
+            if (notVisible.length > 0) {
+                const toOpen = [];
+                const toRemove = [];
+                notVisible.forEach(currentPath => {
+                    if (isStructured && currentPath.startsWith(path)) {
+                        let pathParts = currentPath.substring(path.length).split('/').slice(0, -1);
+                        for (let i in pathParts) {
+                            if (i > 0) {
+                                toOpen.push(toOpen[i - 1] + '/' + pathParts[i]);
+                            } else {
+                                toOpen.push(path);
+                            }
+                        }
+                    } else {
+                        toRemove.push(currentPath);
+                    }
+                });
+
+                if (toOpen.length > 0) {
+                    dispatch(cmOpenTablePaths([...new Set(toOpen)]));
                 }
 
-                dispatch(cmRemoveSelection(toRemove));
+                if (toRemove.length > 0) {
+                    dispatch(cmRemoveSelection(toRemove));
+                    if (TableViewModeChangeTracker.modeChanged) {
+                        notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
+                    }
+                }
             }
 
             TableViewModeChangeTracker.resetChanged();
         } else if (!isLoading && rows?.length > 0) {
             TableViewModeChangeTracker.resetChanged();
         }
-    }, [rows, selection, dispatch, paths, isLoading, notify, t]);
+    }, [rows, selection, dispatch, path, paths, isLoading, notify, isStructured, t]);
 
     const doubleClickNavigation = useCallback(node => {
         let newMode = mode;

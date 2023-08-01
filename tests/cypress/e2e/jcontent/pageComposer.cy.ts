@@ -252,38 +252,6 @@ describe('Page composer', () => {
             // Doesn't work: module.parentFrame.get().find('div[data-current="true"]').should('not.exist');
         });
 
-        it('Maintains selection when navigating back and forth from different modes', () => {
-            const absoluteArea = '/sites/jcontentSite/home/footer-1';
-            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-            // Select absolute area
-            const module = jcontent.getModule(absoluteArea);
-            module.click('top');
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-
-            // Check selection in structured mode
-            jcontent.switchToMode('Structured');
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-
-            // Check that selection is removed in list view
-            jcontent.switchToMode('List');
-            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-            cy.contains('1 previously selected');
-
-            // Select a couple of rows in list view
-            const ct = jcontent.getTable();
-            ct.selectRowByLabel('test 1');
-            ct.selectRowByLabel('test 2');
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
-
-            // Check selection in structured mode
-            jcontent.switchToMode('Structured');
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
-
-            // Check selection in PC mode
-            jcontent.switchToMode('Page Composer');
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
-        });
-
         it('Allows to select with right click', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);

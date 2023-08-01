@@ -203,6 +203,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
             description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(key + ".ui.tooltip" + suffix, uiLocale, site)) : description;
 
             label = StringUtils.isEmpty(label) ? StringUtils.substringAfter(nodeType.getName(), ":") : label;
+            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(key + "_description" + suffix, uiLocale, site)) : description;
         }
     }
 

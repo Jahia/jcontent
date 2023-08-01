@@ -28,6 +28,7 @@ jobs:
         with:
           node_version: 14
           auditci_level: critical
+          max_warning: 58
 
   build:
     name: Build Module

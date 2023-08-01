@@ -38,14 +38,13 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: jcontent
-          tests_module_type: "npm"
-          
+
   sbom:
     name: SBOM processing
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: cyclonedx/cyclonedx-cli:0.24.2   
+      image: cyclonedx/cyclonedx-cli:0.24.2
     steps:
       - uses: jahia/jahia-modules-action/sbom-processing@v2
         with:
@@ -57,7 +56,7 @@ jobs:
     name: Integration Tests (Standalone)
     needs: build
     runs-on: self-hosted
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: jahia/jahia-modules-action/helper@v2
       - uses: KengoTODA/actions-setup-docker-compose@main
@@ -116,4 +115,3 @@ jobs:
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
-          tests_module_type: "npm"

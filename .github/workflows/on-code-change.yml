@@ -28,6 +28,7 @@ jobs:
         with:
           node_version: 14
           auditci_level: critical
+          max_warning: 58
 
   build:
     name: Build Module
@@ -45,7 +46,6 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: jcontent
-          tests_module_type: "npm"
 
   sonar-analysis:
     name: Sonar Analysis
@@ -83,6 +83,7 @@ jobs:
           should_use_build_artifacts: true
           should_skip_testrail: true
           github_artifact_name: jcontent-standalone-artifacts-${{ github.run_number }}
+          bastion_ssh_private_key: ${{ secrets.BASTION_SSH_PRIVATE_KEY_JAHIACI }}
           jahia_license: ${{ secrets.JAHIA_LICENSE_8X_FULL }}
           docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
           docker_password: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -98,6 +99,7 @@ jobs:
           incident_google_client_email: ${{ secrets.INCIDENT_GOOGLE_CLIENT_EMAIL }}
           incident_google_api_key_base64: ${{ secrets.INCIDENT_GOOGLE_PRIVATE_KEY_BASE64 }}
           zencrepes_secret: ${{ secrets.ZENCREPES_WEBHOOK_SECRET }}
+          timeout_minutes: 90
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()

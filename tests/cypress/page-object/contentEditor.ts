@@ -58,11 +58,13 @@ export class ContentEditor extends BasePage {
     }
 
     addAnotherContent() {
-        cy.get('#createAnother').check().should('have.attr', 'aria-checked', 'true');
+        cy.get('#createAnother').check();
+        cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
     }
 
     removeAnotherContent() {
-        cy.get('#createAnother').uncheck().should('have.attr', 'aria-checked', 'false');
+        cy.get('#createAnother').uncheck();
+        cy.get('#createAnother').should('have.attr', 'aria-checked', 'false');
     }
 
     activateWorkInProgressMode(language?: string) {
@@ -145,7 +147,8 @@ export class ContentEditor extends BasePage {
     }
 
     toggleOption(optionType: string, optionFieldName: string) {
-        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).scrollIntoView({offset: {left: 0, top: -100}}).find('input').click({force: true});
+        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).scrollIntoView({offset: {left: 0, top: -100}});
+        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).find('input').click({force: true});
         cy.contains(optionFieldName, {timeout: 90000}).should('be.visible');
     }
 

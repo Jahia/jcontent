@@ -57,7 +57,7 @@
     "ckeditor4-react": "1.2.0",
     "bytes": "^3.1.0",
     "clsx": "^1.1.1",
-    "compare-versions": "^5.0.1",
+    "compare-versions": "^6.0.0",
     "connected-react-router": "^6.8.0",
     "copy-to-clipboard": "^3.0.8",
     "dayjs": "^1.10.6",

@@ -21,8 +21,8 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     const contentEditorConfigContext = useContentEditorConfigContext();
     // Get information from page composer to display the preview.
     const {pageComposerCurrentPage, pageComposerActive} = useSelector(state => ({
-        pageComposerCurrentPage: state.pagecomposer.currentPage,
-        pageComposerActive: state.pagecomposer.active
+        pageComposerCurrentPage: state?.pagecomposer?.currentPage,
+        pageComposerActive: state?.pagecomposer?.active
     }), shallowEqual);
     const [i18nContext, setI18nContext] = useState({
         memo: {

@@ -37,5 +37,4 @@
 - executeScript: "script-01-create-categories.groovy"
 
 - uninstallBundle: 
-    - "org.jahia.modules/content-editor/4.6.0.SNAPSHOT"
-    - "org.jahia.modules/jcontent/2.12.0.SNAPSHOT"
+    - "org.jahia.modules/content-editor"

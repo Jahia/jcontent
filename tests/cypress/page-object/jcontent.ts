@@ -11,7 +11,6 @@ import {
     getElement,
     Menu,
     SecondaryNav,
-    Table,
     TableRow
 } from '@jahia/cypress';
 import {BasicSearch} from './basicSearch';

@@ -34,7 +34,6 @@ describe('Content editor form', () => {
                     }
                 }`
         }).should(resp => {
-            // eslint-disable-next-line  no-unused-expressions
             expect(resp?.data?.jcr?.mutateNode.mutateProperty.setValue).to.be.true;
         });
     }

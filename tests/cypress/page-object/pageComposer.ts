@@ -60,7 +60,8 @@ export class PageComposer extends BasePage {
     componentShouldBeVisible(selector: string) {
         cy.iframe('#page-composer-frame', this.iFrameOptions).within(() => {
             cy.iframe('.gwt-Frame', this.iFrameOptions).within(() => {
-                cy.get('.container').find(selector).should('exist').scrollIntoView().should('be.visible');
+                cy.get('.container').find(selector).should('exist').scrollIntoView();
+                cy.get('.container').find(selector).should('be.visible');
             });
         });
     }
@@ -70,11 +71,13 @@ export class PageComposer extends BasePage {
             cy.iframe('.gwt-Frame', this.iFrameOptions).within(() => {
                 // eslint-disable-next-line cypress/no-unnecessary-waiting
                 cy.wait(5000);
-                cy.get('.container').find(selector).trigger('mouseover').rightclick({force: true});
+                cy.get('.container').find(selector).trigger('mouseover');
+                cy.get('.container').find(selector).rightclick({force: true});
             });
         });
         cy.iframe('#page-composer-frame', this.iFrameOptions).within(() => {
-            cy.get('.editModeContextMenu').scrollIntoView().contains('Edit').click();
+            cy.get('.editModeContextMenu').scrollIntoView();
+            cy.get('.editModeContextMenu').contains('Edit').click();
         });
         return new ContentEditor();
     }
@@ -84,11 +87,13 @@ export class PageComposer extends BasePage {
             cy.iframe('.gwt-Frame', this.iFrameOptions).within(() => {
                 // eslint-disable-next-line cypress/no-unnecessary-waiting
                 cy.wait(5000);
-                cy.get('.container').contains(text).trigger('mouseover').rightclick({force: true});
+                cy.get('.container').contains(text).trigger('mouseover');
+                cy.get('.container').contains(text).rightclick({force: true});
             });
         });
         cy.iframe('#page-composer-frame', this.iFrameOptions).within(() => {
-            cy.get('.editModeContextMenu').scrollIntoView().contains('Edit').click();
+            cy.get('.editModeContextMenu').scrollIntoView();
+            cy.get('.editModeContextMenu').contains('Edit').click();
         });
         return new ContentEditor();
     }
@@ -147,8 +152,10 @@ export class PageComposer extends BasePage {
             cy.get('#nt\\:base_ce\\:systemName').should('be.visible').type(title, {force: true});
         }
 
-        cy.get('#select-jmix\\:hasTemplateNode_j\\:templateName').should('be.visible')
-            .click()
+        cy.get('#select-jmix\\:hasTemplateNode_j\\:templateName')
+            .should('be.visible')
+            .click();
+        cy.get('#select-jmix\\:hasTemplateNode_j\\:templateName')
             .find('li[role="option"][data-value="home"]')
             .click();
 
@@ -164,8 +171,10 @@ export class PageComposer extends BasePage {
         });
 
         cy.get('#jnt\\:page_jcr\\:title').should('be.visible').type(title, {force: true});
-        cy.get('#select-jmix\\:hasTemplateNode_j\\:templateName').should('be.visible')
-            .click()
+        cy.get('#select-jmix\\:hasTemplateNode_j\\:templateName')
+            .should('be.visible')
+            .click();
+        cy.get('#select-jmix\\:hasTemplateNode_j\\:templateName')
             .find('li[role="option"][data-value="home"]')
             .click();
 

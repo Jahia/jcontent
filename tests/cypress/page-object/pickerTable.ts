@@ -28,11 +28,15 @@ export class PickerTable extends Table {
         this.getRows().get()
             .then(elems => {
                 expect(elems.length).gte(count);
-                const selectRow = elem =>
+                const selectRow = elem => {
                     cy.wrap(elem)
                         .find('[data-cm-role="table-content-list-cell-selection"] input')
-                        .click()
+                        .click();
+                    cy.wrap(elem)
+                        .find('[data-cm-role="table-content-list-cell-selection"] input')
                         .should('have.attr', 'aria-checked', 'true');
+                };
+
                 for (let i = 0; i < count; i++) {
                     selectRow(elems.eq(i));
                 }

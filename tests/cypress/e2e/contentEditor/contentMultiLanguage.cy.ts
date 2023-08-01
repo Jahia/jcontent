@@ -65,7 +65,6 @@ describe('Create multi language content and verify that it is different in all l
                     path: `/sites/${sitekey}/home`
                 }
             }).then(response => {
-                // eslint-disable-next-line
                 expect(response?.data?.jcr?.mutateNode?.mutateProperty?.setValue).to.be.true;
             });
 
@@ -78,7 +77,6 @@ describe('Create multi language content and verify that it is different in all l
                     path: `/sites/${sitekey}/home`
                 }
             }).then(response => {
-                // eslint-disable-next-line
                 expect(response?.data?.jcr?.mutateNode?.mutateProperty?.setValue).to.be.true;
             });
 

@@ -41,65 +41,61 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Image (from the Document Manager)');
+        cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
-            .click()
             .find('li[role="option"][data-value="internal"]')
             .click();
-        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
-            .scrollIntoView()
-            .should('be.visible');
+
+        const selector = '[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]';
+        cy.get(selector).scrollIntoView();
         contentEditor.getLanguageSwitcher().select('Français');
-        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
-            .as('fr_internal_link')
-            .scrollIntoView()
-            .should('be.visible');
+        cy.get(selector).as('fr_internal_link').scrollIntoView();
+        cy.get(selector).should('be.visible');
+
+        cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
-            .click()
             .find('li[role="option"][data-value="external"]')
             .click();
         cy.get('@fr_internal_link').should('not.exist');
-        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]')
-            .scrollIntoView()
-            .should('be.visible');
-        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]').scrollIntoView().should('be.visible');
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').should('be.visible');
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]').should('be.visible');
         contentEditor.getLanguageSwitcher().select('Deutsch');
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('not.exist');
-        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]')
-            .scrollIntoView()
-            .should('be.visible');
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').should('be.visible');
         cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]')
             .as('de_external_link_url')
-            .scrollIntoView()
-            .should('be.visible');
+            .scrollIntoView();
+        cy.get('@de_external_link_url').should('be.visible');
+        cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
-            .click()
             .find('li[role="option"][data-value="none"]')
             .click();
         cy.get('@de_external_link_url').should('not.exist');
         contentEditor.getLanguageSwitcher().select('English');
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').contains('No link');
+        cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
-            .click()
             .find('li[role="option"][data-value="internal"]')
             .click();
+        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').scrollIntoView();
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
-            .scrollIntoView()
             .should('be.visible')
             .click();
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
-        cy.get('.moonstone-tab-item[data-cm-view-type="pages"]')
-            .should('be.visible')
-            .click()
-            .should('have.class', 'moonstone-selected');
+        cy.get('.moonstone-tab-item[data-cm-view-type="pages"]').should('be.visible').click();
+        cy.get('.moonstone-tab-item[data-cm-view-type="pages"]').should('have.class', 'moonstone-selected');
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
         cy.get('tr[data-cm-role="table-content-list-row"]').contains('Search Results').click();
         cy.get('button[data-sel-picker-dialog-action="done"]').click();
+        cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_jcr\\:title"]').scrollIntoView();
         cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_jcr\\:title"]')
-            .scrollIntoView()
             .should('be.visible')
             .type(cypressDocumentManagerImageReferenceLinkTest);
+        cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_j\\:node"]').scrollIntoView();
         cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_j\\:node"]')
-            .scrollIntoView()
             .should('be.visible')
             .click();
         cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible').contains('snowbearHome.jpeg').click();
@@ -119,26 +115,25 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Cypress document manager image reference');
+        cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
-            .click()
             .find('li[role="option"][data-value="none"]')
             .click();
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('not.exist');
         contentEditor.getLanguageSwitcher().select('Français');
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').contains('Pas de lien');
+        cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
-            .click()
             .find('li[role="option"][data-value="internal"]')
             .click();
-        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
-            .scrollIntoView()
-            .should('be.visible');
+        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('be.visible');
         contentEditor.getLanguageSwitcher().select('English');
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').contains('Internal');
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
             .should('exist')
-            .scrollIntoView()
-            .should('be.visible');
+            .scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('be.visible');
         // ContentEditor.cancelAndDiscard()
         contentEditor.cancel();
     });

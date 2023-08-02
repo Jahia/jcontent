@@ -16,8 +16,8 @@
     - 'mvn:org.jahia.modules/location/3.2.0'
     - 'mvn:org.jahia.modules/topstories/3.0.0'
     - 'mvn:org.jahia.modules/rating/3.2.0'
-    - 'mvn:org.jahia.modules/event/4.0.0-SNAPSHOT'
-    - 'mvn:org.jahia.modules/site-settings-seo/5.0.0-SNAPSHOT'
+    - 'mvn:org.jahia.modules/event'
+    - 'mvn:org.jahia.modules/site-settings-seo'
     - 'mvn:org.jahia.modules/bookmarks/3.1.0'
     - 'mvn:org.jahia.modules/dx-base-demo-core/2.5.0'
     - 'mvn:org.jahia.modules/dx-base-demo-templates/3.4.0'
@@ -38,6 +38,3 @@
   site: "digitall"
 
 - executeScript: "script-01-create-categories.groovy"
-
-- uninstallBundle:
-    - "org.jahia.modules/content-editor"

@@ -30,8 +30,11 @@ export class Folder extends BasePage {
 
     markForDeletion() : Folder {
         cy.get('div[data-sel-role-card=' + this.name + ']').should('be.visible').rightclick({force: true});
+        getComponentByRole(Menu, 'jcontent-contentMenu').should('be.visible');
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();
+        // verify dialog has been dismissed before proceeding
+        cy.get('[data-sel-role="delete-mark-dialog"]').should('not.exist');
         return this;
     }
 

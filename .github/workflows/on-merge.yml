@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - 'master'
+      - 'TECH-1384'
     tags-ignore:
       - '**'
 
@@ -33,7 +34,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
-      - uses: jahia/jahia-modules-action/build@v2
+      - uses: jahia/jahia-modules-action/build@master
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
@@ -102,7 +103,6 @@ jobs:
   publish:
     name: Publish module
     needs: [build]
-    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     container:
       image: jahia/cimg-mvn-cache:ga_cimg_openjdk_8.0.312-node
@@ -111,7 +111,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
-      - uses: jahia/jahia-modules-action/publish@v2
+      - uses: jahia/jahia-modules-action/publish@master
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}

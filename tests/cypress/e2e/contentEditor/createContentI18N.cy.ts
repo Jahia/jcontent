@@ -8,6 +8,7 @@ describe('Create content tests in I18N site', () => {
     let setProperty: DocumentNode;
 
     before(function () {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: sitekey});
         setProperty = require('graphql-tag/loader!../../fixtures/contentEditor/createContent/addJcrTitleWithLang.graphql');
     });

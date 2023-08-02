@@ -27,6 +27,8 @@ import CatManApp from './CatManApp';
 import {buildUrl} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
+import {Redirect} from 'react-router';
+import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -122,7 +124,8 @@ export default function () {
 
     registry.add('primary-nav-item', 'catMan', {
         targets: ['nav-root-top:4.1'],
-        requiredPermission: 'jContentAccess',
+        requiredPermission: 'categoryManager',
+        requiredPermissionPath: '/sites/systemsite/categories',
         render: () => <CatManNavItem/>
     });
 
@@ -130,9 +133,20 @@ export default function () {
         targets: ['main:3'],
         path: '/catMan/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
         requiredPermission: 'categoryManager',
-        requiredPermissionPath: '/sites/systemsite',
+        requiredPermissionPath: '/sites/systemsite/categories',
         render: () => <CatManApp/>
     });
+    if (booleanValue(contextJsParameters.config.jcontent?.hideLegacyPageComposer)) {
+        registry.add('route', 'pageBuilderToPageComposerRoute', {
+            targets: ['main:-1'],
+            path: '/page-composer/default/:lang/sites/:siteKey/:path',
+            requiredPermission: 'jContentAccess',
+            render: props => (
+                <Redirect
+                to={`/jcontent/${props.match.params.siteKey}/${props.match.params.lang}/pages/${props.match.params.path.substring(0, props.match.params.path.lastIndexOf('.'))}`}/>
+            )
+        });
+    }
 
     registry.add('app', 'dnd', {
         targets: ['root:2'],

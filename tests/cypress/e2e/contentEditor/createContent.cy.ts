@@ -5,6 +5,7 @@ describe('Create content tests', {retries: 10}, () => {
     let pageComposer: PageComposer;
 
     before(function () {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: 'contentEditorSite'});
     });
 

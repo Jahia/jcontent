@@ -46,6 +46,7 @@ describe('Create multi language content and verify that it is different in all l
     }`;
 
     before(function () {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         setProperty = require('graphql-tag/loader!../../fixtures/contentEditor/contentMultiLanguage/setPropertyValue.graphql');
     });
 

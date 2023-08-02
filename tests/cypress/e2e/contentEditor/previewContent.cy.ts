@@ -5,6 +5,10 @@ describe('Preview tests', () => {
     const siteKey = 'digitall';
     let pageComposer: PageComposer;
 
+    before(() => {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
+    })
+
     it('It shows correctly preview of edited page even if not the one currently rendered in PageComposer', () => {
         cy.loginAndStoreSession();
         pageComposer = PageComposer.visit(siteKey, 'en', 'home.html');

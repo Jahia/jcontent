@@ -13,6 +13,7 @@ describe('Picker tests - multiple', () => {
 
     beforeEach(() => {
         cy.login();
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });
 

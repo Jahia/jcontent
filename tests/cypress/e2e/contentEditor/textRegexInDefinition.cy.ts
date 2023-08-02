@@ -12,6 +12,7 @@ describe('Test the consistency of the validation of regular expressions added to
     };
 
     before(function () {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         createSite(siteKey, siteConfig);
         enableModule('content-editor-test-module', siteKey);
     });

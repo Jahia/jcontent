@@ -85,6 +85,7 @@ export const QueryHandlersFragments = {
                 }
                 parent {
                     ...NodeCacheRequiredFields
+                    name
                     path
                 }
                 ...NodeCacheRequiredFields

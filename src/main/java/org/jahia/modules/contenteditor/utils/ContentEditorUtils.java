@@ -86,6 +86,18 @@ public class ContentEditorUtils {
         }
     }
 
+    private static final List<String> recursiveContributeTypes = Arrays.asList(Constants.JAHIANT_FOLDER, "jnt:contentFolder");
+
+    private static boolean isRecursiveNodeType(JCRNodeWrapper node) {
+        return recursiveContributeTypes.stream().anyMatch(s -> {
+            try {
+                return node.isNodeType(s);
+            } catch (RepositoryException e) {
+                return false;
+            }
+        });
+    }
+
     private static Set<String> getContributeTypes(JCRNodeWrapper node, Set<String> definitionAllowedTypes) throws RepositoryException {
         if (node.isNodeType("jmix:contributeMode") && node.hasProperty("j:contributeTypes")) {
             Value[] contributeTypes = node.getProperty("j:contributeTypes").getValues();
@@ -101,7 +113,7 @@ public class ContentEditorUtils {
                 })
             );
             return resolvedContributeTypes;
-        } else {
+        } else if (isRecursiveNodeType(node)) {
             // recurse on parent to check if contribute types exists
             JCRNodeWrapper parent;
             try {
@@ -112,6 +124,7 @@ public class ContentEditorUtils {
             }
             return getContributeTypes(parent, definitionAllowedTypes);
         }
+        return Collections.emptySet();
     }
 
     private static Set<String> getChildNodeTypes(JCRNodeWrapper node, List<String> filterNodeType, String childNodeName, boolean includeSubTypes) throws RepositoryException {
@@ -121,16 +134,14 @@ public class ContentEditorUtils {
             availableTypes.addAll(ConstraintsHelper.getConstraintSet(node));
         }
         availableTypes.forEach(type -> {
-                try {
-                    ExtendedNodeType nodeType = NodeTypeRegistry.getInstance().getNodeType(type);
-                    Stream<ExtendedNodeType> typesToCheck = Stream.concat(nodeType.getSubtypesAsList().stream(), Stream.of(nodeType));
-                    typesToCheck.forEach(subType -> {
-                        getAllowedTypes(allowedTypes, filterNodeType, subType, includeSubTypes);
-                    });
-                } catch (RepositoryException e) {
-                    // ignore unknown type
-                }
-            });
+            try {
+                ExtendedNodeType nodeType = NodeTypeRegistry.getInstance().getNodeType(type);
+                Stream<ExtendedNodeType> typesToCheck = Stream.concat(nodeType.getSubtypesAsList().stream(), Stream.of(nodeType));
+                typesToCheck.forEach(subType -> getAllowedTypes(allowedTypes, filterNodeType, subType, includeSubTypes));
+            } catch (RepositoryException e) {
+                // ignore unknown type
+            }
+        });
         return allowedTypes;
     }
 

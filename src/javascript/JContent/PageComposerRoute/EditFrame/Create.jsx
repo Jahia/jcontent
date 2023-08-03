@@ -58,7 +58,7 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
     let nodetypes;
     if (element.getAttribute('nodetypes')) {
         nodetypes = element.getAttribute('nodetypes').split(' ');
-    } else if (parent.getAttribute('nodetypes')) {
+    } else if (parent.getAttribute('nodetypes') && parent.getAttribute("type") === 'area') {
         nodetypes = parent.getAttribute('nodetypes').split(' ');
     } else {
         nodetypes = null;

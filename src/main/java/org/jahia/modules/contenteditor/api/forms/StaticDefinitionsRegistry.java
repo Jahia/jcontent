@@ -24,12 +24,11 @@
 package org.jahia.modules.contenteditor.api.forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jahia.modules.contenteditor.api.forms.model.Field;
-import org.jahia.modules.contenteditor.api.forms.model.FieldSet;
-import org.jahia.modules.contenteditor.api.forms.model.Form;
-import org.jahia.modules.contenteditor.api.forms.model.Section;
+import org.jahia.modules.contenteditor.api.forms.model.*;
+import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -139,7 +138,13 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
                 for (FieldSet fieldSet : section.getFieldSets()) {
                     initFieldSet(fieldSet, bundle);
                 }
+
+                section.setLabelKey(ContentEditorUtils.getLabelKey(section.getLabelKey(), bundle));
+                section.setDescriptionKey(ContentEditorUtils.getLabelKey(section.getDescriptionKey(), bundle));
             }
+
+            form.setLabelKey(ContentEditorUtils.getLabelKey(form.getLabelKey(), bundle));
+            form.setDescriptionKey(ContentEditorUtils.getLabelKey(form.getDescriptionKey(), bundle));
 
             forms.add(form);
             formsByBundle.computeIfAbsent(bundle, b -> new ArrayList<>()).add(form);
@@ -196,6 +201,10 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
         if (fieldSet.getPriority() == null) {
             fieldSet.setPriority(1.);
         }
+
+        fieldSet.setLabelKey(ContentEditorUtils.getLabelKey(fieldSet.getLabelKey(), originBundle));
+        fieldSet.setDescriptionKey(ContentEditorUtils.getLabelKey(fieldSet.getDescriptionKey(), originBundle));
+
         for (Field field : fieldSet.getFields()) {
             try {
                 if (field.getDeclaringNodeType() != null) {
@@ -205,8 +214,17 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
             } catch (NoSuchNodeTypeException e) {
                 throw new RuntimeException(e);
             }
+
+            field.setLabelKey(ContentEditorUtils.getLabelKey(field.getLabelKey(), originBundle));
+            field.setDescriptionKey(ContentEditorUtils.getLabelKey(field.getDescriptionKey(), originBundle));
+            field.setErrorMessageKey(ContentEditorUtils.getLabelKey(field.getErrorMessageKey(), originBundle));
+
+            if (field.getValueConstraints() != null) {
+                for (FieldValueConstraint valueConstraint : field.getValueConstraints()) {
+                    valueConstraint.setDisplayValueKey(ContentEditorUtils.getLabelKey(valueConstraint.getDisplayValueKey(), originBundle));
+                }
+            }
         }
     }
-
 
 }

@@ -11,8 +11,11 @@ import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinition
 const getInitialValues = (sections, nodeData) => {
     // Work in progress default value
     const wipInfo = {[Constants.wip.fieldName]: {status: nodeData.defaultWipInfo.status, languages: nodeData.defaultWipInfo.languages}};
+
+    const name = {[Constants.systemName.name]: nodeData.newName};
+
     // Retrieve fields and the return object contains the field name as the key and the field value as the value
-    return {...getFields(sections).reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {}), ...wipInfo};
+    return {...getFields(sections).reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {}), ...wipInfo, ...name};
 };
 
 /**
@@ -41,7 +44,7 @@ export const adaptCreateFormData = (data, lang, t, contentEditorConfigContext) =
         nodeTypeName: data.jcr.nodeTypeByName.name
     };
 
-    adaptSystemNameField(data, formData, t, data.jcr.nodeTypeByName, true);
+    adaptSystemNameField(formData, data.jcr.nodeTypeByName);
 
     if (contentEditorConfigContext.name) {
         formData.initialValues[Constants.systemName.name] = contentEditorConfigContext.name;

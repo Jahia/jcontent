@@ -7,6 +7,7 @@ import {adaptSections, getExpandedSections} from '~/ContentEditor/ContentEditor/
 import {getFieldValuesFromDefaultValues} from '~/ContentEditor/ContentEditor/getFieldValuesFromDefaultValues';
 import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
 import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
+import {decodeSystemName} from '../utils';
 
 // TODO https://jira.jahia.org/browse/TECH-300
 
@@ -31,8 +32,10 @@ const getInitialValues = (nodeData, sections) => {
         wipInfo[Constants.wip.fieldName] = {status: nodeData.defaultWipInfo.status, languages: nodeData.defaultWipInfo.languages};
     }
 
+    const name = {[Constants.systemName.name]: decodeSystemName(nodeData.name)};
+
     // Return object contains fields and dynamic fieldSets
-    return {...nodeValues, ...extendsMixinFieldsDefaultValues, ...dynamicFieldSets, ...childrenOrderingFields, ...wipInfo};
+    return {...nodeValues, ...extendsMixinFieldsDefaultValues, ...dynamicFieldSets, ...childrenOrderingFields, ...wipInfo, ...name};
 };
 
 const getChildrenOrderingFields = (nodeData, dynamicFieldSets) => {
@@ -162,7 +165,7 @@ export const adaptEditFormData = (data, lang, t) => {
         nodeTypeName: nodeData.primaryNodeType.name
     };
 
-    adaptSystemNameField(data, formData, t, nodeData.primaryNodeType, false, nodeData.isSystemNameReadOnlyMixin);
+    adaptSystemNameField(formData, nodeData.primaryNodeType);
 
     return formData;
 };

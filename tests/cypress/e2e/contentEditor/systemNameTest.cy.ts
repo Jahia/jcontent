@@ -7,6 +7,7 @@ describe('System name test', () => {
 
     before(function () {
         cy.loginAndStoreSession();
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: site});
     });
 

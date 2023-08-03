@@ -10,6 +10,7 @@ describe('Editor url test', () => {
     let validUuid;
 
     before(() => {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         getValidUuid();
     });
 

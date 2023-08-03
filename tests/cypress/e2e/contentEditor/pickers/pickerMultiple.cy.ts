@@ -13,6 +13,7 @@ describe('Picker tests - multiple', () => {
 
     beforeEach(() => {
         cy.login();
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });
 
@@ -88,12 +89,10 @@ describe('Picker tests - multiple', () => {
         picker.getTable().selectItems(1);
 
         cy.log('toggle open selection table');
-        picker
-            .getSelectionCaption()
-            .should('be.visible')
-            .click()
+        picker.getSelectionCaption()
             .invoke('attr', 'data-sel-role')
             .should('eq', `${numSelected}-item-selected`);
+        picker.getSelectionCaption().should('be.visible').click();
         picker.getSelectionTable().get().should('be.visible');
         picker
             .getSelectionTable()

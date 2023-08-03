@@ -86,6 +86,8 @@ export class File extends BasePage {
         cy.get(this.selector).should('be.visible').rightclick({force: true});
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();
+        // Verify dialog has been dismissed before proceeding
+        cy.get('[data-sel-role="delete-mark-dialog"]').should('not.exist');
         return this;
     }
 

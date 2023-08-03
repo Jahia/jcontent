@@ -7,8 +7,8 @@ describe('Picker tests - Search', () => {
     beforeEach(() => {
         // I have issues adding these to before()/after() so have to add to beforeEach()/afterEach()
         cy.login(); // Edit in chief
-
-        // beforeEach()
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
+        // BeforeEach()
         jcontent = JContent.visit(siteKey, 'en', 'pages/home');
     });
 

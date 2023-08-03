@@ -6,6 +6,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
     let pageComposer: PageComposer;
     const cypressDocumentManagerImageReferenceLinkTest = 'Cypress document manager image reference link Test';
     before(function () {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: sitekey});
         cy.loginAndStoreSession(); // Edit in chief
         JContent.visit(sitekey, 'en', 'media/file');

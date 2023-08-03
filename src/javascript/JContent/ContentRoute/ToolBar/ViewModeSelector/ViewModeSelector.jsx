@@ -49,10 +49,10 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
         skip: !path // Skips if path is not defined
     });
 
-    let showPCAndPreviewSelector = false;
+    let showPageBuilderView = false;
 
     if (!loading && !error && data?.jcr?.node) {
-        showPCAndPreviewSelector = mode === JContentConstants.mode.PAGES && booleanValue(contextJsParameters.config.jcontent?.showPageComposer) && data.jcr.node.isDisplayableNode;
+        showPageBuilderView = (mode === JContentConstants.mode.PAGES) && booleanValue(contextJsParameters.config.jcontent?.showPageComposer) && data.jcr.node.isDisplayableNode;
     }
 
     const onChange = vm => dispatch(setTableViewModeAction(vm));
@@ -63,16 +63,18 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
         localStorage.setItem(VIEW_MODE, selectedViewMode);
     };
 
-    const allButtons = showPCAndPreviewSelector ? pagesButtons : buttons;
+    const allButtons = showPageBuilderView ? pagesButtons : buttons;
+
+    const selectedMode = allButtons.indexOf(viewMode) === -1 ? allButtons[0] : viewMode;
 
     return (
         <Dropdown className={classes.dropdown}
                   size="small"
-                  data={tableViewDropdownData(t, viewMode, allButtons)}
+                  data={tableViewDropdownData(t, selectedMode, allButtons)}
                   data-sel-role="sel-view-mode-dropdown"
-                  label={t(`jcontent:label.contentManager.view.${viewMode}`)}
-                  value={viewMode}
-                  icon={icons[viewMode]}
+                  label={t(`jcontent:label.contentManager.view.${selectedMode}`)}
+                  value={selectedMode}
+                  icon={icons[selectedMode]}
                   onChange={(e, item) => handleChange(item.value)}
             />
     );

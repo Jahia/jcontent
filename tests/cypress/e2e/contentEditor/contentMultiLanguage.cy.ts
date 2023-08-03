@@ -46,6 +46,7 @@ describe('Create multi language content and verify that it is different in all l
     }`;
 
     before(function () {
+        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         setProperty = require('graphql-tag/loader!../../fixtures/contentEditor/contentMultiLanguage/setPropertyValue.graphql');
     });
 
@@ -143,7 +144,7 @@ describe('Create multi language content and verify that it is different in all l
 
         // Image should exist in the table if modifying
         if (data.modify) {
-            picker.getTableRow(data.image.split('/')[3]).find('input').click();
+            picker.getTableRow(data.image.split('/')[4]).find('input').click();
         } else {
             picker.uploadFile(data.image);
         }
@@ -260,7 +261,7 @@ describe('Create multi language content and verify that it is different in all l
     it('Can create and modify content in 2 languages and publish respecting mandatory language rules', {retries: 0}, function () {
         const reducedNewsByLanguage = {...newsByLanguage};
         delete reducedNewsByLanguage.de;
-        // Publish in all languages first to make site available in live
+        cy.log('Publish in all languages first to make site available in live');
         let pubDate = new Date();
         cy.apollo({mutation: publishMutation, variables: {
             path: homePath,
@@ -274,7 +275,7 @@ describe('Create multi language content and verify that it is different in all l
             .selectContentType('News entry')
             .create();
 
-        // Create news entry in 2 mandatory languages
+        cy.log('Create news entry in 2 mandatory languages');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create News entry');
         let contentSection = contentEditor.openSection('Content');
         contentSection.expand();
@@ -286,7 +287,7 @@ describe('Create multi language content and verify that it is different in all l
         pageComposer.refresh();
 
         // Test publication
-        // Publish news in both languages and test for presence in live
+        cy.log('Publish news in both languages and test for presence in live');
         pageComposer.switchLanguage(reducedNewsByLanguage.en.lang);
         pageComposer.navigateToPage('Home');
         pubDate = new Date();
@@ -308,7 +309,7 @@ describe('Create multi language content and verify that it is different in all l
         testNewsCreation({pageComposer, subject: {...reducedNewsByLanguage.en, livePresent: true}});
         testNewsCreation({pageComposer, subject: {...reducedNewsByLanguage.fr, livePresent: true}});
 
-        // Modify news
+        cy.log('Modify news');
         pageComposer.editComponent('.news-v3-in-sm');
         cy.get('#contenteditor-dialog-title').should('be.visible');
         contentSection = contentEditor.openSection('Content');
@@ -327,7 +328,7 @@ describe('Create multi language content and verify that it is different in all l
         pageComposer.refresh();
 
         // Test publication
-        // Should be present in live in modified form
+        cy.log('Should be present in live in modified form');
         pageComposer.switchLanguage(reducedNewsByLanguage.en.lang);
         pageComposer.navigateToPage('Home');
         pubDate = new Date();

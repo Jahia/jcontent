@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+
+<urlrewrite use-query-string="true">
+    <rule>
+        <name>jContent page builder from GWT page composer</name>
+        <note>Redirects old /jahia/page-composer urls</note>
+        <from>^.*/jahia/page-composer/default/(.*)/sites/(.*)/(.*)\..*$</from>
+        <to type="redirect">%{context-path}/jahia/jcontent/$2/$1/pages/$3</to>
+    </rule>
+</urlrewrite>

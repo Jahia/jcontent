@@ -1,0 +1,9 @@
+mutation {
+    admin {
+        jahia {
+            configuration(pid:"org.jahia.modules.jcontent") {
+                value(name:"hideLegacyPageComposer", value:"false")
+            }
+        }
+    }
+}

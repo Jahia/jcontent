@@ -24,14 +24,11 @@
 package org.jahia.modules.contenteditor.api.forms.model;
 
 import org.jahia.modules.contenteditor.api.forms.Ranked;
-import org.jahia.modules.contenteditor.api.forms.RankedComparator;
 import org.jahia.services.content.decorator.JCRSiteNode;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static org.jahia.modules.contenteditor.api.forms.EditorFormServiceImpl.resolveResourceKey;
 

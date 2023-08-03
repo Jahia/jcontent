@@ -7,8 +7,10 @@ import {Route, Switch} from 'react-router';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import './colors.scss';
 import {cmClearSelection} from './redux/selection.redux';
+import {usePublicationNotification} from './PublicationStatus/PublicationNotification/usePublicationNotification';
 
 export const JContent = () => {
+    usePublicationNotification();
     const routes = registry.find({type: 'route', target: 'jcontent'});
     const {site, mode} = useSelector(state => ({site: state.jcontent.site, mode: state.jcontent.mode}), shallowEqual);
     const item = registry.get('accordionItem', mode);

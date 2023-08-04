@@ -41,9 +41,13 @@
             {
               "rank": 0.0,
               "name": "ce:systemName",
-              "descriptionKey": "",
+              "labelKey": "label.contentEditor.section.fieldSet.system.fields.systemName",
+              "descriptionKey": "label.contentEditor.section.fieldSet.system.fields.systemNameDescription",
               "requiredType": "String",
               "selectorType": "SystemName",
+              "selectorOptionsMap": {
+                "maxLength": "${jahia:jahia.jcr.maxNameSize}"
+              },
               "i18n": false,
               "readOnly": false,
               "multiple": false,

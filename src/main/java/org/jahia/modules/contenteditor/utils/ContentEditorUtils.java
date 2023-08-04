@@ -35,6 +35,7 @@ import org.jahia.services.content.nodetypes.ConstraintsHelper;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.utils.LanguageCodeConverters;
+import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.touk.throwing.ThrowingConsumer;
@@ -176,5 +177,14 @@ public class ContentEditorUtils {
             return session.getNodeByIdentifier(uuidOrPath);
         }
     }
+
+    public static String getLabelKey(String key, Bundle originBundle) {
+        if (!StringUtils.isEmpty(key) && !key.contains(":") && originBundle != null) {
+            return originBundle.getSymbolicName() + ":" + key;
+        }
+
+        return key;
+    }
+
 
 }

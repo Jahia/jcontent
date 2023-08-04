@@ -141,7 +141,7 @@ public class FormGenerator {
 
         String errorMessageKey = itemDefinition.getResourceBundleKey() + ".constraint.error.message";
         if (itemDefinition.getDeclaringNodeType().getTemplatePackage() != null) {
-            errorMessageKey += "@" + itemDefinition.getDeclaringNodeType().getTemplatePackage().getResourceBundleName();
+            errorMessageKey = itemDefinition.getDeclaringNodeType().getTemplatePackage().getName() + ":" + errorMessageKey;
         }
 
         String selectorType = SelectorType.nameFromValue(propertyDefinition.getSelector());

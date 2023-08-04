@@ -197,13 +197,13 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         description = description == null && descriptionKey != null ? resolveResourceKey(descriptionKey, uiLocale, site) : description;
 
         if (nodeType != null) {
-            String suffix = nodeType.getTemplatePackage() != null ? "@" + nodeType.getTemplatePackage().getResourceBundleName() : "";
+            String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
             String key =  JCRContentUtils.replaceColon(nodeType.getName());
-            label = StringUtils.isEmpty(label) ? StringEscapeUtils.unescapeHtml(resolveResourceKey(key + suffix, uiLocale, site)) : label;
-            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(key + ".ui.tooltip" + suffix, uiLocale, site)) : description;
+            label = StringUtils.isEmpty(label) ? StringEscapeUtils.unescapeHtml(resolveResourceKey(prefix + key, uiLocale, site)) : label;
+            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
 
             label = StringUtils.isEmpty(label) ? StringUtils.substringAfter(nodeType.getName(), ":") : label;
-            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(key + "_description" + suffix, uiLocale, site)) : description;
+            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + "_description", uiLocale, site)) : description;
         }
     }
 

@@ -1,0 +1,20 @@
+{
+  "nodeType": "jnt:page",
+  "priority": 3.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "<main>",
+          "fields": [
+            {
+              "name": "ce:systemName",
+              "descriptionKey": "label.contentEditor.section.fieldSet.system.fields.systemNameDescriptionPage"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

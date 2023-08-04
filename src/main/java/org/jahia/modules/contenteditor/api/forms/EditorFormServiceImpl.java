@@ -36,6 +36,7 @@ import org.jahia.services.content.nodetypes.*;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListInitializer;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListInitializerService;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
+import org.jahia.settings.SettingsBean;
 import org.jahia.utils.i18n.Messages;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
@@ -196,6 +197,11 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean forceReadOnly = field.getExtendedPropertyDefinition() != null && field.getExtendedPropertyDefinition().isInternationalized() ? !i18nFieldsEditable : !sharedFieldsEditable;
                         field.setReadOnly((field.isReadOnly() != null && field.isReadOnly()) || forceReadOnly);
 
+                        if (field.getSelectorOptionsMap() != null && field.getSelectorOptionsMap().size() > 0) {
+                            field.setSelectorOptionsMap(field.getSelectorOptionsMap().entrySet().stream()
+                                .collect(Collectors.toMap(Map.Entry::getKey, entry -> SettingsBean.getInstance().replaceBySubsitutor((String) entry.getValue()))));
+                        }
+
                         if (field.getValueConstraints() != null && field.getExtendedPropertyDefinition() != null) {
                             List<FieldValueConstraint> valueConstraints = getValueConstraints(primaryNodeType, field, existingNode, parentNode, locale, new HashMap<>());
                             if (valueConstraints != null && !valueConstraints.isEmpty()) {
@@ -245,25 +251,24 @@ public class EditorFormServiceImpl implements EditorFormService {
             return key;
         }
         logger.debug("Resources key: {}", key);
-        String baseName = null;
-        String value;
-        if (key.contains("@")) {
-            if (key.contains("resources.")) {
-                baseName = StringUtils.substringAfter(key, "@");
-                key = StringUtils.substringBefore(key, "@");
-            } else {
-                baseName = StringUtils.substringBefore(key, "@");
-                key = StringUtils.substringAfter(key, "@");
-            }
+        String osgiBundleName = null;
+
+        if (key.contains(":")) {
+            osgiBundleName = StringUtils.substringBefore(key, ":");
+            key = StringUtils.substringAfter(key, ":");
         }
 
-        value = Messages.get(baseName, site != null ? site.getTemplatePackage() : null, key, locale, StringUtils.EMPTY);
-        if (StringUtils.isEmpty(value) && baseName != null) {
-            JahiaTemplatesPackage jahiaTemplatesPackage = ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackageRegistry().lookupById(baseName);
-            value = Messages.get(baseName, jahiaTemplatesPackage, key, locale, StringUtils.EMPTY);
-        } else if (value == null) {
-            value = Messages.getInternal(key, locale);
+        // First lookup in site templates (with dependencies and internal resources)
+        String value = Messages.get(null, site.getTemplatePackage(), key, locale, StringUtils.EMPTY);
+
+        if (StringUtils.isEmpty(value) && osgiBundleName != null) {
+            // Then look in module resources (with dependencies and internal resources)
+            JahiaTemplatesPackage jahiaTemplatesPackage = ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackageRegistry().lookupById(osgiBundleName);
+            value = Messages.get(null, jahiaTemplatesPackage, key, locale, StringUtils.EMPTY);
         }
+        // Replace placeholders in labels
+        value = SettingsBean.getInstance().replaceBySubsitutor(value);
+
         return value;
     }
 

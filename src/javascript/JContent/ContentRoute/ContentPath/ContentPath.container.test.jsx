@@ -34,7 +34,10 @@ describe('ContentPathContainer', () => {
         useSelector.mockImplementation(callback => callback({
             language: 'fr',
             jcontent: {
-                path: '/x/y/z'
+                path: '/x/y/z',
+                tableView: {
+                    viewMode: 'bar'
+                }
             }
         }));
 
@@ -64,6 +67,14 @@ describe('ContentPathContainer', () => {
             }
         }));
 
+        useSelector.mockImplementation(callback => callback({
+            jcontent: {
+                tableView: {
+                    viewMode: 'bar'
+                }
+            }
+        }));
+
         const wrapper = shallow(<ContentPathContainer/>).find('ContentPath');
         expect(wrapper.type()).toBe(ContentPath);
         expect(wrapper.prop('items')).toEqual(ancestors);
@@ -77,7 +88,10 @@ describe('ContentPathContainer', () => {
 
         useSelector.mockImplementation(callback => callback({
             jcontent: {
-                mode: 'foo'
+                mode: 'foo',
+                tableView: {
+                    viewMode: 'bar'
+                }
             }
         }));
 

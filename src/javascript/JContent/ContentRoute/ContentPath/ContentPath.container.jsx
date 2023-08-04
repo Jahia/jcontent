@@ -7,6 +7,7 @@ import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPath from './ContentPath';
 import {ContentPathDialog} from './ContentPathDialog';
 import PropTypes from 'prop-types';
+import JContentConstants from '~/JContent/JContent.constants';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;
@@ -43,14 +44,14 @@ const ContentPathContainer = ({setPathAction, selector}) => {
     const dispatch = useDispatch();
     const [currentItem, setCurrentItem] = useState(null);
 
-    const {mode, language, path} = useSelector(selector, shallowEqual);
+    const {mode, language, path, viewMode} = useSelector(selector, shallowEqual);
 
     const {data, error} = useQuery(GetContentPath, {
         variables: {path, language}
     });
 
     const handleNavigation = item => {
-        if (item.primaryNodeType?.name === 'jnt:contentList') {
+        if (item.primaryNodeType?.name === 'jnt:contentList' && mode === JContentConstants.mode.PAGES && viewMode === JContentConstants.tableView.viewMode.PAGE_COMPOSER) {
             setCurrentItem(item);
         } else {
             dispatch(setPathAction(mode, item.path));
@@ -88,6 +89,7 @@ ContentPathContainer.propTypes = {
 ContentPathContainer.defaultProps = {
     selector: state => ({
         mode: state.jcontent.mode,
+        viewMode: state.jcontent.tableView.viewMode,
         path: state.jcontent.path,
         language: state.language
     }),

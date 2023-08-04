@@ -55,7 +55,15 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
     });
 
     const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
-    const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
+    let nodetypes;
+    if (element.getAttribute('nodetypes')) {
+        nodetypes = element.getAttribute('nodetypes').split(' ');
+    } else if (parent.getAttribute('nodetypes') && parent.getAttribute('type') === 'area') {
+        nodetypes = parent.getAttribute('nodetypes').split(' ');
+    } else {
+        nodetypes = null;
+    }
+
     const {nodes} = copyPaste;
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, currentOffset, element, setCurrentOffset]);

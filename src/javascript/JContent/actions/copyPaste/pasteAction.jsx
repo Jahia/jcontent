@@ -54,6 +54,10 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
         nodeChecksProps.hideOnNodeTypes = others.hideOnNodeTypes;
     }
 
+    if (others.hidePasteOnPage) {
+        nodeChecksProps.hideOnNodeTypes = [...(nodeChecksProps.hidePasteOnPage || []), 'jnt:page'];
+    }
+
     const res = useNodeChecks(
         {path, language},
         nodeChecksProps

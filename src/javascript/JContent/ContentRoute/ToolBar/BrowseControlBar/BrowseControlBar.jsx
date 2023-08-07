@@ -34,7 +34,8 @@ export const BrowseControlBar = ({isShowingActions, selector, actionsToExcludeFr
     return isShowingActions && !isRootNode && (
         <>
             <div className="flexRow">
-                <DisplayActions target="headerPrimaryActions"
+                <DisplayActions hidePasteOnPage
+                                target="headerPrimaryActions"
                                 path={editPath}
                                 render={ButtonRenderer}
                                 buttonProps={{size: 'default', variant: 'ghost'}}

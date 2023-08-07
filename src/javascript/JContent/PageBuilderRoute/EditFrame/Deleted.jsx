@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import styles from './Deleted.scss';
 import {Delete, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {isVisible, getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
+import {isVisible, getCoords} from '~/JContent/PageBuilderRoute/EditFrame/EditFrame.utils';
 
 function getBoundingBox(element) {
     if (!isVisible(element)) {

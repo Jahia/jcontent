@@ -5,9 +5,9 @@ import {Box} from './Box';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useMutation} from '@apollo/client';
-import {updateProperty} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-mutations';
+import {updateProperty} from '~/JContent/PageBuilderRoute/EditFrame/Boxes.gql-mutations';
 import {useQuery} from '@apollo/client';
-import {BoxesQuery} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-queries';
+import {BoxesQuery} from '~/JContent/PageBuilderRoute/EditFrame/Boxes.gql-queries';
 import {hasMixin, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
@@ -210,9 +210,9 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, errorPolicy: 'all'});
 
     useEffect(() => {
-        setRefetcher(refetchTypes.PAGE_COMPOSER_BOXES, {refetch: refetch});
+        setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
         return () => {
-            unsetRefetcher(refetchTypes.PAGE_COMPOSER_BOXES);
+            unsetRefetcher(refetchTypes.PAGE_BUILDER_BOXES);
         };
     });
 

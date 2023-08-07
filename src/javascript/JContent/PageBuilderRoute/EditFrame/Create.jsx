@@ -9,7 +9,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
-import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
+import {getCoords} from '~/JContent/PageBuilderRoute/EditFrame/EditFrame.utils';
 
 const ButtonRenderer = getButtonRenderer({showTooltip: true, defaultButtonProps: {color: 'default'}});
 

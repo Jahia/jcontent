@@ -51,7 +51,7 @@ const ContentPathContainer = ({setPathAction, selector}) => {
     });
 
     const handleNavigation = item => {
-        if (item.primaryNodeType?.name === 'jnt:contentList' && mode === JContentConstants.mode.PAGES && viewMode === JContentConstants.tableView.viewMode.PAGE_COMPOSER) {
+        if (item.primaryNodeType?.name === 'jnt:contentList' && mode === JContentConstants.mode.PAGES && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
             setCurrentItem(item);
         } else {
             dispatch(setPathAction(mode, item.path));

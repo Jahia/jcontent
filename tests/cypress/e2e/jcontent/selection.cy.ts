@@ -125,7 +125,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             checkSelectionCount(2);
 
             // Check selection in PC mode
-            jcontent.switchToPageComposer();
+            jcontent.switchToPageBuilder();
             checkSelectionCount(2);
 
             jcontent.switchToListMode();
@@ -141,11 +141,11 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('remove selection when navigating to a mode where item is not visible', () => {
-            const pageComposer = jcontent.switchToPageComposer();
+            const pageBuilder = jcontent.switchToPageBuilder();
 
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             // Select absolute area
-            const module = pageComposer.getModule('/sites/digitall/home/area-main/area/area/area/area-main');
+            const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main');
             module.click('bottom');
             checkSelectionCount(1);
 

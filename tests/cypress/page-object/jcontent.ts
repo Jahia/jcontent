@@ -155,9 +155,9 @@ export class JContent extends BasePage {
         return this;
     }
 
-    switchToPageComposer(): JContentPageComposer {
-        this.switchToMode('Page Composer');
-        return new JContentPageComposer(this);
+    switchToPageBuilder(): JContentPageBuilder {
+        this.switchToMode('Page Builder');
+        return new JContentPageBuilder(this);
     }
 
     assertStatus(value: string) {
@@ -211,14 +211,14 @@ export class JContent extends BasePage {
     }
 }
 
-export class JContentPageComposer extends JContent {
+export class JContentPageBuilder extends JContent {
     constructor(base: JContent) {
         super();
         Object.assign(this, base);
     }
 
     iframe() {
-        const iframeSel = '[data-sel-role="page-composer-frame-active"]';
+        const iframeSel = '[data-sel-role="page-builder-frame-active"]';
         cy.iframe(iframeSel).as('pcIframe');
         cy.get('@pcIframe').find('[jahiatype="createbuttons"]');
         return new BaseComponent(cy.get('@pcIframe'));
@@ -228,17 +228,17 @@ export class JContentPageComposer extends JContent {
         cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
     }
 
-    getModule(path: string): PageComposerModule {
+    getModule(path: string): PageBuilderModule {
         const parentFrame = this.iframe();
-        const module = getComponentBySelector(PageComposerModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
+        const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.parentFrame = parentFrame;
         return module;
     }
 
-    refresh(): JContentPageComposer {
-        cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(() => {
+    refresh(): JContentPageBuilder {
+        cy.get('[data-sel-role="page-builder-frame-active"]').invoke('attr', 'id').then(() => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();
-            // Cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
+            // Cy.get('[data-sel-role="page-builder-frame-active"]').should(e => {
             //     expect(previousId).to.not.eq(e[0].getAttribute('id'));
             // });
         });
@@ -246,7 +246,7 @@ export class JContentPageComposer extends JContent {
     }
 }
 
-class PageComposerModuleHeader extends BaseComponent {
+class PageBuilderModuleHeader extends BaseComponent {
     static defaultSelector = '[jahiatype="header"]';
 
     assertStatus(value: string) {
@@ -258,7 +258,7 @@ class PageComposerModuleHeader extends BaseComponent {
     }
 }
 
-class PageComposerModuleCreateButton extends BaseComponent {
+class PageBuilderModuleCreateButton extends BaseComponent {
     static defaultSelector = '[jahiatype="createbuttons"]';
 
     getButton(type: string): Button {
@@ -274,7 +274,7 @@ class PageComposerModuleCreateButton extends BaseComponent {
     }
 }
 
-class PageComposerModule extends BaseComponent {
+class PageBuilderModule extends BaseComponent {
     static defaultSelector = '[jahiatype="module"]';
     parentFrame: BaseComponent;
 
@@ -287,11 +287,11 @@ class PageComposerModule extends BaseComponent {
         this.get().invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
         });
-        return getComponent(PageComposerModuleHeader, this.parentFrame);
+        return getComponent(PageBuilderModuleHeader, this.parentFrame);
     }
 
     getCreateButtons() {
-        return new PageComposerModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
+        return new PageBuilderModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
         }));
     }

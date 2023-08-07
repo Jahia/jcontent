@@ -9,7 +9,7 @@ import {EditFrame} from './EditFrame';
 import {useNodeInfo} from '@jahia/data-helper';
 import {setTableViewMode} from '../redux/tableView.redux';
 
-export const PageComposerRoute = () => {
+export const PageBuilderRoute = () => {
     const viewMode = useSelector(state => state.jcontent.tableView.viewMode);
 
     const path = useSelector(state => state.jcontent.path);
@@ -31,12 +31,12 @@ export const PageComposerRoute = () => {
         return false;
     }
 
-    const pageComposer = (JContentConstants.tableView.viewMode.PAGE_COMPOSER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
+    const pageBuilder = (JContentConstants.tableView.viewMode.PAGE_BUILDER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
     if (res.node === undefined || res.error) {
         return <Error404/>;
     }
 
-    if (pageComposer) {
+    if (pageBuilder) {
         return (
             <MainLayout header={<ContentHeader/>}>
                 <LoaderSuspense>
@@ -51,4 +51,4 @@ export const PageComposerRoute = () => {
     return <ContentRoute/>;
 };
 
-export default PageComposerRoute;
+export default PageBuilderRoute;

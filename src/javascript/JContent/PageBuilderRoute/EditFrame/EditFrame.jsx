@@ -83,8 +83,8 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                 setTimeout(() => {
                     iframeSwap.current.style.top = '-10000';
                     iframe.current.style.top = '0';
-                    iframe.current.setAttribute('data-sel-role', 'page-composer-frame-active');
-                    iframeSwap.current.setAttribute('data-sel-role', 'page-composer-frame-inactive');
+                    iframe.current.setAttribute('data-sel-role', 'page-builder-frame-active');
+                    iframeSwap.current.setAttribute('data-sel-role', 'page-builder-frame-inactive');
                     iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
 
                     setTimeout(() => {
@@ -220,16 +220,16 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                         width="100%"
                         height="100%"
                         style={{position: 'absolute'}}
-                        id="page-composer-frame-1"
-                        data-sel-role="page-composer-frame-active"
+                        id="page-builder-frame-1"
+                        data-sel-role="page-builder-frame-active"
                         onLoad={iFrameOnLoad}
                 />
                 <iframe ref={iframeSwap}
                         width="100%"
                         height="100%"
                         style={{position: 'absolute', top: -10000}}
-                        id="page-composer-frame-2"
-                        data-sel-role="page-composer-frame-inactive"
+                        id="page-builder-frame-2"
+                        data-sel-role="page-builder-frame-inactive"
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>

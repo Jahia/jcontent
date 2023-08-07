@@ -392,7 +392,7 @@
       "view": {
         "flatList": "List",
         "structuredView": "Structured",
-        "pageComposer": "Page Composer",
+        "pageBuilder": "Page Builder",
         "preview": "Preview Staging"
       },
       "contentTypeSelector": {
@@ -485,8 +485,8 @@
       },
       "contentPath": {
         "dialog": {
-          "title": "Page Composer view not available",
-          "body": "The element you clicked on cannot be displayed with the Page Composer view.",
+          "title": "Page Builder view not available",
+          "body": "The element you clicked on cannot be displayed with the Page Builder view.",
           "listView": "Open in list view",
           "parentPage": "Display the parent page"
         }

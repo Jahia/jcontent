@@ -198,8 +198,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         field.setReadOnly((field.isReadOnly() != null && field.isReadOnly()) || forceReadOnly);
 
                         if (field.getSelectorOptionsMap() != null && field.getSelectorOptionsMap().size() > 0) {
-                            field.setSelectorOptionsMap(field.getSelectorOptionsMap().entrySet().stream()
-                                .collect(Collectors.toMap(Map.Entry::getKey, entry -> SettingsBean.getInstance().replaceBySubsitutor((String) entry.getValue()))));
+                            field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
 
                         if (field.getValueConstraints() != null && field.getExtendedPropertyDefinition() != null) {
@@ -231,6 +230,19 @@ public class EditorFormServiceImpl implements EditorFormService {
         } catch (RepositoryException e) {
             throw new EditorFormException("Error while building edit form definition for node: " + currentNode.getPath() + " and nodeType: " + primaryNodeType.getName(), e);
         }
+    }
+
+    private static Map<String, Object> replaceBySubstitutor(Map<String, Object> selectorOptionsMap) {
+        return selectorOptionsMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> {
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                return SettingsBean.getInstance().replaceBySubsitutor((String) value);
+            } else if (value instanceof Map) {
+                return replaceBySubstitutor((Map) value);
+            }
+
+            return value;
+        }));
     }
 
     private void addFormNodeType(ExtendedNodeType nodeType, SortedSet<DefinitionRegistryItem> formDefinitionsToMerge, Locale locale, boolean singleFieldSet, Set<String> processedNodeTypes) throws RepositoryException {

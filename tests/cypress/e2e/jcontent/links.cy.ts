@@ -1,8 +1,8 @@
-import {JContent, JContentPageComposer} from '../../page-object';
+import {JContent, JContentPageBuilder} from '../../page-object';
 import {Button, getComponentByRole} from '@jahia/cypress';
 
 describe('Links in jcontent', () => {
-    let jcontent: JContentPageComposer;
+    let jcontent: JContentPageBuilder;
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
@@ -22,7 +22,7 @@ describe('Links in jcontent', () => {
         cy.login();
         jcontent = JContent
             .visit('jcontentSite', 'en', 'pages/home')
-            .switchToPageComposer();
+            .switchToPageBuilder();
     });
 
     it('Do not open modal when clicking on internal link', function () {

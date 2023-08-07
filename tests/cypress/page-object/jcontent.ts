@@ -155,9 +155,9 @@ export class JContent extends BasePage {
         return this;
     }
 
-    switchToPageComposer(): JContentPageComposer {
-        this.switchToMode('Page Composer');
-        return new JContentPageComposer(this);
+    switchToPageBuilder(): JContentPageBuilder {
+        this.switchToMode('Page Builder');
+        return new JContentPageBuilder(this);
     }
 
     assertStatus(value: string) {
@@ -211,7 +211,7 @@ export class JContent extends BasePage {
     }
 }
 
-export class JContentPageComposer extends JContent {
+export class JContentPageBuilder extends JContent {
     constructor(base: JContent) {
         super();
         Object.assign(this, base);
@@ -235,7 +235,7 @@ export class JContentPageComposer extends JContent {
         return module;
     }
 
-    refresh(): JContentPageComposer {
+    refresh(): JContentPageBuilder {
         cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(() => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();
             // Cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {

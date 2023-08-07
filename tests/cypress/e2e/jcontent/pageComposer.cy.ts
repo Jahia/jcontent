@@ -1,9 +1,9 @@
-import {JContent, JContentPageComposer} from '../../page-object';
+import {JContent, JContentPageBuilder} from '../../page-object';
 import {Dropdown, getComponentByRole} from '@jahia/cypress';
 import {ContentEditor} from '../../page-object/contentEditor';
 
-describe('Page composer', () => {
-    let jcontent: JContentPageComposer;
+describe('Page builder', () => {
+    let jcontent: JContentPageBuilder;
 
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
@@ -20,7 +20,7 @@ describe('Page composer', () => {
         cy.loginAndStoreSession();
         jcontent = JContent
             .visit('jcontentSite', 'en', 'pages/home')
-            .switchToPageComposer();
+            .switchToPageBuilder();
     });
 
     describe('boxes and header', function () {

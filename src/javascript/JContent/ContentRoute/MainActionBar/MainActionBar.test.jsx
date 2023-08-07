@@ -16,7 +16,7 @@ jest.mock('@jahia/data-helper', () => {
     };
 });
 
-global.contextJsParameters = {config: {jcontent: {showPageComposer: true}}};
+global.contextJsParameters = {config: {jcontent: {showPageBuilder: true}}};
 
 describe('MainActionBar', () => {
     it('Should render', async () => {

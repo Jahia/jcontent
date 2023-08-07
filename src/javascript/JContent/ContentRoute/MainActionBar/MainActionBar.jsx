@@ -12,7 +12,7 @@ const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none', defaultButt
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {size: 'big'}});
 
 export const MainActionBar = () => {
-    const showPageComposer = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
+    const showPageBuilder = booleanValue(contextJsParameters.config.jcontent?.showPageBuilder);
 
     const {path, language, selection} = useSelector(state => ({path: state.jcontent.path, language: state.language, selection: state.jcontent.selection}), shallowEqual);
 
@@ -30,7 +30,7 @@ export const MainActionBar = () => {
             <DisplayAction actionKey="search" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
 
-            {showPageComposer ? (
+            {showPageBuilder ? (
                 <>
                     <DisplayAction actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', className: styles.item}}/>
                     <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>

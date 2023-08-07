@@ -19,7 +19,7 @@ export const registerCreateActions = registry => {
         hasBypassChildrenLimit: false
     });
 
-    if (booleanValue(contextJsParameters.config.jcontent?.showPageComposer)) {
+    if (booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
         registry.addOrReplace('action', 'createPage', createContentAction, {
             buttonIcon: <AddCircle/>,
             targets: ['createMenuActions:-2', 'contentActions:-2', 'rootContentActions:-2', 'headerPrimaryActions:1'],

@@ -1,5 +1,5 @@
 import {NodeIcon} from '~/utils';
-import styles from '~/JContent/PageComposerRoute/EditFrame/Box.scss';
+import styles from '~/JContent/PageBuilderRoute/EditFrame/Box.scss';
 import {Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';

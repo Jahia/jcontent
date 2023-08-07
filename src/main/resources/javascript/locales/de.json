@@ -477,8 +477,8 @@
       },
       "contentPath": {
         "dialog": {
-          "title": "Page Composer Ansicht nicht verfügbar",
-          "body": "Das selektierte Element kann nicht in der Page Composer Ansicht angezeigt werden.",
+          "title": "Page Builder Ansicht nicht verfügbar",
+          "body": "Das selektierte Element kann nicht in der Page Builder Ansicht angezeigt werden.",
           "listView": "In Listenansicht öffnen",
           "parentPage": "Übergeordnete Seite anzeigen"
         }

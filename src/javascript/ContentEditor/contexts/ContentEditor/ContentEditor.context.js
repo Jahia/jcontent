@@ -19,7 +19,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     const {t} = useTranslation('jcontent');
     const [errors, setErrors] = useState(null);
     const contentEditorConfigContext = useContentEditorConfigContext();
-    // Get information from page composer to display the preview.
+    // Get information from legacy page composer to display the preview.
     const {pageComposerCurrentPage, pageComposerActive} = useSelector(state => ({
         pageComposerCurrentPage: state?.pagecomposer?.currentPage,
         pageComposerActive: state?.pagecomposer?.active

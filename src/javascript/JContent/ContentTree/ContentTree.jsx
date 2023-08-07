@@ -175,7 +175,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       }}
                       onClickItem={object => {
                           const {node} = object.treeItemProps;
-                          if (node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageComposer') {
+                          if (node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageBuilder') {
                               openTextMenuDialog(node);
                           } else if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
                               openLinkDialog(node);

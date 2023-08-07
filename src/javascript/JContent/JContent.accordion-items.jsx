@@ -2,7 +2,7 @@ import React from 'react';
 import {AccordionItem, Collections, FolderSpecial, Grain, Page, Tag} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
-import PageComposerRoute from './PageComposerRoute';
+import PageBuilderRoute from './PageBuilderRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
@@ -32,7 +32,7 @@ const folderRegex = /^\/sites\/[^/]+\/files((\/.*)|$)/;
 const everythingUnderSitesRegex = /^\/sites\/.*/;
 
 export const jContentAccordionItems = registry => {
-    const showPageComposer = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
+    const showPageBuilder = booleanValue(contextJsParameters.config.jcontent?.showPageBuilder);
 
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: (v, item) => (
@@ -101,7 +101,7 @@ export const jContentAccordionItems = registry => {
 
     const canDragDrop = () => {
         let tableView = window.jahia.reduxStore.getState().jcontent.tableView;
-        let pages = showPageComposer && tableView.viewType === JContentConstants.tableView.viewType.PAGES;
+        let pages = showPageBuilder && tableView.viewType === JContentConstants.tableView.viewType.PAGES;
         let structuredContent = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED && tableView.viewType === JContentConstants.tableView.viewType.CONTENT;
         return pages || structuredContent;
     };
@@ -111,7 +111,7 @@ export const jContentAccordionItems = registry => {
         icon: <Page/>,
         label: 'jcontent:label.contentManager.navigation.pages',
         rootPath: '/sites/{site}',
-        routeComponent: PageComposerRoute,
+        routeComponent: PageBuilderRoute,
         getPathForItem: node => {
             const pages = node.ancestors
                 .filter(n => n.primaryNodeType.name === 'jnt:page');
@@ -132,9 +132,9 @@ export const jContentAccordionItems = registry => {
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
             rootLabel: 'jcontent:label.contentManager.browsePages',
             dnd: {
-                canDrag: showPageComposer, canDrop: showPageComposer, canReorder: showPageComposer
+                canDrag: showPageBuilder, canDrop: showPageBuilder, canReorder: showPageBuilder
             },
-            showContextMenuOnRootPath: booleanValue(contextJsParameters.config.jcontent?.showPageComposer)
+            showContextMenuOnRootPath: booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)
         },
         tableConfig: {
             queryHandler: PagesQueryHandler,

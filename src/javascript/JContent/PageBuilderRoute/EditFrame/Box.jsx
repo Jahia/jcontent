@@ -7,8 +7,8 @@ import {registry} from '@jahia/ui-extender';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
-import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
-import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
+import {DefaultBar} from '~/JContent/PageBuilderRoute/EditFrame/DefaultBar';
+import {getCoords} from '~/JContent/PageBuilderRoute/EditFrame/EditFrame.utils';
 import {Portal} from './Portal';
 
 function getBoundingBox(element) {

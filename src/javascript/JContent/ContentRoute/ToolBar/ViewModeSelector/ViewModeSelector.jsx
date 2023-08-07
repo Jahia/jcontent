@@ -15,18 +15,18 @@ const localStorage = window.localStorage;
 
 const FLATLIST = JContentConstants.tableView.viewMode.FLAT;
 const STRUCTUREDVIEW = JContentConstants.tableView.viewMode.STRUCTURED;
-const PAGE_COMPOSER = JContentConstants.tableView.viewMode.PAGE_COMPOSER;
+const PAGE_BUILDER = JContentConstants.tableView.viewMode.PAGE_BUILDER;
 
 const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
 
 const icons = {
-    [PAGE_COMPOSER]: <WebPage/>,
+    [PAGE_BUILDER]: <WebPage/>,
     [FLATLIST]: <ViewList/>,
     [STRUCTUREDVIEW]: <ViewTree/>
 };
 
 const buttons = [FLATLIST, STRUCTUREDVIEW];
-const pagesButtons = [PAGE_COMPOSER, FLATLIST, STRUCTUREDVIEW];
+const pagesButtons = [PAGE_BUILDER, FLATLIST, STRUCTUREDVIEW];
 
 const tableViewDropdownData = (t, viewMode, allButtons) => {
     return allButtons.map(v => ({
@@ -52,7 +52,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     let showPageBuilderView = false;
 
     if (!loading && !error && data?.jcr?.node) {
-        showPageBuilderView = (mode === JContentConstants.mode.PAGES) && booleanValue(contextJsParameters.config.jcontent?.showPageComposer) && data.jcr.node.isDisplayableNode;
+        showPageBuilderView = (mode === JContentConstants.mode.PAGES) && booleanValue(contextJsParameters.config.jcontent?.showPageBuilder) && data.jcr.node.isDisplayableNode;
     }
 
     const onChange = vm => dispatch(setTableViewModeAction(vm));

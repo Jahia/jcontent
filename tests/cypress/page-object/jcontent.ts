@@ -218,7 +218,7 @@ export class JContentPageBuilder extends JContent {
     }
 
     iframe() {
-        const iframeSel = '[data-sel-role="page-composer-frame-active"]';
+        const iframeSel = '[data-sel-role="page-builder-frame-active"]';
         cy.iframe(iframeSel).as('pcIframe');
         cy.get('@pcIframe').find('[jahiatype="createbuttons"]');
         return new BaseComponent(cy.get('@pcIframe'));
@@ -236,9 +236,9 @@ export class JContentPageBuilder extends JContent {
     }
 
     refresh(): JContentPageBuilder {
-        cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(() => {
+        cy.get('[data-sel-role="page-builder-frame-active"]').invoke('attr', 'id').then(() => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();
-            // Cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
+            // Cy.get('[data-sel-role="page-builder-frame-active"]').should(e => {
             //     expect(previousId).to.not.eq(e[0].getAttribute('id'));
             // });
         });

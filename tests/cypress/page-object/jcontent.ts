@@ -228,9 +228,9 @@ export class JContentPageBuilder extends JContent {
         cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
     }
 
-    getModule(path: string): PageComposerModule {
+    getModule(path: string): PageBuilderModule {
         const parentFrame = this.iframe();
-        const module = getComponentBySelector(PageComposerModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
+        const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.parentFrame = parentFrame;
         return module;
     }
@@ -246,7 +246,7 @@ export class JContentPageBuilder extends JContent {
     }
 }
 
-class PageComposerModuleHeader extends BaseComponent {
+class PageBuilderModuleHeader extends BaseComponent {
     static defaultSelector = '[jahiatype="header"]';
 
     assertStatus(value: string) {
@@ -258,7 +258,7 @@ class PageComposerModuleHeader extends BaseComponent {
     }
 }
 
-class PageComposerModuleCreateButton extends BaseComponent {
+class PageBuilderModuleCreateButton extends BaseComponent {
     static defaultSelector = '[jahiatype="createbuttons"]';
 
     getButton(type: string): Button {
@@ -274,7 +274,7 @@ class PageComposerModuleCreateButton extends BaseComponent {
     }
 }
 
-class PageComposerModule extends BaseComponent {
+class PageBuilderModule extends BaseComponent {
     static defaultSelector = '[jahiatype="module"]';
     parentFrame: BaseComponent;
 
@@ -287,11 +287,11 @@ class PageComposerModule extends BaseComponent {
         this.get().invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
         });
-        return getComponent(PageComposerModuleHeader, this.parentFrame);
+        return getComponent(PageBuilderModuleHeader, this.parentFrame);
     }
 
     getCreateButtons() {
-        return new PageComposerModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
+        return new PageBuilderModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
         }));
     }

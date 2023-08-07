@@ -7,7 +7,7 @@ describe('jContent header tests', () => {
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.apollo({mutationFile: 'jcontent/enablePageComposer.graphql'});
+        cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
     });
 
     after(() => {

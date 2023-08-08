@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
-import {Collapsible, getComponentBySelector, Menu} from '@jahia/cypress';
+import {Collapsible, getComponentBySelector} from '@jahia/cypress';
 import {ContentEditor} from '../../page-object/contentEditor';
 
 describe('Copy Cut and Paste tests with jcontent', () => {

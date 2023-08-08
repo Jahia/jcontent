@@ -81,13 +81,15 @@ export const ContentEditorApi = () => {
 
         if (onExited) {
             onExited();
-        } else if (copy.length > 0) {
-            const {locationFromState} = getEncodedLocations(location, copy);
-            history.replace(rison.decode(locationFromState));
-        } else if (spliced[0]?.isFullscreen && window.history.state && !window.history.state.prevUrl?.contains('/cms/login') && window.location.pathname.indexOf('/jahia/workflow') === -1) {
-            history.go(-1);
-        } else {
-            history.replace(rison.decode(locationWithoutEditors));
+        } else if (spliced[0]?.isFullscreen) {
+            if (copy.length > 0) {
+                const {locationFromState} = getEncodedLocations(location, copy);
+                history.replace(rison.decode(locationFromState));
+            } else if (history.location.state?.wasPushed) {
+                history.go(-1);
+            } else {
+                history.replace(rison.decode(locationWithoutEditors));
+            }
         }
     };
 
@@ -109,7 +111,7 @@ export const ContentEditorApi = () => {
                     // Todo : handle the case when stacking a new content-editor - we should push
                     history.replace(rison.decode(locationFromState));
                 } else {
-                    history.push(rison.decode(locationFromState));
+                    history.push(rison.decode(locationFromState), {wasPushed: true});
                 }
             } else if (currentEncodedLocation !== locationFromState && locationFromState.includes('contentEditor:')) {
                 const {contentEditor} = decode(rison.decode(locationFromState).hash);

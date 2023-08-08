@@ -74,8 +74,7 @@ describe('Picker tests - Display actions', () => {
         cy.log('assert refresh works for nav tree and table and does not change selection on both');
         picker.getRefreshButton().click();
         picker.wait();
-        contentAccordion.getTreeItem('ce-picker-custom-contents')
-            .find('div').should('have.class', 'moonstone-selected');
+        contentAccordion.getTreeItem('ce-picker-custom-contents').shouldBeSelected();
         contentAccordion.getTreeItem('refresh1').should('be.visible');
         picker.getTable().getRowByName('refresh2').should('be.visible');
         picker.getTable().getRowByName('test-loc1')

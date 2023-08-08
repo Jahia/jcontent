@@ -123,35 +123,19 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         });
 
         it('Does not display paste as reference action on a page', () => {
-            // Cy.login();
-
             const jcontent = JContent.visit('digitall', 'en', 'pages/home');
             const item = jcontent.getAccordionItem('pages');
             item.expandTreeItem('home');
-            item.getTreeItem('about').rightclick();
-            let menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
-            menu.select('Copy');
-            item.getTreeItem('newsroom').rightclick();
-            menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
-            menu.get().find('span').contains('Paste as reference').should('not.exist');
-
-            // Cy.logout();
+            item.getTreeItem('about').contextMenu().select('Copy');
+            item.getTreeItem('newsroom').contextMenu().get().find('span').contains('Paste as reference').should('not.exist');
         });
 
         it('Should display paste action on a page', () => {
-            // Cy.login();
-
             const jcontent = JContent.visit('digitall', 'en', 'pages/home');
             const item = jcontent.getAccordionItem('pages');
             item.expandTreeItem('home');
-            item.getTreeItem('about').rightclick();
-            let menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
-            menu.select('Copy');
-            item.getTreeItem('newsroom').rightclick();
-            menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
-            menu.get().find('span').contains('Paste').should('exist');
-
-            // Cy.logout();
+            item.getTreeItem('about').contextMenu().select('Copy');
+            item.getTreeItem('newsroom').contextMenu().get().find('span').contains('Paste').should('exist');
         });
     });
 });

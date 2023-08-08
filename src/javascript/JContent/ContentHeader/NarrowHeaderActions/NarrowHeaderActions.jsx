@@ -12,7 +12,7 @@ export const NarrowHeaderActions = ({previewSelection, selection, path, clear}) 
     const context = {path: path};
 
     return selection.length === 0 && (
-        <DisplayAction menuUseElementAnchor actionKey="narrowHeaderMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost'}} {...context}/>
+        <DisplayAction hidePasteOnPage menuUseElementAnchor actionKey="narrowHeaderMenu" render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost'}} {...context}/>
     );
 };
 

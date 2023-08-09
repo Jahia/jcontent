@@ -6,7 +6,7 @@
     <rule>
         <name>jContent page builder from GWT page composer</name>
         <note>Redirects old /jahia/page-composer urls</note>
-        <from>^.*/jahia/page-composer/default/(.*)/sites/(.*)/(.*)\..*$</from>
-        <to type="redirect">%{context-path}/jahia/jcontent/$2/$1/pages/$3</to>
+        <from>^.*/jahia/page-composer/default/(.*)/sites/(.*)/(.*)/(.*)\..*$</from>
+        <to type="redirect">%{context-path}/jahia/jcontent/$2/$1/pages/$3/$4</to>
     </rule>
 </urlrewrite>

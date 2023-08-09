@@ -79,42 +79,40 @@ export const UsagesTable = ({path, language}) => {
     }
 
     return (
-        <section className={styles.tableContainer}>
-            <Table aria-labelledby="tableUsages"
-                   data-cm-role="table-usages-list"
-                   {...getTableProps()}
-            >
-                <ContentListHeader headerGroups={headerGroups} headerClasses={styles}/>
-                <TableBody {...getTableBodyProps()}>
-                    {tableRows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <TableRow key={'row' + row.id}
-                                      {...row}
-                            >
-                                {row.cells.map(cell => (
-                                    <React.Fragment
-                                        key={cell.column.id}
-                                    >{cell.render('Cell')}
-                                    </React.Fragment>
-                                ))}
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-                <TablePagination totalNumberOfRows={data?.jcr?.nodeByPath?.usages?.pageInfo.totalCount}
-                                 currentPage={currentPage + 1}
-                                 rowsPerPage={pageSize}
-                                 label={{
-                                     rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                                     of: t('jcontent:label.pagination.of')
-                                 }}
-                                 rowsPerPageOptions={[10, 20, 50]}
-                                 onPageChange={page => setCurrentPage(page - 1)}
-                                 onRowsPerPageChange={size => setPageSize(size)}
-                />
-            </Table>
-        </section>
+        <Table aria-labelledby="tableUsages"
+               data-cm-role="table-usages-list"
+               {...getTableProps()}
+        >
+            <ContentListHeader headerGroups={headerGroups} headerClasses={styles}/>
+            <TableBody {...getTableBodyProps()}>
+                {tableRows.map(row => {
+                    prepareRow(row);
+                    return (
+                        <TableRow key={'row' + row.id}
+                                  {...row}
+                        >
+                            {row.cells.map(cell => (
+                                <React.Fragment
+                                    key={cell.column.id}
+                                >{cell.render('Cell')}
+                                </React.Fragment>
+                            ))}
+                        </TableRow>
+                    );
+                })}
+            </TableBody>
+            <TablePagination totalNumberOfRows={data?.jcr?.nodeByPath?.usages?.pageInfo.totalCount}
+                             currentPage={currentPage + 1}
+                             rowsPerPage={pageSize}
+                             label={{
+                                 rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                                 of: t('jcontent:label.pagination.of')
+                             }}
+                             rowsPerPageOptions={[10, 20, 50]}
+                             onPageChange={page => setCurrentPage(page - 1)}
+                             onRowsPerPageChange={size => setPageSize(size)}
+            />
+        </Table>
     );
 };
 

@@ -66,6 +66,7 @@ import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
 import JContentConstants from '~/JContent/JContent.constants';
 import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
+import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -459,5 +460,9 @@ export const jContentActions = registry => {
     registry.add('action', 'selectionAction', {
         targets: ['notSelectedContentMenu:-10', 'selectedContentActions:-10'],
         component: SelectionActionComponent
+    });
+
+    registry.add('action', 'viewUsages', {
+        component: ViewUsagesComponent
     });
 };

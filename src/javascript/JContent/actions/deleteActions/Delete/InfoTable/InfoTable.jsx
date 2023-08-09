@@ -17,7 +17,7 @@ import {CellExport} from './CellExport';
 
 const usages = {
     id: 'usages',
-    label: 'jcontent:label.contentManager.deleteAction.infoTable.headerLabel',
+    label: 'jcontent:label.contentManager.deleteAction.infoTable.usages',
     Header: Header,
     Cell: CellUsages,
     sortable: false,

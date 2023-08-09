@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useQuery} from '@apollo/client';
-import {UsagesCountQuery} from '~/ContentEditor/editorTabs/AdvancedOptions/Usages/Usages.gql-queries';
+import {UsagesCountQuery} from '~/UsagesTable/UsagesTable.gql-queries';
 
 const DEPRECATED_GWT_ACTIONS = ['content', 'layout', 'metadata', 'categories', 'options', 'seo', 'usages', 'channels'];
 

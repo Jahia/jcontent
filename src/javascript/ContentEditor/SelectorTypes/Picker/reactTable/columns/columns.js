@@ -68,7 +68,8 @@ export const allColumnData = [
     {
         id: 'location',
         Cell: LocationCell,
-        sortable: false,
+        sortable: true,
+        property: 'path',
         label: 'jcontent:label.contentEditor.edit.advancedOption.usages.path',
         Header: reactTable.Header,
         width: '300px'

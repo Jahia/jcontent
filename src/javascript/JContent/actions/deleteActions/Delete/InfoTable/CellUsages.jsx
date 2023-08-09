@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import clsx from 'clsx';
+import {DisplayAction} from '@jahia/ui-extender';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import styles from '~/JContent/actions/deleteActions/Delete/InfoTable/Cells.scss';
+
+const ButtonRenderer = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {className: styles.button}});
 
 export const CellUsages = ({cell, column, row}) => {
     const {t} = useTranslation('jcontent');
     const node = row.original;
     const usagesCount = node?.usages?.pageInfo?.nodesCount;
-    const usageKey = usagesCount === 0 ? 'usageZero' : 'usage';
 
     return (
         <TableBodyCell key={row.id + column.id}
@@ -17,7 +21,18 @@ export const CellUsages = ({cell, column, row}) => {
                        width={column.width}
                        data-cm-role={'table-content-list-cell-' + column.id}
         >
-            <Typography>{t(`jcontent:label.contentManager.deleteAction.infoTable.${usageKey}`, {count: usagesCount})}</Typography>
+            {usagesCount === 0 ? (
+                <Typography>
+                    {t('jcontent:label.contentManager.deleteAction.infoTable.usageZero')}
+                </Typography>
+            ) : (
+                <DisplayAction
+                    actionKey="viewUsages"
+                    usagesCount={usagesCount}
+                    path={row.original.path}
+                    render={ButtonRenderer}
+                />
+            )}
         </TableBodyCell>
     );
 };

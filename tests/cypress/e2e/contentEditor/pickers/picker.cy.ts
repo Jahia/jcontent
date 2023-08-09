@@ -184,8 +184,8 @@ describe('Picker tests', () => {
             .open();
         pagesAccordion = picker.getAccordionItem('picker-media');
 
-        cy.log(`verify ${folderName} is not selected and root is selected`);
-        pagesAccordion.getTreeItem(folderName).should('not.exist');
+        cy.log(`verify ${folderName} does not exist and root is selected`);
+        pagesAccordion.shouldNotHaveTreeItem(folderName);
         pagesAccordion.getTreeItem('files').shouldBeSelected();
     });
 

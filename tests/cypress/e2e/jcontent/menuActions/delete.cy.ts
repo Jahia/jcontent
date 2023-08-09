@@ -212,6 +212,18 @@ describe('delete tests', () => {
         cy.get(dialogCss).should('not.exist');
     });
 
+    it('shows usages button', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+
+        jcontent.getTable()
+            .getRowByLabel('test 3')
+            .contextMenu()
+            .select('Delete');
+
+        cy.get('[data-sel-role="delete-mark-dialog"]').find('button[data-sel-role="viewUsages"]').click();
+        cy.get('[data-sel-role="usages-table"]').find('button[data-sel-role="close"]').click();
+    });
+
     it('Shows export button', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.switchToSubpages();

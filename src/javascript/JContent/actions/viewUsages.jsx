@@ -15,8 +15,8 @@ const UsagesDialog = ({isOpen, onExited, onClose, path, language, name}) => {
         <Dialog fullWidth
                 maxWidth="xl"
                 open={isOpen}
-                aria-labelledby="form-dialog-title"
-                data-cm-role="export-options"
+                aria-labelledby="usages-table"
+                data-sel-role="usages-table"
                 onExited={onExited}
                 onClose={onClose}
         >
@@ -28,6 +28,7 @@ const UsagesDialog = ({isOpen, onExited, onClose, path, language, name}) => {
             </DialogContent>
             <DialogActions>
                 <Button size="big"
+                        data-sel-role="close"
                         label={t('jcontent:label.contentEditor.close')}
                         onClick={onClose}/>
             </DialogActions>

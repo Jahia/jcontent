@@ -19,7 +19,6 @@ describe('Content folder', () => {
 
     it('Open content folders correctly', () => {
         jcontent.getAccordionItem('content-folders').click();
-        jcontent
         cy.get('span').contains('Content Folder').should('exist');
     });
 });

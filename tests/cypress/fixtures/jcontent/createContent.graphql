@@ -87,6 +87,13 @@ mutation {
                             }
                         ]
                     }
+                    {
+                        name: "events"
+                        primaryNodeType: "jnt:page"
+                        properties: [
+                            { name: "j:templateName" value: "events" }
+                        ]
+                    }
                 ]
             ) {
                 uuid

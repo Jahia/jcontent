@@ -86,6 +86,14 @@ describe('Page builder', () => {
             buttons.getButton('New Event');
         });
 
+        it('should show 1 create buttons in events page', () => {
+            JContent.visit('jcontentSite', 'en', 'pages/home/events');
+
+            const buttons = jcontent.getModule('/sites/jcontentSite/home/events/Events').getCreateButtons();
+            buttons.assertHasNoButtonForType('New content');
+            buttons.getButton('New Event');
+        });
+
         it('should show global create button where there are too many restrictions', function () {
             cy.apollo({
                 mutationFile: 'jcontent/setRestrictions.graphql',

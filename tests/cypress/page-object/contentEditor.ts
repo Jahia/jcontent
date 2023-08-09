@@ -32,12 +32,14 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'createButton').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully created');
+        cy.get(ContentEditor.defaultSelector).should('not.exist');
     }
 
     save() {
         getComponentByRole(Button, 'submitSave').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully saved');
+        cy.get(ContentEditor.defaultSelector).should('not.exist');
     }
 
     saveUnchecked() {

@@ -14,10 +14,13 @@ export const usePublicationNotification = () => {
         const language = data.backgroundJobSubscription.publicationJob.language;
         const state = data.backgroundJobSubscription.publicationJob.jobState;
 
+        notificationContext.closeNotification();
+
+        console.log(data.backgroundJobSubscription.publicationJob);
         if (state === 'STARTED') {
-            notificationContext.notify(`Publishing in ${language}`);
+            notificationContext.notify(`Publishing in ${language}`, ['closeButton'], {autoHideDuration: 3000});
         } else if (state === 'FINISHED') {
-            notificationContext.notify(`Publication completed`);
+            notificationContext.notify(`Publication completed`, ['closeButton'], {autoHideDuration: 3000});
         }
     }
 }

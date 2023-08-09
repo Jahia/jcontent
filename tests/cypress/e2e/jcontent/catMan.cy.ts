@@ -1,4 +1,4 @@
-import {CategoryManager, JContent} from '../../page-object';
+import {CategoryManager} from '../../page-object';
 
 const accordionItemName = 'category';
 describe('Category Manager', () => {
@@ -14,7 +14,7 @@ describe('Category Manager', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        catMan = JContent.visitCatMan('en');
+        catMan = CategoryManager.visitCatMan('en');
     });
 
     it('Should open Category Manager', () => {

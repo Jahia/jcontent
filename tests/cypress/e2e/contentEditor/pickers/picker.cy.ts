@@ -69,7 +69,7 @@ describe('Picker tests', () => {
 
         cy.log('test double-click on table');
         picker.getTableRow('content-folder1').dblclick();
-        contentAccordion.getTreeItem('content-folder1').find('div').should('have.class', 'moonstone-selected');
+        contentAccordion.getTreeItem('content-folder1').shouldBeSelected();
         picker
             .getTable()
             .getRows()
@@ -142,7 +142,7 @@ describe('Picker tests', () => {
         pagesAccordion = picker.getAccordionItem('picker-media');
 
         cy.log('verify files > images > companies still selected');
-        pagesAccordion.getTreeItem('companies').find('div').should('have.class', 'moonstone-selected');
+        pagesAccordion.getTreeItem('companies').shouldBeSelected();
     });
 
     it('should go to root when previous location is not available', () => {
@@ -184,9 +184,9 @@ describe('Picker tests', () => {
             .open();
         pagesAccordion = picker.getAccordionItem('picker-media');
 
-        cy.log(`verify ${folderName} is not selected and root is selected`);
-        pagesAccordion.getTreeItem(folderName).should('not.exist');
-        pagesAccordion.getTreeItem('files').find('div').should('have.class', 'moonstone-selected');
+        cy.log(`verify ${folderName} does not exist and root is selected`);
+        pagesAccordion.shouldNotHaveTreeItem(folderName);
+        pagesAccordion.getTreeItem('files').shouldBeSelected();
     });
 
     it('should be able to switch site', () => {
@@ -220,9 +220,9 @@ describe('Picker tests', () => {
         picker.getSiteSwitcher().select('Digitall');
         picker.getTable().getRowByLabel('ce-picker-files');
         const item = picker.getAccordionItem('picker-media');
-        item.getTreeItem('files').find('div').should('have.class', 'moonstone-selected');
+        item.getTreeItem('files').shouldBeSelected();
         item.getTreeItem('companies').click();
-        item.getTreeItem('companies').find('div').should('have.class', 'moonstone-selected');
+        item.getTreeItem('companies').shouldBeSelected();
     });
 
     it('should pick thumbnail on double click', () => {

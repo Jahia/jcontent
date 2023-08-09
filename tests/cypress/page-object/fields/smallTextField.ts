@@ -6,10 +6,17 @@ export class SmallTextField extends Field {
     addNewValue(newValue: string, force = false) {
         if (this.multiple) {
             this.get().find(SmallTextField.ADD_FIELD_SEL).click();
-            this.get().find('input').last().type(newValue, {force: force});
+            this.get().find('input').last().as('textinput');
+            // Prevent field from being hidden by sticky header
+            this.get().scrollIntoView();
+            cy.get('@textinput').type(newValue, {force: force});
         } else {
-            this.get().find('input[type="text"]').clear({force: force});
-            this.get().find('input[type="text"]').type(newValue, {force: force}).should('have.value', newValue);
+            this.get().find('input[type="text"]').as('textinput');
+            // Prevent field from being hidden by sticky header
+            this.get().scrollIntoView();
+            cy.get('@textinput').clear({force: force, scrollBehavior: false});
+            cy.get('@textinput').type(newValue, {force: force, scrollBehavior: false});
+            cy.get('@textinput').should('have.value', newValue);
         }
 
         return this;

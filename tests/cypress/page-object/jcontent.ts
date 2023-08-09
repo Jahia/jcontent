@@ -32,9 +32,11 @@ export class JContent extends BasePage {
         return new JContent();
     }
 
-    static visitCatMan(language: string): CategoryManager {
-        cy.visit(`/jahia/catMan/${language}/category/`);
-        return new CategoryManager(new JContent());
+    reset() {
+        this.secondaryNav = null;
+        this.accordion = null;
+        this.siteSwitcher = null;
+        this.languageSwitcher = null;
     }
 
     getSecondaryNav(): SecondaryNav {
@@ -315,6 +317,11 @@ export class CategoryManager extends JContent {
     constructor(base: JContent) {
         super();
         Object.assign(this, base);
+    }
+
+    static visitCatMan(language: string): CategoryManager {
+        cy.visit(`/jahia/catMan/${language}/category/`);
+        return new CategoryManager(new JContent());
     }
 
     getCreateCategory(): void {

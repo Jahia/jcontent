@@ -1,4 +1,5 @@
-import {Accordion} from '@jahia/cypress';
+import {Accordion, BaseComponent, Menu, getComponentBySelector} from '@jahia/cypress';
+import ClickOptions = Cypress.ClickOptions;
 
 export class AccordionItem {
     accordion: Accordion;
@@ -35,17 +36,42 @@ export class AccordionItem {
         return this.getSection().find('[role="treeitem"]');
     }
 
-    getTreeItem(role) {
-        return this.getSection().find(`[role="treeitem"][data-sel-role=${role}]`);
+    getTreeItem(role, assertion?: (s: JQuery) => void): TreeItem {
+        return new TreeItem(this.getSection().find(`[role="treeitem"][data-sel-role=${role}]`), assertion);
+    }
+
+    shouldNotHaveTreeItem(role) {
+        this.getSection().find(`[role="treeitem"][data-sel-role=${role}]`).should('not.exist');
     }
 
     expandTreeItem(role) {
-        return this.getTreeItem(role).then(t => {
+        this.getTreeItem(role).expand();
+    }
+}
+
+export class TreeItem extends BaseComponent {
+    static defaultSelector = '[role="treeitem"]';
+
+    shouldBeSelected() {
+        this.get().find('div').should('have.class', 'moonstone-selected');
+    }
+
+    click(options?: Partial<ClickOptions>) {
+        return this.get().click(options);
+    }
+
+    expand() {
+        return this.get().then(t => {
             const isExpanded = t.attr('aria-expanded') === 'true';
             if (!isExpanded) {
                 // Toggle only if not expanded already
                 return cy.wrap(t).find('.moonstone-treeView_itemToggle').click();
             }
         });
+    }
+
+    contextMenu(): Menu {
+        this.get().rightclick();
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 }

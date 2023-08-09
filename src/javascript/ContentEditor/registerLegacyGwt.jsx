@@ -48,6 +48,10 @@ export const registerLegacyGwt = registry => {
         }
     });
 
+    const refresh = () => {
+        window.authoringApi.refreshContent();
+    };
+
     // Register GWT Hooks
     window.top.jahiaGwtHook = {
         // Hook on edit engine opening
@@ -67,6 +71,15 @@ export const registerLegacyGwt = registry => {
                 isFullscreen: false,
                 configName: contentTypes[0] === 'jnt:page' ? 'gwtcreatepage' : 'gwtcreate'
             });
+        },
+        delete: params => {
+            window.CE_API.executeAction({actionKey: 'delete', onDeleted: refresh, ...params});
+        },
+        deletePermanently: params => {
+            window.CE_API.executeAction({actionKey: 'deletePermanently', onDeleted: refresh, ...params});
+        },
+        undelete: params => {
+            window.CE_API.executeAction({actionKey: 'undelete', onDeleted: refresh, ...params});
         }
     };
 };

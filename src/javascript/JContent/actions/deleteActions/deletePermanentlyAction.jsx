@@ -16,7 +16,7 @@ const checkAction = node => (node['jnt:category'] || node.primaryNodeType?.name 
     node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
     (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive));
 
-export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
+export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
 
@@ -53,7 +53,8 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
                     dialogType: 'permanently',
                     node: res.node,
                     nodes: res.nodes,
-                    onExit: onExit
+                    onDeleted,
+                    onExit
                 });
             }}
         />
@@ -66,6 +67,8 @@ DeletePermanentlyActionComponent.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
 
     buttonProps: PropTypes.object,
+
+    onDeleted: PropTypes.func,
 
     render: PropTypes.func.isRequired,
 

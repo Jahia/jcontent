@@ -11,7 +11,7 @@ function checkAction(node) {
     return node.operationsSupport.markForDeletion && isMarkedForDeletion(node);
 }
 
-export const UndeleteActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
+export const UndeleteActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
 
@@ -48,7 +48,8 @@ export const UndeleteActionComponent = ({path, paths, buttonProps, render: Rende
                     dialogType: 'undelete',
                     node: res.node,
                     nodes: res.nodes,
-                    onExit: onExit
+                    onDeleted,
+                    onExit
                 });
             }}
         />
@@ -61,6 +62,8 @@ UndeleteActionComponent.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
 
     buttonProps: PropTypes.object,
+
+    onDeleted: PropTypes.func,
 
     render: PropTypes.func.isRequired,
 

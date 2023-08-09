@@ -15,6 +15,8 @@ import {Breadcrumb} from './breadcrumb';
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
     languageSwitcher: LanguageSwitcher;
+    createAnother = false;
+    advancedMode = false;
 
     static getContentEditor() : ContentEditor {
         return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
@@ -32,14 +34,18 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'createButton').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully created');
-        cy.get(ContentEditor.defaultSelector).should('not.exist');
+        if (!this.createAnother) {
+            cy.get(ContentEditor.defaultSelector).should('not.exist');
+        }
     }
 
     save() {
         getComponentByRole(Button, 'submitSave').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully saved');
-        cy.get(ContentEditor.defaultSelector).should('not.exist');
+        if (!this.advancedMode) {
+            cy.get(ContentEditor.defaultSelector).should('not.exist');
+        }
     }
 
     saveUnchecked() {
@@ -62,11 +68,13 @@ export class ContentEditor extends BasePage {
     addAnotherContent() {
         cy.get('#createAnother').check();
         cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
+        this.createAnother = true;
     }
 
     removeAnotherContent() {
         cy.get('#createAnother').uncheck();
         cy.get('#createAnother').should('have.attr', 'aria-checked', 'false');
+        this.createAnother = false;
     }
 
     activateWorkInProgressMode(language?: string) {
@@ -113,6 +121,7 @@ export class ContentEditor extends BasePage {
 
     switchToAdvancedMode() {
         getComponentByRole(Button, 'advancedMode').should('be.visible').click();
+        this.advancedMode = true;
     }
 
     validateContentIsVisibleInPreview(content: string) {

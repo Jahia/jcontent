@@ -61,7 +61,7 @@ export const ContentLayoutContainer = () => {
         sort: state.jcontent.sort,
         tableView: state.jcontent.tableView,
         openPaths: state.jcontent.tableOpenPaths
-    }));
+    }), shallowEqual);
 
     const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);
 

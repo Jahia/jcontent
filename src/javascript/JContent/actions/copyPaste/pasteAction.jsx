@@ -5,7 +5,7 @@ import {withNotifications} from '@jahia/react-material';
 import {isDescendantOrSelf} from '~/JContent/JContent.utils';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import React from 'react';
 import {useApolloClient} from '@apollo/client';
@@ -37,7 +37,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
     const {copyPaste, language} = useSelector(state => ({
         language: state.language,
         copyPaste: state.jcontent.copyPaste
-    }));
+    }), shallowEqual);
 
     const refreshTree = useRefreshTreeAfterMove();
     const nodeChecksProps = {

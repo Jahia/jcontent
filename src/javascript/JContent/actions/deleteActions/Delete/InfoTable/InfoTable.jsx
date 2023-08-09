@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useTable} from 'react-table';
 import {name, publicationStatus, status, type, useExpandedControlled, useSort, Header} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {Button, Loader, Table, TableBody, TableRow, Typography, Reload} from '@jahia/moonstone';
@@ -45,7 +45,7 @@ export const InfoTable = ({paths, dialogType}) => {
         path: state.jcontent.path,
         lang: state.language,
         uilang: state.uilang
-    }));
+    }), shallowEqual);
     const {result, error: layoutError, loading: layoutLoading, refetch} = useLayoutQuery({
         mode: 'deletionInfo',
         paths: paths,

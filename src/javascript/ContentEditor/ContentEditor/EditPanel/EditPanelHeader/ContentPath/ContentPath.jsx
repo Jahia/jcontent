@@ -63,9 +63,7 @@ export const ContentPath = ({path}) => {
     const {i18nContext} = useContentEditorContext();
 
     const dispatch = useDispatch();
-    const {language} = useSelector(state => ({
-        language: state.language
-    }));
+    const language = useSelector(state => state.language);
 
     const {data, error} = useQuery(GetContentPath, {
         variables: {

@@ -4,6 +4,7 @@ import {PushEventHandler} from './PushEventHandler';
 import React from 'react';
 import {triggerRefetchAll} from './JContent.refetches';
 import Upload from './ContentRoute/ContentLayout/Upload';
+import {JContentApi} from '~/JContent/JContentApi/JContentApi';
 
 export const jContentAppRoot = registry => {
     registry.add('app', 'jcontent-ds-provider', {
@@ -25,6 +26,17 @@ export const jContentAppRoot = registry => {
             </>
         )
     });
+
+    registry.add('app', 'jcontent-api', {
+        targets: ['root:17'],
+        render: next => (
+            <>
+                <JContentApi/>
+                {next}
+            </>
+        )
+    });
+
     registry.add('app', 'jcontent-upload', {
         targets: ['root:17'],
         render: next => (

@@ -139,7 +139,7 @@ const getMutation = dialogType => {
     return MarkForDeletionMutation;
 };
 
-const Delete = ({dialogType, node, nodes, onExit}) => {
+const Delete = ({dialogType, node, nodes, onExit, onDeleted}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
     const language = useSelector(state => state.language);
@@ -181,6 +181,9 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             }
 
             triggerRefetchAll();
+            if (onDeleted) {
+                onDeleted();
+            }
         }).catch(() => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
             paths.forEach(path => client.cache.flushNodeEntryByPath(path));
@@ -215,6 +218,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
 
 Delete.propTypes = {
     onExit: PropTypes.func.isRequired,
+    onDeleted: PropTypes.func,
     dialogType: PropTypes.string.isRequired,
     node: PropTypes.object,
     nodes: PropTypes.array

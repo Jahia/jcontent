@@ -6,6 +6,8 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import {getAccordionItems} from '~/JContent/JContent.utils';
+import {batchActions} from 'redux-batched-actions';
+import {setTableViewMode, setTableViewType} from '~/JContent/redux/tableView.redux';
 
 const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
@@ -36,7 +38,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
                            mode={mode}
                            siteKey={siteKey}
                            isReversed={isReversed}
-                           handleNavigation={(mode, path) => dispatch(handleNavigationAction(mode, path))}
+                           handleNavigation={(mode, path, viewMode, viewType) => dispatch(handleNavigationAction(mode, path, viewMode, viewType))}
         />
     );
 };
@@ -57,7 +59,7 @@ ContentNavigationContainer.defaultProps = {
         siteKey: state.site,
         language: state.language
     }),
-    handleNavigationAction: (mode, path) => cmGoto({mode, path}),
+    handleNavigationAction: (mode, path, viewMode, viewType) => batchActions([cmGoto({mode, path}), setTableViewMode(viewMode), setTableViewType(viewType)]),
     accordionItemTarget: 'jcontent',
     isReversed: true
 };

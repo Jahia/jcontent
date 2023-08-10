@@ -168,4 +168,19 @@ export const jContentRedux = registry => {
         extractParamsFromUrl,
         buildUrl
     });
+
+    let listener = store => () => {
+        const state = store.getState();
+        if (state.router.location.pathname.startsWith('/jcontent') && state.jcontent?.mode) {
+            localStorage.setItem('jcontent-previous-mode-' + state.site, state.jcontent.mode);
+            localStorage.setItem('jcontent-previous-tableView-viewMode-' + state.site + '-' + state.jcontent.mode, state.jcontent.tableView.viewMode);
+            localStorage.setItem('jcontent-previous-tableView-viewType-' + state.site + '-' + state.jcontent.mode, state.jcontent.tableView.viewType);
+
+            if (state.jcontent?.path) {
+                localStorage.setItem('jcontent-previous-location-' + state.site + '-' + state.jcontent.mode, state.jcontent.path);
+            }
+        }
+    };
+
+    registry.add('redux-listener', 'jcontent-path', {createListener: listener});
 };

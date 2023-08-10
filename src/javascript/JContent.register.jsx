@@ -8,7 +8,7 @@ import {jContentRoutes} from './JContent/JContent.routes';
 import {jContentActions} from './JContent/JContent.actions';
 import {jContentAccordionItems} from './JContent/JContent.accordion-items';
 import {jContentAppRoot} from './JContent/JContent.app-root';
-import {jContentRedux} from './JContent/redux/JContent.redux';
+import {cmGoto, cmOpenPaths, jContentRedux} from './JContent/redux/JContent.redux';
 import {fileuploadRedux} from './JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {previewRedux} from './JContent/redux/preview.redux';
 import {copypasteRedux} from './JContent/actions/copyPaste/copyPaste.redux';
@@ -16,7 +16,7 @@ import {filesGridRedux} from './JContent/redux/filesGrid.redux';
 import {paginationRedux} from './JContent/redux/pagination.redux';
 import {sortRedux} from './JContent/redux/sort.redux';
 import {selectionRedux} from '~/JContent/redux/selection.redux';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {tableViewRedux} from './JContent/redux/tableView.redux';
 import {DndProvider} from 'react-dnd';
@@ -24,23 +24,23 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
-import {buildUrl} from '~/JContent/JContent.utils';
+import {extractPaths} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
 import {Redirect} from 'react-router';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+import {batchActions} from 'redux-batched-actions';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
 
 export default function () {
     const JContentNavItem = props => {
-        const history = useHistory();
+        const dispatch = useDispatch();
         const {t} = useTranslation('jcontent');
-        const {site, language, path, mode, params, pathname} = useSelector(state => ({
+        const {site, language, mode, params, pathname} = useSelector(state => ({
             language: state.language,
             site: state.site,
-            path: state.jcontent.path,
             mode: state.jcontent.mode,
             params: '',
             pathname: state.router.location.pathname
@@ -70,8 +70,14 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                const newMode = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? defaultMode : mode;
-                                history.push(buildUrl({site, language: newLanguage, mode: newMode, path, params}));
+                                const storedMode = localStorage.getItem('jcontent-previous-mode-' + site);
+                                const newMode = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? (storedMode || defaultMode) : mode;
+                                const newPath = localStorage.getItem('jcontent-previous-location-' + site + '-' + newMode) || '';
+                                const paths = extractPaths(site, newPath, newMode).slice(0, -1);
+                                dispatch(batchActions([
+                                    cmOpenPaths(paths),
+                                    cmGoto({site, language: newLanguage, mode: newMode, path: newPath, params})
+                                ]));
                             }}/>
         );
     };

@@ -114,4 +114,11 @@ describe('Content editor form', () => {
         field.get().find('label').should('contain', 'Title JSON override');
         field.get().scrollIntoView().contains('Information').should('be.visible');
     });
+
+    it('Should display overridden system name and description labels from json overrides', () => {
+        const contentEditor = jcontent.createContent('contentRetrievalCETest');
+        const field = contentEditor.getField(SmallTextField, 'nt:base_ce:systemName', false);
+        field.get().find('label').should('contain', 'Customized system name');
+        field.get().scrollIntoView().contains('Customized description').should('be.visible');
+    });
 });

@@ -22,6 +22,11 @@
               "declaringNodeType": "mix:title",
               "labelKey": "content-editor-test-module:label.textoverride",
               "descriptionKey": "label.information"
+            },
+            {
+              "name": "ce:systemName",
+              "label": "Customized system name",
+              "description": "Customized description"
             }
           ]
         }

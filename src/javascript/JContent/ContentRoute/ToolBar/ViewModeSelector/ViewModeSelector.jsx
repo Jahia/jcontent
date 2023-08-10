@@ -65,10 +65,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
 
     const allButtons = showPageBuilderView ? pagesButtons : buttons;
 
-    const viewModeHasNotBeenChanged = localStorage.getItem(VIEW_MODE) === null;
-
-    const selectedMode = allButtons.indexOf(viewMode) === -1 ? allButtons[0] :
-        showPageBuilderView && viewModeHasNotBeenChanged ? pagesButtons[0] : viewMode;
+    const selectedMode = allButtons.indexOf(viewMode) === -1 ? allButtons[0] : viewMode;
 
     return (
         <Dropdown className={classes.dropdown}

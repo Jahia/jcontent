@@ -65,14 +65,14 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
 
     const allButtons = showPageBuilderView ? pagesButtons : buttons;
 
-    const selectedMode = allButtons.indexOf(viewMode) === -1 ? allButtons[0] : viewMode;
+    const selectedMode = allButtons.indexOf(viewMode) === -1 ? null : viewMode;
 
     return (
         <Dropdown className={classes.dropdown}
                   size="small"
                   data={tableViewDropdownData(t, selectedMode, allButtons)}
                   data-sel-role="sel-view-mode-dropdown"
-                  label={t(`jcontent:label.contentManager.view.${selectedMode}`)}
+                  label={selectedMode && t(`jcontent:label.contentManager.view.${selectedMode}`)}
                   value={selectedMode}
                   icon={icons[selectedMode]}
                   onChange={(e, item) => handleChange(item.value)}

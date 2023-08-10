@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 
 export const OpenInJContentActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
-    const {language} = useSelector(state => ({language: state.language}));
+    const language = useSelector(state => state.language);
     const res = useNodeChecks(
         {path},
         {

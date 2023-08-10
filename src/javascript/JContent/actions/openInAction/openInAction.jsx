@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
 import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 
 export const OpenInLiveActionComponent = props => <OpenInActionComponent isLive {...props}/>;
@@ -14,9 +14,7 @@ const OpenInActionComponent = ({
     path,
     ...others
 }) => {
-    const {language} = useSelector(state => ({
-        language: state.language
-    }), shallowEqual);
+    const language = useSelector(state => state.language);
     let urlPath = path;
     const res = useQuery(OpenInActionQuery, {
         variables: {

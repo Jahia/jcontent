@@ -399,11 +399,14 @@
         "contents": "Contents {{count}}",
         "pages": "Sub-pages {{count}}"
       },
+      "viewUsages": {
+        "title": "Usages {{name}}",
+        "usage": "{{count}} usage",
+        "usage_plural": "{{count}} usages"
+      },
       "deleteAction": {
         "infoTable": {
-          "headerLabel": "Usages",
-          "usage": "{{count}} usage",
-          "usage_plural": "{{count}} usages",
+          "usages": "Usages",
           "usageZero": "-"
         },
         "loading": "Loading...",

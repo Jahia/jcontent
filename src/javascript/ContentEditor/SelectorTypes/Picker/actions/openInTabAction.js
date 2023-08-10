@@ -6,9 +6,11 @@ import {useApolloClient, useQuery} from '@apollo/client';
 import rison from 'rison-node';
 import {OpenInTabActionQuery} from '~/ContentEditor/SelectorTypes/Picker/actions/openInTabAction.gql-queries';
 import * as jcontentUtils from '~/JContent/JContent.utils';
+import {useSelector} from 'react-redux';
 
 export const OpenInTabActionComponent = ({render: Render, loading: Loading, path, field, inputContext, ...others}) => {
     const {lang} = useContentEditorContext();
+    const fallbackLanguage = useSelector(state => state.language);
     const client = useApolloClient();
 
     let uuid;
@@ -36,8 +38,8 @@ export const OpenInTabActionComponent = ({render: Render, loading: Loading, path
             {...others}
             onClick={() => {
                 jcontentUtils.expandTree({uuid}, client).then(({mode, parentPath, site}) => {
-                    const hash = rison.encode_uri({contentEditor: [{uuid, lang, mode: Constants.routes.baseEditRoute, isFullscreen: true}]});
-                    const url = jcontentUtils.buildUrl({site, language: lang, mode, path: parentPath});
+                    const hash = rison.encode_uri({contentEditor: [{uuid, lang: lang || fallbackLanguage, mode: Constants.routes.baseEditRoute, isFullscreen: true}]});
+                    const url = jcontentUtils.buildUrl({site, language: lang || fallbackLanguage, mode, path: parentPath});
                     window.open(`${window.contextJsParameters.urlbase}${url}#${hash}`, '_blank');
                 });
             }}

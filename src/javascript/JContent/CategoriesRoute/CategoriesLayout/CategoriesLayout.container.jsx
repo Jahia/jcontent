@@ -42,7 +42,7 @@ export const CategoriesLayoutContainer = () => {
         searchPath: state.jcontent.catManParams.searchPath,
         searchContentType: 'jnt:category',
         searchTerms: state.jcontent.catManParams.searchTerms
-    }));
+    }), shallowEqual);
 
     const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);
 

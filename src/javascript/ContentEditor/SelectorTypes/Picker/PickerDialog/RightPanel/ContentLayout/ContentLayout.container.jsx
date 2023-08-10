@@ -87,7 +87,7 @@ export const ContentLayoutContainer = ({pickerConfig, isMultiple, accordionItemP
         sort: state.contenteditor.picker.sort,
         tableView: state.contenteditor.picker.tableView,
         openPaths: state.contenteditor.picker.openPaths
-    }));
+    }), shallowEqual);
 
     const {result, error, loading, isStructured, refetch} = useLayoutQuery(options, additionalFragments, undefined, accordionItemProps);
 

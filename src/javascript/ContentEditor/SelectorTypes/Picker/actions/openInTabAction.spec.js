@@ -15,6 +15,10 @@ jest.mock('@apollo/client', () => {
     };
 });
 
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn()
+}));
+
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 
 jest.mock('~/JContent/JContent.utils', () => ({

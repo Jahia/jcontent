@@ -150,9 +150,12 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
                     refreshTree(destParent.path, nodes, moveResults);
                 }
 
-                notificationContext.notify(message, ['closeButton']);
+                notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
             }).catch(e => {
-                notificationContext.notify(getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}), ['closeButton']);
+                notificationContext.notify(
+                    getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}),
+                    ['closeButton', 'closeAfter5s']
+                );
             });
         }
     }), [dropTarget, destParent, names, insertPosition, entries, res, nodeTypeCheck]);

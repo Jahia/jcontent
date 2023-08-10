@@ -20,5 +20,6 @@ describe('Content folder', () => {
     it('Open content folders correctly', () => {
         jcontent.getAccordionItem('content-folders').click();
         cy.get('span').contains('Content Folder').should('exist');
+        cy.get('div[data-sel-role="sel-view-mode-dropdown"]').contains('List').should('exist');
     });
 });

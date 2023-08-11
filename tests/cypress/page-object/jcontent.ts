@@ -140,18 +140,8 @@ export class JContent extends BasePage {
         return this;
     }
 
-    switchToGridMode(): JContent {
-        this.switchToMode('grid');
-        return this;
-    }
-
     switchToListMode(): JContent {
         this.switchToMode('List');
-        return this;
-    }
-
-    switchToFlatList(): JContent {
-        this.switchToMode('flatList');
         return this;
     }
 

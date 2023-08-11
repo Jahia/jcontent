@@ -18,6 +18,7 @@ describe('Menu tests', () => {
 
     it('Can edit content', function () {
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.getTable().getRowByIndex(1).contextMenu().select('Delete');
 
         cy.get('[data-sel-role="cancel-button"]').click();

@@ -10,6 +10,7 @@ describe('Picker - PDF', () => {
 
         // beforeEach()
         jcontent = JContent.visit(siteKey, 'en', 'pages/home/investors/events');
+        jcontent.switchToListMode();
     });
 
     afterEach(() => {

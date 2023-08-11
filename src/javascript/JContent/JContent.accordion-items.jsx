@@ -108,6 +108,7 @@ export const jContentAccordionItems = registry => {
         targets: ['jcontent:50'],
         icon: <Page/>,
         label: 'jcontent:label.contentManager.navigation.pages',
+        isEnabled: siteKey => siteKey !== 'systemsite',
         rootPath: '/sites/{site}',
         routeComponent: ContentRoute,
         getPathForItem: node => {

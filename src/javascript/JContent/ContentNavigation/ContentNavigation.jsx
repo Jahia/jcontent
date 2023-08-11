@@ -18,6 +18,13 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
         }
     };
 
+    // If existing mode is not enabled, default to the first available accordion
+    const enabledAccordionItems = accordionItems.filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey));
+    const modeEnabled = enabledAccordionItems.some(item => mode === item.key);
+    if (!modeEnabled && enabledAccordionItems.length > 0) {
+        onSetOpenedItem(enabledAccordionItems[0].key);
+    }
+
     return (
         <SecondaryNav defaultSize={{height: '100%', width: '245px'}}
                       header={header}
@@ -27,7 +34,7 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
                        openedItem={mode}
                        onSetOpenedItem={onSetOpenedItem}
             >
-                {accordionItems.filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey)).map(accordionItem => {
+                {enabledAccordionItems.map(accordionItem => {
                     let props = {
                         id: accordionItem.key,
                         label: t(accordionItem.label),

@@ -26,6 +26,7 @@ describe('delete tests', () => {
 
     it('Can cancel mark for deletion', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         jcontent.getTable()
@@ -42,6 +43,7 @@ describe('delete tests', () => {
 
     it('Can mark root and subnodes for deletion', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         jcontent.getTable()
@@ -77,6 +79,7 @@ describe('delete tests', () => {
 
     it('Cannot undelete non-root node', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         cy.log('Undelete non-root node');
@@ -96,6 +99,7 @@ describe('delete tests', () => {
 
     it('Can undelete root node', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         cy.log('Undelete root node');
@@ -125,6 +129,7 @@ describe('delete tests', () => {
 
     it('It refreshes table and show notification when there is an error during deletion', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         jcontent.getTable()
@@ -151,6 +156,7 @@ describe('delete tests', () => {
 
     it('Cannot delete subnodes permanently', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         cy.log('Cannot delete subnodes permanently');
@@ -170,6 +176,7 @@ describe('delete tests', () => {
 
     it('Can delete root node permanently', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         cy.log('Can delete root node permanently');
@@ -226,6 +233,7 @@ describe('delete tests', () => {
 
     it('Shows export button', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         jcontent.getTable()
@@ -253,6 +261,7 @@ describe('delete tests', () => {
 
     it('Can delete root node permanently and refresh selection', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
         jcontent.switchToSubpages();
 
         cy.log('Can delete root node permanently');

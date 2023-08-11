@@ -7,7 +7,7 @@ import JContentConstants from '../JContent.constants';
 import {ErrorBoundary, Error404, LoaderSuspense} from '@jahia/jahia-ui-root';
 import {EditFrame} from './EditFrame';
 import {useNodeInfo} from '@jahia/data-helper';
-import {setTableViewMode} from '../redux/tableView.redux';
+import {setTableViewMode} from '../redux/JContent.redux';
 
 export const PageBuilderRoute = () => {
     const viewMode = useSelector(state => state.jcontent.tableView.viewMode);

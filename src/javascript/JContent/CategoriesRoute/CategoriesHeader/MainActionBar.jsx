@@ -7,13 +7,22 @@ import styles from '~/JContent/ContentRoute/MainActionBar/MainActionBar.scss';
 const ButtonRenderer = getButtonRenderer({defaultButtonProps: {size: 'big'}});
 
 export const MainActionBar = () => {
-    const {path, selection} = useSelector(state => ({path: state.jcontent.catManPath, selection: state.jcontent.selection}), shallowEqual);
+    const {path, selection} = useSelector(state => ({
+        path: state.jcontent.path,
+        selection: state.jcontent.selection
+    }), shallowEqual);
 
     const isDisabled = selection && selection.length > 0;
 
     return (
         <div className={styles.root}>
-            <DisplayAction actionKey="searchCatMan" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
+            <DisplayAction isShowingOnlySearchInput
+                           actionKey="search"
+                           defaultContentType="jnt:category"
+                           path={path}
+                           isDisabled={isDisabled}
+                           render={ButtonRenderer}
+                           buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
         </div>
     );
 };

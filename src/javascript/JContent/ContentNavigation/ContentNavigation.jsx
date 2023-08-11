@@ -6,6 +6,18 @@ import {getRegistryTarget} from '../JContent.utils';
 
 const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, handleNavigation, header, isReversed}) => {
     const {t} = useTranslation('jcontent');
+
+    const onSetOpenedItem = newMode => {
+        if (newMode && mode !== newMode) {
+            const accordion = accordionItems.find(item => newMode === item.key);
+
+            const path = localStorage.getItem('jcontent-previous-location-' + siteKey + '-' + newMode) || accordion.getRootPath(siteKey);
+            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode) || accordion?.tableConfig?.availableModes?.[0];
+
+            handleNavigation(newMode, path, viewMode);
+        }
+    };
+
     return (
         <SecondaryNav defaultSize={{height: '100%', width: '245px'}}
                       header={header}
@@ -13,7 +25,7 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
         >
             <Accordion isReversed={isReversed}
                        openedItem={mode}
-                       onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).getRootPath(siteKey))}
+                       onSetOpenedItem={onSetOpenedItem}
             >
                 {accordionItems.filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey)).map(accordionItem => {
                     let props = {

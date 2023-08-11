@@ -107,6 +107,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         before(function () {
             cy.loginAndStoreSession(); // Edit in chief
             jcontent = JContent.visit('digitall', 'en', 'pages/home');
+            jcontent.switchToListMode();
         });
 
         afterEach(() => {

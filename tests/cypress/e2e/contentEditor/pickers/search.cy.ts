@@ -10,6 +10,7 @@ describe('Picker tests - Search', () => {
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         // BeforeEach()
         jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
     });
 
     afterEach(() => {

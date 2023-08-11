@@ -31,6 +31,7 @@ describe('Editor url test', () => {
     it('should open editor', function () {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        jcontent.switchToListMode();
         contentEditor = jcontent.editComponentByText('People First');
         contentEditor.switchToAdvancedMode();
         cy.url().as('peopleFirstUrl');

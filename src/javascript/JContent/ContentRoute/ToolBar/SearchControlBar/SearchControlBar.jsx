@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {useNodeInfo} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 
-export const SearchControlBar = ({actionKey}) => {
+export const SearchControlBar = ({searchActionParams}) => {
     const {t} = useTranslation('jcontent');
     const {path, mode, from, language, searchPath, searchContentType} = useSelector(state => ({
         path: state.jcontent.path,
@@ -35,7 +35,7 @@ export const SearchControlBar = ({actionKey}) => {
 
     return (
         <React.Fragment>
-            <DisplayAction actionKey={actionKey} path={path} buttonLabel="Edit query" buttonIcon={<Edit/>} render={ButtonRenderer} buttonProps={{variant: 'ghost'}} data-sel-role="open-search-dialog"/>
+            <DisplayAction actionKey="search" path={path} buttonLabel="Edit query" buttonIcon={<Edit/>} render={ButtonRenderer} buttonProps={{variant: 'ghost'}} data-sel-role="open-search-dialog" {...searchActionParams}/>
             <Separator variant="vertical" invisible="firstOrLastChild"/>
             {advancedSearchMode &&
             <>
@@ -50,11 +50,7 @@ export const SearchControlBar = ({actionKey}) => {
 };
 
 SearchControlBar.propTypes = {
-    actionKey: PropTypes.string
-};
-
-SearchControlBar.defaultProps = {
-    actionKey: 'search'
+    searchActionParams: PropTypes.object
 };
 
 export default SearchControlBar;

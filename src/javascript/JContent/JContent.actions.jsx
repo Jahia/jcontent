@@ -5,7 +5,8 @@ import {
     AddFolder,
     Archive,
     ChevronDown,
-    ClearPaste, Cloud,
+    ClearPaste,
+    Cloud,
     CloudDownload,
     CloudUpload,
     Copy,
@@ -64,8 +65,6 @@ import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
-import JContentConstants from '~/JContent/JContent.constants';
-import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 
 export const jContentActions = registry => {
@@ -361,22 +360,6 @@ export const jContentActions = registry => {
         buttonIcon: <Search/>,
         buttonLabel: 'jcontent:label.contentManager.search.search',
         targets: [],
-        component: SearchActionComponent
-    });
-    registry.add('action', 'searchCatMan', {
-        buttonIcon: <Search/>,
-        buttonLabel: 'jcontent:label.contentManager.search.search',
-        targets: [],
-        selector: state => ({
-            path: state.jcontent.catManPath,
-            params: state.jcontent.params,
-            mode: state.jcontent.mode
-        }),
-        isShowingOnlySearchInput: true,
-        searchAction: (params, dispatch) => {
-            let mode = JContentConstants.mode.SEARCH;
-            dispatch(cmGotoCatMan({mode, params: params}));
-        },
         component: SearchActionComponent
     });
     registry.add('action', 'openInJContent', {

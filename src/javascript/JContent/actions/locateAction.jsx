@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
-import {setTableViewType} from '~/JContent/redux/tableView.redux';
+import {setTableViewType} from '~/JContent/redux/JContent.redux';
 import {batchActions} from 'redux-batched-actions';
 import {expandTree} from '~/JContent/JContent.utils';
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import {registry} from '@jahia/ui-extender';
-import {useHistory} from 'react-router-dom';
 import {Collections, PrimaryNavItem, Tag} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
@@ -8,7 +7,7 @@ import {jContentRoutes} from './JContent/JContent.routes';
 import {jContentActions} from './JContent/JContent.actions';
 import {jContentAccordionItems} from './JContent/JContent.accordion-items';
 import {jContentAppRoot} from './JContent/JContent.app-root';
-import {jContentRedux} from './JContent/redux/JContent.redux';
+import {cmGoto, cmOpenPaths, jContentRedux, setTableViewMode} from './JContent/redux/JContent.redux';
 import {fileuploadRedux} from './JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {previewRedux} from './JContent/redux/preview.redux';
 import {copypasteRedux} from './JContent/actions/copyPaste/copyPaste.redux';
@@ -16,33 +15,30 @@ import {filesGridRedux} from './JContent/redux/filesGrid.redux';
 import {paginationRedux} from './JContent/redux/pagination.redux';
 import {sortRedux} from './JContent/redux/sort.redux';
 import {selectionRedux} from '~/JContent/redux/selection.redux';
-import {shallowEqual, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
-import {tableViewRedux} from './JContent/redux/tableView.redux';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
-import {buildUrl} from '~/JContent/JContent.utils';
-import JContentConstants from '~/JContent/JContent.constants';
+import {extractPaths} from '~/JContent/JContent.utils';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
 import {Redirect} from 'react-router';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+import {batchActions} from 'redux-batched-actions';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
 
 export default function () {
     const JContentNavItem = props => {
-        const history = useHistory();
+        const dispatch = useDispatch();
         const {t} = useTranslation('jcontent');
-        const {site, language, path, mode, params, pathname} = useSelector(state => ({
+        const {site, language, mode, pathname} = useSelector(state => ({
             language: state.language,
             site: state.site,
-            path: state.jcontent.path,
             mode: state.jcontent.mode,
-            params: '',
             pathname: state.router.location.pathname
         }), shallowEqual);
 
@@ -70,23 +66,29 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                const newMode = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? defaultMode : mode;
-                                history.push(buildUrl({site, language: newLanguage, mode: newMode, path, params}));
+                                const storedMode = localStorage.getItem('jcontent-previous-mode-' + site);
+                                const newMode = (mode && accordions.find(acc => acc.key === mode)) ? mode : (storedMode || defaultMode);
+                                const newPath = localStorage.getItem('jcontent-previous-location-' + site + '-' + newMode) || '';
+                                const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + newMode) || '';
+
+                                const paths = extractPaths(site, newPath, newMode).slice(0, -1);
+                                dispatch(batchActions([
+                                    cmOpenPaths(paths),
+                                    cmGoto({app: 'jcontent', site, language: newLanguage, mode: newMode, path: newPath, params: {}}),
+                                    setTableViewMode(viewMode)
+                                ]));
                             }}/>
         );
     };
 
     const CatManNavItem = props => {
-        const history = useHistory();
+        const dispatch = useDispatch();
         const {t} = useTranslation('jcontent');
-        const {language, catManPath, pathname} = useSelector(state => ({
+        const {language, pathname} = useSelector(state => ({
             language: state.language,
-            catManPath: state.jcontent.catManPath,
-            mode: state.jcontent.catManMode,
             pathname: state.router.location.pathname
         }), shallowEqual);
 
-        let accordions = registry.find({type: 'accordionItem', target: 'catMan'});
         const permissions = useNodeChecks({
             path: '/sites/systemsite'
         }, {
@@ -104,8 +106,12 @@ export default function () {
                             label={t('label.categoryManager.name')}
                             icon={<Tag/>}
                             onClick={() => {
-                                let urlPathPart = accordions[0].getUrlPathPart('systemsite', catManPath);
-                                history.push(`/catMan/${language}/category${urlPathPart === '' ? '/' : urlPathPart}`);
+                                const newPath = localStorage.getItem('catMan-previous-location') || '';
+                                const paths = extractPaths('systemsite', newPath, 'category').slice(0, -1);
+                                dispatch(batchActions([
+                                    cmOpenPaths(paths),
+                                    cmGoto({app: 'catMan', language, mode: 'category', path: newPath, params: {}})
+                                ]));
                             }}/>
         );
     };
@@ -166,7 +172,6 @@ export default function () {
     fileuploadRedux(registry);
     previewRedux(registry);
     copypasteRedux(registry);
-    tableViewRedux(registry);
     filesGridRedux(registry);
     paginationRedux(registry);
     sortRedux(registry);

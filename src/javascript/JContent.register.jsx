@@ -7,7 +7,7 @@ import {jContentRoutes} from './JContent/JContent.routes';
 import {jContentActions} from './JContent/JContent.actions';
 import {jContentAccordionItems} from './JContent/JContent.accordion-items';
 import {jContentAppRoot} from './JContent/JContent.app-root';
-import {cmGoto, cmOpenPaths, jContentRedux} from './JContent/redux/JContent.redux';
+import {cmGoto, cmOpenPaths, jContentRedux, setTableViewMode} from './JContent/redux/JContent.redux';
 import {fileuploadRedux} from './JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {previewRedux} from './JContent/redux/preview.redux';
 import {copypasteRedux} from './JContent/actions/copyPaste/copyPaste.redux';
@@ -17,7 +17,6 @@ import {sortRedux} from './JContent/redux/sort.redux';
 import {selectionRedux} from '~/JContent/redux/selection.redux';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
-import {tableViewRedux} from './JContent/redux/tableView.redux';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
@@ -70,10 +69,13 @@ export default function () {
                                 const storedMode = localStorage.getItem('jcontent-previous-mode-' + site);
                                 const newMode = (mode && accordions.find(acc => acc.key === mode)) ? mode : (storedMode || defaultMode);
                                 const newPath = localStorage.getItem('jcontent-previous-location-' + site + '-' + newMode) || '';
+                                const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + newMode) || '';
+
                                 const paths = extractPaths(site, newPath, newMode).slice(0, -1);
                                 dispatch(batchActions([
                                     cmOpenPaths(paths),
-                                    cmGoto({app: 'jcontent', site, language: newLanguage, mode: newMode, path: newPath, params: {}})
+                                    cmGoto({app: 'jcontent', site, language: newLanguage, mode: newMode, path: newPath, params: {}}),
+                                    setTableViewMode(viewMode)
                                 ]));
                             }}/>
         );
@@ -170,7 +172,6 @@ export default function () {
     fileuploadRedux(registry);
     previewRedux(registry);
     copypasteRedux(registry);
-    tableViewRedux(registry);
     filesGridRedux(registry);
     paginationRedux(registry);
     sortRedux(registry);

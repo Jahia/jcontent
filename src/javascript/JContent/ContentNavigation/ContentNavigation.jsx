@@ -9,11 +9,12 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
 
     const onSetOpenedItem = newMode => {
         if (newMode && mode !== newMode) {
-            const path = localStorage.getItem('jcontent-previous-location-' + siteKey + '-' + newMode) || accordionItems.find(item => newMode === item.key).getRootPath(siteKey);
-            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode);
-            const viewType = localStorage.getItem('jcontent-previous-tableView-viewType-' + siteKey + '-' + newMode);
+            const accordion = accordionItems.find(item => newMode === item.key);
 
-            handleNavigation(newMode, path, viewMode, viewType);
+            const path = localStorage.getItem('jcontent-previous-location-' + siteKey + '-' + newMode) || accordion.getRootPath(siteKey);
+            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode) || accordion?.tableConfig?.availableModes?.[0];
+
+            handleNavigation(newMode, path, viewMode);
         }
     };
 

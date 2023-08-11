@@ -3,11 +3,10 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {useNodeChecks} from '@jahia/data-helper';
-import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import {getAccordionItems} from '~/JContent/JContent.utils';
 import {batchActions} from 'redux-batched-actions';
-import {setTableViewMode, setTableViewType} from '~/JContent/redux/tableView.redux';
 
 const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
@@ -38,7 +37,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
                            mode={mode}
                            siteKey={siteKey}
                            isReversed={isReversed}
-                           handleNavigation={(mode, path, viewMode, viewType) => dispatch(handleNavigationAction(mode, path, viewMode, viewType))}
+                           handleNavigation={(mode, path, viewMode) => dispatch(handleNavigationAction(mode, path, viewMode))}
         />
     );
 };
@@ -59,7 +58,7 @@ ContentNavigationContainer.defaultProps = {
         siteKey: state.site,
         language: state.language
     }),
-    handleNavigationAction: (mode, path, viewMode, viewType) => batchActions([cmGoto({mode, path}), setTableViewMode(viewMode), setTableViewType(viewType)]),
+    handleNavigationAction: (mode, path, viewMode) => batchActions([cmGoto({mode, path}), setTableViewMode(viewMode)]),
     accordionItemTarget: 'jcontent',
     isReversed: true
 };

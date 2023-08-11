@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import styles from './LinkDialog.scss';
 import {useDispatch} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
-import {setTableViewMode} from '~/JContent/redux/tableView.redux';
+import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 
 export const TextMenuDialog = ({node, isOpen, onClose, setPathAction}) => {

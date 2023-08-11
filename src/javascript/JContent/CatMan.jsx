@@ -54,12 +54,12 @@ export const CatMan = () => {
                             {item && (
                                 item.routeComponent ? (
                                     <Route key={item.key}
-                                           path={'/catMan/:lang/:mode/*'}
+                                           path="/catMan/:lang/:mode"
                                            render={p =>
                                                <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
                                     />
                                 ) : (<Route key={item.key}
-                                            path={'/catMan/:lang/:mode/*'}
+                                            path="/catMan/:lang/:mode"
                                             render={props =>
                                                 <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
                                     />

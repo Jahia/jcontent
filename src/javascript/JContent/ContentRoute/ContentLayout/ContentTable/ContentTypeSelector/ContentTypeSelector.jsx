@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Tab, TabItem} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
-import {setTableViewType} from '~/JContent/redux/tableView.redux';
+import {setTableViewType} from '~/JContent/redux/JContent.redux';
 import classes from './ContentTypeSelector.scss';
 import {useTranslation} from 'react-i18next';
 import {cmSetPage} from '~/JContent/redux/pagination.redux';

@@ -5,7 +5,7 @@ import {cmGoto, cmPreSearchModeMemo} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchDialog from './SearchDialog';
 
-const SearchDialogContainer = ({isOpen, handleClose, isShowingOnlySearchInput}) => {
+const SearchDialogContainer = ({isOpen, handleClose, defaultContentType, isShowingOnlySearchInput}) => {
     const dispatch = useDispatch();
 
     const {params, mode, path} = useSelector(state => ({
@@ -23,7 +23,7 @@ const SearchDialogContainer = ({isOpen, handleClose, isShowingOnlySearchInput}) 
     const [isAdvancedSearch, setIsAdvancedSearch] = useState(mode === JContentConstants.mode.SQL2SEARCH);
     const [searchPath, setSearchPath] = useState(params.searchPath ? params.searchPath : path);
     const [searchTerms, setSearchTerms] = useState(params.searchTerms ? params.searchTerms : '');
-    const [searchContentType, setSearchContentType] = useState(params.searchContentType ? params.searchContentType : '');
+    const [searchContentType, setSearchContentType] = useState(params.searchContentType ? params.searchContentType : defaultContentType);
     const [sql2SearchFrom, setSql2SearchFrom] = useState(params.sql2SearchFrom ? params.sql2SearchFrom : '');
     const [sql2SearchWhere, setSql2SearchWhere] = useState(params.sql2SearchWhere ? params.sql2SearchWhere : '');
 
@@ -90,10 +90,12 @@ const SearchDialogContainer = ({isOpen, handleClose, isShowingOnlySearchInput}) 
 SearchDialogContainer.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
+    defaultContentType: PropTypes.string,
     isShowingOnlySearchInput: PropTypes.bool
 };
 
 SearchDialogContainer.defaultProps = {
+    defaultContentType: '',
     isShowingOnlySearchInput: false
 };
 

@@ -36,11 +36,10 @@ export default function () {
     const JContentNavItem = props => {
         const dispatch = useDispatch();
         const {t} = useTranslation('jcontent');
-        const {site, language, mode, params, pathname} = useSelector(state => ({
+        const {site, language, mode, pathname} = useSelector(state => ({
             language: state.language,
             site: state.site,
             mode: state.jcontent.mode,
-            params: '',
             pathname: state.router.location.pathname
         }), shallowEqual);
 
@@ -74,7 +73,7 @@ export default function () {
                                 const paths = extractPaths(site, newPath, newMode).slice(0, -1);
                                 dispatch(batchActions([
                                     cmOpenPaths(paths),
-                                    cmGoto({app: 'jcontent', site, language: newLanguage, mode: newMode, path: newPath, params})
+                                    cmGoto({app: 'jcontent', site, language: newLanguage, mode: newMode, path: newPath, params: {}})
                                 ]));
                             }}/>
         );

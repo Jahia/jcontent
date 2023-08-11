@@ -18,6 +18,7 @@ export const MainActionBar = () => {
         <div className={styles.root}>
             <DisplayAction isShowingOnlySearchInput
                            actionKey="search"
+                           defaultContentType="jnt:category"
                            path={path}
                            isDisabled={isDisabled}
                            render={ButtonRenderer}

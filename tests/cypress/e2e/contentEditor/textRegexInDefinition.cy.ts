@@ -86,7 +86,7 @@ describe('Test the consistency of the validation of regular expressions added to
         const contentEditorToEdit = pageComposer.editComponentByText(' testregexp');
 
         editFieldValues(contentEditorToEdit, editFields, langEN);
-        cy.get('body').click();
+        cy.get('body').click({force: true});
         checkInvalidPatternErrorMsg(invalidPatternMsgError, langEN);
     });
 });

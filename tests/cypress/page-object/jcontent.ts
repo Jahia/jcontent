@@ -142,6 +142,7 @@ export class JContent extends BasePage {
 
     switchToListMode(): JContent {
         this.switchToMode('List');
+        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
         return this;
     }
 

@@ -1,26 +1,47 @@
-import {useSubscription} from '@apollo/client';
+import {useSubscription, useQuery} from '@apollo/client';
 import {SubscribeToPublicationData} from './PublicationNotification.gql-subscription';
-import {useNotifications} from '@jahia/react-material';
+import {GetUserQuery} from './PublicationNotification.gql-query';
+import {enqueueSnackbar} from 'notistack';
+import {useTranslation} from 'react-i18next';
+import {shallowEqual, useSelector} from 'react-redux';
+import {useSiteInfo} from '@jahia/data-helper';
 
 export const usePublicationNotification = () => {
-    const notificationContext = useNotifications();
-    const {data, loading, error} = useSubscription(SubscribeToPublicationData);
+    const {t} = useTranslation('jcontent');
+    const {siteKey, language} = useSelector(state => ({
+        siteKey: state.site,
+        language: state.language
+    }), shallowEqual);
+    const {siteInfo, loading: siteInfoLoading, error: siteInfoError} = useSiteInfo({siteKey, displayLanguage: language});
+    const {data: getUserData, loading: getUserLoading, error: getUserError} = useQuery(GetUserQuery);
+    const {data, loading, error} = useSubscription(SubscribeToPublicationData, {
+        variables: {
+            userKeys: [getUserData?.currentUser?.node?.path]
+        },
+        fetchPolicy: 'network-only',
+        skip: !getUserData || getUserLoading || getUserError || siteInfoLoading || siteInfoError
+    });
 
-    if (error) {
-        console.error(error);
+    const e = siteInfoError || getUserError || error;
+
+    if (e) {
+        console.log(e);
     }
 
-    if (!loading && !error && data?.backgroundJobSubscription?.publicationJob) {
+    if (!e && !loading && data?.backgroundJobSubscription?.publicationJob) {
         const language = data.backgroundJobSubscription.publicationJob.language;
         const state = data.backgroundJobSubscription.publicationJob.jobState;
 
-        notificationContext.closeNotification();
+        let notifSuffix = '';
 
-        console.log(data.backgroundJobSubscription.publicationJob);
+        if (siteInfo.languages.length <= 1 || language === null) {
+            notifSuffix = 'NoLang';
+        }
+
         if (state === 'STARTED') {
-            notificationContext.notify(`Publishing in ${language}`, ['closeButton'], {autoHideDuration: 3000});
+            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.publishing${notifSuffix}`, {language: language}), {autoHideDuration: 5000});
         } else if (state === 'FINISHED') {
-            notificationContext.notify(`Publication completed`, ['closeButton'], {autoHideDuration: 3000});
+            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.published${notifSuffix}`, {language: language}), {autoHideDuration: 5000});
         }
     }
-}
+};

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const SubscribeToPublicationData = gql`
-  subscription SubscribeToPublicationData {
-      backgroundJobSubscription(filterByGroups:["PublicationJob"]) {
+  subscription SubscribeToPublicationData($userKeys:[String]!) {
+      backgroundJobSubscription(filterByGroups:["PublicationJob"] filterByUserKey:$userKeys) {
         name
         publicationJob {
           language

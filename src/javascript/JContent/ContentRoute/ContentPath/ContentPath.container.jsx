@@ -68,12 +68,13 @@ const ContentPathContainer = ({selector}) => {
             <ContentPath items={items} onItemClick={handleNavigation}/>
             <ContentPathDialog isOpen={Boolean(currentItem)}
                                handleParentNavigation={() => {
-                                   dispatch(setPathAction(mode, currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))));
+                                   const path = currentItem.path.substring(0, currentItem.path.lastIndexOf('/'));
+                                   dispatch(cmGoto({mode, path}));
                                    setCurrentItem(null);
                                }}
                                handleClose={() => setCurrentItem(null)}
                                handleListNavigation={() => {
-                                   dispatch(setPathAction(mode, currentItem.path));
+                                   dispatch(cmGoto({mode, path: currentItem.path}));
                                    setCurrentItem(null);
                                }}
             />

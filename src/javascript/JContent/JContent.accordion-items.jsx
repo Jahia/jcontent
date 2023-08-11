@@ -23,7 +23,6 @@ import {
 } from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
 import {CategoriesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/CategoriesQueryHandler';
 import CategoriesRoute from '~/JContent/CategoriesRoute/CategoriesRoute';
-import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -227,12 +226,12 @@ export const jContentAccordionItems = registry => {
                              selector={state => ({
                                  siteKey: 'systemsite',
                                  lang: state.language,
-                                 path: state.jcontent.catManPath,
-                                 mode: state.jcontent.catManMode,
+                                 path: state.jcontent.path,
+                                 mode: state.jcontent.mode,
                                  openPaths: state.jcontent.openPaths,
                                  viewMode: JContentConstants.tableView.viewMode.FLAT
                              })}
-                             setPathAction={(path, params) => cmGotoCatMan({path, params})}/>
+                />
             </AccordionItem>
         ),
         routeComponent: CategoriesRoute,

@@ -8,7 +8,7 @@ import './colors.scss';
 import {cmClearSelection} from './redux/selection.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import ContentNavigationContainer from './ContentNavigation';
-import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 export const CatMan = () => {
     const item = registry.get('accordionItem', 'category');
@@ -28,16 +28,12 @@ export const CatMan = () => {
     }, [handleKeyboardNavigation]);
 
     const selector = state => ({
-        mode: state.jcontent.catManMode,
+        mode: state.jcontent.mode,
         siteKey: 'systemsite',
         language: state.language
     });
     const handleNavigationAction = (mode, path) => {
-        dispatch(cmGotoCatMan({mode, path}));
-    };
-
-    const handleSwitchLanguageAction = language => {
-        dispatch(cmGotoCatMan({language}));
+        dispatch(cmGoto({mode, path}));
     };
 
     return (
@@ -46,9 +42,9 @@ export const CatMan = () => {
                                                     selector={selector}
                                                     handleNavigationAction={handleNavigationAction}
                                                     header={<NavigationHeader isDisplaySiteSwitcher={false}
-                                                                              setLanguageAction={handleSwitchLanguageAction}
                                                                               languageSelector={state => ({
-                                                                                  lang: state.language, siteKey: 'systemsite'
+                                                                                  lang: state.language,
+                                                                                  siteKey: 'systemsite'
                                                                               })}
                                                                               logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
             content={

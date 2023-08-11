@@ -23,25 +23,25 @@ export const CategoriesLayoutContainer = () => {
         filesMode,
         viewType
     } = useSelector(state => ({
-        mode: state.jcontent.catManMode,
-        path: state.jcontent.catManPath
+        mode: state.jcontent.mode,
+        path: state.jcontent.path
     }), shallowEqual);
 
     const dispatch = useDispatch();
     const accordionItem = registry.get('accordionItem', 'category');
     const options = useSelector(state => ({
-        mode: state.jcontent.catManMode,
+        mode: state.jcontent.mode,
         siteKey: 'systemsite',
-        path: state.jcontent.catManPath,
+        path: state.jcontent.path,
         lang: state.language,
         uilang: state.uilang,
         pagination: state.jcontent.pagination,
         sort: accordionItem.tableConfig.defaultSort,
         openPaths: state.jcontent.openPaths,
         tableView: {viewMode: JContentConstants.tableView.viewMode.FLAT},
-        searchPath: state.jcontent.catManParams.searchPath,
+        searchPath: state.jcontent.params.searchPath,
         searchContentType: 'jnt:category',
-        searchTerms: state.jcontent.catManParams.searchTerms
+        searchTerms: state.jcontent.params.searchTerms
     }), shallowEqual);
 
     const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);

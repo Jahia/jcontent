@@ -1,6 +1,5 @@
 import React from 'react';
 import {registry} from '@jahia/ui-extender';
-import {useHistory} from 'react-router-dom';
 import {Collections, PrimaryNavItem, Tag} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
@@ -25,7 +24,6 @@ import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
 import CatManApp from './CatManApp';
 import {extractPaths} from '~/JContent/JContent.utils';
-import JContentConstants from '~/JContent/JContent.constants';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
 import {Redirect} from 'react-router';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
@@ -71,28 +69,25 @@ export default function () {
                             icon={<Collections/>}
                             onClick={() => {
                                 const storedMode = localStorage.getItem('jcontent-previous-mode-' + site);
-                                const newMode = (mode === undefined || mode === '' || mode === JContentConstants.mode.SEARCH) ? (storedMode || defaultMode) : mode;
+                                const newMode = (mode && accordions.find(acc => acc.key === mode)) ? mode : (storedMode || defaultMode);
                                 const newPath = localStorage.getItem('jcontent-previous-location-' + site + '-' + newMode) || '';
                                 const paths = extractPaths(site, newPath, newMode).slice(0, -1);
                                 dispatch(batchActions([
                                     cmOpenPaths(paths),
-                                    cmGoto({site, language: newLanguage, mode: newMode, path: newPath, params})
+                                    cmGoto({app: 'jcontent', site, language: newLanguage, mode: newMode, path: newPath, params})
                                 ]));
                             }}/>
         );
     };
 
     const CatManNavItem = props => {
-        const history = useHistory();
+        const dispatch = useDispatch();
         const {t} = useTranslation('jcontent');
-        const {language, catManPath, pathname} = useSelector(state => ({
+        const {language, pathname} = useSelector(state => ({
             language: state.language,
-            catManPath: state.jcontent.catManPath,
-            mode: state.jcontent.catManMode,
             pathname: state.router.location.pathname
         }), shallowEqual);
 
-        let accordions = registry.find({type: 'accordionItem', target: 'catMan'});
         const permissions = useNodeChecks({
             path: '/sites/systemsite'
         }, {
@@ -110,8 +105,12 @@ export default function () {
                             label={t('label.categoryManager.name')}
                             icon={<Tag/>}
                             onClick={() => {
-                                let urlPathPart = accordions[0].getUrlPathPart('systemsite', catManPath);
-                                history.push(`/catMan/${language}/category${urlPathPart === '' ? '/' : urlPathPart}`);
+                                const newPath = localStorage.getItem('catMan-previous-location') || '';
+                                const paths = extractPaths('systemsite', newPath, 'category').slice(0, -1);
+                                dispatch(batchActions([
+                                    cmOpenPaths(paths),
+                                    cmGoto({app: 'catMan', language, mode: 'category', path: newPath, params: {}})
+                                ]));
                             }}/>
         );
     };

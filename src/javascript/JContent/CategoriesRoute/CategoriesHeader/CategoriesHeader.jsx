@@ -7,7 +7,7 @@ import ContentPath from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';
-import {cmGotoCatMan} from '~/JContent/redux/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
 import BrowseControlBar from '~/JContent/ContentRoute/ToolBar/BrowseControlBar';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
@@ -41,9 +41,9 @@ const CategoriesHeader = () => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, preSearchModeMemo, path, language, displayLanguage, selection, previewSelection} = useSelector(state => ({
-        mode: state.jcontent.catManMode,
+        mode: state.jcontent.mode,
         preSearchModeMemo: state.jcontent.preSearchModeMemo,
-        path: state.jcontent.catManPath,
+        path: state.jcontent.path,
         language: state.language,
         displayLanguage: state.uilang,
         selection: state.jcontent.selection
@@ -61,7 +61,7 @@ const CategoriesHeader = () => {
     if (inSearchMode) {
         const clearSearchFunc = () => {
             const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
-            dispatch(cmGotoCatMan({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
+            dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
         };
 
         return narrow ? (
@@ -69,7 +69,7 @@ const CategoriesHeader = () => {
                 backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
-                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar actionKey="searchCatMan"/>}
+                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar searchActionParams={{isShowingOnlySearchInput: true}}/>}
             />
         ) : (
             <Header
@@ -79,7 +79,7 @@ const CategoriesHeader = () => {
                 toolbarLeft={
                     <>
                         {selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
-                        {selection.length === 0 && <SearchControlBar actionKey="searchCatMan"/>}
+                        {selection.length === 0 && <SearchControlBar searchActionParams={{isShowingOnlySearchInput: true}}/>}
                     </>
                 }
             />
@@ -88,19 +88,11 @@ const CategoriesHeader = () => {
 
     const {nodePath, nodeType, title} = extractNodeInfo(node, loading);
 
-    const selector = state => ({
-        mode: state.jcontent.catManMode,
-        path: state.jcontent.catManPath,
-        language: state.language,
-        site: state.site
-    });
-    const setPathAction = (mode, path) => cmGotoCatMan({mode, path});
-
     return narrow ? (
         <Header
             title={title}
             mainActions={<MainActionBar/>}
-            breadcrumb={<ContentPath setPathAction={setPathAction} selector={selector}/>}
+            breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
         />
@@ -108,7 +100,7 @@ const CategoriesHeader = () => {
         <Header
             title={title}
             mainActions={<MainActionBar/>}
-            breadcrumb={<ContentPath setPathAction={setPathAction} selector={selector}/>}
+            breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             toolbarLeft={
                 <>
@@ -116,7 +108,7 @@ const CategoriesHeader = () => {
                     <BrowseControlBar isShowingActions={selection.length === 0}
                                       actionsToExcludeFromMenu={excludedActions}
                                       selector={state => ({
-                        path: state.jcontent.catManPath,
+                        path: state.jcontent.path,
                         siteKey: state.site,
                         selection: state.jcontent.selection
                     })}/>

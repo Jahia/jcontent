@@ -25,10 +25,10 @@ export const CategoriesLayout = ({
 }) => {
     const contextualMenu = useRef();
     const selector = state => ({
-        mode: state.jcontent.catManMode,
+        mode: state.jcontent.mode,
         previewSelection: [],
         siteKey: 'systemsite',
-        path: state.jcontent.catManPath,
+        path: state.jcontent.path,
         pagination: state.jcontent.pagination,
         previewState: CM_DRAWER_STATES.HIDE,
         selection: state.jcontent.selection,

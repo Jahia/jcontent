@@ -17,7 +17,7 @@ export const SearchActionComponent = ({render: Render, ...others}) => {
                     setIsDialogOpen(true);
                 }}
             />
-            <SearchDialog isOpen={isDialogOpen} handleClose={handleClose} selector={others.selector} isShowingOnlySearchInput={others.isShowingOnlySearchInput} searchAction={others.searchAction}/>
+            <SearchDialog isOpen={isDialogOpen} handleClose={handleClose} isShowingOnlySearchInput={others.isShowingOnlySearchInput}/>
         </>
     );
 };

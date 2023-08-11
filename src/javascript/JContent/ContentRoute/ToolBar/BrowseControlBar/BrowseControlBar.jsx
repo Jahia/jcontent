@@ -21,8 +21,12 @@ const excludedActions = [
     'fileUpload'
 ];
 
-export const BrowseControlBar = ({isShowingActions, selector, actionsToExcludeFromMenu}) => {
-    const {path, siteKey, selection} = useSelector(selector, shallowEqual);
+export const BrowseControlBar = ({isShowingActions, actionsToExcludeFromMenu}) => {
+    const {path, siteKey, selection} = useSelector(state => ({
+        path: state.jcontent.path,
+        siteKey: state.site,
+        selection: state.jcontent.selection
+    }), shallowEqual);
 
     const contentActions = useMemo(() => [
         ...registry.find({type: 'action', target: 'headerPrimaryActions'}).map(action => action.key),
@@ -58,17 +62,11 @@ export const BrowseControlBar = ({isShowingActions, selector, actionsToExcludeFr
 
 BrowseControlBar.propTypes = {
     isShowingActions: PropTypes.bool,
-    selector: PropTypes.func,
     actionsToExcludeFromMenu: PropTypes.array
 };
 
 BrowseControlBar.defaultProps = {
     isShowingActions: true,
-    selector: state => ({
-        path: state.jcontent.path,
-        siteKey: state.site,
-        selection: state.jcontent.selection
-    }),
     actionsToExcludeFromMenu: excludedActions
 };
 

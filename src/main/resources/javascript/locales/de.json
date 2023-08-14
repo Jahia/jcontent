@@ -393,6 +393,11 @@
         "contents": "Content {{count}}",
         "pages": "Unter-Seiten {{count}}"
       },
+      "viewUsages": {
+        "title": "Verwendungen {{name}}",
+        "usage": "{{count}} Verwendung",
+        "usage_plural": "{{count}} Verwendungen"
+      },
       "deleteAction": {
         "infoTable": {
           "headerLabel": "Verwendungen",

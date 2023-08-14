@@ -6,6 +6,10 @@ jest.mock('./publish.gql-mutation', () => {
     };
 });
 
+jest.mock('notistack', () => ({
+    enqueueSnackbar: jest.fn()
+}));
+
 describe('publish', () => {
     const consoleErrorOriginal = console.error;
 

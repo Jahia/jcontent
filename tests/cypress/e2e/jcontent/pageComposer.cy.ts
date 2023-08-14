@@ -116,6 +116,10 @@ describe('Page builder', () => {
         it('should show paste button when we copy', function () {
             jcontent.refresh();
 
+            // Context menu does not show up; wait necessary
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
+
             const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
             menu.select('Copy');
 
@@ -127,6 +131,10 @@ describe('Page builder', () => {
 
         it('remove paste button when we clear clipboard', function () {
             jcontent.refresh();
+
+            // Context menu does not show up; wait necessary
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
 
             const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
             menu.select('Copy');

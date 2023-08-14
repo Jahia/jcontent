@@ -60,6 +60,7 @@ describe('Editor url test', () => {
     it('Should create hash', function () {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        jcontent.switchToListMode();
         contentEditor = jcontent.editComponentByText('People First');
         contentEditor.switchToAdvancedMode();
         cy.hash().should('contain', 'contentEditor:');
@@ -69,6 +70,7 @@ describe('Editor url test', () => {
     it('History is handled consistently', function () {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        jcontent.switchToListMode();
         contentEditor = jcontent.editComponentByText('People First');
         contentEditor.switchToAdvancedMode();
         cy.get('h1').contains('People First').should('exist');

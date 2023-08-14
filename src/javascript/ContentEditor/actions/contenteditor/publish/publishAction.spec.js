@@ -17,9 +17,9 @@ jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 jest.mock('formik');
 jest.mock('@apollo/client');
-jest.mock('notistack', () => {
-    jest.fn();
-});
+jest.mock('notistack', () => ({
+    enqueueSnackbar: jest.fn()
+}));
 
 describe('publish action', () => {
     let defaultProps;

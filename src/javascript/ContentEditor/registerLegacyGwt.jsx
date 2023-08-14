@@ -83,8 +83,8 @@ export const registerLegacyGwt = registry => {
         undelete: params => {
             window.CE_API.executeAction({actionKey: 'undelete', onDeleted: refresh, ...params});
         },
-        queuePublication: () => {
-            enqueueSnackbar('Publication is queued', {autoHideDuration: 3000, anchorOrigin: {
+        queuePublication: params => {
+            enqueueSnackbar(params.message, {autoHideDuration: 3000, anchorOrigin: {
                 vertical: 'bottom',
                 horizontal: 'center'
             }});

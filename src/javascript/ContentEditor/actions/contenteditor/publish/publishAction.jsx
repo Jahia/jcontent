@@ -5,12 +5,10 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useContentEditorContext, usePublicationInfoContext} from '~/ContentEditor/contexts';
 import {useApolloClient} from '@apollo/client';
 import {useTranslation} from 'react-i18next';
-import {useNotifications} from '@jahia/react-material';
 import {useFormikContext} from 'formik';
 import {isDirty} from '~/ContentEditor/utils';
 
 const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
-    const notificationContext = useNotifications();
     const {publicationInfoPolling, publicationStatus, stopPublicationInfoPolling, startPublicationInfoPolling} = usePublicationInfoContext();
     const client = useApolloClient();
     const {t} = useTranslation();
@@ -49,14 +47,13 @@ const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
         publishNode({
             client,
             t,
-            notificationContext,
             data: {
                 nodeData,
                 language: lang
             },
             successCallback: startPublicationInfoPolling
         });
-    }, [client, t, notificationContext, nodeData, lang, startPublicationInfoPolling]);
+    }, [client, t, nodeData, lang, startPublicationInfoPolling]);
 
     if (Loading) {
         return <Loading {...otherProps}/>;

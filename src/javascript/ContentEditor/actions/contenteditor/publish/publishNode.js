@@ -28,8 +28,8 @@ export const publishNode = ({
         }, error => {
             console.error(error);
             enqueueSnackbar(t('jcontent:label.contentEditor.edit.action.publish.error'), {autoHideDuration: 3000, anchorOrigin: {
-                    vertical: 'bottom',
-                    horizontal: 'center'
-                }});
+                vertical: 'bottom',
+                horizontal: 'center'
+            }});
         });
 };

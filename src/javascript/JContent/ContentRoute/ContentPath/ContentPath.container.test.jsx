@@ -99,7 +99,7 @@ describe('ContentPathContainer', () => {
         wrapper.invoke('onItemClick')({path: '/x/y/z'});
 
         expect(dispatch).toHaveBeenCalledTimes(1);
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'foo', path: '/x/y/z'});
+        expect(cmGoto).toHaveBeenCalledWith({mode: 'foo', path: '/x/y/z', params: {sub: false}});
     });
 
     it('starts from the closest ancestor visible in Content tree if node is not visible Content tree', () => {

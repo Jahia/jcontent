@@ -41,4 +41,28 @@ describe('Breadcrumb navigation test', () => {
         Breadcrumb.findByContent('CEOs of The Digital Roundtable').click();
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
     });
+
+    it('Display same items as tree content selection', () => {
+        const jcontent = JContent.visit('digitall', 'en', 'pages/home');
+        jcontent.switchToListMode();
+
+        // Get total rows
+        cy.get('[data-sel-role="table-pagination-total-rows"]')
+            .invoke('text')
+            .then(e => {
+                // Get total rows through regex e.g. extract 21 from "1-21 of 21"
+                const totalRows = e.match(/of (.*)$/)?.[1];
+                cy.wrap(totalRows).as('totalRows');
+            });
+
+        JContent.visit('digitall', 'en', 'pages/home/area-main/highlights');
+        Breadcrumb.findByContent('Home').click();
+        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+
+        cy.get('@totalRows').then(totalRows => {
+            cy.get('[data-sel-role="table-pagination-total-rows"]')
+                .invoke('text')
+                .should('contain', totalRows);
+        });
+    });
 });

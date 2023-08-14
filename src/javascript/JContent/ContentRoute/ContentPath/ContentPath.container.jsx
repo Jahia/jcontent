@@ -40,7 +40,7 @@ function getItems(node = {}) {
     return ancestors;
 }
 
-const ContentPathContainer = ({setPathAction, selector}) => {
+const ContentPathContainer = ({selector}) => {
     const dispatch = useDispatch();
     const [currentItem, setCurrentItem] = useState(null);
 
@@ -54,7 +54,7 @@ const ContentPathContainer = ({setPathAction, selector}) => {
         if (item.primaryNodeType?.name === 'jnt:contentList' && mode === JContentConstants.mode.PAGES && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
             setCurrentItem(item);
         } else {
-            dispatch(setPathAction(mode, item.path));
+            dispatch(cmGoto({mode, path: item.path, params: {sub: false}}));
         }
     };
 
@@ -68,12 +68,13 @@ const ContentPathContainer = ({setPathAction, selector}) => {
             <ContentPath items={items} onItemClick={handleNavigation}/>
             <ContentPathDialog isOpen={Boolean(currentItem)}
                                handleParentNavigation={() => {
-                                   dispatch(setPathAction(mode, currentItem.path.substring(0, currentItem.path.lastIndexOf('/'))));
+                                   const path = currentItem.path.substring(0, currentItem.path.lastIndexOf('/'));
+                                   dispatch(cmGoto({mode, path}));
                                    setCurrentItem(null);
                                }}
                                handleClose={() => setCurrentItem(null)}
                                handleListNavigation={() => {
-                                   dispatch(setPathAction(mode, currentItem.path));
+                                   dispatch(cmGoto({mode, path: currentItem.path}));
                                    setCurrentItem(null);
                                }}
             />
@@ -82,8 +83,7 @@ const ContentPathContainer = ({setPathAction, selector}) => {
 };
 
 ContentPathContainer.propTypes = {
-    selector: PropTypes.func,
-    setPathAction: PropTypes.func
+    selector: PropTypes.func
 };
 
 ContentPathContainer.defaultProps = {
@@ -92,8 +92,7 @@ ContentPathContainer.defaultProps = {
         viewMode: state.jcontent.tableView.viewMode,
         path: state.jcontent.path,
         language: state.language
-    }),
-    setPathAction: (mode, path) => cmGoto({mode, path})
+    })
 };
 
 export default ContentPathContainer;

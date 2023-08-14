@@ -1,4 +1,5 @@
 import {publishNode} from './publishNode';
+import {enqueueSnackbar} from 'notistack';
 
 jest.mock('./publish.gql-mutation', () => {
     return {
@@ -27,7 +28,6 @@ describe('publish', () => {
             client: {
                 mutate: jest.fn(() => Promise.resolve())
             },
-            notificationContext: {notify: jest.fn()},
             actions: {setSubmitting: jest.fn()},
             t: jest.fn(),
             data: {
@@ -46,14 +46,14 @@ describe('publish', () => {
     it('should display a notification when request is a success', async () => {
         await publishNode(params);
 
-        expect(params.notificationContext.notify).toHaveBeenCalled();
+        expect(enqueueSnackbar).toHaveBeenCalled();
     });
 
     it('should display a notification when request is a failure', async () => {
         params.client.mutate = () => Promise.reject();
         await publishNode(params);
 
-        expect(params.notificationContext.notify).toHaveBeenCalled();
+        expect(enqueueSnackbar).toHaveBeenCalled();
     });
 
     it('should log error when request is a failure', async () => {

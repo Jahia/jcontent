@@ -18,10 +18,10 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
         }
     };
 
-    // If existing mode is not enabled, default to the first available accordion
+    // If existing mode (excluding search) is not enabled, default to the first available accordion
     const enabledAccordionItems = accordionItems.filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey));
     const modeEnabled = enabledAccordionItems.some(item => mode === item.key);
-    if (!modeEnabled && enabledAccordionItems.length > 0) {
+    if (!modeEnabled && !mode.includes('search') && enabledAccordionItems.length > 0) {
         onSetOpenedItem(enabledAccordionItems[0].key);
     }
 

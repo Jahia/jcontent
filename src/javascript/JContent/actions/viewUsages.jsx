@@ -48,10 +48,10 @@ UsagesDialog.propTypes = {
 
 export const ViewUsagesComponent = ({path, render: Render, loading: Loading, usagesCount, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    const res = useNodeChecks({path}, {getDisplayName: true, ...others});
+    const language = useSelector(state => state.language);
+    const res = useNodeChecks({path, language}, {getDisplayName: true, ...others});
 
     const {t} = useTranslation('jcontent');
-    const language = useSelector(state => state.language);
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;

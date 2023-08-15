@@ -18,6 +18,13 @@
       "rename": "Renommer",
       "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
       "publicationStatus": {
+        "notification": {
+          "publish": "Publication en file d'attente",
+          "publishing": "Publication en {{language}}",
+          "publishingNoLang": "Publication ...",
+          "published": "Publication terminée: {{language}}",
+          "publishedNoLang": "Publication terminée"
+        },
         "notPublished": "Ce contenu n'a jamais été publié",
         "unPublished": "Cet élément a été dépublié",
         "modified": "Modifié par {{userName}} le {{timestamp}}",

@@ -18,6 +18,13 @@
       "rename": "Rename",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
       "publicationStatus": {
+        "notification": {
+          "publish": "Publication is queued",
+          "publishing": "Publishing in {{language}}",
+          "publishingNoLang": "Publishing ...",
+          "published": "Publication completed: {{language}}",
+          "publishedNoLang": "Publication completed"
+        },
         "notPublished": "This content has never been published",
         "unPublished": "This item has been unpublished",
         "modified": "Modified by {{userName}} on {{timestamp}}",

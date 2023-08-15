@@ -18,6 +18,13 @@
       "rename": "Umbenennen",
       "workInProgress": "In Arbeit: {{wipLang}} (ausgenommen gemeinsame Eigenschaften)",
       "publicationStatus": {
+        "notification": {
+          "publish": "Veröffentlichung der Warteschlange hinzugefügt",
+          "publishing": "Veröffentlichung in {{language}}",
+          "publishingNoLang": "Veröffentlichung ...",
+          "published": "Veröffentlichung abgeschlossen: {{language}}",
+          "publishedNoLang": "Veröffentlichung abgeschlossen"
+        },
         "notPublished": "Dieser Content wurde nie veröffentlicht",
         "unPublished": "Veröffentlichung für das Element wurde rückgängig gemacht",
         "modified": "Geändert von {{userName}} am {{timestamp}}",

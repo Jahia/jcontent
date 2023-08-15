@@ -1,3 +1,5 @@
+import {enqueueSnackbar} from 'notistack';
+
 export const registerLegacyGwt = registry => {
     const pcNavigateTo = path => registry.get('redux-action', 'pagecomposerNavigateTo').action(path);
 
@@ -80,6 +82,12 @@ export const registerLegacyGwt = registry => {
         },
         undelete: params => {
             window.CE_API.executeAction({actionKey: 'undelete', onDeleted: refresh, ...params});
+        },
+        queuePublication: params => {
+            enqueueSnackbar(params.message, {autoHideDuration: 3000, anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'center'
+            }});
         }
     };
 };

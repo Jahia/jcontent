@@ -1,9 +1,9 @@
 import {PublishNodeMutation} from './publish.gql-mutation';
+import {enqueueSnackbar} from 'notistack';
 
 export const publishNode = ({
     client,
     t,
-    notificationContext,
     data: {
         nodeData,
         language
@@ -18,12 +18,18 @@ export const publishNode = ({
         mutation: PublishNodeMutation
     })
         .then(() => {
-            notificationContext.notify(t('jcontent:label.contentEditor.edit.action.publish.success'), ['closeButton'], {autoHideDuration: 3000});
+            enqueueSnackbar(t('jcontent:label.contentManager.publicationStatus.notification.publish'), {autoHideDuration: 3000, anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'center'
+            }});
             if (successCallback) {
                 successCallback();
             }
         }, error => {
             console.error(error);
-            notificationContext.notify(t('jcontent:label.contentEditor.edit.action.publish.error'), ['closeButton']);
+            enqueueSnackbar(t('jcontent:label.contentEditor.edit.action.publish.error'), {autoHideDuration: 3000, anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'center'
+            }});
         });
 };

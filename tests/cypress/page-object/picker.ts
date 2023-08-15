@@ -166,6 +166,19 @@ export class Picker extends BaseComponent {
         this.get().find('[data-sel-role="table-pagination-total-rows"]').should('be.visible').and('contain', `of ${length}`);
     }
 
+    verifyResultsAtLeast(length: number) {
+        const totalRowsSelector = '[data-sel-role="table-pagination-total-rows"]';
+        this.get().find(totalRowsSelector).should('be.visible');
+        this.get().find(totalRowsSelector)
+            .invoke('text')
+            .then(e => {
+                // Get total rows through regex e.g. extract 21 from "1-21 of 21"
+                const totalRows = e.match(/of (.*)$/)?.[1];
+                const totalRowsNum = Number(totalRows);
+                expect(totalRowsNum).to.be.at.least(length, `Verifying picker result rows to at least be ${length}`);
+            });
+    }
+
     switchSearchContext(context: string) {
         getComponentBySelector(Dropdown, '.moonstone-searchContextInput_element').select(context);
     }

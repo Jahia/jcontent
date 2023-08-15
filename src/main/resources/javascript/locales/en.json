@@ -400,7 +400,7 @@
         "pages": "Sub-pages {{count}}"
       },
       "viewUsages": {
-        "title": "Usages {{name}}",
+        "title": "Usages for \"{{name}}\"",
         "usage": "{{count}} usage",
         "usage_plural": "{{count}} usages"
       },

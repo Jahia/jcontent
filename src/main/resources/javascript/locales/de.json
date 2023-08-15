@@ -394,7 +394,7 @@
         "pages": "Unter-Seiten {{count}}"
       },
       "viewUsages": {
-        "title": "Verwendungen {{name}}",
+        "title": "Verwendungen \"{{name}}\"",
         "usage": "{{count}} Verwendung",
         "usage_plural": "{{count}} Verwendungen"
       },

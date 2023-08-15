@@ -7,6 +7,7 @@ import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/co
 import {Button} from '@jahia/moonstone';
 import {UsagesTable} from '~/UsagesTable';
 import {useSelector} from 'react-redux';
+import {ellipsizeText} from '~/JContent/JContent.utils';
 
 const UsagesDialog = ({isOpen, onExited, onClose, path, language, name}) => {
     const {t} = useTranslation('jcontent');
@@ -21,7 +22,7 @@ const UsagesDialog = ({isOpen, onExited, onClose, path, language, name}) => {
                 onClose={onClose}
         >
             <DialogTitle>
-                {t('jcontent:label.contentManager.viewUsages.title', {name})}
+                {t('jcontent:label.contentManager.viewUsages.title', {name: ellipsizeText(name, 100)})}
             </DialogTitle>
             <DialogContent>
                 <UsagesTable path={path} language={language}/>

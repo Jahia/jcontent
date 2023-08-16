@@ -47,7 +47,7 @@ describe('Lock tests', () => {
 
     it('Has empty folder page on locked page', () => {
         lockNode(`/sites/${siteKey}/home/test-pageLock1`);
-        JContent.visit(siteKey, 'en', 'pages/home/test-pageLock1');
+        JContent.visit(siteKey, 'en', 'pages/home/test-pageLock1').switchToListMode();
         cy.get('[data-type="emptyZone"]').contains('This empty folder is locked');
     });
 

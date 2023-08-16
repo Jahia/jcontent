@@ -58,7 +58,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
     const firstNode = data?.jcr?.nodesByPath[0];
     const pages = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
     const folders = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.folders.pageInfo.totalCount + (node.isFolder ? 1 : 0)), 0);
-    const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + (!node.isPage && !node.isFolder ? 1 : 0)), 0) + pages + folders;
+    const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + (!node.isPage && !node.isFolder ? 1 : 0)), 0) + pages + folders || 0;
     const locked = firstNode?.isMarkedForDeletion && !firstNode?.isMarkedForDeletionRoot;
     const hasUsages = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsages, node) => hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usages?.nodes?.length > 0), false);
     const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((isOverflow, node) => isOverflow || node.allDescendants.nodes.length === 100, false);
@@ -105,7 +105,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                             isDisabled={isMutationLoading}
                             color="danger"
                             data-sel-role={`delete-${dialogType}-button`}
-                            label={(count === 1 ?
+                            label={(count <= 1 ?
                                 t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) :
                                 t(`jcontent:label.contentManager.deleteAction.${dialogType}.action`, {count}))}
                             onClick={onAction}

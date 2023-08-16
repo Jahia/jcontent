@@ -407,7 +407,7 @@
       },
       "deleteAction": {
         "infoTable": {
-          "headerLabel": "Verwendungen",
+          "usages": "Verwendungen",
           "usage": "{{count}} Verwendung",
           "usage_plural": "{{count}} Verwendungen"
         },

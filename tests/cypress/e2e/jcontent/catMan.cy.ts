@@ -58,7 +58,7 @@ describe('Category Manager', () => {
         basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Test Category 1', 'Test Category 2']).verifyTotalCount(2);
     });
 
-    it.only('Shows usages for sub categories when deleting Companies category', () => {
+    it('Shows usages for sub categories when deleting Companies category', () => {
         const accordionItem = catMan.getAccordionItem(accordionItemName);
         accordionItem.getTreeItem('categories').click({multiple: true});
         catMan.getTable().getRowByLabel('Companies')

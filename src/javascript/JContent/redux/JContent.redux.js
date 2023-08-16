@@ -22,7 +22,9 @@ const apps = {
             const registryItem = registry.get('accordionItem', mode);
             const path = decodeURIComponent((registryItem && registryItem.getPath && registryItem.getPath(site, pathElements)) || ('/' + pathElements.join('/')));
             const params = deserializeQueryString(search);
-            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + mode) || '';
+
+            const accordion = registry.get('accordionItem', mode);
+            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + mode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
             return {...defaultState, site, language, mode, path, viewMode, params};
         },
         buildUrl: ({site, language, mode, path, params}) => {

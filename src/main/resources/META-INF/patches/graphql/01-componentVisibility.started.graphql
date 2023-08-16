@@ -1,7 +1,7 @@
 mutation {
     admin {
         jahia {
-            configuration(pid:"org.jahia.modules.jcontent") {
+            configuration(pid:"org.jahia.modules.jcontent", updateOnly: true) {
                 pcHide: value(name:"hideLegacyPageComposer", value:"true")
                 pbShow: value(name:"showPageBuilder", value:"true")
                 catManShow: value(name:"showCatMan", value:"true")

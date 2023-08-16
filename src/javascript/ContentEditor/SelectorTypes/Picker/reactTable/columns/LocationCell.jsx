@@ -2,6 +2,7 @@ import {Chip, TableBodyCell, Typography} from '@jahia/moonstone';
 import React from 'react';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererNoLabel} from '~/ContentEditor/utils';
+import {Tooltip} from '@material-ui/core';
 import styles from './Cells.scss';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
@@ -17,7 +18,9 @@ export const LocationCell = ({row, column}) => {
     return (
         <TableBodyCell data-cm-role="location-cell" className={styles.cellLocation} width={column.width}>
             <div className={styles.location}>
-                <Typography className={styles.text} variant="body">{row.original.path}</Typography>
+                <Tooltip title={row.original.path} classes={{tooltip: styles.cellTooltip}}>
+                    <Typography isNowrap className={styles.text} variant="body">{row.original.path}</Typography>
+                </Tooltip>
                 <div className="flexFluid"/>
                 <div className={styles.badges}>
                     {sortedLanguages.map(l => <Chip key={l} color="accent" label={l}/>)}

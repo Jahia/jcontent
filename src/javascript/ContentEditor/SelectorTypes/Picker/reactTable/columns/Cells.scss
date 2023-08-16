@@ -17,10 +17,14 @@
 
 div.cellTooltip {
     max-width: none;
-    background-color: var(--color-gray_light40);
-    color: var(--color-dark);
-    white-space: nowrap;
+
     font-size: 0.8rem;
+
+    color: var(--color-dark);
+
+    white-space: nowrap;
+
+    background-color: var(--color-gray_light40);
 }
 
 .badges {

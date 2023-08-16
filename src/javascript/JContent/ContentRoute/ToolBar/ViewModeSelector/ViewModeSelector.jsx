@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown, ViewList, ViewTree, WebPage} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
@@ -7,8 +7,6 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import classes from './ViewModeSelector.scss';
 import {booleanValue} from '~/JContent/JContent.utils';
-import {useQuery} from '@apollo/client';
-import {GetContentType} from './ViewModeSelector.gql-queries';
 import {TableViewModeChangeTracker} from './tableViewChangeTracker';
 import {registry} from '@jahia/ui-extender';
 
@@ -39,23 +37,12 @@ const tableViewDropdownData = (t, viewMode, allButtons) => {
 export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {mode, viewMode, path} = useSelector(selector, shallowEqual);
+    const {mode, viewMode} = useSelector(selector, shallowEqual);
 
     const accordion = registry.get('accordionItem', mode);
     let availableModes = accordion?.tableConfig?.availableModes || defaultAvailableModes;
 
     if (!booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
-        availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
-    }
-
-    const {data, loading} = useQuery(GetContentType, {
-        variables: {path: path},
-        skip: !path || availableModes.indexOf(PAGE_BUILDER) === -1
-    });
-
-    if (loading) {
-        availableModes = [];
-    } else if (data?.jcr?.node && !data.jcr.node.isDisplayableNode) {
         availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
     }
 
@@ -65,12 +52,6 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
         TableViewModeChangeTracker.registerChange();
         onChange(selectedViewMode);
     };
-
-    useEffect(() => {
-        if (!loading && availableModes.indexOf(viewMode) === -1 && availableModes.length > 0) {
-            onChange(availableModes[0]);
-        }
-    });
 
     return (
         <Dropdown className={classes.dropdown}

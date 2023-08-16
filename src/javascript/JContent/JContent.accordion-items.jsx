@@ -2,7 +2,6 @@ import React from 'react';
 import {AccordionItem, Collections, FolderSpecial, Grain, Page, Tag} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
-import PageBuilderRoute from './PageBuilderRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
@@ -67,7 +66,6 @@ export const jContentAccordionItems = registry => {
         },
         rootPath: '/sites/{site}',
         tableConfig: {
-            availableModes: ['flatList', 'structuredView'],
             queryHandler: ContentFoldersQueryHandler,
             typeFilter: ['jnt:content'],
             uploadType: JContentConstants.mode.IMPORT
@@ -111,7 +109,7 @@ export const jContentAccordionItems = registry => {
         icon: <Page/>,
         label: 'jcontent:label.contentManager.navigation.pages',
         rootPath: '/sites/{site}',
-        routeComponent: PageBuilderRoute,
+        routeComponent: ContentRoute,
         getPathForItem: node => {
             const pages = node.ancestors
                 .filter(n => n.primaryNodeType.name === 'jnt:page');
@@ -137,6 +135,7 @@ export const jContentAccordionItems = registry => {
             showContextMenuOnRootPath: booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)
         },
         tableConfig: {
+            defaultViewMode: 'pageBuilder',
             availableModes: ['pageBuilder', 'flatList', 'structuredView'],
             queryHandler: PagesQueryHandler,
             viewSelector: <ViewModeSelector/>,

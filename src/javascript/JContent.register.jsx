@@ -69,7 +69,8 @@ export default function () {
                                 const storedMode = localStorage.getItem('jcontent-previous-mode-' + site);
                                 const newMode = (mode && accordions.find(acc => acc.key === mode)) ? mode : (storedMode || defaultMode);
                                 const newPath = localStorage.getItem('jcontent-previous-location-' + site + '-' + newMode) || '';
-                                const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + newMode) || '';
+                                const accordion = registry.get('accordionItem', newMode);
+                                const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + newMode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
 
                                 const paths = extractPaths(site, newPath, newMode).slice(0, -1);
                                 dispatch(batchActions([

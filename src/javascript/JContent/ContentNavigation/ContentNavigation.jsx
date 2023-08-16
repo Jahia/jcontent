@@ -12,7 +12,7 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
             const accordion = accordionItems.find(item => newMode === item.key);
 
             const path = localStorage.getItem('jcontent-previous-location-' + siteKey + '-' + newMode) || accordion.getRootPath(siteKey);
-            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode) || accordion?.tableConfig?.availableModes?.[0];
+            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
 
             handleNavigation(newMode, path, viewMode);
         }

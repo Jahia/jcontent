@@ -15,6 +15,14 @@
     overflow: hidden;
 }
 
+div.cellTooltip {
+    max-width: none;
+    background-color: var(--color-gray_light40);
+    color: var(--color-dark);
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+
 .badges {
     & > div {
         margin-left: var(--spacing-nano);

@@ -67,13 +67,13 @@ describe('Category Manager', () => {
 
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss).as('deleteDialog');
-        cy.get('@deleteDialog').find('[data-cm-role="table-content-list-cell-name"]').children('div').children('svg').click()
-        cy.get(dialogCss).should('contain','3 usages').and('contain', '1 usage').and('contain', '2 usages')
-        cy.get(dialogCss).contains('3 usages').click()
-        cy.get('[data-sel-role="usages-table"]').as('usagesTable').contains('Usages for "Media"')
-        const usagesName=['all-Movies', 'all-News', 'all-sports']
+        cy.get('@deleteDialog').find('[data-cm-role="table-content-list-cell-name"]').children('div').children('svg').click();
+        cy.get(dialogCss).should('contain', '3 usages').and('contain', '1 usage').and('contain', '2 usages');
+        cy.get(dialogCss).contains('3 usages').click();
+        cy.get('[data-sel-role="usages-table"]').as('usagesTable').contains('Usages for "Media"');
+        const usagesName = ['all-Movies', 'all-News', 'all-sports'];
         cy.get('@usagesTable').find('[data-cm-role="table-content-list-cell-name"]').should('have.length', 3).and(element => {
-            usagesName.forEach(value => expect(element).to.contain(value))
-        })
-    })
+            usagesName.forEach(value => expect(element).to.contain(value));
+        });
+    });
 });

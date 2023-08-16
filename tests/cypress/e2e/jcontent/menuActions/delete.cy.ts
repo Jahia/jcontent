@@ -228,7 +228,7 @@ describe('delete tests', () => {
             .select('Delete');
 
         cy.get('[data-sel-role="delete-mark-dialog"]').contains('1 usage').click();
-        cy.get('[data-sel-role="usages-table"]').as('usagesTable').should('contain','test-delete3-ref').and('contain', 'Content reference');
+        cy.get('[data-sel-role="usages-table"]').as('usagesTable').should('contain', 'test-delete3-ref').and('contain', 'Content reference');
         cy.get('@usagesTable').find('button[data-sel-role="close"]').click();
     });
 

@@ -9,6 +9,7 @@ import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
+import Breadcrumbs from './Breadcrumbs';
 
 function getBoundingBox(element) {
     const rect = getCoords(element);
@@ -30,6 +31,7 @@ const reposition = function (element, currentOffset, setCurrentOffset) {
 export const Box = React.memo(({
     node,
     element,
+    breadcrumbs,
     entries,
     language,
     displayLanguage,
@@ -162,6 +164,8 @@ export const Box = React.memo(({
         </div>
     );
 
+    const boxStyle = breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
+
     return (
         <div ref={rootDiv}
              className={styles.root}
@@ -169,6 +173,11 @@ export const Box = React.memo(({
         >
             <div className={clsx(styles.rel, isHeaderDisplayed ? styles.relHeader : styles.relNoHeader)}>
                 {isHeaderDisplayed && Header}
+
+                {breadcrumbs.length > 0 &&
+                    <div className={clsx(styles.absolute, styles.relFooter)}>
+                        <Breadcrumbs nodes={breadcrumbs}/>
+                    </div>}
             </div>
         </div>
     );
@@ -176,6 +185,8 @@ export const Box = React.memo(({
 
 Box.propTypes = {
     element: PropTypes.any,
+
+    breadcrumbs: PropTypes.array,
 
     node: PropTypes.any,
 

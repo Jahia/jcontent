@@ -218,6 +218,27 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
     const nodes = useMemo(() => data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {}), [data?.jcr]);
 
+    const getBreadcrumbsForPath = path => {
+        const breadcrumbs = [];
+        const node = nodes[path];
+
+        if (!node) {
+            return breadcrumbs;
+        }
+
+        const pathFragments = node.path.split('/');
+        pathFragments.pop();
+
+        let lookUpPath = pathFragments.join('/');
+        while (nodes[lookUpPath]) {
+            breadcrumbs.unshift(nodes[lookUpPath]);
+            pathFragments.pop();
+            lookUpPath = pathFragments.join('/');
+        }
+
+        return breadcrumbs;
+    };
+
     const onDoubleClick = useCallback(event => {
         event.preventDefault();
         event.stopPropagation();
@@ -283,6 +304,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
+                         breadcrumbs={element === currentElement ? getBreadcrumbsForPath(node.path) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}

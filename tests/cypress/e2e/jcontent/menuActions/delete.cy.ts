@@ -1,5 +1,6 @@
 import {JContent} from '../../../page-object';
 import gql from 'graphql-tag';
+import {PageComposer} from '../../../page-object/pageComposer';
 
 describe('delete tests', () => {
     const siteKey = 'jContentSite-delete';
@@ -320,5 +321,78 @@ describe('delete tests', () => {
             .click();
         cy.get(dialogCss).should('not.exist');
         jcontent.checkSelectionCount(0);
+    });
+
+    describe.only('Legacy Page Composer GWT Tests', () => {
+        const text = 'Cercarla inquieta ne ed bruttava scarabeo ostinata su so. Guardava volgersi la va pensieri ho. Imagina in ritorni sa calmati fuggire al ed sorrisi. Ha impudente riaprirmi la la ascoltami sorridere subitaneo vivamente vi. Promessa lo va palpebre ho me riposati provarlo. Turba ben tenue all hai rende osate porre nei volge. Osi sfaldavano dolcemente trascinava sii dio eguagliare chiedergli conservava qui. Esausto tal calmati uno portate qui sognato sta baciato. Con sta armi era gote ambo pur.\n' +
+            '\n' +
+            'Riparo specie non calice dal volevo eroico mia. Oh care io ai vivo vedo tu onde. Parlero rimorso ho abbozzo ma conduco ex dovesti. Il inespresso si perpetuato palpitante emergevano. Prende sia sentii potrei vedevo mia ama all. Fai incontrato dolcemente lei del tra calpestare avidamente.\n' +
+            '\n' +
+            'Chi splendori ero per singolare rifiutare. Stia alpe si nato di ci dara. Ti un ha voglio fu vicino volevo stoffe aperta voluto. Credetti io no spezzare va re prodigio. Fina dell ebro bell oro file afa. Sepolcri ti vergogna ci torrente. Voi bestiale dio turbarlo sul lasciati talvolta stillano bastanza.\n' +
+            '\n' +
+            'Annunziare pericolosa pensieroso ad ma. Vuoi acre fine pago bel tua una. Ma solo rose ch ardi rote reni. Capolavoro or ed da cancellata oricellari interrompe ah. Amo nel sorriso polvere non liberta. Scompare profonda di lucidita ah possente duchessa. Com capo ore per cima ella atto voto mia tele.\n' +
+            '\n' +
+            'Ha ma anima lotta farla umida brevi mirti di. Spero col del the sai lauro dolce getto. Ci piramide bestiale raccogli smettere ci filaccie ho ah. Compiuto sofferma di vi sospenda. Ed lo scale rosse degli colte grado so di. Fu accaduto serbatoi montagne io se giardini me finestre cipresso. Trascinano preferisti in no el cancellato ai. Prendesse se vigilanza mazzolino vi deliziosa dissetato. Incomincio far mie masticando tua incertezza improvvisa finalmente guarderemo. Se stelle altera sedere il verita venuto il ultima.\n' +
+            '\n' +
+            'Nuvola ed fa potuto di tracce infine me. Semplice miracolo col dal proseguo cipressi una. Assorto pregato giu portero ali chinava eri. Qui davanzale qua subitanea soggiunse accendeva vacillavo riconosco. Udito il oblio amano anche degna acuta ha. Uno divina giu qua sangue furore barche quante nel.\n' +
+            '\n' +
+            'Lo in ti splendore solitario io generando. Mentre povero allora ve gioghi posata depone ma re da. Smarrisce po vigilanza ho ornamento tentativo. Cima vede soli dove vada meno sul dio. Piena bosco copre fanno siedi due qui chi. Or evocata va braccio intatta vi vi. Campo ero corse pensa sta assai ferro era. Ove tabacco ben mia vedesti evitato diventi attende noi versate. Vibri amo tra prima sai eri verso.\n' +
+            '\n' +
+            'Tempesta tue qualcuno scolpita tua montagne. Ammirabile elefantina nascondeva accompagno accostarmi la vi fa discendere me. Vai oro inquieta sua sussulto soltanto amo. Vale lo da fare sara veda po faro quel. Implorando io rinnovella ah discendere incomincio le. Le ghirlande usignuoli tenerezza dimagrato primavera da so ha. Incomincio sospettoso affrontare un ah declinante villanella lievissimo. Percosso continua prodigio chiamata escirgli ah tu lucidita. Intendeva per statuette singolare bel guanciale sta mio smarrisce tristezza. Fossi un tante or spera.\n' +
+            '\n' +
+            'Parrebbe osi volgendo traversa poi torcesse esercita. Gocce messa tua sue offro. Da svanito piccolo leggera perisce avevano le modella fu ha. Anno fu me bene un orlo onta volo ai tese. Conoscermi di indefinite cominciata seducevano coraggiose sgomentato si. Per rientrarvi sfaldavano sostenendo ore. Te da coraggio tendendo silenzio da. Obliare corrosi confini pollici ve al deposti monella.\n' +
+            '\n' +
+            'Brillanti sostenere riempiono sublimate fu da. Ho sofferma al so compiere stillano. Perche me furore povero ti vostri no vi. Riconobbe sparvieri salutando lo ritornata tu precipita. Il parlato battera augusta lontano miseria sa. Dove fai ero doni teco sua alpe sul solo. Vuotarla ad gioconda ch ripeteva conservo turbarlo. Un so anch io pace taci cane nego rete.';
+
+        let pageComposer: PageComposer;
+        before(() => {
+            cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
+            cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: 'deleteInLegacy'});
+        });
+        beforeEach(() => {
+            cy.loginAndStoreSession();
+            pageComposer = PageComposer.visit('deleteInLegacy', 'en', 'home.html');
+        });
+        after(function () {
+            cy.logout();
+            cy.executeGroovy('contentEditor/deleteSite.groovy', {SITEKEY: 'deleteInLegacy'});
+        });
+        it('opens JContent delete dialog in legacy', () => {
+            const contentEditor = pageComposer
+                .openCreateContent()
+                .getContentTypeSelector()
+                .searchForContentType('Rich text')
+                .selectContentType('Rich text')
+                .create();
+            contentEditor.getRichTextField('jnt:bigText_text').setData(text)
+            contentEditor.create()
+            pageComposer.refresh()
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog()
+            let dialogCss = '[data-sel-role="delete-mark-dialog"]';
+            cy.get(dialogCss)
+                .should('be.visible')
+                .find('[data-sel-role="delete-mark-button"]')
+                .click();
+            pageComposer.refresh()
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openUndeleteDialog()
+            dialogCss = '[data-sel-role="delete-undelete-dialog"]';
+            cy.get(dialogCss)
+                .should('be.visible')
+                .find('[data-sel-role="delete-undelete-button"]')
+                .click();
+            pageComposer.refresh()
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog()
+            dialogCss = '[data-sel-role="delete-mark-dialog"]';
+            cy.get(dialogCss)
+                .should('be.visible')
+                .find('[data-sel-role="delete-mark-button"]').should('be.visible')
+                .click();
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeletePermanentlyDialog()
+            dialogCss = '[data-sel-role="delete-permanently-dialog"]';
+            cy.get(dialogCss)
+                .should('be.visible')
+                .find('[data-sel-role="delete-permanently-button"]')
+                .click();
+        })
     });
 });

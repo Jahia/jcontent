@@ -22,6 +22,18 @@ export class PageComposerContextualMenu extends BasePage {
         });
     }
 
+    openDeleteDialog() {
+        this.execute('Delete');
+    }
+
+    openDeletePermanentlyDialog() {
+        this.execute('Delete (permanently)');
+    }
+
+    openUndeleteDialog() {
+        this.execute('Undelete');
+    }
+
     execute(action: string, thenFunction?: () => void) {
         cy.log('Execute action: ' + action);
         cy.iframe('#page-composer-frame', this.iFrameOptions).within(() => {

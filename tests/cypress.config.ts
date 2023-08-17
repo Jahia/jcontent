@@ -3,7 +3,10 @@ import * as fs from 'fs';
 
 export default defineConfig({
     chromeWebSecurity: false,
-    defaultCommandTimeout: 30000,
+    defaultCommandTimeout: 5000,
+    pageLoadTimeout: 30000,
+    requestTimeout: 5000,
+    responseTimeout: 7000,
     videoUploadOnPasses: false,
     reporter: 'cypress-multi-reporters',
     reporterOptions: {

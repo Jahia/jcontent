@@ -120,7 +120,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
                 }))).then(datas => {
                     dispatch(copypasteClear());
                     setLocalStorage(copyPasteConstants.COPY, [], client);
-                    notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton']);
+                    notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton', 'closeAfter5s']);
 
                     const moveResults = datas.map(d => d.data.jcr.pasteNode.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});
                     refreshTree(path, nodes, moveResults);

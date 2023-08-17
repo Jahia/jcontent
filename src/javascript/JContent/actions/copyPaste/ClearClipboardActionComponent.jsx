@@ -25,7 +25,7 @@ export const ClearClipboardActionComponent = withNotifications()(({render: Rende
             onClick={() => {
                 dispatch(copypasteClear());
                 setLocalStorage(copyPasteConstants.COPY, [], client);
-                notificationContext.notify(t('jcontent:label.contentManager.copyPaste.clear'), ['closeButton']);
+                notificationContext.notify(t('jcontent:label.contentManager.copyPaste.clear'), ['closeButton', 'closeAfter5s']);
             }}
         />
     );

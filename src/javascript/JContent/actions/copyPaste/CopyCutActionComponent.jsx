@@ -57,7 +57,10 @@ export const CopyCutActionComponent = withNotifications()(({
             onClick={() => {
                 let nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);
-                notificationContext.notify(nodes.length === 1 ? t('jcontent:label.contentManager.copyPaste.stored.one', {name: getName(nodes[0])}) : t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length}), ['closeButton']);
+                const message = nodes.length === 1 ?
+                    t('jcontent:label.contentManager.copyPaste.stored.one', {name: getName(nodes[0])}) :
+                    t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length});
+                notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
                 dispatch(type === 'copy' ? copypasteCopy(nodes) : copypasteCut(nodes));
             }}
         />

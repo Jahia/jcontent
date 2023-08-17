@@ -323,7 +323,7 @@ describe('delete tests', () => {
         jcontent.checkSelectionCount(0);
     });
 
-    describe.only('Legacy Page Composer GWT Tests', () => {
+    describe('Legacy Page Composer GWT Tests', () => {
         const text = 'Cercarla inquieta ne ed bruttava scarabeo ostinata su so. Guardava volgersi la va pensieri ho. Imagina in ritorni sa calmati fuggire al ed sorrisi. Ha impudente riaprirmi la la ascoltami sorridere subitaneo vivamente vi. Promessa lo va palpebre ho me riposati provarlo. Turba ben tenue all hai rende osate porre nei volge. Osi sfaldavano dolcemente trascinava sii dio eguagliare chiedergli conservava qui. Esausto tal calmati uno portate qui sognato sta baciato. Con sta armi era gote ambo pur.\n' +
             '\n' +
             'Riparo specie non calice dal volevo eroico mia. Oh care io ai vivo vedo tu onde. Parlero rimorso ho abbozzo ma conduco ex dovesti. Il inespresso si perpetuato palpitante emergevano. Prende sia sentii potrei vedevo mia ama all. Fai incontrato dolcemente lei del tra calpestare avidamente.\n' +
@@ -364,35 +364,35 @@ describe('delete tests', () => {
                 .searchForContentType('Rich text')
                 .selectContentType('Rich text')
                 .create();
-            contentEditor.getRichTextField('jnt:bigText_text').setData(text)
-            contentEditor.create()
-            pageComposer.refresh()
-            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog()
+            contentEditor.getRichTextField('jnt:bigText_text').setData(text);
+            contentEditor.create();
+            pageComposer.refresh();
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog();
             let dialogCss = '[data-sel-role="delete-mark-dialog"]';
             cy.get(dialogCss)
                 .should('be.visible')
                 .find('[data-sel-role="delete-mark-button"]')
                 .click();
-            pageComposer.refresh()
-            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openUndeleteDialog()
+            pageComposer.refresh();
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openUndeleteDialog();
             dialogCss = '[data-sel-role="delete-undelete-dialog"]';
             cy.get(dialogCss)
                 .should('be.visible')
                 .find('[data-sel-role="delete-undelete-button"]')
                 .click();
-            pageComposer.refresh()
-            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog()
+            pageComposer.refresh();
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog();
             dialogCss = '[data-sel-role="delete-mark-dialog"]';
             cy.get(dialogCss)
                 .should('be.visible')
                 .find('[data-sel-role="delete-mark-button"]').should('be.visible')
                 .click();
-            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeletePermanentlyDialog()
+            pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeletePermanentlyDialog();
             dialogCss = '[data-sel-role="delete-permanently-dialog"]';
             cy.get(dialogCss)
                 .should('be.visible')
                 .find('[data-sel-role="delete-permanently-button"]')
                 .click();
-        })
+        });
     });
 });

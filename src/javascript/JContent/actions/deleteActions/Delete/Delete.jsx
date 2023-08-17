@@ -144,7 +144,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     const [infoOpen, setInfoOpen] = useState(false);
     const language = useSelector(state => state.language);
     const dispatch = useDispatch();
-    const queryPaths = path ? [path] : (paths.map(path => path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
+    const queryPaths = path ? [path] : (paths.sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -166,19 +166,16 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     }
 
     const handleMutation = () => {
-        Promise.all(paths.map(path => mutation({
+        Promise.all(queryPaths.map(path => mutation({
             variables: {
                 path: path
             }
         }))).then(() => {
             setOpen(false);
         }).then(() => {
-            paths.forEach(path => {
-                console.log('Flushing cache for path', path);
-                client.cache.flushNodeEntryByPath(path);
-            });
+            queryPaths.forEach(path => client.cache.flushNodeEntryByPath(path));
             if (dialogType === 'permanently') {
-                paths.forEach(path => {
+                queryPaths.forEach(path => {
                     dispatch(cmRemoveSelection(path));
                 });
             }
@@ -189,7 +186,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             }
         }).catch(() => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
-            paths.forEach(path => client.cache.flushNodeEntryByPath(path));
+            queryPaths.forEach(path => client.cache.flushNodeEntryByPath(path));
             triggerRefetchAll();
             setOpen(false);
         });
@@ -208,7 +205,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
                 <DeleteContent data={data}
                                isLoading={loading}
                                isMutationLoading={mutationLoading}
-                               paths={paths}
+                               paths={queryPaths}
                                dialogType={dialogType}
                                setInfoOpen={setInfoOpen}
                                onClose={() => setOpen(false)}

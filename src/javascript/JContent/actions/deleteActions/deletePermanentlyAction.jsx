@@ -30,6 +30,9 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+        },
+    {
+        fetchPolicy:"network-only"
         }
     );
 

@@ -24,9 +24,6 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
-        },
-        {
-            fetchPolicy:"network-only"
         }
     );
 
@@ -49,8 +46,8 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
             onClick={() => {
                 componentRenderer.render('deleteDialog', Delete, {
                     dialogType: 'mark',
-                    node: res.node,
-                    nodes: res.nodes,
+                    path: path,
+                    paths: paths,
                     onDeleted,
                     onExit
                 });

@@ -30,9 +30,6 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
-        },
-    {
-        fetchPolicy:"network-only"
         }
     );
 
@@ -54,8 +51,8 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
             onClick={() => {
                 componentRenderer.render('deleteDialog', Delete, {
                     dialogType: 'permanently',
-                    node: res.node,
-                    nodes: res.nodes,
+                    path: path,
+                    paths: paths,
                     onDeleted,
                     onExit
                 });

@@ -139,12 +139,12 @@ const getMutation = dialogType => {
     return MarkForDeletionMutation;
 };
 
-const Delete = ({dialogType, node, nodes, onExit, onDeleted}) => {
+const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
     const language = useSelector(state => state.language);
     const dispatch = useDispatch();
-    const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
+    const queryPaths = path ? [path] : (paths.map(path => path).sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
     const client = useApolloClient();
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -153,7 +153,7 @@ const Delete = ({dialogType, node, nodes, onExit, onDeleted}) => {
     const {data, error, loading} = useQuery(DeleteQueries, {
         variables: {
             language: language,
-            paths: paths,
+            paths: queryPaths,
             getUsages: dialogType !== 'undelete'
         },
         skip: mutationLoading,
@@ -173,7 +173,10 @@ const Delete = ({dialogType, node, nodes, onExit, onDeleted}) => {
         }))).then(() => {
             setOpen(false);
         }).then(() => {
-            paths.forEach(path => client.cache.flushNodeEntryByPath(path));
+            paths.forEach(path => {
+                console.log('Flushing cache for path', path);
+                client.cache.flushNodeEntryByPath(path);
+            });
             if (dialogType === 'permanently') {
                 paths.forEach(path => {
                     dispatch(cmRemoveSelection(path));
@@ -220,8 +223,8 @@ Delete.propTypes = {
     onExit: PropTypes.func.isRequired,
     onDeleted: PropTypes.func,
     dialogType: PropTypes.string.isRequired,
-    node: PropTypes.object,
-    nodes: PropTypes.array
+    path: PropTypes.string,
+    paths: PropTypes.array
 };
 
 export default Delete;

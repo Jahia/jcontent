@@ -175,8 +175,8 @@ export const Box = React.memo(({
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&
-                    <div className={clsx(styles.absolute, styles.relFooter)}>
-                        <Breadcrumbs nodes={breadcrumbs}/>
+                    <div className={clsx(styles.relFooter)}>
+                        <Breadcrumbs nodes={breadcrumbs} responsiveMode={element.getBoundingClientRect().width < 350}/>
                     </div>}
             </div>
         </div>

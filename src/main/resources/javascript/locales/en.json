@@ -507,6 +507,11 @@
           "body": "Menu titles are used to organize pages and cannot be displayed in the current view. Switch to list view instead",
           "openInList": "Open in list view"
         }
+      },
+      "pageBuilder": {
+        "breadcrumbs": {
+          "dropdownLabel": "Item path"
+        }
       }
     },
     "categoryManager": {

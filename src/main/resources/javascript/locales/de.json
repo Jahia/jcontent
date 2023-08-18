@@ -501,6 +501,11 @@
           "body": "Menütitel werden verwendet, um Seiten zu organisieren und können in dieser Ansicht nicht angezeigt werden. Bitte schalten Sie in die Listenansicht.",
           "openInList": "In Listenansicht öffnen"
         }
+      },
+      "pageBuilder": {
+        "breadcrumbs": {
+          "dropdownLabel": "Element-Pfad"
+        }
       }
     },
     "categoryManager": {

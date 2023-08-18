@@ -101,8 +101,7 @@ describe('Test the save publish buttons flow)', () => {
     it('Check save publish buttons flow', () => {
         cy.log('Login with editor in chief');
         cy.login(userName, 'password');
-        const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents');
-        jcontent.viewSubContentComponentByText(contentFolder);
+        const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents/contentEditorTestContents');
         const contentEditor = jcontent.editComponentByText(contentTest);
         contentEditor.switchToAdvancedMode();
         checkContentEditorHeaderButtons(contentEditor, false, true);

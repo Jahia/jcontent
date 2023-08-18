@@ -4,8 +4,9 @@ mutation {
             configuration(pid:"org.jahia.modules.jcontent", updateOnly: true) {
                 pcHide: value(name:"hideLegacyPageComposer", value:"true")
                 pbShow: value(name:"showPageBuilder", value:"true")
-                catManShow: value(name:"showCatMan", value:"true")
                 newContentButtonLimit: value(name:"createChildrenDirectButtons.limit", value:"5")
+                removePcProp: remove(name:"showPageComposer")
+                removeCatManProp: remove(name:"showCatMan")
             }
         }
     }

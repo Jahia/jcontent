@@ -1,6 +1,6 @@
 import React from 'react';
 import {registry} from '@jahia/ui-extender';
-import {Collections, PrimaryNavItem, Tag} from '@jahia/moonstone';
+import {PrimaryNavItem, Tag} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
 import {jContentRoutes} from './JContent/JContent.routes';
@@ -27,6 +27,7 @@ import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSw
 import {Redirect} from 'react-router';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
+import SvgJContent from '~/icons/JContent';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -64,7 +65,7 @@ export default function () {
                             {...props}
                             isSelected={pathname.startsWith('/jcontent') && pathname.split('/').length > 3}
                             label={t('label.name')}
-                            icon={<Collections/>}
+                            icon={<SvgJContent/>}
                             onClick={() => {
                                 const storedMode = localStorage.getItem('jcontent-previous-mode-' + site);
                                 const newMode = (mode && accordions.find(acc => acc.key === mode)) ? mode : (storedMode || defaultMode);

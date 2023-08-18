@@ -90,7 +90,7 @@ export const ContentPath = ({path}) => {
             }
 
             const onExited = () => {
-                dispatch(cmGoto({mode: mode, path: itemPath}));
+                dispatch(cmGoto({mode, path: itemPath, params: {sub: false}}));
             };
 
             updateEditorConfig({closed: true, onExited});

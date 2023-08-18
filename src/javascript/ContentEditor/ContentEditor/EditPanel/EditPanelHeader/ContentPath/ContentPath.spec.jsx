@@ -231,7 +231,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/x/y/z');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'pages', path: '/x/y/z'});
+        expect(cmGoto).toHaveBeenCalledWith({mode: 'pages', path: '/x/y/z', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });
@@ -264,7 +264,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/sites/mySiteXD/files/chocolate');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'media', path: '/sites/mySiteXD/files/chocolate'});
+        expect(cmGoto).toHaveBeenCalledWith({mode: 'media', path: '/sites/mySiteXD/files/chocolate', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });
@@ -274,7 +274,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/sites/mySiteXD/contents/fruits');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'content-folders', path: '/sites/mySiteXD/contents/fruits'});
+        expect(cmGoto).toHaveBeenCalledWith({mode: 'content-folders', path: '/sites/mySiteXD/contents/fruits', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });
@@ -284,7 +284,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/sites/mySiteXD/lord/rings');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'pages', path: '/sites/mySiteXD/lord/rings'});
+        expect(cmGoto).toHaveBeenCalledWith({mode: 'pages', path: '/sites/mySiteXD/lord/rings', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });

@@ -56,7 +56,11 @@ jobs:
     name: Integration Tests (Standalone)
     needs: build
     runs-on: self-hosted
-    timeout-minutes: 120
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        config_file: [ "cypress.config-contentEditor.ts", "cypress.config-jcontent.ts", "cypress.config-menuActions.ts", "cypress.config-pickers.ts" ]
     steps:
       - uses: jahia/jahia-modules-action/helper@v2
       - uses: KengoTODA/actions-setup-docker-compose@main
@@ -72,6 +76,7 @@ jobs:
           testrail_project: jContent Module
           tests_manifest: provisioning-manifest-build.yml
           jahia_image: jahia/jahia-ee-dev:8-SNAPSHOT
+          tests_profile: ${{ matrix.config_file }}
           should_use_build_artifacts: true
           github_artifact_name: jcontent-standalone-${{ github.run_number }}
           bastion_ssh_private_key: ${{ secrets.BASTION_SSH_PRIVATE_KEY_JAHIACI }}

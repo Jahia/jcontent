@@ -44,6 +44,7 @@ services:
             NEXUS_PASSWORD: ${NEXUS_PASSWORD}
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
             SKIP_TESTS: ${SKIP_TESTS:-false}
+            TESTS_PROFILE: ${TESTS_PROFILE:-}
         networks:
             - stack
 networks:

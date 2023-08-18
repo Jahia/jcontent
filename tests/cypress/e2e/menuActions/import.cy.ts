@@ -1,4 +1,4 @@
-import {JContent} from '../../../page-object';
+import {JContent} from '../../page-object';
 
 describe('delete tests', {testIsolation: false}, () => {
     const siteKey = 'jContentSite-import';

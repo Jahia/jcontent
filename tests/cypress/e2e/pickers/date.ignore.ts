@@ -8,9 +8,9 @@ import {
     deleteNodeProperty
 } from '@jahia/cypress';
 
-import {ContentEditor} from '../../../page-object/contentEditor';
-import {DatePicker} from '../../../page-object/datePicker';
-import {JContent} from '../../../page-object/jcontent';
+import {ContentEditor} from '../../page-object/contentEditor';
+import {DatePicker} from '../../page-object/datePicker';
+import {JContent} from '../../page-object/jcontent';
 
 const saveAndCheck = () => {
     const datePicker = new DatePicker();

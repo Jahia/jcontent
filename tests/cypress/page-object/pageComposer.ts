@@ -105,7 +105,7 @@ export class PageComposer extends BasePage {
                     cy.iframe('.gwt-Frame', this.iFrameOptions).within(() => {
                         // eslint-disable-next-line cypress/no-unnecessary-waiting
                         cy.wait(5000);
-                        cy.get(selector).rightclick({force: true});
+                        cy.get(selector).rightclick({force: true, waitForAnimations: true});
                     });
                     return cy.get('.editModeContextMenu').then(element => expect(element).to.be.not.null);
                 },

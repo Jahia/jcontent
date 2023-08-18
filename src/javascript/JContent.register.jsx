@@ -27,7 +27,7 @@ import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSw
 import {Redirect} from 'react-router';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
-import SvgJContent from "~/icons/JContent";
+import SvgJContent from '~/icons/JContent';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;

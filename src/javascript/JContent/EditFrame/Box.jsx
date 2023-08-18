@@ -9,7 +9,6 @@ import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
-import {Portal} from './Portal';
 
 function getBoundingBox(element) {
     const rect = getCoords(element);
@@ -27,8 +26,6 @@ const reposition = function (element, currentOffset, setCurrentOffset) {
         setCurrentOffset(box);
     }
 };
-
-const HEADER_HEIGHT = 32;
 
 export const Box = React.memo(({
     node,
@@ -141,10 +138,7 @@ export const Box = React.memo(({
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
-    const headerProps = isCurrent ? {
-        className: clsx(styles.absolute, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents),
-        style: {...currentOffset, top: currentOffset.top - HEADER_HEIGHT, height: HEADER_HEIGHT}
-    } : {
+    const headerProps = {
         className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
     };
     const Header = (
@@ -168,15 +162,13 @@ export const Box = React.memo(({
         </div>
     );
 
-    const ResolvedHeader = isCurrent ? <Portal target={rootElementRef.current}>{Header}</Portal> : Header;
-
     return (
         <div ref={rootDiv}
              className={styles.root}
              style={currentOffset}
         >
             <div className={clsx(styles.rel, isHeaderDisplayed ? styles.relHeader : styles.relNoHeader)}>
-                {isHeaderDisplayed && ResolvedHeader}
+                {isHeaderDisplayed && Header}
             </div>
         </div>
     );

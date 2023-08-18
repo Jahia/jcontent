@@ -28,7 +28,7 @@ export const usePublicationNotification = () => {
         console.log(e);
     }
 
-    if (!e && !loading && data?.backgroundJobSubscription?.publicationJob) {
+    if (!e && !loading && data?.backgroundJobSubscription?.publicationJob && window.location.pathname.indexOf('/jahia/workflow') === -1) {
         const language = data.backgroundJobSubscription.publicationJob.language;
         const state = data.backgroundJobSubscription.publicationJob.jobState;
 

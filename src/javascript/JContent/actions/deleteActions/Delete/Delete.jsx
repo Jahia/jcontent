@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Button} from '@jahia/moonstone';
+import {Button, Loader} from '@jahia/moonstone';
 import styles from './Delete.scss';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
@@ -17,7 +17,6 @@ import InfoTable from './InfoTable';
 import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {getName} from '~/JContent';
-import {TransparentLoaderOverlay} from '../../../TransparentLoaderOverlay';
 import {isPathChildOfAnotherPath} from '../../../JContent.utils';
 import {useNotifications} from '@jahia/react-material';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
@@ -66,7 +65,6 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
 
     return (
         <>
-            {isMutationLoading && <TransparentLoaderOverlay/>}
             <DialogTitle>
                 {t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`)}
                 <Button className={styles.button}
@@ -77,16 +75,18 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                         }}
                 />
             </DialogTitle>
-            <DialogContent>
-                <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
-                {hasUsages && count === 1 &&
-                    <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
-                {hasUsages && count > 1 &&
-                    <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
-                {!hasUsages && usagesOverflow &&
-                    <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
-                {!locked && <InfoTable paths={paths} dialogType={dialogType}/>}
-            </DialogContent>
+            {isMutationLoading ?
+                <Loader size="big" style={{width: '100%'}}/> :
+                <DialogContent>
+                    <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
+                    {hasUsages && count === 1 &&
+                        <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
+                    {hasUsages && count > 1 &&
+                        <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
+                    {!hasUsages && usagesOverflow &&
+                        <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
+                    {!locked && <InfoTable paths={paths} dialogType={dialogType}/>}
+                </DialogContent>}
             {(locked || isLoading || count === 0) ? (
                 <DialogActions>
                     <Button size="big"

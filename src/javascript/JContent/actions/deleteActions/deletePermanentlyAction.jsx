@@ -51,8 +51,8 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
             onClick={() => {
                 componentRenderer.render('deleteDialog', Delete, {
                     dialogType: 'permanently',
-                    node: res.node,
-                    nodes: res.nodes,
+                    path: path,
+                    paths: paths,
                     onDeleted,
                     onExit
                 });

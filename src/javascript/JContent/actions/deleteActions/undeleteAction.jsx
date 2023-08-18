@@ -46,8 +46,8 @@ export const UndeleteActionComponent = ({path, paths, buttonProps, onDeleted, re
             onClick={() => {
                 componentRenderer.render('undeleteDialog', Delete, {
                     dialogType: 'undelete',
-                    node: res.node,
-                    nodes: res.nodes,
+                    path: path,
+                    paths: paths,
                     onDeleted,
                     onExit
                 });

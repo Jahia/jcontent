@@ -1,4 +1,4 @@
-import {JContent} from '../../../page-object/jcontent';
+import {JContent} from '../../page-object/jcontent';
 import {SecondaryNav} from '@jahia/cypress';
 
 describe('Picker tests - Search', () => {

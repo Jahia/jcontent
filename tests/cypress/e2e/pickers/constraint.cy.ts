@@ -1,4 +1,4 @@
-import {JContent} from '../../../page-object/jcontent';
+import {JContent} from '../../page-object/jcontent';
 
 describe('Picker tests - Constraints', {retries: 3}, () => {
     const siteKey = 'digitall';

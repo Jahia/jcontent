@@ -1,5 +1,5 @@
-import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
-import {JContent} from '../../../page-object/jcontent';
+import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
+import {JContent} from '../../page-object/jcontent';
 
 describe('Picker tests - default', () => {
     const siteKey = 'digitall';

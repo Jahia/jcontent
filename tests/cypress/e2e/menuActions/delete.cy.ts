@@ -1,6 +1,6 @@
-import {JContent} from '../../../page-object';
+import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
-import {PageComposer} from '../../../page-object/pageComposer';
+import {PageComposer} from '../../page-object/pageComposer';
 
 describe('delete tests', () => {
     const siteKey = 'jContentSite-delete';

@@ -1,6 +1,6 @@
-import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
-import {assertUtils} from '../../../utils/assertUtils';
-import {JContent} from '../../../page-object/jcontent';
+import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
+import {assertUtils} from '../../utils/assertUtils';
+import {JContent} from '../../page-object/jcontent';
 
 describe('Picker tests - Trees', () => {
     const siteKey = 'digitall';

@@ -1,7 +1,7 @@
-import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
-import {assertUtils} from '../../../utils/assertUtils';
-import {AccordionItem} from '../../../page-object/accordionItem';
-import {JContent} from '../../../page-object/jcontent';
+import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
+import {assertUtils} from '../../utils/assertUtils';
+import {AccordionItem} from '../../page-object/accordionItem';
+import {JContent} from '../../page-object/jcontent';
 import gql from 'graphql-tag';
 import {slowCypressDown} from 'cypress-slow-down';
 

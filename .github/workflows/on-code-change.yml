@@ -30,6 +30,20 @@ jobs:
           auditci_level: critical
           max_warning: 58
 
+  unit-tests:
+    name: Javascript unit tests (yarn test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - name: Run yarn test
+        shell: bash
+        run: |
+          yarn
+          yarn test
+
   build:
     name: Build Module
     needs: update-signature
@@ -64,6 +78,10 @@ jobs:
     name: Integration Tests (Standalone)
     needs: build
     runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        config_file: ["cypress.config-contentEditor.ts", "cypress.config-jcontent.ts", "cypress.config-menuActions.ts", "cypress.config-pickers.ts"]
     timeout-minutes: 120
     steps:
       - uses: jahia/jahia-modules-action/helper@v2
@@ -82,6 +100,7 @@ jobs:
           jahia_image: jahia/jahia-ee-dev:8-SNAPSHOT
           should_use_build_artifacts: true
           should_skip_testrail: true
+          tests_profile: ${{ matrix.config_file }}
           github_artifact_name: jcontent-standalone-artifacts-${{ github.run_number }}
           bastion_ssh_private_key: ${{ secrets.BASTION_SSH_PRIVATE_KEY_JAHIACI }}
           jahia_license: ${{ secrets.JAHIA_LICENSE_8X_FULL }}

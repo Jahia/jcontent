@@ -190,6 +190,30 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         setModules(modules);
 
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
+            // Prevent showing contextual menu if clicked on breadcrumb, note that ctrl + click counts as right click and triggers contextmenu
+            // target can be either button or typography hence the need to check parent
+            if (event.target && (event.target.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb' || (event.target.parentElement && event.target.parentElement.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb'))) {
+                event.preventDefault();
+                event.stopPropagation();
+                // Ignore for right click and other button + click combinations
+                if (event.ctrlKey) {
+                    const clickEvent = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        ctrlKey: true,
+                        detail: 1,
+                        screenX: event.screenX,
+                        screenY: event.screenY,
+                        clientX: event.clientX,
+                        clientY: event.clientY
+                    });
+                    event.target.dispatchEvent(clickEvent);
+                }
+
+                return;
+            }
+
+            // Show context menu
             const rect = currentFrameRef.current.getBoundingClientRect();
             const dup = new MouseEvent(event.type, {
                 ...event,
@@ -197,7 +221,6 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                 clientY: event.clientY + rect.y
             });
             contextualMenu.current(dup);
-
             event.preventDefault();
         });
     }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);

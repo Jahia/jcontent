@@ -32,18 +32,16 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
         <Breadcrumb>
             {nodes.map(n => (
                 <BreadcrumbItem key={n.path}
+                                data-sel-role="pagebuilder-breadcrumb"
                                 label={n.name}
                                 icon={<img alt={n.name} src={`${window.contextJsParameters.contextPath}${n.primaryNodeType.icon}.png`}/>}
                                 onClick={e => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    if (e.ctrlKey) {
+                                    // Metakey works without issues, ctrl key has a conflict with contextmenu
+                                    if (e.ctrlKey || e.metaKey) {
                                         dispatch(cmAddSelection(n.path));
                                     }
-                                }}
-                                onContextMenu={e => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
                                 }}
                 />
             ))}

@@ -175,7 +175,7 @@ export const Box = React.memo(({
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&
-                    <div className={clsx(styles.relFooter)}>
+                    <div className={clsx(styles.relFooter)} data-current={isCurrent} data-jahia-id={element.getAttribute('id')}>
                         <Breadcrumbs nodes={breadcrumbs} responsiveMode={element.getBoundingClientRect().width < 350}/>
                     </div>}
             </div>

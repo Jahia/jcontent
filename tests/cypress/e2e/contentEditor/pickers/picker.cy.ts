@@ -34,15 +34,15 @@ describe('Picker tests', () => {
         assertUtils.isVisible(picker.getSiteSwitcher());
         assertUtils.isVisible(picker.getAccordion());
 
-        cy.log('assert pages accordion is expanded and populated');
+        cy.log('assert pages accordion is visible');
         const pagesAccordion: AccordionItem = picker.getAccordionItem('picker-pages');
-        pagesAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'true');
-        const rootTree = pagesAccordion.getTreeItems().first();
-        rootTree.should('not.be.empty');
+        pagesAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'false');
 
-        cy.log('assert content accordion is visible');
+        cy.log('assert content folder accordion is expanded and populated');
         const contentAccordion: AccordionItem = picker.getAccordionItem('picker-content-folders');
-        contentAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'false');
+        contentAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'true');
+        const rootTree = contentAccordion.getTreeItems().first();
+        rootTree.should('not.be.empty');
 
         cy.log('check table components');
         picker.getTable().should('exist'); // I have issues checking be.visible; use exist for now
@@ -51,7 +51,6 @@ describe('Picker tests', () => {
         picker.getTable().getHeaderById('type').should('be.visible');
 
         cy.log('selection content folders > contents > ce-picker-files reflects in table');
-        contentAccordion.click();
         contentAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'true');
         contentAccordion.getTreeItem('ce-picker-contents').click(); // Select contents folder
         picker.getTable().should('exist').and('have.length', 1);

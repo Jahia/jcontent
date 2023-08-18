@@ -118,7 +118,7 @@ describe('Page builder', () => {
 
             // Context menu does not show up; wait necessary
             // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(1000);
+            cy.wait(3000);
 
             const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
             menu.select('Copy');
@@ -134,7 +134,7 @@ describe('Page builder', () => {
 
             // Context menu does not show up; wait necessary
             // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(1000);
+            cy.wait(3000);
 
             const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
             menu.select('Copy');

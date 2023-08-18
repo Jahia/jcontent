@@ -45,6 +45,7 @@ describe('Editor url test', () => {
         cy.get('h1').contains('People First').should('exist');
         contentEditor = ContentEditor.getContentEditor();
         contentEditor.cancel();
+        jcontent.switchToListMode();
         cy.get('span').contains('People First').should('exist');
     });
 
@@ -54,6 +55,7 @@ describe('Editor url test', () => {
         cy.get('h1').contains('People First').should('exist');
         contentEditor = ContentEditor.getContentEditor();
         contentEditor.cancel();
+        jcontent.switchToListMode();
         cy.get('span').contains('People First').should('exist');
     });
 

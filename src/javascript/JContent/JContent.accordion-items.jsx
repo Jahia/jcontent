@@ -87,13 +87,15 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', 'search', {
         tableConfig: {
-            queryHandler: SearchQueryHandler
+            queryHandler: SearchQueryHandler,
+            availableModes: ['flatList']
         }
     });
 
     registry.add('accordionItem', 'sql2Search', {
         tableConfig: {
-            queryHandler: Sql2SearchQueryHandler
+            queryHandler: Sql2SearchQueryHandler,
+            availableModes: ['flatList']
         }
     });
 

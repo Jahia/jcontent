@@ -99,4 +99,8 @@ export class BasicSearch extends BasePage {
 
         return this.searchTerm('').searchInCurrentPath().selectContentType('Any content');
     }
+
+    close(): void {
+        getComponentByRole(Button, 'close').click();
+    }
 }

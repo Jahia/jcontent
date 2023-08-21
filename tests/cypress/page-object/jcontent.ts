@@ -135,6 +135,11 @@ export class JContent extends BasePage {
         return this;
     }
 
+    shouldBeInMode(name: string): void {
+        const dropdown = getComponentByRole(Dropdown, 'sel-view-mode-dropdown');
+        dropdown.get().should('contain', name);
+    }
+
     switchToThumbnails(): JContent {
         this.switchToMode('Thumbnails');
         return this;

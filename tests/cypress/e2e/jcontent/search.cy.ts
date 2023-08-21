@@ -112,4 +112,15 @@ describe('Search tests', () => {
             jcontent.shouldBeInMode('Page Builder');
         });
     });
+
+    describe('advanced search', {testIsolation: false}, () => {
+        it('should find event by from ', () => {
+            jcontent.selectAccordion('pages');
+            basicSearch = jcontent.getBasicSearch().openSearch().switchToAdvanced()
+                .searchFrom('jnt:event')
+                .executeSearch()
+                .verifyResults(['test-content5', 'test-content4'])
+                .verifyResultType('Event');
+        });
+    });
 });

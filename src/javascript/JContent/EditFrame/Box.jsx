@@ -171,17 +171,11 @@ export const Box = React.memo(({
              className={styles.root}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? styles.relHeader : styles.relNoHeader)}>
+            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader)}>
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&
-                    <div className={clsx(styles.relFooter)}
-                         jahiatype="footer" // eslint-disable-line react/no-unknown-property
-                         data-current={isCurrent}
-                         data-jahia-id={element.getAttribute('id')}
-                         onMouseOver={onMouseOver}
-                         onMouseOut={onMouseOut}
-                    >
+                    <div className={clsx(styles.relFooter)} data-current={isCurrent} data-jahia-id={element.getAttribute('id')}>
                         <Breadcrumbs nodes={breadcrumbs} responsiveMode={element.getBoundingClientRect().width < 350}/>
                     </div>}
             </div>

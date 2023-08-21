@@ -29,7 +29,7 @@ export const selectionRedux = registry => {
     const toArray = value => (Array.isArray(value) ? value : [value]);
 
     const selectionReducer = handleActions({
-        [cmAddSelection]: (state, action) => state.concat(toArray(action.payload).filter(path => state.indexOf(path) < 0)),
+        [cmAddSelection]: (state, action) => state.concat(toArray(action.payload).filter(path => state.indexOf(path) === -1)),
         [cmRemoveSelection]: (state, action) => state.filter(path => toArray(action.payload).indexOf(path) === -1),
         [cmSwitchSelection]: (state, action) => (state.indexOf(action.payload) === -1) ? [...state, action.payload] : state.filter(path => action.payload !== path),
         [cmClearSelection]: () => ([]),

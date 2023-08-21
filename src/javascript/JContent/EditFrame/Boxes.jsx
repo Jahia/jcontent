@@ -41,6 +41,15 @@ const disallowSelection = element => {
 
 let timeout;
 
+const elementIsInBreadcrumbFooter = element => {
+    return ((element.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb') || (element.parentElement && elementIsInBreadcrumbFooter(element.parentElement)));
+};
+
+const checkClickInBreadcrumbFooter = event => {
+    const element = event.target;
+    return element && elementIsInBreadcrumbFooter(element);
+};
+
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
@@ -114,8 +123,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         }
     }, [selection, currentDocument, dispatch]);
 
-    const clearSelection = useCallback(() => {
-        if (selection.length === 1) {
+    const clearSelection = useCallback(event => {
+        if (selection.length === 1 && !event.defaultPrevented) {
             dispatch(cmClearSelection());
         }
     }, [selection, dispatch]);
@@ -192,7 +201,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
             // Prevent showing contextual menu if clicked on breadcrumb, note that ctrl + click counts as right click and triggers contextmenu
             // target can be either button or typography hence the need to check parent
-            if (event.target && (event.target.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb' || (event.target.parentElement && event.target.parentElement.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb'))) {
+            if (checkClickInBreadcrumbFooter(event)) {
                 event.preventDefault();
                 event.stopPropagation();
                 // Ignore for right click and other button + click combinations

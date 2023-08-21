@@ -33,7 +33,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
         const path = localStorage.getItem('jcontent-previous-location-' + site + '-' + accordion.key) || accordion.getRootPath(site);
         const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + accordion.key) || accordion?.tableConfig?.defaultViewMode || 'flatList';
 
-        dispatch(batchActions([cmGoto({mode: accordion.key, path}), setTableViewMode(viewMode)]));
+        dispatch(batchActions([cmGoto({mode: accordion.key, path, params: {}}), setTableViewMode(viewMode)]));
     };
 
     return narrow ? (

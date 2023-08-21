@@ -58,7 +58,7 @@ ContentNavigationContainer.defaultProps = {
         siteKey: state.site,
         language: state.language
     }),
-    handleNavigationAction: (mode, path, viewMode) => batchActions([cmGoto({mode, path}), setTableViewMode(viewMode)]),
+    handleNavigationAction: (mode, path, viewMode) => batchActions([cmGoto({mode, path, params: {}}), setTableViewMode(viewMode)]),
     accordionItemTarget: 'jcontent',
     isReversed: true
 };

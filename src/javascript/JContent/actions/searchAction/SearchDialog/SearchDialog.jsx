@@ -25,6 +25,7 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                             <Switch
                             checked={isAdvancedSearch}
                             color="primary"
+                            data-sel-role="advanced-search-switch"
                             inputProps={{'aria-label': 'advancedSearchSwitch'}}
                             onChange={toggleAdvancedSearch}
                         />

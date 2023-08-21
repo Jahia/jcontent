@@ -189,7 +189,7 @@ export const jContentRedux = registry => {
 
     let listener = store => () => {
         const state = store.getState();
-        if (state.jcontent?.mode === 'search') {
+        if (state.jcontent?.mode === 'search' && state.jcontent?.mode === 'sql2Search') {
             return;
         }
 

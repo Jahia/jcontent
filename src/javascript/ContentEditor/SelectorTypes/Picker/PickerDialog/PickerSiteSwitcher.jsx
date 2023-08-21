@@ -21,6 +21,7 @@ export const PickerSiteSwitcher = ({pickerConfig, accordionItemProps}) => {
 
     return (
         <SiteSwitcher selector={switcherSelector}
+                      isSiteEnabled={pickerConfig?.pickerDialog?.isSiteEnabled}
                       onSelectAction={siteNode => {
                           const actions = [];
                           actions.push(cePickerSite(siteNode.name));

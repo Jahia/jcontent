@@ -10,6 +10,7 @@ export const registerPagePicker = registry => {
         },
         pickerDialog: {
             dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPageTitle',
+            isSiteEnabled: siteKey => siteKey !== 'systemsite',
             displayTree: false
         },
         selectionTable: {

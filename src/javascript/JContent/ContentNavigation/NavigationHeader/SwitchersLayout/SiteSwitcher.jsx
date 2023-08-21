@@ -45,7 +45,7 @@ const getSites = data => {
     return _.sortBy(siteNodes, s => (s.name === 'systemsite') ? null : s.displayName);
 };
 
-const SiteSwitcher = ({selector, onSelectAction}) => {
+const SiteSwitcher = ({selector, onSelectAction, isSiteEnabled}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const dispatch = useDispatch();
@@ -78,13 +78,14 @@ const SiteSwitcher = ({selector, onSelectAction}) => {
                         );
                     }
 
-                    const sites = getSites(data);
+                    const sites = getSites(data).filter(site => !isSiteEnabled || isSiteEnabled(site.name));
 
                     // Lookup current site, get first site in case not found. Avoid the component to break if not site found at all.
                     let currentSite = sites.find(site => site.name === siteKey) || sites?.[0] || {};
 
                     return (
                         <Dropdown
+                            isDisabled={!sites?.length}
                             data-cm-role="site-switcher"
                             label={currentSite.displayName}
                             value={siteKey}
@@ -105,7 +106,8 @@ const SiteSwitcher = ({selector, onSelectAction}) => {
 SiteSwitcher.propTypes = {
     // This must return redux action object compatible with dispatch fcn
     onSelectAction: PropTypes.func,
-    selector: PropTypes.func
+    selector: PropTypes.func,
+    isSiteEnabled: PropTypes.func
 };
 
 SiteSwitcher.defaultProps = {

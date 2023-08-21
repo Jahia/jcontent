@@ -195,7 +195,9 @@ export const jContentRedux = registry => {
 
         if (state.router.location.pathname.startsWith('/jcontent') && state.jcontent?.mode) {
             localStorage.setItem('jcontent-previous-mode-' + state.site, state.jcontent.mode);
-            localStorage.setItem('jcontent-previous-tableView-viewMode-' + state.site + '-' + state.jcontent.mode, state.jcontent.tableView.viewMode);
+            if (state.jcontent.tableView.viewMode) {
+                localStorage.setItem('jcontent-previous-tableView-viewMode-' + state.site + '-' + state.jcontent.mode, state.jcontent.tableView.viewMode);
+            }
 
             if (state.jcontent?.path) {
                 localStorage.setItem('jcontent-previous-location-' + state.site + '-' + state.jcontent.mode, state.jcontent.path);

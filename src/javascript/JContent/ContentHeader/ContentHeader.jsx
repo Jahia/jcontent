@@ -8,7 +8,7 @@ import ContentPath from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto} from '~/JContent/redux/JContent.redux';
+import {CM_DRAWER_STATES, cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
 import BrowseControlBar from '~/JContent/ContentRoute/ToolBar/BrowseControlBar';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
@@ -17,6 +17,7 @@ import SearchInput from './SearchInput';
 import {registry} from '@jahia/ui-extender';
 import {ResizeContext} from '~/JContent/MainLayout/ResizeObserver';
 import {NarrowHeaderActions} from './NarrowHeaderActions';
+import {batchActions} from 'redux-batched-actions';
 
 const NARROW_HEADER_WIDTH = 750;
 
@@ -26,10 +27,13 @@ let extractNodeInfo = function (node, loading) {
     return {nodePath: node?.path, nodeType, title};
 };
 
-function getSearchHeader({dispatch, preSearchModeMemo, narrow, mode, t, previewSelection, selection, clear}) {
+function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear}) {
     const clearSearchFunc = () => {
-        const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
-        dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
+        const accordion = preSearchModeMemo ? registry.get('accordionItem', preSearchModeMemo) : registry.find({type: 'accordionItem', target: 'jcontent'})[0];
+        const path = localStorage.getItem('jcontent-previous-location-' + site + '-' + accordion.key) || accordion.getRootPath(site);
+        const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + accordion.key) || accordion?.tableConfig?.defaultViewMode || 'flatList';
+
+        dispatch(batchActions([cmGoto({mode: accordion.key, path}), setTableViewMode(viewMode)]));
     };
 
     return narrow ? (
@@ -60,14 +64,15 @@ function getSearchHeader({dispatch, preSearchModeMemo, narrow, mode, t, previewS
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {mode, preSearchModeMemo, path, language, displayLanguage, selection, previewSelection} = useSelector(state => ({
+    const {mode, preSearchModeMemo, path, language, displayLanguage, selection, previewSelection, site} = useSelector(state => ({
         mode: state.jcontent.mode,
         preSearchModeMemo: state.jcontent.preSearchModeMemo,
         path: state.jcontent.path,
         language: state.language,
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
-        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection !== null
+        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection !== null,
+        site: state.site
     }), shallowEqual);
 
     const width = useContext(ResizeContext);
@@ -82,7 +87,7 @@ const ContentHeader = () => {
     let clear = () => dispatch(cmClearSelection());
 
     if (inSearchMode) {
-        return getSearchHeader({dispatch, preSearchModeMemo, narrow, mode, t, previewSelection, selection, clear});
+        return getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear});
     }
 
     const {nodePath, nodeType, title} = extractNodeInfo(node, loading);

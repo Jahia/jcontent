@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import {QueryHandlersFragments} from './BaseQueryHandler.gql-queries';
 
 export const SearchQuery = gql`
-    query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $nodeNameSearchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldFilter: InputFieldFiltersInput, $fieldSorter: InputFieldSorterInput) {
+    query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $nodeNameSearchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldFilter: InputFieldFiltersInput, $fieldSorter: InputFieldSorterInput, $doSearch: Boolean!) {
         jcr {
             nodesByCriteria(
                 criteria: {
@@ -21,7 +21,7 @@ export const SearchQuery = gql`
                 offset: $offset,
                 limit: $limit,
                 fieldSorter: $fieldSorter
-            ) {
+            ) @include(if: $doSearch) {
                 pageInfo {
                     totalCount
                 }

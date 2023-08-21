@@ -23,8 +23,9 @@ export const SearchQueryHandler = {
         fieldFilter: {
             filters: [],
             multi: 'NONE'
-        }
+        },
+        doSearch: Boolean(searchTerms)
     }),
 
-    getResults: data => data && data.jcr && data.jcr.nodesByCriteria
+    getResults: (data, {searchTerms}) => searchTerms ? (data && data.jcr && data.jcr.nodesByCriteria) : {nodes: [], pageInfo: {totalCount: 0}}
 };

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {cmGoto, cmPreSearchModeMemo} from '~/JContent/redux/JContent.redux';
+import {cmGoto, cmPreSearchModeMemo, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchDialog from './SearchDialog';
+import {batchActions} from 'redux-batched-actions';
 
 const SearchDialogContainer = ({isOpen, handleClose, defaultContentType, isShowingOnlySearchInput}) => {
     const dispatch = useDispatch();
@@ -66,7 +67,10 @@ const SearchDialogContainer = ({isOpen, handleClose, defaultContentType, isShowi
             mode = JContentConstants.mode.SEARCH;
         }
 
-        dispatch(cmGoto({mode, params: searchParams}));
+        dispatch(batchActions([
+            cmGoto({mode, params: searchParams}),
+            setTableViewMode('flatList')
+        ]));
 
         handleClose();
     };

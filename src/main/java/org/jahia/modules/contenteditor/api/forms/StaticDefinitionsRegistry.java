@@ -28,7 +28,6 @@ import org.jahia.modules.contenteditor.api.forms.model.*;
 import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
-import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;

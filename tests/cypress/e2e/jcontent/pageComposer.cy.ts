@@ -196,7 +196,7 @@ describe('Page builder', () => {
         });
     });
 
-    describe.only('selection', function () {
+    describe('selection', function () {
         const item1 = '/sites/jcontentSite/home/area-main/test-content4';
         const item2 = '/sites/jcontentSite/home/area-main/test-content5';
         const item3 = '/sites/jcontentSite/home/area-main/lookForMeTag';

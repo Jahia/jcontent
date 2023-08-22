@@ -19,6 +19,11 @@ export class BasicSearch extends BasePage {
         this.jcontent = jcontent;
     }
 
+    switchToAdvanced(): BasicSearch {
+        getComponentBySelector(Button, 'span[data-sel-role="advanced-search-switch"]').click();
+        return this;
+    }
+
     openSearch(): BasicSearch {
         getComponentByRole(Button, 'open-search-dialog').click();
         return this;
@@ -34,6 +39,26 @@ export class BasicSearch extends BasePage {
             getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear().type(value, {force: true});
         } else {
             getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear();
+        }
+
+        return this;
+    }
+
+    searchFrom(value: string): BasicSearch {
+        if (value) {
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-from"]').clear().type(value, {force: true});
+        } else {
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-from"]').clear();
+        }
+
+        return this;
+    }
+
+    searchWhere(value: string): BasicSearch {
+        if (value) {
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-where"]').clear().type(value, {force: true});
+        } else {
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-where"]').clear();
         }
 
         return this;

@@ -105,11 +105,27 @@ describe('Search tests', () => {
 
         it('should go back to default', () => {
             cy.loginAndStoreSession();
-            cy.visit('/jahia/jcontent/digitall/en/search/sites/digitall/contents?params=(searchContentType:%27%27,searchPath:/sites/digitall/home,searchTerms:test)');
+            cy.visit('/jahia/jcontent/jcontentSite/en/search/sites/jcontentSite/contents?params=(searchContentType:%27%27,searchPath:/sites/digitall/home,searchTerms:test)');
             jcontent = new JContent();
             new BasicSearch(jcontent).close();
             jcontent.getAccordionItem('pages').getTreeItem('home').shouldBeSelected();
             jcontent.shouldBeInMode('Page Builder');
+        });
+    });
+
+    describe('advanced search', {testIsolation: false}, () => {
+        before(() => {
+            cy.loginAndStoreSession();
+            jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');
+        });
+
+        it('should find event by from ', () => {
+            jcontent.selectAccordion('pages');
+            basicSearch = jcontent.getBasicSearch().openSearch().switchToAdvanced()
+                .searchFrom('jnt:event')
+                .executeSearch()
+                .verifyResults(['test-content5', 'test-content4'])
+                .verifyResultType('Event');
         });
     });
 });

@@ -251,7 +251,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.12.1</version>
+                <version>1.13.4</version>
                 <executions>
                     <execution>
                         <id>npm install node and yarn</id>
@@ -360,6 +360,7 @@
             </plugin>
         </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>dev</id>
@@ -367,106 +368,6 @@
                 <yarn.arguments>build</yarn.arguments>
                 <cyclonedx.skip>true</cyclonedx.skip>
             </properties>
-        </profile>
-        <profile>
-            <id>javascript</id>
-            <activation>
-                <property>
-                    <name>!skipJS</name>
-                </property>
-            </activation>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                    </resource>
-                </resources>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>src/main/resources/javascript/apps</directory>
-                                    <includes>
-                                        <include>*</include>
-                                    </includes>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.12.1</version>
-                        <executions>
-                            <execution>
-                                <id>npm install node and npm</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>install-node-and-yarn</goal>
-                                </goals>
-                                <configuration>
-                                    <nodeVersion>v18.16.0</nodeVersion>
-                                    <yarnVersion>v1.22.19</yarnVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>yarn install</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>yarn</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>yarn post-install</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>yarn</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>${yarn.arguments}</arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>sync-pom</id>
-                                <phase>none</phase>
-                                <goals>
-                                    <goal>yarn</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>sync-pom</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-scm-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>package-json</id>
-                                <phase>none</phase>
-                                <goals>
-                                    <goal>checkin</goal>
-                                </goals>
-                                <configuration>
-                                    <includes>package.json</includes>
-                                    <message>[maven-scm-plugin] [skip ci] synchronize package.json</message>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <configuration>
-                            <preparationGoals>clean verify frontend:yarn@sync-pom scm:checkin@package-json</preparationGoals>
-                            <completionGoals>frontend:yarn@sync-pom scm:checkin@package-json</completionGoals>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>

@@ -41,6 +41,15 @@ const disallowSelection = element => {
 
 let timeout;
 
+const elementIsInBreadcrumbFooter = element => {
+    return ((element.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb') || (element.parentElement && elementIsInBreadcrumbFooter(element.parentElement)));
+};
+
+const checkClickInBreadcrumbFooter = event => {
+    const element = event.target;
+    return element && elementIsInBreadcrumbFooter(element);
+};
+
 export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
@@ -114,8 +123,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         }
     }, [selection, currentDocument, dispatch]);
 
-    const clearSelection = useCallback(() => {
-        if (selection.length === 1) {
+    const clearSelection = useCallback(event => {
+        if (selection.length === 1 && !event.defaultPrevented) {
             dispatch(cmClearSelection());
         }
     }, [selection, dispatch]);
@@ -190,6 +199,30 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         setModules(modules);
 
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
+            // Prevent showing contextual menu if clicked on breadcrumb, note that ctrl + click counts as right click and triggers contextmenu
+            // target can be either button or typography hence the need to check parent
+            if (checkClickInBreadcrumbFooter(event)) {
+                event.preventDefault();
+                event.stopPropagation();
+                // Ignore for right click and other button + click combinations
+                if (event.ctrlKey) {
+                    const clickEvent = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        ctrlKey: true,
+                        detail: 1,
+                        screenX: event.screenX,
+                        screenY: event.screenY,
+                        clientX: event.clientX,
+                        clientY: event.clientY
+                    });
+                    event.target.dispatchEvent(clickEvent);
+                }
+
+                return;
+            }
+
+            // Show context menu
             const rect = currentFrameRef.current.getBoundingClientRect();
             const dup = new MouseEvent(event.type, {
                 ...event,
@@ -197,7 +230,6 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                 clientY: event.clientY + rect.y
             });
             contextualMenu.current(dup);
-
             event.preventDefault();
         });
     }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
@@ -217,6 +249,27 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     });
 
     const nodes = useMemo(() => data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {}), [data?.jcr]);
+
+    const getBreadcrumbsForPath = path => {
+        const breadcrumbs = [];
+        const node = nodes[path];
+
+        if (!node) {
+            return breadcrumbs;
+        }
+
+        const pathFragments = node.path.split('/');
+        pathFragments.pop();
+
+        let lookUpPath = pathFragments.join('/');
+        while (nodes[lookUpPath]) {
+            breadcrumbs.unshift(nodes[lookUpPath]);
+            pathFragments.pop();
+            lookUpPath = pathFragments.join('/');
+        }
+
+        return breadcrumbs;
+    };
 
     const onDoubleClick = useCallback(event => {
         event.preventDefault();
@@ -283,6 +336,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
+                         breadcrumbs={element === currentElement ? getBreadcrumbsForPath(node.path) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}

@@ -199,7 +199,7 @@ describe('Page builder', () => {
     describe('selection', function () {
         const item1 = '/sites/jcontentSite/home/area-main/test-content4';
         const item2 = '/sites/jcontentSite/home/area-main/test-content5';
-        const item3 = '/sites/jcontentSite/home/area-main/lookForMeSystemName';
+        const item3 = '/sites/jcontentSite/home/area-main/lookForMeTag';
 
         it('Selects and unselects one item', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');

@@ -502,6 +502,11 @@
           "body": "Les titres de menu sont utilisés pour organiser les pages, et ne peuvent être affichés dans la vue actuelle. Néanmoins ils peuvent être affichés en vue liste.",
           "openInList": "Ouvrir en vue liste"
         }
+      },
+      "pageBuilder": {
+        "breadcrumbs": {
+          "dropdownLabel": "Chemin de l’élément"
+        }
       }
     },
     "categoryManager": {

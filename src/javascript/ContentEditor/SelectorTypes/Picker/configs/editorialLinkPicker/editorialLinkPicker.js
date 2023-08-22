@@ -12,6 +12,7 @@ export const registerEditorialLinkPicker = registry => {
         showOnlyNodesWithTemplates: true,
         pickerDialog: {
             dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalEditorialTitle',
+            isSiteEnabled: siteKey => siteKey !== 'systemsite',
             displayTree: false
         }
     });

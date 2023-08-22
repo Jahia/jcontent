@@ -6,7 +6,7 @@ on:
 
 jobs:
   integration-tests-standalone:
-    name: Integration Tests (Standalone)
+    name: Integration Tests ${{ matrix.config_file }}
     runs-on: self-hosted
     strategy:
       fail-fast: false

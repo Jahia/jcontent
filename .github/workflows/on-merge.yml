@@ -53,7 +53,7 @@ jobs:
           sbom_artifacts: 'build-artifacts'
 
   integration-tests-standalone:
-    name: Integration Tests (Standalone)
+    name: Integration Tests ${{ matrix.config_file }}
     needs: build
     runs-on: self-hosted
     timeout-minutes: 45

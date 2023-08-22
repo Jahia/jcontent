@@ -4,7 +4,7 @@ import {Breadcrumb, BreadcrumbItem, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {batchActions} from "redux-batched-actions";
+import {batchActions} from 'redux-batched-actions';
 
 const handleItemOnClick = (selection, n, dispatch) => {
     return event => {
@@ -24,7 +24,7 @@ const handleItemOnClick = (selection, n, dispatch) => {
 
         return false;
     };
-}
+};
 
 export const Breadcrumbs = ({nodes, responsiveMode}) => {
     const {t} = useTranslation('jcontent');

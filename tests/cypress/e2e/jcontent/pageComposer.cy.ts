@@ -196,7 +196,7 @@ describe('Page builder', () => {
         });
     });
 
-    describe.only('selection', function () {
+    describe('selection', function () {
         const item1 = '/sites/jcontentSite/home/area-main/test-content4';
         const item2 = '/sites/jcontentSite/home/area-main/test-content5';
         const item3 = '/sites/jcontentSite/home/area-main/lookForMeTag';
@@ -210,7 +210,7 @@ describe('Page builder', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 
-        it.only('Selects all items with meta key and deselect them with meta key', () => {
+        it('Selects all items with meta key and deselect them with meta key', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
             module.click({metaKey: true});

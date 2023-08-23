@@ -128,4 +128,9 @@ export class BasicSearch extends BasePage {
     close(): void {
         getComponentByRole(Button, 'close').click();
     }
+
+    sortBy(role: string): BasicSearch {
+        this.jcontent.getTable().getHeaderByRole(role).sort();
+        return this;
+    }
 }

@@ -1,6 +1,6 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
 import {Dropdown, getComponentByRole} from '@jahia/cypress';
-import {ContentEditor} from '../../page-object/contentEditor';
+import {ContentEditor} from '../../page-object';
 
 describe('Page builder', () => {
     let jcontent: JContentPageBuilder;
@@ -201,16 +201,16 @@ describe('Page builder', () => {
         const item2 = '/sites/jcontentSite/home/area-main/test-content5';
         const item3 = '/sites/jcontentSite/home/area-main/lookForMeTag';
 
-        it('Selects and unselects one item', () => {
+        it('Selects and unselects one item when clicking outside the selected module', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
             module.click();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-            module.click();
+            jcontent.switchToPageBuilder().iframe().get().click();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 
-        it('Selects all items with meta key', () => {
+        it('Selects all items with meta key and deselect them with meta key', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
             module.click({metaKey: true});
@@ -225,15 +225,15 @@ describe('Page builder', () => {
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '3 items selected');
 
             // Unselect by clicking
-            module.click();
+            module.click({metaKey: true});
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
             module = jcontent.getModule(item2);
-            module.click();
+            module.click({metaKey: true});
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item1);
-            module.click();
+            module.click({metaKey: true});
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 

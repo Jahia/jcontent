@@ -209,6 +209,8 @@ interface JCRNode {
         before: String,
         "Filter by graphQL fields values"
         fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
         "fetching only the first certain number of nodes"
         first: Int,
         "fetching only the last certain number of nodes"
@@ -301,109 +303,6 @@ interface Principal {
     site: JCRSite
 }
 
-union GqlSearchFacetValue = DateRangeValue | NumberRangeValue | TermValue
-
-"Function score mutations"
-type ASAdminFunctionScoreMutations {
-    "Remove function score specification"
-    removeFunction(
-        "Function score id to be removed"
-        id: String!
-    ): Boolean
-    "Upload function score specification"
-    uploadFunction(
-        "Describes what this function score does."
-        description: String,
-        "Function score file"
-        file: String!,
-        "Function score id, will be used as reference at query time."
-        id: String!
-    ): Boolean
-}
-
-"Function score admin entry point"
-type ASAdminFunctionScoreQueries {
-    "List available function score functions"
-    functions(
-        "fetching only nodes after this node (exclusive)"
-        after: String,
-        "fetching only nodes before this node (exclusive)"
-        before: String,
-        "fetching only the first certain number of nodes"
-        first: Int,
-        "fetching only the last certain number of nodes"
-        last: Int,
-        "fetching only the first certain number of nodes"
-        limit: Int,
-        "fetching only nodes after this node (inclusive)"
-        offset: Int
-    ): FunctionScoreConnection
-}
-
-"Generic object with admin mutation results"
-type ASAdminMutations {
-    "Add site to the list of indexed sites"
-    addSite(
-        "Site key"
-        siteKey: String!
-    ): String
-    "Clear the database connection to use with Augmented Search (indexation and querying)"
-    clearDbConnection: String
-    "Function score mutations"
-    functionScore: ASAdminFunctionScoreMutations
-    "Remove site from the list of indexed sites"
-    removeSite(
-        "Site key"
-        siteKey: String!
-    ): String
-    "Set the database connection to use with Augmented Search (indexation and querying)"
-    setDbConnection(
-        "DB connection id"
-        connectionId: String!
-    ): String
-    "Given a list of sites, trigger bulk indexing. If no sites are provided, triggers a full reindex."
-    startIndex(
-        "Force start indexation for when job has already been started"
-        force: Boolean = false,
-        "List of siteKeys to index"
-        siteKeys: [String],
-        "Can be LIVE or EDIT or null for both"
-        workspace: Workspace
-    ): indexMutationResult
-    "Given a list of nodes, trigger bulk indexing of those nodes and its descendants."
-    startNodeIndex(
-        "Re-index descendants (Optional; default=false)"
-        inclDescendants: Boolean,
-        "List of node paths to index"
-        nodePaths: [String],
-        "Can be LIVE or EDIT, or both if not specified"
-        workspace: Workspace
-    ): indexMutationResult
-}
-
-"List of indexed sites entry point"
-type ASAdminQueries {
-    "Current database connection ID used by Augmented Search"
-    currentConnection: String
-    "Get current shard configuration"
-    currentShardConfiguration: GqlShardConfiguration
-    "List of available database connections"
-    dbConnections: [GqlAvailableConnection]
-    "Function score queries"
-    functionScore: ASAdminFunctionScoreQueries
-    "Get index sizes"
-    indexSizes: [GqlIndexSize]
-    "List sites configured for Augmented Search"
-    listSites: siteList
-    "Get optimal shard configurations"
-    optimalShardConfigurations(
-        "Maximum average shard size allowed, in Gb"
-        maxShardSizeInGb: Float,
-        "Minimum amount of heap memory for each shard, in Mb"
-        minHeapPerShardInMb: Float
-    ): [GqlShardConfiguration]
-}
-
 "GraphQL representation of a Jahia ACL role"
 type AclRole {
     "List of dependencies for a given role"
@@ -430,8 +329,6 @@ type AdminMutation {
     jahia: JahiaAdminMutation!
     "Personal API tokens mutations"
     personalApiTokens: PersonalApiTokensMutation
-    "Augmented Search administrative mutations"
-    search: ASAdminMutations
     "Sitemap API mutations"
     sitemap: GqlSitemapMutation
 }
@@ -448,8 +345,6 @@ type AdminQuery {
     personalApiTokens: PersonalApiTokensQuery
     "Get available ACL roles; does not include any hidden or privileged roles"
     roles: [AclRole]
-    "Augmented Search administrative queries"
-    search: ASAdminQueries
     "Sitemap API queries"
     sitemap: GqlSitemapQueries
     "Get user administration endpoint"
@@ -605,148 +500,6 @@ type Current_32_user {
     site: JCRSite
     "Username of the user"
     username: String!
-}
-
-type DateRangeValue {
-    count: Int
-    range: Range
-}
-
-type EditorForm {
-    "Retrieve a description text for the form, might contain explanations on how to use the form"
-    description: String
-    "Retrieve the displayable name of the form (in a specific language)"
-    displayName: String
-    "Returns the preview status of the form. If true, the form can display a preview."
-    hasPreview: Boolean
-    "Retrieve the name (aka identifier) of the form"
-    name: String
-    "Retrieve the sections that make up the form"
-    sections: [EditorFormSection]
-}
-
-type EditorFormField {
-    "This value contains the current existing values for the field."
-    currentValues: [EditorFormFieldValue]
-    "The declaring node type for the field"
-    declaringNodeType: String
-    "This value contains the default values for the field."
-    defaultValues: [EditorFormFieldValue]
-    "The description of the field"
-    description: String
-    "The displayable name of the field"
-    displayName: String
-    "The error message of the field"
-    errorMessage: String
-    "This value is true if the field allows for internationalized values"
-    i18n: Boolean
-    "This value is true if the field is mandatory"
-    mandatory: Boolean
-    "This value is true if the field value is multi-valued."
-    multiple: Boolean
-    "The name of the field"
-    name: String
-    "This value is true if the field is readonly. This could be due to locks or permissions"
-    readOnly: Boolean
-    "The required type for the field"
-    requiredType: JCRPropertyType
-    "Options for the selector type. For JCR definitions, this will usually include choicelist initializer name and properties."
-    selectorOptions: [EditorFormProperty]
-    "The selector type for the field. In the case of fields generated from node types, this is actually the SelectorType."
-    selectorType: String
-    "This array contains the list of possible values to choose from"
-    valueConstraints: [EditorFormFieldValueConstraint]
-}
-
-type EditorFormFieldSet {
-    "Only used in the case of a dynamic field set. Set to true if it is activated"
-    activated: Boolean
-    "Get the internationalized description of the field set"
-    description: String
-    "Get the internationalized displayable name of the field set"
-    displayName: String
-    "Defines if the field has to be displayed or not"
-    displayed: Boolean
-    "True if this is dynamic field set (meaningin it can be activated or not)"
-    dynamic: Boolean
-    "Get the fields contained in the target"
-    fields: [EditorFormField]
-    "Get the name of the field set"
-    name: String
-    "This value is true if the fieldset is readonly. This could be due to locks or permissions"
-    readOnly: Boolean
-}
-
-type EditorFormFieldValue {
-    "This value's string representation"
-    string: String
-    "The type of this value"
-    type: String
-}
-
-type EditorFormFieldValueConstraint {
-    "The value as it is intended to be displayed in UIs"
-    displayValue: String
-    "The key of the value to get the translated value from the client side"
-    displayValueKey: String
-    "The properties for the value"
-    properties: [EditorFormProperty]
-    "The actual value to be used in storage"
-    value: EditorFormFieldValue
-}
-
-type EditorFormProperty {
-    "Property name"
-    name: String
-    "Property value"
-    value: String
-    "Property values"
-    values: [String]
-}
-
-type EditorFormSection {
-    "Returns the description of the section"
-    description: String
-    "Retrieve the displayable name of the section"
-    displayName: String
-    "Is the section expanded"
-    expanded: Boolean
-    "Returns the field sets contained in this section"
-    fieldSets: [EditorFormFieldSet]
-    "Check if this section should be hide"
-    hide: Boolean
-    "Retrieve the name (aka identifier) of the section"
-    name: String
-}
-
-"Functions score representation"
-type FunctionScore {
-    "Function score description"
-    description: String
-    "Function score id"
-    id: String
-    "JSON string "
-    json: String
-}
-
-"A connection to a list of items."
-type FunctionScoreConnection {
-    "a list of edges"
-    edges: [FunctionScoreEdge]
-    "a list of nodes"
-    nodes: [FunctionScore]
-    "details about this specific page"
-    pageInfo: PageInfo!
-}
-
-"An edge in a connection"
-type FunctionScoreEdge {
-    "cursor marks a unique position or index into the connection"
-    cursor: String!
-    "index in the connection"
-    index: Int
-    "The item at the end of the edge"
-    node: FunctionScore
 }
 
 "GraphQL representation of a generic JCR node"
@@ -936,6 +689,8 @@ type GenericJCRNode implements JCRNode {
         before: String,
         "Filter by graphQL fields values"
         fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
         "fetching only the first certain number of nodes"
         first: Int,
         "fetching only the last certain number of nodes"
@@ -1015,14 +770,6 @@ type GqlAclEntry {
     role: AclRole
 }
 
-"Elasticsearch connection model"
-type GqlAvailableConnection {
-    "Id of the connection"
-    connectionId: String
-    "List of plugins if any"
-    plugins: [GqlPlugin]
-}
-
 "Background job"
 type GqlBackgroundJob {
     "The amount of time the job ran for (in milliseconds). The returned value will be -1 until the job has actually completed"
@@ -1055,6 +802,8 @@ type GqlBackgroundJob {
     ): String
     "The job name"
     name: String
+    "GraphQL representation of publication job"
+    publicationJob: GqlPublicationBackgroundJob
     "The site key. The returned value will be null in case the job doesn't have associated site key"
     siteKey: String
     "The user key. The returned value will be null in case the job doesn't have associated user key"
@@ -1128,6 +877,71 @@ type GqlDashboard {
     toolsAccess: Boolean
 }
 
+type GqlEditorForm {
+    "Retrieve a description text for the form, might contain explanations on how to use the form"
+    description: String
+    "Retrieve the displayable name of the form (in a specific language)"
+    displayName: String
+    "Returns the preview status of the form. If true, the form can display a preview."
+    hasPreview: Boolean
+    "Retrieve the name (aka identifier) of the form"
+    name: String
+    "Retrieve the sections that make up the form"
+    sections: [GqlEditorFormSection]
+}
+
+type GqlEditorFormField {
+    "The declaring node type for the field"
+    declaringNodeType: String
+    "This value contains the default values for the field."
+    defaultValues: [GqlEditorFormValue]
+    "The description of the field"
+    description: String
+    "The displayable name of the field"
+    displayName: String
+    "The error message of the field"
+    errorMessage: String
+    "This value is true if the field allows for internationalized values"
+    i18n: Boolean
+    "This value is true if the field is mandatory"
+    mandatory: Boolean
+    "This value is true if the field value is multi-valued."
+    multiple: Boolean
+    "The name of the field"
+    name: String
+    "This value is true if the field is readonly. This could be due to locks or permissions"
+    readOnly: Boolean
+    "The required type for the field"
+    requiredType: JCRPropertyType
+    "Options for the selector type. For JCR definitions, this will usually include choicelist initializer name and properties."
+    selectorOptions: [GqlEditorFormProperty]
+    "The selector type for the field. In the case of fields generated from node types, this is actually the SelectorType."
+    selectorType: String
+    "This array contains the list of possible values to choose from"
+    valueConstraints: [GqlEditorFormValueConstraint]
+    visible: Boolean
+}
+
+type GqlEditorFormFieldSet {
+    "Only used in the case of a dynamic field set. Set to true if it is activated"
+    activated: Boolean
+    "Get the internationalized description of the field set"
+    description: String
+    "Get the internationalized displayable name of the field set"
+    displayName: String
+    "True if this is dynamic field set (meaning it can be activated or not)"
+    dynamic: Boolean
+    "Get the fields contained in the target"
+    fields: [GqlEditorFormField]
+    "Only used in the case of a dynamic field set. Set to true if it is activated"
+    hasEnableSwitch: Boolean
+    "Get the name of the field set"
+    name: String
+    "This value is true if the fieldset is readonly. This could be due to locks or permissions"
+    readOnly: Boolean
+    visible: Boolean
+}
+
 type GqlEditorFormMutations {
     "Publish the edited node with the associated technical sub nodes (visibility conditions, vanity urls, ACLs)"
     publishForm(
@@ -1141,6 +955,47 @@ type GqlEditorFormMutations {
         "An ID generated client side used to identify the lock"
         editorID: String!
     ): Boolean
+}
+
+type GqlEditorFormProperty {
+    "Property name"
+    name: String
+    "Property value"
+    value: String
+    "Property values"
+    values: [String]
+}
+
+type GqlEditorFormSection {
+    "Returns the description of the section"
+    description: String
+    "Retrieve the displayable name of the section"
+    displayName: String
+    "Is the section expanded"
+    expanded: Boolean
+    "Returns the field sets contained in this section"
+    fieldSets: [GqlEditorFormFieldSet]
+    "Retrieve the name (aka identifier) of the section"
+    name: String
+    visible: Boolean
+}
+
+type GqlEditorFormValue {
+    "This value's string representation"
+    string: String
+    "The type of this value"
+    type: String
+}
+
+type GqlEditorFormValueConstraint {
+    "The value as it is intended to be displayed in UIs"
+    displayValue: String
+    "The key of the value to get the translated value from the client side"
+    displayValueKey: String
+    "The properties for the value"
+    properties: [GqlEditorFormProperty]
+    "The actual value to be used in storage"
+    value: GqlEditorFormValue
 }
 
 type GqlEditorForms {
@@ -1181,7 +1036,7 @@ type GqlEditorForms {
         uiLocale: String!,
         "uuid or path of an existing node under with the new content will be created."
         uuidOrPath: String!
-    ): EditorForm
+    ): GqlEditorForm
     "Get a editor form from a locale and an existing node"
     editForm(
         "A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ..."
@@ -1190,7 +1045,7 @@ type GqlEditorForms {
         uiLocale: String!,
         "UUID or path of an existing node under with the new content will be created."
         uuidOrPath: String!
-    ): EditorForm
+    ): GqlEditorForm
     "Get field constraints"
     fieldConstraints(
         "Object contains additional information of the node"
@@ -1209,7 +1064,7 @@ type GqlEditorForms {
         primaryNodeType: String!,
         "A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ..."
         uiLocale: String!
-    ): [EditorFormFieldValueConstraint]
+    ): [GqlEditorFormValueConstraint]
     "Retrieve the number of sub contents under the node for given types"
     subContentsCount(
         "List of node types to check for"
@@ -1226,14 +1081,6 @@ type GqlHealthCheck {
     probes: [GqlProbe]
     "Highest reported status across all probes"
     status: GqlProbeStatus
-}
-
-"Index size"
-type GqlIndexSize {
-    "Index name"
-    name: String
-    "Index size in bytes"
-    size: Long
 }
 
 type GqlJcrImageTransformMutation {
@@ -1274,15 +1121,6 @@ type GqlLockDetail {
     type: String
 }
 
-type GqlMetricsFacetResult {
-    "The field that was used to run the aggregation"
-    field: String
-    "Maximum value within the filtered dataset"
-    max: Float
-    "Minimum value within the filtered dataset"
-    min: Float
-}
-
 type GqlModule {
     "User facing description for the module"
     description: String
@@ -1308,16 +1146,6 @@ type GqlOperationsSupport {
     publication: Boolean!
 }
 
-"Model of a plugin information (name,description,version)"
-type GqlPlugin {
-    "Full description of the plugin"
-    description: String
-    "Full name of the plugin"
-    name: String
-    "version of the plugin"
-    version: String
-}
-
 type GqlProbe {
     "Description specified by the developer of the probe"
     description: String
@@ -1337,6 +1165,46 @@ type GqlProbeStatus {
     message: String
 }
 
+"Publication background job"
+type GqlPublicationBackgroundJob {
+    "The amount of time the job ran for (in milliseconds). The returned value will be -1 until the job has actually completed"
+    duration: Long
+    "The job group name"
+    group: String
+    "The job (Boolean) property that correspond to the given name. The returned value will be null in case the job doesn't have the property"
+    jobBooleanProperty(
+        "The job name"
+        name: String
+    ): Boolean
+    "The job (Int) property that correspond to the given name. The returned value will be null in case the job doesn't have the property"
+    jobIntegerProperty(
+        "The job name"
+        name: String
+    ): Int
+    "The job (Long) property that correspond to the given name. The returned value will be null in case the job doesn't have the property"
+    jobLongProperty(
+        "The job name"
+        name: String
+    ): Long
+    "The job state is different from the status, it reflect the last action done on the job instance (Started, Vetoed, Finished)"
+    jobState: GqlBackgroundJobState
+    "The job status"
+    jobStatus: GqlBackgroundJobStatus
+    "The job (String) property that correspond to the given name. The returned value will be null in case the job doesn't have the property"
+    jobStringProperty(
+        "The job name"
+        name: String
+    ): String
+    "Publication language"
+    language: String
+    "The job name"
+    name: String
+    "The site key. The returned value will be null in case the job doesn't have associated site key"
+    siteKey: String
+    "The user key. The returned value will be null in case the job doesn't have associated user key"
+    userKey: String
+}
+
 "Publication status information for a JCR node"
 type GqlPublicationInfo {
     "Whether current user is allowed to publish the node omitting any workflows"
@@ -1351,22 +1219,6 @@ type GqlPublicationInfo {
     workInProgress: Boolean
 }
 
-"Representation of range facet aggregation buckets"
-type GqlRangeFacetData {
-    "Number of documents matching the range"
-    count: Int
-    "Name provided for the range"
-    name: String
-}
-
-"Result of aggregation based on field and ranges"
-type GqlRangeFacetResult {
-    "Data based on facets specified in the search"
-    data: [GqlRangeFacetData]
-    "The field that was used to run the aggregation"
-    field: String
-}
-
 "Scheduler object which allows to access to background jobs"
 type GqlScheduler {
     "List of active jobs"
@@ -1379,41 +1231,6 @@ type GqlScope {
     description: String
     "The name of the scope"
     name: String
-}
-
-"Container for search operations"
-type GqlSearchQueryExtension {
-    "Retrieves nodes matching a search"
-    search(
-        "Facets specification"
-        facets: Inputfacets,
-        "Filtering specification"
-        filter: Inputfilter,
-        "Limit of pages displayed"
-        limit: Int,
-        "Offset, total offset is calculated by multiplying offset number by limit"
-        offset: Int,
-        "Search query"
-        q: String!,
-        "Where to search, can be CONTENT or FILES"
-        searchIn: [SearchIn],
-        "Sorting specification"
-        sortBy: InputSort
-    ): searchResults @deprecated(reason: "This will be removed in future versions")
-}
-
-"Sharding configuration details"
-type GqlShardConfiguration {
-    "Average shard size, based on the current index size"
-    averageShardSize: Long
-    "Is the number of shards evenly divisible by number of data nodes"
-    divisible: Boolean
-    "Available heap memory per shard"
-    heapPerShard: Long
-    "Number of primary shards"
-    primaryCount: Int
-    "Number of replicas"
-    replicas: Int
 }
 
 type GqlSitemapMutation {
@@ -1435,50 +1252,6 @@ type GqlSitemapQueries {
         "Sitemap index XML or sitemap XML URL"
         siteKey: String!
     ): String
-}
-
-"Aggregation bucket representation"
-type GqlTermFacetData {
-    "The aggregation bucket value"
-    count: Int
-    "The aggregation bucket value"
-    value: String
-}
-
-"Result of aggregation based on field"
-type GqlTermFacetResult {
-    "Data based on facets specified in the search"
-    data: [GqlTermFacetData]
-    "The field that was used to run the aggregation"
-    field: String
-}
-
-"Children data of tree facet root value"
-type GqlTreeFacetData {
-    "Number of documents"
-    count: Int
-    "Filter expression to find matching results for this path"
-    filter: String
-    "Indicate whether the tree element has any children"
-    hasChildren: Boolean
-    "Human Readable path"
-    humanPath: String
-    "key of this facet"
-    key: String
-    "System path to be used in root path for tree facets"
-    rootPath: String
-    "The aggregation bucket value"
-    value: String
-}
-
-"Result of hierarchical facet aggregation"
-type GqlTreeFacetResult {
-    "Data based on facets specified in the search"
-    data: [GqlTreeFacetData]
-    "The field that was used to run the aggregation"
-    field: String
-    "rootPath passed as a parameter"
-    rootPath: String
 }
 
 type GqlWorkflowEvent {
@@ -2332,15 +2105,6 @@ type JCRQuery {
         "The query language"
         queryLanguage: QueryLanguage = SQL2
     ): JCRNodeConnection
-    "Execute one or more search queries"
-    searches(
-        "Language to search in"
-        language: String!,
-        "Unique site identifier"
-        siteKey: String,
-        "Can be LIVE or EDIT"
-        workspace: Workspace!
-    ): GqlSearchQueryExtension @deprecated(reason: "This will be removed in future versions")
     "Get the workspace of the query"
     workspace: Workspace!
 }
@@ -2544,6 +2308,8 @@ type JCRSite implements JCRNode {
         before: String,
         "Filter by graphQL fields values"
         fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
         "fetching only the first certain number of nodes"
         first: Int,
         "fetching only the last certain number of nodes"
@@ -2653,7 +2419,9 @@ type JahiaAdminMutation {
         "If factory pid, configiration identifier (filename suffix)"
         identifier: String,
         "Configuration pid ot factory pid"
-        pid: String!
+        pid: String!,
+        "Do not create new configuration, update existing one"
+        updateOnly: Boolean = false
     ): GqlConfigurationMutation
     "Create a task"
     createTask(
@@ -2867,25 +2635,6 @@ type NodeTypeTreeEntry {
     parent: NodeTypeTreeEntry
 }
 
-"Number Range Input Object"
-type NumberRange {
-    "Greater than a number"
-    gt: Float
-    "Greate than or equal to a number"
-    gte: Float
-    "Less than a number"
-    lt: Float
-    "Less than or equal to a number"
-    lte: Float
-    "Name to describe the facet"
-    name: String!
-}
-
-type NumberRangeValue {
-    count: Int
-    range: NumberRange
-}
-
 "Information about pagination in a connection."
 type PageInfo {
     "When paginating forwards, the cursor to continue."
@@ -3072,39 +2821,10 @@ type Query {
         "The name of the workspace to fetch the node from; either EDIT, LIVE, or null to use EDIT by default"
         workspace: Workspace
     ): JCRQuery!
-    "Search in Jahia using Augmented Search"
-    search(
-        "Boost specification"
-        boosts: Inputboost,
-        "Filtering specification"
-        filters: Inputfilter,
-        "Function score id"
-        functionScoreId: String,
-        "Language to search in"
-        language: String = "en",
-        "Search query"
-        q: String!,
-        "Where to search, can be CONTENT or FILES"
-        searchIn: [SearchIn],
-        "List of unique site identifiers. Search across all sites if not provided"
-        siteKeys: [String],
-        "Can be LIVE or EDIT"
-        workspace: Workspace = LIVE
-    ): augmentedSearchResult
     "Tag Queries"
     tag: JCRTags
     "Retrieves the number of active workflow tasks for the current user"
     workflow: WorkflowService
-}
-
-"Number Range Input Object"
-type Range {
-    "From value [used in Range facet]"
-    from: String
-    "Name to describe the facet"
-    name: String!
-    "To value [used in Range facet]"
-    to: String
 }
 
 "Rendering result for a node"
@@ -3168,6 +2888,8 @@ type Subscription {
         filterByJobStatuses: [GqlBackgroundJobStatus],
         "Subscribe only to job with matching names"
         filterByNames: [String],
+        "Subscribe only to job with matching user keys"
+        filterByUserKey: [String],
         "The target scheduler for listening jobs"
         targetScheduler: TargetScheduler = BOTH
     ): GqlBackgroundJob
@@ -3216,12 +2938,6 @@ type TaskEdge {
     index: Int
     "The item at the end of the edge"
     node: Task
-}
-
-type TermValue {
-    count: Int
-    "Value of term"
-    value: String
 }
 
 "GraphQL representation of a Jahia user"
@@ -3543,6 +3259,8 @@ type VanityUrl implements JCRNode {
         before: String,
         "Filter by graphQL fields values"
         fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
         "fetching only the first certain number of nodes"
         first: Int,
         "fetching only the last certain number of nodes"
@@ -3667,224 +3385,6 @@ type ZipFileMutation {
         "destination path to unzip"
         path: String!
     ): Boolean
-}
-
-"Generic object with search results which contains facets and results"
-type augmentedSearchResult {
-    "Provides access to min and max values for a specific field across the selected dataset"
-    numberRange(
-        "Defines the field to operate on, this field is required."
-        field: String!
-    ): GqlMetricsFacetResult
-    "Retrieves aggregations for range facet"
-    rangeFacet(
-        "Defines the field to aggregate on, this field is required."
-        field: String!,
-        "List of available ranges to be used"
-        ranges: [InputRange]
-    ): GqlRangeFacetResult
-    "Retrieves nodes matching a search"
-    results(
-        "Page count to offset the results window"
-        page: Int,
-        "Number of documents in the results window"
-        size: Int = 25,
-        "Sort object, by default, doesn’t do any sorting and return the results by weight."
-        sortBy: [InputsortV2]
-    ): searchResultsV2
-    "Retrieves aggregations for term facet"
-    termFacet(
-        "Defines whether the facet aggregation should be executed on the exact search filter (disjunctive: false) or on a modified version of the filter without the current facet field."
-        disjunctive: Boolean = false,
-        "Defines the field to aggregate on, this field is required."
-        field: String!,
-        "Maximum number of facet groups returned."
-        max: Int = 10,
-        "Minimum number of documents for a value to return as a facet."
-        minDocCount: Int = 1,
-        "Label to be used for missing values on this field. If not specified, missing fields will not be counted"
-        missingValue: String
-    ): GqlTermFacetResult
-    "Retrieves aggregations for tree facet"
-    treeFacet(
-        "Defines whether the facet aggregation should be executed on the exact search filter (disjunctive: false) or on a modified version of the filter without the current facet field."
-        disjunctive: Boolean = false,
-        "Defines the field to aggregate on, this field is required."
-        field: String!,
-        "Maximum number of facet groups returned."
-        max: Int = 10,
-        "Minimum number of documents for a value to return as a facet."
-        minDocCount: Int = 1,
-        "Label to be used for missing values on this field. If not specified, missing fields will not be counted"
-        missingValue: String,
-        "The root path to fetch children from"
-        rootPath: String!
-    ): GqlTreeFacetResult
-}
-
-"Information related to specific indexing job"
-type indexJob {
-    "The ID of the job that was just started"
-    id: String
-    "Relation to a Jahia project object"
-    project: project
-    "Indexing job status"
-    status: jobStatus
-}
-
-"Information about indexing jobs"
-type indexMutationResult {
-    "Information about indexing jobs, one per site indexed"
-    jobs: [indexJob]
-}
-
-"Representation of indexed site"
-type indexedSite {
-    "End time of most recent indexation as ISO string"
-    indexationEnd: String
-    "Scheduled time of most recent indexation as ISO string"
-    indexationScheduled: String
-    "Start time of most recent indexation as ISO string"
-    indexationStart: String
-    "Status of indexation"
-    indexationStatus: indexationStatus
-    "Site key"
-    siteKey: String
-}
-
-"Site specific information "
-type project {
-    "Unique site identifier"
-    siteKey: String
-}
-
-"Search facet"
-type searchFacet {
-    "Data based on facets specified in the search"
-    data: [GqlSearchFacetValue]
-    "JCR name of the field to filter by"
-    field: String
-    "Type of the facet"
-    type: String
-}
-
-"Detailed information about search hit"
-type searchHit {
-    "Date when node was created"
-    created: String
-    "User who created the node"
-    createdBy: String
-    "Prettified displayable name of the node"
-    displayableName: String
-    "Short extract from the hit"
-    excerpt: String
-    "ID of the node"
-    id: String
-    "Keywords associated with this hit"
-    keywords: [String]
-    "Date and time of last modification"
-    lastModified: String
-    "User who modified the node last"
-    lastModifiedBy: String
-    "Date and time of last publication"
-    lastPublished: String
-    "User who published the node last"
-    lastPublishedBy: String
-    "Formatted link to the node"
-    link: String
-    "Mime type of the node"
-    mimeType: String
-    "Information about JCR node, lookup JCRNode in API docs for deeper insight"
-    node: JCRNode
-    "Main type of the node, e.g jnt:page"
-    nodeType: String
-    "Path of the node"
-    path: String
-    "Determines how relevant a match is to the query"
-    score: Float
-    "Tags associated with this hit"
-    tags: [String]
-}
-
-"Detailed information about search hit"
-type searchHitV2 {
-    "Date when node was created"
-    created: String
-    "User who created the node"
-    createdBy: String
-    "Prettified displayable name of the node"
-    displayableName: String
-    "Short extract from the hit"
-    excerpt: String
-    "ID of the node"
-    id: String
-    "Keywords associated with this hit"
-    keywords: [String]
-    "Date and time of last modification"
-    lastModified: String
-    "User who modified the node last"
-    lastModifiedBy: String
-    "Date and time of last publication"
-    lastPublished: String
-    "User who published the node last"
-    lastPublishedBy: String
-    "Formatted link to the node"
-    link: String
-    "Mime type of the node"
-    mimeType: String
-    "Main type of the node, e.g jnt:page"
-    nodeType: String
-    "Path of the node"
-    path: String
-    "Fetch the value of the requested property, property name can be pass as an alias or as an argument"
-    property(
-        "Name of the property to return"
-        name: String
-    ): String
-    "Determines how relevant a match is to the query"
-    score: Float
-    "Tags associated with this hit"
-    tags: [String]
-}
-
-"Object with search results"
-type searchResults {
-    "Array of facets to narrow down the search"
-    facets: [searchFacet]
-    "This flag indicates that more data is available by using different filters"
-    hasMore: Boolean
-    "Array of hits based on the search query"
-    hits: [searchHit]
-    "Number of hits on page"
-    hitsOnPage: Long
-    "Time taken by query"
-    took: String
-    "Total number of hits"
-    totalHits: Long
-}
-
-"Object with search results"
-type searchResultsV2 {
-    "This flag indicates that more data is available by using different filters"
-    hasMore: Boolean
-    "Array of hits based on the search query"
-    hits: [searchHitV2]
-    "Number of hits on page"
-    hitsOnPage: Long
-    "Time taken by query"
-    took: String
-    "Total number of hits"
-    totalHits: Long
-}
-
-"List of indexed sites"
-type siteList {
-    "Database connection id"
-    connectionId: String
-    "Indexed sites"
-    sites: [indexedSite]
-    "Total number of indexed sites"
-    totalCount: Int
 }
 
 "Task that prevents server from shutdown"
@@ -4034,21 +3534,6 @@ enum NodeNamingConflictResolutionStrategy {
     RENAME
 }
 
-enum Operation {
-    "AND"
-    AND
-    "OR"
-    OR
-}
-
-"Direction of sort"
-enum OrderDirection {
-    "Ascendant order"
-    ASC
-    "Descendant order"
-    DESC
-}
-
 enum OrderType {
     "Ascendant order"
     ASC
@@ -4145,22 +3630,6 @@ enum ReorderedChildrenPosition {
     LAST
 }
 
-"Index in which search should be performed"
-enum SearchIn {
-    "content index"
-    CONTENT
-    "files index"
-    FILES
-}
-
-"Order of sort"
-enum SortOrder {
-    "Ascendant order"
-    ASC
-    "Descendant order"
-    DESC
-}
-
 enum SortType {
     "Ascendant order"
     ASC
@@ -4200,24 +3669,6 @@ enum Workspace {
     EDIT
     "Live workspace"
     LIVE
-}
-
-"Status of indexation"
-enum indexationStatus {
-    "Indexation has completed"
-    COMPLETED
-    "Indexation has been scheduled"
-    SCHEDULED
-    "Indexation has started"
-    STARTED
-}
-
-"Status of job"
-enum jobStatus {
-    "Job has completed"
-    COMPLETED
-    "Job has started"
-    STARTED
 }
 
 "Date type"
@@ -4341,14 +3792,6 @@ input InputGqlOrdering {
     property: String
 }
 
-"Tree facet input object"
-input InputGqlTreeFacet {
-    "value of the root of hierarchical tree"
-    rootValue: String
-    "Term facet"
-    termFacet: InputTermFacet
-}
-
 "GraphQL representation of a JCR node to be created"
 input InputJCRNode {
     "The collection of sub nodes to create"
@@ -4399,16 +3842,6 @@ input InputJCRProperty {
     values: [String]
 }
 
-"Metrics facet to filter by specific field"
-input InputMetricsFacet {
-    "Whether the facet filter will be OR (set to true) or AND (set to false). Default is false."
-    disjunctive: Boolean
-    "Field the facet is applied on."
-    field: String!
-    "Maximum number of facet groups returned. Default is 10."
-    max: Int
-}
-
 "Node properties selection"
 input InputNodePropertiesInput {
     "Individual property filters"
@@ -4457,34 +3890,6 @@ input InputNodeTypesListInput {
     siteKey: String
 }
 
-"Number Range Input Object"
-input InputNumberRange {
-    "Greater than a number"
-    gt: Float
-    "Greate than or equal to a number"
-    gte: Float
-    "Less than a number"
-    lt: Float
-    "Less than or equal to a number"
-    lte: Float
-    "Name to describe the facet"
-    name: String!
-}
-
-"Number Range facet to filter on specified ranges"
-input InputNumberRangeFacet {
-    "Whether the facet filter will be OR (set to true) or AND (set to false). Default is false."
-    disjunctive: Boolean
-    "Field the facet is applied on."
-    field: String!
-    "Maximum number of facet groups returned. Default is 10."
-    max: Int
-    "List of available ranges to be used"
-    ranges: [InputNumberRange]!
-    "Selected groups. Default is []."
-    selections: [InputNumberRange]
-}
-
 "Describes input using name and with principal type (user/group)"
 input InputPrincipalInput {
     "Get principal name"
@@ -4493,60 +3898,12 @@ input InputPrincipalInput {
     type: PrincipalType
 }
 
-"Number Range Input Object"
-input InputRange {
-    "From value [used in Range facet]"
-    from: String
-    "Name to describe the facet"
-    name: String!
-    "To value [used in Range facet]"
-    to: String
-}
-
-"Range facet to filter on specified ranges"
-input InputRangeFacet {
-    "Whether the facet filter will be OR (set to true) or AND (set to false). Default is false."
-    disjunctive: Boolean
-    "Field the facet is applied on."
-    field: String!
-    "Maximum number of facet groups returned. Default is 10."
-    max: Int
-    "List of available ranges to be used"
-    ranges: [InputRange]!
-    "Selected groups. Default is []."
-    selections: [InputRange]
-}
-
 "Request attribute that can be use by rendering API"
 input InputRenderRequestAttributeInput {
     "The name of the request attribute"
     name: String!
     "The value of the request attribute"
     value: String!
-}
-
-"Sort object for ordering or results"
-input InputSort {
-    "ASC or DESC order"
-    orderType: SortOrder!
-    "The property to order by"
-    property: String!
-}
-
-"Term facet to filter on specific selections"
-input InputTermFacet {
-    "Whether the facet filter will be OR (set to true) or AND (set to false). Default is false."
-    disjunctive: Boolean
-    "Field the facet is applied on."
-    field: String!
-    "Maximum number of facet groups returned. Default is 10."
-    max: Int
-    "Minimum number of documents for a value to return as a facet. Default is 5."
-    minDocCount: Int
-    "Label to be used for missing values on this field. If not specified, missing fields will not be counted"
-    missingValue: String
-    "Selected groups. Default is []."
-    selections: [String]
 }
 
 input InputVanityUrl {
@@ -4558,170 +3915,6 @@ input InputVanityUrl {
     language: String!
     "The vanity URL"
     url: String!
-}
-
-"Boost fields for document matching"
-input Inputboost {
-    "Boost configuration for fields and subfields. Overrides content, main and metadata boosts if present. Unspecified fields receive a default value as specified in .cfg file."
-    boosts: InputboostConfig
-    "Boost document based on their content(rich text, simple text) matching"
-    content: Float
-    "Boost document based on their main field (displayableName, title) matching"
-    main: Float
-    "Boost document based on their metadata field (tags, keywords, categories) matching"
-    metadata: Float
-}
-
-"Boost configuration for fields and their subfields"
-input InputboostConfig {
-    "Boost for jgql:content field multimatch query"
-    content: InputboostSpec
-    "Boost for jgql:file_content field multimatch query. Note that stem and ngram field boosts are not taken into account."
-    file: InputboostSpec
-    "Boost for jgql:main field multimatch query"
-    main: InputboostSpec
-    "Boost for jgql:metadata field multimatch query"
-    metadata: InputboostSpec
-}
-
-"Boost specification for multimatch query against a field"
-input InputboostSpec {
-    "Boost for default field"
-    defaultField: Float
-    "Boost for ngram field"
-    ngram: Float
-    "Boost for phrase field"
-    phrase: Float
-    "Overall boost for multimatch query (default field and subfields as a group)"
-    query: Float
-    "Boost for stem field"
-    stem: Float
-}
-
-"A set of applicable facets"
-input Inputfacets {
-    "Date range facet to be used during search"
-    dateRange: [InputRangeFacet]
-    "Metrics facet to be used during search"
-    metrics: [InputMetricsFacet]
-    "Range facet to be used during search"
-    numberRange: [InputNumberRangeFacet]
-    "Term facet to be used during search"
-    term: [InputTermFacet]
-    "Metrics facet to be used during search"
-    tree: [InputGqlTreeFacet]
-}
-
-"Search filter"
-input Inputfilter {
-    "Author filter"
-    author: String
-    "Created filter"
-    created: InputfilterRange
-    "Custom filters"
-    custom: InputfilterGroups
-    "Modified filter"
-    modified: InputfilterRange
-    "Node type filter"
-    nodeType: InputnodeTypeFilter
-    "Node path filter"
-    path: String
-    "Published filter"
-    published: InputfilterRange
-}
-
-"Custom term input object"
-input InputfilterCustomTerm {
-    "Mapped field to filter on"
-    field: String!
-    "Value to filter"
-    value: String!
-}
-
-"Custom date range group"
-input InputfilterDateRangeGroup {
-    "AND or OR filter operation"
-    operation: Operation
-    "Ranges used for filtering"
-    ranges: [InputfilterExtendedDateRange]!
-}
-
-"Custom extended date range input object"
-input InputfilterExtendedDateRange {
-    "To display hits after specified date"
-    after: String
-    "To display hits before specified date"
-    before: String
-    "Filter for strict equality to the date"
-    equal: String
-    "Field to filter by"
-    field: String!
-}
-
-"Custom filter groups"
-input InputfilterGroups {
-    "Groups of date range filters"
-    dateRange: [InputfilterDateRangeGroup]
-    "Groups of number range filters"
-    numberRange: [InputfilterNumberRangeGroup]
-    "Groups of term filters"
-    term: [InputfilterTermGroup]
-}
-
-"Number range input object"
-input InputfilterNumberRange {
-    "Numeric field to filter by"
-    field: String!
-    "Greater than a number"
-    gt: Float
-    "Greater than or equal to number"
-    gte: Float
-    "Less than a number"
-    lt: Float
-    "Less than or equal to number"
-    lte: Float
-}
-
-"Custom number range group"
-input InputfilterNumberRangeGroup {
-    "Filter operation"
-    operation: Operation
-    "Ranges"
-    ranges: [InputfilterNumberRange]!
-}
-
-"Range input object"
-input InputfilterRange {
-    "To display hits after specified date"
-    after: String
-    "To display hits before specified date"
-    before: String
-    "Filter for strict equality to the date"
-    equal: String
-}
-
-"Custom filter term group"
-input InputfilterTermGroup {
-    "Filter operation"
-    operation: Operation
-    "Terms to filter by"
-    terms: [InputfilterCustomTerm]!
-}
-
-"Filter for filtering on node type"
-input InputnodeTypeFilter {
-    "Flag to determine if sub node types should be included in filter"
-    includeSubNodes: Boolean
-    "Node type"
-    type: String
-}
-
-"Sort object for ordering or results"
-input InputsortV2 {
-    "Direction in which ordering occurs"
-    dir: OrderDirection!
-    "The field to order by"
-    field: String!
 }
 
 "Work in progress information"

@@ -113,7 +113,7 @@ describe('Search tests', () => {
         });
     });
 
-    describe('advanced search', {testIsolation: false}, () => {
+    describe.only('advanced search', {testIsolation: false}, () => {
         before(() => {
             cy.loginAndStoreSession();
             jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');
@@ -124,6 +124,7 @@ describe('Search tests', () => {
             basicSearch = jcontent.getBasicSearch().openSearch().switchToAdvanced()
                 .searchFrom('jnt:event')
                 .executeSearch()
+                .sortBy('name')
                 .verifyResults(['test-content5', 'test-content4'])
                 .verifyResultType('Event');
         });

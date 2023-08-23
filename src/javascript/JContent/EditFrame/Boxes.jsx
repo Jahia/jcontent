@@ -34,7 +34,7 @@ const getModuleElement = (currentDocument, target) => {
 };
 
 const disallowSelection = element => {
-    const tags = ['A', 'BUTTON', 'VIDEO'];
+    const tags = ['A', 'BUTTON'];
 
     return tags.includes(element.tagName) || element.closest('a') !== null || element.ownerDocument.getSelection().type === 'Range';
 };
@@ -101,7 +101,6 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         const path = element.getAttribute('path');
         const isSelected = selection.includes(path);
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
-
         if (event.detail === 1) {
             // Do not handle selection if the target element can be interacted with
             if (disallowSelection(event.target) && !isMultipleSelectionMode) {
@@ -110,17 +109,20 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
             event.preventDefault();
             event.stopPropagation();
-            if (isSelected) {
-                dispatch(cmRemoveSelection(path));
-            } else if (isMultipleSelectionMode) {
-                dispatch(cmAddSelection(path));
-            } else {
+            if (isMultipleSelectionMode) {
+                if (isSelected) {
+                    dispatch(cmRemoveSelection(path));
+                } else {
+                    dispatch(cmAddSelection(path));
+                }
+            } else if (!isSelected) {
                 dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
             }
         } else if (event.detail === 2) {
             event.preventDefault();
             event.stopPropagation();
         }
+        return false;
     }, [selection, currentDocument, dispatch]);
 
     const clearSelection = useCallback(event => {
@@ -248,7 +250,10 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         };
     });
 
-    const nodes = useMemo(() => data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {}), [data?.jcr]);
+    const nodes = useMemo(() => data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({
+        ...acc,
+        [n.path]: n
+    }), {}), [data?.jcr]);
 
     const getBreadcrumbsForPath = path => {
         const breadcrumbs = [];
@@ -276,7 +281,14 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         event.stopPropagation();
         const element = getModuleElement(currentDocument, event.currentTarget);
         const path = element.getAttribute('path');
-        window.CE_API.edit({uuid: nodes[path].uuid, site: site, lang: language, uilang, isFullscreen: false, configName: 'gwtedit'});
+        window.CE_API.edit({
+            uuid: nodes[path].uuid,
+            site: site,
+            lang: language,
+            uilang,
+            isFullscreen: false,
+            configName: 'gwtedit'
+        });
     }, [nodes, site, language, uilang, currentDocument]);
 
     useEffect(() => {
@@ -350,7 +362,10 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                     />
                 ))}
 
-            {placeholders.map(element => ({element, node: nodes?.[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]}))
+            {placeholders.map(element => ({
+                element,
+                node: nodes?.[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
+            }))
                 .filter(({node}) => node && !isMarkedForDeletion(node))
                 .map(({node, element}) => (
                     <Create key={element.getAttribute('id')}

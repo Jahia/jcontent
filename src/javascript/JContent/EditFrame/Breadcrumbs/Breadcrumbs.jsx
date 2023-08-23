@@ -6,20 +6,20 @@ import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/s
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 
-const handleItemOnClick = (selection, n, dispatch) => {
+const handleItemOnClick = (selection, path, dispatch) => {
     return event => {
         event.preventDefault();
         event.stopPropagation();
+        const isSelected = selection.includes(path);
         // Meta key works without issues, ctrl key has a conflict with contextmenu
         if (event.ctrlKey || event.metaKey) {
-            const isSelected = selection.includes(n.path);
             if (isSelected) {
-                dispatch(cmRemoveSelection(n.path));
+                dispatch(cmRemoveSelection(path));
             } else {
-                dispatch(cmAddSelection(n.path));
+                dispatch(cmAddSelection(path));
             }
-        } else {
-            dispatch(batchActions([cmClearSelection(), cmAddSelection(n.path)]));
+        } else if (!isSelected) {
+            dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
         }
 
         return false;
@@ -45,7 +45,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
                       onChange={(e, v) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          dispatch(cmAddSelection(v.value));
+                          handleItemOnClick(selection, v.value, dispatch)
                       }}
             />
         );
@@ -58,7 +58,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
                                 label={n.name}
                                 icon={<img alt={n.name}
                                            src={`${window.contextJsParameters.contextPath}${n.primaryNodeType.icon}.png`}/>}
-                                onClick={handleItemOnClick(selection, n, dispatch)}
+                                onClick={handleItemOnClick(selection, n.path, dispatch)}
                 />
             ))}
         </Breadcrumb>

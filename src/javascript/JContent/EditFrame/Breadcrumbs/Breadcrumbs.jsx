@@ -45,7 +45,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
                       onChange={(e, v) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleItemOnClick(selection, v.value, dispatch)
+                          handleItemOnClick(selection, v.value, dispatch);
                       }}
             />
         );

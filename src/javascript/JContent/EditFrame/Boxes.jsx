@@ -122,6 +122,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             event.preventDefault();
             event.stopPropagation();
         }
+
         return false;
     }, [selection, currentDocument, dispatch]);
 

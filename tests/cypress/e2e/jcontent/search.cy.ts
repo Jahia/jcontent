@@ -113,7 +113,7 @@ describe('Search tests', () => {
         });
     });
 
-    describe.only('advanced search', {testIsolation: false}, () => {
+    describe('advanced search', {testIsolation: false}, () => {
         before(() => {
             cy.loginAndStoreSession();
             jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');

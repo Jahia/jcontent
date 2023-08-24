@@ -191,13 +191,17 @@ export class UploadItem extends React.Component {
     }
 
     changeStatusToUploading() {
-        const upload = {
-            id: this.props.id,
-            status: uploadStatuses.UPLOADING,
-            error: null,
-            path: this.props.path
-        };
-        this.props.updateUpload(upload);
+        if (this.props.isFolder) {
+            // Handle folder rename
+        } else {
+            const upload = {
+                id: this.props.id,
+                status: uploadStatuses.UPLOADING,
+                error: null,
+                path: this.props.path
+            };
+            this.props.updateUpload(upload);
+        }
     }
 }
 
@@ -207,6 +211,7 @@ UploadItem.propTypes = {
     entry: PropTypes.object,
     t: PropTypes.func.isRequired,
     status: PropTypes.string.isRequired,
+    isFolder: PropTypes.bool,
     type: PropTypes.string,
     id: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,

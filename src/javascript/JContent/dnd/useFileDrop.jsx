@@ -74,6 +74,10 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
         return Promise.resolve();
     }));
 
+    [...files, ...directories].forEach(file => {
+        file.entryPath = (file.path + '/' + file.entry.name).normalize('NFC');
+    });
+
     return {files, directories};
 }
 
@@ -106,17 +110,17 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                 let acceptedFiles = files;
 
                 if (uploadType === JContentConstants.mode.UPLOAD) {
-                    const {conflicts} = await createMissingFolders(client, directories);
+                    const {cannotCreate} = await createMissingFolders(client, directories);
 
-                    if (conflicts.length > 0) {
-                        const uploads = conflicts.map(dir => ({
+                    if (cannotCreate.length > 0) {
+                        const uploads = cannotCreate.map(dir => ({
                             status: uploadStatuses.HAS_ERROR,
-                            error: 'FOLDER_EXISTS',
+                            isFolder: true,
                             ...dir,
                             id: v4()
                         }));
-                        conflicts.forEach(dir => {
-                            acceptedFiles = acceptedFiles.filter(f => !f.path.startsWith(uploadPath + dir.entry.fullPath));
+                        uploads.forEach(dir => {
+                            acceptedFiles = acceptedFiles.filter(f => f.path !== (uploadPath + dir.entry.fullPath) && !f.path.startsWith(uploadPath + dir.entry.fullPath + '/'));
                         });
                         dispatch(fileuploadAddUploads(uploads));
                     }

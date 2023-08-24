@@ -37,7 +37,7 @@ const SecondaryActionsList = props => {
             );
         }
 
-        if (error === 'FOLDER_EXISTS') {
+        if (error === 'FOLDER_CONFLICT' || error === 'FOLDER_FILE_NAME_SIZE' || error === 'FOLDER_FILE_NAME_INVALID') {
             return (
                 <DontUploadButton {...props}/>
             );

@@ -30,8 +30,7 @@ export const useRegisterEngineTabActions = () => {
         mixinTypes.map(mixinType => mixinType.name),
         getNodeTypes(primaryNodeType),
         primaryNodeType.hasOrderableChildNodes
-    );
-
+    ).filter(t => ['contributeMode'].indexOf(t) === -1);
     const {loading, error, data} = useQuery(engineTabsPermissionCheckQuery(tabs, site));
 
     if (!error && !loading) {

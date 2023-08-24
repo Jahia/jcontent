@@ -70,25 +70,28 @@ export const fileIgnored = file => {
 };
 
 export const createMissingFolders = async (client, directories) => {
+    directories.forEach(dir => {
+        dir.entryPath = (dir.path + '/' + dir.entry.name).normalize('NFC');
+    });
     const foldersChecks = await client.query({
         query: CheckNodeFolder,
         variables: {
-            paths: directories.map(dir => dir.path + '/' + dir.entry.name)
+            paths: directories.map(dir => dir.entryPath)
         },
         fetchPolicy: 'network-only',
         errorPolicy: 'ignore'
     });
-    const conflicts = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && !n.isNodeType));
-    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && n.isNodeType));
+    const conflicts = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && !n.isNodeType));
+    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && n.isNodeType));
     const created = directories
-        .filter(dir => !foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name))
-        .filter(dir => !conflicts.find(f => dir.path.startsWith(f.path + '/' + f.entry.name)));
+        .filter(dir => !foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath))
+        .filter(dir => !conflicts.find(f => dir.path.startsWith(f.entryPath)));
     await client.mutate({
         mutation: CreateFolders,
         variables: {
             nodes: created.map(dir => ({
                 parentPathOrId: dir.path,
-                name: dir.entry.name,
+                name: dir.entry.name.normalize('NFC'),
                 primaryNodeType: 'jnt:folder'
             }))
         }

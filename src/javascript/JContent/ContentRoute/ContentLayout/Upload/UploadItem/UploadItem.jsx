@@ -94,7 +94,7 @@ export class UploadItem extends React.Component {
                             id="rename-dialog-text"
                             name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
                             helperText={errMsg}
-                            defaultValue={file ? file.name : entry.name}
+                            defaultValue={(file ? file.name : entry.name).normalize('NFC')}
                             onChange={e => this.setState({userChosenName: e.target.value})}
                         />
                     </DialogContent>
@@ -168,25 +168,26 @@ export class UploadItem extends React.Component {
 
     handleUpload(type) {
         const {file, path, client} = this.props;
+        const normalizedPath = path.normalize('NFC');
         if (type === 'import') {
-            return registry.get('fileUpload', 'import').handleUpload({path, file, client});
+            return registry.get('fileUpload', 'import').handleUpload({path: normalizedPath, file, client});
         }
 
         if (type === 'replace') {
-            let newPath = `${path}/${this.getFileName()}`;
+            let newPath = `${normalizedPath}/${this.getFileName()}`;
             return registry.get('fileUpload', 'replace').handleUpload({path: newPath, file, client});
         }
 
         if (type === 'replaceWith') {
-            return registry.get('fileUpload', 'replace').handleUpload({path, file, client});
+            return registry.get('fileUpload', 'replace').handleUpload({path: normalizedPath, file, client});
         }
 
         const filename = this.getFileName();
-        return registry.get('fileUpload', 'default').handleUpload({path, file, filename, client});
+        return registry.get('fileUpload', 'default').handleUpload({path: normalizedPath, file, filename, client});
     }
 
     getFileName() {
-        return (this.state.userChosenName ? this.state.userChosenName : (this.props.file ? this.props.file.name : this.props.entry.name));
+        return (this.state.userChosenName ? this.state.userChosenName : (this.props.file ? this.props.file.name : this.props.entry.name).normalize('NFC'));
     }
 
     changeStatusToUploading() {

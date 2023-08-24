@@ -13,7 +13,7 @@ describe('Category Manager', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        categoryManager = CategoryManager.visitCatMan('en');
+        categoryManager = CategoryManager.visitCategoryManager('en');
     });
 
     it('Should open Category Manager', () => {

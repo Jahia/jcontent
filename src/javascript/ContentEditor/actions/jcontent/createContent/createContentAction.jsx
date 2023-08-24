@@ -11,7 +11,21 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 
-export const CreateContent = ({contextNodePath, path, showOnNodeTypes, nodeTypes, name, includeSubTypes, isFullscreen, hasBypassChildrenLimit, onCreate, onClosed, render: Render, loading: Loading, ...otherProps}) => {
+export const CreateContent = ({
+    contextNodePath,
+    path,
+    showOnNodeTypes,
+    nodeTypes,
+    name,
+    includeSubTypes,
+    isFullscreen,
+    hasBypassChildrenLimit,
+    templateLimit,
+    onCreate,
+    onClosed,
+    render: Render,
+    loading: Loading,
+    ...otherProps}) => {
     const api = useContentEditorApiContext();
     const {t} = useTranslation('jcontent');
     const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}), shallowEqual);
@@ -54,7 +68,7 @@ export const CreateContent = ({contextNodePath, path, showOnNodeTypes, nodeTypes
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
 
-    if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node)) {
+    if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
 
@@ -91,16 +105,17 @@ CreateContent.defaultProps = {
 CreateContent.propTypes = {
     contextNodePath: PropTypes.string,
     path: PropTypes.string.isRequired,
-    isFullscreen: PropTypes.bool,
     showOnNodeTypes: PropTypes.array,
     nodeTypes: PropTypes.array,
     name: PropTypes.string,
     includeSubTypes: PropTypes.bool,
-    render: PropTypes.func.isRequired,
+    isFullscreen: PropTypes.bool,
+    hasBypassChildrenLimit: PropTypes.bool,
+    templateLimit: PropTypes.number,
     onCreate: PropTypes.func,
     onClosed: PropTypes.func,
-    loading: PropTypes.func,
-    hasBypassChildrenLimit: PropTypes.bool
+    render: PropTypes.func.isRequired,
+    loading: PropTypes.func
 };
 
 export const createContentAction = {

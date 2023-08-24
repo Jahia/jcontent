@@ -77,16 +77,19 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
     }
 }
 
-export function childrenLimitReachedOrExceeded(node) {
+export function childrenLimitReachedOrExceeded(node, templateLimit) {
     if (!node) {
         return false;
     }
 
+    const childrenCount = node?.subNodes?.pageInfo?.totalCount || 0;
     if (node['jmix:listSizeLimit']) {
         const limit = node?.properties?.find(property => property.name === 'limit')?.value;
-        const childrenNumber = node?.subNodes?.pageInfo?.totalCount;
-        return limit && childrenNumber >= Number(limit);
+        if (limit && childrenCount >= Number(limit)) {
+            return true;
+        }
     }
 
-    return false;
+    return typeof (templateLimit) === 'number' && childrenCount >= templateLimit;
 }
+

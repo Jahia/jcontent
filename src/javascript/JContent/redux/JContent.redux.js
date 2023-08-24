@@ -40,19 +40,19 @@ const apps = {
             return `/jcontent/${site}/${language}/${mode}${path}${queryString}`;
         }
     },
-    catMan: {
+    'category-manager': {
         extractParamsFromUrl: (pathname, search) => {
             const [, , language, mode, ...pathElements] = pathname.split('/');
             const registryItem = registry.get('accordionItem', mode);
             pathElements.splice(0, 0, 'categories');
             const path = decodeURIComponent(((registryItem && registryItem.getPath && registryItem.getPath('systemsite', pathElements)) || ('/' + pathElements.join('/'))));
             const params = deserializeQueryString(search);
-            return {...defaultState, app: 'catMan', language, mode, path, viewMode: 'flatList', params};
+            return {...defaultState, app: 'category-manager', language, mode, path, viewMode: 'flatList', params};
         },
         buildUrl: ({language, mode, path, params}) => {
             const queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);
             path = path.startsWith('/sites/systemsite/categories') ? path.substring('/sites/systemsite/categories'.length) : '';
-            return `/catMan/${language}/${mode}${path}${queryString}`;
+            return `/category-manager/${language}/${mode}${path}${queryString}`;
         }
     }
 };
@@ -204,8 +204,8 @@ export const jContentRedux = registry => {
             }
         }
 
-        if (state.router.location.pathname.startsWith('/catMan') && state.jcontent?.mode && state.jcontent?.path) {
-            localStorage.setItem('catMan-previous-location', state.jcontent.path);
+        if (state.router.location.pathname.startsWith('/category-manager') && state.jcontent?.mode && state.jcontent?.path) {
+            localStorage.setItem('category-manager-previous-location', state.jcontent.path);
         }
     };
 

@@ -219,7 +219,7 @@ export const jContentAccordionItems = registry => {
     });
 
     registry.add('accordionItem', 'category', renderDefaultContentTrees, {
-        targets: ['catMan:1'],
+        targets: ['category-manager:1'],
         icon: <Tag/>,
         label: 'Categories',
         rootPath: '/sites/systemsite/categories',

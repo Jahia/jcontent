@@ -10,7 +10,7 @@ import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import ContentNavigationContainer from './ContentNavigation';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 
-export const CatMan = () => {
+export const CategoryManager = () => {
     const item = registry.get('accordionItem', 'category');
     const dispatch = useDispatch();
     const clear = useCallback(() => dispatch(cmClearSelection()), [dispatch]);
@@ -38,7 +38,7 @@ export const CatMan = () => {
 
     return (
         <LayoutModule
-            navigation={<ContentNavigationContainer accordionItemTarget="catMan"
+            navigation={<ContentNavigationContainer accordionItemTarget="category-manager"
                                                     selector={selector}
                                                     handleNavigationAction={handleNavigationAction}
                                                     header={<NavigationHeader isDisplaySiteSwitcher={false}
@@ -54,12 +54,12 @@ export const CatMan = () => {
                             {item && (
                                 item.routeComponent ? (
                                     <Route key={item.key}
-                                           path="/catMan/:lang/:mode"
+                                           path="/category-manager/:lang/:mode"
                                            render={p =>
                                                <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
                                     />
                                 ) : (<Route key={item.key}
-                                            path="/catMan/:lang/:mode"
+                                            path="/category-manager/:lang/:mode"
                                             render={props =>
                                                 <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
                                     />
@@ -73,4 +73,4 @@ export const CatMan = () => {
     );
 };
 
-export default CatMan;
+export default CategoryManager;

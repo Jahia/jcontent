@@ -318,8 +318,8 @@ export class CategoryManager extends JContent {
         Object.assign(this, base);
     }
 
-    static visitCatMan(language: string): CategoryManager {
-        cy.visit(`/jahia/catMan/${language}/category/`);
+    static visitCategoryManager(language: string): CategoryManager {
+        cy.visit(`/jahia/category-manager/${language}/category/`);
         return new CategoryManager(new JContent());
     }
 

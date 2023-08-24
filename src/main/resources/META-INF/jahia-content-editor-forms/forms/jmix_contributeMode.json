@@ -1,0 +1,29 @@
+{
+  "nodeType": "jmix:contributeMode",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "listOrdering",
+      "fieldSets": [
+        {
+          "name": "jmix:contributeMode",
+          "descriptionKey": "label.contentEditor.section.fieldSet.contributeMode.description",
+          "rank" : "0.5",
+          "requiredPermission" : "viewContentTypeRestrictionTab",
+          "fields" : [
+            {
+              "rank": 0.0,
+              "name": "j:editableInContribution",
+              "hide": true
+            },
+            {
+              "rank": 1.0,
+              "name": "j:contributeTypes",
+              "selectorType": "MultipleLeftRightSelector"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

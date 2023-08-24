@@ -1,7 +1,7 @@
 import {CategoryManager} from '../../page-object';
 const accordionItemName = 'category';
 describe('Category Manager', () => {
-    let catMan: CategoryManager;
+    let categoryManager: CategoryManager;
 
     before(() => {
         cy.apollo({mutationFile: 'jcontent/createCategories.graphql'});
@@ -13,20 +13,20 @@ describe('Category Manager', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        catMan = CategoryManager.visitCatMan('en');
+        categoryManager = CategoryManager.visitCatMan('en');
     });
 
     it('Should open Category Manager', () => {
-        catMan.getSecondaryNav().get().contains('Category Manager').should('be.visible');
+        categoryManager.getSecondaryNav().get().contains('Category Manager').should('be.visible');
     });
 
     it('Create a new category', () => {
-        catMan.getCreateCategory();
+        categoryManager.getCreateCategory();
         cy.contains('Create category').should('be.visible');
     });
 
     it('Navigates to sub category Category 2', () => {
-        const accordionItem = catMan.getAccordionItem(accordionItemName);
+        const accordionItem = categoryManager.getAccordionItem(accordionItemName);
         accordionItem.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('Test Category 1').should('be.visible');
         accordionItem.expandTreeItem('rootTestCategory');
@@ -36,7 +36,7 @@ describe('Category Manager', () => {
     });
 
     it('Contains only expected actions in primary header action', () => {
-        const accordionItem = catMan.getAccordionItem(accordionItemName);
+        const accordionItem = categoryManager.getAccordionItem(accordionItemName);
         accordionItem.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('Test Category 1').should('be.visible');
         const primaryActions = ['New category', 'Edit', 'Import content', 'Refresh'];
@@ -46,22 +46,22 @@ describe('Category Manager', () => {
     });
 
     it('Performs a simple search at the root level', () => {
-        const basicSearch = catMan.getBasicSearch().openSearch().reset(true);
+        const basicSearch = categoryManager.getBasicSearch().openSearch().reset(true);
         basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Root Test Category', 'Test Category 1', 'Test Category 2']).verifyTotalCount(3);
     });
 
     it('Performs a simple search at the specified level', () => {
-        const accordionItem = catMan.getAccordionItem(accordionItemName).click();
+        const accordionItem = categoryManager.getAccordionItem(accordionItemName).click();
         accordionItem.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('Test Category 1').should('be.visible');
-        const basicSearch = catMan.getBasicSearch().openSearch().reset(true);
+        const basicSearch = categoryManager.getBasicSearch().openSearch().reset(true);
         basicSearch.searchTerm('Test Category').executeSearch().verifyResults(['Test Category 1', 'Test Category 2']).verifyTotalCount(2);
     });
 
     it('Shows usages for sub categories when deleting Companies category', () => {
-        const accordionItem = catMan.getAccordionItem(accordionItemName);
+        const accordionItem = categoryManager.getAccordionItem(accordionItemName);
         accordionItem.getTreeItem('categories').click({multiple: true});
-        catMan.getTable().getRowByLabel('Companies')
+        categoryManager.getTable().getRowByLabel('Companies')
             .contextMenu()
             .select('Delete');
 

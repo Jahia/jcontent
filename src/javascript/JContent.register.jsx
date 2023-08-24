@@ -21,7 +21,7 @@ import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
 import hashes from './localesHash!';
-import CatManApp from './CatManApp';
+import CategoryManagerApp from './CategoryManagerApp';
 import {extractPaths} from '~/JContent/JContent.utils';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
 import {Redirect} from 'react-router';
@@ -83,7 +83,7 @@ export default function () {
         );
     };
 
-    const CatManNavItem = props => {
+    const CategoryManagerNavItem = props => {
         const dispatch = useDispatch();
         const {t} = useTranslation('jcontent');
         const {language, pathname} = useSelector(state => ({
@@ -102,17 +102,17 @@ export default function () {
         }
 
         return (
-            <PrimaryNavItem key="/catMan"
+            <PrimaryNavItem key="/category-manager"
                             {...props}
-                            isSelected={pathname.startsWith('/catMan')}
+                            isSelected={pathname.startsWith('/category-manager')}
                             label={t('label.categoryManager.name')}
                             icon={<Tag/>}
                             onClick={() => {
-                                const newPath = localStorage.getItem('catMan-previous-location') || '';
+                                const newPath = localStorage.getItem('category-manager-previous-location') || '';
                                 const paths = extractPaths('systemsite', newPath, 'category').slice(0, -1);
                                 dispatch(batchActions([
                                     cmOpenPaths(paths),
-                                    cmGoto({app: 'catMan', language, mode: 'category', path: newPath, params: {}})
+                                    cmGoto({app: 'category-manager', language, mode: 'category', path: newPath, params: {}})
                                 ]));
                             }}/>
         );
@@ -130,19 +130,19 @@ export default function () {
         render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
     });
 
-    registry.add('primary-nav-item', 'catMan', {
+    registry.add('primary-nav-item', 'category-manager', {
         targets: ['nav-root-top:4.1'],
         requiredPermission: 'categoryManager',
         requiredPermissionPath: '/sites/systemsite/categories',
-        render: () => <CatManNavItem/>
+        render: () => <CategoryManagerNavItem/>
     });
 
-    registry.add('route', 'route-catMan', {
+    registry.add('route', 'route-category-manager', {
         targets: ['main:3'],
-        path: '/catMan/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
+        path: '/category-manager/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
         requiredPermission: 'categoryManager',
         requiredPermissionPath: '/sites/systemsite/categories',
-        render: () => <CatManApp/>
+        render: () => <CategoryManagerApp/>
     });
     if (booleanValue(contextJsParameters.config.jcontent?.hideLegacyPageComposer)) {
         registry.add('route', 'pageBuilderToPageComposerRoute', {

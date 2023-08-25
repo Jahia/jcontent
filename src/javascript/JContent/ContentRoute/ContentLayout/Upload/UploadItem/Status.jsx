@@ -4,7 +4,8 @@ import {AddCircle, Check, Information, Loader, Typography} from '@jahia/moonston
 import styles from './UploadItem.scss';
 import {useTranslation} from 'react-i18next';
 
-const Status = ({status, error, type}) => {
+const Status = ({upload}) => {
+    const {status, error, type} = upload;
     const {t} = useTranslation('jcontent');
     let content;
 

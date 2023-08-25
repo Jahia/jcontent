@@ -1,182 +1,65 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {Button, Typography} from '@jahia/moonstone';
-import {compose} from '~/utils';
-import {withApollo} from '@apollo/react-hoc';
-import {uploadStatuses} from '../Upload.constants';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
 import EditButton from './EditButton';
 import {registry} from '@jahia/ui-extender';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './UploadItem.scss';
-import {onFilesSelected} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
+import {useApolloClient} from '@apollo/client';
+import {useDispatch} from 'react-redux';
+import {
+    NUMBER_OF_SIMULTANEOUS_UPLOADS,
+    uploadStatuses
+} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.constants';
 import {batchActions} from 'redux-batched-actions';
+import {
+    fileuploadRemoveUpload,
+    fileuploadTakeFromQueue,
+    fileuploadUpdateUpload
+} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 
 const UPLOAD_DELAY = 200;
 
-export class UploadItem extends React.Component {
-    constructor(props) {
-        super(props);
-        this.client = null;
-        this.state = {
-            userChosenName: null,
-            anchorEl: null,
-            component: null,
-            uuid: null
-        };
+export const UploadItem = ({upload, index}) => {
+    const [userChosenName, setUserChosenName] = useState();
+    const [modalAnchor, setModalAnchor] = useState();
+    const [component, setComponent] = useState();
+    const [uuid, setUuid] = useState();
 
-        this.doUploadAndStatusUpdate = this.doUploadAndStatusUpdate.bind(this);
+    const dispatch = useDispatch();
+
+    const {t} = useTranslation();
+    const {file, entry} = upload;
+    const client = useApolloClient();
+
+    const getFileName = useCallback(() => userChosenName ? userChosenName : (file ? file.name : entry.name).normalize('NFC'), [entry.name, file, userChosenName]);
+
+    const fileName = getFileName();
+    const isNameSizeValid = fileName && fileName.length <= contextJsParameters.config.maxNameSize;
+    const isNameCharsValid = fileName.match(JContentConstants.namingInvalidCharactersRegexp) === null;
+    let errMsg = '';
+
+    if (!isNameSizeValid) {
+        errMsg = t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
     }
 
-    // Dependent on timing conditions, sometimes the component is mounted when the upload item has entered the UPLOADING state already.
-    componentDidMount() {
-        if (this.props.status === uploadStatuses.UPLOADING) {
-            this.doUploadAndStatusUpdate();
-            this.props.updateUploadsStatus();
-        }
+    if (!isNameCharsValid) {
+        errMsg = t('jcontent:label.contentManager.fileUpload.invalidChars');
     }
 
-    // And sometimes the upload item enters the UPLOADING state when the component has already been mounted.
-    componentDidUpdate(prevProps) {
-        if (this.props.status === uploadStatuses.UPLOADING && prevProps.status !== uploadStatuses.UPLOADING) {
-            this.doUploadAndStatusUpdate();
-            this.props.updateUploadsStatus();
-        }
-    }
-
-    render() {
-        const {t, file, entry} = this.props;
-
-        const fileName = this.getFileName();
-        const isNameSizeValid = fileName && fileName.length <= contextJsParameters.config.maxNameSize;
-        const isNameCharsValid = fileName.match(JContentConstants.namingInvalidCharactersRegexp) === null;
-        let errMsg = '';
-
-        if (!isNameSizeValid) {
-            errMsg = t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
-        }
-
-        if (!isNameCharsValid) {
-            errMsg = t('jcontent:label.contentManager.fileUpload.invalidChars');
-        }
-
-        return (
-            <div className={styles.listItem}>
-                <Typography className={styles.fileNameText}>
-                    {fileName}
-                </Typography>
-                <SecondaryActionsList
-                    {...this.props}
-                    showRenameDialog={e => this.setState({
-                        anchorEl: e.currentTarget
-                    })}
-                    doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}
-                />
-                <div className={styles.grow}/>
-                <Status {...this.props}/>
-                {this.state.component}
-                {file && <EditButton {...this.props} uuid={this.state.uuid}/>}
-                <Dialog open={this.state.anchorEl !== null}>
-                    <DialogTitle>
-                        {t('jcontent:label.contentManager.fileUpload.dialogRenameTitle')}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {t('jcontent:label.contentManager.fileUpload.dialogRenameText')}
-                        </DialogContentText>
-                        <TextField
-                            fullWidth
-                            autoFocus
-                            error={Boolean(errMsg)}
-                            label={t('jcontent:label.contentManager.fileUpload.newName')}
-                            type="text"
-                            id="rename-dialog-text"
-                            name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
-                            helperText={errMsg}
-                            defaultValue={(file ? file.name : entry.name).normalize('NFC')}
-                            onChange={e => this.setState({userChosenName: e.target.value})}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} data-cm-role="rename-dialog-cancel" size="big" onClick={() => this.setState({anchorEl: null})}/>
-                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')} data-cm-role="rename-dialog" size="big" color="accent" isDisabled={Boolean(errMsg)} onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}/>
-                    </DialogActions>
-                </Dialog>
-            </div>
-        );
-    }
-
-    doUploadAndStatusUpdate(type = this.props.type) {
-        const upload = {
-            id: this.props.id,
-            status: null,
-            error: null,
-            path: this.props.path,
-            type: this.props.type,
-            uuid: null
-        };
-        try {
-            this.handleUpload(type).then(uploadReturnObj => {
-                upload.status = uploadStatuses.UPLOADED;
-                upload.uuid = uploadReturnObj.uuid;
-
-                setTimeout(() => {
-                    this.props.uploadFile(upload);
-                    this.props.updateUploadsStatus();
-                    const {component, uuid} = uploadReturnObj;
-                    if (typeof component !== 'undefined' && component !== null && React.isValidElement(component)) {
-                        this.setState({component: component});
-                    }
-
-                    if (typeof uuid !== 'undefined' && uuid !== null) {
-                        this.setState({uuid: uuid});
-                    }
-                }, UPLOAD_DELAY);
-            }).catch(e => {
-                // Server side errors
-                upload.status = uploadStatuses.HAS_ERROR;
-
-                if (e.message.indexOf('GqlJcrWrongInputException') !== -1) {
-                    upload.error = 'WRONG_INPUT';
-                }
-
-                if (e.message.indexOf('ItemExistsException') !== -1) {
-                    upload.error = 'FILE_EXISTS';
-                }
-
-                if (e.message.indexOf('FileSizeLimitExceededException') !== -1) {
-                    upload.error = 'INCORRECT_SIZE';
-                }
-
-                setTimeout(() => {
-                    this.props.uploadFile(upload);
-                    this.props.updateUploadsStatus();
-                }, UPLOAD_DELAY);
-            });
-        } catch (error) {
-            // Client side errors
-            upload.status = uploadStatuses.HAS_ERROR;
-            upload.error = error.message;
-
-            setTimeout(() => {
-                this.props.uploadFile(upload);
-                this.props.updateUploadsStatus();
-            }, UPLOAD_DELAY);
-        }
-    }
-
-    handleUpload(type) {
-        const {file, path, client} = this.props;
+    const handleUpload = useCallback(type => {
+        const {file, path} = upload;
         const normalizedPath = path.normalize('NFC');
         if (type === 'import') {
             return registry.get('fileUpload', 'import').handleUpload({path: normalizedPath, file, client});
         }
 
         if (type === 'replace') {
-            let newPath = `${normalizedPath}/${this.getFileName()}`;
+            let newPath = `${normalizedPath}/${getFileName()}`;
             return registry.get('fileUpload', 'replace').handleUpload({path: newPath, file, client});
         }
 
@@ -184,20 +67,73 @@ export class UploadItem extends React.Component {
             return registry.get('fileUpload', 'replace').handleUpload({path: normalizedPath, file, client});
         }
 
-        const filename = this.getFileName();
+        const filename = getFileName();
         return registry.get('fileUpload', 'default').handleUpload({path: normalizedPath, file, filename, client});
-    }
+    }, [client, getFileName, upload]);
 
-    getFileName() {
-        return (this.state.userChosenName ? this.state.userChosenName : (this.props.file ? this.props.file.name : this.props.entry.name).normalize('NFC'));
-    }
+    const doUploadAndStatusUpdate = useCallback((type = upload.type) => {
+        const newUpload = {
+            id: upload.id,
+            status: null,
+            error: null,
+            path: upload.path,
+            type: upload.type,
+            uuid: null
+        };
+        try {
+            handleUpload(type).then(uploadReturnObj => {
+                newUpload.status = uploadStatuses.UPLOADED;
+                newUpload.uuid = uploadReturnObj.uuid;
 
-    changeStatusToUploading() {
-        if (this.props.isFolder) {
-            this.props.removeUploadFromQueue(this.props.index);
-            this.props.subEntries.forEach(file => {
-                file.path = file.path.replace(this.props.path + '/' + this.props.entry.name, this.props.path + '/' + this.state.userChosenName);
-                file.invalidParents.splice(file.invalidFolders.indexOf(this.props.entry), 1);
+                setTimeout(() => {
+                    dispatch(batchActions([fileuploadUpdateUpload(newUpload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
+
+                    const {component, uuid} = uploadReturnObj;
+                    if (typeof component !== 'undefined' && component !== null && React.isValidElement(component)) {
+                        setComponent(component);
+                    }
+
+                    if (typeof uuid !== 'undefined' && uuid !== null) {
+                        setUuid(uuid);
+                    }
+                }, UPLOAD_DELAY);
+            }).catch(e => {
+                // Server side errors
+                newUpload.status = uploadStatuses.HAS_ERROR;
+
+                if (e.message.indexOf('GqlJcrWrongInputException') !== -1) {
+                    newUpload.error = 'WRONG_INPUT';
+                }
+
+                if (e.message.indexOf('ItemExistsException') !== -1) {
+                    newUpload.error = 'FILE_EXISTS';
+                }
+
+                if (e.message.indexOf('FileSizeLimitExceededException') !== -1) {
+                    newUpload.error = 'INCORRECT_SIZE';
+                }
+
+                setTimeout(() => {
+                    dispatch(batchActions([fileuploadUpdateUpload(newUpload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
+                }, UPLOAD_DELAY);
+            });
+        } catch (error) {
+            // Client side errors
+            newUpload.status = uploadStatuses.HAS_ERROR;
+            newUpload.error = error.message;
+
+            setTimeout(() => {
+                dispatch(batchActions([fileuploadUpdateUpload(newUpload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
+            }, UPLOAD_DELAY);
+        }
+    }, [dispatch, handleUpload, upload]);
+
+    const changeStatusToUploading = useCallback(() => {
+        if (upload.isFolder) {
+            dispatch(fileuploadRemoveUpload(index));
+            upload.subEntries.forEach(file => {
+                file.path = file.path.replace(upload.path + '/' + upload.entry.name, upload.path + '/' + userChosenName);
+                file.invalidParents.splice(file.invalidFolders.indexOf(upload.entry), 1);
             });
             // Handle file upload and directory creation
             // const acceptedFiles = this.props.subEntries.filter(f => f.invalidParents.length === 0);
@@ -209,37 +145,81 @@ export class UploadItem extends React.Component {
             //     });
             // }
         } else {
-            const upload = {
-                id: this.props.id,
+            const newUpload = {
+                id: upload.id,
                 status: uploadStatuses.UPLOADING,
                 error: null,
-                path: this.props.path
+                path: upload.path
             };
-            this.props.updateUpload(upload);
+            dispatch(fileuploadUpdateUpload(newUpload));
         }
-    }
-}
+    }, [upload, dispatch, index, userChosenName]);
 
-UploadItem.propTypes = {
-    updateUploadsStatus: PropTypes.func.isRequired,
-    file: PropTypes.object,
-    entry: PropTypes.object,
-    t: PropTypes.func.isRequired,
-    status: PropTypes.string.isRequired,
-    isFolder: PropTypes.bool,
-    type: PropTypes.string,
-    id: PropTypes.string.isRequired,
-    index: PropTypes.number,
-    path: PropTypes.string.isRequired,
-    subEntries: PropTypes.array,
-    client: PropTypes.object.isRequired,
-    updateUpload: PropTypes.func.isRequired,
-    uploadFile: PropTypes.func.isRequired,
-    removeUploadFromQueue: PropTypes.func.isRequired,
-    dispatchBatch: PropTypes.func.isRequired
+    useEffect(() => {
+        if (upload.status === uploadStatuses.UPLOADING) {
+            console.log('do upload');
+            doUploadAndStatusUpdate();
+        }
+    }, [doUploadAndStatusUpdate, upload]);
+
+    return (
+        <div className={styles.listItem}>
+            <Typography className={styles.fileNameText}>
+                {fileName}
+            </Typography>
+            <SecondaryActionsList upload={upload}
+                                  index={index}
+                                  doUploadAndStatusUpdate={doUploadAndStatusUpdate}
+                                  showRenameDialog={e => setModalAnchor(e.currentTarget)}
+            />
+            <div className={styles.grow}/>
+            <Status upload={upload}/>
+            {component}
+            {file && <EditButton upload={upload} uuid={uuid}/>}
+            <Dialog open={modalAnchor}>
+                <DialogTitle>
+                    {t('jcontent:label.contentManager.fileUpload.dialogRenameTitle')}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {t('jcontent:label.contentManager.fileUpload.dialogRenameText')}
+                    </DialogContentText>
+                    <TextField
+                        fullWidth
+                        autoFocus
+                        error={Boolean(errMsg)}
+                        label={t('jcontent:label.contentManager.fileUpload.newName')}
+                        type="text"
+                        id="rename-dialog-text"
+                        name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
+                        helperText={errMsg}
+                        defaultValue={(file ? file.name : entry.name).normalize('NFC')}
+                        onChange={e => setUserChosenName(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
+                            data-cm-role="rename-dialog-cancel"
+                            size="big"
+                            onClick={() => setModalAnchor(null)}/>
+                    <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')}
+                            data-cm-role="rename-dialog"
+                            size="big"
+                            color="accent"
+                            isDisabled={Boolean(errMsg)}
+                            onClick={() => {
+                                setModalAnchor(null);
+                                changeStatusToUploading();
+                            }}/>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
 };
 
-export default compose(
-    withTranslation(),
-    withApollo
-)(UploadItem);
+UploadItem.propTypes = {
+    index: PropTypes.number,
+    upload: PropTypes.object.isRequired
+};
+
+export default UploadItem;

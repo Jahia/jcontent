@@ -8,7 +8,7 @@ import {useContentEditorConfigContext, useContentEditorContext, useContentEditor
 import {validate} from '~/ContentEditor/validation';
 import {createNode} from './createNode';
 import {useApolloClient} from '@apollo/client';
-import {triggerRefetchAll} from "~/JContent/JContent.refetches";
+import {refetchTypes, triggerRefetch, triggerRefetchAll} from "~/JContent/JContent.refetches";
 
 export const Create = () => {
     const notificationContext = useNotifications();
@@ -41,7 +41,8 @@ export const Create = () => {
             },
             createCallback: info => {
                 createCallback(info, contentEditorConfigContext);
-                triggerRefetchAll();
+                triggerRefetch(refetchTypes.CONTENT_DATA);
+                triggerRefetch(refetchTypes.PAGE_BUILDER_BOXES);
             }
         });
     };

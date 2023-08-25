@@ -84,5 +84,6 @@
 
     <modules>
         <module>jcontent-test-module</module>
+        <module>jcontent-test-template</module>
   </modules>
 </project>

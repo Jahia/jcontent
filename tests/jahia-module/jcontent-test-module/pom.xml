@@ -37,19 +37,23 @@
 
     If you are unsure which license is appropriate for your use,
     please contact the sales department at sales@jahia.com.
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>jahia-modules</artifactId>
         <groupId>org.jahia.modules</groupId>
         <version>8.2.0.0-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath />
     </parent>
     <groupId>org.jahia.test</groupId>
-    <artifactId>jcontent-test-module-root</artifactId>
-    <name>jContent Test Module Root</name>
+    <artifactId>jcontent-test-module</artifactId>
+    <name>jContent Test Module</name>
     <version>3.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>bundle</packaging>
     <description>This is the custom module (text-field-initializer) for content-editor cypress tests.</description>
 
     <repositories>
@@ -81,8 +85,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <modules>
-        <module>jcontent-test-module</module>
-  </modules>
 </project>

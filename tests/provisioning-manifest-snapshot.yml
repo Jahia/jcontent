@@ -12,7 +12,7 @@
     - 'mvn:org.jahia.modules/jahia-administration'
     - 'mvn:org.jahia.modules/graphql-dxm-provider'
     - 'mvn:org.jahia.modules/jahia-ui-root'
-    - 'mvn:org.jahia.test/content-editor-test-module'
+    - 'mvn:org.jahia.test/jcontent-test-module'
   autoStart: true
   uninstallPreviousVersion: true
 - include: 'provisioning.yml'

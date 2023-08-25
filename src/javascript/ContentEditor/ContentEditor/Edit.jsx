@@ -13,7 +13,7 @@ import {updateNode} from './updateNode';
 import {LockManager} from './LockManager';
 import {useTranslation} from 'react-i18next';
 import {useApolloClient} from '@apollo/client';
-import {refetchTypes, triggerRefetch, triggerRefetchAll} from "~/JContent/JContent.refetches";
+import {refetchTypes, triggerRefetch} from "~/JContent/JContent.refetches";
 
 export const Edit = () => {
     const notificationContext = useNotifications();

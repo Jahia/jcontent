@@ -12,6 +12,8 @@ import EditButton from './EditButton';
 import {registry} from '@jahia/ui-extender';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './UploadItem.scss';
+import {onFilesSelected} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
+import {batchActions} from 'redux-batched-actions';
 
 const UPLOAD_DELAY = 200;
 
@@ -192,7 +194,20 @@ export class UploadItem extends React.Component {
 
     changeStatusToUploading() {
         if (this.props.isFolder) {
-            // Handle folder rename
+            this.props.removeUploadFromQueue(this.props.index);
+            this.props.subEntries.forEach(file => {
+                file.path = file.path.replace(this.props.path + '/' + this.props.entry.name, this.props.path + '/' + this.state.userChosenName);
+                file.invalidParents.splice(file.invalidFolders.indexOf(this.props.entry), 1);
+            });
+            // Handle file upload and directory creation
+            // const acceptedFiles = this.props.subEntries.filter(f => f.invalidParents.length === 0);
+            // if (acceptedFiles.length > 0) {
+            //     onFilesSelected({
+            //         acceptedFiles,
+            //         dispatchBatch: this.props.dispatchBatch,
+            //         type: 'upload'
+            //     });
+            // }
         } else {
             const upload = {
                 id: this.props.id,
@@ -214,11 +229,14 @@ UploadItem.propTypes = {
     isFolder: PropTypes.bool,
     type: PropTypes.string,
     id: PropTypes.string.isRequired,
+    index: PropTypes.number,
     path: PropTypes.string.isRequired,
+    subEntries: PropTypes.array,
     client: PropTypes.object.isRequired,
     updateUpload: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
-    removeUploadFromQueue: PropTypes.func.isRequired
+    removeUploadFromQueue: PropTypes.func.isRequired,
+    dispatchBatch: PropTypes.func.isRequired
 };
 
 export default compose(

@@ -117,10 +117,14 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                             status: uploadStatuses.HAS_ERROR,
                             isFolder: true,
                             ...dir,
+                            subEntries: [...files, ...cannotCreate].filter(f => f.entryPath.startsWith(dir.entryPath + '/')),
                             id: v4()
                         }));
                         uploads.forEach(dir => {
                             acceptedFiles = acceptedFiles.filter(f => f.path !== (uploadPath + dir.entry.fullPath) && !f.path.startsWith(uploadPath + dir.entry.fullPath + '/'));
+                            dir.subEntries.forEach(f => {
+                                f.invalidParents = [...(f.invalidParents || []), dir.entry];
+                            });
                         });
                         dispatch(fileuploadAddUploads(uploads));
                     }

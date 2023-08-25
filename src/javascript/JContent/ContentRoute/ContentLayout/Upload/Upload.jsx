@@ -71,7 +71,7 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
+        let {uploads, updateUpload, uploadFile, removeUploadFromQueue, dispatchBatch} = this.props;
 
         return (
             <Snackbar open={uploads.length > 0} classes={{root: styles.snackBar}}>
@@ -86,6 +86,7 @@ export class Upload extends React.Component {
                                     updateUpload={updateUpload}
                                     uploadFile={uploadFile}
                                     removeUploadFromQueue={removeUploadFromQueue}
+                                    dispatchBatch={dispatchBatch}
                                     {...upload}
                                 />
                             ))}
@@ -179,8 +180,8 @@ const mapDispatchToProps = dispatch => {
         uploadFile: upload => {
             dispatch(batchActions([fileuploadUpdateUpload(upload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
         },
-        removeUploadFromQueue: index => dispatch(fileuploadRemoveUpload(index))
-
+        removeUploadFromQueue: index => dispatch(fileuploadRemoveUpload(index)),
+        dispatchBatch: actions => dispatch(batchActions(actions))
     };
 };
 
@@ -193,7 +194,8 @@ Upload.propTypes = {
     uploadUpdateCallback: PropTypes.func.isRequired,
     updateUpload: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
-    removeUploadFromQueue: PropTypes.func.isRequired
+    removeUploadFromQueue: PropTypes.func.isRequired,
+    dispatchBatch: PropTypes.func.isRequired
 };
 
 export default compose(

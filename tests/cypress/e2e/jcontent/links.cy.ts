@@ -1,6 +1,6 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
 import {Button, getComponentByRole} from '@jahia/cypress';
-import {PageComposer} from "../../page-object/pageComposer";
+import {PageComposer} from '../../page-object/pageComposer';
 
 describe('Links in jcontent', () => {
     let jcontent: JContentPageBuilder;
@@ -147,9 +147,9 @@ describe('Links in jcontent', () => {
 
     it('Trying to access legacy page composer redirect to page builder', () => {
         PageComposer.visit('jcontentSite', 'en', 'home.html');
-        jcontent.switchToListMode().getTable().getRowByLabel('test-content5')
+        jcontent.switchToListMode().getTable().getRowByLabel('test-content5');
         PageComposer.visit('digitall', 'en', 'home/demo-roles-and-users.html');
-        cy.url().should("include",'/jahia/jcontent/digitall/en/pages/home/demo-roles-and-users')
-        jcontent.switchToListMode().getTable().getRowByLabel('How to use this demonstration? You can discover Jahia 7 using the following users (login / password): root / root (if you\'re using the Demo Pack. Otherwise, the root password is the one set using the Jahia')
+        cy.url().should('include', '/jahia/jcontent/digitall/en/pages/home/demo-roles-and-users');
+        jcontent.switchToListMode().getTable().getRowByLabel('How to use this demonstration? You can discover Jahia 7 using the following users (login / password): root / root (if you\'re using the Demo Pack. Otherwise, the root password is the one set using the Jahia');
     });
 });

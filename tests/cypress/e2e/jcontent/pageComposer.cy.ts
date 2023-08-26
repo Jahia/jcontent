@@ -1,5 +1,6 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {Dropdown, getComponentByRole} from '@jahia/cypress';
+import {createSite, deleteSite, Dropdown, getComponentByRole} from '@jahia/cypress';
+import {addPageGql, addContentGql} from '../../fixtures/jcontent/pageComposer/setLimitContent';
 import {ContentEditor} from '../../page-object';
 
 describe('Page builder', () => {
@@ -60,7 +61,7 @@ describe('Page builder', () => {
 
         it('should show 1 create buttons with restrictions', () => {
             cy.apollo({
-                mutationFile: 'jcontent/setRestrictions.graphql',
+                mutationFile: 'jcontent/pageComposer/setRestrictions.graphql',
                 variables: {path: '/sites/jcontentSite/home/landing', values: ['jnt:event']}
             });
 
@@ -74,7 +75,7 @@ describe('Page builder', () => {
 
         it('should show 2 create buttons with restrictions', function () {
             cy.apollo({
-                mutationFile: 'jcontent/setRestrictions.graphql',
+                mutationFile: 'jcontent/pageComposer/setRestrictions.graphql',
                 variables: {path: '/sites/jcontentSite/home/landing', values: ['jnt:banner', 'jnt:event']}
             });
 
@@ -96,7 +97,7 @@ describe('Page builder', () => {
 
         it('should show global create button where there are too many restrictions', function () {
             cy.apollo({
-                mutationFile: 'jcontent/setRestrictions.graphql',
+                mutationFile: 'jcontent/pageComposer/setRestrictions.graphql',
                 variables: {
                     path: '/sites/jcontentSite/home/landing',
                     values: ['jnt:banner', 'jnt:event', 'bootstrap3nt:carousel', 'bootstrap3nt:collapse', 'bootstrap3nt:column', 'jnt:contentFolderReference']
@@ -149,6 +150,8 @@ describe('Page builder', () => {
     });
 
     describe('list limit', function () {
+        const limitSiteKey = 'limitSite';
+
         function removeLimit() {
             cy.apollo({
                 mutationFile: 'jcontent/removeLimit.graphql',
@@ -159,10 +162,16 @@ describe('Page builder', () => {
 
         before(() => {
             removeLimit();
+            createSite(limitSiteKey, {
+                serverName: 'localhost',
+                locale: 'en',
+                templateSet: 'jcontent-test-template'
+            });
         });
 
         after(() => {
             removeLimit();
+            deleteSite(limitSiteKey);
         });
 
         it('should show buttons before removing limit', () => {
@@ -172,7 +181,7 @@ describe('Page builder', () => {
 
         it('Set limit to landing section - graphql mutation', () => {
             cy.apollo({
-                mutationFile: 'jcontent/setLimit.graphql',
+                mutationFile: 'jcontent/pageComposer/setLimit.graphql',
                 variables: {path: '/sites/jcontentSite/home/landing'}
             });
         });
@@ -191,6 +200,30 @@ describe('Page builder', () => {
 
             cy.log('Assert no paste buttons after copy');
             jcontent.getModule('/sites/jcontentSite/home/landing')
+                .getCreateButtons()
+                .assertHasNoButton();
+        });
+
+        // Template 'simple' from 'jcontent-test-template' has an area list limit = 3
+
+        const limitPage = 'limitPage';
+
+        it('should show create button when template limit is not reached', () => {
+            cy.apollo({
+                mutation: addPageGql(limitSiteKey, limitPage)
+            });
+            JContent.visit(limitSiteKey, 'en', `pages/home/${limitPage}`);
+            jcontent.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`)
+                .getCreateButtons()
+                .getButton('New content');
+        });
+
+        it('should not show create button when template limit is reached', () => {
+            cy.apollo({
+                mutation: addContentGql(limitSiteKey, limitPage)
+            });
+            JContent.visit(limitSiteKey, 'en', `pages/home/${limitPage}`);
+            jcontent.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`)
                 .getCreateButtons()
                 .assertHasNoButton();
         });

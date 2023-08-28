@@ -54,7 +54,7 @@ describe('Create content tests', () => {
             contentEditor.getRichTextField('jnt:bigText_text').type('Newly created content');
             contentEditor.create();
             // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(500);
+            cy.wait(2500);
             cy.iframe(iframeSel).should('contain.text', 'Newly created content');
         });
         it('Update nelwy created content', () => {
@@ -65,7 +65,7 @@ describe('Create content tests', () => {
             contentEditor.getRichTextField('jnt:bigText_text').type('Newly updated content');
             contentEditor.save();
             // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(500);
+            cy.wait(2500);
             cy.iframe(iframeSel).should('contain.text', 'Newly updated contentNewly created content');
         });
     });

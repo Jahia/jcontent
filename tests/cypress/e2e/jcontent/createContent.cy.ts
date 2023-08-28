@@ -62,11 +62,12 @@ describe('Create content tests', () => {
             jcontent.getModule('/sites/jcontentSite/home/landing').get().scrollIntoView();
             jcontent.getModule('/sites/jcontentSite/home/landing/rich-text').doubleClick();
             const contentEditor = new ContentEditor();
-            contentEditor.getRichTextField('jnt:bigText_text').type('Newly updated content');
+            const richTextField = contentEditor.getRichTextField('jnt:bigText_text');
+            richTextField.setData('Newly updated content');
             contentEditor.save();
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
-            cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated contentNewly created content');
+            cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated content');
         });
     });
 });

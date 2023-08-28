@@ -213,16 +213,18 @@ export class JContent extends BasePage {
 }
 
 export class JContentPageBuilder extends JContent {
-    constructor(base: JContent) {
+    private alias: string;
+    constructor(base: JContent, alias = 'pcIframe') {
         super();
+        this.alias = alias;
         Object.assign(this, base);
     }
 
     iframe() {
         const iframeSel = '[data-sel-role="page-builder-frame-active"]';
-        cy.iframe(iframeSel).as('pcIframe');
-        cy.get('@pcIframe').find('[jahiatype="createbuttons"]');
-        return new BaseComponent(cy.get('@pcIframe'));
+        cy.iframe(iframeSel).as(this.alias);
+        cy.get(`@${this.alias}`).find('[jahiatype="createbuttons"]');
+        return new BaseComponent(cy.get(`@${this.alias}`));
     }
 
     getCreatePage(): void {
@@ -232,6 +234,7 @@ export class JContentPageBuilder extends JContent {
     getModule(path: string): PageBuilderModule {
         const parentFrame = this.iframe();
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
+        module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;
         return module;
     }

@@ -13,6 +13,7 @@ import {updateNode} from './updateNode';
 import {LockManager} from './LockManager';
 import {useTranslation} from 'react-i18next';
 import {useApolloClient} from '@apollo/client';
+import {refetchTypes, triggerRefetch} from '~/JContent/JContent.refetches';
 
 export const Edit = () => {
     const notificationContext = useNotifications();
@@ -49,12 +50,13 @@ export const Edit = () => {
                 const {originalNode, updatedNode} = info;
 
                 editCallback(info, contentEditorConfigContext);
-
                 // Hard reFetch to be able to enable publication menu from jContent menu displayed in header
                 // Note that node cache is flushed in save.request.js, we should probably replace this operation with
                 // Something less invasive as this one reloads ALL queries.
                 if (originalNode.path === updatedNode.path) {
                     client.reFetchObservableQueries();
+                    triggerRefetch(refetchTypes.CONTENT_DATA);
+                    triggerRefetch(refetchTypes.PAGE_BUILDER_BOXES);
                 }
             }
         });

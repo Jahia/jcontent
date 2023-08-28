@@ -1,5 +1,6 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
 import {Button, getComponentByRole} from '@jahia/cypress';
+import {PageComposer} from '../../page-object/pageComposer';
 
 describe('Links in jcontent', () => {
     let jcontent: JContentPageBuilder;
@@ -10,6 +11,7 @@ describe('Links in jcontent', () => {
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({mutationFile: 'jcontent/createLinks.graphql'});
         cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
+        cy.apollo({mutationFile: 'jcontent/disableLegacyPageComposer.graphql'});
     });
 
     after(function () {
@@ -141,5 +143,13 @@ describe('Links in jcontent', () => {
         cy.contains('Menu titles are used to organize pages and cannot be displayed in the current view. Switch to list view instead');
         getComponentByRole(Button, 'list-view-button').click();
         jcontent.getTable().getRowByLabel('Sub Menu Entry Page').get().should('be.visible');
+    });
+
+    it('Trying to access legacy page composer redirect to page builder', () => {
+        PageComposer.visit('jcontentSite', 'en', 'home.html');
+        jcontent.switchToListMode().getTable().getRowByLabel('test-content5');
+        PageComposer.visit('digitall', 'en', 'home/demo-roles-and-users.html');
+        cy.url().should('include', '/jahia/jcontent/digitall/en/pages/home/demo-roles-and-users');
+        jcontent.switchToListMode().getTable().getRowByLabel('How to use this demonstration? You can discover Jahia 7 using the following users (login / password): root / root (if you\'re using the Demo Pack. Otherwise, the root password is the one set using the Jahia');
     });
 });

@@ -1,7 +1,6 @@
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 
 describe('Create content tests', () => {
-
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
@@ -39,7 +38,7 @@ describe('Create content tests', () => {
 
     describe('Page Builder Creation', () => {
         const iframeSel = '[data-sel-role="page-builder-frame-active"]';
-        let jcontent: JContentPageBuilder
+        let jcontent: JContentPageBuilder;
         beforeEach(() => {
             cy.loginAndStoreSession();
             jcontent = JContent
@@ -47,25 +46,25 @@ describe('Create content tests', () => {
                 .switchToPageBuilder();
         });
 
-        it('Create content in page builder', () =>{
+        it('Create content in page builder', () => {
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons.get().scrollIntoView()
+            buttons.get().scrollIntoView();
             buttons.getButton('New content').click();
-            let contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('Rich text').selectContentType('Rich text').create();
-            contentEditor.getRichTextField('jnt:bigText_text').type('Newly created content')
-            contentEditor.create()
-            cy.wait(500)
-            cy.iframe(iframeSel).should('contain.text','Newly created content')
-        })
-         it('Update nelwy created content', () =>{
-             jcontent = new JContentPageBuilder(new JContent())
-             jcontent.getModule('/sites/jcontentSite/home/landing').get().scrollIntoView()
-             jcontent.getModule('/sites/jcontentSite/home/landing/rich-text').doubleClick()
-             let contentEditor = new ContentEditor();
-             contentEditor.getRichTextField('jnt:bigText_text').type('Newly updated content')
-             contentEditor.save()
-             cy.wait(500)
-             cy.iframe(iframeSel).should('contain.text','Newly updated contentNewly created content')
-         })
+            const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('Rich text').selectContentType('Rich text').create();
+            contentEditor.getRichTextField('jnt:bigText_text').type('Newly created content');
+            contentEditor.create();
+            cy.wait(500);
+            cy.iframe(iframeSel).should('contain.text', 'Newly created content');
+        });
+        it('Update nelwy created content', () => {
+            jcontent = new JContentPageBuilder(new JContent());
+            jcontent.getModule('/sites/jcontentSite/home/landing').get().scrollIntoView();
+            jcontent.getModule('/sites/jcontentSite/home/landing/rich-text').doubleClick();
+            const contentEditor = new ContentEditor();
+            contentEditor.getRichTextField('jnt:bigText_text').type('Newly updated content');
+            contentEditor.save();
+            cy.wait(500);
+            cy.iframe(iframeSel).should('contain.text', 'Newly updated contentNewly created content');
+        });
     });
 });

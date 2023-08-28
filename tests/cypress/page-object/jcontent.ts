@@ -214,7 +214,7 @@ export class JContent extends BasePage {
 
 export class JContentPageBuilder extends JContent {
     private alias: string;
-    constructor(base: JContent, alias: string = 'pcIframe') {
+    constructor(base: JContent, alias = 'pcIframe') {
         super();
         this.alias = alias;
         Object.assign(this, base);
@@ -234,7 +234,7 @@ export class JContentPageBuilder extends JContent {
     getModule(path: string): PageBuilderModule {
         const parentFrame = this.iframe();
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
-        module.should('exist').and('be.visible')
+        module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;
         return module;
     }

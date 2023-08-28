@@ -55,7 +55,7 @@ describe('Create content tests', () => {
             contentEditor.create();
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
-            cy.iframe(iframeSel).should('contain.text', 'Newly created content');
+            cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly created content');
         });
         it('Update nelwy created content', () => {
             jcontent = new JContentPageBuilder(new JContent());
@@ -66,7 +66,7 @@ describe('Create content tests', () => {
             contentEditor.save();
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
-            cy.iframe(iframeSel).should('contain.text', 'Newly updated contentNewly created content');
+            cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated contentNewly created content');
         });
     });
 });

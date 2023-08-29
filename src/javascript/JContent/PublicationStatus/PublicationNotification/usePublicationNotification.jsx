@@ -5,6 +5,7 @@ import {enqueueSnackbar} from 'notistack';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useSiteInfo} from '@jahia/data-helper';
+import {useState} from "react";
 
 export const usePublicationNotification = () => {
     const {t} = useTranslation('jcontent');
@@ -12,14 +13,18 @@ export const usePublicationNotification = () => {
         siteKey: state.site,
         language: state.language
     }), shallowEqual);
+    const [notificationData, setNotificationData] = useState(undefined)
     const {siteInfo, loading: siteInfoLoading, error: siteInfoError} = useSiteInfo({siteKey, displayLanguage: language});
     const {data: getUserData, loading: getUserLoading, error: getUserError} = useQuery(GetUserQuery);
-    const {data, loading, error} = useSubscription(SubscribeToPublicationData, {
+    const {loading, error} = useSubscription(SubscribeToPublicationData, {
         variables: {
             userKeys: [getUserData?.currentUser?.node?.path]
         },
         fetchPolicy: 'network-only',
-        skip: !getUserData || getUserLoading || getUserError || siteInfoLoading || siteInfoError
+        skip: !getUserData || getUserLoading || getUserError || siteInfoLoading || siteInfoError,
+        onData: ({data}) => {
+            setNotificationData(data.data)
+        }
     });
 
     const e = siteInfoError || getUserError || error;
@@ -27,10 +32,10 @@ export const usePublicationNotification = () => {
     if (e) {
         console.log(e);
     }
-
-    if (!e && !loading && data?.backgroundJobSubscription?.publicationJob && window.location.pathname.indexOf('/jahia/workflow') === -1) {
-        const language = data.backgroundJobSubscription.publicationJob.language;
-        const state = data.backgroundJobSubscription.publicationJob.jobState;
+    const optionsNotiStack = {autoHideDuration: 5000, preventDuplicate: true, onClose: () => {setNotificationData(undefined)}};
+    if (!e && !loading && notificationData !== undefined  && window.location.pathname.indexOf('/jahia/workflow') === -1) {
+        const language = notificationData.backgroundJobSubscription.publicationJob.language;
+        const state = notificationData.backgroundJobSubscription.publicationJob.jobState;
 
         let notifSuffix = '';
 
@@ -39,9 +44,9 @@ export const usePublicationNotification = () => {
         }
 
         if (state === 'STARTED') {
-            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.publishing${notifSuffix}`, {language: language}), {autoHideDuration: 5000});
+            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.publishing${notifSuffix}`, {language: language}), optionsNotiStack);
         } else if (state === 'FINISHED') {
-            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.published${notifSuffix}`, {language: language}), {autoHideDuration: 5000});
+            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.published${notifSuffix}`, {language: language}), optionsNotiStack);
         }
     }
 };

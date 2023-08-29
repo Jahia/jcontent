@@ -15,21 +15,22 @@
 
 // Import commands.js using ES2015 syntax:
 
-import "./commands";
+import './commands';
 import addContext from 'mochawesome/addContext';
-// import "@cypress/code-coverage/support";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('cypress-terminal-report/src/installLogsCollector')({
     xhr: {
         printHeaderData: true,
-        printRequestData: true,
+        printRequestData: true
     },
     enableExtendedCollector: true,
-    collectTypes: ['cons:log','cons:info', 'cons:warn', 'cons:error', 'cy:log', 'cy:xhr', 'cy:request', 'cy:intercept', 'cy:command'],
+    collectTypes: ['cons:log', 'cons:info', 'cons:warn', 'cons:error', 'cy:log', 'cy:xhr', 'cy:request', 'cy:intercept', 'cy:command']
 });
-require('@jahia/cypress/dist/support/registerSupport').registerSupport()
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('@jahia/cypress/dist/support/registerSupport').registerSupport();
 
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on('uncaught:exception', () => {
     // Returning false here prevents Cypress from
     // failing the test
     return false;

@@ -9,9 +9,10 @@ export const CreateNode = gql`
         $mixins: [String],
         $wipInfo: InputwipInfo!,
         $properties: [InputJCRProperty],
-        $children: [InputJCRNode]
+        $children: [InputJCRNode],
+        $language: String
     ) {
-        jcr {
+        jcr (sessionLanguage: $language){
             addNode(
                 parentPathOrId: $uuid,
                 name: $name,

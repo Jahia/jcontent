@@ -16,7 +16,7 @@ export const SavePropertiesMutation = gql`
         $wipInfo: InputwipInfo!,
         $shouldSetWip: Boolean!
     ) {
-        jcr {
+        jcr (sessionLanguage: $language) {
             mutateNode(pathOrId: $uuid) {
                 mutateWipInfo(wipInfo:$wipInfo) @include(if: $shouldSetWip)
             }

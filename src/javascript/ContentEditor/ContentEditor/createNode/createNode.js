@@ -28,7 +28,8 @@ export const createNode = ({
         primaryNodeType,
         mixins: mixinsToAdd,
         properties: propsToSave,
-        wipInfo
+        wipInfo,
+        language: language
     });
     // Hooks on content to be created
     const onCreates = registry.find({type: 'contentEditor.onCreate'});

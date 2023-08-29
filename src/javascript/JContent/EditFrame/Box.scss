@@ -146,3 +146,11 @@ $color-accent: rgb(0, 160, 227);
 :global .moonstone-tableHead {
     background-color: transparent;
 }
+
+.selected {
+    z-index: 1200;
+}
+
+.current {
+    z-index: 13000;
+}

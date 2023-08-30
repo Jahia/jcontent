@@ -10,7 +10,7 @@ const visitDateTimePicker = () => {
 };
 
 const deleteAndCheck = () => {
-    const dateTimePicker = new DateTimePicker();
+    const dateTimePicker = new DateTimePicker('qant:pickers_datetimepicker');
     deleteNodeProperty('/sites/testsite/contents/contentEditorPickers', 'datetimepicker', 'en');
     visitDateTimePicker();
     cy.reload();
@@ -42,7 +42,7 @@ describe('DateTime picker tests', () => {
 
     it('Test DateTime Picker', () => {
         cy.login();
-        const dateTimePicker = new DateTimePicker();
+        const dateTimePicker = new DateTimePicker('qant:pickers_datetimepicker');
         const contentEditor = new ContentEditor();
         contentEditor.advancedMode = true;
         visitDateTimePicker();
@@ -58,7 +58,7 @@ describe('DateTime picker tests', () => {
 
     it('Test without DateTime Picker', () => {
         cy.login();
-        const dateTimePicker = new DateTimePicker();
+        const dateTimePicker = new DateTimePicker('qant:pickers_datetimepicker');
         const contentEditor = new ContentEditor();
         contentEditor.advancedMode = true;
         visitDateTimePicker();

@@ -1,11 +1,14 @@
 import {DatePicker} from './datePicker';
 
 export class DateTimePicker extends DatePicker {
-    private dateTimePickerId: string;
+    private dateTimePickerId: string | null;
 
-    constructor(dateTimePickerId = 'qant:pickers_datetimepicker') {
+    constructor(dateTimePickerId?:string) {
         super();
-        this.dateTimePickerId = dateTimePickerId;
+        this.dateTimePickerId = null;
+        if(dateTimePickerId) {
+            this.dateTimePickerId = dateTimePickerId;
+        }
     }
 
     protected getNowTime(separator: string): string {

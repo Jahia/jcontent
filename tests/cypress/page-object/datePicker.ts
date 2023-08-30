@@ -3,7 +3,7 @@ export class DatePicker {
 
     constructor(datePickerId?:string) {
         this.datePickerId = null;
-        if(datePickerId) {
+        if (datePickerId) {
             this.datePickerId = datePickerId;
         }
     }

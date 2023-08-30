@@ -6,7 +6,7 @@ export class DateTimePicker extends DatePicker {
     constructor(dateTimePickerId?:string) {
         super();
         this.dateTimePickerId = null;
-        if(dateTimePickerId) {
+        if (dateTimePickerId) {
             this.dateTimePickerId = dateTimePickerId;
         }
     }

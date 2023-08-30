@@ -85,7 +85,7 @@ describe('Date picker tests', () => {
         deleteAndCheck();
     });
 
-    afterEach('Check Value is kept after saving and clean picker', () => {
+    afterEach('Logout', () => {
         cy.logout();
     });
 

@@ -1,6 +1,13 @@
 import {DatePicker} from './datePicker';
 
 export class DateTimePicker extends DatePicker {
+    private dateTimePickerId: string;
+
+    constructor(dateTimePickerId = 'qant:pickers_datetimepicker') {
+        super();
+        this.dateTimePickerId = dateTimePickerId;
+    }
+
     protected getNowTime(separator: string): string {
         const date = new Date();
         const hours = date.getHours();
@@ -37,7 +44,7 @@ export class DateTimePicker extends DatePicker {
     }
 
     public getTimePicker(): Cypress.Chainable {
-        return cy.get('input[id="qant:pickers_datetimepicker"]');
+        return cy.get(`input[id="${this.dateTimePickerId}"]`);
     }
 
     public open() {

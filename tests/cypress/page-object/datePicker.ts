@@ -1,5 +1,11 @@
 export class DatePicker {
-    private getTodayDate(separator: string): string {
+    private datePickerId: string;
+
+    constructor(datePickerId = 'qant:pickers_datepicker') {
+        this.datePickerId = datePickerId;
+    }
+
+    protected getTodayDate(separator: string): string {
         const date = new Date();
         const day = date.getDate();
         const month = date.getMonth() + 1;
@@ -11,7 +17,7 @@ export class DatePicker {
     }
 
     public getDatePicker(): Cypress.Chainable {
-        return cy.get('input[id="qant:pickers_datepicker"]');
+        return cy.get(`input[id="${this.datePickerId}"]`);
     }
 
     public open() {

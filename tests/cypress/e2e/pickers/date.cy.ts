@@ -5,32 +5,40 @@ import {
     deleteUser,
     grantRoles,
     addNode,
-    deleteNodeProperty
+    deleteNodeProperty,
+    getNodeByPath
 } from '@jahia/cypress';
 
 import {ContentEditor} from '../../page-object/contentEditor';
 import {DatePicker} from '../../page-object/datePicker';
 import {JContent} from '../../page-object/jcontent';
 
+const visitDatePicker = () => {
+    cy.get('@datePicker').then(uuid => {
+        cy.visit(`/jahia/jcontent/severalLanguages/fr/content-folders/contents#(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:fr,mode:edit,uuid:'${uuid}')))`);
+    });
+};
+
 const saveAndCheck = () => {
     const datePicker = new DatePicker();
     const contentEditor = new ContentEditor();
+    contentEditor.advancedMode = true;
     contentEditor.save();
-    cy.get('@datePicker').then(uuid => {
-        cy.visit(`/jahia/content-editor/en/edit/${uuid}`);
-    });
+    visitDatePicker();
     datePicker.checkTodayDate();
 };
 
 const deleteAndCheck = () => {
     const datePicker = new DatePicker();
     deleteNodeProperty('/sites/testsite/contents/contentEditorPickers', 'datepicker', 'en');
+    visitDatePicker();
     cy.reload();
     datePicker.checkDate('');
 };
 
 describe('Date picker tests', () => {
     before('Create required content', () => {
+        cy.login();
         createSite('testsite');
         createUser('myUser', 'password');
         grantRoles('/sites/testsite', ['editor'], 'myUser', 'USER');
@@ -44,15 +52,19 @@ describe('Date picker tests', () => {
             name: 'contentEditorPickers',
             primaryNodeType: 'qant:pickers'
         });
+        cy.logout();
     });
 
     beforeEach('Check datePicker is empty', () => {
         cy.login('myUser', 'password');
         JContent.visit('testsite', 'en', 'content-folders/contents').editComponentByText('contentEditorPickers');
+        getNodeByPath('/sites/testsite/contents/contentEditorPickers').its('data.jcr.nodeByPath.uuid').as('datePicker');
     });
 
     it('Test Date Picker', () => {
+        cy.login();
         const datePicker = new DatePicker();
+        visitDatePicker();
         datePicker.checkDate('');
         datePicker.pickTodayDate();
         cy.get('body').click();
@@ -62,7 +74,9 @@ describe('Date picker tests', () => {
     });
 
     it('Test without using picker', () => {
+        cy.login();
         const datePicker = new DatePicker();
+        visitDatePicker();
         datePicker.checkDate('');
         datePicker.typeTodayDate();
         cy.get('body').click();
@@ -71,7 +85,7 @@ describe('Date picker tests', () => {
         deleteAndCheck();
     });
 
-    afterEach('Check Value is kept after saving and clean picker', () => {
+    afterEach('Logout', () => {
         cy.logout();
     });
 

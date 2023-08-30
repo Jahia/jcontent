@@ -1,0 +1,26 @@
+package org.jahia.modules.jexperience.core.rules
+
+// list any import classes here.
+import java.util.List
+import org.jahia.services.content.rules.*
+import org.jahia.services.content.JCRNodeWrapper
+import org.jahia.services.content.JCRContentUtils
+import org.slf4j.Logger
+
+expander rules.dsl
+
+// declare any global variables here
+global User user
+global Service service
+global Logger logger
+
+rule "Set title in description"
+    when
+        Not in operation import
+        A new node is created
+           - the node has the type jnt:page
+    then
+        Log "**************************** Set title as description ****************************"
+        Log "hasProperty('jcr:title'): " + node.getNode().hasProperty("jcr:title") + " " + node.getNode().getPath() + " Lang: " + node.getLanguage()
+        Set the property jcr:description of the node with the value of node.getNode().getPropertyAsString("jcr:title")
+end

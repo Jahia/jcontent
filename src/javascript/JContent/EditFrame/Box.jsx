@@ -171,7 +171,7 @@ export const Box = React.memo(({
              className={clsx(styles.root, isSelected ? styles.selected : styles.current)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader)}>
+            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isSelected ? styles.selected : styles.current)}>
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&

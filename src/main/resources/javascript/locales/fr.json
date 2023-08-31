@@ -292,8 +292,7 @@
         "error_name": "{{name}} ne peut pas être déplacé vers {{dest}}."
       },
       "actions": {
-        "openInEditMode": "Ouvrir en mode édition",
-        "pageComposer": "Ouvrir dans Page Composer",
+        "openInJContent": "Ouvrir dans un nouvel onglet",
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
         },

@@ -295,8 +295,7 @@
         "error_name": "{{name}} cannot be moved to {{dest}}."
       },
       "actions": {
-        "pageComposer": "Open in Page Composer",
-        "openInJContent": "Open in jContent",
+        "openInJContent": "Open in a new tab",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

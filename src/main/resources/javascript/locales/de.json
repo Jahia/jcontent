@@ -292,8 +292,7 @@
         "error_name": "{{name}} kann nicht verschoben werden."
       },
       "actions": {
-        "openInEditMode": "Im Bearbeitungsmodus öffnen",
-        "pageComposer": "Im Page Composer öffnen",
+        "openInJContent": "In einem neuen Tab öffnen",
         "error": {
           "loading": "Fehler beim Abrufen der Aktionsdaten: {{details}}"
         },

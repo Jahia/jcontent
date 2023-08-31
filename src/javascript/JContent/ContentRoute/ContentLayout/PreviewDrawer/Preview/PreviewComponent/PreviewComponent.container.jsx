@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useContentPreview} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
 import PreviewComponent from './PreviewComponent';
@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 import {LoaderOverlay, LoaderSuspense} from '@jahia/jahia-ui-root';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 
 export const PreviewComponentContainer = ({previewMode, previewSelection, previewState, notificationContext}) => {
     const {t} = useTranslation('jcontent');
@@ -18,7 +19,12 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
         language,
         workspace: previewMode
     });
-
+    useEffect(() => {
+        setRefetcher(refetchTypes.PREVIEW_COMPONENT, {refetch: refetch});
+        return () => {
+            unsetRefetcher(refetchTypes.PREVIEW_COMPONENT);
+        };
+    });
     if (!loading && Object.keys(data || {}).length === 0) {
         refetch();
     }

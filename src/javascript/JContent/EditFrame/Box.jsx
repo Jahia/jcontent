@@ -52,14 +52,14 @@ export const Box = React.memo(({
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
 
     useEffect(() => {
-        element.addEventListener('mouseover', onMouseOver);
-        element.addEventListener('mouseout', onMouseOut);
+        element.addEventListener('mouseenter', onMouseOver);
+        element.addEventListener('mouseleave', onMouseOut);
         element.addEventListener('click', onClick);
         element.addEventListener('dblclick', onDoubleClick);
 
         return () => {
-            element.removeEventListener('mouseover', onMouseOver);
-            element.removeEventListener('mouseout', onMouseOut);
+            element.removeEventListener('mouseenter', onMouseOver);
+            element.removeEventListener('mouseleave', onMouseOut);
             element.removeEventListener('click', onClick);
             element.removeEventListener('dblclick', onDoubleClick);
         };
@@ -168,10 +168,10 @@ export const Box = React.memo(({
 
     return (
         <div ref={rootDiv}
-             className={styles.root}
+             className={clsx(styles.root, isSelected ? styles.selected : styles.current)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader)}>
+            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isSelected ? styles.selected : styles.current)}>
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&

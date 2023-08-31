@@ -344,7 +344,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          node={node}
                          isCurrent={element === currentElement}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={(selection.length === 1 && (selection.includes(node.path) || currentElement === null)) || element === currentElement}
+                         isHeaderDisplayed={element === currentElement || (selection.length === 1 && selection.includes(node.path))}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}

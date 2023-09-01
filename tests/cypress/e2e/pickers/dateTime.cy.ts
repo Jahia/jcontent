@@ -62,7 +62,7 @@ describe('DateTime picker tests', () => {
         const contentEditor = new ContentEditor();
         contentEditor.advancedMode = true;
         visitDateTimePicker();
-        dateTimePicker.checkDate('');
+        dateTimePicker.checkTime('');
         dateTimePicker.typeNowTime();
         cy.get('body').click();
         dateTimePicker.checkNowTime();

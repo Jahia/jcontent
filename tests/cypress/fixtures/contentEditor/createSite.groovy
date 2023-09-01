@@ -8,7 +8,7 @@ if (sitesService.getSiteByKey("SITEKEY") == null) {
             siteKey("SITEKEY").
             serverName("localhost").
             title("SITEKEY").
-            modulesToDeploy(new String[] {"content-editor-test-module"}).
+            modulesToDeploy(new String[] {"jcontent-test-module"}).
             templateSet("dx-base-demo-templates").
             locale("en").build())
 }

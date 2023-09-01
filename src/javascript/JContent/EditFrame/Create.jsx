@@ -55,13 +55,17 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
     });
 
     const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
-    let nodetypes;
+    let nodetypes = null;
     if (element.getAttribute('nodetypes')) {
         nodetypes = element.getAttribute('nodetypes').split(' ');
     } else if (parent.getAttribute('nodetypes') && parent.getAttribute('type') === 'area') {
         nodetypes = parent.getAttribute('nodetypes').split(' ');
-    } else {
-        nodetypes = null;
+    }
+
+    // Extract limit defined on template set
+    let templateLimit = null;
+    if (parent.getAttribute('listLimit') && parent.getAttribute('type') === 'area') {
+        templateLimit = Number(parent.getAttribute('listLimit'));
     }
 
     const {nodes} = copyPaste;
@@ -91,9 +95,25 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
         >
-            {nodes.length === 0 && (<DisplayAction actionKey="createContent" tooltipProps={tooltipProps} path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>)}
-            <DisplayAction actionKey="paste" tooltipProps={tooltipProps} path={parentPath} loading={() => false} render={ButtonRenderer}/>
-            <DisplayAction actionKey="pasteReference" tooltipProps={tooltipProps} path={parentPath} loading={() => false} render={ButtonRenderer}/>
+            {nodes.length === 0 &&
+                <DisplayAction actionKey="createContent"
+                               tooltipProps={tooltipProps}
+                               path={parentPath}
+                               name={nodePath}
+                               nodeTypes={nodetypes}
+                               templateLimit={templateLimit}
+                               loading={() => false}
+                               render={ButtonRenderer}/>}
+            <DisplayAction actionKey="paste"
+                           tooltipProps={tooltipProps}
+                           path={parentPath}
+                           loading={() => false}
+                           render={ButtonRenderer}/>
+            <DisplayAction actionKey="pasteReference"
+                           tooltipProps={tooltipProps}
+                           path={parentPath}
+                           loading={() => false}
+                           render={ButtonRenderer}/>
         </div>
     );
 });

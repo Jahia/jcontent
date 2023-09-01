@@ -2,7 +2,7 @@ import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {PageComposer} from '../../page-object/pageComposer';
 import {SmallTextField, DateField} from '../../page-object/fields';
 
-describe('Test the text field initializer)', () => {
+describe('Test the text field initializer', () => {
     const siteKey = 'extFieldInitializerTest';
     const langEN = 'en';
     const langFR = 'fr';
@@ -18,7 +18,7 @@ describe('Test the text field initializer)', () => {
     before(function () {
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         createSite(siteKey, siteConfig);
-        enableModule('content-editor-test-module', siteKey);
+        enableModule('jcontent-test-module', siteKey);
     });
 
     after(function () {

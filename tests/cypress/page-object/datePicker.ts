@@ -1,8 +1,11 @@
 export class DatePicker {
-    private datePickerId: string;
+    private datePickerId: string | null;
 
-    constructor(datePickerId = 'qant:pickers_datepicker') {
-        this.datePickerId = datePickerId;
+    constructor(datePickerId?:string) {
+        this.datePickerId = null;
+        if (datePickerId) {
+            this.datePickerId = datePickerId;
+        }
     }
 
     protected getTodayDate(separator: string): string {

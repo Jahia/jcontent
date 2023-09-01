@@ -20,7 +20,7 @@ const visitDatePicker = () => {
 };
 
 const saveAndCheck = () => {
-    const datePicker = new DatePicker();
+    const datePicker = new DatePicker('qant:pickers_datepicker');
     const contentEditor = new ContentEditor();
     contentEditor.advancedMode = true;
     contentEditor.save();
@@ -29,7 +29,7 @@ const saveAndCheck = () => {
 };
 
 const deleteAndCheck = () => {
-    const datePicker = new DatePicker();
+    const datePicker = new DatePicker('qant:pickers_datepicker');
     deleteNodeProperty('/sites/testsite/contents/contentEditorPickers', 'datepicker', 'en');
     visitDatePicker();
     cy.reload();
@@ -63,7 +63,7 @@ describe('Date picker tests', () => {
 
     it('Test Date Picker', () => {
         cy.login();
-        const datePicker = new DatePicker();
+        const datePicker = new DatePicker('qant:pickers_datepicker');
         visitDatePicker();
         datePicker.checkDate('');
         datePicker.pickTodayDate();
@@ -75,7 +75,7 @@ describe('Date picker tests', () => {
 
     it('Test without using picker', () => {
         cy.login();
-        const datePicker = new DatePicker();
+        const datePicker = new DatePicker('qant:pickers_datepicker');
         visitDatePicker();
         datePicker.checkDate('');
         datePicker.typeTodayDate();

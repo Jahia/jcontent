@@ -7,6 +7,7 @@ import {
 import {
     CreateFolders
 } from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-mutations';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const IGNORED_FILES = ['.DS_Store', '.localized'];
 
@@ -73,28 +74,42 @@ export const createMissingFolders = async (client, directories) => {
     const foldersChecks = await client.query({
         query: CheckNodeFolder,
         variables: {
-            paths: directories.map(dir => dir.path + '/' + dir.entry.name)
+            paths: directories.map(dir => dir.entryPath)
         },
         fetchPolicy: 'network-only',
         errorPolicy: 'ignore'
     });
-    const conflicts = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && !n.isNodeType));
-    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && n.isNodeType));
+
+    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && n.isNodeType));
+    directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && !n.isNodeType)).forEach(dir => {
+        dir.error = 'FOLDER_CONFLICT';
+    });
+    directories.filter(dir => (dir.userChosenName || dir.entry.name.normalize('NFC')).length > contextJsParameters.config.maxNameSize).forEach(dir => {
+        dir.error = 'FOLDER_FILE_NAME_SIZE';
+    });
+    directories.filter(dir => (dir.userChosenName || dir.entry.name.normalize('NFC')).match(JContentConstants.namingInvalidCharactersRegexp)).forEach(dir => {
+        dir.error = 'FOLDER_FILE_NAME_INVALID';
+    });
+    const cannotCreate = directories.filter(dir => dir.error);
+    // Add sub-folders that cannot be created because parent is invalid
+    cannotCreate.push(...directories.filter(dir => cannotCreate.indexOf(dir) === -1 && cannotCreate.find(errorDir => dir.entryPath.startsWith(errorDir.entryPath + '/'))));
+
     const created = directories
-        .filter(dir => !foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name))
-        .filter(dir => !conflicts.find(f => dir.path.startsWith(f.path + '/' + f.entry.name)));
+        .filter(dir => exists.indexOf(dir) === -1)
+        .filter(dir => cannotCreate.indexOf(dir) === -1);
+
     await client.mutate({
         mutation: CreateFolders,
         variables: {
             nodes: created.map(dir => ({
-                parentPathOrId: dir.path,
-                name: dir.entry.name,
+                parentPathOrId: dir.path.normalize('NFC'),
+                name: (dir.userChosenName || dir.entry.name.normalize('NFC')),
                 primaryNodeType: 'jnt:folder'
             }))
         }
     });
 
     return {
-        created, exists, conflicts
+        created, exists, cannotCreate
     };
 };

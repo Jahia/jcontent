@@ -28,7 +28,8 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
     async function scanFiles(entry) {
         if (entry.isDirectory) {
             directories.push({
-                path: uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)),
+                path: uploadPath + entry.fullPath.substring(0, entry.fullPath.lastIndexOf('/' + entry.name)),
+                isFolder: true,
                 entry
             });
             let directoryReader = entry.createReader();
@@ -74,6 +75,10 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
         return Promise.resolve();
     }));
 
+    [...files, ...directories].forEach(file => {
+        file.entryPath = (file.path + '/' + file.entry.name).normalize('NFC');
+    });
+
     return {files, directories};
 }
 
@@ -106,17 +111,20 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                 let acceptedFiles = files;
 
                 if (uploadType === JContentConstants.mode.UPLOAD) {
-                    const {conflicts} = await createMissingFolders(client, directories);
+                    const {cannotCreate} = await createMissingFolders(client, directories);
 
-                    if (conflicts.length > 0) {
-                        const uploads = conflicts.map(dir => ({
-                            status: uploadStatuses.HAS_ERROR,
-                            error: 'FOLDER_EXISTS',
-                            ...dir,
-                            id: v4()
-                        }));
-                        conflicts.forEach(dir => {
-                            acceptedFiles = acceptedFiles.filter(f => !f.path.startsWith(uploadPath + dir.entry.fullPath));
+                    if (cannotCreate.length > 0) {
+                        const uploads = cannotCreate.filter(dir => dir.error);
+                        uploads.forEach(dir => {
+                            dir.status = uploadStatuses.HAS_ERROR;
+                            dir.subEntries = [...files, ...cannotCreate].filter(f => f.entryPath.startsWith(dir.entryPath + '/'));
+                            dir.id = v4();
+                        });
+                        uploads.forEach(dir => {
+                            acceptedFiles = acceptedFiles.filter(f => f.path !== (uploadPath + dir.entry.fullPath) && !f.path.startsWith(uploadPath + dir.entry.fullPath + '/'));
+                            dir.subEntries.forEach(f => {
+                                f.invalidParents = [...(f.invalidParents || []), dir.entry];
+                            });
                         });
                         dispatch(fileuploadAddUploads(uploads));
                     }

@@ -9,10 +9,10 @@ import rison from 'rison';
 import {buildUrl, expandTree} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
 
-const EditButton = props => {
+const EditButton = ({upload, uuid}) => {
     const {t} = useTranslation('jcontent');
     const language = useSelector(state => state.language);
-    const {status, file, uuid} = props;
+    const {status, file} = upload;
     const client = useApolloClient();
 
     if (isImageFile(file.name) && uuid !== null && status === uploadStatuses.UPLOADED) {
@@ -38,9 +38,8 @@ const EditButton = props => {
 };
 
 EditButton.propTypes = {
-    status: PropTypes.string,
-    uuid: PropTypes.string,
-    file: PropTypes.object.isRequired
+    upload: PropTypes.object,
+    uuid: PropTypes.string
 };
 
 export default EditButton;

@@ -4,7 +4,8 @@ import {AddCircle, Check, Information, Loader, Typography} from '@jahia/moonston
 import styles from './UploadItem.scss';
 import {useTranslation} from 'react-i18next';
 
-const Status = ({status, error, type}) => {
+const Status = ({upload}) => {
+    const {status, error, type} = upload;
     const {t} = useTranslation('jcontent');
     let content;
 
@@ -32,7 +33,10 @@ const Status = ({status, error, type}) => {
                 case 'WRONG_INPUT': return t('jcontent:label.contentManager.fileUpload.wrongInput');
                 case 'FILE_EXISTS': return t('jcontent:label.contentManager.fileUpload.exists');
                 case 'FILE_NAME_INVALID': return t('jcontent:label.contentManager.fileUpload.invalidChars');
-                case 'FOLDER_EXISTS': return t('jcontent:label.contentManager.fileUpload.folderExists');
+                case 'FILE_NAME_SIZE': return t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
+                case 'FOLDER_CONFLICT': return t('jcontent:label.contentManager.fileUpload.folderExists');
+                case 'FOLDER_FILE_NAME_INVALID': return t('jcontent:label.contentManager.fileUpload.invalidChars');
+                case 'FOLDER_FILE_NAME_SIZE': return t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
                 case 'INCORRECT_SIZE': return t('jcontent:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize});
                 default: return type === 'import' ? t('jcontent:label.contentManager.fileUpload.failedImport') : t('jcontent:label.contentManager.fileUpload.failedUpload');
             }

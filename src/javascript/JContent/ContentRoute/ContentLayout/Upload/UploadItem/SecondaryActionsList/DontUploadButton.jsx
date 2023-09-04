@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import {Button} from '@jahia/moonstone';
 import styles from '../UploadItem.scss';
 import {useTranslation} from 'react-i18next';
+import {useDispatch} from 'react-redux';
+import {fileuploadRemoveUpload} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 
-const DontUploadButton = ({index, removeUploadFromQueue, updateUploadsStatus, type}) => {
+const DontUploadButton = ({upload, index}) => {
     const {t} = useTranslation('jcontent');
+    const dispatch = useDispatch();
+    const {type} = upload;
+
     return (
         <Button
             key="dontupload"
@@ -16,18 +21,15 @@ const DontUploadButton = ({index, removeUploadFromQueue, updateUploadsStatus, ty
             variant="ghost"
             label={type === 'import' ? t('jcontent:label.contentManager.fileUpload.dontImport') : t('jcontent:label.contentManager.fileUpload.dontUpload')}
             onClick={() => {
-                removeUploadFromQueue(index);
-                updateUploadsStatus();
+                dispatch(fileuploadRemoveUpload(index));
             }}
         />
     );
 };
 
 DontUploadButton.propTypes = {
-    updateUploadsStatus: PropTypes.func.isRequired,
-    index: PropTypes.number.isRequired,
-    removeUploadFromQueue: PropTypes.func.isRequired,
-    type: PropTypes.string
+    index: PropTypes.number,
+    upload: PropTypes.object
 };
 
 export default DontUploadButton;

@@ -37,7 +37,7 @@ export const UploadItem = ({upload, index}) => {
     const {file, entry} = upload;
     const client = useApolloClient();
 
-    const getFileName = useCallback(() => userChosenName ? userChosenName : (file ? file.name : entry.name).normalize('NFC'), [entry.name, file, userChosenName]);
+    const getFileName = useCallback(() => userChosenName ? userChosenName : (file ? file.name : entry.name).normalize('NFC'), [entry, file, userChosenName]);
 
     const fileName = getFileName();
     const isNameSizeValid = fileName && fileName.length <= contextJsParameters.config.maxNameSize;

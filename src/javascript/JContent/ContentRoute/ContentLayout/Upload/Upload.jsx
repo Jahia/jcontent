@@ -18,25 +18,28 @@ export const Upload = ({uploadUpdateCallback}) => {
     }), shallowEqual);
 
     const uploadStatus = useMemo(() => {
+        const files = uploads.filter(f => !f.isFolder);
         const uploadStatus = {
             uploading: 0,
             uploaded: 0,
             error: 0,
-            total: uploads.length,
+            total: files.length,
             state: uploadsStatuses.NOT_STARTED
         };
 
-        if (uploads.length > 0) {
-            uploads.forEach(upload => {
-                switch (upload.status) {
-                    case uploadStatuses.UPLOADED:
-                        uploadStatus.uploaded += 1;
-                        break;
-                    case uploadStatuses.HAS_ERROR:
-                        uploadStatus.error += 1;
-                        break;
-                    default:
-                        uploadStatus.uploading += 1;
+        if (files.length > 0) {
+            files.forEach(upload => {
+                if (!upload.isFolder) {
+                    switch (upload.status) {
+                        case uploadStatuses.UPLOADED:
+                            uploadStatus.uploaded += 1;
+                            break;
+                        case uploadStatuses.HAS_ERROR:
+                            uploadStatus.error += 1;
+                            break;
+                        default:
+                            uploadStatus.uploading += 1;
+                    }
                 }
 
                 if (upload.type === 'import') {

@@ -132,6 +132,7 @@ describe('FormBuilder component', () => {
                 {
                     name: 'jmix:orderedList',
                     displayed: true,
+                    visible: true,
                     fields: [
                         {name: 'jmix:orderedList_ce:manualOrdering'}
                     ]
@@ -152,6 +153,7 @@ describe('FormBuilder component', () => {
                 {
                     name: 'jmix:orderedList',
                     displayed: true,
+                    visible: true,
                     fields: [
                         {name: 'jmix:orderedList_ce:manualOrdering'}
                     ]
@@ -171,6 +173,7 @@ describe('FormBuilder component', () => {
                 {
                     displayName: 'yo1',
                     displayed: true,
+                    visible: true,
                     fields: [
                         {name: 'field1', displayName: 'field 1'},
                         {name: 'field2', displayName: 'field 2'}

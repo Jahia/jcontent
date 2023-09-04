@@ -34,7 +34,7 @@ describe('Children section component', () => {
     });
 
     it('should be able to switch automatic ordering', () => {
-        props.section = {fieldSets: [listOrderingFieldSet(false, false)]};
+        props.section = {displayName: 'children', fieldSets: [listOrderingFieldSet(false, false)]};
         props.values[Constants.ordering.automaticOrdering.mixin] = '';
 
         const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);
@@ -46,7 +46,7 @@ describe('Children section component', () => {
     });
 
     it('should not be able to switch automatic ordering, if fieldSet is readOnly', () => {
-        props.section = {fieldSets: [listOrderingFieldSet(true, false)]};
+        props.section = {displayName: 'children', fieldSets: [listOrderingFieldSet(true, false)]};
         props.values[Constants.ordering.automaticOrdering.mixin] = '';
 
         const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);
@@ -57,7 +57,7 @@ describe('Children section component', () => {
     it('should not be able to switch automatic ordering', () => {
         const fieldSet = listOrderingFieldSet(false, false);
         fieldSet.fields = fieldSet.fields.filter(f => f.name === 'jmix:orderedList_ce:manualOrdering');
-        props.section = {fieldSets: [fieldSet]};
+        props.section = {displayName: 'children', fieldSets: [fieldSet]};
 
         const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);
 
@@ -67,7 +67,7 @@ describe('Children section component', () => {
     });
 
     it('should display manual ordering', () => {
-        props.section = {fieldSets: [listOrderingFieldSet(false, false)]};
+        props.section = {displayName: 'children', fieldSets: [listOrderingFieldSet(false, false)]};
 
         const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);
 
@@ -76,7 +76,7 @@ describe('Children section component', () => {
     });
 
     it('should display automatic ordering', () => {
-        props.section = {fieldSets: [listOrderingFieldSet(false, false)]};
+        props.section = {displayName: 'children', fieldSets: [listOrderingFieldSet(false, false)]};
         formik.values['jmix:orderedList'] = true;
 
         const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);

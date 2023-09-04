@@ -2,12 +2,15 @@ export const listOrderingFieldSet = (fieldSetReadOnly, propsReadOnly) => ({
     name: 'jmix:orderedList',
     displayName: 'List ordering (automatic)',
     description: '',
+    visible: true,
     dynamic: true,
+    hasEnableSwitch: true,
     activated: false,
     displayed: true,
     readOnly: fieldSetReadOnly,
     fields: [
         {
+            displayName: 'name',
             name: 'jmix:orderedList_ce:manualOrdering'
         },
         {

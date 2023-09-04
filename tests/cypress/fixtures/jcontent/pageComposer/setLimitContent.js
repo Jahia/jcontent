@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const addPageGql = (siteKey, page) =>  gql`mutation {
+export const addPageGql = (siteKey, page) => gql`mutation {
     jcr {
         addNode(
             parentPathOrId:"/sites/${siteKey}/home", 

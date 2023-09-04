@@ -84,23 +84,26 @@ export const createMissingFolders = async (client, directories) => {
     directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && !n.isNodeType)).forEach(dir => {
         dir.error = 'FOLDER_CONFLICT';
     });
-    directories.filter(dir => dir.entry.name.normalize('NFC').length > contextJsParameters.config.maxNameSize).forEach(dir => {
+    directories.filter(dir => (dir.userChosenName || dir.entry.name.normalize('NFC')).length > contextJsParameters.config.maxNameSize).forEach(dir => {
         dir.error = 'FOLDER_FILE_NAME_SIZE';
     });
-    directories.filter(dir => dir.entry.name.normalize('NFC').match(JContentConstants.namingInvalidCharactersRegexp)).forEach(dir => {
+    directories.filter(dir => (dir.userChosenName || dir.entry.name.normalize('NFC')).match(JContentConstants.namingInvalidCharactersRegexp)).forEach(dir => {
         dir.error = 'FOLDER_FILE_NAME_INVALID';
     });
     const cannotCreate = directories.filter(dir => dir.error);
+    // Add sub-folders that cannot be created because parent is invalid
+    cannotCreate.push(...directories.filter(dir => cannotCreate.indexOf(dir) === -1 && cannotCreate.find(errorDir => dir.entryPath.startsWith(errorDir.entryPath + '/'))));
+
     const created = directories
         .filter(dir => exists.indexOf(dir) === -1)
-        .filter(dir => cannotCreate.indexOf(dir) === -1)
-        .filter(dir => !cannotCreate.find(errorDir => dir.entryPath.startsWith(errorDir.entryPath + '/')));
+        .filter(dir => cannotCreate.indexOf(dir) === -1);
+
     await client.mutate({
         mutation: CreateFolders,
         variables: {
             nodes: created.map(dir => ({
                 parentPathOrId: dir.path.normalize('NFC'),
-                name: dir.entry.name.normalize('NFC'),
+                name: (dir.userChosenName || dir.entry.name.normalize('NFC')),
                 primaryNodeType: 'jnt:folder'
             }))
         }

@@ -21,6 +21,7 @@ import {
     fileuploadTakeFromQueue,
     fileuploadUpdateUpload
 } from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
+import {createMissingFolders, onFilesSelected} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 
 const UPLOAD_DELAY = 200;
 
@@ -133,17 +134,27 @@ export const UploadItem = ({upload, index}) => {
             dispatch(fileuploadRemoveUpload(index));
             upload.subEntries.forEach(file => {
                 file.path = file.path.replace(upload.path + '/' + upload.entry.name, upload.path + '/' + userChosenName);
-                file.invalidParents.splice(file.invalidFolders.indexOf(upload.entry), 1);
+                file.entryPath = file.path + '/' + (file.userChosenName || file.entry.name).normalize('NFC');
+                file.invalidParents.splice(file.invalidParents.indexOf(upload.entry), 1);
             });
-            // Handle file upload and directory creation
-            // const acceptedFiles = this.props.subEntries.filter(f => f.invalidParents.length === 0);
-            // if (acceptedFiles.length > 0) {
-            //     onFilesSelected({
-            //         acceptedFiles,
-            //         dispatchBatch: this.props.dispatchBatch,
-            //         type: 'upload'
-            //     });
-            // }
+            upload.userChosenName = userChosenName;
+            upload.error = null;
+            upload.entryPath = (upload.path + '/' + userChosenName).normalize('NFC');
+            if (!upload.invalidParents || upload.invalidParents.length === 0) {
+                const subEntries = upload.subEntries.filter(f => f.invalidParents.length === 0);
+                const missingFolders = [upload, ...subEntries.filter(f => f.isFolder && !f.error)];
+                createMissingFolders(client, missingFolders).then(() => {
+                    // Handle file upload and directory creation
+                    const acceptedFiles = subEntries.filter(f => !f.isFolder);
+                    if (acceptedFiles.length > 0) {
+                        onFilesSelected({
+                            acceptedFiles,
+                            dispatchBatch: actions => dispatch(batchActions(actions)),
+                            type: 'upload'
+                        });
+                    }
+                });
+            }
         } else {
             const newUpload = {
                 id: upload.id,
@@ -153,11 +164,10 @@ export const UploadItem = ({upload, index}) => {
             };
             dispatch(fileuploadUpdateUpload(newUpload));
         }
-    }, [upload, dispatch, index, userChosenName]);
+    }, [upload, dispatch, index, userChosenName, client]);
 
     useEffect(() => {
         if (upload.status === uploadStatuses.UPLOADING) {
-            console.log('do upload');
             doUploadAndStatusUpdate();
         }
     }, [doUploadAndStatusUpdate, upload]);

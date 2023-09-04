@@ -28,7 +28,8 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
     async function scanFiles(entry) {
         if (entry.isDirectory) {
             directories.push({
-                path: uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)),
+                path: uploadPath + entry.fullPath.substring(0, entry.fullPath.lastIndexOf('/' + entry.name)),
+                isFolder: true,
                 entry
             });
             let directoryReader = entry.createReader();
@@ -113,13 +114,12 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                     const {cannotCreate} = await createMissingFolders(client, directories);
 
                     if (cannotCreate.length > 0) {
-                        const uploads = cannotCreate.map(dir => ({
-                            status: uploadStatuses.HAS_ERROR,
-                            isFolder: true,
-                            ...dir,
-                            subEntries: [...files, ...cannotCreate].filter(f => f.entryPath.startsWith(dir.entryPath + '/')),
-                            id: v4()
-                        }));
+                        const uploads = cannotCreate.filter(dir => dir.error);
+                        uploads.forEach(dir => {
+                            dir.status = uploadStatuses.HAS_ERROR;
+                            dir.subEntries = [...files, ...cannotCreate].filter(f => f.entryPath.startsWith(dir.entryPath + '/'));
+                            dir.id = v4();
+                        });
                         uploads.forEach(dir => {
                             acceptedFiles = acceptedFiles.filter(f => f.path !== (uploadPath + dir.entry.fullPath) && !f.path.startsWith(uploadPath + dir.entry.fullPath + '/'));
                             dir.subEntries.forEach(f => {

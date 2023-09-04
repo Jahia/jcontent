@@ -110,7 +110,6 @@
     "xlsx": "^0.17.0"
   },
   "resolutions": {
-    "@apollo/client": "3.5.10",
     "@jahia/data-helper/graphql": "^15.4.0",
     "graphql": "^15.4.0",
     "glob-parent": "^5.1.2",

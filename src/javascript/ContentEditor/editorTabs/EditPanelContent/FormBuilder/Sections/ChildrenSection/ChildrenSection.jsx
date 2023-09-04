@@ -12,17 +12,24 @@ import {useFormikContext} from 'formik';
 import fieldSetStyles from '../../FieldSet/FieldSet.scss';
 import styles from './ChildrenSection.scss';
 import clsx from 'clsx';
+import {filterFieldSets} from '../filterFieldSets';
 
 export const ChildrenSection = ({section, isExpanded, onClick}) => {
     const {values, handleChange} = useFormikContext();
     const {t} = useTranslation('jcontent');
 
-    const orderingFieldSet = section.fieldSets.find(fs => fs.name === 'jmix:orderedList');
+    const fieldSets = filterFieldSets(section.fieldSets);
+
+    if (fieldSets.length === 0) {
+        return null;
+    }
+
+    const orderingFieldSet = fieldSets.find(fs => fs.name === 'jmix:orderedList');
     const automaticallyOrderField = orderingFieldSet?.fields?.find(f => f.name === 'jmix:orderedList_firstField');
     const manuallyOrderField = orderingFieldSet?.fields?.find(f => f.name === 'jmix:orderedList_ce:manualOrdering');
     const isAutomaticOrder = automaticallyOrderField && values[Constants.ordering.automaticOrdering.mixin];
     const hasChildrenToReorder = values['Children::Order'] && values['Children::Order'].length > 0;
-    const childrenFieldSets = section.fieldSets.filter(fieldSet => fieldSet.name !== 'jmix:orderedList');
+    const childrenFieldSets = fieldSets.filter(fieldSet => fieldSet.name !== 'jmix:orderedList');
 
     if ((!manuallyOrderField || !hasChildrenToReorder) && !automaticallyOrderField && childrenFieldSets.length === 0) {
         return false;
@@ -31,7 +38,7 @@ export const ChildrenSection = ({section, isExpanded, onClick}) => {
     const sec = {
         isOrderingSection: true,
         displayName: t('jcontent:label.contentEditor.section.listAndOrdering.title'),
-        fieldSets: section.fieldSets.filter(f => f.name !== 'jmix:orderedList')
+        fieldSets: fieldSets.filter(f => f.name !== 'jmix:orderedList')
     };
 
     return (

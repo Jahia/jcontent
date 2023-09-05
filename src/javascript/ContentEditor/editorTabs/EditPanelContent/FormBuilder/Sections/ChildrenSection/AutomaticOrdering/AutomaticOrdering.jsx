@@ -102,5 +102,5 @@ export const AutomaticOrdering = ({orderingFieldSet}) => {
 };
 
 AutomaticOrdering.propTypes = {
-    orderingFieldSet: PropTypes.arrayOf(PropTypes.object).isRequired
+    orderingFieldSet: PropTypes.object.isRequired
 };

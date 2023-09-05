@@ -13,6 +13,7 @@
     - 'mvn:org.jahia.modules/graphql-dxm-provider'
     - 'mvn:org.jahia.modules/jahia-ui-root'
     - 'mvn:org.jahia.test/jcontent-test-module'
+    - 'mvn:org.jahia.test/jcontent-test-template'
   autoStart: true
   uninstallPreviousVersion: true
 - include: 'provisioning.yml'

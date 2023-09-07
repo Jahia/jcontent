@@ -36,7 +36,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
         const data = nodes.map(n => ({
             label: n.name,
             value: n.path,
-            image: <img alt={n.name} src={`${window.contextJsParameters.contextPath}${n.primaryNodeType.icon}.png`}/>
+            image: <img alt={n.name} src={`${n.primaryNodeType.icon}.png`}/>
         }));
 
         return (
@@ -57,7 +57,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
                 <BreadcrumbItem key={n.path}
                                 label={n.name}
                                 icon={<img alt={n.name}
-                                           src={`${window.contextJsParameters.contextPath}${n.primaryNodeType.icon}.png`}/>}
+                                           src={`${n.primaryNodeType.icon}.png`}/>}
                                 onClick={handleItemOnClick(selection, n.path, dispatch)}
                 />
             ))}

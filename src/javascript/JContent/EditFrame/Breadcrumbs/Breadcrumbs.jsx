@@ -57,7 +57,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
                 <BreadcrumbItem key={n.path}
                                 label={n.name}
                                 icon={<img alt={n.name}
-                                           src={`${window.contextJsParameters.contextPath}${n.primaryNodeType.icon}.png`}/>}
+                                           src={`${n.primaryNodeType.icon}.png`}/>}
                                 onClick={handleItemOnClick(selection, n.path, dispatch)}
                 />
             ))}

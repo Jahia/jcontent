@@ -296,7 +296,7 @@ class PageBuilderModule extends BaseComponent {
 
     getCreateButtons() {
         return new PageBuilderModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
-            this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
+            return this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
         }));
     }
 

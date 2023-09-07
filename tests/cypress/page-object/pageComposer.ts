@@ -98,7 +98,7 @@ export class PageComposer extends BasePage {
         return new ContentEditor();
     }
 
-    openContextualMenuOnContent(selector: string | number | symbol) {
+    openContextualMenuOnContent(selector: string) {
         cy.iframe('#page-composer-frame', this.iFrameOptions).within(() => {
             cy.waitUntil(
                 () => {
@@ -219,7 +219,7 @@ export class PageComposer extends BasePage {
         cy.waitUntil(
             () => {
                 return cy.apollo({query: this.published, variables: {path: path, lang: lang}}).then(resp => {
-                    if (resp?.graphQLErrors) {
+                    if (resp?.errors) {
                         return false;
                     }
 

@@ -36,11 +36,12 @@ describe('Picker tests', () => {
 
         cy.log('assert pages accordion is visible');
         const pagesAccordion: AccordionItem = picker.getAccordionItem('picker-pages');
-        pagesAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'false');
+        pagesAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'true');
 
         cy.log('assert content folder accordion is expanded and populated');
         const contentAccordion: AccordionItem = picker.getAccordionItem('picker-content-folders');
-        contentAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'true');
+        contentAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'false');
+        contentAccordion.click();
         const rootTree = contentAccordion.getTreeItems().first();
         rootTree.should('not.be.empty');
 

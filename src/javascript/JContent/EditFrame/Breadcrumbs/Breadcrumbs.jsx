@@ -43,9 +43,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
             <Dropdown data={data}
                       placeholder={t('jcontent:label.contentManager.pageBuilder.breadcrumbs.dropdownLabel')}
                       onChange={(e, v) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleItemOnClick(selection, v.value, dispatch);
+                          handleItemOnClick(selection, v.value, dispatch)(e);
                       }}
             />
         );

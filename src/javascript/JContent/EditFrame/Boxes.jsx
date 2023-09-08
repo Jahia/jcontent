@@ -42,6 +42,7 @@ const disallowSelection = element => {
 let timeout;
 
 const elementIsInBreadcrumbFooter = element => {
+    // Detects element to be a breadcrumb item or list item found in dropdown menus
     return element.closest('[data-sel-role="pagebuilder-breadcrumb"]') !== null || element.closest('.moonstone-listItem') !== null;
 };
 

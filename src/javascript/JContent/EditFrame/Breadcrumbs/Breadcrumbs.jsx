@@ -6,13 +6,13 @@ import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/s
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 
-const handleItemOnClick = (selection, path, dispatch, ignoreKeys) => {
+const handleItemOnClick = (selection, path, dispatch) => {
     return event => {
         event.preventDefault();
         event.stopPropagation();
         const isSelected = selection.includes(path);
         // Meta key works without issues, ctrl key has a conflict with contextmenu
-        if (event.ctrlKey || event.metaKey || ignoreKeys) {
+        if (event.ctrlKey || event.metaKey) {
             if (isSelected) {
                 dispatch(cmRemoveSelection(path));
             } else {
@@ -43,7 +43,7 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
             <Dropdown data={data}
                       placeholder={t('jcontent:label.contentManager.pageBuilder.breadcrumbs.dropdownLabel')}
                       onChange={(e, v) => {
-                          handleItemOnClick(selection, v.value, dispatch, true)(e);
+                          handleItemOnClick(selection, v.value, dispatch)(e);
                       }}
             />
         );

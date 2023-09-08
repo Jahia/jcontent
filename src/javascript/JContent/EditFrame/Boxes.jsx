@@ -42,7 +42,8 @@ const disallowSelection = element => {
 let timeout;
 
 const elementIsInBreadcrumbFooter = element => {
-    return ((element.getAttribute('data-sel-role') === 'pagebuilder-breadcrumb') || (element.parentElement && elementIsInBreadcrumbFooter(element.parentElement)));
+    // Detects element to be a breadcrumb item or list item found in dropdown menus
+    return element.closest('[data-sel-role="pagebuilder-breadcrumb"]') !== null || element.closest('.moonstone-listItem') !== null;
 };
 
 const checkClickInBreadcrumbFooter = event => {
@@ -203,7 +204,6 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
             // Prevent showing contextual menu if clicked on breadcrumb, note that ctrl + click counts as right click and triggers contextmenu
-            // target can be either button or typography hence the need to check parent
             if (checkClickInBreadcrumbFooter(event)) {
                 event.preventDefault();
                 event.stopPropagation();

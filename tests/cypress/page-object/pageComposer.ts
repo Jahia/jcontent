@@ -1,17 +1,14 @@
 import {BaseComponent, BasePage, Button, getComponent, getComponentByRole, getElement, MUIInput} from '@jahia/cypress';
 import {ContentEditor} from './contentEditor';
 import IframeOptions = Cypress.IframeOptions;
-import {DocumentNode} from 'graphql';
 import {PageComposerContextualMenu} from './pageComposerContextualMenu';
 
 export class PageComposer extends BasePage {
     iFrameOptions: IframeOptions;
-    published: DocumentNode;
 
     constructor() {
         super();
         this.iFrameOptions = {timeout: 90000, log: true};
-        this.published = require('graphql-tag/loader!../fixtures/contentEditor/publication/published.graphql');
     }
 
     static visit(site: string, language: string, path: string): PageComposer {
@@ -213,22 +210,6 @@ export class PageComposer extends BasePage {
             cy.get('.menu-edit-menu-publication').find('span').contains(menuEntry).click();
             cy.get('button').contains(selectorText).click();
         });
-    }
-
-    publishedAfter(path: string, lang: string, date: Date) {
-        cy.waitUntil(
-            () => {
-                return cy.apollo({query: this.published, variables: {path: path, lang: lang}}).then(resp => {
-                    if (resp?.errors) {
-                        return false;
-                    }
-
-                    const pubDate = resp?.data?.jcr?.nodeByPath?.lastPublished?.value;
-                    return pubDate && date < new Date(pubDate);
-                });
-            },
-            {timeout: 10000, interval: 2000, errorMsg: 'Publication check timeout'}
-        );
     }
 }
 

@@ -32,11 +32,11 @@ export const selectionRedux = registry => {
         [cmAddSelection]: (state, action) => state.concat(toArray(action.payload).filter(path => state.indexOf(path) === -1)),
         [cmRemoveSelection]: (state, action) => state.filter(path => toArray(action.payload).indexOf(path) === -1),
         [cmSwitchSelection]: (state, action) => (state.indexOf(action.payload) === -1) ? [...state, action.payload] : state.filter(path => action.payload !== path),
-        [cmClearSelection]: () => ([]),
-        [cmSetSort]: () => ([]),
-        [cmSetPage]: () => ([]),
-        [cmSetPageSize]: () => ([]),
-        '@@router/LOCATION_CHANGE': () => ([])
+        [cmClearSelection]: state => state.length === 0 ? state : ([]),
+        [cmSetSort]: state => state.length === 0 ? state : ([]),
+        [cmSetPage]: state => state.length === 0 ? state : ([]),
+        [cmSetPageSize]: state => state.length === 0 ? state : ([]),
+        '@@router/LOCATION_CHANGE': (state, action) => window.location.pathname === contextJsParameters.contextPath + '/jahia' + action.payload.location.pathname || state.length === 0 ? state : ([])
     }, []);
 
     registry.add('redux-reducer', 'selection', {targets: ['jcontent'], reducer: selectionReducer});

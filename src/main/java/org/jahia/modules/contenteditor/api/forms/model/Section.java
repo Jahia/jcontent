@@ -178,7 +178,7 @@ public class Section implements Cloneable, Ranked {
 
     private void mergeFieldSets(List<FieldSet> otherFieldSets, Form form) {
         for (FieldSet otherFieldSet : otherFieldSets) {
-            String key = otherFieldSet.getName().equals("<main>") ? form.getNodeType().getName() : otherFieldSet.getName();
+            String key = otherFieldSet.getName().equals("<main>") ? form.getNodeTypeName() : otherFieldSet.getName();
             FieldSet mergedFieldSet = fieldSets.stream().filter(fieldSet -> fieldSet.getName().equals(key)).findFirst().orElseGet(this::addFieldSet);
             mergedFieldSet.mergeWith(otherFieldSet, form);
             if (!fieldSets.contains(mergedFieldSet)) {

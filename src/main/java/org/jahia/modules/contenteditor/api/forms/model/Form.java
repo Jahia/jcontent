@@ -40,6 +40,7 @@ import java.util.stream.Stream;
  * Represents the definition of an editor form, including the ordering of sections
  */
 public class Form implements DefinitionRegistryItem {
+    private String nodeTypeName;
     private ExtendedNodeType nodeType;
     private Boolean orderable;
     private String labelKey;
@@ -52,15 +53,23 @@ public class Form implements DefinitionRegistryItem {
     private Bundle originBundle;
 
     public ExtendedNodeType getNodeType() {
+        if (nodeType == null) {
+            try {
+                nodeType = NodeTypeRegistry.getInstance().getNodeType(nodeTypeName);
+            } catch (NoSuchNodeTypeException e) {
+                // Not found
+            }
+        }
+
         return nodeType;
     }
 
+    public String getNodeTypeName() {
+        return nodeTypeName;
+    }
+
     public void setNodeType(String nodeTypeName) {
-        try {
-            nodeType = NodeTypeRegistry.getInstance().getNodeType(nodeTypeName);
-        } catch (NoSuchNodeTypeException e) {
-            throw new RuntimeException(e);
-        }
+        this.nodeTypeName = nodeTypeName;
     }
 
     public Boolean getOrderable() {
@@ -137,6 +146,7 @@ public class Form implements DefinitionRegistryItem {
     }
 
     public void initializeLabel(Locale uiLocale) {
+        ExtendedNodeType nodeType = getNodeType();
         label = label == null ? nodeType.getLabel(uiLocale) : label;
         description = description == null ? nodeType.getDescription(uiLocale) : descriptionKey;
     }
@@ -150,7 +160,7 @@ public class Form implements DefinitionRegistryItem {
     }
 
     public void mergeWith(Form otherForm) {
-        setNodeType(nodeType == null ? otherForm.getNodeType().getName() : nodeType.getName());
+        setNodeType(nodeTypeName == null ? otherForm.getNodeTypeName() : nodeTypeName);
 
         setHasPreview(otherForm.hasPreview() != null ? otherForm.hasPreview() : hasPreview);
         mergeSections(otherForm.getSections());

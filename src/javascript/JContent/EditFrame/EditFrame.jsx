@@ -19,6 +19,7 @@ import {useDragDropManager} from 'react-dnd';
 import {LinkInterceptor} from './LinkInterceptor';
 import {Tooltip} from '@material-ui/core';
 import {batchActions} from 'redux-batched-actions';
+import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -216,6 +217,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         <>
             <Tooltip title=""><span/></Tooltip>
             <DeviceContainer enabled={isDeviceView} device={device} setDevice={setDevice}>
+                {!currentDocument && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}
                         width="100%"
                         height="100%"

@@ -20,6 +20,7 @@ const FullScreenError = props => {
     const [open, setOpen] = useState(true);
     const handleClose = () => {
         setOpen(false);
+        props.reset();
         updateWindowLocation();
     };
 
@@ -33,21 +34,18 @@ const FullScreenError = props => {
                 onClose={handleClose}
         >
             {React.cloneElement(ErrorBoundary.defaultProps.fallback, {
-                ...props, goBack: () => {
-                    // Close the modal to go back to the previous screen
-                    setOpen(false);
-                    updateWindowLocation();
-                }
+                ...props, goBack: handleClose
             })}
         </Dialog>
     );
 };
 
-const ModalError = () => {
+const ModalError = ({reset}) => {
     const {t} = useTranslation('jcontent');
     const [isOpen, setOpen] = useState(true);
     const onClose = () => {
         setOpen(false);
+        reset();
         updateWindowLocation();
     };
 
@@ -82,8 +80,13 @@ export const ContentEditorError = errorProps => {
     return <ErrorCmp {...errorProps}/>;
 };
 
-ContentEditorError.propTypes = {
-    errorProps: {
-        error: PropTypes.object
-    }
+const proptypes = {
+    error: PropTypes.object,
+    reset: PropTypes.func
 };
+
+ModalError.propTypes = proptypes;
+
+FullScreenError.propTypes = proptypes;
+
+ContentEditorError.propTypes = proptypes;

@@ -82,6 +82,8 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         if (is404) {
             throw new CeModalError('ItemNotFoundException', {cause: error});
         }
+
+        throw new CeModalError(error.message, {cause: error});
     }
 
     if (siteInfoResult.error) {

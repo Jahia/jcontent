@@ -95,6 +95,7 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      */
     public Collection<Form> getFormsForType(ExtendedNodeType type) {
         return forms.stream()
+            .filter(definition -> definition.getNodeType() != null)
             .filter(definition -> type.isNodeType(definition.getNodeType().getName()) &&
                     (definition.getOrderable() == null || type.hasOrderableChildNodes()))
             .collect(Collectors.toCollection(ArrayList::new));
@@ -108,6 +109,7 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      */
     public Collection<FieldSet> getFieldSetsForType(ExtendedNodeType type) {
         return fieldSets.stream()
+            .filter(definition -> definition.getNodeType() != null)
             .filter(definition -> type.isNodeType(definition.getNodeType().getName()))
             .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -147,7 +149,7 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
 
             forms.add(form);
             formsByBundle.computeIfAbsent(bundle, b -> new ArrayList<>()).add(form);
-            logger.info("Successfully loaded static form for name {} from {}", form.getNodeType().getName(), editorFormURL);
+            logger.info("Successfully loaded static form for name {} from {}", form.getNodeTypeName(), editorFormURL);
         } catch (IOException e) {
             logger.warn("Error loading editor form from " + editorFormURL + " : " + e.getMessage());
         }

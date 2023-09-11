@@ -45,11 +45,6 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
 
     public void setName(String name) {
         this.name = name;
-        try {
-            this.nodeType = NodeTypeRegistry.getInstance().getNodeType(name);
-        } catch (NoSuchNodeTypeException e) {
-            // No node type
-        }
     }
 
     public String getLabelKey() {
@@ -189,6 +184,14 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
 
     @JsonIgnore
     public ExtendedNodeType getNodeType() {
+        if (nodeType == null) {
+            try {
+                nodeType = NodeTypeRegistry.getInstance().getNodeType(name);
+            } catch (NoSuchNodeTypeException e) {
+                // Not found
+            }
+        }
+
         return nodeType;
     }
 
@@ -196,6 +199,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         label = label == null && labelKey != null ? resolveResourceKey(labelKey, uiLocale, site) : label;
         description = description == null && descriptionKey != null ? resolveResourceKey(descriptionKey, uiLocale, site) : description;
 
+        ExtendedNodeType nodeType = getNodeType();
         if (nodeType != null) {
             String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
             String key =  JCRContentUtils.replaceColon(nodeType.getName());
@@ -216,7 +220,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
     }
 
     public void mergeWith(FieldSet otherFieldSet, Form form) {
-        setName(name == null ? (otherFieldSet.getName().equals("<main>") ? form.getNodeType().getName() : otherFieldSet.getName()) : name);
+        setName(name == null ? (otherFieldSet.getName().equals("<main>") ? form.getNodeTypeName() : otherFieldSet.getName()) : name);
 
         setLabel(otherFieldSet.getLabelKey() != null || otherFieldSet.getLabel() != null ? otherFieldSet.getLabel() : label);
         setLabelKey(otherFieldSet.getLabelKey() != null || otherFieldSet.getLabel() != null ? otherFieldSet.getLabelKey() : labelKey);

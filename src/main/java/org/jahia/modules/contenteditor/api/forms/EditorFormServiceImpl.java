@@ -175,8 +175,8 @@ public class EditorFormServiceImpl implements EditorFormService {
                     fieldSet.getFields().sort(RankedComparator.INSTANCE);
 
                     // Check if fieldset is dynamic
-                    if (fieldSet.getNodeType() != null) {
-                        ExtendedNodeType nodeType = fieldSet.getNodeType();
+                    ExtendedNodeType nodeType = fieldSet.getNodeType();
+                    if (nodeType != null) {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);

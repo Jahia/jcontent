@@ -2,16 +2,15 @@ import React, {useCallback, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/client';
-import {push} from 'connected-react-router';
 
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
-import {cmGoto} from '~/ContentEditor/redux/JContent.redux-actions';
 import {CloseConfirmationDialog} from '~/ContentEditor/CloseConfirmationDialog';
 import {GetContentPath} from './ContentPath.gql-queries';
 import {ContentPathView} from './ContentPathView';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useFormikContext} from 'formik';
 import {isDirty} from '~/ContentEditor/utils';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 const findLastIndex = (array, callback) => {
     let lastIndex = -1;
@@ -75,26 +74,22 @@ export const ContentPath = ({path}) => {
     const dirty = isDirty(formik, i18nContext);
 
     const doRedirect = itemPath => {
+        let mode = 'pages';
+        let app = 'jcontent';
         if (itemPath.startsWith('/sites/systemsite/categories/') || itemPath === '/sites/systemsite/categories') {
-            const onExited = () => {
-                dispatch(push('/category-manager'));
-            };
-
-            updateEditorConfig({closed: true, onExited});
-        } else {
-            let mode = 'pages';
-            if (/^\/sites\/[^/]+\/files(\/.*)?$/.test(itemPath)) {
-                mode = 'media';
-            } else if (/^\/sites\/[^/]+\/contents(\/.*)?$/.test(itemPath)) {
-                mode = 'content-folders';
-            }
-
-            const onExited = () => {
-                dispatch(cmGoto({mode, path: itemPath, params: {sub: false}}));
-            };
-
-            updateEditorConfig({closed: true, onExited});
+            mode = 'category';
+            app = 'category-manager';
+        } else if (/^\/sites\/[^/]+\/files(\/.*)?$/.test(itemPath)) {
+            mode = 'media';
+        } else if (/^\/sites\/[^/]+\/contents(\/.*)?$/.test(itemPath)) {
+            mode = 'content-folders';
         }
+
+        const onExited = () => {
+            dispatch(cmGoto({app, mode, path: itemPath, params: {sub: false}}));
+        };
+
+        updateEditorConfig({closed: true, onExited});
     };
 
     const handleNavigation = itemPath => {

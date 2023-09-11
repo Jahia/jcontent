@@ -40,6 +40,10 @@ const FullScreenError = props => {
     );
 };
 
+FullScreenError.propTypes = {
+    reset: PropTypes.func
+};
+
 const ModalError = ({reset}) => {
     const {t} = useTranslation('jcontent');
     const [isOpen, setOpen] = useState(true);
@@ -75,18 +79,16 @@ const ModalError = ({reset}) => {
     );
 };
 
+ModalError.propTypes = {
+    reset: PropTypes.func
+};
+
 export const ContentEditorError = errorProps => {
     const ErrorCmp = (errorProps.error instanceof CeModalError) ? ModalError : FullScreenError;
     return <ErrorCmp {...errorProps}/>;
 };
 
-const proptypes = {
+ContentEditorError.propTypes = {
     error: PropTypes.object,
     reset: PropTypes.func
 };
-
-ModalError.propTypes = proptypes;
-
-FullScreenError.propTypes = proptypes;
-
-ContentEditorError.propTypes = proptypes;

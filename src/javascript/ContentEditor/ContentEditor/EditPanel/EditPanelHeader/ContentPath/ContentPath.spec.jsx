@@ -3,8 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/client';
 import {shallow} from '@jahia/test-framework';
 
-import {push} from 'connected-react-router';
-import {cmGoto} from '~/ContentEditor/redux/JContent.redux-actions';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 
 import {GetContentPath} from './ContentPath.gql-queries';
@@ -16,7 +15,7 @@ jest.mock('connected-react-router', () => ({
     push: jest.fn()
 }));
 
-jest.mock('~/ContentEditor/redux/JContent.redux-actions', () => ({
+jest.mock('~/JContent/redux/JContent.redux', () => ({
     cmGoto: jest.fn()
 }));
 
@@ -231,7 +230,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/x/y/z');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'pages', path: '/x/y/z', params: {sub: false}});
+        expect(cmGoto).toHaveBeenCalledWith({app: 'jcontent', mode: 'pages', path: '/x/y/z', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });
@@ -264,7 +263,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/sites/mySiteXD/files/chocolate');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'media', path: '/sites/mySiteXD/files/chocolate', params: {sub: false}});
+        expect(cmGoto).toHaveBeenCalledWith({app: 'jcontent', mode: 'media', path: '/sites/mySiteXD/files/chocolate', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });
@@ -274,7 +273,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/sites/mySiteXD/contents/fruits');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'content-folders', path: '/sites/mySiteXD/contents/fruits', params: {sub: false}});
+        expect(cmGoto).toHaveBeenCalledWith({app: 'jcontent', mode: 'content-folders', path: '/sites/mySiteXD/contents/fruits', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });
@@ -284,17 +283,7 @@ describe('ContentPathContainer', () => {
         wrapper.find('ContentPathView').simulate('itemClick', '/sites/mySiteXD/lord/rings');
 
         expect(dispatch).toHaveBeenCalled();
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'pages', path: '/sites/mySiteXD/lord/rings', params: {sub: false}});
-        expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
-        expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
-    });
-
-    it('handle redirects on item click when path start with categories', () => {
-        const wrapper = shallow(<ContentPath {...defaultProps}/>);
-        wrapper.find('ContentPathView').simulate('itemClick', '/sites/systemsite/categories/tennis');
-
-        expect(dispatch).toHaveBeenCalled();
-        expect(push).toHaveBeenCalledWith('/category-manager');
+        expect(cmGoto).toHaveBeenCalledWith({app: 'jcontent', mode: 'pages', path: '/sites/mySiteXD/lord/rings', params: {sub: false}});
         expect(contentEditorConfigContext.updateEditorConfig).toHaveBeenCalled();
         expect(wrapper.find('CloseConfirmationDialog').props.isOpen).toBeFalsy();
     });

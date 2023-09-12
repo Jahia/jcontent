@@ -23,6 +23,10 @@ export class BreadcrumbPageBuilder extends BaseComponent {
         this.get().find('span').contains(name).click({force: true});
     }
 
+    addToSelection(name: string): void {
+        this.get().find('span').contains(name).click({force: true, metaKey: true});
+    }
+
     click() {
         this.element.click();
     }

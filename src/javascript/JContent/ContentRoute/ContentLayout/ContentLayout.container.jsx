@@ -20,7 +20,7 @@ import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQue
 import clsx from 'clsx';
 import styles from './ContentLayout.scss';
 
-export const ContentLayoutContainer = () => {
+export const ContentLayoutContainer = React.memo(() => {
     const {t} = useTranslation('jcontent');
     const currentResult = useRef();
     const client = useApolloClient();
@@ -30,7 +30,6 @@ export const ContentLayoutContainer = () => {
         path: state.jcontent.path,
         previewSelection: state.jcontent.previewSelection,
         previewState: state.jcontent.previewState,
-        params: state.jcontent.params,
         filesMode: state.jcontent.filesGrid.mode,
         openedPaths: state.jcontent.openPaths,
         viewType: state.jcontent.tableView.viewType,
@@ -241,6 +240,6 @@ export const ContentLayoutContainer = () => {
             />
         </div>
     );
-};
+});
 
 export default ContentLayoutContainer;

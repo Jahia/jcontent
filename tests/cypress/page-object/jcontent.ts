@@ -20,6 +20,7 @@ import {Media} from './media';
 import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
+import {BreadcrumbPageBuilder} from './breadcrumb';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -262,6 +263,14 @@ class PageBuilderModuleHeader extends BaseComponent {
     }
 }
 
+class PageBuilderModuleFooter extends BaseComponent {
+    static defaultSelector = '[jahiatype="footer"]';
+
+    getBreadcrumbs(): BreadcrumbPageBuilder {
+        return getComponentByRole(BreadcrumbPageBuilder, 'pagebuilder-breadcrumb', this);
+    }
+}
+
 class PageBuilderModuleCreateButton extends BaseComponent {
     static defaultSelector = '[jahiatype="createbuttons"]';
 
@@ -292,6 +301,14 @@ class PageBuilderModule extends BaseComponent {
             this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
         });
         return getComponent(PageBuilderModuleHeader, this.parentFrame);
+    }
+
+    getFooter() {
+        this.hover();
+        this.get().invoke('attr', 'id').then(id => {
+            this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
+        });
+        return getComponent(PageBuilderModuleFooter, this.parentFrame);
     }
 
     getCreateButtons() {

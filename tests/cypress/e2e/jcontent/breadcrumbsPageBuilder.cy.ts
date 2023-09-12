@@ -1,6 +1,6 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
 
-describe('Breadcrumbs in page builder', () => {
+describe('Breadcrumbs inside boxes of page builder', () => {
     beforeEach(function () {
         cy.loginAndStoreSession();
     });

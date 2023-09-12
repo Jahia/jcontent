@@ -16,7 +16,7 @@ describe('Breadcrumbs in page builder', () => {
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
     });
 
-    it('Multiple selection works', () => {
+    it('Selects multiple elements', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = jcontent.switchToPageBuilder();
         const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies');

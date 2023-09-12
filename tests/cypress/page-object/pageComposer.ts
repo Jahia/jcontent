@@ -1,7 +1,8 @@
-import {BaseComponent, BasePage, Button, getComponent, getComponentByRole, getElement, MUIInput} from '@jahia/cypress';
+import {BasePage, getComponent} from '@jahia/cypress';
 import {ContentEditor} from './contentEditor';
-import IframeOptions = Cypress.IframeOptions;
 import {PageComposerContextualMenu} from './pageComposerContextualMenu';
+import {ContentTypeSelector} from './createContent';
+import IframeOptions = Cypress.IframeOptions;
 
 export class PageComposer extends BasePage {
     iFrameOptions: IframeOptions;
@@ -210,30 +211,5 @@ export class PageComposer extends BasePage {
             cy.get('.menu-edit-menu-publication').find('span').contains(menuEntry).click();
             cy.get('button').contains(selectorText).click();
         });
-    }
-}
-
-export class ContentTypeSelector extends BaseComponent {
-    static defaultSelector = 'div[aria-labelledby="dialog-createNewContent"]';
-
-    searchInput = getComponentByRole(MUIInput, 'content-type-dialog-input', this);
-
-    searchForContentType(contentType: string): ContentTypeSelector {
-        this.searchInput.type(contentType);
-        return this;
-    }
-
-    selectContentType(contentType: string): ContentTypeSelector {
-        getElement('[data-sel-role="content-type-tree"] span', this).contains(contentType).click();
-        return this;
-    }
-
-    cancel(): void {
-        getComponentByRole(Button, 'content-type-dialog-cancel', this).click();
-    }
-
-    create(): ContentEditor {
-        getComponentByRole(Button, 'content-type-dialog-create', this).click();
-        return new ContentEditor();
     }
 }

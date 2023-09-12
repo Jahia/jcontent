@@ -1,5 +1,4 @@
-import {JContent} from '../../page-object/jcontent';
-import {PageComposer} from '../../page-object/pageComposer';
+import {JContent, PageComposer} from '../../page-object/';
 
 const sitekey = 'contentEditorSiteAddMixin';
 describe('Add Mixin by using choice list initializers (Image Reference)', () => {
@@ -10,16 +9,14 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: sitekey});
         cy.loginAndStoreSession(); // Edit in chief
         JContent.visit(sitekey, 'en', 'media/file');
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(5000);
         cy.get('div[data-cm-role="grid-content-list"]')
+            .should('be.visible')
             .children('div')
             .selectFile('cypress/fixtures/contentEditor/snowbearHome.jpeg', {
                 action: 'drag-drop',
                 waitForAnimations: true
             });
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(5000);
+        cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible');
     });
 
     after(function () {

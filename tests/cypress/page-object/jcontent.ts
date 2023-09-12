@@ -29,6 +29,9 @@ export class JContent extends BasePage {
 
     static visit(site: string, language: string, path: string): JContent {
         cy.visit(`/jahia/jcontent/${site}/${language}/${path}`);
+        if(path.indexOf('/pages/') > -1) {
+            cy.get('#')
+        }
         return new JContent();
     }
 
@@ -157,6 +160,7 @@ export class JContent extends BasePage {
     }
 
     switchToPageBuilder(): JContentPageBuilder {
+        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
         this.switchToMode('Page Builder');
         return new JContentPageBuilder(this);
     }

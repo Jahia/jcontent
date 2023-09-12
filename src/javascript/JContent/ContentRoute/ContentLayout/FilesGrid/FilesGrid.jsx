@@ -22,7 +22,18 @@ import {cmClearSelection} from '../../../redux/selection.redux';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
-    const {mode, path, pagination, gridMode, siteKey, uilang, lang, previewSelection, previewState, selection} = useSelector(state => ({
+    const {
+        mode,
+        path,
+        pagination,
+        gridMode,
+        siteKey,
+        uilang,
+        lang,
+        previewSelection,
+        previewState,
+        selection
+    } = useSelector(state => ({
         mode: state.jcontent.mode,
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
@@ -70,7 +81,6 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
     const [{isCanDrop}, drop] = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path});
-    drop(mainPanelRef);
 
     if ((!rows || rows.length === 0) && isLoading) {
         return null;
@@ -88,13 +98,20 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
 
     if ((!rows || rows.length === 0) && !isLoading) {
         return (
-            <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD} reference={mainPanelRef} isCanDrop={isCanDrop}/>
+            <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD}
+                                    reference={mainPanelRef}
+                                    isCanDrop={isCanDrop}/>
         );
     }
 
+    console.log('Rendering Files Grid');
+
     return (
         <>
-            <div ref={mainPanelRef}
+            <div ref={el => {
+                mainPanelRef.current = el;
+                drop(mainPanelRef);
+            }}
                  className={clsx(styles.grid, isCanDrop && styles.drop)}
                  data-cm-role="grid-content-list"
                  tabIndex="1"

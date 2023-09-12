@@ -1,9 +1,17 @@
-import {addNode, createSite, createUser, deleteSite, getComponentByRole, getNodeByPath, grantRoles, Menu} from '@jahia/cypress';
+import {
+    addNode,
+    createSite,
+    createUser,
+    deleteSite,
+    getComponentByRole,
+    getNodeByPath,
+    grantRoles,
+    Menu
+} from '@jahia/cypress';
 import {SmallTextField} from '../../page-object/fields';
-import {JContent} from '../../page-object/jcontent';
-import {ContentEditor} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
 
-describe('Test the save publish buttons flow)', () => {
+describe('Test the save publish buttons flow', () => {
     const siteKey = 'savePublishButtonsFlow';
     const sitePath = '/sites/' + siteKey;
     const siteContentPath = sitePath + '/contents';
@@ -94,8 +102,8 @@ describe('Test the save publish buttons flow)', () => {
                 const publicationStatus = result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus;
                 return publicationStatus && publicationStatus === 'UNPUBLISHED';
             });
-        checkContentEditorHeaderButtons(contentEditor, false, true);
-        checkContentEditorHeaderMenu(contentEditor, 'true');
+        checkContentEditorHeaderButtons(new ContentEditor(), false, true);
+        checkContentEditorHeaderMenu(new ContentEditor(), 'true');
     };
 
     it('Check save publish buttons flow', () => {

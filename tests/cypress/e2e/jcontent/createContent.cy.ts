@@ -57,7 +57,7 @@ describe('Create content tests', () => {
             cy.wait(2500);
             cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly created content');
         });
-        it('Update nelwy created content', () => {
+        it('Update newly created content', () => {
             jcontent = new JContentPageBuilder(new JContent());
             jcontent.getModule('/sites/jcontentSite/home/landing').get().scrollIntoView();
             jcontent.getModule('/sites/jcontentSite/home/landing/rich-text').doubleClick();

@@ -25,6 +25,7 @@ export const PushEventHandler = () => {
             let evtType = eventData.type;
             if (evtType === 'workflowTask') {
                 if (eventData.endedWorkflow !== null) {
+                    client.reFetchObservableQueries();
                     triggerRefetchAll();
                 }
             } else if (evtType === 'job') {
@@ -36,10 +37,11 @@ export const PushEventHandler = () => {
                             });
                         }
                     });
+                    client.reFetchObservableQueries();
                     triggerRefetchAll();
                 }
             } else if (evtType === 'contentUnpublished') {
-                // Should flush cache here, but need more data from gwt event
+                client.reFetchObservableQueries();
                 triggerRefetchAll();
             }
         }

@@ -11,8 +11,7 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Display popup when navigating to list and render list view when selected', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
-        jcontent.switchToPageBuilder();
+        JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-cm-role="breadcrumb-view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Content List').should('be.visible');
@@ -20,8 +19,7 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Display popup when navigating to list and render parent page when selected', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
-        jcontent.switchToPageBuilder();
+        JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-cm-role="breadcrumb-view-parent"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
@@ -29,8 +27,7 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Do not display popup when navigating to page', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry');
-        jcontent.switchToPageBuilder();
+        JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry');
         Breadcrumb.findByContent('Newsroom').click();
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
         cy.get('h1').contains('Newsroom');

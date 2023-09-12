@@ -44,7 +44,7 @@
     "@apollo/react-components": "^4.0.0",
     "@apollo/react-hoc": "^4.0.0",
     "@babel/polyfill": "^7.11.5",
-    "@jahia/data-helper": "^1.1.4",
+    "@jahia/data-helper": "^1.1.5",
     "@jahia/design-system-kit": "^1.1.8",
     "@jahia/icons": "^1.1.2",
     "@jahia/jahia-reporter": "^1.0.3",

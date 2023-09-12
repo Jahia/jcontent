@@ -11,7 +11,7 @@ import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 
-const ButtonRenderer = getButtonRenderer({showTooltip: true, defaultButtonProps: {color: 'default'}});
+const ButtonRenderer = getButtonRenderer({showTooltip: true, defaultButtonProps: {color: 'default'}, defaultTooltipProps: {placement: 'top', classes:{popper: styles.tooltipPopper}}});
 
 function getBoundingBox(element) {
     const rect = getCoords(element);

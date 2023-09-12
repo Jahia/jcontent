@@ -14,10 +14,10 @@
     flex-wrap: nowrap;
 
     & > button {
+        z-index: 10000;
+
         flex: 1;
         overflow: hidden;
-
-        z-index: 10000;
 
         margin: 0 4px;
 

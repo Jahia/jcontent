@@ -8,6 +8,7 @@ describe('Picker - PDF', () => {
         cy.loginAndStoreSession(); // Edit in chief
 
         jcontent = JContent.visit(siteKey, 'en', 'pages/home/investors/events');
+        cy.frameLoaded('#page-builder-frame-1');
         jcontent.switchToListMode();
     });
 

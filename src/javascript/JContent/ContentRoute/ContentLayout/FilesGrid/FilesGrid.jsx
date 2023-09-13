@@ -99,7 +99,10 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     if ((!rows || rows.length === 0) && !isLoading) {
         return (
             <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD}
-                                    reference={mainPanelRef}
+                                    reference={el => {
+                                        mainPanelRef.current = el;
+                                        drop(mainPanelRef);
+                                    }}
                                     isCanDrop={isCanDrop}/>
         );
     }

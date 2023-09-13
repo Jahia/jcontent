@@ -1,5 +1,4 @@
-import {JContent} from '../../page-object/jcontent';
-import {AccordionItem} from '../../page-object/accordionItem';
+import {AccordionItem, JContent} from '../../page-object';
 
 describe('Picker - PDF', () => {
     const siteKey = 'digitall';
@@ -8,7 +7,6 @@ describe('Picker - PDF', () => {
         // I have issues adding these to before()/after() so have to add to beforeEach()/afterEach()
         cy.loginAndStoreSession(); // Edit in chief
 
-        // beforeEach()
         jcontent = JContent.visit(siteKey, 'en', 'pages/home/investors/events');
         jcontent.switchToListMode();
     });

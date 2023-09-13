@@ -30,6 +30,10 @@ export class JContent extends BasePage {
 
     static visit(site: string, language: string, path: string): JContent {
         cy.visit(`/jahia/jcontent/${site}/${language}/${path}`);
+        if (path.startsWith('pages/')) {
+            cy.frameLoaded('#page-builder-frame-1');
+        }
+
         return new JContent();
     }
 
@@ -114,7 +118,7 @@ export class JContent extends BasePage {
         return new CreateContent(this);
     }
 
-    getMedia() : Media {
+    getMedia(): Media {
         return new Media(this);
     }
 
@@ -218,6 +222,7 @@ export class JContent extends BasePage {
 
 export class JContentPageBuilder extends JContent {
     private alias: string;
+
     constructor(base: JContent, alias = 'pcIframe') {
         super();
         this.alias = alias;

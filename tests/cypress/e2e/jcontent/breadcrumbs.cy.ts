@@ -3,7 +3,8 @@ import {Breadcrumb} from '../../page-object/breadcrumb';
 
 describe('Breadcrumb navigation test', () => {
     before(function () {
-        cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
+        cy.loginAndStoreSession();
+        JContent.visit('digitall', 'en', 'pages/home');
     });
 
     beforeEach(function () {

@@ -1,17 +1,12 @@
 import {JContent} from '../../page-object';
-import {addNode} from '@jahia/cypress';
-import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
 import {RichTextField} from '../../page-object/fields';
 
-describe('constraints', {testIsolation: false}, () => {
+describe('richText', {testIsolation: false}, () => {
     let jcontent: JContent;
     let contentEditor;
     let richText;
 
     before(() => {
-        cy.window().then(win => {
-            win.navigator.clipboard.writeText('test');
-        });
         cy.loginAndStoreSession();
         jcontent = JContent
             .visit('digitall', 'en', 'pages/home')

@@ -30,10 +30,6 @@ export class JContent extends BasePage {
 
     static visit(site: string, language: string, path: string): JContent {
         cy.visit(`/jahia/jcontent/${site}/${language}/${path}`);
-        if (path.startsWith('pages/')) {
-            cy.frameLoaded('#page-builder-frame-1');
-        }
-
         return new JContent();
     }
 

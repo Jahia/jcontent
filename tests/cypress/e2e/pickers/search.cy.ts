@@ -1,16 +1,17 @@
 import {JContent} from '../../page-object/jcontent';
 import {SecondaryNav} from '@jahia/cypress';
+import {ContentEditor} from "../../page-object";
 
 describe('Picker tests - Search', () => {
-    const siteKey = 'digitall';
+    let contentEditor: ContentEditor;
     let jcontent: JContent;
+
     beforeEach(() => {
         // I have issues adding these to before()/after() so have to add to beforeEach()/afterEach()
         cy.login(); // Edit in chief
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
-        // BeforeEach()
-        jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        jcontent.switchToListMode();
+        contentEditor = ContentEditor.visit('/sites/digitall/home/area-main/highlights/leading-by-example', 'digitall', 'en', 'pages/home');
+        jcontent = new JContent();
     });
 
     afterEach(() => {
@@ -19,7 +20,6 @@ describe('Picker tests - Search', () => {
 
     // Tests
     it('Media Picker - Search for tab - letter by letter', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
         picker.search('t');
@@ -32,7 +32,6 @@ describe('Picker tests - Search', () => {
     });
 
     it('Media Picker - Search for tab - in different context', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
         picker.search('tab');
@@ -45,7 +44,6 @@ describe('Picker tests - Search', () => {
     });
 
     it('Media Picker - Search for tab - cancel and reopen - search should be empty', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         let picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
         picker.search('tab');
@@ -53,13 +51,12 @@ describe('Picker tests - Search', () => {
         picker.getTableRow('person-smartphone-office-table.jpg').should('be.visible');
         picker.cancel();
         contentEditor.cancel();
-
+        jcontent.switchToListMode();
         picker = jcontent.editComponentByText('Leading by Example').getPickerField('jdmix:imgView_image').open();
         picker.getSearchInput().should('be.empty');
     });
 
     it('Editorial Picker- Search for tab - letter by letter', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.search('t');
         picker.verifyResultsAtLeast(82);
@@ -70,7 +67,6 @@ describe('Picker tests - Search', () => {
     });
 
     it('Editorial Picker- Search for tab - ensure all accordions are closed', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.search('tab');
         picker.verifyResultsLength(7);
@@ -80,7 +76,6 @@ describe('Picker tests - Search', () => {
     });
 
     it('Editorial Picker- Search for tab and them empty search - ensure previous context is restored', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.wait();
 
@@ -99,7 +94,6 @@ describe('Picker tests - Search', () => {
     });
 
     it('Media Picker- Search for xylophone and should find nothing no matter the context', () => {
-        const contentEditor = jcontent.editComponentByText('Leading by Example');
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
         picker.search('xylophone', true);

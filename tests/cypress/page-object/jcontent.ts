@@ -71,12 +71,14 @@ export class JContent extends BasePage {
 
     editComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.get().scrollIntoView();
         row.contextMenu().select('Edit');
         return new ContentEditor();
     }
 
     viewSubContentComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.get().scrollIntoView();
         row.contextMenu().select('View sub-contents');
     }
 

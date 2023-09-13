@@ -11,12 +11,32 @@ import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
 import {Field, PickerField, RichTextField, SmallTextField, DateField} from './fields';
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
+import gql from "graphql-tag";
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
     languageSwitcher: LanguageSwitcher;
     createAnother = false;
     advancedMode = false;
+
+    static visit(path: string, site: string, language: string, jContentPath: string) : ContentEditor {
+        cy.apollo({
+            mutation: gql`
+                query getUuid {
+                    jcr {
+                        nodeByPath(path: "${path}") { uuid }
+                    }
+                }
+            `
+        }).then(resp => {
+            const validUuid = resp?.data?.jcr?.nodeByPath?.uuid;
+            const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:${language},mode:edit,site:${site},uilang:en,uuid:'${validUuid}')))`;
+            const baseUrl = `/jahia/jcontent/${site}/${language}/${jContentPath}`;
+            cy.visit(`${baseUrl}#${ceParams}`);
+        });
+
+        return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
+    }
 
     static getContentEditor() : ContentEditor {
         return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);

@@ -11,7 +11,7 @@ import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
 import {Field, PickerField, RichTextField, SmallTextField, DateField} from './fields';
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';

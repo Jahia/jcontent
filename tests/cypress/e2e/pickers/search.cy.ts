@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object/jcontent';
 import {SecondaryNav} from '@jahia/cypress';
-import {ContentEditor} from "../../page-object";
+import {ContentEditor} from '../../page-object';
 
 describe('Picker tests - Search', () => {
     let contentEditor: ContentEditor;

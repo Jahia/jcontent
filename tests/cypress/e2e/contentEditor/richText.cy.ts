@@ -1,7 +1,7 @@
 import {JContent} from '../../page-object';
 import {addNode} from '@jahia/cypress';
 import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
-import {RichTextField} from "../../page-object/fields";
+import {RichTextField} from '../../page-object/fields';
 
 describe('constraints', {testIsolation: false}, () => {
     let jcontent: JContent;

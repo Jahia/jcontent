@@ -4,7 +4,7 @@
   username: ${env:NEXUS_USERNAME}
   password: ${env:NEXUS_PASSWORD}
 
-- include: 'mvn:org.jahia.packages/jahia-additional-modules'
+- include: 'mvn:org.jahia.packages/jahia-additional-modules/${const:org.jahia.api.Constants.JAHIA_PROJECT_VERSION}/yaml/provisioning'
 
 - import: "jar:mvn:org.jahia.modules/digitall/2.3.0/zip/import!/users.zip"
 - importSite: "jar:mvn:org.jahia.modules/digitall/2.3.0/zip/import!/Digitall.zip"

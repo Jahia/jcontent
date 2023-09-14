@@ -3,7 +3,8 @@ import {Breadcrumb} from '../../page-object/breadcrumb';
 
 describe('Breadcrumb navigation test', () => {
     before(function () {
-        cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
+        cy.loginAndStoreSession();
+        JContent.visit('digitall', 'en', 'pages/home');
     });
 
     beforeEach(function () {
@@ -12,6 +13,7 @@ describe('Breadcrumb navigation test', () => {
 
     it('Display popup when navigating to list and render list view when selected', () => {
         JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
+        cy.frameLoaded('#page-builder-frame-1');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-cm-role="breadcrumb-view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Content List').should('be.visible');

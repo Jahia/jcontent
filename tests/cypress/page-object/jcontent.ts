@@ -71,12 +71,14 @@ export class JContent extends BasePage {
 
     editComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.get().scrollIntoView();
         row.contextMenu().select('Edit');
         return new ContentEditor();
     }
 
     viewSubContentComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.get().scrollIntoView();
         row.contextMenu().select('View sub-contents');
     }
 
@@ -112,7 +114,7 @@ export class JContent extends BasePage {
         return new CreateContent(this);
     }
 
-    getMedia() : Media {
+    getMedia(): Media {
         return new Media(this);
     }
 
@@ -216,6 +218,7 @@ export class JContent extends BasePage {
 
 export class JContentPageBuilder extends JContent {
     private alias: string;
+
     constructor(base: JContent, alias = 'pcIframe') {
         super();
         this.alias = alias;

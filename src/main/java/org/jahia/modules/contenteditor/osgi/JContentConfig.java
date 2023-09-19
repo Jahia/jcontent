@@ -45,7 +45,7 @@ public class JContentConfig implements ManagedService {
 
     @Override
     public void updated(Dictionary<String, ?> dictionary) throws ConfigurationException {
-        hideLegacyPageComposer = getBoolean(dictionary, "hideLegacyPageComposer", true);
+        hideLegacyPageComposer = dictionary == null || getBoolean(dictionary, "hideLegacyPageComposer", true);
         Resource resource = getResource(bundleContext.getBundle());
         if (hideLegacyPageComposer) {
             rewriteService.removeConfigurationResource(resource);

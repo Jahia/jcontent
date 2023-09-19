@@ -293,6 +293,7 @@
       },
       "actions": {
         "openInJContent": "Ouvrir dans un nouvel onglet",
+        "pageComposer": "Ouvrir dans Page Composer",
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
         },

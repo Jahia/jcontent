@@ -296,6 +296,7 @@
       },
       "actions": {
         "openInJContent": "Open in a new tab",
+        "pageComposer": "Open in Page Composer",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

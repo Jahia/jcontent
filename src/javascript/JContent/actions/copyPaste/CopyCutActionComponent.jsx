@@ -5,6 +5,8 @@ import copyPasteConstants from './copyPaste.constants';
 import {getName, hasMixin} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
 import {copypasteCopy, copypasteCut} from './copyPaste.redux';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
+import {batchActions} from 'redux-batched-actions';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
@@ -47,7 +49,8 @@ export const CopyCutActionComponent = withNotifications()(({
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let isVisible = res.checksResult && (res.node ? !hasMixin(res.node, 'jmix:markedForDeletionRoot') : res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true));
+    const nodes = res.node ? [res.node] : res.nodes;
+    const isVisible = res.checksResult && !nodes.some(n => hasMixin(n, 'jmix:markedForDeletionRoot'));
 
     return (
         <Render
@@ -55,13 +58,14 @@ export const CopyCutActionComponent = withNotifications()(({
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                let nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);
                 const message = nodes.length === 1 ?
                     t('jcontent:label.contentManager.copyPaste.stored.one', {name: getName(nodes[0])}) :
                     t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length});
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
-                dispatch(type === 'copy' ? copypasteCopy(nodes) : copypasteCut(nodes));
+
+                const copyPasteAction = (type === copyPasteConstants.COPY) ? copypasteCopy : copypasteCut;
+                dispatch(batchActions([copyPasteAction(nodes), cmClearSelection()]));
             }}
         />
     );

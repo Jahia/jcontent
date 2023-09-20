@@ -90,8 +90,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     );
 
     useEffect(() => {
-        if (selection.length > 0 && !isLoading && rows?.length > 0) {
-            const notVisible = selection.filter(path => !pathExistsInTree(path, rows));
+        if (selection.length > 0 && !isLoading) {
+            const notVisible = (rows?.length > 0) ? selection.filter(path => !pathExistsInTree(path, rows)) : selection;
             if (notVisible.length > 0) {
                 const toOpen = [];
                 const toRemove = [];

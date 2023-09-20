@@ -1,5 +1,6 @@
 import {JContent} from '../../page-object';
 import {Button, getComponentBySelector} from '@jahia/cypress';
+import {addNode, deleteNode} from '@jahia/cypress';
 
 describe('Multi-selection tests', {testIsolation: false}, () => {
     let jcontent;
@@ -104,10 +105,21 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
     });
 
     describe('test selection when switching modes', () => {
+        const folderName = 'folder1';
+
         before(function () {
+            addNode({
+                name: folderName,
+                parentPathOrId: '/sites/digitall/files',
+                primaryNodeType: 'jnt:folder'
+            });
             cy.loginAndStoreSession(); // Edit in chief
             jcontent = JContent.visit('digitall', 'en', 'pages/home');
             jcontent.switchToListMode();
+        });
+
+        after(() => {
+            deleteNode(`/sites/digitall/files/${folderName}`);
         });
 
         afterEach(() => {
@@ -158,6 +170,18 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             jcontent.switchToListMode();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             cy.contains('1 previously selected');
+        });
+
+        it('remove selection when navigating to empty folder', () => {
+            cy.log('select item');
+            jcontent = JContent.visit('digitall', 'en', 'media/files').switchToListMode();
+            jcontent.getTable().selectRowByLabel('bootstrap');
+            checkSelectionCount(1);
+
+            cy.log('check selection is cleared for empty folder');
+            jcontent.getAccordionItem('media').getTreeItem(folderName).click();
+            cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+            cy.get('[data-sel-role="selection-infos"]').should('not.exist');
         });
     });
 });

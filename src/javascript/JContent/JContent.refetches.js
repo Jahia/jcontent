@@ -25,7 +25,7 @@ export const unsetRefetcher = name => {
 
 export const triggerRefetch = (name, queryParams) => {
     const refetch = registry.get('refetcher', name);
-    if (!refetch) {
+    if (!refetch || !refetch.refetch) {
         return;
     }
 

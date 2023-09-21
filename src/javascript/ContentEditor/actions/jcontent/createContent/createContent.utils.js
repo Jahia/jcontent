@@ -5,6 +5,7 @@ import {toIconComponent} from '@jahia/moonstone';
 // eslint-disable-next-line
 export const useCreatableNodetypesTree = (nodeTypes, childNodeName, includeSubTypes, path, uilang, excludedNodeTypes, showOnNodeTypes) => {
     const {data, error, loadingTypes} = useQuery(getTreeOfContentWithRequirements, {
+        fetchPolicy: 'cache-and-network',
         variables: {
             nodeTypes: (nodeTypes && nodeTypes.length) > 0 ? nodeTypes : undefined,
             childNodeName,

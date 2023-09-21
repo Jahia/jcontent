@@ -1,0 +1,15 @@
+{
+  "nodeType": "jmix:createdFromPageModel",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "jmix:createdFromPageModel",
+          "alwaysPresent": true
+        }
+      ]
+    }
+  ]
+}

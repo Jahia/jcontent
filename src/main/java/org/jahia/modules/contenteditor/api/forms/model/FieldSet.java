@@ -38,6 +38,8 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
     private boolean hasEnableSwitch = false;
     private boolean activated = true;
     private boolean visible = true;
+    // Fieldset will be included in section even if it is invisible
+    private Boolean alwaysPresent;
 
     public String getName() {
         return name;
@@ -182,6 +184,14 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         this.visible = visible;
     }
 
+    public Boolean isAlwaysPresent() {
+        return alwaysPresent;
+    }
+
+    public void setAlwaysPresent(Boolean alwaysPresent) {
+        this.alwaysPresent = alwaysPresent;
+    }
+
     @JsonIgnore
     public ExtendedNodeType getNodeType() {
         if (nodeType == null) {
@@ -229,7 +239,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         setRequiredPermission(otherFieldSet.getRequiredPermission() != null ? otherFieldSet.getRequiredPermission() : requiredPermission);
         setHide(otherFieldSet.isHide() != null ? otherFieldSet.isHide() : hide);
         setRank(otherFieldSet.getRank() != null ? otherFieldSet.getRank() : rank);
-
+        setAlwaysPresent(otherFieldSet.isAlwaysPresent() != null ? otherFieldSet.isAlwaysPresent() : alwaysPresent);
         mergeFields(otherFieldSet.getFields(), form);
     }
 

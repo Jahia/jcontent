@@ -218,8 +218,8 @@ public class EditorFormServiceImpl implements EditorFormService {
                 // Remove empty fieldSets - only keep empty dynamic field set which do not have matching mixin in another section
                 // (if the dynamic mixin is present in multiple sections, keep only the non-empty ones)
                 section.setFieldSets(section.getFieldSets().stream()
-                    .filter(FieldSet::isVisible)
-                    .filter(fs -> (fs.isDynamic() && fieldSetsMap.get(fs.getName()).size() == 1) || !fs.getFields().isEmpty())
+                    .filter(fs -> fs.isAlwaysPresent() != null && fs.isAlwaysPresent() || fs.isVisible())
+                    .filter(fs -> (fs.isDynamic() && fieldSetsMap.get(fs.getName()).size() == 1) || !fs.getFields().isEmpty() || (fs.isAlwaysPresent() != null && fs.isAlwaysPresent()))
                     .collect(Collectors.toList()));
 
                 section.setVisible(section.isVisible() && section.getFieldSets().stream().anyMatch(FieldSet::isVisible));

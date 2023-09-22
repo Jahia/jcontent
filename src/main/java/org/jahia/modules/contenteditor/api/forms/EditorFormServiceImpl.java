@@ -238,16 +238,16 @@ public class EditorFormServiceImpl implements EditorFormService {
     }
 
     private static Map<String, Object> replaceBySubstitutor(Map<String, Object> selectorOptionsMap) {
-        return selectorOptionsMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> {
+        Map<String, Object> map = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> entry : selectorOptionsMap.entrySet()) {
             Object value = entry.getValue();
             if (value instanceof String) {
-                return SettingsBean.getInstance().replaceBySubsitutor((String) value);
+                map.put(entry.getKey(), SettingsBean.getInstance().replaceBySubsitutor((String) value));
             } else if (value instanceof Map) {
-                return replaceBySubstitutor((Map) value);
+                map.put(entry.getKey(), replaceBySubstitutor((Map) value));
             }
-
-            return value;
-        }));
+        }
+        return map;
     }
 
     private void addFormNodeType(ExtendedNodeType nodeType, SortedSet<DefinitionRegistryItem> formDefinitionsToMerge, Locale locale, boolean singleFieldSet, Set<String> processedNodeTypes) throws RepositoryException {

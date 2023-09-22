@@ -57,23 +57,23 @@ describe('constraints', () => {
 
     it('can create restricted content', () => {
         jcontent = JContent
-            .visit('jcontentSite', 'en', 'content-folders/contents/folder1')
-        // verify create highlight button is present and create content
+            .visit('jcontentSite', 'en', 'content-folders/contents/folder1');
+        // Verify create highlight button is present and create content
         cy.get('[data-registry-key="action:createContent"][data-sel-role="jnt:banner"]').click();
         new ContentEditor().create();
 
-        // verify content created
+        // Verify content created
         jcontent.getTable().getRowByLabel('banner').should('be.visible');
     });
 
     it('can inherit restricted content to subfolders', () => {
         jcontent = JContent
-            .visit('jcontentSite', 'en', 'content-folders/contents/folder1/subfolder1')
-        // verify create highlight button is present and create content
+            .visit('jcontentSite', 'en', 'content-folders/contents/folder1/subfolder1');
+        // Verify create highlight button is present and create content
         cy.get('[data-registry-key="action:createContent"][data-sel-role="jnt:banner"]').click();
         new ContentEditor().create();
 
-        // verify content created
+        // Verify content created
         jcontent.getTable().getRowByLabel('banner').should('be.visible');
     });
 
@@ -91,16 +91,15 @@ describe('constraints', () => {
 
     it('can create restricted content', () => {
         jcontent = JContent
-            .visit('jcontentSite', 'en', 'content-folders/contents/folder1')
-        // verify create highlight button is still present 
+            .visit('jcontentSite', 'en', 'content-folders/contents/folder1');
+        // Verify create highlight button is still present
         cy.get('[data-registry-key="action:createContent"][data-sel-role="jnt:banner"]').should('be.visible');
-        // verify new text restriction is present and create content
+        // Verify new text restriction is present and create content
         cy.get('[data-registry-key="action:createContent"][data-sel-role="jnt:text"]').click();
         new ContentEditor().create();
 
-        // verify content created
+        // Verify content created
         jcontent.getTable().getRowByLabel('simple-text').should('be.visible');
     });
-
 });
 

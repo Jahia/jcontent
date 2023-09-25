@@ -239,7 +239,7 @@ describe('Page builder', () => {
             const module = jcontent.getModule(item1);
             module.click();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-            jcontent.iframe().get().find(".blog-topbar").click();
+            jcontent.iframe().get().find('.blog-topbar').click();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 

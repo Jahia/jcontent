@@ -299,6 +299,14 @@ class PageBuilderModule extends BaseComponent {
         this.get().realHover();
     }
 
+    hasNoHeaderAndFooter () {
+        this.hover();
+        this.get().invoke('attr', 'id').then(id => {
+            this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`).should('not.exist');
+            this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`).should('not.exist');
+        });
+    }
+
     getHeader() {
         this.hover();
         this.get().invoke('attr', 'id').then(id => {

@@ -11,10 +11,6 @@
     display: block;
 
     margin-left: -2px;
-
-    border: 2px solid rgba(0, 160, 227, 1);
-    border-radius: 4px;
-    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }
 
 .relHeader {
@@ -30,7 +26,7 @@
     left: 0;
 
     width: calc(100% + 4px);
-    height: calc(100% + 65px);
+    height: calc(100% + 64px);
 }
 
 .relNoHeader {
@@ -118,6 +114,10 @@
     vertical-align: top;
 }
 
+.title {
+    flex-grow: 3;
+}
+
 :global(.noprefix) .dropTarget {
     outline: 4px solid var(--color-accent_light);
     outline-offset: 4px;
@@ -148,10 +148,14 @@
     z-index: 1200;
 
     border: 2px solid var(--color-accent);
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }
 
 .current {
     z-index: 13000;
 
     border: 2px solid var(--color-gray);
+    border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }

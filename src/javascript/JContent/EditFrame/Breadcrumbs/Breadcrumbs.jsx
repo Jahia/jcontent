@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
+import {isDescendant} from '~/JContent/JContent.utils';
 
 const handleItemOnClick = (selection, path, dispatch) => {
     return event => {
@@ -15,8 +16,13 @@ const handleItemOnClick = (selection, path, dispatch) => {
         if (event.ctrlKey || event.metaKey) {
             if (isSelected) {
                 dispatch(cmRemoveSelection(path));
-            } else {
-                dispatch(cmAddSelection(path));
+            } else if (!selection.some(element => isDescendant(path, element))) {
+                // Ok so no parent is already selected we can add ourselves
+                let actions = [];
+                actions.push(cmAddSelection(path));
+                // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
+                selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
+                dispatch(batchActions(actions));
             }
         } else if (!isSelected) {
             dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));

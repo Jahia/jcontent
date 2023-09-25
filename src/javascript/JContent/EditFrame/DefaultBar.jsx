@@ -33,7 +33,7 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
     return (
         <>
             <NodeIcon node={node} className={styles.icon}/>
-            <Typography isNowrap className="flexFluid" variant="caption">{node.displayName}</Typography>
+            <Typography isNowrap className={styles.title} variant="caption">{node.displayName}</Typography>
 
             <ContentStatuses node={node}
                              hasLabel={displayLabels}

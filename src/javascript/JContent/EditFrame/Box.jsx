@@ -11,18 +11,18 @@ import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 import Breadcrumbs from './Breadcrumbs';
 
-function getBoundingBox(element) {
+function getBoundingBox(element, isHeaderDisplayed) {
     const rect = getCoords(element);
 
     const left = Math.max(2, (rect.left - 4));
-    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
+    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8) + (isHeaderDisplayed ? 0 : 4);
     const top = rect.top;
-    const height = rect.height + 4;
+    const height = rect.height + (isHeaderDisplayed ? 0 : 4);
     return {top, left, width, height};
 }
 
-const reposition = function (element, currentOffset, setCurrentOffset) {
-    const box = getBoundingBox(element);
+const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
+    const box = getBoundingBox(element, isHeaderDisplayed);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
         setCurrentOffset(box);
     }
@@ -49,7 +49,7 @@ export const Box = React.memo(({
     onDoubleClick
 }) => {
     const ref = useRef(element);
-    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
+    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
 
     useEffect(() => {
         element.addEventListener('mouseenter', onMouseOver);
@@ -126,13 +126,13 @@ export const Box = React.memo(({
         };
     }, [isCanDrop, insertPosition, destParent, element]);
 
-    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, currentOffset, element, setCurrentOffset]);
+    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed)), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
     if (!isCurrent && !isSelected) {
         return false;
     }
 
-    reposition(element, currentOffset, setCurrentOffset);
+    reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);
 
     const type = element.getAttribute('type');
 
@@ -168,7 +168,7 @@ export const Box = React.memo(({
 
     return (
         <div ref={rootDiv}
-             className={clsx(styles.root, isSelected ? styles.selected : styles.current)}
+             className={clsx(styles.root)}
              style={currentOffset}
         >
             <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isSelected ? styles.selected : styles.current)}>
@@ -179,6 +179,7 @@ export const Box = React.memo(({
                          data-current={isCurrent}
                          data-jahia-id={element.getAttribute('id')}
                          jahiatype="footer" // eslint-disable-line react/no-unknown-property
+                         onClick={onClick}
                     >
                         <Breadcrumbs nodes={breadcrumbs} responsiveMode={element.getBoundingClientRect().width < 350}/>
                     </div>}

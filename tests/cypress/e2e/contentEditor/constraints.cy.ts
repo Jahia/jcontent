@@ -89,10 +89,10 @@ describe('constraints', () => {
         contentEditor.save();
     });
 
-    it('can create restricted content', () => {
+    it('can create another added restricted content', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents/folder1');
-        // Verify create highlight button is still present
+        // Verify create banner button is still present
         cy.get('[data-registry-key="action:createContent"][data-sel-role="jnt:banner"]').should('be.visible');
         // Verify new text restriction is present and create content
         cy.get('[data-registry-key="action:createContent"][data-sel-role="jnt:text"]').click();

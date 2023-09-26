@@ -8,7 +8,7 @@ import {useMutation} from '@apollo/client';
 import {updateProperty} from '~/JContent/EditFrame/Boxes.gql-mutations';
 import {useQuery} from '@apollo/client';
 import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
-import {hasMixin, isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {hasMixin, isDescendant, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
 import {pathExistsInTree} from '../JContent.utils';
@@ -113,8 +113,13 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             if (isMultipleSelectionMode) {
                 if (isSelected) {
                     dispatch(cmRemoveSelection(path));
-                } else {
-                    dispatch(cmAddSelection(path));
+                } else if (!selection.some(element => isDescendant(path, element))) {
+                    // Ok so no parent is already selected we can add ourselves
+                    let actions = [];
+                    actions.push(cmAddSelection(path));
+                    // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
+                    selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
+                    dispatch(batchActions(actions));
                 }
             } else if (!isSelected) {
                 dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
@@ -344,12 +349,12 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          node={node}
                          isCurrent={element === currentElement}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={element === currentElement || (selection.length === 1 && selection.includes(node.path))}
+                         isHeaderDisplayed={selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement) || (selection.length === 0 && element === currentElement)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
-                         breadcrumbs={element === currentElement ? getBreadcrumbsForPath(node.path) : []}
+                         breadcrumbs={(selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement) || (selection.length === 0 && element === currentElement)) ? getBreadcrumbsForPath(node.path) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}

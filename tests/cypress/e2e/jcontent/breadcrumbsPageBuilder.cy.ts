@@ -26,7 +26,6 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         breadcrumbs.shouldHaveCount(3);
         breadcrumbs.select('landing');
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-        breadcrumbs.addToSelection('slider');
-        jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
+        pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies').hasNoHeaderAndFooter();
     });
 });

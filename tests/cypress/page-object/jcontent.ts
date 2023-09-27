@@ -76,6 +76,11 @@ export class JContent extends BasePage {
         return new ContentEditor();
     }
 
+    editPage() {
+        cy.get('[data-sel-role="editPage"]').click();
+        return new ContentEditor();
+    }
+
     viewSubContentComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
         row.get().scrollIntoView();

@@ -245,6 +245,8 @@ public class EditorFormServiceImpl implements EditorFormService {
                 map.put(entry.getKey(), SettingsBean.getInstance().replaceBySubsitutor((String) value));
             } else if (value instanceof Map) {
                 map.put(entry.getKey(), replaceBySubstitutor((Map) value));
+            } else {
+                map.put(entry.getKey(), value);
             }
         }
         return map;

@@ -3,11 +3,15 @@ services:
     jahia:
         image: '${JAHIA_IMAGE}'
         container_name: jahia
+        deploy:
+          resources:
+            limits:
+              memory: 4gb
         environment:
             JAHIA_LICENSE: ${JAHIA_LICENSE}
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
             PROCESSING_SERVER: 'true'
-            MAX_RAM_PERCENTAGE: 95
+            MAX_RAM_PERCENTAGE: 80
             JAHIA_PROPERTIES: ${JAHIA_PROPERTIES}
             CATALINA_OPTS: ${CATALINA_OPTS}
             RESTORE_MODULE_STATES: 'false'
@@ -27,9 +31,11 @@ services:
     cypress:
         profiles: ["test"]
         image: '${TESTS_IMAGE}'
-        # https://github.com/cypress-io/cypress/issues/350
-        ipc: host
         container_name: cypress
+        deploy:
+          resources:
+            limits:
+              memory: 4gb
         depends_on:
             - jahia
         environment:

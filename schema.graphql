@@ -244,6 +244,25 @@ interface JCRNode {
         "Optional: Return languages only if it is active for the site"
         isActiveOnly: Boolean
     ): [String]
+    "GraphQL representations of the reference properties that target the current JCR Node"
+    usages(
+        "fetching only nodes after this node (exclusive)"
+        after: String,
+        "fetching only nodes before this node (exclusive)"
+        before: String,
+        "Filter by graphQL fields values"
+        fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
+        "fetching only the first certain number of nodes"
+        first: Int,
+        "fetching only the last certain number of nodes"
+        last: Int,
+        "fetching only the first certain number of nodes"
+        limit: Int,
+        "fetching only nodes after this node (inclusive)"
+        offset: Int
+    ): UsageConnection!
     "The UUID of the JCR node this object represents"
     uuid: String!
     "Get vanity URLs from the current node filtered by the parameters"
@@ -329,8 +348,6 @@ type AdminMutation {
     jahia: JahiaAdminMutation!
     "Personal API tokens mutations"
     personalApiTokens: PersonalApiTokensMutation
-    "Sitemap API mutations"
-    sitemap: GqlSitemapMutation
 }
 
 "Admin queries root"
@@ -345,34 +362,12 @@ type AdminQuery {
     personalApiTokens: PersonalApiTokensQuery
     "Get available ACL roles; does not include any hidden or privileged roles"
     roles: [AclRole]
-    "Sitemap API queries"
-    sitemap: GqlSitemapQueries
     "Get user administration endpoint"
     userAdmin: UserAdminQuery
     "Get user group endpoint"
     userGroup: UserGroupQuery
     "Version of the running Jahia instance"
     version: String! @deprecated(reason: "Deprecated")
-}
-
-"Asset type for files"
-type Asset {
-    "Asset metadata"
-    metadata: Metadata
-    "Asset size"
-    size: Long
-    "Mime type of the asset"
-    type: String
-}
-
-"Category type"
-type Category {
-    "Description"
-    description: String
-    "Asset metadata"
-    metadata: Metadata
-    "Title"
-    title: String
 }
 
 "Details about the Jahia Cluster"
@@ -724,6 +719,25 @@ type GenericJCRNode implements JCRNode {
         "Optional: Return languages only if it is active for the site"
         isActiveOnly: Boolean
     ): [String]
+    "GraphQL representations of the reference properties that target the current JCR Node"
+    usages(
+        "fetching only nodes after this node (exclusive)"
+        after: String,
+        "fetching only nodes before this node (exclusive)"
+        before: String,
+        "Filter by graphQL fields values"
+        fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
+        "fetching only the first certain number of nodes"
+        first: Int,
+        "fetching only the last certain number of nodes"
+        last: Int,
+        "fetching only the first certain number of nodes"
+        limit: Int,
+        "fetching only nodes after this node (inclusive)"
+        offset: Int
+    ): UsageConnection!
     "The UUID of the JCR node this object represents"
     uuid: String!
     "Get vanity URLs from the current node filtered by the parameters"
@@ -1136,6 +1150,28 @@ type GqlModule {
     version: String
 }
 
+type GqlNpmHelper {
+    "Render a compoment according to the parameters"
+    renderedComponent(
+        "Rendering context configuration"
+        contextConfiguration: String,
+        "Edit mode"
+        isEditMode: Boolean,
+        "Language"
+        language: String,
+        "Main resource path"
+        mainResourcePath: String,
+        "Input containing the primary node type, the name, the properties and other fields of a JCR Node of a node to render"
+        node: InputJCRNode,
+        "Path of the node"
+        path: String,
+        "Template type"
+        templateType: String,
+        "Name of the view"
+        view: String
+    ): SimpleRenderedNode
+}
+
 "Possible operations on a node"
 type GqlOperationsSupport {
     "Can node be locked"
@@ -1231,27 +1267,6 @@ type GqlScope {
     description: String
     "The name of the scope"
     name: String
-}
-
-type GqlSitemapMutation {
-    "Delete existing sitemap cache if exists before expiration time difference"
-    deleteSitemapCache(
-        "Site key"
-        siteKey: String
-    ): Boolean
-    "Sending sitemap(s) based on either sitemap index XML or sitemap XML URL to search engine URL(s) specified in CFG"
-    sendSitemapToSearchEngine(
-        "Sitemap index XML or sitemap XML URL"
-        sitemapURL: String!
-    ): Boolean
-}
-
-type GqlSitemapQueries {
-    "Get site URL with only server domain appended from sitemap URL"
-    siteUrl(
-        "Sitemap index XML or sitemap XML URL"
-        siteKey: String!
-    ): String
 }
 
 type GqlWorkflowEvent {
@@ -1355,20 +1370,6 @@ type GroupEdge {
     index: Int
     "The item at the end of the edge"
     node: Group
-}
-
-"Asset type for image"
-type ImageAsset {
-    "Image height"
-    height: Long
-    "Asset metadata"
-    metadata: Metadata
-    "Image size"
-    size: Long
-    "Mime type of image"
-    type: String
-    "Image width"
-    width: Long
 }
 
 "JCR Mutations"
@@ -2347,6 +2348,25 @@ type JCRSite implements JCRNode {
         "Optional: Return languages only if it is active for the site"
         isActiveOnly: Boolean
     ): [String]
+    "GraphQL representations of the reference properties that target the current JCR Node"
+    usages(
+        "fetching only nodes after this node (exclusive)"
+        after: String,
+        "fetching only nodes before this node (exclusive)"
+        before: String,
+        "Filter by graphQL fields values"
+        fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
+        "fetching only the first certain number of nodes"
+        first: Int,
+        "fetching only the last certain number of nodes"
+        last: Int,
+        "fetching only the first certain number of nodes"
+        limit: Int,
+        "fetching only nodes after this node (inclusive)"
+        offset: Int
+    ): UsageConnection!
     "The UUID of the JCR node this object represents"
     uuid: String!
     "Get vanity URLs from the current node filtered by the parameters"
@@ -2580,22 +2600,6 @@ type LockInfo {
     lockable: Boolean
 }
 
-"Metadata properties for all content"
-type Metadata {
-    "Date of creation for the associated content"
-    created: Date
-    "Original author of the associated content"
-    createdBy: String
-    "Date of last modification of the associated content"
-    lastModified: Date
-    "Author of last modification of the associated content"
-    lastModifiedBy: String
-    "Date of last publication of the associated content"
-    lastPublished: Date
-    "Author of last publication of the associated content"
-    lastPublishedBy: String
-}
-
 "Root mutation type"
 type Mutation {
     "Admin Mutation"
@@ -2794,22 +2798,6 @@ type PrincipalEdge {
 type Query {
     "Admin Queries"
     admin: AdminQuery!
-    "default finder for categoryById"
-    categoryById(
-        id: String,
-        "Content language, defaults to English"
-        language: String = "en",
-        "Return content from live or default workspace"
-        preview: Boolean = false
-    ): Category
-    "default finder for categoryByPath"
-    categoryByPath(
-        "Content language, defaults to English"
-        language: String = "en",
-        path: String,
-        "Return content from live or default workspace"
-        preview: Boolean = false
-    ): Category
     "Get the current user"
     currentUser: Current_32_user
     "Main access field to the DX GraphQL Dashboard API"
@@ -2821,6 +2809,8 @@ type Query {
         "The name of the workspace to fetch the node from; either EDIT, LIVE, or null to use EDIT by default"
         workspace: Workspace
     ): JCRQuery!
+    "Main access field to the NPM helpers"
+    npm: GqlNpmHelper
     "Tag Queries"
     tag: JCRTags
     "Retrieves the number of active workflow tasks for the current user"
@@ -2838,6 +2828,14 @@ type RenderedNode {
         "Assets type"
         type: String!
     ): [StaticAsset]
+}
+
+"Rendering result for a node"
+type SimpleRenderedNode {
+    "Id of of the rendering node"
+    id: String
+    "Rendering output"
+    output: String
 }
 
 "Simple numeric aggregation on properties values"
@@ -2938,6 +2936,34 @@ type TaskEdge {
     index: Int
     "The item at the end of the edge"
     node: Task
+}
+
+"GraphQL representation of a usage (node holding the reference + list of properties referencing the caller)"
+type Usage {
+    "The GraphQL representation of the JCR node the property belongs to."
+    node: JCRNode!
+    "The GraphQL representation of the references on this node."
+    properties: [JCRProperty]!
+}
+
+"A connection to a list of items."
+type UsageConnection {
+    "a list of edges"
+    edges: [UsageEdge]
+    "a list of nodes"
+    nodes: [Usage]
+    "details about this specific page"
+    pageInfo: PageInfo!
+}
+
+"An edge in a connection"
+type UsageEdge {
+    "cursor marks a unique position or index into the connection"
+    cursor: String!
+    "index in the connection"
+    index: Int
+    "The item at the end of the edge"
+    node: Usage
 }
 
 "GraphQL representation of a Jahia user"
@@ -3298,6 +3324,25 @@ type VanityUrl implements JCRNode {
     ): [String]
     "The vanity URL"
     url: String
+    "GraphQL representations of the reference properties that target the current JCR Node"
+    usages(
+        "fetching only nodes after this node (exclusive)"
+        after: String,
+        "fetching only nodes before this node (exclusive)"
+        before: String,
+        "Filter by graphQL fields values"
+        fieldFilter: InputFieldFiltersInput,
+        "Sort by graphQL fields values"
+        fieldSorter: InputFieldSorterInput,
+        "fetching only the first certain number of nodes"
+        first: Int,
+        "fetching only the last certain number of nodes"
+        last: Int,
+        "fetching only the first certain number of nodes"
+        limit: Int,
+        "fetching only nodes after this node (inclusive)"
+        offset: Int
+    ): UsageConnection!
     "The UUID of the JCR node this object represents"
     uuid: String!
     "Get vanity URLs from the current node filtered by the parameters"
@@ -3671,10 +3716,7 @@ enum Workspace {
     LIVE
 }
 
-"Date type"
-scalar Date
-
-"Long type"
+"A 64-bit signed integer"
 scalar Long
 
 "Info about a node to be reproduced at (moved or copied to) another parent node"

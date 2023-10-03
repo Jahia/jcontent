@@ -23,3 +23,25 @@
 .header-location {
     flex-grow: 2;
 }
+
+.tableWrapper {
+  position: relative;
+
+  max-width: 100%;
+
+  outline: none;
+  overflow: auto;
+}
+
+
+.pagination {
+  min-height: 64px;
+}
+
+.contentPaper.contentPaper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}

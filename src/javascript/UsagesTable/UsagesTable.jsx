@@ -10,6 +10,8 @@ import {useQuery} from '@apollo/client';
 import {UsagesQuery} from './UsagesTable.gql-queries';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import {Paper} from '@material-ui/core';
 
 const defaultCols = ['publicationStatus', 'name', 'type', 'location'];
 const columns = defaultCols.map(c => (typeof c === 'string') ? allColumnData.find(col => col.id === c) : c);
@@ -30,7 +32,8 @@ export const UsagesTable = ({path, language}) => {
                 fieldName: sort.orderBy === '' ? null : 'node.' + sort.orderBy,
                 ignoreCase: true
             }
-        }
+        },
+        fetchPolicy: 'cache-and-network'
     });
 
     const usages = data?.jcr?.nodeByPath?.usages?.nodes ? Object.values(data.jcr.nodeByPath.usages.nodes.reduce((acc, ref) => (
@@ -38,7 +41,7 @@ export const UsagesTable = ({path, language}) => {
             ...acc,
             [ref.node.uuid]: {
                 ...ref.node,
-                locales: acc[ref.node.uuid] ? [...acc[ref.node.uuid]?.locales, ref.language] : [ref.language]
+                locales: ref.properties.map(property => property.language)
             }
         }
     ), {})) : [];
@@ -79,40 +82,49 @@ export const UsagesTable = ({path, language}) => {
     }
 
     return (
-        <Table aria-labelledby="tableUsages"
-               data-cm-role="table-usages-list"
-               {...getTableProps()}
-        >
-            <ContentListHeader headerGroups={headerGroups} headerClasses={styles}/>
-            <TableBody {...getTableBodyProps()}>
-                {tableRows.map(row => {
-                    prepareRow(row);
-                    return (
-                        <TableRow key={'row' + row.id}
-                                  {...row}
-                        >
-                            {row.cells.map(cell => (
-                                <React.Fragment
-                                    key={cell.column.id}
-                                >{cell.render('Cell')}
-                                </React.Fragment>
-                            ))}
-                        </TableRow>
-                    );
-                })}
-            </TableBody>
-            <TablePagination totalNumberOfRows={data?.jcr?.nodeByPath?.usages?.pageInfo.totalCount}
-                             currentPage={currentPage + 1}
-                             rowsPerPage={pageSize}
-                             label={{
-                                 rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                                 of: t('jcontent:label.pagination.of')
-                             }}
-                             rowsPerPageOptions={[10, 20, 50]}
-                             onPageChange={page => setCurrentPage(page - 1)}
-                             onRowsPerPageChange={size => setPageSize(size)}
-            />
-        </Table>
+        <Paper className={styles.contentPaper}>
+            <div className={clsx('flexFluid', 'flexCol')}>
+                <div className={clsx(styles.tableWrapper, 'flexFluid')}>
+                    <Table aria-labelledby="tableUsages"
+                           data-cm-role="table-usages-list"
+                           style={{width: '100%', minWidth: '1100px', maxHeight: '75vh'}}
+                           {...getTableProps()}
+                    >
+                        <ContentListHeader headerGroups={headerGroups} headerClasses={styles}/>
+                        <TableBody {...getTableBodyProps()}>
+                            {tableRows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <TableRow key={'row' + row.id}
+                                              {...row}
+                                    >
+                                        {row.cells.map(cell => (
+                                            <React.Fragment
+                                                key={cell.column.id}
+                                            >{cell.render('Cell')}
+                                            </React.Fragment>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
+                <TablePagination
+                    className={styles.pagination}
+                    totalNumberOfRows={data?.jcr?.nodeByPath?.usages?.pageInfo.totalCount}
+                    currentPage={currentPage + 1}
+                    rowsPerPage={pageSize}
+                    label={{
+                        rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                        of: t('jcontent:label.pagination.of')
+                    }}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    onPageChange={page => setCurrentPage(page - 1)}
+                    onRowsPerPageChange={size => setPageSize(size)}
+                />
+            </div>
+        </Paper>
     );
 };
 

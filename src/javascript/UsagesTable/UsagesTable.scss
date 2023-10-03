@@ -25,23 +25,22 @@
 }
 
 .tableWrapper {
-  position: relative;
+    position: relative;
 
-  max-width: 100%;
+    max-width: 100%;
 
-  outline: none;
-  overflow: auto;
+    outline: none;
+    overflow: auto;
 }
 
-
 .pagination {
-  min-height: 64px;
+    min-height: 64px;
 }
 
 .contentPaper.contentPaper {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  width: 100%;
-  min-width: 0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
 }

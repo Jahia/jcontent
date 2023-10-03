@@ -33,7 +33,7 @@ export const UsagesTable = ({path, language}) => {
                 ignoreCase: true
             }
         },
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: 'cache-and-network'
     });
 
     const usages = data?.jcr?.nodeByPath?.usages?.nodes ? Object.values(data.jcr.nodeByPath.usages.nodes.reduce((acc, ref) => (

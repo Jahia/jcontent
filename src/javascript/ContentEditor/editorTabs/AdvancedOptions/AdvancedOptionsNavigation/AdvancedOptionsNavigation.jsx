@@ -15,10 +15,11 @@ const DEPRECATED_GWT_ACTIONS = ['content', 'layout', 'metadata', 'categories', '
 
 function getNodesCount(data) {
     const nodesCount = data?.jcr?.nodeByPath?.usages?.pageInfo?.nodesCount;
-    if(nodesCount === undefined) {
+    if (nodesCount === undefined) {
         return '0';
     }
-    return nodesCount > 100 ? '99+':nodesCount;
+
+    return nodesCount > 100 ? '99+' : nodesCount;
 }
 
 const Renderer = ({activeOption, setActiveOption, buttonLabel, onClick, tabs}) => {
@@ -27,7 +28,7 @@ const Renderer = ({activeOption, setActiveOption, buttonLabel, onClick, tabs}) =
 
     const {data} = useQuery(UsagesCountQuery, {
         variables: {path: nodeData.path},
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: 'cache-and-network'
     });
 
     if (tab === 'usages') {

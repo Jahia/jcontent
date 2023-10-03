@@ -163,7 +163,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 // Set section label and description if not set
                 section.initializeLabel(uiLocale, site);
                 section.setVisible((section.isHide() == null || !section.isHide()) &&
-                    (section.getRequiredPermission() == null || currentNode.hasPermission(section.getRequiredPermission())) &&
+                    (section.getRequiredPermission() == null || site.hasPermission(section.getRequiredPermission())) &&
                     (section.getDisplayModes() == null || section.getDisplayModes().contains(mode)));
                 section.getFieldSets().sort(RankedComparator.INSTANCE);
 
@@ -171,7 +171,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                     // Set fieldSet label and description if not set
                     fieldSet.initializeLabel(uiLocale, site);
                     fieldSet.setVisible((fieldSet.isHide() == null || !fieldSet.isHide()) &&
-                        (fieldSet.getRequiredPermission() == null || currentNode.hasPermission(fieldSet.getRequiredPermission())));
+                        (fieldSet.getRequiredPermission() == null || site.hasPermission(fieldSet.getRequiredPermission())));
                     fieldSet.getFields().sort(RankedComparator.INSTANCE);
 
                     // Check if fieldset is dynamic

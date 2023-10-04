@@ -98,8 +98,9 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
     it('should expand selection and restore tab', () => {
         const contentType = contentTypes.editoriallinkpicker;
         const contentEditor = jcontent.createContent(contentType.typeName);
-        const picker = contentEditor
-            .getPickerField(contentType.fieldNodeType, contentType.multiple)
+        const pickerField = contentEditor
+            .getPickerField(contentType.fieldNodeType, contentType.multiple);
+        const picker = pickerField
             .open();
 
         cy.log('select newsroom > news-entry > all organic in pages tab');
@@ -112,8 +113,13 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
         picker.selectTab('content'); // Switch tabs
         picker.select();
 
+        pickerField.assertValue('all-Organic Foods Network Gains New Sponsorship');
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+
         cy.log('verify tab is restored and selection is expanded');
-        contentEditor.getPickerField(contentType.fieldNodeType, contentType.multiple).open();
+        pickerField.open();
         picker.getTab('pages').should('have.class', 'moonstone-selected');
         picker.getTable().getRowByName('all-organic-foods-network-gains').get().scrollIntoView();
         picker.getTable().getRowByName('all-organic-foods-network-gains')

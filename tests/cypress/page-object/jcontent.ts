@@ -22,6 +22,8 @@ import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
 import {BreadcrumbPageBuilder} from './breadcrumb';
 
+Menu.defaultSelector = '.moonstone-menu:not(.moonstone-hidden)';
+
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
     accordion: Accordion;
@@ -134,7 +136,10 @@ export class JContent extends BasePage {
         const dropdown = getComponentByRole(Dropdown, 'sel-view-mode-dropdown');
         // Wait for dropdown to be available
         dropdown.get().find('[role=dropdown]:not(.moonstone-disabled)');
-        dropdown.select(name).get().should('contain', name);
+        dropdown.get().click();
+        cy.wait(5000);
+        getComponent(Menu, dropdown).select(name);
+        dropdown.get().should('contain', name);
         return this;
     }
 

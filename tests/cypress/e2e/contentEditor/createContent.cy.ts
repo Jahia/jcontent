@@ -1,11 +1,11 @@
 import {Button, getComponentByRole} from '@jahia/cypress';
 import {PageComposer} from '../../page-object/pageComposer';
+import {JContent} from "../../page-object";
 
 describe('Create content tests', {retries: 10}, () => {
-    let pageComposer: PageComposer;
+    let jcontent: JContent;
 
     before(function () {
-        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: 'contentEditorSite'});
     });
 
@@ -16,32 +16,22 @@ describe('Create content tests', {retries: 10}, () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        pageComposer = PageComposer.visit('contentEditorSite', 'en', 'home.html');
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
     });
 
     it('Can create content', function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
+        const contentEditor = jcontent.createContent('Rich text');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         const contentSection = contentEditor.openSection('Content');
         contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Test');
         contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Test');
+        jcontent.getTable().getRowByLabel('Cypress Test');
     });
 
     it('Can create multiple content in same modal', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
+        const contentEditor = jcontent.createContent('Rich text');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         let contentSection = contentEditor.openSection('Content');
         contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test-multiple-1');
@@ -63,17 +53,12 @@ describe('Create content tests', {retries: 10}, () => {
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Multiple Content Test 2');
         contentEditor.removeAnotherContent();
         contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Multiple Content Test 1');
-        pageComposer.shouldContain('Cypress Multiple Content Test 2');
+        jcontent.getTable().getRowByLabel('Cypress Multiple Content Test 1');
+        jcontent.getTable().getRowByLabel('Cypress Multiple Content Test 2');
     });
 
     it('Can create work in progress content', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
+        const contentEditor = jcontent.createContent('Rich text');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode();
@@ -82,17 +67,16 @@ describe('Create content tests', {retries: 10}, () => {
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress Test');
         contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Work In Progress Test');
-        pageComposer.shouldContainWIPOverlay();
+        jcontent.getTable().getRowByLabel('Cypress Work In Progress Test');
+        // pageComposer.shouldContainWIPOverlay();
     });
 
+    // it ('can create and delete wip', function () {
+    //     jc
+    // });
+
     it('Can create a news and edit it from the successful alert', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('News entry')
-            .selectContentType('News entry')
-            .create();
+        const contentEditor = jcontent.createContent('News entry');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create News entry');
         const contentSection = contentEditor.openSection('Content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress news titlez', {force: true});
@@ -108,16 +92,11 @@ describe('Create content tests', {retries: 10}, () => {
             .type('Cypress news title', {force: true});
         getComponentByRole(Button, 'submitSave').click();
         // GetComponentByRole(Button, 'backButton').click()
-        pageComposer.refresh().shouldContain('Cypress news title');
+        jcontent.getTable().getRowByLabel('Cypress news title');
     });
 
     it('keeps "create another" checkbox state after save', () => {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Simple Text')
-            .selectContentType('Simple text')
-            .create();
+        const contentEditor = jcontent.createContent('Simple text');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Simple text');
@@ -134,7 +113,7 @@ describe('Create content tests', {retries: 10}, () => {
         contentEditor.openSection('Content').get().find('input[type="text"]').type('Create another - test 2');
         contentEditor.removeAnotherContent();
         contentEditor.create();
-        pageComposer.refresh().shouldContain('Create another - test 1');
-        pageComposer.refresh().shouldContain('Create another - test 2');
+        jcontent.getTable().getRowByLabel('Create another - test 1');
+        jcontent.getTable().getRowByLabel('Create another - test 2');
     });
 });

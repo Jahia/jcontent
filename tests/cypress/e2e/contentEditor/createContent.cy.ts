@@ -67,13 +67,8 @@ describe('Create content tests', {retries: 10}, () => {
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress Test');
         contentEditor.create();
-        jcontent.getTable().getRowByLabel('Cypress Work In Progress Test');
-        // pageComposer.shouldContainWIPOverlay();
+        jcontent.getTable().getRowByLabel('Cypress Work In Progress Test').get().find('.moonstone-chip[title="Work in progress:  (excluding non-localized properties)"]');
     });
-
-    // it ('can create and delete wip', function () {
-    //     jc
-    // });
 
     it('Can create a news and edit it from the successful alert', {retries: 0}, function () {
         const contentEditor = jcontent.createContent('News entry');

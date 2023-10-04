@@ -35,10 +35,8 @@ describe('Create content tests in I18N site', () => {
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress FR/EN Test');
         contentEditor.create();
         jcontent.getTable().getRowByLabel('Cypress Work In Progress EN/FR Test');
-        // jcontent.shouldContainWIPOverlay();
         jcontent.getLanguageSwitcher().select('fr');
         jcontent.getTable().getRowByLabel('Cypress Work In Progress FR/EN Test');
-        // jcontent.shouldContainWIPOverlay();
     });
 
     it('keeps "create another" checkbox state when switching languages ', () => {

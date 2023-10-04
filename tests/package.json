@@ -22,7 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.2.1",
-    "@jahia/cypress": "^3.15.0",
+    "@jahia/cypress": "^3.17.1",
     "@jahia/jahia-reporter": "^1.0.30",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.1",

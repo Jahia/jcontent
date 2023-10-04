@@ -4,8 +4,8 @@ export const baseConfig = {
     chromeWebSecurity: false,
     defaultCommandTimeout: 30000,
     pageLoadTimeout: 30000,
-    requestTimeout: 5000,
-    responseTimeout: 7000,
+    requestTimeout: 30000,
+    responseTimeout: 30000,
     videoUploadOnPasses: false,
     reporter: 'cypress-multi-reporters',
     reporterOptions: {

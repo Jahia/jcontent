@@ -98,7 +98,7 @@ describe('Editor url test', () => {
         contentEditor.cancel();
         // Wait for transition
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(500);
+        cy.wait(1000);
         cy.go('forward');
         cy.get('h1').contains('Our Companies').should('exist');
         contentEditor.cancel();

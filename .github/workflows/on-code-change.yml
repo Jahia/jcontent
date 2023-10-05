@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: Jahia/jahia-modules-action/static-analysis@v2
+      - uses: Jahia/jahia-modules-action/static-analysis@yarn-3
         with:
-          node_version: 14
           auditci_level: critical
           max_warning: 58
+          enable_corepack: true
 
   unit-tests:
     name: Javascript unit tests (yarn test)
@@ -36,11 +36,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with:
-          node-version: 14
       - name: Run yarn test
         shell: bash
         run: |
+          corepack enable
           yarn
           yarn test
 

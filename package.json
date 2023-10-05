@@ -116,7 +116,6 @@
     "mammoth": "^1.4.13",
     "node-fetch": "^2.6.1",
     "prismjs": "^1.26.0",
-    "react-file-viewer/**/ajv": "^6.12.6",
     "three": "^0.125.0",
     "trim": "^1.0.0",
     "trim-newlines": "^3.0.1",
@@ -174,5 +173,6 @@
     "webpack": "^5.88.2",
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-cli": "^4.2.0"
-  }
+  },
+  "packageManager": "yarn@3.6.4"
 }

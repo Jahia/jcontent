@@ -1,6 +1,5 @@
 {
   "name": "@jahia/jcontent-cypress",
-  "private": false,
   "version": "3.0.0-tests.2",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
@@ -49,5 +48,6 @@
   },
   "dependencies": {
     "cypress-real-events": "^1.7.6"
-  }
+  },
+  "packageManager": "yarn@3.6.4"
 }

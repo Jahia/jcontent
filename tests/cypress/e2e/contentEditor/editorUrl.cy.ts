@@ -34,11 +34,13 @@ describe('Editor url test', () => {
         jcontent.switchToListMode();
         contentEditor = jcontent.editComponentByText('People First');
         contentEditor.switchToAdvancedMode();
-        cy.url().as('peopleFirstUrl');
     });
 
     it('Should open editor upon login', function () {
-        cy.visit(this.peopleFirstUrl, {failOnStatusCode: false});
+        ContentEditor.getUrl('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home')
+            .then(url => {
+                cy.visit(url, {failOnStatusCode: false});
+            });
         cy.get('input[name="username"]').type('root', {force: true});
         cy.get('input[name="password"]').type('root1234', {force: true});
         cy.get('button[type="submit"]').click({force: true});
@@ -51,9 +53,8 @@ describe('Editor url test', () => {
 
     it('Should open editor already logged in', function () {
         cy.login();
-        cy.visit(this.peopleFirstUrl);
+        contentEditor = ContentEditor.visit('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home');
         cy.get('h1').contains('People First').should('exist');
-        contentEditor = ContentEditor.getContentEditor();
         contentEditor.cancel();
         jcontent.switchToListMode();
         cy.get('span').contains('People First').should('exist');
@@ -106,9 +107,12 @@ describe('Editor url test', () => {
 
     it('Handles breadcrum in GWT correctly', function () {
         cy.login();
-        const hashIndex = this.peopleFirstUrl.indexOf('#');
-        const hash = this.peopleFirstUrl.substring(hashIndex);
-        PageComposer.visit('digitall', 'en', `home.html?redirect=false${hash}`);
+        ContentEditor.getUrl('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home')
+            .then(url => {
+                const hash = url.substring(url.indexOf('#'));
+                PageComposer.visit('digitall', 'en', `home.html?redirect=false${hash}`);
+            });
+
         contentEditor.getBreadcrumb('highlights').click();
         cy.get('h1').contains('highlights').should('exist');
     });

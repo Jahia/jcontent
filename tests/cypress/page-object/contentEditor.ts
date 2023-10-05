@@ -19,8 +19,8 @@ export class ContentEditor extends BasePage {
     createAnother = false;
     advancedMode = false;
 
-    static visit(path: string, site: string, language: string, jContentPath: string) : ContentEditor {
-        cy.apollo({
+    static getUrl(path: string, site: string, language: string, jContentPath: string): Cypress.Chainable<string> {
+        return cy.apollo({
             mutation: gql`
                 query getUuid {
                     jcr {
@@ -32,7 +32,13 @@ export class ContentEditor extends BasePage {
             const validUuid = resp?.data?.jcr?.nodeByPath?.uuid;
             const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:${language},mode:edit,site:${site},uilang:en,uuid:'${validUuid}')))`;
             const baseUrl = `/jahia/jcontent/${site}/${language}/${jContentPath}`;
-            cy.visit(`${baseUrl}#${ceParams}`);
+            return `${baseUrl}#${ceParams}`;
+        });
+    }
+
+    static visit(path: string, site: string, language: string, jContentPath: string) : ContentEditor {
+        ContentEditor.getUrl(path, site, language, jContentPath).then(url => {
+            cy.visit(url);
         });
 
         return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);

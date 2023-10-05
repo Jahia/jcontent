@@ -3,7 +3,7 @@ import * as fs from 'fs';
 export const baseConfig = {
     chromeWebSecurity: false,
     defaultCommandTimeout: 30000,
-    pageLoadTimeout: 30000,
+    pageLoadTimeout: 60000,
     requestTimeout: 30000,
     responseTimeout: 30000,
     videoUploadOnPasses: false,

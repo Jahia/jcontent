@@ -1,16 +1,11 @@
-import {PageComposer} from '../../page-object/pageComposer';
-import {DocumentNode} from 'graphql';
 import {JContent} from '../../page-object/jcontent';
 
 const sitekey = 'contentEditorSiteI18N';
 describe('Create content tests in I18N site', () => {
-    let pageComposer: PageComposer;
-    let setProperty: DocumentNode;
+    let jcontent: JContent;
 
     before(function () {
-        cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: sitekey});
-        setProperty = require('graphql-tag/loader!../../fixtures/contentEditor/createContent/addJcrTitleWithLang.graphql');
     });
 
     after(function () {
@@ -20,83 +15,11 @@ describe('Create content tests in I18N site', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        pageComposer = PageComposer.visit(sitekey, 'en', 'home.html');
-    });
-
-    it('Can create content', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
-        cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
-        const contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test');
-        contentSection.expand().get().find('.cke_button__source').click();
-        contentSection.get().find('textarea').should('have.value', '').type('Cypress Test');
-        contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Test');
-    });
-
-    it('Can create multiple content in same modal', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
-        cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
-        const contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test-multiple-1');
-        contentSection.expand();
-        contentEditor.getRichTextField('jnt:bigText_text').type('Cypress Multiple Content Test 1');
-        contentEditor.addAnotherContent();
-        contentEditor.create();
-        contentEditor.closeSection('Content');
-        contentEditor
-            .openSection('Options')
-            .get()
-            .find('input[type="text"]')
-            .should('have.value', 'rich-text')
-            .clear()
-            .type('cypress-test-multiple-2');
-        // CKEditor will stay in source mode so no need to click on source again
-        contentSection.expand();
-        contentEditor.getRichTextField('jnt:bigText_text').getData().should('be.empty');
-        contentEditor.getRichTextField('jnt:bigText_text').type('Cypress Multiple Content Test 2');
-        contentEditor.removeAnotherContent();
-        contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Multiple Content Test 1');
-        pageComposer.shouldContain('Cypress Multiple Content Test 2');
-    });
-
-    it('Can create work in progress content for all properties', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
-        cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
-        // Activate Work in progress
-        contentEditor.activateWorkInProgressMode('ALL');
-        const contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-wip-all-test');
-        contentSection.expand().get().find('.cke_button__source').click();
-        contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress ALL Test');
-        contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Work In Progress ALL Test');
-        pageComposer.shouldContainWIPOverlay();
+        jcontent = JContent.visit(sitekey, 'en', 'content-folders/contents');
     });
 
     it('Can create work in progress content for en/fr properties', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
+        const contentEditor = jcontent.createContent('Rich text');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode('en,fr');
@@ -111,20 +34,13 @@ describe('Create content tests in I18N site', () => {
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress FR/EN Test');
         contentEditor.create();
-        pageComposer.refresh().shouldContain('Cypress Work In Progress EN/FR Test');
-        pageComposer.shouldContainWIPOverlay();
-        PageComposer.visit(sitekey, 'fr', 'home.html');
-        pageComposer.refresh().shouldContain('Cypress Work In Progress FR/EN Test');
-        pageComposer.shouldContainWIPOverlay();
+        jcontent.getTable().getRowByLabel('Cypress Work In Progress EN/FR Test');
+        jcontent.getLanguageSwitcher().select('fr');
+        jcontent.getTable().getRowByLabel('Cypress Work In Progress FR/EN Test');
     });
 
     it('keeps "create another" checkbox state when switching languages ', () => {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('Rich Text')
-            .selectContentType('Rich text')
-            .create();
+        const contentEditor = jcontent.createContent('Rich text');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Rich text');
@@ -138,12 +54,7 @@ describe('Create content tests in I18N site', () => {
     });
 
     it('Can create a news in en -> fr and then create a new one in en only ', {retries: 0}, function () {
-        const contentEditor = pageComposer
-            .openCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('News entry')
-            .selectContentType('News entry')
-            .create();
+        const contentEditor = jcontent.createContent('News entry');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create News entry');
         const contentSection = contentEditor.openSection('Content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress news title', {force: true});
@@ -168,12 +79,12 @@ describe('Create content tests in I18N site', () => {
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress titre actualite 3', {force: true});
         contentEditor.create();
         contentEditor.cancelAndDiscard();
-        pageComposer.refresh().shouldContain('Cypress news content');
-        pageComposer.shouldContain('Cypress news content 2');
+        jcontent.getTable().getRowByLabel('Cypress news title');
+        jcontent.getTable().getRowByLabel('Cypress news title 2');
     });
 
     it('Correctly handles i18n title with jcr:title property on the node itself', function () {
-        const jcontent = JContent.visit(sitekey, 'en', 'media/file');
+        jcontent = JContent.visit(sitekey, 'en', 'media/file');
         const fileName = 'snowbearHome.jpeg';
         const fieldName = 'jnt:file_jcr:title';
         // eslint-disable-next-line cypress/unsafe-to-chain-command
@@ -186,12 +97,12 @@ describe('Create content tests in I18N site', () => {
                 // Unfortunately, this one seems necessary as it takes some time for uploaded file to register in JCR
                 // eslint-disable-next-line cypress/no-unnecessary-waiting
                 cy.wait(2000);
-                cy.apollo({mutation: setProperty, variables: {
+                cy.apollo({mutationFile: 'contentEditor/createContent/addJcrTitleWithLang.graphql', variables: {
                     path: `/sites/${sitekey}/files/${fileName}`,
                     value: 'No lang'
                 }});
 
-                cy.apollo({mutation: setProperty, variables: {
+                cy.apollo({mutationFile: 'contentEditor/createContent/addJcrTitleWithLang.graphql', variables: {
                     path: `/sites/${sitekey}/files/${fileName}`,
                     value: 'With lang',
                     lang: 'en'

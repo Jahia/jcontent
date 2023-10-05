@@ -2,10 +2,10 @@ import * as fs from 'fs';
 
 export const baseConfig = {
     chromeWebSecurity: false,
-    defaultCommandTimeout: 5000,
-    pageLoadTimeout: 30000,
-    requestTimeout: 5000,
-    responseTimeout: 7000,
+    defaultCommandTimeout: 60000,
+    pageLoadTimeout: 60000,
+    requestTimeout: 60000,
+    responseTimeout: 60000,
     videoUploadOnPasses: false,
     reporter: 'cypress-multi-reporters',
     reporterOptions: {

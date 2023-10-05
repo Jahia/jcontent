@@ -2,7 +2,7 @@ import {
     addNode,
     createSite,
     createUser,
-    deleteSite,
+    deleteSite, deleteUser,
     getComponentByRole,
     getNodeByPath,
     grantRoles,
@@ -52,6 +52,7 @@ describe('Test the save publish buttons flow', () => {
 
     after(function () {
         deleteSite(siteKey);
+        deleteUser(userName);
     });
 
     const checkContentEditorHeaderButtons = (contentEditor: ContentEditor, saveDisabled: boolean, publishDisabled: boolean) => {

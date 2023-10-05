@@ -53,8 +53,10 @@ describe('Create content tests', () => {
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('Rich text').selectContentType('Rich text').create();
             contentEditor.getRichTextField('jnt:bigText_text').type('Newly created content');
             contentEditor.create();
-            // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
+            cy.iframe(iframeSel).find('p').first().then(el => {
+                el.closest('html')[0].scroll(0, -2000);
+            });
             cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly created content');
         });
         it('Update newly created content', () => {
@@ -67,6 +69,9 @@ describe('Create content tests', () => {
             contentEditor.save();
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
+            cy.iframe(iframeSel).find('p').first().then(el => {
+                el.closest('html')[0].scroll(0, -2000);
+            });
             cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated content');
         });
     });

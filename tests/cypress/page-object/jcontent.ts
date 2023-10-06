@@ -196,24 +196,6 @@ export class JContent extends BasePage {
     getHeaderActionButton(role: string): Button {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
-
-    rightClickMenu(operation: string, elementName: string) {
-        cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
-        return cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find(`li[data-sel-role="${operation}"]`).click();
-    }
-
-    paste() {
-        return cy.get('span:contains("Paste"):not(:contains("Paste "))').click();
-    }
-
-    checkUserCanNotPaste() {
-        cy.get('span:contains("Paste"):not(:contains("Pasteur"))').should('have.length', 0);
-    }
-
-    checkUserCanNotCut(elementName: string) {
-        cy.get('td[data-cm-role="table-content-list-cell-name"]').contains(elementName).rightclick();
-        cy.get('menu[data-sel-role="jcontent-contentMenu"]:not([class*="moonstone-hidden"]').find('li[data-sel-role="cut"]').should('not.exist');
-    }
 }
 
 export class JContentPageBuilder extends JContent {

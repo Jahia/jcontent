@@ -42,10 +42,13 @@ describe('Copy Cut and Paste tests with jcontent', () => {
 
             cy.log('Verify editor can copy/paste');
             let jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
+            jcontent.getHeaderActionButton('openInLive').should('be.visible');
             jcontent.getTable().getRowByLabel('Taber').contextMenu().select('Copy');
             cy.get('#message-id').contains('Taber is in the clipboard');
+            jcontent.getHeaderActionButton('paste').should('exist').and('be.visible');
             jcontent.getAccordionItem('Contents');
             jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
+            jcontent.getHeaderActionButton('openInLive').should('be.visible');
             jcontent.getTable().getRowByLabel('Sparks').should('be.visible');
             jcontent.getHeaderActionButton('paste').should('exist').and('be.visible').click();
             jcontent.getTable().getRowByLabel('Taber').should('be.visible');

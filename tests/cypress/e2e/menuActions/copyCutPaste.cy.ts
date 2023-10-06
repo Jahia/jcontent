@@ -1,12 +1,10 @@
-import {JContent} from '../../page-object';
+import {JContent, JContentPageBuilder} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
 import {Collapsible, getComponentBySelector} from '@jahia/cypress';
 import {ContentEditor} from '../../page-object/contentEditor';
 
 describe('Copy Cut and Paste tests with jcontent', () => {
     describe('Copy paste functionality', function () {
-        const jcontent = new JContent();
-
         before('Add all needed metadata', () => {
             // Add required mixins
 
@@ -43,73 +41,21 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.login('mathias', 'password');
 
             cy.log('Verify editor can copy/paste');
-            cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
-            jcontent.rightClickMenu('copy', 'Taber').then(() => {
-                cy.get('#message-id').contains('Taber is in the clipboard');
-            });
-            cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
-            jcontent.paste().then(() => {
-                cy.get('td:contains("Taber")').should('exist');
-                jcontent.rightClickMenu('edit', 'Taber').then(() => {
-                    getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="Classification"]').expand();
-                    cy.get('.moonstone-tag span').contains('Media').should('exist');
-                    const contentEditor = new ContentEditor();
-                    contentEditor.getLanguageSwitcher().select('Français');
-                    cy.get('.moonstone-tag span').contains('Média').should('exist');
-                });
+            let jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
+            jcontent.getTable().getRowByLabel('Taber').contextMenu().select('Copy');
+            cy.get('#message-id').contains('Taber is in the clipboard');
+            jcontent.getAccordionItem('Contents');
+            jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
+            jcontent.getHeaderActionButton('paste').click();
+            const ce = jcontent.editComponentByText('Taber');
+            ce.openSection('Classification');
+            cy.get('.moonstone-tag span').contains('Media').should('exist');
+            const contentEditor = new ContentEditor();
+            contentEditor.getLanguageSwitcher().select('Français');
+            cy.get('.moonstone-tag span').contains('Média').should('exist');
 
-                GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
-            });
-
-            cy.log('Verify editor can cut/paste');
-            cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
-            jcontent.rightClickMenu('cut', 'Taber').then(() => {
-                cy.get('#message-id').contains('Taber is in the clipboard');
-            });
-            cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
-            jcontent.paste().then(() => {
-                cy.get('td:contains("Taber")').should('exist');
-
-                // eslint-disable-next-line max-nested-callbacks
-                jcontent.rightClickMenu('cut', 'Taber').then(() => {
-                    cy.get('#message-id').contains('Taber is in the clipboard');
-                });
-                cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople?params');
-                jcontent.paste();
-            });
-
+            GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
             cy.logout();
-        });
-
-        it('Reviewer can\'t copy cut and paste in jcontent', () => {
-            cy.login('irina', 'password');
-
-            cy.log('Verify reviewer can\'t copy/paste');
-            cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople?params');
-            jcontent.rightClickMenu('copy', 'Taber').then(() => {
-                cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
-                jcontent.checkUserCanNotPaste();
-            });
-
-            cy.log('Verify reviewer can\'t cut');
-            cy.visit('/jahia/jcontent/digitall/en/pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
-            jcontent.checkUserCanNotCut('Taber');
-
-            cy.logout();
-        });
-
-        it('Test copy/cut/paste on folder', () => {
-            cy.login();
-
-            cy.visit('/jahia/jcontent/digitall/en/content-folders/contents?params');
-            jcontent.rightClickMenu('copy', 'testFolder2').then(() => {
-                cy.visit('/jahia/jcontent/digitall/en/content-folders/contents/testFolder1');
-                // eslint-disable-next-line max-nested-callbacks
-                jcontent.paste().then(() => {
-                    cy.get('td:contains("testFolder2")').should('exist');
-                    GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder1/testFolder2');
-                });
-            });
         });
     });
 

@@ -118,6 +118,7 @@
 
 .title {
     flex-grow: 3;
+    flex-shrink: 2;
 }
 
 :global(.noprefix) .dropTarget {

@@ -47,7 +47,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             jcontent.getAccordionItem('Contents');
             jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
             jcontent.getTable().getRowByLabel('Sparks').should('be.visible');
-            jcontent.getHeaderActionButton('paste').click();
+            jcontent.getHeaderActionButton('paste').should('exist').and('be.visible').click();
             jcontent.getTable().getRowByLabel('Taber').should('be.visible');
             const ce = jcontent.editComponentByText('Taber');
             ce.openSection('Classification');

@@ -36,7 +36,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
         });
 
-        it.only('Editor can copy cut and paste with jcontent (metadata included)', () => {
+        it('Editor can copy cut and paste with jcontent (metadata included)', () => {
             // Log in as editor
             cy.login('mathias', 'password');
 

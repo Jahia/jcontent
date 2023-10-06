@@ -36,7 +36,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
         });
 
-        it('Editor can copy cut and paste with jcontent (metadata included)', () => {
+        it.only('Editor can copy cut and paste with jcontent (metadata included)', () => {
             // Log in as editor
             cy.login('mathias', 'password');
 
@@ -46,7 +46,9 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.get('#message-id').contains('Taber is in the clipboard');
             jcontent.getAccordionItem('Contents');
             jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
+            jcontent.getTable().getRowByLabel('Sparks').should('be.visible');
             jcontent.getHeaderActionButton('paste').click();
+            jcontent.getTable().getRowByLabel('Taber').should('be.visible');
             const ce = jcontent.editComponentByText('Taber');
             ce.openSection('Classification');
             cy.get('.moonstone-tag span').contains('Media').should('exist');

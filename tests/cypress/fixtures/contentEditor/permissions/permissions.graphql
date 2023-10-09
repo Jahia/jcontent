@@ -1,0 +1,13 @@
+mutation createContent {
+    jcr {
+        content: mutateNode(pathOrId: "/sites/digitall/contents") {
+            addChild(name: "ce-picker-contents", primaryNodeType: "jnt:contentFolder") {
+                addChildrenBatch(
+                    nodes: [
+                        {
+                            name: "test-content1"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 1" }]
+                        }
+                        {
+                            name: "test-content2"

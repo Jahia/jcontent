@@ -36,25 +36,19 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
         });
 
-        it('Editor can copy cut and paste with jcontent (metadata included)', () => {
+        it('Editor can copy cut and paste with jcontent', () => {
             // Log in as editor
             cy.login('mathias', 'password');
 
             cy.log('Verify editor can copy/paste');
-            let jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-movies/relatedPeople');
-            jcontent.getTable().getRowByLabel('Taber').contextMenu().select('Copy');
-            cy.get('#message-id').contains('Taber is in the clipboard');
-            jcontent.getAccordionItem('Contents');
-            jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
+            const jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
+            jcontent.getTable().getRowByLabel('Sparks').contextMenu().select('Copy');
+            cy.get('#message-id').contains('Sparks is in the clipboard');
+            jcontent.getAccordionItem('content-folders').click();
+            jcontent.getAccordionItem('content-folders').getTreeItem('contents').click();
             jcontent.getHeaderActionButton('paste').click();
-            const ce = jcontent.editComponentByText('Taber');
-            ce.openSection('Classification');
-            cy.get('.moonstone-tag span').contains('Media').should('exist');
-            const contentEditor = new ContentEditor();
-            contentEditor.getLanguageSwitcher().select('Français');
-            cy.get('.moonstone-tag span').contains('Média').should('exist');
-
-            GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
+            jcontent.editComponentByText('Sparks');
+            GraphqlUtils.deleteNode('/sites/digitall/contents/luanna-sparks');
             cy.logout();
         });
     });

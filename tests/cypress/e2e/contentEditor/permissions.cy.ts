@@ -13,7 +13,7 @@ describe('permissions', () => {
                     jcr {
                         mutateNode(pathOrId: "/sites/digitall/contents") {
                             addChild(name: "test", primaryNodeType: "jnt:bigText") {
-                                grantRoles(principalName: "mathias", principalType:USER, roleNames: "editor")
+                                grantRoles(principalName: "bill", principalType:USER, roleNames: "editor")
                                 mutateChildren(names: "j:acl") {
                                     mutateProperty(name: "j:inherit") {
                                         setValue(value: "false")
@@ -24,7 +24,7 @@ describe('permissions', () => {
                     }
                 }
             `});
-        cy.loginAndStoreSession('mathias', 'password');
+        cy.loginAndStoreSession('bill', 'password');
 
         jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
         contentEditor = jcontent.editComponentByText('test');

@@ -15,7 +15,7 @@ export const VanityUrls = () => {
 
     const {path} = useContentEditorContext();
 
-    const res  = useNodeChecks(
+    const res = useNodeChecks(
         {path},
         {
             requiredPermission: ['viewVanityUrlModal']
@@ -30,9 +30,9 @@ export const VanityUrls = () => {
                 {t('jcontent:label.contentEditor.vanityTab.title')}
             </Typography>
             <Typography className={styles.item}>
-                {hasPermission
-                    ? t('jcontent:label.contentEditor.vanityTab.label')
-                    : t('jcontent:label.contentEditor.vanityTab.noPermissionLabel')}
+                {hasPermission ?
+                    t('jcontent:label.contentEditor.vanityTab.label') :
+                    t('jcontent:label.contentEditor.vanityTab.noPermissionLabel')}
             </Typography>
             <div className={styles.item}>
                 <DisplayAction actionKey="vanityUrls"

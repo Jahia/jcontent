@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {useTranslation} from 'react-i18next';
 import styles from './VanityUrls.scss';
 import {getButtonRenderer} from '~/ContentEditor/utils';
@@ -15,14 +15,16 @@ export const VanityUrls = () => {
 
     const {path} = useContentEditorContext();
 
-    const res = useNodeChecks(
+    const {loading, checksResult: hasPermission} = useNodeChecks(
         {path},
         {
             requiredPermission: ['viewVanityUrlModal']
         }
     );
 
-    const hasPermission = res.checksResult;
+    if (loading) {
+        return (<></>);
+    }
 
     return (
         <section className={styles.container}>

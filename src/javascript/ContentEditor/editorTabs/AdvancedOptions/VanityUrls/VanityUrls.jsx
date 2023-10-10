@@ -23,6 +23,7 @@ export const VanityUrls = () => {
     );
 
     if (loading) {
+        /* eslint-disable react/jsx-no-useless-fragment */
         return (<></>);
     }
 

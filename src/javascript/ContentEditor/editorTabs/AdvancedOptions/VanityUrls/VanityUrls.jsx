@@ -5,11 +5,27 @@ import {getButtonRenderer} from '~/ContentEditor/utils';
 import {DisplayAction} from '@jahia/ui-extender';
 import {Typography} from '@jahia/moonstone';
 import clsx from 'clsx';
+import {useNodeChecks} from '@jahia/data-helper';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 const ButtonRendererAccent = getButtonRenderer({defaultButtonProps: {variant: 'default', size: 'big', color: 'accent'}});
 
 export const VanityUrls = () => {
     const {t} = useTranslation('jcontent');
+
+    const {path} = useContentEditorContext();
+
+    const {loading, checksResult: hasPermission} = useNodeChecks(
+        {path},
+        {
+            requiredPermission: ['viewVanityUrlModal']
+        }
+    );
+
+    if (loading) {
+        /* eslint-disable react/jsx-no-useless-fragment */
+        return (<></>);
+    }
 
     return (
         <section className={styles.container}>
@@ -17,7 +33,9 @@ export const VanityUrls = () => {
                 {t('jcontent:label.contentEditor.vanityTab.title')}
             </Typography>
             <Typography className={styles.item}>
-                {t('jcontent:label.contentEditor.vanityTab.label')}
+                {hasPermission ?
+                    t('jcontent:label.contentEditor.vanityTab.label') :
+                    t('jcontent:label.contentEditor.vanityTab.noPermissionLabel')}
             </Typography>
             <div className={styles.item}>
                 <DisplayAction actionKey="vanityUrls"

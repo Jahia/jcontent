@@ -8,10 +8,11 @@ import {
     Menu
 } from '@jahia/cypress';
 import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
-import {Field, PickerField, RichTextField, SmallTextField, DateField} from './fields';
+import {DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
+import {AdvancedOptions} from './advancedOptions';
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
@@ -205,5 +206,15 @@ export class ContentEditor extends BasePage {
 
     getBreadcrumb(content: string): Breadcrumb {
         return Breadcrumb.findByContent(content);
+    }
+
+    switchToAdvancedOptions(): AdvancedOptions {
+        if (this.advancedMode) {
+            cy.get('.moonstone-tab-item[data-sel-role="tab-advanced-options"]').should('be.visible').click();
+            return new AdvancedOptions();
+        }
+
+        this.switchToAdvancedMode();
+        return this.switchToAdvancedOptions();
     }
 }

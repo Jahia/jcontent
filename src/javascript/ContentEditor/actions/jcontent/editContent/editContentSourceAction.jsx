@@ -33,13 +33,9 @@ export const EditContentSource = ({
         return <Loading {...otherProps}/>;
     }
 
-    if (!refUuid) {
-        return false;
-    }
-
     return (
         <Render {...otherProps}
-                isVisible={res.checksResult && res2.checksResult}
+                isVisible={res.checksResult && res2.checksResult && refUuid}
                 onClick={() => api.edit({
                     uuid: refUuid,
                     lang: language,

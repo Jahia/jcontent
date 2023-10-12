@@ -82,7 +82,7 @@ export const UsagesTable = ({path, language}) => {
     }
 
     return (
-        <Paper className={styles.contentPaper}>
+        <Paper className={styles.contentPaper} data-sel-role="usages">
             <div className={clsx('flexFluid', 'flexCol')}>
                 <div className={clsx(styles.tableWrapper, 'flexFluid')}>
                     <Table aria-labelledby="tableUsages"

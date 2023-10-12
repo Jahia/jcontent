@@ -526,6 +526,7 @@
       "edit": {
         "title": "Content bearbeiten",
         "contentEdit": "Content bearbeiten",
+        "contentEditSource": "Referenzquelle bearbeiten",
         "validation": {
           "required": "erforderlich",
           "invalidForm": "Fehler im Formular",

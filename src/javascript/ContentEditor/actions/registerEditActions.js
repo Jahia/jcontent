@@ -7,6 +7,7 @@ import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 
 export const registerEditActions = actionsRegistry => {
     const showPageBuilder = booleanValue(contextJsParameters.config.jcontent?.showPageBuilder);
@@ -17,6 +18,16 @@ export const registerEditActions = actionsRegistry => {
         buttonLabel: 'jcontent:label.contentEditor.edit.contentEdit',
         targets: showPageBuilder ? ['contentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1'] : ['contentActions:2', 'narrowHeaderMenu:1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'], // For edit content
+        requiredSitePermission: ['editAction'],
+        getDisplayName: true
+    });
+
+    // Edit action button in JContent; need separate actions for content and pages
+    actionsRegistry.add('action', 'editSource', editContentSourceAction, {
+        buttonIcon: <Edit/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.contentEditSource',
+        targets: ['contentActions:2.1', 'narrowHeaderMenu:1.1'],
+        showOnNodeTypes: ['jnt:content'], // For edit content
         requiredSitePermission: ['editAction'],
         getDisplayName: true
     });

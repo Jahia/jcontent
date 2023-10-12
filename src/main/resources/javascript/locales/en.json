@@ -532,6 +532,7 @@
       "edit": {
         "title": "Edit content",
         "contentEdit": "Edit",
+        "contentEditSource": "Edit reference source",
         "validation": {
           "required": "Required",
           "invalidForm": "Invalid form",

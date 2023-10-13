@@ -2,7 +2,6 @@ import {addNode, createSite, deleteSite, getNodeByPath} from '@jahia/cypress';
 import {JContent} from '../../page-object';
 import {RepositoryExplorer} from '../../page-object/repositoryExplorer';
 import {CategoryManager} from '../../page-object';
-import { isPunctuatorTokenKind } from 'graphql/language/lexer';
 
 const siteKey = 'hidePreviewSite';
 
@@ -10,7 +9,7 @@ const initVisit = () => {
     const jcontent = JContent.visit(siteKey, 'en', 'home.html');
     jcontent.switchToPageBuilder();
     return jcontent;
-}
+};
 
 describe('Hide Preview testsuite', () => {
     before('Create site and content', () => {
@@ -61,7 +60,6 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t be visible for users in Repository Explorer', () => {
-        ;
         const re = RepositoryExplorer.open();
         re.openSection('root');
         re.openSection('users');

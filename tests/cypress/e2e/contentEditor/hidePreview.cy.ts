@@ -1,9 +1,17 @@
 import {addNode, createSite, deleteSite, getNodeByPath} from '@jahia/cypress';
 import {JContent} from '../../page-object';
 import {RepositoryExplorer} from '../../page-object/repositoryExplorer';
-import {CategoryManager} from '../../page-object/categoryManager';
+import {CategoryManager} from '../../page-object';
+import { isPunctuatorTokenKind } from 'graphql/language/lexer';
 
 const siteKey = 'hidePreviewSite';
+
+const initVisit = () => {
+    const jcontent = JContent.visit(siteKey, 'en', 'home.html');
+    jcontent.switchToPageBuilder();
+    return jcontent;
+}
+
 describe('Hide Preview testsuite', () => {
     before('Create site and content', () => {
         createSite(siteKey);
@@ -26,9 +34,7 @@ describe('Hide Preview testsuite', () => {
 
     beforeEach('login and visit home', () => {
         cy.login();
-        const jcontent = new JContent();
-        JContent.visit(siteKey, 'en', 'home.html');
-        jcontent.switchToPageBuilder();
+        initVisit();
     });
 
     it('Preview shouldn\'t exist for a site', () => {
@@ -39,7 +45,7 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t exist for a content folder', () => {
-        const jcontent = new JContent();
+        const jcontent = initVisit();
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('ContentFolder');
         ce.switchToAdvancedMode();
@@ -47,7 +53,7 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview should be visible for a content', () => {
-        const jcontent = new JContent();
+        const jcontent = initVisit();
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('Text');
         ce.switchToAdvancedMode();
@@ -55,8 +61,8 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t be visible for users in Repository Explorer', () => {
-        RepositoryExplorer.open();
-        const re = new RepositoryExplorer();
+        ;
+        const re = RepositoryExplorer.open();
         re.openSection('root');
         re.openSection('users');
         const ce = re.editItem('guest');
@@ -65,8 +71,7 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t exist for administrators in Repository Explorer', () => {
-        RepositoryExplorer.open();
-        const re = new RepositoryExplorer();
+        const re = RepositoryExplorer.open();
         re.openSection('root');
         re.openSection('groups');
         const ce = re.editItem('administrators');
@@ -75,7 +80,7 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t be shown in Category Manager', () => {
-        const cm = CategoryManager.open();
+        const cm = CategoryManager.visitCategoryManager('en');
         const ce = cm.editItem('Annual Filings');
         ce.switchToAdvancedMode();
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');

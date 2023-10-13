@@ -355,4 +355,10 @@ export class CategoryManager extends JContent {
     getCreateCategory(): void {
         cy.get('.moonstone-header button[data-sel-role="jnt:category"]').click();
     }
+
+    editItem(text: string) {
+        cy.get(`span[class*="moonstone-tableCellContent"]:contains("${text}")`).rightclick();
+        cy.get('li[data-registry-key="action:edit"]').click();
+        return new ContentEditor();
+    }
 }

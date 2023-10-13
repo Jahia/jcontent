@@ -88,6 +88,8 @@ export const PublishActionComponent = props => {
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation('jcontent');
 
+    // Publication info needs to be refreshed in case subNodes have changed
+    const queryOptions = (publishType === 'publish') ? {fetchPolicy: 'cache-and-network'} : undefined;
     const res = useNodeChecks({path, paths, language: languageToUse}, {
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],
@@ -96,7 +98,7 @@ export const PublishActionComponent = props => {
         getOperationSupport: true,
         getPermissions: ['publish', 'publication-start'],
         ...constraintsByType[publishType]
-    });
+    }, queryOptions);
 
     useEffect(() => {
         setRefetcher(id, {

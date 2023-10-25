@@ -22,7 +22,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
             getDisplayName: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );

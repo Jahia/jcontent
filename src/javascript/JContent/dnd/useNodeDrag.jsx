@@ -19,7 +19,7 @@ export function useNodeDrag({dragSource}) {
         {
             getPrimaryNodeType: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
             getLockInfo: true
         }

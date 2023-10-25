@@ -3,3 +3,6 @@
 
 // Deprecated now use core type [jmix:visibleInContentTree] instead
 // [jmix:cmContentTreeDisplayable] mixin
+
+[jmix:hideDeleteAction] mixin > jmix:forbiddenMixinToCopy
+ extends = jnt:page, jnt:content

@@ -38,7 +38,7 @@ export const CopyCutActionComponent = withNotifications()(({
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
             requiredSitePermission: type === copyPasteConstants.COPY ? [ACTION_PERMISSIONS.copyAction] : [ACTION_PERMISSIONS.cutAction],
             getProperties: ['jcr:mixinTypes'],
-            hideOnNodeTypes: ['jnt:virtualsite'],
+            hideOnNodeTypes: type === copyPasteConstants.COPY ? ['jnt:virtualsite'] : ['jnt:virtualsite', 'jmix:hideDeleteAction'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );

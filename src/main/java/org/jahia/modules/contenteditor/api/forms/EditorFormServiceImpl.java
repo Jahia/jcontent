@@ -191,7 +191,8 @@ public class EditorFormServiceImpl implements EditorFormService {
                     for (Field field : fieldSet.getFields()) {
                         // Set field label and description if not set
                         field.initializeLabel(uiLocale, site, primaryNodeType);
-                        field.setVisible(field.isHide() == null || !field.isHide());
+                        field.setVisible((field.isHide() == null || !field.isHide()) &&
+                            (field.getRequiredPermission() == null || site.hasPermission(field.getRequiredPermission())));
 
                         // Update readonly if user does not have permission to edit
                         boolean forceReadOnly = field.getExtendedPropertyDefinition() != null && field.getExtendedPropertyDefinition().isInternationalized() ? !i18nFieldsEditable : !sharedFieldsEditable;

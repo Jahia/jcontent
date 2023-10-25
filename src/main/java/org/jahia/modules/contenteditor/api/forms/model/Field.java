@@ -27,6 +27,7 @@ public class Field implements Ranked {
     private String descriptionKey;
     private String errorMessage;
     private String errorMessageKey;
+    private String requiredPermission;
     private Boolean hide;
     private Double rank;
     private String declaringNodeType;
@@ -97,6 +98,14 @@ public class Field implements Ranked {
 
     public void setErrorMessageKey(String errorMessageKey) {
         this.errorMessageKey = errorMessageKey;
+    }
+
+    public String getRequiredPermission() {
+        return requiredPermission;
+    }
+
+    public void setRequiredPermission(String requiredPermission) {
+        this.requiredPermission = requiredPermission;
     }
 
     public Boolean isHide() {
@@ -260,6 +269,7 @@ public class Field implements Ranked {
         setDescription(otherField.getDescriptionKey() != null || otherField.getDescription() != null ? otherField.getDescription() : description);
         setDescriptionKey(otherField.getDescriptionKey() != null || otherField.getDescription() != null ? otherField.getDescriptionKey() : descriptionKey);
         setHide(otherField.isHide() != null ? otherField.isHide() : hide);
+        setRequiredPermission(otherField.getRequiredPermission() != null ? otherField.getRequiredPermission() : requiredPermission);
         setRank(otherField.getRank() != null ? otherField.getRank() : rank);
         setErrorMessage(otherField.getErrorMessage() != null ? otherField.getErrorMessage() : errorMessage);
         setExtendedPropertyDefinition(otherField.getExtendedPropertyDefinition() != null ? otherField.getExtendedPropertyDefinition() : extendedPropertyDefinition);

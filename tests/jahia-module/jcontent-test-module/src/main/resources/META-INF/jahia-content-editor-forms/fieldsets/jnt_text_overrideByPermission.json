@@ -1,0 +1,13 @@
+{
+  "name": "jnt:text",
+  "condition": {
+    "withoutPermission": "viewRolesTab"
+  },
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "text",
+      "readOnly": true
+    }
+  ]
+}

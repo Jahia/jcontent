@@ -112,7 +112,8 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
     public Collection<FieldSet> getFieldSetsForType(ExtendedNodeType type, JCRSiteNode site) {
         return fieldSets.stream()
             .filter(definition -> definition.getConditionNodeTypeName() != null)
-            .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()))
+            .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
+                (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 

@@ -1,7 +1,5 @@
 package org.jahia.modules.contenteditor.api.forms.model;
 
-import org.jahia.services.content.nodetypes.ExtendedNodeType;
-
 public class Condition {
     private String nodeType;
     private Boolean orderable;

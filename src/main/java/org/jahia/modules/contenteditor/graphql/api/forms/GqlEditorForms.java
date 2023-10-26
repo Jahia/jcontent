@@ -168,9 +168,7 @@ public class GqlEditorForms {
         String toolbar = "Light";
         try {
             JCRNodeWrapper node = getSession().getNode(nodePath);
-            if (node.hasPermission("view-full-wysiwyg-editor")) {
-                toolbar = "Full";
-            } else if (node.hasPermission("view-basic-wysiwyg-editor")) {
+            if (node.hasPermission("view-full-wysiwyg-editor") || node.hasPermission("view-basic-wysiwyg-editor")) {
                 toolbar = "Basic";
             }
         } catch (PathNotFoundException e) {

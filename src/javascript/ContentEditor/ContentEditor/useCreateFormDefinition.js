@@ -11,11 +11,15 @@ import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinition
 const getInitialValues = (sections, nodeData) => {
     // Work in progress default value
     const wipInfo = {[Constants.wip.fieldName]: {status: nodeData.defaultWipInfo.status, languages: nodeData.defaultWipInfo.languages}};
-
     const name = {[Constants.systemName.name]: nodeData.newName};
 
-    // Retrieve fields and the return object contains the field name as the key and the field value as the value
-    return {...getFields(sections).reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {}), ...wipInfo, ...name};
+    // Retrieve dynamic auto-enabled mixins
+    const autoActivatedMixins = sections.flatMap(s => s.fieldSets).filter(fs => fs.activated && fs.dynamic).reduce((result, fs) => ({...result, [fs.name]: true}), {});
+
+    // Retrieve fields and then return object contains the field name as the key and the field value as the value
+    const fieldDefaultValues = getFields(sections).reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {});
+
+    return {...fieldDefaultValues, ...autoActivatedMixins, ...wipInfo, ...name};
 };
 
 /**

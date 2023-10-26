@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object/jcontent';
 import {Field, SmallTextField} from '../../page-object/fields';
-import {Button, Dropdown, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
+import {Button, Dropdown, getComponentByAttr, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
 import gql from 'graphql-tag';
 
 describe('Content editor form', () => {
@@ -120,5 +120,15 @@ describe('Content editor form', () => {
         const field = contentEditor.getField(SmallTextField, 'nt:base_ce:systemName', false);
         field.get().find('label').should('contain', 'Customized system name');
         field.get().scrollIntoView().contains('Customized description').should('be.visible');
+    });
+
+    it('Should enable automatically cemix:testAutoActivatedMixin on jnt:bigText', () => {
+        const contentEditor = jcontent.createContent('Rich text');
+        contentEditor.getField(SmallTextField, 'cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField');
+    });
+
+    it('Should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText', () => {
+        const contentEditor = jcontent.createContent('Simple text');
+        cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
     });
 });

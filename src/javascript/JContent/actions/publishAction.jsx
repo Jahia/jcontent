@@ -89,7 +89,7 @@ export const PublishActionComponent = props => {
     const {t} = useTranslation('jcontent');
 
     // Publication info needs to be refreshed in case subNodes have changed
-    const queryOptions = (publishType === 'publish') ? {fetchPolicy: 'cache-and-network'} : undefined;
+    const queryOptions = (publishType === 'publish') ? {fetchPolicy: 'network-only'} : undefined;
     const res = useNodeChecks({path, paths, language: languageToUse}, {
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],

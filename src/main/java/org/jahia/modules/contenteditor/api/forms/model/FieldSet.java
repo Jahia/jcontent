@@ -22,6 +22,7 @@ import static org.jahia.modules.contenteditor.api.forms.EditorFormServiceImpl.re
 public class FieldSet implements DefinitionRegistryItem, Ranked {
     private String name;
     private ExtendedNodeType nodeType;
+    private Condition condition;
     private String labelKey;
     private String descriptionKey;
     private String label;
@@ -48,6 +49,15 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Condition getCondition() {
+        return condition;
+    }
+
+    public void setCondition(Condition condition) {
+        this.condition = condition;
     }
 
     public String getLabelKey() {

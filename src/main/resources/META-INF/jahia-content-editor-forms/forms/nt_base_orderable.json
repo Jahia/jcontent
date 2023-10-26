@@ -1,6 +1,8 @@
 {
   "nodeType": "nt:base",
-  "orderable" : true,
+  "condition": {
+    "orderable" : true
+  },
   "priority": 1.1,
   "sections": [
     {

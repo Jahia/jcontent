@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 public class Form implements DefinitionRegistryItem {
     private String nodeTypeName;
     private ExtendedNodeType nodeType;
-    private Boolean orderable;
+    private Condition condition;
     private String labelKey;
     private String descriptionKey;
     private String label;
@@ -72,12 +72,13 @@ public class Form implements DefinitionRegistryItem {
         this.nodeTypeName = nodeTypeName;
     }
 
-    public Boolean getOrderable() {
-        return orderable;
+    @Override
+    public Condition getCondition() {
+        return condition;
     }
 
-    public void setOrderable(Boolean orderable) {
-        this.orderable = orderable;
+    public void setCondition(Condition condition) {
+        this.condition = condition;
     }
 
     public String getLabelKey() {

@@ -122,6 +122,11 @@ export const PublishActionComponent = props => {
     } : getButtonLabelParams(paths, languageToUse, res, t);
 
     let {buttonLabel, buttonLabelShort} = props;
+
+    if (publishType === 'publish' && res.node && res.node.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED') {
+        buttonLabel += 'Published';
+    }
+
     if (isMediumLabel) {
         buttonLabel += 'Medium';
         buttonLabelParams.language = _.escape(languageToUse).toUpperCase();

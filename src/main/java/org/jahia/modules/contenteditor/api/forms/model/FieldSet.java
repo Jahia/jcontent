@@ -29,6 +29,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
     private String requiredPermission;
     private Boolean hide;
     private Boolean readOnly;
+    private Boolean activatedOnCreate = false;
     private Double rank;
     private List<Field> fields = new ArrayList<>();
     private Double priority;
@@ -113,6 +114,14 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
 
     public void setReadOnly(Boolean readOnly) {
         this.readOnly = readOnly;
+    }
+
+    public Boolean isActivatedOnCreate() {
+        return activatedOnCreate;
+    }
+
+    public void setActivatedOnCreate(Boolean activatedOnCreate) {
+        this.activatedOnCreate = activatedOnCreate;
     }
 
     public Double getRank() {
@@ -238,6 +247,8 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         setDescriptionKey(otherFieldSet.getDescriptionKey() != null || otherFieldSet.getDescription() != null ? otherFieldSet.getDescriptionKey() : descriptionKey);
         setRequiredPermission(otherFieldSet.getRequiredPermission() != null ? otherFieldSet.getRequiredPermission() : requiredPermission);
         setHide(otherFieldSet.isHide() != null ? otherFieldSet.isHide() : hide);
+        setReadOnly(otherFieldSet.isReadOnly() != null ? otherFieldSet.isReadOnly() : readOnly);
+        setActivatedOnCreate(otherFieldSet.isActivatedOnCreate() != null ? otherFieldSet.isActivatedOnCreate() : activatedOnCreate);
         setRank(otherFieldSet.getRank() != null ? otherFieldSet.getRank() : rank);
         setAlwaysPresent(otherFieldSet.isAlwaysPresent() != null ? otherFieldSet.isAlwaysPresent() : alwaysPresent);
         mergeFields(otherFieldSet.getFields(), form);

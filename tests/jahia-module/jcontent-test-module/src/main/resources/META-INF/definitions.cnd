@@ -85,3 +85,7 @@
 - j:filter (weakreference, category[autoSelectParent=false]) multiple
 - j:noResultsMessage (string) i18n indexed=no
 - j:subNodesView (string, choicelist[templates=subnodes,resourceBundle,image,dependentProperties='j:type']) nofulltext itemtype = layout
+
+[cemix:testAutoActivatedMixin] mixin
+ extends = jnt:content
+- j:testAutoActivatedMixinField (string)

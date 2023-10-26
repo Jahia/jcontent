@@ -1,0 +1,15 @@
+{
+  "nodeType": "jnt:bigText",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "cemix:testAutoActivatedMixin",
+          "activatedOnCreate": true
+        }
+      ]
+    }
+  ]
+}

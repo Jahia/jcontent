@@ -13,6 +13,10 @@
               "descriptionKey": "label.contentEditor.section.fieldSet.system.fields.systemNameDescriptionPage"
             }
           ]
+        },
+        {
+          "name": "jdmix:hidePage",
+          "activatedOnCreate": true
         }
       ]
     }

@@ -43,8 +43,8 @@ export const Tag = ({field, value, id, onChange, onBlur}) => {
 
     return (
         <MultipleInput
-            creatable
-            async
+            isCreatable
+            isAsync
             name={id}
             id={id}
             options={field.data && field.data.values && adaptOptions(field.data.values)}

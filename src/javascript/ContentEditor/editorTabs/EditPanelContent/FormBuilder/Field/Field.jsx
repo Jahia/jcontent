@@ -139,7 +139,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
                                     />
                                 )}
                                 {field.readOnly && (
-                                    <ReadOnlyBadge readOnly={field.readOnly}/>
+                                    <ReadOnlyBadge isReadOnly={field.readOnly}/>
                                 )}
                                 {showChipField(field.i18n, wipInfo, editorContext.lang) && (
                                     <Chip

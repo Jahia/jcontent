@@ -33,7 +33,7 @@ describe('SaveErrorModal', () => {
 
     it('should display the dialog by default', () => {
         const cmp = shallowWithTheme(
-            <SaveErrorModal {...props} open/>,
+            <SaveErrorModal {...props} isOpen/>,
             {},
             dsGenericTheme
         );
@@ -45,7 +45,7 @@ describe('SaveErrorModal', () => {
         let open = true;
         const cmp = shallowWithTheme(
             <SaveErrorModal {...props}
-                            open={open}
+                            isOpen={open}
                             onClose={() => {
                                 open = false;
                             }}

@@ -82,6 +82,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
         buttonIcon: PropTypes.node,
         buttonIconEnd: PropTypes.node,
         actionKey: PropTypes.string,
+        // eslint-disable-next-line react/boolean-prop-naming
         enabled: PropTypes.bool,
         isDisabled: PropTypes.bool,
         onClick: PropTypes.func,

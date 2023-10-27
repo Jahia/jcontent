@@ -23,6 +23,17 @@ const isArray = array => {
     return Array.isArray(array);
 };
 
+function recreate(sections) {
+    sections.forEach(section => {
+        section.fieldSets = section.fieldSets.map(fieldSet => ({
+            ...fieldSet,
+            fields: fieldSet.fields.map(f => ({
+                ...f
+            }))
+        }));
+    });
+}
+
 export const registerSelectorTypesOnChange = registry => {
     registry.add('selectorType.onChange', 'dependentProperties', {
         targets: ['*'],
@@ -86,14 +97,7 @@ export const registerSelectorTypesOnChange = registry => {
                                 // Update field in place (for those who keep a constant ref on sectionsContext)
                                 fieldToUpdate.valueConstraints = data.forms.fieldConstraints;
                                 // And recreate the full sections object to make change detection work
-                                sections.forEach(section => {
-                                    section.fieldSets = section.fieldSets.map(fieldSet => ({
-                                        ...fieldSet,
-                                        fields: fieldSet.fields.map(f => ({
-                                            ...f
-                                        }))
-                                    }));
-                                });
+                                recreate(sections);
                                 updated = true;
                             }
                         }

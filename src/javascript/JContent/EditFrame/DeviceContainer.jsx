@@ -28,17 +28,17 @@ const devices = {
     }
 };
 
-export const DeviceContainer = ({enabled, device, setDevice, children}) => {
+export const DeviceContainer = ({isEnabled, device, setDevice, children}) => {
     const ref = useRef();
     const [scale, setScale] = useState(1);
     const [scaled, setScaled] = useState(false);
 
     useEffect(() => {
-        if (enabled && !device) {
+        if (isEnabled && !device) {
             setDevice(Object.keys(devices)[0]);
         }
 
-        if (device && enabled) {
+        if (device && isEnabled) {
             if (scaled) {
                 const box = ref.current.getBoundingClientRect();
                 setScale(Math.min(box.height / devices[device].decorationHeight, box.width / devices[device].decorationWidth));
@@ -46,9 +46,9 @@ export const DeviceContainer = ({enabled, device, setDevice, children}) => {
                 setScale(1);
             }
         }
-    }, [ref, device, scaled, enabled, setDevice]);
+    }, [ref, device, scaled, isEnabled, setDevice]);
 
-    if (!enabled || !device) {
+    if (!isEnabled || !device) {
         return (
             <div className={styles.frame}>
                 {children}
@@ -108,7 +108,7 @@ export const DeviceContainer = ({enabled, device, setDevice, children}) => {
 };
 
 DeviceContainer.propTypes = {
-    enabled: PropTypes.bool,
+    isEnabled: PropTypes.bool,
     device: PropTypes.string,
     setDevice: PropTypes.func,
     children: PropTypes.any

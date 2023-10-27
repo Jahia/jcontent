@@ -72,7 +72,7 @@ storiesOf('MultipleInput', module)
         () => (
             <DSProvider>
                 <MultipleInput
-                    creatable
+                    isCreatable
                     options={suggestions}
                     placeholder={text('placeholder', '')}
                     readOnly={boolean('readOnly', false)}

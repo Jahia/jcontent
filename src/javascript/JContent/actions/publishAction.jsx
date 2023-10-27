@@ -83,9 +83,40 @@ const constraintsByType = {
     }
 };
 
+function getLabels({res, languageToUse, paths, t, props, publishType, isPublishingAllLanguages}) {
+    const buttonLabelParams = res.node ? {
+        displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
+        language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
+    } : getButtonLabelParams(paths, languageToUse, res, t);
+
+    let {buttonLabel, buttonLabelShort, buttonIcon, isMediumLabel} = props;
+
+    if (isMediumLabel) {
+        buttonLabel += 'Medium';
+        buttonLabelParams.language = _.escape(languageToUse).toUpperCase();
+        const siteLanguages = res?.nodes && res?.nodes.length > 0 ? res.nodes[0].site?.languages : res?.node?.site?.languages;
+        if ((siteLanguages || []).length > 1) {
+            // Display language in publish button by disabling short label
+            buttonLabelShort = '';
+        }
+    }
+
+    if (publishType === 'publish' && !isPublishingAllLanguages && res.node && res.node.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED') {
+        buttonLabel += 'Published';
+        if (buttonLabelShort) {
+            buttonLabelShort += 'Published';
+        }
+
+        if (buttonIcon) {
+            buttonIcon = <CloudCheck/>;
+        }
+    }
+
+    return {buttonLabelParams, buttonLabel, buttonLabelShort, buttonIcon};
+}
+
 export const PublishActionComponent = props => {
-    const {id, path, paths, language, publishType, isPublishingAllLanguages, enabled, isVisible,
-        isMediumLabel, render: Render, loading: Loading} = props;
+    const {id, path, paths, language, publishType, isPublishingAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation('jcontent');
 
@@ -117,33 +148,12 @@ export const PublishActionComponent = props => {
     const actionEnabled = enabled === undefined ? actionChecks.enabled : (enabled && actionChecks.enabled);
     const actionVisible = isVisible === undefined ? actionChecks.isVisible : (isVisible && actionChecks.isVisible);
 
-    const buttonLabelParams = res.node ? {
-        displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
-        language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
-    } : getButtonLabelParams(paths, languageToUse, res, t);
-
-    let {buttonLabel, buttonLabelShort, buttonIcon} = props;
-
-    if (isMediumLabel) {
-        buttonLabel += 'Medium';
-        buttonLabelParams.language = _.escape(languageToUse).toUpperCase();
-        const siteLanguages = res?.nodes && res?.nodes.length > 0 ? res.nodes[0].site?.languages : res?.node?.site?.languages;
-        if ((siteLanguages || []).length > 1) {
-            // Display language in publish button by disabling short label
-            buttonLabelShort = '';
-        }
-    }
-
-    if (publishType === 'publish' && !isPublishingAllLanguages && res.node && res.node.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED') {
-        buttonLabel += 'Published';
-        if (buttonLabelShort) {
-            buttonLabelShort += 'Published';
-        }
-
-        if (buttonIcon) {
-            buttonIcon = <CloudCheck/>;
-        }
-    }
+    let {
+        buttonLabelParams,
+        buttonLabel,
+        buttonLabelShort,
+        buttonIcon
+    } = getLabels({res, languageToUse, paths, t, props, publishType, isPublishingAllLanguages});
 
     return (
         <Render
@@ -170,6 +180,7 @@ PublishActionComponent.propTypes = {
     path: PropTypes.string,
     paths: PropTypes.arrayOf(PropTypes.string),
     language: PropTypes.string,
+    // eslint-disable-next-line react/boolean-prop-naming
     enabled: PropTypes.bool,
     isVisible: PropTypes.bool,
     publishType: PropTypes.oneOf(['publish', 'publishAll', 'unpublish']),

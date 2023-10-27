@@ -25,6 +25,7 @@ function getMixinList(field, fieldValue) {
 export const registerChoiceListOnChange = registry => {
     registry.add('selectorType.onChange', 'addMixinChoicelist', {
         targets: ['Choicelist', 'MultipleLeftRightSelector'],
+        // eslint-disable-next-line max-params
         onChange: (previousValue, currentValue, field, onChangeContext, selectorType, helper) => {
             let editorSection = onChangeContext.sections;
 

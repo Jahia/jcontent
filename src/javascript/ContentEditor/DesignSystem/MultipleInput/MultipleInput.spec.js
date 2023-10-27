@@ -25,7 +25,7 @@ describe('MultipleInput', () => {
     });
 
     it('should use CreatableSelect when creatable props is at true', () => {
-        defaultProps.creatable = true;
+        defaultProps.isCreatable = true;
         const cmp = shallowWithTheme(
             <MultipleInput {...defaultProps}/>,
             {},

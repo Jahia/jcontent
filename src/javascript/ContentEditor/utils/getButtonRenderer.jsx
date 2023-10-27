@@ -6,7 +6,7 @@ import styles from './getButtonRenderer.scss';
 
 export const getButtonRenderer = ({labelStyle, defaultButtonProps, noIcon} = {}) => {
     const ButtonRenderer = props => {
-        const {addWarningBadge, buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, actionKey, enabled, disabled, onClick, buttonProps, dataSelRole, className} = props;
+        const {hasWarningBadge, buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, actionKey, enabled, disabled, onClick, buttonProps, dataSelRole, className} = props;
         const {t} = useTranslation(buttonLabelNamespace);
 
         let label = buttonLabel;
@@ -43,7 +43,7 @@ export const getButtonRenderer = ({labelStyle, defaultButtonProps, noIcon} = {})
         return (
             <>
                 {button}
-                {addWarningBadge && (
+                {hasWarningBadge && (
                     <Report size="big" data-sel-role={`${actionKey}_pastille`} className={styles.warningBadge}/>
                 )}
             </>
@@ -58,11 +58,13 @@ export const getButtonRenderer = ({labelStyle, defaultButtonProps, noIcon} = {})
         buttonLabelParams: PropTypes.object,
         buttonIcon: PropTypes.node,
         actionKey: PropTypes.string,
+        // eslint-disable-next-line react/boolean-prop-naming
         enabled: PropTypes.bool,
+        // eslint-disable-next-line react/boolean-prop-naming
         disabled: PropTypes.bool,
         onClick: PropTypes.func,
         buttonProps: PropTypes.object,
-        addWarningBadge: PropTypes.bool,
+        hasWarningBadge: PropTypes.bool,
         dataSelRole: PropTypes.string,
         className: PropTypes.string
     };

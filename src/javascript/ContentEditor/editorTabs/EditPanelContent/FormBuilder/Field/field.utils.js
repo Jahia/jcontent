@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-warning-comments
 // TODO: BACKLOG-13219 adapt this when fetching the data, not here, it's too late.
 export const buildFlatFieldObject = field => {
     if (!field.selectorOptions) {

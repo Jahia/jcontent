@@ -9,8 +9,6 @@ import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
 import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
 import {decodeSystemName} from '../utils';
 
-// TODO https://jira.jahia.org/browse/TECH-300
-
 const getInitialValues = (nodeData, sections) => {
     // Retrieve dynamic fieldSets
     const dynamicFieldSets = getDynamicFieldSets(sections);

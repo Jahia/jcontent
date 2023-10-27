@@ -10,7 +10,7 @@ const setErrorFieldTouched = (errorsFields, setTouched) => {
     return setTouched(fieldsTouched, false);
 };
 
-export const validateForm = async ({setTouched, validateForm}, i18nContext, sections, language, siteInfo, componentRenderer) => {
+export const validateForm = async ({formik: {setTouched, validateForm}, i18nContext, sections, lang, siteInfo, componentRenderer}) => {
     const errors = await validateForm();
     // SetEach values touched to display errors if there is so.
     // If no error, form will be reset after submition
@@ -33,11 +33,11 @@ export const validateForm = async ({setTouched, validateForm}, i18nContext, sect
         });
     });
 
-    delete i18nErrors[language];
+    delete i18nErrors[lang];
     Object.keys(errors)
         .map(k => fields.find(f => f.name === k))
         .forEach(f => {
-            const langKey = f.i18n ? language : 'shared';
+            const langKey = f.i18n ? lang : 'shared';
             i18nErrors[langKey] = i18nErrors[langKey] || {};
             i18nErrors[langKey][f.name] = errors[f.name];
         });
@@ -49,7 +49,7 @@ export const validateForm = async ({setTouched, validateForm}, i18nContext, sect
             componentRenderer.destroy('SaveErrorModal');
         };
 
-        componentRenderer.render('SaveErrorModal', SaveErrorModal, {open: true, fields, siteInfo, i18nErrors, onClose});
+        componentRenderer.render('SaveErrorModal', SaveErrorModal, {isOpen: true, fields, siteInfo, i18nErrors, onClose});
     }
 
     return {

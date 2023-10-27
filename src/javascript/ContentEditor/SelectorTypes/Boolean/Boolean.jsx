@@ -19,6 +19,7 @@ export const Boolean = ({field, value, id, onChange, onBlur}) => {
 Boolean.propTypes = {
     field: FieldPropTypes.isRequired,
     id: PropTypes.string.isRequired,
+    // eslint-disable-next-line react/boolean-prop-naming
     value: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func.isRequired

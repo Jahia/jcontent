@@ -219,6 +219,7 @@ export function checkIfValuesAreDifferent(firstValue, secondValue, requiredType)
  */
 export function propertyHasChanged(currentValue, field, nodeData) {
     // Retrieve previous value
+    // eslint-disable-next-line no-warning-comments
     // TODO https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
     const propertyData = nodeData && nodeData.properties && nodeData.properties.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.nodeType);
     const previousValue = propertyData && propertyData[_getPropertyNameToCompare(field)];

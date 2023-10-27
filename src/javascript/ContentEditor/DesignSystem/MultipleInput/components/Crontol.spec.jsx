@@ -11,7 +11,7 @@ describe('Control', () => {
         defaultProps = {
             innerProps: {},
             children: '',
-            menuIsOpen: false,
+            isMenuOpen: false,
             isFocused: false,
             isDisabled: false,
             selectProps: {

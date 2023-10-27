@@ -32,13 +32,13 @@ const handleItemOnClick = (selection, path, dispatch) => {
     };
 };
 
-export const Breadcrumbs = ({nodes, responsiveMode}) => {
+export const Breadcrumbs = ({nodes, isResponsiveMode}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {selection} = useSelector(state => ({
         selection: state.jcontent.selection
     }), shallowEqual);
-    if (responsiveMode) {
+    if (isResponsiveMode) {
         const data = nodes.map(n => ({
             label: n.name,
             value: n.path,
@@ -70,6 +70,6 @@ export const Breadcrumbs = ({nodes, responsiveMode}) => {
 };
 
 Breadcrumbs.propTypes = {
-    responsiveMode: PropTypes.bool,
+    isResponsiveMode: PropTypes.bool,
     nodes: PropTypes.array
 };

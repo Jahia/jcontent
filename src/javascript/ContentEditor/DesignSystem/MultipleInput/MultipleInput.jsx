@@ -20,8 +20,8 @@ const Input = props => {
     return <components.Input {...props} {...props.selectProps.inputProps}/>;
 };
 
-const MultipleInputComponent = ({classes, creatable, async, readOnly, ...props}) => {
-    const Cmp = creatable ? async ? AsyncCreatableSelect : CreatableSelect : Select;
+const MultipleInputComponent = ({classes, isCreatable, isAsync, readOnly, ...props}) => {
+    const Cmp = isCreatable ? isAsync ? AsyncCreatableSelect : CreatableSelect : Select;
     const components = {
         MultiValue,
         MultiValueRemove,
@@ -29,7 +29,7 @@ const MultipleInputComponent = ({classes, creatable, async, readOnly, ...props})
         IndicatorSeparator: EmptyCmp,
         Control,
         NoOptionsMessage,
-        DropdownIndicator: creatable ? EmptyCmp : DropdownIndicator
+        DropdownIndicator: isCreatable ? EmptyCmp : DropdownIndicator
     };
 
     const [selection, setSelection] = useState();
@@ -54,8 +54,8 @@ const MultipleInputComponent = ({classes, creatable, async, readOnly, ...props})
 };
 
 MultipleInputComponent.defaut = {
-    creatable: false,
-    async: false,
+    isCreatable: false,
+    isAsync: false,
     readOnly: false,
     onChange: () => {},
     onBlur: () => {}
@@ -63,9 +63,10 @@ MultipleInputComponent.defaut = {
 
 MultipleInputComponent.propTypes = {
     classes: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/boolean-prop-naming
     readOnly: PropTypes.bool,
-    creatable: PropTypes.bool,
-    async: PropTypes.bool,
+    isCreatable: PropTypes.bool,
+    isAsync: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func
 };

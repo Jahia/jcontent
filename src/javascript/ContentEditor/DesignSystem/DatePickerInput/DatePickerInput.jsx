@@ -180,6 +180,7 @@ DatePickerInput.propTypes = {
     initialValue: PropTypes.object,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    // eslint-disable-next-line react/boolean-prop-naming
     readOnly: PropTypes.bool,
     displayDateFormat: PropTypes.string,
     displayDateMask: PropTypes.string

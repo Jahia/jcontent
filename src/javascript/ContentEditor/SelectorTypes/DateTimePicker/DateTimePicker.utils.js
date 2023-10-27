@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {extractRangeConstraints} from '~/ContentEditor/utils';
 
-const _buildDisableDay = (type, boundary, disableBoundary, datetime, offset) => {
+const _buildDisableDay = ({type, boundary, disableBoundary, datetime, offset}) => {
     if (boundary && boundary.length > 0) {
         const disabledDays = {};
         disabledDays[type] = new Date(boundary);
@@ -24,13 +24,13 @@ export function fillDisabledDaysFromJCRConstraints(field, datetime) {
         const disableDays = [];
         const {lowerBoundary, disableLowerBoundary, upperBoundary, disableUpperBoundary} = extractRangeConstraints(field.valueConstraints[0].value.string);
         // Add one day / minute to the disabled dates if the lower boundary is not include, ex : "(2019-06-01,.."
-        let lowerDisabledDays = _buildDisableDay('before', lowerBoundary, disableLowerBoundary, datetime, 1);
+        let lowerDisabledDays = _buildDisableDay({type: 'before', boundary: lowerBoundary, disableBoundary: disableLowerBoundary, datetime, offset: 1});
         if (lowerDisabledDays) {
             disableDays.push(lowerDisabledDays);
         }
 
         // Remove one day / minute to the disabled dates if the upper boundary is not include, ex : "..,2019-06-01)"
-        let upperDisabledDays = _buildDisableDay('after', upperBoundary, disableUpperBoundary, datetime, -1);
+        let upperDisabledDays = _buildDisableDay({type: 'after', boundary: upperBoundary, disableBoundary: disableUpperBoundary, datetime, offset: -1});
         if (upperDisabledDays) {
             disableDays.push(upperDisabledDays);
         }

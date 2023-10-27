@@ -202,12 +202,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
 
-                        if (field.getValueConstraints() != null && field.getExtendedPropertyDefinition() != null) {
-                            List<FieldValueConstraint> valueConstraints = getValueConstraints(primaryNodeType, field, existingNode, parentNode, locale, new HashMap<>());
-                            if (valueConstraints != null && !valueConstraints.isEmpty()) {
-                                field.setValueConstraints(valueConstraints);
-                            }
-                        }
+                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, locale, new HashMap<>()));
                     }
                     fieldSet.setFields(fieldSet.getFields().stream()
                         .filter(Field::isVisible)
@@ -296,13 +291,11 @@ public class EditorFormServiceImpl implements EditorFormService {
         ExtendedPropertyDefinition propertyDefinition = editorFormField.getExtendedPropertyDefinition();
         if (propertyDefinition == null) {
             logger.error("Missing property definition to resolve choice list values, cannot process");
-            return Collections.emptyList();
+            return editorFormField.getValueConstraints();
         }
 
-        Map<String, Object> selectorOptions = editorFormField.getSelectorOptionsMap();
-        List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
-
-        if (selectorOptions != null && !selectorOptions.isEmpty()) {
+        if (propertyDefinition.getSelector() == SelectorType.CHOICELIST) {
+            Map<String, Object> selectorOptions = editorFormField.getSelectorOptionsMap();
             Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
 
             Map<String, Object> context = new HashMap<>();
@@ -310,29 +303,28 @@ public class EditorFormServiceImpl implements EditorFormService {
             context.put("contextNode", existingNode);
             context.put("contextParent", parentNode);
             context.putAll(extendContext);
+            List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
             for (Map.Entry<String, Object> entry : selectorOptions.entrySet()) {
                 if (initializers.containsKey(entry.getKey())) {
                     initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, locale, context);
                 }
             }
-            List<FieldValueConstraint> valueConstraints = null;
-            if (initialChoiceListValues != null) {
-                valueConstraints = new ArrayList<>();
-                for (ChoiceListValue choiceListValue : initialChoiceListValues) {
-                    FieldValueConstraint cst = new FieldValueConstraint();
-                    cst.setDisplayValue(choiceListValue.getDisplayName());
-                    cst.setValue(FieldValue.convert(choiceListValue.getValue()));
-                    cst.setPropertyList(choiceListValue.getProperties() != null ?
+
+            List<FieldValueConstraint> valueConstraints = new ArrayList<>();
+            for (ChoiceListValue choiceListValue : initialChoiceListValues) {
+                FieldValueConstraint cst = new FieldValueConstraint();
+                cst.setDisplayValue(choiceListValue.getDisplayName());
+                cst.setValue(FieldValue.convert(choiceListValue.getValue()));
+                cst.setPropertyList(choiceListValue.getProperties() != null ?
                         choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
                         Collections.emptyList()
-                    );
-                    valueConstraints.add(cst);
-                }
+                );
+                valueConstraints.add(cst);
             }
             return valueConstraints;
-        } else {
-            return editorFormField.getValueConstraints();
         }
+
+        return editorFormField.getValueConstraints();
     }
 
     private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRSiteNode site) throws NoSuchNodeTypeException {

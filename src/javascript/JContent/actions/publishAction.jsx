@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
+import {Check, CloudCheck} from '@jahia/moonstone';
 
 function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;
@@ -121,11 +122,7 @@ export const PublishActionComponent = props => {
         language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
     } : getButtonLabelParams(paths, languageToUse, res, t);
 
-    let {buttonLabel, buttonLabelShort} = props;
-
-    if (publishType === 'publish' && res.node && res.node.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED') {
-        buttonLabel += 'Published';
-    }
+    let {buttonLabel, buttonLabelShort, buttonIcon} = props;
 
     if (isMediumLabel) {
         buttonLabel += 'Medium';
@@ -137,9 +134,21 @@ export const PublishActionComponent = props => {
         }
     }
 
+    if (publishType === 'publish' && !isPublishingAllLanguages && res.node && res.node.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED') {
+        buttonLabel += 'Published';
+        if (buttonLabelShort) {
+            buttonLabelShort += 'Published';
+        }
+
+        if (buttonIcon) {
+            buttonIcon = <CloudCheck/>;
+        }
+    }
+
     return (
         <Render
             {...props}
+            buttonIcon={buttonIcon}
             buttonLabel={buttonLabel}
             buttonLabelShort={buttonLabelShort}
             buttonLabelParams={buttonLabelParams}
@@ -169,5 +178,6 @@ PublishActionComponent.propTypes = {
     loading: PropTypes.func,
     buttonLabelShort: PropTypes.string,
     buttonLabel: PropTypes.string.isRequired,
+    buttonIcon: PropTypes.node,
     isMediumLabel: PropTypes.bool
 };

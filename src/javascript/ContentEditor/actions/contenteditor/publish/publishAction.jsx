@@ -7,8 +7,9 @@ import {useApolloClient} from '@apollo/client';
 import {useTranslation} from 'react-i18next';
 import {useFormikContext} from 'formik';
 import {isDirty} from '~/ContentEditor/utils';
+import {CloudCheck} from '@jahia/moonstone';
 
-const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
+const Publish = ({buttonIcon, render: Render, loading: Loading, ...otherProps}) => {
     const {publicationInfoPolling, publicationStatus, stopPublicationInfoPolling, startPublicationInfoPolling} = usePublicationInfoContext();
     const client = useApolloClient();
     const {t} = useTranslation();
@@ -39,9 +40,23 @@ const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
             ].includes(publicationStatus);
     }
 
-    const buttonLabel = publicationInfoPolling ?
+    let buttonLabel = publicationInfoPolling ?
         'jcontent:label.contentEditor.edit.action.publish.namePolling' :
         'jcontent:label.contentEditor.edit.action.publish.name';
+
+    let buttonLabelShort = (siteInfo?.languages?.length === 1) && !publicationInfoPolling ?
+        'jcontent:label.contentEditor.edit.action.publish.shortName' : '';
+
+    if (publicationStatus === 'PUBLISHED') {
+        buttonLabel += 'Published';
+        if (buttonLabelShort) {
+            buttonLabelShort += 'Published';
+        }
+
+        if (buttonIcon) {
+            buttonIcon = <CloudCheck/>;
+        }
+    }
 
     let onClick = useCallback(() => {
         publishNode({
@@ -62,10 +77,10 @@ const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
     return (
         <Render
             {...otherProps}
+            buttonIcon={buttonIcon}
             disabled={disabled}
             buttonLabel={buttonLabel}
-            buttonLabelShort={(siteInfo?.languages?.length === 1) && !publicationInfoPolling ?
-                'jcontent:label.contentEditor.edit.action.publish.shortName' : ''}
+            buttonLabelShort={buttonLabelShort}
             buttonLabelParams={{language: lang}}
             isVisible={isVisible}
             onClick={onClick}
@@ -74,6 +89,7 @@ const Publish = ({render: Render, loading: Loading, ...otherProps}) => {
 };
 
 Publish.propTypes = {
+    buttonIcon: PropTypes.node,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

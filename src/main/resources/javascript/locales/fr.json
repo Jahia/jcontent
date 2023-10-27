@@ -258,9 +258,11 @@
         "copyUUIDToClipboard": "Copier l'UUID dans le presse-papier",
         "expand": "Agrandir",
         "publish": "Publier <em>{{displayName}}</em> - {{language}}",
-        "publishMedium": "Publier - {{language}}",
-        "publishShort": "Publier",
         "publishPublished": "<em>{{displayName}}</em> publié - {{language}}",
+        "publishMedium": "Publier - {{language}}",
+        "publishMediumPublished": "Publié - {{language}}",
+        "publishShort": "Publier",
+        "publishShortPublished": "Publié",
         "publishPublishedMedium": "Publié - {{language}}",
         "publishPublishedShort": "Publié",
         "undelete": "Annuler la suppression",
@@ -589,7 +591,9 @@
             "name": "Publier maintenant",
             "namePolling": "Publication",
             "success": "La publication a été ajoutée à la file d’attente",
-            "error": "Erreur durant la publication"
+            "error": "Erreur durant la publication",
+            "namePublished": "Publié - {{language}}",
+            "shortNamePublished": "Publié"
           },
           "startWorkflow": {
             "name": "Demander une publication"

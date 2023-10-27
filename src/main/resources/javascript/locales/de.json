@@ -258,11 +258,11 @@
         "copyUUIDToClipboard": "UUID in Zwischenablage kopieren",
         "expand": "Erweitern",
         "publish": "Veröffentlichen <em>{{displayName}}</em> - {{language}}",
-        "publishMedium": "Veröffentlichen - {{language}}",
-        "publishShort": "Veröffentlichen",
         "publishPublished": "<em>{{displayName}}</em> veröffentlicht - {{language}}",
-        "publishPublishedMedium": "Veröffentlicht - {{language}}",
-        "publishPublishedShort": "Veröffentlicht",
+        "publishMedium": "Veröffentlichen - {{language}}",
+        "publishMediumPublished": "Veröffentlicht - {{language}}",
+        "publishShort": "Veröffentlichen",
+        "publishShortPublished": "Veröffentlicht",
         "undelete": "Wiederherstellen",
         "publishDeletion": "Löschen veröffentlichen",
         "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am",
@@ -588,7 +588,9 @@
             "name": "Jetzt veröffentlichen",
             "namePolling": "Veröffentlichung",
             "success": "Veröffentlichung der Warteschlange hinzugefügt",
-            "error": "Fehler während Veröffentlichung"
+            "error": "Fehler während Veröffentlichung",
+            "namePublished": "Veröffentlicht - {{language}}",
+            "shortNamePublished": "VeröffentlichT"
           },
           "startWorkflow": {
             "name": "Veröffentlichung anfordern"

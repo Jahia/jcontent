@@ -29,15 +29,15 @@ describe('validation utils', () => {
 
         it('should return null when there is no errors', async () => {
             errors = {};
-            expect((await validateForm(formik, {}, sections, 'en', {}, renderComponent)).errors).toBeNull();
+            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent})).errors).toBeNull();
         });
 
         it('should return object with errors', async () => {
-            expect((await validateForm(formik, {}, sections, 'en', {}, renderComponent)).errors).toBeDefined();
+            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent})).errors).toBeDefined();
         });
 
         it('should set fields in error to touched', async () => {
-            await validateForm(formik, {}, sections, 'en', {}, renderComponent);
+            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent});
 
             expect(formik.setTouched).toHaveBeenCalledWith({
                 field1: true,
@@ -46,14 +46,14 @@ describe('validation utils', () => {
         });
 
         it('should display a modal when field have errors', async () => {
-            await validateForm(formik, {}, sections, 'en', {}, renderComponent);
+            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent});
             expect(render).toHaveBeenCalled();
         });
 
         it('should not display a modal when field have no errors', async () => {
             errors = {};
             render = jest.fn();
-            await validateForm(formik, {}, sections, 'en', {}, renderComponent);
+            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent});
             expect(render).not.toHaveBeenCalled();
         });
     });

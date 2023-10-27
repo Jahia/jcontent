@@ -11,12 +11,12 @@ describe('validation utils', () => {
             }]
         }];
         let formik;
-        let renderComponent;
+        let componentRenderer;
         let render;
         let errors;
         beforeEach(() => {
             render = jest.fn();
-            renderComponent = {render};
+            componentRenderer = {render};
             errors = {
                 field1: 'required',
                 field2: 'required'
@@ -29,15 +29,15 @@ describe('validation utils', () => {
 
         it('should return null when there is no errors', async () => {
             errors = {};
-            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer: renderComponent})).errors).toBeNull();
+            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer})).errors).toBeNull();
         });
 
         it('should return object with errors', async () => {
-            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent})).errors).toBeDefined();
+            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer})).errors).toBeDefined();
         });
 
         it('should set fields in error to touched', async () => {
-            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent});
+            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer});
 
             expect(formik.setTouched).toHaveBeenCalledWith({
                 field1: true,
@@ -46,14 +46,14 @@ describe('validation utils', () => {
         });
 
         it('should display a modal when field have errors', async () => {
-            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent});
+            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer});
             expect(render).toHaveBeenCalled();
         });
 
         it('should not display a modal when field have no errors', async () => {
             errors = {};
             render = jest.fn();
-            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent});
+            await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer});
             expect(render).not.toHaveBeenCalled();
         });
     });

@@ -395,4 +395,24 @@ describe('delete tests', () => {
                 .click();
         });
     });
+
+    it('does not show delete if jmix:hideDeleteAction is set', () => {
+        cy.apollo({mutation: gql`mutation {
+                jcr {
+                    mutateNode(pathOrId:"/sites/jContentSite-delete/contents/test-deleteContents/test-delete1") {
+                        addMixins(mixins: ["jmix:hideDeleteAction"])
+                    }
+                }
+            }`
+        });
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+        jcontent.getTable().getRowByLabel('test 2').contextMenu().should('contain', 'Delete');
+        cy.get('.moonstone-menu_overlay').click();
+        jcontent.getTable().getRowByLabel('test 1').contextMenu().should('not.contain', 'Delete');
+        cy.get('.moonstone-menu_overlay').click();
+        jcontent.getTable().getRowByLabel('test 1').contextMenu().select('Copy');
+        jcontent.getTable().getRowByLabel('content-folder1').get().dblclick();
+        jcontent.getHeaderActionButton('paste').click();
+        jcontent.getTable().getRowByLabel('test 1').contextMenu().should('contain', 'Delete');
+    });
 });

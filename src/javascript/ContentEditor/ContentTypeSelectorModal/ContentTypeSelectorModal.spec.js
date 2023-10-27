@@ -52,7 +52,7 @@ describe('CreateNewContentDialog', () => {
 
     it('should display the dialog by default', () => {
         const cmp = shallowWithTheme(
-            <ContentTypeSelectorModal nodeTypesTree={emptyTree} {...props} open/>,
+            <ContentTypeSelectorModal nodeTypesTree={emptyTree} {...props} isOpen/>,
             {},
             dsGenericTheme
         );

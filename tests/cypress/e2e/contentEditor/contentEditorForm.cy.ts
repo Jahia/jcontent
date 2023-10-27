@@ -144,12 +144,12 @@ describe('Content editor form', () => {
     it('Should not see readonly text field for reviewer', () => {
         const contentEditor = jcontent.createContent('Simple text');
         const field = contentEditor.getField(SmallTextField, 'jnt:text_text');
-        field.get().find('input').should('not.have.attr', 'readonly', 'readonly')
+        field.get().find('input').should('not.have.attr', 'readonly', 'readonly');
         cy.login('mathias', 'password');
 
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         const contentEditor2 = jcontent.createContent('Simple text');
         const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
-        field2.get().find('input').should('have.attr', 'readonly', 'readonly')
+        field2.get().find('input').should('have.attr', 'readonly', 'readonly');
     });
 });

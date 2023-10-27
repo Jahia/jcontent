@@ -9,6 +9,15 @@ describe('Content editor form', () => {
 
     before(function () {
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: siteKey});
+        cy.apollo({
+            mutation: gql`mutation GrantRoles {
+                jcr {
+                    mutateNode(pathOrId: "/sites/contentEditorSite") {
+                        grantRoles(roleNames: "editor", principalType: USER, principalName: "mathias")
+                    }
+                }
+            }`
+        });
     });
 
     after(function () {
@@ -128,7 +137,19 @@ describe('Content editor form', () => {
     });
 
     it('Should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText', () => {
-        const contentEditor = jcontent.createContent('Simple text');
+        jcontent.createContent('Simple text');
         cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
+    });
+
+    it('Should not see readonly text field for reviewer', () => {
+        const contentEditor = jcontent.createContent('Simple text');
+        const field = contentEditor.getField(SmallTextField, 'jnt:text_text');
+        field.get().find('input').should('not.have.attr', 'readonly', 'readonly');
+        cy.login('mathias', 'password');
+
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        const contentEditor2 = jcontent.createContent('Simple text');
+        const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
+        field2.get().find('input').should('have.attr', 'readonly', 'readonly');
     });
 });

@@ -26,6 +26,7 @@ package org.jahia.modules.contenteditor.api.forms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jahia.modules.contenteditor.api.forms.model.*;
 import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
+import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.osgi.framework.Bundle;
@@ -91,13 +92,14 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      * Retrieve all forms definition for the given type.
      *
      * @param type to look at
+     * @param site
      * @return form definitions that match the type
      */
-    public Collection<Form> getFormsForType(ExtendedNodeType type) {
+    public Collection<Form> getFormsForType(ExtendedNodeType type, JCRSiteNode site) {
         return forms.stream()
-            .filter(definition -> definition.getNodeType() != null)
-            .filter(definition -> type.isNodeType(definition.getNodeType().getName()) &&
-                    (definition.getOrderable() == null || type.hasOrderableChildNodes()))
+            .filter(definition -> definition.getConditionNodeTypeName() != null)
+            .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
+                    (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -107,11 +109,18 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      * @param type to look at
      * @return form definitions that match the type
      */
-    public Collection<FieldSet> getFieldSetsForType(ExtendedNodeType type) {
+    public Collection<FieldSet> getFieldSetsForType(ExtendedNodeType type, JCRSiteNode site) {
         return fieldSets.stream()
-            .filter(definition -> definition.getNodeType() != null)
-            .filter(definition -> type.isNodeType(definition.getNodeType().getName()))
+            .filter(definition -> definition.getConditionNodeTypeName() != null)
+            .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
+                (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
             .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public boolean matchCondition(Condition condition, ExtendedNodeType type, JCRSiteNode site) {
+        return (condition.getOrderable() == null || type.hasOrderableChildNodes()) &&
+            (condition.getWithPermission() == null || site.hasPermission(condition.getWithPermission())) &&
+            (condition.getWithoutPermission() == null || !site.hasPermission(condition.getWithoutPermission()));
     }
 
     private void registerForm(Bundle bundle) {

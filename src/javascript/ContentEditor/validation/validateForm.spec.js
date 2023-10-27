@@ -29,7 +29,7 @@ describe('validation utils', () => {
 
         it('should return null when there is no errors', async () => {
             errors = {};
-            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, renderComponent})).errors).toBeNull();
+            expect((await validateForm({formik, i18nContext: {}, sections, lang: 'en', siteInfo: {}, componentRenderer: renderComponent})).errors).toBeNull();
         });
 
         it('should return object with errors', async () => {

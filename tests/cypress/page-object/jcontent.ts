@@ -76,6 +76,11 @@ export class JContent extends BasePage {
         return new ContentEditor();
     }
 
+    editPage() {
+        cy.get('[data-sel-role="editPage"]').click();
+        return new ContentEditor();
+    }
+
     viewSubContentComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
         row.get().scrollIntoView();
@@ -339,5 +344,11 @@ export class CategoryManager extends JContent {
 
     getCreateCategory(): void {
         cy.get('.moonstone-header button[data-sel-role="jnt:category"]').click();
+    }
+
+    editItem(text: string) {
+        cy.get(`span[class*="moonstone-tableCellContent"]:contains("${text}")`).rightclick();
+        cy.get('li[data-registry-key="action:edit"]').click();
+        return new ContentEditor();
     }
 }

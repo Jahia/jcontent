@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
-import {Check, CloudCheck} from '@jahia/moonstone';
+import {CloudCheck} from '@jahia/moonstone';
 
 function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;

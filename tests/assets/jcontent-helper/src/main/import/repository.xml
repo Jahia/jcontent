@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content xmlns:j="http://www.jahia.org/jahia/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
+   <modules jcr:primaryType="jnt:modules">
+      <jcontent-helper j:dependencies="default"
+                       j:modulePriority="0"
+                       j:moduleType="module"
+                       j:title="jcontent-helper"
+                       jcr:primaryType="jnt:module">
+         <files jcr:primaryType="jnt:folder"/>
+         <contents jcr:primaryType="jnt:contentFolder"/>
+         <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
+            <files jcr:primaryType="jnt:folder"/>
+            <contents jcr:primaryType="jnt:contentFolder"/>
+         </templates>
+      </jcontent-helper>
+   </modules>
+</content>

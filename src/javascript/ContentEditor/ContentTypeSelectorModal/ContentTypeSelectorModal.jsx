@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {filterTree, isOpenableEntry} from './ContentTypeSelectorModal.utils';
 import styles from './ContentTypeSelectorModal.scss';
 
-export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose, onCreateContent}) => {
+export const ContentTypeSelectorModal = ({nodeTypesTree, isOpen, onExited, onClose, onCreateContent}) => {
     const {t} = useTranslation('jcontent');
     const [selectedType, setSelectedType] = useState(null);
     const [filter, setFilter] = useState();
@@ -17,7 +17,7 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose
     const filteredTree = filterTree(nodeTypesTree, selectedType, filter);
 
     return (
-        <Dialog classes={{paper: styles.modalRoot}} open={open} aria-labelledby="dialog-createNewContent" onExited={onExited} onClose={onClose}>
+        <Dialog classes={{paper: styles.modalRoot}} open={isOpen} aria-labelledby="dialog-createNewContent" onExited={onExited} onClose={onClose}>
             <DialogTitle className={styles.dialogTitle} id="dialog-createNewContent">
                 <Typography variant="heading">
                     {t('jcontent:label.contentEditor.CMMActions.createNewContent.labelModal')}
@@ -84,7 +84,7 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, open, onExited, onClose
 
 ContentTypeSelectorModal.propTypes = {
     nodeTypesTree: PropTypes.array.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onExited: PropTypes.func.isRequired,
     onCreateContent: PropTypes.func.isRequired

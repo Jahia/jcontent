@@ -94,6 +94,7 @@ ColorPickerInput.propTypes = {
     initialValue: PropTypes.string,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    // eslint-disable-next-line react/boolean-prop-naming
     readOnly: PropTypes.bool,
     inputProps: PropTypes.object
 };

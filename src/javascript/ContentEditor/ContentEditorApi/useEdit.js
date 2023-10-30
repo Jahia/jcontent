@@ -9,6 +9,7 @@ export const useEdit = setEditorConfig => {
      * @param lang the current lang from url
      * @param uilang deprecated
      */
+    // eslint-disable-next-line max-params
     return useCallback((uuid, site, lang, _, isFullscreen, editCallback, onClosedCallback) => {
         if (typeof uuid === 'object') {
             setEditorConfig({

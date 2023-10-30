@@ -8,6 +8,7 @@ const isContentOrFileNode = formData => {
     }).length !== 0;
 };
 
+// eslint-disable-next-line no-warning-comments
 // TODO completely get rid of this adapter
 export const adaptSystemNameField = (formData, primaryNodeType) => {
     const systemNameField = formData.sections

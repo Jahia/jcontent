@@ -28,7 +28,7 @@ jobs:
         with:
           node_version: 14
           auditci_level: critical
-          max_warning: 58
+          max_warning: 8
 
   unit-tests:
     name: Javascript unit tests (yarn test)

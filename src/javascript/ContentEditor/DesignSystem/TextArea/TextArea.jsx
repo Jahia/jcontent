@@ -72,7 +72,9 @@ TextAreaCmp.defaultProps = {
 TextAreaCmp.propTypes = {
     rows: PropTypes.number,
     value: PropTypes.string,
+    // eslint-disable-next-line react/boolean-prop-naming
     readOnly: PropTypes.bool,
+    // eslint-disable-next-line react/boolean-prop-naming
     disabled: PropTypes.bool,
     classes: PropTypes.object.isRequired
 };

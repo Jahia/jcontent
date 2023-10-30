@@ -26,7 +26,7 @@ export const registerCreateActions = registry => {
             showOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite'],
             requiredPermission: ['jcr:addChildNodes'],
             nodeTypes: ['jnt:page'],
-            includeSubTypes: false,
+            isIncludeSubTypes: false,
             hasBypassChildrenLimit: true,
             onCreate: ({path}) => {
                 window.jahia.reduxStore.dispatch(batchActions([{
@@ -49,7 +49,7 @@ export const registerCreateActions = registry => {
             showOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite'],
             requiredPermission: ['jcr:addChildNodes'],
             nodeTypes: ['jnt:navMenuText', 'jnt:nodeLink', 'jnt:externalLink'],
-            includeSubTypes: false,
+            isIncludeSubTypes: false,
             hasBypassChildrenLimit: true
         });
     }

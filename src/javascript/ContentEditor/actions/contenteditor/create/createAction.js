@@ -7,7 +7,7 @@ import {useFormikContext} from 'formik';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useKeydownListener} from '~/ContentEditor/utils';
 
-const Create = ({createAnother, render: Render, loading: Loading, ...otherProps}) => {
+const Create = ({isCreateAnother, render: Render, loading: Loading, ...otherProps}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const formik = useFormikContext();
     const {updateEditorConfig, count, onSavedCallback} = useContentEditorConfigContext();
@@ -39,7 +39,7 @@ const Create = ({createAnother, render: Render, loading: Loading, ...otherProps}
         const {
             errors,
             i18nErrors
-        } = await validateForm(formik, i18nContext, sections, lang, siteInfo, componentRenderer);
+        } = await validateForm({formik, i18nContext, sections, lang, siteInfo, componentRenderer});
 
         if (errors || i18nErrors) {
             setErrors({...errors});
@@ -51,7 +51,7 @@ const Create = ({createAnother, render: Render, loading: Loading, ...otherProps}
             .submitForm()
             .then(data => {
                 if (data) {
-                    if (createAnother) {
+                    if (isCreateAnother) {
                         // Fetch only to generate a new valid system name
                         refetchFormData().then(() => {
                             resetI18nContext();
@@ -79,7 +79,7 @@ const Create = ({createAnother, render: Render, loading: Loading, ...otherProps}
 
     return (
         <Render {...otherProps}
-                addWarningBadge={Object.keys(formik.errors).length > 0}
+                hasWarningBadge={Object.keys(formik.errors).length > 0}
                 isVisible={mode === Constants.routes.baseCreateRoute}
                 disabled={clicked}
                 onClick={() => save(formik)}/>
@@ -89,7 +89,7 @@ const Create = ({createAnother, render: Render, loading: Loading, ...otherProps}
 Create.propTypes = {
     render: PropTypes.func.isRequired,
     loading: PropTypes.func,
-    createAnother: PropTypes.bool
+    isCreateAnother: PropTypes.bool
 };
 
 export const createAction = {

@@ -128,10 +128,10 @@ export const FilesGrid = ({totalCount, rows, isLoading, pickerConfig, isMultiple
                                       onPreviewSelect(...args);
                                   }}
                                   onDoubleClick={() => {
-                                      if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(node.primaryNodeType.name) !== -1) {
-                                          setPath(siteKey, node.path, mode);
-                                      } else {
+                                      if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(node.primaryNodeType.name) === -1) {
                                           dblClickSelect(node.uuid);
+                                      } else {
+                                          setPath(siteKey, node.path, mode);
                                       }
                                   }}
                         />

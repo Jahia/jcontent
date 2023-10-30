@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {getCapitalized} from '~/ContentEditor/utils';
 import styles from './SaveErrorModal.scss';
 
-export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) => {
+export const SaveErrorModal = ({i18nErrors, fields, isOpen, siteInfo, onClose}) => {
     const {t} = useTranslation('jcontent');
     const langs = Object.keys(i18nErrors).sort();
 
@@ -44,7 +44,7 @@ export const SaveErrorModal = ({i18nErrors, fields, open, siteInfo, onClose}) =>
     return (
         <Dialog maxWidth="md"
                 classes={{paper: styles.dialog}}
-                open={open}
+                open={isOpen}
                 aria-labelledby="dialog-errorBeforeSave"
                 data-sel-role="dialog-errorBeforeSave"
                 onClose={onClose}
@@ -82,7 +82,7 @@ SaveErrorModal.propTypes = {
     i18nErrors: PropTypes.object.isRequired,
     fields: PropTypes.array.isRequired,
     siteInfo: PropTypes.object.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired
 };
 

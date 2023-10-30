@@ -102,6 +102,7 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             newState.site = getSite(selectedNode.path);
             newState.mode = firstMatchingAccordion.key;
             if (firstMatchingAccordion.getPathForItem) {
+                // eslint-disable-next-line no-warning-comments
                 // Todo: Must implement something for pages accordion, where the selected path is not the direct parent
                 newState.path = firstMatchingAccordion.getPathForItem(selectedNode);
             } else {

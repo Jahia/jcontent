@@ -108,6 +108,7 @@ export const ContentEditorApi = () => {
             // Add hash to history only if full screen configuration available, otherwise update config state directly
             if (currentEncodedLocation !== locationFromState && locationFromState.includes('contentEditor:') && locationFromState.includes('isFullscreen:!!t')) {
                 if (currentEncodedLocation.includes('contentEditor:')) {
+                    // eslint-disable-next-line no-warning-comments
                     // Todo : handle the case when stacking a new content-editor - we should push
                     history.replace(rison.decode(locationFromState));
                 } else {
@@ -168,7 +169,7 @@ export const ContentEditorApi = () => {
         <>
             {contentTypeSelectorConfig && (
                 <ContentTypeSelectorModal
-                    open
+                    isOpen
                     nodeTypesTree={contentTypeSelectorConfig.nodeTypesTree}
                     onClose={() => {
                         setContentTypeSelectorConfig(false);
@@ -191,7 +192,7 @@ export const ContentEditorApi = () => {
             {editorConfigs.map((editorConfig, index) => {
                 return (
                     <ContentEditorModal
-                        key={editorConfig.mode + '_' + editorConfig.uuid} // TODO: best effort to have a unique KEY for modals (definitely we need control to allow or not open same modal or multiple create at the same time.)
+                        key={editorConfig.mode + '_' + editorConfig.uuid}
                         editorConfig={editorConfig}
                         updateEditorConfig={updatedEditorConfig => {
                             updateEditorConfig(updatedEditorConfig, index);

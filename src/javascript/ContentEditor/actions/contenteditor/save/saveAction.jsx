@@ -34,7 +34,7 @@ const Save = ({render: Render, loading: Loading, ...otherProps}) => {
     const dirty = isDirty(formik, i18nContext);
 
     const save = async formik => {
-        const {errors, i18nErrors} = await validateForm(formik, i18nContext, sections, lang, siteInfo, componentRenderer);
+        const {errors, i18nErrors} = await validateForm({formik, i18nContext, sections, lang, siteInfo, componentRenderer});
 
         if (errors || i18nErrors) {
             setErrors({...errors});
@@ -61,7 +61,7 @@ const Save = ({render: Render, loading: Loading, ...otherProps}) => {
     return (
         <Render
             {...otherProps}
-            addWarningBadge={Object.keys(formik.errors).length > 0}
+            hasWarningBadge={Object.keys(formik.errors).length > 0}
             isVisible={mode === Constants.routes.baseEditRoute}
             disabled={!dirty || publicationInfoPolling}
             onClick={() => save(formik)}

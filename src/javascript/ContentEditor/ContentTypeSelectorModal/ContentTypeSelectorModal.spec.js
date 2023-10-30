@@ -52,7 +52,7 @@ describe('CreateNewContentDialog', () => {
 
     it('should display the dialog by default', () => {
         const cmp = shallowWithTheme(
-            <ContentTypeSelectorModal nodeTypesTree={emptyTree} {...props} open/>,
+            <ContentTypeSelectorModal nodeTypesTree={emptyTree} {...props} isOpen/>,
             {},
             dsGenericTheme
         );
@@ -65,7 +65,7 @@ describe('CreateNewContentDialog', () => {
         const cmp = shallowWithTheme(
             <ContentTypeSelectorModal {...props}
                                       nodeTypesTree={emptyTree}
-                                      open={open}
+                                      isOpen={open}
                                       onClose={() => {
                                         open = false;
                                     }}
@@ -83,7 +83,7 @@ describe('CreateNewContentDialog', () => {
 
     it('should call onCreateContent when clicking on create button Button', () => {
         const cmp = shallowWithTheme(
-            <ContentTypeSelectorModal open nodeTypesTree={emptyTree} {...props}/>,
+            <ContentTypeSelectorModal isOpen nodeTypesTree={emptyTree} {...props}/>,
             {},
             dsGenericTheme
         );
@@ -95,7 +95,7 @@ describe('CreateNewContentDialog', () => {
 
     it('should filter properly with id hichem', () => {
         const cmp = shallowWithTheme(
-            <ContentTypeSelectorModal open nodeTypesTree={tree} {...props}/>,
+            <ContentTypeSelectorModal isOpen nodeTypesTree={tree} {...props}/>,
             {},
             dsGenericTheme
         );
@@ -108,7 +108,7 @@ describe('CreateNewContentDialog', () => {
 
     it('should filter properly with id rom3 with no case sensitive', () => {
         const cmp = shallowWithTheme(
-            <ContentTypeSelectorModal open nodeTypesTree={tree} {...props}/>,
+            <ContentTypeSelectorModal isOpen nodeTypesTree={tree} {...props}/>,
             {},
             dsGenericTheme
         );
@@ -121,7 +121,7 @@ describe('CreateNewContentDialog', () => {
 
     it('should filter properly with n with no case sensitive', () => {
         const cmp = shallowWithTheme(
-            <ContentTypeSelectorModal open nodeTypesTree={tree} {...props}/>,
+            <ContentTypeSelectorModal isOpen nodeTypesTree={tree} {...props}/>,
             {},
             dsGenericTheme
         );

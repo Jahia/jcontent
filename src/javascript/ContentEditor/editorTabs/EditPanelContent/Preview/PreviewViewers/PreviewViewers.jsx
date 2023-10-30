@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getFileType, isBrowserImage, isPDF} from '../Preview.utils';
 import clsx from 'clsx';
 import styles from './PreviewViewers.scss';
 
@@ -8,6 +7,7 @@ import {DocumentViewer} from './DocumentViewer';
 import {PDFViewer} from './PDFViewer';
 import {ImageViewer} from './ImageViewer';
 import {IframeViewer} from './IframeViewer';
+import {getFileType, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 
 export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
     // If node type is "jnt:file" use specific viewer

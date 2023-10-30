@@ -93,6 +93,7 @@ const addFieldsToFieldset = (fieldsToAdd, fieldset, afterField) => {
  * @param formik formik
  * @returns list of updated sections
  */
+// eslint-disable-next-line max-params
 const moveMixinToTargetFieldset = (mixin, targetFieldset, sections, updatedField, formik) => {
     // Add mixin and display fields from new value
     if (mixin) {

@@ -12,7 +12,7 @@ export const Section = ({section, isExpanded, onClick}) => {
         return null;
     }
 
-    const sectionName = section.displayName !== '' ? section.displayName : section.name;
+    const sectionName = section.displayName === '' ? section.name : section.displayName;
 
     if (section.hideHeader) {
         return fieldSets?.map(fs => <FieldSet key={fs.name} fieldset={fs}/>);

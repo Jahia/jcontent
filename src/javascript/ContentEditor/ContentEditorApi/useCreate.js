@@ -4,6 +4,7 @@ import {useCallback} from 'react';
 import {useApolloClient} from '@apollo/client';
 import {useSelector} from 'react-redux';
 
+// eslint-disable-next-line max-params
 const create = async (setEditorConfig, setContentTypeSelectorConfig, client, data, uilang) => {
     const {
         path, name, nodeTypes, excludedNodeTypes, includeSubTypes, nodeTypesTree, ...editorConfig
@@ -64,6 +65,7 @@ export const useCreate = (setEditorConfig, setContentTypeSelectorConfig) => {
      * @param name the name of the child node (only specified in case of named child node, null/undefined otherwise)
      * @param isFullscreen open editor in fullscreen
      */
+    // eslint-disable-next-line max-params
     return useCallback(async (uuid, path, site, lang, _, nodeTypes, excludedNodeTypes, includeSubTypes, name, isFullscreen, createCallback, onClosedCallback) => {
         if (typeof uuid === 'object') {
             return create(setEditorConfig, setContentTypeSelectorConfig, client, uuid, uilang);

@@ -63,6 +63,7 @@ MenuItemRenderer.propTypes = {
     menuState: PropTypes.object,
     buttonIcon: PropTypes.object,
     buttonIconEnd: PropTypes.object,
+    // eslint-disable-next-line react/boolean-prop-naming
     enabled: PropTypes.bool,
     isSeparator: PropTypes.bool,
     isTitle: PropTypes.bool,

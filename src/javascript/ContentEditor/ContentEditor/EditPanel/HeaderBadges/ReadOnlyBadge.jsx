@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import styles from './ReadOnlyBadge.scss';
 import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 
-export const ReadOnlyBadge = ({isGlobal, readOnly}) => {
+export const ReadOnlyBadge = ({isGlobal, isReadOnly}) => {
     const {t} = useTranslation('jcontent');
     const {nodeData} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
@@ -25,7 +25,7 @@ export const ReadOnlyBadge = ({isGlobal, readOnly}) => {
         return badge;
     }
 
-    if (readOnly && !(nodeData.lockedAndCannotBeEdited || !hasNotReadOnlySection)) {
+    if (isReadOnly && !(nodeData.lockedAndCannotBeEdited || !hasNotReadOnlySection)) {
         return badge;
     }
 
@@ -34,5 +34,5 @@ export const ReadOnlyBadge = ({isGlobal, readOnly}) => {
 
 ReadOnlyBadge.propTypes = {
     isGlobal: PropTypes.bool,
-    readOnly: PropTypes.bool
+    isReadOnly: PropTypes.bool
 };

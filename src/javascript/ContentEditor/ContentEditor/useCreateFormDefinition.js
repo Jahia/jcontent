@@ -6,6 +6,7 @@ import {getFieldValuesFromDefaultValues} from '~/ContentEditor/ContentEditor/get
 import {CreateFormQuery} from '~/ContentEditor/ContentEditor/create.gql-queries';
 import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
 
+// eslint-disable-next-line no-warning-comments
 // TODO https://jira.jahia.org/browse/TECH-300
 
 const getInitialValues = (sections, nodeData) => {

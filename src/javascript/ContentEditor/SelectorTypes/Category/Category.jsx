@@ -53,7 +53,7 @@ export const Category = ({field, value, id, editorContext, onChange, onBlur}) =>
         locale: editorContext.lang
     });
 
-    const singleValue = !field.multiple ? value : undefined;
+    const singleValue = field.multiple ? undefined : value;
     const multipleValue = field.multiple ? (value || []) : undefined;
 
     return (

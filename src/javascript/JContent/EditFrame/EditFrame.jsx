@@ -216,7 +216,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
     return (
         <>
             <Tooltip title=""><span/></Tooltip>
-            <DeviceContainer enabled={isDeviceView} device={device} setDevice={setDevice}>
+            <DeviceContainer isEnabled={isDeviceView} device={device} setDevice={setDevice}>
                 {!currentDocument && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}
                         width="100%"

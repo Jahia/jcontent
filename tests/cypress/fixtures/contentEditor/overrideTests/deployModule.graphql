@@ -1,0 +1,9 @@
+mutation m {
+  jcr {
+    mutateNode(pathOrId: "/sites/contentEditorSite") {
+      mutateProperty(name: "j:installedModules") {
+        addValue(value: "jcontent-helper")
+      }
+    }
+  }
+}

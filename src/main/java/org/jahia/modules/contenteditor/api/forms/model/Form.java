@@ -48,6 +48,7 @@ public class Form implements DefinitionRegistryItem {
     private String label;
     private String description;
     private Boolean hasPreview;
+    private Boolean showAdvancedMode;
     private List<Section> sections = new ArrayList<>();
     private Double priority;
     private Bundle originBundle;
@@ -137,6 +138,14 @@ public class Form implements DefinitionRegistryItem {
         this.priority = priority;
     }
 
+    public Boolean getShowAdvancedMode() {
+        return showAdvancedMode;
+    }
+
+    public void setShowAdvancedMode(Boolean showAdvancedMode) {
+        this.showAdvancedMode = showAdvancedMode;
+    }
+
     @JsonIgnore
     public Bundle getOriginBundle() {
         return originBundle;
@@ -164,6 +173,7 @@ public class Form implements DefinitionRegistryItem {
         setNodeType(nodeTypeName == null ? otherForm.getNodeTypeName() : nodeTypeName);
 
         setHasPreview(otherForm.hasPreview() != null ? otherForm.hasPreview() : hasPreview);
+        setShowAdvancedMode(otherForm.getShowAdvancedMode() != null ? otherForm.getShowAdvancedMode() : showAdvancedMode);
         mergeSections(otherForm.getSections());
     }
 

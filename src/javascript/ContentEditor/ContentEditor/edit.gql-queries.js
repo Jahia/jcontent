@@ -119,6 +119,7 @@ export const EditFormQuery = gql`
                 displayName
                 description
                 hasPreview
+                showAdvancedMode
                 sections {
                     name
                     displayName

@@ -41,6 +41,7 @@ export const adaptCreateFormData = (data, lang, t, contentEditorConfigContext) =
             ...getInitialValues(sections, nodeData)
         },
         hasPreview: false,
+        showAdvancedMode: true,
         nodeData,
         details: {},
         technicalInfo: [],

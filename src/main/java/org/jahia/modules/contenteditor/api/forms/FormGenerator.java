@@ -41,6 +41,7 @@ public class FormGenerator {
         form.setNodeType(nodeType.getName());
         form.setPriority(0.);
         form.setHasPreview(false);
+        form.setShowAdvancedMode(true);
         form.setSections(generateFormSections(nodeType, locale, singleFieldSet));
         return form;
     }

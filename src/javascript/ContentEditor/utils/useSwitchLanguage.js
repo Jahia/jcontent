@@ -46,7 +46,7 @@ export const useSwitchLanguage = () => {
         fieldsObj[Constants.wip.fieldName] = {i18n: false};
 
         setI18nContext(prev => {
-            const previousValue = {
+            const previousValues = {
                 ...formik.initialValues,
                 ...prev.shared?.values,
                 ...prev[previousLanguage]?.values
@@ -61,7 +61,7 @@ export const useSwitchLanguage = () => {
                 validation: {}
             };
 
-            fillValues({newValues: formik.values, previousValue, fieldsObj, i18nValues, nonI18nValues, dynamicFieldSets});
+            fillValues({newValues: formik.values, previousValues, fieldsObj, i18nValues, nonI18nValues, dynamicFieldSets});
 
             if (Object.keys(i18nValues.values).length > 0 && Object.keys(nonI18nValues.values).length === 0) {
                 const systemName = Object.keys(formik.values).find(fieldname => fieldname.endsWith('systemName'));

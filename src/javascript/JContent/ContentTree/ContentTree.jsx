@@ -116,8 +116,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
-        openableTypes: arrayValue(item.treeConfig.openableTypes),
-        selectableTypes: arrayValue(item.treeConfig.selectableTypes),
+        openableTypes: arrayValue(item.treeConfig.openableTypes) || [],
+        selectableTypes: arrayValue(item.treeConfig.selectableTypes) || [],
         queryVariables: {language: lang},
         hideRoot: booleanValue(item.treeConfig.hideRoot),
         sortBy: item.treeConfig.sortBy
@@ -174,13 +174,15 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           }
                       }}
                       onClickItem={object => {
-                          const {node} = object.treeItemProps;
-                          if (node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageBuilder') {
-                              openTextMenuDialog(node);
-                          } else if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
-                              openLinkDialog(node);
-                          } else {
-                              dispatch(setPathAction(object.id, {sub: false}));
+                          if (object.isSelectable) {
+                              const {node} = object.treeItemProps;
+                              if (node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageBuilder') {
+                                  openTextMenuDialog(node);
+                              } else if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
+                                  openLinkDialog(node);
+                              } else {
+                                  dispatch(setPathAction(object.id, {sub: false}));
+                              }
                           }
                       }}
                       onOpenItem={object => dispatch(openPathAction(object.id))}

@@ -129,8 +129,8 @@ export const jContentAccordionItems = registry => {
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         treeConfig: {
             hideRoot: true,
-            selectableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:externalLink', 'jnt:nodeLink', 'jnt:navMenuText'],
-            openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
+            selectableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:externalLink', 'jnt:nodeLink', 'jnt:navMenuText', 'jmix:mainResource'],
+            openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText', 'jmix:visibleInPagesTree'],
             rootLabel: 'jcontent:label.contentManager.browsePages',
             dnd: {
                 canDrag: showPageBuilder, canDrop: showPageBuilder, canReorder: showPageBuilder

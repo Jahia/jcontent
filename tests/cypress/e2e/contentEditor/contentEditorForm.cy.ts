@@ -152,4 +152,14 @@ describe('Content editor form', () => {
         const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
         field2.get().find('input').should('have.attr', 'readonly', 'readonly');
     });
+
+    it('Should not see see field for reviewer', () => {
+        const contentEditor = jcontent.createContent('News');
+        const field = contentEditor.getField(SmallTextField, 'jnt:news_desc');
+        cy.login('mathias', 'password');
+
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent.createContent('News');
+        cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');
+    });
 });

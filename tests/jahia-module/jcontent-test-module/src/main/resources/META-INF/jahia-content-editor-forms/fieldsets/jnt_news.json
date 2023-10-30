@@ -1,0 +1,13 @@
+{
+  "name": "jnt:news",
+  "priority": 1.1,
+  "fields": [
+    {
+      "name": "desc",
+      "requiredPermission": "viewHistoryTab",
+      "defaultValues": [{
+        "type": "STRING",
+        "value": "Test Override"
+      }]
+    }]
+}

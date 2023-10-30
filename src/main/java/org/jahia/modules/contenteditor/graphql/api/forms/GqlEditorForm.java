@@ -75,4 +75,10 @@ public class GqlEditorForm {
         return form.hasPreview() != null && form.hasPreview();
     }
 
+    @GraphQLField
+    @GraphQLDescription("Returns the advanced mode status of the form. If true advanced mode is available.")
+    public boolean showAdvancedMode() {
+        return form.getShowAdvancedMode() != null && form.getShowAdvancedMode();
+    }
+
 }

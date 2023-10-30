@@ -155,6 +155,7 @@ export const adaptEditFormData = (data, lang, t) => {
         expandedSections: getExpandedSections(sections),
         initialValues: getInitialValues(nodeData, sections),
         hasPreview: data.forms.editForm.hasPreview,
+        showAdvancedMode: data.forms.editForm.showAdvancedMode,
         nodeData,
         details: getDetailsValue(data.forms.editForm.sections, nodeData, lang),
         technicalInfo: getTechnicalInfo(nodeData, t),

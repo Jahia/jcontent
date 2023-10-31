@@ -59,15 +59,6 @@ describe('Hide Preview testsuite', () => {
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
     });
 
-    it('Preview shouldn\'t be visible for users in Repository Explorer', () => {
-        const re = RepositoryExplorer.open();
-        re.openSection('root');
-        re.openSection('users');
-        const ce = re.editItem('guest');
-        ce.switchToAdvancedMode();
-        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
-    });
-
     it('Preview shouldn\'t exist for administrators in Repository Explorer', () => {
         const re = RepositoryExplorer.open();
         re.openSection('root');

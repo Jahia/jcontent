@@ -3,17 +3,17 @@ import {Picker} from '../picker';
 import {Field} from './field';
 
 export class RichTextField extends Field {
-    type(text) {
+    type(text: string) {
         this.get().iframe('.cke_wysiwyg_frame').type(text);
     }
 
-    setData(value) {
+    setData(value: string) {
         cy.window().its('CKEDITOR').its('instances').then(instances => {
             instances[Object.keys(instances)[0]].setData(value);
         });
     }
 
-    getData() {
+    getData(): Cypress.Chainable<string> {
         return cy.window().its('CKEDITOR').its('instances').then(instances => instances[Object.keys(instances)[0]].getData());
     }
 

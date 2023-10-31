@@ -21,6 +21,7 @@ import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
 import {BreadcrumbPageBuilder} from './breadcrumb';
+import ClickOptions = Cypress.ClickOptions;
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -322,11 +323,11 @@ class PageBuilderModule extends BaseComponent {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
-    click(clickOptions?) {
+    click(clickOptions?: Partial<ClickOptions>) {
         this.get().scrollIntoView().click(clickOptions);
     }
 
-    doubleClick(clickOptions?) {
+    doubleClick(clickOptions?: Partial<ClickOptions>) {
         this.get().scrollIntoView().dblclick(clickOptions);
     }
 }

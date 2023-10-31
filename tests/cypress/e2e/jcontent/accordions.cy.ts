@@ -1,6 +1,4 @@
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {PageComposer} from '../../page-object/pageComposer';
-import {SmallTextField} from '../../page-object/fields';
 import gql from 'graphql-tag';
 import {JContent} from '../../page-object';
 

@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object/jcontent';
 import {Field, SmallTextField} from '../../page-object/fields';
-import {Button, Dropdown, getComponentByAttr, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
+import {Button, Dropdown, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
 import gql from 'graphql-tag';
 
 describe('Content editor form', () => {

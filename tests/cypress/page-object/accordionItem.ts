@@ -36,15 +36,15 @@ export class AccordionItem {
         return this.getSection().find('[role="treeitem"]');
     }
 
-    getTreeItem(role, assertion?: (s: JQuery) => void): TreeItem {
+    getTreeItem(role: string, assertion?: (s: JQuery) => void): TreeItem {
         return new TreeItem(this.getSection().find(`[role="treeitem"][data-sel-role=${role}]`), assertion);
     }
 
-    shouldNotHaveTreeItem(role) {
+    shouldNotHaveTreeItem(role: string) {
         this.getSection().find(`[role="treeitem"][data-sel-role=${role}]`).should('not.exist');
     }
 
-    expandTreeItem(role) {
+    expandTreeItem(role: string) {
         this.getTreeItem(role).expand();
     }
 }

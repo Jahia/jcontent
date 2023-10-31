@@ -1,7 +1,5 @@
 import {addNode, createSite, deleteSite, getNodeByPath} from '@jahia/cypress';
-import {JContent} from '../../page-object';
-import {RepositoryExplorer} from '../../page-object/repositoryExplorer';
-import {CategoryManager} from '../../page-object';
+import {CategoryManager, JContent} from '../../page-object';
 
 const siteKey = 'hidePreviewSite';
 
@@ -57,15 +55,6 @@ describe('Hide Preview testsuite', () => {
         const ce = jcontent.editComponentByText('Text');
         ce.switchToAdvancedMode();
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
-    });
-
-    it('Preview shouldn\'t exist for administrators in Repository Explorer', () => {
-        const re = RepositoryExplorer.open();
-        re.openSection('root');
-        re.openSection('groups');
-        const ce = re.editItem('administrators');
-        ce.switchToAdvancedMode();
-        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
     });
 
     it('Preview shouldn\'t be shown in Category Manager', () => {

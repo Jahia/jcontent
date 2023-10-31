@@ -108,6 +108,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                     }
 
                     if (toOpen.length === 0) {
+                        // The node was not visible, and we cannot fix that by opening folders: remove selection
                         toRemove.push(currentPath);
                     } else {
                         dispatch(cmOpenTablePaths([...new Set(toOpen)]));

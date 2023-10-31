@@ -93,26 +93,26 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         if (selection.length > 0 && !isLoading) {
             const notVisible = (rows?.length > 0) ? selection.filter(path => !pathExistsInTree(path, rows)) : selection;
             if (notVisible.length > 0) {
-                const toOpen = [];
                 const toRemove = [];
                 notVisible.forEach(currentPath => {
+                    const toOpen = [];
                     if (isStructured && currentPath.startsWith(path)) {
                         let pathParts = currentPath.substring(path.length).split('/').slice(0, -1);
-                        for (let i in pathParts) {
-                            if (i > 0) {
-                                toOpen.push(toOpen[i - 1] + '/' + pathParts[i]);
-                            } else {
-                                toOpen.push(path);
+                        let pathToAdd = '';
+                        for (let pathPart of pathParts) {
+                            pathToAdd = pathToAdd ? (pathToAdd + '/' + pathPart) : path;
+                            if (tableOpenPaths.indexOf(pathToAdd) === -1) {
+                                toOpen.push(pathToAdd);
                             }
                         }
-                    } else {
+                    }
+
+                    if (toOpen.length === 0) {
                         toRemove.push(currentPath);
+                    } else {
+                        dispatch(cmOpenTablePaths([...new Set(toOpen)]));
                     }
                 });
-
-                if (toOpen.length > 0) {
-                    dispatch(cmOpenTablePaths([...new Set(toOpen)]));
-                }
 
                 if (toRemove.length > 0) {
                     dispatch(cmRemoveSelection(toRemove));

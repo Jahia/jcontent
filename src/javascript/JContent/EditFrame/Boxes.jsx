@@ -171,7 +171,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                     if (parent) {
                         element.dataset.jahiaParent = parent.id;
                     } else {
-                        console.warn('Couldn\'t find parent element with jahiatype=module for element ',element);
+                        console.warn('Couldn\'t find parent element with jahiatype=module for element ', element);
                         placeholders.pop();
                     }
                 }

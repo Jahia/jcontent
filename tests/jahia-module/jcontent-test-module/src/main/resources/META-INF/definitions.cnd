@@ -89,3 +89,6 @@
 [cemix:testAutoActivatedMixin] mixin
  extends = jnt:content
 - j:testAutoActivatedMixinField (string)
+
+[cent:visibleInTree] > jnt:content, jmix:visibleInPagesTree
+

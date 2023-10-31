@@ -55,8 +55,9 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
         const element = {
             id: treeEntry.path,
             label: treeEntry.node.displayName,
-            hasChildren: treeEntry.hasChildren,
+            hasChildren: treeEntry.hasChildren && treeEntry.openable,
             parent: parentPath,
+            isSelectable: treeEntry.selectable,
             isClosable: treeEntry.depth > 0,
             iconStart: displayIcon(treeEntry.node),
             iconEnd: <StatusIcon path={treeEntry.path} contentMenu={contentMenu} isLocked={locked} isNotPublished={notPublished}/>,

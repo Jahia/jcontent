@@ -12,7 +12,7 @@ export class PickerField extends Field {
         return getComponentByRole(Picker, 'picker-dialog');
     }
 
-    assertValue(value) {
+    assertValue(value: string) {
         this.get().find('[data-sel-field-picker-name]').contains(value);
     }
 

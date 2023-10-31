@@ -1,7 +1,5 @@
-import {JContent, JContentPageBuilder} from '../../page-object';
+import {JContent} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
-import {Collapsible, getComponentBySelector} from '@jahia/cypress';
-import {ContentEditor} from '../../page-object/contentEditor';
 
 describe('Copy Cut and Paste tests with jcontent', () => {
     describe('Copy paste functionality', function () {

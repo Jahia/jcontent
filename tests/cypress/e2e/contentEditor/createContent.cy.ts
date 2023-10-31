@@ -1,5 +1,4 @@
 import {Button, getComponentByRole} from '@jahia/cypress';
-import {PageComposer} from '../../page-object/pageComposer';
 import {JContent} from '../../page-object';
 
 describe('Create content tests', {retries: 10}, () => {

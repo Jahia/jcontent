@@ -127,7 +127,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         } else if (!isLoading && rows?.length > 0) {
             TableViewModeChangeTracker.resetChanged();
         }
-    }, [rows, selection, dispatch, path, paths, isLoading, notify, isStructured, t]);
+    }, [rows, tableOpenPaths, selection, dispatch, path, paths, isLoading, notify, isStructured, t]);
 
     const doubleClickNavigation = useCallback(node => {
         let newMode = mode;

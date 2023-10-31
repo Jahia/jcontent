@@ -1,9 +1,7 @@
-import {JContent, JContentPageBuilder} from "../../page-object";
-import {createSite, deleteSite, enableModule} from "@jahia/cypress";
-
+import {JContent, JContentPageBuilder} from '../../page-object';
+import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Content navigation', () => {
-
     before(() => {
         createSite('mySite1');
         createSite('mySite2');
@@ -16,13 +14,12 @@ describe('Content navigation', () => {
     });
 
     beforeEach(() => {
-       cy.login();
+        cy.login();
     });
-
 
     it('Should display custom accordion when enabled on site', () => {
         const jcontent = JContent.visit('mySite1', 'en', 'pages/home');
-        // tests/jahia-module/jcontent-test-module/src/main/resources/javascript/apps/accordionConfig.js
+        // Tests/jahia-module/jcontent-test-module/src/main/resources/javascript/apps/accordionConfig.js
         jcontent.getAccordionItem('accordion-config').getHeader().should('be.visible');
     });
 

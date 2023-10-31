@@ -30,7 +30,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
     const enabledAccordionItems = accordionItems
         .filter(accordionItem => !accordionItem.requiredSitePermission || Boolean(nodeChecks.node?.site?.[accordionItem.requiredSitePermission]))
         .filter(accordionItem => !accordionItem.requireModuleInstalledOnSite || installedModulesOnSite.has(accordionItem.requireModuleInstalledOnSite))
-        .filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey))
+        .filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey));
 
     return (
         <ContentNavigation header={header}

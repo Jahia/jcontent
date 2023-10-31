@@ -19,10 +19,9 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
     };
 
     // If existing mode (excluding search) is not enabled, default to the first available accordion
-    const enabledAccordionItems = accordionItems.filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey));
-    const modeEnabled = enabledAccordionItems.some(item => mode === item.key);
-    if (!modeEnabled && !mode.includes('search') && !mode.includes('sql2Search') && enabledAccordionItems.length > 0) {
-        onSetOpenedItem(enabledAccordionItems[0].key);
+    const modeEnabled = accordionItems.some(item => mode === item.key);
+    if (!modeEnabled && !mode.includes('search') && !mode.includes('sql2Search') && accordionItems.length > 0) {
+        onSetOpenedItem(accordionItems[0].key);
     }
 
     return (
@@ -34,7 +33,7 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
                        openedItem={mode}
                        onSetOpenedItem={onSetOpenedItem}
             >
-                {enabledAccordionItems.map(accordionItem => {
+                {accordionItems.map(accordionItem => {
                     let props = {
                         id: accordionItem.key,
                         label: t(accordionItem.label),

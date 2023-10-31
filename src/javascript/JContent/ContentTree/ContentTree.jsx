@@ -23,6 +23,7 @@ export const accordionPropType = PropTypes.shape({
     label: PropTypes.string.isRequired,
     getRootPath: PropTypes.func,
     requiredSitePermission: PropTypes.string.isRequired,
+    requireModuleInstalledOnSite: PropTypes.string,
     treeConfig: PropTypes.shape({
         hideRoot: PropTypes.bool,
         selectableTypes: PropTypes.arrayOf(PropTypes.string),

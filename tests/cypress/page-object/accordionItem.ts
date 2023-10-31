@@ -15,8 +15,12 @@ export class AccordionItem {
         this.itemName = itemName;
     }
 
-    getHeader() {
-        return this.accordion.get().find(`section.moonstone-accordionItem header[aria-controls="${this.itemName}"]`);
+    getHeader(options?) {
+        return this.accordion.get().find(`section.moonstone-accordionItem header[aria-controls="${this.itemName}"]`, options);
+    }
+
+    shouldNotExist() {
+        return this.getHeader({timeout: 3000}).should('not.exist');
     }
 
     click() {

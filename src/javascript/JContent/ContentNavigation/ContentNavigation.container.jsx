@@ -14,26 +14,28 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
     let accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
 
     const sitePermissions = [...new Set(accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined))];
-
-    const permissions = useNodeChecks({
+    const nodeChecks = useNodeChecks({
         path: `/sites/${siteKey}`,
         language: language
     }, {
-        requiredSitePermission: sitePermissions
+        requiredSitePermission: sitePermissions,
+        getSiteInstalledModules: true
     });
 
-    if (permissions.loading) {
+    if (nodeChecks.loading) {
         return null;
     }
 
-    accordionItems = sitePermissions.length === 0 ? accordionItems : accordionItems.filter(accordionItem =>
-        permissions.node && Object.prototype.hasOwnProperty.call(permissions.node.site, accordionItem.requiredSitePermission) && permissions.node.site[accordionItem.requiredSitePermission]
-    );
+    const installedModulesOnSite = new Set(nodeChecks.node?.site?.installedModulesWithAllDependencies);
+    const enabledAccordionItems = accordionItems
+        .filter(accordionItem => !accordionItem.requiredSitePermission || Boolean(nodeChecks.node?.site?.[accordionItem.requiredSitePermission]))
+        .filter(accordionItem => !accordionItem.requireModuleInstalledOnSite || installedModulesOnSite.has(accordionItem.requireModuleInstalledOnSite))
+        .filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey));
 
     return (
         <ContentNavigation header={header}
                            accordionItemTarget={accordionItemTarget}
-                           accordionItems={accordionItems}
+                           accordionItems={enabledAccordionItems}
                            mode={mode}
                            siteKey={siteKey}
                            isReversed={isReversed}

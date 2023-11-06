@@ -47,7 +47,7 @@ describe('Test the save publish buttons flow', () => {
     };
 
     // Implement scenario from https://jira.jahia.org/browse/BACKLOG-21685
-    it.only('Publish deletion in structured view', () => {
+    it('Publish deletion in structured view', () => {
         cy.log('Login with editor in chief');
         cy.login(userName, 'password');
         const jcontent = JContent.visit(siteKey, langEN, 'pages/home');

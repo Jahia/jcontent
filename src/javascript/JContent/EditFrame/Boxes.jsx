@@ -9,7 +9,7 @@ import {updateProperty} from '~/JContent/EditFrame/Boxes.gql-mutations';
 import {useQuery} from '@apollo/client';
 import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
 import {hasMixin, isDescendant, isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../redux/selection.redux';
+import {cmAddSelection, cmClearSelection, cmRemoveSelection, cmSetSelection} from '../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
 import {pathExistsInTree} from '../JContent.utils';
 import {useTranslation} from 'react-i18next';
@@ -122,7 +122,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                     dispatch(batchActions(actions));
                 }
             } else if (!isSelected) {
-                dispatch(batchActions([cmClearSelection(), cmAddSelection(path)]));
+                dispatch(cmSetSelection(path));
             }
         } else if (event.detail === 2) {
             event.preventDefault();

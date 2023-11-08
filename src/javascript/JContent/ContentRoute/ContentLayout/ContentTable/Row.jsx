@@ -23,7 +23,7 @@ export const Row = ({
 }) => {
     const rowProps = row.getRowProps();
     const node = row.original;
-    const isSelected = node.path === previewSelection && isPreviewOpened;
+    const isPreviewSelected = node.path === previewSelection && isPreviewOpened;
 
     const contextualMenu = useRef();
 
@@ -54,7 +54,7 @@ export const Row = ({
         <TableRow {...rowProps}
                   data-cm-role="table-content-list-row"
                   className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
-                  isHighlighted={isSelected}
+                  isHighlighted={isPreviewSelected}
                   onClick={() => {
                       if (isPreviewOpened && !node.notSelectableForPreview) {
                           setSelectedItemIndex(index);

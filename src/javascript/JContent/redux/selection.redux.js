@@ -23,6 +23,9 @@ cmRemoveSelection.toString = () => 'CM_REMOVE_SELECTION';
 export const cmSwitchSelection = path => getAction(path, 'CM_SWITCH_SELECTION');
 cmSwitchSelection.toString = () => 'CM_SWITCH_SELECTION';
 
+export const cmSetSelection = path => getAction(path, 'CM_SET_SELECTION');
+cmSetSelection.toString = () => 'CM_SET_SELECTION';
+
 export const cmClearSelection = createAction('CM_CLEAR_SELECTION');
 
 export const selectionRedux = registry => {
@@ -32,6 +35,7 @@ export const selectionRedux = registry => {
         [cmAddSelection]: (state, action) => state.concat(toArray(action.payload).filter(path => state.indexOf(path) === -1)),
         [cmRemoveSelection]: (state, action) => state.filter(path => toArray(action.payload).indexOf(path) === -1),
         [cmSwitchSelection]: (state, action) => (state.indexOf(action.payload) === -1) ? [...state, action.payload] : state.filter(path => action.payload !== path),
+        [cmSetSelection]: (state, action) => ([action.payload]),
         [cmClearSelection]: state => state.length === 0 ? state : ([]),
         [cmSetSort]: state => state.length === 0 ? state : ([]),
         [cmSetPage]: state => state.length === 0 ? state : ([]),

@@ -321,7 +321,10 @@ public class EditorFormServiceImpl implements EditorFormService {
                 );
                 valueConstraints.add(cst);
             }
-            return valueConstraints;
+
+            if (!valueConstraints.isEmpty()) {
+                return valueConstraints;
+            }
         }
 
         return editorFormField.getValueConstraints();

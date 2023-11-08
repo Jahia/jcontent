@@ -3,7 +3,7 @@ import {Button, getComponentBySelector} from '@jahia/cypress';
 import {addNode, deleteNode} from '@jahia/cypress';
 
 describe('Multi-selection tests', {testIsolation: false}, () => {
-    let jcontent;
+    let jcontent: JContent;
 
     const clearSelection = () => {
         cy.get('body').then(body => {
@@ -24,6 +24,10 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         cy.get('[data-sel-role="selection-infos"]')
             .should('have.attr', 'data-sel-selection-size')
             .and('equal', count.toString());
+    };
+
+    const checkNoSelection = () => {
+        cy.get('[data-sel-role="selection-infos"]').should('not.exist');
     };
 
     describe('test simple select/unselect on files', () => {
@@ -101,6 +105,73 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             jcontent.getTable().selectRowByLabel('images');
             jcontent.getTable().getRowByLabel('images').contextMenu().should('contain', '1 item selected');
             cy.get('.moonstone-menu_overlay').click();
+        });
+    });
+
+    describe('test selection in thumbnails view', () => {
+        before(() => {
+            cy.loginAndStoreSession(); // Edit in chief
+            jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
+            jcontent.switchToThumbnails();
+        });
+
+        afterEach(() => {
+            clearSelection();
+        });
+
+        it('should be able to select item', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
+            checkSelectionCount(1);
+        });
+
+        it('should switch selection', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('forest-woman').get().click();
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldNotBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            checkSelectionCount(1);
+        });
+
+        it('should select multiple', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            checkSelectionCount(2);
+        });
+
+        it('should be able to unselect', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldNotBeSelected();
+            checkSelectionCount(1);
+        });
+
+        it('should have dedicated context menu', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('forest-woman').contextMenu().select('Add to selection');
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            checkSelectionCount(2);
+        });
+
+        it('should have dedicated context menu', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('forest-woman').contextMenu().select('Add to selection');
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            checkSelectionCount(2);
+        });
+
+        it('should not select anything if preview is opened', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').contextMenu().select('Preview');
+            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldNotBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            checkNoSelection();
         });
     });
 

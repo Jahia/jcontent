@@ -1,4 +1,4 @@
-import {JContent, JContentPageBuilder} from '../../page-object';
+import {JContent} from '../../page-object';
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Content navigation', () => {

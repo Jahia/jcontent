@@ -155,7 +155,7 @@ describe('Content editor form', () => {
 
     it('Should not see see field for reviewer', () => {
         const contentEditor = jcontent.createContent('News');
-        const field = contentEditor.getField(SmallTextField, 'jnt:news_desc');
+        contentEditor.getField(SmallTextField, 'jnt:news_desc');
         cy.login('mathias', 'password');
 
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');

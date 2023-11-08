@@ -1,6 +1,4 @@
-import {ContentEditor, JContent} from '../../page-object';
-import {RichTextField} from '../../page-object/fields';
-import {Button, getComponentByRole} from '@jahia/cypress';
+import {JContent} from '../../page-object';
 
 describe('overrideTests', {testIsolation: false}, () => {
     let jcontent: JContent;

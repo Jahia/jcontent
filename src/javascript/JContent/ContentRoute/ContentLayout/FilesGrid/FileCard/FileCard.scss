@@ -15,7 +15,7 @@
     background: #fdfdfd;
     box-shadow: 0 4px 8px rgba(19, 28, 33, 0.2);
 
-    transition: all 0.1s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: box-shadow 0.2s ease-out, outline-width 0.1s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 
     &:hover {
         box-shadow: 0 8px 20px rgba(19, 28, 33, 0.4);

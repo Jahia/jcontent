@@ -58,6 +58,10 @@ function getElement(node, encodedPath) {
     );
 }
 
+function getIsHighlighted(node, previewSelection, isPreviewOpened, selection) {
+    return (node.path === previewSelection && isPreviewOpened) || (selection.indexOf(node.path) > -1) || (selection.indexOf(node.uuid) > -1);
+}
+
 export const FileCard = ({
     node,
     lang,
@@ -78,7 +82,7 @@ export const FileCard = ({
 
     let contextualMenu = useRef();
 
-    const isHighlighted = (node.path === previewSelection && isPreviewOpened) || (selection.indexOf(node.path) > -1) || (selection.indexOf(node.uuid) > -1);
+    const isHighlighted = getIsHighlighted(node, previewSelection, isPreviewOpened, selection);
 
     // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout
     // let rowNumber = Math.floor(index / 2) + 1;

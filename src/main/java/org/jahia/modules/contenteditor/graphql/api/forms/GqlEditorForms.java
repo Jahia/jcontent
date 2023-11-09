@@ -24,6 +24,7 @@
 package org.jahia.modules.contenteditor.graphql.api.forms;
 
 import graphql.annotations.annotationTypes.*;
+import org.apache.commons.lang.StringUtils;
 import org.jahia.api.Constants;
 import org.jahia.data.templates.JahiaTemplatesPackage;
 import org.jahia.modules.contenteditor.api.forms.EditorFormException;
@@ -53,6 +54,8 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.jahia.modules.contenteditor.utils.ContentEditorUtils.resolveNodeFromPathorUUID;
 
 /**
  * The root class for the GraphQL form API
@@ -120,10 +123,10 @@ public class GqlEditorForms {
         @GraphQLName("excludedNodeTypes") @GraphQLDescription("List of types we want to exclude, null for all") List<String> excludedNodeTypes,
         @GraphQLName("includeSubTypes") @GraphQLDefaultValue(GqlUtils.SupplierTrue.class) @GraphQLDescription("if true, retrieves all the sub types of the given node types, if false, returns the type only. Default value is true") boolean includeSubTypes,
         @GraphQLName("useContribute") @GraphQLDefaultValue(GqlUtils.SupplierTrue.class) @GraphQLDescription("if true, check the contribute property of the node. Default value is true") boolean useContribute,
-        @GraphQLName("nodePath") @GraphQLNonNull @GraphQLDescription("thPath of an existing node under with the new content will be created.") String nodePath,
+        @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("Path or id of an existing node under with the new content will be created.") String uuidOrPath,
         @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale)
         throws RepositoryException {
-        JCRNodeWrapper parentNode = getSession().getNode(nodePath);
+        JCRNodeWrapper parentNode = StringUtils.startsWith(uuidOrPath, "/") ? getSession().getNode(uuidOrPath) : getSession().getNodeByIdentifier(uuidOrPath);
 
         // Only jmix:editorialContent on jnt:contentFolder
         if (parentNode.isNodeType("jnt:contentFolder") && (nodeTypes == null || nodeTypes.isEmpty())) {
@@ -136,7 +139,7 @@ public class GqlEditorForms {
         final String nodeIdentifier = parentNode.getIdentifier();
         Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
         List<String> allowedNodeTypes = new ArrayList<>(ContentEditorUtils.getAllowedNodeTypesAsChildNode(parentNode, childNodeName, useContribute, includeSubTypes, nodeTypes));
-        Set<NodeTypeTreeEntry> entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, nodePath, getSession(locale), locale);
+        Set<NodeTypeTreeEntry> entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
         return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
     }
 

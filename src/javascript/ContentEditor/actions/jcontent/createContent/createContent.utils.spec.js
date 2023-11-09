@@ -13,7 +13,7 @@ describe('CreateNewContent utils', () => {
         let queryResponse;
 
         const getActions = async (client, showOnNodeTypes) => {
-            return transformNodeTypesToActions(flattenNodeTypes(await getCreatableNodetypesTree(client, 'jnt:page', null, false, '/dummy/path', 'en', ['jmix:studioOnly', 'jmix:hiddenType'], showOnNodeTypes)));
+            return transformNodeTypesToActions(flattenNodeTypes(await getCreatableNodetypesTree({client, nodeTypes: 'jnt:page', includeSubTypes: false, path: '/dummy/path', uilang: 'en', excludedNodeTypes: ['jmix:studioOnly', 'jmix:hiddenType'], showOnNodeTypes})));
         };
 
         beforeEach(() => {

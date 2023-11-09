@@ -1,10 +1,15 @@
-import {getTreeOfContentWithRequirements} from './createContent.gql-queries';
+import {
+    getNodeByPath,
+    getTreeOfContentWithRequirements,
+    getTreeOfContentWithRequirementsFromUuid
+} from './createContent.gql-queries';
 import {useQuery} from '@apollo/client';
 import {toIconComponent} from '@jahia/moonstone';
+import gql from 'graphql-tag';
+import {PredefinedFragments} from '@jahia/data-helper';
 
-// eslint-disable-next-line
-export const useCreatableNodetypesTree = (nodeTypes, childNodeName, includeSubTypes, path, uilang, excludedNodeTypes, showOnNodeTypes) => {
-    const {data, error, loadingTypes} = useQuery(getTreeOfContentWithRequirements, {
+export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
+    const {data, error, loadingTypes} = useQuery(uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements, {
         fetchPolicy: 'cache-and-network',
         variables: {
             nodeTypes: (nodeTypes && nodeTypes.length) > 0 ? nodeTypes : undefined,
@@ -12,6 +17,7 @@ export const useCreatableNodetypesTree = (nodeTypes, childNodeName, includeSubTy
             includeSubTypes,
             uilang,
             path,
+            uuid,
             excludedNodeTypes,
             showOnNodeTypes
         }
@@ -24,16 +30,17 @@ export const useCreatableNodetypesTree = (nodeTypes, childNodeName, includeSubTy
         nodetypes: nodeTypeNotDisplayed ? [] : data.forms.contentTypesAsTree
     };
 };
-// eslint-disable-next-line
-export async function getCreatableNodetypesTree(client, nodeTypes, childNodeName, includeSubTypes, path, uilang, excludedNodeTypes, showOnNodeTypes) {
+
+export async function getCreatableNodetypesTree({client, nodeTypes, childNodeName, includeSubTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) {
     const {data} = await client.query({
-        query: getTreeOfContentWithRequirements,
+        query: uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements,
         variables: {
             nodeTypes: (nodeTypes && nodeTypes.length) > 0 ? nodeTypes : undefined,
             childNodeName,
             includeSubTypes: includeSubTypes !== false,
             uilang,
             path,
+            uuid,
             excludedNodeTypes,
             showOnNodeTypes
         }
@@ -41,6 +48,11 @@ export async function getCreatableNodetypesTree(client, nodeTypes, childNodeName
 
     const nodeTypeNotDisplayed = !data?.jcr || (showOnNodeTypes && showOnNodeTypes.length > 0 && data.jcr.nodeByPath && !data.jcr.nodeByPath.isNodeType);
     return nodeTypeNotDisplayed ? [] : data.forms.contentTypesAsTree;
+}
+
+export async function getNodeUUID({client, path}) {
+    const {data} = await client.query({query: getNodeByPath, variables: {path}});
+    return data?.jcr?.nodeByPath?.uuid;
 }
 
 export function flattenNodeTypes(nodeTypes) {

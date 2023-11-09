@@ -1,25 +1,38 @@
-import {flattenNodeTypes, getCreatableNodetypesTree} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
+import {
+    flattenNodeTypes,
+    getCreatableNodetypesTree,
+    getNodeUUID
+} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useCallback} from 'react';
 import {useApolloClient} from '@apollo/client';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 
 // eslint-disable-next-line max-params
-const create = async (setEditorConfig, setContentTypeSelectorConfig, client, data, uilang) => {
+const create = async (setEditorConfig, setContentTypeSelectorConfig, client, data, uilang, currentLanguage) => {
     const {
-        path, name, nodeTypes, excludedNodeTypes, includeSubTypes, nodeTypesTree, ...editorConfig
+        path, uuid, name, nodeTypes, excludedNodeTypes, includeSubTypes, nodeTypesTree, lang, ...editorConfigWithoutUuid
     } = data;
 
-    const resolvedCreatableNodeTypesTree = nodeTypesTree || await getCreatableNodetypesTree(
+    console.log('site:', editorConfigWithoutUuid.site);
+
+    const resolvedCreatableNodeTypesTree = nodeTypesTree || await getCreatableNodetypesTree({
         client,
         nodeTypes,
-        name,
+        childNodeName: name,
         includeSubTypes,
         path,
+        uuid,
         uilang,
-        (excludedNodeTypes && excludedNodeTypes.length) > 0 ? excludedNodeTypes : ['jmix:studioOnly', 'jmix:hiddenType'],
-        []
+        excludedNodeTypes: (excludedNodeTypes && excludedNodeTypes.length) > 0 ? excludedNodeTypes : ['jmix:studioOnly', 'jmix:hiddenType'],
+        showOnNodeTypes: []}
     );
+
+    const editorConfig = {
+        ...editorConfigWithoutUuid,
+        lang: lang || currentLanguage,
+        uuid: uuid || await getNodeUUID({client, path})
+    };
 
     const flattenedNodeTypes = flattenNodeTypes(resolvedCreatableNodeTypesTree);
 
@@ -37,9 +50,7 @@ const create = async (setEditorConfig, setContentTypeSelectorConfig, client, dat
     if (flattenedNodeTypes.length > 1) {
         setContentTypeSelectorConfig({
             nodeTypesTree: resolvedCreatableNodeTypesTree,
-            includeSubTypes,
             name,
-            path,
             editorConfig
         });
     }
@@ -47,7 +58,7 @@ const create = async (setEditorConfig, setContentTypeSelectorConfig, client, dat
 
 export const useCreate = (setEditorConfig, setContentTypeSelectorConfig) => {
     const client = useApolloClient();
-    const uilang = useSelector(state => state.uilang);
+    const {currentLanguage, uilang} = useSelector(state => ({currentLanguage: state.language, uilang: state.uilang}), shallowEqual);
 
     /**
      * Open content type selection then content editor as a modal to create a new content
@@ -67,12 +78,12 @@ export const useCreate = (setEditorConfig, setContentTypeSelectorConfig) => {
      */
     // eslint-disable-next-line max-params
     return useCallback(async (uuid, path, site, lang, _, nodeTypes, excludedNodeTypes, includeSubTypes, name, isFullscreen, createCallback, onClosedCallback) => {
-        if (typeof uuid === 'object') {
-            return create(setEditorConfig, setContentTypeSelectorConfig, client, uuid, uilang);
+        if (uuid && typeof uuid === 'object') {
+            return create(setEditorConfig, setContentTypeSelectorConfig, client, uuid, uilang, currentLanguage);
         }
 
         return create(setEditorConfig, setContentTypeSelectorConfig, client, {
-            uuid, path, site, lang, nodeTypes, excludedNodeTypes, includeSubTypes, name, isFullscreen, createCallback, onClosedCallback
-        });
-    }, [uilang, client, setEditorConfig, setContentTypeSelectorConfig]);
+            uuid, path, lang, nodeTypes, excludedNodeTypes, includeSubTypes, name, isFullscreen, createCallback, onClosedCallback
+        }, uilang, currentLanguage);
+    }, [uilang, currentLanguage, client, setEditorConfig, setContentTypeSelectorConfig]);
 };

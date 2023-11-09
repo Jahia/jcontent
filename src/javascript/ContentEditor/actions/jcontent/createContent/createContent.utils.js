@@ -5,8 +5,6 @@ import {
 } from './createContent.gql-queries';
 import {useQuery} from '@apollo/client';
 import {toIconComponent} from '@jahia/moonstone';
-import gql from 'graphql-tag';
-import {PredefinedFragments} from '@jahia/data-helper';
 
 export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
     const {data, error, loadingTypes} = useQuery(uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements, {

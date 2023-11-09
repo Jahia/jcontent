@@ -2,7 +2,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useCallback} from 'react';
 import {getNodeUUID} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 import {useApolloClient} from '@apollo/client';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 export const useEdit = setEditorConfig => {
     const client = useApolloClient();
@@ -39,5 +39,5 @@ export const useEdit = setEditorConfig => {
                 onClosedCallback
             });
         }
-    }, [setEditorConfig]);
+    }, [client, currentLanguage, setEditorConfig]);
 };

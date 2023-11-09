@@ -61,19 +61,21 @@ export const FilesGrid = ({totalCount, rows, isLoading, pickerConfig, isMultiple
     const tableConfig = useMemo(() => {
         return jcontentUtils.getAccordionItem(registry.get('accordionItem', mode), accordionItemProps)?.tableConfig;
     }, [mode, accordionItemProps]);
-    const onPreviewSelect = previewSelection => {
-        const actions = [];
-        if (!isMultiple) {
-            actions.push(reduxActions.clearSelection());
-        }
+    const onClick = node => {
+        if (node.isSelectable) {
+            const actions = [];
+            if (!isMultiple) {
+                actions.push(reduxActions.clearSelection());
+            }
 
-        if (selection.indexOf(previewSelection.uuid) === -1) {
-            actions.push(reduxActions.addToSelection(previewSelection.uuid));
-        } else {
-            actions.push(reduxActions.removeFromSelection(previewSelection.uuid));
-        }
+            if (selection.indexOf(node.uuid) === -1) {
+                actions.push(reduxActions.addToSelection(node.uuid));
+            } else {
+                actions.push(reduxActions.removeFromSelection(node.uuid));
+            }
 
-        dispatch(batchActions(actions));
+            dispatch(batchActions(actions));
+        }
     };
 
     const setPath = (siteKey, path) => {
@@ -124,8 +126,8 @@ export const FilesGrid = ({totalCount, rows, isLoading, pickerConfig, isMultiple
                                   setPath={setPath}
                                   contextualMenuAction="contentPickerMenu"
                                   tableConfig={tableConfig}
-                                  onPreviewSelect={(...args) => {
-                                      onPreviewSelect(...args);
+                                  onClick={(...args) => {
+                                      onClick(node, ...args);
                                   }}
                                   onDoubleClick={() => {
                                       if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(node.primaryNodeType.name) === -1) {

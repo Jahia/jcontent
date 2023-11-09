@@ -7,7 +7,7 @@ import {cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
 
-export function useUnselect(selection, isLoading, rows, isStructured, path, tableOpenPaths) {
+export function useUnselect({selection, isLoading, rows, isStructured, path, tableOpenPaths}) {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const dispatch = useDispatch();

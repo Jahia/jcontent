@@ -19,6 +19,7 @@ import {
 import {flattenTree, getDetailedPathArray} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import * as jcontentUtils from '~/JContent/JContent.utils';
+import {clickHandler} from '~/JContent/JContent.utils';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {useFileDrop} from '~/JContent/dnd';
 import {
@@ -30,7 +31,9 @@ import {
 } from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import {registry} from '@jahia/ui-extender';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
-import {Row} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/ContentLayout/ContentTable/Row';
+import {
+    PickerRow
+} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/PickerContentLayout/PickerContentTable/PickerRow';
 import clsx from 'clsx';
 
 const reduxActions = {
@@ -42,27 +45,11 @@ const reduxActions = {
     setPageSizeAction: pageSize => cePickerSetPageSize(pageSize)
 };
 
-const clickHandler = {
-    handleEvent(e, fcn) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.nativeEvent.detail === 1 && !this.timeout) {
-            this.timeout = setTimeout(() => {
-                this.timeout = undefined;
-                fcn();
-            }, 300);
-        } else if (e.nativeEvent.detail === 2) {
-            clearTimeout(this.timeout);
-            this.timeout = undefined;
-        }
-    }
-};
-
 const SELECTION_COLUMN_ID = 'selection';
 
 const defaultCols = ['publicationStatus', 'name', 'type', 'lastModified'];
 
-export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, pickerConfig, isMultiple, accordionItemProps}) => {
+export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, pickerConfig, isMultiple, accordionItemProps}) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
@@ -213,15 +200,15 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                         {tableRows.map(row => {
                             prepareRow(row);
                             return (
-                                <Row key={'row' + row.id}
-                                     isStructured={isStructured}
-                                     row={row}
-                                     isMultiple={isMultiple}
-                                     tableConfig={tableConfig}
-                                     handleOnClick={handleOnClick}
-                                     handleOnDoubleClick={handleOnDoubleClick}
-                                     previousModeTableConfig={previousModeTableConfig}
-                                     doubleClickNavigation={doubleClickNavigation}
+                                <PickerRow key={'row' + row.id}
+                                           isStructured={isStructured}
+                                           row={row}
+                                           isMultiple={isMultiple}
+                                           tableConfig={tableConfig}
+                                           handleOnClick={handleOnClick}
+                                           handleOnDoubleClick={handleOnDoubleClick}
+                                           previousModeTableConfig={previousModeTableConfig}
+                                           doubleClickNavigation={doubleClickNavigation}
                                 />
                             );
                         })}
@@ -244,7 +231,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     );
 };
 
-ContentTable.propTypes = {
+PickerContentTable.propTypes = {
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool,
     isStructured: PropTypes.bool,
@@ -255,4 +242,4 @@ ContentTable.propTypes = {
     accordionItemProps: PropTypes.object
 };
 
-export default ContentTable;
+export default PickerContentTable;

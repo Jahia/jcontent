@@ -5,7 +5,7 @@ import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/confi
 import {Button, Typography} from '@jahia/moonstone';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import ContentLayout from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/ContentLayout';
+import PickerContentLayout from './PickerContentLayout';
 import clsx from 'clsx';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/ContentEditor/utils';
@@ -94,7 +94,7 @@ const RightPanel = ({pickerConfig, isMultiple, accordionItemProps, lang, onClose
                 </div>
             </header>
             <div className={clsx('flexFluid', 'flexCol_nowrap', css.body)}>
-                {mode !== '' && <ContentLayout pickerConfig={pickerConfig} isMultiple={isMultiple} accordionItemProps={accordionItemProps} dblClickSelect={dblClickSelect}/>}
+                {mode !== '' && <PickerContentLayout pickerConfig={pickerConfig} isMultiple={isMultiple} accordionItemProps={accordionItemProps} dblClickSelect={dblClickSelect}/>}
             </div>
 
             <SelectionTable selection={nodes} expanded={selectionExpanded} pickerConfig={pickerConfig}/>

@@ -14,8 +14,6 @@ const create = async (setEditorConfig, setContentTypeSelectorConfig, client, dat
         path, uuid, name, nodeTypes, excludedNodeTypes, includeSubTypes, nodeTypesTree, lang, ...editorConfigWithoutUuid
     } = data;
 
-    console.log('site:', editorConfigWithoutUuid.site);
-
     const resolvedCreatableNodeTypesTree = nodeTypesTree || await getCreatableNodetypesTree({
         client,
         nodeTypes,

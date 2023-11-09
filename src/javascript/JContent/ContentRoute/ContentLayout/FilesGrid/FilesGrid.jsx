@@ -19,6 +19,7 @@ import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import {registry} from '@jahia/ui-extender';
 import {batchActions} from 'redux-batched-actions';
 import {cmSetSelection, cmSwitchSelection} from '../../../redux/selection.redux';
+import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
@@ -76,6 +77,8 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         }
     });
 
+    useUnselect(selection, isLoading, rows, false, path);
+
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
     const [{isCanDrop}, drop] = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path});
@@ -104,8 +107,6 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                     isCanDrop={isCanDrop}/>
         );
     }
-
-    console.log('Rendering Files Grid');
 
     return (
         <>

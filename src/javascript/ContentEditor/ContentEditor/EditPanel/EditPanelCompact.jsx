@@ -6,8 +6,8 @@ import clsx from 'clsx';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
-import {Button, Checkbox, Edit, Typography} from '@jahia/moonstone';
-import {getButtonRenderer, truncate} from '~/ContentEditor/utils';
+import {Button, Checkbox, Chip, Edit, Typography} from '@jahia/moonstone';
+import {getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/utils';
 import {EditPanelLanguageSwitcher} from './EditPanelLanguageSwitcher';
 import {useTranslation} from 'react-i18next';
 import {HeaderBadges} from './HeaderBadges';
@@ -29,7 +29,7 @@ const accentColorButtonProps = {
 };
 
 export const EditPanelCompact = ({title, createAnother}) => {
-    const {mode, showAdvancedMode} = useContentEditorContext();
+    const {nodeTypeName, nodeTypeDisplayName, mode, showAdvancedMode} = useContentEditorContext();
     const {updateEditorConfig} = useContentEditorConfigContext();
     const {t} = useTranslation('jcontent');
 
@@ -49,8 +49,9 @@ export const EditPanelCompact = ({title, createAnother}) => {
                     {mode !== Constants.routes.baseCreateRoute && showAdvancedMode && <Button className={styles.uppercase} label={t('label.contentEditor.create.advanced')} icon={<Edit/>} data-sel-role="advancedMode" onClick={setFullscreen}/>}
                     <DisplayAction actionKey="content-editor/header/3dots" render={DotsButtonRenderer}/>
                 </div>
-                <div className={clsx('flexRow', styles.languageSwitcher)}>
+                <div className={clsx('flexRow', 'alignCenter', styles.languageSwitcher)}>
                     <EditPanelLanguageSwitcher/>
+                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)}/>
                     <div className="flexFluid"/>
                     <HeaderBadges mode={mode}/>
                 </div>

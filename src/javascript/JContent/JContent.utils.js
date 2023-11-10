@@ -287,3 +287,19 @@ export const expandTree = (variables, client) => {
         return {mode, parentPath, ancestorPaths, viewType, site};
     });
 };
+
+export const clickHandler = {
+    handleEvent(e, fcn) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.nativeEvent.detail === 1 && !this.timeout) {
+            this.timeout = setTimeout(() => {
+                this.timeout = undefined;
+                fcn();
+            }, 300);
+        } else if (e.nativeEvent.detail === 2) {
+            clearTimeout(this.timeout);
+            this.timeout = undefined;
+        }
+    }
+};

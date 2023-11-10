@@ -11,7 +11,7 @@ import {cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/redux/preview
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import classNames from 'clsx';
 import clsx from 'clsx';
-import {extractPaths} from '~/JContent/JContent.utils';
+import {clickHandler, extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
@@ -20,6 +20,7 @@ import {registry} from '@jahia/ui-extender';
 import {batchActions} from 'redux-batched-actions';
 import {cmSetSelection, cmSwitchSelection} from '../../../redux/selection.redux';
 import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
@@ -54,6 +55,20 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         dispatch(isMultipleSelectionMode ? cmSwitchSelection(node.path) : cmSetSelection(node.path));
     };
 
+    const onClick = (node, index, event) => {
+        if (isPreviewOpened && !node.notSelectableForPreview) {
+            setSelectedItemIndex(index);
+            onPreviewSelect(node, event);
+        } else if (!isPreviewOpened) {
+            onSelect(node, event);
+        }
+    };
+
+    const allowDoubleClickNavigation = nodeType => {
+        return Constants.mode.SEARCH !== mode &&
+            ((tableConfig.canAlwaysDoubleClickOnType && tableConfig.canAlwaysDoubleClickOnType(nodeType)) || (['jnt:folder', 'jnt:contentFolder'].includes(nodeType)));
+    };
+
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
     const setPath = (siteKey, path, mode) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
@@ -77,7 +92,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         }
     });
 
-    useUnselect(selection, isLoading, rows, false, path);
+    useUnselect({selection, isLoading, rows, path});
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
@@ -137,12 +152,11 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   setPath={setPath}
                                   contextualMenuAction="contentMenu"
                                   tableConfig={tableConfig}
-                                  onClick={(...args) => {
-                                      if (isPreviewOpened && !node.notSelectableForPreview) {
-                                          setSelectedItemIndex(index);
-                                          onPreviewSelect(node, ...args);
-                                      } else if (!isPreviewOpened) {
-                                          onSelect(node, ...args);
+                                  onClick={e => {
+                                      if (allowDoubleClickNavigation(node.primaryNodeType.name)) {
+                                          clickHandler.handleEvent(e, () => onClick(node, index, e));
+                                      } else {
+                                          onClick(node, index, e);
                                       }
                                   }}
                         />

@@ -85,7 +85,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         useExpandedControlled
     );
 
-    useUnselect(selection, isLoading, rows, isStructured, path, tableOpenPaths);
+    useUnselect({selection, isLoading, rows, isStructured, path, tableOpenPaths});
 
     const doubleClickNavigation = useCallback(node => {
         let newMode = mode;

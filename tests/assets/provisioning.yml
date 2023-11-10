@@ -17,4 +17,5 @@
 - enable: "qa-module"
   site: "digitall"
 
+- executeScript: "setLog.groovy"
 - executeScript: "script-01-create-categories.groovy"

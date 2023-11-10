@@ -11,6 +11,7 @@ export const createNode = ({
     notificationContext,
     actions,
     createCallback,
+    orderBefore,
     data: {
         primaryNodeType,
         nodeData,
@@ -28,7 +29,9 @@ export const createNode = ({
         primaryNodeType,
         mixins: mixinsToAdd,
         properties: propsToSave,
-        wipInfo
+        wipInfo,
+        reorder: Boolean(orderBefore),
+        orderBefore
     });
     // Hooks on content to be created
     const onCreates = registry.find({type: 'contentEditor.onCreate'});

@@ -55,7 +55,7 @@ export const ContentEditorApi = () => {
 
     const unsetEditorConfigs = () => {
         history.replace(rison.decode(locationWithoutEditors));
-        setEditorConfigs(editorConfigs.map(e => ({...e, closed: 'history', onExited: () => {}})));
+        setEditorConfigs(editorConfigs.map(e => ({...e, closed: true, onExited: () => {}})));
     };
 
     let newEditorConfig = editorConfig => {

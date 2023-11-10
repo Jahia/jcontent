@@ -15,7 +15,7 @@ export const Create = () => {
     const client = useApolloClient();
     const {t} = useTranslation('jcontent');
     const contentEditorConfigContext = useContentEditorConfigContext();
-    const {onClosedCallback, contentType, lang, createCallback} = contentEditorConfigContext;
+    const {onClosedCallback, contentType, lang, createCallback, orderBefore} = contentEditorConfigContext;
     const {nodeData, initialValues, title, i18nContext, createAnother} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
 
@@ -31,6 +31,7 @@ export const Create = () => {
             t,
             notificationContext,
             actions,
+            orderBefore,
             data: {
                 primaryNodeType: contentType,
                 nodeData,

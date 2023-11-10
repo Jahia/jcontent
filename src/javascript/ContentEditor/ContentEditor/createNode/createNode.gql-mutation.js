@@ -9,7 +9,9 @@ export const CreateNode = gql`
         $mixins: [String],
         $wipInfo: InputwipInfo!,
         $properties: [InputJCRProperty],
-        $children: [InputJCRNode]
+        $children: [InputJCRNode],
+        $reorder: Boolean!
+        $orderBefore: String
     ) {
         jcr {
             addNode(
@@ -26,6 +28,9 @@ export const CreateNode = gql`
                     ...NodeCacheRequiredFields
                 }
                 createWipInfo(wipInfo:$wipInfo)
+            }
+            mutateNode(pathOrId:$uuid) @include(if: $reorder) {
+                reorderChildren(names:[$name, $orderBefore])
             }
             modifiedNodes {
                 ...NodeCacheRequiredFields

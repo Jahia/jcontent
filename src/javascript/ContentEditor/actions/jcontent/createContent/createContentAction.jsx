@@ -45,15 +45,15 @@ export const CreateContent = ({
         }
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
-    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree(
+    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
         nodeTypes,
-        name,
-        isIncludeSubTypes || false,
-        contextNodePath || path,
+        childNodeName: name,
+        includeSubTypes: isIncludeSubTypes || false,
+        path: contextNodePath || path,
         uilang,
         excludedNodeTypes,
         showOnNodeTypes
-    );
+    });
 
     if (Loading && (loadingTypes || res.loading || nodeInfo.loading)) {
         return <Loading {...otherProps}/>;
@@ -76,7 +76,7 @@ export const CreateContent = ({
     const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit);
 
     const onClick = ({nodeTypesTree}) => {
-        api.create({uuid: nodeInfo.node.uuid, path, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
+        api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
     };
 
     return (actions || [{key: 'allTypes', nodeTypeIcon: otherProps.defaultIcon}]).map(result => (

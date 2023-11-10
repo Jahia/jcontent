@@ -1032,7 +1032,7 @@ type GqlEditorForms {
         "if true, retrieves all the sub types of the given node types, if false, returns the type only. Default value is true"
         includeSubTypes: Boolean = true,
         "thPath of an existing node under with the new content will be created."
-        nodePath: String!,
+        uuidOrPath: String!,
         "List of types we want to retrieve, null for all"
         nodeTypes: [String],
         "A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ..."

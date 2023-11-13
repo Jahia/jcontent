@@ -327,9 +327,8 @@ public class EditorFormServiceImpl implements EditorFormService {
                 valueConstraints.add(cst);
             }
 
-            if (!valueConstraints.isEmpty()) {
-                return valueConstraints;
-            }
+            // If we cannot get choicelist initializer with selector options return default constraints
+            return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : valueConstraints;
         }
 
         return editorFormField.getValueConstraints();

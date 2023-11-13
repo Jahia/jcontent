@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import css from './ContentTable.scss';
 
-const ContentTableWrapper = ({children, reference, dropReference, uploadType, onClick = () => {}, onKeyDown = () => {}, isCanDrop, ...rest}) => {
+export const ContentTableWrapper = ({children, reference, dropReference, uploadType, onClick = () => {}, onKeyDown = () => {}, isCanDrop, ...rest}) => {
     return (
         <div ref={reference}
              className={clsx(css.tableWrapper, 'flexFluid')}
@@ -26,5 +26,3 @@ ContentTableWrapper.propTypes = {
     onKeyDown: PropTypes.func,
     isCanDrop: PropTypes.bool
 };
-
-export default ContentTableWrapper;

@@ -66,6 +66,7 @@ import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
+import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -367,6 +368,12 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.actions.openInJContent',
         targets: [],
         component: OpenInJContentActionComponent
+    });
+    registry.add('action', 'openInPageBuilder', {
+        buttonIcon: <OpenInBrowser/>,
+        buttonLabel: 'jcontent:label.contentManager.actions.openInPageBuilder',
+        targets: ['contentActions:2.2', 'narrowHeaderMenu:12.2'],
+        component: OpenInPageBuilderActionComponent
     });
 
     registry.add('action', 'openInLive', {

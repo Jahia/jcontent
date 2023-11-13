@@ -9,6 +9,7 @@ import classes from './ViewModeSelector.scss';
 import {booleanValue} from '~/JContent/JContent.utils';
 import {TableViewModeChangeTracker} from './tableViewChangeTracker';
 import {registry} from '@jahia/ui-extender';
+import {useNodeInfo} from '@jahia/data-helper';
 
 const FLATLIST = JContentConstants.tableView.viewMode.FLAT;
 const STRUCTUREDVIEW = JContentConstants.tableView.viewMode.STRUCTURED;
@@ -22,10 +23,11 @@ const icons = {
 
 const defaultAvailableModes = [FLATLIST, STRUCTUREDVIEW];
 
-const tableViewDropdownData = (t, viewMode, allButtons) => {
+const tableViewDropdownData = (t, viewMode, allButtons, disabled) => {
     return allButtons.map(v => ({
         label: t(`jcontent:label.contentManager.view.${v}`),
         value: v,
+        isDisabled: disabled.indexOf(v) !== -1,
         iconStart: icons[v],
         attributes: {
             'aria-selected': viewMode === v,
@@ -37,7 +39,8 @@ const tableViewDropdownData = (t, viewMode, allButtons) => {
 export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {mode, viewMode} = useSelector(selector, shallowEqual);
+    const {mode, viewMode, path} = useSelector(selector, shallowEqual);
+    const info = useNodeInfo({path}, {getIsNodeTypes: ['jnt:page', 'jmix:mainResource']});
 
     const accordion = registry.get('accordionItem', mode);
     let availableModes = accordion?.tableConfig?.availableModes || defaultAvailableModes;
@@ -45,6 +48,9 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     if (!booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
         availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
     }
+
+    const disabledPageBuilder = info.node && !info.node['jnt:page'] && !info.node['jmix:mainResource'];
+    const disabled = disabledPageBuilder ? [PAGE_BUILDER] : [];
 
     const onChange = vm => dispatch(setTableViewModeAction(vm));
 
@@ -56,7 +62,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     return (
         <Dropdown className={classes.dropdown}
                   size="small"
-                  data={tableViewDropdownData(t, viewMode, availableModes)}
+                  data={tableViewDropdownData(t, viewMode, availableModes, disabled)}
                   data-sel-role="sel-view-mode-dropdown"
                   label={viewMode && t(`jcontent:label.contentManager.view.${viewMode}`)}
                   value={viewMode}

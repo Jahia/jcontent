@@ -29,7 +29,7 @@ const defaultGetToggleRowSelectedProps = (selection, row) => {
 function useInstance(instance) {
     const {getHooks} = instance;
     const getInstance = useGetLatest(instance);
-    const {selection} = useSelector(state => ({selection: state.contenteditor.picker.selection}));
+    const selection = useSelector(state => state.contenteditor.picker.selection);
     const dispatch = useDispatch();
 
     const anySelected = selection.length > 0;

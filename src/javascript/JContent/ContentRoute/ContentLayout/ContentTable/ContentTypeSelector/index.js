@@ -1,3 +1,1 @@
-import ContentTypeSelector from './ContentTypeSelector';
-
-export default ContentTypeSelector;
+export * from './ContentTypeSelector';

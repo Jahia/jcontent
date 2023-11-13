@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {Button, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import styles from './LinkDialog.scss';
+import styles from './Dialog.scss';
 import {useDispatch} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
@@ -57,9 +57,7 @@ export const TextMenuDialog = ({node, isOpen, onClose, setPathAction}) => {
 };
 
 TextMenuDialog.propTypes = {
-    node: {
-        path: PropTypes.string
-    },
+    node: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     setPathAction: PropTypes.func

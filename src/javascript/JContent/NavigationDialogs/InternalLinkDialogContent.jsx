@@ -2,9 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {DialogContent} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
-import styles from '~/JContent/ContentTree/LinkDialog/LinkDialog.scss';
+import styles from './Dialog.scss';
+import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
 
-export const InternalLinkDialogContent = ({node, data, t, siteKey, ...otherProps}) => {
+export const InternalLinkDialogContent = ({node, data, ...otherProps}) => {
+    const {t} = useTranslation('jcontent');
+    const siteKey = useSelector(state => state.site);
+
     const {displayName, path, linkSite} = data?.jcr.nodeByPath?.internalLink?.refNode || {};
     const isSameSite = linkSite?.sitekey === siteKey;
 
@@ -28,7 +33,5 @@ export const InternalLinkDialogContent = ({node, data, t, siteKey, ...otherProps
 
 InternalLinkDialogContent.propTypes = {
     node: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired,
-    siteKey: PropTypes.string.isRequired
+    data: PropTypes.object.isRequired
 };

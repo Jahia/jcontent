@@ -5,25 +5,20 @@ const visibleInContentTree = gql`
     fragment VisibleInContentTree on JCRNode {
         isVisibleInContentTree: isNodeType(type: {
             multi: ANY,
-            types: [
-                "jmix:visibleInContentTree",
-                "jmix:cmContentTreeDisplayable",
-                "jnt:contentFolder",
-                "jnt:folder",
-                "jnt:page"
-            ]
+            types: $types
         })
     }
 `;
 
 export const GetContentPath = gql`
-    query getContentPath($path:String!, $language: String!) {
+    query getContentPath($path:String!, $language: String!, $types: [String]!) {
         jcr {
             node: nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
                 primaryNodeType {
                     name
                 }
+                isNodeType(type: {multi: ANY, types: ["jmix:mainResource", "jnt:page"]})
                 ...VisibleInContentTree
                 ancestors(fieldFilter: {
                     filters: [
@@ -36,6 +31,7 @@ export const GetContentPath = gql`
                     primaryNodeType {
                         name
                     }
+                    isNodeType(type: {multi: ANY, types: ["jmix:mainResource", "jnt:page"]})
                     ...VisibleInContentTree
                     ...NodeCacheRequiredFields
                 }

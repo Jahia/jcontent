@@ -1,3 +1,1 @@
-import PickerContentTable from './PickerContentTable';
-
-export default PickerContentTable;
+export * from './PickerContentTable';

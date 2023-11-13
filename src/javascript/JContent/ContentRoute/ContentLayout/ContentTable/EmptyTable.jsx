@@ -4,7 +4,7 @@ import {Typography} from '@jahia/moonstone';
 import styles from './EmptyTable.scss';
 import {useTranslation} from 'react-i18next';
 
-const EmptyTable = ({text}) => {
+export const EmptyTable = ({text}) => {
     const {t} = useTranslation('jcontent');
     return (
         <div className="flexFluid flexCol_center alignCenter">
@@ -17,5 +17,3 @@ const EmptyTable = ({text}) => {
 EmptyTable.propTypes = {
     text: PropTypes.string.isRequired
 };
-
-export default EmptyTable;

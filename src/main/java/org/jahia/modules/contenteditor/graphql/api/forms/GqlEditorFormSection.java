@@ -28,7 +28,6 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import org.jahia.modules.contenteditor.api.forms.model.Section;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

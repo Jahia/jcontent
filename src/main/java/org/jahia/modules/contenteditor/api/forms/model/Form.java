@@ -30,6 +30,7 @@ import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.osgi.framework.Bundle;
 
 import javax.jcr.nodetype.NoSuchNodeTypeException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,8 +51,25 @@ public class Form implements DefinitionRegistryItem {
     private Boolean hasPreview;
     private Boolean showAdvancedMode;
     private List<Section> sections = new ArrayList<>();
+
+    // Registry form
     private Double priority;
     private Bundle originBundle;
+    private URL fileUrl;
+
+    // Merged form
+    private List<DefinitionRegistryItem> mergedItems;
+
+    public Form() {
+    }
+
+    public Form(List<DefinitionRegistryItem> mergedItems) {
+        this.mergedItems = mergedItems;
+
+        for (DefinitionRegistryItem current : mergedItems) {
+            mergeWith(current);
+        }
+    }
 
     public ExtendedNodeType getNodeType() {
         if (nodeType == null) {
@@ -153,6 +171,19 @@ public class Form implements DefinitionRegistryItem {
 
     public void setOriginBundle(Bundle originBundle) {
         this.originBundle = originBundle;
+    }
+
+    @JsonIgnore
+    public URL getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(URL fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public List<DefinitionRegistryItem> getMergedItems() {
+        return mergedItems;
     }
 
     public void initializeLabel(Locale uiLocale) {

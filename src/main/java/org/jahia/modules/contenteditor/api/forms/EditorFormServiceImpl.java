@@ -135,12 +135,7 @@ public class EditorFormServiceImpl implements EditorFormService {
             }
 
             // Merge all forms into a new form
-            Form form = new Form();
-            for (DefinitionRegistryItem current : mergeSet) {
-                if (current.getOriginBundle() == null || isApplicable(current.getOriginBundle(), site)) {
-                    form.mergeWith(current);
-                }
-            }
+            Form form = new Form(mergeSet.stream().filter(f -> isApplicable(f, site)).collect(Collectors.toList()));
 
             // Post process on sections / fieldSets / fields
             JCRSessionWrapper session = existingNode != null ? existingNode.getSession() : parentNode.getSession();
@@ -173,6 +168,9 @@ public class EditorFormServiceImpl implements EditorFormService {
                     fieldSet.setVisible((fieldSet.isHide() == null || !fieldSet.isHide()) &&
                         (fieldSet.getRequiredPermission() == null || site.hasPermission(fieldSet.getRequiredPermission())));
                     fieldSet.getFields().sort(RankedComparator.INSTANCE);
+                    fieldSet.setActivated(true);
+                    fieldSet.setDynamic(false);
+                    fieldSet.setHasEnableSwitch(false);
 
                     // Check if fieldset is dynamic
                     ExtendedNodeType nodeType = fieldSet.getNodeType();
@@ -351,13 +349,18 @@ public class EditorFormServiceImpl implements EditorFormService {
         return res;
     }
 
-    boolean isApplicable(Bundle bundle, JCRSiteNode site) {
-        JahiaTemplatesPackage tpl = jahiaTemplateManagerService.getTemplatePackageById(bundle.getSymbolicName());
-        if ("system".equals(tpl.getModuleType())) {
-            return true;
+    boolean isApplicable(DefinitionRegistryItem form, JCRSiteNode site) {
+        if (form.getOriginBundle() != null) {
+            String name = form.getOriginBundle().getSymbolicName();
+            JahiaTemplatesPackage tpl = jahiaTemplateManagerService.getTemplatePackageById(name);
+            if ("system".equals(tpl.getModuleType())) {
+                return true;
+            }
+
+            return site.getInstalledModulesWithAllDependencies().contains(name);
         }
 
-        return site.getInstalledModulesWithAllDependencies().contains(bundle.getSymbolicName());
+        return true;
     }
 
     @Override

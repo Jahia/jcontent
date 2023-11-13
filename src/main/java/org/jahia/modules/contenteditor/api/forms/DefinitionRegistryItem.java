@@ -4,6 +4,8 @@ import org.jahia.modules.contenteditor.api.forms.model.Condition;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.osgi.framework.Bundle;
 
+import java.net.URL;
+
 public interface DefinitionRegistryItem {
     Double getPriority();
 
@@ -12,6 +14,8 @@ public interface DefinitionRegistryItem {
     Condition getCondition();
 
     Bundle getOriginBundle();
+
+    URL getFileUrl();
 
     default String getConditionNodeTypeName() {
         if (getCondition() != null && getCondition().getNodeType() != null) {

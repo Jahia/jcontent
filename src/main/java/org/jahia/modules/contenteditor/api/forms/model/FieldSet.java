@@ -13,6 +13,7 @@ import org.osgi.framework.Bundle;
 import org.owasp.html.Sanitizers;
 
 import javax.jcr.nodetype.NoSuchNodeTypeException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,17 +32,21 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
     private Boolean hide;
     private Boolean readOnly;
     private Boolean activatedOnCreate = false;
-    private Double rank;
-    private List<Field> fields = new ArrayList<>();
-    private Double priority;
-    private Bundle originBundle;
-
-    private boolean dynamic = false;
-    private boolean hasEnableSwitch = false;
-    private boolean activated = true;
-    private boolean visible = true;
     // Fieldset will be included in section even if it is invisible
     private Boolean alwaysPresent;
+    private Double rank;
+    private List<Field> fields = new ArrayList<>();
+
+    // Registry field set
+    private Double priority;
+    private Bundle originBundle;
+    private URL fileUrl;
+
+    // Generated fields
+    private Boolean dynamic;
+    private Boolean hasEnableSwitch;
+    private Boolean activated;
+    private Boolean visible;
 
     public String getName() {
         return name;
@@ -134,6 +139,14 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         this.activatedOnCreate = activatedOnCreate;
     }
 
+    public Boolean isAlwaysPresent() {
+        return alwaysPresent;
+    }
+
+    public void setAlwaysPresent(Boolean alwaysPresent) {
+        this.alwaysPresent = alwaysPresent;
+    }
+
     public Double getRank() {
         return rank;
     }
@@ -168,47 +181,50 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         this.originBundle = originBundle;
     }
 
+    @Override
     @JsonIgnore
-    public boolean isDynamic() {
+    public URL getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(URL fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    @JsonIgnore
+    public Boolean isDynamic() {
         return dynamic;
     }
 
-    public void setDynamic(boolean dynamic) {
+    public void setDynamic(Boolean dynamic) {
         this.dynamic = dynamic;
     }
 
     @JsonIgnore
-    public boolean isHasEnableSwitch() {
+    public Boolean isHasEnableSwitch() {
         return hasEnableSwitch;
     }
 
-    public void setHasEnableSwitch(boolean hasEnableSwitch) {
+    public void setHasEnableSwitch(Boolean hasEnableSwitch) {
         this.hasEnableSwitch = hasEnableSwitch;
     }
 
     @JsonIgnore
-    public boolean isActivated() {
+    public Boolean isActivated() {
         return activated;
     }
 
-    public void setActivated(boolean activated) {
+    public void setActivated(Boolean activated) {
         this.activated = activated;
     }
 
-    public boolean isVisible() {
+    @JsonIgnore
+    public Boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public void setVisible(Boolean visible) {
         this.visible = visible;
-    }
-
-    public Boolean isAlwaysPresent() {
-        return alwaysPresent;
-    }
-
-    public void setAlwaysPresent(Boolean alwaysPresent) {
-        this.alwaysPresent = alwaysPresent;
     }
 
     @JsonIgnore

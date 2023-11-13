@@ -23,8 +23,8 @@
  */
 package org.jahia.modules.contenteditor.api.forms;
 
-import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.api.forms.model.FieldValueConstraint;
+import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.graphql.api.types.ContextEntryInput;
 
 import java.util.List;

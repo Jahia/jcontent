@@ -28,7 +28,6 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import org.jahia.modules.contenteditor.api.forms.model.Section;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,13 +69,13 @@ public class GqlEditorFormSection {
     @GraphQLField
     @GraphQLName("expanded")
     @GraphQLDescription("Is the section expanded")
-    public boolean expanded() {
-        return section.isExpanded() != null && section.isExpanded();
+    public Boolean expanded() {
+        return section.isExpanded();
     }
 
     @GraphQLField
-    @GraphQLDescription("")
-    public boolean isVisible() {
+    @GraphQLDescription("This section is visible")
+    public Boolean isVisible() {
         return section.isVisible();
     }
 }

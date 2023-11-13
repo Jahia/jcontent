@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.jahia.modules.contenteditor.graphql.api.forms;
+package org.jahia.modules.contenteditor.graphql.api;
 
 import graphql.annotations.annotationTypes.*;
 import org.apache.commons.lang.StringUtils;
@@ -30,8 +30,9 @@ import org.jahia.data.templates.JahiaTemplatesPackage;
 import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.EditorFormService;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
-import org.jahia.modules.contenteditor.graphql.api.GqlUtils;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeTreeEntry;
+import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorForm;
+import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorFormValueConstraint;
 import org.jahia.modules.contenteditor.graphql.api.types.ContextEntryInput;
 import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
 import org.jahia.modules.graphql.provider.dxm.osgi.annotations.GraphQLOsgiService;
@@ -54,8 +55,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.jahia.modules.contenteditor.utils.ContentEditorUtils.resolveNodeFromPathorUUID;
 
 /**
  * The root class for the GraphQL form API

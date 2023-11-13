@@ -25,6 +25,7 @@ describe('Create content tests', {retries: 10}, () => {
     it('can edit content', () => {
         jcontent.getTable().getRowByLabel('Rich text').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
+        cy.get('.moonstone-chip').contains('Rich text');
         contentEditor.getField(RichTextField, 'jnt:bigText_text');
         contentEditor.cancel();
     });

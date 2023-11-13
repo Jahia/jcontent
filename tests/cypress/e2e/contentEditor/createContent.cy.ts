@@ -21,6 +21,7 @@ describe('Create content tests', {retries: 10}, () => {
     it('Can create content', function () {
         const contentEditor = jcontent.createContent('Rich text');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
+        cy.get('.moonstone-chip').contains('Rich text');
         const contentSection = contentEditor.openSection('Content');
         contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test');
         contentSection.expand().get().find('.cke_button__source').click();

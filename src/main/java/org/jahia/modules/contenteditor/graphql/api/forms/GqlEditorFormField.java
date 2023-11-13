@@ -138,31 +138,31 @@ public class GqlEditorFormField {
 
     @GraphQLField
     @GraphQLDescription("This value is true if the field allows for internationalized values")
-    public boolean getI18n() {
-        return field.isI18n() != null && field.isI18n();
+    public Boolean getI18n() {
+        return field.isI18n();
     }
 
     @GraphQLField
     @GraphQLDescription("This value is true if the field is readonly. This could be due to locks or permissions")
-    public boolean getReadOnly() {
-        return field.isReadOnly() != null && field.isReadOnly();
+    public Boolean getReadOnly() {
+        return field.isReadOnly();
     }
 
     @GraphQLField
     @GraphQLDescription("This value is true if the field value is multi-valued.")
-    public boolean getMultiple() {
-        return field.isMultiple() != null && field.isMultiple();
+    public Boolean getMultiple() {
+        return field.isMultiple();
     }
 
     @GraphQLField
     @GraphQLDescription("This value is true if the field is mandatory")
-    public boolean getMandatory() {
-        return field.isMandatory() != null && field.isMandatory();
+    public Boolean getMandatory() {
+        return field.isMandatory();
     }
 
     @GraphQLField
-    @GraphQLDescription("")
-    public boolean isVisible() {
+    @GraphQLDescription("This fields set is visible")
+    public Boolean isVisible() {
         return field.isVisible();
     }
 }

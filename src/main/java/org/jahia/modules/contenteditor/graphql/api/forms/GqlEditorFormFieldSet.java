@@ -79,8 +79,8 @@ public class GqlEditorFormFieldSet {
 
     @GraphQLField
     @GraphQLDescription("This value is true if the fieldset is readonly. This could be due to locks or permissions")
-    public boolean getReadOnly() {
-        return fieldSet.isReadOnly() != null && fieldSet.isReadOnly();
+    public Boolean getReadOnly() {
+        return fieldSet.isReadOnly();
     }
 
     @GraphQLField
@@ -92,7 +92,7 @@ public class GqlEditorFormFieldSet {
 
     @GraphQLField
     @GraphQLDescription("")
-    public boolean isVisible() {
+    public Boolean isVisible() {
         return fieldSet.isVisible();
     }
 

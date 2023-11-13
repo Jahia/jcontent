@@ -23,6 +23,8 @@
  */
 package org.jahia.modules.contenteditor.api.forms;
 
+import graphql.annotations.annotationTypes.GraphQLDescription;
+import graphql.annotations.annotationTypes.GraphQLField;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jahia.api.templates.JahiaTemplateManagerService;
@@ -160,6 +162,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 section.setVisible((section.isHide() == null || !section.isHide()) &&
                     (section.getRequiredPermission() == null || site.hasPermission(section.getRequiredPermission())) &&
                     (section.getDisplayModes() == null || section.getDisplayModes().contains(mode)));
+                section.setExpanded(section.isExpanded() != null && section.isExpanded());
                 section.getFieldSets().sort(RankedComparator.INSTANCE);
 
                 for (FieldSet fieldSet : section.getFieldSets()) {
@@ -171,6 +174,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                     fieldSet.setActivated(true);
                     fieldSet.setDynamic(false);
                     fieldSet.setHasEnableSwitch(false);
+                    fieldSet.setReadOnly(fieldSet.isReadOnly() != null && fieldSet.isReadOnly());
 
                     // Check if fieldset is dynamic
                     ExtendedNodeType nodeType = fieldSet.getNodeType();
@@ -182,7 +186,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                             fieldSet.setHasEnableSwitch(!nodeType.isNodeType("jmix:templateMixin"));
 
                             // Update readonly if user does not have permission to add/remove mixin
-                            fieldSet.setReadOnly((fieldSet.isReadOnly() != null && fieldSet.isReadOnly()) || !fieldSetEditable);
+                            fieldSet.setReadOnly(fieldSet.isReadOnly() || !fieldSetEditable);
                         }
                     }
 
@@ -191,6 +195,9 @@ public class EditorFormServiceImpl implements EditorFormService {
                         field.initializeLabel(uiLocale, site, primaryNodeType);
                         field.setVisible((field.isHide() == null || !field.isHide()) &&
                             (field.getRequiredPermission() == null || site.hasPermission(field.getRequiredPermission())));
+                        field.setI18n(field.isI18n() != null && field.isI18n());
+                        field.setMultiple(field.isMultiple() != null && field.isMultiple());
+                        field.setMandatory(field.isMandatory() != null && field.isMandatory());
 
                         // Update readonly if user does not have permission to edit
                         boolean forceReadOnly = field.getExtendedPropertyDefinition() != null && field.getExtendedPropertyDefinition().isInternationalized() ? !i18nFieldsEditable : !sharedFieldsEditable;

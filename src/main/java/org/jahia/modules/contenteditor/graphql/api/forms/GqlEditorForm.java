@@ -25,8 +25,12 @@ package org.jahia.modules.contenteditor.graphql.api.forms;
 
 import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
+import graphql.annotations.annotationTypes.GraphQLName;
+import graphql.schema.DataFetchingEnvironment;
 import org.jahia.modules.contenteditor.api.forms.DefinitionRegistryItem;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
+import org.jahia.modules.graphql.provider.dxm.predicate.FieldFiltersInput;
+import org.jahia.modules.graphql.provider.dxm.predicate.FilterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,19 +74,19 @@ public class GqlEditorForm {
 
     @GraphQLField
     @GraphQLDescription("Returns the preview status of the form. If true, the form can display a preview.")
-    public boolean hasPreview() {
-        return form.hasPreview() != null && form.hasPreview();
+    public Boolean hasPreview() {
+        return form.hasPreview();
     }
 
     @GraphQLField
     @GraphQLDescription("Returns the advanced mode status of the form. If true advanced mode is available.")
-    public boolean showAdvancedMode() {
-        return form.getShowAdvancedMode() != null && form.getShowAdvancedMode();
+    public Boolean showAdvancedMode() {
+        return form.getShowAdvancedMode();
     }
 
     @GraphQLField
     @GraphQLDescription("Get list of merged forms.")
-    public List<GqlMergedItem> getMergedItems() {
+    public List<GqlMergedItem> getMergedItems(@GraphQLName("filter") @GraphQLDescription("Filter on field values") FieldFiltersInput fieldFilter, DataFetchingEnvironment env) {
         if (form.getMergedItems() != null) {
             List<GqlMergedItem> list = new ArrayList<>();
             for (DefinitionRegistryItem mergedItem : form.getMergedItems()) {
@@ -90,7 +94,8 @@ public class GqlEditorForm {
                     list.add(new GqlMergedItem(mergedItem));
                 }
             }
-            return list;
+
+            return FilterHelper.filterList(list, fieldFilter, env);
         }
 
         return null;

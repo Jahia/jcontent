@@ -65,7 +65,7 @@ export const ContentPath = ({selector}) => {
     const accordion = registry.get('accordionItem', mode);
 
     const {data, error} = useQuery(GetContentPath, {
-        variables: {path, language, types: accordion.treeConfig.openableTypes}
+        variables: {path, language, types: accordion?.treeConfig?.openableTypes}
     });
 
     const handleNavigation = item => {

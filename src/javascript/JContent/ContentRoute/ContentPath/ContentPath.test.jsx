@@ -64,11 +64,36 @@ describe('ContentPath', () => {
             }
         }));
 
-        const wrapper = shallow(<ContentPath/>).find('SimplePathEntry');
+        const ancestors = [{
+            uuid: 'x',
+            path: '/x',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'y',
+            path: '/x/y',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'z',
+            path: '/x/y/z',
+            isVisibleInContentTree: false
+        }];
+
+        useQuery.mockImplementation(() => ({
+            data: {
+                jcr: {
+                    node: {
+                        isVisibleInContentTree: false,
+                        ancestors: ancestors
+                    }
+                }
+            }
+        }));
+
+        const wrapper = shallow(<ContentPath/>).find('SimplePathEntry').first();
         wrapper.invoke('onItemClick')({path: '/x/y/z'});
 
         expect(dispatch).toHaveBeenCalledTimes(1);
-        expect(cmGoto).toHaveBeenCalledWith({mode: 'foo', path: '/x/y/z', params: {sub: false}});
+        expect(cmGoto).toHaveBeenCalledWith({path: '/x/y/z', params: {sub: false}});
     });
 
     it('starts from the closest ancestor visible in Content tree if node is not visible Content tree', () => {
@@ -97,7 +122,7 @@ describe('ContentPath', () => {
             }
         }));
 
-        const wrapper = shallow(<ContentPath/>).find('SimplePathEntry');
-        expect(wrapper.prop('item')).toEqual(ancestors[0]);
+        const wrapper = shallow(<ContentPath/>).find('SimplePathEntry').first();
+        expect(wrapper.prop('item')).toEqual(ancestors[1]);
     });
 });

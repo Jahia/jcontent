@@ -2,9 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {DialogContent} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
-import styles from './LinkDialog.scss';
+import styles from './Dialog.scss';
+import {useTranslation} from 'react-i18next';
 
-export const ExternalLinkDialogContent = ({node, data, t, ...otherProps}) => {
+export const ExternalLinkDialogContent = ({node, data, ...otherProps}) => {
+    const {t} = useTranslation('jcontent');
+
     const url = data?.jcr.nodeByPath?.externalLink?.value;
     return (
         <DialogContent {...otherProps}>
@@ -19,6 +22,5 @@ export const ExternalLinkDialogContent = ({node, data, t, ...otherProps}) => {
 
 ExternalLinkDialogContent.propTypes = {
     node: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    data: PropTypes.object.isRequired
 };

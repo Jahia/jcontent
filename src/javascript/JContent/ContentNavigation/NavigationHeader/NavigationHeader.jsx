@@ -4,7 +4,7 @@ import SwitchersLayout from './SwitchersLayout';
 import styles from './NavigationHeader.scss';
 import PropTypes from 'prop-types';
 
-const NavigationHeader = ({isDisplaySwitchers, logo, isDisplaySiteSwitcher, isDisplayLanguageSwitcher, languageSelector, setLanguageAction}) => {
+export const NavigationHeader = ({isDisplaySwitchers, logo, isDisplaySiteSwitcher, isDisplayLanguageSwitcher, languageSelector, setLanguageAction}) => {
     return (
         <div className={styles.header}>
             <div className={styles.logo}>
@@ -30,5 +30,3 @@ NavigationHeader.defaultProps = {
     isDisplaySiteSwitcher: true,
     isDisplayLanguageSwitcher: true
 };
-
-export default NavigationHeader;

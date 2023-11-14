@@ -11,6 +11,9 @@ export const useNodeDialog = () => {
 
     const onClose = () => {
         setOpen(false);
+    };
+
+    const onExited = () => {
         setNode();
     };
 
@@ -18,6 +21,7 @@ export const useNodeDialog = () => {
         openDialog,
         node,
         isOpen,
-        onClose
+        onClose,
+        onExited
     };
 };

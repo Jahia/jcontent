@@ -5,7 +5,7 @@ import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
-import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
+import {ContentTypeSelector} from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
 import {PagesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/PagesQueryHandler';
@@ -139,7 +139,6 @@ export const jContentAccordionItems = registry => {
         },
         tableConfig: {
             defaultViewMode: 'pageBuilder',
-            availableModes: ['pageBuilder', 'flatList', 'structuredView'],
             queryHandler: PagesQueryHandler,
             viewSelector: <ViewModeSelector/>,
             tableHeader: <ContentTypeSelector/>,

@@ -299,6 +299,7 @@
       },
       "actions": {
         "openInJContent": "Open in a new tab",
+        "openInPageBuilder": "Open in Page Builder",
         "pageComposer": "Open in Page Composer",
         "error": {
           "loading": "Error retrieving action data: {{details}}"

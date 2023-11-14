@@ -89,7 +89,6 @@ export const CopyLanguageDialog = ({
                     value={currentOption.value}
                     size="medium"
                     isDisabled={false}
-                    maxWidth="120px"
                     data={[defaultOption].concat(availableLanguages.filter(element => element.displayName !== language).map(element => {
                         return {
                             value: element.language,

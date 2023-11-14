@@ -4,7 +4,7 @@ import './date.config';
 import {initClipboardWatcher} from '~/JContent/actions/copyPaste/localStorageHandler';
 import {useApolloClient} from '@apollo/client';
 import {useDispatch} from 'react-redux';
-import CategoryManager from './JContent/CategoryManager';
+import {CategoryManager} from './JContent/CategoryManager';
 
 const CategoryManagerApp = () => {
     const client = useApolloClient();

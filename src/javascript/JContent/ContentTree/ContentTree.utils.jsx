@@ -43,6 +43,8 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
         return tree;
     }
 
+    const highlighted = selected && (!treeEntries.find(f => f.path === selected)) ? treeEntries.findLast(f => selected.startsWith(f.path)) : null;
+
     treeEntries.forEach(treeEntry => {
         const notPublished = treeEntry.node.publicationStatus && (
             treeEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED ||
@@ -74,6 +76,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
                 'data-sel-role': treeEntry.node.name,
                 node: treeEntry.node,
                 treeEntries,
+                'data-highlight': highlighted?.path === treeEntry.path,
                 ...itemProps
             }
         };

@@ -14,5 +14,3 @@ ContentEmptyDropZone.propTypes = {
     isCanDrop: PropTypes.bool,
     selector: PropTypes.func
 };
-
-export default ContentEmptyDropZone;

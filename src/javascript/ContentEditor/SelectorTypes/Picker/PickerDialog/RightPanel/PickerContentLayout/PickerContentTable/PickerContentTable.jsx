@@ -241,5 +241,3 @@ PickerContentTable.propTypes = {
     isMultiple: PropTypes.bool,
     accordionItemProps: PropTypes.object
 };
-
-export default PickerContentTable;

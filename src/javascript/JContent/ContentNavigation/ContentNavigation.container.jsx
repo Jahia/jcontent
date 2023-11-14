@@ -4,7 +4,7 @@ import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {useNodeChecks} from '@jahia/data-helper';
 import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
-import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
+import {NavigationHeader} from '~/JContent/ContentNavigation/NavigationHeader';
 import {getAccordionItems} from '~/JContent/JContent.utils';
 import {batchActions} from 'redux-batched-actions';
 

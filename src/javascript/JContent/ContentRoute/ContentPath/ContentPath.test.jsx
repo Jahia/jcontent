@@ -1,62 +1,128 @@
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useQuery} from '@apollo/client';
 import {shallow} from '@jahia/test-framework';
-import {Breadcrumb} from '@jahia/moonstone';
 
-import ContentPath from './ContentPath';
-import SimplePathEntry from './SimplePathEntry';
-import CompositePathEntry from './CompositePathEntry';
+import {GetContentPath} from './ContentPath.gql-queries';
+import {ContentPath} from './ContentPath';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
+
+jest.mock('~/JContent/redux/JContent.redux', () => ({
+    cmGoto: jest.fn()
+}));
+
+jest.mock('react-redux', () => ({
+    useDispatch: jest.fn(),
+    useSelector: jest.fn()
+}));
+
+jest.mock('@apollo/client', () => ({
+    useQuery: jest.fn().mockReturnValue({})
+}));
+
+jest.mock('connected-react-router', () => jest.fn(() => {}));
 
 describe('ContentPath', () => {
-    it('should not render anything when items is empty', () => {
-        const wrapper = shallow(<ContentPath items={[]}/>);
-        expect(wrapper.isEmptyRender()).toBeTruthy();
+    afterEach(() => {
+        useQuery.mockClear();
+        useDispatch.mockClear();
+        useSelector.mockClear();
     });
 
-    it('should render a Breadcrumb when items is not empty', () => {
-        const wrapper = shallow(<ContentPath items={[{uuid: 'x'}]}/>);
-        expect(wrapper.find(Breadcrumb)).toHaveLength(1);
+    it('uses expected query parameters', () => {
+        useSelector.mockImplementation(callback => callback({
+            language: 'fr',
+            jcontent: {
+                path: '/x/y/z',
+                tableView: {
+                    viewMode: 'bar'
+                }
+            }
+        }));
+
+        shallow(<ContentPath/>);
+
+        expect(useQuery).toHaveBeenCalledWith(GetContentPath, {
+            variables: {
+                path: '/x/y/z',
+                language: 'fr'
+            }
+        });
     });
 
-    it('should render one entry per item when items has less than 4 elements', () => {
-        const items = [
-            {uuid: 'a', displayName: 'A'},
-            {uuid: 'b', displayName: 'B'},
-            {uuid: 'c', displayName: 'C'}
-        ];
-        const wrapper = shallow(<ContentPath items={items}/>);
-        const breadcrumb = wrapper.find(Breadcrumb);
+    it('handle redirects on item click', () => {
+        const dispatch = jest.fn();
 
-        const entries = breadcrumb.find(SimplePathEntry);
-        expect(entries).toHaveLength(items.length);
+        useDispatch.mockImplementation(() => dispatch);
 
-        entries.forEach((entry, index) =>
-            expect(entry.prop('item')).toEqual(items[index])
-        );
+        useSelector.mockImplementation(callback => callback({
+            jcontent: {
+                mode: 'foo',
+                tableView: {
+                    viewMode: 'bar'
+                }
+            }
+        }));
+
+        const ancestors = [{
+            uuid: 'x',
+            path: '/x',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'y',
+            path: '/x/y',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'z',
+            path: '/x/y/z',
+            isVisibleInContentTree: false
+        }];
+
+        useQuery.mockImplementation(() => ({
+            data: {
+                jcr: {
+                    node: {
+                        isVisibleInContentTree: false,
+                        ancestors: ancestors
+                    }
+                }
+            }
+        }));
+
+        const wrapper = shallow(<ContentPath/>).find('SimplePathEntry').first();
+        wrapper.invoke('onItemClick')({path: '/x/y/z'});
+
+        expect(dispatch).toHaveBeenCalledTimes(1);
+        expect(cmGoto).toHaveBeenCalledWith({path: '/x/y/z', params: {sub: false}});
     });
 
-    it('should render three entries when items has more than 3 elements', () => {
-        const items = [
-            {uuid: 'a', displayName: 'A'},
-            {uuid: 'b', displayName: 'B'},
-            {uuid: 'c', displayName: 'C'},
-            {uuid: 'd', displayName: 'D'}
-        ];
-        const wrapper = shallow(<ContentPath items={items}/>);
-        const breadcrumb = wrapper.find(Breadcrumb);
+    it('starts from the closest ancestor visible in Content tree if node is not visible Content tree', () => {
+        const ancestors = [{
+            uuid: 'x',
+            path: '/x',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'y',
+            path: '/x/y',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'z',
+            path: '/x/y/z',
+            isVisibleInContentTree: false
+        }];
 
-        expect(breadcrumb.find(SimplePathEntry)).toHaveLength(2);
-        expect(breadcrumb.find(CompositePathEntry)).toHaveLength(1);
+        useQuery.mockImplementation(() => ({
+            data: {
+                jcr: {
+                    node: {
+                        isVisibleInContentTree: false,
+                        ancestors: ancestors
+                    }
+                }
+            }
+        }));
 
-        const firstEntry = breadcrumb.childAt(0);
-        expect(firstEntry.type()).toEqual(SimplePathEntry);
-        expect(firstEntry.prop('item')).toEqual(items[0]);
-
-        const middleEntry = breadcrumb.childAt(1);
-        expect(middleEntry.type()).toEqual(CompositePathEntry);
-        expect(middleEntry.prop('items')).toEqual(items.slice(1, items.length - 1));
-
-        const lastEntry = breadcrumb.childAt(2);
-        expect(lastEntry.type()).toEqual(SimplePathEntry);
-        expect(lastEntry.prop('item')).toEqual(items[items.length - 1]);
+        const wrapper = shallow(<ContentPath/>).find('SimplePathEntry').first();
+        expect(wrapper.prop('item')).toEqual(ancestors[1]);
     });
 });

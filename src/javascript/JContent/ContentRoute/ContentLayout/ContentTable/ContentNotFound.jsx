@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {Table, TableBody, TableBodyCell, TableRow, Typography} from '@jahia/moonstone';
 import ContentTableConstants from './ContentTable.constants';
 import css from './ContentTable.scss';
-import ContentTableWrapper from './ContentTableWrapper';
+import {ContentTableWrapper} from './ContentTableWrapper';
 
-const ContentNotFound = ({columnSpan, t}) => (
+export const ContentNotFound = ({columnSpan, t}) => (
     <ContentTableWrapper>
         <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
             <TableBody>
@@ -26,4 +26,3 @@ ContentNotFound.propTypes = {
     t: PropTypes.func.isRequired
 };
 
-export default ContentNotFound;

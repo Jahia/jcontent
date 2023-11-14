@@ -4,7 +4,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Loader} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
-import PickerContentTable from './PickerContentTable';
+import {PickerContentTable} from './PickerContentTable';
 import {registry} from '@jahia/ui-extender';
 import * as jcontentUtils from '~/JContent/JContent.utils';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';

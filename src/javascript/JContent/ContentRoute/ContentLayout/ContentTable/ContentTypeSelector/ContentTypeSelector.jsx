@@ -12,7 +12,7 @@ import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQue
 const localStorage = window.localStorage;
 const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
-const ContentTypeSelector = ({selector, reduxActions}) => {
+export const ContentTypeSelector = ({selector, reduxActions}) => {
     const {t} = useTranslation('jcontent');
     const {tableView} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
@@ -117,5 +117,3 @@ ContentTypeSelector.defaultProps = {
         setTableViewTypeAction: view => setTableViewType(view)
     }
 };
-
-export default ContentTypeSelector;

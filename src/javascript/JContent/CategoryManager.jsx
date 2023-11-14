@@ -6,8 +6,8 @@ import {Route, Switch} from 'react-router';
 import {useDispatch} from 'react-redux';
 import './colors.scss';
 import {cmClearSelection} from './redux/selection.redux';
-import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
-import ContentNavigationContainer from './ContentNavigation';
+import {NavigationHeader} from '~/JContent/ContentNavigation/NavigationHeader';
+import ContentNavigation from './ContentNavigation';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 export const CategoryManager = () => {
@@ -38,15 +38,15 @@ export const CategoryManager = () => {
 
     return (
         <LayoutModule
-            navigation={<ContentNavigationContainer accordionItemTarget="category-manager"
-                                                    selector={selector}
-                                                    handleNavigationAction={handleNavigationAction}
-                                                    header={<NavigationHeader isDisplaySiteSwitcher={false}
-                                                                              languageSelector={state => ({
-                                                                                  lang: state.language,
-                                                                                  siteKey: 'systemsite'
-                                                                              })}
-                                                                              logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
+            navigation={<ContentNavigation accordionItemTarget="category-manager"
+                                           selector={selector}
+                                           handleNavigationAction={handleNavigationAction}
+                                           header={<NavigationHeader isDisplaySiteSwitcher={false}
+                                                                     languageSelector={state => ({
+                                                                         lang: state.language,
+                                                                         siteKey: 'systemsite'
+                                                                     })}
+                                                                     logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
             content={
                 <LoaderSuspense>
                     <ErrorBoundary>

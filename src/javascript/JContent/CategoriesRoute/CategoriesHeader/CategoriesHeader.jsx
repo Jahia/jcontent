@@ -3,7 +3,7 @@ import {ArrowLeft, Button, Chip, Header} from '@jahia/moonstone';
 import {MainActionBar} from '~/JContent/CategoriesRoute/CategoriesHeader/MainActionBar';
 import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import ContentPath from '~/JContent/ContentRoute/ContentPath';
+import {ContentPath} from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';

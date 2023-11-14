@@ -4,7 +4,7 @@ import {MainActionBar} from '~/JContent/ContentRoute/MainActionBar';
 import JContentConstants from '~/JContent/JContent.constants';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import ContentPath from '~/JContent/ContentRoute/ContentPath';
+import {ContentPath} from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';

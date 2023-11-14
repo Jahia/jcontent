@@ -1,3 +1,1 @@
-import ContentListHeader from './ContentListHeader';
-
-export default ContentListHeader;
+export * from './ContentListHeader';

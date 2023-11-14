@@ -21,3 +21,8 @@
 .ContentTree_Item:hover .ContentTree_ItemMenuIcon {
     display: block;
 }
+
+li[data-highlight=true] {
+  box-shadow:inset 0px 0px 0px 2px var(--color-accent);
+}
+

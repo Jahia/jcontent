@@ -88,7 +88,7 @@ export const ContentPath = ({selector}) => {
                     {renderItems(items, handleNavigation)}
                 </Breadcrumb>
             )}
-            <NonDisplayableNodeDialog {...dialogProps} parentPage={items[0]?.isNodeType && items[0]} setPathAction={(path, params) => cmGoto({path, params})}/>
+            <NonDisplayableNodeDialog {...dialogProps} parentPage={items[0]?.isNodeType ? items[0] : null} setPathAction={(path, params) => cmGoto({path, params})}/>
         </>
     );
 };

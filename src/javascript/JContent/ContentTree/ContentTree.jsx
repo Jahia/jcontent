@@ -154,11 +154,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     let contextualMenu = useRef();
     let rootContextualMenu = useRef();
 
-    if (!treeEntries.find(f => f.path === path)) {
-        const closestMatch = treeEntries.findLast(f => path.startsWith(f.path));
-        console.log('highlight:', closestMatch?.path);
-    }
-
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}

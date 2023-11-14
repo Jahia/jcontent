@@ -21,7 +21,7 @@ const icons = {
     [STRUCTUREDVIEW]: <ViewTree/>
 };
 
-const defaultAvailableModes = [FLATLIST, STRUCTUREDVIEW];
+const defaultAvailableModes = [PAGE_BUILDER, FLATLIST, STRUCTUREDVIEW];
 
 const tableViewDropdownData = (t, viewMode, allButtons, disabled) => {
     return allButtons.map(v => ({

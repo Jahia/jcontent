@@ -139,7 +139,6 @@ export const jContentAccordionItems = registry => {
         },
         tableConfig: {
             defaultViewMode: 'pageBuilder',
-            availableModes: ['pageBuilder', 'flatList', 'structuredView'],
             queryHandler: PagesQueryHandler,
             viewSelector: <ViewModeSelector/>,
             tableHeader: <ContentTypeSelector/>,

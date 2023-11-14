@@ -5,6 +5,9 @@ import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
 import styles from './Dialog.scss';
 import {useDispatch} from 'react-redux';
+import JContentConstants from '~/JContent/JContent.constants';
+import {batchActions} from 'redux-batched-actions';
+import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 
 export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, parentPage}) => {
     const {t} = useTranslation('jcontent');
@@ -16,7 +19,7 @@ export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, 
     };
 
     const handleListNavigation = () => {
-        dispatch(setPathAction(node.path));
+        dispatch(batchActions([setTableViewMode(JContentConstants.tableView.viewMode.FLAT), setPathAction(node.path, {sub: false})]));
         onClose();
     };
 

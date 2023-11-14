@@ -70,7 +70,6 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
                 imageSize="small"
                 data-sel-content-editor-select-readonly={readOnly}
                 isDisabled={readOnly}
-                maxWidth="100%"
                 variant="outlined"
                 size="medium"
                 data={dropdownData}

@@ -20,7 +20,8 @@ export const LinkDialog = ({node, isOpen, onClose}) => {
     const {t} = useTranslation('jcontent');
     const language = useSelector(state => state.language);
     const {data} = useQuery(GetLinkData, {
-        variables: {path: node?.path, language}
+        variables: {path: node?.path, language},
+        skip: !node?.path
     });
 
     if (!node || !data) {

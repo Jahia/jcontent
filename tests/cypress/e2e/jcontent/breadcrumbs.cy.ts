@@ -15,7 +15,7 @@ describe('Breadcrumb navigation test', () => {
         JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         cy.frameLoaded('#page-builder-frame-1');
         Breadcrumb.findByContent('article').click();
-        cy.get('button[data-cm-role="breadcrumb-view-list"]').should('be.visible').click();
+        cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Content List').should('be.visible');
         cy.get('h1').contains('article');
     });
@@ -23,7 +23,7 @@ describe('Breadcrumb navigation test', () => {
     it('Display popup when navigating to list and render parent page when selected', () => {
         JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         Breadcrumb.findByContent('article').click();
-        cy.get('button[data-cm-role="breadcrumb-view-parent"]').should('be.visible').click();
+        cy.get('button[data-sel-role="view-parent"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
         cy.get('h1').contains('News Entry');
     });

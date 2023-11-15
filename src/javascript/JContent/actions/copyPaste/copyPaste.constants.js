@@ -1,4 +1,5 @@
 export default {
     CUT: 'cut',
-    COPY: 'copy'
+    COPY: 'copy',
+    COPY_PAGE: 'copyPage'
 };

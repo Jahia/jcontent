@@ -64,9 +64,10 @@ import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
-import {ACTION_PERMISSIONS} from './actions/actions.constants';
+import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions/actions.constants';
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
+import {MenuActionWithRequirementsComponent} from '~/JContent/actions/menuActionWithRequirements';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -221,31 +222,59 @@ export const jContentActions = registry => {
     });
     registry.add('action', 'copy', {
         buttonIcon: <Copy/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.copy',
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.copy',
         targets: ['contentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
         copyCutType: 'copy',
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        component: CopyCutActionComponent
+    });
+    registry.add('action', 'copyPageMenu', menuActionWithRenderer, {
+        buttonIcon: <Copy/>,
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.copy',
+        menuTarget: 'copyPageMenu',
+        targets: ['contentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
+        showOnNodeTypes: ['jnt:page'],
+        component: MenuActionWithRequirementsComponent
+    });
+    registry.add('action', 'copyPageOnly', {
+        buttonIcon: <Copy/>,
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.copyPageOnly',
+        targets: ['copyPageMenu:1'],
+        showOnNodeTypes: ['jnt:page'],
+        copyCutType: 'copyPage',
+        component: CopyCutActionComponent
+    });
+    registry.add('action', 'copyPageWithSubPages', {
+        buttonIcon: <Copy/>,
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.copyPageWithSubPages',
+        targets: ['copyPageMenu:2'],
+        showOnNodeTypes: ['jnt:page'],
+        copyCutType: 'copy',
+        component: CopyCutActionComponent
+    });
+    registry.add('action', 'cut', {
+        buttonIcon: <Cut/>,
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.cut',
+        targets: ['contentActions:3.9', 'selectedContentActions:3.9', 'narrowHeaderSelectionMenu:3.9'],
+        copyCutType: 'cut',
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
     registry.add('action', 'paste', {
         buttonIcon: <Paste/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.paste',
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.paste',
         targets: ['headerPrimaryActions:10', 'contentActions:3.91', 'rootContentActions:3.91', 'narrowHeaderMenu:4'],
         component: PasteActionComponent
     });
     registry.add('action', 'pasteReference', {
         buttonIcon: <Paste/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.pasteReference',
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.pasteReference',
         hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:category'],
         referenceTypes: ['jnt:contentReference'],
         targets: ['headerPrimaryActions:10.1', 'contentActions:3.92'],
         component: PasteActionComponent
-    });
-    registry.add('action', 'cut', {
-        buttonIcon: <Cut/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.cut',
-        targets: ['contentActions:3.9', 'selectedContentActions:3.9', 'narrowHeaderSelectionMenu:3.9'],
-        copyCutType: 'cut',
-        component: CopyCutActionComponent
     });
     registry.add('action', 'delete', {
         buttonIcon: <Delete/>,
@@ -402,7 +431,7 @@ export const jContentActions = registry => {
 
     registry.add('action', 'clearClipboard', {
         buttonIcon: <ClearPaste/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.clear',
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.clear',
         targets: ['headerPrimaryActions:14', 'narrowHeaderMenu:14'],
         component: ClearClipboardActionComponent
     });

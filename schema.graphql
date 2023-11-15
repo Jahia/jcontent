@@ -6,6 +6,9 @@ schema {
     subscription: Subscription
 }
 
+"Indicates an Input Object is a OneOf Input Object."
+directive @oneOf on INPUT_OBJECT
+
 "GraphQL representation of a JCR item definition"
 interface JCRItemDefinition {
     "Reports whether the item is to be automatically created when its parent node is created."
@@ -824,6 +827,13 @@ type GqlBackgroundJob {
     userKey: String
 }
 
+type GqlCondition {
+    nodeType: String
+    orderable: Boolean
+    withPermission: String
+    withoutPermission: String
+}
+
 "Mutation for OSGi configuration"
 type GqlConfigurationMutation {
     "Modify a list of items"
@@ -898,10 +908,17 @@ type GqlEditorForm {
     displayName: String
     "Returns the preview status of the form. If true, the form can display a preview."
     hasPreview: Boolean
+    "Get list of merged forms."
+    mergedItems(
+        "Filter on field values"
+        filter: InputFieldFiltersInput
+    ): [GqlMergedItem]
     "Retrieve the name (aka identifier) of the form"
     name: String
     "Retrieve the sections that make up the form"
     sections: [GqlEditorFormSection]
+    "Returns the advanced mode status of the form. If true advanced mode is available."
+    showAdvancedMode: Boolean
 }
 
 type GqlEditorFormField {
@@ -933,6 +950,7 @@ type GqlEditorFormField {
     selectorType: String
     "This array contains the list of possible values to choose from"
     valueConstraints: [GqlEditorFormValueConstraint]
+    "This fields set is visible"
     visible: Boolean
 }
 
@@ -991,6 +1009,7 @@ type GqlEditorFormSection {
     fieldSets: [GqlEditorFormFieldSet]
     "Retrieve the name (aka identifier) of the section"
     name: String
+    "This section is visible"
     visible: Boolean
 }
 
@@ -1031,14 +1050,14 @@ type GqlEditorForms {
         excludedNodeTypes: [String],
         "if true, retrieves all the sub types of the given node types, if false, returns the type only. Default value is true"
         includeSubTypes: Boolean = true,
-        "thPath of an existing node under with the new content will be created."
-        uuidOrPath: String!,
         "List of types we want to retrieve, null for all"
         nodeTypes: [String],
         "A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ..."
         uiLocale: String!,
         "if true, check the contribute property of the node. Default value is true"
-        useContribute: Boolean = true
+        useContribute: Boolean = true,
+        "Path or id of an existing node under with the new content will be created."
+        uuidOrPath: String!
     ): [NodeTypeTreeEntry]
     "Get a editor form to create a new content from its nodetype and parent"
     createForm(
@@ -1090,13 +1109,6 @@ type GqlEditorForms {
     ): Int
 }
 
-"Server healthCheck"
-type GqlHealthCheck {
-    probes: [GqlProbe]
-    "Highest reported status across all probes"
-    status: GqlProbeStatus
-}
-
 type GqlJcrImageTransformMutation {
     "Crop an image under the current node"
     cropImage(
@@ -1133,6 +1145,15 @@ type GqlLockDetail {
     owner: String
     "Lock type"
     type: String
+}
+
+type GqlMergedItem {
+    bundleName: String
+    condition: GqlCondition
+    fieldSet: GqlEditorFormFieldSet
+    filename: String
+    form: GqlEditorForm
+    priority: Float
 }
 
 type GqlModule {
@@ -1180,25 +1201,6 @@ type GqlOperationsSupport {
     markForDeletion: Boolean
     "does the node supports publication"
     publication: Boolean!
-}
-
-type GqlProbe {
-    "Description specified by the developer of the probe"
-    description: String
-    "Name of the probe"
-    name: String
-    "Severity of the probe (LOW to CRITICAL)"
-    severity: GqlProbeSeverity
-    "Status reported by the probe (GREEN to RED)"
-    status: GqlProbeStatus
-}
-
-"Probe status"
-type GqlProbeStatus {
-    "Health of the probe"
-    health: GqlProbeHealth
-    "Message explaining probe status"
-    message: String
 }
 
 "Publication background job"
@@ -1396,6 +1398,8 @@ type JCRMutation {
     ): [JCRNodeMutation]
     "Copy a single node to a different parent node"
     copyNode(
+        "The child node types that should be skipped during copy"
+        childNodeTypesToSkip: [String],
         "The name of the node at the new location or null if its current name should be preserved"
         destName: String,
         "Path or UUID of the destination parent node to copy the node to"
@@ -1404,7 +1408,11 @@ type JCRMutation {
         pathOrId: String!
     ): JCRNodeMutation
     "Copy multiple nodes to different parent node(s)"
-    copyNodes(nodes: [InputCarriedJCRNode!]!): [JCRNodeMutation]
+    copyNodes(
+        "The child node types that should be skipped during copy"
+        childNodeTypesToSkip: [String],
+        nodes: [InputCarriedJCRNode!]!
+    ): [JCRNodeMutation]
     "Delete an existing node and all its children"
     deleteNode(
         "The path or id of the node to delete"
@@ -1467,6 +1475,8 @@ type JCRMutation {
     ): [VanityUrlMappingMutation]
     "Paste a single node to a different parent node"
     pasteNode(
+        "The child node types that should be skipped during copy"
+        childNodeTypesToSkip: [String],
         "The name of the node at the new location or null if its current name should be preserved"
         destName: String,
         "Path or UUID of the destination parent node to paste the node to"
@@ -1480,6 +1490,8 @@ type JCRMutation {
     ): JCRNodeMutation
     "Paste multiple nodes to different parent node(s)"
     pasteNodes(
+        "The child node types that should be skipped during copy"
+        childNodeTypesToSkip: [String],
         "Paste mode, either COPY or MOVE"
         mode: PasteMode!,
         "The way to deal with duplicate node names when they are not allowed, either FAIL or RENAME"
@@ -2443,29 +2455,6 @@ type JahiaAdminMutation {
         "Do not create new configuration, update existing one"
         updateOnly: Boolean = false
     ): GqlConfigurationMutation
-    "Create a task"
-    createTask(
-        "Task name"
-        name: String!,
-        "Service name"
-        service: String!
-    ): Boolean
-    "Delete a task"
-    deleteTask(
-        "Task name"
-        name: String!,
-        "Service name"
-        service: String!
-    ): Boolean
-    "Shutdown the server"
-    shutdown(
-        "Do not send the shutdown event"
-        dryRun: Boolean,
-        "Force immediate shutdown even if server is busy"
-        force: Boolean,
-        "In seconds, maximum time to wait for server to be ready to shutdown"
-        timeout: Int
-    ): Boolean
 }
 
 "Jahia admin queries root"
@@ -2479,16 +2468,10 @@ type JahiaAdminQuery {
     ): GqlConfigurationQuery
     "Details about the database Jahia is connected to"
     database: JahiaDatabase
-    "HealthCheck node"
-    healthCheck(severity: GqlProbeSeverity): GqlHealthCheck
-    "Get server load"
-    load: Load
     "Get jobs scheduler"
     scheduler: GqlScheduler
     "Details about the system hosting Jahia"
     system: JahiaSystem
-    "Lists tasks running on the Jahia server. A server should not be stopped/restarted when any of these tasks are present. These tasks are specific to the server being queried and are not shared accorss a cluster"
-    tasks: [task]
     "Version of the running Jahia instance"
     version: JahiaVersion
 }
@@ -2567,22 +2550,6 @@ type JournalRevision {
     revision: Long
     "The cluster node server Id"
     serverId: String
-}
-
-"Server load"
-type Load {
-    "Get requests load"
-    requests: LoadValue
-    "Get JCR Sessions load"
-    sessions: LoadValue
-}
-
-"Load value"
-type LoadValue {
-    "Exponential moving average"
-    average(interval: LoadInterval): Float
-    "Instantaneous count"
-    count: Int
 }
 
 "Information on node lock"
@@ -3432,16 +3399,6 @@ type ZipFileMutation {
     ): Boolean
 }
 
-"Task that prevents server from shutdown"
-type task {
-    "The name of the task associated with the service"
-    name: String
-    "Service attached to the task being monitored"
-    service: String
-    "Datetime at which the task was started or registered"
-    started: String
-}
-
 "Work in progress information"
 type wipInfo {
     "The languages set for Work in progress"
@@ -3491,26 +3448,6 @@ enum GqlBackgroundJobStatus {
     SUCCESSFUL
 }
 
-enum GqlProbeHealth {
-    "GREEN"
-    GREEN
-    "RED"
-    RED
-    "YELLOW"
-    YELLOW
-}
-
-enum GqlProbeSeverity {
-    "CRITICAL"
-    CRITICAL
-    "HIGH"
-    HIGH
-    "LOW"
-    LOW
-    "MEDIUM"
-    MEDIUM
-}
-
 enum GroupingType {
     "Put grouped items at the end in the order groups appear in the 'groups' list"
     END
@@ -3552,15 +3489,6 @@ enum JCRPropertyType {
     URI
     "WEAKREFERENCE"
     WEAKREFERENCE
-}
-
-enum LoadInterval {
-    "FIFTEEN"
-    FIFTEEN
-    "FIVE"
-    FIVE
-    "ONE"
-    ONE
 }
 
 enum MulticriteriaEvaluation {

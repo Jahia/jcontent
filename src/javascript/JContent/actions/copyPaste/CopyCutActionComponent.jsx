@@ -4,7 +4,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
 import {getName, hasMixin} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
-import {copypasteCopy, copypasteCut} from './copyPaste.redux';
+import {copypaste, copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
@@ -36,10 +36,9 @@ export const CopyCutActionComponent = withNotifications()(({
             getPrimaryNodeType: true,
             getDisplayName: true,
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
-            requiredSitePermission: type === copyPasteConstants.COPY ? [ACTION_PERMISSIONS.copyAction] : [ACTION_PERMISSIONS.cutAction],
+            requiredSitePermission: type === copyPasteConstants.CUT ? [ACTION_PERMISSIONS.cutAction] : [ACTION_PERMISSIONS.copyAction],
             getProperties: ['jcr:mixinTypes'],
-            hideOnNodeTypes: type === copyPasteConstants.COPY ? ['jnt:virtualsite'] : ['jnt:virtualsite', 'jmix:hideDeleteAction'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+            ...others
         }
     );
 
@@ -61,7 +60,7 @@ export const CopyCutActionComponent = withNotifications()(({
                     t('jcontent:label.contentManager.copyPaste.stored.one', {name: getName(nodes[0])}) :
                     t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length});
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
-                dispatch(type === 'copy' ? copypasteCopy(nodes) : copypasteCut(nodes));
+                dispatch(copypaste({type, nodes}));
             }}
         />
     );
@@ -72,7 +71,7 @@ CopyCutActionComponent.propTypes = {
 
     paths: PropTypes.arrayOf(PropTypes.string),
 
-    copyCutType: PropTypes.oneOf([copyPasteConstants.COPY, copyPasteConstants.CUT]),
+    copyCutType: PropTypes.oneOf([copyPasteConstants.COPY, copyPasteConstants.COPY_PAGE, copyPasteConstants.CUT]),
 
     render: PropTypes.func.isRequired,
 

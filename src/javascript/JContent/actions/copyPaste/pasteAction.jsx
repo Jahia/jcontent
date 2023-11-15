@@ -71,6 +71,8 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
     const {nodes, type} = copyPaste;
 
+    const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? ['jnt:page'] : [];
+
     let isVisible = res.checksResult && res.node.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
     let isEnabled = true;
 
@@ -114,6 +116,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
                         pathOrId: nodeToPaste.path,
                         destParentPathOrId: path,
                         destName: nodeToPaste.name,
+                        nodeTypesToSkip,
                         referenceType: possibleReferenceTypes && possibleReferenceTypes.length > 0 ? possibleReferenceTypes[0].name : ''
                     },
                     mutation

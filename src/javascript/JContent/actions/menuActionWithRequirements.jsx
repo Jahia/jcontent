@@ -1,6 +1,7 @@
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import {MenuActionComponent} from '@jahia/ui-extender';
+import PropTypes from 'prop-types';
 
 export const MenuActionWithRequirementsComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const res = useNodeChecks({path}, others);
@@ -16,4 +17,10 @@ export const MenuActionWithRequirementsComponent = ({path, render: Render, loadi
     }
 
     return <MenuActionComponent render={Render} loading={Loading} {...others}/>;
+};
+
+MenuActionWithRequirementsComponent.propTypes = {
+    path: PropTypes.string.isRequired,
+    render: PropTypes.func.isRequired,
+    loading: PropTypes.func
 };

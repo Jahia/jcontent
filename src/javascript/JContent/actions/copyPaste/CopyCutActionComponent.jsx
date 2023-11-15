@@ -4,10 +4,10 @@ import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
 import {getName, hasMixin} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
-import {copypaste, copypasteCopy, copypasteCut} from './copyPaste.redux';
+import {copypaste} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
+import {ACTION_PERMISSIONS} from '../actions.constants';
 import {withNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 

@@ -101,9 +101,10 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         if (iframe.current === loadedIframe) {
             const currentDocument = iframe.current.contentDocument;
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            if (framePath && framePath !== path) {
+            const frameLanguage = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('locale');
+            if (framePath && (framePath !== path || frameLanguage !== language)) {
                 dispatch(batchActions([
-                    cmGoto({path: framePath}),
+                    cmGoto({path: framePath, language: frameLanguage}),
                     cmOpenPaths(extractPaths(site, framePath.substring(0, framePath.lastIndexOf('/'))))
                 ]));
             }

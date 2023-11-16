@@ -10,25 +10,6 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@apollo/client@^3.4.9":
-  version "3.8.7"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.7.tgz#090b1518f513503b9a6a690ee3eaec49529822e1"
-  integrity sha512-DnQtFkQrCyxHTSa9gR84YRLmU/al6HeXcLZazVe+VxKBmx/Hj4rV8xWtzfWYX5ijartsqDR7SJgV037MATEecA==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.1.1"
-    "@wry/context" "^0.7.3"
-    "@wry/equality" "^0.5.6"
-    "@wry/trie" "^0.4.3"
-    graphql-tag "^2.12.6"
-    hoist-non-react-statics "^3.3.2"
-    optimism "^0.17.5"
-    prop-types "^15.7.2"
-    response-iterator "^0.2.6"
-    symbol-observable "^4.0.0"
-    ts-invariant "^0.10.3"
-    tslib "^2.3.0"
-    zen-observable-ts "^1.2.5"
-
 "@apollo/client@^3.7.14", "@apollo/client@^3.7.17", "@apollo/client@latest":
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.2.tgz#42833d7ae5f1bb4909dd435c2971010d1923733e"
@@ -2489,16 +2470,6 @@
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
-
-"@jahia/cypress@^3.17.4":
-  version "3.17.4"
-  resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-3.17.4.tgz#901d6bfd6cfd6998a6452bec02a8254f89f79e64"
-  integrity sha512-CAvYKbSYMyHiZWNfxdUglH90+Pn7mytfefAtDIFCo3g83zQcSM82v0CBV26jpqZlxE5sv6xbVMggHM9YTwOGfQ==
-  dependencies:
-    "@apollo/client" "^3.4.9"
-    cypress-real-events "^1.11.0"
-    graphql "^15.5.0"
-    graphql-tag "^2.11.0"
 
 "@jahia/data-helper@^1.1.5":
   version "1.1.5"
@@ -7438,11 +7409,6 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.2.tgz#673b5f233bf34d8e602b949429f8171d9121bea3"
   integrity sha512-0sVXIohTfLqVIW3kb/0n6IiWF3Ifj5nm2XaSrLq2DI6fKIGa2fYAZdk917rUneaeLVpYfFcyXE2ft0fe3remsA==
 
-cypress-real-events@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/cypress-real-events/-/cypress-real-events-1.11.0.tgz#292fe5281c5b6e955524e766ab7fec46930c7763"
-  integrity sha512-4LXVRsyq+xBh5TmlEyO1ojtBXtN7xw720Pwb9rEE9rkJuXmeH3VyoR1GGayMGr+Itqf11eEjfDewtDmcx6PWPQ==
-
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -9716,7 +9682,7 @@ graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql@^15.4.0, graphql@^15.5.0:
+graphql@^15.4.0:
   version "15.4.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.4.0.tgz#e459dea1150da5a106486ba7276518b5295a4347"
   integrity sha512-EB3zgGchcabbsU9cFe1j+yxdzKQKAbGUWRb13DsrsMN1yyfmmIq+2+L5MqVWcDCE4V89R5AyUOi7sMOGxdsYtA==

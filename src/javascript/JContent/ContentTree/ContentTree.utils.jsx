@@ -43,7 +43,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
         return tree;
     }
 
-    const highlighted = selected && (!treeEntries.find(f => f.path === selected)) ? treeEntries.findLast(f => selected.startsWith(f.path)) : null;
+    const highlighted = selected && (!treeEntries.find(f => f.path === selected)) ? treeEntries.filter(f => selected.startsWith(f.path)).slice(-1)[0] : null;
 
     treeEntries.forEach(treeEntry => {
         const notPublished = treeEntry.node.publicationStatus && (

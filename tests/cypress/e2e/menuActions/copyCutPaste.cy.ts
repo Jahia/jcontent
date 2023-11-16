@@ -57,6 +57,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         });
 
         afterEach(function () {
+            GraphqlUtils.deleteNode('/sites/digitall/home/newsroom/about');
             cy.logout();
         });
 
@@ -65,15 +66,39 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             const item = jcontent.getAccordionItem('pages');
             item.expandTreeItem('home');
             item.getTreeItem('about').contextMenu().select('Copy');
-            item.getTreeItem('newsroom').contextMenu().get().find('span').contains('Paste as reference').should('not.exist');
+            item.getTreeItem('newsroom').contextMenu().shouldNotHaveItem('Paste as reference');
         });
 
         it('Should display paste action on a page', () => {
             const jcontent = JContent.visit('digitall', 'en', 'pages/home');
             const item = jcontent.getAccordionItem('pages');
             item.expandTreeItem('home');
-            item.getTreeItem('about').contextMenu().select('Copy');
-            item.getTreeItem('newsroom').contextMenu().get().find('span').contains('Paste').should('exist');
+            item.getTreeItem('about')
+                .contextMenu()
+                .submenu('Copy', 'jcontent-copyPageMenu')
+                .select('Page with Sub-pages');
+
+            item.getTreeItem('newsroom')
+                .contextMenu()
+                .shouldHaveItem('Paste');
+        });
+
+        it('Should be able to copy single page', () => {
+            const jcontent = JContent.visit('digitall', 'en', 'pages/home');
+            const item = jcontent.getAccordionItem('pages');
+            item.expandTreeItem('home');
+            item.getTreeItem('about')
+                .contextMenu()
+                .submenu('Copy', 'jcontent-copyPageMenu')
+                .select('Page only');
+
+            item.getTreeItem('newsroom')
+                .contextMenu()
+                .select('Paste');
+            item.getTreeItem('newsroom').expand();
+
+            GraphqlUtils.getNode('/sites/digitall/home/newsroom/about').should('exist');
+            GraphqlUtils.getNode('/sites/digitall/home/newsroom/about/history').should('not.exist');
         });
     });
 });

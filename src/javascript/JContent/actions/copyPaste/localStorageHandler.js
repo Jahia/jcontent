@@ -58,7 +58,7 @@ const initClipboardWatcher = (dispatch, client) => {
     }, 1000);
 };
 
-const setLocalStorage = (type, nodes, client) => {
+const setLocalStorage = (type, nodes, client, nodeTypesToSkip) => {
     client.query({
         query: copyPasteQueries,
         variables: {uuids: nodes.map(n => n.uuid)},
@@ -67,7 +67,8 @@ const setLocalStorage = (type, nodes, client) => {
         const nodesWithData = data.jcr.nodesById;
         let clipboard = {
             nodes: nodesWithData.map(getGWTNode),
-            type
+            type,
+            nodeTypesToSkip
         };
         currentValue = JSON.stringify(clipboard);
         localStorage.setItem('jahia-clipboard', currentValue);

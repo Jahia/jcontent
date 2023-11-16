@@ -118,12 +118,13 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@jahia/cypress@^3.17.2":
-  version "3.17.2"
-  resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-3.17.2.tgz#63663b4b4cf53d6cc7f4edff768201aa63c79ecc"
-  integrity sha512-F7nFVQuA3JfTUzemECT7f/WMC7PAqrrDrKAxy0F2zJGEpBJCH2qBBZq127MkSgH7FyJyzQgRdqyzyAdTz1Bmsw==
+"@jahia/cypress@^3.17.4":
+  version "3.17.4"
+  resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-3.17.4.tgz#901d6bfd6cfd6998a6452bec02a8254f89f79e64"
+  integrity sha512-CAvYKbSYMyHiZWNfxdUglH90+Pn7mytfefAtDIFCo3g83zQcSM82v0CBV26jpqZlxE5sv6xbVMggHM9YTwOGfQ==
   dependencies:
     "@apollo/client" "^3.4.9"
+    cypress-real-events "^1.11.0"
     graphql "^15.5.0"
     graphql-tag "^2.11.0"
 
@@ -1034,6 +1035,11 @@ cypress-plugin-config@^1.0.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/cypress-plugin-config/-/cypress-plugin-config-1.2.1.tgz#aa7eaa55ab5ce5e186ab7d0e37cc7e42bfb609b4"
   integrity sha512-z+bQ7oyfDKun51HiCVNBOR+g38/nYRJ7zVdCZT2/9UozzE8P4iA1zF/yc85ePZLy5NOj/0atutoUPBBR5SqjSQ==
+
+cypress-real-events@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/cypress-real-events/-/cypress-real-events-1.11.0.tgz#292fe5281c5b6e955524e766ab7fec46930c7763"
+  integrity sha512-4LXVRsyq+xBh5TmlEyO1ojtBXtN7xw720Pwb9rEE9rkJuXmeH3VyoR1GGayMGr+Itqf11eEjfDewtDmcx6PWPQ==
 
 cypress-real-events@^1.7.6:
   version "1.7.6"

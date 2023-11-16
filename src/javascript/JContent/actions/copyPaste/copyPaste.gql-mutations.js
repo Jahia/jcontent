@@ -2,9 +2,9 @@ import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
 const copyPasteQueries = {
-    pasteNode: gql`mutation pasteNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String) {
+    pasteNode: gql`mutation pasteNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String, $nodeTypesToSkip: [String]) {
         jcr {
-            pasteNode(mode: COPY, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, destName: $destName, namingConflictResolution: RENAME) {
+            pasteNode(mode: COPY, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, destName: $destName, childNodeTypesToSkip: $nodeTypesToSkip, namingConflictResolution: RENAME) {
                 node {
                     ...NodeCacheRequiredFields
                     path
@@ -27,14 +27,6 @@ const copyPasteQueries = {
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
     `,
-
-    pasteNodes: gql`mutation pasteNodes($pathOrId: String!) {
-        jcr {
-            mutateNode(pathOrId: $pathOrId) {
-                clearAllLocks
-            }
-        }
-    }`,
 
     pasteReferenceNode: gql`mutation pasteReferenceNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String!, $referenceType: String!) {
         jcr {

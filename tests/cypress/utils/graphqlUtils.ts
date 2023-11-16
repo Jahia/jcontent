@@ -58,17 +58,22 @@ export class GraphqlUtils {
     public static getNodeId = (path: string, as?: string) => {
         const asValue = typeof as === 'undefined' ? 'ret' : as;
 
-        cy.apollo({
+        return cy.apollo({
             variables: {
                 path: path
             },
             queryFile: 'jcontent/jcrGetNode.graphql'
         }).its('data.jcr.nodeByPath.uuid').as(asValue);
-        if (typeof as === 'undefined') {
-            cy.get('@ret').then(uuid => {
-                return `${uuid}`;
-            });
-        }
+    };
+
+    public static getNode = (path: string) => {
+        return cy.apollo({
+            variables: {
+                path: path
+            },
+            queryFile: 'jcontent/jcrGetNode.graphql',
+            errorPolicy: 'all'
+        }).its('data.jcr.nodeByPath');
     };
 
     public static setProperty = (pathOrId: string, property: string, value: string, language: string) => {

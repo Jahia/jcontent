@@ -194,8 +194,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
 
     return (
         <>
-            <Dialog fullWidth
-                    maxWidth="xl"
+            <Dialog maxWidth="xl"
                     open={open}
                     aria-labelledby="form-dialog-title"
                     data-sel-role={`delete-${dialogType}-dialog`}

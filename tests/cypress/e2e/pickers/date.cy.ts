@@ -1,96 +1,62 @@
-import {
-    createSite,
-    createUser,
-    deleteSite,
-    deleteUser,
-    grantRoles,
-    addNode,
-    deleteNodeProperty,
-    getNodeByPath
-} from '@jahia/cypress';
+import {addNode, createSite, createUser, deleteSite, deleteUser, grantRoles} from '@jahia/cypress';
 
 import {ContentEditor} from '../../page-object/contentEditor';
-import {DatePicker} from '../../page-object/datePicker';
-import {JContent} from '../../page-object/jcontent';
-
-const visitDatePicker = () => {
-    cy.get('@datePicker').then(uuid => {
-        cy.visit(`/jahia/jcontent/severalLanguages/fr/content-folders/contents#(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:fr,mode:edit,uuid:'${uuid}')))`);
-    });
-};
-
-const saveAndCheck = () => {
-    const datePicker = new DatePicker('qant:pickers_datepicker');
-    const contentEditor = new ContentEditor();
-    contentEditor.advancedMode = true;
-    contentEditor.save();
-    visitDatePicker();
-    datePicker.checkTodayDate();
-};
-
-const deleteAndCheck = () => {
-    const datePicker = new DatePicker('qant:pickers_datepicker');
-    deleteNodeProperty('/sites/testsite/contents/contentEditorPickers', 'datepicker', 'en');
-    visitDatePicker();
-    cy.reload();
-    datePicker.checkDate('');
-};
+import {DateField} from '../../page-object/fields';
 
 describe('Date picker tests', () => {
     before('Create required content', () => {
-        cy.login();
         createSite('testsite');
-        createUser('myUser', 'password');
+        createUser('myUser', 'password', [{name: 'preferredLanguage', value: 'es'}]);
         grantRoles('/sites/testsite', ['editor'], 'myUser', 'USER');
-        addNode({
-            parentPathOrId: '/sites/testsite/contents',
-            name: 'contentEditorTestContents',
-            primaryNodeType: 'jnt:contentFolder'
-        });
         addNode({
             parentPathOrId: '/sites/testsite/contents',
             name: 'contentEditorPickers',
             primaryNodeType: 'qant:pickers'
         });
-        cy.logout();
-    });
-
-    beforeEach('Check datePicker is empty', () => {
-        cy.login('myUser', 'password');
-        JContent.visit('testsite', 'en', 'content-folders/contents').editComponentByText('contentEditorPickers');
-        getNodeByPath('/sites/testsite/contents/contentEditorPickers').its('data.jcr.nodeByPath.uuid').as('datePicker');
-    });
-
-    it('Test Date Picker', () => {
-        cy.login();
-        const datePicker = new DatePicker('qant:pickers_datepicker');
-        visitDatePicker();
-        datePicker.checkDate('');
-        datePicker.pickTodayDate();
-        cy.get('body').click();
-        datePicker.checkTodayDate();
-        saveAndCheck();
-        deleteAndCheck();
-    });
-
-    it('Test without using picker', () => {
-        cy.login();
-        const datePicker = new DatePicker('qant:pickers_datepicker');
-        visitDatePicker();
-        datePicker.checkDate('');
-        datePicker.typeTodayDate();
-        cy.get('body').click();
-        datePicker.checkTodayDate();
-        saveAndCheck();
-        deleteAndCheck();
-    });
-
-    afterEach('Logout', () => {
-        cy.logout();
     });
 
     after('Remove tests content', () => {
         deleteUser('myUser');
         deleteSite('testsite');
+    });
+
+    it('Test Date Picker', () => {
+        cy.login();
+        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const dateField = ce.getField(DateField, 'qant:pickers_datepicker', false);
+        dateField.checkValue('');
+        const today = dateField.getTodayDate();
+        dateField.pickTodayDate();
+        dateField.checkValue(today);
+    });
+
+    it('Test without using picker', () => {
+        cy.login();
+        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const dateField = ce.getField(DateField, 'qant:pickers_datepicker', false);
+        const today = dateField.getTodayDate();
+        dateField.checkValue('');
+        dateField.addNewValue(today);
+        dateField.checkValue(today);
+    });
+
+    it('Test Date time Picker without using picker', () => {
+        cy.login();
+        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const dateField = ce.getField(DateField, 'qant:pickers_datetimepicker', false);
+        dateField.checkValue('');
+        dateField.pickTodayDate();
+        dateField.select({time: '11:00'});
+        dateField.checkValue(dateField.getTodayDate() + ' 11:00');
+    });
+
+    it('Test Date Picker with spanish user', () => {
+        cy.login('myUser', 'password');
+        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const dateField = ce.getField(DateField, 'qant:pickers_datepicker', false);
+        dateField.checkValue('');
+        const today = dateField.getTodayDate();
+        dateField.pickTodayDate();
+        dateField.checkValue(today);
     });
 });

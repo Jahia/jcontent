@@ -42,7 +42,9 @@ export class ContentEditor extends BasePage {
             cy.visit(url);
         });
 
-        return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
+        const ce = getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
+        ce.advancedMode = true;
+        return ce;
     }
 
     static getContentEditor() : ContentEditor {

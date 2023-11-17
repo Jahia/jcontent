@@ -18,7 +18,6 @@ import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.re
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
 import clsx from 'clsx';
 import styles from './Box.scss';
-import editStyles from './EditFrame.scss';
 import {getBoundingBox} from './EditFrame.utils';
 import {DropArea} from './DropArea';
 
@@ -403,7 +402,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                     />
                 ))}
 
-            {draggedOverlayPosition && <div className={clsx(styles.root, editStyles.dragging)} style={draggedOverlayPosition}/>}
+            {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
             {dropTarget && <DropArea dropTarget={dropTarget}/>}
 
             {placeholders.map(element => ({

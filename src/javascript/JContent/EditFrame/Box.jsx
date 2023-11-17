@@ -94,7 +94,8 @@ export const Box = React.memo(({
             setDraggedOverlayPosition(null);
             element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
         };
-    }, [dragging, element, rootElementRef, currentOffset, setDraggedOverlayPosition]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dragging, element, rootElementRef, setDraggedOverlayPosition]);
 
     useEffect(() => {
         if (parent) {

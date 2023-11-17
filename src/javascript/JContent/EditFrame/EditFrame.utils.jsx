@@ -86,6 +86,16 @@ export const getCoords = elem => {
     };
 };
 
+export const getBoundingBox = (element, isHeaderDisplayed) => {
+    const rect = getCoords(element);
+
+    const left = Math.max(2, (rect.left - 4));
+    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8) + (isHeaderDisplayed ? 0 : 4);
+    const top = rect.top;
+    const height = rect.height + (isHeaderDisplayed ? 0 : 4);
+    return {top, left, width, height};
+};
+
 export const isVisible = elem => {
     const style = getComputedStyle(elem);
     if (style.display === 'none') {

@@ -47,8 +47,9 @@ export function useNodeDrag({dragSource}) {
 
     const enhancedProps = (isAnythingDragging && selection.indexOf(dragSource?.path) > -1 && props.dragClasses.length === 0) ? {
         ...props,
+        isAnythingDragging,
         dragClasses: styles.drag
-    } : props;
+    } : {...props, isAnythingDragging};
 
     return [enhancedProps, drag];
 }

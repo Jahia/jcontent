@@ -1,5 +1,5 @@
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {PageComposer} from '../../page-object/pageComposer';
+import {PageComposer} from '../../page-object';
 import {SmallTextField, DateField} from '../../page-object/fields';
 
 describe('Test the text field initializer', () => {
@@ -224,10 +224,10 @@ describe('Test the text field initializer', () => {
             .create();
         checkFieldValues(contentEditorToCreate, initialFields, langEN);
         contentEditorToCreate.getSmallTextField('cent:textFieldInitializer_jcr:title').addNewValue('englishTitle', true);
-        contentEditorToCreate.getLanguageSwitcher().selectLang('Français');
+        contentEditorToCreate.getLanguageSwitcher().selectLang('French');
         checkFieldValues(contentEditorToCreate, initialFields, langFR);
         contentEditorToCreate.getSmallTextField('cent:textFieldInitializer_jcr:title').addNewValue('frenchTitle', true);
-        contentEditorToCreate.getLanguageSwitcher().selectLang('Deutsch');
+        contentEditorToCreate.getLanguageSwitcher().selectLang('German');
         checkFieldValues(contentEditorToCreate, initialFields, langDE);
         contentEditorToCreate.getSmallTextField('cent:textFieldInitializer_jcr:title').addNewValue('deutschTitle', true);
         contentEditorToCreate.getLanguageSwitcher().selectLang('English');

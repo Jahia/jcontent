@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object/jcontent';
+import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../page-object';
 
@@ -54,8 +54,8 @@ describe('Language switcher tests', () => {
             .should(elems => {
                 expect(elems).to.have.length(3);
                 langInGroup(elems, 'English', 'Create translation');
-                langInGroup(elems, 'Deutsch', 'Create translation');
-                langInGroup(elems, 'Français', 'Create translation');
+                langInGroup(elems, 'German', 'Create translation');
+                langInGroup(elems, 'French', 'Create translation');
             });
     });
 
@@ -72,7 +72,7 @@ describe('Language switcher tests', () => {
         ce.getSmallTextField('jnt:text_text').addNewValue('cypress-test');
 
         // Switch language
-        ce.getLanguageSwitcher().select('Deutsch');
+        ce.getLanguageSwitcher().select('German');
 
         // Verify language switcher
         const langSwitcher = ce.getLanguageSwitcher();
@@ -81,8 +81,8 @@ describe('Language switcher tests', () => {
             .should(elems => {
                 expect(elems).to.have.length(3);
                 langInGroup(elems, 'English', 'Switch language');
-                langInGroup(elems, 'Deutsch', 'Create translation');
-                langInGroup(elems, 'Français', 'Create translation');
+                langInGroup(elems, 'German', 'Create translation');
+                langInGroup(elems, 'French', 'Create translation');
             });
     });
 
@@ -98,8 +98,8 @@ describe('Language switcher tests', () => {
             .should(elems => {
                 expect(elems).to.have.length(3);
                 langInGroup(elems, 'English', 'Add translation');
-                langInGroup(elems, 'Deutsch', 'Add translation');
-                langInGroup(elems, 'Français', 'Switch language');
+                langInGroup(elems, 'German', 'Add translation');
+                langInGroup(elems, 'French', 'Switch language');
             });
 
         cy.apollo({mutation: gql`
@@ -125,7 +125,7 @@ describe('Language switcher tests', () => {
 
         cy.log('Fill text in French');
         const frText = 'Cypress test - French';
-        ce.getLanguageSwitcher().select('Français').get().find('span[title="Français"]')
+        ce.getLanguageSwitcher().select('French').get().find('span[title="French"]')
             .should('be.visible')
             .log('Language set to French');
         ce.getSmallTextField('jnt:text_text').addNewValue(frText);

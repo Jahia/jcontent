@@ -19,7 +19,8 @@ export const EditPanelLanguageSwitcher = () => {
         const translatedLangs = nodeData?.translationLanguages || [];
 
         siteInfo.languages.forEach(item => {
-            const label = getCapitalized(item.displayName);
+            // Const label = item.displayName === item.uiLanguageDisplayName ? getCapitalized(item.displayName) : `${getCapitalized(item.displayName)} (${getCapitalized(item.uiLanguageDisplayName)})`;
+            const label = getCapitalized(item.uiLanguageDisplayName);
             if (item.language === currentLanguage) {
                 langLabel = label;
             }

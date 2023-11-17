@@ -23,8 +23,6 @@
  */
 package org.jahia.modules.contenteditor.api.forms;
 
-import graphql.annotations.annotationTypes.GraphQLDescription;
-import graphql.annotations.annotationTypes.GraphQLField;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jahia.api.templates.JahiaTemplateManagerService;
@@ -40,7 +38,6 @@ import org.jahia.services.content.nodetypes.initializers.ChoiceListInitializerSe
 import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
 import org.jahia.settings.SettingsBean;
 import org.jahia.utils.i18n.Messages;
-import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -203,7 +200,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean forceReadOnly = field.getExtendedPropertyDefinition() != null && field.getExtendedPropertyDefinition().isInternationalized() ? !i18nFieldsEditable : !sharedFieldsEditable;
                         field.setReadOnly((field.isReadOnly() != null && field.isReadOnly()) || forceReadOnly);
 
-                        if (field.getSelectorOptionsMap() != null && field.getSelectorOptionsMap().size() > 0) {
+                        if (field.getSelectorOptionsMap() != null && !field.getSelectorOptionsMap().isEmpty()) {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
 
@@ -267,7 +264,7 @@ public class EditorFormServiceImpl implements EditorFormService {
     public static String resolveResourceKey(String key, Locale locale, JCRSiteNode site) {
         // Copied from org.jahia.ajax.gwt.helper.UIConfigHelper.getResources
         // Todo: BACKLOG-10823 - avoid code duplication and use a static shared utility function
-        if (key == null || key.length() == 0) {
+        if (key == null || key.isEmpty()) {
             return key;
         }
         logger.debug("Resources key: {}", key);

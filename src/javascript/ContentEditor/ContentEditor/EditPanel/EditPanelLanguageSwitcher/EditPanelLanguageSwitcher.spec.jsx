@@ -8,7 +8,8 @@ const siteInfo = {
     languages: [
         {
             language: 'en',
-            displayName: 'English'
+            displayName: 'English',
+            uiLanguageDisplayName: 'English'
         }
     ]
 };
@@ -52,7 +53,8 @@ describe('EditPanelLanguageSwitcher', () => {
     it('should show language switcher with more than one language', () => {
         siteInfo.languages.push({
             language: 'fr',
-            displayName: 'French'
+            displayName: 'French',
+            uiLanguageDisplayName: 'French'
         });
 
         const cmp = shallowWithTheme(

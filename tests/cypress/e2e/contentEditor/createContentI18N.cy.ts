@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object/jcontent';
+import {JContent} from '../../page-object';
 
 const sitekey = 'contentEditorSiteI18N';
 describe('Create content tests in I18N site', () => {
@@ -28,7 +28,7 @@ describe('Create content tests in I18N site', () => {
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').type('Cypress Work In Progress EN/FR Test');
         // Switch to French
-        contentEditor.getLanguageSwitcher().select('Français');
+        contentEditor.getLanguageSwitcher().select('French');
         cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('contain', 'WIP - FR');
         cy.focused().frameLoaded('iframe.cke_wysiwyg_frame');
         contentSection.expand().get().find('.cke_button__source').click();
@@ -47,7 +47,7 @@ describe('Create content tests in I18N site', () => {
 
         contentEditor.getLanguageSwitcher().selectLang('English');
         contentEditor.addAnotherContent();
-        contentEditor.getLanguageSwitcher().selectLang('Français');
+        contentEditor.getLanguageSwitcher().selectLang('French');
         cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
 
         contentEditor.cancel();
@@ -61,7 +61,7 @@ describe('Create content tests in I18N site', () => {
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress news content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
         // Switch to French
-        contentEditor.getLanguageSwitcher().select('Français');
+        contentEditor.getLanguageSwitcher().select('French');
         contentEditor.addAnotherContent();
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress titre actualite', {force: true});
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress contenu actualite');
@@ -74,7 +74,7 @@ describe('Create content tests in I18N site', () => {
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress news content 2');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
         contentEditor.create();
-        contentEditor.getLanguageSwitcher().select('Français');
+        contentEditor.getLanguageSwitcher().select('French');
         cy.get('#contenteditor-dialog-content', {timeout: 1000}).should('not.contain.text', 'Invalid form');
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress titre actualite 3', {force: true});
         contentEditor.create();

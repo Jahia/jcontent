@@ -20,9 +20,10 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     const [errors, setErrors] = useState(null);
     const contentEditorConfigContext = useContentEditorConfigContext();
     // Get information from legacy page composer to display the preview.
-    const {pageComposerCurrentPage, pageComposerActive} = useSelector(state => ({
+    const {pageComposerCurrentPage, pageComposerActive, uiLanguage} = useSelector(state => ({
         pageComposerCurrentPage: state?.pagecomposer?.currentPage,
-        pageComposerActive: state?.pagecomposer?.active
+        pageComposerActive: state?.pagecomposer?.active,
+        uiLanguage: state?.uilang
     }), shallowEqual);
     const [i18nContext, setI18nContext] = useState({
         memo: {
@@ -74,7 +75,8 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
 
     const siteInfoResult = useSiteInfo({
         siteKey: site,
-        displayLanguage: lang
+        displayLanguage: lang,
+        uiLanguage: uiLanguage
     });
 
     if (error) {

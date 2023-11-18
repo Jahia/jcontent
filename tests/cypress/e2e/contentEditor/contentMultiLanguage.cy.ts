@@ -19,13 +19,13 @@ const newsByLanguage = {
     de: {
         title: 'German news',
         description: 'Something new happened in Germany',
-        localeName: 'Deutsch',
+        localeName: 'German',
         localeKey: 'de'
     },
     fr: {
         title: 'French news',
         description: 'Something new happened in France',
-        localeName: 'Français',
+        localeName: 'French',
         localeKey: 'fr'
     }
 };

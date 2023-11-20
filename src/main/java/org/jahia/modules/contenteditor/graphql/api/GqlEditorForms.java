@@ -125,7 +125,12 @@ public class GqlEditorForms {
         @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("Path or id of an existing node under with the new content will be created.") String uuidOrPath,
         @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale)
         throws RepositoryException {
-        JCRNodeWrapper parentNode = StringUtils.startsWith(uuidOrPath, "/") ? getSession().getNode(uuidOrPath) : getSession().getNodeByIdentifier(uuidOrPath);
+        JCRNodeWrapper parentNode = null;
+        try {
+            parentNode = StringUtils.startsWith(uuidOrPath, "/") ? getSession().getNode(uuidOrPath) : getSession().getNodeByIdentifier(uuidOrPath);
+        } catch (PathNotFoundException e) {
+            return Collections.emptyList();
+        }
 
         // Only jmix:editorialContent on jnt:contentFolder
         if (parentNode.isNodeType("jnt:contentFolder") && (nodeTypes == null || nodeTypes.isEmpty())) {

@@ -8,18 +8,8 @@ import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
-import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
+import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import Breadcrumbs from './Breadcrumbs';
-
-function getBoundingBox(element, isHeaderDisplayed) {
-    const rect = getCoords(element);
-
-    const left = Math.max(2, (rect.left - 4));
-    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8) + (isHeaderDisplayed ? 0 : 4);
-    const top = rect.top;
-    const height = rect.height + (isHeaderDisplayed ? 0 : 4);
-    return {top, left, width, height};
-}
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -46,16 +36,22 @@ export const Box = React.memo(({
     isCurrent,
     isSelected,
     isActionsHidden,
-    onDoubleClick
+    onDoubleClick,
+    setDraggedOverlayPosition,
+    calculateDropTarget
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
+    const [{dragging, isAnythingDragging}, drag] = useNodeDrag({dragSource: node});
 
     useEffect(() => {
-        element.addEventListener('mouseenter', onMouseOver);
-        element.addEventListener('mouseleave', onMouseOut);
-        element.addEventListener('click', onClick);
-        element.addEventListener('dblclick', onDoubleClick);
+        // Disable mouse events to prevent showing boxes when dragging
+        if (!isAnythingDragging) {
+            element.addEventListener('mouseenter', onMouseOver);
+            element.addEventListener('mouseleave', onMouseOut);
+            element.addEventListener('click', onClick);
+            element.addEventListener('dblclick', onDoubleClick);
+        }
 
         return () => {
             element.removeEventListener('mouseenter', onMouseOver);
@@ -63,7 +59,7 @@ export const Box = React.memo(({
             element.removeEventListener('click', onClick);
             element.removeEventListener('dblclick', onDoubleClick);
         };
-    }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick]);
+    }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
 
     element.dataset.current = isCurrent;
 
@@ -78,8 +74,7 @@ export const Box = React.memo(({
 
     const rootDiv = useRef();
 
-    const [{dragging}, drag] = useNodeDrag({dragSource: node});
-    const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({
+    const [{isCanDrop, insertPosition, destParent, isOver}, drop] = useNodeDrop({
         dropTarget: parent && node,
         orderable: true,
         entries,
@@ -89,19 +84,17 @@ export const Box = React.memo(({
     drop(ref);
 
     useEffect(() => {
-        const currentRootElement = rootElementRef.current;
         if (dragging) {
+            setDraggedOverlayPosition(currentOffset);
             element.ownerDocument.body.classList.add(editStyles.disablePointerEvents);
-            element.classList.add(editStyles.dragging);
-            currentRootElement?.classList?.add?.(styles.dragging);
         }
 
         return () => {
+            setDraggedOverlayPosition(null);
             element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
-            element.classList.remove(editStyles.dragging);
-            currentRootElement?.classList?.remove?.(styles.dragging);
         };
-    }, [dragging, element, rootElementRef]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dragging, element, rootElementRef, setDraggedOverlayPosition]);
 
     useEffect(() => {
         if (parent) {
@@ -115,16 +108,20 @@ export const Box = React.memo(({
 
     useEffect(() => {
         const classname = insertPosition ? styles['dropTarget_' + insertPosition] : styles.dropTarget;
+
         if (isCanDrop) {
-            element.style.setProperty('--droplabel', `"[${destParent?.name?.replace(/[\u00A0-\u9999<>&]/g, i => '&#' + i.charCodeAt(0) + ';')}]"`);
             element.classList.add(classname);
+            calculateDropTarget(destParent?.path);
+        } else if (isOver) {
+            element.ownerDocument.body.style.setProperty('cursor', 'not-allowed');
         }
 
         return () => {
             element.classList.remove(classname);
-            element.style.removeProperty('--droplabel');
+            calculateDropTarget();
+            element.ownerDocument.body.style.setProperty('cursor', 'default');
         };
-    }, [isCanDrop, insertPosition, destParent, element]);
+    }, [isCanDrop, insertPosition, destParent, element, calculateDropTarget, isOver]);
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed)), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
@@ -143,6 +140,7 @@ export const Box = React.memo(({
     const headerProps = {
         className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
     };
+
     const Header = (
         <div {...headerProps}
              jahiatype="header" // eslint-disable-line react/no-unknown-property
@@ -223,5 +221,9 @@ Box.propTypes = {
 
     isActionsHidden: PropTypes.bool,
 
-    onDoubleClick: PropTypes.func
+    onDoubleClick: PropTypes.func,
+
+    calculateDropTarget: PropTypes.func,
+
+    setDraggedOverlayPosition: PropTypes.func
 };

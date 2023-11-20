@@ -16,6 +16,10 @@ import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
+import clsx from 'clsx';
+import styles from './Box.scss';
+import {getBoundingBox} from './EditFrame.utils';
+import {DropArea} from './DropArea';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -56,6 +60,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     const {notify} = useNotifications();
     const [inlineEditor] = registry.find({type: 'inline-editor'});
     const dispatch = useDispatch();
+    const [draggedOverlayPosition, setDraggedOverlayPosition] = useState();
+    const [dropTarget, setDropTarget] = useState();
 
     const {language, displayLanguage, selection, path, site, uilang} = useSelector(state => ({
         language: state.language,
@@ -81,7 +87,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             window.clearTimeout(timeout);
             timeout = window.setTimeout(() => {
                 setCurrentElement(getModuleElement(currentDocument, target));
-            }, 100);
+            }, 10);
         }
     }, [setCurrentElement, currentDocument]);
 
@@ -326,6 +332,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
         depth: m.dataset.jahiaPath.split('/').length
     })), [modules]);
 
+    // Console.log(entries);
     let pathObject;
 
     if (selection.length > 0) {
@@ -338,6 +345,26 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     } else {
         pathObject = {path: currentPath, actionKey: 'contentMenu'};
     }
+
+    const calculateDropTarget = destPath => {
+        if (!destPath) {
+            setDropTarget(null);
+            return;
+        }
+
+        const current = nodes[destPath];
+        const targetModule = modules.find(m => m.dataset.jahiaPath === current?.path);
+
+        if (targetModule) {
+            const rect = getBoundingBox(targetModule, true);
+            setDropTarget({
+                ...current,
+                position: {
+                    ...rect
+                }
+            });
+        }
+    };
 
     return (
         <div ref={rootElement}>
@@ -365,6 +392,8 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          displayLanguage={displayLanguage}
                          color="default"
                          addIntervalCallback={addIntervalCallback}
+                         setDraggedOverlayPosition={setDraggedOverlayPosition}
+                         calculateDropTarget={calculateDropTarget}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onClick={onClick}
@@ -372,6 +401,9 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                          onSaved={onSaved}
                     />
                 ))}
+
+            {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
+            {dropTarget && <DropArea dropTarget={dropTarget}/>}
 
             {placeholders.map(element => ({
                 element,

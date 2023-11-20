@@ -8,7 +8,7 @@ import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 
-export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden}) => {
+export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden}) => {
     // eslint-disable-next-line react/prop-types
     const wrap = Renderer => ({onClick, ...props}) => (
         <Renderer
@@ -35,11 +35,11 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
             <NodeIcon node={node} className={styles.icon}/>
             <Typography isNowrap className={styles.title} variant="caption">{node.displayName}</Typography>
 
-            <ContentStatuses node={node}
-                             hasLabel={displayLabels}
-                             uilang={displayLanguage}
-                             language={language}
-                             renderedStatuses={['locked', 'warning', 'workInProgress', 'published', 'modified', 'markedForDeletion']}/>
+            {!isStatusHidden && <ContentStatuses node={node}
+                                                 hasLabel={displayLabels}
+                                                 uilang={displayLanguage}
+                                                 language={language}
+                                                 renderedStatuses={['locked', 'warning', 'workInProgress', 'published', 'modified', 'markedForDeletion']}/>}
 
             {!isActionsHidden && (
                 <>
@@ -74,5 +74,7 @@ DefaultBar.propTypes = {
 
     currentFrameRef: PropTypes.any,
 
-    isActionsHidden: PropTypes.bool
+    isActionsHidden: PropTypes.bool,
+
+    isStatusHidden: PropTypes.bool
 };

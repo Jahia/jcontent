@@ -9,11 +9,13 @@ import {ellipsizeText, getName, isDescendantOrSelf} from '~/JContent/JContent.ut
 import {useNodeTypeCheck} from '~/JContent';
 import {useConnector} from './useConnector';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import {useSelector} from 'react-redux';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
         mutateNodes(pathsOrIds: $pathsOrIds) @include(if: $move) {
-            move(parentPathOrId: $destParentPathOrId)
+            move(parentPathOrId: $destParentPathOrId, renameOnConflict: true)
             node {
                 ...NodeCacheRequiredFields
                 path
@@ -55,13 +57,16 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
     const refreshTree = useRefreshTreeAfterMove();
+    const language = useSelector(state => state.language);
     const res = useNodeChecks(
-        {path: destParent?.path},
+        {path: destParent?.path, language: language},
         {
             requiredPermission: 'jcr:addChildNodes',
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
-            getLockInfo: true
+            getLockInfo: true,
+            getSubNodesCount: true,
+            getProperties: ['limit']
         }
     );
 
@@ -72,7 +77,8 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
         collect: monitor => ({
             isCanDrop: monitor.canDrop(),
             insertPosition,
-            destParent
+            destParent,
+            isOver: monitor.isOver({shallow: true})
         }),
         hover: (dragSource, monitor) => {
             const target = getCurrent();
@@ -111,7 +117,10 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
         canDrop: (dragSource, monitor) => {
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
-            return dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner &&
+            const limit = res.node?.properties.find(p => p.name === 'limit');
+            const hasRoom = limit ? res.node?.subNodes?.pageInfo?.totalCount < parseInt(limit.value, 10) : true;
+
+            return dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom &&
                 (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))) &&
                 !isDescendantOrSelf(destParent.path, dragSource.path) &&
                 nodeTypeCheck(res.node, nodes).checkResult;
@@ -151,6 +160,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
                 }
 
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
+                triggerRefetchAll();
             }).catch(e => {
                 notificationContext.notify(
                     getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}),

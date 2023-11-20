@@ -5,10 +5,12 @@ describe('Copy language Utils', () => {
         const languages = [
             {
                 displayName: 'Français',
+                uiLanguageDisplayName: 'French',
                 language: 'fr'
             },
             {
                 displayName: 'English',
+                uiLanguageDisplayName: 'English',
                 language: 'en'
             }
         ];

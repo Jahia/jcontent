@@ -20,7 +20,7 @@ describe('Breadcrumb navigation test', () => {
         cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Content List').should('be.visible');
         cy.get('h1').contains('article');
-        jcontent.shouldBeInMode("List");
+        jcontent.shouldBeInMode('List');
     });
 
     it('Display popup when navigating to list and render parent page when selected', () => {

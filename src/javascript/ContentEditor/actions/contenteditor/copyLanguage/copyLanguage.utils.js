@@ -9,7 +9,7 @@
 export function getFullLanguageName(languages, id) {
     return languages.find(language =>
         language.language === id
-    ).displayName;
+    ).uiLanguageDisplayName;
 }
 
 /**

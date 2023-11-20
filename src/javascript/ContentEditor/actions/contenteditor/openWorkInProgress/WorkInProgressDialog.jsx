@@ -134,7 +134,7 @@ export const WorkInProgressDialog = ({
                                         }}
                                     />
                                     <Typography className={styles.label}>
-                                        {language.displayName}
+                                        {language.uiLanguageDisplayName}
                                     </Typography>
                                 </div>
                             );

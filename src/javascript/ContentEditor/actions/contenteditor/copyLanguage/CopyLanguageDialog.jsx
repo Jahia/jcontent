@@ -92,7 +92,7 @@ export const CopyLanguageDialog = ({
                     data={[defaultOption].concat(availableLanguages.filter(element => element.displayName !== language).map(element => {
                         return {
                             value: element.language,
-                            label: element.displayName
+                            label: element.uiLanguageDisplayName
                         };
                     }))}
                     onChange={handleOnChange}

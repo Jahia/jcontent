@@ -10,6 +10,7 @@ import {useNodeTypeCheck} from '~/JContent';
 import {useConnector} from './useConnector';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import {useSelector} from 'react-redux';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -44,7 +45,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQueries, language}) {
+export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQueries}) {
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -56,6 +57,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
     const refreshTree = useRefreshTreeAfterMove();
+    const language = useSelector(state => state.language);
     const res = useNodeChecks(
         {path: destParent?.path, language: language},
         {

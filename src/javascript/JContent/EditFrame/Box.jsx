@@ -78,8 +78,7 @@ export const Box = React.memo(({
         dropTarget: parent && node,
         orderable: true,
         entries,
-        onSaved,
-        language
+        onSaved
     });
 
     drop(ref);

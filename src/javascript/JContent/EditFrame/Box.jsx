@@ -65,7 +65,7 @@ export const Box = React.memo(({
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
-        parent = element.closest('[jahiatype=module]');
+        parent = element.parentElement.closest('[jahiatype=module]');
 
         if (parent) {
             element.dataset.jahiaParent = parent.id;
@@ -78,7 +78,8 @@ export const Box = React.memo(({
         dropTarget: parent && node,
         orderable: true,
         entries,
-        onSaved
+        onSaved,
+        pos: {before: element.dataset.prevPos, after: element.dataset.nextPos}
     });
 
     drop(ref);
@@ -108,7 +109,10 @@ export const Box = React.memo(({
 
     useEffect(() => {
         if (isCanDrop) {
-            calculateDropTarget(destParent?.path, node.path, insertPosition);
+            const pos = (insertPosition === 'insertBefore') ? element.dataset.prevPos :
+                ((insertPosition === 'insertAfter') ? element.dataset.nextPos : null);
+
+            calculateDropTarget(destParent?.path, node.path, pos);
         } else if (isOver) {
             element.ownerDocument.body.style.setProperty('cursor', 'not-allowed');
         }

@@ -20,6 +20,7 @@ import {LinkInterceptor} from './LinkInterceptor';
 import {Tooltip} from '@material-ui/core';
 import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
+import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -67,6 +68,8 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 
     const iframe = useRef();
     const iframeSwap = useRef();
+
+    const currentDndInfo = useRef({});
 
     const iFrameOnLoad = event => {
         const loadedIframe = event.currentTarget;
@@ -242,12 +245,14 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                     <div id="jahia-portal-root" className={styles.root}>
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
+                               currentDndInfo={currentDndInfo}
                                addIntervalCallback={addIntervalCallback}
                                onSaved={() => {
                                    refresh();
                                }}
                         />
                         <Infos currentDocument={currentDocument} addIntervalCallback={addIntervalCallback}/>
+                        <DndOverlays currentDndInfo={currentDndInfo}/>
                     </div>
                 </Portal>
             )}

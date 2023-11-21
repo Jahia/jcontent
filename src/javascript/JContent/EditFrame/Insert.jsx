@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export const Insert = ({relative}) => {
-    const style = {...relative.position, height: '4px'};
+    const style = {...relative.position, height: '2px'};
 
     if (relative.insertPosition === 'insertAfter') {
         style.top = relative.position.top + relative.position.height;

@@ -111,7 +111,7 @@ export const Box = React.memo(({
 
         if (isCanDrop) {
             element.classList.add(classname);
-            calculateDropTarget(destParent?.path);
+            calculateDropTarget(destParent?.path, insertPosition);
         } else if (isOver) {
             element.ownerDocument.body.style.setProperty('cursor', 'not-allowed');
         }

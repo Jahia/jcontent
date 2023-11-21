@@ -9,13 +9,39 @@ import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
-import Breadcrumbs from './Breadcrumbs';
+import {Breadcrumbs} from './Breadcrumbs';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
         setCurrentOffset(box);
     }
+};
+
+const nodeHasRequiredMixinOrType = (node, customBoxConfig) => {
+    const nodeTypes = [...node.mixinTypes,node.primaryNodeType.name];
+    return customBoxConfig.nodeTypes.some(nodeType => nodeTypes.includes(nodeType));
+};
+
+const processCustomBoxConfigIfExists = node => {
+    // Take the first matching config
+    const pageBuilderBoxConfig = node && registry.find({type: 'pageBuilderBoxConfig'})
+        .filter(customBoxConfig => nodeHasRequiredMixinOrType(node, customBoxConfig))
+        .pop();
+
+    const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
+
+    let borderColorCurrent = 'var(--color-gray)';
+    let borderColorSelected = 'var(--color-accent)';
+    if (pageBuilderBoxConfig) {
+        const borderColors = pageBuilderBoxConfig.borderColors;
+        if (borderColors) {
+            borderColorCurrent = borderColors.hover ? borderColors.hover : borderColorCurrent;
+            borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
+        }
+    }
+
+    return {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed};
 };
 
 export const Box = React.memo(({
@@ -123,16 +149,16 @@ export const Box = React.memo(({
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed)), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    if (!isCurrent && !isSelected) {
+    const {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed} = processCustomBoxConfigIfExists(node);
+
+    isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
+    if (!isHeaderDisplayed && !isCurrent && !isSelected) {
         return false;
     }
 
     reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);
 
     const type = element.getAttribute('type');
-
-    const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
-    const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerProps = {
@@ -167,7 +193,12 @@ export const Box = React.memo(({
              className={clsx(styles.root)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isSelected ? styles.selected : styles.current)}>
+            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isCurrent && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
+                 style={{
+                     '--colorCurrent': borderColorCurrent,
+                     '--colorSelected': borderColorSelected
+                 }}
+            >
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&

@@ -12,12 +12,13 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Display popup when navigating to list and render list view when selected', () => {
-        JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
+        const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         cy.frameLoaded('#page-builder-frame-1');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Content List').should('be.visible');
         cy.get('h1').contains('article');
+        jcontent.shouldBeInMode('List');
     });
 
     it('Display popup when navigating to list and render parent page when selected', () => {

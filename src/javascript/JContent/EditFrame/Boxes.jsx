@@ -345,7 +345,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         currentDndInfo.current.draggedOverlayPosition = position;
     };
 
-    const calculateDropTarget = (destPath, insertPosition) => {
+    const calculateDropTarget = (destPath, nodePath, insertPosition) => {
         if (!destPath) {
             currentDndInfo.current.dropTarget = null;
             return;
@@ -357,12 +357,27 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         if (targetModule) {
             const rect = getBoundingBox(targetModule, true);
             currentDndInfo.current.dropTarget = {
-                ...current,
+                node: current,
                 position: {
                     ...rect
-                },
-                insertPosition
+                }
             };
+        }
+
+        if (nodePath) {
+            const current = nodes[nodePath];
+            const targetModule = modules.find(m => m.dataset.jahiaPath === current?.path);
+
+            if (targetModule) {
+                const rect = getBoundingBox(targetModule, true);
+                currentDndInfo.current.relative = {
+                    node: current,
+                    position: {
+                        ...rect
+                    },
+                    insertPosition
+                };
+            }
         }
     };
 

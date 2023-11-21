@@ -107,21 +107,17 @@ export const Box = React.memo(({
     }, [parent, element]);
 
     useEffect(() => {
-        const classname = insertPosition ? styles['dropTarget_' + insertPosition] : styles.dropTarget;
-
         if (isCanDrop) {
-            element.classList.add(classname);
-            calculateDropTarget(destParent?.path, insertPosition);
+            calculateDropTarget(destParent?.path, node.path, insertPosition);
         } else if (isOver) {
             element.ownerDocument.body.style.setProperty('cursor', 'not-allowed');
         }
 
         return () => {
-            element.classList.remove(classname);
             calculateDropTarget();
             element.ownerDocument.body.style.setProperty('cursor', 'default');
         };
-    }, [isCanDrop, insertPosition, destParent, element, calculateDropTarget, isOver]);
+    }, [isCanDrop, insertPosition, destParent, node, element, calculateDropTarget, isOver]);
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed)), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 

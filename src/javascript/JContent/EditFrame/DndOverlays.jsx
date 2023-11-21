@@ -3,7 +3,8 @@ import {useDragLayer} from 'react-dnd';
 import PropTypes from 'prop-types';
 import styles from './Box.scss';
 import clsx from 'clsx';
-import {DropArea} from '~/JContent/EditFrame/DropArea';
+import {DropArea} from './DropArea';
+import {Insert} from './Insert';
 
 export const DndOverlays = ({currentDndInfo}) => {
     const {isDragging} = useDragLayer(monitor => ({
@@ -15,11 +16,17 @@ export const DndOverlays = ({currentDndInfo}) => {
         return null;
     }
 
-    const {draggedOverlayPosition, dropTarget} = currentDndInfo.current;
+    const {draggedOverlayPosition, dropTarget, relative} = currentDndInfo.current;
+
+    if (relative) {
+        console.log({...relative.position, height: '4px'});
+    }
+
     return (
         <>
             {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
             {dropTarget && <DropArea dropTarget={dropTarget}/>}
+            {relative && <Insert relative={relative}/>}
         </>
     );
 };

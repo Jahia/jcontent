@@ -2,7 +2,6 @@ import {JContent} from '../../page-object';
 import {Breadcrumb} from '../../page-object/breadcrumb';
 
 describe('Breadcrumb navigation test', () => {
-    let jcontent: JContent;
 
     before(function () {
         cy.loginAndStoreSession();
@@ -14,7 +13,7 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Display popup when navigating to list and render list view when selected', () => {
-        jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
+        const jcontent= JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         cy.frameLoaded('#page-builder-frame-1');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-sel-role="view-list"]').should('be.visible').click();

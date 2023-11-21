@@ -26,7 +26,7 @@ export const DndOverlays = ({currentDndInfo}) => {
         <>
             {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
             {dropTarget && <DropArea dropTarget={dropTarget}/>}
-            {relative && <Insert relative={relative}/>}
+            {dropTarget && relative && <Insert relative={relative}/>}
         </>
     );
 };

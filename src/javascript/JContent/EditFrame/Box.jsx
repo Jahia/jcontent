@@ -19,7 +19,7 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
 };
 
 const nodeHasRequiredMixinOrType = (node, customBoxConfig) => {
-    const nodeTypes = [...node.mixinTypes,node.primaryNodeType.name];
+    const nodeTypes = [...node.mixinTypes, node.primaryNodeType.name];
     return customBoxConfig.nodeTypes.some(nodeType => nodeTypes.includes(nodeType));
 };
 

@@ -160,7 +160,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
                 }
 
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
-                triggerRefetchAll();
+                setTimeout(triggerRefetchAll, 100);
             }).catch(e => {
                 notificationContext.notify(
                     getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}),

@@ -120,7 +120,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                     names.push(dropTarget.name);
                 }
 
-                setNames(names);
+                setNames(names.filter(n => n !== undefined));
                 setDestParent(insertPosition === 'insertBefore' || (insertPosition === 'insertAfter' && d !== 1) ? dropTarget.parent : null);
             }
         },
@@ -128,12 +128,12 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
             const limit = res.node?.properties.find(p => p.name === 'limit');
-            const hasRoom = limit ? res.node?.subNodes?.pageInfo?.totalCount < parseInt(limit.value, 10) : true;
+            const hasRoom = limit ?  nodes.length <= parseInt(limit.value, 10) - res.node?.subNodes?.pageInfo?.totalCount : true;
 
-            return dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom &&
-                (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))) &&
-                !isDescendantOrSelf(destParent.path, dragSource.path) &&
-                nodeTypeCheck(res.node, nodes).checkResult;
+            const basicConditions = dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom;
+            const notSelf = nodes.find(source => isDescendantOrSelf(dropTarget.path, source.path) || isDescendantOrSelf(destParent.path, source.path)) === undefined;
+
+            return basicConditions && notSelf && nodeTypeCheck(res.node, nodes).checkResult;
         },
         drop: (dragSource, monitor) => {
             if (monitor.didDrop()) {
@@ -143,7 +143,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             const isNode = monitor.getItemType() === 'node';
             const nodes = isNode ? [dragSource] : dragSource;
             const pathsOrIds = nodes.map(n => n.uuid);
-            const move = (dragSource.path !== (destParent.path + '/' + dragSource.name));
+            const move = nodes.find(source => source.path === (destParent.path + '/' + source.name)) === undefined;
             const reorder = Boolean(insertPosition);
 
             const position = names?.length === 2 ? 'INPLACE' : 'LAST';
@@ -170,8 +170,9 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                 }
 
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
-                setTimeout(triggerRefetchAll, 100);
+                setTimeout(triggerRefetchAll, 1500);
             }).catch(e => {
+                console.log(e)
                 notificationContext.notify(
                     getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}),
                     ['closeButton', 'closeAfter5s']

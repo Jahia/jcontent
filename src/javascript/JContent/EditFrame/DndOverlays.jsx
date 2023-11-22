@@ -18,10 +18,6 @@ export const DndOverlays = ({currentDndInfo}) => {
 
     const {draggedOverlayPosition, dropTarget, relative} = currentDndInfo.current;
 
-    if (relative) {
-        console.log({...relative.position, height: '4px'});
-    }
-
     return (
         <>
             {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}

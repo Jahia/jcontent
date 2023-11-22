@@ -4,9 +4,8 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
-import {useMutation} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {updateProperty} from '~/JContent/EditFrame/Boxes.gql-mutations';
-import {useQuery} from '@apollo/client';
 import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
 import {hasMixin, isDescendant, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection, cmSetSelection} from '../redux/selection.redux';
@@ -51,6 +50,20 @@ const checkClickInBreadcrumbFooter = event => {
     const element = event.target;
     return element && elementIsInBreadcrumbFooter(element);
 };
+
+function getRelativePos(coord1, coord2) {
+    if (!coord1 || !coord2) {
+        return '';
+    }
+
+    const offPX = coord2?.x - coord1?.x;
+    const offPY = coord2?.y - coord1?.y;
+    if (offPY === 0 && offPX !== 0) {
+        return (offPX > 0) ? 'right' : 'left';
+    }
+
+    return (offPY >= 0) ? 'bottom' : 'top';
+}
 
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved}) => {
     const {t} = useTranslation('jcontent');
@@ -159,23 +172,33 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     useEffect(() => {
         const placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+            let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+
+            if (!parent) {
+                parent = element.parentElement?.closest?.('[jahiatype=module]');
+
+                if (parent) {
+                    element.dataset.jahiaParent = parent.id;
+                }
+            }
+
             if (element.getAttribute('path') === '*' || element.getAttribute('type') === 'placeholder') {
                 placeholders.push(element);
 
-                let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
                 if (!parent) {
-                    parent = element.parentElement;
-                    while (parent && parent.getAttribute('jahiatype') !== 'module') {
-                        parent = parent.parentElement;
-                    }
-
-                    if (parent) {
-                        element.dataset.jahiaParent = parent.id;
-                    } else {
-                        console.warn('Couldn\'t find parent element with jahiatype=module for element ', element);
-                        placeholders.pop();
-                    }
+                    console.warn('Couldn\'t find parent element with jahiatype=module for element ', element);
+                    placeholders.pop();
                 }
+            }
+        });
+
+        currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+            const parentId = element.id;
+            const children = [...currentDocument.querySelectorAll(`[data-jahia-parent=${parentId}]`)];
+            const coords = children.map(m => m.getBoundingClientRect());
+            for (let i = 0; i < children.length; i++) {
+                children[i].dataset.prevPos = getRelativePos(coords[i], coords[i - 1]) || 'top';
+                children[i].dataset.nextPos = getRelativePos(coords[i], coords[i + 1]) || 'bottom';
             }
         });
 

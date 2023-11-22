@@ -45,7 +45,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQueries}) {
+export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries}) {
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -88,11 +88,21 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
                 }
 
                 const height = baseRect.current.height;
+                const width = baseRect.current.width;
                 const clientOffset = monitor.getClientOffset();
                 const hoverClientY = clientOffset.y - baseRect.current.top;
-                if (hoverClientY < (height / 4)) {
+                const hoverClientX = clientOffset.x - baseRect.current.left;
+
+                const v = {
+                    top: hoverClientY < (height / 4),
+                    bottom: hoverClientY > height - (height / 4),
+                    left: hoverClientX < (width / 4),
+                    right: hoverClientX > width - (width / 4)
+                };
+
+                if (v[pos?.before || 'top']) {
                     setInsertPosition('insertBefore');
-                } else if (hoverClientY > height - (height / 4)) {
+                } else if (v[pos?.after || 'bottom']) {
                     setInsertPosition('insertAfter');
                 } else {
                     setInsertPosition(null);

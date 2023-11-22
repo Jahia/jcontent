@@ -1,7 +1,4 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {createSite, deleteSite, Dropdown, getComponentByRole} from '@jahia/cypress';
-import {addPageGql, addContentGql} from '../../fixtures/jcontent/pageComposer/setLimitContent';
-import {ContentEditor} from '../../page-object';
 
 describe('Page builder', () => {
     let jcontent: JContentPageBuilder;

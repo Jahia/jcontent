@@ -48,7 +48,7 @@ export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, 
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
-                <Button label={t('jcontent:label.cancel')} size="big" data-cm-role="breadcrumb-cancel" onClick={onClose}/>
+                <Button label={t('jcontent:label.cancel')} size="big" data-sel-role="cancel-button" onClick={onClose}/>
                 <Button label={t('jcontent:label.contentManager.contentPath.dialog.listView')} size="big" color={parentPage ? 'default' : 'accent'} data-sel-role="view-list" onClick={handleListNavigation}/>
                 {parentPage && <Button label={t('jcontent:label.contentManager.contentPath.dialog.parentPage')} size="big" color="accent" data-sel-role="view-parent" onClick={handleParentNavigation}/>}
             </DialogActions>

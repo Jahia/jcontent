@@ -9,6 +9,12 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {batchActions} from 'redux-batched-actions';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 
+const messageRegistry = {
+    'jnt:navMenuText': 'jcontent:label.contentManager.textMenu.editDialog',
+    'jnt:contentFolder': 'jcontent:label.contentManager.contentFolder.dialog',
+    default: 'jcontent:label.contentManager.contentPath.dialog'
+};
+
 export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, parentPage}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
@@ -23,16 +29,22 @@ export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, 
         onClose();
     };
 
+    const message = messageRegistry[node?.primaryNodeType?.name] ? messageRegistry[node?.primaryNodeType?.name] : messageRegistry.default;
+
     return (
-        <Dialog open={isOpen}
-                aria-labelledby="form-dialog-title"
-                classes={{paper: styles.root}}
-                onClose={onClose}
+        <Dialog
+            fullWidth
+            maxWidth="md"
+            data-sel-role="node-content-dialog"
+            open={isOpen}
+            aria-labelledby="form-dialog-title"
+            classes={{paper: styles.root}}
+            onClose={onClose}
         >
-            <DialogTitle id="form-dialog-title" className={styles.dialogTitle}>{t('jcontent:label.contentManager.contentPath.dialog.title')}</DialogTitle>
+            <DialogTitle id="form-dialog-title" className={styles.dialogTitle}>{t(`${message}.title`)}</DialogTitle>
             <DialogContent className={styles.dialogContent}>
                 <DialogContentText>
-                    {t('jcontent:label.contentManager.contentPath.dialog.body')}
+                    {t(`${message}.body`)}
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={styles.dialogActions}>

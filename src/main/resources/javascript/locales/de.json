@@ -508,6 +508,12 @@
           "openInList": "In Listenansicht öffnen"
         }
       },
+      "contentFolder": {
+        "dialog": {
+          "title": "Inhalts-Ordner",
+          "body": "Inhalts-Ordner können nicht in der aktuell gewählten Ansicht dargestellt werden. Bitte schalten Sie in die Listenansicht."
+        }
+      },
       "pageBuilder": {
         "breadcrumbs": {
           "dropdownLabel": "Element-Pfad"

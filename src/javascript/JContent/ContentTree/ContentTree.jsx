@@ -14,7 +14,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
-import {NonDisplayableNodeDialog, TextMenuDialog, LinkDialog, useNodeDialog} from '~/JContent/NavigationDialogs';
+import {NonDisplayableNodeDialog, LinkDialog, useNodeDialog} from '~/JContent/NavigationDialogs';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -104,7 +104,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     const dispatch = useDispatch();
     const {lang, siteKey, path, openPaths, viewMode} = useSelector(selector, shallowEqual);
     const {openDialog: openLinkDialog, ...linkDialogProps} = useNodeDialog();
-    const {openDialog: openTextMenuDialog, ...textMenuDialogProps} = useNodeDialog();
     const {openDialog: openNonDisplayableNodeDialog, ...nonDisplayableNodeDialogProps} = useNodeDialog();
     const rootPath = item.getRootPath(siteKey);
 
@@ -179,9 +178,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                               const {node} = object.treeItemProps;
                               if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
                                   openLinkDialog(node);
-                              } else if (node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageBuilder') {
-                                  openTextMenuDialog(node);
-                              } else if (node.primaryNodeType.name !== 'jnt:page' && viewMode === 'pageBuilder') {
+                              } else if (node.primaryNodeType.name !== 'jnt:page' && !node.isMainResource && viewMode === 'pageBuilder') {
                                   openNonDisplayableNodeDialog(node);
                               } else {
                                   dispatch(setPathAction(object.id, {sub: false}));
@@ -192,7 +189,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
             <LinkDialog {...linkDialogProps}/>
-            <TextMenuDialog {...textMenuDialogProps} setPathAction={setPathAction}/>
             <NonDisplayableNodeDialog {...nonDisplayableNodeDialogProps} setPathAction={setPathAction}/>
             {item.treeConfig.showContextMenuOnRootPath && (
                 <>

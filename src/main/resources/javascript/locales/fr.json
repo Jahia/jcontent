@@ -511,6 +511,12 @@
           "openInList": "Ouvrir en vue liste"
         }
       },
+      "contentFolder": {
+        "dialog": {
+          "title": "Dossier de contenu",
+          "body": "Les dossiers de contenu ne peuvent pas être affichés dans la vue actuelle. Néanmoins ils peuvent être affichés en vue liste."
+        }
+      },
       "pageBuilder": {
         "breadcrumbs": {
           "dropdownLabel": "Chemin de l’élément"

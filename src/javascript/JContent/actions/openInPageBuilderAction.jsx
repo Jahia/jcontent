@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {cmGoto, cmOpenPaths, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -11,19 +11,19 @@ import {useApolloClient} from '@apollo/client';
 export const OpenInPageBuilderActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
-    const mode = useSelector(state => state.jcontent.mode);
+    const {mode, viewMode} = useSelector(state => ({mode: state.jcontent.mode, viewMode: state.jcontent.tableView.viewMode}), shallowEqual);
     const isSearch = (mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH);
+    const isPageBuilderMode = (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER);
 
-    const res = useNodeChecks({path}, {
+    const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
         showOnNodeTypes: ['jmix:mainResource']
     });
-
     if (res.loading && Loading) {
         return <Loading {...others}/>;
     }
 
     if (!res.node) {
-        return false;
+        return (<Render {...others} isVisible={false}/>);
     }
 
     return (

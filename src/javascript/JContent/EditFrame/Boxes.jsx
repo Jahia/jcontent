@@ -53,7 +53,7 @@ const checkClickInBreadcrumbFooter = event => {
 
 function getRelativePos(coord1, coord2) {
     if (!coord1 || !coord2) {
-        return '-';
+        return '';
     }
 
     const offPX = coord2?.x - coord1?.x;
@@ -197,8 +197,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             const children = [...currentDocument.querySelectorAll(`[data-jahia-parent=${parentId}]`)];
             const coords = children.map(m => m.getBoundingClientRect());
             for (let i = 0; i < children.length; i++) {
-                children[i].dataset.nextPos = getRelativePos(coords[i], coords[i + 1]);
-                children[i].dataset.prevPos = getRelativePos(coords[i], coords[i - 1]);
+                children[i].dataset.prevPos = getRelativePos(coords[i], coords[i - 1]) || 'top';
+                children[i].dataset.nextPos = getRelativePos(coords[i], coords[i + 1]) || 'bottom';
             }
         });
 

@@ -68,6 +68,10 @@ export class ContentEditor extends BasePage {
         }
     }
 
+    createUnchecked() {
+        getComponentByRole(Button, 'createButton').click();
+    }
+
     save() {
         getComponentByRole(Button, 'submitSave').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
@@ -78,7 +82,7 @@ export class ContentEditor extends BasePage {
     }
 
     saveUnchecked() {
-        getComponentByRole(Button, 'createButton').click();
+        getComponentByRole(Button, 'submitSave').click();
     }
 
     editSavedContent() {

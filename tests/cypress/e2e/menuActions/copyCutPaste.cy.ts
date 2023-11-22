@@ -96,6 +96,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
                 .contextMenu()
                 .select('Paste');
             item.getTreeItem('newsroom').expand();
+            cy.get('[role="treeitem"][data-sel-role=about]').should('have.length', 2);
 
             GraphqlUtils.getNode('/sites/digitall/home/newsroom/about').should('exist');
             GraphqlUtils.getNode('/sites/digitall/home/newsroom/about/history').should('not.exist');

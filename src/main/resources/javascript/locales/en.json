@@ -514,6 +514,12 @@
           "openInList": "Open in list view"
         }
       },
+      "contentFolder": {
+        "dialog": {
+          "title": "Content Folder",
+          "body": "Content folders cannot be displayed in the current view. Switch to list view instead."
+        }
+      },
       "pageBuilder": {
         "breadcrumbs": {
           "dropdownLabel": "Item path"

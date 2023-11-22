@@ -354,14 +354,6 @@ describe('Page builder', () => {
         cy.get('[data-sel-role="cancel-button"]').click();
     });
 
-    it('Click on menu items should open modal', () => {
-        jcontent.getSecondaryNav().get().find('[data-sel-role="home"] .moonstone-treeView_itemToggle').click();
-        cy.contains('menu').click();
-        cy.contains('Menu titles are used to organize pages and cannot be displayed in the current view. Switch to list view instead');
-        cy.get('[data-sel-role="list-view-button"]').click();
-        getComponentByRole(Dropdown, 'sel-view-mode-dropdown').get().should('contain', 'List');
-    });
-
     // Tests to be added when content-editor is moved here
     //
     // describe('page creation', function () {

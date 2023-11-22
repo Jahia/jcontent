@@ -65,7 +65,7 @@ export const Box = React.memo(({
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
-        parent = element.parentElement.closest('[jahiatype=module]');
+        parent = element.closest('[jahiatype=module]');
 
         if (parent) {
             element.dataset.jahiaParent = parent.id;

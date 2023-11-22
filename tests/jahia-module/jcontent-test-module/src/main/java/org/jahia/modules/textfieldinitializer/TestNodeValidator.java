@@ -1,9 +1,10 @@
 package org.jahia.modules.textfieldinitializer;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.decorator.validation.JCRNodeValidator;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class TestNodeValidator implements JCRNodeValidator {
 
@@ -18,7 +19,7 @@ public class TestNodeValidator implements JCRNodeValidator {
         return node.getPropertyAsString("defaultString");
     }
 
-    @Length(min = 3)
+    @Size(min = 3)
     public String getDefaultI18nString() {
         return node.getPropertyAsString("defaultI18nString");
     }

@@ -43,6 +43,7 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
 
     const currentFolderInfo = useNodeInfo({path: state.path}, {skip: !state.path});
     const paths = (Array.isArray(initialSelectedItem) ? initialSelectedItem : [initialSelectedItem]).filter(f => f);
+    console.debug('Initial state', state.path, state.site, initialSelectedItem, paths);
     let accordion;
     if (state.mode === '') {
         accordion = registry.find({type: 'accordionItem', target: pickerConfig.key})[0];
@@ -62,7 +63,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             language: lang,
             uilang: uilang,
             selectableTypesTable: pickerConfig.selectableTypesTable
-        }
+        },
+        initialFetchPolicy: 'network-only',
+        nextFetchPolicy: 'cache-and-network'
     });
 
     useEffect(() => {
@@ -105,8 +108,10 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
                 // eslint-disable-next-line no-warning-comments
                 // Todo: Must implement something for pages accordion, where the selected path is not the direct parent
                 newState.path = firstMatchingAccordion.getPathForItem(selectedNode);
+                console.debug('We should pass here', selectedNode.path, newState.site, newState.path);
             } else {
                 newState.path = firstMatchingAccordion.getRootPath(newState.site);
+                console.debug('We should not pass here', selectedNode.path, newState.site, newState.path);
             }
 
             if (firstMatchingAccordion.getViewTypeForItem) {
@@ -143,6 +148,7 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             newState.sort = firstMatchingAccordion.tableConfig.defaultSort;
         }
 
+        console.debug('State comparison', newState.path, state.path);
         const actions = ([
             (newState.site !== state.site) && cePickerSite(newState.site),
             (newState.mode !== state.mode) && cePickerMode(newState.mode),

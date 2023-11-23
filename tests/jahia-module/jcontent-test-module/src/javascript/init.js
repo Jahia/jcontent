@@ -21,10 +21,10 @@ export default function () {
         }
     });
 
-    registry.add('pageBuilderBoxConfig', 'cent:defaultValueTest', {
+    registry.add('pageBuilderBoxConfig', 'defaultValueTest', {
         Bar: CustomBar,
         isBarAlwaysDisplayed: true,
         borderColors: {hover: 'rgba(224, 24, 45)', selected: 'var(--color-purple)'},
-        nodeTypes: ['cent:defaultValueTest']
+        targets: [{id: 'cent:defaultValueTest', priority: 0}]
     });
 }

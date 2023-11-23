@@ -18,16 +18,15 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
     }
 };
 
-const nodeHasRequiredMixinOrType = (node, customBoxConfig) => {
-    const nodeTypes = [...node.mixinTypes, node.primaryNodeType.name];
-    return customBoxConfig.nodeTypes.some(nodeType => nodeTypes.includes(nodeType));
-};
-
 const processCustomBoxConfigIfExists = node => {
     // Take the first matching config
-    const pageBuilderBoxConfig = node && registry.find({type: 'pageBuilderBoxConfig'})
-        .filter(customBoxConfig => nodeHasRequiredMixinOrType(node, customBoxConfig))
-        .pop();
+    // Only check the primaryNodeType and mixins added on the node
+    const nodeTypes = [...node.mixinTypes, node.primaryNodeType.name];
+    let configs = [];
+    nodeTypes.forEach(nodeType => {
+        configs.push(...registry.find({type: 'pageBuilderBoxConfig', target: nodeType}));
+    });
+    const pageBuilderBoxConfig = configs.shift();
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
@@ -42,6 +41,16 @@ const processCustomBoxConfigIfExists = node => {
     }
 
     return {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed};
+};
+
+const adaptContentPositionAndSize = element => {
+    if (element.id === element.parentElement.firstChild.id) {
+        element.parentElement.classList.add(editStyles.parentPadding);
+    } else {
+        element.classList.add(editStyles.marginTop);
+    }
+
+    element.classList.add(editStyles.smallerBox);
 };
 
 export const Box = React.memo(({
@@ -154,6 +163,10 @@ export const Box = React.memo(({
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isCurrent && !isSelected) {
         return false;
+    }
+
+    if (isBarAlwaysDisplayed) {
+        adaptContentPositionAndSize(element);
     }
 
     reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);

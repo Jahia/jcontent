@@ -134,8 +134,6 @@
 }
 
 .selected {
-    --colorSelected: var(--color-accent);
-
     z-index: 15000;
 
     border: 2px solid var(--colorSelected);
@@ -144,8 +142,6 @@
 }
 
 .current {
-    --colorCurrent: var(--color-gray);
-
     z-index: 18000;
 
     border: 2px solid var(--colorCurrent);

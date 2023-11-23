@@ -173,3 +173,16 @@
 :global(.noprefix) .dragging {
     opacity: 0.2;
 }
+
+:global(.noprefix) .marginTop {
+    margin-top: 68px;
+}
+
+:global(.noprefix) .parentPadding {
+    padding-top: 36px;
+}
+
+:global(.noprefix) .smallerBox {
+    margin-left: 4px;
+    margin-right: 4px;
+}

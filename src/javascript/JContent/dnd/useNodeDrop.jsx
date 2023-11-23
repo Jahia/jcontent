@@ -169,13 +169,13 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
 
                 if (onSaved) {
                     onSaved();
+                    setTimeout(triggerRefetchAll, 1000);
                 } else {
                     const moveResults = data.jcr.mutateNodes.map(n => n.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});
                     refreshTree(destParent.path, nodes, moveResults);
                 }
 
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
-                setTimeout(triggerRefetchAll, 1500);
             }).catch(e => {
                 console.log(e);
                 notificationContext.notify(

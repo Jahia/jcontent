@@ -102,7 +102,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
         if (event.relatedTarget && event.currentTarget.dataset.current === 'true' &&
-            (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path')) &&
+            (getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path')) &&
             !event.target.closest('#menuHolder')
         ) {
             disableHover.current = false;

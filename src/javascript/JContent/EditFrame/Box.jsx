@@ -75,8 +75,8 @@ export const Box = React.memo(({
     const rootDiv = useRef();
 
     const [{isCanDrop, insertPosition, destParent, isOver}, drop] = useNodeDrop({
-        dropTarget: parent && node,
-        orderable: true,
+        dropTarget: node,
+        orderable: Boolean(parent),
         entries,
         onSaved,
         pos: {before: element.dataset.prevPos, after: element.dataset.nextPos}
@@ -98,14 +98,12 @@ export const Box = React.memo(({
     }, [dragging, element, rootElementRef, setDraggedOverlayPosition]);
 
     useEffect(() => {
-        if (parent) {
-            element.classList.add(editStyles.enablePointerEvents);
-        }
+        element.classList.add(editStyles.enablePointerEvents);
 
         return () => {
             element.classList.remove(editStyles.enablePointerEvents);
         };
-    }, [parent, element]);
+    }, [element]);
 
     useEffect(() => {
         if (isCanDrop) {

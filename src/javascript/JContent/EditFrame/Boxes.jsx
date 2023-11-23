@@ -391,7 +391,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             const current = nodes[nodePath];
             const targetModule = modules.find(m => m.dataset.jahiaPath === current?.path);
 
-            if (targetModule) {
+            if (targetModule && insertPosition) {
                 const rect = getBoundingBox(targetModule, true);
                 currentDndInfo.current.relative = {
                     node: current,
@@ -400,6 +400,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     },
                     insertPosition
                 };
+            } else {
+                currentDndInfo.current.relative = null;
             }
         }
     };

@@ -52,6 +52,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
     const [insertPosition, setInsertPosition] = useState();
     const [destParentState, setDestParent] = useState();
     const [names, setNames] = useState([]);
+    const [, setIsCanDrop] = useState(false);
 
     const {getCurrent, setCurrent} = useConnector();
     const destParent = destParentState || dropTarget;
@@ -128,12 +129,16 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
             const limit = res.node?.properties.find(p => p.name === 'limit');
-            const hasRoom = limit ?  nodes.length <= parseInt(limit.value, 10) - res.node?.subNodes?.pageInfo?.totalCount : true;
+            const hasRoom = limit ? nodes.length <= parseInt(limit.value, 10) - res.node?.subNodes?.pageInfo?.totalCount : true;
 
             const basicConditions = dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom;
             const notSelf = nodes.find(source => (dropTarget && isDescendantOrSelf(dropTarget.path, source.path)) || (destParent && isDescendantOrSelf(destParent.path, source.path))) === undefined;
 
-            return basicConditions && notSelf && nodeTypeCheck(res.node, nodes).checkResult;
+            let result = Boolean(basicConditions && notSelf && nodeTypeCheck(res.node, nodes).checkResult);
+
+            // The nodeTypeCheck result is asynchronous - Store result in state to trigger update when the value change
+            setIsCanDrop(result);
+            return result;
         },
         drop: (dragSource, monitor) => {
             if (monitor.didDrop()) {
@@ -172,7 +177,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
                 setTimeout(triggerRefetchAll, 1500);
             }).catch(e => {
-                console.log(e)
+                console.log(e);
                 notificationContext.notify(
                     getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}),
                     ['closeButton', 'closeAfter5s']

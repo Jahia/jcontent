@@ -12,7 +12,8 @@ export const useMediaPickerInputData = uuids => {
             language: lang
         },
         skip: !uuids,
-        errorPolicy: 'ignore'
+        errorPolicy: 'ignore',
+        fetchPolicy: 'network-only'
     });
 
     if (loading || error || !data || !data.jcr || !uuids || (data.jcr.result.length === 0 && uuids.length > 0)) {

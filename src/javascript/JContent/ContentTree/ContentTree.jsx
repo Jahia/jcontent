@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
@@ -74,10 +74,9 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     }, [depth]);
 
     return (
-        <>
-            <li ref={ref}
-                {...props}
-                className={clsx([
+        <li ref={ref}
+            {...props}
+            className={clsx([
                     {
                         'moonstone-drag': dragging,
                         'moonstone-drop_listItem': (isCanDrop || isCanDropFile) && !insertPosition,
@@ -85,10 +84,9 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
                         'moonstone-order_after': isCanDrop && insertPosition === 'insertAfter'
                     }
                 ])}
-            >
-                {children}
-            </li>
-        </>
+        >
+            {children}
+        </li>
     );
 };
 
@@ -103,10 +101,20 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     const dispatch = useDispatch();
     const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
     const rootPath = item.getRootPath(siteKey);
+    const ulRef = useRef(null);
+    const ulScrollRef = useRef(0);
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
         openPaths.push(rootPath);
     }
+
+    // Use callback to be able to perform an action when ref is set
+    const ulRefSet = useCallback(node => {
+        if (node) {
+            ulRef.current = node;
+            node.parentElement.scrollTop = ulScrollRef.current;
+        }
+    }, []);
 
     const useTreeEntriesOptionsJson = {
         fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.isTreeSelectable, lockInfo, PickerItemsFragment.parentNode, displayName],
@@ -152,7 +160,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
-            <TreeView isReversed={isReversed}
+            <TreeView ref={ulRefSet}
+                      isReversed={isReversed}
                       itemComponent={ItemComponent}
                       data={convertPathsToTree({treeEntries, selected: path, isReversed, contentMenu: contextualMenuAction, itemProps: {item}})}
                       openedItems={openPaths}
@@ -168,7 +177,11 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                               dispatch(setPathAction(object.id, {sub: false}));
                           }
                       }}
-                      onOpenItem={object => dispatch(openPathAction(object.id))}
+                      onOpenItem={object => {
+                          // Record scroll position of tree container
+                          ulScrollRef.current = ulRef.current?.parentElement.scrollTop;
+                          dispatch(openPathAction(object.id));
+                      }}
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
         </React.Fragment>

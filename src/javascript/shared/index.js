@@ -8,6 +8,7 @@ export {default as UploadTransformComponent} from '../JContent/ContentRoute/Cont
 export {ContentEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentEmptyDropZone';
 export {default as FilesGridEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';
 export {ContentNotFound} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentNotFound';
+export {default as ContentStatuses} from '../JContent/ContentRoute/ContentStatuses/ContentStatuses';
 export {EmptyTable} from '../JContent/ContentRoute/ContentLayout/ContentTable/EmptyTable';
 export {ContentListHeader} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';
 export {ContentTableWrapper} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentTableWrapper';

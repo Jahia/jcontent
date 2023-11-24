@@ -23,7 +23,7 @@ function childrenLimitReachedOrExceeded(node) {
 
     if (node['jmix:listSizeLimit']) {
         const limit = node?.properties?.find(property => property.name === 'limit')?.value;
-        const childrenNumber = node?.subNodes?.pageInfo?.totalCount;
+        const childrenNumber = node?.['subNodesCount_nt:base'] || 0;
         return limit && childrenNumber >= Number(limit);
     }
 
@@ -45,7 +45,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
         requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],
         getChildNodeTypes: true,
         getContributeTypesRestrictions: true,
-        getSubNodesCount: true,
+        getSubNodesCount: ['nt:base'],
         getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'],
         getProperties: ['limit']
     };

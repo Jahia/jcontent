@@ -30,6 +30,8 @@ export const CopyCutActionComponent = withNotifications()(({
 
     const type = copyCutType || copyPasteConstants.COPY;
 
+    const subPagesCondition = (others.hideIfHasNoSubPages) ? {getSubNodesCount: ['jnt:page']} : {};
+
     const res = useNodeChecks(
         {path, paths, language, displayLanguage},
         {
@@ -38,6 +40,7 @@ export const CopyCutActionComponent = withNotifications()(({
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
             requiredSitePermission: type === copyPasteConstants.CUT ? [ACTION_PERMISSIONS.cutAction] : [ACTION_PERMISSIONS.copyAction],
             getProperties: ['jcr:mixinTypes'],
+            ...subPagesCondition,
             ...others
         }
     );
@@ -47,12 +50,13 @@ export const CopyCutActionComponent = withNotifications()(({
     }
 
     let isVisible = res.checksResult && (res.node ? !hasMixin(res.node, 'jmix:markedForDeletionRoot') : res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true));
+    let isEnabled = !others.hideIfHasNoSubPages || res.node?.['subNodesCount_jnt:page'] !== 0;
 
     return (
         <Render
             {...others}
             isVisible={isVisible}
-            enabled={isVisible}
+            enabled={isVisible && isEnabled}
             onClick={() => {
                 let nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);

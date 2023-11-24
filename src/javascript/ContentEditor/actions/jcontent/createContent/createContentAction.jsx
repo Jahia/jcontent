@@ -39,7 +39,7 @@ export const CreateContent = ({
         {path: path, language},
         {
             getPrimaryNodeType: true,
-            getSubNodesCount: true,
+            getSubNodesCount: ['nt:base'],
             getIsNodeTypes: ['jmix:listSizeLimit'],
             getProperties: ['limit']
         }

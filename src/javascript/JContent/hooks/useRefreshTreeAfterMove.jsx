@@ -41,7 +41,6 @@ export const useRefreshTreeAfterMove = () => {
             }
         });
 
-        console.log('Refresh');
         triggerRefetchAll();
     };
 };

@@ -30,7 +30,7 @@ export const CopyCutActionComponent = withNotifications()(({
 
     const type = copyCutType || copyPasteConstants.COPY;
 
-    const subPagesCondition = (others.hideIfHasNoSubPages) ? {getSubNodesCount: ['jnt:page']} : {};
+    const subPagesCondition = (others.hideIfHasNoSubPages) ? {getSubNodesCount: ['jnt:page', 'jmix:navMenuItem']} : {};
 
     const res = useNodeChecks(
         {path, paths, language, displayLanguage},
@@ -50,7 +50,7 @@ export const CopyCutActionComponent = withNotifications()(({
     }
 
     let isVisible = res.checksResult && (res.node ? !hasMixin(res.node, 'jmix:markedForDeletionRoot') : res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true));
-    let isEnabled = !others.hideIfHasNoSubPages || res.node?.['subNodesCount_jnt:page'] !== 0;
+    let isEnabled = !others.hideIfHasNoSubPages || (res.node?.['subNodesCount_jnt:page'] + res.node?.['subNodesCount_jmix:navMenuItem']) !== 0;
 
     return (
         <Render

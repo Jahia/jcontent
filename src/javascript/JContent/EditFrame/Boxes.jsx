@@ -205,15 +205,17 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         setPlaceholders(placeholders);
 
         const modules = [];
+
         currentDocument.querySelectorAll('[jahiatype]').forEach(element => {
             const type = element.getAttribute('jahiatype');
-            const path = element.getAttribute('path');
-            if (type === 'module' && path !== '*') {
-                if (path.startsWith('/')) {
-                    element.dataset.jahiaPath = path;
+            const modulePath = element.getAttribute('path');
+
+            if (type === 'module' && modulePath !== '*' && modulePath !== path) {
+                if (modulePath.startsWith('/')) {
+                    element.dataset.jahiaPath = modulePath;
                 } else {
                     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
-                    element.dataset.jahiaPath = parent.dataset.jahiaPath + '/' + path;
+                    element.dataset.jahiaPath = parent.dataset.jahiaPath + '/' + modulePath;
                 }
 
                 modules.push(element);
@@ -269,7 +271,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             contextualMenu.current(dup);
             event.preventDefault();
         });
-    }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
+    }, [path, currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
 
     const paths = [...new Set([
         ...modules.map(m => m.dataset.jahiaPath),

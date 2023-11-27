@@ -203,7 +203,7 @@ export const Box = React.memo(({
 
     return (
         <div ref={rootDiv}
-             className={clsx(styles.root)}
+             className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              style={currentOffset}
         >
             <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isCurrent && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}

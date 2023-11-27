@@ -1,8 +1,15 @@
 .root {
     position: absolute;
-    z-index: 15000;
 
     pointer-events: none;
+}
+
+.defaultZIndex {
+    z-index: 15000;
+}
+
+.alwaysDisplayedZIndex {
+    z-index: auto;
 }
 
 .rel {

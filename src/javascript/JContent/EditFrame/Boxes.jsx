@@ -271,7 +271,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             contextualMenu.current(dup);
             event.preventDefault();
         });
-    }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
+    }, [path, currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
 
     const paths = [...new Set([
         ...modules.map(m => m.dataset.jahiaPath),

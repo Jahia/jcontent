@@ -66,7 +66,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
             getLockInfo: true,
-            getSubNodesCount: true,
+            getSubNodesCount: ['nt:base'],
             getProperties: ['limit']
         }
     );
@@ -129,7 +129,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
             const limit = res.node?.properties.find(p => p.name === 'limit');
-            const hasRoom = limit ? nodes.length <= parseInt(limit.value, 10) - res.node?.subNodes?.pageInfo?.totalCount : true;
+            const hasRoom = limit ? nodes.length <= parseInt(limit.value, 10) - res.node?.['subNodesCount_nt:base'] : true;
 
             const basicConditions = dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom;
             const notSelf = nodes.find(source => (dropTarget && isDescendantOrSelf(dropTarget.path, source.path)) || (destParent && isDescendantOrSelf(destParent.path, source.path))) === undefined;

@@ -100,7 +100,7 @@ describe('CreateNewContent utils', () => {
         node = {
             'jmix:listSizeLimit': true,
             properties: [{name: 'limit', value: 5}],
-            subNodes: {pageInfo: {totalCount: 6}}
+            'subNodesCount_nt:base': 6
         };
     });
 
@@ -110,7 +110,7 @@ describe('CreateNewContent utils', () => {
 
     it('should return true if child limit is exceeded', async () => {
         expect(childrenLimitReachedOrExceeded(node)).toBe(true);
-        node.subNodes.pageInfo.totalCount = 4;
+        node['subNodesCount_nt:base'] = 4;
         expect(childrenLimitReachedOrExceeded(node)).toBe(false);
     });
 

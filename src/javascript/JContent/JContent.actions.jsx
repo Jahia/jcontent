@@ -250,6 +250,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.copyPageWithSubPages',
         targets: ['copyPageMenu:2'],
         showOnNodeTypes: ['jnt:page'],
+        hideIfHasNoSubPages: true,
         copyCutType: 'copy',
         component: CopyCutActionComponent
     });

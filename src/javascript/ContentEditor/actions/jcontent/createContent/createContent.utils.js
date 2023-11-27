@@ -93,7 +93,7 @@ export function childrenLimitReachedOrExceeded(node, templateLimit) {
         return false;
     }
 
-    const childrenCount = node?.subNodes?.pageInfo?.totalCount || 0;
+    const childrenCount = node?.['subNodesCount_nt:base'] || 0;
     if (node['jmix:listSizeLimit']) {
         const limit = node?.properties?.find(property => property.name === 'limit')?.value;
         if (limit && childrenCount >= Number(limit)) {

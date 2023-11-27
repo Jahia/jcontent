@@ -67,7 +67,8 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             getContributeTypesRestrictions: true,
             getLockInfo: true,
             getSubNodesCount: ['nt:base'],
-            getProperties: ['limit']
+            getProperties: ['limit'],
+            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay']
         }
     );
 

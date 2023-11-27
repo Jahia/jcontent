@@ -10,6 +10,7 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         const pageBuilder = new JContentPageBuilder(jcontent);
         const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies');
         module.hover();
+        module.click();
         const breadcrumbs = module.getFooter().getBreadcrumbs();
         breadcrumbs.shouldHaveCount(3);
         breadcrumbs.select('landing');

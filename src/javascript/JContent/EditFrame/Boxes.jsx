@@ -421,12 +421,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          node={node}
                          isCurrent={element === currentElement}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement) || (selection.length === 0 && element === currentElement)}
+                         isHeaderDisplayed={selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
-                         breadcrumbs={(selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement) || (selection.length === 0 && element === currentElement)) ? getBreadcrumbsForPath(node.path) : []}
+                         breadcrumbs={(selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)) ? getBreadcrumbsForPath(node.path) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}

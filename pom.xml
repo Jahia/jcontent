@@ -42,7 +42,7 @@
         <connection>scm:git:git@github.com:Jahia/jcontent.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/jcontent.git</developerConnection>
         <url>https://github.com/Jahia/jcontent</url>
-        <tag>2_11_0</tag>
+        <tag>2_x</tag>
     </scm>
     <properties>
         <jahia-module-type>system</jahia-module-type>

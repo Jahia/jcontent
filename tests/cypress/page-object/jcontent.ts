@@ -298,6 +298,7 @@ class PageBuilderModule extends BaseComponent {
 
     getHeader() {
         this.hover();
+        this.click(); // Header shows up only when selected
         this.get().invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
         });

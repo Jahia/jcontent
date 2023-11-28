@@ -47,10 +47,15 @@ describe('Page builder', () => {
 
             const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
             menu.select('Copy');
-
+            jcontent.clearSelection();
+            // Clearing selection should keep paste buttons
+            let buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
+            buttons.assertHasNoButtonForType('New content');
+            buttons.getButton('Paste');
+            buttons.getButton('Paste as reference');
             jcontent.clearClipboard();
 
-            const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
+            buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.getButton('New content');
             buttons.assertHasNoButtonForType('Paste');
             buttons.assertHasNoButtonForType('Paste as reference');

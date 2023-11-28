@@ -69,7 +69,7 @@ describe('Page builder', () => {
 
         it('should not show paste button when limit is reached', () => {
             jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1')
-                .contextMenu()
+                .contextMenu(true)
                 .select('Copy');
 
             cy.log('Assert no paste buttons after copy');

@@ -29,7 +29,7 @@ describe('Page builder', () => {
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(3000);
 
-            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
+            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true);
             menu.select('Copy');
 
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
@@ -45,7 +45,7 @@ describe('Page builder', () => {
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(3000);
 
-            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu();
+            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true);
             menu.select('Copy');
             jcontent.clearSelection();
             // Clearing selection should keep paste buttons

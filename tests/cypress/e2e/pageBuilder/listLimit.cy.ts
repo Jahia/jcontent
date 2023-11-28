@@ -23,7 +23,7 @@ describe('Page builder', () => {
             .switchToPageBuilder();
     });
 
-    describe.only('list limit', function () {
+    describe('list limit', function () {
         const limitSiteKey = 'limitSite';
 
         function removeLimit() {

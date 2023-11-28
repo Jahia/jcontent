@@ -285,6 +285,7 @@ class PageBuilderModule extends BaseComponent {
 
     hover() {
         this.get().realHover();
+        return this.get();
     }
 
     hasNoHeaderAndFooter() {

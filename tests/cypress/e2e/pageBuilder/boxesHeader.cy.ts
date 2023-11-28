@@ -22,12 +22,13 @@ describe('Page builder', () => {
 
     describe('boxes and header', function () {
         it('should show box when hovering', () => {
-            jcontent.getModule('/sites/jcontentSite/home/landing').getHeader();
+            jcontent.getModule('/sites/jcontentSite/home/landing').hover().should('have.attr', 'data-current', 'true');
         });
 
         it('should show box with name, status and edit buttons', () => {
-            const header = jcontent.getModule('/sites/jcontentSite/home/landing').getHeader();
-            header.get().find('p').contains('landing');
+            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').click();
+            const header = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').getHeader();
+            header.get().find('p').contains('test-content4');
             header.assertStatus('Not published');
             header.getButton('edit');
             header.getButton('contentMenu');

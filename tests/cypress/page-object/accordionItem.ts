@@ -41,7 +41,7 @@ export class AccordionItem {
     }
 
     getTreeItem(role: string, assertion?: (s: JQuery) => void): TreeItem {
-        return new TreeItem(this.getSection().find(`[role="treeitem"][data-sel-role=${role}]`), assertion);
+        return new TreeItem(this.getSection().find(`[role="treeitem"][data-sel-role="${role}"]`), assertion);
     }
 
     shouldNotHaveTreeItem(role: string) {

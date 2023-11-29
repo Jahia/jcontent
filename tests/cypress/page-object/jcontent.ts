@@ -285,6 +285,7 @@ class PageBuilderModule extends BaseComponent {
 
     hover() {
         this.get().realHover();
+        return this.get();
     }
 
     hasNoHeaderAndFooter() {
@@ -295,8 +296,12 @@ class PageBuilderModule extends BaseComponent {
         });
     }
 
-    getHeader() {
+    getHeader(selectFirst = false) {
         this.hover();
+        if (selectFirst) {
+            this.click(); // Header shows up only when selected
+        }
+
         this.get().invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
         });
@@ -317,8 +322,8 @@ class PageBuilderModule extends BaseComponent {
         }));
     }
 
-    contextMenu(): Menu {
-        this.getHeader();
+    contextMenu(selectFirst = false): Menu {
+        this.getHeader(selectFirst);
         this.get().rightclick({force: true});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }

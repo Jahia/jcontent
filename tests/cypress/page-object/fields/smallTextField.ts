@@ -24,7 +24,7 @@ export class SmallTextField extends Field {
 
     clearValue(force = false) {
         if (this.multiple) {
-            // Todo
+            // Handle clearing values of multiple values here
         } else {
             this.get().find('input[type="text"]').as('textinput');
             // Prevent field from being hidden by sticky header

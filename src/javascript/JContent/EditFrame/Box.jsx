@@ -3,13 +3,13 @@ import {HandleDrag} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
-import {registry} from '@jahia/ui-extender';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from './Breadcrumbs';
+import {findAvailableBoxConfig} from '../JContent.utils';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -19,14 +19,7 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
 };
 
 const processCustomBoxConfigIfExists = node => {
-    // Take the first matching config
-    // Only check the primaryNodeType and mixins added on the node
-    const nodeTypes = [...node.mixinTypes, node.primaryNodeType.name];
-    let configs = [];
-    nodeTypes.forEach(nodeType => {
-        configs.push(...registry.find({type: 'pageBuilderBoxConfig', target: nodeType}));
-    });
-    const pageBuilderBoxConfig = configs.shift();
+    const pageBuilderBoxConfig = findAvailableBoxConfig(node);
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
@@ -194,7 +187,7 @@ export const Box = React.memo(({
                         <HandleDrag size="default"/>
                     </div>
                 )}
-                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef}/>}
+                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
             </div>
         </div>
     );

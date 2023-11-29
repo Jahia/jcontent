@@ -19,6 +19,7 @@ export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable
 export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';
+export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 
 // Content-editor shared/index.js
 export * from '~/ContentEditor/contexts/ContentEditor';

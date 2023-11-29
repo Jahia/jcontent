@@ -8,26 +8,27 @@ import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 
+// eslint-disable-next-line react/prop-types
+export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...props}) => (
+    <Renderer
+        onClick={(item, event) => onClick(item, {
+            ...event,
+            currentTarget: {
+                ...event.currentTarget,
+                getBoundingClientRect: () => {
+                    const boundingClientRect = event.currentTarget.getBoundingClientRect();
+                    const frameRect = currentFrameRef.current.getBoundingClientRect();
+                    return new DOMRect(boundingClientRect.x + frameRect.x, boundingClientRect.y + frameRect.y, boundingClientRect.width, boundingClientRect.height);
+                }
+            }}
+        )}
+        {...props}
+    />
+);
+
 export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden}) => {
-    // eslint-disable-next-line react/prop-types
-    const wrap = Renderer => ({onClick, ...props}) => (
-        <Renderer
-            onClick={(item, event) => onClick(item, {
-                ...event,
-                currentTarget: {
-                    ...event.currentTarget,
-                    getBoundingClientRect: () => {
-                        const boundingClientRect = event.currentTarget.getBoundingClientRect();
-                        const frameRect = currentFrameRef.current.getBoundingClientRect();
-                        return new DOMRect(boundingClientRect.x + frameRect.x, boundingClientRect.y + frameRect.y, boundingClientRect.width, boundingClientRect.height);
-                    }
-                }}
-            )}
-            {...props}
-        />
-    );
-    const WrappedButtonRendererNoLabel = wrap(ButtonRendererNoLabel);
-    const WrappedButtonRenderer = wrap(ButtonRenderer);
+    const WrappedButtonRendererNoLabel = headerButtonWrapper(ButtonRendererNoLabel, currentFrameRef);
+    const WrappedButtonRenderer = headerButtonWrapper(ButtonRenderer, currentFrameRef);
 
     const displayLabels = width > 400;
     return (

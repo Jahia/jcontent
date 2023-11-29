@@ -2,12 +2,23 @@ import {JContent} from '../../page-object';
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Content navigation', () => {
+    const specialCharsName = '@#$^&€§¢ª¶ø°£™¥‰œæÀ-ž--';
+
     before(() => {
         createSite('mySite1');
         createSite('mySite2');
         enableModule('jcontent-test-module', 'mySite1');
         enableModule('events', 'mySite1');
         addNode({parentPathOrId: '/sites/mySite1/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
+        addNode({
+            name: specialCharsName,
+            parentPathOrId: '/sites/mySite1/home',
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'special chars page', language: 'en'},
+                {name: 'j:templateName', value: '2-column'}
+            ]
+        });
     });
 
     after(() => {
@@ -21,13 +32,22 @@ describe('Content navigation', () => {
 
     it('Should display custom accordion when enabled on site', () => {
         const jcontent = JContent.visit('mySite1', 'en', 'pages/home');
-        // Tests/jahia-module/jcontent-test-module/src/main/resources/javascript/apps/accordionConfig.js
+        // Tests requireModuleInstalledOnSite prop
+        // in /jahia-module/jcontent-test-module/src/main/resources/javascript/apps/accordionConfig.js
         jcontent.getAccordionItem('accordion-config').getHeader().should('be.visible');
     });
 
     it('Should not display custom accordion when not enabled on site', () => {
         const jcontent = JContent.visit('mySite2', 'en', 'pages/home');
         jcontent.getAccordionItem('accordion-config').shouldNotExist();
+    });
+
+    it('can open page with special chars in page builder', () => {
+        const jcontent = JContent.visit('mySite1', 'en', 'pages/home');
+        jcontent.getAccordionItem('pages').expandTreeItem('home');
+        jcontent.getAccordionItem('pages').getTreeItem(specialCharsName).click();
+        jcontent.shouldBeInMode('Page Builder');
+        cy.get('h1').contains('special chars page');
     });
 
     it('can open news in page builder', () => {

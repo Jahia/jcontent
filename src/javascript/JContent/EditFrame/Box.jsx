@@ -138,14 +138,13 @@ export const Box = React.memo(({
             const pos = (insertPosition === 'insertBefore') ? element.dataset.prevPos :
                 ((insertPosition === 'insertAfter') ? element.dataset.nextPos : null);
 
-            calculateDropTarget(destParent?.path, node.path, pos);
+            calculateDropTarget(destParent?.path, node.path, pos, true);
         } else if (isOver) {
-            element.ownerDocument.body.style.setProperty('cursor', 'not-allowed');
+            calculateDropTarget(destParent?.path, node.path, null, false);
         }
 
         return () => {
             calculateDropTarget();
-            element.ownerDocument.body.style.setProperty('cursor', 'default');
         };
     }, [isCanDrop, insertPosition, destParent, node, element, calculateDropTarget, isOver]);
 
@@ -192,7 +191,7 @@ export const Box = React.memo(({
         </div>
     );
 
-    const boxStyle = breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
+    const boxStyle = !isAnythingDragging && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
 
     return (
         <div ref={rootDiv}
@@ -207,7 +206,7 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
 
-                {breadcrumbs.length > 0 &&
+                {!isAnythingDragging && breadcrumbs.length > 0 &&
                     <div className={clsx(styles.relFooter)}
                          data-current={isCurrent}
                          data-jahia-id={element.getAttribute('id')}

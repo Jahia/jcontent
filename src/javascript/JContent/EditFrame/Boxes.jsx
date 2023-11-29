@@ -370,11 +370,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         currentDndInfo.current.draggedOverlayPosition = position;
     };
 
-    const calculateDropTarget = (destPath, nodePath, insertPosition) => {
+    const calculateDropTarget = (destPath, nodePath, insertPosition, dropAllowed) => {
         if (!destPath) {
             currentDndInfo.current.dropTarget = null;
             return;
         }
+
+        currentDndInfo.current.dropAllowed = dropAllowed;
 
         const current = nodes[destPath];
         const targetModule = modules.find(m => m.dataset.jahiaPath === current?.path);

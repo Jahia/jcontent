@@ -16,12 +16,12 @@ export const DndOverlays = ({currentDndInfo}) => {
         return null;
     }
 
-    const {draggedOverlayPosition, dropTarget, relative} = currentDndInfo.current;
+    const {draggedOverlayPosition, dropTarget, relative, dropAllowed} = currentDndInfo.current;
 
     return (
         <>
             {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
-            {dropTarget && <DropArea dropTarget={dropTarget}/>}
+            {dropTarget && <DropArea dropTarget={dropTarget} isDropAllowed={dropAllowed}/>}
             {dropTarget && relative && <Insert relative={relative}/>}
         </>
     );

@@ -3,19 +3,47 @@ import {HandleDrag} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
-import {registry} from '@jahia/ui-extender';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
-import Breadcrumbs from './Breadcrumbs';
+import {Breadcrumbs} from './Breadcrumbs';
+import {findAvailableBoxConfig} from '../JContent.utils';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
         setCurrentOffset(box);
     }
+};
+
+const processCustomBoxConfigIfExists = node => {
+    const pageBuilderBoxConfig = findAvailableBoxConfig(node);
+
+    const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
+
+    let borderColorCurrent = 'var(--color-gray)';
+    let borderColorSelected = 'var(--color-accent)';
+    if (pageBuilderBoxConfig) {
+        const borderColors = pageBuilderBoxConfig.borderColors;
+        if (borderColors) {
+            borderColorCurrent = borderColors.hover ? borderColors.hover : borderColorCurrent;
+            borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
+        }
+    }
+
+    return {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed};
+};
+
+const adaptContentPositionAndSize = element => {
+    if (element.id === element.parentElement.firstChild.id) {
+        element.parentElement.classList.add(editStyles.parentPadding);
+    } else {
+        element.classList.add(editStyles.marginTop);
+    }
+
+    element.classList.add(editStyles.smallerBox);
 };
 
 export const Box = React.memo(({
@@ -123,16 +151,20 @@ export const Box = React.memo(({
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed)), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    if (!isCurrent && !isSelected) {
+    const {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed} = processCustomBoxConfigIfExists(node);
+
+    isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
+    if (!isHeaderDisplayed && !isCurrent && !isSelected) {
         return false;
+    }
+
+    if (isBarAlwaysDisplayed) {
+        adaptContentPositionAndSize(element);
     }
 
     reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);
 
     const type = element.getAttribute('type');
-
-    const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
-    const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerProps = {
@@ -155,7 +187,7 @@ export const Box = React.memo(({
                         <HandleDrag size="default"/>
                     </div>
                 )}
-                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef}/>}
+                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
             </div>
         </div>
     );
@@ -164,10 +196,15 @@ export const Box = React.memo(({
 
     return (
         <div ref={rootDiv}
-             className={clsx(styles.root)}
+             className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isSelected ? styles.selected : styles.current)}>
+            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isCurrent && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
+                 style={{
+                     '--colorCurrent': borderColorCurrent,
+                     '--colorSelected': borderColorSelected
+                 }}
+            >
                 {isHeaderDisplayed && Header}
 
                 {breadcrumbs.length > 0 &&

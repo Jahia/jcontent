@@ -10,7 +10,7 @@ import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
 import {hasMixin, isDescendant, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection, cmSetSelection} from '../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {pathExistsInTree} from '../JContent.utils';
+import {pathExistsInTree, findAvailableBoxConfig} from '../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -24,7 +24,7 @@ const getModuleElement = (currentDocument, target) => {
         element = element.closest('[jahiatype]');
     }
 
-    if (element.getAttribute('jahiatype') === 'createbuttons') {
+    if (element && element.getAttribute('jahiatype') === 'createbuttons') {
         element = currentDocument.getElementById(element.dataset.jahiaParent);
     } else if (element?.dataset?.jahiaId) {
         element = currentDocument.getElementById(element.dataset.jahiaId);
@@ -448,7 +448,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 element,
                 node: nodes?.[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
             }))
-                .filter(({node}) => node && !isMarkedForDeletion(node))
+                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden)
                 .map(({node, element}) => (
                     <Create key={element.getAttribute('id')}
                             node={node}

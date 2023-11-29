@@ -8,6 +8,7 @@ export {default as UploadTransformComponent} from '../JContent/ContentRoute/Cont
 export {ContentEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentEmptyDropZone';
 export {default as FilesGridEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';
 export {ContentNotFound} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentNotFound';
+export {default as ContentStatuses} from '../JContent/ContentRoute/ContentStatuses/ContentStatuses';
 export {EmptyTable} from '../JContent/ContentRoute/ContentLayout/ContentTable/EmptyTable';
 export {ContentListHeader} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';
 export {ContentTableWrapper} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentTableWrapper';
@@ -18,6 +19,7 @@ export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable
 export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';
+export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 
 // Content-editor shared/index.js
 export * from '~/ContentEditor/contexts/ContentEditor';

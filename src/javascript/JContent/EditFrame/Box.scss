@@ -1,8 +1,15 @@
 .root {
     position: absolute;
-    z-index: 15000;
 
     pointer-events: none;
+}
+
+.defaultZIndex {
+    z-index: 15000;
+}
+
+.alwaysDisplayedZIndex {
+    z-index: auto;
 }
 
 .rel {
@@ -136,7 +143,7 @@
 .selected {
     z-index: 15000;
 
-    border: 2px solid var(--color-accent);
+    border: 2px solid var(--colorSelected);
     border-radius: 4px;
     box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }
@@ -144,7 +151,7 @@
 .current {
     z-index: 18000;
 
-    border: 2px solid var(--color-gray);
+    border: 2px solid var(--colorCurrent);
     border-radius: 4px;
     box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }

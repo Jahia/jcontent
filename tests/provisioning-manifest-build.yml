@@ -1,7 +1,7 @@
 - addMavenRepository: 'https://store.jahia.com/nexus/content/repositories/jahia-public-app-store@id=JahiaStore'
 - addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/@snapshots@noreleases'
 - installBundle:
-    - 'mvn:org.jahia.modules/content-editor'
+    - 'mvn:org.jahia.modules/content-editor/4.5.0'
     - 'mvn:org.jahia.modules/graphql-dxm-provider/2.19.0-SNAPSHOT'
   autoStart: true
   uninstallPreviousVersion: true

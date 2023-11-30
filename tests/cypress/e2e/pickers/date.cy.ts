@@ -46,6 +46,7 @@ describe('Date picker tests', () => {
         const dateField = ce.getField(DateField, 'qant:pickers_datetimepicker', false);
         dateField.checkValue('');
         dateField.pickTodayDate();
+        dateField.checkValue(dateField.getTodayDate() + ' 00:00');
         dateField.select({time: '11:00'});
         dateField.checkValue(dateField.getTodayDate() + ' 11:00');
     });

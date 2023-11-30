@@ -189,7 +189,8 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 
     useEffect(() => {
         const renderMode = isPreview ? 'render' : 'editframe';
-        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${path}.html?redirect=false${deviceParam}`;
+        const encodedPath = path.replace(/[^/]/g, encodeURIComponent);
+        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
             let mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
             const framePath = mainModule?.getAttribute('path');

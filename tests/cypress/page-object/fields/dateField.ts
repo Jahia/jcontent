@@ -12,14 +12,19 @@ export class DateField extends Field {
         this.get().find('button').click();
     }
 
+    public close() {
+        cy.get('.DayPicker').parent().parent().parent().click({waitForAnimations: true, multiple: true});
+        cy.get('.DayPicker').should('not.exist');
+    }
+
     pickTodayDate() {
         this.open();
         cy.get('.DayPicker-Day--today').click();
-        cy.get('body').click();
+        this.close();
     }
 
     select({month = null, year = null, date = null, time = null}) {
-        this.get().find('button').click();
+        this.open();
         if (month) {
             cy.get('.DayPicker').find('#select-month').click();
             cy.get('#menu-month').find(`[data-value=${month}]`).click();
@@ -38,7 +43,7 @@ export class DateField extends Field {
             cy.get('.TimePicker').contains(time).click();
         }
 
-        cy.get('body').click();
+        this.close();
     }
 
     getTodayDate(): string {

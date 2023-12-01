@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {HandleDrag} from '@jahia/moonstone';
+import {Checkbox, HandleDrag} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
@@ -57,6 +57,8 @@ export const Box = React.memo(({
     onMouseOver,
     onMouseOut,
     onClick,
+    onSelect,
+    setCurrentElement,
     onSaved,
     rootElementRef,
     currentFrameRef,
@@ -186,6 +188,7 @@ export const Box = React.memo(({
                         <HandleDrag size="default"/>
                     </div>
                 )}
+                <Checkbox checked={isSelected} onChange={onSelect}/>
                 {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
             </div>
         </div>
@@ -213,7 +216,7 @@ export const Box = React.memo(({
                          jahiatype="footer" // eslint-disable-line react/no-unknown-property
                          onClick={onClick}
                     >
-                        <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350}/>
+                        <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350} setCurrentElement={setCurrentElement}/>
                     </div>}
             </div>
         </div>
@@ -240,6 +243,10 @@ Box.propTypes = {
     onMouseOver: PropTypes.func,
 
     onMouseOut: PropTypes.func,
+
+    setCurrentElement: PropTypes.func,
+
+    onSelect: PropTypes.func,
 
     onClick: PropTypes.func,
 

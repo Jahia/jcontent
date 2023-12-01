@@ -8,9 +8,9 @@ import {useMutation, useQuery} from '@apollo/client';
 import {updateProperty} from '~/JContent/EditFrame/Boxes.gql-mutations';
 import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
 import {hasMixin, isDescendant, isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {cmAddSelection, cmClearSelection, cmRemoveSelection, cmSetSelection} from '../redux/selection.redux';
+import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {pathExistsInTree, findAvailableBoxConfig} from '../JContent.utils';
+import {findAvailableBoxConfig, pathExistsInTree} from '../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -88,6 +88,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [modules, setModules] = useState([]);
     const [updatePropertyMutation] = useMutation(updateProperty);
 
+    const [header, setHeader] = useState(false);
+
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
         if (!disableHover.current) {
@@ -107,14 +109,36 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ) {
             disableHover.current = false;
             window.clearTimeout(timeout);
+            setHeader(false);
             setCurrentElement(null);
         }
     }, [setCurrentElement, currentDocument]);
 
-    const onClick = useCallback(event => {
+    const onSelect = useCallback(event => {
         const element = getModuleElement(currentDocument, event.currentTarget);
         const path = element.getAttribute('path');
         const isSelected = selection.includes(path);
+
+        // Do not handle selection if the target element can be interacted with
+        if (disallowSelection(event.target)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        if (isSelected) {
+            dispatch(cmRemoveSelection(path));
+        } else if (!selection.some(element => isDescendant(path, element))) {
+            // Ok so no parent is already selected we can add ourselves
+            let actions = [];
+            actions.push(cmAddSelection(path));
+            // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
+            selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
+            dispatch(batchActions(actions));
+        }
+    }, [selection, currentDocument, dispatch]);
+
+    const onClick = useCallback(event => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
         if (event.detail === 1) {
             // Do not handle selection if the target element can be interacted with
@@ -125,18 +149,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             event.preventDefault();
             event.stopPropagation();
             if (isMultipleSelectionMode) {
-                if (isSelected) {
-                    dispatch(cmRemoveSelection(path));
-                } else if (!selection.some(element => isDescendant(path, element))) {
-                    // Ok so no parent is already selected we can add ourselves
-                    let actions = [];
-                    actions.push(cmAddSelection(path));
-                    // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
-                    selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
-                    dispatch(batchActions(actions));
-                }
-            } else if (!isSelected) {
-                dispatch(cmSetSelection(path));
+                onSelect(event);
+            } else {
+                setHeader(true);
             }
         } else if (event.detail === 2) {
             event.preventDefault();
@@ -144,7 +159,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return false;
-    }, [selection, currentDocument, dispatch]);
+    }, [onSelect]);
 
     const clearSelection = useCallback(event => {
         if (selection.length === 1 && !event.defaultPrevented) {
@@ -425,12 +440,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          node={node}
                          isCurrent={element === currentElement}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)}
+                         isHeaderDisplayed={(header && element === currentElement) || selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
-                         breadcrumbs={(selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)) ? getBreadcrumbsForPath(node.path) : []}
+                         breadcrumbs={((header && element === currentElement) || selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)) ? getBreadcrumbsForPath(node.path) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}
@@ -438,8 +453,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
+                         setCurrentElement={setCurrentElement}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
+                         onSelect={onSelect}
                          onClick={onClick}
                          onDoubleClick={onDoubleClick}
                          onSaved={onSaved}

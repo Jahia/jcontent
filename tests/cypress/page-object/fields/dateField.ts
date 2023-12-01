@@ -47,7 +47,11 @@ export class DateField extends Field {
         const month = date.getMonth();
         const year = date.getFullYear();
 
-        return new Date(year, month, day).toLocaleDateString();
+        return new Date(year, month, day).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
     }
 
     checkValue(expectedValue: string) {

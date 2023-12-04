@@ -13,12 +13,12 @@ export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMod
     const handleItemOnClick = useCallback((event, path) => {
         event.preventDefault();
         event.stopPropagation();
-        if (selection.length === 0) {
-            const element = event.target.ownerDocument.querySelector(`[jahiatype="module"][path="${path}"]`);
-            if (element) {
-                setCurrentElement({element, path, breadcrumb: true});
-            }
-        } else {
+        const element = event.target.ownerDocument.querySelector(`[jahiatype="module"][path="${path}"]`);
+        if (element) {
+            setCurrentElement({element, path, breadcrumb: true});
+        }
+
+        if (selection.length > 0) {
             onSelect(event, path);
         }
 

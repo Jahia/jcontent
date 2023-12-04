@@ -189,7 +189,7 @@ export const Box = React.memo(({
              onDoubleClick={onDoubleClick}
         >
             <div ref={dragWithChecks} className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}>
-                <Checkbox checked={isSelected} onChange={onSelect}/>
+                <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
                 {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
             </div>
         </div>

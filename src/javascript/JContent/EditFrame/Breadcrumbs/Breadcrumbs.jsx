@@ -2,11 +2,10 @@ import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {Breadcrumb, BreadcrumbItem, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 
-export const Breadcrumbs = ({nodes, setCurrentElement, isResponsiveMode}) => {
+export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMode}) => {
     const {t} = useTranslation('jcontent');
-    const dispatch = useDispatch();
     const {selection} = useSelector(state => ({
         selection: state.jcontent.selection
     }), shallowEqual);
@@ -14,13 +13,17 @@ export const Breadcrumbs = ({nodes, setCurrentElement, isResponsiveMode}) => {
     const handleItemOnClick = useCallback((event, path) => {
         event.preventDefault();
         event.stopPropagation();
-        let element = event.target.ownerDocument.querySelector(`[jahiatype="module"][path="${path}"]`);
-        if (element) {
-            setCurrentElement(element);
+        if (selection.length === 0) {
+            const element = event.target.ownerDocument.querySelector(`[jahiatype="module"][path="${path}"]`);
+            if (element) {
+                setCurrentElement({element, path, breadcrumb: true});
+            }
+        } else {
+            onSelect(event, path);
         }
 
         return false;
-    }, [setCurrentElement]);
+    }, [onSelect, selection.length, setCurrentElement]);
 
     if (isResponsiveMode) {
         const data = nodes.map(n => ({
@@ -33,7 +36,7 @@ export const Breadcrumbs = ({nodes, setCurrentElement, isResponsiveMode}) => {
             <Dropdown data={data}
                       placeholder={t('jcontent:label.contentManager.pageBuilder.breadcrumbs.dropdownLabel')}
                       onChange={(e, v) => {
-                          handleItemOnClick(selection, v.value, dispatch)(e);
+                          handleItemOnClick(e, v.value);
                       }}
             />
         );
@@ -56,5 +59,6 @@ export const Breadcrumbs = ({nodes, setCurrentElement, isResponsiveMode}) => {
 Breadcrumbs.propTypes = {
     nodes: PropTypes.array,
     setCurrentElement: PropTypes.func,
+    onSelect: PropTypes.func,
     isResponsiveMode: PropTypes.bool
 };

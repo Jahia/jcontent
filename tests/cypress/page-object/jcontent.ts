@@ -253,6 +253,10 @@ class PageBuilderModuleHeader extends BaseComponent {
     getButton(role: string): Button {
         return getComponentByRole(Button, role, this);
     }
+
+    select() {
+        this.get().find('[data-sel-role="selection-checkbox"]').click();
+    }
 }
 
 class PageBuilderModuleFooter extends BaseComponent {

@@ -31,6 +31,7 @@ describe('Page builder', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
             module.click();
+            module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
             jcontent.iframe().get().find('.blog-topbar').click();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
@@ -63,25 +64,11 @@ describe('Page builder', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 
-        it('Always selects one item without meta key', () => {
-            cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-            let module = jcontent.getModule(item1);
-            module.click();
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-
-            module = jcontent.getModule(item2);
-            module.click();
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-
-            module = jcontent.getModule(item3);
-            module.click();
-            jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-        });
-
         it('Clears selection when unselected', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
             module.click();
+            module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module.parentFrame.get().find('div[data-current="true"]').should('exist');
@@ -98,6 +85,7 @@ describe('Page builder', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
             module.click();
+            module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item3);
@@ -114,6 +102,7 @@ describe('Page builder', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item2);
             module.click();
+            module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
             module = jcontent.getModule(item3);
@@ -122,6 +111,7 @@ describe('Page builder', () => {
             jcontent.refresh();
 
             module.click();
+            module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
         });
 
@@ -129,6 +119,7 @@ describe('Page builder', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
             module.click();
+            module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
             module.doubleClick();
             const contentEditor = new ContentEditor();

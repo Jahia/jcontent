@@ -1,9 +1,26 @@
+function handleSkipped(char, inSkip) {
+    if (char === '{') {
+        inSkip++;
+    }
+
+    if (char === '}') {
+        inSkip--;
+
+        if (inSkip === 1) {
+            inSkip = 0;
+        }
+    }
+
+    return inSkip;
+}
+
 export const prefixCssSelectors = function (rules, className) {
     let classLen = className.length * 2;
     let char;
     let nextChar;
     let isAt;
     let isIn;
+    let inSkip;
 
     // Removes comments
     rules = rules.replace(/\/\*(?:(?!\*\/)[\s\S])*\*\/|[\r\n\t]+/g, '');
@@ -41,20 +58,28 @@ export const prefixCssSelectors = function (rules, className) {
         char = rules[i];
         nextChar = rules[i + 1];
 
-        if (char === '@' && !rules.substr(i).startsWith('@keyframes') && !rules.substr(i).startsWith('@font-face')) {
-            isAt = true;
+        if (rules.substr(i).startsWith('@keyframes') || rules.substr(i).startsWith('@font-face')) {
+            inSkip = 1;
         }
 
-        if (!isAt && char === '{') {
-            isIn = true;
-        }
+        if (inSkip) {
+            inSkip = handleSkipped(char, inSkip);
+        } else {
+            if (char === '@') {
+                isAt = true;
+            }
 
-        if (isIn && char === '}') {
-            isIn = false;
-        }
+            if (!isAt && char === '{') {
+                isIn = true;
+            }
 
-        if (!isIn && nextChar !== '@' && nextChar !== '}' && (char === '}' || char === ',' || ((char === '{' || char === ';') && isAt))) {
-            i = handleRule(i);
+            if (isIn && char === '}') {
+                isIn = false;
+            }
+
+            if (!isIn && nextChar !== '@' && nextChar !== '}' && (char === '}' || char === ',' || ((char === '{' || char === ';') && isAt))) {
+                i = handleRule(i);
+            }
         }
     }
 

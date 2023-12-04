@@ -7,10 +7,10 @@ import PropTypes from 'prop-types';
 import {useMutation, useQuery} from '@apollo/client';
 import {updateProperty} from '~/JContent/EditFrame/Boxes.gql-mutations';
 import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
-import {hasMixin, isDescendant, isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {cmAddSelection, cmClearSelection, cmRemoveSelection, cmSetSelection} from '../redux/selection.redux';
+import {hasMixin, isDescendant, isDescendantOrSelf, isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {pathExistsInTree, findAvailableBoxConfig} from '../JContent.utils';
+import {findAvailableBoxConfig, pathExistsInTree} from '../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -83,38 +83,61 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
     // It helps determine box visibility and header visibility.
     const [currentElement, setCurrentElement] = useState();
-    const disableHover = useRef(false);
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
     const [updatePropertyMutation] = useMutation(updateProperty);
 
+    const [header, setHeader] = useState(false);
+
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
-        if (!disableHover.current) {
-            const target = event.currentTarget;
-            window.clearTimeout(timeout);
-            timeout = window.setTimeout(() => {
-                setCurrentElement(getModuleElement(currentDocument, target));
-            }, 10);
-        }
+        const target = event.currentTarget;
+        window.clearTimeout(timeout);
+        timeout = window.setTimeout(() => {
+            let moduleElement = getModuleElement(currentDocument, target);
+            setCurrentElement(current => (
+                (current && current.breadcrumb && isDescendantOrSelf(moduleElement.getAttribute('path'), current.path)) ? current : {element: moduleElement, path: moduleElement.getAttribute('path')}
+            ));
+        }, 10);
     }, [setCurrentElement, currentDocument]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
         if (event.relatedTarget && event.currentTarget.dataset.current === 'true' &&
-            (getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path')) &&
+            !isDescendantOrSelf(getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'), getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')) &&
             !event.target.closest('#menuHolder')
         ) {
-            disableHover.current = false;
             window.clearTimeout(timeout);
+            setHeader(false);
             setCurrentElement(null);
         }
     }, [setCurrentElement, currentDocument]);
 
-    const onClick = useCallback(event => {
+    const onSelect = useCallback((event, path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
-        const path = element.getAttribute('path');
+        path = path || element.getAttribute('path');
         const isSelected = selection.includes(path);
+
+        // Do not handle selection if the target element can be interacted with
+        if (disallowSelection(event.target)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        if (isSelected) {
+            dispatch(cmRemoveSelection(path));
+        } else if (!selection.some(element => isDescendant(path, element))) {
+            // Ok so no parent is already selected we can add ourselves
+            let actions = [];
+            actions.push(cmAddSelection(path));
+            // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
+            selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
+            dispatch(batchActions(actions));
+        }
+    }, [selection, currentDocument, dispatch]);
+
+    const onClick = useCallback(event => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
         if (event.detail === 1) {
             // Do not handle selection if the target element can be interacted with
@@ -125,18 +148,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             event.preventDefault();
             event.stopPropagation();
             if (isMultipleSelectionMode) {
-                if (isSelected) {
-                    dispatch(cmRemoveSelection(path));
-                } else if (!selection.some(element => isDescendant(path, element))) {
-                    // Ok so no parent is already selected we can add ourselves
-                    let actions = [];
-                    actions.push(cmAddSelection(path));
-                    // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
-                    selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
-                    dispatch(batchActions(actions));
-                }
-            } else if (!isSelected) {
-                dispatch(cmSetSelection(path));
+                onSelect(event);
+            } else {
+                setHeader(true);
             }
         } else if (event.detail === 2) {
             event.preventDefault();
@@ -144,7 +158,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return false;
-    }, [selection, currentDocument, dispatch]);
+    }, [onSelect]);
 
     const clearSelection = useCallback(event => {
         if (selection.length === 1 && !event.defaultPrevented) {
@@ -345,7 +359,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     }, [currentDocument, inlineEditor, language, updatePropertyMutation]);
 
-    const currentPath = currentElement ? currentElement.getAttribute('path') : path;
+    const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({
         name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
         path: m.dataset.jahiaPath,
@@ -410,6 +424,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     };
 
+    const el = currentElement?.element;
+
     return (
         <div ref={rootElement}>
             <ContextualMenu
@@ -423,14 +439,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          node={node}
-                         isCurrent={element === currentElement}
+                         isCurrent={element === el}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)}
-                         isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === currentElement}
+                         isHeaderDisplayed={(header && element === el) || selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === el)}
+                         isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
-                         breadcrumbs={(selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === currentElement)) ? getBreadcrumbsForPath(node.path) : []}
+                         breadcrumbs={((header && element === el) || selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === el)) ? getBreadcrumbsForPath(node.path) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}
@@ -438,8 +454,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
+                         setCurrentElement={setCurrentElement}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
+                         onSelect={onSelect}
                          onClick={onClick}
                          onDoubleClick={onDoubleClick}
                          onSaved={onSaved}

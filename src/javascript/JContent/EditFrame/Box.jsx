@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {HandleDrag} from '@jahia/moonstone';
+import {Checkbox} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
@@ -57,6 +57,8 @@ export const Box = React.memo(({
     onMouseOver,
     onMouseOut,
     onClick,
+    onSelect,
+    setCurrentElement,
     onSaved,
     rootElementRef,
     currentFrameRef,
@@ -163,6 +165,12 @@ export const Box = React.memo(({
 
     reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);
 
+    const dragWithChecks = n => {
+        if (type === 'existingNode' && !isActionsHidden) {
+            drag(n);
+        }
+    };
+
     const type = element.getAttribute('type');
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
@@ -180,12 +188,8 @@ export const Box = React.memo(({
              onClick={onClick}
              onDoubleClick={onDoubleClick}
         >
-            <div className={clsx(styles.header, 'flexRow_nowrap', 'alignCenter')}>
-                {type === 'existingNode' && !isActionsHidden && (
-                    <div ref={drag} className={clsx(editStyles.enablePointerEvents, styles.dragHandle, 'flexRow_center', 'alignCenter')}>
-                        <HandleDrag size="default"/>
-                    </div>
-                )}
+            <div ref={dragWithChecks} className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}>
+                <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
                 {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
             </div>
         </div>
@@ -213,7 +217,7 @@ export const Box = React.memo(({
                          jahiatype="footer" // eslint-disable-line react/no-unknown-property
                          onClick={onClick}
                     >
-                        <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350}/>
+                        <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
                     </div>}
             </div>
         </div>
@@ -240,6 +244,10 @@ Box.propTypes = {
     onMouseOver: PropTypes.func,
 
     onMouseOut: PropTypes.func,
+
+    setCurrentElement: PropTypes.func,
+
+    onSelect: PropTypes.func,
 
     onClick: PropTypes.func,
 

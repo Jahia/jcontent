@@ -47,7 +47,7 @@ describe('Page builder', () => {
 
             const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true);
             menu.select('Copy');
-            jcontent.clearSelection();
+
             // Clearing selection should keep paste buttons
             let buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.assertHasNoButtonForType('New content');

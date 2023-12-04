@@ -55,7 +55,7 @@ describe('Content navigation', () => {
         jc.getTable().getRowByLabel('test-event').contextMenu().select('Open in Page Builder');
         cy.frameLoaded('#page-builder-frame-1');
         jc.shouldBeInMode('Page Builder');
-        jc.getAccordionItem('content-folders').getTreeItem('contents').get().invoke('attr', 'data-highlight').should('eq', 'true');
+        jc.getAccordionItem('content-folders').getTreeItem('contents').get().invoke('attr', 'aria-current').should('eq', 'page');
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
         cy.get('h1').contains('test-event');
     });

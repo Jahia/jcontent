@@ -163,6 +163,9 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     let contextualMenu = useRef();
     let rootContextualMenu = useRef();
 
+    const highlightedItem = path && (!treeEntries.find(f => f.path === path)) && treeEntries.filter(f => path.startsWith(f.path)).slice(-1)[0];
+    const highlighted = highlightedItem ? [highlightedItem.path] : [];
+
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
@@ -177,6 +180,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           itemProps: {item}
                       })}
                       openedItems={openPaths}
+                      highlightedItems={highlighted}
                       selectedItems={[path.endsWith('/') ? path.slice(0, -1) : path]}
                       onContextMenuItem={(object, event) => {
                           event.stopPropagation();

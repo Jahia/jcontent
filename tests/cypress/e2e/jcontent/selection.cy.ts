@@ -231,6 +231,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             // Select absolute area
             const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main');
             module.click('bottom');
+            module.getHeader().select();
             checkSelectionCount(1);
 
             // Check selection in structured mode

@@ -40,6 +40,11 @@
 [cent:testOverride] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
  - jcr:title (string) < '^.{0,10}$'
 
+[cent:choiceListSelectorTypeOverride] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - radioButton (string, choicelist) = 'choice1' < 'choice1', 'choice2', 'choice3'
+ - list (string, choicelist) = 'choice4' < 'choice4', 'choice5', 'choice6'
+ - checkbox (string, choicelist) = 'choice7' multiple < 'choice7', 'choice8', 'choice9'
+ - mList (string, choicelist) = 'choice10' multiple < 'choice10', 'choice11', 'choice12'
 
 [cent:testDefaultTemplate] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:hasTemplateNode
 - j:templateName (string,choicelist[templatesNode=pageTemplate]) mandatory nofulltext

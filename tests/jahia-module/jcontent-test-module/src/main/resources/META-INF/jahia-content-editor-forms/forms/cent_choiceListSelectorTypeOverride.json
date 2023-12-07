@@ -1,0 +1,24 @@
+{
+  "nodeType": "cent:choiceListSelectorTypeOverride",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "cent:choiceListSelectorTypeOverride",
+          "fields": [
+            {
+              "name": "radioButton",
+              "selectorType": "RadioChoiceList"
+            },
+            {
+              "name": "checkbox",
+              "selectorType": "CheckboxChoiceList"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

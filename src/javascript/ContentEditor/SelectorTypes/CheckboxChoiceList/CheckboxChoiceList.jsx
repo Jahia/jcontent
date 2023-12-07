@@ -50,7 +50,7 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
                         key={item.value.string}
                         fieldId={id}
                         item={item}
-                        checked={value?.includes(item.value.string)}/>
+                        isChecked={value?.includes(item.value.string)}/>
                 ))}
             </CheckboxGroup>
             {inputContext.displayActions && (
@@ -67,5 +67,11 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
 CheckboxChoiceList.propTypes = {
     field: FieldPropTypes.isRequired,
     value: PropTypes.string,
-    id: PropTypes.string
+    id: PropTypes.string,
+    inputContext: {
+        actionContext: PropTypes.object,
+        displayActions: PropTypes.object
+    },
+    onChange: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired
 };

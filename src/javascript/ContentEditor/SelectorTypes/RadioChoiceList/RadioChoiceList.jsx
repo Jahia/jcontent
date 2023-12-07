@@ -31,5 +31,6 @@ export const RadioChoiceList = ({field, value, id, onChange}) => {
 RadioChoiceList.propTypes = {
     field: FieldPropTypes.isRequired,
     value: PropTypes.string,
-    id: PropTypes.string
+    id: PropTypes.string,
+    onChange: PropTypes.func
 };

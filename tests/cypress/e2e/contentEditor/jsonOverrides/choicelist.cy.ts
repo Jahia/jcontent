@@ -1,7 +1,7 @@
-import {JContent} from "../../../page-object";
-import {createSite, deleteSite, enableModule} from "@jahia/cypress";
-import {RadioChoiceList, CheckboxChoiceList} from "../../../page-object/fields/toggleChoiceList";
-import {Field} from "../../../page-object/fields";
+import {JContent} from '../../../page-object';
+import {createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {RadioChoiceList, CheckboxChoiceList} from '../../../page-object/fields/toggleChoiceList';
+import {Field} from '../../../page-object/fields';
 
 // Override defined in jcontent-test-module, forms/cent_choiceListSelectorTypeOverride.json
 describe('radio button and checkbox selectorType overrides', {defaultCommandTimeout: 10000}, () => {
@@ -17,14 +17,14 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-    })
+    });
 
     after(() => {
         deleteSite(siteKey);
         cy.logout();
     });
 
-    it('should override choice list with radio button selectorType', {defaultCommandTimeout: 10000},() => {
+    it('should override choice list with radio button selectorType', {defaultCommandTimeout: 10000}, () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         let contentEditor = jcontent.createContent('choiceListSelectorTypeOverride');
         let field: RadioChoiceList = contentEditor.getField(
@@ -43,7 +43,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
         field.assertNotSelected('choice1');
     });
 
-    it('should override multiple choice list with checkbox selectorType', {defaultCommandTimeout: 10000},() => {
+    it('should override multiple choice list with checkbox selectorType', {defaultCommandTimeout: 10000}, () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         let contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
         let field: CheckboxChoiceList = contentEditor.getField(
@@ -75,7 +75,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
     });
 
     it('should not override choice list with no selectorType defined', () => {
-        const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         const contentEditor = jcontent.createContent('choiceListSelectorTypeOverride');
         const field = contentEditor.getField(Field, 'cent:choiceListSelectorTypeOverride_list', false);
         // Verify field still contains standard dropdown selector
@@ -86,13 +86,12 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
 
     it('should not override multiple choice list with no selectorType defined', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        let contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
-        let field: Field = contentEditor.getField(
+        const contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
+        const field: Field = contentEditor.getField(
             Field, 'cent:choiceListSelectorTypeOverride_mList', false);
         // Verify field still contains standard dropdown selector
         field.get().scrollIntoView()
             .find('.moonstone-dropdown')
             .should('be.visible');
     });
-
 });

@@ -3,7 +3,7 @@ import {CheckboxItem} from '@jahia/moonstone/dist/components/CheckboxGroup/Check
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const CheckboxItemField = ({fieldId, item, checked, ...props}) => {
+export const CheckboxItemField = ({fieldId, item, isChecked, ...props}) => {
     const {t} = useTranslation();
 
     const label = item.displayValueKey ? t(item.displayValueKey) : item.displayValue;
@@ -14,12 +14,13 @@ export const CheckboxItemField = ({fieldId, item, checked, ...props}) => {
             id={`${fieldId}-${value}`}
             label={label}
             value={value}
-            checked={checked}
+            checked={isChecked}
         />
     );
 };
 
 CheckboxItemField.propTypes = {
     fieldId: PropTypes.string,
-    item: PropTypes.object
+    item: PropTypes.object,
+    isChecked: PropTypes.bool
 };

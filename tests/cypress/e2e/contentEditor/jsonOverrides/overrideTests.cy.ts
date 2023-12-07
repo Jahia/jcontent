@@ -1,6 +1,5 @@
 import {JContent} from '../../../page-object';
-import {createSite, deleteSite, enableModule} from "@jahia/cypress";
-import {Field, SmallTextField} from "../../../page-object/fields";
+import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('overrideTests', {testIsolation: false}, () => {
     const siteKey = 'contentEditorSite';
@@ -32,6 +31,5 @@ describe('overrideTests', {testIsolation: false}, () => {
         jcontent.editComponentByText('test-content1');
         cy.get('button[data-sel-role="advancedMode"]').should('exist');
     });
-
 });
 

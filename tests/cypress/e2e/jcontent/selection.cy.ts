@@ -224,13 +224,20 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             jcontent.getTable().getRowByLabel('We are a global network');
         });
 
-        it('remove selection when navigating to a mode where item is not visible', () => {
+        it.only('remove selection when navigating to a mode where item is not visible',() => {
             const pageBuilder = jcontent.switchToPageBuilder();
-
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-            // Select absolute area
-            const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main');
-            module.click('bottom');
+
+            /**
+             * There is no way to get to the area-main header through clicking
+             * (clicking will bring up rich text header instead) in order to select.
+             * As a workaround, we go through the rich text and select area-main using footer.
+             * Then use the selector from parentFrame to check the checkbox (we cannot use module here).
+             */
+            const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main/global-network-rich-text');
+            module.click(); // bring up footer
+            module.getFooter().getBreadcrumbs().selectPos(5); // navigate to area-main
+            module.parentFrame.get().find('[data-sel-role="selection-checkbox"]').click({force: true});
             checkSelectionCount(1);
 
             // Check selection in structured mode

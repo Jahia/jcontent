@@ -23,6 +23,11 @@ export class BreadcrumbPageBuilder extends BaseComponent {
         this.get().find('span').contains(name).click({force: true});
     }
 
+    selectPos(pos: number) {
+        const truePos = (pos * 2) - 1; // we need to skip the li separators
+        this.get().find(`li:nth-child(${truePos}) span`).click({force: true});
+    }
+
     addToSelection(name: string): void {
         this.get().find('span').contains(name).click({force: true, metaKey: true});
     }

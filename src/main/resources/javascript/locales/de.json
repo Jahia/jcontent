@@ -889,6 +889,10 @@
         "multipleLeftRightSelector": {
           "displayValue": "Multiple list",
           "description": "Alternative zu mehreren Drop Downs wenn viele Werte gewählt werden können"
+        },
+        "radioButton": {
+          "displayValue": "Radio button",
+          "description": "Alternative zum Dropdown zum Auswählen eines Elements aus einer Liste"
         }
       }
     },

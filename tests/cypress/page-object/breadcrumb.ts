@@ -24,7 +24,7 @@ export class BreadcrumbPageBuilder extends BaseComponent {
     }
 
     selectPos(pos: number) {
-        const truePos = (pos * 2) - 1; // we need to skip the li separators
+        const truePos = (pos * 2) - 1; // We need to skip the li separators
         this.get().find(`li:nth-child(${truePos}) span`).click({force: true});
     }
 

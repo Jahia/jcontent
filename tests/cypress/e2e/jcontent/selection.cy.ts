@@ -224,7 +224,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             jcontent.getTable().getRowByLabel('We are a global network');
         });
 
-        it.only('remove selection when navigating to a mode where item is not visible',() => {
+        it('remove selection when navigating to a mode where item is not visible', () => {
             const pageBuilder = jcontent.switchToPageBuilder();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
 
@@ -235,8 +235,8 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
              * Then use the selector from parentFrame to check the checkbox (we cannot use module here).
              */
             const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main/global-network-rich-text');
-            module.click(); // bring up footer
-            module.getFooter().getBreadcrumbs().selectPos(5); // navigate to area-main
+            module.click(); // Bring up footer
+            module.getFooter().getBreadcrumbs().selectPos(5); // Navigate to area-main
             module.parentFrame.get().find('[data-sel-role="selection-checkbox"]').click({force: true});
             checkSelectionCount(1);
 

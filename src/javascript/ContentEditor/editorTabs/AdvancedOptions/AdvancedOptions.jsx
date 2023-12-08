@@ -6,7 +6,7 @@ import {TechnicalInformation} from './TechnicalInformation/TechnicalInformation'
 import {DeprecatedOption} from './DeprecatedOption';
 import {VanityUrls} from './VanityUrls';
 import {Usages} from './Usages';
-import {Channels} from './Channels';
+import {Visibility} from './Visibility/Visibility';
 
 export const AdvancedOptions = () => {
     const [activeOption, setActiveOption] = useState('technicalInformation');
@@ -20,7 +20,7 @@ export const AdvancedOptions = () => {
         categories: DeprecatedOption,
         seo: VanityUrls,
         usages: Usages,
-        channels: Channels
+        visibility: Visibility
     };
     const SelectedTabComponent = SelectedTabComponents[activeOption];
     return (

@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: var(--spacing-medium);
+}
+
+.row {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--spacing-medium);
+    justify-content: flex-start;
+    align-items: baseline;
+    padding: var(--spacing-medium);
+}

@@ -135,7 +135,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             const basicConditions = dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom;
             const notSelf = nodes.find(source => (dropTarget && isDescendantOrSelf(dropTarget.path, source.path)) || (destParent && isDescendantOrSelf(destParent.path, source.path))) === undefined;
 
-            let result = Boolean(basicConditions && notSelf && nodeTypeCheck(res.node, nodes).checkResult);
+            let result = Boolean(basicConditions && notSelf && res.checksResult && nodeTypeCheck(res.node, nodes).checkResult);
 
             // The nodeTypeCheck result is asynchronous - Store result in state to trigger update when the value change
             setIsCanDrop(result);

@@ -24,10 +24,19 @@ export const ContentPickerApi = () => {
         picker.setValue(pickerResult);
     };
 
+    const initialSelectedItem = [];
+    if (picker?.value) {
+        try {
+            initialSelectedItem.push({fileUrl: new URL(picker?.value)});
+        } catch {
+            initialSelectedItem.push({path: picker.value});
+        }
+    }
+
     return picker && (
         <PickerDialog
             isOpen={Boolean(picker)}
-            initialSelectedItem={picker?.value}
+            initialSelectedItem={initialSelectedItem}
             site={picker?.site}
             pickerConfig={pickerConfig}
             lang={picker?.lang}

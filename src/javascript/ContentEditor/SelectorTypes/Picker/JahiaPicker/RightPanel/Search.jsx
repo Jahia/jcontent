@@ -9,7 +9,7 @@ import {useQuery} from '@apollo/client';
 import {batchActions} from 'redux-batched-actions';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {getBaseSearchContextData} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
-import {GET_SEARCH_CONTEXT} from '../PickerDialog.gql-queries';
+import {GET_SEARCH_CONTEXT} from '../JahiaPicker.gql-queries';
 import PropTypes from 'prop-types';
 import * as jcontentUtils from '~/JContent/JContent.utils';
 

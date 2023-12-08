@@ -26,10 +26,10 @@ export const useMediaPickerInputData = uuids => {
             uuid: imageData.uuid,
             url: `${
                 window.contextJsParameters.contextPath
-            }/files/default${encodeJCRPath(imageData.path)}?lastModified=${imageData.lastModified.value}&t=thumbnail2`,
+            }/files/default${encodeJCRPath(imageData.path)}?lastModified=${imageData.lastModified?.value}&t=thumbnail2`,
             name: imageData.displayName,
             path: imageData.path,
-            info: `${imageData.content && imageData.content.mimeType.value}${sizeInfo}`
+            info: `${imageData.content && imageData.content?.mimeType?.value}${sizeInfo}`
         };
     });
 

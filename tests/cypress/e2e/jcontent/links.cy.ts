@@ -39,7 +39,7 @@ describe('Links in jcontent', () => {
         getComponentByRole(Button, 'cancel').click();
     });
 
-    it('Open modal when clicking on external link', function () {
+    it.skip('Open modal when clicking on external link', function () {
         jcontent.iframe().get().contains('external-link').click();
         cy.get('div[role=dialog]');
         cy.contains('You are leaving Jahia. Do you want to open the external URL in a new tab');

@@ -892,6 +892,10 @@
         "multipleLeftRightSelector": {
           "displayValue": "Multiple list",
           "description": "Sélectionner de nombreuses valeurs à partir d'une liste"
+        },
+        "radioButton": {
+          "displayValue": "Radio button",
+          "description": "Alternative à la liste déroulante à choix unique pour sélectionner un élément"
         }
       }
     },

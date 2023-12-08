@@ -1,8 +1,8 @@
-mutation m {
+mutation undeployModule($pathOrId: String!, $moduleName: String!) {
   jcr {
-    mutateNode(pathOrId: "/sites/contentEditorSite") {
+    mutateNode(pathOrId: $pathOrId) {
       mutateProperty(name: "j:installedModules") {
-        removeValue(value: "jcontent-helper")
+        removeValue(value: $moduleName)
       }
     }
   }

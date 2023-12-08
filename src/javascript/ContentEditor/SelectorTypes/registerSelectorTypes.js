@@ -11,6 +11,8 @@ import {registerBoolean} from './Boolean';
 import {registerPicker} from './Picker';
 import {registerSystemName} from './SystemName';
 import {registerMultipleLeftRightSelector} from './MultipleLeftRightSelector';
+import {registerRadioChoiceList} from './RadioChoiceList';
+import {registerCheckboxChoiceList} from './CheckboxChoiceList';
 
 export const registerSelectorTypes = ceRegistry => {
     registerSelectorTypesOnChange(ceRegistry);
@@ -25,6 +27,8 @@ export const registerSelectorTypes = ceRegistry => {
     registerBoolean(ceRegistry);
     registerPicker(ceRegistry);
     registerChoiceList(ceRegistry);
+    registerRadioChoiceList(ceRegistry);
+    registerCheckboxChoiceList(ceRegistry);
     registerSystemName(ceRegistry);
     registerMultipleLeftRightSelector(ceRegistry);
 };

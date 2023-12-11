@@ -57,7 +57,7 @@ describe('Create content tests', () => {
         contentEditor.cancel();
     });
 
-    it.only('Add languages to site - languages switch should show', () => {
+    it('Add languages to site - languages switch should show', () => {
         cy.apollo({mutationFile: 'contentEditor/visibility/addExtraLanguagesToSite.graphql'});
         jcontent = JContent.visit(sitekey, 'en', 'pages/home');
         jcontent.switchToListMode().getTable().getRowByLabel('test 1').contextMenu().select('Edit');

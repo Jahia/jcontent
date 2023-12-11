@@ -1,0 +1,10 @@
+mutation {
+    jcr {
+        mutateNode(pathOrId: "/sites/jcontentSite") {
+            mutateProperty(name: "j:languages") {
+                addValues(values: ["fr", "de"])
+            }
+        }
+    }
+}
+

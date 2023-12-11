@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 
 export const ExternalPickerConfigPropsTypes = PropTypes.shape({
-    module: PropTypes.string,
+    requireModuleInstalledOnSite: PropTypes.string,
+    pickerConfigs: PropTypes.arrayOf(PropTypes.string),
     selectableTypes: PropTypes.arrayOf(PropTypes.string),
-    key: PropTypes.string.isRequired,
+    keyUrlPath: PropTypes.string,
     pickerInput: PropTypes.shape({
-        usePickerInputData: PropTypes.elementType.isRequired,
         emptyLabel: PropTypes.string,
         emptyIcon: PropTypes.string
     }),

@@ -24,9 +24,7 @@ export const useMediaPickerInputData = uuids => {
         const sizeInfo = (imageData.height && imageData.width) ? ` - ${parseInt(imageData.height.value, 10)}x${parseInt(imageData.width.value, 10)}px` : '';
         return {
             uuid: imageData.uuid,
-            url: `${
-                window.contextJsParameters.contextPath
-            }/files/default${encodeJCRPath(imageData.path)}?lastModified=${imageData.lastModified?.value}&t=thumbnail2`,
+            url: imageData.thumbnailUrl,
             name: imageData.displayName,
             path: imageData.path,
             info: `${imageData.content && imageData.content?.mimeType?.value}${sizeInfo}`

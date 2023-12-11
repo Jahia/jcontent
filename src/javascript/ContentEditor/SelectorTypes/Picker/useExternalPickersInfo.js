@@ -1,5 +1,5 @@
 import {useQuery} from '@apollo/client';
-import {valueTypesByPathQuery, valueTypesQuery} from './valueTypes.gql-queries';
+import {valueTypesByPathQuery, valueTypesQuery} from './useExternalPickersInfo.gql-queries';
 import {useNodeInfo} from '@jahia/data-helper';
 import {registry} from '@jahia/ui-extender';
 
@@ -49,7 +49,10 @@ export const useExternalPickersInfo = (site, values, pickerConfig) => {
         .filter(({requireModuleInstalledOnSite}) => !requireModuleInstalledOnSite || nodeInfo.node.site.installedModulesWithAllDependencies?.includes?.(requireModuleInstalledOnSite))
         .filter(({pickerConfigs}) => !pickerConfigs || pickerConfigs.indexOf(pickerConfig.key) > -1);
 
-    // Get Dam Modules selector config
+    // Get Dam Modules selector config.
+    // Todo: cleanup how the pickers detect they can handle the file.
+    // This is currently done by specific code, either checking the selectableTypes (if values are nodes identified by uuid or path, so based on  valueNodeTypes)
+    // Or by checking if "keyUrlPath" is part of the url (if values are only identified by url)
     const externalPickerConfig =
         availableExternalPickerConfigs.find(({selectableTypes}) => selectableTypes && selectableTypes.find(selectableType => valueNodeTypes.valueTypes.has(selectableType))) ||
         availableExternalPickerConfigs.find(({keyUrlPath}) => keyUrlPath && values.find(v => v.fileUrl?.host && v.fileUrl.host.indexOf(keyUrlPath) > -1)) ||

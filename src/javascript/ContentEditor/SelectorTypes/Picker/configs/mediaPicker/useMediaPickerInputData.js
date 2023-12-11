@@ -1,6 +1,5 @@
 import {useQuery} from '@apollo/client';
 import {MediaPickerFilledQuery} from './MediaPicker.gql-queries';
-import {encodeJCRPath} from '~/ContentEditor/utils';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 export const useMediaPickerInputData = uuids => {
@@ -22,9 +21,10 @@ export const useMediaPickerInputData = uuids => {
 
     const fieldData = data.jcr.result.map(imageData => {
         const sizeInfo = (imageData.height && imageData.width) ? ` - ${parseInt(imageData.height.value, 10)}x${parseInt(imageData.width.value, 10)}px` : '';
+        const url = imageData.thumbnailUrl + (imageData.thumbnailUrl.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + imageData.lastModified?.value;
         return {
             uuid: imageData.uuid,
-            url: imageData.thumbnailUrl,
+            url,
             name: imageData.displayName,
             path: imageData.path,
             info: `${imageData.content && imageData.content?.mimeType?.value}${sizeInfo}`

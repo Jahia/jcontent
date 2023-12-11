@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 
 const toArray = value => (Array.isArray(value) ? value : [value]);
 
-export const MultipleLeftRightSelector = ({field, onChange, value}) => {
+export const MultipleLeftRightSelector = ({field, onChange, value, labels}) => {
     const {t} = useTranslation('jcontent');
     const labelBase = 'label.contentEditor.picker.selectors.multipleLeftRightSelector';
     const arrayValue = value ? toArray(value) : [];
@@ -27,14 +27,26 @@ export const MultipleLeftRightSelector = ({field, onChange, value}) => {
         value: constraint.value.string
     }));
 
+    const listLabels = {
+        addAllTitle: t(`${labelBase}.addAll`),
+        removeAllTitle: t(`${labelBase}.removeAll`),
+        selected: t(`${labelBase}.selected`, {count: arrayValue.length})
+    };
+
+    if (labels !== undefined) {
+        if (Object.hasOwn(labels, 'rightListTitle')) {
+            listLabels.rightListTitle = t(labels.rightListTitle);
+        }
+
+        if (Object.hasOwn(labels, 'leftListTitle')) {
+            listLabels.leftListTitle = t(labels.leftListTitle);
+        }
+    }
+
     return (
         <ListSelector
             isReadOnly={field.readOnly || field.valueConstraints.length === 0}
-            label={{
-                addAllTitle: t(`${labelBase}.addAll`),
-                removeAllTitle: t(`${labelBase}.removeAll`),
-                selected: t(`${labelBase}.selected`, {count: arrayValue.length})
-            }}
+            label={listLabels}
             values={arrayValue}
             options={options}
             onChange={onChange}
@@ -45,7 +57,11 @@ export const MultipleLeftRightSelector = ({field, onChange, value}) => {
 MultipleLeftRightSelector.propTypes = {
     field: FieldPropTypes.isRequired,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.oneOf([PropTypes.string, PropTypes.array])
+    value: PropTypes.oneOf([PropTypes.string, PropTypes.array]),
+    labels: PropTypes.shape({
+        rightListTitle: PropTypes.string,
+        leftListTitle: PropTypes.string
+    })
 };
 
 export default MultipleLeftRightSelector;

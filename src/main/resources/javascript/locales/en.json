@@ -908,13 +908,19 @@
       "visibilityTab": {
         "languages" : {
           "title" : "Languages",
-          "description": "Content will be visible in the selected languages",
-          "label" : "Hide content in specific languages"
+          "description": "Content will not be visible in the selected languages",
+          "label" : "Hide content in specific languages",
+          "leftList" : "The content is visible for these languages in live:",
+          "rightList" : "Content is not available for these languages in live:"
         },
         "conditions" : {
           "title" : "Date and time",
           "rules" : "{{rulesNumber}} rules set",
+          "rule" : "1 rule is set",
           "norules" : "No rules set"
+        },
+        "channels": {
+
         }
       }
     },

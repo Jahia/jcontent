@@ -14,12 +14,13 @@ export const Visibility = () => {
         variables: {
             path: nodeData.path
         },
-        fetchPolicy: 'cache-and-network'
+        fetchPolicy: 'network-only'
     });
 
     if (loading) {
         return <LoaderOverlay/>;
     }
 
-    return <div className={styles.container}><Languages invalidLanguages={data.jcr.nodeByPath.invalidLanguages.values}/><DateTime rules={data.jcr.nodeByPath.children.nodes}/><Channels/></div>;
+    const invalidLanguages = data.jcr.nodeByPath.invalidLanguages.values;
+    return <div className={styles.container}><Languages invalidLanguages={invalidLanguages}/><DateTime rules={data.jcr.nodeByPath.rules.pageInfo.totalCount}/><Channels/></div>;
 };

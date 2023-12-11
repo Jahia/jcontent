@@ -897,6 +897,21 @@
           "displayValue": "Radio button",
           "description": "Alternative à la liste déroulante à choix unique pour sélectionner un élément"
         }
+      },
+      "visibilityTab": {
+        "languages" : {
+          "title" : "Langues",
+          "description": "Le contenu sera cacher dans les langues sélectionnées",
+          "label" : "Cacher le contenu dans les langues sélectionnées",
+          "leftList" : "Le contenu sera visible en:",
+          "rightList" : "Le contenu ne sera pas visible en:"
+        },
+        "conditions" : {
+          "title" : "Jour et heure",
+          "rules" : "{{rulesNumber}} conditions définies",
+          "rule" : "1 condition définie",
+          "norules" : "Pas de condition définie"
+        }
       }
     },
     "ok": "OK",

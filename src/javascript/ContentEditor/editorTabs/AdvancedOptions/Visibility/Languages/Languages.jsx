@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
-import {Validation} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Validation';
 import styles from './Languages.scss';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {Toggle} from '@jahia/design-system-kit';
@@ -32,7 +31,7 @@ const filterRegularFieldSets = fieldSets => {
 const LanguageSection = ({fields}) => {
     return (
         <div className={stylesFieldset.fields}>
-            { fields.map(field =>
+            {fields.map(field =>
                 <FieldContainer key={field.name} field={field}/>)}
         </div>
     );
@@ -72,9 +71,12 @@ export const Languages = ({invalidLanguages}) => {
         return null;
     }
 
+    if (fieldSets[0].fields[0].valueConstraints.length < 2) {
+        return null;
+    }
+
     return (
         <div className={styles.container}>
-            <Validation/>
             <section>
                 <article>
                     <div className={stylesFieldset.fieldSetTitleContainer}>

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {useContentEditorSectionContext} from '~/ContentEditor/contexts';
-import {Validation} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Validation';
 import styles from './DateTime.scss';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/ContentEditor/utils';
@@ -42,7 +41,7 @@ export const DateTime = ({rules}) => {
     const {sections} = useContentEditorSectionContext();
     const section = sections.filter(s => s.name === 'visibility');
     const fieldSets = filterRegularFieldSets(section[0].fieldSets);
-    const [activatedSection, setActivatedSection] = useState(rules.length > 0);
+    const [activatedSection, setActivatedSection] = useState(rules > 0);
 
     if (fieldSets.length === 0) {
         return null;
@@ -54,7 +53,6 @@ export const DateTime = ({rules}) => {
 
     return (
         <div className={styles.container}>
-            <Validation/>
             <section>
                 <article>
                     <div className={stylesFieldset.fieldSetTitleContainer}>
@@ -83,13 +81,28 @@ export const DateTime = ({rules}) => {
                     <div className={stylesFieldset.fields}>
                         {activatedSection &&
                             <DisplayAction actionKey="contentEditorGWTTabAction_visibility"
-                                           render={props => (
-                                               <div className={styles.row}>
-                                                   <Typography>{rules.length === 0 ? t('jcontent:label.contentEditor.visibilityTab.conditions.norules') : t('jcontent:label.contentEditor.visibilityTab.conditions.rules', {rulesNumber: rules.length})}</Typography>
-                                                   <ButtonRenderer {...props}
-                                                                   buttonLabel={t('jcontent:label.contentManager.editAction')}/>
-                                               </div>
-                                           )}
+                                           render={props => {
+                                               let typo;
+                                               switch (rules) {
+                                                   case 0:
+                                                       typo = t('jcontent:label.contentEditor.visibilityTab.conditions.norules');
+                                                       break;
+                                                   case 1:
+                                                       typo = t('jcontent:label.contentEditor.visibilityTab.conditions.rule');
+                                                       break;
+                                                   default:
+                                                       typo = t('jcontent:label.contentEditor.visibilityTab.conditions.rules', {rulesNumber: rules});
+                                                       break;
+                                               }
+
+                                               return (
+                                                   <div className={styles.row}>
+                                                       <Typography>{typo}</Typography>
+                                                       <ButtonRenderer {...props}
+                                                                       buttonLabel={t('jcontent:label.contentManager.editAction')}/>
+                                                   </div>
+                                               );
+                                           }}
                             />}
                     </div>
                 </article>

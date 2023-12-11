@@ -24,7 +24,15 @@ export const registerCheckboxChoiceList = registry => {
         dataType: ['String'],
         cmp: ({field, value, id, inputContext, onChange, onBlur}) => {
             if (field.valueConstraints?.length > 5) {
-                return <MultipleLeftRightSelector field={field} value={value} onChange={onChange}/>;
+                return (
+                    <MultipleLeftRightSelector field={field}
+                                               value={value}
+                                               labels={{
+                    rightListTitle: 'jcontent:label.contentEditor.visibilityTab.languages.rightList',
+                    leftListTitle: 'jcontent:label.contentEditor.visibilityTab.languages.leftList'
+                }}
+                                               onChange={onChange}/>
+                );
             }
 
             return (

@@ -5,9 +5,9 @@ export const VisibilityQuery = gql`query($path:String!) {
     jcr {
         nodeByPath(path: $path) {
             ...NodeCacheRequiredFields
-            children(names:["j:conditionalVisibility"]) {
-                nodes {
-                    ...NodeCacheRequiredFields
+            rules: descendants(typesFilter:{types: ["jnt:condition"], multi: ALL}) {
+                pageInfo {
+                    totalCount
                 }
             }
             invalidLanguages: property(name:"j:invalidLanguages") {

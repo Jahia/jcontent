@@ -14,7 +14,13 @@
               "labelKey": "label.contentEditor.visibilityTab.languages.label",
               "descriptionKey": "label.contentEditor.visibilityTab.languages.description",
               "hide": false,
-              "selectorType": "CheckboxesToMultiLeftRight"
+              "selectorType": "CheckboxesToMultiLeftRight",
+              "selectorOptionsMap": {
+                "choicelist": "",
+                "siteLanguage": "",
+                "skipValidation": "true",
+                "maxCheckboxes": "5"
+              }
             }
           ]
         }

@@ -10,7 +10,7 @@ import {VisibilityQuery} from '~/ContentEditor/editorTabs/AdvancedOptions/Visibi
 
 export const Visibility = () => {
     const {nodeData} = useContentEditorContext();
-    const {data, loading} = useQuery(VisibilityQuery, {
+    const {data, loading, refetch} = useQuery(VisibilityQuery, {
         variables: {
             path: nodeData.path
         },
@@ -21,6 +21,6 @@ export const Visibility = () => {
         return <LoaderOverlay/>;
     }
 
-    const invalidLanguages = data.jcr.nodeByPath.invalidLanguages.values;
-    return <div className={styles.container}><Languages invalidLanguages={invalidLanguages}/><DateTime rules={data.jcr.nodeByPath.rules.pageInfo.totalCount}/><Channels/></div>;
+    const invalidLanguages = data.jcr.nodeByPath.invalidLanguages?.values;
+    return <div className={styles.container} data-cm-role="visibilityScreen"><Languages invalidLanguages={invalidLanguages}/><DateTime rules={data.jcr.nodeByPath.rules.pageInfo.totalCount} refresh={refetch}/><Channels/></div>;
 };

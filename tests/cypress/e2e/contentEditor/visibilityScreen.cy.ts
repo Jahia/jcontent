@@ -57,6 +57,18 @@ describe('Create content tests', () => {
         contentEditor.cancel();
     });
 
+    it('Add languages to site - languages checkboxes should show', () => {
+        cy.apollo({mutationFile: 'contentEditor/visibility/addLanguagesToSite.graphql'});
+        jcontent = JContent.visit(sitekey, 'en', 'pages/home');
+        jcontent.switchToListMode().getTable().getRowByLabel('test 1').contextMenu().select('Edit');
+        const contentEditor = new ContentEditor();
+        const advancedOptions = contentEditor.switchToAdvancedOptions();
+        advancedOptions.switchToOption('Visibility');
+        cy.get('[data-sel-role-dynamic-fieldset="jmix:i18n"]').should('be.visible').click();
+        cy.get('input[name="jmix:i18n_j:invalidLanguages"]').should('have.length', 3);
+        contentEditor.cancel();
+    });
+
     it('Add languages to site - languages switch should show', () => {
         cy.apollo({mutationFile: 'contentEditor/visibility/addExtraLanguagesToSite.graphql'});
         jcontent = JContent.visit(sitekey, 'en', 'pages/home');

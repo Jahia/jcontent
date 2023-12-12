@@ -23,7 +23,12 @@ export const registerCheckboxChoiceList = registry => {
     registry.add('selectorType', 'CheckboxesToMultiLeftRight', {
         dataType: ['String'],
         cmp: ({field, value, id, inputContext, onChange, onBlur}) => {
-            if (field.valueConstraints?.length > 5) {
+            let maxCheckboxes = 5;
+            if (field.selectorOptions?.some(option => option.name === 'maxCheckboxes')) {
+                maxCheckboxes = parseInt(field.selectorOptions.find(option => option.name === 'maxCheckboxes').value, 10);
+            }
+
+            if (field.valueConstraints?.length > maxCheckboxes) {
                 return (
                     <MultipleLeftRightSelector field={field}
                                                value={value}

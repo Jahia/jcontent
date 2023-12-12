@@ -12,3 +12,11 @@
     align-items: baseline;
     padding: var(--spacing-medium);
 }
+
+.rowSwitch {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--spacing-small);
+    justify-content: flex-start;
+    align-items: center;
+}

@@ -6,15 +6,22 @@ import {getButtonRenderer} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {Toggle} from '@jahia/design-system-kit';
-import {Edit, Typography} from '@jahia/moonstone';
+import {Edit, Reload, Typography} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 
-const ButtonRenderer = getButtonRenderer({
+const EditButton = getButtonRenderer({
     defaultButtonProps: {
         variant: 'outlined',
-        size: 'medium',
-        color: 'accent',
-        buttonIcon: <Edit/>
+        size: 'default',
+        color: 'accent'
+    }
+});
+
+const RefreshButton = getButtonRenderer({
+    labelStyle: 'none',
+    defaultButtonProps: {
+        size: 'small',
+        color: 'accent'
     }
 });
 
@@ -36,7 +43,19 @@ const filterRegularFieldSets = fieldSets => {
     return fieldSets.filter(fs => showFieldSet(fs));
 };
 
-export const DateTime = ({rules}) => {
+function render(props, t) {
+    return (
+        <div className={styles.row}>
+            <Typography>{props.typo}</Typography>
+            <EditButton {...props}
+                        buttonLabel={t('jcontent:label.contentManager.editAction')}
+                        buttonIcon={<Edit/>}
+            />
+        </div>
+    );
+}
+
+export const DateTime = ({rules, refresh}) => {
     const {t} = useTranslation('jcontent');
     const {sections} = useContentEditorSectionContext();
     const section = sections.filter(s => s.name === 'visibility');
@@ -50,6 +69,23 @@ export const DateTime = ({rules}) => {
     const handleChange = () => {
         setActivatedSection(!activatedSection);
     };
+
+    const handleClick = () => {
+        refresh();
+    };
+
+    let typo;
+    switch (rules) {
+        case 0:
+            typo = t('jcontent:label.contentEditor.visibilityTab.conditions.norules');
+            break;
+        case 1:
+            typo = t('jcontent:label.contentEditor.visibilityTab.conditions.rule');
+            break;
+        default:
+            typo = t('jcontent:label.contentEditor.visibilityTab.conditions.rules', {rulesNumber: rules});
+            break;
+    }
 
     return (
         <div className={styles.container}>
@@ -66,7 +102,7 @@ export const DateTime = ({rules}) => {
                                 checked={activatedSection}
                                 onChange={handleChange}
                             />
-                            <div className="flexCol">
+                            <div className={styles.rowSwitch}>
                                 <Typography component="label"
                                             htmlFor="jmix:conditionalVisibility"
                                             className={stylesFieldset.fieldSetTitle}
@@ -75,33 +111,16 @@ export const DateTime = ({rules}) => {
                                 >
                                     {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
                                 </Typography>
+                                <RefreshButton buttonIcon={<Reload/>} onClick={handleClick}/>
                             </div>
                         </div>
                     </div>
                     <div className={stylesFieldset.fields}>
                         {activatedSection &&
                             <DisplayAction actionKey="contentEditorGWTTabAction_visibility"
+                                           typo={typo}
                                            render={props => {
-                                               let typo;
-                                               switch (rules) {
-                                                   case 0:
-                                                       typo = t('jcontent:label.contentEditor.visibilityTab.conditions.norules');
-                                                       break;
-                                                   case 1:
-                                                       typo = t('jcontent:label.contentEditor.visibilityTab.conditions.rule');
-                                                       break;
-                                                   default:
-                                                       typo = t('jcontent:label.contentEditor.visibilityTab.conditions.rules', {rulesNumber: rules});
-                                                       break;
-                                               }
-
-                                               return (
-                                                   <div className={styles.row}>
-                                                       <Typography>{typo}</Typography>
-                                                       <ButtonRenderer {...props}
-                                                                       buttonLabel={t('jcontent:label.contentManager.editAction')}/>
-                                                   </div>
-                                               );
+                                               return render(props, t);
                                            }}
                             />}
                     </div>
@@ -112,5 +131,6 @@ export const DateTime = ({rules}) => {
 };
 
 DateTime.propTypes = {
-    rules: PropTypes.array
+    rules: PropTypes.number.isRequired,
+    refresh: PropTypes.func.isRequired
 };

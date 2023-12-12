@@ -1,10 +1,15 @@
 .languageSwitcher {
-    flex: 1;
+    justify-content: space-between;
 
-    text-transform: uppercase;
+    border-left: 1px solid var(--color-gray);
+}
+
+.languageSwitcher.fullWidth {
+    width: inherit;
 }
 
 .label {
-    display: flex;
-    align-items: center;
+    padding: var(--spacing-nano) var(--spacing-small);
+
+    border-left: 1px solid var(--color-gray);
 }

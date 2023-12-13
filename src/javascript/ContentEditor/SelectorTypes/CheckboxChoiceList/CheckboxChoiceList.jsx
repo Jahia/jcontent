@@ -53,7 +53,7 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
                         key={item.value.string}
                         fieldId={id}
                         item={item}
-isChecked={isInverted ? !value?.includes(item.value.string) : value?.includes(item.value.string)}/>
+                        isChecked={isInverted ? !value?.includes(item.value.string) : value?.includes(item.value.string)}/>
                 ))}
             </CheckboxGroup>
             {inputContext.displayActions && (

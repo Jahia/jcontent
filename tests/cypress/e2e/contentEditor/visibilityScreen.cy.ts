@@ -61,11 +61,19 @@ describe('Create content tests', () => {
         cy.apollo({mutationFile: 'contentEditor/visibility/addLanguagesToSite.graphql'});
         jcontent = JContent.visit(sitekey, 'en', 'pages/home');
         jcontent.switchToListMode().getTable().getRowByLabel('test 1').contextMenu().select('Edit');
-        const contentEditor = new ContentEditor();
-        const advancedOptions = contentEditor.switchToAdvancedOptions();
+        let contentEditor = new ContentEditor();
+        let advancedOptions = contentEditor.switchToAdvancedOptions();
         advancedOptions.switchToOption('Visibility');
         cy.get('[data-sel-role-dynamic-fieldset="jmix:i18n"]').should('be.visible').click();
-        cy.get('input[name="jmix:i18n_j:invalidLanguages"]').should('have.length', 3);
+        cy.get('input[name="jmix:i18n_j:invalidLanguages"]').should('have.length', 3).and('be.checked').uncheck('fr');
+        contentEditor.save();
+        contentEditor.cancel();
+        jcontent.getTable().getRowByLabel('test 1').contextMenu().select('Edit');
+        contentEditor = new ContentEditor();
+        advancedOptions = contentEditor.switchToAdvancedOptions();
+        advancedOptions.switchToOption('Visibility');
+        cy.get('input[value="fr"]').should('have.length', 1).and('not.be.checked').check();
+        contentEditor.save();
         contentEditor.cancel();
     });
 
@@ -77,7 +85,7 @@ describe('Create content tests', () => {
         const advancedOptions = contentEditor.switchToAdvancedOptions();
         advancedOptions.switchToOption('Visibility');
         cy.get('[data-sel-role-dynamic-fieldset="jmix:i18n"]').should('be.visible').click();
-        cy.get('.moonstone-listSelector').contains('The content is visible for these languages in live:').should('be.visible');
+        cy.get('.moonstone-listSelector').contains('The content will be visible in:').should('be.visible');
         cy.get('li.moonstone-valueListItem[role="left-list"]').should('have.length', 7);
         contentEditor.cancel();
     });

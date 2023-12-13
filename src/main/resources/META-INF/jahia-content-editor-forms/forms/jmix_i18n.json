@@ -19,7 +19,8 @@
                 "choicelist": "",
                 "siteLanguage": "",
                 "skipValidation": "true",
-                "maxCheckboxes": "5"
+                "maxCheckboxes": "5",
+                "isInvertedSelection": "true"
               }
             }
           ]

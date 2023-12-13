@@ -17,6 +17,8 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
         return;
     }
 
+    const isInverted = field.selectorOptions?.some(option => option.name === 'isInvertedSelection');
+
     // Check if value is a valid item in the list otherwise reset to null
     if (value && value.length > 0) {
         const availableValues = items.map(item => item.value.string);
@@ -28,9 +30,10 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
 
     const checkboxOnChange = (ev, val, checked) => {
         const valIndex = value.findIndex(v => v === val);
-        if (checked && valIndex < 0) {
+        const isChecked = isInverted ? !checked : checked;
+        if (isChecked && valIndex < 0) {
             onChange(value.concat(val)); // Add to values if it doesn't exist
-        } else if (!checked && valIndex >= 0) {
+        } else if (!isChecked && valIndex >= 0) {
             const clone = [...value];
             clone.splice(valIndex, 1);
             onChange(clone);
@@ -50,7 +53,7 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
                         key={item.value.string}
                         fieldId={id}
                         item={item}
-                        isChecked={value?.includes(item.value.string)}/>
+                        isChecked={isInverted ? !value?.includes(item.value.string) : !value?.includes(item.value.string)}/>
                 ))}
             </CheckboxGroup>
             {inputContext.displayActions && (

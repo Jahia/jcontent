@@ -50,7 +50,7 @@ const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
         return null;
     }
 
-    const selectedLang = data.find(l => l.value === lang);
+    const selectedLang = data.find(l => l.value === lang) || {value: lang};
 
     const LabelPill = (
         <Tooltip title={selectedLang.label} placement="bottom-start">

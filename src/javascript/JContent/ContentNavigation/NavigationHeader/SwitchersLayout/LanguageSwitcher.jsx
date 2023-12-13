@@ -3,12 +3,14 @@ import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
-import {Dropdown, Typography} from '@jahia/moonstone';
+import {Dropdown, Pill} from '@jahia/moonstone';
 import styles from './LanguageSwitcher.scss';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import PropTypes from 'prop-types';
+import {Tooltip} from '@material-ui/core';
+import clsx from 'clsx';
 
-const LanguageSwitcher = ({setLanguageAction, selector}) => {
+const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
     const {siteKey, lang} = useSelector(selector, shallowEqual);
     const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: lang});
     const {t} = useTranslation('jcontent');
@@ -32,27 +34,40 @@ const LanguageSwitcher = ({setLanguageAction, selector}) => {
             <Dropdown isDisabled
                       data={[{label: 'none', value: 'none'}]}
                       className={styles.languageSwitcher}
-                      onChange={() => {
-                      }}
-            />
+                      onChange={() => {}}/>
         );
     }
 
-    const data = siteInfo.languages.filter(l => l.activeInEdit).map(l => ({label: l.language, value: l.language}));
+    const data = siteInfo.languages
+        .filter(l => l.activeInEdit)
+        .map(l => ({
+            label: l.localizedDisplayName,
+            value: l.language,
+            iconEnd: <Pill label={l.language}/>
+        }));
 
     if (!data) {
         return null;
     }
 
+    const selectedLang = data.find(l => l.value === lang) || {value: lang};
+
+    const LabelPill = (
+        <Tooltip title={selectedLang.label} placement="bottom-start">
+            <Pill isReversed label={selectedLang.value}/>
+        </Tooltip>
+    );
+
     return (data.length === 1) ? (
         <div className={styles.label}>
-            <Typography isUpperCase variant="body">{lang}</Typography>
+            {LabelPill}
         </div>
     ) : (
         <Dropdown
+            className={clsx(styles.languageSwitcher, {[styles.fullWidth]: isFullDropdown})}
             data-cm-role="language-switcher"
-            className={styles.languageSwitcher}
-            label={lang}
+            icon={isFullDropdown ? undefined : LabelPill}
+            label={isFullDropdown ? undefined : ' '}
             value={lang}
             data={data}
             onChange={(e, item) => {
@@ -65,7 +80,8 @@ const LanguageSwitcher = ({setLanguageAction, selector}) => {
 
 LanguageSwitcher.propTypes = {
     setLanguageAction: PropTypes.func,
-    selector: PropTypes.func
+    selector: PropTypes.func,
+    isFullDropdown: PropTypes.bool
 };
 
 LanguageSwitcher.defaultProps = {

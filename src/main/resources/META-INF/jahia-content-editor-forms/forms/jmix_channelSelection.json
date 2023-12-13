@@ -7,13 +7,17 @@
       "fieldSets": [
         {
           "name": "jmix:channelSelection",
+          "labelKey" : "label.contentEditor.visibilityTab.channels.label",
           "fields": [
             {
               "name": "j:channelSelection",
+              "labelKey" : "label.contentEditor.visibilityTab.channels.devices.label",
+              "descriptionKey" : "label.contentEditor.visibilityTab.channels.devices.description",
               "selectorType": "MultipleLeftRightSelector"
             },
             {
               "name": "j:channelIncludeOrExclude",
+              "labelKey" : "label.contentEditor.visibilityTab.channels.includeExclude.label",
               "mandatory": true,
               "defaultValues": [{"type":  "j:channelIncludeOrExclude", "value":  "include"}]
             }

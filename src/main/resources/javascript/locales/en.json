@@ -904,6 +904,24 @@
           "displayValue": "Radio button",
           "description": "Alternative to dropdown for selecting an item from a list"
         }
+      },
+      "visibilityTab": {
+        "languages" : {
+          "title" : "Languages",
+          "description": "Content will display in selected languages",
+          "label" : "Content visibility by language",
+          "leftList" : "The content will be visible in:",
+          "rightList" : "The content will not be visible in:"
+        },
+        "conditions" : {
+          "title" : "Date and time",
+          "rules" : "{{rulesNumber}} rules set",
+          "rule" : "1 rule is set",
+          "norules" : "No rules set"
+        },
+        "channels": {
+
+        }
       }
     },
     "ok": "OK",

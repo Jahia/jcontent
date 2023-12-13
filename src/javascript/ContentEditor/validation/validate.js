@@ -79,6 +79,10 @@ const patternFieldValidation = (values, field) => {
     // instead of running the selector options through Regex.
     const strictValidation = field.selectorType === Constants.field.selectorType.CHOICELIST;
 
+    if (field.selectorOptions?.some(option => option.name === 'skipValidation' && option.value === 'true')) {
+        return;
+    }
+
     if (constraints && constraints.length > 0 && field.requiredType === 'STRING') {
         const fieldValues = field.multiple ? (values[field.name] || []) : [values[field.name]];
         const constraintTestFn = (strictValidation) ?

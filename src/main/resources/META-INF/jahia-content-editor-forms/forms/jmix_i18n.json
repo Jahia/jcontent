@@ -1,0 +1,31 @@
+{
+  "nodeType": "jmix:i18n",
+  "priority": 2.1,
+  "sections": [
+    {
+      "name": "visibility",
+      "fieldSets": [
+        {
+          "name": "jmix:i18n",
+          "fields": [
+            {
+              "rank": 0.0,
+              "name": "j:invalidLanguages",
+              "labelKey": "label.contentEditor.visibilityTab.languages.label",
+              "descriptionKey": "label.contentEditor.visibilityTab.languages.description",
+              "hide": false,
+              "selectorType": "CheckboxesToMultiLeftRight",
+              "selectorOptionsMap": {
+                "choicelist": "",
+                "siteLanguage": "",
+                "skipValidation": "true",
+                "maxCheckboxes": "5",
+                "isInvertedSelection": "true"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

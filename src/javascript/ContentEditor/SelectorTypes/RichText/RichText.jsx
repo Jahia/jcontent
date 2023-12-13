@@ -54,7 +54,14 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
     field.selectorOptions
         .filter(option => option.name.startsWith(CK_EDITOR_PREFIX))
         .forEach(option => {
-            definitionConfig[option.name.substring(CK_EDITOR_PREFIX.length)] = option.value;
+            let optionValue = option.value;
+            if (optionValue.toLowerCase() === 'true') {
+                optionValue = true;
+            } else if (optionValue.toLowerCase() === 'false') {
+                optionValue = false;
+            }
+
+            definitionConfig[option.name.substring(CK_EDITOR_PREFIX.length)] = optionValue;
         });
 
     // Resolve Toolbar
@@ -92,6 +99,7 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
     };
 
     const config = {
+        allowedContent: false,
         customConfig: '',
         width: '100%',
         contentEditorFieldName: id, // Used by selenium to get CKEditor instance
@@ -104,6 +112,8 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
         ...definitionConfig
     };
 
+    console.log('CKEditor injected config', config);
+
     return (
         <CKEditor
                 key={'v' + (i18nContext?.memo?.count || 0)}
@@ -113,6 +123,7 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
                 config={config}
                 readOnly={field.readOnly}
                 onMode={evt => {
+                    console.log(evt.editor);
                     if (evt.editor.mode === 'source') {
                         let editable = evt.editor.editable();
                         editable.attachListener(editable, 'input', inputEvt => onChange(inputEvt.sender.getValue()));

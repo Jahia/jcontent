@@ -1,0 +1,21 @@
+{
+  "nodeType": "jmix:conditionalVisibility",
+  "priority": 2.1,
+  "sections": [
+    {
+      "name": "visibility",
+      "fieldSets": [
+        {
+          "name": "jmix:conditionalVisibility",
+          "fields": [
+            {
+              "rank": 0.0,
+              "name": "j:legacyRuleSettings",
+              "hide": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

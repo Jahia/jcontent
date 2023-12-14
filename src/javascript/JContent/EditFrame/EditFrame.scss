@@ -186,3 +186,7 @@
     margin-left: 4px;
     margin-right: 4px;
 }
+
+:global(.noprefix) [type='placeholdernode'] {
+    filter: blur(1px);
+}

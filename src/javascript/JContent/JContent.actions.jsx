@@ -193,6 +193,15 @@ export const jContentActions = registry => {
         }
     });
 
+    registry.add('action', 'nonExistingContentMenu', menuActionWithRenderer, {
+        buttonIcon: <MoreVert/>,
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
+        menuTarget: 'nonExistingContentActions',
+        menuItemProps: {
+            isShowIcons: true
+        }
+    });
+
     registry.add('action', 'rootContentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',

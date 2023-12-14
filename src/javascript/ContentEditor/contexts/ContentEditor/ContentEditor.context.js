@@ -9,6 +9,7 @@ import {useContentEditorConfigContext} from '../ContentEditorConfig';
 import {shallowEqual, useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {getFields} from '~/ContentEditor/utils';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -45,7 +46,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         }));
     }, [setI18nContext]);
 
-    const {lang, mode, name} = contentEditorConfigContext;
+    const {lang, mode, name, defaultValues} = contentEditorConfigContext;
 
     // Get user navigator locale preference
     const browserLang = navigator.language;
@@ -70,6 +71,18 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         nodeTypeName,
         nodeTypeDisplayName
     } = formDefinition || {};
+
+    const values = {...initialValues};
+
+    if (initialValues && defaultValues && sections) {
+        const fields = getFields(sections);
+        Object.keys(defaultValues).forEach(key => {
+            const field = fields.find(f => f.propertyName === key);
+            if (field) {
+                values[field.name] = defaultValues[key];
+            }
+        });
+    }
 
     const site = nodeData?.site?.name || 'systemsite';
 
@@ -131,7 +144,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         nodeData,
         details,
         technicalInfo,
-        initialValues,
+        initialValues: values,
         expandedSections,
         hasPreview,
         showAdvancedMode,

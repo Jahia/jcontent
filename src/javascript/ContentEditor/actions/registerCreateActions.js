@@ -1,11 +1,12 @@
 import React from 'react';
-import {AddCircle, Save} from '@jahia/moonstone';
+import {AddCircle, Edit, Save} from '@jahia/moonstone';
 
 import {createContentAction} from './jcontent/createContent/createContentAction';
 import {createAction} from './contenteditor/create/createAction';
 import {batchActions} from 'redux-batched-actions';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {createFromTemplateAction} from '~/ContentEditor/actions/jcontent/createFromTemplate/createFromTemplateAction';
 
 export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContent', createContentAction, {
@@ -17,6 +18,13 @@ export const registerCreateActions = registry => {
         hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
         requiredPermission: ['jcr:addChildNodes'],
         hasBypassChildrenLimit: false
+    });
+
+    registry.addOrReplace('action', 'createFromTemplate', createFromTemplateAction, {
+        buttonIcon: <Edit/>,
+        buttonLabel:
+            'Create and edit',
+        targets: ['nonExistingContentActions']
     });
 
     if (booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {

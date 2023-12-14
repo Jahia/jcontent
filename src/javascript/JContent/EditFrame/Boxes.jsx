@@ -376,8 +376,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         } else {
             pathObject = {path: currentPath, actionKey: 'notSelectedContentMenu'};
         }
-    } else {
+    } else if (nodes && nodes[currentPath]) {
         pathObject = {path: currentPath, actionKey: 'contentMenu'};
+    } else if (currentElement?.element?.dataset?.content) {
+        pathObject = {path: currentPath, actionKey: 'nonExistingContentMenu', content: currentElement?.element?.dataset?.content ? JSON.parse(currentElement.element.dataset.content) : {}};
+    } else {
+        pathObject = {actionKey: ''};
     }
 
     const setDraggedOverlayPosition = position => {
@@ -450,7 +454,30 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}
-                         color="default"
+                         addIntervalCallback={addIntervalCallback}
+                         setDraggedOverlayPosition={setDraggedOverlayPosition}
+                         calculateDropTarget={calculateDropTarget}
+                         setCurrentElement={setCurrentElement}
+                         onMouseOver={onMouseOver}
+                         onMouseOut={onMouseOut}
+                         onSelect={onSelect}
+                         onClick={onClick}
+                         onDoubleClick={onDoubleClick}
+                         onSaved={onSaved}
+                    />
+                ))}
+            {modules.filter(element => element.getAttribute('type') === 'placeholdernode')
+                .map(element => (
+                    <Box key={element.getAttribute('id')}
+                         isCurrent={element === el}
+                         isHeaderDisplayed={(header && element === el)}
+                         currentFrameRef={currentFrameRef}
+                         rootElementRef={rootElement}
+                         element={element}
+                         breadcrumbs={[]}
+                         entries={entries}
+                         language={language}
+                         displayLanguage={displayLanguage}
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}

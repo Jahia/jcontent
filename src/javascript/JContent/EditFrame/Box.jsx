@@ -10,6 +10,7 @@ import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from './Breadcrumbs';
 import {findAvailableBoxConfig} from '../JContent.utils';
+import {PlaceholderNodeBar} from '~/JContent/EditFrame/PlaceholderNodeBar';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -19,9 +20,9 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
 };
 
 const processCustomBoxConfigIfExists = node => {
-    const pageBuilderBoxConfig = findAvailableBoxConfig(node);
+    const pageBuilderBoxConfig = node && findAvailableBoxConfig(node);
 
-    const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
+    const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || (node ? DefaultBar : PlaceholderNodeBar);
 
     let borderColorCurrent = 'var(--color-gray)';
     let borderColorSelected = 'var(--color-accent)';
@@ -189,8 +190,8 @@ export const Box = React.memo(({
              onDoubleClick={onDoubleClick}
         >
             <div ref={dragWithChecks} className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}>
-                <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
-                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
+                {node && <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>}
+                <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>
             </div>
         </div>
     );

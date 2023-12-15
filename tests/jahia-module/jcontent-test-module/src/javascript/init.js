@@ -1,6 +1,7 @@
 import {registry} from '@jahia/ui-extender';
 import {CustomBar} from './CustomBar';
 import i18next from 'i18next';
+import {PickerDialog} from './PickerDialog';
 
 export default function () {
     i18next.loadNamespaces('accordion-config');
@@ -26,5 +27,20 @@ export default function () {
         isBarAlwaysDisplayed: true,
         borderColors: {hover: 'rgba(224, 24, 45)', selected: 'var(--color-purple)'},
         targets: [{id: 'cent:defaultValueTest', priority: 0}]
+    });
+
+    registry.add('externalPickerConfiguration', 'test', {
+        requireModuleInstalledOnSite: 'jcontent-test-module',
+        pickerConfigs: ['file'],
+        selectableTypes: ['rep:root'],
+        keyUrlPath: 'zzzz',
+        pickerInput: {
+            emptyLabel: 'Nothing selected'
+        },
+        pickerDialog: {
+            cmp: PickerDialog,
+            label: 'Custom picker',
+            description: 'Custom picker description'
+        }
     });
 }

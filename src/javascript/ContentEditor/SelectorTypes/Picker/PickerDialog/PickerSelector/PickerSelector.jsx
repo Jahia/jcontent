@@ -48,6 +48,7 @@ export const PickerSelector = ({
                 label={label}
                 value={externalPickerConfig?.key}
                 icon={iconName && toIconComponent(iconName)}
+                data-sel-role="picker-selector"
                 onChange={(evt, item) => handleOnChange(item)}
             />
         </div>

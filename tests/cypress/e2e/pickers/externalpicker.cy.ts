@@ -2,7 +2,7 @@ import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
 import {assertUtils} from '../../utils/assertUtils';
 import {AccordionItem} from '../../page-object/accordionItem';
 import {JContent} from '../../page-object/jcontent';
-import {createSite, deleteSite, Dropdown, enableModule, getComponentByRole} from "@jahia/cypress";
+import {createSite, deleteSite, Dropdown, enableModule, getComponentByRole} from '@jahia/cypress';
 
 describe('Picker tests', () => {
     let jcontent: JContent;
@@ -26,7 +26,7 @@ describe('Picker tests', () => {
     // Tests
 
     it('should display content reference picker', () => {
-        let pickerField = jcontent
+        const pickerField = jcontent
             .createContent('Pickers')
             .getPickerField('qant:pickers_filepicker');
         const picker = pickerField.open();

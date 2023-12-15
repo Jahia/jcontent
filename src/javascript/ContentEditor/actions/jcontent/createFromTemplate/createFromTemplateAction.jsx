@@ -16,7 +16,7 @@ export const CreateFromTemplate = ({content, render: Render, ...props}) => {
         lang: language,
         nodeTypes: [content.nodeType],
         includeSubTypes: false,
-        defaultValues: {...content.properties, ...content.i18nProperties[language]}
+        defaultValues: {...content.properties, ...content.i18nProperties?.[language]}
     };
 
     return (

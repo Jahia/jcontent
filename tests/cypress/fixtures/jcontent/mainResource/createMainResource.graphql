@@ -1,0 +1,35 @@
+mutation {
+    jcr {
+        pages: mutateNode(pathOrId: "/sites/mySite1/home") {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "test-event"
+                        primaryNodeType: "jnt:event",
+                        properties: [
+                            { name: "body", language: "en", value: "test event 1" }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+        contents: mutateNode(pathOrId: "/sites/mySite1/contents") {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "test-event"
+                        primaryNodeType: "jnt:event",
+                        properties: [
+                            { name: "body", language: "en", value: "test event 2" }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+    }
+}
+

@@ -1,5 +1,5 @@
 import {CategoryManager} from '../../page-object';
-import {deleteNode} from "@jahia/cypress";
+import {deleteNode} from '@jahia/cypress';
 
 describe('Category Manager', () => {
     let categoryManager: CategoryManager;

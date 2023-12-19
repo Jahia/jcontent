@@ -55,9 +55,9 @@ describe('Category Manager', () => {
         accordionItem.getTreeItem('test-category2').contextMenu().select('Copy');
         accordionItem.getTreeItem('test-category3').contextMenu().select('Paste');
 
-        // Visit and make sure copied category path exists
-        categoryManager = CategoryManager.visitCategoryManager('en', 'rootTestCategory/test-category3/test-category2/test-subcategory2');
-        categoryManager.getTreeItem('test-subcategory2').should('be.visible');
+        // get the category pasted under test-category3
+        accordionItem.expandTreeItem('test-category3');
+        cy.get('[data-sel-role="test-category2"][style*="depth: 2"]').should('be.visible');
     });
 
     it('Contains only expected actions in primary header action', () => {

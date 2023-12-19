@@ -57,7 +57,7 @@ describe('Category Manager', () => {
 
         // get the category pasted under test-category3
         accordionItem.expandTreeItem('test-category3');
-        cy.get('[data-sel-role="test-category2"][style*="depth: 2"]').should('be.visible');
+        cy.get('[data-sel-role="test-category2"][style$="depth: 2;"]').should('be.visible');
     });
 
     it('Contains only expected actions in primary header action', () => {

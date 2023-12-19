@@ -55,9 +55,14 @@ describe('Category Manager', () => {
         accordionItem.getTreeItem('test-category2').contextMenu().select('Copy');
         accordionItem.getTreeItem('test-category3').contextMenu().select('Paste');
 
-        // get the category pasted under test-category3
+        // Get the category pasted under test-category3
         accordionItem.expandTreeItem('test-category3');
-        cy.get('[data-sel-role="test-category2"][style$="depth: 2;"]').should('be.visible');
+
+        // Workaround to get tree item for a given depth;
+        // the actual style text depends on chrome version
+        // - v107 has "--tree-depth:2" while v120 has "--tree-depth: 2" (with space)
+        // account for both scenarios (to be fixed in moonstone)
+        cy.get('[data-sel-role="test-category2"][style*="depth: 2"],[data-sel-role="test-category2"][style*="depth:2"]').should('be.visible');
     });
 
     it('Contains only expected actions in primary header action', () => {

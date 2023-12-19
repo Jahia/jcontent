@@ -175,7 +175,7 @@ export const Box = React.memo(({
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerProps = {
-        className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
+        className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents, isCurrent ? styles.bigheader : '')
     };
 
     const Header = (
@@ -195,7 +195,7 @@ export const Box = React.memo(({
         </div>
     );
 
-    const boxStyle = !isAnythingDragging && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
+    const boxStyle = !isAnythingDragging && isCurrent && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
 
     return (
         <div ref={rootDiv}
@@ -210,7 +210,7 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && breadcrumbs.length > 0 &&
+                {!isAnythingDragging && isCurrent && breadcrumbs.length > 0 &&
                     <div className={clsx(styles.relFooter)}
                          data-current={isCurrent}
                          data-jahia-id={element.getAttribute('id')}

@@ -132,7 +132,7 @@ describe('Category Manager', () => {
 
     it('can import xml and zip exports', () => {
         categoryManager = CategoryManager.visitCategoryManager('en');
-        const fixturesDir = 'cypress/fixtures/contentEditor/categoryManager';
+        const fixturesDir = 'cypress/fixtures/categoryManager';
 
         // Import xml
         categoryManager.getTreeItem('import-xml').contextMenu().select('Import content');

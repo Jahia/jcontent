@@ -65,10 +65,18 @@ export class TreeItem extends BaseComponent {
     }
 
     expand() {
+        this.toggle(true);
+    }
+
+    collapse() {
+        this.toggle(false);
+    }
+
+    toggle(expand: boolean) {
+        this.get().find('.moonstone-treeView_itemToggle svg').should('be.visible');
         return this.get().then(t => {
             const isExpanded = t.attr('aria-expanded') === 'true';
-            if (!isExpanded) {
-                // Toggle only if not expanded already
+            if (isExpanded !== expand) {
                 return cy.wrap(t).find('.moonstone-treeView_itemToggle').click();
             }
         });

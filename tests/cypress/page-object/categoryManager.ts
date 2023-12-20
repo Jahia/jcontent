@@ -39,14 +39,17 @@ export class CategoryManager extends JContent {
         this.editFields(fields).create();
     }
 
-    editCategoryNav(name: string, fields: {title?: string, name?: string}) {
+    editCategoryNav(name: string, fields: {title?: string, name?: string}, lang?: string) {
         const accordionItem = this.getAccordionItem();
         accordionItem.getTreeItem(name).contextMenu().select('Edit');
-        this.editFields(fields).save();
+        this.editFields(fields, lang).save();
     }
 
-    editFields({title, name}: {title?: string, name?: string}) {
+    editFields({title, name}: {title?: string, name?: string}, lang?: string) {
         const contentEditor = new ContentEditor();
+        if (lang) {
+            contentEditor.getLanguageSwitcher().selectLang(lang);
+        }
         if (title) {
             const titleField = contentEditor.getField(SmallTextField, 'jnt:category_jcr:title', false);
             titleField.addNewValue(title);

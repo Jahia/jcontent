@@ -4,14 +4,26 @@ import {deleteNode} from '@jahia/cypress';
 describe('Category Manager', () => {
     let categoryManager: CategoryManager;
 
+    before(() => {
+        cy.apollo({mutationFile: 'jcontent/createCategories.graphql'});
+    });
+
     after(() => {
         deleteNode('/sites/systemsite/categories/rootTestCategory');
+        deleteNode('/sites/systemsite/categories/import-xml');
+        deleteNode('/sites/systemsite/categories/import-zip');
         cy.logout();
     });
 
     beforeEach(() => {
         cy.loginAndStoreSession();
     });
+
+    // root categories has depth=0
+    function categoryExists(role: string, depth: number) {
+        cy.get(`[data-sel-role="${role}"][style*="depth: ${depth}"],[data-sel-role="${role}"][style*="depth:${depth}"]`)
+            .should('be.visible');
+    }
 
     it('can create and edit a new category', () => {
         categoryManager = CategoryManager.visitCategoryManager('en');
@@ -21,7 +33,11 @@ describe('Category Manager', () => {
         categoryManager.getTreeItem('rootTestCategory').get().contains('My Main Category');
 
         categoryManager.editCategoryNav('rootTestCategory', {title: 'Root Test Category'});
+        categoryManager.editCategoryNav('rootTestCategory', {title: 'Root Test Category - french'}, 'French');
         categoryManager.getTreeItem('rootTestCategory').get().contains('Root Test Category');
+
+        categoryManager.getLanguageSwitcher().select('French');
+        categoryManager.getTreeItem('rootTestCategory').get().contains('Root Test Category - french');
     });
 
     it('create subcategories and navigate to it', () => {
@@ -48,7 +64,7 @@ describe('Category Manager', () => {
         cy.contains('test-subcategory3').should('be.visible');
     });
 
-    it('Test copy/cut/paste', () => {
+    it('Test copy/paste', () => {
         categoryManager = CategoryManager.visitCategoryManager('en');
         const accordionItem = categoryManager.getAccordionItem();
         accordionItem.expandTreeItem('rootTestCategory');
@@ -62,7 +78,7 @@ describe('Category Manager', () => {
         // the actual style text depends on chrome version
         // - v107 has "--tree-depth:2" while v120 has "--tree-depth: 2" (with space)
         // account for both scenarios (to be fixed in moonstone)
-        cy.get('[data-sel-role="test-category2"][style*="depth: 2"],[data-sel-role="test-category2"][style*="depth:2"]').should('be.visible');
+        categoryExists('test-category2', 2);
     });
 
     it('Contains only expected actions in primary header action', () => {
@@ -70,9 +86,12 @@ describe('Category Manager', () => {
         categoryManager.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('test-category1').should('be.visible');
         const primaryActions = ['New category', 'Edit', 'Import content', 'Refresh'];
-        cy.get('.moonstone-header').children('.moonstone-header_toolbar').children('.moonstone-header_actions').find('.moonstone-button').should('have.length', primaryActions.length + 1).and(elems => {
-            primaryActions.forEach(action => expect(elems).to.contain(action));
-        });
+        cy.get('.moonstone-header').children('.moonstone-header_toolbar').children('.moonstone-header_actions')
+            .find('.moonstone-button')
+            .should('have.length', primaryActions.length + 1)
+            .and(elems => {
+                primaryActions.forEach(action => expect(elems).to.contain(action));
+            });
     });
 
     it('Performs a simple search at the root level', () => {
@@ -109,5 +128,26 @@ describe('Category Manager', () => {
         cy.get('@usagesTable').find('[data-cm-role="table-content-list-cell-name"]').should('have.length', 3).and(element => {
             usagesName.forEach(value => expect(element).to.contain(value));
         });
+    });
+
+    it('can import xml and zip exports', () => {
+        categoryManager = CategoryManager.visitCategoryManager('en');
+        const fixturesDir = 'cypress/fixtures/contentEditor/categoryManager';
+
+        // Import xml
+        categoryManager.getTreeItem('import-xml').contextMenu().select('Import content');
+        cy.get('#file-upload-input').selectFile({
+            contents: `${fixturesDir}/sample-categories.xml`,
+            mimeType: 'text/xml' // need to override default mimeType application/xml
+        }, {force: true});
+        categoryManager.getTreeItem('import-xml').expand();
+        categoryExists('rootTestCategory', 1);
+        categoryManager.getTreeItem('import-xml').collapse();
+
+        // Import zip
+        categoryManager.getTreeItem('import-zip').contextMenu().select('Import content');
+        cy.get('#file-upload-input').selectFile(`${fixturesDir}/sample-categories.zip`, {force: true});
+        categoryManager.getTreeItem('import-zip').expand();
+        categoryExists('rootTestCategory', 1);
     });
 });

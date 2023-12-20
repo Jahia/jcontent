@@ -340,25 +340,3 @@ class PageBuilderModule extends BaseComponent {
         this.get().scrollIntoView().dblclick(clickOptions);
     }
 }
-
-export class CategoryManager extends JContent {
-    constructor(base: JContent) {
-        super();
-        Object.assign(this, base);
-    }
-
-    static visitCategoryManager(language: string): CategoryManager {
-        cy.visit(`/jahia/category-manager/${language}/category/`);
-        return new CategoryManager(new JContent());
-    }
-
-    getCreateCategory(): void {
-        cy.get('.moonstone-header button[data-sel-role="jnt:category"]').click();
-    }
-
-    editItem(text: string) {
-        cy.get(`span[class*="moonstone-tableCellContent"]:contains("${text}")`).rightclick();
-        cy.get('li[data-registry-key="action:edit"]').click();
-        return new ContentEditor();
-    }
-}

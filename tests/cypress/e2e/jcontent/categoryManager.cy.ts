@@ -19,7 +19,7 @@ describe('Category Manager', () => {
         cy.loginAndStoreSession();
     });
 
-    // root categories has depth=0
+    // Root categories has depth=0
     function categoryExists(role: string, depth: number) {
         cy.get(`[data-sel-role="${role}"][style*="depth: ${depth}"],[data-sel-role="${role}"][style*="depth:${depth}"]`)
             .should('be.visible');
@@ -138,7 +138,7 @@ describe('Category Manager', () => {
         categoryManager.getTreeItem('import-xml').contextMenu().select('Import content');
         cy.get('#file-upload-input').selectFile({
             contents: `${fixturesDir}/sample-categories.xml`,
-            mimeType: 'text/xml' // need to override default mimeType application/xml
+            mimeType: 'text/xml' // Need to override default mimeType application/xml
         }, {force: true});
         categoryManager.getTreeItem('import-xml').expand();
         categoryExists('rootTestCategory', 1);

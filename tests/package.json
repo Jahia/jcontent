@@ -13,7 +13,7 @@
     "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public",
     "lint:js": "eslint --ext js,ts cypress",
     "lint:js:fix": "yarn lint:js --fix cypress",
-    "lint:fix": "yarn lint:js:fix"
+    "lint:fix": "yarn lint:js:fix --resolve-plugins-relative-to ."
   },
   "main": "index.js",
   "files": [

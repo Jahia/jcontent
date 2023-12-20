@@ -50,6 +50,7 @@ export class CategoryManager extends JContent {
         if (lang) {
             contentEditor.getLanguageSwitcher().selectLang(lang);
         }
+
         if (title) {
             const titleField = contentEditor.getField(SmallTextField, 'jnt:category_jcr:title', false);
             titleField.addNewValue(title);

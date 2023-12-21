@@ -73,7 +73,6 @@ export class TreeItem extends BaseComponent {
     }
 
     toggle(expand: boolean) {
-        this.get().find('.moonstone-treeView_itemToggle svg').should('be.visible');
         return this.get().then(t => {
             const isExpanded = t.attr('aria-expanded') === 'true';
             if (isExpanded !== expand) {

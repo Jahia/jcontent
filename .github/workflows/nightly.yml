@@ -62,6 +62,7 @@ jobs:
           zencrepes_secret: ${{ secrets.ZENCREPES_WEBHOOK_SECRET }}
       - name: Test Report
         uses: phoenix-actions/test-reporting@v12
+        id: test-report
         if: success() || failure()
         with:
           name: Nightly ${{ matrix.config_file }}
@@ -69,3 +70,7 @@ jobs:
           reporter: java-junit
           fail-on-error: 'false'
           output-to: 'step-summary'
+      - name: Print test report URL
+        run: |
+          echo "Test report URL is ${{ steps.test-report.outputs.runHtmlUrl }}"
+

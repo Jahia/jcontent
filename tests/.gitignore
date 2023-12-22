@@ -1,6 +1,7 @@
 instrumented/
 .nyc_output
 cypress/videos
+cypress/downloads
 coverage
 node_modules
 run-artifacts

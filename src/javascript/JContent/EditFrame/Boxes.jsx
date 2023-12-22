@@ -95,12 +95,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
             const moduleElement = getModuleElement(currentDocument, target);
+            setHeader(currentElement?.pinned && moduleElement.getAttribute('path') === currentElement.path);
             setCurrentElement(current => (
                 (current && (current.breadcrumb || current.pinned) && isDescendantOrSelf(moduleElement.getAttribute('path'), current.path)) ?
                     current : {element: moduleElement, path: moduleElement.getAttribute('path')}
             ));
         }, 10);
-    }, [setCurrentElement, currentDocument]);
+    }, [setCurrentElement, currentDocument, currentElement]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();

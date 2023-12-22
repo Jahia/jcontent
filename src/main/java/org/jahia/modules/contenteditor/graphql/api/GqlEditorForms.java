@@ -41,6 +41,7 @@ import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.content.JCRSessionWrapper;
+import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.utils.LanguageCodeConverters;
 import org.jahia.utils.NodeTypeTreeEntry;
 import org.jahia.utils.NodeTypesUtils;
@@ -143,8 +144,21 @@ public class GqlEditorForms {
         final String nodeIdentifier = parentNode.getIdentifier();
         Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
         List<String> allowedNodeTypes = new ArrayList<>(ContentEditorUtils.getAllowedNodeTypesAsChildNode(parentNode, childNodeName, useContribute, includeSubTypes, nodeTypes));
-        Set<NodeTypeTreeEntry> entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
-        return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+        Set<NodeTypeTreeEntry> entries;
+        if (nodeTypes!=null && nodeTypes.size()==1 && nodeTypes.contains("jnt:condition")) {
+            entries = new HashSet<>();
+            for (String allowedNodeType : allowedNodeTypes) {
+                if(allowedNodeType.equals("jnt:condition")) {
+                    continue;
+                }
+                entries.add(new NodeTypeTreeEntry(NodeTypeRegistry.getInstance().getNodeType(allowedNodeType), locale));
+            }
+        } else {
+            entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
+        }
+        List<GqlNodeTypeTreeEntry> nodeTypeTreeEntries = entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+        nodeTypeTreeEntries.sort(Comparator.comparing(GqlNodeTypeTreeEntry::getName));
+        return nodeTypeTreeEntries;
     }
 
     @GraphQLField
@@ -200,7 +214,7 @@ public class GqlEditorForms {
         JCRSessionWrapper session = getSession();
         JCRNodeWrapper node = session.getNode(nodePath);
 
-        // no need for queries if node doesnt have children
+        // no need for queries if node doesn't have children
         if (!node.hasNodes()) {
             return count;
         }

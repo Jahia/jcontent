@@ -22,5 +22,5 @@ export const Visibility = () => {
     }
 
     const invalidLanguages = data.jcr.nodeByPath.invalidLanguages?.values;
-    return <div className={styles.container} data-cm-role="visibilityScreen"><Languages invalidLanguages={invalidLanguages}/><DateTime rules={data.jcr.nodeByPath.rules.pageInfo.totalCount} refresh={refetch}/><Channels/></div>;
+    return <div className={styles.container} data-cm-role="visibilityScreen"><Languages invalidLanguages={invalidLanguages}/><DateTime rules={data.jcr.nodeByPath.rules.pageInfo.totalCount} refresh={refetch} node={nodeData}/><Channels/></div>;
 };

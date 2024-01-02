@@ -1,7 +1,1 @@
-- addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/@snapshots@noreleases@id=JahiaPublicSnapshots'
-- installBundle:
-    - 'mvn:org.jahia.modules/channels'
-  autoStart: true
-  uninstallPreviousVersion: true
-
 - include: 'provisioning.yml'

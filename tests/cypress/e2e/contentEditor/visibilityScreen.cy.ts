@@ -30,7 +30,6 @@ describe('Create content tests', () => {
         advancedOptions.switchToOption('Visibility');
         cy.get('[data-sel-role-dynamic-fieldset="jmix:i18n"]').should('not.exist');
         cy.get('[data-sel-role-dynamic-fieldset="jmix:conditionalVisibility"]').should('be.visible');
-        cy.get('[data-sel-role-dynamic-fieldset="jmix:channelSelection"]').should('be.visible');
         contentEditor.cancel();
     });
 

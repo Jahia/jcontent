@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
+import {useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import styles from './Languages.scss';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {Toggle} from '@jahia/design-system-kit';
@@ -32,7 +32,7 @@ const LanguageSection = ({fields}) => {
     return (
         <div className={stylesFieldset.fields}>
             {fields.map(field =>
-                <FieldContainer key={field.name} field={field}/>)}
+                <FieldContainer key={field.name} field={field} inputContext={{displayActions: false}}/>)}
         </div>
     );
 };
@@ -49,12 +49,11 @@ export const Languages = ({invalidLanguages}) => {
         displayLanguage: state.language,
         uiLanguage: state.uilang
     }), shallowEqual);
-    const {siteInfo, error, loading} = useSiteInfo({
+    const {error, loading} = useSiteInfo({
         siteKey: siteKey,
         displayLanguage: displayLanguage,
         uiLanguage: uiLanguage
     });
-    const {nodeData} = useContentEditorContext();
     const [activatedSection, setActivatedSection] = useState(invalidLanguages !== undefined && invalidLanguages.length > 0);
     const section = sections.filter(s => s.name === 'visibility');
     const fieldSets = filterRegularFieldSets(section[0].fieldSets);
@@ -66,7 +65,6 @@ export const Languages = ({invalidLanguages}) => {
         return null;
     }
 
-    console.log(siteInfo, nodeData);
     if (fieldSets.length === 0) {
         return null;
     }

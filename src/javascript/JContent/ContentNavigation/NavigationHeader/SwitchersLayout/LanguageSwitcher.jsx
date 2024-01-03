@@ -11,8 +11,8 @@ import {Tooltip} from '@material-ui/core';
 import clsx from 'clsx';
 
 const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
-    const {siteKey, lang} = useSelector(selector, shallowEqual);
-    const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: lang});
+    const {siteKey, lang, uilang} = useSelector(selector, shallowEqual);
+    const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: uilang});
     const {t} = useTranslation('jcontent');
 
     const dispatch = useDispatch();
@@ -88,7 +88,8 @@ LanguageSwitcher.defaultProps = {
     setLanguageAction: lang => cmGoto({language: lang}),
     selector: state => ({
         siteKey: state.site,
-        lang: state.language
+        lang: state.language,
+        uilang: state.uilang
     })
 };
 export default LanguageSwitcher;

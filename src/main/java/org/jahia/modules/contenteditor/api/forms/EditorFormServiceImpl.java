@@ -204,7 +204,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
 
-                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, locale, new HashMap<>()));
+                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, uiLocale, new HashMap<>()));
                     }
                     fieldSet.setFields(fieldSet.getFields().stream()
                         .filter(Field::isVisible)

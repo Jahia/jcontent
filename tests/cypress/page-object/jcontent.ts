@@ -334,6 +334,9 @@ class PageBuilderModule extends BaseComponent {
 
     click(clickOptions?: Partial<ClickOptions>) {
         this.get().scrollIntoView().click(clickOptions);
+        if (clickOptions === undefined) {
+            this.get().click(clickOptions);
+        }
     }
 
     doubleClick(clickOptions?: Partial<ClickOptions>) {

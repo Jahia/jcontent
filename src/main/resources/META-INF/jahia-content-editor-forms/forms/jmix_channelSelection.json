@@ -6,6 +6,7 @@
       "name": "visibility",
       "fieldSets": [
         {
+          "requiredPermission" : "viewChannelsTab",
           "name": "jmix:channelSelection",
           "labelKey" : "label.contentEditor.visibilityTab.channels.label",
           "fields": [

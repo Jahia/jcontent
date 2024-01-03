@@ -13,7 +13,6 @@
             {
               "name": "j:channelSelection",
               "labelKey" : "label.contentEditor.visibilityTab.channels.devices.label",
-              "descriptionKey" : "label.contentEditor.visibilityTab.channels.devices.description",
               "selectorType": "MultipleLeftRightSelector"
             },
             {

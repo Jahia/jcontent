@@ -44,7 +44,8 @@ export const CategoryManager = () => {
                                            header={<NavigationHeader isDisplaySiteSwitcher={false}
                                                                      languageSelector={state => ({
                                                                          lang: state.language,
-                                                                         siteKey: 'systemsite'
+                                                                         siteKey: 'systemsite',
+                                                                         uilang: state.uilang
                                                                      })}
                                                                      logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
             content={

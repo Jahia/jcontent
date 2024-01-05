@@ -71,7 +71,7 @@ export const registerLegacyGwt = registry => {
                 includeSubTypes,
                 name,
                 isFullscreen: false,
-                configName: contentTypes[0] === 'jnt:page' ? 'gwtcreatepage' : 'gwtcreate'
+                configName: contentTypes && contentTypes[0] === 'jnt:page' ? 'gwtcreatepage' : 'gwtcreate'
             });
         },
         delete: params => {

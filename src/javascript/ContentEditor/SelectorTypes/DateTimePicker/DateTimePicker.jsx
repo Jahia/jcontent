@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import {DatePickerInput} from '~/ContentEditor/DesignSystem/DatePickerInput';
 import dayjs from 'dayjs';
+
 import {fillDisabledDaysFromJCRConstraints} from './DateTimePicker.utils';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {specificDateFormat} from './DateTimePicker.formats';
@@ -41,8 +42,10 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
             inputProps={{
                 'aria-labelledby': `${field.name}-label`
             }}
-            onChange={date => {
-                onChange(date && dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSS'));
+            onChange={dayjsDate => {
+                const dateStr = dayjsDate?.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+                console.log(`dateTimePicker: ${dateStr}`);
+                onChange(dateStr);
             }}
             onBlur={onBlur}
         />

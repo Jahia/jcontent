@@ -9,6 +9,7 @@ import dayjs from '../../date.config';
 import {Popover} from '@material-ui/core';
 import NumberFormat from 'react-number-format';
 import {Button, Calendar} from '@jahia/moonstone';
+import {TimezoneDropdown} from './TimezoneDropdown';
 
 const datetimeFormat = {
     date: 'L',
@@ -59,6 +60,7 @@ export const DatePickerInput = ({
     const [datetimeString, setDatetimeString] = useState(
         formatDateTime(initialValue, lang, variant, displayDateFormat)
     );
+    const [tz, setTz] = useState(dayjs.tz.guess());
 
     useEffect(() => {
         setDatetime(initialValue);
@@ -87,9 +89,11 @@ export const DatePickerInput = ({
                 if (newDate.isValid()) {
                     setDatetimeString(newDate.locale(lang).format(displayDateFormat || datetimeFormat[variant]));
                     setDatetime(newDate.toDate());
-                    onChange(newDate.toDate());
+                    const dayjsDate = dayjs(newDate.toDate()).tz(tz);
+                    onChange(dayjsDate);
                 } else {
-                    onChange(e.target.value);
+                    const dayjsDate = dayjs(e.target.value).tz(tz);
+                    onChange(dayjsDate);
                 }
             }
         }
@@ -132,7 +136,8 @@ export const DatePickerInput = ({
                          horizontal: 'left'
                      }}
                      onClose={() => {
-                         onChange(datetime);
+                         const dayjsDate = dayjs(datetime).tz(tz);
+                         onChange(dayjsDate);
                          onBlur();
                          setAnchorEl(null);
                     }}
@@ -149,6 +154,10 @@ export const DatePickerInput = ({
                     }}
                     {...dayPickerProps}
                 />
+                <TimezoneDropdown value={tz} onChange={tz => {
+                    setTz(tz);
+                    onChange(datetime && dayjs(datetime).tz(tz));
+                }}/>
             </Popover>
         </div>
     );

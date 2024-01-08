@@ -40,7 +40,10 @@ module.exports = (env, argv) => {
                 ...moonstone,
                 {
                     test: /\.m?js$/,
-                    type: 'javascript/auto'
+                    type: 'javascript/auto',
+                    resolve: {
+                        fullySpecified: false
+                    }
                 },
                 {
                     test: /\.js$/,

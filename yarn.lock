@@ -14280,6 +14280,14 @@ react-textarea-autosize@^7.1.0:
     "@babel/runtime" "^7.1.2"
     prop-types "^15.6.0"
 
+react-timezone-select@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-timezone-select/-/react-timezone-select-3.1.0.tgz#921afc1b91c504a67afea20ecc2065018a8bf3db"
+  integrity sha512-+Ki07Iv/k3v7v0byN0iQB41D61n2eb7QT9uMSuBUyN5cGKeNbvt4hW78Hjm6+UEze+fu8TIqXISOnu+QVcP3Cg==
+  dependencies:
+    spacetime "^7.4.8"
+    timezone-soft "^1.5.1"
+
 react-to-typescript-definitions@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/react-to-typescript-definitions/-/react-to-typescript-definitions-3.1.1.tgz#cfa44735ff69d3ae7331053892f597956b241eea"
@@ -15449,6 +15457,11 @@ space-separated-tokens@^1.0.0:
   resolved "https://registry.yarnpkg.com/space-separated-tokens/-/space-separated-tokens-1.1.5.tgz#85f32c3d10d9682007e917414ddc5c26d1aa6899"
   integrity sha512-q/JSVd1Lptzhf5bkYm4ob4iWPjx0KiRe3sRFBNrVqbJkFaBm5vbbowy1mymoPNLRa52+oadOhJ+K49wsSeSjTA==
 
+spacetime@^7.4.8:
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-7.5.0.tgz#38eb3129d7535221cc5e32ddca61dfd5c17c54b6"
+  integrity sha512-FJ8EqkHf3W69s1/fDZVKQwVSrP7fd8oPdEIkgrXw2Mdcq9NeimrflEQFkCLQI84NVHHPTdwMq8L2sD39tIBJPg==
+
 spdx-correct@^3.0.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.2.0.tgz#4f5ab0668f0059e34f9c00dce331784a12de4e9c"
@@ -16186,6 +16199,11 @@ timers-browserify@^2.0.4:
   integrity sha512-9phl76Cqm6FhSX9Xe1ZUAMLtm1BLkKj2Qd5ApyWkXzsMRaA7dgr81kf4wJmQf/hAvg8EEyJxDo3du/0KlhPiKQ==
   dependencies:
     setimmediate "^1.0.4"
+
+timezone-soft@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/timezone-soft/-/timezone-soft-1.5.1.tgz#1c0148a6cbcc0ee76ecb06b0fc3df2819dfd4351"
+  integrity sha512-3BlU8Vq8Z+hlyIiKjAHTBttc8kN10g6FPWzAEDws3zexZgEZ43c9/MJx6moJVu6rjRk51gAHFSYkssoR5+c2dQ==
 
 timezone-support@^1.5.5:
   version "1.8.1"

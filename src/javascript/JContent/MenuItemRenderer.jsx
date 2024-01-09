@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {ChevronDown, ChevronRight, MenuItem, Separator} from '@jahia/moonstone';
 
-export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, buttonIconEnd, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle}) => {
-    const {t} = useTranslation('jcontent');
+export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, buttonIconEnd, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle, buttonLabelNamespace}) => {
+    const {t} = useTranslation(buttonLabelNamespace);
     const [hover, setHover] = useState(false);
 
     if (isSeparator) {
@@ -58,6 +58,7 @@ export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, men
 MenuItemRenderer.propTypes = {
     actionKey: PropTypes.string.isRequired,
     buttonLabel: PropTypes.string,
+    buttonLabelNamespace: PropTypes.string,
     buttonLabelParams: PropTypes.object,
     menuContext: PropTypes.object,
     menuState: PropTypes.object,
@@ -86,4 +87,8 @@ MenuItemRenderer.propTypes = {
      * Additional props to pass to the menu item element
      */
     buttonProps: PropTypes.object
+};
+
+MenuItemRenderer.defaultProps = {
+    buttonLabelNamespace: 'jcontent'
 };

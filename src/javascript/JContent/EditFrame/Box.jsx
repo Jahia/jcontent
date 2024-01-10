@@ -175,7 +175,7 @@ export const Box = React.memo(({
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerProps = {
-        className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents, isCurrent ? styles.bigheader : '')
+        className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
     };
 
     const Header = (

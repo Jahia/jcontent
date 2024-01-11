@@ -90,7 +90,7 @@ jobs:
   publish:
     name: Publish module
     needs: [integration-tests-standalone]
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/2_x'
     runs-on: ubuntu-latest
     container:
       image: jahia/cimg-mvn-cache:ga_cimg_openjdk_8.0.312-node

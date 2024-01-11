@@ -1,0 +1,7 @@
+.cke_editable .ckeditor-html5-video .jahiaFancyboxForm{
+   display: none;
+}
+
+.cke_editable .ckeditor-html5-video .VideoContainer .PlayButtonContainer{
+    display: none;
+}

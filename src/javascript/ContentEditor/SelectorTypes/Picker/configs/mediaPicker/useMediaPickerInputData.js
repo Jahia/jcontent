@@ -21,7 +21,7 @@ export const useMediaPickerInputData = uuids => {
     }
 
     const fieldData = data.jcr.result.map(imageData => {
-        const sizeInfo = (imageData.height && imageData.width) ? ` - ${parseInt(imageData.height.value, 10)}x${parseInt(imageData.width.value, 10)}px` : '';
+        const sizeInfo = (imageData.height && imageData.width) ? ` - ${parseInt(imageData.width.value, 10)}x${parseInt(imageData.height.value, 10)}px` : '';
         return {
             uuid: imageData.uuid,
             url: `${

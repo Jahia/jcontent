@@ -29,11 +29,13 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
 
     const displayDateMask = isDateTime ? maskLocale + ' __:__' : maskLocale;
 
+    console.log(`value: ${value}`);
     return (
         <DatePickerInput
             dayPickerProps={{disabledDays}}
             lang={uilang}
-            initialValue={value ? dayjs(value).toDate() : null}
+            // TODO fix this to use the correct timezone; remove any timezone for now
+            initialValue={value ? dayjs(value, 'YYYY-MM-DDTHH:mm:ss').toDate() : null}
             displayDateFormat={displayDateFormat}
             displayDateMask={displayDateMask}
             readOnly={field.readOnly}

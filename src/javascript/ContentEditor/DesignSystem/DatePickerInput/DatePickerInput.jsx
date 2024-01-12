@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {DatePicker} from '../DatePicker';
@@ -9,25 +9,10 @@ import dayjs from '../../date.config';
 import {Popover} from '@material-ui/core';
 import NumberFormat from 'react-number-format';
 import {Button, Calendar} from '@jahia/moonstone';
-import {TimezoneDropdown} from './TimezoneDropdown';
+import {TimezoneDropdown} from '../TimezoneDropdown';
 
-const datetimeFormat = {
-    date: 'L',
-    datetime: 'L HH:mm'
-};
-
-const formatDateTime = (datetime, lang, variant, displayDateFormat) => {
-    if (!datetime) {
-        return '';
-    }
-
-    return dayjs(datetime)
-        .locale(lang)
-        .format(displayDateFormat || datetimeFormat[variant]);
-};
-
-export const getMaskOptions = (displayDateMask, isDateTime) => {
-    const mask = displayDateMask ? displayDateMask : (isDateTime ? '__/__/____ __:__' : '__/__/____');
+export const getMaskOptions = (displayDateMask, variant) => {
+    const mask = displayDateMask || (variant === 'datetime' ? '__/__/____ __:__' : '__/__/____');
     return {
         mask: mask.replace(/_/g, '#'),
         empty: mask
@@ -43,6 +28,18 @@ const CustomInput = ({value, ...others}) => {
     );
 };
 
+const datetimeFormat = {date: 'L', datetime: 'L HH:mm'};
+const useFormatDatetime = (lang, variant, displayDateFormat) => {
+    const formatDatetime = datetime => {
+        return !datetime ? '' :
+            dayjs(datetime)
+                .locale(lang)
+                .format(displayDateFormat || datetimeFormat[variant]);
+    };
+
+    return {formatDatetime};
+};
+
 export const DatePickerInput = ({
     variant,
     lang,
@@ -56,20 +53,15 @@ export const DatePickerInput = ({
     ...props
 }) => {
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const {formatDatetime} = useFormatDatetime(lang, variant, displayDateFormat);
     const [datetime, setDatetime] = useState(initialValue);
-    const [datetimeString, setDatetimeString] = useState(
-        formatDateTime(initialValue, lang, variant, displayDateFormat)
-    );
-    const [tz, setTz] = useState(dayjs.tz.guess());
+    const [datetimeString, setDatetimeString] = useState(formatDatetime(initialValue));
+    // TODO extract timezone from given initialValue/offset, if it exists
+    const [timezone, setTimezone] = useState(dayjs.tz.guess());
 
-    useEffect(() => {
-        setDatetime(initialValue);
-        setDatetimeString(formatDateTime(initialValue, lang, variant, displayDateFormat));
-    }, [setDatetime, setDatetimeString, initialValue, lang, variant, displayDateFormat]);
-
-    const isDateTime = variant === 'datetime';
     const htmlInput = useRef();
-    const maskOptions = getMaskOptions(displayDateMask, isDateTime);
+    const maskOptions = getMaskOptions(displayDateMask, variant);
 
     const handleOpenPicker = () => {
         if (!readOnly) {
@@ -80,19 +72,18 @@ export const DatePickerInput = ({
     const handleInputChange = e => {
         if (e && e.target) {
             setDatetimeString(e.target.value);
-
             if (maskOptions.empty === e.target.value) {
                 setDatetime(null);
                 onChange(null);
             } else if (!e.target.value.includes('_')) {
                 const newDate = dayjs(e.target.value, displayDateFormat || datetimeFormat[variant], lang);
                 if (newDate.isValid()) {
-                    setDatetimeString(newDate.locale(lang).format(displayDateFormat || datetimeFormat[variant]));
+                    setDatetimeString(formatDatetime(newDate));
                     setDatetime(newDate.toDate());
-                    const dayjsDate = dayjs(newDate.toDate()).tz(tz);
+                    const dayjsDate = dayjs(newDate.toDate()).tz(timezone, true);
                     onChange(dayjsDate);
                 } else {
-                    const dayjsDate = dayjs(e.target.value).tz(tz);
+                    const dayjsDate = dayjs(e.target.value).tz(timezone, true);
                     onChange(dayjsDate);
                 }
             }
@@ -136,7 +127,7 @@ export const DatePickerInput = ({
                          horizontal: 'left'
                      }}
                      onClose={() => {
-                         const dayjsDate = dayjs(datetime).tz(tz);
+                         const dayjsDate = dayjs(datetime).tz(timezone, true);
                          onChange(dayjsDate);
                          onBlur();
                          setAnchorEl(null);
@@ -149,16 +140,17 @@ export const DatePickerInput = ({
                     onSelectDateTime={datetime => {
                         setDatetime(datetime);
                         setDatetimeString(
-                            formatDateTime(datetime, lang, variant, displayDateFormat)
+                            formatDatetime(datetime)
                         );
                     }}
                     {...dayPickerProps}
                 />
-                <TimezoneDropdown value={tz} onChange={tz => {
-                    setTz(tz);
-                    onChange(datetime && dayjs(datetime).tz(tz));
-                }}/>
             </Popover>
+            <TimezoneDropdown value={timezone}
+                              onChange={tz => {
+                setTimezone(tz);
+                onChange(datetime && dayjs(datetime).tz(tz, true));
+            }}/>
         </div>
     );
 };

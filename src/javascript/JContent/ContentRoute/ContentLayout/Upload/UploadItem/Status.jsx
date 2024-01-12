@@ -37,7 +37,7 @@ const Status = ({upload}) => {
                 case 'FOLDER_CONFLICT': return t('jcontent:label.contentManager.fileUpload.folderExists');
                 case 'FOLDER_FILE_NAME_INVALID': return t('jcontent:label.contentManager.fileUpload.invalidChars');
                 case 'FOLDER_FILE_NAME_SIZE': return t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
-                case 'INCORRECT_SIZE': return t('jcontent:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize});
+                case 'INCORRECT_SIZE': return t('jcontent:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.config.maxUploadSize});
                 default: return type === 'import' ? t('jcontent:label.contentManager.fileUpload.failedImport') : t('jcontent:label.contentManager.fileUpload.failedUpload');
             }
         });

@@ -64,7 +64,10 @@ export const CreateContent = ({
             'jcontent:label.contentEditor.error.queryingContent',
             {details: error.message ? error.message : ''}
         );
-        console.error(message);
+        if (!error.message.includes('javax.jcr.PathNotFoundException')) {
+            console.error(message);
+        }
+
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
 

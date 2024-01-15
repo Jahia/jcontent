@@ -69,7 +69,7 @@ describe('useMediaPickerInputData', () => {
             error: undefined,
             fieldData: [{
                 uuid: 'this-is-uuid',
-                info: 'image/jpeg - 1080x1920px',
+                info: 'image/jpeg - 1920x1080px',
                 name: 'a cake',
                 path: 'placeholder.jpg',
                 url: 'localContextPath/files/defaultplaceholder.jpg?lastModified=tomorrow&t=thumbnail2'

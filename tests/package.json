@@ -8,7 +8,7 @@
     "e2e:debug": "cypress open",
     "lint": "eslint . -c .eslintrc.json --ext .ts",
     "report:merge": "mochawesome-merge results/reports/mochawesome*.json > results/reports/report.json && rm results/reports/mochawesome*.json",
-    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",
+    "report:html": "marge results/reports/report.json --reportDir results --assetsDir results/assets",
     "build": "tsc -p ./lib-tsconfig.json",
     "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public",
     "lint:js": "eslint --ext js,ts cypress",

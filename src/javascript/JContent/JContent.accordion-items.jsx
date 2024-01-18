@@ -116,7 +116,7 @@ export const jContentAccordionItems = registry => {
         getPathForItem: node => {
             const pages = node.ancestors
                 .filter(n => n.primaryNodeType.name === 'jnt:page');
-            return pages[pages.length - 1].path;
+            return pages[pages.length - 1]?.path || node.site.path;
         },
         canDisplayItem: ({selectionNode, folderNode}) =>
             selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) &&
@@ -129,7 +129,7 @@ export const jContentAccordionItems = registry => {
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         treeConfig: {
             hideRoot: true,
-            selectableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:externalLink', 'jnt:nodeLink', 'jnt:navMenuText', 'jmix:visibleInPagesTree', 'jmix:mainResource'],
+            selectableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:externalLink', 'jnt:nodeLink', 'jnt:navMenuText', 'jmix:visibleInPagesTree'],
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText', 'jmix:visibleInPagesTree'],
             rootLabel: 'jcontent:label.contentManager.browsePages',
             dnd: {

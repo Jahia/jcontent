@@ -102,6 +102,10 @@
     padding: 0 var(--spacing-small);
 
     background-color: var(--color-gray_light40);
+
+    button {
+        min-width: max-content;
+    }
 }
 
 .dragHandle {

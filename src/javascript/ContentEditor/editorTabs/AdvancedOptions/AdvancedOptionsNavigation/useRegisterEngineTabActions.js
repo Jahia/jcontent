@@ -51,5 +51,7 @@ export const useRegisterEngineTabActions = () => {
             });
     }
 
+    console.log('Tabs', tabs);
+
     return {loading, error, tabs};
 };

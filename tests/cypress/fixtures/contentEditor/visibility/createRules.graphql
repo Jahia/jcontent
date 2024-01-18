@@ -1,0 +1,39 @@
+mutation {
+    jcr {
+        mutateNode(pathOrId: "/sites/jcontentSite/home/area-main/test-content1") {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "j:conditionalVisibility",
+                        primaryNodeType: "jnt:conditionalVisibility",
+                        children: [
+                            {
+                                name: "dayOfWeekCondition",
+                                primaryNodeType: "jnt:dayOfWeekCondition",
+                                properties: [
+                                    {
+                                        name: "dayOfWeek"
+                                        values: ["monday"]
+                                    }
+                                ]
+                                useAvailableNodeName: true
+                            },
+                            {
+                                name: "dayOfWeekCondition",
+                                primaryNodeType: "jnt:dayOfWeekCondition",
+                                properties: [
+                                    {
+                                        name: "dayOfWeek"
+                                        values: ["friday"]
+                                    }
+                                ]
+                                useAvailableNodeName: true
+                            }
+                        ]}
+                ]) {
+                uuid
+            }
+        }
+    }
+}
+

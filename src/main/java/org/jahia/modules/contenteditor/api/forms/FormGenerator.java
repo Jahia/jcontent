@@ -67,7 +67,7 @@ public class FormGenerator {
 
         for (ExtendedItemDefinition itemDefinition : itemDefinitions) {
             // do not return hidden props
-            if (itemDefinition.isNode() || itemDefinition.isHidden() || itemDefinition.isUnstructured() || processedProperties.contains(itemDefinition.getName())) {
+            if (itemDefinition.isNode() || itemDefinition.isUnstructured() || processedProperties.contains(itemDefinition.getName())) {
                 processedProperties.add(itemDefinition.getName());
                 continue;
             }
@@ -168,6 +168,7 @@ public class FormGenerator {
         field.setMandatory(propertyDefinition.isMandatory());
         field.setValueConstraints(valueConstraints);
         field.setDefaultValues(defaultValues);
+        field.setHide(propertyDefinition.isHidden());
         return field;
     }
 }

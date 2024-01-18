@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow} from '@jahia/test-framework';
+import {shallow, mount} from '@jahia/test-framework';
 import {useDispatch, useSelector} from 'react-redux';
 import LanguageSwitcher from './LanguageSwitcher';
 import {useSiteInfo} from '@jahia/data-helper';
@@ -24,7 +24,7 @@ describe('Language switcher test', () => {
     beforeEach(() => {
         siteInfo = {
             languages: [
-                {language: 'en', activeInEdit: true}
+                {language: 'en', localizedDisplayName: 'English', activeInEdit: true}
             ]
         };
         useSelector.mockImplementation(() => ({
@@ -39,16 +39,28 @@ describe('Language switcher test', () => {
 
         const cmp = shallow(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeFalsy();
-        expect(cmp.find('Typography').exists()).toBeTruthy();
+        expect(cmp.find('Pill').exists()).toBeTruthy();
+        expect(cmp.find('Pill').dive().contains('en')).toBeTruthy();
     });
 
     it('should show language switcher in left nav with more than one language', () => {
         siteInfo.languages.push({language: 'fr-ca', activeInEdit: true});
         useSiteInfo.mockReturnValue({siteInfo});
 
-        const cmp = shallow(<LanguageSwitcher/>);
+        const cmp = mount(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeTruthy();
-        expect(cmp.find('Typography').exists()).toBeFalsy();
+        expect(cmp.contains('en')).toBeTruthy();
+        expect(cmp.contains('English')).toBeFalsy();
+    });
+
+    it('should show full language text', () => {
+        siteInfo.languages.push({language: 'fr-ca', activeInEdit: true});
+        useSiteInfo.mockReturnValue({siteInfo});
+
+        const cmp = mount(<LanguageSwitcher isFullDropdown/>);
+        expect(cmp.find('Dropdown').exists()).toBeTruthy();
+        expect(cmp.contains('en')).toBeFalsy();
+        expect(cmp.contains('English')).toBeTruthy();
     });
 
     it('should show language label, not dropdown, in left nav with only one ACTIVE language', () => {
@@ -57,6 +69,6 @@ describe('Language switcher test', () => {
 
         const cmp = shallow(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeFalsy();
-        expect(cmp.find('Typography').exists()).toBeTruthy();
+        expect(cmp.find('Pill').exists()).toBeTruthy();
     });
 });

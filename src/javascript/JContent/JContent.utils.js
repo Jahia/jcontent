@@ -36,7 +36,7 @@ export const hasProperty = (node, propertyName) => {
 };
 
 export const isDescendant = (path, ancestorPath) => {
-    return path.startsWith(ancestorPath + '/');
+    return Boolean(path) && path.startsWith(ancestorPath + '/');
 };
 
 export const isDescendantOrSelf = (path, ancestorOrSelfPath) => {

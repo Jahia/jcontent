@@ -108,12 +108,12 @@ describe('Content editor form', () => {
 
     it('Should display hidden property with overridden hide flag', () => {
         const contentEditor = jcontent.createContent('contentRetrievalCETest');
-        const field = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_j:invalidLanguages', true);
+        const field = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_j:invalidLanguagesHiddenTest', true);
         field.addNewValue('fr', true);
         field.addNewValue('de', true);
         contentEditor.create();
         jcontent.editComponentByText('contentRetrievalCETest');
-        const fieldEdit = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_j:invalidLanguages', true);
+        const fieldEdit = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_j:invalidLanguagesHiddenTest', true);
         fieldEdit.checkValues(['fr', 'de']);
     });
 

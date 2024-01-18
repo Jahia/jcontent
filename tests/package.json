@@ -1,7 +1,7 @@
 {
   "name": "@jahia/jcontent-cypress",
   "private": false,
-  "version": "3.0.0-tests.2",
+  "version": "3.0.0-tests.8",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
@@ -13,7 +13,7 @@
     "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public",
     "lint:js": "eslint --ext js,ts cypress",
     "lint:js:fix": "yarn lint:js --fix cypress",
-    "lint:fix": "yarn lint:js:fix"
+    "lint:fix": "yarn lint:js:fix --resolve-plugins-relative-to ."
   },
   "main": "index.js",
   "files": [

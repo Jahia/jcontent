@@ -889,6 +889,25 @@
         "multipleLeftRightSelector": {
           "displayValue": "Multiple list",
           "description": "Alternative zu mehreren Drop Downs wenn viele Werte gewählt werden können"
+        },
+        "radioButton": {
+          "displayValue": "Radio button",
+          "description": "Alternative zum Dropdown zum Auswählen eines Elements aus einer Liste"
+        }
+      },
+      "visibilityTab": {
+        "languages" : {
+          "title" : "Anzeigesprachen",
+          "description": "Content ist in den gewählten Sprachen sichtbar",
+          "label" : "Content in spezifischer Sprache verstecken",
+          "leftList" : "Der Content wird sichtbar sein in:",
+          "rightList" : "Der Content wird nicht sichtbar sein in:"
+        },
+        "conditions" : {
+          "title" : "Datum und Uhrzeit",
+          "rules" : "{{rulesNumber}} Bedingungen definiert",
+          "rule" : "Eine Bedingung definiert",
+          "norules" : "Keine Bedingung definiert"
         }
       }
     },

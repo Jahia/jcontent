@@ -4,6 +4,7 @@
 <cent = 'http://www.jahia.org/ce/nt/1.0'>
 <cemix = 'http://www.foo.org/cd/mix/1.0'>
 
+
 [cent:textFieldInitializer] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery
  - defaultString (string) = 'Default string'
  - defaultI18nString (string) = 'Default i18n string' internationalized
@@ -23,7 +24,7 @@
  - moduleI18nRBAutocreatedString (string) = resourceBundle('kiss') autocreated internationalized
  - moduleClassInitString (string) = useClass(org.jahia.modules.textfieldinitializer.InitTextValue)
 
- [cent:defaultValueTest] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery
+[cent:defaultValueTest] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery
  - defaultString (string) = 'Default string'
  - defaultI18nString (string) = 'Default i18n string' internationalized
  - defaultDate (date) = now()
@@ -40,15 +41,20 @@
 [cent:testOverride] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
  - jcr:title (string) < '^.{0,10}$'
 
+[cent:choiceListSelectorTypeOverride] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - radioButton (string, choicelist) = 'choice1' < 'choice1', 'choice2', 'choice3'
+ - list (string, choicelist) = 'choice4' < 'choice4', 'choice5', 'choice6'
+ - checkbox (string, choicelist) = 'choice7' multiple < 'choice7', 'choice8', 'choice9'
+ - mList (string, choicelist) = 'choice10' multiple < 'choice10', 'choice11', 'choice12'
 
 [cent:testDefaultTemplate] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:hasTemplateNode
-- j:templateName (string,choicelist[templatesNode=pageTemplate]) mandatory nofulltext
+ - j:templateName (string, choicelist[templatesNode=pageTemplate]) mandatory nofulltext
 
+[cent:showAdvancedModeText] > jnt:bigText
 
 [cent:testRegExp] > jnt:content, jmix:basicContent
-- badge (string) mandatory < '[a-z0-9]+'
-- comment (string) mandatory < '^.{1,15}$'
-
+ - badge (string) mandatory < '[a-z0-9]+'
+ - comment (string) mandatory < '^.{1,15}$'
 
 [cemix:genericContent] mixin
  - defaultValue (string) = 'kW' autocreated
@@ -77,18 +83,21 @@
 [cemix:retrievableContentCETest] mixin
 
 [cent:contentRetrievalCETest] > jnt:content, jmix:list, jmix:renderableList, jmix:queryContent, mix:title, jmix:cache, jmix:editorialContent
-- j:type (string, choicelist[subnodetypes = 'jnt:page,jmix:basicContent,jmix:editorialContent,jmix:retrievableContent',resourceBundle]) indexed=no
-- j:criteria (string,choicelist[resourceBundle]) = 'jcr:created' autocreated indexed=no < 'jcr:created','jcr:lastModified','j:lastPublished'
-- j:sortDirection (string, choicelist[resourceBundle]) = 'asc' autocreated indexed=no < 'asc','desc'
-- maxItems (long) indexed=no
-- j:startNode (weakreference)
-- j:filter (weakreference, category[autoSelectParent=false]) multiple
-- j:noResultsMessage (string) i18n indexed=no
-- j:subNodesView (string, choicelist[templates=subnodes,resourceBundle,image,dependentProperties='j:type']) nofulltext itemtype = layout
+ - j:type (string, choicelist[subnodetypes='jnt:page,jmix:basicContent,jmix:editorialContent,jmix:retrievableContent', resourceBundle]) indexed=no
+ - j:criteria (string, choicelist[resourceBundle]) = 'jcr:created' autocreated indexed=no < 'jcr:created','jcr:lastModified','j:lastPublished'
+ - j:sortDirection (string, choicelist[resourceBundle]) = 'asc' autocreated indexed=no < 'asc','desc'
+ - maxItems (long) indexed=no
+ - j:startNode (weakreference)
+ - j:filter (weakreference, category[autoSelectParent=false]) multiple
+ - j:noResultsMessage (string) i18n indexed=no
+ - j:subNodesView (string, choicelist[templates=subnodes, resourceBundle, image, dependentProperties='j:type']) nofulltext itemtype = layout
+ - j:invalidLanguagesHiddenTest (string) multiple nofulltext hidden
 
 [cemix:testAutoActivatedMixin] mixin
  extends = jnt:content
-- j:testAutoActivatedMixinField (string)
+ - j:testAutoActivatedMixinField (string)
 
 [cent:visibleInTree] > jnt:content, jmix:visibleInPagesTree
 
+[cent:html5PluginTestComponent] > jnt:content, mix:title, jmix:editorialContent, jmix:droppableContent, jmix:siteComponent
+ - text (string, richtext[ckeditor.customConfig='$context/modules/jcontent-test-module/javascript/config.js'])

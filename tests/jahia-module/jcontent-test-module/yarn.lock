@@ -1693,10 +1693,10 @@
     eslint-plugin-react "^7.32.2"
     eslint-plugin-react-hooks "^4.6.0"
 
-"@jahia/moonstone@^2.5.12":
-  version "2.6.0"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.6.0.tgz#cb23832b5490bce55ccc027ba23cdfbfa991072a"
-  integrity sha512-fZvIrH2je+PS09Q1Bvipu9O14nx92J8xGIOFeeQiXsB/yZe0Z23BQzP2urP4xjTZCNGXgxSrz0n+hbXPejiUmQ==
+"@jahia/moonstone@^2.7.0":
+  version "2.7.0"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.7.0.tgz#3427242c6b076c45cf4ce21a7712bb733458f2f0"
+  integrity sha512-WXD1vpmsjLn+pGo7vjyF4a+TKowh55Mx3+8bT0aOeZyhRhRWjS/xM7t0ySWEWszai7E/0DRAk4Giqf/+NznaZA==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@jahia/scripts" "^1.3.3"

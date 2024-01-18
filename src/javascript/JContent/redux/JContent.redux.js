@@ -143,7 +143,7 @@ export const jContentRedux = registry => {
         [setTableViewMode]: (state, action) => ({...state, viewMode: action.payload}),
         [setTableViewType]: (state, action) => ({...state, viewType: action.payload})
     }, {
-        viewMode: currentValueFromUrl.viewMode,
+        viewMode: currentValueFromUrl.viewMode || JContentConstants.tableView.viewMode.PAGE_BUILDER,
         viewType: localStorage.getItem(JContentConstants.localStorageKeys.viewType) || JContentConstants.tableView.viewType.CONTENT
     });
 

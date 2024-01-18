@@ -7,7 +7,7 @@ import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
 } from '~/JContent/eventHandlerRegistry';
-import {isDescendantOrSelf, extractPaths} from '~/JContent/JContent.utils';
+import {extractPaths, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
 import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
@@ -28,7 +28,7 @@ function addEventListeners(target, manager, iframeRef) {
         return;
     }
 
-    const {backend} = manager;
+    const {backend, monitor} = manager;
 
     target.addEventListener('dragover', () => {
         const clientRect = iframeRef.current.getBoundingClientRect();
@@ -47,6 +47,18 @@ function addEventListeners(target, manager, iframeRef) {
     target.addEventListener('dragover', backend.handleTopDragOverCapture, true);
     target.addEventListener('drop', backend.handleTopDrop);
     target.addEventListener('drop', backend.handleTopDropCapture, true);
+    target.addEventListener('mouseup', event => {
+        if (monitor.isDragging()) {
+            console.debug('Mouse up event happened while monitor is still dragging, cancelling previous DND operation', event, monitor.isDragging());
+            backend.handleTopDragEndCapture(event);
+        }
+    });
+    target.addEventListener('mousemove', event => {
+        if (monitor.isDragging() && event.buttons === 0) {
+            console.debug('Mouse move event happened while monitor is still dragging, cancelling previous DND operation', event, monitor.isDragging());
+            backend.handleTopDragEndCapture(event);
+        }
+    });
 }
 
 export const EditFrame = ({isPreview, isDeviceView}) => {

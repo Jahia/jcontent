@@ -54,7 +54,14 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
     field.selectorOptions
         .filter(option => option.name.startsWith(CK_EDITOR_PREFIX))
         .forEach(option => {
-            definitionConfig[option.name.substring(CK_EDITOR_PREFIX.length)] = option.value;
+            let optionValue = option.value;
+            if (optionValue.toLowerCase() === 'true') {
+                optionValue = true;
+            } else if (optionValue.toLowerCase() === 'false') {
+                optionValue = false;
+            }
+
+            definitionConfig[option.name.substring(CK_EDITOR_PREFIX.length)] = optionValue;
         });
 
     // Resolve Toolbar

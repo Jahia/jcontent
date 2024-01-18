@@ -94,12 +94,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         const target = event.currentTarget;
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
-            let moduleElement = getModuleElement(currentDocument, target);
+            const moduleElement = getModuleElement(currentDocument, target);
+            setHeader(currentElement?.pinned && moduleElement.getAttribute('path') === currentElement.path);
             setCurrentElement(current => (
-                (current && current.breadcrumb && isDescendantOrSelf(moduleElement.getAttribute('path'), current.path)) ? current : {element: moduleElement, path: moduleElement.getAttribute('path')}
+                (current && (current.breadcrumb || current.pinned) && isDescendantOrSelf(moduleElement.getAttribute('path'), current.path)) ?
+                    current : {element: moduleElement, path: moduleElement.getAttribute('path')}
             ));
         }, 10);
-    }, [setCurrentElement, currentDocument]);
+    }, [setCurrentElement, currentDocument, currentElement]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
@@ -150,6 +152,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             if (isMultipleSelectionMode) {
                 onSelect(event);
             } else {
+                setCurrentElement(current => ({...current, pinned: true}));
                 setHeader(true);
             }
         } else if (event.detail === 2) {

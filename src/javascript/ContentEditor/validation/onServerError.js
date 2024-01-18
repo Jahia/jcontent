@@ -8,6 +8,7 @@ const setError = ({language, constraintViolation, formikActions, fieldName, i18n
     }
 };
 
+/* eslint max-depth: ["error", 8] */
 export const onServerError = (error, formikActions, i18nContext, language, notificationContext, t, propFieldNameMapping, defaultErrorMessage) => {
     // Set submitting false
     formikActions.setSubmitting(false);

@@ -11,10 +11,10 @@ import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/ContentEditor/utils';
 import {SelectionCaption, SelectionTable} from './PickerSelection';
 import {Search} from './Search';
-import {PickerSiteSwitcher} from '~/ContentEditor/SelectorTypes/Picker';
+import {PickerSiteSwitcher} from '../PickerSiteSwitcher';
 import * as jcontentUtils from '~/JContent/JContent.utils';
 import {replaceFragmentsInDocument} from '@jahia/data-helper';
-import {GET_PICKER_NODE_UUID} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/PickerDialog.gql-queries';
+import {GET_PICKER_NODE_UUID} from '../JahiaPicker.gql-queries';
 import {useQuery, useApolloClient} from '@apollo/client';
 
 const ButtonRenderer = getButtonRenderer({defaultButtonProps: {variant: 'ghost'}});

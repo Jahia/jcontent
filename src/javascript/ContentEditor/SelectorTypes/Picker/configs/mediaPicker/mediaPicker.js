@@ -27,7 +27,8 @@ const viewModeSelectorProps = config => ({
 export const registerMediaPickers = registry => {
     registry.add(Constants.pickerConfig, 'file', {
         pickerInput: {
-            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFileTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFileTitle',
+            usePickerInputData: useMediaPickerInputData
         },
         pickerDialog: {
             dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalFileTitle'
@@ -65,7 +66,8 @@ export const registerMediaPickers = registry => {
 
     registry.add(Constants.pickerConfig, 'pdf', {
         pickerInput: {
-            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPDFTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPDFTitle',
+            usePickerInputData: useMediaPickerInputData
         },
         pickerDialog: {
             dialogTitle: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalPDFTitle'
@@ -106,7 +108,8 @@ export const registerMediaPickers = registry => {
 
     registry.add(Constants.pickerConfig, 'video', {
         pickerInput: {
-            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalVideoTitle'
+            emptyLabel: 'jcontent:label.contentEditor.edit.fields.contentPicker.modalVideoTitle',
+            usePickerInputData: useMediaPickerInputData
         },
         pickerDialog: {
             view: 'Thumbnail',

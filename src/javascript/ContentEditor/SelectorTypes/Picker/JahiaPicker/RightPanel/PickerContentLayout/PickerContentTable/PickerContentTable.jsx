@@ -33,7 +33,7 @@ import {registry} from '@jahia/ui-extender';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import {
     PickerRow
-} from '~/ContentEditor/SelectorTypes/Picker/PickerDialog/RightPanel/PickerContentLayout/PickerContentTable/PickerRow';
+} from '~/ContentEditor/SelectorTypes/Picker/JahiaPicker/RightPanel/PickerContentLayout/PickerContentTable/PickerRow';
 import clsx from 'clsx';
 
 const reduxActions = {

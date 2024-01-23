@@ -307,7 +307,8 @@ export const clickHandler = {
 export const findAvailableBoxConfig = node => {
     // Take the first matching config
     // Only check the primaryNodeType and mixins added on the node
-    const nodeTypes = [...node.mixinTypes, node.primaryNodeType.name];
+    const mixinTypesName = node.mixinTypes?.map(mixin => mixin.name) || [];
+    const nodeTypes = [...mixinTypesName, node.primaryNodeType.name];
     let configs = [];
     nodeTypes.forEach(nodeType => {
         configs.push(...registry.find({type: 'pageBuilderBoxConfig', target: nodeType}));

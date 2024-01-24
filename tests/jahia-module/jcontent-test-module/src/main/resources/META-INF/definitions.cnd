@@ -101,3 +101,5 @@
 
 [cent:html5PluginTestComponent] > jnt:content, mix:title, jmix:editorialContent, jmix:droppableContent, jmix:siteComponent
  - text (string, richtext[ckeditor.customConfig='$context/modules/jcontent-test-module/javascript/config.js'])
+
+[cemix:withCustomBar] mixin

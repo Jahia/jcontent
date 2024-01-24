@@ -29,6 +29,14 @@ export default function () {
         targets: [{id: 'cent:defaultValueTest', priority: 0}]
     });
 
+
+    registry.add('pageBuilderBoxConfig', 'withCustomBar', {
+        Bar: CustomBar,
+        isBarAlwaysDisplayed: true,
+        borderColors: {hover: 'rgba(224, 24, 45)', selected: 'var(--color-purple)'},
+        targets: [{id: 'cemix:withCustomBar', priority: 0}]
+    });
+
     registry.add('externalPickerConfiguration', 'test', {
         requireModuleInstalledOnSite: 'jcontent-test-module',
         pickerConfigs: ['file'],

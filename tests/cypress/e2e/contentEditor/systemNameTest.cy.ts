@@ -1,5 +1,5 @@
-import {PageComposer} from '../../page-object/pageComposer';
-import {Button, getComponentByRole} from '@jahia/cypress';
+import {PageComposer} from '../../page-object';
+import {Button, getComponentByRole, getNodeByPath} from '@jahia/cypress';
 
 describe('System name test', () => {
     const site = 'contentEditorSite';
@@ -95,5 +95,17 @@ describe('System name test', () => {
         pageComposer.checkSystemNameSync('éàöäèü', 'eaoaeu');
         pageComposer = PageComposer.visit(site, 'en', 'home.html');
         pageComposer.checkSystemNameSync('[]-{}-()-!!', '');
+    });
+
+    it('Should limit the system name of content to 128 characters', function () {
+        const pageName = 'abcdefg'.repeat(20);
+        pageComposer.createPage(pageName, true);
+        cy.waitUntil(() => getNodeByPath(`/sites/contentEditorSite/home/${pageName.substring(0, 128)}`).then(({data}) => {
+            return Boolean(data?.jcr?.nodeByPath);
+        }), {
+            errorMsg: `Cannot find node ${pageName.substring(0, 128)} in 10s`,
+            timeout: 10000,
+            interval: 500
+        });
     });
 });

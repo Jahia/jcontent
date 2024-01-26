@@ -36,6 +36,8 @@ public class FormGenerator {
         defaultSelectors.put(PropertyType.BINARY, SelectorType.SMALLTEXT);
     }
 
+    public static Map<String, String> replacedSelectors = new HashMap<>();
+
     public static Form generateForm(ExtendedNodeType nodeType, Locale locale, boolean singleFieldSet) throws RepositoryException {
         Form form = new Form();
         form.setNodeType(nodeType.getName());
@@ -160,7 +162,7 @@ public class FormGenerator {
         field.setErrorMessageKey(errorMessageKey);
         field.setExtendedPropertyDefinition(propertyDefinition);
         field.setRequiredType(PropertyType.nameFromValue(propertyDefinition.getRequiredType()));
-        field.setSelectorType(selectorType);
+        field.setSelectorType(replaceSelectorIfNeeded(selectorType));
         field.setSelectorOptionsMap(selectorOptions);
         field.setI18n(propertyDefinition.isInternationalized());
         field.setReadOnly(propertyDefinition.isProtected());
@@ -170,5 +172,9 @@ public class FormGenerator {
         field.setDefaultValues(defaultValues);
         field.setHide(propertyDefinition.isHidden());
         return field;
+    }
+
+    private static String replaceSelectorIfNeeded(String originalSelector) {
+        return replacedSelectors.getOrDefault(originalSelector, originalSelector);
     }
 }

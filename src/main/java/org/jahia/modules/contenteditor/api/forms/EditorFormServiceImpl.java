@@ -36,6 +36,7 @@ import org.jahia.services.content.nodetypes.*;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListInitializer;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListInitializerService;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
+import org.jahia.services.sites.JahiaSite;
 import org.jahia.settings.SettingsBean;
 import org.jahia.utils.i18n.Messages;
 import org.osgi.service.component.annotations.Component;
@@ -112,6 +113,8 @@ public class EditorFormServiceImpl implements EditorFormService {
 
         try {
             final JCRSiteNode site = currentNode.getResolveSite();
+
+            checkForSelectorReplacements(site);
 
             // Gather all nodetypes and get associated forms
             Set<String> processedNodeTypes = new HashSet<>();
@@ -388,4 +391,11 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
     }
 
+    private void checkForSelectorReplacements(JCRSiteNode site) throws RepositoryException {
+        FormGenerator.replacedSelectors.clear();
+        // Users can choose between ckeditor 4 and 5
+        if (!site.isNodeType("rtmix:ckEditorVersionSelector") || !site.getProperty("useCkEditor4").getBoolean()) {
+            FormGenerator.replacedSelectors.put("RichText", "RichText5");
+        }
+    }
 }

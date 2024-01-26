@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {ContextualMenu, registry} from '@jahia/ui-extender';
+import {ContextualMenu} from '@jahia/ui-extender';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
-import {useMutation, useQuery} from '@apollo/client';
-import {updateProperty} from '~/JContent/EditFrame/Boxes.gql-mutations';
+import {useQuery} from '@apollo/client';
 import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
 import {hasMixin, isDescendant, isDescendantOrSelf, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../redux/selection.redux';
@@ -68,7 +67,6 @@ function getRelativePos(coord1, coord2) {
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
-    const [inlineEditor] = registry.find({type: 'inline-editor'});
     const dispatch = useDispatch();
 
     const {language, displayLanguage, selection, path, site, uilang} = useSelector(state => ({
@@ -85,7 +83,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [currentElement, setCurrentElement] = useState();
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
-    const [updatePropertyMutation] = useMutation(updateProperty);
 
     const [header, setHeader] = useState(false);
 
@@ -344,23 +341,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             configName: 'gwtedit'
         });
     }, [nodes, site, language, uilang, currentDocument]);
-
-    useEffect(() => {
-        if (inlineEditor) {
-            currentDocument.querySelectorAll('[jahiatype=inline]').forEach(element => {
-                const path = element.getAttribute('path');
-                const property = element.getAttribute('property');
-                inlineEditor.callback(element, value => {
-                    console.log('Saving to ', path, property, value);
-                    updatePropertyMutation({variables: {path, property, language, value}}).then(r => {
-                        console.log('Property updated', r);
-                    }).catch(e => {
-                        console.log('Error', e);
-                    });
-                });
-            });
-        }
-    }, [currentDocument, inlineEditor, language, updatePropertyMutation]);
 
     const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({

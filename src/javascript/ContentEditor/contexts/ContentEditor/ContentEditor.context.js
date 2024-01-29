@@ -9,6 +9,7 @@ import {useContentEditorConfigContext} from '../ContentEditorConfig';
 import {shallowEqual, useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -79,6 +80,8 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         uiLanguage: uiLanguage
     });
 
+    const ranAllHooks = useOnBeforeContextHooks(!loading && !siteInfoResult.loading && !error && !siteInfoResult.error ? {nodeData, siteInfo: siteInfoResult.data.jcr.result} : undefined);
+
     if (error) {
         // Check for ItemNotFound exception
         const is404 = (error.graphQLErrors || []).some(e => e.message?.includes('ItemNotFoundException'));
@@ -96,7 +99,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         return null;
     }
 
-    if (loading || siteInfoResult.loading) {
+    if (loading || siteInfoResult.loading || !ranAllHooks) {
         return <LoaderOverlay/>;
     }
 

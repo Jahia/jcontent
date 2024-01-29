@@ -140,6 +140,8 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
         if (onClosedCallback) {
             onClosedCallback(mergedConfig, needRefresh.current);
         }
+
+        registry.find({type: 'jcontent-editor-onclose-hook'}).forEach(h => h.hook());
     };
 
     mergedConfig.layout = mergedConfig.layout || (mergedConfig.isFullscreen ? EditPanelFullscreen : EditPanelCompact);

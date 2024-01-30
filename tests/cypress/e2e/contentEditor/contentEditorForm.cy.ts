@@ -2,7 +2,7 @@ import {JContent} from '../../page-object/jcontent';
 import {Field, SmallTextField} from '../../page-object/fields';
 import {Button, Dropdown, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
 import gql from 'graphql-tag';
-import {ContentEditor} from "../../page-object";
+import {ContentEditor} from '../../page-object';
 
 describe('Content editor form', () => {
     let jcontent: JContent;
@@ -23,7 +23,7 @@ describe('Content editor form', () => {
 
     after(function () {
         cy.runProvisioningScript({
-            fileContent: `- startBundle: jcontent-test-module`,
+            fileContent: '- startBundle: jcontent-test-module',
             type: 'application/yaml'
         });
         cy.logout();

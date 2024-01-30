@@ -103,7 +103,7 @@ describe('Create media tests', () => {
     it('Can upload, rename and delete file with too much characters in filename', function () {
         jcontent.getMedia()
             .open()
-            .createFile('long_long_long_long_long_long_long_long_long_long_long_long_filename.txt')
+            .createFile(`${'long_'.repeat(30)}filename.txt`)
             .dndUpload('div[data-sel-role-card=bootstrap]')
             .renameAfterUpload('short_filename.txt')
             .download()

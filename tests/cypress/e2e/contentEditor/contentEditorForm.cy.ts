@@ -2,6 +2,7 @@ import {JContent} from '../../page-object/jcontent';
 import {Field, SmallTextField} from '../../page-object/fields';
 import {Button, Dropdown, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
 import gql from 'graphql-tag';
+import {ContentEditor} from "../../page-object";
 
 describe('Content editor form', () => {
     let jcontent: JContent;
@@ -21,6 +22,10 @@ describe('Content editor form', () => {
     });
 
     after(function () {
+        cy.runProvisioningScript({
+            fileContent: `- startBundle: jcontent-test-module`,
+            type: 'application/yaml'
+        });
         cy.logout();
         cy.executeGroovy('contentEditor/deleteSite.groovy', {SITEKEY: siteKey});
     });
@@ -161,5 +166,21 @@ describe('Content editor form', () => {
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         jcontent.createContent('News');
         cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');
+    });
+
+    it('should display default resource key when module is disabled', () => {
+        let contentEditor = jcontent.createContent('Default Value Test');
+        let field = contentEditor.getField(SmallTextField, 'cent:defaultValueTest_defaultDate', false);
+        field.get().find('label').should('contain', 'Default date label');
+        contentEditor.create();
+
+        cy.runProvisioningScript({
+            fileContent: '- stopBundle: jcontent-test-module',
+            type: 'application/yaml'
+        });
+        jcontent.getTable().getRowByLabel('default-value-test').contextMenu().select('Edit');
+        contentEditor = new ContentEditor();
+        field = contentEditor.getField(SmallTextField, 'cent:defaultValueTest_defaultDate', false);
+        field.get().find('label').should('contain', 'defaultDate');
     });
 });

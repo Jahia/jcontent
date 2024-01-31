@@ -56,11 +56,11 @@ jobs:
     name: Integration Tests ${{ matrix.config_file }}
     needs: build
     runs-on: self-hosted
-    timeout-minutes: 45
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
-        config_file: 
+        config_file:
           - cypress.config-contentEditor.ts
           - cypress.config-jcontent.ts
           - cypress.config-menuActions.ts

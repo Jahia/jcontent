@@ -9,7 +9,7 @@
       "preview": {
         "hide": "Masquer l'aperçu",
         "tabs": {
-          "preview": "Apperçu",
+          "preview": "Aperçu",
           "metadata": "Metadata",
           "quickEdit": "Edition rapide"
         },
@@ -38,7 +38,7 @@
           "label": "Non publiable (publiez les langues obligatoires avant)"
         },
         "conflict": {
-          "description": "Un contenu avec le même nom existe déjà en mode live et ne fera pas partie de cette publication",
+          "description": "Un contenu avec le même nom existe déjà en ligne et ne fera pas partie de cette publication",
           "label": "Non publiable (conflit)"
         },
         "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}",
@@ -48,7 +48,7 @@
       "downloadAsZip": "Télécharger comme Zip",
       "fileUpload": {
         "nothingToDisplay": "Rien à afficher",
-        "nothingToDisplay2": "Les éléments non selectionables n'apparaissent pas dans cette vue",
+        "nothingToDisplay2": "Les éléments non sélectionables n'apparaissent pas dans cette vue",
         "locked": "Ce dossier vide est verrouillé",
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
         "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
@@ -63,7 +63,7 @@
         "dontImport": "Ne pas importer",
         "uploadButtonLabel": "Importer des fichiers",
         "successfulUploadMessage": "Fichier téléchargé avec succès",
-        "successfulUploadMessage_plural": "{{number}} Fichiers téléchargés avec succès",
+        "successfulUploadMessage_plural": "{{number}} fichiers téléchargés avec succès",
         "successfulImportMessage": "Fichier importé avec succès",
         "successfulImportMessage_plural": "{{number}} fichiers importés avec succès",
         "newName": "Nouveau nom",
@@ -82,8 +82,8 @@
         "failedImport": "Impossible d'importer ce fichier",
         "errorActionMessage": "Veuillez résoudre le(s) problème(s)",
         "dialogRenameTitle": "Renommer le fichier importé",
-        "dialogRenameText": "Quel nom voulez vous pour le fichier importé ?",
-        "dialogRenameExample": "ex: filename",
+        "dialogRenameText": "Quel nom voulez-vous pour le fichier importé ?",
+        "dialogRenameExample": "ex: nomdefichier",
         "dialogRenameCancel": "Annuler",
         "dialogRename": "Renommer",
         "replaceWith": "Remplacer par",
@@ -156,7 +156,7 @@
       "subContentsAction": "Voir les sous-contenus",
       "translateAction": "{{source}} -> {{dest}}",
       "noResults": "Aucun résultat",
-      "noResultsText": "Aucun resultat pour votre recherche \"{{text}}\"",
+      "noResultsText": "Aucun résultat pour votre recherche \"{{text}}\"",
       "create": {
         "contentFolder": "Nouveau répertoire de contenu",
         "folder": "Nouveau dossier",
@@ -224,7 +224,7 @@
       "contextMenu": {
         "lockActions": {
           "unlock": "Déverrouiller",
-          "clearAllLocks": "Retirer tout le verrou",
+          "clearAllLocks": "Retirer le verrou en entier",
           "lock": "Verrouiller"
         }
       },
@@ -238,11 +238,11 @@
         "delete": "Supprimer",
         "translate": "Traduire",
         "emptyMessage": "Chargement en cours...",
-        "download": "Télecharger",
+        "download": "Télécharger",
         "publishMenu": "Publier...",
         "unpublish": "Dépublier <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Modifié par {{userName}} le",
-        "share": "Copier chemin/UUID",
+        "share": "Copier le chemin/UUID",
         "staging": "En édition",
         "live": "En ligne",
         "publishInAllLanguages": "Publier <em>{{displayName}}</em> dans toutes les langues",
@@ -307,7 +307,7 @@
         },
         "locate": "Localiser",
         "openInLive": "Live",
-        "openInPreview": "Apperçu",
+        "openInPreview": "Aperçu",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "Plus d'actions",
@@ -346,8 +346,8 @@
         "goBack": "Retour",
         "exitConfirmation": "Vous avez des modifications non enregistrées. Etes-vous sûr de vouloir quitter sans enregistrer ?",
         "continueEditing": "Continuer d'éditer",
-        "discardChangesTitle": "Annulez les modifications ?",
-        "discardChangesButton": "Annulez les modifications",
+        "discardChangesTitle": "Annuler les modifications ?",
+        "discardChangesButton": "Annuler les modifications",
         "saveAsDialog": {
           "title": "Enregistrer sous",
           "text": "Entrez un nom de fichier",
@@ -382,7 +382,7 @@
       },
       "downloadFile": {
         "title": "Télécharger le fichier",
-        "selectVersion": "Selectionner la version",
+        "selectVersion": "Sélectionner la version",
         "live": "En ligne",
         "default": "En édition",
         "copyUrl": "Copier l'URL",
@@ -396,7 +396,7 @@
         "modified": "Modifié",
         "new": "Nouveau",
         "notPublished": "Non publié",
-        "published": "Live",
+        "published": "En ligne",
         "warning": "Attention",
         "workInProgress": "Travail en cours"
       },
@@ -465,13 +465,13 @@
         "locked":{
           "permanently": {
             "title": "Impossible de supprimer",
-            "content": "L’élément <strong>{{name}}</strong> ne peut actuellement être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "content_plural": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content": "L’élément <strong>{{name}}</strong> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
+            "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           },
           "undelete": {
             "title": "Impossible d'annuler la suppression",
             "content": "Il n’est actuellement pas possible d’annuler la seule suppression de l’élément <strong>{{name}}</strong>. Merci d’annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "content_plural": "Il y a ${count} elements <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           }
         },
         "error": "Impossible d'exécuter l'opération demandée. Fermeture de la fenêtre et rafraîchissement des données."
@@ -590,11 +590,11 @@
             "btnSave": "Sauvegarder"
           },
           "lock": {
-            "deletion": "Vérouillé: Contenu marqué pour suppression",
-            "engine": "Vérouillé par {{userName}}",
-            "user": "Vérouillé par {{userName}}",
-            "validation": "Vérouiller par un workflow de publication",
-            "unknown": "Vérouillé pour une raison inconnue"
+            "deletion": "Verrouillé: Contenu marqué pour suppression",
+            "engine": "Verrouillé par {{userName}}",
+            "user": "Verrouillé par {{userName}}",
+            "validation": "Verrouiller par un workflow de publication",
+            "unknown": "Verrouillé pour une raison inconnue"
           },
           "publish": {
             "name": "Publier maintenant",
@@ -622,7 +622,7 @@
             "btnDone": "Valider",
             "checkboxLabel": "Travail en cours",
             "checkboxSubLabel": "Le contenu peut être publié dans toutes les langues.",
-            "clickHere": "cliquez ici.",
+            "clickHere": "Cliquez ici.",
             "dialogTitle": "Travail en cours (WIP)",
             "dialogSubTitle": "Vous pouvez marquer le contenu comme travail en cours pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
             "label" : {
@@ -646,7 +646,7 @@
           },
           "usages": {
             "path": "Emplacement",
-            "none": "Pas d’utilisations",
+            "none": "Pas d’utilisation",
             "noneDescription": "Cet élément n’est référencé par aucun autre contenu."
           }
         },
@@ -738,7 +738,7 @@
           "menu": "Nouveau contenu",
           "newMenu": "Nouveau...",
           "contentOfType": "Nouveau : {{typeName}}",
-          "labelModal": "Sélectionner Un Type De Contenu",
+          "labelModal": "Sélectionner un type de contenu",
           "btnDiscard": "ANNULER",
           "btnCreate": "CRÉER",
           "filterLabel": "Rechercher un type de contenu"
@@ -764,7 +764,7 @@
           "ordering": "Ordre",
           "automatic": "Classement automatique",
           "orderBy": "Trier par",
-          "description": "Activez le classement automatique pour organiser vos sous-contenus en utilisant au maximum trois critères, ou réorganisez vos sous-contenus manuellement, par glisser-déposer."
+          "description": "Activez le classement automatique pour organiser vos sous-contenus en utilisant au maximum de trois critères, ou réorganisez vos sous-contenus manuellement, par glisser-déposer."
         },
         "listSizeLimit": {
           "name": "Nombre d'éléments",
@@ -778,7 +778,7 @@
         "publishing": "Publication en cours",
         "modified": "Modifié",
         "notPublished": "Non publié",
-        "published": "Live",
+        "published": "En ligne",
         "warning": "Attention"
       },
       "publicationStatusTooltip": {
@@ -786,7 +786,7 @@
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
         "mandatoryLanguageValid": "Le contenu ne sera visible en ligne qu'après publication dans toutes les langues obligatoires.",
-        "conflict": "Un contenu avec le même nom existe déjà en mode live et ne fera pas partie de cette publication",
+        "conflict": "Un contenu avec le même nom existe déjà en ligne et ne fera pas partie de cette publication",
         "unknown": "Statut de publication indisponible"
       },
       "global": {
@@ -801,7 +801,7 @@
         "warnings": {
           "content": "Le contenu doit être modifié directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
           "options": "Les options additionnelles peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
-          "categories": "Les catégorie associées au contenu peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
+          "categories": "Les catégories associées au contenu peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
           "metadata": "Les métadonnées peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour.",
           "layout": "Les options de rendu peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour."
         }

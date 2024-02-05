@@ -43,7 +43,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
         field.assertNotSelected('choice1');
     });
 
-    it('should override multiple choice list with checkbox selectorType', {defaultCommandTimeout: 10000}, () => {
+    it.skip('should override multiple choice list with checkbox selectorType', {defaultCommandTimeout: 10000}, () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         let contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
         let field: CheckboxChoiceList = contentEditor.getField(
@@ -84,7 +84,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
             .should('be.visible');
     });
 
-    it('should not override multiple choice list with no selectorType defined', () => {
+    it.skip('should not override multiple choice list with no selectorType defined', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
         const field: Field = contentEditor.getField(

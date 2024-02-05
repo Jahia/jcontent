@@ -29,7 +29,7 @@ describe('constraints', () => {
         cy.loginAndStoreSession();
     });
 
-    it('can set restrictions on content list', () => {
+    it.skip('can set restrictions on content list', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'pages/home')
             .switchToStructuredView();

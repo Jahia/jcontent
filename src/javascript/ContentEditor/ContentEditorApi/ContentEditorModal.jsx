@@ -140,8 +140,6 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
         if (onClosedCallback) {
             onClosedCallback(mergedConfig, needRefresh.current);
         }
-
-        registry.find({type: 'jcontent-editor-onclose-hook'}).forEach(h => h.hook());
     };
 
     mergedConfig.layout = mergedConfig.layout || (mergedConfig.isFullscreen ? EditPanelFullscreen : EditPanelCompact);
@@ -175,7 +173,10 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
                 aria-labelledby="dialog-content-editor"
                 classes={classes}
                 onClose={() => confirmationDialog.current ? confirmationDialog.current.openDialog() : updateEditorConfig({closed: true})}
-                onExited={onExited}
+                onExited={() => {
+                    onExited();
+                    registry.find({type: 'jcontent-editor-onclose-hook'}).forEach(h => h.hook());
+                }}
                 onRendered={() => window.focus()}
                 {...mergedConfig.dialogProps}
         >

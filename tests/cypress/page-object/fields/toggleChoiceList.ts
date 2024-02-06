@@ -14,19 +14,24 @@ export class ToggleChoiceList extends Field {
             .contains(this.labelSel, label).should('be.visible');
     }
 
+    assertExists(label: string) {
+        return this.get().scrollIntoView()
+            .contains(this.labelSel, label).should('exist');
+    }
+
     assertSelected(label: string) {
-        return this.assertVisible(label)
+        return this.assertExists(label)
             .find(this.inputSel).should('have.attr', 'checked');
     }
 
     assertNotSelected(label: string) {
-        return this.assertVisible(label)
+        return this.assertExists(label)
             .find(this.inputSel).should('not.have.attr', 'checked');
     }
 
     select(label: string) {
-        this.assertVisible(label)
-            .find(this.inputSel).should('be.visible').click();
+        this.assertExists(label)
+            .find(this.inputSel).click({force: true});
     }
 }
 

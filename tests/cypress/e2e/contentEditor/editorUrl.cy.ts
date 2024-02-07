@@ -86,6 +86,8 @@ describe('Editor url test', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
         cy.go('forward');
+        // Wait for transition
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
         cy.get('h1').contains('People First').should('exist');
         contentEditor.cancel();

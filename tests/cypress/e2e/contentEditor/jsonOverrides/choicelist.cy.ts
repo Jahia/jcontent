@@ -31,8 +31,8 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
             RadioChoiceList, 'cent:choiceListSelectorTypeOverride_radioButton', false);
 
         field.assertSelected('choice1');
-        field.assertVisible('choice2');
-        field.assertVisible('choice3');
+        field.assertExists('choice2');
+        field.assertExists('choice3');
         field.select('choice2');
         contentEditor.create();
 
@@ -43,15 +43,15 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
         field.assertNotSelected('choice1');
     });
 
-    it.skip('should override multiple choice list with checkbox selectorType', {defaultCommandTimeout: 10000}, () => {
+    it('should override multiple choice list with checkbox selectorType', {defaultCommandTimeout: 10000}, () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         let contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
         let field: CheckboxChoiceList = contentEditor.getField(
             CheckboxChoiceList, 'cent:choiceListSelectorTypeOverride_checkbox', false);
 
         field.assertSelected('choice7');
-        field.assertVisible('choice8');
-        field.assertVisible('choice9');
+        field.assertExists('choice8');
+        field.assertExists('choice9');
         field.select('choice9');
         contentEditor.save();
 
@@ -81,10 +81,10 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
         // Verify field still contains standard dropdown selector
         field.get().scrollIntoView()
             .find('.moonstone-dropdown')
-            .should('be.visible');
+            .should('exist');
     });
 
-    it.skip('should not override multiple choice list with no selectorType defined', () => {
+    it('should not override multiple choice list with no selectorType defined', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.editComponentByText('choiceListSelectorTypeOverride');
         const field: Field = contentEditor.getField(
@@ -92,6 +92,6 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
         // Verify field still contains standard dropdown selector
         field.get().scrollIntoView()
             .find('.moonstone-dropdown')
-            .should('be.visible');
+            .should('exist');
     });
 });

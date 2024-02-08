@@ -70,7 +70,7 @@ describe('Editor url test', () => {
         cy.hash().should('contain', 'lang:en');
     });
 
-    it.skip('History is handled consistently', function () {
+    it('History is handled consistently', function () {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
         jcontent.switchToListMode();
@@ -86,6 +86,9 @@ describe('Editor url test', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
         cy.go('forward');
+        // Wait for transition
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
         cy.get('h1').contains('People First').should('exist');
         contentEditor.cancel();
 

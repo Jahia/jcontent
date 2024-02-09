@@ -3,5 +3,6 @@
 - installBundle:
     - 'mvn:org.jahia.modules/content-editor/4.5.0'
     - 'mvn:org.jahia.modules/graphql-dxm-provider/2.19.0-SNAPSHOT'
+    - 'mvn:org.jahia.modules/site-settings-seo/4.4.0'
   autoStart: true
   uninstallPreviousVersion: true

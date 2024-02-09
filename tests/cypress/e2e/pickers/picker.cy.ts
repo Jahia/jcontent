@@ -165,7 +165,7 @@ describe('Picker tests', () => {
 
         cy.log('assert created folder exists and select');
         pagesAccordion.expandTreeItem('images');
-        pagesAccordion.getTreeItem(folderName).click().should('be.visible');
+        pagesAccordion.getTreeItem(folderName).should('be.visible').click();
         picker.cancel();
         contentEditor.cancel();
         cy.log(`delete folder '${folderName}'`);

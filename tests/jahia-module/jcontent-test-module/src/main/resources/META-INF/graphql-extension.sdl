@@ -1,0 +1,17 @@
+
+type CouvertureCollectif @mapping(node: "jnt:offreCouvertureCC", ignoreDefaultQueries: true){
+  couvertureTitre: String @mapping(property: "couvertureTitre")
+}
+
+type OffreCollectif @mapping(node: "jnt:offreCC", ignoreDefaultQueries: true) {
+  metadata: Metadata
+  titre: String! @mapping(property: "titre")
+  subTitre: String @mapping(property: "subTitre")
+  couvertures: CouvertureCollectifConnection
+  testCouvertures: [CouvertureCollectif]
+}
+
+extend type Query {
+  allOffreCollectif: [OffreCollectif]
+  allCouvertureCollectif: [CouvertureCollectif]
+}

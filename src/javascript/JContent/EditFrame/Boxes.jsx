@@ -414,6 +414,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             <ContextualMenu
                 setOpenRef={contextualMenu}
                 currentPath={currentPath}
+                documentElement={currentDocument.documentElement}
                 {...pathObject}
             />
 

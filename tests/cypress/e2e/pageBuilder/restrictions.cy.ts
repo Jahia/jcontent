@@ -1,4 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
+import {addNode, deleteNode} from '@jahia/cypress';
 
 describe('Page builder', () => {
     let jcontent: JContentPageBuilder;
@@ -89,6 +90,29 @@ describe('Page builder', () => {
             buttons.getButton('New content');
             buttons.assertHasNoButtonForType('New Banner');
             buttons.assertHasNoButtonForType('New Event');
+        });
+
+        it('should have nodetype and list limit restrictions on absolute areas', function () {
+            addNode({
+                name: 'absoluteArea',
+                parentPathOrId: '/sites/jcontentSite/home/area-main',
+                primaryNodeType: 'jnt:absoluteArea',
+                properties: [
+                    {name: 'j:allowedTypes', values: ['jnt:event']},
+                    {name: 'j:numberOfItems', value: 2},
+                    {name: 'j:level', value: 0}
+                ]
+            }).then(() => {
+                jcontent = JContent
+                    .visit('jcontentSite', 'en', 'pages/home')
+                    .switchToPageBuilder();
+                const absoluteArea = jcontent.getModule('/sites/jcontentSite/home/area-main/absoluteArea');
+                absoluteArea.get().find('[jahiatype="module"][type="absoluteArea"]').should('have.attr', 'listlimit', '2');
+                const buttons = absoluteArea.getCreateButtons();
+                buttons.assertHasNoButtonForType('New content');
+                buttons.getButton('New Event');
+                deleteNode('/sites/jcontentSite/home/area-main/absoluteArea');
+            });
         });
     });
 });

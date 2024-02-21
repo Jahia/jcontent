@@ -58,13 +58,15 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
     let nodetypes = null;
     if (element.getAttribute('nodetypes')) {
         nodetypes = element.getAttribute('nodetypes').split(' ');
-    } else if (parent.getAttribute('nodetypes') && parent.getAttribute('type') === 'area') {
+    } else if (parent.getAttribute('nodetypes') &&
+        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         nodetypes = parent.getAttribute('nodetypes').split(' ');
     }
 
     // Extract limit defined on template set
     let templateLimit = null;
-    if (parent.getAttribute('listLimit') && parent.getAttribute('type') === 'area') {
+    if (parent.getAttribute('listLimit') &&
+        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         templateLimit = Number(parent.getAttribute('listLimit'));
     }
 

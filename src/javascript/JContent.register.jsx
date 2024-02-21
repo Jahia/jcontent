@@ -48,7 +48,7 @@ export default function () {
             path: `/sites/${site}`,
             language: language
         }, {
-            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))],
+            requiredSitePermission: [...new Set(accordions.filter(acc => acc.requiredSitePermission).map(acc => acc.requiredSitePermission))],
             getSiteLanguages: true
         });
 

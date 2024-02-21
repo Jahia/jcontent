@@ -91,8 +91,10 @@ describe('Page builder', () => {
             buttons.assertHasNoButtonForType('New Banner');
             buttons.assertHasNoButtonForType('New Event');
         });
+    });
 
-        it('should have nodetype and list limit restrictions on absolute areas', function () {
+    describe('area restrictions', function () {
+        beforeEach(() => {
             addNode({
                 name: 'absoluteArea',
                 parentPathOrId: '/sites/jcontentSite/home/area-main',
@@ -102,17 +104,22 @@ describe('Page builder', () => {
                     {name: 'j:numberOfItems', value: 2},
                     {name: 'j:level', value: 0}
                 ]
-            }).then(() => {
-                jcontent = JContent
-                    .visit('jcontentSite', 'en', 'pages/home')
-                    .switchToPageBuilder();
-                const absoluteArea = jcontent.getModule('/sites/jcontentSite/home/area-main/absoluteArea');
-                absoluteArea.get().find('[jahiatype="module"][type="absoluteArea"]').should('have.attr', 'listlimit', '2');
-                const buttons = absoluteArea.getCreateButtons();
-                buttons.assertHasNoButtonForType('New content');
-                buttons.getButton('New Event');
-                deleteNode('/sites/jcontentSite/home/area-main/absoluteArea');
             });
+        });
+
+        afterEach(() => {
+            deleteNode('/sites/jcontentSite/home/area-main/absoluteArea');
+        });
+
+        it('should have nodetype and list limit restrictions on absolute areas', function () {
+            jcontent = JContent
+                .visit('jcontentSite', 'en', 'pages/home')
+                .switchToPageBuilder();
+            const absoluteArea = jcontent.getModule('/sites/jcontentSite/home/area-main/absoluteArea');
+            absoluteArea.get().find('[jahiatype="module"][type="absoluteArea"]').should('have.attr', 'listlimit', '2');
+            const buttons = absoluteArea.getCreateButtons();
+            buttons.assertHasNoButtonForType('New content');
+            buttons.getButton('New Event');
         });
     });
 });

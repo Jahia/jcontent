@@ -5,7 +5,9 @@
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
+    "e2e:ci:performance": "cypress run --browser chrome -C cypress.config-performance.ts",
     "e2e:debug": "cypress open",
+    "e2e:debug:performance": "cypress open -C cypress.config-performance.ts",
     "lint": "eslint . -c .eslintrc.json --ext .ts",
     "report:merge": "mochawesome-merge results/reports/mochawesome*.json > results/reports/report.json && rm results/reports/mochawesome*.json",
     "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",

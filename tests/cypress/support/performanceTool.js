@@ -11,24 +11,19 @@ export const generateReportFile = () => {
         o.average = o.runs.reduce((acc, value) => acc + value, 0) / o.runs.length;
     });
 
-    cy.writeFile('performanceReport.json', JSON.stringify(logs, null, 2));
+    cy.writeFile('results/performanceReport.json', JSON.stringify(logs, null, 2));
 };
 
-let measurementName;
-let measurementStart;
+export const gatherPerformanceStats = cy => {
+    cy.on('test:after:run', test => {
+        if (!logs[test.title]) {
+            logs[test.title] = {
+                runs: [],
+                average: 0
+            };
+        }
 
-export const beginMeasurement = name => {
-    measurementName = name;
-    measurementStart = performance.now();
+        logs[test.title].runs.push(test.duration);
+    });
 };
 
-export const endMeasurement = () => {
-    if (!logs[measurementName]) {
-        logs[measurementName] = {
-            runs: [],
-            average: 0
-        };
-    }
-
-    logs[measurementName].runs.push(performance.now() - measurementStart);
-};

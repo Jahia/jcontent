@@ -1,14 +1,15 @@
 import {ContentEditor, JContent} from '../../page-object';
-import {preparePerformanceTool, generateReportFile, beginMeasurement, endMeasurement} from '../../support/performanceTool';
+import {preparePerformanceTool, generateReportFile, gatherPerformanceStats} from '../../support/performanceTool';
 import {Button, getComponentByRole} from '@jahia/cypress';
 
 describe('jContent performance tests', () => {
     let jcontent: JContent;
     const siteKey = 'jcontentSitePerformance';
-    const repeatTimes = 2;
+    const repeatTimes = 3;
 
     before(() => {
         // These timeout values were sufficient for my machine, they are most likely machine dependent
+        Cypress.config('execTimeout', 1000000);
         Cypress.config('defaultCommandTimeout', 1000000);
         Cypress.config('requestTimeout', 1000000);
         Cypress.config('responseTimeout', 1000000);
@@ -20,7 +21,7 @@ describe('jContent performance tests', () => {
     after(() => {
         generateReportFile();
         cy.logout();
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
+        // cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
     });
 
     beforeEach(() => {
@@ -30,7 +31,7 @@ describe('jContent performance tests', () => {
 
     Cypress._.times(repeatTimes, () => {
         it('Test navigation tree expansion', () => {
-            beginMeasurement('Expand nav tree 5 levels deep');
+            gatherPerformanceStats(cy);
             const pageAccordion = jcontent.getAccordionItem('pages');
             pageAccordion.getTreeItem('home').expand();
             pageAccordion.getTreeItem('page-2-1').expand();
@@ -38,14 +39,13 @@ describe('jContent performance tests', () => {
             pageAccordion.getTreeItem('page-2-3').expand();
             pageAccordion.getTreeItem('page-2-4').expand();
             pageAccordion.getTreeItem('page-2-5').should('exist');
-            endMeasurement();
             pageAccordion.getTreeItem('page-2-1').collapse();
         });
     });
 
     Cypress._.times(repeatTimes, () => {
         it('Test navigation tree expansion and context menu', () => {
-            beginMeasurement('Expand nav tree 5 levels deep with context menu');
+            gatherPerformanceStats(cy);
             const pageAccordion = jcontent.getAccordionItem('pages');
             let item = pageAccordion.getTreeItem('home');
             item.contextMenu().shouldHaveItem('Delete');
@@ -70,14 +70,13 @@ describe('jContent performance tests', () => {
             item = pageAccordion.getTreeItem('page-3-5');
             item.contextMenu().shouldHaveItem('Delete');
             cy.get('.moonstone-menu_overlay').click({force: true});
-            endMeasurement();
             pageAccordion.getTreeItem('page-3-1').collapse();
         });
     });
 
     Cypress._.times(repeatTimes, () => {
         it('Test navigation tree expansion, context menu and open editor', () => {
-            beginMeasurement('Expand nav tree 5 levels deep with context menu and open editor');
+            gatherPerformanceStats(cy);
             const pageAccordion = jcontent.getAccordionItem('pages');
             let item = pageAccordion.getTreeItem('home');
             item.contextMenu().select('Edit');
@@ -102,14 +101,13 @@ describe('jContent performance tests', () => {
             item = pageAccordion.getTreeItem('page-4-5');
             item.contextMenu().select('Edit');
             ContentEditor.getContentEditor().cancel();
-            endMeasurement();
             pageAccordion.getTreeItem('page-4-1').collapse();
         });
     });
 
     Cypress._.times(repeatTimes, () => {
         it('Test navigation tree expansion, page selection with context menu', () => {
-            beginMeasurement('Expand nav tree 5 levels deep, select page, invoke context menu');
+            gatherPerformanceStats(cy);
             jcontent.switchToStructuredView();
             const pageAccordion = jcontent.getAccordionItem('pages');
             let item = pageAccordion.getTreeItem('home');
@@ -138,14 +136,13 @@ describe('jContent performance tests', () => {
             item.click();
             jcontent.getTable().getRowByLabel('highlights-1').contextMenu().shouldHaveItem('Delete');
             cy.get('.moonstone-menu_overlay').click({force: true});
-            endMeasurement();
             pageAccordion.getTreeItem('page-4-1').collapse();
         });
     });
 
     Cypress._.times(repeatTimes, () => {
         it('Test navigation tree expansion, context menu and deletion', () => {
-            beginMeasurement('Expand nav tree 5 levels deep with context menu and deletion');
+            gatherPerformanceStats(cy);
             const pageAccordion = jcontent.getAccordionItem('pages');
             let item = pageAccordion.getTreeItem('home');
             item.expand();
@@ -173,8 +170,11 @@ describe('jContent performance tests', () => {
             item.contextMenu().select('Delete');
             getComponentByRole(Button, 'delete-mark-button').should('be.visible');
             getComponentByRole(Button, 'cancel-button').click();
-            endMeasurement();
             pageAccordion.getTreeItem('page-1-1').collapse();
         });
+    });
+
+    it('Empty test, helps make sure test:after:run executes fully for the previous batch', () => {
+        assert(true);
     });
 });

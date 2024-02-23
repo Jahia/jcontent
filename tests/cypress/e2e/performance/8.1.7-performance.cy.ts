@@ -27,6 +27,9 @@ describe('jContent performance tests', () => {
     beforeEach(() => {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        cy.get('div[role="resizable-panel"]')
+            .invoke('attr', 'style', 'width: 360px')
+            .should('have.attr', 'style', 'width: 360px');
     });
 
     Cypress._.times(repeatTimes, () => {
@@ -80,27 +83,45 @@ describe('jContent performance tests', () => {
             const pageAccordion = jcontent.getAccordionItem('pages');
             let item = pageAccordion.getTreeItem('home');
             item.contextMenu().select('Edit');
-            ContentEditor.getContentEditor().cancel();
+            getComponentByRole(Button, 'backButton').click();
+            cy.get('div[role="resizable-panel"]')
+                .invoke('attr', 'style', 'width: 360px')
+                .should('have.attr', 'style', 'width: 360px');
             item.expand();
             item = pageAccordion.getTreeItem('page-4-1');
             item.contextMenu().select('Edit');
-            ContentEditor.getContentEditor().cancel();
+            getComponentByRole(Button, 'backButton').click();
+            cy.get('div[role="resizable-panel"]')
+                .invoke('attr', 'style', 'width: 360px')
+                .should('have.attr', 'style', 'width: 360px');
             item.expand();
             item = pageAccordion.getTreeItem('page-4-2');
             item.contextMenu().select('Edit');
-            ContentEditor.getContentEditor().cancel();
+            getComponentByRole(Button, 'backButton').click();
+            cy.get('div[role="resizable-panel"]')
+                .invoke('attr', 'style', 'width: 360px')
+                .should('have.attr', 'style', 'width: 360px');
             item.expand();
             item = pageAccordion.getTreeItem('page-4-3');
             item.contextMenu().select('Edit');
-            ContentEditor.getContentEditor().cancel();
+            getComponentByRole(Button, 'backButton').click();
+            cy.get('div[role="resizable-panel"]')
+                .invoke('attr', 'style', 'width: 360px')
+                .should('have.attr', 'style', 'width: 360px');
             item.expand();
             item = pageAccordion.getTreeItem('page-4-4');
             item.contextMenu().select('Edit');
-            ContentEditor.getContentEditor().cancel();
+            getComponentByRole(Button, 'backButton').click();
+            cy.get('div[role="resizable-panel"]')
+                .invoke('attr', 'style', 'width: 360px')
+                .should('have.attr', 'style', 'width: 360px');
             item.expand();
             item = pageAccordion.getTreeItem('page-4-5');
             item.contextMenu().select('Edit');
-            ContentEditor.getContentEditor().cancel();
+            getComponentByRole(Button, 'backButton').click();
+            cy.get('div[role="resizable-panel"]')
+                .invoke('attr', 'style', 'width: 360px')
+                .should('have.attr', 'style', 'width: 360px');
             pageAccordion.getTreeItem('page-4-1').collapse();
         });
     });

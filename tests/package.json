@@ -5,7 +5,7 @@
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
-    "e2e:ci:performance": "cypress run --browser chrome -C cypress.config-performance.ts",
+    "e2e:ci:performance": "cypress run --browser chrome -C cypress.config-performance.ts --spec ${0}",
     "e2e:debug": "cypress open",
     "e2e:debug:performance": "cypress open -C cypress.config-performance.ts",
     "lint": "eslint . -c .eslintrc.json --ext .ts",

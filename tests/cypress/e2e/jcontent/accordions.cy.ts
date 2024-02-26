@@ -32,4 +32,22 @@ describe('Test accordions', () => {
         jc.getAccordionItem('pages').getTreeItem('home').expand();
         jc.getAccordionItem('pages').getTreeItem('test');
     });
+
+    it('Adds and displays accordion without permission', () => {
+        cy.login();
+        const jc = JContent.visit('accordionTest', 'en', 'pages/home');
+        cy.window().then(win => {
+            win.eval(`window.jahia.uiExtender.registry.add('accordionItem', 'testmoduleApps_Example', window.jahia.uiExtender.registry.get('accordionItem', 'renderDefaultApps'), {
+                    targets: ['jcontent:998'],
+                    label: 'new-accordion',
+                    appsTarget: 'testmoduleaccordion',
+                    isEnabled: function(siteKey) {
+                        return siteKey !== 'systemsite'
+                    }
+                });`
+            );
+            jc.getAccordionItem('pages').getTreeItem('home').expand();
+            jc.getAccordionItem('testmoduleApps_Example').click();
+        });
+    });
 });

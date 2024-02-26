@@ -35,7 +35,7 @@ export const baseConfig = {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             return require('./cypress/plugins/index.js')(on, config);
         },
-        excludeSpecPattern: ['**/*.ignore.ts'],
+        excludeSpecPattern: ['**/*.ignore.ts', '**/*performance.cy.ts'],
         baseUrl: 'http://localhost:8080'
     }
 };

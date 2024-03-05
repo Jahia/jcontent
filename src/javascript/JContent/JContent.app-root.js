@@ -1,6 +1,5 @@
 import {DSProvider} from '@jahia/design-system-kit';
 import {NotificationProvider} from '@jahia/react-material';
-import {PushEventHandler} from './PushEventHandler';
 import React from 'react';
 import {triggerRefetchAll} from './JContent.refetches';
 import Upload from './ContentRoute/ContentLayout/Upload';
@@ -25,16 +24,6 @@ export const jContentAppRoot = registry => {
             <>
                 <SnackbarProvider/>
                 <PublicationNotification/>
-                {next}
-            </>
-        )
-    });
-
-    registry.add('app', 'jcontent-push-event-handler', {
-        targets: ['root:14'],
-        render: next => (
-            <>
-                <PushEventHandler/>
                 {next}
             </>
         )

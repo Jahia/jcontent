@@ -113,10 +113,15 @@ describe('Test the save publish buttons flow', () => {
         const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents/contentEditorTestContents');
         const contentEditor = jcontent.editComponentByText(contentTest);
         contentEditor.switchToAdvancedMode();
+        cy.log('Check Content Editor header buttons');
         checkContentEditorHeaderButtons(contentEditor, false, true);
+        cy.log('Check Content Editor header menu');
         checkContentEditorHeaderMenu(contentEditor, 'true');
+        cy.log('Check update and save');
         updateAndSave(contentEditor);
+        cy.log('Check publish buttons flow');
         publish(contentEditor);
+        cy.log('Check unpublish buttons flow');
         unPublish(contentEditor);
     });
 });

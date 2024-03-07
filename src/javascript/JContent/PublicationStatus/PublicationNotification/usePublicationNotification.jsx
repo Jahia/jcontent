@@ -1,4 +1,4 @@
-import {useSubscription, useQuery} from '@apollo/client';
+import {useSubscription, useQuery, useApolloClient} from '@apollo/client';
 import {SubscribeToPublicationData} from './PublicationNotification.gql-subscription';
 import {GetUserQuery} from './PublicationNotification.gql-query';
 import {enqueueSnackbar} from 'notistack';
@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useSiteInfo} from '@jahia/data-helper';
 import {useState} from 'react';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
 export const usePublicationNotification = () => {
     const {t} = useTranslation('jcontent');
@@ -14,12 +15,10 @@ export const usePublicationNotification = () => {
         language: state.language
     }), shallowEqual);
     const [notificationData, setNotificationData] = useState(undefined);
+    const client = useApolloClient();
     const {siteInfo, loading: siteInfoLoading, error: siteInfoError} = useSiteInfo({siteKey, displayLanguage: language});
     const {data: getUserData, loading: getUserLoading, error: getUserError} = useQuery(GetUserQuery);
     const {loading, error} = useSubscription(SubscribeToPublicationData, {
-        variables: {
-            userKeys: [getUserData?.currentUser?.node?.path]
-        },
         fetchPolicy: 'network-only',
         skip: !getUserData || getUserLoading || getUserError || siteInfoLoading || siteInfoError,
         onData: ({data}) => {
@@ -37,8 +36,8 @@ export const usePublicationNotification = () => {
         setNotificationData(undefined);
     }};
     if (!e && !loading && notificationData !== undefined && window.location.pathname.indexOf('/jahia/workflow') === -1) {
-        const language = notificationData.backgroundJobSubscription.publicationJob.language;
-        const state = notificationData.backgroundJobSubscription.publicationJob.jobState;
+        const language = notificationData.subscribeToPublicationJob.language;
+        const state = notificationData.subscribeToPublicationJob.state;
 
         let notifSuffix = '';
 
@@ -50,6 +49,15 @@ export const usePublicationNotification = () => {
             enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.publishing${notifSuffix}`, {language: language}), optionsNotiStack);
         } else if (state === 'FINISHED') {
             enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.published${notifSuffix}`, {language: language}), optionsNotiStack);
+            notificationData.subscribeToPublicationJob.paths.forEach(path => {
+                client.cache.flushNodeEntryByPath(path);
+            });
+            client.reFetchObservableQueries();
+            triggerRefetchAll();
+        } else if (state === 'UNPUBLISHED') {
+            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.unpublished${notifSuffix}`, {language: language}), optionsNotiStack);
+            client.reFetchObservableQueries();
+            triggerRefetchAll();
         }
     }
 };

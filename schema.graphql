@@ -6,6 +6,10 @@ schema {
     subscription: Subscription
 }
 
+directive @fetcher(name: String) on FIELD_DEFINITION
+
+directive @mapping(ignoreDefaultQueries: Boolean, node: String, property: String) on OBJECT | FIELD_DEFINITION
+
 "Indicates an Input Object is a OneOf Input Object."
 directive @oneOf on INPUT_OBJECT
 
@@ -148,6 +152,8 @@ interface JCRNode {
     ): Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
+    "true if node is under a mounted node"
+    isExternal: Boolean!
     "Reports if the current node matches the nodetype(s) passed in parameter"
     isNodeType(
         "Node type name"
@@ -242,11 +248,18 @@ interface JCRNode {
     ): RenderedNode
     "GraphQL representation of the site the JCR node belongs to, or the system site in case the node does not belong to any site"
     site: JCRSite
+    "Get node thumbnail URL"
+    thumbnailUrl(
+        "Thumbnail name"
+        name: String
+    ): String
     "Returns languages of available translations for this node"
     translationLanguages(
         "Optional: Return languages only if it is active for the site"
         isActiveOnly: Boolean
     ): [String]
+    "Get node URL"
+    url: String
     "GraphQL representations of the reference properties that target the current JCR Node"
     usages(
         "fetching only nodes after this node (exclusive)"
@@ -349,6 +362,8 @@ type AclRole {
 type AdminMutation {
     "Get Jahia admin mutation"
     jahia: JahiaAdminMutation!
+    "Mount point mutation extension API"
+    mountPoint: GqlMountPointMutation
     "Personal API tokens mutations"
     personalApiTokens: PersonalApiTokensMutation
 }
@@ -361,16 +376,88 @@ type AdminQuery {
     datetime: String
     "Get Jahia admin query"
     jahia: JahiaAdminQuery!
+    "Mount point mutation extension API"
+    mountPoint: GqlMountPointQuery
     "Personal API tokens queries"
     personalApiTokens: PersonalApiTokensQuery
     "Get available ACL roles; does not include any hidden or privileged roles"
     roles: [AclRole]
+    "Jahia admin tools"
+    tools: AdminTools
     "Get user administration endpoint"
     userAdmin: UserAdminQuery
     "Get user group endpoint"
     userGroup: UserGroupQuery
     "Version of the running Jahia instance"
     version: String! @deprecated(reason: "Deprecated")
+}
+
+"Jahia admin tools"
+type AdminTools {
+    "Will return all the duplicate export packages and the bundles that export them"
+    findMatchingExportPackages(
+        "will return only export-package matching the RegExp"
+        RegExp: String,
+        "will return only export-package found multiple times for a same package name"
+        duplicates: Boolean = false
+    ): FindExportPackage
+    "Will return all the import packages matching the given parameters."
+    findMatchingImportPackages(
+        "will return only import-package matching the RegExp"
+        RegExp: String,
+        "will return only import-package matching the given version"
+        version: String,
+        "will return only import-package with no version range limitations"
+        versionMissing: Boolean = false
+    ): FindImportPackage
+}
+
+"Asset type for files"
+type Asset {
+    "Asset metadata"
+    metadata: Metadata
+    "Asset size"
+    size: Float
+    "Mime type of the asset"
+    type: String
+}
+
+"Result of the export package inspector operation."
+type BundleWithExportPackage {
+    "Display name of the bundle."
+    bundleDisplayName: String
+    "ID of the bundle."
+    bundleId: Long
+    "Name of the bundle."
+    bundleName: String
+    "Symbolic name of the bundle."
+    bundleSymbolicName: String
+    "The full export-package clause."
+    matchingExportPackage: String
+}
+
+"Result of the import package inspector operation."
+type BundleWithImportPackages {
+    "Display name of the bundle."
+    bundleDisplayName: String
+    "ID of the bundle."
+    bundleId: Long
+    "Name of the bundle."
+    bundleName: String
+    "Symbolic name of the bundle."
+    bundleSymbolicName: String
+    "List of matching imported packages."
+    matchingImportPackages: [String]
+}
+
+"Category type"
+type Category {
+    "Description"
+    description: String
+    "Asset metadata"
+    metadata: Metadata
+    "Title"
+    title: String
 }
 
 "Details about the Jahia Cluster"
@@ -500,6 +587,32 @@ type Current_32_user {
     username: String!
 }
 
+"Result of the export package inspector operation."
+type ExportPackages {
+    "Flat list of exported packages"
+    matchingExportPackages: [String]
+    "The bundles that export the package."
+    matchingExportPackagesDetailed: [BundleWithExportPackage]
+    "the package name."
+    packageName: String
+}
+
+"Result of the export package inspector operation."
+type FindExportPackage {
+    "List of matching packages"
+    packages: [ExportPackages]
+    "Total number of matching export packages."
+    totalCount: Int
+}
+
+"Result of the import package inspector operation."
+type FindImportPackage {
+    "List of matching bundles."
+    bundles: [BundleWithImportPackages]
+    "Total number of matching import packages."
+    totalCount: Int
+}
+
 "GraphQL representation of a generic JCR node"
 type GenericJCRNode implements JCRNode {
     "Get ACL info for this node"
@@ -623,6 +736,8 @@ type GenericJCRNode implements JCRNode {
     ): Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
+    "true if node is under a mounted node"
+    isExternal: Boolean!
     "Reports if the current node matches the nodetype(s) passed in parameter"
     isNodeType(
         "Node type name"
@@ -717,11 +832,18 @@ type GenericJCRNode implements JCRNode {
     ): RenderedNode
     "GraphQL representation of the site the JCR node belongs to, or the system site in case the node does not belong to any site"
     site: JCRSite
+    "Get node thumbnail URL"
+    thumbnailUrl(
+        "Thumbnail name"
+        name: String
+    ): String
     "Returns languages of available translations for this node"
     translationLanguages(
         "Optional: Return languages only if it is active for the site"
         isActiveOnly: Boolean
     ): [String]
+    "Get node URL"
+    url: String
     "GraphQL representations of the reference properties that target the current JCR Node"
     usages(
         "fetching only nodes after this node (exclusive)"
@@ -827,10 +949,15 @@ type GqlBackgroundJob {
     userKey: String
 }
 
+"Condition for override item"
 type GqlCondition {
+    "Item will apply only on this nodetype"
     nodeType: String
+    "Item will apply only if node has orderable children"
     orderable: Boolean
+    "Item will apply only if user has permissions"
     withPermission: String
+    "Item will apply only if user has not permissions"
     withoutPermission: String
 }
 
@@ -1109,6 +1236,14 @@ type GqlEditorForms {
     ): Int
 }
 
+"Server healthCheck"
+type GqlHealthCheck {
+    "Probes registered in SAM for the requested severity"
+    probes: [GqlProbe]
+    "Highest reported status across all probes"
+    status: GqlProbeStatus
+}
+
 type GqlJcrImageTransformMutation {
     "Crop an image under the current node"
     cropImage(
@@ -1147,12 +1282,19 @@ type GqlLockDetail {
     type: String
 }
 
+"Override item"
 type GqlMergedItem {
+    "Name of the bundle owning this file"
     bundleName: String
+    "Conditions set on this form/fieldset"
     condition: GqlCondition
+    "Get field set detail, if item is a field set"
     fieldSet: GqlEditorFormFieldSet
+    "File name and path"
     filename: String
+    "Get form detail, if item is a form"
     form: GqlEditorForm
+    "Override priority"
     priority: Float
 }
 
@@ -1169,6 +1311,96 @@ type GqlModule {
     name: String
     "Version number for the module"
     version: String
+}
+
+"Mount point object"
+type GqlMountPoint {
+    "Mount point name"
+    mountName: String
+    "Mount point local reference path"
+    mountPointRefPath: String
+    "Mount status"
+    mountStatus: String
+    "Mount node type"
+    nodeType: String
+    "Mount point additional properties"
+    properties: [GqlMountPointProperty]
+    "Mount point property"
+    property(
+        "The name of the property"
+        name: String!
+    ): String
+    "Mount point node uuid"
+    uuid: String
+}
+
+"Mount point mutation object"
+type GqlMountPointMutation {
+    "Create a mounted mount point node in /mounts"
+    add(
+        "Target local mount point"
+        mountPointRefPath: String,
+        "Mount point name"
+        name: String!
+    ): String
+    "Create a mounted VFS mount point node in /mounts"
+    addVfs(
+        "Target local mount point"
+        mountPointRefPath: String,
+        "Name for the mount point"
+        name: String!,
+        "VFS root mount point"
+        rootPath: String
+    ): String
+    "Modify an existing mount point node"
+    modify(
+        "Change local mount point, or set to empty string to remove"
+        mountPointRefPath: String,
+        "Rename existing mount point"
+        name: String,
+        "Mount point path or ID to modify"
+        pathOrId: String!
+    ): Boolean
+    "Modify an existing mount point node"
+    modifyVfs(
+        "Change target local mount point, or set to empty string to remove"
+        mountPointRefPath: String,
+        "Rename existing mount point"
+        name: String,
+        "Mount point path or ID to modify"
+        pathOrId: String!,
+        "VFS root mount point"
+        rootPath: String
+    ): Boolean
+    "Mount an existing mount point"
+    mount(
+        "Mount point path or ID to mount"
+        pathOrId: String!
+    ): Boolean
+    "Unmount an existing mount point"
+    unmount(
+        "Mount point path or ID to unmount"
+        pathOrId: String!
+    ): Boolean
+}
+
+"Mount point property"
+type GqlMountPointProperty {
+    "The property key"
+    key: String
+    "The property value"
+    value: String
+}
+
+"Mount point queries object"
+type GqlMountPointQuery {
+    "Get mount point with given name, or null if it doesn't exists"
+    mountPoint(
+        "Name for the mount point"
+        name: String!
+    ): GqlMountPoint
+    "Get list of mount points, or empty list if no mounts exist"
+    mountPoints: [GqlMountPoint]
 }
 
 type GqlNpmHelper {
@@ -1201,6 +1433,26 @@ type GqlOperationsSupport {
     markForDeletion: Boolean
     "does the node supports publication"
     publication: Boolean!
+}
+
+"Probes registered with SAM"
+type GqlProbe {
+    "Description specified by the developer of the probe"
+    description: String
+    "Name of the probe"
+    name: String
+    "Severity of the probe (LOW to CRITICAL)"
+    severity: GqlProbeSeverity
+    "Status reported by the probe (GREEN to RED)"
+    status: GqlProbeStatus
+}
+
+"Probe status"
+type GqlProbeStatus {
+    "Health of the probe"
+    health: GqlProbeHealth
+    "Message explaining probe status"
+    message: String
 }
 
 "Publication background job"
@@ -1241,6 +1493,20 @@ type GqlPublicationBackgroundJob {
     siteKey: String
     "The user key. The returned value will be null in case the job doesn't have associated user key"
     userKey: String
+}
+
+"Publication event"
+type GqlPublicationEvent {
+    "Language"
+    language: String
+    "Paths"
+    paths: [String]
+    "Site key"
+    siteKey: String
+    "State of the publication event"
+    state: State
+    "User"
+    user: String
 }
 
 "Publication status information for a JCR node"
@@ -1372,6 +1638,20 @@ type GroupEdge {
     index: Int
     "The item at the end of the edge"
     node: Group
+}
+
+"Asset type for image"
+type ImageAsset {
+    "Image height"
+    height: Float
+    "Asset metadata"
+    metadata: Metadata
+    "Image size"
+    size: Float
+    "Mime type of image"
+    type: String
+    "Image width"
+    width: Float
 }
 
 "JCR Mutations"
@@ -1634,7 +1914,9 @@ type JCRNodeMutation {
         "The target node path of the current node after the move operation"
         destPath: String,
         "The parent node path or id under which the current node will be moved to"
-        parentPathOrId: String
+        parentPathOrId: String,
+        "Renames current node before moving if the name exists under destination node"
+        renameOnConflict: Boolean
     ): String
     "Mutates a set of existing direct sub nodes, based on filters passed as parameter"
     mutateChildren(
@@ -1886,6 +2168,10 @@ type JCRProperty {
     refNode: JCRNode
     "GraphQL representations of the nodes this property references in case the property is multiple-valued, null otherwise"
     refNodes: [JCRNode]
+    "Gets the rendered value of that property"
+    renderedValue: String
+    "Gets the rendered values of that property"
+    renderedValues: [String]
     "The binary size of the JCR node as a Long, null otherwise"
     size: Long
     "The type of the JCR property"
@@ -2255,6 +2541,8 @@ type JCRSite implements JCRNode {
     installedModulesWithAllDependencies: [String]
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
+    "true if node is under a mounted node"
+    isExternal: Boolean!
     "Reports if the current node matches the nodetype(s) passed in parameter"
     isNodeType(
         "Node type name"
@@ -2355,11 +2643,18 @@ type JCRSite implements JCRNode {
     site: JCRSite
     "Site key"
     sitekey: String
+    "Get node thumbnail URL"
+    thumbnailUrl(
+        "Thumbnail name"
+        name: String
+    ): String
     "Returns languages of available translations for this node"
     translationLanguages(
         "Optional: Return languages only if it is active for the site"
         isActiveOnly: Boolean
     ): [String]
+    "Get node URL"
+    url: String
     "GraphQL representations of the reference properties that target the current JCR Node"
     usages(
         "fetching only nodes after this node (exclusive)"
@@ -2455,6 +2750,29 @@ type JahiaAdminMutation {
         "Do not create new configuration, update existing one"
         updateOnly: Boolean = false
     ): GqlConfigurationMutation
+    "Create a task"
+    createTask(
+        "Task name"
+        name: String!,
+        "Service name"
+        service: String!
+    ): Boolean
+    "Delete a task"
+    deleteTask(
+        "Task name"
+        name: String!,
+        "Service name"
+        service: String!
+    ): Boolean
+    "Shutdown the server"
+    shutdown(
+        "Do not send the shutdown event"
+        dryRun: Boolean,
+        "Force immediate shutdown even if server is busy"
+        force: Boolean,
+        "In seconds, maximum time to wait for server to be ready to shutdown"
+        timeout: Int
+    ): Boolean
 }
 
 "Jahia admin queries root"
@@ -2468,10 +2786,19 @@ type JahiaAdminQuery {
     ): GqlConfigurationQuery
     "Details about the database Jahia is connected to"
     database: JahiaDatabase
+    "HealthCheck node"
+    healthCheck(
+        "Returns SAM probes with this severity or higher"
+        severity: GqlProbeSeverity
+    ): GqlHealthCheck
+    "Get server load"
+    load: Load
     "Get jobs scheduler"
     scheduler: GqlScheduler
     "Details about the system hosting Jahia"
     system: JahiaSystem
+    "Lists tasks running on the Jahia server. A server should not be stopped/restarted when any of these tasks are present. These tasks are specific to the server being queried and are not shared accorss a cluster"
+    tasks: [task]
     "Version of the running Jahia instance"
     version: JahiaVersion
 }
@@ -2552,6 +2879,25 @@ type JournalRevision {
     serverId: String
 }
 
+"Server load"
+type Load {
+    "Get requests load"
+    requests: LoadValue
+    "Get JCR Sessions load"
+    sessions: LoadValue
+}
+
+"Load value"
+type LoadValue {
+    "Exponential moving average"
+    average(
+        "Interval between collection of load metrics"
+        interval: LoadInterval
+    ): Float
+    "Instantaneous count"
+    count: Int
+}
+
 "Information on node lock"
 type LockInfo {
     "Can the node be locked"
@@ -2565,6 +2911,22 @@ type LockInfo {
     ): [GqlLockDetail]
     "Is node lockable"
     lockable: Boolean
+}
+
+"Metadata properties for all content"
+type Metadata {
+    "Date of creation for the associated content"
+    created: Date
+    "Original author of the associated content"
+    createdBy: String
+    "Date of last modification of the associated content"
+    lastModified: Date
+    "Author of last modification of the associated content"
+    lastModifiedBy: String
+    "Date of last publication of the associated content"
+    lastPublished: Date
+    "Author of last publication of the associated content"
+    lastPublishedBy: String
 }
 
 "Root mutation type"
@@ -2765,6 +3127,24 @@ type PrincipalEdge {
 type Query {
     "Admin Queries"
     admin: AdminQuery!
+    "default finder for categoryById"
+    categoryById(
+        "Node identifier"
+        id: String,
+        "Content language, defaults to English"
+        language: String = "en",
+        "Return content from live or default workspace"
+        preview: Boolean = false
+    ): Category
+    "default finder for categoryByPath"
+    categoryByPath(
+        "Content language, defaults to English"
+        language: String = "en",
+        "Path of the node"
+        path: String,
+        "Return content from live or default workspace"
+        preview: Boolean = false
+    ): Category
     "Get the current user"
     currentUser: Current_32_user
     "Main access field to the DX GraphQL Dashboard API"
@@ -2857,7 +3237,7 @@ type Subscription {
         filterByUserKey: [String],
         "The target scheduler for listening jobs"
         targetScheduler: TargetScheduler = BOTH
-    ): GqlBackgroundJob
+    ): GqlBackgroundJob @deprecated(reason: "Use subscribeToPublicationJob instead")
     "Lock the node for edition and subscribe to hold the lock. The node is automatically unlocked when the client disconnect or close the connection"
     subscribeToEditorLock(
         "An ID generated client side used to identify the lock"
@@ -2865,6 +3245,8 @@ type Subscription {
         "Uuid of the node to be locked."
         nodeId: String!
     ): String
+    "Subscription on publication jobs"
+    subscribeToPublicationJob: GqlPublicationEvent
     "Subscription on workflows"
     workflowEvent: GqlWorkflowEvent
 }
@@ -3186,6 +3568,8 @@ type VanityUrl implements JCRNode {
     ): Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
+    "true if node is under a mounted node"
+    isExternal: Boolean!
     "Reports if the current node matches the nodetype(s) passed in parameter"
     isNodeType(
         "Node type name"
@@ -3284,6 +3668,11 @@ type VanityUrl implements JCRNode {
     site: JCRSite
     "The node targeted by this vanity URL"
     targetNode: JCRNode
+    "Get node thumbnail URL"
+    thumbnailUrl(
+        "Thumbnail name"
+        name: String
+    ): String
     "Returns languages of available translations for this node"
     translationLanguages(
         "Optional: Return languages only if it is active for the site"
@@ -3399,6 +3788,16 @@ type ZipFileMutation {
     ): Boolean
 }
 
+"Task that prevents server from shutdown"
+type task {
+    "The name of the task associated with the service"
+    name: String
+    "Service attached to the task being monitored"
+    service: String
+    "Datetime at which the task was started or registered"
+    started: String
+}
+
 "Work in progress information"
 type wipInfo {
     "The languages set for Work in progress"
@@ -3448,6 +3847,28 @@ enum GqlBackgroundJobStatus {
     SUCCESSFUL
 }
 
+"Available health statuses for a probe"
+enum GqlProbeHealth {
+    "GREEN"
+    GREEN
+    "RED"
+    RED
+    "YELLOW"
+    YELLOW
+}
+
+"Available severity levels for SAM probes"
+enum GqlProbeSeverity {
+    "CRITICAL"
+    CRITICAL
+    "HIGH"
+    HIGH
+    "LOW"
+    LOW
+    "MEDIUM"
+    MEDIUM
+}
+
 enum GroupingType {
     "Put grouped items at the end in the order groups appear in the 'groups' list"
     END
@@ -3489,6 +3910,16 @@ enum JCRPropertyType {
     URI
     "WEAKREFERENCE"
     WEAKREFERENCE
+}
+
+"Interval expressed in minutes"
+enum LoadInterval {
+    "FIFTEEN"
+    FIFTEEN
+    "FIVE"
+    FIVE
+    "ONE"
+    ONE
 }
 
 enum MulticriteriaEvaluation {
@@ -3610,6 +4041,14 @@ enum SortType {
     DESC
 }
 
+"State of the publication event"
+enum State {
+    "FINISHED"
+    FINISHED
+    "STARTED"
+    STARTED
+}
+
 "The target scheduler(s)"
 enum TargetScheduler {
     "Both persisted and RAM schedulers will be used"
@@ -3643,6 +4082,9 @@ enum Workspace {
     "Live workspace"
     LIVE
 }
+
+"Date type"
+scalar Date
 
 "A 64-bit signed integer"
 scalar Long

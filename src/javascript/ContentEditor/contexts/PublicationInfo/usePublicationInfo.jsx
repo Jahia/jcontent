@@ -1,6 +1,9 @@
-import {useQuery} from '@apollo/client';
+import {useQuery, useSubscription} from '@apollo/client';
 import {PublicationInfoQuery} from './PublicationInfo.gql-queries';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
+import {
+    SubscribeToPublicationData
+} from '~/JContent/PublicationStatus/PublicationNotification/PublicationNotification.gql-subscription';
 
 export const usePublicationInfo = (queryParams, t) => {
     const [polling, setPolling] = useState(false);
@@ -10,23 +13,16 @@ export const usePublicationInfo = (queryParams, t) => {
         pollInterval: polling ? 5000 : 0
     });
 
-    // Refresh publication info when GWT do publication
-    useEffect(() => {
-        const index = window.authoringApi.pushEventHandlers.length;
-
-        window.authoringApi.pushEventHandlers[index] = jobsData => {
-            // Only refresh in case there is content unpublished or ended jobs
-            if (jobsData && (jobsData.type === 'contentUnpublished' || (jobsData.endedJobs && jobsData.endedJobs.length > 0))) {
+    const {loadingSubscription, errorSubscription} = useSubscription(SubscribeToPublicationData, {
+        fetchPolicy: 'network-only',
+        onData: ({data}) => {
+            if (data?.data?.subscribeToPublicationJob?.state === 'UNPUBLISHED' || data?.data?.subscribeToPublicationJob?.state === 'FINISHED') {
                 refetch();
             }
-        };
+        }
+    });
 
-        return () => {
-            window.authoringApi.pushEventHandlers.splice(index, 1);
-        };
-    }, [refetch]);
-
-    if (error || loading || !data?.jcr) {
+    if (error || loading || loadingSubscription || errorSubscription || !data?.jcr) {
         return {
             publicationInfoPolling: polling,
             publicationInfoLoading: loading,

@@ -23,7 +23,9 @@
           "publishing": "Publishing in {{language}}",
           "publishingNoLang": "Publishing ...",
           "published": "Publication completed: {{language}}",
-          "publishedNoLang": "Publication completed"
+          "publishedNoLang": "Publication completed",
+          "unpublished": "Unpublication completed: {{language}}",
+          "unpublishedNoLang": "Unpublication completed"
         },
         "notPublished": "This content has never been published",
         "unPublished": "This item has been unpublished",

@@ -54,6 +54,10 @@ export const usePublicationNotification = () => {
             });
             client.reFetchObservableQueries();
             triggerRefetchAll();
+        } else if (state === 'UNPUBLISHED') {
+            enqueueSnackbar(t(`jcontent:label.contentManager.publicationStatus.notification.unpublished${notifSuffix}`, {language: language}), optionsNotiStack);
+            client.reFetchObservableQueries();
+            triggerRefetchAll();
         }
     }
 };

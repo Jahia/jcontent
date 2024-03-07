@@ -208,6 +208,7 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'publishAction').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Publication is queued');
+        cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Publication completed');
     }
 
     getBreadcrumb(content: string): Breadcrumb {

@@ -11,7 +11,7 @@ import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useQuery} from '@apollo/client';
 import {UsagesCountQuery} from '~/UsagesTable/UsagesTable.gql-queries';
 
-const DEPRECATED_GWT_ACTIONS = ['content', 'layout', 'metadata', 'categories', 'options', 'seo', 'usages', 'channels', 'visibility'];
+const DEPRECATED_GWT_ACTIONS = ['seo', 'usages', 'channels', 'visibility'];
 
 function getNodesCount(data) {
     const nodesCount = data?.jcr?.nodeByPath?.usages?.pageInfo?.nodesCount;

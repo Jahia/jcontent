@@ -106,6 +106,8 @@ describe('Editor url test', () => {
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         cy.go('back');
         jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
         cy.go('forward');
         contentEditor = new ContentEditor();
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');

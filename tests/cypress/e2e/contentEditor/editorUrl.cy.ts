@@ -1,6 +1,4 @@
-import {JContent} from '../../page-object/jcontent';
-import {ContentEditor} from '../../page-object';
-import {PageComposer} from '../../page-object/pageComposer';
+import {ContentEditor, JContent, PageComposer} from '../../page-object';
 import {Button, getComponentByRole} from '@jahia/cypress';
 import gql from 'graphql-tag';
 
@@ -74,41 +72,57 @@ describe('Editor url test', () => {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
         jcontent.switchToListMode();
+        cy.log('Editing People First');
         contentEditor = jcontent.editComponentByText('People First');
+        cy.log('Switching to advanced mode');
         contentEditor.switchToAdvancedMode();
-        cy.get('h1').contains('People First').should('exist');
+        cy.log('Checking if the component is open');
+        contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
+        cy.log('Going back to homepage');
         cy.go('back');
-        cy.get('h1').contains('People First').should('not.exist');
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+        cy.log('Going forward to People First CE');
         cy.go('forward');
+        contentEditor = new ContentEditor();
+        contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
+        cy.log('Cancel editing People First');
+        contentEditor.cancel();
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        cy.log('Reopen People First by going forward');
+        cy.go('forward');
+        contentEditor = new ContentEditor();
+        contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         cy.get('h1').contains('People First').should('exist');
         contentEditor.cancel();
-        // Wait for transition
+        cy.log('Back to Home page list');
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(500);
-        cy.go('forward');
-        // Wait for transition
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(500);
-        cy.get('h1').contains('People First').should('exist');
-        contentEditor.cancel();
-
+        cy.wait(1000);
+        cy.log('Edit Our Companies');
         contentEditor = jcontent.editComponentByText('Our Companies');
         contentEditor.switchToAdvancedMode();
-        cy.get('h1').contains('Our Companies').should('exist');
+        contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         cy.go('back');
-        cy.get('h1').contains('Our Companies').should('not.exist');
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
         cy.go('forward');
-        cy.get('h1').contains('Our Companies').should('exist');
+        contentEditor = new ContentEditor();
+        contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         contentEditor.cancel();
         // Wait for transition
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
         cy.go('forward');
-        cy.get('h1').contains('Our Companies').should('exist');
+        contentEditor = new ContentEditor();
+        contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         contentEditor.cancel();
     });
 
-    it('Handles breadcrum in GWT correctly', function () {
+    it('Handles breadcrumb in GWT correctly', function () {
         cy.login();
         ContentEditor.getUrl('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home')
             .then(url => {

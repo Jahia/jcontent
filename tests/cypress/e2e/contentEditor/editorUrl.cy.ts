@@ -68,7 +68,7 @@ describe('Editor url test', () => {
         cy.hash().should('contain', 'lang:en');
     });
 
-    it.only('History is handled consistently', function () {
+    it('History is handled consistently', function () {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
         jcontent.switchToListMode();

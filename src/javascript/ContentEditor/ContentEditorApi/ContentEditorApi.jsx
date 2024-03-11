@@ -152,14 +152,14 @@ export const ContentEditorApi = () => {
             // Sync GWT language
             window.overrideLang = editorConfigLang;
             window.previousLang = window.jahiaGWTParameters.lang;
-            if (window.authoringApi.switchLanguage) {
+            if (window.authoringApi?.switchLanguage) {
                 window.authoringApi.switchLanguage(editorConfigLang);
             }
         }
 
         return () => {
             delete window.overrideLang;
-            if (window.authoringApi.switchLanguage && window.previousLang) {
+            if (window.authoringApi?.switchLanguage && window.previousLang) {
                 window.authoringApi.switchLanguage(window.previousLang);
             }
         };

@@ -3,7 +3,6 @@ import {LayoutModule} from '@jahia/moonstone';
 import {AdvancedOptionsNavigation} from './AdvancedOptionsNavigation';
 import styles from './AdvancedOptions.scss';
 import {TechnicalInformation} from './TechnicalInformation/TechnicalInformation';
-import {DeprecatedOption} from './DeprecatedOption';
 import {VanityUrls} from './VanityUrls';
 import {Usages} from './Usages';
 import {Visibility} from './Visibility/Visibility';
@@ -13,11 +12,6 @@ export const AdvancedOptions = () => {
 
     const SelectedTabComponents = {
         technicalInformation: TechnicalInformation,
-        content: DeprecatedOption,
-        metadata: DeprecatedOption,
-        layout: DeprecatedOption,
-        options: DeprecatedOption,
-        categories: DeprecatedOption,
         seo: VanityUrls,
         usages: Usages,
         visibility: Visibility

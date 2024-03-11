@@ -54,9 +54,9 @@ describe('useRegisterEngineTabActions', () => {
         window.authoringApi = {
             getEditTabs: () => {
                 return [{
-                    id: 'content',
-                    title: 'Content',
-                    requiredPermission: 'viewContentTab'},
+                    id: 'visibility',
+                    title: 'Visibility',
+                    requiredPermission: 'viewVisibilityTab'},
                 {
                     id: 'metadata',
                     title: 'Metadata',
@@ -71,7 +71,7 @@ describe('useRegisterEngineTabActions', () => {
             data: {
                 jcr: {
                     nodeByPath: {
-                        content: true,
+                        visibility: true,
                         metadata: true
                     }
                 }}
@@ -101,10 +101,10 @@ describe('useRegisterEngineTabActions', () => {
     it('should add to registry action for each tab when you have permission', () => {
         useRegisterEngineTabActions();
 
-        expect(registry.addOrReplace).toHaveBeenCalledWith('action', 'contentEditorGWTTabAction_content', openEngineTabsAction, {
-            buttonLabel: 'Content',
+        expect(registry.addOrReplace).toHaveBeenCalledWith('action', 'contentEditorGWTTabAction_visibility', openEngineTabsAction, {
+            buttonLabel: 'Visibility',
+            tabs: ['visibility'],
             targets: ['AdvancedOptionsActions:3'],
-            tabs: ['content'],
             shouldBeDisplayed: tabShouldBeDisplayed
         });
     });

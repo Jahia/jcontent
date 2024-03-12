@@ -4,7 +4,6 @@ export class PickerGrid extends BaseComponent {
     getCardByName(name: string) {
         return getComponentBySelector(GridCard, `[data-sel-role-card="${name}"]`, this);
     }
-
 }
 
 export class GridCard extends BaseComponent {

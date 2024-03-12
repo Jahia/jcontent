@@ -1,7 +1,7 @@
 import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
 import {assertUtils} from '../../utils/assertUtils';
 import {JContent} from '../../page-object/jcontent';
-import {AccordionItem} from "../../page-object";
+import {AccordionItem} from '../../page-object';
 
 describe('Picker tests - Trees', () => {
     const siteKey = 'digitall';
@@ -101,8 +101,8 @@ describe('Picker tests - Trees', () => {
         picker.getGrid().getCardByName('fans-stadium.jpg').click();
 
         // Verify tree with selection can collapse
-        mediaAccordion.getTreeItem("images").collapse()
-        mediaAccordion.getTreeItem("images").should('attr', 'aria-expanded', 'false');
-        mediaAccordion.shouldNotHaveTreeItem("backgrounds");
+        mediaAccordion.getTreeItem('images').collapse();
+        mediaAccordion.getTreeItem('images').should('attr', 'aria-expanded', 'false');
+        mediaAccordion.shouldNotHaveTreeItem('backgrounds');
     });
 });

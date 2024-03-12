@@ -26,7 +26,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: Jahia/jahia-modules-action/static-analysis@v2
         with:
-          node_version: 14
           auditci_level: critical
           max_warning: 8
 
@@ -37,7 +36,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 'lts/*'
       - name: Run yarn test
         shell: bash
         run: |

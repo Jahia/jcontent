@@ -1,6 +1,7 @@
 import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
 import {assertUtils} from '../../utils/assertUtils';
 import {JContent} from '../../page-object/jcontent';
+import {AccordionItem} from '../../page-object';
 
 describe('Picker tests - Trees', () => {
     const siteKey = 'digitall';
@@ -87,5 +88,21 @@ describe('Picker tests - Trees', () => {
         picker.getTable().getRows(el => expect(el).to.have.length(1));
         picker.switchToSite('Digitall');
         picker.getTableRow('ce-picker-files').should('have.class', 'moonstone-TableRow-highlighted');
+    });
+
+    it('should be able to collapse tree with selection', () => {
+        const {typeName, fieldNodeType, multiple} = contentTypes.imagepicker;
+        const picker = jcontent.createContent(typeName)
+            .getPickerField(fieldNodeType, multiple)
+            .open();
+
+        const mediaAccordion: AccordionItem = picker.getAccordionItem('picker-media');
+        picker.navigateTo(mediaAccordion, 'files/images/backgrounds');
+        picker.getGrid().getCardByName('fans-stadium.jpg').click();
+
+        // Verify tree with selection can collapse
+        mediaAccordion.getTreeItem('images').collapse();
+        mediaAccordion.getTreeItem('images').should('attr', 'aria-expanded', 'false');
+        mediaAccordion.shouldNotHaveTreeItem('backgrounds');
     });
 });

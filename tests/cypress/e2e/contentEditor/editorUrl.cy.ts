@@ -127,11 +127,15 @@ describe('Editor url test', () => {
         ContentEditor.getUrl('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home')
             .then(url => {
                 const hash = url.substring(url.indexOf('#'));
+                cy.login();
                 PageComposer.visit('digitall', 'en', `home.html?redirect=false${hash}`);
+                cy.url().should('contain', hash).and('contain', '/jahia/page-composer/default/');
+                contentEditor = new ContentEditor();
+                contentEditor.getBreadcrumb('highlights').click();
+                cy.get('h1').contains('highlights').should('exist');
+                jcontent = new JContent();
+                jcontent.getTable().getRowByLabel('People First').get().should('be.visible');
             });
-
-        contentEditor.getBreadcrumb('highlights').click();
-        cy.get('h1').contains('highlights').should('exist');
     });
 
     it('Should not show error modal for valid uuid', () => {

@@ -8,11 +8,15 @@ on:
       jahia_image:
         description: 'Jahia Image'
         required: true
-        default: 'jahia/jahia-discovery-dev:8-SNAPSHOT'
+        default: 'jahia/jahia-ee-dev:8-SNAPSHOT'
       manifest:
         description: 'Provisioning manifest. Can be a local repository file in the tests folder or a publicly accessible link'
         required: true
         default: 'provisioning-manifest-snapshot.yml'
+      config_file:
+        description: 'Cypress config file to use'
+        required: false
+        default: 'cypress.config-jcontent.ts'
 
 jobs:
   integration-tests:
@@ -40,6 +44,7 @@ jobs:
           github_artifact_name: jcontent-standalone-artifacts-${{ github.run_number }}
           bastion_ssh_private_key: ${{ secrets.BASTION_SSH_PRIVATE_KEY_JAHIACI }}
           tests_manifest: ${{ github.event.inputs.manifest }}
+          tests_profile: ${{ github.event.inputs.config_file }}
           jahia_license: ${{ secrets.JAHIA_LICENSE_8X_FULL }}
           docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
           docker_password: ${{ secrets.DOCKERHUB_PASSWORD }}

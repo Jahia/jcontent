@@ -122,7 +122,7 @@ describe('Editor url test', () => {
         contentEditor.cancel();
     });
 
-    it.only('Handles breadcrumb in GWT correctly', function () {
+    it('Handles breadcrumb in GWT correctly', function () {
         cy.login();
         ContentEditor.getUrl('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home')
             .then(url => {

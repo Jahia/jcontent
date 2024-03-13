@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const SubscribeToPublicationData = gql`
-    subscription SubscribeToPublicationData {
-        subscribeToPublicationJob {
+    subscription SubscribeToPublicationData($userKeys:[String]!) {
+        subscribeToPublicationJob(userKeyFilter:$userKeys) {
             state
             language
             paths

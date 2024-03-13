@@ -224,6 +224,11 @@ export function propertyHasChanged(currentValue, field, nodeData) {
     const propertyData = nodeData && nodeData.properties && nodeData.properties.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.nodeType);
     const previousValue = propertyData && propertyData[_getPropertyNameToCompare(field)];
 
+    // Specific case for j:invalidLanguages
+    if (field.propertyName === 'j:invalidLanguages' && !previousValue) {
+        return false;
+    }
+
     // Compare previous value
     if (field.multiple) {
         // Check if both array are null or undefined

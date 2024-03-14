@@ -225,7 +225,7 @@ export function propertyHasChanged(currentValue, field, nodeData) {
     const previousValue = propertyData && propertyData[_getPropertyNameToCompare(field)];
 
     // Specific case for j:invalidLanguages
-    if (field.propertyName === 'j:invalidLanguages' && !previousValue) {
+    if (field.propertyName === 'j:invalidLanguages' && !previousValue && currentValue.length === 0) {
         return false;
     }
 

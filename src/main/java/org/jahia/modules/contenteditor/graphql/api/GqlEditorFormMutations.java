@@ -63,7 +63,7 @@ public class GqlEditorFormMutations {
 
     /**
      * Unlock the given node for edition, if the node is locked.
-     * In case the node was not locked, it's should not fail.
+     * In case the node was not locked, it should not fail.
      *
      * @throws EditorFormException In case of any error during the unlocking
      */

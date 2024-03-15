@@ -108,6 +108,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     const rootPath = item.getRootPath(siteKey);
     const ulRef = useRef(null);
     const ulScrollRef = useRef(0);
+    const dataRef = useRef(null);
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
         openPaths.push(rootPath);
@@ -134,6 +135,10 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     };
 
     const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
+
+    if (dataRef.current === null || treeEntries.length > 0) {
+        dataRef.current = treeEntries;
+    }
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child
@@ -173,7 +178,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       isReversed={isReversed}
                       itemComponent={ItemComponent}
                       data={convertPathsToTree({
-                          treeEntries,
+                          treeEntries: dataRef.current,
                           selected: path,
                           isReversed,
                           contentMenu: contextualMenuAction,

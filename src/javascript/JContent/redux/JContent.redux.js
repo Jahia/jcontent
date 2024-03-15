@@ -159,7 +159,7 @@ export const jContentRedux = registry => {
         viewType: localStorage.getItem(JContentConstants.localStorageKeys.viewType) || JContentConstants.tableView.viewType.CONTENT
     });
     const templateReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).template
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).template || ''
     }, currentValueFromUrl.template);
 
     const openPathsReducer = handleActions({

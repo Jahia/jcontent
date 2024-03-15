@@ -31,7 +31,22 @@ const apps = {
                 path = path.substring(0, path.lastIndexOf('.'));
             }
 
-            console.debug('extractParamsFromUrl', {site, language, mode, path, template, viewMode, params, pathname, search});
+            if (params.template) {
+                template = params.template;
+                delete params.template;
+            }
+
+            console.debug('extractParamsFromUrl', {
+                site,
+                language,
+                mode,
+                path,
+                template,
+                viewMode,
+                params,
+                pathname,
+                search
+            });
             return {...defaultState, site, language, mode, path, template, viewMode, params};
         },
         buildUrl: ({site, language, mode, path, template, params}) => {
@@ -44,7 +59,7 @@ const apps = {
             // Special chars in folder naming
             path = path.replace(/[^/]/g, encodeURIComponent);
             if (template !== '') {
-                path = path + '.' + template;
+                params.template = template;
             }
 
             let queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);
@@ -100,7 +115,16 @@ const deserializeQueryString = search => {
     return {};
 };
 
-export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo, cmReplaceOpenedPaths, cmOpenTablePaths, cmCloseTablePaths, setTableViewMode, setTableViewType} =
+export const {
+    cmOpenPaths,
+    cmClosePaths,
+    cmPreSearchModeMemo,
+    cmReplaceOpenedPaths,
+    cmOpenTablePaths,
+    cmCloseTablePaths,
+    setTableViewMode,
+    setTableViewType
+} =
     createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS', 'CM_OPEN_TABLE_PATHS', 'CM_CLOSE_TABLE_PATHS', 'SET_TABLE_VIEW_MODE', 'SET_TABLE_VIEW_TYPE');
 
 export const cmGoto = data => (

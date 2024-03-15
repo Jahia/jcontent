@@ -18,6 +18,7 @@ function intercept(doc, site, setModal) {
                 setModal({isOpen: true, isExternal: true, url});
                 e.preventDefault();
             } else {
+                console.debug('Link intercepted', url, jahiaRegex, url.match(jahiaRegex));
                 const jahiaMatch = url.match(jahiaRegex);
                 if (jahiaMatch) {
                     const newSite = jahiaMatch[3];

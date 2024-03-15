@@ -64,10 +64,11 @@ function addEventListeners(target, manager, iframeRef) {
 export const EditFrame = ({isPreview, isDeviceView}) => {
     const manager = useDragDropManager();
 
-    const {path, site, language} = useSelector(state => ({
+    const {path, site, language, template} = useSelector(state => ({
         language: state.language,
         site: state.site,
         path: state.jcontent.path,
+        template: state.jcontent.template,
         selection: state.jcontent.selection
     }), shallowEqual);
 
@@ -117,9 +118,11 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             const currentDocument = iframe.current.contentDocument;
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
             const frameLanguage = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('locale');
-            if (framePath && (framePath !== path || frameLanguage !== language)) {
+            const frameTemplate = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('template');
+            if (framePath && (framePath !== path || frameLanguage !== language || frameTemplate !== template)) {
+                console.debug('Updating path to', framePath, 'and language to', frameLanguage, 'in redux', 'template', frameTemplate, 'older path', path, 'older language', language, 'older template', template);
                 dispatch(batchActions([
-                    cmGoto({path: framePath, language: frameLanguage}),
+                    cmGoto({path: framePath, language: frameLanguage, template: frameTemplate}),
                     cmOpenPaths(extractPaths(site, framePath.substring(0, framePath.lastIndexOf('/'))))
                 ]));
             }
@@ -201,10 +204,11 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 
     useEffect(() => {
         const renderMode = isPreview ? 'render' : 'editframe';
-        const encodedPath = path.replace(/[^/]/g, encodeURIComponent);
+        const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
             let mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
+            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, isPreview, template);
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
             if (!isPreview && path === framePath && locale === language && previousDevice.current === deviceParam) {
@@ -221,10 +225,11 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                 previousDevice.current = deviceParam;
             }
         } else if (path && !path.endsWith('/')) {
+            console.debug('Loading', url, 'in iframe');
             iframe.current.contentWindow.location.href = url;
             previousDevice.current = deviceParam;
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language, isPreview]);
+    }, [currentDocument, path, previousDevice, deviceParam, language, isPreview, template]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;

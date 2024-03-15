@@ -13,21 +13,44 @@ export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
 const ROUTER_REDUX_ACTION = '@@router/LOCATION_CHANGE';
 
-const defaultState = {app: 'jcontent', site: '', language: '', mode: '', path: '', params: {}};
+const defaultState = {app: 'jcontent', site: '', language: '', mode: '', path: '', template: '', params: {}};
 
 const apps = {
     jcontent: {
         extractParamsFromUrl: (pathname, search) => {
             const [, , site, language, mode, ...pathElements] = pathname.split('/');
             const registryItem = registry.get('accordionItem', mode);
-            const path = decodeURIComponent((registryItem && registryItem.getPath && registryItem.getPath(site, pathElements)) || ('/' + pathElements.join('/')));
+            let path = decodeURIComponent((registryItem && registryItem.getPath && registryItem.getPath(site, pathElements)) || ('/' + pathElements.join('/')));
             const params = deserializeQueryString(search);
 
             const accordion = registry.get('accordionItem', mode);
             const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + mode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
-            return {...defaultState, site, language, mode, path, viewMode, params};
+            let template = '';
+            if (path.lastIndexOf('.') > 0) {
+                template = path.substring(path.lastIndexOf('.') + 1);
+                path = path.substring(0, path.lastIndexOf('.'));
+            }
+
+            if (params.template) {
+                template = params.template;
+                delete params.template;
+            }
+
+            console.debug('extractParamsFromUrl', {
+                site,
+                language,
+                mode,
+                path,
+                template,
+                viewMode,
+                params,
+                pathname,
+                search
+            });
+            return {...defaultState, site, language, mode, path, template, viewMode, params};
         },
-        buildUrl: ({site, language, mode, path, params}) => {
+        buildUrl: ({site, language, mode, path, template, params}) => {
+            console.debug('buildUrl', {site, language, mode, path, template, params});
             let registryItem = registry.get('accordionItem', mode);
             if (registryItem && registryItem.getUrlPathPart) {
                 path = registryItem.getUrlPathPart(site, path, registryItem);
@@ -35,6 +58,9 @@ const apps = {
 
             // Special chars in folder naming
             path = path.replace(/[^/]/g, encodeURIComponent);
+            if (template !== '') {
+                params.template = template;
+            }
 
             let queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);
             return `/jcontent/${site}/${language}/${mode}${path}${queryString}`;
@@ -57,10 +83,10 @@ const apps = {
     }
 };
 
-const buildUrl = ({app, site, language, mode, path, params}) => {
+const buildUrl = ({app, site, language, mode, path, template, params}) => {
     const newApp = app || 'jcontent';
     if (apps[newApp]) {
-        return apps[newApp].buildUrl({app: newApp, site, language, mode, path, params});
+        return apps[newApp].buildUrl({app: newApp, site, language, mode, path, template, params});
     }
 };
 
@@ -89,19 +115,29 @@ const deserializeQueryString = search => {
     return {};
 };
 
-export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo, cmReplaceOpenedPaths, cmOpenTablePaths, cmCloseTablePaths, setTableViewMode, setTableViewType} =
+export const {
+    cmOpenPaths,
+    cmClosePaths,
+    cmPreSearchModeMemo,
+    cmReplaceOpenedPaths,
+    cmOpenTablePaths,
+    cmCloseTablePaths,
+    setTableViewMode,
+    setTableViewType
+} =
     createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS', 'CM_OPEN_TABLE_PATHS', 'CM_CLOSE_TABLE_PATHS', 'SET_TABLE_VIEW_MODE', 'SET_TABLE_VIEW_TYPE');
 
 export const cmGoto = data => (
     (dispatch, getStore) => {
-        const {site, language, jcontent: {app, mode, path, params}} = getStore();
-
+        const {site, language, jcontent: {app, mode, path, template, params}} = getStore();
+        console.debug('cmGoto', {app, site, language, mode, path, template, params, data});
         dispatch(push(buildUrl({
             app: data.app || app || 'jcontent',
             site: data.site || site,
             language: data.language || language,
             mode: data.mode || mode,
             path: data.path || path,
+            template: data.template || '',
             params: data.params || params
         })));
     }
@@ -146,6 +182,9 @@ export const jContentRedux = registry => {
         viewMode: currentValueFromUrl.viewMode || JContentConstants.tableView.viewMode.PAGE_BUILDER,
         viewType: localStorage.getItem(JContentConstants.localStorageKeys.viewType) || JContentConstants.tableView.viewType.CONTENT
     });
+    const templateReducer = handleActions({
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).template || ''
+    }, currentValueFromUrl.template);
 
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),
@@ -164,6 +203,7 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'preSearchModeMemo', {targets: ['jcontent'], reducer: preSearchModeMemoReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
+    registry.add('redux-reducer', 'template', {targets: ['jcontent'], reducer: templateReducer});
     registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
     registry.add('redux-reducer', 'tableOpenPaths', {targets: ['jcontent'], reducer: tableOpenPathsReducer});

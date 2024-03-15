@@ -213,10 +213,13 @@ export class JContentPageBuilder extends JContent {
         Object.assign(this, base);
     }
 
-    iframe() {
+    iframe(bypassCheck = false) {
         const iframeSel = '[data-sel-role="page-builder-frame-active"]';
         cy.iframe(iframeSel).as(this.alias);
-        cy.get(`@${this.alias}`).find('[jahiatype="createbuttons"]');
+        if (!bypassCheck) {
+            cy.get(`@${this.alias}`).find('[jahiatype="createbuttons"]');
+        }
+
         return new BaseComponent(cy.get(`@${this.alias}`));
     }
 
@@ -227,6 +230,14 @@ export class JContentPageBuilder extends JContent {
     getModule(path: string): PageBuilderModule {
         const parentFrame = this.iframe();
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
+        module.should('exist').and('be.visible');
+        module.parentFrame = parentFrame;
+        return module;
+    }
+
+    getMainModule(path: string): PageBuilderModule {
+        const parentFrame = this.iframe(true);
+        const module = getComponentBySelector(PageBuilderModule, `[jahiatype="mainmodule"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;
         return module;

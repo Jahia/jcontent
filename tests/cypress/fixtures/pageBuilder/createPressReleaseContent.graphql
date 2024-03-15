@@ -1,0 +1,27 @@
+mutation ($path: String!, $date: String!){
+    jcr {
+        mutateNode(pathOrId: $path) {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "pagecontent"
+                        primaryNodeType: "jnt:contentList"
+                        children: [
+                            {
+                                name: "test-press-release"
+                                primaryNodeType: "jnt:press"
+                                properties: [{ name: "jcr:title", language: "en", value: "Press Release 1 title" },
+                                    {name: "date", value: $date, type: DATE },
+                                    {name: "body", language: "en", value: "Press Release 1 body" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+    }
+}
+

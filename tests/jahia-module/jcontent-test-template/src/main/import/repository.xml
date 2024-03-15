@@ -38,6 +38,16 @@
                   <main-resource-display j:mainResourceView="default" jcr:primaryType="jnt:mainResourceDisplay"/>
                </pagecontent>
             </content-template>
+             <fullpage j:applyOn="jnt:content"
+                       j:defaultTemplate="false"
+                       j:hiddenTemplate="true"
+                       j:priority="100"
+                       j:view="jcontent-test-template"
+                       jcr:primaryType="jnt:contentTemplate">
+                 <pagecontent jcr:primaryType="jnt:contentList">
+                     <main-resource-display j:mainResourceView="fullpage" jcr:primaryType="jnt:mainResourceDisplay"/>
+                 </pagecontent>
+             </fullpage>
          </templates>
          <home j:isHomePage="true"
                j:templateName="home"

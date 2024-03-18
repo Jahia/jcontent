@@ -162,6 +162,10 @@ export const isVisible = elem => {
     }
 
     let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
+    if (pointContainer === null) {
+        return false;
+    }
+
     do {
         if (pointContainer === elem) {
             return true;

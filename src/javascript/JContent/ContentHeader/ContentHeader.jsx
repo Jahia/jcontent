@@ -32,8 +32,12 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
         const accordion = preSearchModeMemo ? registry.get('accordionItem', preSearchModeMemo) : registry.find({type: 'accordionItem', target: 'jcontent'})[0];
         const path = localStorage.getItem('jcontent-previous-location-' + site + '-' + accordion.key) || accordion.getRootPath(site);
         const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + accordion.key) || accordion?.tableConfig?.defaultViewMode || 'flatList';
+        let template = '';
+        if (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
+            template = localStorage.getItem('jcontent-previous-template-' + site + '-' + viewMode) || '';
+        }
 
-        dispatch(batchActions([cmGoto({mode: accordion.key, path, params: {}}), setTableViewMode(viewMode)]));
+        dispatch(batchActions([cmGoto({mode: accordion.key, path, template, params: {}}), setTableViewMode(viewMode)]));
     };
 
     return narrow ? (

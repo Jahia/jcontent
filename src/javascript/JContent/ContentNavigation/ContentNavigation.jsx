@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Accordion, SecondaryNav} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {getRegistryTarget} from '../JContent.utils';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, handleNavigation, header, isReversed}) => {
     const {t} = useTranslation('jcontent');
@@ -13,8 +14,12 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
 
             const path = localStorage.getItem('jcontent-previous-location-' + siteKey + '-' + newMode) || accordion.getRootPath(siteKey);
             const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
+            let template = '';
+            if (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
+                template = localStorage.getItem('jcontent-previous-template-' + siteKey + '-' + newMode) || '';
+            }
 
-            handleNavigation(newMode, path, viewMode);
+            handleNavigation(newMode, path, viewMode, template);
         }
     };
 

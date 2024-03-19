@@ -54,7 +54,8 @@ const SiteSwitcher = ({selector, onSelectAction, isSiteEnabled}) => {
     const onSelectSite = (siteNode, currentLang) => {
         let newLang = getTargetSiteLanguageForSwitch(siteNode, currentLang);
         const newPath = localStorage.getItem('jcontent-previous-location-' + siteNode.name + '-' + mode) || path;
-        dispatch(onSelectAction(siteNode, newLang, mode, newPath));
+        const newTemplate = localStorage.getItem('jcontent-previous-template-' + siteNode.name + '-' + mode) || '';
+        dispatch(onSelectAction(siteNode, newLang, mode, newPath, newTemplate));
     };
 
     return (
@@ -111,8 +112,8 @@ SiteSwitcher.propTypes = {
 };
 
 SiteSwitcher.defaultProps = {
-    onSelectAction: (siteNode, language, mode, path) => (batchActions([
-        cmGoto({site: siteNode.name, language, mode, path}),
+    onSelectAction: (siteNode, language, mode, path, template) => (batchActions([
+        cmGoto({site: siteNode.name, language, mode, path, template}),
         cmSetPreviewMode(CM_PREVIEW_MODES.EDIT),
         cmSetPreviewState(CM_DRAWER_STATES.HIDE),
         cmSetPreviewSelection(null)

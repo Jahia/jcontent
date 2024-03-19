@@ -39,7 +39,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
                            mode={mode}
                            siteKey={siteKey}
                            isReversed={isReversed}
-                           handleNavigation={(mode, path, viewMode) => dispatch(handleNavigationAction(mode, path, viewMode))}
+                           handleNavigation={(mode, path, viewMode, template) => dispatch(handleNavigationAction(mode, path, viewMode, template))}
         />
     );
 };
@@ -60,7 +60,7 @@ ContentNavigationContainer.defaultProps = {
         siteKey: state.site,
         language: state.language
     }),
-    handleNavigationAction: (mode, path, viewMode) => batchActions([cmGoto({mode, path, params: {}}), setTableViewMode(viewMode)]),
+    handleNavigationAction: (mode, path, viewMode, template) => batchActions([cmGoto({mode, path, template, params: {}}), setTableViewMode(viewMode)]),
     accordionItemTarget: 'jcontent',
     isReversed: true
 };

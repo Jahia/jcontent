@@ -237,6 +237,9 @@ export const jContentRedux = registry => {
             localStorage.setItem('jcontent-previous-mode-' + state.site, state.jcontent.mode);
             if (state.jcontent.tableView.viewMode) {
                 localStorage.setItem('jcontent-previous-tableView-viewMode-' + state.site + '-' + state.jcontent.mode, state.jcontent.tableView.viewMode);
+                if (state.jcontent.tableView.viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
+                    localStorage.setItem('jcontent-previous-template-' + state.site + '-' + state.jcontent.mode, state.jcontent.template);
+                }
             }
 
             if (state.jcontent?.path) {

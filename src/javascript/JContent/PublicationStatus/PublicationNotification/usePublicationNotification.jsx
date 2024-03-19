@@ -38,6 +38,7 @@ export const usePublicationNotification = () => {
     const optionsNotiStack = {autoHideDuration: 5000, preventDuplicate: true, onClose: () => {
         setNotificationData(undefined);
     }};
+
     if (!e && !loading && notificationData !== undefined && window.location.pathname.indexOf('/jahia/workflow') === -1) {
         const language = notificationData.subscribeToPublicationJob.language;
         const state = notificationData.subscribeToPublicationJob.state;

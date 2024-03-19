@@ -8,9 +8,10 @@ import {useTranslation} from 'react-i18next';
 import {useFormikContext} from 'formik';
 import {isDirty} from '~/ContentEditor/utils';
 import {CloudCheck} from '@jahia/moonstone';
+import {enqueueSnackbar} from 'notistack';
 
 const Publish = ({buttonIcon, render: Render, loading: Loading, ...otherProps}) => {
-    const {publicationInfoPolling, publicationStatus, stopPublicationInfoPolling, startPublicationInfoPolling} = usePublicationInfoContext();
+    const {publicationInfoPolling, publicationStatus} = usePublicationInfoContext();
     const client = useApolloClient();
     const {t} = useTranslation();
     const {nodeData, lang, i18nContext, siteInfo} = useContentEditorContext();
@@ -21,10 +22,6 @@ const Publish = ({buttonIcon, render: Render, loading: Loading, ...otherProps}) 
     const isVisible = hasPublishPermission;
 
     if (isVisible) {
-        if (publicationInfoPolling && publicationStatus === Constants.editPanel.publicationStatus.PUBLISHED) {
-            stopPublicationInfoPolling();
-        }
-
         const dirty = isDirty(formik, i18nContext);
 
         const wipInfo = formik.values[Constants.wip.fieldName];
@@ -61,14 +58,14 @@ const Publish = ({buttonIcon, render: Render, loading: Loading, ...otherProps}) 
     let onClick = useCallback(() => {
         publishNode({
             client,
-            t,
             data: {
                 nodeData,
                 language: lang
-            },
-            successCallback: startPublicationInfoPolling
+            }
         });
-    }, [client, t, nodeData, lang, startPublicationInfoPolling]);
+        enqueueSnackbar(t('jcontent:label.contentManager.publicationStatus.notification.publish'),
+            {autoHideDuration: 3000, anchorOrigin: {vertical: 'bottom', horizontal: 'center'}});
+    }, [client, nodeData, t, lang]);
 
     if (Loading) {
         return <Loading {...otherProps}/>;

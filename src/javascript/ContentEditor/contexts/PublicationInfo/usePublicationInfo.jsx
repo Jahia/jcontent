@@ -1,30 +1,28 @@
 import {useQuery, useSubscription} from '@apollo/client';
 import {PublicationInfoQuery} from './PublicationInfo.gql-queries';
-import {useState} from 'react';
 import {
     SubscribeToPublicationData
 } from '~/JContent/PublicationStatus/PublicationNotification/PublicationNotification.gql-subscription';
 
 export const usePublicationInfo = (queryParams, t) => {
-    const [polling, setPolling] = useState(false);
     const {loading, error, data, refetch} = useQuery(PublicationInfoQuery, {
         variables: queryParams,
-        fetchPolicy: 'network-only',
-        pollInterval: polling ? 5000 : 0
+        fetchPolicy: 'network-only'
     });
 
-    const {loadingSubscription, errorSubscription} = useSubscription(SubscribeToPublicationData, {
+    const {error: subError} = useSubscription(SubscribeToPublicationData, {
         fetchPolicy: 'network-only',
         onData: ({data}) => {
+            console.log('data', data);
             if (data?.data?.subscribeToPublicationJob?.state === 'UNPUBLISHED' || data?.data?.subscribeToPublicationJob?.state === 'FINISHED') {
                 refetch();
             }
         }
     });
 
-    if (error || loading || loadingSubscription || errorSubscription || !data?.jcr) {
+    if (error || loading || subError || !data?.jcr) {
         return {
-            publicationInfoPolling: polling,
+            publicationInfoPolling: true,
             publicationInfoLoading: loading,
             publicationInfoError: error,
             publicationInfoErrorMessage: error && t('jcontent:label.contentEditor.error.queryingContent', {details: (error.message ? error.message : '')})
@@ -37,12 +35,6 @@ export const usePublicationInfo = (queryParams, t) => {
         lastModifiedBy: data.jcr.nodeById.lastModifiedBy?.value,
         lastPublished: data.jcr.nodeById.lastPublished?.value,
         lastPublishedBy: data.jcr.nodeById.lastPublishedBy?.value,
-        publicationInfoPolling: polling,
-        startPublicationInfoPolling: () => {
-            setPolling(true);
-        },
-        stopPublicationInfoPolling: () => {
-            setPolling(false);
-        }
+        publicationInfoPolling: false
     };
 };

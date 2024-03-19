@@ -8,7 +8,6 @@ import {useTranslation} from 'react-i18next';
 import {useFormikContext} from 'formik';
 import {isDirty} from '~/ContentEditor/utils';
 import {CloudCheck} from '@jahia/moonstone';
-import {enqueueSnackbar} from 'notistack';
 
 const Publish = ({buttonIcon, render: Render, loading: Loading, ...otherProps}) => {
     const {publicationInfoPolling, publicationStatus} = usePublicationInfoContext();
@@ -58,14 +57,13 @@ const Publish = ({buttonIcon, render: Render, loading: Loading, ...otherProps}) 
     let onClick = useCallback(() => {
         publishNode({
             client,
+            t,
             data: {
                 nodeData,
                 language: lang
             }
         });
-        enqueueSnackbar(t('jcontent:label.contentManager.publicationStatus.notification.publish'),
-            {autoHideDuration: 3000, anchorOrigin: {vertical: 'bottom', horizontal: 'center'}});
-    }, [client, nodeData, t, lang]);
+    }, [client, t, nodeData, lang]);
 
     if (Loading) {
         return <Loading {...otherProps}/>;

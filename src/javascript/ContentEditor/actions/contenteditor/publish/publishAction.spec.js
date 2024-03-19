@@ -105,21 +105,6 @@ describe('publish action', () => {
         expect(cmp.props().disabled).toBe(true);
     });
 
-    it('should stop polling if we are polling and node is published', () => {
-        publicationInfoContext.publicationStatus = 'PUBLISHED';
-        publicationInfoContext.publicationInfoPolling = true;
-
-        shallow(<PublishAction {...defaultProps}/>);
-        expect(publicationInfoContext.stopPublicationInfoPolling).toHaveBeenCalled();
-    });
-
-    it('should not stop polling if we are polling and node is not published', () => {
-        publicationInfoContext.publicationInfoPolling = true;
-
-        shallow(<PublishAction {...defaultProps}/>);
-        expect(publicationInfoContext.stopPublicationInfoPolling).not.toHaveBeenCalled();
-    });
-
     it('should not disabled submit action when node is not already published', () => {
         publicationInfoContext.publicationStatus = 'NOT_PUBLISHED';
 

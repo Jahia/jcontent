@@ -19,6 +19,9 @@ export const usePublicationNotification = () => {
     const {siteInfo, loading: siteInfoLoading, error: siteInfoError} = useSiteInfo({siteKey, displayLanguage: language});
     const {data: getUserData, loading: getUserLoading, error: getUserError} = useQuery(GetUserQuery);
     const {loading, error} = useSubscription(SubscribeToPublicationData, {
+        variables: {
+            userKeys: [/[^/]*$/.exec(getUserData?.currentUser?.node?.path)[0]]
+        },
         fetchPolicy: 'network-only',
         skip: !getUserData || getUserLoading || getUserError || siteInfoLoading || siteInfoError,
         onData: ({data}) => {
@@ -35,6 +38,7 @@ export const usePublicationNotification = () => {
     const optionsNotiStack = {autoHideDuration: 5000, preventDuplicate: true, onClose: () => {
         setNotificationData(undefined);
     }};
+
     if (!e && !loading && notificationData !== undefined && window.location.pathname.indexOf('/jahia/workflow') === -1) {
         const language = notificationData.subscribeToPublicationJob.language;
         const state = notificationData.subscribeToPublicationJob.state;

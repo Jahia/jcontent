@@ -120,7 +120,7 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
             });
         } else if (!mergedConfig.isFullscreen) {
             if (newNode) {
-                Promise.all(window.contentModificationEventHandlers.map(handler => handler(newNode.uuid, newNode.path, newNode.path.split('/').pop(), 'update'))).then(() => {
+                Promise.all(window.contentModificationEventHandlers.map(handler => handler(newNode.uuid, newNode.path, newNode.path.split('/').pop(), 'create'))).then(() => {
                     // Otherwise refresh and close
                     updateEditorConfig({closed: true});
                 });

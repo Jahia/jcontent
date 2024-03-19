@@ -145,8 +145,11 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         }
 
         if (operation === 'create') {
-            // Do nothing ?
-        } else if (operation === 'delete') {
+            // Do nothing; refetcher should have been called already at this point
+            return;
+        }
+
+        if (operation === 'delete') {
             // Clear cache entries for subnodes
             Object.keys(client.cache.idByPath)
                 .filter(p => isDescendantOrSelf(p, nodePath))

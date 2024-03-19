@@ -7,8 +7,7 @@ export const publishNode = ({
     data: {
         nodeData,
         language
-    },
-    successCallback
+    }
 }) => {
     return client.mutate({
         variables: {
@@ -22,9 +21,6 @@ export const publishNode = ({
                 vertical: 'bottom',
                 horizontal: 'center'
             }});
-            if (successCallback) {
-                successCallback();
-            }
         }, error => {
             console.error(error);
             enqueueSnackbar(t('jcontent:label.contentEditor.edit.action.publish.error'), {autoHideDuration: 3000, anchorOrigin: {

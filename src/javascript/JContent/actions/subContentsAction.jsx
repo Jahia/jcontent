@@ -23,7 +23,7 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const totalCount = res.node['subNodesCount_jnt:file'] + res.node['subNodesCount_jnt:folder'] + res.node['subNodesCount_jnt:content'] + res.node['subNodesCount_jnt:contentFolder'];
+    const totalCount = !res || !res.node ? 0 : res.node['subNodesCount_jnt:file'] + res.node['subNodesCount_jnt:folder'] + res.node['subNodesCount_jnt:content'] + res.node['subNodesCount_jnt:contentFolder'];
 
     const isVisible = res.checksResult && mode !== JContentConstants.mode.SEARCH && mode !== JContentConstants.mode.SQL2SEARCH && (
         (res.node.primaryNodeType.name === 'jnt:page' || res.node.primaryNodeType.name === 'jnt:folder' || res.node.primaryNodeType.name === 'jnt:contentFolder') ||

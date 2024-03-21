@@ -46,6 +46,7 @@ const adaptContentPositionAndSize = element => {
     element.classList.add(editStyles.smallerBox);
 };
 
+// eslint-disable-next-line complexity
 export const Box = React.memo(({
     node,
     element,

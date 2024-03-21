@@ -15,6 +15,13 @@ export const ContentEditorContext = React.createContext({});
 
 export const useContentEditorContext = () => useContext(ContentEditorContext);
 
+const renderError = (siteInfoResult, t, notificationContext) => {
+    console.error('Error when fetching data: ' + siteInfoResult.error);
+    let message = t('label.contentEditor.error.queryingContent', {details: (siteInfoResult.error.message ? siteInfoResult.error.message : '')});
+    notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+    return null;
+};
+
 export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -93,10 +100,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     }
 
     if (siteInfoResult.error) {
-        console.error('Error when fetching data: ' + siteInfoResult.error);
-        let message = t('label.contentEditor.error.queryingContent', {details: (siteInfoResult.error.message ? siteInfoResult.error.message : '')});
-        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-        return null;
+        return renderError(siteInfoResult, t, notificationContext);
     }
 
     if (loading || siteInfoResult.loading || !ranAllHooks) {

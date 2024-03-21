@@ -35,6 +35,67 @@ function getOptions(field, inputContext) {
     return parsedOptions;
 }
 
+// eslint-disable-next-line max-params
+const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, setDialogOpen, isDialogOpen, inputContext, value) => {
+    return (
+        <>
+            <ReferenceCard
+                isReadOnly={field.readOnly}
+                isError={error || notFound}
+                emptyLabel={t((error || notFound) ? pickerConfig.pickerInput.notFoundLabel : pickerConfig.pickerInput.emptyLabel)}
+                emptyIcon={(error || notFound) ? pickerConfig.pickerInput.notFoundIcon : pickerConfig.pickerInput.emptyIcon}
+                labelledBy={`${field.name}-label`}
+                fieldData={fieldData && fieldData[0]}
+                onClick={() => setDialogOpen(!isDialogOpen)}
+            />
+            {inputContext.displayActions && value && (
+                <DisplayAction
+                    actionKey="content-editor/field/Picker"
+                    value={value}
+                    field={field}
+                    inputContext={inputContext}
+                    render={ButtonRenderer}
+                />
+            )}
+        </>
+    );
+};
+
+// eslint-disable-next-line max-params
+const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
+    return (
+        <div className="flexFluid">
+            {fieldData && fieldData.length > 0 && fieldData.map((fieldVal, index) => {
+                return (
+                    <OrderableValue
+                        key={`${field.name}_${fieldVal.name}`}
+                        component={<ReferenceCard
+                            isReadOnly
+                            labelledBy={`${fieldVal.name}-label`}
+                            fieldData={fieldVal}/>}
+                        field={field}
+                        index={index}
+                        onValueReorder={onValueReorder}
+                        onFieldRemove={onFieldRemove}/>
+                );
+            })}
+            {fieldData && fieldData.length > 0 && (
+                <OrderableValue field={field}
+                                index={fieldData.length}
+                                onValueReorder={onValueReorder}/>
+            )}
+            {!field.readOnly &&
+                <Button className={styles.addButton}
+                        data-sel-action="addField"
+                        variant="outlined"
+                        size="big"
+                        label={t('jcontent:label.contentEditor.edit.fields.actions.add')}
+                        onClick={() => setDialogOpen(!isDialogOpen)}
+                />}
+        </div>
+    );
+};
+
 export const Picker = ({
     field,
     value,
@@ -124,55 +185,8 @@ export const Picker = ({
     return (
         <div className="flexFluid flexRow_nowrap alignCenter">
             {field.multiple ?
-                <div className="flexFluid">
-                    {fieldData && fieldData.length > 0 && fieldData.map((fieldVal, index) => {
-                        return (
-                            <OrderableValue
-                                key={`${field.name}_${fieldVal.name}`}
-                                component={<ReferenceCard
-                                    isReadOnly
-                                    labelledBy={`${fieldVal.name}-label`}
-                                    fieldData={fieldVal}/>}
-                                field={field}
-                                index={index}
-                                onValueReorder={onValueReorder}
-                                onFieldRemove={onFieldRemove}/>
-                        );
-                    })}
-                    {fieldData && fieldData.length > 0 && (
-                        <OrderableValue field={field}
-                                        index={fieldData.length}
-                                        onValueReorder={onValueReorder}/>
-                    )}
-                    {!field.readOnly &&
-                        <Button className={styles.addButton}
-                                data-sel-action="addField"
-                                variant="outlined"
-                                size="big"
-                                label={t('jcontent:label.contentEditor.edit.fields.actions.add')}
-                                onClick={() => setDialogOpen(!isDialogOpen)}
-                        />}
-                </div> :
-                <>
-                    <ReferenceCard
-                        isReadOnly={field.readOnly}
-                        isError={error || notFound}
-                        emptyLabel={t((error || notFound) ? pickerConfig.pickerInput.notFoundLabel : pickerConfig.pickerInput.emptyLabel)}
-                        emptyIcon={(error || notFound) ? pickerConfig.pickerInput.notFoundIcon : pickerConfig.pickerInput.emptyIcon}
-                        labelledBy={`${field.name}-label`}
-                        fieldData={fieldData && fieldData[0]}
-                        onClick={() => setDialogOpen(!isDialogOpen)}
-                    />
-                    {inputContext.displayActions && value && (
-                        <DisplayAction
-                            actionKey="content-editor/field/Picker"
-                            value={value}
-                            field={field}
-                            inputContext={inputContext}
-                            render={ButtonRenderer}
-                        />
-                    )}
-                </>}
+                getMultipleElement(fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) :
+                getSimpleElement(field, error, notFound, t, pickerConfig, fieldData, setDialogOpen, isDialogOpen, inputContext, value)}
 
             <PickerDialog
                 isOpen={isDialogOpen}

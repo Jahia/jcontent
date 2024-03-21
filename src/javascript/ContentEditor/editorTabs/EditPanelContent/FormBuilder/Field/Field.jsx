@@ -24,6 +24,110 @@ export const showChipField = (is18nField, wipInfo, currentLanguage) => {
     return is18nField && wipInfo && wipInfo.status === Constants.wip.status.LANGUAGES && wipInfo.languages.indexOf(currentLanguage) > -1;
 };
 
+// eslint-disable-next-line max-params
+const renderField = (inputContext, field, isMultipleField, idInput, hasMandatoryError, t, wipInfo, editorContext, selectorType, onChange, onBlur, shouldDisplayErrors, errorName, errorArgs) => {
+    return (
+        <div className="flexFluid">
+            {inputContext.displayLabels &&
+            <div className={clsx(styles.inputLabelContainer, 'flexRow', 'alignCenter')}>
+                <InputLabel id={`${field.name}-label`}
+                            className={styles.inputLabel}
+                            htmlFor={isMultipleField ? null : idInput}
+                >
+                    <Typography weight="bold">{field.displayName}</Typography>
+                </InputLabel>
+                {inputContext.displayBadges && (
+                <>
+                    {field.mandatory && (
+                    <Chip
+                                className={styles.badge}
+                                data-sel-content-editor-field-mandatory={Boolean(hasMandatoryError)}
+                                label={t('jcontent:label.contentEditor.edit.validation.required')}
+                                color={hasMandatoryError ? 'warning' : 'accent'}
+                            />
+                        )}
+                    {field.readOnly && (
+                    <ReadOnlyBadge isReadOnly={field.readOnly}/>
+                        )}
+                    {showChipField(field.i18n, wipInfo, editorContext.lang) && (
+                    <Chip
+                                className={styles.badge}
+                                data-sel-role="wip-info-chip-field"
+                                label={t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelField')}
+                                color="accent"
+                            />
+                        )}
+                    {(!field.i18n && editorContext.siteInfo.languages.length > 1) &&
+                    <Chip
+                                className={styles.badge}
+                                icon={<Language/>}
+                                label={t('jcontent:label.contentEditor.edit.sharedLanguages')}
+                                color="default"
+                            />}
+                </>
+                )}
+                <div className="flexFluid"/>
+                <DisplayAction
+                    actionKey="content-editor/field/3dots"
+                    editorContext={editorContext}
+                    field={field}
+                    selectorType={selectorType}
+                    render={ButtonRenderer}
+                />
+            </div>}
+            {field.description && (
+            <Typography className={styles.inputDescription} variant="caption">
+                {/* eslint-disable-next-line react/no-danger */}
+                <span dangerouslySetInnerHTML={{__html: field.description}}/>
+            </Typography>
+        )}
+            <div className="flexRow_nowrap alignCenter">
+                <div className="flexFluid">
+                    {isMultipleField ?
+                        <MultipleField inputContext={inputContext}
+                                       editorContext={editorContext}
+                                       field={field}
+                                       onChange={onChange}
+                                       onBlur={onBlur}
+                    /> :
+                        <SingleField inputContext={inputContext}
+                                     editorContext={editorContext}
+                                     field={field}
+                                     onChange={onChange}
+                                     onBlur={onBlur}
+                    />}
+                </div>
+                {inputContext.displayActions && registry.get('action', selectorType.key + 'Menu') && (
+                <div className={styles.actions}>
+                    <DisplayAction actionKey={selectorType.key + 'Menu'}
+                                   field={field}
+                                   selectorType={selectorType}
+                                   inputContext={inputContext}
+                                   render={ButtonRenderer}
+                    />
+                </div>
+            )}
+                {inputContext.actionRender && (
+                <div>
+                    {inputContext.actionRender}
+                </div>
+            )}
+            </div>
+            {inputContext.displayErrors && shouldDisplayErrors && (
+            <Typography className={styles.errorMessage}
+                        data-sel-error={shouldDisplayErrors && errorName}
+            >
+                {shouldDisplayErrors ?
+                    field.errorMessage ?
+                        field.errorMessage :
+                        t(`jcontent:label.contentEditor.edit.errors.${errorName}`, {...buildFlatFieldObject(field), ...errorArgs}) :
+                    ''}&nbsp;
+            </Typography>
+        )}
+        </div>
+    );
+};
+
 export const Field = ({inputContext, idInput, selectorType, field}) => {
     const {t} = useTranslation('jcontent');
     const formik = useFormikContext();
@@ -112,111 +216,15 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
     const firstField = sectionsContext.sections ? sectionsContext.sections[0]?.fieldSets[0]?.fields[0] === field : false;
 
     return (
-        <div className={clsx(styles.formControl, {[styles.formControlError]: Boolean(shouldDisplayErrors)}, inputContext.selectorType?.containerStyle)}
-             data-first-field={firstField}
-             data-sel-content-editor-field={field.name}
-             data-sel-content-editor-field-type={seleniumFieldType}
-             data-sel-content-editor-field-picker-type={pickerType}
-             data-sel-content-editor-field-readonly={field.readOnly}
+        <div
+            className={clsx(styles.formControl, {[styles.formControlError]: Boolean(shouldDisplayErrors)}, inputContext.selectorType?.containerStyle)}
+            data-first-field={firstField}
+            data-sel-content-editor-field={field.name}
+            data-sel-content-editor-field-type={seleniumFieldType}
+            data-sel-content-editor-field-picker-type={pickerType}
+            data-sel-content-editor-field-readonly={field.readOnly}
         >
-            <div className="flexFluid">
-                {inputContext.displayLabels &&
-                    <div className={clsx(styles.inputLabelContainer, 'flexRow', 'alignCenter')}>
-                        <InputLabel id={`${field.name}-label`}
-                                    className={styles.inputLabel}
-                                    htmlFor={isMultipleField ? null : idInput}
-                        >
-                            <Typography weight="bold">{field.displayName}</Typography>
-                        </InputLabel>
-                        {inputContext.displayBadges && (
-                            <>
-                                {field.mandatory && (
-                                    <Chip
-                                        className={styles.badge}
-                                        data-sel-content-editor-field-mandatory={Boolean(hasMandatoryError)}
-                                        label={t('jcontent:label.contentEditor.edit.validation.required')}
-                                        color={hasMandatoryError ? 'warning' : 'accent'}
-                                    />
-                                )}
-                                {field.readOnly && (
-                                    <ReadOnlyBadge isReadOnly={field.readOnly}/>
-                                )}
-                                {showChipField(field.i18n, wipInfo, editorContext.lang) && (
-                                    <Chip
-                                        className={styles.badge}
-                                        data-sel-role="wip-info-chip-field"
-                                        label={t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelField')}
-                                        color="accent"
-                                    />
-                                )}
-                                {(!field.i18n && editorContext.siteInfo.languages.length > 1) &&
-                                    <Chip
-                                        className={styles.badge}
-                                        icon={<Language/>}
-                                        label={t('jcontent:label.contentEditor.edit.sharedLanguages')}
-                                        color="default"
-                                    />}
-                            </>
-                        )}
-                        <div className="flexFluid"/>
-                        <DisplayAction
-                            actionKey="content-editor/field/3dots"
-                            editorContext={editorContext}
-                            field={field}
-                            selectorType={selectorType}
-                            render={ButtonRenderer}
-                        />
-                    </div>}
-                {field.description && (
-                    <Typography className={styles.inputDescription} variant="caption">
-                        {/* eslint-disable-next-line react/no-danger */}
-                        <span dangerouslySetInnerHTML={{__html: field.description}}/>
-                    </Typography>
-                )}
-                <div className="flexRow_nowrap alignCenter">
-                    <div className="flexFluid">
-                        {isMultipleField ?
-                            <MultipleField inputContext={inputContext}
-                                           editorContext={editorContext}
-                                           field={field}
-                                           onChange={onChange}
-                                           onBlur={onBlur}
-                            /> :
-                            <SingleField inputContext={inputContext}
-                                         editorContext={editorContext}
-                                         field={field}
-                                         onChange={onChange}
-                                         onBlur={onBlur}
-                            />}
-                    </div>
-                    {inputContext.displayActions && registry.get('action', selectorType.key + 'Menu') && (
-                        <div className={styles.actions}>
-                            <DisplayAction actionKey={selectorType.key + 'Menu'}
-                                           field={field}
-                                           selectorType={selectorType}
-                                           inputContext={inputContext}
-                                           render={ButtonRenderer}
-                            />
-                        </div>
-                    )}
-                    {inputContext.actionRender && (
-                        <div>
-                            {inputContext.actionRender}
-                        </div>
-                    )}
-                </div>
-                {inputContext.displayErrors && shouldDisplayErrors && (
-                    <Typography className={styles.errorMessage}
-                                data-sel-error={shouldDisplayErrors && errorName}
-                    >
-                        {shouldDisplayErrors ?
-                            field.errorMessage ?
-                                field.errorMessage :
-                                t(`jcontent:label.contentEditor.edit.errors.${errorName}`, {...buildFlatFieldObject(field), ...errorArgs}) :
-                            ''}&nbsp;
-                    </Typography>
-                )}
-            </div>
+            {renderField(inputContext, field, isMultipleField, idInput, hasMandatoryError, t, wipInfo, editorContext, selectorType, onChange, onBlur, shouldDisplayErrors, errorName, errorArgs)}
         </div>
     );
 };

@@ -23,7 +23,7 @@ const addIconSuffix = icon => {
 };
 
 function getFileIcon(node, props) {
-    if (node.content !== undefined || node.resourceChildren !== undefined) {
+    function getIconFromMimeType() {
         let mimetype = node.content === undefined ? node.resourceChildren.nodes.pop().mimeType.value : node.content.mimeType.value;
         if (mimetype.startsWith('image/')) {
             return (
@@ -91,7 +91,10 @@ function getFileIcon(node, props) {
                     );
             }
         }
-    } else {
+    }
+
+    // eslint-disable-next-line complexity
+    function getIconFromExtension() {
         switch (node.path.split('.').pop().toLowerCase()) {
             case 'avif':
             case 'png':
@@ -191,6 +194,12 @@ function getFileIcon(node, props) {
                 );
         }
     }
+
+    if (node.content !== undefined || node.resourceChildren !== undefined) {
+        return getIconFromMimeType();
+    }
+
+    return getIconFromExtension();
 }
 
 export const NodeIcon = ({node, ...props}) => {

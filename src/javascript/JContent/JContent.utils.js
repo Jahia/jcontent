@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import ellipsize from 'ellipsize';
 import JContentConstants from './JContent.constants';
 import {getIcon} from '@jahia/icons';
-import {Layers} from '@jahia/moonstone';
+import {Layers, Tag} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
 import {GetAncestorsQueryById, GetAncestorsQueryByPath} from '~/JContent/JContentUtils.gql-queries';
 import rison from 'rison';
@@ -138,6 +138,10 @@ export const uppercaseFirst = string => {
 };
 
 export const getNodeTypeIcon = typeName => {
+    if (typeName === 'jnt:category') {
+        return <Tag/>;
+    }
+
     const Icon = getIcon(typeName) || Layers;
     return <Icon/>;
 };

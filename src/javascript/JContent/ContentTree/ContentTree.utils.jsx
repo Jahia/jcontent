@@ -5,11 +5,15 @@ import {isMarkedForDeletion} from '../JContent.utils';
 import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
-import {DefaultEntry, Link, Section} from '@jahia/moonstone';
+import {DefaultEntry, Link, Section, Tag} from '@jahia/moonstone';
 
 export function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {
         return <Section/>;
+    }
+
+    if (node.primaryNodeType.name === 'jnt:category') {
+        return <Tag/>;
     }
 
     if (['jnt:nodeLink', 'jnt:externalLink'].includes(node.primaryNodeType.name)) {

@@ -112,6 +112,7 @@ SiteSwitcher.propTypes = {
 };
 
 SiteSwitcher.defaultProps = {
+    // eslint-disable-next-line max-params
     onSelectAction: (siteNode, language, mode, path, template) => (batchActions([
         cmGoto({site: siteNode.name, language, mode, path, template}),
         cmSetPreviewMode(CM_PREVIEW_MODES.EDIT),

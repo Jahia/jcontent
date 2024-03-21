@@ -8,7 +8,7 @@ const setError = ({language, constraintViolation, formikActions, fieldName, i18n
     }
 };
 
-/* eslint max-depth: ["error", 8] */
+// eslint-disable-next-line max-params
 export const onServerError = (error, formikActions, i18nContext, language, notificationContext, t, propFieldNameMapping, defaultErrorMessage) => {
     // Set submitting false
     formikActions.setSubmitting(false);
@@ -33,9 +33,12 @@ export const onServerError = (error, formikActions, i18nContext, language, notif
 
                 for (const constraintViolation of graphQLError.extensions.constraintViolations) {
                     console.log('Constraint violation error: ', constraintViolation);
+                    // eslint-disable-next-line max-depth
                     if (constraintViolation.propertyName) {
                         const fieldName = propFieldNameMapping[constraintViolation.propertyName];
+                        // eslint-disable-next-line max-depth
                         if (fieldName) {
+                            // eslint-disable-next-line max-depth
                             if (constraintViolation.constraintMessage.startsWith('Invalid link')) {
                                 // Custom handling for invalid link error
                                 setError({language, constraintViolation, formikActions, fieldName, i18nContext, message: 'invalidLink_' + constraintViolation.constraintMessage.substring('Invalid link'.length)});

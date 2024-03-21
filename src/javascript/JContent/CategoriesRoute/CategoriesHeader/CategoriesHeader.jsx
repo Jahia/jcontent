@@ -1,11 +1,10 @@
 import React, {useContext} from 'react';
-import {ArrowLeft, Button, Chip, Header} from '@jahia/moonstone';
+import {ArrowLeft, Button, Chip, Header, Tag} from '@jahia/moonstone';
 import {MainActionBar} from '~/JContent/CategoriesRoute/CategoriesHeader/MainActionBar';
 import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {ContentPath} from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
-import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
@@ -16,6 +15,7 @@ import SearchInput from './SearchInput';
 import {registry} from '@jahia/ui-extender';
 import {ResizeContext} from '~/JContent/MainLayout/ResizeObserver';
 import {NarrowHeaderActions} from './NarrowHeaderActions';
+import {getCapitalized} from '~/ContentEditor/utils';
 
 const NARROW_HEADER_WIDTH = 750;
 
@@ -93,7 +93,7 @@ const CategoriesHeader = () => {
             title={title}
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
-            contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
+            contentType={nodeType && <Chip color="accent" label={getCapitalized(nodeType.displayName || nodeType.name)} icon={<Tag/>}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
         />
     ) : (
@@ -101,7 +101,7 @@ const CategoriesHeader = () => {
             title={title}
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
-            contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
+            contentType={nodeType && <Chip color="accent" label={getCapitalized(nodeType.displayName || nodeType.name)} icon={<Tag/>}/>}
             toolbarLeft={
                 <>
                     {selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}

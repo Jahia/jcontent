@@ -75,10 +75,75 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
     }, [nodesInfo.data, dispatch]);
 
     const previousState = useRef(state);
+
     useEffect(() => {
         if (currentFolderInfo.loading || nodesInfo.loading || state.mode === Constants.mode.SEARCH) {
             return;
         }
+
+        const updatePathInNewState = (selectedNode, newState, firstMatchingAccordion) => {
+            // If selection exists we don't care about previous state, need to update state in accordance with selection
+            // Initialize site when opening dialog
+            if (selectedNode && !previousState.current.isOpen) {
+                // If an item is selected, preselect site/mode/path
+                newState.site = getSite(selectedNode.path);
+                newState.mode = firstMatchingAccordion.key;
+                if (firstMatchingAccordion.getPathForItem) {
+                    // eslint-disable-next-line no-warning-comments
+                    // Todo: Must implement something for pages accordion, where the selected path is not the direct parent
+                    newState.path = firstMatchingAccordion.getPathForItem(selectedNode);
+                    console.debug('We should pass here', selectedNode.path, newState.site, newState.path);
+                } else {
+                    newState.path = firstMatchingAccordion.getRootPath(newState.site);
+                    console.debug('We should not pass here', selectedNode.path, newState.site, newState.path);
+                }
+
+                if (firstMatchingAccordion.getViewTypeForItem) {
+                    newState.viewType = firstMatchingAccordion.getViewTypeForItem(selectedNode);
+                }
+            } else if (!currentFolderInfo.node || state.path.startsWith(currentFolderInfo.node.path)) {
+                if (firstMatchingAccordion.tableConfig.defaultViewType && !previousState.current.isOpen) {
+                    newState.viewType = firstMatchingAccordion.tableConfig.defaultViewType;
+                }
+
+                newState.mode = firstMatchingAccordion.key;
+                const rootPath = firstMatchingAccordion.getRootPath(newState.site);
+
+                // If picker default path does not target any site use it
+                if ((!currentFolderInfo.node) ||
+                    (firstMatchingAccordion.canDisplayItem && !firstMatchingAccordion.canDisplayItem({folderNode: currentFolderInfo.node})) ||
+                    (!newState.path.startsWith(rootPath)) ||
+                    (!jcontentUtils.booleanValue(pickerConfig.pickerDialog.displayTree))
+                ) {
+                    newState.path = rootPath;
+                }
+            }
+        };
+
+        const getActions = (allAccordionItems, newState, selectedNode, firstMatchingAccordion) => {
+            const accordionItems = allAccordionItems
+                .filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(newState.site));
+            newState.modes = accordionItems.map(item => item.key);
+
+            if (selectedNode && !previousState.current.isOpen) {
+                newState.openPaths = [...new Set([...newState.openPaths, ...getDetailedPathArray(getPathWithoutFile(selectedNode.path), newState.site)])];
+            }
+
+            if (previousState.current.mode !== newState.mode && firstMatchingAccordion.tableConfig.defaultSort) {
+                newState.sort = firstMatchingAccordion.tableConfig.defaultSort;
+            }
+
+            const actions = ([
+                (newState.site !== state.site) && cePickerSite(newState.site),
+                (newState.mode !== state.mode) && cePickerMode(newState.mode),
+                (newState.sort !== state.sort) && cePickerSetSort(newState.sort),
+                (newState.modes.length !== state.modes?.length || newState.modes.some(mode => !state.modes.includes(mode))) && cePickerModes(newState.modes),
+                (newState.path !== state.path) && cePickerPath(newState.path),
+                (newState.viewType !== state.viewType) && cePickerSetTableViewType(newState.viewType),
+                (newState.openPaths.length !== state.openPaths.length || newState.openPaths.some(value => state.openPaths.indexOf(value) === -1)) && cePickerOpenPaths(newState.openPaths)
+            ]).filter(f => f);
+            return actions;
+        };
 
         const newState = {...state, isOpen: true};
 
@@ -98,64 +163,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             newState.site = site;
         }
 
-        // If selection exists we don't care about previous state, need to update state in accordance with selection
-        // Initialize site when opening dialog
-        if (selectedNode && !previousState.current.isOpen) {
-            // If an item is selected, preselect site/mode/path
-            newState.site = getSite(selectedNode.path);
-            newState.mode = firstMatchingAccordion.key;
-            if (firstMatchingAccordion.getPathForItem) {
-                // eslint-disable-next-line no-warning-comments
-                // Todo: Must implement something for pages accordion, where the selected path is not the direct parent
-                newState.path = firstMatchingAccordion.getPathForItem(selectedNode);
-                console.debug('We should pass here', selectedNode.path, newState.site, newState.path);
-            } else {
-                newState.path = firstMatchingAccordion.getRootPath(newState.site);
-                console.debug('We should not pass here', selectedNode.path, newState.site, newState.path);
-            }
+        updatePathInNewState(selectedNode, newState, firstMatchingAccordion);
 
-            if (firstMatchingAccordion.getViewTypeForItem) {
-                newState.viewType = firstMatchingAccordion.getViewTypeForItem(selectedNode);
-            }
-        } else if (!currentFolderInfo.node || state.path.startsWith(currentFolderInfo.node.path)) {
-            if (firstMatchingAccordion.tableConfig.defaultViewType && !previousState.current.isOpen) {
-                newState.viewType = firstMatchingAccordion.tableConfig.defaultViewType;
-            }
-
-            newState.mode = firstMatchingAccordion.key;
-            const rootPath = firstMatchingAccordion.getRootPath(newState.site);
-
-            // If picker default path does not target any site use it
-            if ((!currentFolderInfo.node) ||
-                (firstMatchingAccordion.canDisplayItem && !firstMatchingAccordion.canDisplayItem({folderNode: currentFolderInfo.node})) ||
-                (!newState.path.startsWith(rootPath)) ||
-                (!jcontentUtils.booleanValue(pickerConfig.pickerDialog.displayTree))
-            ) {
-                newState.path = rootPath;
-            }
-        }
-
-        const accordionItems = allAccordionItems
-            .filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(newState.site));
-        newState.modes = accordionItems.map(item => item.key);
-
-        if (selectedNode && !previousState.current.isOpen) {
-            newState.openPaths = [...new Set([...newState.openPaths, ...getDetailedPathArray(getPathWithoutFile(selectedNode.path), newState.site)])];
-        }
-
-        if (previousState.current.mode !== newState.mode && firstMatchingAccordion.tableConfig.defaultSort) {
-            newState.sort = firstMatchingAccordion.tableConfig.defaultSort;
-        }
-
-        const actions = ([
-            (newState.site !== state.site) && cePickerSite(newState.site),
-            (newState.mode !== state.mode) && cePickerMode(newState.mode),
-            (newState.sort !== state.sort) && cePickerSetSort(newState.sort),
-            (newState.modes.length !== state.modes?.length || newState.modes.some(mode => !state.modes.includes(mode))) && cePickerModes(newState.modes),
-            (newState.path !== state.path) && cePickerPath(newState.path),
-            (newState.viewType !== state.viewType) && cePickerSetTableViewType(newState.viewType),
-            (newState.openPaths.length !== state.openPaths.length || newState.openPaths.some(value => state.openPaths.indexOf(value) === -1)) && cePickerOpenPaths(newState.openPaths)
-        ]).filter(f => f);
+        const actions = getActions(allAccordionItems, newState, selectedNode, firstMatchingAccordion);
 
         if (actions.length > 0) {
             dispatch(batchActions(actions));

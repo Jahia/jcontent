@@ -4,7 +4,8 @@ import {
     getTreeOfContentWithRequirementsFromUuid
 } from './createContent.gql-queries';
 import {useQuery} from '@apollo/client';
-import {toIconComponent} from '@jahia/moonstone';
+import {Tag, toIconComponent} from '@jahia/moonstone';
+import React from 'react';
 
 export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
     const {data, error, loadingTypes} = useQuery(uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements, {
@@ -72,6 +73,15 @@ export function flattenNodeTypes(nodeTypes) {
 
 export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
     const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
+
+    function getNodeTypeIcon(nodeType) {
+        if (nodeType.name === 'jnt:category') {
+            return <Tag/>;
+        }
+
+        return nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
+    }
+
     if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
         return nodeTypes
             .filter(f => f.name !== 'jnt:resource')
@@ -81,7 +91,7 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
                 flattenedNodeTypes: [nodeType],
                 nodeTypesTree: [nodeType],
                 nodeTypes: [nodeType.name],
-                nodeTypeIcon: nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL),
+                nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: nodeType.label}
             }));

@@ -186,6 +186,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     useEffect(() => {
         const placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+            element.style['pointer-events'] = 'all';
             let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
 
             if (!parent) {
@@ -214,6 +215,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 children[i].dataset.prevPos = getRelativePos(coords[i], coords[i - 1]) || 'top';
                 children[i].dataset.nextPos = getRelativePos(coords[i], coords[i + 1]) || 'bottom';
             }
+        });
+
+        currentDocument.querySelectorAll('[jahiatype=mainmodule]').forEach(element => {
+            element.style['pointer-events'] = 'none';
         });
 
         setPlaceholders(placeholders);

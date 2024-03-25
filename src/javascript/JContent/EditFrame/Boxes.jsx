@@ -221,6 +221,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             element.style['pointer-events'] = 'none';
         });
 
+        currentDocument.querySelectorAll('a').forEach(element => {
+            element.style['pointer-events'] = 'all';
+        });
+
+        currentDocument.querySelectorAll('button').forEach(element => {
+            element.style['pointer-events'] = 'all';
+        });
+
         setPlaceholders(placeholders);
 
         const modules = [];

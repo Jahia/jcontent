@@ -10,8 +10,8 @@ describe('Page builder - Navigation', () => {
     });
 
     it('should switch language', () => {
-        jcontent.iframe().get().find('#languages.pull-right').click();
-        jcontent.iframe().get().find('#languages.pull-right').contains('German').click();
+        jcontent.iframe().get().find('#languages.pull-right').children('a').click();
+        jcontent.iframe().get().find('#languages.pull-right').contains('German').click({multiple: true});
         jcontent.getLanguageSwitcher().get().contains('de');
     });
 

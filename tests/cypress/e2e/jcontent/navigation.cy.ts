@@ -46,7 +46,7 @@ describe('Content navigation', () => {
         const jcontent = JContent.visit('mySite1', 'en', 'pages/home');
         jcontent.getAccordionItem('pages').expandTreeItem('home');
         jcontent.getAccordionItem('pages').getTreeItem(specialCharsName).click();
-        jcontent.shouldBeInMode('Page Builder');
+        jcontent.shouldBeInMode('Page Builder - Beta');
         cy.get('h1').contains('special chars page');
     });
 
@@ -54,7 +54,7 @@ describe('Content navigation', () => {
         const jc = JContent.visit('mySite1', 'en', 'content-folders/contents');
         jc.getTable().getRowByLabel('test-event').contextMenu().select('Open in Page Builder');
         cy.frameLoaded('#page-builder-frame-1');
-        jc.shouldBeInMode('Page Builder');
+        jc.shouldBeInMode('Page Builder - Beta');
         jc.getAccordionItem('content-folders').getTreeItem('contents').get().invoke('attr', 'aria-current').should('eq', 'page');
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
         cy.get('h1').contains('test-event');

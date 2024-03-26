@@ -407,7 +407,7 @@
       "view": {
         "flatList": "List",
         "structuredView": "Structured",
-        "pageBuilder": "Page Builder",
+        "pageBuilder": "Page Builder - Beta",
         "preview": "Preview Staging"
       },
       "contentTypeSelector": {

@@ -165,7 +165,8 @@ export const ContentLayoutContainer = React.memo(() => {
         }
 
         if (operation === 'create') {
-            await onGwtCreate(nodePath);
+            // This seems to be no longer used
+            // await onGwtCreate(nodePath);
         } else if (operation === 'delete') {
             await onGwtDelete(nodePath);
         } else if (operation === 'rename') {

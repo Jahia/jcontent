@@ -64,17 +64,6 @@ export const ContentLayoutContainer = React.memo(() => {
 
     const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);
 
-    function onGwtCreate(nodePath) {
-        let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-        client.cache.flushNodeEntryByPath(parentPath);
-        if (path !== parentPath) {
-            // Make sure the created CONTENT is visible in the main panel.
-            setPath(parentPath);
-        }
-
-        return client.reFetchObservableQueries();
-    }
-
     function onGwtDelete(nodePath) {
         // Clear cache entries for subnodes
         Object.keys(client.cache.idByPath)
@@ -166,7 +155,7 @@ export const ContentLayoutContainer = React.memo(() => {
 
         if (operation === 'create') {
             // This seems to be no longer used
-            // await onGwtCreate(nodePath);
+            // Do nothing
         } else if (operation === 'delete') {
             await onGwtDelete(nodePath);
         } else if (operation === 'rename') {

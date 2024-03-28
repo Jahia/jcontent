@@ -1,16 +1,31 @@
 import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
-
+import {useQuery} from '@apollo/client';
+import {GetContentStatuses} from './ContentStatuses.gql-queries';
 import ContentStatuses from './ContentStatuses';
 import PropTypes from 'prop-types';
 
-const ContentStatusesContainer = ({node}) => {
+const ContentStatusesContainer = ({node, nodePath}) => {
     const {isDisabled, language, uilang} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
         isDisabled: state.jcontent.selection.length > 0,
         uilang: state.uilang
     }), shallowEqual);
+
+    const {data, error} = useQuery(GetContentStatuses, {
+        variables: {
+            path: nodePath || path,
+            language: language
+        },
+        skip: node
+    });
+
+    if (error) {
+        console.log(error);
+    }
+
+    node = node || (data && data.jcr && data.jcr.result);
 
     if (!node) {
         return null;
@@ -22,6 +37,7 @@ const ContentStatusesContainer = ({node}) => {
 };
 
 ContentStatusesContainer.propTypes = {
+    nodePath: PropTypes.string,
     node: PropTypes.shape({
         aggregatedPublicationInfo: PropTypes.shape({
             publicationStatus: PropTypes.string,
@@ -65,7 +81,7 @@ ContentStatusesContainer.propTypes = {
                 value: PropTypes.string
             })
         }))
-    }).isRequired
+    })
 };
 
 export default ContentStatusesContainer;

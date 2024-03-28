@@ -1,13 +1,12 @@
 import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/client';
-
-import ContentStatuses from './ContentStatuses';
 import {GetContentStatuses} from './ContentStatuses.gql-queries';
+import ContentStatuses from './ContentStatuses';
 import PropTypes from 'prop-types';
 
-const ContentStatusesContainer = ({nodePath}) => {
-    const {path, isDisabled, language, uilang} = useSelector(state => ({
+const ContentStatusesContainer = ({node, nodePath}) => {
+    const {isDisabled, language, uilang, path} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
         isDisabled: state.jcontent.selection.length > 0,
@@ -18,21 +17,72 @@ const ContentStatusesContainer = ({nodePath}) => {
         variables: {
             path: nodePath || path,
             language: language
-        }
+        },
+        skip: node
     });
 
     if (error) {
         console.log(error);
+        return null;
     }
 
-    const node = (data && data.jcr && data.jcr.result) || {};
+    const n = node ? node : data?.jcr?.result;
+
+    if (!n) {
+        return null;
+    }
+
     return (
-        <ContentStatuses node={node} isDisabled={isDisabled} language={language} uilang={uilang}/>
+        <ContentStatuses node={n} isDisabled={isDisabled} language={language} uilang={uilang}/>
     );
 };
 
 ContentStatusesContainer.propTypes = {
-    nodePath: PropTypes.string
+    nodePath: PropTypes.string,
+    node: PropTypes.shape({
+        aggregatedPublicationInfo: PropTypes.shape({
+            publicationStatus: PropTypes.string,
+            existsInLive: PropTypes.bool
+        }),
+        deleted: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        deletedBy: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        lastModified: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        lastModifiedBy: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        lastPublished: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        lastPublishedBy: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        lockOwner: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        mixinTypes: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string
+        })),
+        wipStatus: PropTypes.shape({
+            value: PropTypes.string
+        }),
+        wipLangs: PropTypes.shape({
+            values: PropTypes.arrayOf(PropTypes.string)
+        }),
+        ancestors: PropTypes.arrayOf(PropTypes.shape({
+            deleted: PropTypes.shape({
+                value: PropTypes.string
+            }),
+            deletedBy: PropTypes.shape({
+                value: PropTypes.string
+            })
+        }))
+    })
 };
 
 export default ContentStatusesContainer;

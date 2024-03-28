@@ -18,6 +18,7 @@ import {registry} from '@jahia/ui-extender';
 import {ResizeContext} from '~/JContent/MainLayout/ResizeObserver';
 import {NarrowHeaderActions} from './NarrowHeaderActions';
 import {batchActions} from 'redux-batched-actions';
+import {contentStatusFragment} from '../ContentRoute/ContentStatuses/ContentStatuses.gql-queries';
 
 const NARROW_HEADER_WIDTH = 750;
 
@@ -86,7 +87,11 @@ const ContentHeader = () => {
 
     const viewSelector = registry.get('accordionItem', mode)?.tableConfig?.viewSelector;
 
-    const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {getPrimaryNodeType: true, getDisplayName: true});
+    const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {
+        getPrimaryNodeType: true,
+        getDisplayName: true,
+        applyFragment: contentStatusFragment
+    });
 
     let clear = () => dispatch(cmClearSelection());
 
@@ -106,7 +111,7 @@ const ContentHeader = () => {
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
-            status={<ContentStatuses/>}
+            status={<ContentStatuses node={node}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
             toolbarRight={viewSelector}
         />
@@ -116,7 +121,7 @@ const ContentHeader = () => {
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
-            status={<ContentStatuses/>}
+            status={<ContentStatuses node={node}/>}
             toolbarLeft={
                 <>
                     {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}

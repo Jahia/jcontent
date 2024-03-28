@@ -6,7 +6,7 @@ import ContentStatuses from './ContentStatuses';
 import PropTypes from 'prop-types';
 
 const ContentStatusesContainer = ({node, nodePath}) => {
-    const {isDisabled, language, uilang} = useSelector(state => ({
+    const {isDisabled, language, uilang, path} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
         isDisabled: state.jcontent.selection.length > 0,

@@ -23,16 +23,17 @@ const ContentStatusesContainer = ({node, nodePath}) => {
 
     if (error) {
         console.log(error);
+        return null;
     }
 
-    node = node || (data && data.jcr && data.jcr.result);
+    const n = node ? node : data?.jcr?.result;
 
-    if (!node) {
+    if (!n) {
         return null;
     }
 
     return (
-        <ContentStatuses node={node} isDisabled={isDisabled} language={language} uilang={uilang}/>
+        <ContentStatuses node={n} isDisabled={isDisabled} language={language} uilang={uilang}/>
     );
 };
 

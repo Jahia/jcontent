@@ -2478,10 +2478,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@jahia/data-helper@^1.1.11":
-  version "1.1.11"
-  resolved "https://npm.jahia.com/@jahia%2fdata-helper/-/data-helper-1.1.11.tgz#ee1dc968aad86ff91361a450a735bd01d1c6caec"
-  integrity sha512-kD17sJWPvUYZCymZN2B4MWOWaLzhDIPJaWloM8uK7NU1sTwAS7B0/8iWIZixNChYRiToE6FXpw8lcxQe3MUi3g==
+"@jahia/data-helper@^1.1.12":
+  version "1.1.12"
+  resolved "https://npm.jahia.com/@jahia%2fdata-helper/-/data-helper-1.1.12.tgz#3d7eee58a2617a0a083103e1bfd26c7b50a4d3ae"
+  integrity sha512-4o0QMLSnv07ADjwu2yxRJ7G5OVYLhcXDuTGyvOU6J3vBqi3iA5dwkC6F5z1vZ6pDn0dwj8V4qiA7tGa8ylixXg==
   dependencies:
     "@apollo/client" "^3.7.14"
     "@apollo/react-components" "^4.0.0"

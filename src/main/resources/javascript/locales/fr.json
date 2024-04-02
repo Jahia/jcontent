@@ -597,7 +597,8 @@
             "unknown": "Verrouillé pour une raison inconnue"
           },
           "publish": {
-            "name": "Publier maintenant",
+            "name": "Publier maintenant - {{language}}",
+            "shortName": "Publier maintenant",
             "namePolling": "Publication",
             "success": "La publication a été ajoutée à la file d’attente",
             "error": "Erreur durant la publication",

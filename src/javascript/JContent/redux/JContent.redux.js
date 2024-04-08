@@ -58,8 +58,12 @@ const apps = {
 
             // Special chars in folder naming
             path = path.replace(/[^/]/g, encodeURIComponent);
-            if (template !== '') {
-                params.template = template;
+            if (template) {
+                if (params) {
+                    params.template = template;
+                } else {
+                    params = {template: template};
+                }
             }
 
             let queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);

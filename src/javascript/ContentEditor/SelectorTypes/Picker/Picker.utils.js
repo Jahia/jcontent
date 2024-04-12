@@ -59,8 +59,7 @@ export const set = (target, path, value) => {
 
         if (match) {
             key = key.replace(match[0], '');
-            // eslint-disable-next-line
-            position = ParseInt(match[0].replace(/[\[\]]/g, ''));
+            position = parseInt(match[0].replace(/[\[\]]/g, ''), 10);
         }
 
         if (!current[key]) {
@@ -91,8 +90,7 @@ export const set = (target, path, value) => {
 
     if (match) {
         key = key.replace(match[0], '');
-        // eslint-disable-next-line
-        position = ParseInt(match[0].replace(/[\[\]]/g, ''));
+        position = parseInt(match[0].replace(/[\[\]]/g, ''), 10);
 
         if (!current[key]) {
             current[key] = [];

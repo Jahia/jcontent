@@ -15,6 +15,9 @@ const OpenInActionQuery = gql`
                     existsInLive
                     status: publicationStatus
                 }
+                site {
+                    serverName
+                }
             }
         }
     }

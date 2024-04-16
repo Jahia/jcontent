@@ -66,6 +66,8 @@ jobs:
     name: Sonar Analysis
     needs: build
     runs-on: ubuntu-latest
+    env:
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
     steps:
       - uses: actions/checkout@v3
       - uses: jahia/jahia-modules-action/sonar-analysis@v2

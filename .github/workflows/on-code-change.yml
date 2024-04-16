@@ -47,6 +47,8 @@ jobs:
     name: Build Module
     needs: update-signature
     runs-on: ubuntu-latest
+    env:
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
     container:
       image: jahia/cimg-mvn-cache:ga_cimg_openjdk_11.0.20-node
       credentials:

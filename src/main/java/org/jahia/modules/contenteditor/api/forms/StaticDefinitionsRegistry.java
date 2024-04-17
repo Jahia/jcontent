@@ -99,7 +99,7 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
         return forms.stream()
             .filter(definition -> definition.getConditionNodeTypeName() != null)
             .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
-                    (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
+                (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -160,8 +160,8 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
             forms.add(form);
             formsByBundle.computeIfAbsent(bundle, b -> new ArrayList<>()).add(form);
             logger.info("Successfully loaded static form for name {} from {}", form.getNodeTypeName(), editorFormURL);
-        } catch (IOException e) {
-            logger.warn("Error loading editor form from " + editorFormURL + " : " + e.getMessage());
+        } catch (IOException | StaticDefinitionsRegistryException e) {
+            logger.warn("Error loading editor form from {} : {}", editorFormURL, e.getMessage());
         }
     }
 
@@ -196,8 +196,8 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
             fieldSets.add(fieldSet);
             fieldSetsByBundle.computeIfAbsent(bundle, b -> new ArrayList<>()).add(fieldSet);
             logger.info("Successfully loaded static fieldSets for name {} from {}", fieldSet.getName(), editorFormURL);
-        } catch (IOException e) {
-            logger.warn("Error loading editor fieldset from " + editorFormURL + " : " + e.getMessage());
+        } catch (IOException | StaticDefinitionsRegistryException e) {
+            logger.warn("Error loading editor fieldset from {} : {}", editorFormURL, e.getMessage());
         }
     }
 
@@ -209,7 +209,7 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
         this.fieldSets.removeAll(fieldSets);
     }
 
-    private static void initFieldSet(FieldSet fieldSet, Bundle originBundle) {
+    private static void initFieldSet(FieldSet fieldSet, Bundle originBundle) throws StaticDefinitionsRegistryException {
         if (fieldSet.getPriority() == null) {
             fieldSet.setPriority(1.);
         }
@@ -224,7 +224,7 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
                     field.setExtendedPropertyDefinition(declaringNodeType.getPropertyDefinitionsAsMap().get(field.getName()));
                 }
             } catch (NoSuchNodeTypeException e) {
-                throw new RuntimeException(e);
+                throw new StaticDefinitionsRegistryException("Error while loading field " + field.getName() + " from fieldset " + fieldSet.getName() + ": " + e.getMessage(), e);
             }
 
             field.setLabelKey(ContentEditorUtils.getLabelKey(field.getLabelKey(), originBundle));
@@ -239,4 +239,9 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
         }
     }
 
+    private static class StaticDefinitionsRegistryException extends Throwable {
+        public StaticDefinitionsRegistryException(String message, Exception exception) {
+            super(message, exception);
+        }
+    }
 }

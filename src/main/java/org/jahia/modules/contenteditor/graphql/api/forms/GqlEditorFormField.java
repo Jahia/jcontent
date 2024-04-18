@@ -61,13 +61,25 @@ public class GqlEditorFormField {
                 if (value instanceof Map) {
                     serializeMap(flattenedOptions, baseKey + key + ".", (Map<String, Object>) value);
                 } else if (value instanceof List) {
-                    flattenedOptions.add(new GqlEditorFormProperty(baseKey + key, (List<String>) value));
+                    handleList(flattenedOptions, baseKey + key, (List<Object>) value);
                 } else {
                     flattenedOptions.add(new GqlEditorFormProperty(baseKey + key, value.toString()));
                 }
             }
         }
         return flattenedOptions;
+    }
+
+    private void handleList(List<GqlEditorFormProperty> flattenedOptions, String baseKey, List<Object> value) {
+        int i = 0;
+        for (Object o : value) {
+            String key = String.format("%s[%d]", baseKey, i++);
+            if (o instanceof String) {
+                flattenedOptions.add(new GqlEditorFormProperty(key, String.valueOf(o)));
+            } else if (o instanceof Map) {
+                serializeMap(flattenedOptions, key + ".", (Map<String, Object>) o);
+            }
+        }
     }
 
     @GraphQLField

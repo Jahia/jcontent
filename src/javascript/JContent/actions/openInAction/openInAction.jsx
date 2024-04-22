@@ -59,7 +59,7 @@ const OpenInActionComponent = ({
                     baseUrl = baseUrl.replace(/\/default\/[a-zA-Z_]{2,5}/, `/default/${language}`);
                 }
 
-                window.open(`${location.protocol}//${node.site.serverName === 'localhost' ? locaation.hostname : node.site.serverName}:${location.port}${baseUrl}${urlPath}.html`, '_blank');
+                window.open(`${location.protocol}//${node.site.serverName === 'localhost' ? location.hostname : node.site.serverName}:${location.port}${baseUrl}${urlPath}.html`, '_blank');
             }}
         />
     );

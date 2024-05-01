@@ -79,7 +79,7 @@ export const QueryHandlersFragments = {
                         value
                     }
                 }
-                notSelectableForPreview: isNodeType(type: {types:["jnt:page", "jnt:folder", "jnt:contentFolder"]})
+                notSelectableForPreview: isNodeType(type: {types: ["jnt:page", "jnt:virtualsite", "jnt:navMenuText"]})
                 site {
                     ...NodeCacheRequiredFields
                 }

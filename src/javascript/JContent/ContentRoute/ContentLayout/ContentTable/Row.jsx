@@ -50,13 +50,18 @@ export const Row = ({
         contextualMenu.current(event);
     };
 
+    function isSelectableForPreview() {
+        // Hide on page, virtualsite and navMenuText no matter what. Allow to render preview if the node extends contentFolder or folder
+        return !node.notSelectableForPreview && !['jnt:contentFolder', 'jnt:folder'].includes(node.primaryNodeType.name);
+    }
+
     return (
         <TableRow {...rowProps}
                   data-cm-role="table-content-list-row"
                   className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isSelected}
                   onClick={() => {
-                      if (isPreviewOpened && !node.notSelectableForPreview) {
+                      if (isPreviewOpened && isSelectableForPreview()) {
                           setSelectedItemIndex(index);
                           onPreviewSelect(node.path);
                       }

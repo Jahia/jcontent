@@ -11,7 +11,7 @@ export const PreviewActionComponent = ({path, render: Render, loading: Loading, 
     const res = useNodeChecks(
         {path},
         {
-            hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder', 'jnt:virtualsite', 'jnt:navMenuText']
+            hideOnNodeTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']
         }
     );
 
@@ -19,11 +19,16 @@ export const PreviewActionComponent = ({path, render: Render, loading: Loading, 
         return (Loading && <Loading {...others}/>) || false;
     }
 
+    function isVisible() {
+        // Hide on page, virtualsite and navMenuText no matter what. Allow to render preview if the node extends contentFolder or folder
+        return res.checksResult || !['jnt:contentFolder', 'jnt:folder'].includes(res.node.primaryNodeType.name);
+    }
+
     return (
         <Render
             {...others}
-            isVisible={res.checksResult}
-            enabled={res.checksResult}
+            isVisible={isVisible()}
+            enabled={isVisible()}
             onClick={() => {
                 dispatch(cmSetPreviewSelection(path));
                 dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));

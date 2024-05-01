@@ -1,6 +1,6 @@
 FROM cypress/browsers:latest
 
-RUN apt-get update && apt-get install -y jq
+RUN apt-get update && apt-get install -y jq curl
 
 RUN adduser --disabled-password jahians
 

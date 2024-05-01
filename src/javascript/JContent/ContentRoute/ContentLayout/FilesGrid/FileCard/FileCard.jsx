@@ -60,6 +60,11 @@ export const FileCard = ({
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
 
+    function isSelectableForPreview() {
+        // Hide on page, virtualsite and navMenuText no matter what. Allow to render preview if the node extends contentFolder or folder
+        return node.notSelectableForPreview ? false : !['jnt:contentFolder', 'jnt:folder'].includes(node.primaryNodeType.name);
+    }
+
     return (
         <div
             ref={ref}
@@ -81,7 +86,7 @@ export const FileCard = ({
                 }
             }}
             onClick={() => {
-                if (!node.notSelectableForPreview) {
+                if (isSelectableForPreview()) {
                     onPreviewSelect(node);
                 }
             }}

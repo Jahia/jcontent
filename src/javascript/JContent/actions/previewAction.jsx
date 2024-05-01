@@ -21,7 +21,7 @@ export const PreviewActionComponent = ({path, render: Render, loading: Loading, 
 
     function isVisible() {
         // Hide on page, virtualsite and navMenuText no matter what. Allow to render preview if the node extends contentFolder or folder
-        return res.checksResult || !['jnt:contentFolder', 'jnt:folder'].includes(res.node.primaryNodeType.name);
+        return res.checksResult ? !['jnt:contentFolder', 'jnt:folder'].includes(res.node.primaryNodeType?.name) : false;
     }
 
     return (

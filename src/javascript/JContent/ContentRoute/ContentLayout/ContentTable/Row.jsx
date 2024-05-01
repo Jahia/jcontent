@@ -52,7 +52,7 @@ export const Row = ({
 
     function isSelectableForPreview() {
         // Hide on page, virtualsite and navMenuText no matter what. Allow to render preview if the node extends contentFolder or folder
-        return !node.notSelectableForPreview && !['jnt:contentFolder', 'jnt:folder'].includes(node.primaryNodeType.name);
+        return node.notSelectableForPreview ? false : !['jnt:contentFolder', 'jnt:folder'].includes(node.primaryNodeType.name);
     }
 
     return (

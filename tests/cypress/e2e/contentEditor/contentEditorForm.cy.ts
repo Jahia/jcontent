@@ -183,4 +183,14 @@ describe('Content editor form', () => {
         field = contentEditor.getField(SmallTextField, 'cent:defaultValueTest_defaultDate', false);
         field.get().find('label').should('contain', 'defaultDate');
     });
+
+    it('Should render only one title field', () => {
+        const contentTypeName = 'epSifeRestaurant';
+
+        cy.log('verify there is only one title field');
+        const contentEditor = jcontent.createContent(contentTypeName);
+        // Get all the fields and ensure there is only one title field
+        cy.get('[data-sel-content-editor-field]').should('have.length.greaterThan', 8).filter('[data-sel-content-editor-field$="_jcr:title"]').should('have.length', 1);
+        contentEditor.cancel();
+    });
 });

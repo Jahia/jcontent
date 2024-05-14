@@ -103,3 +103,24 @@
  - text (string, richtext[ckeditor.customConfig='$context/modules/jcontent-test-module/javascript/config.js'])
 
 [cemix:withCustomBar] mixin
+
+// Adding definitions and JSON overrides for the new content types based on https://jira.jahia.org/browse/QA-15148
+[cemix:epSifeComponent] > jmix:droppableContent mixin
+
+[cent:epSifeRestaurant] > cent:epSifeIllustratedLink, jmix:editorialContent, cemix:epSifeComponent, cemix:epSifeLocationProps
+
+[cent:epSifeIllustratedLink] > jnt:content, cemix:epSifeIllustrated, cemix:epSifeLinkBase
+
+[cemix:epSifeIllustrated] mixin
+ - image (weakreference, picker[type='image']) internationalized
+ - description (string, textarea) internationalized
+
+[cemix:epSifeLinkBase] > jmix:nodeReference, jmix:link mixin
+ - jcr:title (string) internationalized scoreboost=3.0
+ - linkType (string, choicelist[customLinkTypeInitializer]) indexed=no noqueryorder nofulltext
+ - linkStyle (string, choicelist) = 'No style' indexed=no noqueryorder nofulltext < 'No style', 'Button primary', 'Button secondary'
+
+[cemix:epSifeLocationProps] mixin
+ extends = jnt:page, jnt:nodeLink, jnt:externalLink
+ itemtype = content
+ - locationValues (string, choicelist[locationValuesInitializer]) = 'default' noqueryorder nofulltext

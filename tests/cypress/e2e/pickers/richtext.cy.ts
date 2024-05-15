@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object/jcontent';
+import {JContent} from '../../page-object';
 
 describe('Picker tests - richtext', () => {
     const siteKey = 'digitall';
@@ -6,10 +6,12 @@ describe('Picker tests - richtext', () => {
 
     beforeEach(() => {
         cy.login();
-        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        cy.apollo({mutationFile: 'contentEditor/pickers/createContent.graphql'});
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/ce-picker-contents');
     });
 
     afterEach(() => {
+        cy.apollo({mutationFile: 'contentEditor/pickers/deleteContent.graphql'});
         cy.logout();
     });
 
@@ -43,6 +45,48 @@ describe('Picker tests - richtext', () => {
         linkModal.ok();
 
         richText.getData().should('have.string', 'editing-digitall-site');
+    });
+
+    it.only('Image picker in richtext handles special characters properly', () => {
+        // Create a content with a special character in the name
+        cy.fixture('assets/üöäè e`!.png', 'binary')
+            .then(image => {
+                // Convert the file base64 string to a blob
+                const blob = Cypress.Blob.binaryStringToBlob(image, 'image/png');
+                const file = new File([blob], 'üöäè e`!.png', {type: blob.type});
+                cy.apollo({
+                    mutationFile: 'contentEditor/pickers/uploadFile.graphql',
+                    variables: {
+                        path: `/sites/${siteKey}/files/ce-picker-files`,
+                        name: 'üöäè e`!.png',
+                        mimeType: 'image/png',
+                        file: file
+                    }
+                });
+                // eslint-disable-next-line cypress/no-unnecessary-waiting
+                cy.wait(1000);
+            });
+        const contentEditor = jcontent.createContent('Rich text');
+        const richText = contentEditor.getRichTextField('jnt:bigText_text');
+
+        richText.type('Hello');
+
+        const imageModal = richText.openImageModal();
+        const picker = imageModal.openBrowseServerImages();
+        picker.getGrid().get().contains('ce-picker-files').dblclick();
+        picker.getGrid().get().contains('üöäè e`!.png').click();
+        picker.select();
+        imageModal.ok();
+
+        richText.getData().should('have.string', 'üöäè e`!.png');
+        contentEditor.create();
+
+        const rowByLabel = jcontent.getTable().getRowByLabel('Hello');
+        rowByLabel.contextMenu().select('Edit');
+        const richText2 = contentEditor.getRichTextField('jnt:bigText_text');
+        richText2.getData().should('have.string', 'üöäè e`!.png');
+        richText2.getElement('img').dblclick({force: true});
+        richText2.getOpenedImageModal().getURLFieldValue().should('have.string', `/files/{workspace}/sites/digitall/files/ce-picker-files/${encodeURIComponent('üöäè e`!.png').toLowerCase()}`);
     });
 });
 

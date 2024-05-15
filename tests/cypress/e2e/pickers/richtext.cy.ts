@@ -47,7 +47,7 @@ describe('Picker tests - richtext', () => {
         richText.getData().should('have.string', 'editing-digitall-site');
     });
 
-    it.only('Image picker in richtext handles special characters properly', () => {
+    it('Image picker in richtext handles special characters properly', () => {
         // Create a content with a special character in the name
         cy.fixture('assets/üöäè e`!.png', 'binary')
             .then(image => {

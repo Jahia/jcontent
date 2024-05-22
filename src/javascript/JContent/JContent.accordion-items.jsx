@@ -57,7 +57,9 @@ export const jContentAccordionItems = registry => {
             return path;
         },
         getPathForItem(node) {
-            return node.ancestors[node.ancestors.length - 1].path;
+            const pages = node.ancestors
+                .filter(n => n.primaryNodeType.name === 'jnt:page');
+            return pages[pages.length - 1]?.path || node.site.path;
         },
         rootPath: '/sites/{site}',
         tableConfig: {

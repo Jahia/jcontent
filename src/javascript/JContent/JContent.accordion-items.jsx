@@ -57,9 +57,7 @@ export const jContentAccordionItems = registry => {
             return path;
         },
         getPathForItem(node) {
-            const pages = node.ancestors
-                .filter(n => n.primaryNodeType.name === 'jnt:page');
-            return pages[pages.length - 1]?.path || node.site.path;
+            return node.ancestors[node.ancestors.length - 1].path;
         },
         rootPath: '/sites/{site}',
         tableConfig: {
@@ -110,7 +108,7 @@ export const jContentAccordionItems = registry => {
         getPathForItem: node => {
             const pages = node.ancestors
                 .filter(n => n.primaryNodeType.name === 'jnt:page');
-            return pages[pages.length - 1].path;
+            return pages[pages.length - 1]?.path || node.site.path;
         },
         canDisplayItem: ({selectionNode, folderNode}) =>
             selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) &&

@@ -38,7 +38,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
 
-    const onPreviewSelect = useCallback(previewSelection => dispatch(cmSetPreviewSelection(previewSelection)), [dispatch]);
+    const onPreviewSelect = useCallback(_previewSelection => dispatch(cmSetPreviewSelection(_previewSelection)), [dispatch]);
     const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);
     const setPageSize = useCallback(pageSize => dispatch(cmSetPageSize(pageSize)), [dispatch]);
     const mainPanelRef = useRef(null);
@@ -104,8 +104,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         }));
     }, [mode, dispatch, siteKey]);
 
-    let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : mainColumnData;
-    let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+    const columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : mainColumnData;
+    const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 

@@ -6,7 +6,7 @@ import {Field} from './Field';
 
 export const FieldContainer = React.memo(({field, inputContext}) => {
     const selectorType = resolveSelectorType(field);
-    let context = React.useMemo(() => ({
+    const context = React.useMemo(() => ({
         displayLabels: true,
         displayBadges: true,
         displayActions: true,

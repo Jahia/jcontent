@@ -25,7 +25,22 @@ export const showChipField = (is18nField, wipInfo, currentLanguage) => {
 };
 
 // eslint-disable-next-line max-params
-const renderField = (inputContext, field, isMultipleField, idInput, hasMandatoryError, t, wipInfo, editorContext, selectorType, onChange, onBlur, shouldDisplayErrors, errorName, errorArgs) => {
+const renderField = (
+    inputContext,
+    field,
+    isMultipleField,
+    idInput,
+    hasMandatoryError,
+    t,
+    wipInfo,
+    editorContext,
+    selectorType,
+    onChange,
+    onBlur,
+    shouldDisplayErrors,
+    errorName,
+    errorArgs
+) => {
     return (
         <div className="flexFluid">
             {inputContext.displayLabels &&
@@ -160,12 +175,12 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
         onChangeContext.current = {...editorContext, ...sectionsContext, formik, client};
     }, [editorContext, sectionsContext, formik, client]);
 
-    const registeredOnChange = useCallback(currentValue => {
-        if (registeredOnChanges && registeredOnChanges.length > 0 && onChangeValue.current !== currentValue) {
+    const registeredOnChange = useCallback(_currentValue => {
+        if (registeredOnChanges && registeredOnChanges.length > 0 && onChangeValue.current !== _currentValue) {
             registeredOnChanges.forEach(currentOnChange => {
                 if (currentOnChange.onChange) {
                     try {
-                        currentOnChange.onChange(onChangeValue.current, currentValue, field, onChangeContext.current, selectorType, contentEditorHelper);
+                        currentOnChange.onChange(onChangeValue.current, _currentValue, field, onChangeContext.current, selectorType, contentEditorHelper);
                     } catch (error) {
                         console.error(error);
                     }
@@ -173,15 +188,15 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
             });
         }
 
-        onChangeValue.current = currentValue;
+        onChangeValue.current = _currentValue;
     }, [field, registeredOnChanges, selectorType]);
 
-    const onChange = useCallback(currentValue => {
+    const onChange = useCallback(_currentValue => {
         // Update formik
-        setFieldValue(field.name, currentValue);
+        setFieldValue(field.name, _currentValue);
 
         // Trigger on changes
-        registeredOnChange(currentValue);
+        registeredOnChange(_currentValue);
     }, [field.name, registeredOnChange, setFieldValue]);
 
     const onBlur = useCallback(() => {

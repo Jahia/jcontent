@@ -44,7 +44,7 @@ const DatePickerCmp = ({
     const selectedHour = selectedDateTime ? dayjs(selectedDateTime).format('HH:mm') : '00:00';
 
     return (
-        <div className={classes.container + ' ' + (isDateTime ? classes.containerDateTime : '')}>
+        <div className={`${classes.container} ${isDateTime ? classes.containerDateTime : ''}`}>
             <DayPicker
                 locale={lang}
                 disabledDays={disabledDays}

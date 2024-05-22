@@ -74,19 +74,19 @@ export const ContentPath = ({path}) => {
     const dirty = isDirty(formik, i18nContext);
 
     const doRedirect = itemPath => {
-        let mode = 'pages';
+        let _mode = 'pages';
         let app = 'jcontent';
         if (itemPath.startsWith('/sites/systemsite/categories/') || itemPath === '/sites/systemsite/categories') {
-            mode = 'category';
+            _mode = 'category';
             app = 'category-manager';
         } else if (/^\/sites\/[^/]+\/files(\/.*)?$/.test(itemPath)) {
-            mode = 'media';
+            _mode = 'media';
         } else if (/^\/sites\/[^/]+\/contents(\/.*)?$/.test(itemPath)) {
-            mode = 'content-folders';
+            _mode = 'content-folders';
         }
 
         const onExited = () => {
-            dispatch(cmGoto({app, mode, path: itemPath, params: {sub: false}}));
+            dispatch(cmGoto({app, mode: _mode, path: itemPath, params: {sub: false}}));
         };
 
         updateEditorConfig({closed: true, onExited});
@@ -103,7 +103,7 @@ export const ContentPath = ({path}) => {
     const node = data?.jcr?.node;
     const items = useMemo(() => getItems(mode, node), [mode, node]);
 
-    let onCloseDialog = useCallback(() => setDialogState({open: false}), [setDialogState]);
+    const onCloseDialog = useCallback(() => setDialogState({open: false}), [setDialogState]);
     if (error) {
         return <>{error.message}</>;
     }

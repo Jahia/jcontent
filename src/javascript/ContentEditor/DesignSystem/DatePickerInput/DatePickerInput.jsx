@@ -26,7 +26,8 @@ const formatDateTime = (datetime, lang, variant, displayDateFormat) => {
 };
 
 export const getMaskOptions = (displayDateMask, isDateTime) => {
-    const mask = displayDateMask ? displayDateMask : (isDateTime ? '__/__/____ __:__' : '__/__/____');
+    const defaultDateMask = isDateTime ? '__/__/____ __:__' : '__/__/____';
+    const mask = displayDateMask ? displayDateMask : defaultDateMask;
     return {
         mask: mask.replace(/_/g, '#'),
         empty: mask
@@ -141,10 +142,10 @@ export const DatePickerInput = ({
                     variant={variant}
                     lang={lang}
                     selectedDateTime={datetime}
-                    onSelectDateTime={datetime => {
-                        setDatetime(datetime);
+                    onSelectDateTime={_datetime => {
+                        setDatetime(_datetime);
                         setDatetimeString(
-                            formatDateTime(datetime, lang, variant, displayDateFormat)
+                            formatDateTime(_datetime, lang, variant, displayDateFormat)
                         );
                     }}
                     {...dayPickerProps}

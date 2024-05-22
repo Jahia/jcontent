@@ -15,7 +15,7 @@ function handleSkipped(char, inSkip) {
 }
 
 export const prefixCssSelectors = function (rules, className) {
-    let classLen = className.length * 2;
+    const classLen = className.length * 2;
     let char;
     let nextChar;
     let isAt;
@@ -26,14 +26,14 @@ export const prefixCssSelectors = function (rules, className) {
     rules = rules.replace(/\/\*(?:(?!\*\/)[\s\S])*\*\/|[\r\n\t]+/g, '');
 
     // Convert rem to px on 16px base
-    rules = rules.replace(/([\d.]+)rem/g, (match, p1) => ((16 * p1) + 'px'));
+    rules = rules.replace(/([\d.]+)rem/g, (match, p1) => (`${16 * p1}px`));
 
     // Makes sure nextChar will not target a space
     rules = rules.replace(/}(\s*)@/g, '}@');
     rules = rules.replace(/}(\s*)}/g, '}}');
 
     function handleRule(i) {
-        let before = rules.slice(0, i + 1);
+        const before = rules.slice(0, i + 1);
         let after = rules.slice(i + 1).trim();
         if (after.startsWith('.noprefix')) {
             after = after.substr(9);

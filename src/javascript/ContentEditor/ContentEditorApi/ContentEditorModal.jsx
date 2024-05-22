@@ -128,7 +128,9 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
                 updateEditorConfig({closed: true});
             } else {
                 client.cache.flushNodeEntryByPath(originalNode.path);
-                Promise.all(window.contentModificationEventHandlers.map(handler => handler(updatedNode.uuid, originalNode.path, updatedNode.path.split('/').pop(), 'update'))).then(() => {
+                Promise.all(window.contentModificationEventHandlers.map(handler =>
+                    handler(updatedNode.uuid, originalNode.path, updatedNode.path.split('/').pop(), 'update'))
+                ).then(() => {
                     // Otherwise refresh and close
                     updateEditorConfig({closed: true});
                 });

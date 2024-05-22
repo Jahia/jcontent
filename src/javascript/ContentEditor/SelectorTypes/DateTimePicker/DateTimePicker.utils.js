@@ -17,6 +17,8 @@ const _buildDisableDay = ({type, boundary, disableBoundary, datetime, offset}) =
 
         return disabledDays;
     }
+
+    return undefined;
 };
 
 export function fillDisabledDaysFromJCRConstraints(field, datetime) {
@@ -24,17 +26,19 @@ export function fillDisabledDaysFromJCRConstraints(field, datetime) {
         const disableDays = [];
         const {lowerBoundary, disableLowerBoundary, upperBoundary, disableUpperBoundary} = extractRangeConstraints(field.valueConstraints[0].value.string);
         // Add one day / minute to the disabled dates if the lower boundary is not include, ex : "(2019-06-01,.."
-        let lowerDisabledDays = _buildDisableDay({type: 'before', boundary: lowerBoundary, disableBoundary: disableLowerBoundary, datetime, offset: 1});
+        const lowerDisabledDays = _buildDisableDay({type: 'before', boundary: lowerBoundary, disableBoundary: disableLowerBoundary, datetime, offset: 1});
         if (lowerDisabledDays) {
             disableDays.push(lowerDisabledDays);
         }
 
         // Remove one day / minute to the disabled dates if the upper boundary is not include, ex : "..,2019-06-01)"
-        let upperDisabledDays = _buildDisableDay({type: 'after', boundary: upperBoundary, disableBoundary: disableUpperBoundary, datetime, offset: -1});
+        const upperDisabledDays = _buildDisableDay({type: 'after', boundary: upperBoundary, disableBoundary: disableUpperBoundary, datetime, offset: -1});
         if (upperDisabledDays) {
             disableDays.push(upperDisabledDays);
         }
 
         return disableDays;
     }
+
+    return undefined;
 }

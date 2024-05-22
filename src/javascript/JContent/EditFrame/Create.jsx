@@ -11,7 +11,11 @@ import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 
-const ButtonRenderer = getButtonRenderer({showTooltip: true, defaultButtonProps: {color: 'default'}, defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}});
+const ButtonRenderer = getButtonRenderer({
+    showTooltip: true,
+    defaultButtonProps: {color: 'default'},
+    defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}}
+);
 
 function getBoundingBox(element) {
     const rect = getCoords(element);
@@ -31,7 +35,7 @@ const reposition = function (element, currentOffset, setCurrentOffset) {
 
 export const Create = React.memo(({element, node, addIntervalCallback, onMouseOver, onMouseOut, onSaved}) => {
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
-    let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+    const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
 
     useEffect(() => {
         element.style.height = '28px';

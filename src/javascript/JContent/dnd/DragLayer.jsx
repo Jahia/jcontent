@@ -39,6 +39,8 @@ export const DragLayer = () => {
                 window.document.documentElement.removeEventListener('dragover', listener);
             };
         }
+
+        return undefined;
     }, [setAdditionalOffset, additionalOffset]);
 
     const {itemType, isDragging, item, clientOffset} =

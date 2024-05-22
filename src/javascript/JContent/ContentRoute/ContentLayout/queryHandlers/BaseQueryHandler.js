@@ -16,18 +16,18 @@ export const BaseQueryHandler = {
 
         // Recursively finds and puts children of data[i] in data[i].subRows
         function setSubrows(data, unstructuredData) {
-            for (let i = 0; i < data.length; i++) {
-                data[i].subRows = [];
+            for (const element of data) {
+                element.subRows = [];
                 const rest = [];
-                for (let j = 0; j < unstructuredData.length; j++) {
-                    if (data[i].path === unstructuredData[j].parent.path) {
-                        data[i].subRows.push(unstructuredData[j]);
+                for (const item of unstructuredData) {
+                    if (element.path === item.parent.path) {
+                        element.subRows.push(item);
                     } else {
-                        rest.push(unstructuredData[j]);
+                        rest.push(item);
                     }
                 }
 
-                setSubrows(data[i].subRows, rest);
+                setSubrows(element.subRows, rest);
             }
         }
     },

@@ -49,7 +49,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     }), shallowEqual);
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
-    const onPreviewSelect = previewSelection => dispatch(batchActions([cmSetPreviewSelection(previewSelection.path), cmSetPreviewState(CM_DRAWER_STATES.SHOW)]));
+    const onPreviewSelect = _previewSelection => dispatch(batchActions([cmSetPreviewSelection(_previewSelection.path), cmSetPreviewState(CM_DRAWER_STATES.SHOW)]));
     const onSelect = (node, event) => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
         dispatch(isMultipleSelectionMode ? cmSwitchSelection(node.path) : cmSetSelection(node.path));
@@ -58,7 +58,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const onClick = (node, index, event) => {
         if (isPreviewOpened && !node.notSelectableForPreview) {
             setSelectedItemIndex(index);
-            onPreviewSelect(node, event);
+            onPreviewSelect(node);
         } else if (!isPreviewOpened) {
             onSelect(node, event);
         }
@@ -70,9 +70,9 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     };
 
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
-    const setPath = (siteKey, path, mode) => {
-        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
-        dispatch(cmGoto({path: path}));
+    const setPath = (_siteKey, _path, _mode) => {
+        dispatch(cmOpenPaths(extractPaths(_siteKey, _path, _mode)));
+        dispatch(cmGoto({path: _path}));
     };
 
     const mainPanelRef = useRef(null);
@@ -89,6 +89,8 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                 document.querySelector(`[data-sel-role-card="${row.name}"]`).scrollIntoView(true);
                 return onPreviewSelect(row);
             }
+
+            return undefined;
         }
     });
 

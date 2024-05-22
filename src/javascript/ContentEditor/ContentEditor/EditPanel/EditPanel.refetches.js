@@ -1,7 +1,7 @@
 const editPanelRefetches = {};
 
-let triggerRefetch = key => {
-    let refetch = editPanelRefetches[key];
+const triggerRefetch = key => {
+    const refetch = editPanelRefetches[key];
     if (!refetch) {
         return;
     }
@@ -13,20 +13,20 @@ let triggerRefetch = key => {
     }
 };
 
-let setPreviewRefetcher = refetcherData => {
+const setPreviewRefetcher = refetcherData => {
     // In content editor only the path and the language can change for the preview query, so just this parameters to build a key
     // ideally the key of a refetcher should be all it's queryParams.
     editPanelRefetches[buildPreviewRefetcherKey(refetcherData.queryParams.path, refetcherData.queryParams.language)] = refetcherData;
 };
 
-let invalidateRefetch = queryParams => delete editPanelRefetches[buildPreviewRefetcherKey(queryParams.path, queryParams.language)];
+const invalidateRefetch = queryParams => delete editPanelRefetches[buildPreviewRefetcherKey(queryParams.path, queryParams.language)];
 
-let refetchPreview = (path, language) => {
+const refetchPreview = (path, language) => {
     triggerRefetch(buildPreviewRefetcherKey(path, language));
 };
 
-let buildPreviewRefetcherKey = (path, language) => {
-    return path + '_' + language;
+const buildPreviewRefetcherKey = (path, language) => {
+    return `${path}_${language}`;
 };
 
 export {

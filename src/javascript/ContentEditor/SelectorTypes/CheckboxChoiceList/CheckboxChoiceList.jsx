@@ -14,7 +14,7 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
 
     const items = field.valueConstraints;
     if (!items) {
-        return;
+        return null;
     }
 
     const isInverted = field.selectorOptions?.some(option => option.name === 'isInvertedSelection');

@@ -8,7 +8,7 @@ export const ApolloCacheFlushOnGWTSave = () => {
     useEffect(() => {
         // Register flush on GWT save
         window.contentModificationEventHandlers = window.contentModificationEventHandlers || [];
-        let handler = nodeUuid => {
+        const handler = nodeUuid => {
             client.cache.flushNodeEntryById(nodeUuid);
             refetchFormData();
         };

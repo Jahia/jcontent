@@ -20,7 +20,13 @@ export const CellStatus = ({cell, column, row}) => {
                        data-cm-role={`table-content-list-cell-${column.id}`}
         >
             {isWorkInProgress(node, lang) &&
-            <Tooltip title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}><Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>}/></Tooltip>}
+                <Tooltip
+                    title={node.wipLangs ?
+                        t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) :
+                        t('jcontent:label.contentManager.workInProgressAll')}
+                >
+                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>}/>
+                </Tooltip>}
             {node.lockOwner !== null &&
             <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color="danger"/></Tooltip>}
             {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}

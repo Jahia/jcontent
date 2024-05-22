@@ -2,7 +2,7 @@ import React from 'react';
 import {ImgWrapper} from '@jahia/moonstone';
 
 export const extractAndFormatContentTypeData = data => {
-    let contentTypeSelectData = data.jcr.nodeTypes.nodes.map(item => {
+    const contentTypeSelectData = data.jcr.nodeTypes.nodes.map(item => {
         return {
             label: item.displayName,
             value: item.name,

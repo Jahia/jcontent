@@ -34,7 +34,10 @@ Sql2Input.propTypes = {
     value: PropTypes.string.isRequired
 };
 
-export const AdvancedSearch = ({searchForm: {searchPath, sql2SearchFrom, sql2SearchWhere}, searchFormSetters: {setSearchPath, setSql2SearchFrom, setSql2SearchWhere}, performSearch}) => {
+export const AdvancedSearch = ({
+    searchForm: {searchPath, sql2SearchFrom, sql2SearchWhere},
+    searchFormSetters: {setSearchPath, setSql2SearchFrom, setSql2SearchWhere}, performSearch
+}) => {
     const onKeyPress = e => {
         const code = e.keyCode || e.which;
 

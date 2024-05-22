@@ -15,7 +15,7 @@ export const ClearClipboardActionComponent = withNotifications()(({render: Rende
     const copyPaste = useSelector(state => state.jcontent.copyPaste);
     const {nodes} = copyPaste;
 
-    let isVisible = nodes.length > 0;
+    const isVisible = nodes.length > 0;
 
     return (
         <Render

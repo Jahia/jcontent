@@ -49,8 +49,12 @@ export const CopyCutActionComponent = withNotifications()(({
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let isVisible = res.checksResult && (res.node ? !hasMixin(res.node, 'jmix:markedForDeletionRoot') : res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true));
-    let isEnabled = !others.hideIfHasNoSubPages || (res.node?.['subNodesCount_jnt:page'] + res.node?.['subNodesCount_jmix:navMenuItem']) !== 0;
+    const isVisible = res.checksResult &&
+        (res.node ?
+            !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
+            res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)
+        );
+    const isEnabled = !others.hideIfHasNoSubPages || (res.node?.['subNodesCount_jnt:page'] + res.node?.['subNodesCount_jmix:navMenuItem']) !== 0;
 
     return (
         <Render
@@ -58,7 +62,7 @@ export const CopyCutActionComponent = withNotifications()(({
             isVisible={isVisible}
             enabled={isVisible && isEnabled}
             onClick={() => {
-                let nodes = res.node ? [res.node] : res.nodes;
+                const nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);
                 const message = nodes.length === 1 ?
                     t('jcontent:label.contentManager.copyPaste.stored.one', {name: getName(nodes[0])}) :

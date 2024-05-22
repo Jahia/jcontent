@@ -14,7 +14,7 @@ export const FieldSet = ({fieldset}) => {
         return false;
     }
 
-    let filteredFields = fieldset.fields.filter(f => f.visible);
+    const filteredFields = fieldset.fields.filter(f => f.visible);
     return (
         <article className={activatedFieldSet && filteredFields.length > 0 ? styles.fieldSetOpen : styles.fieldSet}>
             {!fieldset.hideHeader && (

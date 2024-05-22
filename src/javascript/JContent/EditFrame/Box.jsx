@@ -138,8 +138,8 @@ export const Box = React.memo(({
 
     useEffect(() => {
         if (isCanDrop) {
-            const pos = (insertPosition === 'insertBefore') ? element.dataset.prevPos :
-                ((insertPosition === 'insertAfter') ? element.dataset.nextPos : null);
+            const nextPos = (insertPosition === 'insertAfter') ? element.dataset.nextPos : null;
+            const pos = (insertPosition === 'insertBefore') ? element.dataset.prevPos : nextPos;
 
             calculateDropTarget(destParent?.path, node.path, pos, true);
         } else if (isOver) {
@@ -151,7 +151,14 @@ export const Box = React.memo(({
         };
     }, [isCanDrop, insertPosition, destParent, node, element, calculateDropTarget, isOver]);
 
-    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed)), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
+    useEffect(() => addIntervalCallback(() =>
+        reposition(
+            element,
+            currentOffset,
+            setCurrentOffset,
+            isHeaderDisplayed
+        )
+    ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
     const {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed} = processCustomBoxConfigIfExists(node);
 
@@ -191,7 +198,15 @@ export const Box = React.memo(({
         >
             <div ref={dragWithChecks} className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}>
                 <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
-                {node && <Bar isActionsHidden={isActionsHidden} node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef} element={element}/>}
+                {node &&
+                    <Bar
+                        isActionsHidden={isActionsHidden}
+                        node={node}
+                        language={language}
+                        displayLanguage={displayLanguage}
+                        width={currentOffset.width}
+                        currentFrameRef={currentFrameRef}
+                        element={element}/>}
             </div>
         </div>
     );

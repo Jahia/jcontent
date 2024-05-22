@@ -17,7 +17,7 @@ export const useContentEditorContext = () => useContext(ContentEditorContext);
 
 const renderError = (siteInfoResult, t, notificationContext) => {
     console.error('Error when fetching data: ' + siteInfoResult.error);
-    let message = t('label.contentEditor.error.queryingContent', {details: (siteInfoResult.error.message ? siteInfoResult.error.message : '')});
+    const message = t('label.contentEditor.error.queryingContent', {details: (siteInfoResult.error.message ? siteInfoResult.error.message : '')});
     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
     return null;
 };
@@ -87,7 +87,12 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         uiLanguage: uiLanguage
     });
 
-    const ranAllHooks = useOnBeforeContextHooks(!loading && !siteInfoResult.loading && !error && !siteInfoResult.error ? {nodeData, siteInfo: siteInfoResult.data.jcr.result} : undefined);
+    const ranAllHooks = useOnBeforeContextHooks(
+        !loading &&
+        !siteInfoResult.loading &&
+        !error &&
+        !siteInfoResult.error ? {nodeData, siteInfo: siteInfoResult.data.jcr.result} : undefined
+    );
 
     if (error) {
         // Check for ItemNotFound exception

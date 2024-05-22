@@ -19,17 +19,17 @@ export const CopyLanguageDialog = ({
 }) => {
     const client = useApolloClient();
 
-    const getDataFromSelectedLanguage = async language => {
-        let variables = {
-            uilang: language,
+    const getDataFromSelectedLanguage = async _language => {
+        const variables = {
+            uilang: _language,
             formik,
-            language: language,
+            language: _language,
             uuid: uuid,
-            writePermission: `jcr:modifyProperties_default_${language}`,
+            writePermission: `jcr:modifyProperties_default_${_language}`,
             childrenFilterTypes: Constants.childrenFilterTypes
         };
 
-        let formAndData = await client.query({query: EditFormQuery, variables: variables});
+        const formAndData = await client.query({query: EditFormQuery, variables: variables});
 
         return getI18nFieldAndValues(formAndData);
     };
@@ -54,14 +54,14 @@ export const CopyLanguageDialog = ({
     const handleApply = () => {
         getDataFromSelectedLanguage(currentOption.value).then(data => {
             data.forEach(value => {
-                formik.setFieldValue(value.definition.declaringNodeType.name + '_' + value.name, value.multiple ? value.values : value.value);
+                formik.setFieldValue(`${value.definition.declaringNodeType.name}_${value.name}`, value.multiple ? value.values : value.value);
             });
         });
 
         onCloseDialog();
     };
 
-    let isApplyDisabled = defaultOption.value === currentOption.value;
+    const isApplyDisabled = defaultOption.value === currentOption.value;
 
     return (
         <Dialog fullWidth

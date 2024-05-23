@@ -21,12 +21,15 @@ export const AdditionalAppsRoute = ({match, target}) => {
     const filteredAdminRoutes = adminRoutes && adminRoutes
         .filter(route => route.requiredPermission === undefined || (node && (node[route.requiredPermission] !== false)))
         .filter(route => route.isSelectable && route.render)
-        .filter(route => route.requireModuleInstalledOnSite === undefined || (node && node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1));
+        .filter(route =>
+            route.requireModuleInstalledOnSite === undefined ||
+            (node && node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1)
+        );
 
     return (
         <Switch>
             {filteredAdminRoutes && filteredAdminRoutes.map(r =>
-                <Route key={r.key} path={match.path + '/' + r.key} render={props => r.render(props)}/>
+                <Route key={r.key} path={`${match.path}/${r.key}`} render={props => r.render(props)}/>
             )}
             <Route key="nothingToDisplayRoute"
                    path={match.path}

@@ -37,7 +37,7 @@ export const DownloadFileDialog = ({path, onExit}) => {
     const handleClose = () => setOpen(false);
 
     const currentNode = mode === 'live' ? liveNode : node;
-    const href = new URL(window.contextJsParameters.contextPath + '/files/' + mode + currentNode?.path, window.location.href).toString();
+    const href = new URL(`${window.contextJsParameters.contextPath}/files/${mode}${currentNode?.path}`, window.location.href).toString();
 
     const dropdownData = useMemo(() => [
         {label: t('jcontent:label.contentManager.downloadFile.default'), value: 'default'},

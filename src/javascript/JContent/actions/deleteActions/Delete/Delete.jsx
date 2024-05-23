@@ -21,7 +21,7 @@ import {isPathChildOfAnotherPath} from '../../../JContent.utils';
 import {useNotifications} from '@jahia/react-material';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 
-let getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t}) => {
+const getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t}) => {
     if (locked) {
         return t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
             count: count,
@@ -55,11 +55,16 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
     const {t} = useTranslation('jcontent');
 
     const firstNode = data?.jcr?.nodesByPath[0];
-    const pages = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
-    const folders = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.folders.pageInfo.totalCount + (node.isFolder ? 1 : 0)), 0);
-    const count = data?.jcr?.nodesByPath?.reduce((count, node) => count + (node.content.pageInfo.totalCount + (!node.isPage && !node.isFolder ? 1 : 0)), 0) + pages + folders || 0;
+    const pages = data?.jcr?.nodesByPath?.reduce((_count, node) => _count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
+    const folders = data?.jcr?.nodesByPath?.reduce((_count, node) => _count + (node.folders.pageInfo.totalCount + (node.isFolder ? 1 : 0)), 0);
+    const count = data?.jcr?.nodesByPath?.reduce((_count, node) =>
+        _count + (node.content.pageInfo.totalCount + (!node.isPage && !node.isFolder ? 1 : 0)), 0) + pages + folders || 0;
     const locked = firstNode?.isMarkedForDeletion && !firstNode?.isMarkedForDeletionRoot;
-    const hasUsages = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((hasUsages, node) => hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usages?.nodes?.length > 0), false);
+    const hasUsages = dialogType !== 'undelete' &&
+        data?.jcr?.nodesByPath?.reduce(
+            (_hasUsages, node) =>
+                _hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usages?.nodes?.length > 0), false
+        );
     const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((isOverflow, node) => isOverflow || node.allDescendants.nodes.length === 100, false);
     const label = getLabel({dialogType, locked, count, data, firstNode, pages, folders, t});
 
@@ -144,7 +149,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     const [infoOpen, setInfoOpen] = useState(false);
     const language = useSelector(state => state.language);
     const dispatch = useDispatch();
-    const queryPaths = path ? [path] : (paths.sort().filter((path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(path, parentPath)) === undefined));
+    const queryPaths = path ? [path] : (paths.sort().filter((_path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(_path, parentPath)) === undefined));
     const client = useApolloClient();
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -166,17 +171,17 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     }
 
     const handleMutation = () => {
-        Promise.all(queryPaths.map(path => mutation({
+        Promise.all(queryPaths.map(_path => mutation({
             variables: {
-                path: path
+                path: _path
             }
         }))).then(() => {
             setOpen(false);
         }).then(() => {
-            queryPaths.forEach(path => client.cache.flushNodeEntryByPath(path));
+            queryPaths.forEach(_path => client.cache.flushNodeEntryByPath(_path));
             if (dialogType === 'permanently') {
-                queryPaths.forEach(path => {
-                    dispatch(cmRemoveSelection(path));
+                queryPaths.forEach(_path => {
+                    dispatch(cmRemoveSelection(_path));
                 });
             }
 
@@ -186,7 +191,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             }
         }).catch(() => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
-            queryPaths.forEach(path => client.cache.flushNodeEntryByPath(path));
+            queryPaths.forEach(_path => client.cache.flushNodeEntryByPath(_path));
             triggerRefetchAll();
             setOpen(false);
         });

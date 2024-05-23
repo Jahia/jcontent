@@ -80,7 +80,7 @@ export const FileCard = ({
     const {t} = useTranslation('jcontent');
     const {isCanDrop, isCanDropFile, dragging, ref} = useDragDrop(node, tableConfig);
 
-    let contextualMenu = useRef();
+    const contextualMenu = useRef();
 
     const isHighlighted = getIsHighlighted(node, previewSelection, isPreviewOpened, selection);
 

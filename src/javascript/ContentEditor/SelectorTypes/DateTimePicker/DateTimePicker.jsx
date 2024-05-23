@@ -21,10 +21,10 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
 
     const userNavigatorLocale = editorContext.browserLang;
 
-    let dateFormat = userNavigatorLocale in specificDateFormat ? specificDateFormat[userNavigatorLocale] : 'DD/MM/YYYY';
-    let displayDateFormat = isDateTime ? (dateFormat + ' HH:mm') : dateFormat;
+    const dateFormat = userNavigatorLocale in specificDateFormat ? specificDateFormat[userNavigatorLocale] : 'DD/MM/YYYY';
+    const displayDateFormat = isDateTime ? (dateFormat + ' HH:mm') : dateFormat;
 
-    let maskLocale = String(dateFormat).replace(/[^\W]+?/g, '_');
+    const maskLocale = String(dateFormat).replace(/[^\W]+?/g, '_');
 
     const displayDateMask = isDateTime ? maskLocale + ' __:__' : maskLocale;
 

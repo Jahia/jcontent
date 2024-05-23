@@ -165,8 +165,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         };
     });
 
-    let contextualMenu = useRef();
-    let rootContextualMenu = useRef();
+    const contextualMenu = useRef();
+    const rootContextualMenu = useRef();
 
     const highlightedItem = path && (!treeEntries.find(f => f.path === path)) && treeEntries.filter(f => path.startsWith(f.path)).slice(-1)[0];
     const highlighted = highlightedItem ? [highlightedItem.path] : [];

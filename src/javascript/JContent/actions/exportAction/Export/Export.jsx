@@ -19,7 +19,7 @@ export class Export extends React.Component {
     }
 
     onWorkspaceChange(event, item) {
-        let wsp = item.value;
+        const wsp = item.value;
         this.setState(Object.assign({workspace: wsp}, (wsp === 'live') ? {xml: false} : {}));
     }
 
@@ -30,15 +30,15 @@ export class Export extends React.Component {
     }
 
     triggerExport(path) {
-        let contextPath = window.contextJsParameters.contextPath;
-        let format = (this.state.xml ? 'xml' : 'zip');
-        let live = (this.state.workspace === 'live');
+        const contextPath = window.contextJsParameters.contextPath;
+        const format = (this.state.xml ? 'xml' : 'zip');
+        const live = (this.state.workspace === 'live');
         window.open(`${contextPath}/cms/export/default${path}.${format}?exportformat=${format}&live=${live}`);
     }
 
     render() {
-        let {t, onClose, onExited, path, isOpen} = this.props;
-        let live = (this.state.workspace === 'live');
+        const {t, onClose, onExited, path, isOpen} = this.props;
+        const live = (this.state.workspace === 'live');
         return (
             <Dialog fullWidth open={isOpen} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
@@ -53,7 +53,9 @@ export class Export extends React.Component {
                             {label: t('jcontent:label.contentManager.export.stagingOnlyOption'), value: 'default', attributes: {'data-cm-role': 'default-workspace'}},
                             {label: t('jcontent:label.contentManager.export.stagingAndLiveOption'), value: 'live', attributes: {'data-cm-role': 'live-workspace'}}
                         ]}
-                        label={this.state.workspace === 'live' ? t('jcontent:label.contentManager.export.stagingAndLiveOption') : t('jcontent:label.contentManager.export.stagingOnlyOption')}
+                        label={this.state.workspace === 'live' ?
+                            t('jcontent:label.contentManager.export.stagingAndLiveOption') :
+                            t('jcontent:label.contentManager.export.stagingOnlyOption')}
                         value={this.state.workspace}
                         variant="outlined"
                         size="medium"

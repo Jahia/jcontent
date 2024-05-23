@@ -1,7 +1,7 @@
 import React from 'react';
 import {AddCircle, toIconComponent} from '@jahia/moonstone';
 
-let getIconStart = function (node) {
+const getIconStart = function (node) {
     return (node.iconURL && !node.iconURL.endsWith('/nt_base.png') && toIconComponent(node.iconURL)) || <AddCircle/>;
 };
 

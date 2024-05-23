@@ -336,7 +336,6 @@ public class EditorFormServiceImpl implements EditorFormService {
         for (ExtendedNodeType nodeType : m.keySet()) {
             if (type.isNodeType(nodeType.getName())) {
                 for (ExtendedNodeType extension : m.get(nodeType)) {
-//                        ctx.put("contextType", realType);
                     if (installedModules == null || extension.getTemplatePackage() == null || extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system") || installedModules.contains(extension.getTemplatePackage().getId())) {
                         res.add(extension);
                     }

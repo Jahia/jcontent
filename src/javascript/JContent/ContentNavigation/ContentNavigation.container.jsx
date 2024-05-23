@@ -11,7 +11,7 @@ import {batchActions} from 'redux-batched-actions';
 const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
     const {siteKey, language, mode} = useSelector(selector, shallowEqual);
-    let accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
+    const accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
 
     const sitePermissions = [...new Set(accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined))];
     const nodeChecks = useNodeChecks({
@@ -39,7 +39,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
                            mode={mode}
                            siteKey={siteKey}
                            isReversed={isReversed}
-                           handleNavigation={(mode, path, viewMode, template) => dispatch(handleNavigationAction(mode, path, viewMode, template))}
+                           handleNavigation={(_mode, path, viewMode, template) => dispatch(handleNavigationAction(_mode, path, viewMode, template))}
         />
     );
 };

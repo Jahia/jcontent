@@ -19,15 +19,17 @@ export const AutomaticOrdering = ({orderingFieldSet}) => {
                 return i;
             }
         }
+
+        return -1;
     };
 
-    const add = (nextRow, nextRowIndex) => {
-        setDisplayedRows([...displayedRows, nextRowIndex]);
+    const add = (_nextRow, _nextRowIndex) => {
+        setDisplayedRows([...displayedRows, _nextRowIndex]);
 
-        setFieldValue(nextRow.propField.name, 'jcr:lastModified');
-        setFieldTouched(nextRow.propField.name, true, false);
-        setFieldValue(nextRow.directionField.name, 'desc');
-        setFieldTouched(nextRow.directionField.name, true, false);
+        setFieldValue(_nextRow.propField.name, 'jcr:lastModified');
+        setFieldTouched(_nextRow.propField.name, true, false);
+        setFieldValue(_nextRow.directionField.name, 'desc');
+        setFieldTouched(_nextRow.directionField.name, true, false);
     };
 
     const remove = index => {
@@ -73,7 +75,7 @@ export const AutomaticOrdering = ({orderingFieldSet}) => {
     };
 
     const nextRowIndex = _getNextRowIndexToAdd();
-    const nextRow = nextRowIndex !== undefined && rows[nextRowIndex];
+    const nextRow = nextRowIndex !== -1 && rows[nextRowIndex];
     return (
         <>
             {displayedRows

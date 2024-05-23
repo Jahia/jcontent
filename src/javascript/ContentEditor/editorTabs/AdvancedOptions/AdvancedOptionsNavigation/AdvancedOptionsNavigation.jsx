@@ -51,7 +51,7 @@ const Renderer = ({activeOption, setActiveOption, buttonLabel, onClick, tabs}) =
     }
 
     if (tab === 'channels') {
-        return;
+        return null;
     }
 
     return (

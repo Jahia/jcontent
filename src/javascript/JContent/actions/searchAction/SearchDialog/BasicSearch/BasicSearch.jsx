@@ -7,7 +7,13 @@ import styles from './BasicSearch.scss';
 import SearchLocation from '../SearchLocation';
 import {findSelectedContentType} from './BasicSearch.utils';
 
-export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContentType}, searchFormSetters: {setSearchPath, setSearchTerms, setSearchContentType}, contentTypeData, performSearch, isShowingOnlySearchInput}) => {
+export const BasicSearch = ({
+    searchForm: {searchPath, searchTerms, searchContentType},
+    searchFormSetters: {setSearchPath, setSearchTerms, setSearchContentType},
+    contentTypeData,
+    performSearch,
+    isShowingOnlySearchInput
+}) => {
     const {t} = useTranslation('jcontent');
 
     const defaultContentType = {
@@ -15,7 +21,7 @@ export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContent
         value: ''
     };
 
-    let contentTypeSelectData = [defaultContentType].concat(contentTypeData);
+    const contentTypeSelectData = [defaultContentType].concat(contentTypeData);
 
     let selectedContentType = defaultContentType;
     if (searchContentType) {

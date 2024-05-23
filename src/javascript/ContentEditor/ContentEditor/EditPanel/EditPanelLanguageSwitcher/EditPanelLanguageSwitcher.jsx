@@ -13,16 +13,15 @@ export const EditPanelLanguageSwitcher = () => {
     const labelPrefix = 'jcontent:label.contentEditor.header.languageSwitcher';
 
     function getLanguageOptions() {
-        let langLabel; // Current dropdown selection
+        let _langLabel; // Current dropdown selection
         const translatedOption = {groupLabel: t(`${labelPrefix}.switchLanguage`), options: []};
         const notTranslatedOption = {groupLabel: t(`${labelPrefix}.addTranslation.${mode}`), options: []};
         const translatedLangs = nodeData?.translationLanguages || [];
 
         siteInfo.languages.forEach(item => {
-            // Const label = item.displayName === item.uiLanguageDisplayName ? getCapitalized(item.displayName) : `${getCapitalized(item.displayName)} (${getCapitalized(item.uiLanguageDisplayName)})`;
             const label = getCapitalized(item.uiLanguageDisplayName);
             if (item.language === currentLanguage) {
-                langLabel = label;
+                _langLabel = label;
             }
 
             // Group language options depending on whether node has been translated to this language already or not
@@ -37,8 +36,8 @@ export const EditPanelLanguageSwitcher = () => {
             });
         });
 
-        const langOptions = [translatedOption, notTranslatedOption].filter(o => o.options.length); // Do not display group if empty
-        return {langLabel, langOptions};
+        const _langOptions = [translatedOption, notTranslatedOption].filter(o => o.options.length); // Do not display group if empty
+        return {langLabel: _langLabel, langOptions: _langOptions};
     }
 
     const {langLabel, langOptions} = getLanguageOptions();

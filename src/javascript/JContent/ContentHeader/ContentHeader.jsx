@@ -22,7 +22,7 @@ import {contentStatusFragment} from '../ContentRoute/ContentStatuses/ContentStat
 
 const NARROW_HEADER_WIDTH = 750;
 
-let extractNodeInfo = function (node, loading) {
+const extractNodeInfo = function (node, loading) {
     const nodeType = node?.primaryNodeType;
     const title = ((!loading && node && node.displayName) || 'Loading ...');
     return {nodePath: node?.path, nodeType, title};
@@ -31,11 +31,11 @@ let extractNodeInfo = function (node, loading) {
 function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear}) {
     const clearSearchFunc = () => {
         const accordion = preSearchModeMemo ? registry.get('accordionItem', preSearchModeMemo) : registry.find({type: 'accordionItem', target: 'jcontent'})[0];
-        const path = localStorage.getItem('jcontent-previous-location-' + site + '-' + accordion.key) || accordion.getRootPath(site);
-        const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + accordion.key) || accordion?.tableConfig?.defaultViewMode || 'flatList';
+        const path = localStorage.getItem(`jcontent-previous-location-${site}-${accordion.key}`) || accordion.getRootPath(site);
+        const viewMode = localStorage.getItem(`jcontent-previous-tableView-viewMode-${site}-${accordion.key}`) || accordion?.tableConfig?.defaultViewMode || 'flatList';
         let template = '';
         if (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
-            template = localStorage.getItem('jcontent-previous-template-' + site + '-' + viewMode) || '';
+            template = localStorage.getItem(`jcontent-previous-template-${site}-${viewMode}`) || '';
         }
 
         dispatch(batchActions([cmGoto({mode: accordion.key, path, template, params: {}}), setTableViewMode(viewMode)]));
@@ -93,7 +93,7 @@ const ContentHeader = () => {
         applyFragment: contentStatusFragment
     });
 
-    let clear = () => dispatch(cmClearSelection());
+    const clear = () => dispatch(cmClearSelection());
 
     if (inSearchMode) {
         return getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear});

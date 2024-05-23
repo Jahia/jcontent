@@ -31,7 +31,7 @@ const excludedActions = [
     'fileUpload'
 ];
 
-let extractNodeInfo = function (node, loading) {
+const extractNodeInfo = function (node, loading) {
     const nodeType = node?.primaryNodeType;
     const title = ((!loading && node && node.displayName) || 'Loading ...');
     return {nodePath: node?.path, nodeType, title};
@@ -56,7 +56,7 @@ const CategoriesHeader = () => {
 
     const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {getPrimaryNodeType: true, getDisplayName: true});
 
-    let clear = () => dispatch(cmClearSelection());
+    const clear = () => dispatch(cmClearSelection());
 
     if (inSearchMode) {
         const clearSearchFunc = () => {
@@ -69,7 +69,15 @@ const CategoriesHeader = () => {
                 backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
-                toolbarLeft={selection.length > 0 ? <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar searchActionParams={{isShowingOnlySearchInput: true}}/>}
+                toolbarLeft={selection.length > 0 ?
+                    <NarrowHeaderActions
+                        previewSelection={previewSelection}
+                        selection={selection}
+                        clear={clear}
+                    /> :
+                    <SearchControlBar
+                        searchActionParams={{isShowingOnlySearchInput: true}}
+                    />}
             />
         ) : (
             <Header

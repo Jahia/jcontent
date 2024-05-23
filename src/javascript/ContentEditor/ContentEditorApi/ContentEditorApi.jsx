@@ -20,7 +20,7 @@ function decode(hash) {
     return values;
 }
 
-let getEncodedLocations = function (location, editorConfigs) {
+const getEncodedLocations = function (location, editorConfigs) {
     const {contentEditor, ...others} = decode(location.hash);
 
     const valid = editorConfigs.every(config => Object.values(config).every(o => typeof o !== 'function'));
@@ -28,8 +28,10 @@ let getEncodedLocations = function (location, editorConfigs) {
     const cleanedHash = Object.keys(others).length > 0 ? rison.encode_uri(others) : '';
     const locationWithoutEditors = rison.encode({search: location.search, hash: cleanedHash});
     const locationFromState = (valid && editorConfigs.length > 0) ?
-        rison.encode({search: location.search, hash: '#' + rison.encode_uri({...others, contentEditor: JSON.parse(JSON.stringify(editorConfigs.map((({closed, ...obj}) => obj))))})}) :
-        locationWithoutEditors;
+        rison.encode({
+            search: location.search,
+            hash: '#' + rison.encode_uri({...others, contentEditor: JSON.parse(JSON.stringify(editorConfigs.map((({closed, ...obj}) => obj))))})
+        }) : locationWithoutEditors;
 
     return {
         locationFromState,
@@ -58,7 +60,7 @@ export const ContentEditorApi = () => {
         setEditorConfigs(editorConfigs.map(e => ({...e, closed: true, onExited: () => {}})));
     };
 
-    let newEditorConfig = editorConfig => {
+    const newEditorConfig = editorConfig => {
         if (!editorConfig.formKey) {
             editorConfig.formKey = 'modal_' + editorConfigs.length;
         }
@@ -66,25 +68,25 @@ export const ContentEditorApi = () => {
         setEditorConfigs([...editorConfigs, editorConfig]);
     };
 
-    let updateEditorConfig = (editorConfig, index) => {
-        let copy = Array.from(editorConfigs);
+    const updateEditorConfig = (editorConfig, index) => {
+        const copy = Array.from(editorConfigs);
         copy[index] = {...copy[index], ...editorConfig};
         setEditorConfigs(copy);
     };
 
-    let onExited = index => {
+    const onExited = index => {
         const copy = Array.from(editorConfigs);
         const spliced = copy.splice(index, 1);
-        const onExited = spliced[0].onExited;
+        const onExitedCallback = spliced[0].onExited;
 
         setEditorConfigs(copy);
 
-        if (onExited) {
-            onExited();
+        if (onExitedCallback) {
+            onExitedCallback();
         } else if (spliced[0]?.isFullscreen) {
             if (copy.length > 0) {
-                const {locationFromState} = getEncodedLocations(location, copy);
-                history.replace(rison.decode(locationFromState));
+                const {locationFromState: _locationFromState} = getEncodedLocations(location, copy);
+                history.replace(rison.decode(_locationFromState));
             } else if (history.location.state?.wasPushed) {
                 history.go(-1);
             } else {
@@ -93,7 +95,7 @@ export const ContentEditorApi = () => {
         }
     };
 
-    let context = useContentEditorApiContext();
+    const context = useContentEditorApiContext();
     context.edit = useEdit(newEditorConfig);
     context.create = useCreate(newEditorConfig, setContentTypeSelectorConfig);
 
@@ -192,7 +194,7 @@ export const ContentEditorApi = () => {
             {editorConfigs.map((editorConfig, index) => {
                 return (
                     <ContentEditorModal
-                        key={editorConfig.mode + '_' + editorConfig.uuid}
+                        key={`${editorConfig.mode}_${editorConfig.uuid}`}
                         editorConfig={editorConfig}
                         updateEditorConfig={updatedEditorConfig => {
                             updateEditorConfig(updatedEditorConfig, index);

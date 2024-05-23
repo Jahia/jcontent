@@ -37,12 +37,12 @@ export const ContentLayoutContainer = React.memo(() => {
     }), shallowEqual);
 
     const dispatch = useDispatch();
-    const setPath = (path, params) => dispatch(cmGoto({path, params}));
-    const setPreviewSelection = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
+    const setPath = (_path, params) => dispatch(cmGoto({path: _path, params}));
+    const setPreviewSelection = _previewSelection => dispatch(cmSetPreviewSelection(_previewSelection));
     const openPaths = paths => dispatch(cmOpenPaths(paths));
     const closePaths = paths => dispatch(cmClosePaths(paths));
-    const removeSelection = path => dispatch(cmRemoveSelection(path));
-    const switchSelection = path => dispatch(cmSwitchSelection(path));
+    const removeSelection = _path => dispatch(cmRemoveSelection(_path));
+    const switchSelection = _path => dispatch(cmSwitchSelection(_path));
 
     const options = useSelector(state => ({
         mode: state.jcontent.mode,
@@ -76,7 +76,7 @@ export const ContentLayoutContainer = React.memo(() => {
         }
 
         // Close any expanded nodes that have been just removed.
-        let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
+        const pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
         if (!_.isEmpty(pathsToClose)) {
             closePaths(pathsToClose);
         }
@@ -90,8 +90,8 @@ export const ContentLayoutContainer = React.memo(() => {
     }
 
     function onGwtRename(nodePath, nodeName) {
-        let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-        let newPath = parentPath + '/' + nodeName;
+        const parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
+        const newPath = `${parentPath}/${nodeName}`;
 
         // Clear cache entries for subnodes
         Object.keys(client.cache.idByPath)
@@ -128,7 +128,7 @@ export const ContentLayoutContainer = React.memo(() => {
 
         client.cache.flushNodeEntryById(nodeUuid);
         await client.reFetchObservableQueries();
-        let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+        const nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
         if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
             !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
             Object.keys(client.cache.idByPath)
@@ -138,7 +138,7 @@ export const ContentLayoutContainer = React.memo(() => {
 
         if (selection.length > 0) {
             // Modification when using multiple selection actions
-            let selectedNodes = _.clone(selection);
+            const selectedNodes = _.clone(selection);
             setTimeout(function () {
                 if (_.includes(selectedNodes, nodePath)) {
                     removeSelection(nodePath);

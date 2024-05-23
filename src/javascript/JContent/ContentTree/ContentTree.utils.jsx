@@ -42,7 +42,7 @@ function findInTree(tree, id) {
 }
 
 function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps}) {
-    let tree = [];
+    const tree = [];
     if (treeEntries.length === 0) {
         return tree;
     }

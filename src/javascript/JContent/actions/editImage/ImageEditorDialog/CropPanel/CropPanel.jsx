@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 export const CropPanel = ({originalWidth, originalHeight, cropParams, onCrop}) => {
     const {t} = useTranslation('jcontent');
     const setWidth = event => {
-        let width = event.target.value;
+        const width = event.target.value;
 
         if (event.target.checkValidity()) {
             onCrop({width: Math.floor(Math.min(width, originalWidth))});
@@ -18,7 +18,7 @@ export const CropPanel = ({originalWidth, originalHeight, cropParams, onCrop}) =
     };
 
     const setHeight = event => {
-        let height = event.target.value;
+        const height = event.target.value;
 
         if (event.target.checkValidity()) {
             onCrop({height: Math.floor(Math.min(height, originalHeight))});

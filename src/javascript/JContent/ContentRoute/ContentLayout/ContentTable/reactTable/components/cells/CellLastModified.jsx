@@ -27,8 +27,8 @@ export const CellLastModified = ({row, value, cell, column}) => {
                     >
                         <DisplayActions
                             target="contentActions"
-                            filter={value => {
-                                return includes(['edit', 'preview', 'subContents', 'locate'], value.key);
+                            filter={_value => {
+                                return includes(['edit', 'preview', 'subContents', 'locate'], _value.key);
                             }}
                             path={row.original.path}
                             render={ButtonRendererNoLabel}

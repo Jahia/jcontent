@@ -12,11 +12,11 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
         if (newMode && mode !== newMode) {
             const accordion = accordionItems.find(item => newMode === item.key);
 
-            const path = localStorage.getItem('jcontent-previous-location-' + siteKey + '-' + newMode) || accordion.getRootPath(siteKey);
-            const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + siteKey + '-' + newMode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
+            const path = localStorage.getItem(`jcontent-previous-location-${siteKey}-${newMode}`) || accordion.getRootPath(siteKey);
+            const viewMode = localStorage.getItem(`jcontent-previous-tableView-viewMode-${siteKey}-${newMode}`) || accordion?.tableConfig?.defaultViewMode || 'flatList';
             let template = '';
             if (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
-                template = localStorage.getItem('jcontent-previous-template-' + siteKey + '-' + newMode) || '';
+                template = localStorage.getItem(`jcontent-previous-template-${siteKey}-${newMode}`) || '';
             }
 
             handleNavigation(newMode, path, viewMode, template);
@@ -39,11 +39,11 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
                        onSetOpenedItem={onSetOpenedItem}
             >
                 {accordionItems.map(accordionItem => {
-                    let props = {
+                    const props = {
                         id: accordionItem.key,
                         label: t(accordionItem.label),
                         icon: accordionItem.icon,
-                        'data-registry-key': accordionItem.type + ':' + accordionItem.key,
+                        'data-registry-key': `${accordionItem.type}:${accordionItem.key}`,
                         'data-registry-target': getRegistryTarget(accordionItem, accordionItemTarget)
                     };
                     return accordionItem.component ? <accordionItem.component key={accordionItem.key} {...props}/> : accordionItem.render(props, accordionItem);

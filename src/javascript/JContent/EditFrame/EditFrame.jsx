@@ -115,10 +115,10 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         }
 
         if (iframe.current === loadedIframe) {
-            const currentDocument = iframe.current.contentDocument;
-            const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            const frameLanguage = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('locale');
-            const frameTemplate = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('template');
+            const _currentDocument = iframe.current.contentDocument;
+            const framePath = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
+            const frameLanguage = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('locale');
+            const frameTemplate = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('template');
             if (framePath && (framePath !== path || frameLanguage !== language || frameTemplate !== template)) {
                 console.debug('Updating path to', framePath, 'and language to', frameLanguage, 'in redux', 'template', frameTemplate, 'older path', path, 'older language', language, 'older template', template);
                 dispatch(batchActions([
@@ -127,7 +127,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                 ]));
             }
 
-            setCurrentDocument(currentDocument);
+            setCurrentDocument(_currentDocument);
         }
     };
 
@@ -167,9 +167,9 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         setRefetcher(refetchTypes.CONTENT_DATA, {
             refetch: () => {
                 currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
-                    let path = element.getAttribute('path');
-                    if (path !== '*') {
-                        client.cache.flushNodeEntryByPath(path);
+                    const _path = element.getAttribute('path');
+                    if (_path !== '*') {
+                        client.cache.flushNodeEntryByPath(_path);
                     }
                 });
 
@@ -210,7 +210,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
-            let mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
+            const mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
             console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, isPreview, template);
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');

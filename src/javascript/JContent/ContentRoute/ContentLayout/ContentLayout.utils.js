@@ -5,7 +5,7 @@ const imageExtensionSet = new Set(imageExtensions);
 
 export const isBrowserImage = function (node) {
     if (node.isFile) {
-        let mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
             switch (node.path.split('.').pop().toLowerCase()) {
                 case 'avif':
@@ -35,14 +35,13 @@ export const isImageFile = function (filename) {
 
 export const isPDF = function (node) {
     if (node.isFile) {
-        let mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
-            switch (node.path.split('.').pop().toLowerCase()) {
-                case 'pdf':
-                    return true;
-                default:
-                    return false;
+            if (node.path.split('.').pop().toLowerCase() === 'pdf') {
+                return true;
             }
+
+            return false;
         }
 
         return mimetype.toLowerCase().indexOf('pdf') > 0;
@@ -53,7 +52,7 @@ export const isPDF = function (node) {
 
 export const getFileType = function (node) {
     if (node.isFile) {
-        let mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
             return node.path.split('.').pop().toLowerCase();
         }
@@ -64,6 +63,8 @@ export const getFileType = function (node) {
 
         return mime.getExtension(mimetype);
     }
+
+    return undefined;
 };
 
 export const flattenTree = function (rows) {
@@ -72,9 +73,9 @@ export const flattenTree = function (rows) {
     return items;
 
     function collectItems(arrayData) {
-        for (let i = 0; i < arrayData.length; i++) {
-            items.push(arrayData[i]);
-            collectItems(arrayData[i].subRows || []);
+        for (const element of arrayData) {
+            items.push(element);
+            collectItems(element.subRows || []);
         }
     }
 };

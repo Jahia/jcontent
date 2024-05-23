@@ -57,7 +57,7 @@ export const FileModeSelector = ({selector, setModeAction}) => {
     );
 };
 
-const selector = state => ({
+const modeSelector = state => ({
     mode: state.jcontent.filesGrid.mode
 });
 
@@ -67,7 +67,7 @@ FileModeSelector.propTypes = {
 };
 
 FileModeSelector.defaultProps = {
-    selector: selector,
+    selector: modeSelector,
     setModeAction: mode => filesgridSetMode(mode)
 };
 

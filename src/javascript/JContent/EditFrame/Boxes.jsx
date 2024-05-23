@@ -103,7 +103,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
         if (event.relatedTarget && event.currentTarget.dataset.current === 'true' &&
-            !isDescendantOrSelf(getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'), getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')) &&
+            !isDescendantOrSelf(
+                getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),
+                getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')
+            ) &&
             !event.target.closest('#menuHolder')
         ) {
             window.clearTimeout(timeout);
@@ -112,10 +115,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     }, [setCurrentElement, currentDocument]);
 
-    const onSelect = useCallback((event, path) => {
+    const onSelect = useCallback((event, _path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
-        path = path || element.getAttribute('path');
-        const isSelected = selection.includes(path);
+        _path = _path || element.getAttribute('path');
+        const isSelected = selection.includes(_path);
 
         // Do not handle selection if the target element can be interacted with
         if (disallowSelection(event.target)) {
@@ -125,13 +128,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         event.preventDefault();
         event.stopPropagation();
         if (isSelected) {
-            dispatch(cmRemoveSelection(path));
-        } else if (!selection.some(element => isDescendant(path, element))) {
+            dispatch(cmRemoveSelection(_path));
+        } else if (!selection.some(selectionElement => isDescendant(_path, selectionElement))) {
             // Ok so no parent is already selected we can add ourselves
-            let actions = [];
-            actions.push(cmAddSelection(path));
+            const actions = [];
+            actions.push(cmAddSelection(_path));
             // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
-            selection.filter(element => isDescendant(element, path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
+            selection.filter(selectionElement => isDescendant(selectionElement, _path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
             dispatch(batchActions(actions));
         }
     }, [selection, currentDocument, dispatch]);
@@ -141,7 +144,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         if (event.detail === 1) {
             // Do not handle selection if the target element can be interacted with
             if (disallowSelection(event.target) && !isMultipleSelectionMode) {
-                return;
+                return undefined;
             }
 
             event.preventDefault();
@@ -184,7 +187,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     }, [selection, dispatch, currentDocument, clearSelection, handleKeyboardNavigation]);
 
     useEffect(() => {
-        const placeholders = [];
+        const _placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
             element.style['pointer-events'] = 'all';
             let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
@@ -198,11 +201,11 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             }
 
             if (element.getAttribute('path') === '*' || element.getAttribute('type') === 'placeholder') {
-                placeholders.push(element);
+                _placeholders.push(element);
 
                 if (!parent) {
                     console.warn('Couldn\'t find parent element with jahiatype=module for element ', element);
-                    placeholders.pop();
+                    _placeholders.pop();
                 }
             }
         });
@@ -229,9 +232,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             element.style['pointer-events'] = 'all';
         });
 
-        setPlaceholders(placeholders);
+        setPlaceholders(_placeholders);
 
-        const modules = [];
+        const _modules = [];
 
         currentDocument.querySelectorAll('[jahiatype]').forEach(element => {
             const type = element.getAttribute('jahiatype');
@@ -241,17 +244,17 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 if (modulePath.startsWith('/')) {
                     element.dataset.jahiaPath = modulePath;
                 } else {
-                    let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
-                    element.dataset.jahiaPath = parent.dataset.jahiaPath + '/' + modulePath;
+                    const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+                    element.dataset.jahiaPath = `${parent.dataset.jahiaPath}/${modulePath}`;
                 }
 
-                modules.push(element);
+                _modules.push(element);
             }
         });
 
         // Removes invisible selections
         if (selection.length > 0) {
-            const toRemove = selection.filter(path => !pathExistsInTree(path, modules, node => node.dataset.jahiaPath));
+            const toRemove = selection.filter(_path => !pathExistsInTree(_path, _modules, node => node.dataset.jahiaPath));
             if (toRemove.length > 0) {
                 if (TableViewModeChangeTracker.modeChanged) {
                     notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
@@ -263,7 +266,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
         TableViewModeChangeTracker.resetChanged();
 
-        setModules(modules);
+        setModules(_modules);
 
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
             // Prevent showing contextual menu if clicked on breadcrumb, note that ctrl + click counts as right click and triggers contextmenu
@@ -319,9 +322,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         [n.path]: n
     }), {}), [data?.jcr]);
 
-    const getBreadcrumbsForPath = path => {
+    const getBreadcrumbsForPath = _path => {
         const breadcrumbs = [];
-        const node = nodes[path];
+        const node = nodes[_path];
 
         if (!node) {
             return breadcrumbs;
@@ -344,9 +347,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         event.preventDefault();
         event.stopPropagation();
         const element = getModuleElement(currentDocument, event.currentTarget);
-        const path = element.getAttribute('path');
+        const _path = element.getAttribute('path');
         window.CE_API.edit({
-            uuid: nodes[path].uuid,
+            uuid: nodes[_path].uuid,
             site: site,
             lang: language,
             uilang,
@@ -362,7 +365,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         depth: m.dataset.jahiaPath.split('/').length
     })), [modules]);
 
-    // Console.log(entries);
     let pathObject;
 
     if (selection.length > 0) {
@@ -402,13 +404,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         if (nodePath) {
-            const current = nodes[nodePath];
-            const targetModule = modules.find(m => m.dataset.jahiaPath === current?.path);
+            const currentDnd = nodes[nodePath];
+            const dndTargetModule = modules.find(m => m.dataset.jahiaPath === currentDnd?.path);
 
-            if (targetModule && insertPosition) {
-                const rect = getBoundingBox(targetModule, true);
+            if (dndTargetModule && insertPosition) {
+                const rect = getBoundingBox(dndTargetModule, true);
                 currentDndInfo.current.relative = {
-                    node: current,
+                    node: currentDnd,
                     position: {
                         ...rect
                     },
@@ -438,12 +440,19 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          node={node}
                          isCurrent={element === el}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={(header && element === el) || selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === el)}
+                         isHeaderDisplayed={(header && element === el) ||
+                             selection.includes(node.path) ||
+                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
-                         breadcrumbs={((header && element === el) || selection.includes(node.path) || (selection.length > 0 && !selection.some(element => isDescendant(node.path, element)) && element === el)) ? getBreadcrumbsForPath(node.path) : []}
+                         breadcrumbs={((header && element === el) ||
+                             selection.includes(node.path) ||
+                             (selection.length > 0 &&
+                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
+                             getBreadcrumbsForPath(node.path) :
+                             []}
                          entries={entries}
                          language={language}
                          displayLanguage={displayLanguage}

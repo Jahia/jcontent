@@ -53,7 +53,7 @@ export const AdditionalAppsTree = ({item, target}) => {
             iconStart: route.icon,
             treeItemProps: {
                 'data-sel-role': route.key,
-                'data-registry-key': route.type + ':' + route.key,
+                'data-registry-key': `${route.type}:${route.key}`,
                 'data-registry-target': getRegistryTarget(route, target)
             }
         }))

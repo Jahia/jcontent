@@ -55,8 +55,6 @@ public class ContentEditorUtils {
         // prevent new instance of this class
     }
 
-    private static Logger logger = LoggerFactory.getLogger(ContentEditorUtils.class);
-
     /**
      * For the given node, return the allowed node types as child node
      *

@@ -40,6 +40,12 @@ mutation createDeleteContent {
                             primaryNodeType: "jnt:contentReference"
                             properties: [{ name: "j:node", language: "en", value: "/sites/jContentSite-delete/contents/test-deleteContents/test-delete3", type: REFERENCE }]
                         }
+                        {
+                            name: "test-delete4-autopublish"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 4" }]
+                            mixins: ["jmix:autoPublish"]
+                        }
                     ]
                 ) {
                     uuid

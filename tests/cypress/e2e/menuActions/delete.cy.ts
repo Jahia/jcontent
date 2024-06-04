@@ -415,4 +415,35 @@ describe('delete tests', () => {
         jcontent.getHeaderActionButton('paste').click();
         jcontent.getTable().getRowByLabel('test 1').contextMenu().should('contain', 'Delete');
     });
+    it('allows to permanently delete an autopublished node', () => {
+        cy.log('Verify autopublished node exists before starting test');
+        cy.apollo({
+            query: gql`query { jcr { nodeByPath(path: "/sites/${siteKey}/contents/test-deleteContents/test-delete4-autopublish") {uuid}}}`
+        }).should(resp => {
+            expect(resp?.data.jcr.nodeByPath).not.to.be.null;
+        });
+
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+
+        jcontent.getTable()
+            .getRowByLabel('test 4')
+            .contextMenu()
+            .select('Delete (permanently)');
+
+        cy.log('Verify dialog opens and can be deleted');
+        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
+        cy.get(dialogCss)
+            .find('[data-sel-role="delete-permanently-button"]')
+            .click();
+        cy.get(dialogCss).should('not.exist');
+
+        cy.log('Verify autopublished node is deleted');
+        cy.apollo({
+            query: gql`query { jcr { nodeByPath(path: "/sites/${siteKey}/contents/test-deleteContents/test-delete4-autopublish") {uuid}}}`,
+            errorPolicy: 'ignore'
+        }).should(resp => {
+            expect(resp?.data.jcr.nodeByPath).to.be.null;
+        });
+        jcontent.checkSelectionCount(0);
+    });
 });

@@ -24,6 +24,8 @@
  - moduleI18nRBAutocreatedString (string) = resourceBundle('kiss') autocreated internationalized
  - moduleClassInitString (string) = useClass(org.jahia.modules.textfieldinitializer.InitTextValue)
 
+[cent:testTextField] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:autoPublish
+
 [cent:defaultValueTest] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery
  - defaultString (string) = 'Default string'
  - defaultI18nString (string) = 'Default i18n string' internationalized

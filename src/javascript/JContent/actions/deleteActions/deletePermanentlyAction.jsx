@@ -11,10 +11,15 @@ const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
 };
 
-const checkAction = node => (node['jnt:category'] || node.primaryNodeType?.name === 'jnt:category') || (node.operationsSupport.markForDeletion &&
-    isMarkedForDeletion(node) &&
-    node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
-    (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive));
+const checkAction = node => {
+    const isCategory = (node['jnt:category'] || node.primaryNodeType?.name === 'jnt:category');
+    const isMarkForDeletionAllowed = node.operationsSupport.markForDeletion &&
+        isMarkedForDeletion(node) &&
+        node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
+        (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
+    const isAutoPublish = node['jmix:autoPublish'];
+    return isCategory || isMarkForDeletionAllowed || isAutoPublish;
+};
 
 export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);

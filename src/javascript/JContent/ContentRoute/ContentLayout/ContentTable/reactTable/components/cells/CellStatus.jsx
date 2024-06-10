@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {Build, Chip, Lock, Subdirectory, TableBodyCell} from '@jahia/moonstone';
 import {isWorkInProgress} from '~/JContent/JContent.utils';
@@ -12,6 +12,12 @@ export const CellStatus = ({cell, column, row}) => {
     const node = row.original;
     const lang = useSelector(state => state.lang);
     const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
+    const subNodesCountText = useMemo(() => {
+        if (showSubNodes) {
+            const count = node.subNodes.pageInfo.totalCount;
+            return count > 99 ? '99+' : count;
+        }
+    }, [showSubNodes, node.subNodes.pageInfo.totalCount]);
 
     return (
         <TableBodyCell key={row.id + column.id}
@@ -29,7 +35,7 @@ export const CellStatus = ({cell, column, row}) => {
                 </Tooltip>}
             {node.lockOwner !== null &&
             <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color="danger"/></Tooltip>}
-            {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}
+            {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${subNodesCountText} item(s)`} icon={<Subdirectory/>}/>}
         </TableBodyCell>
     );
 };

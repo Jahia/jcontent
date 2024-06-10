@@ -40,7 +40,7 @@ export const status = {
     sortable: false,
     Header: '',
     Cell: CellStatus,
-    width: '115px'
+    width: '205px'
 };
 export const type = {
     id: 'type',
@@ -71,7 +71,7 @@ export const lastModified = {
     property: 'lastModified.value',
     Cell: CellLastModified,
     Header: Header,
-    width: '290px'
+    width: '200px'
 };
 export const visibleActions = {
     id: 'visibleActions',

@@ -446,4 +446,31 @@ describe('delete tests', () => {
         });
         jcontent.checkSelectionCount(0);
     });
+    it('allows to mark node for deletion and context menu updates', () => {
+        cy.log('Verify node exists before starting test');
+        cy.apollo({
+            query: gql`query { jcr { nodeByPath(path: "/sites/${siteKey}/contents/test-deleteContents/test-delete5") {uuid}}}`
+        }).should(resp => {
+            expect(resp?.data.jcr.nodeByPath).not.to.be.null;
+        });
+
+        cy.log('Try marking node for deletion');
+
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+
+        jcontent.getTable()
+            .getRowByLabel('test 5')
+            .contextMenu()
+            .select('Delete');
+
+        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .find('[data-sel-role="delete-mark-button"]')
+            .click();
+
+        cy.log('Verify context menu updates');
+        const contextMenu = jcontent.getTable().getRowByLabel('test 5').contextMenu();
+        contextMenu.shouldHaveItem('Undelete');
+        contextMenu.shouldHaveItem('Delete (permanently)');
+    });
 });

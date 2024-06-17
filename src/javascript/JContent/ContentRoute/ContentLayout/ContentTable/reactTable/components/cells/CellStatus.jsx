@@ -17,7 +17,7 @@ export const CellStatus = ({cell, column, row}) => {
             const count = node.subNodes.pageInfo.totalCount;
             return count > 99 ? '99+' : count;
         }
-    }, [showSubNodes, node.subNodes.pageInfo.totalCount]);
+    }, [showSubNodes, node?.subNodes?.pageInfo?.totalCount]);
 
     return (
         <TableBodyCell key={row.id + column.id}

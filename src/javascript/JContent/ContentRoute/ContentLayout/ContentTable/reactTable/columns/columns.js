@@ -22,7 +22,7 @@ export const selection = {
     sortable: false,
     Header: HeaderSelection,
     Cell: CellSelection,
-    width: '50px'
+    width: '56px'
 };
 export const name = {
     id: 'name',

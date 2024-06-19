@@ -23,6 +23,8 @@ export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPub
         getOperationSupport: true,
         requiredPermission: ['publish'],
         hideOnNodeTypes: ['jnt:virtualsite']
+    }, {
+        fetchPolicy: 'network-only'
     });
 
     if (res.loading) {

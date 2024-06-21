@@ -24,7 +24,6 @@ export const showChipField = (is18nField, wipInfo, currentLanguage) => {
     return is18nField && wipInfo && wipInfo.status === Constants.wip.status.LANGUAGES && wipInfo.languages.indexOf(currentLanguage) > -1;
 };
 
-// eslint-disable-next-line max-params
 const renderField = (
     inputContext,
     field,
@@ -40,6 +39,7 @@ const renderField = (
     shouldDisplayErrors,
     errorName,
     errorArgs
+// eslint-disable-next-line max-params
 ) => {
     return (
         <div className="flexFluid">
@@ -50,6 +50,7 @@ const renderField = (
                             htmlFor={isMultipleField ? null : idInput}
                 >
                     <Typography weight="bold">
+                        {/* eslint-disable-next-line react/no-danger */}
                         <span dangerouslySetInnerHTML={{__html: field.displayName}}/>
                     </Typography>
                 </InputLabel>

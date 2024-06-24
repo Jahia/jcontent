@@ -49,10 +49,7 @@ const renderField = (
                             className={styles.inputLabel}
                             htmlFor={isMultipleField ? null : idInput}
                 >
-                    <Typography weight="bold">
-                        {/* eslint-disable-next-line react/no-danger */}
-                        <span dangerouslySetInnerHTML={{__html: field.displayName}}/>
-                    </Typography>
+                    <Typography weight="bold">{field.displayName}</Typography>
                 </InputLabel>
                 {inputContext.displayBadges && (
                 <>

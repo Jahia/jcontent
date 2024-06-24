@@ -256,7 +256,7 @@ public class Field implements Ranked {
     private void initializeLabelFromItemDefinition(ExtendedItemDefinition definition, Locale uiLocale, JCRSiteNode site, ExtendedNodeType nodeType) {
         String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
         String key = definition.getResourceBundleKey(nodeType);
-        label = StringUtils.isEmpty(label) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key, uiLocale, site)) : label;
+        label = StringUtils.isEmpty(label) ? StringEscapeUtils.unescapeHtml(resolveResourceKey(prefix + key, uiLocale, site)) : label;
         description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
         errorMessage = StringUtils.isEmpty(errorMessage)? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + ".constraint.error.message", uiLocale, site)) : errorMessage;
     }

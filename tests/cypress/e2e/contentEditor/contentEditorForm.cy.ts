@@ -57,8 +57,6 @@ describe('Content editor form', () => {
         const field = contentEditor.getField(SmallTextField, 'cent:testOverride_jcr:title', false);
 
         field.get().find('label').should('contain', 'My title 1234');
-        field.get().find('label strong').should('exist').and('contain', 'bold');
-        field.get().find('label script').should('not.exist');
 
         field.get().find('span').should('contain', 'Custom title');
         field.get().find('span em').should('exist').and('contain', 'italic');

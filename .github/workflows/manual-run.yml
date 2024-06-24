@@ -3,7 +3,7 @@
 name: Manual Tests Run
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
     inputs:
       jahia_image:
         description: 'Jahia Image'

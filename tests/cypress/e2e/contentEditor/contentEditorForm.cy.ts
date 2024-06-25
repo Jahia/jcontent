@@ -55,8 +55,13 @@ describe('Content editor form', () => {
     it('Should display custom title label and error message', function () {
         const contentEditor = jcontent.createContent('testOverride');
         const field = contentEditor.getField(SmallTextField, 'cent:testOverride_jcr:title', false);
+
         field.get().find('label').should('contain', 'My title 1234');
+
         field.get().find('span').should('contain', 'Custom title');
+        field.get().find('span em').should('exist').and('contain', 'italic');
+        field.get().find('span script').should('not.exist');
+
         field.addNewValue('123456789012', true);
         getComponentByRole(Button, 'createButton').click();
         cy.get('[data-sel-role=dialog-errorBeforeSave]').contains('My title 1234');

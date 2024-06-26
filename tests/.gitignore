@@ -1,6 +1,7 @@
 instrumented/
 .nyc_output
 cypress/videos
+cypress/downloads
 coverage
 node_modules
 run-artifacts
@@ -9,4 +10,4 @@ artifacts
 build-dependencies
 dist
 results
-
+**/src/main/resources/javascript/apps

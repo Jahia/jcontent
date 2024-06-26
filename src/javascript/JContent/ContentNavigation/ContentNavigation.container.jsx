@@ -10,28 +10,27 @@ import {getAccordionItems} from '~/JContent/JContent.utils';
 const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
     const {siteKey, language, mode} = useSelector(selector, shallowEqual);
-    let accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
+    const accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
 
     const sitePermissions = [...new Set(accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined))];
 
-    const permissions = useNodeChecks({
+    const nodeChecks = useNodeChecks({
         path: `/sites/${siteKey}`,
         language: language
     }, {
         requiredSitePermission: sitePermissions
     });
 
-    if (permissions.loading) {
+    if (nodeChecks.loading) {
         return null;
     }
 
-    accordionItems = sitePermissions.length === 0 ? accordionItems : accordionItems.filter(accordionItem =>
-        permissions.node && Object.prototype.hasOwnProperty.call(permissions.node.site, accordionItem.requiredSitePermission) && permissions.node.site[accordionItem.requiredSitePermission]
-    );
+    const enabledAccordionItems = accordionItems
+        .filter(accordionItem => !accordionItem.requiredSitePermission || Boolean(nodeChecks.node?.site?.[accordionItem.requiredSitePermission]));
 
     return (
         <ContentNavigation header={header}
-                           accordionItems={accordionItems}
+                           accordionItems={enabledAccordionItems}
                            mode={mode}
                            siteKey={siteKey}
                            isReversed={isReversed}

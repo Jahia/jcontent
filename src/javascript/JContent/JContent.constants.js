@@ -1,5 +1,4 @@
 const JContentConstants = {
-    contentType: 'jmix:editorialContent',
     maxCreateContentOfTypeDirectItems: 5,
     availablePublicationStatuses: {
         PUBLISHED: 'PUBLISHED',

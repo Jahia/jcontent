@@ -22,7 +22,11 @@ export function fillCKEditorPicker(setUrl, dialog, contentPicker, pickerResult) 
     const contentElement = dialog.getContentElement('info', eltId === 'url' ? 'advTitle' : altElementId);
 
     if (contentElement !== undefined) {
-        contentElement.setValue(pickerResult.name);
+        if (eltId === 'url' && pickerResult.displayName) {
+            contentElement.setValue(pickerResult.displayName);
+        } else {
+            contentElement.setValue(pickerResult.name);
+        }
     }
 
     if (pickerResult.url) {

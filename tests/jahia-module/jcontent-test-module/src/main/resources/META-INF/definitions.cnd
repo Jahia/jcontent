@@ -126,3 +126,8 @@
  extends = jnt:page, jnt:nodeLink, jnt:externalLink
  itemtype = content
  - locationValues (string, choicelist[locationValuesInitializer]) = 'default' noqueryorder nofulltext
+
+[cent:mainResourceLinkComponentTest] > jnt:content, jmix:basicContent, mix:title, jmix:editorialContent
+ + * (cent:mainResourceLinkTest) = cent:mainResourceLinkTest
+
+[cent:mainResourceLinkTest] > jnt:content, jmix:mainResource, mix:title, jmix:editorialContent

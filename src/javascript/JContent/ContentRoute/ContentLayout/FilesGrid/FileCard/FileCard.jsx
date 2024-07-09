@@ -49,7 +49,9 @@ function getElement(node, encodedPath) {
                 style={{backgroundImage: `url("${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2")`}}
             />
         );
-    } else if (isPDF(node) && node.thumbnailUrl && node.thumbnailUrl.endsWith('?t=thumbnail')) {
+    }
+
+    if (isPDF(node) && node.thumbnailUrl && node.thumbnailUrl.endsWith('?t=thumbnail')) {
         return (
             <div
                 className={clsx(styles.cardPreviewAndIcon, {[styles.smallImage]: node.width && node.width.value < 200})}

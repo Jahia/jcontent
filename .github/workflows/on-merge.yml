@@ -89,7 +89,7 @@ jobs:
 
   publish:
     name: Publish module
-    needs: [integration-tests-standalone]
+    needs: [build]
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/2_x'
     runs-on: ubuntu-latest
     container:

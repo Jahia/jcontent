@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Typography} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
-import {isBrowserImage} from '../../ContentLayout.utils';
+import {isBrowserImage, isPDF} from '../../ContentLayout.utils';
 import {NodeIcon} from '~/utils';
 import {allowDoubleClickNavigation, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
@@ -47,6 +47,15 @@ function getElement(node, encodedPath) {
             <div
                 className={clsx(styles.cardPreviewAndIcon, {[styles.smallImage]: node.width && node.width.value < 200})}
                 style={{backgroundImage: `url("${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2")`}}
+            />
+        );
+    }
+
+    if (isPDF(node) && node.thumbnailUrl && node.thumbnailUrl.endsWith('?t=thumbnail')) {
+        return (
+            <div
+                className={clsx(styles.cardPreviewAndIcon, {[styles.smallImage]: node.width && node.width.value < 200})}
+                style={{backgroundImage: `url("${node.thumbnailUrl}")`}}
             />
         );
     }

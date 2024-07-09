@@ -22,6 +22,7 @@ export const imageFields = {
                     value
                 }
             }
+            thumbnailUrl(name: "thumbnail")
         }
     `,
     applyFor: 'node'

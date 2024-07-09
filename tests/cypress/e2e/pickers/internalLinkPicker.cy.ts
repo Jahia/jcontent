@@ -48,7 +48,7 @@ describe('Internal link picker test', () => {
     });
 
     after(function () {
-        deleteSite('externalPickerTest');
+        deleteSite(siteKey);
     });
 
     // Tests

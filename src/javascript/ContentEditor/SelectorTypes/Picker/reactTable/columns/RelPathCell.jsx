@@ -5,7 +5,7 @@ import {rowPropType} from '~/ContentEditor/SelectorTypes/Picker/reactTable/colum
 
 export const RelPathCell = ({row}) => (
     <TableBodyCell data-cm-role="rel-path-cell">
-        {getRelativePath(row.original.path, row.original.site.path)}
+        {getRelativePath(row.original.path)}
     </TableBodyCell>
 );
 

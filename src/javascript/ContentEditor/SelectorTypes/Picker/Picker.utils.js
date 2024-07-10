@@ -6,8 +6,8 @@ export const getPathWithoutFile = fullPath => {
     return fullPath && fullPath.split('/').slice(0, -1).join('/');
 };
 
-export const getRelativePath = (fullPath, sitePath) => {
-    return getPathWithoutFile(fullPath.split(`${sitePath}/`)[1]) || '';
+export const getRelativePath = fullPath => {
+    return getPathWithoutFile(fullPath.replace('/sites/', '')) || '';
 };
 
 export const flattenTree = rows => {

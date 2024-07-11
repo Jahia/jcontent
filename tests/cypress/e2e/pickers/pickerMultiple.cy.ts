@@ -99,6 +99,10 @@ describe('Picker tests - multiple', () => {
             .getRows()
             .get()
             .then(rows => expect(rows.length).eq(numSelected));
+        picker
+            .getSelectionTable()
+            .get()
+            .find('span').contains('digitall/files/images/devices');
 
         cy.log('remove selection through selection table');
         picker

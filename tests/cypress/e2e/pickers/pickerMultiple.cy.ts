@@ -102,7 +102,7 @@ describe('Picker tests - multiple', () => {
         picker
             .getSelectionTable()
             .get()
-            .find('span').contains('digitall/files/images/devices')
+            .find('span').contains('digitall/files/images/devices');
 
         cy.log('remove selection through selection table');
         picker

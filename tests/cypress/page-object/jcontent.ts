@@ -202,6 +202,10 @@ export class JContent extends BasePage {
     getHeaderActionButton(role: string): Button {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
+
+    clickPublishNow() {
+        cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
+    };
 }
 
 export class JContentPageBuilder extends JContent {
@@ -252,6 +256,12 @@ export class JContentPageBuilder extends JContent {
         });
         return this;
     }
+
+    clickPublishNow() {
+        cy.get('#publishNowButton').should('be.visible')
+            .find('button').contains('Publish now')
+            .click();
+    };
 }
 
 class PageBuilderModuleHeader extends BaseComponent {

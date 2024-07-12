@@ -406,6 +406,7 @@ describe('delete tests', () => {
             }`
         });
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+        cy.get('.moonstone-header h1').contains('Test-deleteContents').should('be.visible');
         jcontent.getTable().getRowByLabel('test 2').contextMenu().should('contain', 'Delete');
         cy.get('.moonstone-menu_overlay').click();
         jcontent.getTable().getRowByLabel('test 1').contextMenu().should('not.contain', 'Delete');
@@ -415,6 +416,7 @@ describe('delete tests', () => {
         jcontent.getHeaderActionButton('paste').click();
         jcontent.getTable().getRowByLabel('test 1').contextMenu().should('contain', 'Delete');
     });
+
     it('allows to permanently delete an autopublished node', () => {
         cy.log('Verify autopublished node exists before starting test');
         cy.apollo({

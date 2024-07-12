@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import styles from './AdvancedOptionsNavigation.scss';
 import {DisplayActions, registry} from '@jahia/ui-extender';
 import {Chip, MenuItem} from '@jahia/moonstone';
@@ -8,7 +8,7 @@ import {registerAdvancedOptionsActions} from './registerAdvancedOptionsActions';
 import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {useQuery} from '@apollo/client';
+import {skipToken, useQuery} from '@apollo/client';
 import {UsagesCountQuery} from '~/UsagesTable/UsagesTable.gql-queries';
 
 const DEPRECATED_GWT_ACTIONS = ['seo', 'usages', 'channels', 'visibility'];
@@ -26,10 +26,26 @@ const Renderer = ({activeOption, setActiveOption, buttonLabel, onClick, tabs}) =
     const tab = tabs ? tabs[0] : 'technicalInformation';
     const {nodeData} = useContentEditorContext();
 
-    const {data} = useQuery(UsagesCountQuery, {
+    const isHidden = useMemo(() => {
+        if (tab === 'channels') {
+            return true;
+        }
+
+        if (tab === 'usages' && nodeData.isSite) {
+            return true;
+        }
+
+        return false;
+    }, [tab, nodeData.isSite]);
+
+    const {data} = useQuery(UsagesCountQuery, isHidden ? skipToken : {
         variables: {path: nodeData.path},
         fetchPolicy: 'cache-and-network'
     });
+
+    if (isHidden) {
+        return null;
+    }
 
     if (tab === 'usages') {
         return (
@@ -48,10 +64,6 @@ const Renderer = ({activeOption, setActiveOption, buttonLabel, onClick, tabs}) =
                 }}
             />
         );
-    }
-
-    if (tab === 'channels') {
-        return null;
     }
 
     return (

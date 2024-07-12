@@ -22,7 +22,7 @@ export const imageFields = {
                     value
                 }
             }
-            thumbnailUrl(name: "thumbnail")
+            thumbnailUrl(name: "thumbnail", checkIfExists: true)
         }
     `,
     applyFor: 'node'

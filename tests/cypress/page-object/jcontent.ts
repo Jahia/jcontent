@@ -205,7 +205,7 @@ export class JContent extends BasePage {
 
     clickPublishNow() {
         cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
-    };
+    }
 }
 
 export class JContentPageBuilder extends JContent {
@@ -261,7 +261,7 @@ export class JContentPageBuilder extends JContent {
         cy.get('#publishNowButton').should('be.visible')
             .find('button').contains('Publish now')
             .click();
-    };
+    }
 }
 
 class PageBuilderModuleHeader extends BaseComponent {

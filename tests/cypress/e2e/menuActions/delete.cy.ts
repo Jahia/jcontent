@@ -1,23 +1,10 @@
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
 import {PageComposer} from '../../page-object/pageComposer';
+import {createSite, deleteSite, enableModule, publishAndWaitJobEnding} from '@jahia/cypress';
 
 describe('delete tests', () => {
     const siteKey = 'jContentSite-delete';
-
-    before(() => {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
-        cy.apollo({mutationFile: 'jcontent/menuActions/createDeleteContent.graphql'});
-    });
-
-    beforeEach(() => {
-        cy.loginAndStoreSession(); // Edit in chief
-    });
-
-    after(function () {
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
-        cy.logout();
-    });
 
     const markForDeletionMutation = path => {
         return gql`mutation MarkForDeletionMutation {
@@ -25,15 +12,34 @@ describe('delete tests', () => {
         }`;
     };
 
-    it('Can cancel mark for deletion', function () {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
+    const confirmMarkForDeletion = verifyMsg => {
+        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
+        cy.get(dialogCss)
+            .should('contain', verifyMsg)
+            .find('[data-sel-role="delete-mark-button"]')
+            .click();
+        cy.get(dialogCss).should('not.exist');
+    };
 
-        jcontent.getTable()
-            .getRowByLabel('Page test 1')
-            .contextMenu()
-            .select('Delete');
+    before(() => {
+        createSite(siteKey);
+        enableModule('jcontent-test-module', siteKey);
+        cy.apollo({mutationFile: 'jcontent/menuActions/createDeleteContent.graphql'})
+            .then(() => publishAndWaitJobEnding(`/sites/${siteKey}/home/test-pageDelete3/test-subpage3`));
+    });
+
+    beforeEach(() => {
+        cy.loginAndStoreSession(); // Edit in chief
+    });
+
+    after(function () {
+        deleteSite(siteKey);
+        cy.logout();
+    });
+
+    it('Can cancel mark for deletion', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
+        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete');
 
         const dialogCss = '[data-sel-role="delete-mark-dialog"]';
         cy.get(dialogCss)
@@ -43,22 +49,11 @@ describe('delete tests', () => {
     });
 
     it('Can mark root and subnodes for deletion', function () {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
-
-        jcontent.getTable()
-            .getRowByLabel('Page test 1')
-            .contextMenu()
-            .select('Delete');
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
+        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete');
 
         cy.log('Verify dialog opens and can be mark for deletion');
-        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'You are about to delete 3 items, including 3 page(s)')
-            .find('[data-sel-role="delete-mark-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        confirmMarkForDeletion('You are about to delete 5 items, including 3 page(s)');
 
         cy.log('Verify menu and subpages has been marked for deletion');
         cy.apollo({
@@ -79,15 +74,10 @@ describe('delete tests', () => {
     });
 
     it('Cannot undelete non-root node', function () {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1/test-subpage1');
 
         cy.log('Undelete non-root node');
-        jcontent.getTable()
-            .getRowByLabel('Subpage test 1')
-            .contextMenu()
-            .select('Undelete');
+        jcontent.getAccordionItem('pages').getTreeItem('test-subpage1').contextMenu().select('Undelete');
 
         cy.log('Verify dialog opens and cannot be marked for deletion');
         const dialogCss = '[data-sel-role="delete-undelete-dialog"]';
@@ -99,20 +89,15 @@ describe('delete tests', () => {
     });
 
     it('Can undelete root node', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
 
         cy.log('Undelete root node');
-        jcontent.getTable()
-            .getRowByLabel('Page test 1')
-            .contextMenu()
-            .select('Undelete');
+        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Undelete');
 
         cy.log('Verify dialog opens and can be undeleted');
         const dialogCss = '[data-sel-role="delete-undelete-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'Do you really want to undelete 3 items, including 3 page(s)')
+            .should('contain', 'Do you really want to undelete 5 items, including 3 page(s)')
             .find('[data-sel-role="delete-undelete-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -123,8 +108,9 @@ describe('delete tests', () => {
             variables: {path: `/sites/${siteKey}/home/test-pageDelete1`}
         }).should(resp => {
             const {mixinTypes, children} = resp?.data?.jcr.nodeByPath;
-            expect(mixinTypes).to.be.empty;
-            expect(children.nodes.every(n => !n.mixinTypes.length)).to.be.true;
+            expect(mixinTypes.map(m => m.name)).to.not.include('jmix:markedForDeletion');
+            expect(mixinTypes.map(m => m.name)).to.not.include('jmix:markedForDeletionRoot');
+            expect(children.nodes.every(n => !n.mixinTypes.includes('jmix:markedForDeletion'))).to.be.true;
         });
     });
 
@@ -141,7 +127,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and can be mark for deletion');
         const dialogCss = '[data-sel-role="delete-mark-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to delete 3 items, including 3 page(s)');
+            .should('contain', 'You are about to delete 5 items, including 3 page(s)');
 
         cy.apollo({
             mutation: markForDeletionMutation(`/sites/${siteKey}/home/test-pageDelete1`)
@@ -156,15 +142,8 @@ describe('delete tests', () => {
     });
 
     it('Cannot delete subnodes permanently', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
-
-        cy.log('Cannot delete subnodes permanently');
-        jcontent.getTable()
-            .getRowByLabel('Subpage test 1')
-            .contextMenu()
-            .select('Delete (permanently)');
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1/test-subpage1');
+        jcontent.getAccordionItem('pages').getTreeItem('test-subpage1').contextMenu().select('Delete (permanently)');
 
         cy.log('Verify dialog opens and cannot be deleted permanently');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
@@ -176,20 +155,13 @@ describe('delete tests', () => {
     });
 
     it('Can delete root node permanently', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
-
-        cy.log('Can delete root node permanently');
-        jcontent.getTable()
-            .getRowByLabel('Page test 1')
-            .contextMenu()
-            .select('Delete (permanently)');
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
+        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete (permanently)');
 
         cy.log('Verify dialog opens and can be deleted');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete 3 items, including 3 page(s)')
+            .should('contain', 'You are about to permanently delete 5 items, including 3 page(s)')
             .find('[data-sel-role="delete-permanently-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -202,6 +174,33 @@ describe('delete tests', () => {
             expect(resp?.data.jcr.nodeByPath).to.be.null;
         });
         jcontent.checkSelectionCount(0);
+    });
+
+    it('selects the parent in jContent nav if current selection has been deleted', () => {
+        const relPath = 'home/test-pageDelete3/test-subpage3';
+        const jcontent = JContent.visit(siteKey, 'en', `pages/${relPath}`);
+
+        cy.log('mark published page for deletion');
+        jcontent.getAccordionItem('pages').getTreeItem('test-subpage3').contextMenu().select('Delete');
+        confirmMarkForDeletion('You are about to delete 3 items, including 1 page(s)');
+
+        cy.log('Publish deletion');
+        jcontent.getHeaderActionButton('publishDeletion').get().should('be.visible').click();
+        jcontent.clickPublishNow();
+
+        cy.log('Verify node is deleted');
+        cy.apollo({
+            query: gql`query { jcr { nodeByPath(path: "/sites/${siteKey}/${relPath}") {uuid}}}`,
+            errorPolicy: 'ignore'
+        }).should(resp => {
+            expect(resp?.data.jcr.nodeByPath).to.be.null;
+        });
+
+        cy.log('Verify parent page is now selected');
+        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete3').get()
+            .invoke('attr', 'aria-selected').should('eq', 'true');
+        cy.url().should('include', '/home/test-pageDelete3')
+            .and('not.include', 'test-subpage3');
     });
 
     it('show warning when content is referenced', function () {
@@ -234,14 +233,8 @@ describe('delete tests', () => {
     });
 
     it('Shows export button', function () {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
-        jcontent.switchToListMode();
-        jcontent.switchToSubpages();
-
-        jcontent.getTable()
-            .getRowByLabel('Page test 2')
-            .contextMenu()
-            .select('Delete');
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete2');
+        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete2').contextMenu().select('Delete');
 
         const dialogCss = '[data-sel-role="delete-mark-dialog"]';
         cy.get(dialogCss)
@@ -269,22 +262,17 @@ describe('delete tests', () => {
         cy.log('Can delete root node permanently');
         jcontent.getTable()
             .selectRowByLabel('Page test 2');
+        jcontent.checkSelectionCount(1);
 
-        jcontent.checkSelectionCount(1);
         jcontent.getHeaderActionButton('delete').click();
-        cy.log('Verify dialog opens and can be deleted');
-        let dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'You are about to delete Page test 2')
-            .find('[data-sel-role="delete-mark-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        confirmMarkForDeletion('You are about to delete 3 items, including 1 page(s)');
         jcontent.checkSelectionCount(1);
+
         jcontent.getHeaderActionButton('deletePermanently').click();
         cy.log('Verify dialog opens and can be deleted');
-        dialogCss = '[data-sel-role="delete-permanently-dialog"]';
+        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete Page test 2')
+            .should('contain', 'You are about to permanently delete 3 items, including 1 page(s).')
             .find('[data-sel-role="delete-permanently-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -406,7 +394,7 @@ describe('delete tests', () => {
             }`
         });
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
-        cy.get('.moonstone-header h1').contains('Test-deleteContents').should('be.visible');
+        cy.get('.moonstone-header h1').contains('test-deleteContents').should('be.visible');
         jcontent.getTable().getRowByLabel('test 2').contextMenu().should('contain', 'Delete');
         cy.get('.moonstone-menu_overlay').click();
         jcontent.getTable().getRowByLabel('test 1').contextMenu().should('not.contain', 'Delete');

@@ -42,10 +42,6 @@ describe('Test the save publish buttons flow', () => {
         deleteUser(userName);
     });
 
-    const clickPublishNow = () => {
-        cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
-    };
-
     // Implement scenario from https://jira.jahia.org/browse/BACKLOG-21685
     it('Publish deletion in structured view', () => {
         cy.log('Login with editor in chief');
@@ -57,11 +53,11 @@ describe('Test the save publish buttons flow', () => {
         contentEditor.getRichTextField('jnt:bigText_text').type('Newly Created Content');
         contentEditor.create();
         jcontent.getHeaderActionButton('publish').should('exist').and('be.visible').click(); // Verify header is loaded first
-        clickPublishNow();
+        jcontent.clickPublishNow();
         jcontent.switchToListMode().getTable().getRowByLabel('Newly Created Content').contextMenu().select('Delete');
         getComponent(DeleteDialog).markForDeletion();
         jcontent.switchToStructuredView().getTable().selectRowByLabel('Newly Created Content');
         jcontent.getHeaderActionButton('publishDeletion').click();
-        clickPublishNow();
+        jcontent.clickPublishNow();
     });
 });

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
+import {displayName, lockInfo, useNodeInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
@@ -134,6 +134,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         sortBy: item.treeConfig.sortBy
     };
 
+    const nodeInfo = useNodeInfo({path}, {getParent: true});
     const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
 
     if (dataRef.current === null || treeEntries.length > 0) {
@@ -170,6 +171,9 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
     const highlightedItem = path && (!treeEntries.find(f => f.path === path)) && treeEntries.filter(f => path.startsWith(f.path)).slice(-1)[0];
     const highlighted = highlightedItem ? [highlightedItem.path] : [];
+    if (!nodeInfo.loading && !nodeInfo.node && highlightedItem?.path) {
+        dispatch((setPathAction(highlightedItem.path)));
+    }
 
     return (
         <React.Fragment>

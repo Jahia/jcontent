@@ -6,12 +6,12 @@ export const baseConfig = {
     pageLoadTimeout: 60000,
     requestTimeout: 60000,
     responseTimeout: 60000,
-    videoUploadOnPasses: false,
     reporter: 'cypress-multi-reporters',
     reporterOptions: {
         configFile: 'reporter-config.json'
     },
     screenshotsFolder: './results/screenshots',
+    video: true,
     videosFolder: './results/videos',
     viewportWidth: 1366,
     viewportHeight: 768,
@@ -30,6 +30,18 @@ export const baseConfig = {
                     }
 
                     return null;
+                }
+            });
+            on('after:spec', (spec, results) => {
+                if (results && results.video) {
+                    // Do we have failures for any retry attempts?
+                    const failures = results.tests.some(test =>
+                        test.attempts.some(attempt => attempt.state === 'failed')
+                    );
+                    if (!failures) {
+                        // Delete the video if the spec passed and no tests retried
+                        fs.unlinkSync(results.video);
+                    }
                 }
             });
             // eslint-disable-next-line @typescript-eslint/no-var-requires

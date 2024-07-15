@@ -65,7 +65,7 @@ mutation createDeleteContent {
                     primaryNodeType: "jnt:page",
                     properties: [
                         { name: "jcr:title", language: "en", value: "Page test 1" },
-                        { name: "j:templateName", value: "default" }
+                        { name: "j:templateName", value: "home" }
                     ]
                     children: [
                         {
@@ -73,7 +73,7 @@ mutation createDeleteContent {
                             primaryNodeType: "jnt:page"
                             properties: [
                                 { name: "jcr:title", language: "en", value: "Subpage test 1" },
-                                { name: "j:templateName", value: "default" }
+                                { name: "j:templateName", value: "home" }
                             ]
                         }
                         {
@@ -81,7 +81,7 @@ mutation createDeleteContent {
                             primaryNodeType: "jnt:page"
                             properties: [
                                 { name: "jcr:title", language: "en", value: "Subpage test 2" },
-                                { name: "j:templateName", value: "default" }
+                                { name: "j:templateName", value: "home" }
                             ]
                         }
                     ]
@@ -91,7 +91,25 @@ mutation createDeleteContent {
                     primaryNodeType: "jnt:page"
                     properties: [
                         { name: "jcr:title", language: "en", value: "Page test 2" },
-                        { name: "j:templateName", value: "default" }
+                        { name: "j:templateName", value: "home" }
+                    ]
+                }
+                {
+                    name: "test-pageDelete3",
+                    primaryNodeType: "jnt:page",
+                    properties: [
+                        { name: "jcr:title", language: "en", value: "Page test 3" },
+                        { name: "j:templateName", value: "home" }
+                    ]
+                    children: [
+                        {
+                            name: "test-subpage3"
+                            primaryNodeType: "jnt:page"
+                            properties: [
+                                { name: "jcr:title", language: "en", value: "Subpage test 3" },
+                                { name: "j:templateName", value: "home" }
+                            ]
+                        }
                     ]
                 }
             ]) {

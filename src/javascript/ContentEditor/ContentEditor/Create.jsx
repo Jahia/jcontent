@@ -41,6 +41,7 @@ export const Create = () => {
                 i18nContext
             },
             createCallback: info => {
+                document.querySelector('div[role="dialog"] form')?.scrollTo(0, 0);
                 createCallback(info, contentEditorConfigContext);
                 triggerRefetchAll();
             }

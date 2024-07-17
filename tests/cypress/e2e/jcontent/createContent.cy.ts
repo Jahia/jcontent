@@ -30,7 +30,7 @@ describe('Create content tests', () => {
                 .getCreateContent()
                 .open()
                 .getContentTypeSelector()
-                .selectContentType('Content:Basic')
+                .selectContentType('Jahia - Basic')
                 .selectContentType('Rich text')
                 .create();
         });

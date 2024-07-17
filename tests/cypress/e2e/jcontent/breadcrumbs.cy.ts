@@ -16,7 +16,7 @@ describe('Breadcrumb navigation test', () => {
         cy.frameLoaded('#page-builder-frame-1');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
-        cy.get('.moonstone-chip').find('span').contains('Content List').should('be.visible');
+        cy.get('.moonstone-chip').find('span').contains('List of content items').should('be.visible');
         cy.get('h1').contains('article');
         jcontent.shouldBeInMode('List');
     });

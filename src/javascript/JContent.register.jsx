@@ -149,7 +149,6 @@ export default function () {
         registry.add('route', 'pageBuilderToPageComposerRoute', {
             targets: ['main:-1'],
             path: '/page-composer/default/:lang/sites/:siteKey/:path',
-            requiredPermission: 'jContentAccess',
             render: props => (
                 <Redirect
                 to={`/jcontent/${props.match.params.siteKey}/${props.match.params.lang}/pages/${props.match.params.path.substring(0, props.match.params.path.lastIndexOf('.'))}`}/>

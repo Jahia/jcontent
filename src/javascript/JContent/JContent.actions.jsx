@@ -67,7 +67,7 @@ import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions/actions.constants';
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
-import {MenuActionWithRequirementsComponent} from '~/JContent/actions/menuActionWithRequirements';
+import {CopyMenuComponent} from '~/JContent/actions/copyPaste/CopyMenuComponent';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -235,7 +235,7 @@ export const jContentActions = registry => {
         menuTarget: 'copyPageMenu',
         targets: ['contentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
         showOnNodeTypes: ['jnt:page'],
-        component: MenuActionWithRequirementsComponent
+        component: CopyMenuComponent
     });
     registry.add('action', 'copyPageOnly', {
         buttonIcon: <Copy/>,

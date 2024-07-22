@@ -18,7 +18,7 @@ const checkAction = node => {
         node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
         (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
     const isAutoPublish = node['jmix:autoPublish'];
-    return isCategory || isMarkForDeletionAllowed || isAutoPublish;
+    return Boolean(isCategory || isMarkForDeletionAllowed || isAutoPublish);
 };
 
 export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {

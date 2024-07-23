@@ -26,16 +26,18 @@ export function getI18nFieldAndValues(formAndData) {
         .filter(field => field.i18n)
         .map(field => ({...field, propertyName: field.name}));
 
-    const adaptedValues = i18nFields.map(field => getFieldValues(field, jcr?.result)).reduce((acc, current) => ({...acc, ...current}), {});
-
-    return jcr.result.properties
-        .filter(property => i18nFields.map(field => field.name).indexOf(property.name) > -1)
-        .map(property => {
-            const isMultiple = i18nFields.find(field => field.name === property.name).multiple;
-            return {
+    return jcr.result.properties.reduce((acc, property) => {
+        const i18nField = i18nFields.find(field => field.name === property.name);
+        if (i18nField) {
+            const isMultiple = i18nField.multiple;
+            const adaptedValues = getFieldValues(i18nField, jcr?.result)[property.name];
+            return [...acc, {
                 ...property,
                 multiple: isMultiple,
-                ...(isMultiple ? {values: adaptedValues[property.name]} : {value: adaptedValues[property.name]})
-            };
-        });
+                ...(isMultiple ? {values: adaptedValues} : {value: adaptedValues})
+            }];
+        }
+
+        return acc;
+    }, []);
 }

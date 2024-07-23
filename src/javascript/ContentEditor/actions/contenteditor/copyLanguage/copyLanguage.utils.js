@@ -37,6 +37,7 @@ export function getI18nFieldAndValues(formAndData) {
                 ...(isMultiple ? {values: adaptedValues} : {value: adaptedValues})
             }];
         }
+
         return acc;
     }, []);
 }

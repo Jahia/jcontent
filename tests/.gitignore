@@ -11,3 +11,12 @@ build-dependencies
 dist
 results
 **/src/main/resources/javascript/apps
+
+# yarn 4
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

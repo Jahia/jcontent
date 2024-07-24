@@ -24,7 +24,7 @@ const contentTypes: ContentTypes = {
         multiple: false
     },
     imageReference: {
-        typeName: 'Image (from the Document Manager)',
+        typeName: 'Image (Internationalized)',
         fieldNodeType: 'jnt:imageReferenceLink_j:node',
         multiple: false
     },

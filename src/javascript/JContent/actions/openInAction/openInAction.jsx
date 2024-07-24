@@ -50,12 +50,10 @@ const OpenInActionComponent = ({
         <Render
             {...others}
             onClick={() => {
-                let serverName = 'localhost';
+                let serverName = location.hostname;
 
                 // Use current host for preview urls
-                if (!isLive) {
-                    serverName = location.hostname;
-                } else if (node.site.serverName) {
+                if (isLive && node.site.serverName) {
                     serverName = node.site.serverName;
                 }
 

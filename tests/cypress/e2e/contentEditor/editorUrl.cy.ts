@@ -124,11 +124,13 @@ describe('Editor url test', () => {
 
     it('Handles breadcrumb in GWT correctly', function () {
         cy.login();
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);
         ContentEditor.getUrl('/sites/digitall/home/area-main/highlights/people-first', 'digitall', 'en', 'pages/home')
             .then(url => {
                 const hash = url.substring(url.indexOf('#'));
                 cy.login();
+                // eslint-disable-next-line cypress/no-unnecessary-waiting
                 cy.wait(3000);
                 PageComposer.visit('digitall', 'en', `home.html?redirect=false${hash}`);
                 cy.url().should('contain', hash).and('contain', '/jahia/page-composer/default/');

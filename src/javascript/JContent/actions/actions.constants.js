@@ -3,6 +3,7 @@ export const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
 
 export const ACTION_PERMISSIONS = {
     copyAction: 'copyAction',
+    copyPageAction: 'copyPageAction',
     cutAction: 'cutAction',
     exportAction: 'exportAction',
     exportPageAction: 'exportPageAction',

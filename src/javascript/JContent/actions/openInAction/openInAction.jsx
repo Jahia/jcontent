@@ -15,11 +15,11 @@ const OpenInActionComponent = ({
     ...others
 }) => {
     const language = useSelector(state => state.language);
-    let urlPath = path;
     const res = useQuery(OpenInActionQuery, {
         variables: {
             path: path,
-            language: language
+            language: language,
+            workspace: isLive ? 'LIVE' : 'EDIT'
         },
         skip: !path
     });
@@ -44,22 +44,20 @@ const OpenInActionComponent = ({
         return false;
     }
 
-    if (!node.previewAvailable && node.displayableNode.previewAvailable) {
-        urlPath = node.displayableNode.path;
-    }
+    const urlPath = node.renderUrl;
 
     return (
         <Render
             {...others}
             onClick={() => {
-                let baseUrl = window.contextJsParameters.baseUrl;
-                if (isLive) {
-                    baseUrl = baseUrl.replace(/\/default\/[a-zA-Z_]{2,5}/, `/live/${language}`);
-                } else {
-                    baseUrl = baseUrl.replace(/\/default\/[a-zA-Z_]{2,5}/, `/default/${language}`);
+                let serverName = location.hostname;
+
+                // Use current host for preview urls
+                if (isLive && node.site.serverName) {
+                    serverName = node.site.serverName;
                 }
 
-                window.open(`${location.protocol}//${node.site.serverName === 'localhost' ? location.hostname : node.site.serverName}:${location.port}${baseUrl}${urlPath}.html`, '_blank');
+                window.open(`${location.protocol}//${serverName}:${location.port}${urlPath}`, '_blank');
             }}
         />
     );

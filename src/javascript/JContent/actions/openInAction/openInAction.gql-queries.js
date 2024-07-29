@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
 const OpenInActionQuery = gql`
-    query openInActionQuery($path: String!, $language: String!) {
+    query openInActionQuery($path: String!, $language: String!, $workspace: Workspace!) {
         jcr {
             result: nodeByPath(path: $path) {
                 ...NodeCacheRequiredFields
@@ -15,6 +15,7 @@ const OpenInActionQuery = gql`
                     existsInLive
                     status: publicationStatus
                 }
+                renderUrl(workspace: $workspace, language: $language)
                 site {
                     serverName
                 }

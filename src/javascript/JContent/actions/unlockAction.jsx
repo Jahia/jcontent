@@ -10,6 +10,7 @@ export const UnlockActionComponent = ({path, render: Render, loading: Loading, .
         {path},
         {
             getLockInfo: true,
+            getCanLockUnlock: true,
             getOperationSupport: true,
             requiredPermission: 'jcr:lockManagement'
         }
@@ -19,7 +20,11 @@ export const UnlockActionComponent = ({path, render: Render, loading: Loading, .
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes !== null && res.node.lockTypes.values.indexOf(' deletion :deletion') === -1;
+    const isVisible = res.checksResult &&
+        res.node.operationsSupport.lock &&
+        res.node.lockTypes !== null &&
+        res.node.lockTypes.values.indexOf(' deletion :deletion') === -1 &&
+        res.node.lockInfo && res.node.lockInfo.canUnlock;
 
     return (
         <Render

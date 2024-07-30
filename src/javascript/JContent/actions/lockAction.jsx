@@ -12,7 +12,8 @@ export const LockActionComponent = ({path, render: Render, loading: Loading, ...
             getLockInfo: true,
             getOperationSupport: true,
             requiredPermission: 'jcr:lockManagement',
-            hideOnNodeTypes: ['jnt:navMenuText', 'jnt:category']
+            hideOnNodeTypes: ['jnt:navMenuText', 'jnt:category'],
+            getPermissions: ['lockPageAction']
         }
     );
 
@@ -20,7 +21,10 @@ export const LockActionComponent = ({path, render: Render, loading: Loading, ...
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes === null;
+    const isVisible = res.checksResult &&
+        res.node.operationsSupport.lock &&
+        res.node.lockTypes === null &&
+        (!res.node['jnt:page'] || res.node.lockPageAction);
 
     return (
         <Render

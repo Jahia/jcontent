@@ -65,6 +65,7 @@ export const Box = React.memo(({
     currentFrameRef,
     isHeaderDisplayed,
     isCurrent,
+    isClicked,
     isSelected,
     isActionsHidden,
     onDoubleClick,
@@ -211,14 +212,14 @@ export const Box = React.memo(({
         </div>
     );
 
-    const boxStyle = !isAnythingDragging && isCurrent && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
+    const boxStyle = !isAnythingDragging && (isCurrent || isClicked) && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
 
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, isCurrent && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
+            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, (isCurrent || isClicked) && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
                  style={{
                      '--colorCurrent': borderColorCurrent,
                      '--colorSelected': borderColorSelected
@@ -226,7 +227,7 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && isCurrent && breadcrumbs.length > 0 &&
+                {!isAnythingDragging && isClicked && breadcrumbs.length > 0 &&
                     <div className={clsx(styles.relFooter)}
                          data-current={isCurrent}
                          data-jahia-id={element.getAttribute('id')}
@@ -274,6 +275,8 @@ Box.propTypes = {
     isHeaderDisplayed: PropTypes.bool,
 
     isCurrent: PropTypes.bool,
+
+    isClicked: PropTypes.bool,
 
     isSelected: PropTypes.bool,
 

@@ -83,8 +83,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [currentElement, setCurrentElement] = useState();
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
-
-    const [header, setHeader] = useState(false);
+    const [clickedElement, setClickedElement] = useState();
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
@@ -92,13 +91,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
             const moduleElement = getModuleElement(currentDocument, target);
-            setHeader(currentElement?.pinned && moduleElement.getAttribute('path') === currentElement.path);
-            setCurrentElement(current => (
-                (current && (current.breadcrumb || current.pinned) && isDescendantOrSelf(moduleElement.getAttribute('path'), current.path)) ?
-                    current : {element: moduleElement, path: moduleElement.getAttribute('path')}
-            ));
+            setCurrentElement(() => ({element: moduleElement, path: moduleElement.getAttribute('path')}));
         }, 10);
-    }, [setCurrentElement, currentDocument, currentElement]);
+    }, [setCurrentElement, currentDocument]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
@@ -110,7 +105,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             !event.target.closest('#menuHolder')
         ) {
             window.clearTimeout(timeout);
-            setHeader(false);
             setCurrentElement(null);
         }
     }, [setCurrentElement, currentDocument]);
@@ -152,8 +146,15 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             if (isMultipleSelectionMode) {
                 onSelect(event);
             } else {
-                setCurrentElement(current => ({...current, pinned: true}));
-                setHeader(true);
+                const target = event.currentTarget;
+                const moduleElement = getModuleElement(currentDocument, target);
+                const path = moduleElement.getAttribute('path');
+
+                if (clickedElement && clickedElement.path === path) {
+                    setClickedElement(() => undefined);
+                } else {
+                    setClickedElement(() => ({element: moduleElement, path: path}));
+                }
             }
         } else if (event.detail === 2) {
             event.preventDefault();
@@ -161,7 +162,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return false;
-    }, [onSelect]);
+    }, [onSelect, currentDocument, clickedElement]);
 
     const clearSelection = useCallback(event => {
         if (selection.length === 1 && !event.defaultPrevented) {
@@ -438,16 +439,17 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          node={node}
+                         isClicked={clickedElement && node.path === clickedElement.path}
                          isCurrent={element === el}
                          isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={(header && element === el) ||
+                         isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}
-                         breadcrumbs={((header && element === el) ||
+                         breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 &&
                                  !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
@@ -460,7 +462,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
-                         setCurrentElement={setCurrentElement}
+                         setCurrentElement={setClickedElement}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onSelect={onSelect}

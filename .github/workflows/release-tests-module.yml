@@ -1,0 +1,23 @@
+name: Publish tests module to Registry
+on:
+    workflow_dispatch:
+
+
+jobs:
+  npm_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - run: cd tests
+      - run: corepack enable
+      - run: yarn set version stable
+      - run: yarn
+      - run: whoami && node -v && ls -lah 
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_PUBLISH_TOKEN }}" > .npmrc
+      - run: ls -lah ./
+      - run: yarn build
+      - run: yarn publish-tests

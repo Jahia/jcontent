@@ -13,19 +13,21 @@ import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
-    const {path, mode, viewMode} = useSelector(state => ({
+    const {path, mode, tableView, viewMode} = useSelector(state => ({
         path: state.jcontent.path,
         mode: state.jcontent.mode,
+        tableView: state.jcontent.tableView,
         viewMode: state.jcontent.tableView.viewMode
     }), shallowEqual);
     const dispatch = useDispatch();
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
     const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
+    const {FLAT, STRUCTURED, PAGE_BUILDER, PREVIEW} = JContentConstants.tableView.viewMode;
 
     useEffect(() => {
         const accordionItem = registry.get('accordionItem', mode);
         if (accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
-            dispatch(setTableViewMode(accordionItem.tableConfig.defaultViewMode || 'flatList'));
+            dispatch(setTableViewMode(accordionItem.tableConfig.defaultViewMode || FLAT));
         }
     }, [dispatch, mode, viewMode]);
 
@@ -41,14 +43,22 @@ export const ContentRoute = () => {
         return <Error404 label={t('jcontent:label.contentManager.error.missingFolder')}/>;
     }
 
-    const pageBuilder = (JContentConstants.tableView.viewMode.PAGE_BUILDER === viewMode || JContentConstants.tableView.viewMode.PREVIEW === viewMode);
+    const isPageBuilderView = [PAGE_BUILDER, PREVIEW].includes(viewMode);
     const canShowEditFrame = nodeTypes.some(nt => res.node[nt]);
+
+    // Update viewMode if page builder is selected but content cannot be displayed
+    if (isPageBuilderView && !canShowEditFrame) {
+        const {queryHandler, availableModes} = accordionItem?.tableConfig || {};
+        const isStructured = Boolean(queryHandler?.isStructured(tableView));
+        const viewMode = (isStructured && availableModes.includes(STRUCTURED)) ? STRUCTURED : FLAT;
+        dispatch(setTableViewMode(viewMode));
+    }
 
     return (
         <MainLayout header={<ContentHeader/>}>
             <LoaderSuspense>
                 <ErrorBoundary>
-                    { (pageBuilder && canShowEditFrame ? (<EditFrame isPreview={JContentConstants.tableView.viewMode.PREVIEW === viewMode}/>) : <ContentLayout/>) }
+                    { (isPageBuilderView && canShowEditFrame ? (<EditFrame isPreview={JContentConstants.tableView.viewMode.PREVIEW === viewMode}/>) : <ContentLayout/>) }
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

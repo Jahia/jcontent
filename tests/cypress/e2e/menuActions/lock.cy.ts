@@ -7,6 +7,15 @@ describe('Lock tests', () => {
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.apollo({mutationFile: 'jcontent/menuActions/createLockContent.graphql'});
+        cy.apollo({
+            mutation: gql`mutation GrantRoles {
+                jcr {
+                    mutateNode(pathOrId: "/sites/jContentSite-lock") {
+                        grantRoles(roleNames: "editor", principalType: USER, principalName: "mathias")
+                    }
+                }
+            }`
+        });
     });
 
     beforeEach(() => {
@@ -43,6 +52,51 @@ describe('Lock tests', () => {
     after(function () {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
         cy.logout();
+    });
+
+    it('checks unlock owner when unlocking', () => {
+        cy.login();
+        let jcontent = JContent.visit(siteKey, 'en', 'content-folders/content');
+        jcontent.getTable().getRowByLabel('content-lockPermissions1').contextMenu().select('Lock');
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        let contextMenu = jcontent.getTable().getRowByLabel('content-lockPermissions1').contextMenu();
+        contextMenu.shouldNotHaveItem('Lock');
+        contextMenu.shouldHaveItem('Unlock');
+
+        cy.logout();
+        cy.login('mathias', 'password');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/content');
+        contextMenu = jcontent.getTable().getRowByLabel('content-lockPermissions1').contextMenu();
+        contextMenu.shouldNotHaveItem('Lock');
+        contextMenu.shouldNotHaveItem('Unlock');
+    });
+
+    it('lets root unlock everything', () => {
+        cy.login('mathias', 'password');
+        let jcontent = JContent.visit(siteKey, 'en', 'content-folders/content');
+        jcontent.getTable().getRowByLabel('content-lockPermissions2').contextMenu().select('Lock');
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        let contextMenu = jcontent.getTable().getRowByLabel('content-lockPermissions2').contextMenu();
+        contextMenu.shouldNotHaveItem('Lock');
+        contextMenu.shouldHaveItem('Unlock');
+
+        cy.logout();
+        cy.login();
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/content');
+        contextMenu = jcontent.getTable().getRowByLabel('content-lockPermissions2').contextMenu();
+        contextMenu.shouldNotHaveItem('Lock');
+        contextMenu.shouldHaveItem('Unlock');
+        contextMenu.select('Unlock');
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        contextMenu = jcontent.getTable().getRowByLabel('content-lockPermissions2').contextMenu();
+        contextMenu.shouldHaveItem('Lock');
+        contextMenu.shouldNotHaveItem('Unlock');
     });
 
     it('Has empty folder page on locked page', () => {

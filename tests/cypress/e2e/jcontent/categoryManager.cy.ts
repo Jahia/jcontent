@@ -88,9 +88,18 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
         const primaryActions = ['New category', 'Edit', 'Import content', 'Refresh'];
         cy.get('.moonstone-header').children('.moonstone-header_toolbar').children('.moonstone-header_actions')
             .find('.moonstone-button')
-            .should('have.length', primaryActions.length + 1)
+            .should('have.length', primaryActions.length + 1) // +1 for 3-menu button
             .and(elems => {
                 primaryActions.forEach(action => expect(elems).to.contain(action));
+            });
+
+        categoryManager.getTable().selectRowByLabel('test-category1');
+        const selectedPrimaryActions = ['Clear selection', 'Export', 'Copy', 'Cut', 'Delete (permanently)'];
+        cy.get('.moonstone-header').children('.moonstone-header_toolbar').children('.moonstone-header_actions')
+            .find('.moonstone-button')
+            .should('have.length', selectedPrimaryActions.length)
+            .and(elems => {
+                selectedPrimaryActions.forEach(action => expect(elems).to.contain(action));
             });
     });
 

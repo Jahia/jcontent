@@ -29,6 +29,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
         {path, paths, language},
         {
             getDisplayName: true,
+            getPrimaryNodeType: true,
             getProperties: ['jcr:mixinTypes'],
             getAggregatedPublicationInfo: true,
             getOperationSupport: true,

@@ -109,7 +109,7 @@ describe('Page builder', () => {
             // Jcontent.refresh();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module3 = jcontent.getModule(item3);
-            module3.click();
+            module3.click({force: true});
             module3.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
         });

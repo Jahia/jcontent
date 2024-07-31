@@ -227,7 +227,7 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && isClicked && breadcrumbs.length > 0 &&
+                {!isAnythingDragging && (isCurrent || isClicked || isSelected) && breadcrumbs.length > 0 &&
                     <div className={clsx(styles.relFooter)}
                          data-current={isCurrent}
                          data-jahia-id={element.getAttribute('id')}

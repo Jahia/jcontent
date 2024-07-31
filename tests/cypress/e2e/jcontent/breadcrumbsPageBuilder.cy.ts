@@ -9,7 +9,7 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
         const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies');
-        module.click();
+        module.click({force: true});
         module.getHeader().select();
         const breadcrumbs = module.getFooter().getBreadcrumbs();
         breadcrumbs.shouldHaveCount(3);
@@ -21,7 +21,7 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
         const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies');
-        module.click();
+        module.click({force: true});
         module.getHeader().select();
         const breadcrumbs = module.getFooter().getBreadcrumbs();
         breadcrumbs.shouldHaveCount(3);

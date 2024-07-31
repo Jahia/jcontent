@@ -11,10 +11,14 @@ import {expandTree} from '~/JContent/JContent.utils';
 export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
-    const mode = useSelector(state => state.jcontent.mode);
+    const {mode, viewMode} = useSelector(state => ({
+        mode: state.jcontent.mode,
+        viewMode: state.jcontent.tableView.viewMode
+    }));
 
+    const subNodesType = ['jnt:file', 'jnt:folder', 'jnt:content', 'jnt:contentFolder'];
     const res = useNodeChecks({path}, {
-        getSubNodesCount: ['jnt:file', 'jnt:folder', 'jnt:content', 'jnt:contentFolder'],
+        getSubNodesCount: subNodesType,
         getPrimaryNodeType: true,
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:category']
     });
@@ -23,13 +27,12 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const totalCount = !res || !res.node ? 0 : res.node['subNodesCount_jnt:file'] + res.node['subNodesCount_jnt:folder'] + res.node['subNodesCount_jnt:content'] + res.node['subNodesCount_jnt:contentFolder'];
+    const isSearchMode = mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH;
+    const hasSubNodes = subNodesType.some(type => (res?.node[`subNodesCount_${type}`] || 0) > 0);
+    const isContainerType = ['jnt:page', 'jnt:folder', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name);
+    const isPageBuilderView = viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER;
 
-    const isVisible = res.checksResult && mode !== JContentConstants.mode.SEARCH && mode !== JContentConstants.mode.SQL2SEARCH && (
-        (res.node.primaryNodeType.name === 'jnt:page' || res.node.primaryNodeType.name === 'jnt:folder' || res.node.primaryNodeType.name === 'jnt:contentFolder') ||
-        (totalCount > 0)
-    );
-
+    const isVisible = res.checksResult && !isSearchMode && (isContainerType || (hasSubNodes && !isPageBuilderView));
     return (
         <Render
             {...others}

@@ -275,6 +275,10 @@ class PageBuilderModuleHeader extends BaseComponent {
         return getComponentByRole(Button, role, this);
     }
 
+    assertHeaderText(text: string) {
+        this.get().find('p').contains(text);
+    }
+
     select() {
         this.get().find('[data-sel-role="selection-checkbox"]').click();
     }
@@ -355,9 +359,6 @@ class PageBuilderModule extends BaseComponent {
 
     click(clickOptions?: Partial<ClickOptions>) {
         this.get().scrollIntoView().click(clickOptions);
-        if (clickOptions === undefined) {
-            this.get().click(clickOptions);
-        }
     }
 
     doubleClick(clickOptions?: Partial<ClickOptions>) {

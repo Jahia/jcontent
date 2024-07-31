@@ -48,7 +48,7 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
                         actionKey="edit"
                         path={node.path}
                         render={displayLabels ? WrappedButtonRenderer : WrappedButtonRendererNoLabel}
-                        buttonProps={{variant: 'ghost', size: 'small'}}
+                        buttonProps={{variant: 'ghost', size: 'default'}}
                     />
 
                     <DisplayAction
@@ -56,7 +56,7 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
                         path={node.path}
                         menuFilter={value => !includes(['edit'], value.key)}
                         render={WrappedButtonRendererNoLabel}
-                        buttonProps={{variant: 'ghost', size: 'small'}}
+                        buttonProps={{variant: 'ghost', size: 'default'}}
                     />
                 </>
             )}

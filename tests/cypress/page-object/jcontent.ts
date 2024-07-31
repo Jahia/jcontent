@@ -328,7 +328,7 @@ class PageBuilderModule extends BaseComponent {
     getHeader(selectFirst = false) {
         this.hover();
         if (selectFirst) {
-            this.click({force: true}); // Header shows up only when selected
+            this.click(); // Header shows up only when selected
         }
 
         this.get().invoke('attr', 'id').then(id => {

@@ -9,9 +9,9 @@ describe('Page builder navigation tests', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
         const module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.click({force: true});
+        module.click();
         module.getHeader().assertHeaderText('Our Companies');
-        module.click({force: true});
+        module.click();
         module.hasNoHeaderAndFooter();
     });
 
@@ -19,7 +19,7 @@ describe('Page builder navigation tests', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
         let module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.click({force: true});
+        module.click();
         module.getHeader().assertHeaderText('Our Companies');
         const breadcrumbs = module.getFooter().getBreadcrumbs();
         breadcrumbs.select('highlights');
@@ -32,7 +32,7 @@ describe('Page builder navigation tests', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
         let module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.click({force: true});
+        module.click();
         module.getHeader().assertHeaderText('Our Companies');
         const breadcrumbs = module.getFooter().getBreadcrumbs();
         breadcrumbs.select('highlights');
@@ -41,7 +41,7 @@ describe('Page builder navigation tests', () => {
         module.getHeader().assertHeaderText('highlights');
 
         module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.click({force: true});
+        module.click();
         module.getHeader().assertHeaderText('Our Companies');
     });
 });

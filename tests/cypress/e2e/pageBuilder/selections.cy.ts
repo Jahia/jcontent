@@ -30,7 +30,7 @@ describe('Page builder', () => {
         it('Selects and unselects one item when clicking outside the selected module', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
-            module.click({force :true});
+            module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
             jcontent.iframe().get().find('.wrapper').parent().parent().click('left', {timeout: 1000});
@@ -67,7 +67,7 @@ describe('Page builder', () => {
         it('Clears selection when unselected', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
-            module.click({force: true});
+            module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
@@ -84,7 +84,7 @@ describe('Page builder', () => {
         it('Allows to select with right click', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             let module = jcontent.getModule(item1);
-            module.click({force: true});
+            module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
@@ -101,7 +101,7 @@ describe('Page builder', () => {
             // but it appears to be a different issue as we don't get 'language is required' exception from useNodeInfo
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item2);
-            module.click({force: true});
+            module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
@@ -109,7 +109,7 @@ describe('Page builder', () => {
             // Jcontent.refresh();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module3 = jcontent.getModule(item3);
-            module3.click({force: true});
+            module3.click();
             module3.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
         });
@@ -117,7 +117,7 @@ describe('Page builder', () => {
         it('Opens Content Editor on double click', () => {
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
             const module = jcontent.getModule(item1);
-            module.click({force: true});
+            module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
             module.doubleClick();

@@ -235,7 +235,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
              * Then use the selector from parentFrame to check the checkbox (we cannot use module here).
              */
             const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main/global-network-rich-text');
-            module.click({force: true}); // Bring up footer
+            module.click(); // Bring up footer
             module.getFooter().getBreadcrumbs().selectPos(5); // Navigate to area-main
             module.parentFrame.get().find('[data-sel-role="selection-checkbox"]').click({force: true});
             checkSelectionCount(1);

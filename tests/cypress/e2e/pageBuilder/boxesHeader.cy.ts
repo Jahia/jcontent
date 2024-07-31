@@ -26,7 +26,7 @@ describe('Page builder', () => {
         });
 
         it('should show box with name, status and edit buttons', () => {
-            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').click({force: true});
+            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').click();
             const header = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').getHeader();
             header.get().find('p').contains('test-content4');
             header.assertStatus('Not published');

@@ -25,6 +25,14 @@ mutation createLockContent {
                 {
                     name: "content-emptyFolderLock1"
                     primaryNodeType: "jnt:contentFolder"
+                },
+                {
+                    name: "content-lockPermissions1",
+                    primaryNodeType: "jnt:contentFolder",
+                },
+                {
+                    name: "content-lockPermissions2",
+                    primaryNodeType: "jnt:contentFolder",
                 }
             ]) {
                 uuid

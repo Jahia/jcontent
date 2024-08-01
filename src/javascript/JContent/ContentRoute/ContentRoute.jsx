@@ -43,11 +43,12 @@ export const ContentRoute = () => {
         return <Error404 label={t('jcontent:label.contentManager.error.missingFolder')}/>;
     }
 
+    const isSearchMode = mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH;
     const isPageBuilderView = [PAGE_BUILDER, PREVIEW].includes(viewMode);
     const canShowEditFrame = nodeTypes.some(nt => res.node[nt]);
 
     // Update viewMode if page builder is selected but content cannot be displayed
-    if (isPageBuilderView && !canShowEditFrame) {
+    if (!isSearchMode && res.node.path === path && isPageBuilderView && !canShowEditFrame) {
         const {queryHandler, availableModes} = accordionItem?.tableConfig || {};
         const isStructured = Boolean(tableView && queryHandler?.isStructured && queryHandler?.isStructured({tableView}));
         const viewMode = (isStructured && availableModes.includes(STRUCTURED)) ? STRUCTURED : FLAT;

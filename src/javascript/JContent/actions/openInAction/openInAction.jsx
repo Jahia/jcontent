@@ -50,14 +50,18 @@ const OpenInActionComponent = ({
         <Render
             {...others}
             onClick={() => {
-                let serverName = location.hostname;
+                if (urlPath.match(/^https*:\/\//)) {
+                    window.open(urlPath, '_blank');
+                } else {
+                    let serverName = location.hostname;
 
-                // Use current host for preview urls
-                if (isLive && node.site.serverName) {
-                    serverName = node.site.serverName;
+                    // Use current host for preview urls
+                    if (isLive && node.site.serverName) {
+                        serverName = node.site.serverName;
+                    }
+
+                    window.open(`${location.protocol}//${serverName}:${location.port}${urlPath}`, '_blank');
                 }
-
-                window.open(`${location.protocol}//${serverName}:${location.port}${urlPath}`, '_blank');
             }}
         />
     );

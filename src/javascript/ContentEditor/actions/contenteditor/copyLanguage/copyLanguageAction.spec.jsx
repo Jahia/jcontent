@@ -47,6 +47,17 @@ describe('copy language action', () => {
         expect(cmp.props().enabled).toBeFalsy();
     });
 
+    it('should render not be enabled when the node is locked', () => {
+        contentEditorContext.nodeData.lockedAndCannotBeEdited = true;
+        const cmp = shallowWithTheme(
+            <CopyLanguageActionComponent {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        );
+
+        expect(cmp.props().enabled).toBeFalsy();
+    });
+
     it('should render be enabled when there is more than one language', () => {
         const cmp = shallowWithTheme(
             <CopyLanguageActionComponent {...defaultProps}/>,

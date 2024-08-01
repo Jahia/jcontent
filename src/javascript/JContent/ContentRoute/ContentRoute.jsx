@@ -23,13 +23,13 @@ export const ContentRoute = () => {
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
     const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
     const {FLAT, STRUCTURED, PAGE_BUILDER, PREVIEW} = JContentConstants.tableView.viewMode;
+    const accordionItem = registry.get('accordionItem', mode);
 
     useEffect(() => {
-        const accordionItem = registry.get('accordionItem', mode);
         if (accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
             dispatch(setTableViewMode(accordionItem.tableConfig.defaultViewMode || FLAT));
         }
-    }, [dispatch, mode, viewMode]);
+    }, [dispatch, mode, viewMode, FLAT, accordionItem]);
 
     if (res.loading) {
         return <LoaderOverlay/>;
@@ -49,7 +49,7 @@ export const ContentRoute = () => {
     // Update viewMode if page builder is selected but content cannot be displayed
     if (isPageBuilderView && !canShowEditFrame) {
         const {queryHandler, availableModes} = accordionItem?.tableConfig || {};
-        const isStructured = Boolean(queryHandler?.isStructured(tableView));
+        const isStructured = Boolean(tableView && queryHandler?.isStructured && queryHandler?.isStructured({tableView}));
         const viewMode = (isStructured && availableModes.includes(STRUCTURED)) ? STRUCTURED : FLAT;
         dispatch(setTableViewMode(viewMode));
     }

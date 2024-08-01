@@ -50,6 +50,12 @@ describe('Content navigation', () => {
         cy.get('h1').contains('special chars page');
     });
 
+    it('can open page with the correct view mode selection', () => {
+        // Highlights content cannot be displayed in page builder view, so list view mode should be activated by default
+        const jcontent = JContent.visit('digitall', 'en', 'pages/home/area-main/highlights');
+        jcontent.shouldBeInMode('List');
+    });
+
     it('can open news in page builder', () => {
         const jc = JContent.visit('mySite1', 'en', 'content-folders/contents');
         jc.getTable().getRowByLabel('test-event').contextMenu().select('Open in Page Builder');

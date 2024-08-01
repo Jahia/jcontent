@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getFileType, isBrowserImage, isPDF} from '../../../ContentLayout.utils';
+import {getFileExtension, isBrowserImage, isPDF} from '../../../ContentLayout.utils';
 import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
 import DocumentViewer from './DocumentViewer';
@@ -97,7 +97,7 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
             );
         }
 
-        const type = getFileType(data.nodeByPath);
+        const type = getFileExtension(data.nodeByPath);
         // Media compatible with react-file-viewer
         const isMedia = (type === 'mp4' || type === 'webm');
         return (

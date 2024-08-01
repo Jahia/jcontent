@@ -3,7 +3,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import mime from 'mime';
 const imageExtensionSet = new Set(imageExtensions);
 
-export const isBrowserImage = function (node) {
+export const isBrowserImage = node => {
     if (node.isFile) {
         const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
@@ -29,11 +29,11 @@ export const isBrowserImage = function (node) {
     return false;
 };
 
-export const isImageFile = function (filename) {
+export const isImageFile = filename => {
     return imageExtensionSet.has(filename.split('.').pop().toLowerCase());
 };
 
-export const isPDF = function (node) {
+export const isPDF = node => {
     if (node.isFile) {
         const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
@@ -50,7 +50,7 @@ export const isPDF = function (node) {
     return false;
 };
 
-export const getFileType = function (node) {
+export const getFileExtension = node => {
     if (node.isFile) {
         const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
         if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
@@ -65,6 +65,16 @@ export const getFileType = function (node) {
     }
 
     return undefined;
+};
+
+export const getMimeType = node => {
+    const mimetype = node.content?.mimeType.value;
+    if (!mimetype || mimetype === 'null') {
+        // Try to get mimetype using file extension
+        return mime.getType(node.path.split('.').pop().toLowerCase());
+    }
+
+    return mimetype;
 };
 
 export const flattenTree = function (rows) {

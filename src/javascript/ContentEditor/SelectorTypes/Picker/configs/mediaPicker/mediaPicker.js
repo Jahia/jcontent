@@ -1,5 +1,6 @@
 import React from 'react';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {useMediaPickerInputData} from '~/ContentEditor/SelectorTypes/Picker/configs/mediaPicker/useMediaPickerInputData';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
@@ -21,7 +22,8 @@ const viewModeSelectorProps = config => ({
     selector: state => ({
         mode: getMode(state, config)
     }),
-    setModeAction: mode => cePickerSetFileViewMode(mode)
+    setModeAction: mode => cePickerSetFileViewMode(mode),
+    hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER]
 });
 
 export const registerMediaPickers = registry => {

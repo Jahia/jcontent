@@ -36,7 +36,7 @@ const tableViewDropdownData = (t, viewMode, allButtons, disabled) => {
     }));
 };
 
-export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
+export const ViewModeSelector = ({selector, setTableViewModeAction, hiddenViewModes}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, viewMode, path} = useSelector(selector, shallowEqual);
@@ -48,6 +48,8 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     if (!booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
         availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
     }
+
+    availableModes = availableModes.reduce((acc, val) => hiddenViewModes.includes(val) ? acc : acc.concat(val), []);
 
     const disabledPageBuilder = info.node && !info.node['jnt:page'] && !info.node['jmix:mainResource'];
     const disabled = disabledPageBuilder ? [PAGE_BUILDER] : [];
@@ -80,12 +82,14 @@ const selector = state => ({
 
 ViewModeSelector.propTypes = {
     selector: PropTypes.func,
-    setTableViewModeAction: PropTypes.func
+    setTableViewModeAction: PropTypes.func,
+    hiddenViewModes: PropTypes.arrayOf(PropTypes.string)
 };
 
 ViewModeSelector.defaultProps = {
     selector: selector,
-    setTableViewModeAction: mode => setTableViewMode(mode)
+    setTableViewModeAction: mode => setTableViewMode(mode),
+    hiddenViewModes: []
 };
 
 export default ViewModeSelector;

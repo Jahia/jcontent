@@ -4,6 +4,7 @@ import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/config
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
+import JContentConstants from '~/JContent/JContent.constants';
 import {ContentFoldersQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {cePickerSetTableViewMode} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {EditorialContentTypeSelector} from './EditorialContentTypeSelector';
@@ -14,7 +15,8 @@ const viewModeSelectorProps = {
         mode: state.contenteditor.picker.mode,
         viewMode: state.contenteditor.picker.tableView.viewMode
     }),
-    setTableViewModeAction: mode => cePickerSetTableViewMode(mode)
+    setTableViewModeAction: mode => cePickerSetTableViewMode(mode),
+    hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER]
 };
 
 const PickerContentsFolderQueryHandler = transformQueryHandler({

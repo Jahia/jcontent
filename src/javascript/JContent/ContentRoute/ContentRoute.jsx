@@ -10,6 +10,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
+import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
@@ -22,7 +23,7 @@ export const ContentRoute = () => {
     const dispatch = useDispatch();
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
     const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
-    const {FLAT, STRUCTURED, PAGE_BUILDER, PREVIEW} = JContentConstants.tableView.viewMode;
+    const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
 
     useEffect(() => {
@@ -43,12 +44,11 @@ export const ContentRoute = () => {
         return <Error404 label={t('jcontent:label.contentManager.error.missingFolder')}/>;
     }
 
-    const isSearchMode = mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH;
-    const isPageBuilderView = [PAGE_BUILDER, PREVIEW].includes(viewMode);
+    const isPageBuilderView = viewMode === PAGE_BUILDER;
     const canShowEditFrame = nodeTypes.some(nt => res.node[nt]);
 
     // Update viewMode if page builder is selected but content cannot be displayed
-    if (!isSearchMode && res.node.path === path && isPageBuilderView && !canShowEditFrame) {
+    if (!isInSearchMode(mode) && (res.node.path === path) && isPageBuilderView && !canShowEditFrame) {
         const {queryHandler, availableModes} = accordionItem?.tableConfig || {};
         const isStructured = Boolean(tableView && queryHandler?.isStructured && queryHandler?.isStructured({tableView}));
         const viewMode = (isStructured && availableModes.includes(STRUCTURED)) ? STRUCTURED : FLAT;
@@ -59,7 +59,7 @@ export const ContentRoute = () => {
         <MainLayout header={<ContentHeader/>}>
             <LoaderSuspense>
                 <ErrorBoundary>
-                    { (isPageBuilderView && canShowEditFrame ? (<EditFrame isPreview={JContentConstants.tableView.viewMode.PREVIEW === viewMode}/>) : <ContentLayout/>) }
+                    {(isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

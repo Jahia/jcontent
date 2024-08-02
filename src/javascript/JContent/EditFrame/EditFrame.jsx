@@ -61,7 +61,7 @@ function addEventListeners(target, manager, iframeRef) {
     });
 }
 
-export const EditFrame = ({isPreview, isDeviceView}) => {
+export const EditFrame = ({isDeviceView}) => {
     const manager = useDragDropManager();
 
     const {path, site, language, template} = useSelector(state => ({
@@ -206,15 +206,15 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
     const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
 
     useEffect(() => {
-        const renderMode = isPreview ? 'render' : 'editframe';
+        const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
             const mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
-            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, isPreview, template);
+            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, template);
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
-            if (!isPreview && path === framePath && locale === language && previousDevice.current === deviceParam) {
+            if (path === framePath && locale === language && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {
@@ -232,7 +232,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             iframe.current.contentWindow.location.href = url;
             previousDevice.current = deviceParam;
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language, isPreview, template]);
+    }, [currentDocument, path, previousDevice, deviceParam, language, template]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
@@ -261,7 +261,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                 />
             </DeviceContainer>
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
-            {currentDocument && !isPreview && (
+            {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="jahia-portal-root" className={styles.root}>
                         <Boxes currentDocument={currentDocument}
@@ -282,6 +282,5 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 };
 
 EditFrame.propTypes = {
-    isPreview: PropTypes.bool,
     isDeviceView: PropTypes.bool
 };

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
 import {expandTree} from '~/JContent/JContent.utils';
+import {isInSearchMode} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 
 export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
@@ -27,12 +28,11 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isSearchMode = mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH;
-    const hasSubNodes = subNodesType.some(type => (res?.node[`subNodesCount_${type}`] || 0) > 0);
     const isContainerType = ['jnt:page', 'jnt:folder', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name);
+    const hasSubNodes = subNodesType.some(type => (res?.node[`subNodesCount_${type}`] || 0) > 0);
     const isPageBuilderView = viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER;
 
-    const isVisible = res.checksResult && !isSearchMode && (isContainerType || (hasSubNodes && !isPageBuilderView));
+    const isVisible = res.checksResult && !isInSearchMode(mode) && (isContainerType || (hasSubNodes && !isPageBuilderView));
     return (
         <Render
             {...others}
@@ -40,7 +40,7 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
             enabled={isVisible}
             onClick={() => {
                 expandTree({path}, client).then(({mode, ancestorPaths}) => {
-                    dispatch(cmGoto({mode, path, params: {sub: res.node.primaryNodeType.name !== 'jnt:page' && res.node.primaryNodeType.name !== 'jnt:contentFolder'}}));
+                    dispatch(cmGoto({mode, path, params: {sub: ['jnt:page', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name)}}));
                     dispatch(cmOpenPaths(ancestorPaths));
                     dispatch(cmSetPreviewSelection(path));
                 });

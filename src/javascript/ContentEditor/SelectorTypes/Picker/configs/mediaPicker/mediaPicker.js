@@ -22,8 +22,7 @@ const viewModeSelectorProps = config => ({
     selector: state => ({
         mode: getMode(state, config)
     }),
-    setModeAction: mode => cePickerSetFileViewMode(mode),
-    hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER]
+    setModeAction: mode => cePickerSetFileViewMode(mode)
 });
 
 export const registerMediaPickers = registry => {
@@ -161,6 +160,7 @@ export const registerMediaPickers = registry => {
                 defaultSort: {orderBy: 'lastModified.value', order: 'DESC'},
                 queryHandler: transformQueryHandler(PickerFilesQueryHandler),
                 openableTypes: ['jnt:folder'],
+                hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER],
                 viewSelector: ({pickerConfig}) => <FileModeSelector {...viewModeSelectorProps(pickerConfig)}/>,
                 contextualMenu: 'contentPickerMenu',
                 uploadFilter: (file, mode, pickerConfig) => pickerConfig.key !== 'image' || file.type.startsWith('image/'),

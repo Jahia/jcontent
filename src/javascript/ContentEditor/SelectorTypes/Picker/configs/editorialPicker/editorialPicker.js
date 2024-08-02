@@ -15,8 +15,7 @@ const viewModeSelectorProps = {
         mode: state.contenteditor.picker.mode,
         viewMode: state.contenteditor.picker.tableView.viewMode
     }),
-    setTableViewModeAction: mode => cePickerSetTableViewMode(mode),
-    hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER]
+    setTableViewModeAction: mode => cePickerSetTableViewMode(mode)
 };
 
 const PickerContentsFolderQueryHandler = transformQueryHandler({
@@ -54,6 +53,7 @@ export const registerEditorialPicker = registry => {
             tableConfig: {
                 queryHandler: PickerPagesQueryHandler,
                 defaultSort: {orderBy: 'lastModified.value', order: 'DESC'},
+                hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER],
                 viewSelector: <ViewModeSelector {...viewModeSelectorProps}/>,
                 tableHeader: <EditorialContentTypeSelector/>,
                 uploadType: null,
@@ -76,6 +76,7 @@ export const registerEditorialPicker = registry => {
             tableConfig: {
                 queryHandler: PickerContentsFolderQueryHandler,
                 openableTypes: ['jnt:contentFolder'],
+                hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER],
                 viewSelector: <ViewModeSelector {...viewModeSelectorProps}/>,
                 uploadType: null,
                 contextualMenu: 'contentPickerMenu',

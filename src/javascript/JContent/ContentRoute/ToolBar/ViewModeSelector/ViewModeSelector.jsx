@@ -36,7 +36,7 @@ const tableViewDropdownData = (t, viewMode, allButtons, disabled) => {
     }));
 };
 
-export const ViewModeSelector = ({selector, setTableViewModeAction, hiddenViewModes}) => {
+export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, viewMode, path} = useSelector(selector, shallowEqual);
@@ -49,6 +49,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction, hiddenViewMo
         availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
     }
 
+    const hiddenViewModes = accordion?.tableConfig?.hiddenViewModes || [];
     availableModes = availableModes.reduce((acc, val) => hiddenViewModes.includes(val) ? acc : acc.concat(val), []);
 
     const disabledPageBuilder = info.node && !info.node['jnt:page'] && !info.node['jmix:mainResource'];
@@ -82,14 +83,12 @@ const selector = state => ({
 
 ViewModeSelector.propTypes = {
     selector: PropTypes.func,
-    setTableViewModeAction: PropTypes.func,
-    hiddenViewModes: PropTypes.arrayOf(PropTypes.string)
+    setTableViewModeAction: PropTypes.func
 };
 
 ViewModeSelector.defaultProps = {
     selector: selector,
-    setTableViewModeAction: mode => setTableViewMode(mode),
-    hiddenViewModes: []
+    setTableViewModeAction: mode => setTableViewMode(mode)
 };
 
 export default ViewModeSelector;

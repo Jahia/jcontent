@@ -49,6 +49,9 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
         availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
     }
 
+    const hiddenViewModes = accordion?.tableConfig?.hiddenViewModes || [];
+    availableModes = availableModes.filter(v => !hiddenViewModes.includes(v));
+
     const disabledPageBuilder = info.node && !info.node['jnt:page'] && !info.node['jmix:mainResource'];
     const disabled = disabledPageBuilder ? [PAGE_BUILDER] : [];
 

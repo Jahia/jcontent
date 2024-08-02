@@ -1,5 +1,6 @@
 import React from 'react';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {useMediaPickerInputData} from '~/ContentEditor/SelectorTypes/Picker/configs/mediaPicker/useMediaPickerInputData';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
@@ -159,6 +160,7 @@ export const registerMediaPickers = registry => {
                 defaultSort: {orderBy: 'lastModified.value', order: 'DESC'},
                 queryHandler: transformQueryHandler(PickerFilesQueryHandler),
                 openableTypes: ['jnt:folder'],
+                hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER],
                 viewSelector: ({pickerConfig}) => <FileModeSelector {...viewModeSelectorProps(pickerConfig)}/>,
                 contextualMenu: 'contentPickerMenu',
                 uploadFilter: (file, mode, pickerConfig) => pickerConfig.key !== 'image' || file.type.startsWith('image/'),

@@ -4,6 +4,7 @@ import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/config
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
+import JContentConstants from '~/JContent/JContent.constants';
 import {ContentFoldersQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {cePickerSetTableViewMode} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {EditorialContentTypeSelector} from './EditorialContentTypeSelector';
@@ -52,6 +53,7 @@ export const registerEditorialPicker = registry => {
             tableConfig: {
                 queryHandler: PickerPagesQueryHandler,
                 defaultSort: {orderBy: 'lastModified.value', order: 'DESC'},
+                hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER],
                 viewSelector: <ViewModeSelector {...viewModeSelectorProps}/>,
                 tableHeader: <EditorialContentTypeSelector/>,
                 uploadType: null,
@@ -74,6 +76,7 @@ export const registerEditorialPicker = registry => {
             tableConfig: {
                 queryHandler: PickerContentsFolderQueryHandler,
                 openableTypes: ['jnt:contentFolder'],
+                hiddenViewModes: [JContentConstants.tableView.viewMode.PAGE_BUILDER],
                 viewSelector: <ViewModeSelector {...viewModeSelectorProps}/>,
                 uploadType: null,
                 contextualMenu: 'contentPickerMenu',

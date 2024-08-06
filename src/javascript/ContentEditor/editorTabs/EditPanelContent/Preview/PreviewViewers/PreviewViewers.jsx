@@ -7,7 +7,7 @@ import {DocumentViewer} from './DocumentViewer';
 import {PDFViewer} from './PDFViewer';
 import {ImageViewer} from './ImageViewer';
 import {IframeViewer} from './IframeViewer';
-import {getFileType, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
+import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 
 export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
     // If node type is "jnt:file" use specific viewer
@@ -32,7 +32,7 @@ export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
             );
         }
 
-        const type = getFileType(data.nodeByPath);
+        const type = getFileExtension(data.nodeByPath);
         const isMedia = (type === 'webm' || type === 'mp4');
         return (
             <div className={clsx(styles.previewContainer, isMedia && styles.mediaContainer)}

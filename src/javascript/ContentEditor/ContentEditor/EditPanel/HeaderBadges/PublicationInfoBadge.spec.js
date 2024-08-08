@@ -63,11 +63,10 @@ jest.mock('~/ContentEditor/contexts/PublicationInfo', () => {
 });
 
 describe('PublicationInfoBadge', () => {
-    it('Should display "publishing" badge when publication info is polling', () => {
+    it('Should not display any badge when publication info is polling', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
-        expect(wrapper.containsMatchingElement(<PublicationStatus type="publishing"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('PublicationStatus')).toHaveLength(0);
     });
 
     it('Should not display "publishing" badge when publication info is not polling', () => {

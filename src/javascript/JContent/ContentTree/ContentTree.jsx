@@ -175,8 +175,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         dispatch((setPathAction(highlightedItem.path)));
     }
 
-    if (!nodeInfo.loading && nodeInfo.node) {
-        window.top.document.title = `jContent - ${nodeInfo.node?.displayName}`;
+    if (!nodeInfo.loading && nodeInfo.node && nodeInfo.node?.displayName) {
+        window.top.document.title = `jContent - ${nodeInfo.node.displayName}`;
     }
 
     return (

@@ -319,3 +319,7 @@ export const findAvailableBoxConfig = node => {
     });
     return configs.shift();
 };
+
+export const getTitle = (t, item, prefix = 'jContent') => {
+    return item.label ? `${prefix} - ${t(item.label)}` : `${prefix} - ${item.key}`;
+};

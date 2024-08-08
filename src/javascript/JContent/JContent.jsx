@@ -1,14 +1,17 @@
 import React, {useCallback, useEffect} from 'react';
 import {registry} from '@jahia/ui-extender';
-import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
+import {ErrorBoundary, LoaderSuspense, RouteWithTitle} from '@jahia/jahia-ui-root';
 import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
-import {Route, Switch} from 'react-router';
+import {Switch} from 'react-router';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import './colors.scss';
 import {cmClearSelection} from './redux/selection.redux';
+import {useTranslation} from 'react-i18next';
+import {getTitle} from './JContent.utils';
 
 export const JContent = () => {
+    const {t} = useTranslation('jcontent');
     const routes = registry.find({type: 'route', target: 'jcontent'});
     const {site, mode} = useSelector(state => ({site: state.jcontent.site, mode: state.jcontent.mode}), shallowEqual);
     const item = registry.get('accordionItem', mode);
@@ -36,26 +39,30 @@ export const JContent = () => {
                     <ErrorBoundary>
                         <Switch>
                             {routes.map(r => r.component ? (
-                                <Route key={r.key}
-                                       path={r.path}
-                                       render={p => <ErrorBoundary>{React.createElement(r.component, p)}</ErrorBoundary>}
+                                <RouteWithTitle key={r.key}
+                                                routeTitle={getTitle(t, r)}
+                                                path={r.path}
+                                                render={p => <ErrorBoundary>{React.createElement(r.component, p)}</ErrorBoundary>}
                                 />
                             ) : (
-                                <Route key={r.key}
-                                       path={r.path}
-                                       render={p => <ErrorBoundary>{r.render(p)}</ErrorBoundary>}
+                                <RouteWithTitle key={r.key}
+                                                routeTitle={getTitle(t, r)}
+                                                path={r.path}
+                                                render={p => <ErrorBoundary>{r.render(p)}</ErrorBoundary>}
                                 />
                             ))}
                             {item && itemEnabled && (
                                 item.routeComponent ? (
-                                    <Route key={item.key}
-                                           path={'/jcontent/:siteKey/:lang/' + item.key}
-                                           render={p => <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
+                                    <RouteWithTitle key={item.key}
+                                                    routeTitle={getTitle(t, item)}
+                                                    path={'/jcontent/:siteKey/:lang/' + item.key}
+                                                    render={p => <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
                                     />
                                 ) : (
-                                    <Route key={item.key}
-                                           path={'/jcontent/:siteKey/:lang/' + item.key}
-                                           render={props => <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
+                                    <RouteWithTitle key={item.key}
+                                                    routeTitle={getTitle(t, item)}
+                                                    path={'/jcontent/:siteKey/:lang/' + item.key}
+                                                    render={props => <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
                                     />
                                 )
                             )}

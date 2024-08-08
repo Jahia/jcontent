@@ -45,7 +45,6 @@ export const PublicationInfoBadge = () => {
                 {!statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished')}
                 {statuses.warning && renderStatus('warning')}
             </>}
-            {publicationInfoContext.publicationInfoPolling && renderStatus('publishing')}
         </>
     );
 };

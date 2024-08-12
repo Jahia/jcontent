@@ -40,7 +40,7 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
             enabled={isVisible}
             onClick={() => {
                 expandTree({path}, client).then(({mode, ancestorPaths}) => {
-                    dispatch(cmGoto({mode, path, params: {sub: ['jnt:page', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name)}}));
+                    dispatch(cmGoto({mode, path, params: {sub: !['jnt:page', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name)}}));
                     dispatch(cmOpenPaths(ancestorPaths));
                     dispatch(cmSetPreviewSelection(path));
                 });

@@ -98,5 +98,10 @@ export class File extends BasePage {
         cy.get('[data-sel-role="delete-permanently-button"]').click();
         return this;
     }
+
+    contentMenu() : Menu {
+        cy.get(this.selector).should('be.visible').rightclick({force: true});
+        return getComponentByRole(Menu, 'jcontent-contentMenu');
+    }
 }
 

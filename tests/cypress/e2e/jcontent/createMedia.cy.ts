@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
 
 describe('Create media tests', () => {
     let jcontent: JContent;
@@ -109,5 +109,21 @@ describe('Create media tests', () => {
             .download()
             .markForDeletion()
             .deletePermanently();
+    });
+
+    it('Can open created file in advanced mode with preview', function () {
+        const menu = jcontent.getMedia()
+            .open()
+            .createFile('custom_filename.txt')
+            .dndUpload('div[data-sel-role-card=bootstrap]')
+            .download()
+            .contentMenu();
+
+        menu.selectByRole('edit');
+
+        // Should be possible to open and exit out of advanced mode without breaking
+        const ce = ContentEditor.getContentEditor();
+        ce.switchToAdvancedMode();
+        ce.cancel();
     });
 });

@@ -13,8 +13,7 @@ const UsagesDialog = ({isOpen, onExited, onClose, path, language, name}) => {
     const {t} = useTranslation('jcontent');
 
     return (
-        <Dialog fullWidth
-                maxWidth="xl"
+        <Dialog maxWidth="xl"
                 open={isOpen}
                 aria-labelledby="usages-table"
                 data-sel-role="usages-table"

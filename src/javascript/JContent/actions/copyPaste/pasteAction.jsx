@@ -87,6 +87,10 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
         isEnabled = false;
     }
 
+    if (isVisible && referenceTypes && type === copyPasteConstants.CUT) {
+        isVisible = false;
+    }
+
     const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, referenceTypes);
     if (loading) {
         return <Loading {...others}/>;

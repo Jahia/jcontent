@@ -1,16 +1,19 @@
 import React, {useCallback, useEffect} from 'react';
 import {registry} from '@jahia/ui-extender';
-import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
+import {ErrorBoundary, LoaderSuspense, RouteWithTitle} from '@jahia/jahia-ui-root';
 import {LayoutModule, Typography} from '@jahia/moonstone';
-import {Route, Switch} from 'react-router';
+import {Switch} from 'react-router';
 import {useDispatch} from 'react-redux';
 import './colors.scss';
 import {cmClearSelection} from './redux/selection.redux';
 import {NavigationHeader} from '~/JContent/ContentNavigation/NavigationHeader';
 import ContentNavigation from './ContentNavigation';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {useTranslation} from 'react-i18next';
+import {getTitle} from './JContent.utils';
 
 export const CategoryManager = () => {
+    const {t} = useTranslation('jcontent');
     const item = registry.get('accordionItem', 'category');
     const dispatch = useDispatch();
     const clear = useCallback(() => dispatch(cmClearSelection()), [dispatch]);
@@ -54,15 +57,17 @@ export const CategoryManager = () => {
                         <Switch>
                             {item && (
                                 item.routeComponent ? (
-                                    <Route key={item.key}
-                                           path="/category-manager/:lang/:mode"
-                                           render={p =>
-                                               <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
+                                    <RouteWithTitle key={item.key}
+                                                    routeTitle={getTitle(t, item, 'Categories')}
+                                                    path="/category-manager/:lang/:mode"
+                                                    render={p =>
+                                                        <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
                                     />
-                                ) : (<Route key={item.key}
-                                            path="/category-manager/:lang/:mode"
-                                            render={props =>
-                                                <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
+                                ) : (<RouteWithTitle key={item.key}
+                                                     routeTitle={getTitle(t, item, 'Categories')}
+                                                     path="/category-manager/:lang/:mode"
+                                                     render={props =>
+                                                         <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
                                     />
                                 )
                             )}

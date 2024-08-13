@@ -1,12 +1,13 @@
 import {useSelector} from 'react-redux';
-import {useAdminRouteTreeStructure} from '@jahia/jahia-ui-root';
+import {useAdminRouteTreeStructure, RouteWithTitle} from '@jahia/jahia-ui-root';
 import {useNodeInfo} from '@jahia/data-helper';
-import {Route, Switch} from 'react-router';
+import {Switch} from 'react-router';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './AdditionAppsRoute.scss';
+import {getTitle} from '../JContent.utils';
 
 export const AdditionalAppsRoute = ({match, target}) => {
     const site = useSelector(state => state.site);
@@ -29,11 +30,12 @@ export const AdditionalAppsRoute = ({match, target}) => {
     return (
         <Switch>
             {filteredAdminRoutes && filteredAdminRoutes.map(r =>
-                <Route key={r.key} path={`${match.path}/${r.key}`} render={props => r.render(props)}/>
+                <RouteWithTitle key={r.key} routeTitle={getTitle(t, r)} path={`${match.path}/${r.key}`} render={props => r.render(props)}/>
             )}
-            <Route key="nothingToDisplayRoute"
-                   path={match.path}
-                   render={() => <Typography variant="heading" weight="bold" className={styles.heading}>{t('label.contentManager.navigation.apps.404')}</Typography>}
+            <RouteWithTitle key="nothingToDisplayRoute"
+                            routeTitle={t('label.contentManager.navigation.apps.404')}
+                            path={match.path}
+                            render={() => <Typography variant="heading" weight="bold" className={styles.heading}>{t('label.contentManager.navigation.apps.404')}</Typography>}
             />
         </Switch>
     );

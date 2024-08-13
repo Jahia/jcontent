@@ -54,10 +54,19 @@ describe('Copy Cut and Paste tests with jcontent', () => {
     describe('Button presence', function () {
         beforeEach(function () {
             cy.login();
+            // Create contentFolders
+            GraphqlUtils.addNode('/sites/digitall/contents', 'jnt:contentFolder', 'testFolder1');
+            GraphqlUtils.addNode('/sites/digitall/contents', 'jnt:contentFolder', 'testFolder2');
+
+            // Create a rich text
+            GraphqlUtils.addNode('/sites/digitall/contents/testFolder1', 'jnt:bigText', 'testText1');
         });
 
         afterEach(function () {
             GraphqlUtils.deleteNode('/sites/digitall/home/newsroom/about');
+            GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder1/testText1');
+            GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder1');
+            GraphqlUtils.deleteNode('/sites/digitall/contents/testFolder2');
             cy.logout();
         });
 
@@ -100,6 +109,13 @@ describe('Copy Cut and Paste tests with jcontent', () => {
 
             GraphqlUtils.getNode('/sites/digitall/home/newsroom/about').should('exist');
             GraphqlUtils.getNode('/sites/digitall/home/newsroom/about/history').should('not.exist');
+        });
+
+        it('Should not display paste as reference on cut content', () => {
+            cy.login();
+            const jcontent = JContent.visit('digitall', 'en', 'content-folders/contents/testFolder1');
+            jcontent.getTable().getRowByLabel('testText1').contextMenu().select('Cut');
+            jcontent.getAccordionItem('content-folders').getTreeItem('testFolder2').contextMenu().shouldNotHaveItem('Paste as reference');
         });
     });
 });

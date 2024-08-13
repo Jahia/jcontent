@@ -33,7 +33,7 @@ class PublicationStatusNotPublished {
 
 class PublicationStatusPublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        const userName = node?.lastModifiedBy?.value || '';
+        const userName = node?.lastPublishedBy?.value || '';
         const lastPublished = node?.lastPublished?.value || '';
 
         return (

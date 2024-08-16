@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
@@ -15,6 +15,8 @@ import {useFormikContext} from 'formik';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useExternalPickersInfo} from '~/ContentEditor/SelectorTypes/Picker/useExternalPickersInfo';
+import {cePickerSetTableViewMode} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {useDispatch} from 'react-redux';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 
@@ -122,6 +124,14 @@ export const Picker = ({
     const {
         fieldData, error, loading, notFound
     } = usePickerInputData(value && toArray(value));
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (pickerConfig.defaultViewMode) {
+            dispatch(cePickerSetTableViewMode(pickerConfig.defaultViewMode));
+        }
+    }, [dispatch, pickerConfig.defaultViewMode]);
 
     if (error) {
         const message = t(

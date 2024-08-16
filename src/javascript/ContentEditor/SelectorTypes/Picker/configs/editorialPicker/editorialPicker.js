@@ -32,12 +32,14 @@ const PickerContentsFolderQueryHandler = transformQueryHandler({
 export const registerEditorialPicker = registry => {
     registry.add(Constants.pickerConfig, 'editorial', {
         searchContentType: 'jmix:searchable',
-        selectableTypesTable: ['jnt:page', 'jnt:contentList', 'jnt:contentFolder', 'jmix:siteContent', 'jmix:editorialContent']
+        selectableTypesTable: ['jnt:page', 'jnt:contentList', 'jnt:contentFolder', 'jmix:siteContent', 'jmix:editorialContent'],
+        defaultViewMode: JContentConstants.tableView.viewMode.STRUCTURED
     });
 
     registry.add(Constants.pickerConfig, 'droppableContent', {
         searchContentType: 'jmix:searchable',
-        selectableTypesTable: ['jmix:droppableContent']
+        selectableTypesTable: ['jmix:droppableContent'],
+        defaultViewMode: JContentConstants.tableView.viewMode.STRUCTURED
     });
 
     // These are jcontent accordion items, additional targets are added to enhance selection

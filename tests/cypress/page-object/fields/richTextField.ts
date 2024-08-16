@@ -58,7 +58,11 @@ export class LinkModal extends BaseComponent {
     }
 
     getURLFieldValue(): Cypress.Chainable<string> {
-        return this.get().find('div.cke_dialog_ui_text').contains('URL').parent().find('input.cke_dialog_ui_input_text').invoke('val');
+        return this.getURLField().invoke('val');
+    }
+
+    getURLField(): Cypress.Chainable<JQuery> {
+        return this.get().find('div.cke_dialog_ui_text').contains('URL').parent().find('input.cke_dialog_ui_input_text');
     }
 
     cancel() {

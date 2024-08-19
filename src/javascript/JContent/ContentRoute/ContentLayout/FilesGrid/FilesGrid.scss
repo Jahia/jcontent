@@ -32,7 +32,7 @@
 
 .detailedGrid.detailedGrid {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    padding: 0 var(--spacing-medium) var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-medium);
     overflow-x: hidden;
     overflow-y: auto;
 }

@@ -91,6 +91,8 @@ function getFileIcon(node, props) {
                     );
             }
         }
+
+        return <File {...props}/>;
     }
 
     // eslint-disable-next-line complexity

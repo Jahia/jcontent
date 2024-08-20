@@ -131,3 +131,5 @@
  + * (cent:mainResourceLinkTest) = cent:mainResourceLinkTest
 
 [cent:mainResourceLinkTest] > jnt:content, jmix:mainResource, mix:title, jmix:editorialContent
+
+[cent:previewWrapper] > jnt:content, jmix:basicContent

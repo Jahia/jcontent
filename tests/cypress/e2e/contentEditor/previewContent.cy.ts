@@ -1,6 +1,6 @@
 import {PageComposer} from '../../page-object/pageComposer';
 import {addNode, deleteNode, enableModule, disableModule} from '@jahia/cypress';
-import { ContentEditor } from '../../page-object';
+import {ContentEditor} from '../../page-object';
 
 describe('Preview tests', () => {
     const siteKey = 'digitall';
@@ -49,7 +49,7 @@ describe('Preview tests', () => {
         cy.loginAndStoreSession();
         pageComposer = PageComposer.visit(siteKey, 'en', 'home.html');
         pageComposer.navigateToPage('chocolate,-sweets,-cakes');
-        pageComposer.editComponentByText('previewWrapper')
+        pageComposer.editComponentByText('previewWrapper');
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
         contentEditor.validateContentIsVisibleInPreview('previewWrapper Test');

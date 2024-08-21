@@ -50,6 +50,11 @@ mutation createDeleteContent {
                             name: "test-delete5"
                             primaryNodeType: "jnt:bigText"
                             properties: [{ name: "text", language: "en", value: "test 5" }]
+                        },
+                        {
+                            name: "test-delete6"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [{ name: "text", language: "en", value: "test 6" }]
                         }
                     ]
                 ) {

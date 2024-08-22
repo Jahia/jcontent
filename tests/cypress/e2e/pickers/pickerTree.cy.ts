@@ -43,7 +43,7 @@ describe('Picker tests - Trees', () => {
 
         picker.getTable().getRowByIndex(1).get().find('span').first().should('contain', 'files');
 
-        picker.getTable().getRowByIndex(2).get().find('span').first().should('contain', 'ce-picker-files');
+        picker.getTable().getRowByIndex(5).get().find('span').first().should('contain', 'ce-picker-files');
     });
 
     it('should be able to open and close folder', () => {
@@ -67,7 +67,7 @@ describe('Picker tests - Trees', () => {
             .getPickerField(contentTypes.folderpicker.fieldNodeType, contentTypes.folderpicker.multiple);
         let picker = pickerField.open();
 
-        picker.getTable().getRowByIndex(2).get().find('span').first().should('contain', 'ce-picker-files').click();
+        picker.getTable().getRowByIndex(5).get().find('span').first().should('contain', 'ce-picker-files').click();
 
         picker.select();
         pickerField.assertValue('ce-picker-files');
@@ -81,7 +81,7 @@ describe('Picker tests - Trees', () => {
             .getPickerField(contentTypes.folderpicker.fieldNodeType, contentTypes.folderpicker.multiple);
         const picker = pickerField.open();
 
-        picker.getTable().getRowByIndex(2).get().find('span').first().should('contain', 'ce-picker-files').click();
+        picker.getTable().getRowByIndex(5).get().find('span').first().should('contain', 'ce-picker-files').click();
         picker.getSiteSwitcher().should('contain', 'Digitall');
         picker.switchToSite('System Site');
         picker.getSiteSwitcher().should('contain', 'System Site');

@@ -92,7 +92,8 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
 
         return columns
             .filter(c => multiple || c.id !== SELECTION_COLUMN_ID)
-            .filter(c => previousModeTableConfig?.contextualMenu || c.id !== 'visibleActions');
+            .filter(c => previousModeTableConfig?.contextualMenu || c.id !== 'visibleActions')
+            .map(c => ({...c, sortable: !isStructured && c.sortable}));
     }, [isMultiple, previousModeTableConfig, rows, isStructured]);
     const {
         getTableProps,

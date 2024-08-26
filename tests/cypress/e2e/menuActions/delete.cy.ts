@@ -311,6 +311,19 @@ describe('delete tests', () => {
         jcontent.checkSelectionCount(0);
     });
 
+    it('Does not show delete action on locked nodes', () => {
+        cy.apollo({mutation: gql`mutation lockNode {
+                jcr {
+                    mutateNode(pathOrId: "/sites/jContentSite-delete/contents/test-deleteContents/test-delete6") {
+                        lock
+                    }
+                }
+            }`});
+
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+        jcontent.getTable().getRowByLabel('test 6').contextMenu().should('not.contain', 'Delete');
+    });
+
     describe('Legacy Page Composer GWT Tests', () => {
         const text = 'Cercarla inquieta ne ed bruttava scarabeo ostinata su so. Guardava volgersi la va pensieri ho. Imagina in ritorni sa calmati fuggire al ed sorrisi. Ha impudente riaprirmi la la ascoltami sorridere subitaneo vivamente vi. Promessa lo va palpebre ho me riposati provarlo. Turba ben tenue all hai rende osate porre nei volge. Osi sfaldavano dolcemente trascinava sii dio eguagliare chiedergli conservava qui. Esausto tal calmati uno portate qui sognato sta baciato. Con sta armi era gote ambo pur.\n' +
             '\n' +

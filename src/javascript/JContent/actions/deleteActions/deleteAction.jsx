@@ -8,7 +8,7 @@ import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 
 function checkAction(node) {
-    return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node);
+    return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node) && !node.lockOwner;
 }
 
 export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
@@ -23,7 +23,8 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+            getLockInfo: true
         },
         {
             fetchPolicy: 'network-only'

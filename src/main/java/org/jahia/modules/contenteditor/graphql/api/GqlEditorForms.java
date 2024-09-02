@@ -218,13 +218,25 @@ public class GqlEditorForms {
 
     private String getConfigPath(String moduleId, String resource) {
         String configPath = "";
-        JahiaTemplatesPackage ckeditorModule = ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackageById(moduleId);
+        JahiaTemplatesPackage templateModule = ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackageById(moduleId);
 
-        if (ckeditorModule != null) {
-            Bundle ckeditorBundle = ckeditorModule.getBundle();
+        if (templateModule != null) {
+            Bundle ckeditorBundle = templateModule.getBundle();
 
             if (ckeditorBundle != null && ckeditorBundle.getResource(resource) != null) {
-                configPath = "$context" + ckeditorModule.getRootFolderPath() + resource;
+                configPath = "$context" + templateModule.getRootFolderPath() + resource;
+            }
+        }
+
+        if (configPath.isEmpty()) {
+            JahiaTemplatesPackage ckeditorModule = ServicesRegistry.getInstance().getJahiaTemplateManagerService()
+                .getTemplatePackageById("ckeditor");
+            if (ckeditorModule != null) {
+                Bundle ckeditorBundle = ckeditorModule.getBundle();
+                if (ckeditorBundle != null && ckeditorBundle.getResource("javascript/config.js") != null) {
+                    configPath = "$context" + ckeditorModule.getRootFolderPath()
+                        + "/javascript/config.js";
+                }
             }
         }
         return configPath;

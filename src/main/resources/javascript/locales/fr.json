@@ -525,7 +525,8 @@
     },
     "categoryManager": {
       "noSubCategory": "Pas de sous-catégorie",
-      "name":"Gestionnaire de Catégories"
+      "name":"Gestionnaire de Catégories",
+      "pageTitle": "Catégories"
     },
     "contentEditor": {
       "create": {

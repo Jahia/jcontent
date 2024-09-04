@@ -226,6 +226,7 @@ export const jContentAccordionItems = registry => {
             <AccordionItem key={v.id} {...v}>
                 <ContentTree item={item}
                              contextualMenuAction="contentMenu"
+                             pageTitlePrefix="jcontent:label.categoryManager.pageTitle"
                              selector={state => ({
                                  siteKey: 'systemsite',
                                  lang: state.language,

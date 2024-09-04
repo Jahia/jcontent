@@ -50,7 +50,7 @@ export const CategoryManager = () => {
                                                                          siteKey: 'systemsite',
                                                                          uilang: state.uilang
                                                                      })}
-                                                                     logo={<Typography variant="heading" weight="default">Category Manager</Typography>}/>}/>}
+                                                                     logo={<Typography variant="heading" weight="default">{t('jcontent:label.categoryManager.name')}</Typography>}/>}/>}
             content={
                 <LoaderSuspense>
                     <ErrorBoundary>

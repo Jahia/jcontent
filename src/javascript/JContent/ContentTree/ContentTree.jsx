@@ -15,6 +15,7 @@ import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
 import {NonDisplayableNodeDialog, LinkDialog, useNodeDialog} from '~/JContent/NavigationDialogs';
+import {useTranslation} from 'react-i18next';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -100,8 +101,9 @@ ItemComponent.propTypes = {
     treeEntries: PropTypes.array
 };
 
-export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
+export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction, pageTitlePrefix}) => {
     const dispatch = useDispatch();
+    const {t} = useTranslation('jcontent');
     const {lang, siteKey, path, openPaths, viewMode} = useSelector(selector, shallowEqual);
     const {openDialog: openLinkDialog, ...linkDialogProps} = useNodeDialog();
     const {openDialog: openNonDisplayableNodeDialog, ...nonDisplayableNodeDialogProps} = useNodeDialog();
@@ -176,7 +178,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     if (!nodeInfo.loading && nodeInfo.node && nodeInfo.node?.displayName) {
-        window.top.document.title = `jContent - ${nodeInfo.node.displayName}`;
+        window.top.document.title = `${t(pageTitlePrefix)} - ${nodeInfo.node.displayName}`;
     }
 
     return (
@@ -244,7 +246,8 @@ ContentTree.propTypes = {
     closePathAction: PropTypes.func,
     setPathAction: PropTypes.func,
     isReversed: PropTypes.bool,
-    contextualMenuAction: PropTypes.string
+    contextualMenuAction: PropTypes.string,
+    pageTitlePrefix: PropTypes.string
 };
 
 ContentTree.defaultProps = {
@@ -259,7 +262,8 @@ ContentTree.defaultProps = {
     setPathAction: (path, params) => cmGoto({path, params}),
     openPathAction: path => cmOpenPaths([path]),
     closePathAction: path => cmClosePaths([path]),
-    isReversed: true
+    isReversed: true,
+    pageTitlePrefix: 'jContent'
 };
 
 export default ContentTree;

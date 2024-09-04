@@ -522,7 +522,8 @@
     },
     "categoryManager": {
       "noSubCategory": "Keine Unterkategorie",
-      "name": "Kategorie-Manager"
+      "name": "Kategorie-Manager",
+      "pageTitle": "Kategorien"
     },
     "contentEditor": {
       "create": {

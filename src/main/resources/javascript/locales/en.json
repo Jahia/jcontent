@@ -530,7 +530,8 @@
     },
     "categoryManager": {
       "noSubCategory": "No sub-category",
-      "name": "Category Manager"
+      "name": "Category Manager",
+      "pageTitle": "Categories"
     },
     "contentEditor": {
       "create": {

@@ -38,8 +38,8 @@ describe('Search tests', () => {
                 .searchTerm('test')
                 .searchInWholeSite()
                 .executeSearch()
-                .verifyResults(['test', 'test', 'test', 'test', 'test'])
-                .verifyTotalCount(5);
+                .verifyResults(['test', 'test', 'test', 'test', 'test', 'test', 'test'])
+                .verifyTotalCount(7);
         });
 
         it('Test search with type', function () {
@@ -62,7 +62,7 @@ describe('Search tests', () => {
                 .editQuery()
                 .searchInWholeSite()
                 .executeSearch()
-                .verifyTotalCount(5);
+                .verifyTotalCount(7);
         });
 
         it('Test search system name', function () {

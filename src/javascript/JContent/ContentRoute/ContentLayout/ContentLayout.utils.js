@@ -97,5 +97,6 @@ export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode
 // The util is inspecting image extension as do the browsers but returns predictable results.
 // Note that as with the browsers spoofing is a possibility.
 export const getUploadedFileMimeType = file => {
-    return mime.getType(file.name.split('.').pop().toLowerCase());
+    const type = mime.getType(file.name.split('.').pop().toLowerCase());
+    return type || file.type;
 };

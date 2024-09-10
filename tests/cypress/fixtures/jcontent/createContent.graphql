@@ -56,6 +56,17 @@ mutation {
                                     { name: "j:tagList", language: "en", values: ["tagToLookFor"] }
                                 ]
                             }
+                            {
+                                name: "test-content6-linkview"
+                                primaryNodeType: "jnt:bigText"
+                                properties: [{ name: "text", language: "en", value: "test 6" }, {name: "j:view", language: "en", value: "link"}]
+                                mixins: ["jmix:renderable"],
+                            }
+                            {
+                                name: "test-content7-defaultview"
+                                primaryNodeType: "jnt:bigText"
+                                properties: [{ name: "text", language: "en", value: "test 7" }]
+                            }
                         ]
                     }
                     {

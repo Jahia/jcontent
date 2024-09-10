@@ -30,7 +30,7 @@ export const isBrowserImage = node => {
 };
 
 export const isImageFile = filename => {
-    return imageExtensionSet.has(filename.split('.').pop().toLowerCase());
+    return filename.includes('.') ? imageExtensionSet.has(filename.split('.').pop().toLowerCase()) : false;
 };
 
 export const isPDF = node => {
@@ -97,6 +97,6 @@ export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode
 // The util is inspecting image extension as do the browsers but returns predictable results.
 // Note that as with the browsers spoofing is a possibility.
 export const getUploadedFileMimeType = file => {
-    const type = mime.getType(file.name.split('.').pop().toLowerCase());
+    const type = file.name.includes('.') ? mime.getType(file.name.split('.').pop().toLowerCase()) : null;
     return type || file.type;
 };

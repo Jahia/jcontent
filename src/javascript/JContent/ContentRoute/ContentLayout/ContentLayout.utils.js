@@ -30,7 +30,7 @@ export const isBrowserImage = node => {
 };
 
 export const isImageFile = filename => {
-    return filename.includes('.') ? imageExtensionSet.has(filename) : false;
+    return filename.includes('.') ? imageExtensionSet.has(filename.split('.').pop().toLowerCase()) : false;
 };
 
 export const isPDF = node => {

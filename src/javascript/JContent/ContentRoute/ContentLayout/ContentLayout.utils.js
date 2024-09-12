@@ -71,7 +71,7 @@ export const getMimeType = node => {
     const mimetype = node.content?.mimeType.value;
     if (!mimetype || mimetype === 'null') {
         // Try to get mimetype using file extension
-        return mime.getType(node.path.split('.').pop().toLowerCase());
+        return node.path.replace(/^.*[/\\]/, '').includes('.') ? mime.getType(node.path) : null;
     }
 
     return mimetype;
@@ -97,6 +97,6 @@ export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode
 // The util is inspecting image extension as do the browsers but returns predictable results.
 // Note that as with the browsers spoofing is a possibility.
 export const getUploadedFileMimeType = file => {
-    const type = file.name.includes('.') ? mime.getType(file.name.split('.').pop().toLowerCase()) : null;
+    const type = file.name.includes('.') ? mime.getType(file.name) : null;
     return type || file.type;
 };

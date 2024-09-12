@@ -63,7 +63,7 @@ export const UsagesCountQuery = gql`query($path:String!) {
     jcr {
         nodeByPath(path: $path) {
             ...NodeCacheRequiredFields
-            usages: references(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}) {
+            usages: usages(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}) {
                 nodes {
                     node {
                         ...NodeCacheRequiredFields

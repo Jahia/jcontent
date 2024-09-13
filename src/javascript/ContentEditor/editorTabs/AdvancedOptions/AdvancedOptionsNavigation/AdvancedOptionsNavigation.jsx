@@ -14,7 +14,7 @@ import {UsagesCountQuery} from '~/UsagesTable/UsagesTable.gql-queries';
 const DEPRECATED_GWT_ACTIONS = ['seo', 'usages', 'channels', 'visibility'];
 
 function getNodesCount(data) {
-    const nodesCount = data?.jcr?.nodeByPath?.usages?.pageInfo?.nodesCount;
+    const nodesCount = data?.jcr?.nodeByPath?.usages;
     if (nodesCount === undefined) {
         return '0';
     }

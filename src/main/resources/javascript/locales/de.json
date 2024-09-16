@@ -646,7 +646,8 @@
           "usages": {
             "path": "Location",
             "none": "Nicht verwendet",
-            "noneDescription": "Dieses Element ist nicht durch einen anderen Content referenziert."
+            "noneDescription": "Dieses Element ist nicht durch einen anderen Content referenziert.",
+            "restricted": "Dieser Content wird insgesamt in {{total}} Stelle(n) verwendet, wegen beschränkten Rechten sind aber nur {{visible}} sichtbar.\nKontaktieren Sie Ihren Administrator für Erweiterungen der Rechte."
           }
         },
         "sharedLanguages": "Von allen Sprachen geteilt",

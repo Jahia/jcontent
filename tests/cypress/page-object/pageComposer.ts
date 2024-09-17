@@ -192,8 +192,12 @@ export class PageComposer extends BasePage {
 
     switchLanguage(language: string) {
         cy.iframe('#page-composer-frame', this.iFrameOptions).within(() => {
-            cy.get('.toolbar-itemsgroup-languageswitcher').click();
-            cy.get('.x-combo-list-item').contains(language).click();
+            // Seems necessary with the flicker on changing language
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(5000).then(() => {
+                cy.get('.toolbar-itemsgroup-languageswitcher').should('be.visible').click();
+                cy.get('.x-combo-list-item').contains(language).click();
+            });
         });
     }
 

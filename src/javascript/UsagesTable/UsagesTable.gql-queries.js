@@ -5,6 +5,7 @@ export const UsagesQuery = gql`query($path:String!, $language: String!, $pageSiz
     jcr {
         nodeByPath(path: $path) {
             ...NodeCacheRequiredFields
+            usagesCount: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
             usages: usages(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}, limit: $pageSize, offset: $currentPage, fieldSorter: $fieldSorter) {
                 nodes {
                     properties {
@@ -63,17 +64,7 @@ export const UsagesCountQuery = gql`query($path:String!) {
     jcr {
         nodeByPath(path: $path) {
             ...NodeCacheRequiredFields
-            usages: usages(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}) {
-                nodes {
-                    node {
-                        ...NodeCacheRequiredFields
-                        visible: isNodeType(type: {types: ["jnt:workflowTask"], multi: NONE})
-                    }
-                }
-                pageInfo {
-                    nodesCount
-                }
-            }
+            usages: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
         }
     }
 }

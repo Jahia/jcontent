@@ -44,3 +44,9 @@
     width: 100%;
     min-width: 0;
 }
+
+.warning {
+    display: flex;
+    align-items: center;
+    margin: var(--spacing-small);
+}

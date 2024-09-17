@@ -653,7 +653,8 @@
           "usages": {
             "path": "Location",
             "none": "No usages",
-            "noneDescription": "This element is not referenced by any other content."
+            "noneDescription": "This element is not referenced by any other content.",
+            "restricted": "This content is used in {{total}} places in total but you can only see {{visible}} due to permission restrictions. Contact an administrator to extend your permissions if needed."
           }
         },
         "sharedLanguages": "Shared by all languages",

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import styles from './UsagesTable.scss';
-import {Table, TableBody, TablePagination, TableRow, Typography} from '@jahia/moonstone';
+import {Table, TableBody, TablePagination, TableRow, Typography, Warning} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
 import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
@@ -36,6 +36,7 @@ export const UsagesTable = ({path, language}) => {
         fetchPolicy: 'cache-and-network'
     });
 
+    const usagesCount = data?.jcr?.nodeByPath?.usagesCount;
     const usages = data?.jcr?.nodeByPath?.usages?.nodes ? Object.values(data.jcr.nodeByPath.usages.nodes.reduce((acc, ref) => (
         {
             ...acc,
@@ -68,21 +69,40 @@ export const UsagesTable = ({path, language}) => {
         return <LoaderOverlay/>;
     }
 
+    let externalUsagesWarning = null;
+    const visibleUsages = data?.jcr?.nodeByPath?.usages?.pageInfo?.totalCount;
+
+    if (Number.isInteger(usagesCount) && Number.isInteger(visibleUsages) && usagesCount !== visibleUsages) {
+        externalUsagesWarning = (
+            <div className={styles.warning}>
+                <Warning size="big" color="red"/>
+                <Typography variant="body">
+                    {t('jcontent:label.contentEditor.edit.advancedOption.usages.restricted', {total: usagesCount, visible: visibleUsages})}
+                </Typography>
+            </div>
+        );
+    }
+
     if (usages.length === 0) {
         return (
             <section className={styles.container}>
-                <Typography variant="heading">
-                    {t('jcontent:label.contentEditor.edit.advancedOption.usages.none')}
-                </Typography>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.edit.advancedOption.usages.noneDescription')}
-                </Typography>
+                {externalUsagesWarning}
+                {!externalUsagesWarning && (
+                    <>
+                        <Typography variant="heading">
+                            {t('jcontent:label.contentEditor.edit.advancedOption.usages.none')}
+                        </Typography>
+                        <Typography variant="body">
+                            {t('jcontent:label.contentEditor.edit.advancedOption.usages.noneDescription')}
+                        </Typography>
+                    </>)}
             </section>
         );
     }
 
     return (
         <Paper className={styles.contentPaper} data-sel-role="usages">
+            {externalUsagesWarning}
             <div className={clsx('flexFluid', 'flexCol')}>
                 <div className={clsx(styles.tableWrapper, 'flexFluid')}>
                     <Table aria-labelledby="tableUsages"
@@ -112,7 +132,7 @@ export const UsagesTable = ({path, language}) => {
                 </div>
                 <TablePagination
                     className={styles.pagination}
-                    totalNumberOfRows={data?.jcr?.nodeByPath?.usages?.pageInfo.totalCount}
+                    totalNumberOfRows={visibleUsages}
                     currentPage={currentPage + 1}
                     rowsPerPage={pageSize}
                     label={{

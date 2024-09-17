@@ -649,7 +649,8 @@
           "usages": {
             "path": "Emplacement",
             "none": "Pas d’utilisation",
-            "noneDescription": "Cet élément n’est référencé par aucun autre contenu."
+            "noneDescription": "Cet élément n’est référencé par aucun autre contenu.",
+            "restricted": "Ce contenu est utilisé dans {{total}} emplacements mais vos droits de lecture ne vous permettent d'en voir que {{visible}}. Contactez un administrateur pour étendre vos permissions, si nécessaire."
           }
         },
         "sharedLanguages": "Partagé par toutes les langues",

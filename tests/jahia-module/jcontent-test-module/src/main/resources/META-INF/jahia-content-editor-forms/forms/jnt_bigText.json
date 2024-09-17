@@ -8,6 +8,10 @@
         {
           "name": "cemix:testAutoActivatedMixin",
           "activatedOnCreate": true
+        },
+        {
+          "name": "cemix:testAutoAlwaysActivatedMixin",
+          "isAlwaysActivated": true
         }
       ]
     }

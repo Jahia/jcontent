@@ -13,8 +13,17 @@ describe('Content editor form', () => {
         cy.apollo({
             mutation: gql`mutation GrantRoles {
                 jcr {
-                    mutateNode(pathOrId: "/sites/contentEditorSite") {
+                    grantRoles: mutateNode(pathOrId: "/sites/contentEditorSite") {
                         grantRoles(roleNames: "editor", principalType: USER, principalName: "mathias")
+                    }
+                    addContent: mutateNode(pathOrId: "/sites/contentEditorSite/contents") {
+                        addChild(
+                            name: "alwaysActivatedOverrideTest", 
+                            primaryNodeType: "jnt:bigText", 
+                            properties: [{ name: "text", language: "en", value: "isAlwaysActivated override test" }]
+                        ) {
+                            uuid
+                        }
                     }
                 }
             }`
@@ -141,14 +150,22 @@ describe('Content editor form', () => {
         field.get().scrollIntoView().contains('Customized description').should('be.visible');
     });
 
-    it('Should enable automatically cemix:testAutoActivatedMixin on jnt:bigText', () => {
+    it('Should enable automatically cemix:testAutoActivatedMixin on jnt:bigText for create', () => {
         const contentEditor = jcontent.createContent('Rich text');
         contentEditor.getField(SmallTextField, 'cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField');
+        contentEditor.getField(SmallTextField, 'cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField');
     });
 
-    it('Should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText', () => {
+    it('Should enable automatically cemix:testAutoAlwaysActivatedMixin on jnt:bigText for edit', () => {
+        const contentEditor = jcontent.editComponentByText('isAlwaysActivated override test');
+        cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
+        contentEditor.getField(SmallTextField, 'cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField');
+    });
+
+    it('Should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText for create', () => {
         jcontent.createContent('Simple text');
         cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
+        cy.get('[data-sel-content-editor-field="cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField"]').should('not.exist');
     });
 
     it('Should not see readonly text field for reviewer', () => {

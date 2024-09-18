@@ -4,15 +4,7 @@ import {PredefinedFragments} from '@jahia/data-helper';
 const DeleteUsageFragment = gql`    
     fragment DeleteUsageFragment on JCRNode {
         ...NodeCacheRequiredFields
-        usages: references(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}, limit: 1) {
-            nodes {
-                node {
-                    ...NodeCacheRequiredFields
-                    visible: isNodeType(type: {types: ["jnt:workflowTask"], multi: NONE})
-                    path
-                }
-            }
-        }
+        usagesCount: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
     }
 `;
 

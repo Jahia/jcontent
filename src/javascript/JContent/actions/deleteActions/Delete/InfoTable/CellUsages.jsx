@@ -12,7 +12,7 @@ const ButtonRenderer = getButtonRenderer({labelStyle: 'short', defaultButtonProp
 export const CellUsages = ({cell, column, row}) => {
     const {t} = useTranslation('jcontent');
     const node = row.original;
-    const usagesCount = node?.usages?.pageInfo?.nodesCount;
+    const usagesCount = node?.usagesCount;
 
     return (
         <TableBodyCell key={row.id + column.id}

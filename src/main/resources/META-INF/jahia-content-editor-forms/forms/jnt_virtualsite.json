@@ -6,6 +6,10 @@
     {
       "name": "listOrdering",
       "hide": true
+    },
+    {
+      "name": "seo",
+      "hide": true
     }
   ]
 }

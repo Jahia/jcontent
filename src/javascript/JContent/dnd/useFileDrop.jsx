@@ -17,7 +17,7 @@ import {uploadStatuses} from '~/JContent/ContentRoute/ContentLayout/Upload/Uploa
 import {v4} from 'uuid';
 import {fileuploadAddUploads} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {batchActions} from 'redux-batched-actions';
-import mime from 'mime';
+import {getUploadedFileMimeType} from '../ContentRoute/ContentLayout/ContentLayout.utils';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
@@ -43,7 +43,7 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
             if (!file.type) {
                 // Crappy hack for bugged firefox
                 file = new File([file], file.name, {
-                    type: file.name.includes('.') ? mime.getType(file.name) : ''
+                    type: getUploadedFileMimeType(file)
                 });
             }
 

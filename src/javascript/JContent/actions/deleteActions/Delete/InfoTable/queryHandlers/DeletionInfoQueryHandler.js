@@ -18,17 +18,7 @@ export const DeletionInfoQueryHandler = {
             {
                 applyFor: 'node',
                 gql: gql`fragment UsagesFragment on JCRNode {
-                    usages: references(fieldFilter: {filters: {fieldName: "node.visible", value: "true"}}) {
-                        nodes {
-                            node {
-                                ...NodeCacheRequiredFields
-                                visible: isNodeType(type: {types: ["jnt:workflowTask"], multi: NONE})
-                            }
-                        }
-                        pageInfo {
-                            nodesCount
-                        }
-                    }
+                    usagesCount: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
                 }`
             }
         ];

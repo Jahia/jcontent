@@ -63,7 +63,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
     const hasUsages = dialogType !== 'undelete' &&
         data?.jcr?.nodesByPath?.reduce(
             (_hasUsages, node) =>
-                _hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usages?.nodes?.length > 0), false
+                _hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usagesCount > 0), false
         );
     const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((isOverflow, node) => isOverflow || node.allDescendants.nodes.length === 100, false);
     const label = getLabel({dialogType, locked, count, data, firstNode, pages, folders, t});
@@ -86,7 +86,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                     <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
                     {hasUsages && count === 1 &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
-                    {hasUsages && count > 1 &&
+                    {hasUsages && count !== 1 &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
                     {!hasUsages && usagesOverflow &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}

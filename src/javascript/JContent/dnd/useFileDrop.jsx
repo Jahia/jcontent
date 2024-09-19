@@ -44,7 +44,7 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
             if (!file.type) {
                 // Crappy hack for bugged firefox
                 file = new File([file], file.name, {
-                    type: file.name.includes('.') ? mime.getType(file.name) : null
+                    type: file.name.includes('.') ? mime.getType(file.name) : ''
                 });
             }
 

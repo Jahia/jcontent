@@ -84,11 +84,11 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                 <Loader size="big" style={{width: '100%'}}/> :
                 <DialogContent>
                     <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
-                    {!usagesOverflow && hasUsages && count === 1 &&
+                    {hasUsages && count === 1 &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
-                    {!usagesOverflow && hasUsages && (count > 1 || count === 0) &&
+                    {hasUsages && (count > 1 || count === 0) &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.some')}</DialogContentText>}
-                    {usagesOverflow &&
+                    {!hasUsages && usagesOverflow &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.tooMany')}</DialogContentText>}
                     {!locked && <InfoTable paths={paths} dialogType={dialogType}/>}
                 </DialogContent>}

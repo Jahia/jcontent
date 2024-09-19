@@ -80,3 +80,12 @@ export const flattenTree = function (rows) {
 };
 
 export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode || JContentConstants.mode.SEARCH === mode;
+
+// This util is necessary as not all browsers detect svg as image files, which they are not, technically they are xml files and can have application/svg+xml type.
+// That leads to svg files not being marked as images with jmix:image mixin.
+// The util is inspecting image extension as do the browsers but returns predictable results.
+// Note that as with the browsers spoofing is a possibility.
+export const getUploadedFileMimeType = file => {
+    const type = file.name.includes('.') ? mime.getType(file.name) : null;
+    return type || file.type;
+};

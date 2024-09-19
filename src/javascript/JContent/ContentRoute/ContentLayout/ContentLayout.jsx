@@ -19,25 +19,6 @@ export const ContentLayout = ({mode, path, previewState, filesMode, previewSelec
     return (
         <>
             <div className={styles.root}>
-                <Drawer
-                    data-cm-role="preview-drawer"
-                    variant="persistent"
-                    anchor="right"
-                    open={previewOpen}
-                    classes={{
-                        root: classNames(styles.previewDrawer, {[styles.previewDrawerHidden]: !previewOpen}),
-                        paper: classNames({
-                            [styles.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
-                            [styles.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
-                        })
-                    }}
-                >
-                    {previewOpen && (
-                        <ErrorBoundary key={previewSelection}>
-                            <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
-                        </ErrorBoundary>
-                    )}
-                </Drawer>
                 <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
                 <div
                     className={classNames(styles.content)}
@@ -61,6 +42,25 @@ export const ContentLayout = ({mode, path, previewState, filesMode, previewSelec
                         </ErrorBoundary>
                     </Paper>
                 </div>
+                <Drawer
+                    data-cm-role="preview-drawer"
+                    variant="persistent"
+                    anchor="right"
+                    open={previewOpen}
+                    classes={{
+                        root: classNames(styles.previewDrawer, {[styles.previewDrawerHidden]: !previewOpen}),
+                        paper: classNames({
+                            [styles.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
+                            [styles.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
+                        })
+                    }}
+                >
+                    {previewOpen && (
+                        <ErrorBoundary key={previewSelection}>
+                            <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
+                        </ErrorBoundary>
+                    )}
+                </Drawer>
             </div>
         </>
     );

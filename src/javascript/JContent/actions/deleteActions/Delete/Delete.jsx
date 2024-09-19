@@ -63,7 +63,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
     const hasUsages = dialogType !== 'undelete' &&
         data?.jcr?.nodesByPath?.reduce(
             (_hasUsages, node) =>
-                _hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usages?.nodes?.length > 0), false
+                _hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usagesCount > 0), false
         );
     const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((isOverflow, node) => isOverflow || node.allDescendants.nodes.length === 100, false);
     const label = getLabel({dialogType, locked, count, data, firstNode, pages, folders, t});

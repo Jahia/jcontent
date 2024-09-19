@@ -53,6 +53,9 @@ describe('Test the text field initializer', () => {
                 return;
             }
 
+            // Seems necessary with the flicker on changing language
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(5000);
             pageComposer.switchLanguage(data);
             checkValuesDisplayedInPageComposer(pageComposer, valuesToCheck, lang);
         });

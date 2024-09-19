@@ -32,6 +32,8 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
     private Boolean hide;
     private Boolean readOnly;
     private Boolean activatedOnCreate = false;
+
+    private Boolean isAlwaysActivated = false;
     // Fieldset will be included in section even if it is invisible
     private Boolean alwaysPresent;
     private Double rank;
@@ -137,6 +139,14 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
 
     public void setActivatedOnCreate(Boolean activatedOnCreate) {
         this.activatedOnCreate = activatedOnCreate;
+    }
+
+    public Boolean isAlwaysActivated() {
+        return isAlwaysActivated;
+    }
+
+    public void setIsAlwaysActivated(Boolean isAlwaysActivated) {
+        this.isAlwaysActivated = isAlwaysActivated;
     }
 
     public Boolean isAlwaysPresent() {
@@ -275,6 +285,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
         setHide(otherFieldSet.isHide() != null ? otherFieldSet.isHide() : hide);
         setReadOnly(otherFieldSet.isReadOnly() != null ? otherFieldSet.isReadOnly() : readOnly);
         setActivatedOnCreate(otherFieldSet.isActivatedOnCreate() != null ? otherFieldSet.isActivatedOnCreate() : activatedOnCreate);
+        setIsAlwaysActivated(otherFieldSet.isAlwaysActivated() != null ? otherFieldSet.isAlwaysActivated() : isAlwaysActivated);
         setRank(otherFieldSet.getRank() != null ? otherFieldSet.getRank() : rank);
         setAlwaysPresent(otherFieldSet.isAlwaysPresent() != null ? otherFieldSet.isAlwaysPresent() : alwaysPresent);
         mergeFields(otherFieldSet.getFields(), form);

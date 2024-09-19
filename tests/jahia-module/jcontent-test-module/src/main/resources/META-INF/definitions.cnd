@@ -99,6 +99,10 @@
  extends = jnt:content
  - j:testAutoActivatedMixinField (string)
 
+[cemix:testAutoAlwaysActivatedMixin] mixin
+ extends = jnt:content
+ - j:testAutoAlwaysActivatedMixinField (string)
+
 [cent:visibleInTree] > jnt:content, jmix:visibleInPagesTree
 
 [cent:html5PluginTestComponent] > jnt:content, mix:title, jmix:editorialContent, jmix:droppableContent, jmix:siteComponent

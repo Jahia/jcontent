@@ -179,7 +179,10 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            fieldSet.setActivated(existingNode != null && existingNode.isNodeType(fieldSet.getName()) || existingNode == null && fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate());
+                            boolean isActivated = existingNode != null && existingNode.isNodeType(fieldSet.getName());
+                            boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
+                            boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
+                            fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);
                             fieldSet.setHasEnableSwitch(!nodeType.isNodeType("jmix:templateMixin"));
 
                             // Update readonly if user does not have permission to add/remove mixin

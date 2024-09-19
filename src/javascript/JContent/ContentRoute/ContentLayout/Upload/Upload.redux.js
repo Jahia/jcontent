@@ -1,6 +1,7 @@
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {createActions, handleActions} from 'redux-actions';
 import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
+import {getUploadedFileMimeType} from '../ContentLayout.utils';
 
 export const {fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue} =
     createActions('FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE');
@@ -91,7 +92,7 @@ export const fileuploadRedux = registry => {
                 mutation: updateFileContent,
                 variables: {
                     path: `${path}`,
-                    mimeType: file.type,
+                    mimeType: getUploadedFileMimeType(file),
                     fileHandle: file
                 }
             }).then(data => {
@@ -110,7 +111,7 @@ export const fileuploadRedux = registry => {
                     fileHandle: file,
                     nameInJCR: filename,
                     path: path,
-                    mimeType: file.type
+                    mimeType: getUploadedFileMimeType(file)
                 }
             }).then(data => {
                 return ({

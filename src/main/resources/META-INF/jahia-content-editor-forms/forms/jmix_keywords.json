@@ -1,0 +1,16 @@
+{
+  "nodeType": "jmix:keywords",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "metadata",
+      "fieldSets": [
+        {
+          "name": "jmix:keywords",
+          "rank": 0.0,
+          "hide": true
+        }
+      ]
+    }
+  ]
+}

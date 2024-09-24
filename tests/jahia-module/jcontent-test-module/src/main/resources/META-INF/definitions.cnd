@@ -48,6 +48,7 @@
  - list (string, choicelist) = 'choice4' < 'choice4', 'choice5', 'choice6'
  - checkbox (string, choicelist) = 'choice7' multiple < 'choice7', 'choice8', 'choice9'
  - mList (string, choicelist) = 'choice10' multiple < 'choice10', 'choice11', 'choice12'
+ - noDefaultList (string, choicelist) < 'choice1', 'choice2'
 
 [cent:testDefaultTemplate] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:hasTemplateNode
  - j:templateName (string, choicelist[templatesNode=pageTemplate]) mandatory nofulltext

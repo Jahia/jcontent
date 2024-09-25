@@ -53,9 +53,9 @@ export const CopyLanguageDialog = ({
 
     const handleApply = () => {
         getDataFromSelectedLanguage(currentOption.value).then(data => {
-            data.forEach(value => {
-                formik.setFieldValue(`${value.definition.declaringNodeType.name}_${value.name}`, value.multiple ? value.values : value.value);
-            });
+            for (const [key, value] of Object.entries(data)) {
+                formik.setFieldValue(key, value);
+            }
         });
 
         onCloseDialog();

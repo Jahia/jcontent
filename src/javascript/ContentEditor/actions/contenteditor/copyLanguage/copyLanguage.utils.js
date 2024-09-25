@@ -1,4 +1,5 @@
-import {getFieldValues} from '../../../ContentEditor/useEditFormDefinition';
+import {getInitialValues} from '../../../ContentEditor/useEditFormDefinition';
+import {adaptSections} from '~/ContentEditor/ContentEditor/adaptSections';
 
 /**
  * This function get the full name of a language by his id
@@ -14,30 +15,18 @@ export function getFullLanguageName(languages, id) {
 }
 
 /**
- * This function get the internationalized fields and their associated values from a form
+ * This function gets the internationalized fields and their associated values from a form
+ *
  * @param formAndData form and values of a node
  * @returns The internationalized field and their values
  */
 export function getI18nFieldAndValues(formAndData) {
     const {forms, jcr} = formAndData.data;
-    let i18nFields = forms.editForm.sections
+    const adaptedSections = adaptSections(forms.editForm.sections);
+    const initialValues = getInitialValues(jcr.result, adaptedSections);
+    return adaptedSections
         .flatMap(section => section.fieldSets)
         .flatMap(fieldSet => fieldSet.fields)
         .filter(field => field.i18n)
-        .map(field => ({...field, propertyName: field.name}));
-
-    return jcr.result.properties.reduce((acc, property) => {
-        const i18nField = i18nFields.find(field => field.name === property.name);
-        if (i18nField) {
-            const isMultiple = i18nField.multiple;
-            const adaptedValues = getFieldValues(i18nField, jcr?.result)[property.name];
-            return [...acc, {
-                ...property,
-                multiple: isMultiple,
-                ...(isMultiple ? {values: adaptedValues} : {value: adaptedValues})
-            }];
-        }
-
-        return acc;
-    }, []);
+        .reduce((acc, field) => ({...acc, [field.name]: initialValues[field.name]}), {});
 }

@@ -68,6 +68,7 @@ import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './act
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
 import {CopyMenuComponent} from '~/JContent/actions/copyPaste/CopyMenuComponent';
+import {OpenInRepositoryExplorerActionComponent} from '~/JContent/actions/openInRepositoryExplorerAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -418,6 +419,13 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.actions.openInPreview',
         targets: [],
         component: OpenInPreviewActionComponent
+    });
+
+    registry.add('action', 'openInRepositoryExplorer', {
+        buttonIcon: <OpenInBrowser/>,
+        buttonLabel: 'jcontent:label.contentManager.actions.openInRepositoryExplorer',
+        targets: ['contentActions:2.3'],
+        component: OpenInRepositoryExplorerActionComponent
     });
 
     registry.add('action', 'contentActionsSeparator1', {

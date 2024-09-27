@@ -299,6 +299,7 @@
       "actions": {
         "openInJContent": "In einem neuen Tab öffnen",
         "openInPageBuilder": "Im Page Builder öffnen",
+        "openInRepositoryExplorer": "Im Content-Manager anzeigen",
         "pageComposer": "Im Page Composer öffnen",
         "error": {
           "loading": "Fehler beim Abrufen der Aktionsdaten: {{details}}"

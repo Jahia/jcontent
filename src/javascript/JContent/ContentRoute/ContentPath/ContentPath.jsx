@@ -38,7 +38,7 @@ function getItems(node = {}) {
         }
 
         const remainingAncestors = ancestors.slice(indexOfLastAncestorInContentTree + 1);
-        return [lastAncestorInContentTree].concat(remainingAncestors);
+        return [lastAncestorInContentTree].concat(remainingAncestors).concat(node);
     }
 
     return ancestors.concat(node);

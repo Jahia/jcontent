@@ -38,6 +38,7 @@ describe('Breadcrumb navigation test', () => {
 
     it('Do not display popup when navigating to list in list view', () => {
         JContent.visit('digitall', 'en', 'pages/home/investors/events/Events/ceos-of-the-digital-roundtable/relatedPeople');
+        Breadcrumb.findByContent('relatedPeople').should('exist');
         Breadcrumb.getBreadcrumbMenu().select('CEOs of The Digital Roundtable');
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
     });

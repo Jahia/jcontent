@@ -54,7 +54,7 @@ const renderItems = (items, onItemClick) => {
         ];
     }
 
-    return items.map((item, index) => <SimplePathEntry key={item.uuid} item={item} {...(index === items.length - 1 ? {} : {onItemClick: onItemClick})}/>);
+    return items.map((item, index) => <SimplePathEntry key={item.uuid} item={item} onItemClick={index === items.length - 1 ? undefined : onItemClick}/>);
 };
 
 export const ContentPath = ({selector}) => {

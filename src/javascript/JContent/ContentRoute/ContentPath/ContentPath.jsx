@@ -50,11 +50,11 @@ const renderItems = (items, onItemClick) => {
         return [
             <SimplePathEntry key={first.uuid} item={first} onItemClick={onItemClick}/>,
             <CompositePathEntry key={`${first.uuid}-${last.uuid}`} items={others} onItemClick={onItemClick}/>,
-            <SimplePathEntry key={last.uuid} item={last}/>
+            <SimplePathEntry key={last.uuid} isDisabled item={last}/>
         ];
     }
 
-    return items.map((item, index) => <SimplePathEntry key={item.uuid} item={item} onItemClick={index === items.length - 1 ? undefined : onItemClick}/>);
+    return items.map((item, index) => <SimplePathEntry key={item.uuid} item={item} isDisabled={index === items.length - 1} onItemClick={onItemClick}/>);
 };
 
 export const ContentPath = ({selector}) => {

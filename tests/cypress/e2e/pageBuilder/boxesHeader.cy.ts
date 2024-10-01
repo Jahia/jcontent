@@ -34,6 +34,12 @@ describe('Page builder', () => {
             header.getButton('contentMenu');
         });
 
+        it('should trim long titles', () => {
+            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content8-long-text').click();
+            const header = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content8-long-text').getHeader();
+            header.get().find('p').contains('Lorem ipsum dolor sit am...');
+        });
+
         it('should show create buttons', () => {
             jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons().getButton('New content');
         });

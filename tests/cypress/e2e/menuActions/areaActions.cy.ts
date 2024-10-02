@@ -23,6 +23,8 @@ describe('Area actions', () => {
         cy.apollo({mutationFile: 'jcontent/createTextContentUnderPath.graphql', variables: {
             path: '/sites/jcontentSite/home/landing'
         }});
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(3000);
         jcontent.refresh();
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);

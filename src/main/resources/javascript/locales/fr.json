@@ -302,6 +302,7 @@
         "openInJContent": "Ouvrir dans un nouvel onglet",
         "openInPageBuilder": "Ouvrir dans Page Builder",
         "pageComposer": "Ouvrir dans Page Composer",
+        "openInRepositoryExplorer": "Afficher dans le Gestionnaire de contenu",
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
         },

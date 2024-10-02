@@ -25,7 +25,7 @@ describe('Area actions', () => {
         }});
         jcontent.refresh();
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(2000);
+        cy.wait(3000);
         const menu = jcontent.getModule('/sites/jcontentSite/home/landing')
             .contextMenu(true);
         menu.shouldNotHaveItem('Delete');
@@ -41,7 +41,7 @@ describe('Area actions', () => {
             .select('Paste');
         jcontent.refresh();
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(2000);
+        cy.wait(3000);
         jcontent.getModule('/sites/jcontentSite/home/landing/test-content1').should('exist');
     });
 

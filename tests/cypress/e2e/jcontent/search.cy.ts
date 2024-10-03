@@ -33,12 +33,12 @@ describe('Search tests', () => {
             basicSearch.searchTerm('test').executeSearch().verifyTotalCount(0);
         });
 
-        it('Test basic search in all site', function () {
+        it('Test basic search in current site', function () {
             basicSearch
                 .searchTerm('test')
                 .searchInWholeSite()
                 .executeSearch()
-                .verifyResults(['test', 'test', 'test', 'test', 'test', 'test', 'test', 'test'])
+                .verifyResults(['test', 'test', 'test', 'test', 'test', 'test', 'test', 'Lorem ipsum'])
                 .verifyTotalCount(8);
         });
 
@@ -62,7 +62,7 @@ describe('Search tests', () => {
                 .editQuery()
                 .searchInWholeSite()
                 .executeSearch()
-                .verifyTotalCount(7);
+                .verifyTotalCount(8);
         });
 
         it('Test search system name', function () {

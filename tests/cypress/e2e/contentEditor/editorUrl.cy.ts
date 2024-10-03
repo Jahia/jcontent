@@ -72,51 +72,69 @@ describe('Editor url test', () => {
         cy.login();
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
         jcontent.switchToListMode();
+
         cy.log('Editing People First');
         contentEditor = jcontent.editComponentByText('People First');
         cy.log('Switching to advanced mode');
         contentEditor.switchToAdvancedMode();
         cy.log('Checking if the component is open');
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
+
         cy.log('Going back to homepage');
         cy.go('back');
         jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+
         cy.log('Going forward to People First CE');
         cy.go('forward');
         contentEditor = new ContentEditor();
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
+
         cy.log('Cancel editing People First');
         contentEditor.cancel();
-        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
+        cy.url().should('not.contain', 'contentEditor');
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+
         cy.log('Reopen People First by going forward');
         cy.go('forward');
+        cy.url().should('contain', 'contentEditor');
         contentEditor = new ContentEditor();
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         cy.get('h1').contains('People First').should('exist');
         contentEditor.cancel();
+
         cy.log('Back to Home page list');
-        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
+        cy.url().should('not.contain', 'contentEditor');
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+
         cy.log('Edit Our Companies');
         contentEditor = jcontent.editComponentByText('Our Companies');
         contentEditor.switchToAdvancedMode();
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         cy.go('back');
-        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
+        cy.url().should('not.contain', 'contentEditor');
+        jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
+
         cy.go('forward');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        cy.url().should('contain', 'contentEditor');
         contentEditor = new ContentEditor();
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         contentEditor.cancel();
-        // Wait for transition
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
+        cy.url().should('not.contain', 'contentEditor');
         jcontent.getTable().getRowByLabel('How to Use This Demo').get().should('be.visible');
         cy.go('forward');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        cy.url().should('contain', 'contentEditor');
         contentEditor = new ContentEditor();
         contentEditor.getSmallTextField('jdnt:highlight_description', false).should('be.visible');
         contentEditor.cancel();
@@ -140,14 +158,13 @@ describe('Editor url test', () => {
                 jcontent = new JContent();
                 jcontent.getTable().getRowByLabel('People First').get().should('be.visible');
             });
+        cy.logout();
     });
 
     it('Should not show error modal for valid uuid', () => {
-        cy.login();
+        cy.loginAndStoreSession('irina', 'password');
         const baseUrl = '/jahia/jcontent/digitall/en/pages/home/about';
         const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:digitall,uilang:en,uuid:'${validUuid}')))`;
-        cy.logout();
-        cy.login('irina', 'password');
         JContent.visit('digitall', 'en', 'pages/home');
         cy.visit(`${baseUrl}#${ceParams}`);
         cy.get('[data-sel-role="ce-error-dialog"]')
@@ -183,11 +200,9 @@ describe('Editor url test', () => {
     });
 
     it('Should show error modal for opening CE url for user with no permission', () => {
-        cy.login();
+        cy.loginAndStoreSession('irina', 'password');
         const baseUrl = '/jahia/jcontent/digitall/en/pages/home/about';
         const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:digitall,uilang:en,uuid:'${validUuid}')))`;
-        cy.logout();
-        cy.login('irina', 'password');
         JContent.visit('digitall', 'en', 'pages/home');
         cy.visit(`${baseUrl}#${ceParams}`);
         cy.get('[data-sel-role="ce-error-dialog"]')

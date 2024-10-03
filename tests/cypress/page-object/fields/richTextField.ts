@@ -17,7 +17,7 @@ export class RichTextField extends Field {
         return cy.window().its('CKEDITOR').its('instances').then(instances => instances[Object.keys(instances)[0]].getData());
     }
 
-    getElement(elementName: string): Cypress.Chainable<JQuery> {
+    getElement(): Cypress.Chainable<JQuery> {
         return cy.window().its('CKEDITOR').its('instances').then(instances => {
             const instanceOfCK = instances[Object.keys(instances)[0]];
             instanceOfCK.focus();

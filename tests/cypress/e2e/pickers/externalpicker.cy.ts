@@ -1,6 +1,3 @@
-import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
-import {assertUtils} from '../../utils/assertUtils';
-import {AccordionItem} from '../../page-object/accordionItem';
 import {JContent} from '../../page-object/jcontent';
 import {createSite, deleteSite, Dropdown, enableModule, getComponentByRole} from '@jahia/cypress';
 
@@ -29,7 +26,7 @@ describe('Picker tests', () => {
         const pickerField = jcontent
             .createContent('Pickers')
             .getPickerField('qant:pickers_filepicker');
-        const picker = pickerField.open();
+        pickerField.open();
         getComponentByRole(Dropdown, 'picker-selector').select('Custom picker');
         cy.contains('Test picker');
         cy.get('button[data-sel-role="custom-selector"]').click();

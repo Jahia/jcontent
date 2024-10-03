@@ -1,4 +1,4 @@
-import {ContentEditor, JContent} from '../../page-object';
+import {JContent} from '../../page-object';
 import {preparePerformanceTool, generateReportFile, gatherPerformanceStats} from '../../support/performanceTool';
 import {Button, getComponentByRole} from '@jahia/cypress';
 

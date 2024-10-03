@@ -92,17 +92,16 @@ describe('Test the save publish buttons flow', () => {
         contentEditor.openContentEditorHeaderMenu();
         getComponentByRole(Menu, 'jcontent-publishMenu').should('be.visible').find('.moonstone-menuItem[data-sel-role="unpublishInAllLanguages"]').should('have.attr', 'aria-disabled', 'false').click();
         cy.get('button.x-btn-text').contains('Unpublish all').click();
-        cy.apollo({
-            fetchPolicy: 'no-cache',
-            variables: {
-                path: contentPath
-            },
-            queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
-        })
-            .then(result => {
+        cy.waitUntil(() => {
+            return cy.apollo({
+                fetchPolicy: 'no-cache',
+                variables: {path: contentPath},
+                queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
+            }).then(result => {
                 const publicationStatus = result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus;
-                return publicationStatus && publicationStatus === 'UNPUBLISHED';
+                return publicationStatus === 'UNPUBLISHED';
             });
+        }, {timeout: 10000, interval: 2000, errorMsg: `Unable to unpublish content ${contentPath}`});
         checkContentEditorHeaderButtons(new ContentEditor(), false, true);
         checkContentEditorHeaderMenu(new ContentEditor(), 'true');
     };

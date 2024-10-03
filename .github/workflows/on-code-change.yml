@@ -46,6 +46,10 @@ jobs:
   build:
     name: Build Module
     needs: update-signature
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
     runs-on: ubuntu-latest
     env:
       NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
@@ -61,6 +65,10 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: jcontent
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'target/*.jar'
 
   sonar-analysis:
     name: Sonar Analysis

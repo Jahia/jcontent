@@ -1,0 +1,82 @@
+{
+  "nodeType": "cent:testJsonOverrides",
+  "priority": 1.0,
+  "hasPreview": false,
+  "sections": [
+    {
+      "name": "myCustomSection",
+      "expanded": true,
+      "label": "My custom section label",
+      "fieldSets": [
+        {
+          "name": "cent:testJsonOverrides",
+          "fields": [
+            {
+              "name": "readOnlyField",
+              "rank": 2,
+              "readOnly": true
+            },
+            {
+              "name": "hideField",
+              "hide": true
+            },
+            {
+              "name": "defaultValueField",
+              "defaultValues": [{"type": "String", "value": "json override default value"}]
+            },
+            {
+              "name": "mandatoryField",
+              "rank": 1000,
+              "mandatory": true
+            },
+            {
+              "name": "valueConstraintField",
+              "rank": 1,
+              "valueConstraints": [
+                  {
+                  "value": {
+                      "type": "String",
+                      "value": "^[A-Z]+.*"
+                  },
+                  "displayValue": "Must start with capital letter"
+                  }
+              ]
+            },
+            {
+              "name": "pickerOverrideField",
+              "selectorType": "Picker",
+              "selectorOptionsMap": {
+                "type": "default",
+                "accordionItem": {
+                  "picker-pages": {
+                    "label": "News in pages",
+                    "rootPath": "/sites/{site}/home/search-results",
+                    "treeConfig": {
+                      "hideRoot": true
+                    },
+                    "tableConfig": {
+                      "columns": ["name"]
+                    }
+                  }
+                },
+                "pickerConfig": {
+                  "selectableTypesTable": ["jnt:page", "jmix:image"],
+                  "pickerDialog": {
+                    "displaySiteSwitcher": false,
+                    "displayTree": true,
+                    "dialogTitle": "jcontent:label.contentManager.showCurrentPath",
+                    "displaySearch": false
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "seo",
+      "hide": true
+    }
+  ]
+}

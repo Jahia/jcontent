@@ -13,4 +13,10 @@ export class Field extends BaseComponent {
     addNewValue(text: string): void {
         // Empty method
     }
+
+    hasMandatory() {
+        this.get().scrollIntoView().find('[data-sel-content-editor-field-mandatory]')
+            .should('be.visible')
+            .and('have.attr', 'data-sel-content-editor-field-mandatory', 'true');
+    }
 }

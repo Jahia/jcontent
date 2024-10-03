@@ -1,7 +1,6 @@
 import {
     BasePage,
     Button,
-    Collapsible,
     getComponentByAttr,
     getComponentByRole,
     getComponentBySelector,
@@ -13,6 +12,7 @@ import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
 import {AdvancedOptions} from './advancedOptions';
+import {Section} from './section';
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
@@ -51,12 +51,18 @@ export class ContentEditor extends BasePage {
         return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
     }
 
+    getSection(sectionName: string) {
+        const section = getComponentBySelector(Section, `[data-sel-content-editor-fields-group="${sectionName}"]`);
+        section.sectionName = sectionName;
+        return section;
+    }
+
     openSection(sectionName: string) {
-        return getComponentBySelector(Collapsible, `[data-sel-content-editor-fields-group="${sectionName}"]`).expand();
+        return this.getSection(sectionName).expand();
     }
 
     closeSection(sectionName: string) {
-        return getComponentBySelector(Collapsible, `[data-sel-content-editor-fields-group="${sectionName}"]`).collapse();
+        return this.getSection(sectionName).collapse();
     }
 
     create() {
@@ -72,12 +78,14 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'createButton').click();
     }
 
-    save() {
+    save(checked = true) {
         getComponentByRole(Button, 'submitSave').click();
-        cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
-        cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully saved');
-        if (!this.advancedMode) {
-            cy.get(ContentEditor.defaultSelector).should('not.exist');
+        if (checked) {
+            cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
+            cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully saved');
+            if (!this.advancedMode) {
+                cy.get(ContentEditor.defaultSelector).should('not.exist');
+            }
         }
     }
 

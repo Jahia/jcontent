@@ -70,41 +70,48 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.logout();
         });
 
+        const copyPage = (jcontent: JContent, treeItem, copyActionName) => {
+            const contextMenu = jcontent
+                .getAccordionItem('pages')
+                .getTreeItem(treeItem)
+                .contextMenu();
+
+            // There is some registry action pop-in that happens here that messes up with hover on Copy
+            // Confirm they are visible before proceeding
+            contextMenu.shouldHaveItem('New Page');
+            contextMenu.shouldHaveItem('New...');
+            contextMenu
+                .submenu('Copy', 'jcontent-copyPageMenu')
+                .select(copyActionName);
+        };
+
         it('Does not display paste as reference action on a page', () => {
-            const jcontent = JContent.visit('digitall', 'en', 'pages/home');
-            const item = jcontent.getAccordionItem('pages');
-            item.expandTreeItem('home');
-            item.getTreeItem('about').contextMenu().select('Copy');
-            item.getTreeItem('newsroom').contextMenu().shouldNotHaveItem('Paste as reference');
+            const jcontent = JContent.visit('digitall', 'en', 'pages/home/about');
+            copyPage(jcontent, 'about', 'Page only');
+            jcontent
+                .getAccordionItem('pages')
+                .getTreeItem('newsroom')
+                .contextMenu()
+                .shouldNotHaveItem('Paste as reference');
         });
 
         it('Should display paste action on a page', () => {
-            const jcontent = JContent.visit('digitall', 'en', 'pages/home');
-            const item = jcontent.getAccordionItem('pages');
-            item.expandTreeItem('home');
-            item.getTreeItem('about')
-                .contextMenu()
-                .submenu('Copy', 'jcontent-copyPageMenu')
-                .select('Page with Sub-pages');
-
-            item.getTreeItem('newsroom')
+            const jcontent = JContent.visit('digitall', 'en', 'pages/home/about');
+            copyPage(jcontent, 'about', 'Page with Sub-pages');
+            jcontent
+                .getAccordionItem('pages')
+                .getTreeItem('newsroom')
                 .contextMenu()
                 .shouldHaveItem('Paste');
         });
 
         it('Should be able to copy single page', () => {
-            const jcontent = JContent.visit('digitall', 'en', 'pages/home');
-            const item = jcontent.getAccordionItem('pages');
-            item.expandTreeItem('home');
-            item.getTreeItem('about')
-                .contextMenu()
-                .submenu('Copy', 'jcontent-copyPageMenu')
-                .select('Page only');
+            const jcontent = JContent.visit('digitall', 'en', 'pages/home/about');
+            copyPage(jcontent, 'about', 'Page only');
 
-            item.getTreeItem('newsroom')
-                .contextMenu()
-                .select('Paste');
-            item.getTreeItem('newsroom').expand();
+            const newsroomTreeItem = jcontent.getAccordionItem('pages').getTreeItem('newsroom');
+            newsroomTreeItem.contextMenu().select('Paste');
+            newsroomTreeItem.expand();
             cy.get('[role="treeitem"][data-sel-role=about]').should('have.length', 2);
 
             GraphqlUtils.getNode('/sites/digitall/home/newsroom/about').should('exist');

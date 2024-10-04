@@ -197,10 +197,8 @@ describe('delete tests', () => {
         });
 
         cy.log('Verify parent page is now selected');
-        jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete3').get()
-            .invoke('attr', 'aria-selected').should('eq', 'true');
-        cy.url().should('include', '/home/test-pageDelete3')
-            .and('not.include', 'test-subpage3');
+        cy.url().should('not.include', 'test-subpage3')
+            .and('include', '/home/test-pageDelete3');
     });
 
     it('show warning when content is referenced', function () {

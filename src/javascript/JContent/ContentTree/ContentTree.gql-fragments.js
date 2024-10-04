@@ -26,7 +26,7 @@ const PickerItemsFragment = {
             language: 'String!'
         },
         gql: gql`fragment IsTreeSelectable on JCRNode {
-            isTreeSelectable: isNodeType(type: {multi: NONE, types: ["jnt:navMenuText", "jnt:nodeLink", "jnt:externalLink"]})
+            isTreeSelectable: isNodeType(type: {multi: NONE, types: ["jnt:nodeLink", "jnt:externalLink"]})
         }`
     },
     primaryNodeType: {

@@ -2,7 +2,9 @@ import {
     addNode,
     createSite,
     createUser,
-    deleteSite, deleteUser,
+    deleteSite,
+    deleteUser,
+    enableModule,
     getComponentByRole,
     getNodeByPath,
     grantRoles,
@@ -33,6 +35,7 @@ describe('Test the save publish buttons flow', () => {
     before(function () {
         createUser(userName, 'password', [{name: 'preferredLanguage', value: langEN}]);
         createSite(siteKey, siteConfig);
+        enableModule('qa-module', siteKey);
         grantRoles('/sites/' + siteKey, ['editor-in-chief'], userName, 'USER');
         addNode({
             parentPathOrId: siteContentPath,
@@ -51,6 +54,7 @@ describe('Test the save publish buttons flow', () => {
     });
 
     after(function () {
+        cy.logout();
         deleteSite(siteKey);
         deleteUser(userName);
     });
@@ -68,7 +72,9 @@ describe('Test the save publish buttons flow', () => {
 
     const updateAndSave = (contentEditor: ContentEditor) => {
         cy.log('Update sharedSmallText and save');
-        contentEditor.getField(SmallTextField, 'qant:allFields_sharedSmallText').addNewValue(newSharedSmallTextValue, true);
+        contentEditor
+            .getField(SmallTextField, 'qant:allFields_sharedSmallText')
+            .addNewValue(newSharedSmallTextValue + Cypress.currentRetry, true);
         checkContentEditorHeaderButtons(contentEditor, true, false);
         contentEditor.save();
     };
@@ -96,6 +102,9 @@ describe('Test the save publish buttons flow', () => {
             .should('have.attr', 'aria-disabled', 'false')
             .click();
         cy.get('button.x-btn-text').contains('Unpublish all').click();
+        cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
+        cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Unpublication completed');
+
         cy.waitUntil(() => {
             return cy.apollo({
                 fetchPolicy: 'no-cache',
@@ -106,6 +115,10 @@ describe('Test the save publish buttons flow', () => {
                 return publicationStatus === 'UNPUBLISHED';
             });
         }, {timeout: 10000, interval: 2000, errorMsg: `Unable to unpublish content ${contentPath}`});
+
+        // Flaky with refresh, reload instead to check unpublish state
+        const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents/contentEditorTestContents');
+        jcontent.editComponentByText(contentTest).switchToAdvancedMode();
 
         checkContentEditorHeaderButtons(new ContentEditor(), false, true);
         checkContentEditorHeaderMenu(new ContentEditor(), 'true');

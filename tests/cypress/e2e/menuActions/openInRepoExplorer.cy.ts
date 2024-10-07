@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 describe('Open in repo explorer tests', () => {
     let expectedUrl = null;
     before(() => {
-        cy.loginAndStoreSession(); // Edit in chief
+        cy.loginAndStoreSession('root', 'root1234');
         cy.apollo({
             query: gql`
                 query {

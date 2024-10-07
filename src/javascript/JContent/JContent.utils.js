@@ -330,6 +330,6 @@ export const JahiaAreasUtil = {
         this.jahiaAreas[path] = true;
     },
     isJahiaArea: function (path) {
-        return this.jahiaAreas[path];
+        return Boolean(this.jahiaAreas[path]);
     }
 };

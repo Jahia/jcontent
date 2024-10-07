@@ -43,7 +43,6 @@ export const ContentRoute = () => {
     }, [path, language, template]);
 
     const loadPageAndCaptureJahiaAreas = (path, language, template) => {
-        console.log('load')
         const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;

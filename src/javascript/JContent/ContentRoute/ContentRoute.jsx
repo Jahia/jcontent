@@ -35,8 +35,15 @@ export const ContentRoute = () => {
         }
     }, [dispatch, mode, viewMode, FLAT, accordionItem]);
 
-    // Preload areas
+    // Captured area information is used to block delete/move/copy/cut actions on areas
     useEffect(() => {
+        if (path && language) {
+            loadPageAndCaptureJahiaAreas(path, language, template);
+        }
+    }, [path, language, template]);
+
+    const loadPageAndCaptureJahiaAreas = (path, language, template) => {
+        console.log('load')
         const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
@@ -56,8 +63,10 @@ export const ContentRoute = () => {
                     JahiaAreasUtil.addArea(modulePath);
                 }
             }));
+        }).catch(e => {
+            console.error('Failed to capture areas for page', e);
         });
-    }, [path, language, template]);
+    }
 
     if (res.loading) {
         return <LoaderOverlay/>;

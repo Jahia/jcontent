@@ -65,7 +65,7 @@ export const ContentRoute = () => {
         }).catch(e => {
             console.error('Failed to capture areas for page', e);
         });
-    }
+    };
 
     if (res.loading) {
         return <LoaderOverlay/>;

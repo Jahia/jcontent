@@ -10,6 +10,7 @@ import React from 'react';
 import {ACTION_PERMISSIONS} from '../actions.constants';
 import {withNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
+import {JahiaAreasUtil} from '../../JContent.utils';
 
 export const CopyCutActionComponent = withNotifications()(({
     path,
@@ -49,7 +50,7 @@ export const CopyCutActionComponent = withNotifications()(({
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult &&
+    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) &&
         (res.node ?
             !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
             res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)

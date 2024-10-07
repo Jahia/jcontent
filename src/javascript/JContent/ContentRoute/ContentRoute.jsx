@@ -11,14 +11,17 @@ import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
+import {JahiaAreasUtil} from '../JContent.utils';
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
-    const {path, mode, tableView, viewMode} = useSelector(state => ({
+    const {path, mode, tableView, viewMode, template, language} = useSelector(state => ({
+        language: state.language,
         path: state.jcontent.path,
         mode: state.jcontent.mode,
         tableView: state.jcontent.tableView,
-        viewMode: state.jcontent.tableView.viewMode
+        viewMode: state.jcontent.tableView.viewMode,
+        template: state.jcontent.template
     }), shallowEqual);
     const dispatch = useDispatch();
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
@@ -31,6 +34,30 @@ export const ContentRoute = () => {
             dispatch(setTableViewMode(accordionItem.tableConfig.defaultViewMode || FLAT));
         }
     }, [dispatch, mode, viewMode, FLAT, accordionItem]);
+
+    // Preload areas
+    useEffect(() => {
+        const renderMode = 'editframe';
+        const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
+        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
+
+        fetch(url, {
+            method: 'get'
+        }).then(resp => {
+            return resp.text();
+        }).then(resp => {
+            const dom = new DOMParser().parseFromString(resp, 'text/html');
+            dom.querySelectorAll('[jahiatype]').forEach((element => {
+                const jahiatype = element.getAttribute('jahiatype');
+                const modulePath = element.getAttribute('path');
+                const type = element.getAttribute('type');
+
+                if (jahiatype === 'module' && modulePath !== '*' && modulePath !== path && (type === 'area' || type === 'absoluteArea')) {
+                    JahiaAreasUtil.addArea(modulePath);
+                }
+            }));
+        });
+    }, [path, language, template]);
 
     if (res.loading) {
         return <LoaderOverlay/>;

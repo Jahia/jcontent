@@ -28,6 +28,8 @@ export const ContentRoute = () => {
     const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
+    const isPageBuilderView = viewMode === PAGE_BUILDER;
+    const canShowEditFrame = res?.node && nodeTypes.some(nt => res.node[nt]);
 
     useEffect(() => {
         if (accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
@@ -37,10 +39,10 @@ export const ContentRoute = () => {
 
     // Captured area information is used to block delete/move/copy/cut actions on areas
     useEffect(() => {
-        if (path && language) {
+        if (path && language && canShowEditFrame) {
             loadPageAndCaptureJahiaAreas(path, language, template);
         }
-    }, [path, language, template]);
+    }, [path, language, template, canShowEditFrame]);
 
     const loadPageAndCaptureJahiaAreas = (path, language, template) => {
         const renderMode = 'editframe';
@@ -78,9 +80,6 @@ export const ContentRoute = () => {
 
         return <Error404 label={t('jcontent:label.contentManager.error.missingFolder')}/>;
     }
-
-    const isPageBuilderView = viewMode === PAGE_BUILDER;
-    const canShowEditFrame = nodeTypes.some(nt => res.node[nt]);
 
     // Update viewMode if page builder is selected but content cannot be displayed
     if (!isInSearchMode(mode) && (res.node.path === path) && isPageBuilderView && !canShowEditFrame) {

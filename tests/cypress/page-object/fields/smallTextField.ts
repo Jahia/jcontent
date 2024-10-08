@@ -36,7 +36,11 @@ export class SmallTextField extends Field {
     }
 
     checkValue(expectedValue: string) {
-        this.get().find('input').last().should('have.value', expectedValue);
+        return this.get().find('input').last().should('have.value', expectedValue);
+    }
+
+    isReadOnly() {
+        return this.get().find('input').should('have.attr', 'readonly');
     }
 
     checkValues(expectedValues: string[]) {

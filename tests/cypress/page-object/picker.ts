@@ -69,6 +69,10 @@ export class Picker extends BaseComponent {
         this.get().find(`${PickerTable.defaultSelector}[data-cm-role=site-switcher]`).should('not.exist');
     }
 
+    assertHasNoDisplaySearch(): void {
+        this.get().find(`${PickerTable.defaultSelector}[role=search]`).should('not.exist');
+    }
+
     /**
      * @param itemName -
      */

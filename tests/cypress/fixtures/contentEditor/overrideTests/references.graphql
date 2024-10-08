@@ -1,6 +1,6 @@
 mutation {
     jcr {
-        mutateNode(pathOrId: "/sites/contentEditorSite/contents") {
+        contents: mutateNode(pathOrId: "/sites/contentEditorSite/contents") {
             addChildrenBatch(
                 nodes: [
                     {
@@ -9,10 +9,52 @@ mutation {
                         properties: [{ name: "text", language: "en", value: "test 1" }]
                     }
                     {
+                        name: "test-json-overrides"
+                        primaryNodeType: "cent:testJsonOverrides"
+                        properties: [
+                            {name: "jcr:title", language: "en", value: "json overrides" }
+                            {name: "readOnlyField", value: "read only text" },
+                        ]
+                    }
+                    {
                         name: "reference"
                         primaryNodeType: "jnt:contentReference"
                         properties: [
                             { name: "j:node", language: "en", type: REFERENCE, value: "/sites/contentEditorSite/contents/test-content1" }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+        pages: mutateNode(pathOrId: "/sites/contentEditorSite/home/search-results") {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "test-page1"
+                        primaryNodeType: "jnt:page"
+                        properties: [
+                            { name: "jcr:title", language: "en", value: "Page test 1" },
+                            { name: "j:templateName", value: "home" }
+                        ],
+                        children: [
+                            {
+                                name: "test-subpage1"
+                                primaryNodeType: "jnt:page"
+                                properties: [
+                                    { name: "jcr:title", language: "en", value: "Page test 1" },
+                                    { name: "j:templateName", value: "home" }
+                                ]
+                            }
+                        ]
+                    }
+                    {
+                        name: "test-page2"
+                        primaryNodeType: "jnt:page"
+                        properties: [
+                            { name: "jcr:title", language: "en", value: "Page test 2" },
+                            { name: "j:templateName", value: "home" }
                         ]
                     }
                 ]

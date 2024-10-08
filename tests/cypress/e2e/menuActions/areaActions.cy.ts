@@ -39,7 +39,7 @@ describe('Area actions', () => {
     it('Checks that content can be pasted into the area', () => {
         jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true).select('Copy');
         jcontent.getModule('/sites/jcontentSite/home/landing')
-            .contextMenu(true)
+            .contextMenu(true, false)
             .select('Paste');
         jcontent.refresh();
         // eslint-disable-next-line cypress/no-unnecessary-waiting

@@ -352,9 +352,9 @@ class PageBuilderModule extends BaseComponent {
         }));
     }
 
-    contextMenu(selectFirst = false): Menu {
+    contextMenu(selectFirst = false, force = true): Menu {
         this.getHeader(selectFirst);
-        this.get().rightclick({force: true});
+        this.get().rightclick({force});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

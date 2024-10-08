@@ -138,3 +138,16 @@
 [cent:mainResourceLinkTest] > jnt:content, jmix:mainResource, mix:title, jmix:editorialContent
 
 [cent:previewWrapper] > jnt:content, jmix:basicContent
+
+// Tests for examples provided in academy
+// https://academy.jahia.com/documentation/jahia/jahia-8/developer/extending-and-customizing-jahia-ui/customizing-content-editor-forms/examples-of-content-definition-json-overrides
+
+[cent:testJsonOverrides] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - readOnlyField (string)
+ - testField (string)
+ - hideField (string)
+ - moveField (string)
+ - mandatoryField (string)
+ - pickerOverrideField (weakreference)
+ - defaultValueField (string)
+ - valueConstraintField (string)

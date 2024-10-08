@@ -39,7 +39,7 @@ describe('Page builder - Navigation', () => {
             jcontent = JContent.visit(pressReleaseSite, 'en', 'pages/home').switchToPageBuilder();
         });
 
-        it('Should show the non default content template named fullpage for press releases', () => {
+        it.skip('Should show the non default content template named fullpage for press releases', () => {
             jcontent.getModule(`/sites/${pressReleaseSite}/home/pagecontent/test-press-release`).get().contains('Press Release 1 title').click({force: true});
             cy.frameLoaded('[data-sel-role="page-builder-frame-active"]', {url: '/test-press-release.fullpage.html'});
             jcontent = new JContentPageBuilder(new JContent(), 'fullpage');

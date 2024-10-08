@@ -2,7 +2,7 @@ import {getComponent, getComponentBySelector, Table, TableRow} from '@jahia/cypr
 
 export class PickerTable extends Table {
     getHeaderById(id: string) {
-        return this.get().find(`[data-cm-role="table-content-list-header-cell-${id}"]`);
+        return this.get().find(`th[data-cm-role="table-content-list-header-cell-${id}"]`);
     }
 
     getRows(assertion?: (s: JQuery) => void): PickerTableRow {

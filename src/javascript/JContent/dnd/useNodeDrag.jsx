@@ -5,6 +5,7 @@ import {getEmptyImage} from 'react-dnd-html5-backend';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
+import {JahiaAreasUtil} from '../JContent.utils';
 
 export function useNodeDrag({dragSource}) {
     const {selection, language, displayLanguage} = useSelector(state => ({
@@ -19,7 +20,7 @@ export function useNodeDrag({dragSource}) {
         {
             getPrimaryNodeType: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:systemNameReadonly'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockMove'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
             getLockInfo: true
         }
@@ -28,14 +29,14 @@ export function useNodeDrag({dragSource}) {
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({
         type: 'node',
         item: dragSource,
-        canDrag: () => Boolean(res.checksResult) && !res.node?.lockOwner,
+        canDrag: () => Boolean(res.checksResult) && !JahiaAreasUtil.isJahiaArea(dragSource?.path) && !res.node?.lockOwner,
         collect: monitor => ({
             dragging: monitor.isDragging()
         })
     }) : ({
         type: 'nodes',
         item: res.nodes,
-        canDrag: () => res.checksResult && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
+        canDrag: () => res.checksResult && !JahiaAreasUtil.isJahiaArea(dragSource?.path) && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
         collect: monitor => ({
             dragClasses: monitor.isDragging() ? [styles.drag] : []
         })

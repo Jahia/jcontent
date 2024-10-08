@@ -226,7 +226,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.copy',
         targets: ['contentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
         copyCutType: 'copy',
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:systemNameReadonly'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:isAreaList'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
@@ -260,7 +260,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.cut',
         targets: ['contentActions:3.9', 'selectedContentActions:3.9', 'narrowHeaderSelectionMenu:3.9'],
         copyCutType: 'cut',
-        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:systemNameReadonly'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
@@ -282,7 +282,7 @@ export const jContentActions = registry => {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',
         targets: ['contentActions:4', 'selectedContentActions:4', 'narrowHeaderMenu:12', 'narrowHeaderSelectionMenu:4'],
-        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:systemNameReadonly'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
         component: DeleteActionComponent
     });
     registry.add('action', 'deletePermanently', {

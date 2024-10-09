@@ -4,14 +4,17 @@ import PropTypes from 'prop-types';
 
 export const OpenInRepositoryExplorerActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const res = useNodeChecks({path}, {
-        showOnNodeTypes: ['nt:base'],
+        showOnNodeTypes: ['nt:base']
+    });
+    const rootRes = useNodeChecks({path: '/'}, {
         requiredPermission: 'repositoryExplorer'
     });
-    if (res.loading && Loading) {
+
+    if ((rootRes.loading || res.loading) && Loading) {
         return <Loading {...others}/>;
     }
 
-    if (!res.node) {
+    if (!res.node || !rootRes.node) {
         return (<Render {...others} isVisible={false}/>);
     }
 
@@ -20,8 +23,8 @@ export const OpenInRepositoryExplorerActionComponent = ({path, render: Render, l
 
     return (
         <Render {...others}
-                isVisible={res.checksResult}
-                enabled={res.checksResult}
+                isVisible={res.checksResult && rootRes.checksResult}
+                enabled={res.checksResult && rootRes.checksResult}
                 onClick={() => {
                     window.open(url);
                 }}

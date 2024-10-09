@@ -312,6 +312,8 @@
         "locate": "Locate",
         "openInLive": "Live",
         "openInPreview": "Preview",
+        "compareStagingToLive": "Compare staging vs live version",
+        "customizedPreview": "Customized preview",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "More actions",

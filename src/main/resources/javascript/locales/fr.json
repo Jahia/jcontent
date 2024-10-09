@@ -309,6 +309,8 @@
         "locate": "Localiser",
         "openInLive": "Live",
         "openInPreview": "Aperçu",
+        "compareStagingToLive": "Comparer la version de travail et la version publiée",
+        "customizedPreview": "Prévisualisation personnalisée",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "Plus d'actions",

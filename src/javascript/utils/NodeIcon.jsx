@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+    Area,
     File,
     FileCode,
     FileCompresed,
@@ -209,6 +210,10 @@ export const NodeIcon = ({node, ...props}) => {
         return <File {...props}/>;
     }
 
+    if (node?.mixinTypes?.find(m => m.name && m.name === 'jmix:isAreaList')) {
+        return <Area {...props}/>;
+    }
+
     switch (node.primaryNodeType.name) {
         case 'jnt:folder':
             return <Folder {...props}/>;
@@ -230,7 +235,8 @@ NodeIcon.propTypes = {
         path: PropTypes.string,
         primaryNodeType: PropTypes.object,
         content: PropTypes.object,
-        resourceChildren: PropTypes.object
+        resourceChildren: PropTypes.object,
+        mixinTypes: PropTypes.array
     }).isRequired
 };
 

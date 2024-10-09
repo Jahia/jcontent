@@ -2557,10 +2557,10 @@
     uuid "^8.3.1"
     xml-js "^1.6.11"
 
-"@jahia/moonstone@^2.7.4":
-  version "2.7.4"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.7.4.tgz#ec7f7bae2b076597bcfef7dd8d7ecb7e79f859c7"
-  integrity sha512-zfqSvBRaJM1jfkac5h7/Iqu1+OvdBE3quwI+hBj4cL8/vx5hXFatYRfp3SkReDMCIMZcmkAdqFQwN3g6jv6RfA==
+"@jahia/moonstone@^2.8.0":
+  version "2.8.0"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.8.0.tgz#5e42b8ce60fb885322ee38dcc800117120b327a9"
+  integrity sha512-PdLZgFp+gxcbLHXHCX6VOpUy0G7nCLZqJEd+ax9Qd6ObcTKYP1nJoAbolqjFPR2JEitJrQV5Qxb/8AJeIjQj+Q==
   dependencies:
     "@babel/runtime" "^7.23.2"
     "@jahia/scripts" "^1.3.3"

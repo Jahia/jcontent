@@ -58,7 +58,8 @@ import {
     UndeleteActionComponent,
     UnlockActionComponent,
     UnzipActionComponent,
-    ZipActionComponent
+    ZipActionComponent,
+    CompareHtmlActionComponent
 } from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
@@ -438,7 +439,7 @@ export const jContentActions = registry => {
     registry.add('action', 'compareStagingToLive', {
         buttonLabel: 'jcontent:label.contentManager.actions.compareStagingToLive',
         targets: ['openInPreviewMenu:2'],
-        component: OpenInPreviewActionComponent
+        component: CompareHtmlActionComponent
     });
 
     registry.add('action', 'openInRepositoryExplorer', {

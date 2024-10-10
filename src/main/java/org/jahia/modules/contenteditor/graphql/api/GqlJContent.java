@@ -21,33 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.jahia.modules.contenteditor.graphql.extensions;
+package org.jahia.modules.contenteditor.graphql.api;
 
-import graphql.annotations.annotationTypes.GraphQLDescription;
-import graphql.annotations.annotationTypes.GraphQLField;
-import graphql.annotations.annotationTypes.GraphQLName;
-import graphql.annotations.annotationTypes.GraphQLTypeExtension;
-import org.jahia.modules.contenteditor.graphql.api.GqlEditorForms;
-import org.jahia.modules.contenteditor.graphql.api.GqlJContent;
-import org.jahia.modules.graphql.provider.dxm.DXGraphQLProvider;
+import graphql.annotations.annotationTypes.*;
+import org.jahia.ajax.gwt.helper.DiffHelper;
 
 /**
- * This extension to the Query is where the content editor GraphQL form API is made available
+ * The root class for the jContent API
  */
-@GraphQLTypeExtension(DXGraphQLProvider.Query.class)
-public class QueryExtensions {
+@GraphQLDescription("jContent API")
+public class GqlJContent {
+
 
     @GraphQLField
-    @GraphQLName("forms")
-    @GraphQLDescription("Main access field to the DX GraphQL Form API")
-    public static GqlEditorForms getForms() {
-        return new GqlEditorForms();
-    }
-
-    @GraphQLField
-    @GraphQLName("jcontent")
-    @GraphQLDescription("Main access field to the jContent API")
-    public static GqlJContent getJContent() {
-        return new GqlJContent();
+    @GraphQLName("diffHtml")
+    @GraphQLDescription("Returns html with marked differences")
+    public String getDiffHtml(
+        @GraphQLName("originalHtml") @GraphQLDescription("Original html") String originalHtml,
+        @GraphQLName("newHtml") @GraphQLDescription("New html") String newHtml) {
+        return new DiffHelper().getHighlighted(originalHtml, newHtml);
     }
 }

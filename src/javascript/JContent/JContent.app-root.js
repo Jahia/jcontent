@@ -6,6 +6,7 @@ import Upload from './ContentRoute/ContentLayout/Upload';
 import {JContentApi} from '~/JContent/JContentApi/JContentApi';
 import {SnackbarProvider} from 'notistack';
 import PublicationNotification from './PublicationStatus/PublicationNotification';
+import CompareDialog from './CompareDialog';
 
 export const jContentAppRoot = registry => {
     registry.add('app', 'jcontent-ds-provider', {
@@ -16,6 +17,16 @@ export const jContentAppRoot = registry => {
     registry.add('app', 'jcontent-notification-provider', {
         targets: ['root:11'],
         render: next => (<NotificationProvider notificationContext={{}}>{next}</NotificationProvider>)
+    });
+
+    registry.add('app', 'jcontent-compare-staging-live', {
+        targets: ['root:12'],
+        render: next => (
+            <>
+                <CompareDialog/>
+                {next}
+            </>
+        )
     });
 
     registry.add('app', 'jcontent-notistack-provider', {

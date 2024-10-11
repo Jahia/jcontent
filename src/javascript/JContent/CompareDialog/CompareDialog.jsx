@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, Close, Typography} from '@jahia/moonstone';
+import {Button, Reload, Edit, ChevronDown, ButtonGroup, Header} from '@jahia/moonstone';
 import {Dialog} from '@material-ui/core';
 import {useTranslation} from 'react-i18next';
 import styles from './CompareDialog.scss';
@@ -12,12 +12,21 @@ import {
 } from '../redux/compareStagingAndLive.redux';
 import {useLocation} from 'react-router-dom';
 import {decodeHashString} from './util';
+import {DisplayAction} from '@jahia/ui-extender';
+import {getButtonRenderer} from '../../utils/getButtonRenderer';
+
+const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {size: 'big'}});
+const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {size: 'big'}});
 
 const CompareDialog = () => {
     const {t} = useTranslation('jcontent');
     const location = useLocation();
     const dispatch = useDispatch();
-    const {open, showHighlights} = useSelector(state => ({open: state.jcontent.compareStagingAndLive.open, showHighlights: state.jcontent.compareStagingAndLive.showHighlights}), shallowEqual);
+    const {open, showHighlights, path} = useSelector(state => ({
+        open: state.jcontent.compareStagingAndLive.open,
+        showHighlights: state.jcontent.compareStagingAndLive.showHighlights,
+        path: state.jcontent.compareStagingAndLive.path
+    }), shallowEqual);
 
     useEffect(() => {
         if (location.hash) {
@@ -28,23 +37,32 @@ const CompareDialog = () => {
         }
     }, [dispatch, location]);
 
+    // const publishAction = node['jnt:folder'] || node['jnt:contentFolder'] ? 'publishAll' : 'publish';
+
     return (
         <Dialog fullScreen open={open} style={{background: 'grey'}}>
-            <div className={styles.dialogTitle}>
-                <Typography isUpperCase variant="subheading">
-                    {t('Compare staging and live')}
-                </Typography>
-                <Button variant="outlined"
-                        size="big"
-                        icon={<Close/>}
-                        label={t('Show highlights')}
-                        onClick={() => dispatch(showHighlights ? compareStagingLiveHideHighlights() : compareStagingLiveShowHighlights())}/>
-                <Button variant="outlined"
-                        size="big"
-                        icon={<Close/>}
-                        label={t('Reload')}
-                        onClick={() => dispatch(compareStagingLiveReload())}/>
-            </div>
+            <Header title="Compare staging and live"
+                    mainActions={[
+                        <div className={styles.actionsRoot}>
+                            <Button variant="ghost"
+                                    size="big"
+                                    className={styles.actionItem}
+                                    icon={<Reload/>}
+                                    label={t('Refresh')}
+                                    onClick={() => dispatch(compareStagingLiveReload())}/>
+                            <Button variant="outlined"
+                                    size="big"
+                                    color="accent"
+                                    className={styles.actionItem}
+                                    icon={<Edit/>}
+                                    label={showHighlights ? t('Unhighlight') : t('Highlight')}
+                                    onClick={() => dispatch(showHighlights ? compareStagingLiveHideHighlights() : compareStagingLiveShowHighlights())}/>
+                            <ButtonGroup size="big" variant="default" color="accent" className={styles.actionItem}>
+                                <DisplayAction isMediumLabel actionKey={'publishAll'} path={path} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
+                                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
+                            </ButtonGroup>
+                        </div>
+                    ]}/>
             <div className={styles.dialogContent}>
                 <FrameManager/>
             </div>

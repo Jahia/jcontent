@@ -25,29 +25,6 @@ const FrameManager = () => {
         workspace: 'LIVE'
     }, skip: !path});
 
-    // Const [diffHtml, diffHtmlResult] = useLazyQuery(DiffHtml);
-
-    console.log(path, showHighlights, reloadCount, liveData, editData);
-
-    // Const clbk = useCallback(() => {
-    //     if (leftFrame.current && rightFrame.current) {
-    //         const original = leftFrame.current.contentDocument.querySelector('body').outerHTML;
-    //         const n = rightFrame.current.contentDocument.querySelector('body').outerHTML;
-    //         diffHtml({variables: {
-    //             original: original, new: n
-    //         }});
-    //     }
-    // }, [leftFrame, rightFrame, diffHtml]);
-
-    // useEffect(() => {
-    //     if (diffHtmlResult?.data?.jcontent?.diffHtml) {
-    //         // RightFrame.current.contentWindow.document.open();
-    //         // rightFrame.current.contentWindow.document.write(diffHtmlResult.data.jcontent.diffHtml);
-    //         // rightFrame.current.contentWindow.document.close();
-    //         rightFrame.current.contentDocument.querySelector('body').outerHTML = diffHtmlResult.data.jcontent.diffHtml;
-    //     }
-    // }, [diffHtmlResult]);
-
     // Reload both frames
     useEffect(() => {
         if (reloadCount > 0) {
@@ -61,6 +38,7 @@ const FrameManager = () => {
         if (showHighlights) {
             const n = leftFrame.current.contentDocument.querySelector('body').outerHTML;
             const original = rightFrame.current.contentDocument.querySelector('body').outerHTML;
+            console.log(n, original);
             client.query({
                 query: DiffHtml,
                 variables: {

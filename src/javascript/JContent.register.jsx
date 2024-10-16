@@ -28,6 +28,7 @@ import {Redirect} from 'react-router';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import SvgJContent from '~/icons/JContent';
+import {compareStagingAndLiveRedux} from './JContent/redux/compareStagingAndLive.redux';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -178,6 +179,7 @@ export default function () {
     paginationRedux(registry);
     sortRedux(registry);
     selectionRedux(registry);
+    compareStagingAndLiveRedux(registry);
     jContentAccordionItems(registry);
     jContentRedux(registry);
     jContentAppRoot(registry);

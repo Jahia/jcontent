@@ -1,6 +1,6 @@
-import {adaptToCategoryTree} from './category.adapter';
+import {choiceTreeAdapter} from './choiceTree.adapter';
 
-describe('category adapter', () => {
+describe('choice tree adapter', () => {
     let nodes;
     beforeEach(() => {
         nodes = [
@@ -17,12 +17,12 @@ describe('category adapter', () => {
     });
 
     it('should return empty array when there is no nodes', () => {
-        expect(adaptToCategoryTree({nodes: [], parent: {uuid: 'category'}})).toEqual([]);
+        expect(choiceTreeAdapter({nodes: [], parent: {uuid: 'category'}})).toEqual([]);
     });
 
     it('should build a tree', () => {
         const parent = {uuid: 'category'};
-        const tree = adaptToCategoryTree({nodes, parent});
+        const tree = choiceTreeAdapter({nodes, parent});
 
         expect(tree).toEqual([
             {
@@ -81,7 +81,7 @@ describe('category adapter', () => {
         const parent = {uuid: 'category'};
         const selectedValues = ['B', 'C'];
 
-        expect(adaptToCategoryTree({nodes, parent, selectedValues})).toEqual([
+        expect(choiceTreeAdapter({nodes, parent, selectedValues})).toEqual([
             {
                 id: 'A',
                 value: 'A',

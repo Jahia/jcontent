@@ -151,3 +151,14 @@
  - pickerOverrideField (weakreference)
  - defaultValueField (string)
  - valueConstraintField (string)
+
+ [cent:testChoiceTreeContent] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+  + * (cent:testChoiceTreeContent) = cent:testChoiceTreeContent
+
+ [cent:testChoiceTreeContentRoot] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+    + * (cent:testChoiceTreeContent) = cent:testChoiceTreeContent
+
+ [cent:testChoiceTree] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - singleChoiceTree (weakreference)
+ - multipleChoiceTree (weakreference) multiple
+ - multipleChoiceTreeWithTypes (weakreference) multiple

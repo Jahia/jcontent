@@ -184,8 +184,8 @@ export class ContentEditor extends BasePage {
         return this.getField(RichTextField, fieldName, false);
     }
 
-    getChoiceTreeField(fieldName: string): ChoiceTreeField {
-        return this.getField(ChoiceTreeField, fieldName, true);
+    getChoiceTreeField(fieldName: string, multiple?: boolean): ChoiceTreeField {
+        return this.getField(ChoiceTreeField, fieldName, multiple);
     }
 
     getPickerField(fieldName: string, multiple?: boolean): PickerField {

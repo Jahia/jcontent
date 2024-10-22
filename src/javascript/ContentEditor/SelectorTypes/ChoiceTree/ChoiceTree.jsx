@@ -6,14 +6,14 @@ import {GetTreeEntries} from './choiceTree.gql-queries';
 import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Dropdown} from '@jahia/moonstone';
-import {choiceTreeAdapter} from "./choiceTree.adapter";
+import {choiceTreeAdapter} from './choiceTree.adapter';
 
 export const ChoiceTree = ({field, value, id, editorContext, onChange, onBlur}) => {
     const {t} = useTranslation('jcontent');
     const {data, error, loading} = useQuery(GetTreeEntries, {
         variables: {
-            types:  field.selectorOptions?.find(option => option.name === 'types')?.value?.split(','),
-            path: field.selectorOptions?.find(option => option.name === 'rootPath')?.value,
+            types: field.selectorOptions?.find(option => option.name === 'types')?.value?.split(',')?.map(type => type.trim()),
+            path: field.selectorOptions?.find(option => option.name === 'rootPath')?.value.replace('{site}', editorContext.site),
             language: editorContext.lang
         }
     });
@@ -34,11 +34,6 @@ export const ChoiceTree = ({field, value, id, editorContext, onChange, onBlur}) 
             onChange(selectedValue.value);
         }
     };
-
-    if (!field.multiple) {
-        console.warn('ChoiceTree selector is not supporting single value');
-        return <></>;
-    }
 
     if (error) {
         const message = t(
@@ -65,8 +60,8 @@ export const ChoiceTree = ({field, value, id, editorContext, onChange, onBlur}) 
 
     return (
         <Dropdown
-            data-sel-role="choice-tree"
             hasSearch
+            data-sel-role="choice-tree"
             id={id}
             className="flexFluid"
             treeData={tree}
@@ -87,7 +82,8 @@ ChoiceTree.propTypes = {
     id: PropTypes.string.isRequired,
     value: PropTypes.arrayOf(PropTypes.string),
     editorContext: PropTypes.shape({
-        lang: PropTypes.string.isRequired
+        lang: PropTypes.string.isRequired,
+        site: PropTypes.string.isRequired
     }).isRequired,
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func.isRequired

@@ -6,7 +6,8 @@ export class ChoiceTreeField extends Field {
         const input = this.get().find('[data-sel-role="choice-tree"]');
         input.should('be.visible');
         input.click();
-        return getComponentBySelector(ChoiceTree, '[data-sel-role="choice-tree"] menu');
+        console.log('field? ', this);
+        return getComponentBySelector(this.multiple ? ChoiceTree : SingleChoiceTree, '[data-sel-role="choice-tree"] menu', this);
     }
 
     getChoiceTreeInput(): Cypress.Chainable<JQuery> {
@@ -22,8 +23,17 @@ export class ChoiceTreeField extends Field {
         return this.get().get('.moonstone-dropdown_tags').find('button');
     }
 
+    getValue(): Cypress.Chainable<JQuery> {
+        return this.get().get('.moonstone-typography');
+    }
+
     removeValue(value: string): ChoiceTreeField {
-        this.get().contains('.moonstone-dropdown_tags button', value).click();
+        if (this.multiple) {
+            this.get().contains('.moonstone-dropdown_tags button', value).click();
+        } else {
+            this.get().find('button').click();
+        }
+
         return this;
     }
 }
@@ -43,3 +53,11 @@ export class ChoiceTree extends BaseComponent {
         return this;
     }
 }
+
+export class SingleChoiceTree extends ChoiceTree {
+    selectEntry(entry: string): ChoiceTree {
+        this.get().contains('li', entry).click();
+        return this;
+    }
+}
+

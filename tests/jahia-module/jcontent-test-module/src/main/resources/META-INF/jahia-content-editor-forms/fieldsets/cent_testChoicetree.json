@@ -4,13 +4,17 @@
   "fields": [
     {
       "name": "singleChoiceTree",
-      "selectorType": "ChoiceTree"
+      "selectorType": "ChoiceTree",
+      "selectorOptionsMap": {
+        "rootPath": "/sites/{site}/contents/choiceTreeContentRoot",
+        "types": "cent:testChoiceTreeContent"
+      }
     },
     {
       "name": "multipleChoiceTree",
       "selectorType": "ChoiceTree",
       "selectorOptionsMap": {
-        "rootPath": "/sites/choiceTreeSelectorSite/contents/choiceTreeContentRoot",
+        "rootPath": "/sites/{site}/contents/choiceTreeContentRoot",
         "types": "cent:testChoiceTreeContent"
       }
     },
@@ -18,7 +22,7 @@
       "name": "multipleChoiceTreeWithTypes",
       "selectorType": "ChoiceTree",
       "selectorOptionsMap": {
-        "rootPath": "/sites/choiceTreeSelectorSite/contents",
+        "rootPath": "/sites/{site}/contents",
         "types": "cent:testChoiceTreeContent,cent:testChoiceTreeContentRoot"
       }
     }

@@ -76,7 +76,7 @@ describe('Test Choicetree selector type', () => {
     it('can handle choice tree selector with a custom root path', () => {
         // Create content
         const contentEditor = jcontent.createContent('testChoiceTree');
-        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTree');
+        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTree', true);
         const choiceTree = choiceTreeField.openTree();
         // Show 2 roots entries
         choiceTree.getEntries().should('have.length', 2);
@@ -97,7 +97,7 @@ describe('Test Choicetree selector type', () => {
         });
         // Edit content
         const editContentEditorEdit = jcontent.editComponentByText('testchoicetree');
-        const editChoiceTreeField = editContentEditorEdit.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTree');
+        const editChoiceTreeField = editContentEditorEdit.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTree', true);
         editChoiceTreeField.getValues().should('have.length', 2);
         editChoiceTreeField.getValues().should('contain', 'choiceTreeContent2');
         editChoiceTreeField.getValues().should('contain', 'choiceTreeContent1-1');
@@ -115,7 +115,7 @@ describe('Test Choicetree selector type', () => {
     it('can handle choice tree selector for multiple types', () => {
         // Check tree is opened at category root, open it to see other types
         const contentEditor = jcontent.createContent('testChoiceTree');
-        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTreeWithTypes');
+        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTreeWithTypes', true);
         const choiceTree = choiceTreeField.openTree();
         // Show 2 roots entries
         choiceTree.getEntries().should('have.length', 1);
@@ -126,13 +126,21 @@ describe('Test Choicetree selector type', () => {
         choiceTree.getEntries().should('contain', 'choiceTreeContent2');
     });
 
-    it('does not display the Choice tree selector for single value', () => {
+    it.only('displays the Choice tree selector for single value', () => {
         const contentEditor = jcontent.createContent('testChoiceTree');
         contentEditor.openSection('Content');
-        const displayedChoiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTreeWithTypes');
-        displayedChoiceTreeField.getChoiceTreeInput().should('exist');
-        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_singleChoiceTree');
-        choiceTreeField.getChoiceTreeInput().should('not.exist');
+        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_singleChoiceTree', false);
+        choiceTreeField.getChoiceTreeInput().should('exist');
+        // Open tree and select value
+        const choiceTree = choiceTreeField.openTree();
+        choiceTree.selectEntry('choiceTreeContent2');
+        choiceTreeField.getValue().should('contain', 'choiceTreeContent2');
+        contentEditor.create();
+        // Validate saved content
+        getNodeByPath(`/sites/${siteKey}/contents/testchoicetree`, ['singleChoiceTree']).then(res => {
+            const savedValue = res.data.jcr.nodeByPath.properties[0].value;
+            expect(savedValue).eq(choicetreeContent2Uuid);
+        });
     });
 
     it('can display the category selector', () => {
@@ -140,7 +148,7 @@ describe('Test Choicetree selector type', () => {
         const contentEditor = jcontent.createContent('testChoiceTree');
         contentEditor.openSection('Classification and Metadata');
         contentEditor.toggleOption('jmix:categorized', 'Categories');
-        const categoryField = contentEditor.getChoiceTreeField('jmix:categorized_j:defaultCategory');
+        const categoryField = contentEditor.getChoiceTreeField('jmix:categorized_j:defaultCategory', true);
         const choiceTree = categoryField.openTree();
         // We check only categories added by this test.
         choiceTree.getEntries().should('contain', 'choiceTreeCategoryRoot');

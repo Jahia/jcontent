@@ -13,7 +13,7 @@ import {registerSystemName} from './SystemName';
 import {registerMultipleLeftRightSelector} from './MultipleLeftRightSelector';
 import {registerRadioChoiceList} from './RadioChoiceList';
 import {registerCheckboxChoiceList} from './CheckboxChoiceList';
-import {registerChoiceTree} from "./ChoiceTree";
+import {registerChoiceTree} from './ChoiceTree';
 
 export const registerSelectorTypes = ceRegistry => {
     registerSelectorTypesOnChange(ceRegistry);
@@ -32,6 +32,6 @@ export const registerSelectorTypes = ceRegistry => {
     registerCheckboxChoiceList(ceRegistry);
     registerSystemName(ceRegistry);
     registerMultipleLeftRightSelector(ceRegistry);
-    registerChoiceTree(ceRegistry)
+    registerChoiceTree(ceRegistry);
 };
 

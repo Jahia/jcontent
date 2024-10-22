@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {ChoiceTree} from "../ChoiceTree";
+import {ChoiceTree} from '../ChoiceTree';
 
 export const Category = ({field, value, id, editorContext, onChange, onBlur}) => {
     // Set the value of the ChoiceTree component to the value of the Category component
     field.selectorOptions = field.selectorOptions || [];
     field.selectorOptions.push({
-        'name': 'rootPath',
-        'value': '/sites/systemsite/categories'
+        name: 'rootPath',
+        value: '/sites/systemsite/categories'
     });
     field.selectorOptions.push({
-        'name': 'types',
-        'value': 'jnt:category'
+        name: 'types',
+        value: 'jnt:category'
     });
-    return <ChoiceTree field={field} value={value} id={id} editorContext={editorContext} onChange={onChange} onBlur={onBlur} />;
+    return <ChoiceTree field={field} value={value} id={id} editorContext={editorContext} onChange={onChange} onBlur={onBlur}/>;
 };
 
 Category.propTypes = {

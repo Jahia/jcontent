@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
+import {Portal} from './Portal';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
@@ -152,7 +153,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
                 if (clickedElement && clickedElement.path === path) {
                     setClickedElement(() => undefined);
+                    setCurrentElement(() => undefined);
                 } else {
+                    setCurrentElement(() => ({element: moduleElement, path: path}));
                     setClickedElement(() => ({element: moduleElement, path: path}));
                 }
             }
@@ -437,39 +440,43 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
                 .map(({node, element}) => (
-                    <Box key={element.getAttribute('id')}
-                         node={node}
-                         isClicked={clickedElement && node.path === clickedElement.path}
-                         isCurrent={element === el}
-                         isSelected={selection.includes(node.path)}
-                         isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
-                         isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
-                         currentFrameRef={currentFrameRef}
-                         rootElementRef={rootElement}
-                         element={element}
-                         breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 &&
-                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
-                             getBreadcrumbsForPath(node.path) :
-                             []}
-                         entries={entries}
-                         language={language}
-                         displayLanguage={displayLanguage}
-                         color="default"
-                         addIntervalCallback={addIntervalCallback}
-                         setDraggedOverlayPosition={setDraggedOverlayPosition}
-                         calculateDropTarget={calculateDropTarget}
-                         setCurrentElement={setClickedElement}
-                         onMouseOver={onMouseOver}
-                         onMouseOut={onMouseOut}
-                         onSelect={onSelect}
-                         onClick={onClick}
-                         onDoubleClick={onDoubleClick}
-                         onSaved={onSaved}
-                    />
+                    <>
+                    {/* <Portal target={currentDocument.documentElement.querySelector(`[path='${node.path}']`)}> */}
+                        <Box key={element.getAttribute('id')}
+                            node={node}
+                            isClicked={clickedElement && node.path === clickedElement.path}
+                            isCurrent={element === el}
+                            isSelected={selection.includes(node.path)}
+                            isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
+                                selection.includes(node.path) ||
+                                (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
+                            isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
+                            currentFrameRef={currentFrameRef}
+                            rootElementRef={rootElement}
+                            element={element}
+                            breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
+                                selection.includes(node.path) ||
+                                (selection.length > 0 &&
+                                    !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
+                                getBreadcrumbsForPath(node.path) :
+                                []}
+                            entries={entries}
+                            language={language}
+                            displayLanguage={displayLanguage}
+                            color="default"
+                            addIntervalCallback={addIntervalCallback}
+                            setDraggedOverlayPosition={setDraggedOverlayPosition}
+                            calculateDropTarget={calculateDropTarget}
+                            setCurrentElement={setClickedElement}
+                            onMouseOver={onMouseOver}
+                            onMouseOut={onMouseOut}
+                            onSelect={onSelect}
+                            onClick={onClick}
+                            onDoubleClick={onDoubleClick}
+                            onSaved={onSaved}
+                        />
+                    {/* </Portal> */}
+                    </>
                 ))}
 
             {placeholders.map(element => ({

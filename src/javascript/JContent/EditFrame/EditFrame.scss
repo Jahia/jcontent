@@ -9,7 +9,7 @@
         left: auto;
         z-index: auto;
 
-        display: inline;
+        // display: inline;
         float: none;
         clear: none;
         box-sizing: content-box;
@@ -162,9 +162,9 @@
     pointer-events: none;
 }
 
-:global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents * {
-    pointer-events: none;
-}
+// :global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents * {
+//     pointer-events: none;
+// }
 
 :global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents *.enablePointerEvents {
     pointer-events: all;

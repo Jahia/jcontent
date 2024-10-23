@@ -112,12 +112,15 @@ export const getCoords = elem => {
 };
 
 export const getBoundingBox = (element, isHeaderDisplayed) => {
+    const barHeight = 32;
     const rect = getCoords(element);
-
+    
+    const top = rect.top;
     const left = rect.left;
     const width = rect.width;
-    const top = rect.top;
-    const height = rect.height + (isHeaderDisplayed ? 0 : 4);
+    // TODO: If height < barHeight * 3 (header + footer + a little body) ? Bars are outside so increase the height = rect.height + barHeight*2 : Bars are inside so height = rect.height 
+    const height = rect.height;
+
     return {top, left, width, height};
 };
 

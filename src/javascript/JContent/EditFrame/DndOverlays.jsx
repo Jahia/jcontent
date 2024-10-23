@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDragLayer} from 'react-dnd';
 import PropTypes from 'prop-types';
-import styles from './Box.scss';
+import styles from './Box2.scss';
 import clsx from 'clsx';
 import {DropArea} from './DropArea';
 import {Insert} from './Insert';
@@ -20,7 +20,7 @@ export const DndOverlays = ({currentDndInfo}) => {
 
     return (
         <>
-            {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
+            {draggedOverlayPosition && <div className={clsx(styles.root, styles.dndOverlay_dragged)} style={draggedOverlayPosition}/>}
             {dropTarget && <DropArea dropTarget={dropTarget} isDropAllowed={dropAllowed}/>}
             {dropTarget && relative && <Insert relative={relative}/>}
         </>

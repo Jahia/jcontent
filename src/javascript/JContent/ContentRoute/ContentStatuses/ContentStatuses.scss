@@ -1,10 +1,11 @@
 .contentStatuses {
-    display: inline-flex;
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
+    // display: inline-flex;
+
+    // // flex-grow: 1;
+    // // flex-shrink: 0;
+    // flex-direction: row;
+    // justify-content: flex-end;
+    // align-items: center;
 
     & > *:not(:first-child) {
         margin-left: var(--spacing-nano);

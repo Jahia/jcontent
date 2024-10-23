@@ -1,5 +1,6 @@
 import {NodeIcon} from '~/utils';
-import styles from '~/JContent/EditFrame/Box.scss';
+import clsx from 'clsx';
+import styles from '~/JContent/EditFrame/Box2.scss';
 import {Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
@@ -35,8 +36,8 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
     const title = truncate(node.displayName, 24);
     return (
         <>
-            <NodeIcon node={node} className={styles.icon}/>
-            <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
+            <NodeIcon node={node} className={styles.defaultBar_icon}/>
+            <Typography isNowrap className={styles.title, 'flexFluid'} variant="caption">{title}</Typography>
 
             {!isStatusHidden && <ContentStatuses node={node}
                                                  hasLabel={displayLabels}

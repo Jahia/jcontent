@@ -1,77 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {useQuery} from '@apollo/client';
-import {GetCategories} from './category.gql-queries';
-import {useTranslation} from 'react-i18next';
-import {adaptToCategoryTree} from './category.adapter';
-import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {Dropdown} from '@jahia/moonstone';
+import {ChoiceTree} from '../ChoiceTree';
 
 export const Category = ({field, value, id, editorContext, onChange, onBlur}) => {
-    const {t} = useTranslation('jcontent');
-    const {data, error, loading} = useQuery(GetCategories, {
-        variables: {
-            path: '/sites/systemsite/categories',
-            language: editorContext.lang
-        }
+    // Set the value of the ChoiceTree component to the value of the Category component
+    field.selectorOptions = field.selectorOptions || [];
+    field.selectorOptions.push({
+        name: 'rootPath',
+        value: '/sites/systemsite/categories'
     });
-
-    const handleClear = () => {
-        if (field.multiple) {
-            onChange([]);
-        } else {
-            onChange(null);
-        }
-    };
-
-    const handleChange = (_, selectedValue) => {
-        if (field.multiple) {
-            const prev = value || [];
-            onChange(prev.indexOf(selectedValue.value) > -1 ? prev.filter(i => i !== selectedValue.value) : [...prev, selectedValue.value]);
-        } else {
-            onChange(selectedValue.value);
-        }
-    };
-
-    if (error) {
-        const message = t(
-            'jcontent:label.contentEditor.error.queryingContent',
-            {details: `/sites/systemsite/categories in ${editorContext.lang}`}
-        );
-        return <>{message}</>;
-    }
-
-    if (loading) {
-        return <LoaderOverlay/>;
-    }
-
-    const tree = adaptToCategoryTree({
-        nodes: data.jcr.result.descendants.nodes,
-        parent: data.jcr.result,
-        selectedValues: value,
-        locale: editorContext.lang
+    field.selectorOptions.push({
+        name: 'types',
+        value: 'jnt:category'
     });
-
-    const singleValue = field.multiple ? undefined : value;
-    const multipleValue = field.multiple ? (value || []) : undefined;
-
-    return (
-        <Dropdown
-            hasSearch
-            id={id}
-            className="flexFluid"
-            treeData={tree}
-            variant="outlined"
-            size="medium"
-            value={singleValue}
-            values={multipleValue}
-            isDisabled={field.readOnly}
-            onClear={handleClear}
-            onChange={handleChange}
-            onBlur={onBlur}
-        />
-    );
+    return <ChoiceTree field={field} value={value} id={id} editorContext={editorContext} onChange={onChange} onBlur={onBlur}/>;
 };
 
 Category.propTypes = {

@@ -1,0 +1,26 @@
+{
+  "nodeType": "jnt:page",
+  "condition": {
+    "nodeType": "jmix:freezeSystemName"
+  },
+  "priority": 1.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "<main>",
+          "rank": "1.0",
+          "fields": [
+            {
+              "name": "ce:systemName",
+              "label": "Customized system name",
+              "description": "Customized description",
+              "readOnly" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

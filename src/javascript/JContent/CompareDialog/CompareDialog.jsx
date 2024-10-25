@@ -45,6 +45,7 @@ const CompareDialog = () => {
                         <div key="mainActions" className={styles.actionsRoot}>
                             <Button variant="ghost"
                                     size="big"
+                                    data-sel-role="refresh"
                                     className={styles.actionItem}
                                     icon={<Reload/>}
                                     label={t('jcontent:label.contentManager.refresh')}
@@ -52,6 +53,7 @@ const CompareDialog = () => {
                             <Button variant="outlined"
                                     size="big"
                                     color="accent"
+                                    data-sel-role="highlight"
                                     className={styles.actionItem}
                                     icon={<Edit/>}
                                     label={showHighlights ? t('Unhighlight') : t('Highlight')}

@@ -419,7 +419,7 @@ export const jContentActions = registry => {
     registry.add('action', 'openInPreviewMenu', menuActionWithRenderer, {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
         menuTarget: 'openInPreviewMenu',
-        hideOnNodeTypes: ['jnt:category'],
+        showOnNodeTypes: ['jnt:page'],
         isMenuPreload: true
     });
 

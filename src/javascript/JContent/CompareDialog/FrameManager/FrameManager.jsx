@@ -5,8 +5,12 @@ import {DiffHtml, RenderUrl} from './FrameManager.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
 import styles from './FrameManager.scss';
 import clsx from 'clsx';
+import {Typography} from '@jahia/moonstone';
+import {resolveUrlForLiveOrPreview} from '../../JContent.utils';
+import {useTranslation} from 'react-i18next';
 
 const FrameManager = () => {
+    const {t} = useTranslation('jcontent');
     const client = useApolloClient();
     const leftFrame = useRef();
     const rightFrame = useRef();
@@ -16,15 +20,9 @@ const FrameManager = () => {
         reloadCount: state.jcontent.compareStagingAndLive.reloadCount,
         language: state.language
     }), shallowEqual);
-    const {loading: editUrlLoading, data: editData} = useQuery(RenderUrl, {variables: {
+    const {data} = useQuery(RenderUrl, {variables: {
         path: path,
-        language: language,
-        workspace: 'EDIT'
-    }, skip: !path});
-    const {loading: liveUrlLoading, data: liveData} = useQuery(RenderUrl, {variables: {
-        path: path,
-        language: language,
-        workspace: 'LIVE'
+        language: language
     }, skip: !path});
 
     // Reload both frames
@@ -40,7 +38,6 @@ const FrameManager = () => {
         if (showHighlights) {
             const n = leftFrame.current.contentDocument.querySelector('body').outerHTML;
             const original = rightFrame.current.contentDocument.querySelector('body').outerHTML;
-            console.log(n, original);
             client.query({
                 query: DiffHtml,
                 variables: {
@@ -60,26 +57,28 @@ const FrameManager = () => {
 
     // Load staging frame when url available
     useEffect(() => {
-        if (leftFrame.current && editData?.jcr?.result?.renderUrl) {
-            leftFrame.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}${editData.jcr.result.renderUrl}`;
+        if (leftFrame.current && data?.jcr?.result?.renderUrlEdit) {
+            leftFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false);
         }
-    }, [leftFrame, editData]);
 
-    // Load live frame when url is available
-    useEffect(() => {
-        if (rightFrame.current && liveData?.jcr?.result?.renderUrl) {
-            // todo resolve server name as in open in action
-            rightFrame.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}${liveData.jcr.result.renderUrl}`;
+        if (rightFrame.current && data?.jcr?.result?.renderUrlLive) {
+            rightFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlLive, true, data.jcr.result.site.serverName);
         }
-    }, [rightFrame, liveData]);
+    }, [leftFrame, rightFrame, data]);
 
     return (
         <>
-            <div className={styles.frameHolder}>
-                <Frame ref={leftFrame}/>
+            <div className={clsx('flexRow_nowrap', styles.stagingOrLiveHeading)}>
+                <Typography className={styles.fiftyPercentWidth} variant="subheading">{t('jcontent:label.contentManager.contentPreview.staging')}</Typography>
+                <Typography className={styles.fiftyPercentWidth} variant="subheading">{t('jcontent:label.contentManager.contentPreview.live')}</Typography>
             </div>
-            <div className={clsx(styles.frameHolder, styles.leftMargin)}>
-                <Frame ref={rightFrame}/>
+            <div className={styles.frameContainer}>
+                <div className={styles.fiftyPercentWidth}>
+                    <Frame ref={leftFrame}/>
+                </div>
+                <div className={clsx(styles.fiftyPercentWidth, styles.leftMargin)}>
+                    <Frame ref={rightFrame}/>
+                </div>
             </div>
         </>
     );

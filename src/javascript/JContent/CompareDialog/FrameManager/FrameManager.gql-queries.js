@@ -10,11 +10,12 @@ export const DiffHtml = gql`
 `;
 
 export const RenderUrl = gql`
-    query RenderUrl($path: String!, $language: String!, $workspace: Workspace!) {
+    query RenderUrl($path: String!, $language: String!) {
         jcr {
             result: nodeByPath(path: $path) {
                 ...NodeCacheRequiredFields
-                renderUrl(workspace: $workspace, language: $language)
+                renderUrlLive: renderUrl(workspace: LIVE, language: $language)
+                renderUrlEdit: renderUrl(workspace: EDIT, language: $language)
                 site {
                     serverName
                 }

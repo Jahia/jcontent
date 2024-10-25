@@ -333,3 +333,18 @@ export const JahiaAreasUtil = {
         return Boolean(this.jahiaAreas[path]);
     }
 };
+
+export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
+    if (url.match(/^https*:\/\//)) {
+        return url;
+    }
+
+    let host = location.hostname;
+
+    // Use current host for preview urls
+    if (isLive && serverName) {
+        host = serverName;
+    }
+
+    return `${location.protocol}//${host}:${location.port}${url}`;
+};

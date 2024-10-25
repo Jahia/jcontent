@@ -22,7 +22,8 @@ export const MainActionBar = () => {
         return false;
     }
 
-    const publishAction = node['jnt:folder'] || node['jnt:contentFolder'] ? 'publishAll' : 'publish';
+    const isFolder = node['jnt:folder'] || node['jnt:contentFolder'];
+    const publishAction = isFolder ? 'publishAll' : 'publish';
     const isDisabled = selection && selection.length > 0;
 
     return (
@@ -32,10 +33,11 @@ export const MainActionBar = () => {
 
             {showPageBuilder ? (
                 <>
-                    <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
-                        <DisplayAction isMediumLabel actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost', size: 'big', className: styles.item}}/>
-                        <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
-                    </ButtonGroup>
+                    { !isFolder && (
+                        <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
+                            <DisplayAction isMediumLabel actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost', size: 'big', className: styles.item}}/>
+                            <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
+                        </ButtonGroup>)}
                     <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
                 </>
             ) : (

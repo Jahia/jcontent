@@ -3,6 +3,8 @@ import React, {useEffect, useRef} from 'react';
 import {useApolloClient, useQuery} from '@apollo/client';
 import {DiffHtml, RenderUrl} from './FrameManager.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
+import styles from './FrameManager.scss';
+import clsx from 'clsx';
 
 const FrameManager = () => {
     const client = useApolloClient();
@@ -57,26 +59,26 @@ const FrameManager = () => {
     }, [client, showHighlights, leftFrame, rightFrame]);
 
     // Load staging frame when url available
-    // todo resolve url properly
     useEffect(() => {
         if (leftFrame.current && editData?.jcr?.result?.renderUrl) {
-            leftFrame.current.contentWindow.location.href = editData.jcr.result.renderUrl;
+            leftFrame.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}${editData.jcr.result.renderUrl}`;
         }
     }, [leftFrame, editData]);
 
     // Load live frame when url is available
     useEffect(() => {
         if (rightFrame.current && liveData?.jcr?.result?.renderUrl) {
-            rightFrame.current.contentWindow.location.href = liveData.jcr.result.renderUrl;
+            // todo resolve server name as in open in action
+            rightFrame.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}${liveData.jcr.result.renderUrl}`;
         }
     }, [rightFrame, liveData]);
 
     return (
         <>
-            <div style={{display: 'flex', width: '50%'}}>
+            <div className={styles.frameHolder}>
                 <Frame ref={leftFrame}/>
             </div>
-            <div style={{display: 'flex', width: '50%'}}>
+            <div className={clsx(styles.frameHolder, styles.leftMargin)}>
                 <Frame ref={rightFrame}/>
             </div>
         </>

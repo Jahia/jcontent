@@ -55,7 +55,7 @@ const FrameManager = () => {
         }
     }, [client, showHighlights, leftFrame, rightFrame]);
 
-    // Load staging frame when url available
+    // Load frames
     useEffect(() => {
         if (leftFrame.current && data?.jcr?.result?.renderUrlEdit) {
             leftFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false);
@@ -74,10 +74,10 @@ const FrameManager = () => {
             </div>
             <div className={styles.frameContainer}>
                 <div className={styles.fiftyPercentWidth}>
-                    <Frame ref={leftFrame}/>
+                    <Frame ref={leftFrame} role="stagingFrame"/>
                 </div>
                 <div className={clsx(styles.fiftyPercentWidth, styles.leftMargin)}>
-                    <Frame ref={rightFrame}/>
+                    <Frame ref={rightFrame} role="liveFrame"/>
                 </div>
             </div>
         </>

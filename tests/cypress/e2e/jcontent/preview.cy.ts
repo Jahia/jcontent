@@ -25,6 +25,11 @@ describe('JContent preview tests', () => {
                 'test 7');
     });
 
+    it('should open preview with url', () => {
+        const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/jcontentSite/home)))');
+        cy.get('h1').contains('Compare staging vs live version').should('exist');
+    });
+
     afterEach(() => {
         cy.logout();
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});

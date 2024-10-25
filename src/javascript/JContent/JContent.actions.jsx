@@ -68,6 +68,7 @@ import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './act
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
 import {CopyMenuComponent} from '~/JContent/actions/copyPaste/CopyMenuComponent';
+import {OpenInRepositoryExplorerActionComponent} from '~/JContent/actions/openInRepositoryExplorerAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -225,7 +226,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.copy',
         targets: ['contentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
         copyCutType: 'copy',
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:isAreaList'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
@@ -259,7 +260,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.cut',
         targets: ['contentActions:3.9', 'selectedContentActions:3.9', 'narrowHeaderSelectionMenu:3.9'],
         copyCutType: 'cut',
-        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
@@ -281,6 +282,7 @@ export const jContentActions = registry => {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',
         targets: ['contentActions:4', 'selectedContentActions:4', 'narrowHeaderMenu:12', 'narrowHeaderSelectionMenu:4'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
         component: DeleteActionComponent
     });
     registry.add('action', 'deletePermanently', {
@@ -418,6 +420,13 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.actions.openInPreview',
         targets: [],
         component: OpenInPreviewActionComponent
+    });
+
+    registry.add('action', 'openInRepositoryExplorer', {
+        buttonIcon: <OpenInBrowser/>,
+        buttonLabel: 'jcontent:label.contentManager.actions.openInRepositoryExplorer',
+        targets: ['contentActions:2.3'],
+        component: OpenInRepositoryExplorerActionComponent
     });
 
     registry.add('action', 'contentActionsSeparator1', {

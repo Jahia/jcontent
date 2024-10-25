@@ -27,7 +27,7 @@ function getItems(node = {}) {
     const ancestors = node.ancestors || [];
 
     if ((ancestors.length === 0) || node.isVisibleInContentTree) {
-        return ancestors;
+        return ancestors.concat(node);
     }
 
     const indexOfLastAncestorInContentTree = findLastIndex(ancestors, a => a.isVisibleInContentTree);
@@ -38,10 +38,10 @@ function getItems(node = {}) {
         }
 
         const remainingAncestors = ancestors.slice(indexOfLastAncestorInContentTree + 1);
-        return [lastAncestorInContentTree].concat(remainingAncestors);
+        return [lastAncestorInContentTree].concat(remainingAncestors).concat(node);
     }
 
-    return ancestors;
+    return ancestors.concat(node);
 }
 
 const renderItems = (items, onItemClick) => {
@@ -50,11 +50,11 @@ const renderItems = (items, onItemClick) => {
         return [
             <SimplePathEntry key={first.uuid} item={first} onItemClick={onItemClick}/>,
             <CompositePathEntry key={`${first.uuid}-${last.uuid}`} items={others} onItemClick={onItemClick}/>,
-            <SimplePathEntry key={last.uuid} item={last} onItemClick={onItemClick}/>
+            <SimplePathEntry key={last.uuid} isDisabled item={last}/>
         ];
     }
 
-    return items.map(item => <SimplePathEntry key={item.uuid} item={item} onItemClick={onItemClick}/>);
+    return items.map((item, index) => <SimplePathEntry key={item.uuid} item={item} isDisabled={index === items.length - 1} onItemClick={onItemClick}/>);
 };
 
 export const ContentPath = ({selector}) => {

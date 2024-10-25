@@ -1,4 +1,4 @@
-import {isMarkedForDeletion} from '../../JContent.utils';
+import {isMarkedForDeletion, JahiaAreasUtil} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
@@ -22,9 +22,9 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
             getDisplayName: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
-            getLockInfo: true
+            getLockInfo: true,
+            ...others
         },
         {
             fetchPolicy: 'network-only'
@@ -39,7 +39,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
+    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
         <Render

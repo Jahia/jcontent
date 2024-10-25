@@ -24,10 +24,6 @@ describe('permissions', () => {
                     }
                 }
             `});
-        cy.loginAndStoreSession('bill', 'password');
-
-        jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
-        contentEditor = jcontent.editComponentByText('test');
     });
 
     after(() => {
@@ -35,6 +31,9 @@ describe('permissions', () => {
     });
 
     it('can edit rich text with editor', function () {
+        cy.loginAndStoreSession('bill', 'password');
+        jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
+        contentEditor = jcontent.editComponentByText('test');
         const richText = contentEditor.getField(RichTextField, 'jnt:bigText_text');
         richText.type('test');
     });

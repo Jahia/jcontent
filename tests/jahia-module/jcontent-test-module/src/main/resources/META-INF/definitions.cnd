@@ -48,6 +48,7 @@
  - list (string, choicelist) = 'choice4' < 'choice4', 'choice5', 'choice6'
  - checkbox (string, choicelist) = 'choice7' multiple < 'choice7', 'choice8', 'choice9'
  - mList (string, choicelist) = 'choice10' multiple < 'choice10', 'choice11', 'choice12'
+ - noDefaultList (string, choicelist) < 'choice1', 'choice2'
 
 [cent:testDefaultTemplate] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:hasTemplateNode
  - j:templateName (string, choicelist[templatesNode=pageTemplate]) mandatory nofulltext
@@ -137,3 +138,27 @@
 [cent:mainResourceLinkTest] > jnt:content, jmix:mainResource, mix:title, jmix:editorialContent
 
 [cent:previewWrapper] > jnt:content, jmix:basicContent
+
+// Tests for examples provided in academy
+// https://academy.jahia.com/documentation/jahia/jahia-8/developer/extending-and-customizing-jahia-ui/customizing-content-editor-forms/examples-of-content-definition-json-overrides
+
+[cent:testJsonOverrides] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - readOnlyField (string)
+ - testField (string)
+ - hideField (string)
+ - moveField (string)
+ - mandatoryField (string)
+ - pickerOverrideField (weakreference)
+ - defaultValueField (string)
+ - valueConstraintField (string)
+
+ [cent:testChoiceTreeContent] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+  + * (cent:testChoiceTreeContent) = cent:testChoiceTreeContent
+
+ [cent:testChoiceTreeContentRoot] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+    + * (cent:testChoiceTreeContent) = cent:testChoiceTreeContent
+
+ [cent:testChoiceTree] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - singleChoiceTree (weakreference)
+ - multipleChoiceTree (weakreference) multiple
+ - multipleChoiceTreeWithTypes (weakreference) multiple

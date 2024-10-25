@@ -5,12 +5,18 @@ export class Field extends BaseComponent {
     multiple: boolean;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    checkValue(string: string): void {
+    checkValue(text: string): void {
         // Empty method
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    addNewValue(string: string): void {
+    addNewValue(text: string): void {
         // Empty method
+    }
+
+    hasMandatory() {
+        this.get().scrollIntoView().find('[data-sel-content-editor-field-mandatory]')
+            .should('be.visible')
+            .and('have.attr', 'data-sel-content-editor-field-mandatory', 'true');
     }
 }

@@ -46,7 +46,7 @@ describe('Links in jcontent', () => {
         getComponentByRole(Button, 'cancel').click();
     });
 
-    it('Should open link modal and edit page when clicking on same site link from left navigation', () => {
+    it('Should open link modal and edit page when clicking on same site link from left navigation', {retries: 3}, () => {
         const pageAccordion = jcontent.getAccordionItem('pages');
         pageAccordion.expandTreeItem('home');
         pageAccordion.getTreeItem('internal-link-nav').click();

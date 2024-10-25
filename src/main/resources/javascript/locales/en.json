@@ -305,6 +305,7 @@
         "openInJContent": "Open in a new tab",
         "openInPageBuilder": "Open in Page Builder",
         "pageComposer": "Open in Page Composer",
+        "openInRepositoryExplorer": "Show in Repository Explorer",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

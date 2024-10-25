@@ -15,6 +15,7 @@ export const GetContentPath = gql`
         jcr {
             node: nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
+                displayName(language: $language)
                 primaryNodeType {
                     name
                 }

@@ -1,18 +1,18 @@
 import {
     BasePage,
     Button,
-    Collapsible,
     getComponentByAttr,
     getComponentByRole,
     getComponentBySelector,
     Menu
 } from '@jahia/cypress';
 import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
-import {DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';
+import {ChoiceTreeField, DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
 import {AdvancedOptions} from './advancedOptions';
+import {Section} from './section';
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
@@ -51,12 +51,18 @@ export class ContentEditor extends BasePage {
         return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
     }
 
+    getSection(sectionName: string) {
+        const section = getComponentBySelector(Section, `[data-sel-content-editor-fields-group="${sectionName}"]`);
+        section.sectionName = sectionName;
+        return section;
+    }
+
     openSection(sectionName: string) {
-        return getComponentBySelector(Collapsible, `[data-sel-content-editor-fields-group="${sectionName}"]`).expand();
+        return this.getSection(sectionName).expand();
     }
 
     closeSection(sectionName: string) {
-        return getComponentBySelector(Collapsible, `[data-sel-content-editor-fields-group="${sectionName}"]`).collapse();
+        return this.getSection(sectionName).collapse();
     }
 
     create() {
@@ -72,12 +78,14 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'createButton').click();
     }
 
-    save() {
+    save(checked = true) {
         getComponentByRole(Button, 'submitSave').click();
-        cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
-        cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully saved');
-        if (!this.advancedMode) {
-            cy.get(ContentEditor.defaultSelector).should('not.exist');
+        if (checked) {
+            cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
+            cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully saved');
+            if (!this.advancedMode) {
+                cy.get(ContentEditor.defaultSelector).should('not.exist');
+            }
         }
     }
 
@@ -174,6 +182,10 @@ export class ContentEditor extends BasePage {
             assert(instances[Object.keys(instances)[0]].instanceReady);
         });
         return this.getField(RichTextField, fieldName, false);
+    }
+
+    getChoiceTreeField(fieldName: string, multiple?: boolean): ChoiceTreeField {
+        return this.getField(ChoiceTreeField, fieldName, multiple);
     }
 
     getPickerField(fieldName: string, multiple?: boolean): PickerField {

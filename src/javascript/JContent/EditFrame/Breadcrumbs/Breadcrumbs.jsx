@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Breadcrumb, BreadcrumbItem, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
+import {NodeIcon} from '~/utils';
 
 export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMode}) => {
     const {t} = useTranslation('jcontent');
@@ -29,7 +30,7 @@ export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMod
         const data = nodes.map(n => ({
             label: n.name,
             value: n.path,
-            image: <img alt={n.name} src={`${n.primaryNodeType.icon}.png`}/>
+            image: <NodeIcon node={n}/>
         }));
 
         return (
@@ -47,8 +48,7 @@ export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMod
             {nodes.map(n => (
                 <BreadcrumbItem key={n.path}
                                 label={n.name}
-                                icon={<img alt={n.name}
-                                           src={`${n.primaryNodeType.icon}.png`}/>}
+                                icon={<NodeIcon node={n}/>}
                                 onClick={event => handleItemOnClick(event, n.path)}
                 />
             ))}

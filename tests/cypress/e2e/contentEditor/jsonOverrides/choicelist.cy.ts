@@ -1,5 +1,5 @@
 import {JContent} from '../../../page-object';
-import {createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {createSite, deleteSite, Dropdown, enableModule, getComponentBySelector} from '@jahia/cypress';
 import {RadioChoiceList, CheckboxChoiceList} from '../../../page-object/fields/toggleChoiceList';
 import {Field} from '../../../page-object/fields';
 
@@ -22,6 +22,15 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
     after(() => {
         deleteSite(siteKey);
         cy.logout();
+    });
+
+    it('should select from basic static choicelist with no default value', () => {
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.createContent('choiceListSelectorTypeOverride');
+        const field: Dropdown = getComponentBySelector(Dropdown, '[data-sel-content-editor-field="cent:choiceListSelectorTypeOverride_noDefaultList"]');
+        field.select('choice1');
+        field.get().click();
+        field.get().find('.moonstone-menuItem').should('have.length', 2);
     });
 
     it('should override choice list with radio button selectorType', {defaultCommandTimeout: 10000}, () => {

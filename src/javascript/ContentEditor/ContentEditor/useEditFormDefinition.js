@@ -9,7 +9,7 @@ import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
 import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
 import {decodeSystemName} from '../utils';
 
-const getInitialValues = (nodeData, sections) => {
+export const getInitialValues = (nodeData, sections) => {
     // Retrieve dynamic fieldSets
     const dynamicFieldSets = getDynamicFieldSets(sections);
 

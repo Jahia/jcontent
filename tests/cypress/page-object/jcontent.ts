@@ -22,6 +22,7 @@ import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
 import {BreadcrumbPageBuilder} from './breadcrumb';
 import ClickOptions = Cypress.ClickOptions;
+import VisitOptions = Cypress.VisitOptions;
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -29,8 +30,8 @@ export class JContent extends BasePage {
     siteSwitcher: Dropdown;
     languageSwitcher: Dropdown;
 
-    static visit(site: string, language: string, path: string): JContent {
-        cy.visit(`/jahia/jcontent/${site}/${language}/${path}`);
+    static visit(site: string, language: string, path: string, visitOptions: Partial<VisitOptions> = {}): JContent {
+        cy.visit(`/jahia/jcontent/${site}/${language}/${path}`, visitOptions);
         return new JContent();
     }
 
@@ -351,9 +352,9 @@ class PageBuilderModule extends BaseComponent {
         }));
     }
 
-    contextMenu(selectFirst = false): Menu {
+    contextMenu(selectFirst = false, force = true): Menu {
         this.getHeader(selectFirst);
-        this.get().rightclick({force: true});
+        this.get().rightclick({force});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

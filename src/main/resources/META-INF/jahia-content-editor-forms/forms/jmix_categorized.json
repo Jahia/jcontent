@@ -1,0 +1,20 @@
+{
+  "nodeType": "jmix:categorized",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "metadata",
+      "fieldSets": [
+        {
+          "name": "jmix:categorized",
+          "rank": 0.0,
+          "fields": [
+            {
+              "name": "j:defaultCategory"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

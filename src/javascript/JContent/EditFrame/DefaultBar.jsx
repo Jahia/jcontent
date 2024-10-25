@@ -7,6 +7,7 @@ import {includes} from 'lodash';
 import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
+import {truncate} from '~/ContentEditor/utils';
 
 // eslint-disable-next-line react/prop-types
 export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...props}) => (
@@ -31,10 +32,11 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
     const WrappedButtonRenderer = headerButtonWrapper(ButtonRenderer, currentFrameRef);
 
     const displayLabels = width > 400;
+    const title = truncate(node.displayName, 24);
     return (
         <>
             <NodeIcon node={node} className={styles.icon}/>
-            <Typography isNowrap className={styles.title} variant="caption">{node.displayName}</Typography>
+            <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
 
             {!isStatusHidden && <ContentStatuses node={node}
                                                  hasLabel={displayLabels}

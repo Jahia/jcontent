@@ -1,0 +1,30 @@
+{
+  "name": "cent:testChoiceTree",
+  "priority": 2.0,
+  "fields": [
+    {
+      "name": "singleChoiceTree",
+      "selectorType": "ChoiceTree",
+      "selectorOptionsMap": {
+        "rootPath": "/sites/{site}/contents/choiceTreeContentRoot",
+        "types": "cent:testChoiceTreeContent"
+      }
+    },
+    {
+      "name": "multipleChoiceTree",
+      "selectorType": "ChoiceTree",
+      "selectorOptionsMap": {
+        "rootPath": "/sites/{site}/contents/choiceTreeContentRoot",
+        "types": "cent:testChoiceTreeContent"
+      }
+    },
+    {
+      "name": "multipleChoiceTreeWithTypes",
+      "selectorType": "ChoiceTree",
+      "selectorOptionsMap": {
+        "rootPath": "/sites/{site}/contents",
+        "types": "cent:testChoiceTreeContent,cent:testChoiceTreeContentRoot"
+      }
+    }
+  ]
+}

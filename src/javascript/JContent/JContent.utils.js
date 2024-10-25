@@ -323,3 +323,13 @@ export const findAvailableBoxConfig = node => {
 export const getTitle = (t, item, prefix = 'jContent') => {
     return item.label ? `${prefix} - ${t(item.label)}` : `${prefix} - ${item.key}`;
 };
+
+export const JahiaAreasUtil = {
+    jahiaAreas: {},
+    addArea: function (path) {
+        this.jahiaAreas[path] = true;
+    },
+    isJahiaArea: function (path) {
+        return Boolean(this.jahiaAreas[path]);
+    }
+};

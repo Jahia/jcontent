@@ -7,6 +7,7 @@ describe('JContent preview tests', () => {
         cy.loginAndStoreSession(); // Edit in chief
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
         jcontent.publishAll();
+        cy.get('button[data-sel-role="openInLive"]', {timeout: 5000}).should('be.visible');
     });
 
     it('should honor the j:view property when previewing content', () => {

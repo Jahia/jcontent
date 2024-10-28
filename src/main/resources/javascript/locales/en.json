@@ -314,6 +314,8 @@
         "openInPreview": "Preview",
         "compareStagingToLive": "Compare staging vs live version",
         "customizedPreview": "Customized preview",
+        "highlight": "Highlight",
+        "unhighlight": "Unhighlight",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "More actions",

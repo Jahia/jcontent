@@ -311,6 +311,8 @@
         "openInPreview": "Aperçu",
         "compareStagingToLive": "Comparer la version de travail et la version publiée",
         "customizedPreview": "Prévisualisation personnalisée",
+        "highlight": "Surligner les différences",
+        "unhighlight": "Unhighlight",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "Plus d'actions",

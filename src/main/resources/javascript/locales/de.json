@@ -307,6 +307,8 @@
         "locate": "Finden",
         "openInLive": "Live",
         "openInPreview": "Vorschau",
+        "compareStagingToLive": "Vergleich Staging vs Live Version",
+        "customizedPreview": "Angepasste Vorschau",
         "menuLabel": {
           "actions": "Aktionen",
           "moreActions": "Weitere Aktionen",

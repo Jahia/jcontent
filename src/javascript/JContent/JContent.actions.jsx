@@ -415,10 +415,29 @@ export const jContentActions = registry => {
         component: OpenInLiveActionComponent
     });
 
+    registry.add('action', 'openInPreviewMenu', menuActionWithRenderer, {
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
+        menuTarget: 'openInPreviewMenu',
+        hideOnNodeTypes: ['jnt:category'],
+        isMenuPreload: true
+    });
+
     registry.add('action', 'openInPreview', {
         buttonIcon: <Visibility/>,
         buttonLabel: 'jcontent:label.contentManager.actions.openInPreview',
         targets: [],
+        component: OpenInPreviewActionComponent
+    });
+
+    registry.add('action', 'customizedPreview', {
+        buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview',
+        targets: ['openInPreviewMenu:1'],
+        component: OpenInPreviewActionComponent
+    });
+
+    registry.add('action', 'compareStagingToLive', {
+        buttonLabel: 'jcontent:label.contentManager.actions.compareStagingToLive',
+        targets: ['openInPreviewMenu:2'],
         component: OpenInPreviewActionComponent
     });
 

@@ -229,6 +229,8 @@
         }
       },
       "contentPreview": {
+        "highlight": "Hervorheben",
+        "unhighlight": "Hervorhebung rückgängig machen",
         "preview": "Vorschau",
         "publishedBy": "Veröffentlicht von {{userName}} am",
         "advancedPublish": "Erweiterte Veröffentlichung...",

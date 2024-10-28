@@ -1,0 +1,36 @@
+.dialogContent {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-large) calc(var(--spacing-small) * 4);
+
+    background-color: var(--color-gray_light);
+}
+
+.dialogActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    padding: var(--spacing-small) var(--spacing-large) var(--spacing-medium) var(--spacing-large);
+
+    button {
+        margin: 0 var(--spacing-nano);
+    }
+}
+
+.actionsRoot {
+    display: flex;
+}
+
+.actionItem {
+    & + & {
+        margin-left: var(--spacing-small);
+    }
+}
+
+.header {
+    z-index: 1;
+}

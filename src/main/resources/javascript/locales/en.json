@@ -234,6 +234,8 @@
         }
       },
       "contentPreview": {
+        "highlight": "Highlight",
+        "unhighlight": "Unhighlight",
         "preview": "Preview",
         "publishedBy": "Published by {{userName}} on",
         "advancedPublish": "Advanced publish...",

@@ -4,6 +4,7 @@ import {useQuery} from '@apollo/client';
 import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
 import {useSelector} from 'react-redux';
 import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
+import {resolveUrlForLiveOrPreview} from '../../JContent.utils';
 
 export const OpenInLiveActionComponent = props => <OpenInActionComponent isLive {...props}/>;
 export const OpenInPreviewActionComponent = props => <OpenInActionComponent {...props}/>;
@@ -50,18 +51,8 @@ const OpenInActionComponent = ({
         <Render
             {...others}
             onClick={() => {
-                if (urlPath.match(/^https*:\/\//)) {
-                    window.open(urlPath, '_blank');
-                } else {
-                    let serverName = location.hostname;
-
-                    // Use current host for preview urls
-                    if (isLive && node.site.serverName) {
-                        serverName = node.site.serverName;
-                    }
-
-                    window.open(`${location.protocol}//${serverName}:${location.port}${urlPath}`, '_blank');
-                }
+                const url = resolveUrlForLiveOrPreview(urlPath, isLive, node.site.serverName);
+                window.open(url, '_blank');
             }}
         />
     );

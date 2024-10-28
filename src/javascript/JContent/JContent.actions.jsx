@@ -3,7 +3,7 @@ import {menuAction} from '@jahia/ui-extender';
 
 import {
     AddFolder,
-    Archive,
+    Archive, Back,
     ChevronDown,
     ClearPaste,
     Cloud,
@@ -22,7 +22,7 @@ import {
     OpenInNew,
     Paste,
     Publish,
-    Reload,
+    Reload, Replay,
     Search,
     Separator,
     Subdirectory,
@@ -59,7 +59,8 @@ import {
     UnlockActionComponent,
     UnzipActionComponent,
     ZipActionComponent,
-    CompareHtmlActionComponent
+    CompareHtmlActionComponent,
+    FlushCacheActionComponent
 } from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
@@ -513,5 +514,21 @@ export const jContentActions = registry => {
 
     registry.add('action', 'viewUsages', {
         component: ViewUsagesComponent
+    });
+
+    registry.add('action', 'flushPageCache', {
+        component: FlushCacheActionComponent,
+        showOnNodeTypes: ['jnt:page'],
+        buttonLabel: 'jcontent:label.contentManager.contextMenu.flushPageCache',
+        targets: ['contentActions:6', 'narrowHeaderMenu:15'],
+        buttonIcon: <Replay/>
+    });
+
+    registry.add('action', 'flushSiteCache', {
+        component: FlushCacheActionComponent,
+        showOnNodeTypes: ['jnt:virtualsite'],
+        buttonLabel: 'jcontent:label.contentManager.contextMenu.flushSiteCache',
+        targets: ['contentActions:6', 'narrowHeaderMenu:15'],
+        buttonIcon: <Replay/>
     });
 };

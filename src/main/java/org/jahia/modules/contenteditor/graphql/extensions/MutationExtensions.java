@@ -28,6 +28,7 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
 import org.jahia.modules.contenteditor.graphql.api.GqlEditorFormMutations;
+import org.jahia.modules.contenteditor.graphql.api.GqlJContentMutations;
 import org.jahia.modules.graphql.provider.dxm.DXGraphQLProvider;
 
 @GraphQLTypeExtension(DXGraphQLProvider.Mutation.class)
@@ -38,5 +39,12 @@ public class MutationExtensions {
     @GraphQLDescription("Main access field to the DX GraphQL Form mutation API")
     public static GqlEditorFormMutations getForms() {
         return new GqlEditorFormMutations();
+    }
+
+    @GraphQLField
+    @GraphQLName("jcontent")
+    @GraphQLDescription("Main access field to the jContent mutation API")
+    public static GqlJContentMutations getJContent() {
+        return new GqlJContentMutations();
     }
 }

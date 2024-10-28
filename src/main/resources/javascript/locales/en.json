@@ -231,7 +231,9 @@
           "unlock": "Unlock",
           "clearAllLocks": "Clear all locks",
           "lock": "Lock"
-        }
+        },
+        "flushPageCache": "Clear page cache",
+        "flushSiteCache": "Clear site cache"
       },
       "contentPreview": {
         "highlight": "Highlight",

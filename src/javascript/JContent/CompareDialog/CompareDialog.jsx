@@ -61,7 +61,7 @@ const CompareDialog = () => {
                                     data-sel-role="highlight"
                                     className={styles.actionItem}
                                     icon={<Edit/>}
-                                    label={showHighlights ? t('Unhighlight') : t('Highlight')}
+                                    label={showHighlights ? t('jcontent:label.contentManager.contentPreview.unhighlight') : t('jcontent:label.contentManager.contentPreview.highlight')}
                                     onClick={() => dispatch(showHighlights ? compareStagingLiveHideHighlights() : compareStagingLiveShowHighlights())}/>
                             <ButtonGroup size="big" variant="default" color="accent" className={styles.actionItem}>
                                 <DisplayAction isMediumLabel actionKey="publish" path={path} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>

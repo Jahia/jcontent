@@ -229,6 +229,8 @@
         }
       },
       "contentPreview": {
+        "highlight": "Hervorheben",
+        "unhighlight": "Hervorhebung rückgängig machen",
         "preview": "Vorschau",
         "publishedBy": "Veröffentlicht von {{userName}} am",
         "advancedPublish": "Erweiterte Veröffentlichung...",
@@ -309,8 +311,6 @@
         "openInPreview": "Vorschau",
         "compareStagingToLive": "Vergleich Staging vs Live Version",
         "customizedPreview": "Angepasste Vorschau",
-        "highlight": "Hervorheben",
-        "unhighlight": "Hervorhebung rückgängig machen",
         "menuLabel": {
           "actions": "Aktionen",
           "moreActions": "Weitere Aktionen",

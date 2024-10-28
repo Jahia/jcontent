@@ -229,6 +229,8 @@
         }
       },
       "contentPreview": {
+        "highlight": "Surligner les différences",
+        "unhighlight": "Unhighlight",
         "preview": "Aperçu",
         "publishedBy": "Publié par {{userName}} le",
         "advancedPublish": "Publication avancée...",
@@ -311,8 +313,6 @@
         "openInPreview": "Aperçu",
         "compareStagingToLive": "Comparer la version de travail et la version publiée",
         "customizedPreview": "Prévisualisation personnalisée",
-        "highlight": "Surligner les différences",
-        "unhighlight": "Unhighlight",
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "Plus d'actions",

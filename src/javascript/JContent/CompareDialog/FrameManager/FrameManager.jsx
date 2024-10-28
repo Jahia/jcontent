@@ -77,7 +77,6 @@ const FrameManager = () => {
     useSubscription(SubscribeToPublicationData, {
         fetchPolicy: 'network-only',
         onData: ({data}) => {
-            console.log('data', data);
             if (data?.data?.subscribeToPublicationJob?.state === 'FINISHED') {
                 refresh();
             }

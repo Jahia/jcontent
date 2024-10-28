@@ -37,6 +37,7 @@ const CompareDialog = () => {
         }
     }, [dispatch, location]);
 
+    // Don't instantiate dom and react elements unless open, avoid registering hooks etc.
     if (!open) {
         return null;
     }

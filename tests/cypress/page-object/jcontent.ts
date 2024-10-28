@@ -205,7 +205,7 @@ export class JContent extends BasePage {
     }
 
     publishAll() {
-        cy.get('[data-sel-role="publishAll"]').click();
+        cy.get('[data-sel-role="publish"]').click();
         this.clickPublishNow();
     }
 

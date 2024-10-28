@@ -309,8 +309,8 @@
         "openInPreview": "Vorschau",
         "compareStagingToLive": "Vergleich Staging vs Live Version",
         "customizedPreview": "Angepasste Vorschau",
-        "highlight": "Highlight",
-        "unhighlight": "Unhighlight",
+        "highlight": "Hervorheben",
+        "unhighlight": "Hervorhebung rückgängig machen",
         "menuLabel": {
           "actions": "Aktionen",
           "moreActions": "Weitere Aktionen",

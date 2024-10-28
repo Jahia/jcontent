@@ -230,7 +230,7 @@
       },
       "contentPreview": {
         "highlight": "Surligner les différences",
-        "unhighlight": "Unhighlight",
+        "unhighlight": "Retirer le surlignage",
         "preview": "Aperçu",
         "publishedBy": "Publié par {{userName}} le",
         "advancedPublish": "Publication avancée...",

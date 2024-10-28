@@ -37,6 +37,10 @@ const CompareDialog = () => {
         }
     }, [dispatch, location]);
 
+    if (!open) {
+        return null;
+    }
+
     return (
         <Dialog fullScreen open={open}>
             <Header className={styles.header}

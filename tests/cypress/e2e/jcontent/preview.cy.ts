@@ -5,6 +5,8 @@ describe('JContent preview tests', () => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.loginAndStoreSession(); // Edit in chief
+        const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
+        jcontent.publishAll();
     });
 
     it('should honor the j:view property when previewing content', () => {
@@ -26,8 +28,14 @@ describe('JContent preview tests', () => {
     });
 
     it('should open preview with url', () => {
-        const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/jcontentSite/home)))');
+        JContent.visit('jcontentSite', 'en', 'pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/jcontentSite/home)))');
         cy.get('h1').contains('Compare staging vs live version').should('exist');
+        cy.get('iframe[data-sel-role="staging-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible');
+        cy.get('iframe[data-sel-role="live-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible');
     });
 
     afterEach(() => {

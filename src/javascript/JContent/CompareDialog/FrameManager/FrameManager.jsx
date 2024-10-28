@@ -1,6 +1,6 @@
 import Frame from './Frame';
 import React, {useEffect, useRef} from 'react';
-import {useApolloClient, useQuery} from '@apollo/client';
+import {useApolloClient, useQuery, useSubscription} from '@apollo/client';
 import {DiffHtml, RenderUrl} from './FrameManager.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
 import styles from './FrameManager.scss';
@@ -8,6 +8,9 @@ import clsx from 'clsx';
 import {Typography} from '@jahia/moonstone';
 import {resolveUrlForLiveOrPreview} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
+import {
+    SubscribeToPublicationData
+} from '../../PublicationStatus/PublicationNotification/PublicationNotification.gql-subscription';
 
 const FrameManager = () => {
     const {t} = useTranslation('jcontent');
@@ -25,11 +28,15 @@ const FrameManager = () => {
         language: language
     }, skip: !path});
 
+    const refresh = () => {
+        leftFrame.current.contentWindow.location.reload();
+        rightFrame.current.contentWindow.location.reload();
+    };
+
     // Reload both frames
     useEffect(() => {
         if (reloadCount > 0) {
-            leftFrame.current.contentWindow.location.reload();
-            rightFrame.current.contentWindow.location.reload();
+            refresh();
         }
     }, [reloadCount]);
 
@@ -66,6 +73,17 @@ const FrameManager = () => {
         }
     }, [leftFrame, rightFrame, data]);
 
+    // Refresh upon publication
+    useSubscription(SubscribeToPublicationData, {
+        fetchPolicy: 'network-only',
+        onData: ({data}) => {
+            console.log('data', data);
+            if (data?.data?.subscribeToPublicationJob?.state === 'FINISHED') {
+                refresh();
+            }
+        }
+    });
+
     return (
         <>
             <div className={clsx('flexRow_nowrap', styles.stagingOrLiveHeading)}>
@@ -74,10 +92,10 @@ const FrameManager = () => {
             </div>
             <div className={styles.frameContainer}>
                 <div className={styles.fiftyPercentWidth}>
-                    <Frame ref={leftFrame} role="stagingFrame"/>
+                    <Frame ref={leftFrame} role="staging-frame"/>
                 </div>
                 <div className={clsx(styles.fiftyPercentWidth, styles.leftMargin)}>
-                    <Frame ref={rightFrame} role="liveFrame"/>
+                    <Frame ref={rightFrame} role="live-frame"/>
                 </div>
             </div>
         </>

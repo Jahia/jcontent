@@ -204,6 +204,11 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
+    publishAll() {
+        cy.get('[data-sel-role="publishAll"]').click();
+        this.clickPublishNow();
+    }
+
     clickPublishNow() {
         cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
     }

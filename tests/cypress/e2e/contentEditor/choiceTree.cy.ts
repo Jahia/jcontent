@@ -126,7 +126,7 @@ describe('Test Choicetree selector type', () => {
         choiceTree.getEntries().should('contain', 'choiceTreeContent2');
     });
 
-    it.only('displays the Choice tree selector for single value', () => {
+    it('displays the Choice tree selector for single value', () => {
         const contentEditor = jcontent.createContent('testChoiceTree');
         contentEditor.openSection('Content');
         const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_singleChoiceTree', false);

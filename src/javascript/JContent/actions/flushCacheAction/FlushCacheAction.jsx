@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/client';
 import {FlushPageCacheMutation, FlushSiteCacheMutation} from './FlushCacheAction.gql-mutations';
 import {useNotifications} from '@jahia/react-material';
+import {useTranslation} from 'react-i18next';
 
 export const FlushCacheActionComponent = ({path, render: Render, loading: Loading, showOnNodeTypes, ...others}) => {
+    const {t} = useTranslation('jcontent');
     const client = useApolloClient();
     const notificationContext = useNotifications();
     const res = useNodeChecks(
@@ -35,9 +37,8 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
                     mutation: isPageFlush ? FlushPageCacheMutation : FlushSiteCacheMutation
                 }).then(res => {
                     if (res?.data?.jcontent?.flush) {
-                        notificationContext.notify('Cache flushed');
-                    } else {
-                        notificationContext.notify('Could not flush cache');
+                        const typeOfCache = showOnNodeTypes.includes('jnt:virtualsite') ? 'flushedSiteCache' : 'flushedPageCache';
+                        notificationContext.notify(t(`jcontent:label.cache.${typeOfCache}`), ['closeButton']);
                     }
                 });
             }}

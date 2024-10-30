@@ -231,9 +231,7 @@
           "unlock": "Unlock",
           "clearAllLocks": "Clear all locks",
           "lock": "Lock"
-        },
-        "flushPageCache": "Clear page cache",
-        "flushSiteCache": "Clear site cache"
+        }
       },
       "contentPreview": {
         "highlight": "Highlight",
@@ -941,6 +939,12 @@
 
         }
       }
+    },
+    "cache": {
+      "flushPageCache": "Clear page cache",
+      "flushSiteCache": "Clear site cache",
+      "flushedPageCache": "Cache has been flushed",
+      "flushedSiteCache": "Site caches have been flushed"
     },
     "ok": "OK",
     "cancel": "Cancel",

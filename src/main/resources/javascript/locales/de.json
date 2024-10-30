@@ -919,6 +919,10 @@
         }
       }
     },
+    "cache": {
+      "flushPageCache": "Der Cache wurde geleert",
+      "flushSiteCache": "Site Caches wurden geleert"
+    },
     "ok": "OK",
     "cancel": "Abbrechen",
     "no": "Nein",

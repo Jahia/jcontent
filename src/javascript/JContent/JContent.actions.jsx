@@ -3,7 +3,7 @@ import {menuAction} from '@jahia/ui-extender';
 
 import {
     AddFolder,
-    Archive, Back,
+    Archive,
     ChevronDown,
     ClearPaste,
     Cloud,
@@ -22,14 +22,16 @@ import {
     OpenInNew,
     Paste,
     Publish,
-    Reload, Replay,
+    Reload,
+    Replay,
     Search,
     Separator,
     Subdirectory,
     Undelete,
     Unlock,
     Upload,
-    Visibility
+    Visibility,
+    SwapHoriz
 } from '@jahia/moonstone';
 import {
     ClearAllLocksActionComponent,
@@ -421,7 +423,10 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
         menuTarget: 'openInPreviewMenu',
         showOnNodeTypes: ['jnt:page'],
-        isMenuPreload: true
+        isMenuPreload: true,
+        menuItemProps: {
+            isShowIcons: true
+        }
     });
 
     registry.add('action', 'openInPreview', {
@@ -432,12 +437,14 @@ export const jContentActions = registry => {
     });
 
     registry.add('action', 'customizedPreview', {
+        buttonIcon: <Visibility/>,
         buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview',
         targets: ['openInPreviewMenu:1'],
         component: OpenInPreviewActionComponent
     });
 
     registry.add('action', 'compareStagingToLive', {
+        buttonIcon: <SwapHoriz/>,
         buttonLabel: 'jcontent:label.contentManager.actions.compareStagingToLive',
         targets: ['openInPreviewMenu:2'],
         component: CompareHtmlActionComponent
@@ -519,7 +526,7 @@ export const jContentActions = registry => {
     registry.add('action', 'flushPageCache', {
         component: FlushCacheActionComponent,
         showOnNodeTypes: ['jnt:page'],
-        buttonLabel: 'jcontent:label.contentManager.contextMenu.flushPageCache',
+        buttonLabel: 'jcontent:label.cache.flushPageCache',
         targets: ['contentActions:6', 'narrowHeaderMenu:15'],
         buttonIcon: <Replay/>
     });
@@ -527,7 +534,7 @@ export const jContentActions = registry => {
     registry.add('action', 'flushSiteCache', {
         component: FlushCacheActionComponent,
         showOnNodeTypes: ['jnt:virtualsite'],
-        buttonLabel: 'jcontent:label.contentManager.contextMenu.flushSiteCache',
+        buttonLabel: 'jcontent:label.cache.flushSiteCache',
         targets: ['contentActions:6', 'narrowHeaderMenu:15'],
         buttonIcon: <Replay/>
     });

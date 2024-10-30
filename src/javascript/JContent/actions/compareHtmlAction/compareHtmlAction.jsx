@@ -7,7 +7,7 @@ export const CompareHtmlActionComponent = ({path, render: Render, loading: Loadi
     const res = useNodeChecks(
         {path},
         {
-            hideOnNodeTypes: ['jnt:folder', 'jnt:contentFolder'],
+            showOnNodeTypes: ['jnt:page'],
             getAggregatedPublicationInfo: {subNodes: true}
         }
     );

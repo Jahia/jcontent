@@ -61,7 +61,7 @@ public class GqlJContentMutations {
 
     @GraphQLField
     @GraphQLName("flushSiteCache")
-    @GraphQLDescription("Flushes cache for a site, will resolve site node if the path supplied does not belong to a site, checks permission")
+    @GraphQLDescription("Flushes cache for a site, will resolve site node if the path supplied is not a site, checks permission")
     public Boolean flushSiteCache(@GraphQLName("sitePath") @GraphQLDescription("Site path") String sitePath) {
         JCRNodeWrapper node = null;
 

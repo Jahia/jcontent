@@ -920,8 +920,8 @@
       }
     },
     "cache": {
-      "flushPageCache": "Clear page cache",
-      "flushSiteCache": "Clear site cache",
+      "flushPageCache": "Seiten Cache leeren",
+      "flushSiteCache": "Site Cache leeren",
       "flushedPageCache": "Der Cache wurde geleert",
       "flushedSiteCache": "Site Caches wurden geleert"
     },

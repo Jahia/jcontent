@@ -527,15 +527,15 @@ export const jContentActions = registry => {
         component: FlushCacheActionComponent,
         showOnNodeTypes: ['jnt:page'],
         buttonLabel: 'jcontent:label.cache.flushPageCache',
-        targets: ['contentActions:6', 'narrowHeaderMenu:15'],
+        targets: ['contentActions:6'],
         buttonIcon: <Replay/>
     });
 
     registry.add('action', 'flushSiteCache', {
         component: FlushCacheActionComponent,
-        showOnNodeTypes: ['jnt:virtualsite'],
+        showOnNodeTypes: ['jnt:page', 'jnt:virtualsite'],
         buttonLabel: 'jcontent:label.cache.flushSiteCache',
-        targets: ['contentActions:6', 'narrowHeaderMenu:15'],
+        targets: ['contentActions:6'],
         buttonIcon: <Replay/>
     });
 };

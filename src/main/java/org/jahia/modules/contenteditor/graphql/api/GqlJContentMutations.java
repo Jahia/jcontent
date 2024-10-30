@@ -26,6 +26,7 @@ package org.jahia.modules.contenteditor.graphql.api;
 import graphql.annotations.annotationTypes.*;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.services.cache.CacheHelper;
+import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 
@@ -60,15 +61,19 @@ public class GqlJContentMutations {
 
     @GraphQLField
     @GraphQLName("flushSiteCache")
-    @GraphQLDescription("Flushes cache for a site, checks permission and node type")
+    @GraphQLDescription("Flushes cache for a site, will resolve site node if the path supplied does not belong to a site, checks permission")
     public Boolean flushSiteCache(@GraphQLName("sitePath") @GraphQLDescription("Site path") String sitePath) {
         JCRNodeWrapper node = null;
 
         try {
             node = JCRSessionFactory.getInstance().getCurrentUserSession().getNode(sitePath);
 
-            if (node.hasPermission("adminCache") && node.isNodeType("jnt:virtualsite")) {
-                CacheHelper.flushOutputCachesForPath(sitePath, true);
+            if (node.hasPermission("adminCache")) {
+                if (!node.isNodeType("jnt:virtualsite")) {
+                    node = JCRContentUtils.getParentOfType(node, "jnt:virtualsite");
+                }
+
+                CacheHelper.flushOutputCachesForPath(node.getPath(), true);
                 return true;
             }
         } catch (RepositoryException e) {

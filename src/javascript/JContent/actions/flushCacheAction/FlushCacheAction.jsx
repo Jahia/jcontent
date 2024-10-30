@@ -18,7 +18,7 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
         }
     );
 
-    const isPageFlush = showOnNodeTypes.includes('jnt:page');
+    const isSiteFlush = showOnNodeTypes.includes('jnt:virtualsite');
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
@@ -34,10 +34,10 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
             onClick={() => {
                 client.mutate({
                     variables: {path: path},
-                    mutation: isPageFlush ? FlushPageCacheMutation : FlushSiteCacheMutation
+                    mutation: isSiteFlush ? FlushSiteCacheMutation : FlushPageCacheMutation
                 }).then(res => {
                     if (res?.data?.jcontent?.flush) {
-                        const typeOfCache = showOnNodeTypes.includes('jnt:virtualsite') ? 'flushedSiteCache' : 'flushedPageCache';
+                        const typeOfCache = isSiteFlush ? 'flushedSiteCache' : 'flushedPageCache';
                         notificationContext.notify(t(`jcontent:label.cache.${typeOfCache}`), ['closeButton']);
                     }
                 });

@@ -25,7 +25,6 @@ package org.jahia.modules.contenteditor.graphql.api;
 
 import graphql.annotations.annotationTypes.*;
 import org.apache.commons.lang.StringUtils;
-import org.jahia.ajax.gwt.helper.DiffHelper;
 import org.jahia.api.Constants;
 import org.jahia.data.templates.JahiaTemplatesPackage;
 import org.jahia.modules.contenteditor.api.forms.EditorFormException;

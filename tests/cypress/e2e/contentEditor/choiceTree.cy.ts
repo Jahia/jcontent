@@ -164,5 +164,4 @@ describe('Test Choicetree selector type', () => {
         choiceTree.getEntries().should('contain', 'choiceTreeCategory1');
         // Simple check that category selector is displayed properly with expected values.
     });
-
 });

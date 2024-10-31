@@ -1,4 +1,4 @@
-import {JContent, JContentPageBuilder} from '../../page-object';
+import {JContent} from '../../page-object';
 describe('Area actions', () => {
     let jcontent: JContent;
 

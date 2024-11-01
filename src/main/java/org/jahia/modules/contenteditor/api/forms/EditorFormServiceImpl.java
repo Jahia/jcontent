@@ -118,18 +118,18 @@ public class EditorFormServiceImpl implements EditorFormService {
             final SortedSet<DefinitionRegistryItem> mergeSet = new TreeSet<>(DefinitionRegistryItemComparator.INSTANCE);
 
             // First, primary node type and inherited
-            addFormNodeType(primaryNodeType, site, mergeSet, locale, false, processedNodeTypes);
+            addFormNodeType(currentNode, primaryNodeType, site, mergeSet, locale, false, processedNodeTypes);
 
             // Available extends mixins
             List<ExtendedNodeType> extendMixins = getExtendMixins(primaryNodeType, site);
             for (ExtendedNodeType extendMixin : extendMixins) {
-                addFormNodeType(extendMixin, site, mergeSet, locale, true, processedNodeTypes);
+                addFormNodeType(currentNode, extendMixin, site, mergeSet, locale, true, processedNodeTypes);
             }
 
             // Mixins added on node
             if (existingNode != null) {
                 for (ExtendedNodeType mixinNodeType : existingNode.getMixinNodeTypes()) {
-                    addFormNodeType(mixinNodeType, site, mergeSet, locale, false, processedNodeTypes);
+                    addFormNodeType(currentNode, mixinNodeType, site, mergeSet, locale, false, processedNodeTypes);
                 }
             }
 
@@ -253,11 +253,11 @@ public class EditorFormServiceImpl implements EditorFormService {
         return map;
     }
 
-    private void addFormNodeType(ExtendedNodeType nodeType, JCRSiteNode site, SortedSet<DefinitionRegistryItem> formDefinitionsToMerge, Locale locale, boolean singleFieldSet, Set<String> processedNodeTypes) throws RepositoryException {
+    private void addFormNodeType(JCRNodeWrapper node, ExtendedNodeType nodeType, JCRSiteNode site, SortedSet<DefinitionRegistryItem> formDefinitionsToMerge, Locale locale, boolean singleFieldSet, Set<String> processedNodeTypes) throws RepositoryException {
         if (!processedNodeTypes.contains(nodeType.getName())) {
             formDefinitionsToMerge.add(FormGenerator.generateForm(nodeType, locale, singleFieldSet));
-            formDefinitionsToMerge.addAll(staticDefinitionsRegistry.getFormsForType(nodeType, site));
-            formDefinitionsToMerge.addAll(staticDefinitionsRegistry.getFieldSetsForType(nodeType, site));
+            formDefinitionsToMerge.addAll(staticDefinitionsRegistry.getFormsForType(node, nodeType, site));
+            formDefinitionsToMerge.addAll(staticDefinitionsRegistry.getFieldSetsForType(node, nodeType, site));
 
             processedNodeTypes.add(nodeType.getName());
             processedNodeTypes.addAll(nodeType.getSupertypeSet().stream().map(ExtendedNodeType::getName).collect(Collectors.toList()));

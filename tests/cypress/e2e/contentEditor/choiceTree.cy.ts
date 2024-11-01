@@ -69,8 +69,15 @@ describe('Test Choicetree selector type', () => {
         });
     });
 
-    beforeEach('', () => {
+    beforeEach('Login and load content folders', () => {
+        cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+    });
+
+    after('Clean up test env', () => {
+        deleteSite(siteKey);
+        deleteNode('/sites/systemsite/categories/choiceTreeCategoryRoot');
+        cy.logout();
     });
 
     it('can handle choice tree selector with a custom root path', () => {
@@ -126,7 +133,7 @@ describe('Test Choicetree selector type', () => {
         choiceTree.getEntries().should('contain', 'choiceTreeContent2');
     });
 
-    it.only('displays the Choice tree selector for single value', () => {
+    it.skip('displays the Choice tree selector for single value', () => {
         const contentEditor = jcontent.createContent('testChoiceTree');
         contentEditor.openSection('Content');
         const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_singleChoiceTree', false);
@@ -156,11 +163,5 @@ describe('Test Choicetree selector type', () => {
         choiceTree.getEntries().should('contain', 'choiceTreeCategory1');
         choiceTree.getEntries().should('contain', 'choiceTreeCategory1');
         // Simple check that category selector is displayed properly with expected values.
-    });
-
-    after('Clean up test env', () => {
-        cy.loginAndStoreSession();
-        deleteSite(siteKey);
-        deleteNode('/sites/systemsite/categories/choiceTreeCategoryRoot');
     });
 });

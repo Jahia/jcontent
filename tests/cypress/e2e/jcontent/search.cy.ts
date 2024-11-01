@@ -87,8 +87,15 @@ describe('Search tests', () => {
     });
 
     describe('after close', () => {
-        it('should go back to content-folders after close', () => {
+        beforeEach(() => {
             cy.loginAndStoreSession();
+        });
+
+        after(() => {
+            cy.logout();
+        });
+
+        it('should go back to content-folders after close', () => {
             jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');
             jcontent.getBasicSearch().openSearch().searchTerm('test').executeSearch().close();
             jcontent.getAccordionItem('content-folders').getTreeItem('contents').shouldBeSelected();
@@ -96,7 +103,6 @@ describe('Search tests', () => {
         });
 
         it('should go back to pages after close', () => {
-            cy.loginAndStoreSession();
             jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
             jcontent.getBasicSearch().openSearch().searchTerm('test').executeSearch().close();
             jcontent.getAccordionItem('pages').getTreeItem('home').shouldBeSelected();
@@ -104,7 +110,6 @@ describe('Search tests', () => {
         });
 
         it('should go back to default', () => {
-            cy.loginAndStoreSession();
             cy.visit('/jahia/jcontent/jcontentSite/en/search/sites/jcontentSite/contents?params=(searchContentType:%27%27,searchPath:/sites/digitall/home,searchTerms:test)');
             jcontent = new JContent();
             new BasicSearch(jcontent).close();
@@ -114,12 +119,16 @@ describe('Search tests', () => {
     });
 
     describe('advanced search', {testIsolation: false}, () => {
-        before(() => {
+        beforeEach(() => {
             cy.loginAndStoreSession();
-            jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');
+        });
+
+        after(() => {
+            cy.logout();
         });
 
         it('should find event by from ', () => {
+            jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');
             jcontent.selectAccordion('pages');
             basicSearch = jcontent.getBasicSearch().openSearch().switchToAdvanced()
                 .searchFrom('jnt:event')

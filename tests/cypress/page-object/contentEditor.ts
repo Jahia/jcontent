@@ -208,10 +208,12 @@ export class ContentEditor extends BasePage {
         return r;
     }
 
-    toggleOption(optionType: string, optionFieldName: string) {
+    toggleOption(optionType: string, optionFieldName?: string) {
         cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).scrollIntoView({offset: {left: 0, top: -100}});
         cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).find('input').click({force: true});
-        cy.contains(optionFieldName, {timeout: 30000}).should('exist');
+        if (optionFieldName) {
+            cy.contains(optionFieldName, {timeout: 30000}).should('exist');
+        }
     }
 
     checkButtonStatus(role: string, enabled: boolean) {

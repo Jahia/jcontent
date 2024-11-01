@@ -43,6 +43,10 @@ export class SmallTextField extends Field {
         return this.get().find('input').should('have.attr', 'readonly');
     }
 
+    isNotReadOnly() {
+        return this.get().find('input').should('not.have.attr', 'readonly');
+    }
+
     checkValues(expectedValues: string[]) {
         if (this.multiple) {
             this.get().find('input').should($input => {

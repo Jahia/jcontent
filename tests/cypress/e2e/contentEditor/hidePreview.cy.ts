@@ -1,15 +1,9 @@
 import {addNode, createSite, deleteSite, getNodeByPath} from '@jahia/cypress';
 import {CategoryManager, JContent} from '../../page-object';
 
-const siteKey = 'hidePreviewSite';
-
-const initVisit = () => {
-    const jcontent = JContent.visit(siteKey, 'en', 'home.html');
-    jcontent.switchToPageBuilder();
-    return jcontent;
-};
-
 describe('Hide Preview testsuite', () => {
+    const siteKey = 'hidePreviewSite';
+
     before('Create site and content', () => {
         createSite(siteKey);
         addNode({
@@ -31,10 +25,10 @@ describe('Hide Preview testsuite', () => {
 
     beforeEach('login and visit home', () => {
         cy.login();
-        initVisit();
     });
 
     it('Preview shouldn\'t exist for a site', () => {
+        JContent.visit(siteKey, 'en', 'home.html');
         getNodeByPath(`/sites/${siteKey}`).then(res => {
             cy.visit(`/jahia/administration/digitall/settings/properties#(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:${siteKey},uilang:en,uuid:'${res.data.jcr.nodeByPath.uuid}')))`);
         });
@@ -42,7 +36,7 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t exist for a content folder', () => {
-        const jcontent = initVisit();
+        const jcontent = JContent.visit(siteKey, 'en', 'home.html');
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('ContentFolder');
         ce.switchToAdvancedMode();
@@ -50,7 +44,7 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview should be visible for a content', () => {
-        const jcontent = initVisit();
+        const jcontent = JContent.visit(siteKey, 'en', 'home.html');
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('Text');
         ce.switchToAdvancedMode();

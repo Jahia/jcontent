@@ -26,6 +26,7 @@ package org.jahia.modules.contenteditor.api.forms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jahia.modules.contenteditor.api.forms.model.*;
 import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
+import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
@@ -39,6 +40,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.io.IOException;
 import java.net.URL;
@@ -95,11 +97,12 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      * @param site
      * @return form definitions that match the type
      */
-    public Collection<Form> getFormsForType(ExtendedNodeType type, JCRSiteNode site) {
+    public Collection<Form> getFormsForType(JCRNodeWrapper node, ExtendedNodeType type, JCRSiteNode site) {
         return forms.stream()
             .filter(definition -> definition.getConditionNodeTypeName() != null)
             .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
                 (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
+            .filter(definition -> checkMixinCondition(definition.getCondition(), node))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -109,12 +112,39 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      * @param type to look at
      * @return form definitions that match the type
      */
-    public Collection<FieldSet> getFieldSetsForType(ExtendedNodeType type, JCRSiteNode site) {
+    public Collection<FieldSet> getFieldSetsForType(JCRNodeWrapper node, ExtendedNodeType type, JCRSiteNode site) {
         return fieldSets.stream()
             .filter(definition -> definition.getConditionNodeTypeName() != null)
             .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
                 (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
+            .filter(definition -> checkMixinCondition(definition.getCondition(), node))
             .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public boolean checkMixinCondition(Condition condition, JCRNodeWrapper node) {
+        // step 1 - check if we have condition
+        if (condition == null) return true;
+
+        String conditionType = condition.getNodeType();
+        if (conditionType == null) return true;
+
+        // step 2 - get definition from name
+        ExtendedNodeType conditionTypeDefinition;
+        try {
+            conditionTypeDefinition = NodeTypeRegistry.getInstance().getNodeType(conditionType);
+        } catch (NoSuchNodeTypeException e) {
+            return true;
+        }
+
+        // step 3 - check if the condition node is a mixin
+        if (!conditionTypeDefinition.isMixin()) return true;
+
+        // step 4 - check if node has the mixin
+        try {
+            return Arrays.stream(node.getMixinNodeTypes()).anyMatch(m -> m.getName().equals(conditionType));
+        } catch (RepositoryException e) {
+            return true;
+        }
     }
 
     public boolean matchCondition(Condition condition, ExtendedNodeType type, JCRSiteNode site) {

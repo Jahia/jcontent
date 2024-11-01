@@ -162,3 +162,6 @@
  - singleChoiceTree (weakreference)
  - multipleChoiceTree (weakreference) multiple
  - multipleChoiceTreeWithTypes (weakreference) multiple
+
+[jmix:freezeSystemName] mixin
+ extends=jnt:page

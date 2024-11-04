@@ -7,7 +7,7 @@ export const CompareHtmlActionComponent = ({path, render: Render, loading: Loadi
     const res = useNodeChecks(
         {path},
         {
-            hideOnNodeTypes: ['jnt:folder', 'jnt:contentFolder'],
+            showOnNodeTypes: ['jnt:page'],
             getAggregatedPublicationInfo: {subNodes: true}
         }
     );
@@ -16,7 +16,8 @@ export const CompareHtmlActionComponent = ({path, render: Render, loading: Loadi
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && res?.node?.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED';
+    const isVisible = res.checksResult && (res?.node?.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED' ||
+        res?.node?.aggregatedPublicationInfo.publicationStatus === 'MODIFIED');
 
     return (
         <Render

@@ -42,7 +42,7 @@ public class GqlJContentMutations {
     @GraphQLField
     @GraphQLName("flushPageCache")
     @GraphQLDescription("Flushes cache for a page, checks permission and node type")
-    public Boolean flushPageCache(@GraphQLName("pagePath") @GraphQLDescription("Page path") String pagePath) {
+    public Boolean flushPageCache(@GraphQLNonNull @GraphQLName("pagePath") @GraphQLDescription("Page path") String pagePath) {
         JCRNodeWrapper node = null;
 
         try {
@@ -62,7 +62,7 @@ public class GqlJContentMutations {
     @GraphQLField
     @GraphQLName("flushSiteCache")
     @GraphQLDescription("Flushes cache for a site, will resolve site node if the path supplied is not a site, checks permission")
-    public Boolean flushSiteCache(@GraphQLName("sitePath") @GraphQLDescription("Site path") String sitePath) {
+    public Boolean flushSiteCache(@GraphQLNonNull @GraphQLName("sitePath") @GraphQLDescription("Site path") String sitePath) {
         JCRNodeWrapper node = null;
 
         try {

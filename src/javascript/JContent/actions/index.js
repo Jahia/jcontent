@@ -21,3 +21,4 @@ export * from './renameAction';
 export * from './downloadAsZip';
 export * from './editImage';
 export * from './compareHtmlAction';
+export * from './flushCacheAction';

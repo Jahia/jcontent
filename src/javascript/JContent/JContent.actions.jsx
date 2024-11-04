@@ -23,6 +23,7 @@ import {
     Paste,
     Publish,
     Reload,
+    Replay,
     Search,
     Separator,
     Subdirectory,
@@ -59,7 +60,8 @@ import {
     UnlockActionComponent,
     UnzipActionComponent,
     ZipActionComponent,
-    CompareHtmlActionComponent
+    CompareHtmlActionComponent,
+    FlushCacheActionComponent
 } from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
@@ -513,5 +515,21 @@ export const jContentActions = registry => {
 
     registry.add('action', 'viewUsages', {
         component: ViewUsagesComponent
+    });
+
+    registry.add('action', 'flushPageCache', {
+        component: FlushCacheActionComponent,
+        showOnNodeTypes: ['jnt:page'],
+        buttonLabel: 'jcontent:label.cache.flushPageCache',
+        targets: ['contentActions:6'],
+        buttonIcon: <Replay/>
+    });
+
+    registry.add('action', 'flushSiteCache', {
+        component: FlushCacheActionComponent,
+        showOnNodeTypes: ['jnt:page', 'jnt:virtualsite'],
+        buttonLabel: 'jcontent:label.cache.flushSiteCache',
+        targets: ['contentActions:6'],
+        buttonIcon: <Replay/>
     });
 };

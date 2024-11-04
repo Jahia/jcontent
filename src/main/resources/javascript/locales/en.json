@@ -940,6 +940,12 @@
         }
       }
     },
+    "cache": {
+      "flushPageCache": "Clear page cache",
+      "flushSiteCache": "Clear site cache",
+      "flushedPageCache": "Cache has been flushed",
+      "flushedSiteCache": "Site caches have been flushed"
+    },
     "ok": "OK",
     "cancel": "Cancel",
     "no": "No",

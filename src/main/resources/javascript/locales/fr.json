@@ -922,6 +922,12 @@
         }
       }
     },
+    "cache": {
+      "flushPageCache": "Vider le cache de la page",
+      "flushSiteCache": "Vider le cache du site",
+      "flushedPageCache": "Le cache a été vidé",
+      "flushedSiteCache": "Tous les caches du site sont vides"
+    },
     "ok": "OK",
     "cancel": "Annuler",
     "no": "Non",

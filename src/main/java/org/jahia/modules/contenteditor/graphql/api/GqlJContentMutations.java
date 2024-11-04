@@ -41,7 +41,7 @@ public class GqlJContentMutations {
 
     @GraphQLField
     @GraphQLName("flushPageCache")
-    @GraphQLDescription("Flushes cache for a page, checks permission and node type")
+    @GraphQLDescription("Flushes cache for a page, checks adminCache permission and node type")
     public Boolean flushPageCache(@GraphQLNonNull @GraphQLName("pagePath") @GraphQLDescription("Page path") String pagePath) {
         JCRNodeWrapper node = null;
 
@@ -61,7 +61,7 @@ public class GqlJContentMutations {
 
     @GraphQLField
     @GraphQLName("flushSiteCache")
-    @GraphQLDescription("Flushes cache for a site, will resolve site node if the path supplied is not a site, checks permission")
+    @GraphQLDescription("Flushes cache for a site, will resolve site node if the path supplied is not a site, checks adminCache permission")
     public Boolean flushSiteCache(@GraphQLNonNull @GraphQLName("sitePath") @GraphQLDescription("Site path") String sitePath) {
         JCRNodeWrapper node = null;
 
@@ -73,8 +73,10 @@ public class GqlJContentMutations {
                     node = JCRContentUtils.getParentOfType(node, "jnt:virtualsite");
                 }
 
-                CacheHelper.flushOutputCachesForPath(node.getPath(), true);
-                return true;
+                if (node != null) {
+                    CacheHelper.flushOutputCachesForPath(node.getPath(), true);
+                    return true;
+                }
             }
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);

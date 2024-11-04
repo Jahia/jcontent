@@ -35,8 +35,8 @@ export const MainActionBar = () => {
                 <>
                     { !isFolder && (
                         <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
-                            <DisplayAction isMediumLabel actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'outlined', size: 'big', className: styles.item}}/>
-                            <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
+                            <DisplayAction isMediumLabel actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'ghost', size: 'big', className: styles.item}}/>
+                            <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
                         </ButtonGroup>)}
                     <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
                 </>

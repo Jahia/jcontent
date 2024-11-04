@@ -30,8 +30,7 @@ import {
     Undelete,
     Unlock,
     Upload,
-    Visibility,
-    SwapHoriz
+    Visibility
 } from '@jahia/moonstone';
 import {
     ClearAllLocksActionComponent,
@@ -423,10 +422,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
         menuTarget: 'openInPreviewMenu',
         showOnNodeTypes: ['jnt:page'],
-        isMenuPreload: true,
-        menuItemProps: {
-            isShowIcons: true
-        }
+        isMenuPreload: true
     });
 
     registry.add('action', 'openInPreview', {
@@ -437,14 +433,12 @@ export const jContentActions = registry => {
     });
 
     registry.add('action', 'customizedPreview', {
-        buttonIcon: <Visibility/>,
         buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview',
         targets: ['openInPreviewMenu:1'],
         component: OpenInPreviewActionComponent
     });
 
     registry.add('action', 'compareStagingToLive', {
-        buttonIcon: <SwapHoriz/>,
         buttonLabel: 'jcontent:label.contentManager.actions.compareStagingToLive',
         targets: ['openInPreviewMenu:2'],
         component: CompareHtmlActionComponent

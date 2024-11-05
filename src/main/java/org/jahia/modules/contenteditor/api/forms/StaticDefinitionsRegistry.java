@@ -97,12 +97,12 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      * @param site
      * @return form definitions that match the type
      */
-    public Collection<Form> getFormsForType(JCRNodeWrapper node, ExtendedNodeType type, JCRSiteNode site) {
+    public Collection<Form> getFormsForType(ExtendedNodeType type, JCRSiteNode site, Collection<ExtendedNodeType> nodeTypes) {
         return forms.stream()
             .filter(definition -> definition.getConditionNodeTypeName() != null)
             .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
                 (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
-            .filter(definition -> checkMixinCondition(definition.getCondition(), node))
+            .filter(definition -> checkMixinCondition(definition.getCondition(), nodeTypes))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -112,16 +112,16 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
      * @param type to look at
      * @return form definitions that match the type
      */
-    public Collection<FieldSet> getFieldSetsForType(JCRNodeWrapper node, ExtendedNodeType type, JCRSiteNode site) {
+    public Collection<FieldSet> getFieldSetsForType(ExtendedNodeType type, JCRSiteNode site, Collection<ExtendedNodeType> nodeTypes) {
         return fieldSets.stream()
             .filter(definition -> definition.getConditionNodeTypeName() != null)
             .filter(definition -> type.isNodeType(definition.getConditionNodeTypeName()) &&
                 (definition.getCondition() == null || matchCondition(definition.getCondition(), type, site)))
-            .filter(definition -> checkMixinCondition(definition.getCondition(), node))
+            .filter(definition -> checkMixinCondition(definition.getCondition(), nodeTypes))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public boolean checkMixinCondition(Condition condition, JCRNodeWrapper node) {
+    public boolean checkMixinCondition(Condition condition, Collection<ExtendedNodeType> nodeTypes) {
         // step 1 - check if we have condition
         if (condition == null) return true;
 
@@ -139,12 +139,8 @@ public class StaticDefinitionsRegistry implements SynchronousBundleListener {
         // step 3 - check if the condition node is a mixin
         if (!conditionTypeDefinition.isMixin()) return true;
 
-        // step 4 - check if node has the mixin
-        try {
-            return Arrays.stream(node.getMixinNodeTypes()).anyMatch(m -> m.getName().equals(conditionType));
-        } catch (RepositoryException e) {
-            return true;
-        }
+        // step 4 - check if nodetypes has the mixin
+        return nodeTypes.stream().anyMatch(m -> m.getName().equals(conditionType));
     }
 
     public boolean matchCondition(Condition condition, ExtendedNodeType type, JCRSiteNode site) {

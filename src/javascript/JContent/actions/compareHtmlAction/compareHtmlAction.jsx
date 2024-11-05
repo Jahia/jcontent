@@ -7,7 +7,7 @@ export const CompareHtmlActionComponent = ({path, render: Render, loading: Loadi
     const res = useNodeChecks(
         {path},
         {
-            showOnNodeTypes: ['jnt:page'],
+            showOnNodeTypes: ['jnt:page', 'jmix:mainResource'],
             getAggregatedPublicationInfo: {subNodes: true}
         }
     );

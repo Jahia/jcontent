@@ -32,4 +32,12 @@ export class CompareDialog extends BaseComponent {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(2000);
     }
+
+    publish() {
+        this.get().find('[data-sel-role="publish"]').click();
+        cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
+        cy.get('div[id="notistack-snackbar"]', {timeout: 3000}).contains('Publication completed', {timeout: 3000}).should('exist');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(2000);
+    }
 }

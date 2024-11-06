@@ -335,7 +335,7 @@ export const jContentActions = registry => {
     registry.add('action', 'subContents', {
         buttonIcon: <Subdirectory/>,
         buttonLabel: 'jcontent:label.contentManager.subContentsAction',
-        targets: ['contentActions:15', 'accordionContentActions:15'],
+        targets: ['contentActions:15'],
         component: SubContentsActionComponent
     });
     registry.add('action', 'exportPage', {

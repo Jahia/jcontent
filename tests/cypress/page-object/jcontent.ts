@@ -268,8 +268,17 @@ export class JContentPageBuilder extends JContent {
             .find('button').contains('Publish now')
             .click();
     }
+
+    getPageHeaderList(): PageBuilderHeaders {
+        return getComponentByRole(PageBuilderHeaders, 'page-header-list');
+    }
 }
 
+class PageBuilderHeaders extends BaseComponent {
+    items() {
+        return this.get().find('div');
+    }
+}
 class PageBuilderModuleHeader extends BaseComponent {
     static defaultSelector = '[jahiatype="header"]';
 

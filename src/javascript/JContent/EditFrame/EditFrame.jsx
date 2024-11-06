@@ -17,10 +17,10 @@ import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
 import {useDragDropManager} from 'react-dnd';
 import {LinkInterceptor} from './LinkInterceptor';
-import {Tooltip} from '@material-ui/core';
 import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
+import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -240,7 +240,7 @@ export const EditFrame = ({isDeviceView}) => {
 
     return (
         <>
-            <Tooltip title=""><span/></Tooltip>
+            <PageHeaderContainer/>
             <DeviceContainer isEnabled={isDeviceView} device={device} setDevice={setDevice}>
                 {!currentDocument && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}

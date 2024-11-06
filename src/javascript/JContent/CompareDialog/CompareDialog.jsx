@@ -43,14 +43,14 @@ const CompareDialog = () => {
     }
 
     return (
-        <Dialog fullScreen open={open}>
+        <Dialog fullScreen open={open} data-sel-role="compare-dialog">
             <Header className={styles.header}
                     title={t('jcontent:label.contentManager.actions.compareStagingToLive')}
                     mainActions={[
                         <div key="mainActions" className={styles.actionsRoot}>
                             <Button variant="ghost"
                                     size="big"
-                                    data-sel-role="refresh"
+                                    data-sel-role="compare-refresh"
                                     className={styles.actionItem}
                                     icon={<Reload/>}
                                     label={t('jcontent:label.contentManager.refresh')}

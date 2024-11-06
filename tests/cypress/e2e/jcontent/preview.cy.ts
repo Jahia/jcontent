@@ -1,20 +1,6 @@
 import {JContent} from '../../page-object';
-import gql from 'graphql-tag';
 
 describe('JContent preview tests', () => {
-    const addContent = gql`mutation MyMutation {
-  jcr {
-    addNode(
-      name: "addedNode"
-      parentPathOrId: "/sites/jcontentSite/home/area-main"
-      primaryNodeType: "jnt:bigText"
-      properties: { name: "text", language: "en", value: "test added" }
-    ) {
-      uuid
-    }
-  }
-}`;
-
     beforeEach(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
@@ -40,34 +26,6 @@ describe('JContent preview tests', () => {
             .its('0.contentDocument.body.textContent')
             .should('equal',
                 'test 7');
-    });
-
-    it('should open preview with url', () => {
-        JContent.visit('jcontentSite', 'en', 'pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/jcontentSite/home)))');
-        cy.get('h1').contains('Compare staging vs live version').should('exist');
-        cy.get('iframe[data-sel-role="staging-frame"]')
-            .its('0.contentDocument.body')
-            .should('be.visible');
-        cy.get('iframe[data-sel-role="live-frame"]')
-            .its('0.contentDocument.body')
-            .should('be.visible');
-    });
-
-    it('should highlight changes staging vs live', () => {
-        cy.apollo({mutation: addContent});
-        JContent.visit('jcontentSite', 'en', 'pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/jcontentSite/home)))');
-        cy.get('h1').contains('Compare staging vs live version').should('exist');
-        cy.get('button[data-sel-role="highlight"]').should('be.visible').click();
-        cy.get('iframe[data-sel-role="staging-frame"]')
-            .its('0.contentDocument.body')
-            .should('be.visible')
-            .contains('span[class="diff-html-added"]');
-        cy.get('button[data-sel-role="highlight"]').should('be.visible').click();
-        cy.get('iframe[data-sel-role="staging-frame"]')
-            .its('0.contentDocument.body')
-            .should('be.visible')
-            .contains('span[class="diff-html-added"]')
-            .should('not.exist');
     });
 
     afterEach(() => {

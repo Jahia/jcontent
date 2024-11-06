@@ -23,7 +23,7 @@ import {ContentGrid} from './contentGrid';
 import {BreadcrumbPageBuilder} from './breadcrumb';
 import ClickOptions = Cypress.ClickOptions;
 import VisitOptions = Cypress.VisitOptions;
-import {CompareDialog} from "./compareDialog";
+import {CompareDialog} from './compareDialog';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;

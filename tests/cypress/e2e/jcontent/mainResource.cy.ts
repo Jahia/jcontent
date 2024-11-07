@@ -20,6 +20,7 @@ describe('Main resource menu display', () => {
         const jcontent = JContent.visit('mySite1', 'en', 'pages/home');
         jcontent.getAccordionItem('pages').getHeader().should('be.visible');
         jcontent.getAccordionItem('pages').expandTreeItem('home');
+        jcontent.getAccordionItem('pages').shouldNotHaveTreeItem('test-event');
     });
 
     it('Should show event in menu', () => {
@@ -42,6 +43,7 @@ describe('Main resource menu display', () => {
         const jcontent = JContent.visit('mySite1', 'en', 'content-folders/contents');
         jcontent.getAccordionItem('content-folders').getHeader().should('be.visible');
         jcontent.getAccordionItem('content-folders').expandTreeItem('contents');
+        jcontent.getAccordionItem('content-folders').shouldNotHaveTreeItem('test-event');
     });
 
     it('Should show event in menu', () => {

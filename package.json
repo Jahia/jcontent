@@ -116,7 +116,7 @@
     "mammoth": "^1.4.13",
     "node-fetch": "^2.6.1",
     "prismjs": "^1.26.0",
-    "react-file-viewer/**/ajv": "^6.12.6",
+    "schema-utils@npm:^0.3.0": "1.0.0",
     "three": "^0.125.0",
     "trim": "^1.0.0",
     "trim-newlines": "^3.0.1",

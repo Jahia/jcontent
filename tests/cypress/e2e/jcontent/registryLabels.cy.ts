@@ -30,11 +30,11 @@ describe('Registry labels test', () => {
         cy.get('li[data-registry-key="action:createPage"]')
             .should('exist')
             .invoke('attr', 'data-registry-target')
-            .should('eq', 'contentActions:-2');
+            .should('eq', 'accordionContentActions:-2');
 
         cy.get('li[data-registry-key="action:editPage"]')
             .should('exist')
             .invoke('attr', 'data-registry-target')
-            .should('eq', 'contentActions:2');
+            .should('eq', 'accordionContentActions:2');
     });
 });

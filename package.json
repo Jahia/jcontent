@@ -174,5 +174,5 @@
     "webpack-bundle-analyzer": "^4.2.0",
     "webpack-cli": "^4.2.0"
   },
-  "packageManager": "yarn@4.2.2"
+  "packageManager": "yarn@4.5.1"
 }

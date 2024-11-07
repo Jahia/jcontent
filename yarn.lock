@@ -3545,9 +3545,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/data-helper@npm:^1.1.12":
-  version: 1.1.12
-  resolution: "@jahia/data-helper@npm:1.1.12"
+"@jahia/data-helper@npm:^1.1.14":
+  version: 1.1.14
+  resolution: "@jahia/data-helper@npm:1.1.14"
   dependencies:
     "@apollo/client": "npm:^3.7.14"
     "@apollo/react-components": "npm:^4.0.0"
@@ -3556,7 +3556,7 @@ __metadata:
     graphql-tag: "npm:^2.11.0"
     react: "npm:^16.12.0"
     rfdc: "npm:^1.3.0"
-  checksum: 10c0/cd6557a20e2eef58646dfb734e2a3581ac14234a8fa2479279f6ce425de4a0d990a21c46e44a32b702edfa5299adef54901db83e9a0ae1e729121f823b12d269
+  checksum: 10c0/fca9d3e9367bf27de5b497a90e93d637dc8fe373bd4c8a710405b6ad411721850e38bd76e33842a4311895298a9dc0beba1b7de6d9f845fe3ae9b2d61576d7fa
   languageName: node
   linkType: hard
 
@@ -3662,12 +3662,12 @@ __metadata:
     "@babel/preset-env": "npm:^7.13.12"
     "@babel/preset-react": "npm:^7.12.13"
     "@cyclonedx/webpack-plugin": "npm:^3.6.1"
-    "@jahia/data-helper": "npm:^1.1.12"
+    "@jahia/data-helper": "npm:^1.1.14"
     "@jahia/design-system-kit": "npm:^1.1.8"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
     "@jahia/jahia-reporter": "npm:^1.0.3"
-    "@jahia/moonstone": "npm:^2.7.1"
+    "@jahia/moonstone": "npm:^2.8.0"
     "@jahia/react-material": "npm:^3.0.5"
     "@jahia/stylelint-config": "npm:^0.0.3"
     "@jahia/test-framework": "npm:^1.2.0"
@@ -3769,9 +3769,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@npm:^2.7.1":
-  version: 2.7.1
-  resolution: "@jahia/moonstone@npm:2.7.1"
+"@jahia/moonstone@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "@jahia/moonstone@npm:2.8.0"
   dependencies:
     "@babel/runtime": "npm:^7.23.2"
     "@jahia/scripts": "npm:^1.3.3"
@@ -3782,7 +3782,7 @@ __metadata:
   peerDependencies:
     react: ^16.11.0
     react-table: ^7.7.0
-  checksum: 10c0/7654798ebf18a51a650d5d522a10bcd9956e04fb0d87b3c51d8ae9419724de8c3f45ae1ad2ee67c5ed9ecd4138c48bc56ec8968682623ff95c6e80c9aa4c8f01
+  checksum: 10c0/814a798996afa4859398fd13719c7fa003af601b2f96dc7d018d996a32b9b88da16edd4795472caf3933e86fb92eba728ee97a8737113f49d428d9c51586609c
   languageName: node
   linkType: hard
 

@@ -38,7 +38,7 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
                 }).then(res => {
                     if (res?.data?.jcontent?.flush) {
                         const typeOfCache = isSiteFlush ? 'flushedSiteCache' : 'flushedPageCache';
-                        notificationContext.notify(t(`jcontent:label.cache.${typeOfCache}`), ['closeButton']);
+                        notificationContext.notify(t(`jcontent:label.cache.${typeOfCache}`), ['closeButton', 'closeAfter5s']);
                     }
                 });
             }}

@@ -10,6 +10,7 @@ if (sitesService.getSiteByKey("SITEKEY") == null) {
             title("SITEKEY").
             templateSet("dx-base-demo-templates").
             modulesToDeploy(new String[]{"event", "bootstrap3-components", "article"}).
+            serverName("jahia").
             locale("en").build())
 }
 

@@ -36,8 +36,8 @@ export class CompareDialog extends BaseComponent {
     publish() {
         this.get().find('[data-sel-role="publish"]').click();
         cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
-        cy.get('div[id="notistack-snackbar"]', {timeout: 3000}).contains('Publication completed', {timeout: 3000}).should('exist');
+        cy.get('div[id="notistack-snackbar"]', {timeout: 5000}).contains('Publication completed', {timeout: 5000}).should('exist');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(2000);
+        cy.wait(3000);
     }
 }

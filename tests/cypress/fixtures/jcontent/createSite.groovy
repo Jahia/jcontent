@@ -6,7 +6,7 @@ JahiaSitesService sitesService = JahiaSitesService.getInstance();
 if (sitesService.getSiteByKey("SITEKEY") == null) {
     JahiaSite site = sitesService.addSite(SiteCreationInfo.builder().
             siteKey("SITEKEY").
-            serverName("localhost").
+            serverName("jahia").
             title("SITEKEY").
             templateSet("dx-base-demo-templates").
             modulesToDeploy(new String[]{"event", "bootstrap3-components", "article"}).

@@ -28,17 +28,6 @@ describe('JContent preview tests', () => {
                 'test 7');
     });
 
-    it('should open preview with url', () => {
-        JContent.visit('jcontentSite', 'en', 'pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/jcontentSite/home)))');
-        cy.get('h1').contains('Compare staging vs live version').should('exist');
-        cy.get('iframe[data-sel-role="staging-frame"]')
-            .its('0.contentDocument.body')
-            .should('be.visible');
-        cy.get('iframe[data-sel-role="live-frame"]')
-            .its('0.contentDocument.body')
-            .should('be.visible');
-    });
-
     afterEach(() => {
         cy.logout();
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});

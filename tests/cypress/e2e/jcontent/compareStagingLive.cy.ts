@@ -1,5 +1,6 @@
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
+import {publishAndWaitJobEnding} from '@jahia/cypress';
 
 describe('JContent preview tests', () => {
     const addContent = gql`mutation MyMutation {
@@ -20,11 +21,9 @@ describe('JContent preview tests', () => {
     beforeEach(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.loginAndStoreSession(); // Edit in chief
-        const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
-        jcontent.publishAll();
-        cy.get('button[data-sel-role="openInLive"]', {timeout: 5000}).should('be.visible');
+        publishAndWaitJobEnding('/sites/jcontentSite');
         cy.apollo({mutation: addContent});
+        cy.loginAndStoreSession(); // Edit in chief
     });
 
     it('should open preview with url', () => {

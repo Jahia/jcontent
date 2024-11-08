@@ -1,7 +1,9 @@
+import React from 'react';
 import {registry} from '@jahia/ui-extender';
 import {CustomBar} from './CustomBar';
 import i18next from 'i18next';
 import {PickerDialog} from './PickerDialog';
+import {PageHeader} from './PageHeader';
 
 export default function () {
     i18next.loadNamespaces('accordion-config');
@@ -29,7 +31,6 @@ export default function () {
         targets: [{id: 'cent:defaultValueTest', priority: 0}]
     });
 
-
     registry.add('pageBuilderBoxConfig', 'withCustomBar', {
         Bar: CustomBar,
         isBarAlwaysDisplayed: true,
@@ -50,5 +51,19 @@ export default function () {
             label: 'Custom picker',
             description: 'Custom picker description'
         }
+    });
+
+    registry.add('pageHeader', 'customHeaderA', {
+        Component: () => {
+            return (<PageHeader value="This is a first simple page header"/>);
+        },
+        targets: ['pageBuilderHeader:1']
+    });
+
+    registry.add('pageHeader', 'customHeaderB', {
+        Component: () => {
+            return (<PageHeader value="This is a second simple page header"/>);
+        },
+        targets: ['pageBuilderHeader:2']
     });
 }

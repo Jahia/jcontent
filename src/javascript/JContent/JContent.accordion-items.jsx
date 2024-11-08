@@ -35,7 +35,7 @@ export const jContentAccordionItems = registry => {
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: (v, item) => (
             <AccordionItem key={v.id} {...v}>
-                <ContentTree item={item} contextualMenuAction="contentMenu"/>
+                <ContentTree item={item} contextualMenuAction="accordionContentMenu"/>
             </AccordionItem>
         ),
         routeComponent: ContentRoute,

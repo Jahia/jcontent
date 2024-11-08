@@ -16,7 +16,9 @@ export const registerEditActions = actionsRegistry => {
     actionsRegistry.add('action', 'edit', editContentAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.contentEdit',
-        targets: showPageBuilder ? ['contentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1.5'] : ['contentActions:2', 'narrowHeaderMenu:1.5'],
+        targets: showPageBuilder ?
+            ['contentActions:2', 'accordionContentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1.5'] :
+            ['contentActions:2', 'accordionContentActions:2', 'narrowHeaderMenu:1.5'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'], // For edit content
         requiredSitePermission: ['editAction'],
         getDisplayName: true
@@ -26,7 +28,7 @@ export const registerEditActions = actionsRegistry => {
     actionsRegistry.add('action', 'editSource', editContentSourceAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.contentEditSource',
-        targets: ['contentActions:2.1', 'narrowHeaderMenu:1.1'],
+        targets: ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.1'],
         showOnNodeTypes: ['jnt:content'], // For edit content
         requiredSitePermission: ['editAction'],
         getDisplayName: true
@@ -36,7 +38,9 @@ export const registerEditActions = actionsRegistry => {
     actionsRegistry.add('action', 'editPage', editContentAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.contentEdit',
-        targets: showPageBuilder ? ['contentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1.5'] : ['contentActions:2', 'narrowHeaderMenu:1.5'],
+        targets: showPageBuilder ?
+            ['contentActions:2', 'accordionContentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1.5'] :
+            ['contentActions:2', 'accordionContentActions:2', 'narrowHeaderMenu:1.5'],
         showOnNodeTypes: ['jnt:page'], // For edit pages
         requiredSitePermission: ['editPageAction'],
         getDisplayName: true

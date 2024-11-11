@@ -54,7 +54,7 @@ export const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited, ...oth
             onClose={onClose}
         >
             <DialogTitle>
-                my title
+                {t('jcontent:label.contentManager.actions.customizedPreview.label')}
             </DialogTitle>
             <DialogContent>
                 "Well hello there"
@@ -63,7 +63,7 @@ export const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited, ...oth
                 <Button
                     size="big"
                     data-sel-role="close"
-                    label={t('label.ui.close')}
+                    label={t('jcontent:label.contentManager.actions.customizedPreview.showPreview')}
                     onClick={() => {
                         loadCustomizedPreview();
                         onClose();

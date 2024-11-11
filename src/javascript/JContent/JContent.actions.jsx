@@ -451,7 +451,7 @@ export const jContentActions = registry => {
 
     registry.add('action', 'customizedPreview', {
         buttonIcon: <Visibility/>,
-        buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview',
+        buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview.label',
         targets: ['openInPreviewMenu:1'],
         component: CustomizedPreviewActionComponent
     });

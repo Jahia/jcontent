@@ -315,7 +315,10 @@
         "openInLive": "Live",
         "openInPreview": "Preview",
         "compareStagingToLive": "Compare staging vs live version",
-        "customizedPreview": "Customized preview",
+        "customizedPreview": {
+          "label": "Customized preview",
+          "showPreview": "Show customized preview"
+        },
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "More actions",

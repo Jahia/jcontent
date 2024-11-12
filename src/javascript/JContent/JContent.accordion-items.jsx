@@ -258,7 +258,7 @@ export const jContentAccordionItems = registry => {
             rootLabel: 'Categories',
             sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
             dnd: {
-                canDrag: true, canDrop: true, canDropFile: false
+                canDrop: true, canDropFile: false
             }
         },
         tableConfig: {
@@ -267,7 +267,7 @@ export const jContentAccordionItems = registry => {
             viewSelector: undefined,
             uploadType: JContentConstants.mode.IMPORT,
             dnd: {
-                canDrag: true, canDrop: true, canDropFile: true
+                canDrop: true, canDropFile: true
             },
             defaultSort: {orderBy: 'displayName', order: 'ASC'},
             columns: ['name']

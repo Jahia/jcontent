@@ -237,7 +237,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.copy',
         targets: ['contentActions:3.8', 'accordionContentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
         copyCutType: 'copy',
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:isAreaList'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:isAreaList', 'jnt:category'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
@@ -271,7 +271,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.copyPaste.cut',
         targets: ['contentActions:3.9', 'accordionContentActions:3.9', 'selectedContentActions:3.9', 'narrowHeaderSelectionMenu:3.9'],
         copyCutType: 'cut',
-        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList', 'jnt:category'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
         component: CopyCutActionComponent
     });
@@ -293,13 +293,14 @@ export const jContentActions = registry => {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',
         targets: ['contentActions:4', 'accordionContentActions:4', 'selectedContentActions:4', 'narrowHeaderMenu:12', 'narrowHeaderSelectionMenu:4'],
-        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList', 'jnt:category'],
         component: DeleteActionComponent
     });
     registry.add('action', 'deletePermanently', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.deletePermanently',
         targets: ['contentActions:4', 'accordionContentActions:4', 'selectedContentActions:4', 'narrowHeaderMenu:12', 'narrowHeaderSelectionMenu:4'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:category'],
         component: DeletePermanentlyActionComponent
     });
     registry.add('action', 'undelete', {

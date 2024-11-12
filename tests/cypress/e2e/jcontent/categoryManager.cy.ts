@@ -94,7 +94,7 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
             });
 
         categoryManager.getTable().selectRowByLabel('test-category1');
-        const selectedPrimaryActions = ['Clear selection', 'Export', 'Copy', 'Cut', 'Delete (permanently)'];
+        const selectedPrimaryActions = ['Clear selection', 'Export', 'Copy'];
         cy.get('.moonstone-header').children('.moonstone-header_toolbar').children('.moonstone-header_actions')
             .find('.moonstone-button')
             .should('have.length', selectedPrimaryActions.length)
@@ -120,22 +120,23 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
             .verifyTotalCount(2);
     });
 
-    it('Shows usages for sub categories when deleting Companies category', () => {
-        categoryManager = CategoryManager.visitCategoryManager('en');
-        categoryManager.getAccordionItem().getTreeItem('categories').click({multiple: true});
-        categoryManager.getTable().getRowByLabel('Companies').contextMenu().select('Delete');
-
-        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-        cy.get(dialogCss).as('deleteDialog');
-        cy.get('@deleteDialog').find('[data-cm-role="table-content-list-cell-name"]').children('div').children('svg').click();
-        cy.get(dialogCss).should('contain', '3 usages').and('contain', '1 usage').and('contain', '2 usages');
-        cy.get(dialogCss).contains('3 usages').click();
-        cy.get('[data-sel-role="usages-table"]').as('usagesTable').contains('Usages for "Media"');
-        const usagesName = ['all-Movies', 'all-News', 'all-sports'];
-        cy.get('@usagesTable').find('[data-cm-role="table-content-list-cell-name"]').should('have.length', 3).and(element => {
-            usagesName.forEach(value => expect(element).to.contain(value));
-        });
-    });
+    // No longer necessary as behaviour has changed, keep this commented in case behaviour changes again
+    // it('Shows usages for sub categories when deleting Companies category', () => {
+    //     categoryManager = CategoryManager.visitCategoryManager('en');
+    //     categoryManager.getAccordionItem().getTreeItem('categories').click({multiple: true});
+    //     categoryManager.getTable().getRowByLabel('Companies').contextMenu().select('Delete');
+    //
+    //     const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
+    //     cy.get(dialogCss).as('deleteDialog');
+    //     cy.get('@deleteDialog').find('[data-cm-role="table-content-list-cell-name"]').children('div').children('svg').click();
+    //     cy.get(dialogCss).should('contain', '3 usages').and('contain', '1 usage').and('contain', '2 usages');
+    //     cy.get(dialogCss).contains('3 usages').click();
+    //     cy.get('[data-sel-role="usages-table"]').as('usagesTable').contains('Usages for "Media"');
+    //     const usagesName = ['all-Movies', 'all-News', 'all-sports'];
+    //     cy.get('@usagesTable').find('[data-cm-role="table-content-list-cell-name"]').should('have.length', 3).and(element => {
+    //         usagesName.forEach(value => expect(element).to.contain(value));
+    //     });
+    // });
 
     it('can import/export categories - zip', () => {
         categoryManager = CategoryManager.visitCategoryManager('en');

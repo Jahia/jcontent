@@ -39,7 +39,7 @@ export const CategoriesLayout = ({
     });
     return (
         <div className={styles.root}>
-            <ContextualMenu setOpenRef={contextualMenu} actionKey="categoriesMenu" path={path}/>
+            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
             <div
                     className={classNames(styles.content)}
                     onContextMenu={event => contextualMenu.current(event)}

@@ -317,7 +317,17 @@
         "compareStagingToLive": "Compare staging vs live version",
         "customizedPreview": {
           "label": "Customize preview",
-          "showPreview": "Show customized preview"
+          "showPreview": "Show customized preview",
+          "selectChannel": "Select channel",
+          "clearAll": "Clear All",
+          "dialog": {
+            "channelLabel": "Devices",
+            "channelDescription": "Select a device to preview the content",
+            "variantLabel": "Variant",
+            "variantDescription": "Select a variant to preview the content",
+            "dateLabel": "Date",
+            "dateDescription": "Select a date to preview the content"
+          }
         },
         "menuLabel": {
           "actions": "Actions",

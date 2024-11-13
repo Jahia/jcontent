@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
-import {Button} from '@jahia/moonstone';
+import {Button, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import rison from 'rison';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
-import {CustomizedPreviewContextProvider, useCustomizedPreviewContext} from './customizedPreview.context';
-import {DateSelector} from './DateSelector';
+import {CustomizedPreviewContextProvider, useCustomizedPreviewContext} from '../customizedPreview.context';
+import {DateSelector} from './dateSelector';
+import {ChannelSelector} from './channelSelector';
 
 /**
  * @return an onclick() function handler to handle window redirection to the customized preview with the given params
@@ -22,18 +23,16 @@ const useDialogHandler = () => {
         };
 
         // do not include param if not defined
-        const setValue = (key, val) => val && (openDialog.params[key] = val);
-        setValue('user', user);
-        setValue('date', date?.valueOf());
-        setValue('channel', channel);
-        setValue('variant', variant);
+        const setParam = (key, val) => val && (openDialog.params[key] = val);
+        setParam('user', user);
+        setParam('date', date?.valueOf());
+        setParam('channel', channel);
+        setParam('variant', variant);
 
 
         // Check if customized preview is already open
         const isDialogOpen = params.openDialog?.key === 'customizedPreview';
         if (isDialogOpen) {
-            openDialog.params.channel = 'generic'; // TODO FIXME only for testing
-            openDialog.params.variant = ''; // TODO FIXME only for testing
             dispatch(cmGoto({params: {openDialog}}));
         } else {
             const urlWithoutAnchors = window.location.href.split(/[?#]/)[0];
@@ -52,14 +51,14 @@ const CustomizedPreviewDialogContainer = props => (
 
 const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited}) => {
     const {t} = useTranslation('jcontent');
-    const {user, date, channel, variant} = useCustomizedPreviewContext();
+    const {user, date, channelContext: {channel, variant}, clearAll} = useCustomizedPreviewContext();
     const {loadCustomizedPreview} = useDialogHandler();
 
     return (
         <Dialog
             fullWidth
             open={isOpen}
-            data-cm-role="customized-preview-options-dialog"
+            data-sel-role="customized-preview-dialog"
             onExited={onExited}
             onClose={onClose}
         >
@@ -67,15 +66,23 @@ const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited}) => {
                 {t('jcontent:label.contentManager.actions.customizedPreview.label')}
             </DialogTitle>
             <DialogContent>
-                <div>
-                    Date: {date?.format()}<br/>
-                    Channel: {channel}<br/>
-                    Variant: {variant}<br/>
-                    User: {user}<br/>
-                </div>
+                {/*<div>*/}
+                {/*    For debug display purposes only<br/>*/}
+                {/*    User: {user || 'defaults to root (TODO)'}<br/>*/}
+                {/*    Date: {date?.format()|| 'no date selected'}<br/>*/}
+                {/*    Channel: {channel || 'no channel selected'}<br/>*/}
+                {/*    Variant: {variant || 'no variant selected'}<br/>*/}
+                {/*</div>*/}
+                <ChannelSelector/>
                 <DateSelector/>
             </DialogContent>
             <DialogActions>
+                <Button
+                    size="big"
+                    data-sel-role="clear-all"
+                    label={t('jcontent:label.contentManager.actions.customizedPreview.clearAll')}
+                    onClick={clearAll}
+                />
                 <Button
                     size="big"
                     data-sel-role="show-preview-confirm"

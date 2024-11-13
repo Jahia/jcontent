@@ -1,50 +1,18 @@
 import React from 'react';
-import {Calendar, Group, Header, IconTextIcon, LayoutContent, Loading, Typography, WebPage} from '@jahia/moonstone';
+import {LayoutContent, Loading, Typography} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {Dialog} from '@material-ui/core';
-import {DisplayAction} from '@jahia/ui-extender';
-import {ButtonRendererShortLabel} from '~/ContentEditor/utils';
 import {useQuery} from '@apollo/client';
 import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
 
-import dayjs from 'dayjs';
 import styles from './customizedPreview.scss';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import {CustomizedPreviewHeader} from './customizedPreviewHeader';
+import {CustomizedPreviewContextProvider} from './customizedPreview.context';
 
-const CustomizedPreviewHeader = ({user, date, channel, variant}) => {
-    const path = useSelector(state => state.jcontent.path);
-
-    // TODO get channel and variant labels for display
-    return (
-        <Header
-            className={styles.header}
-            title={
-                <div className={clsx('flexRow_nowrap', styles.headerItems)}>
-                    <DisplayAction
-                        className={styles.headerItem}
-                        actionKey="customizedPreview"
-                        path={path}
-                        render={ButtonRendererShortLabel}
-                        buttonProps={{isReversed: true, variant: 'outlined'}}
-                    />
-                    <IconTextIcon className={styles.headerItem} iconStart={<Group/>}>{user}</IconTextIcon>
-                    <IconTextIcon className={styles.headerItem} iconStart={<Calendar/>}>{dayjs(date).format('DD / MMM / YYYY')}</IconTextIcon>
-                    <IconTextIcon className={styles.headerItem} iconStart={<WebPage/>}>{channel}{variant ? `- ${variant}` : ''}</IconTextIcon>
-                </div>
-            }
-        />
-    );
-};
-
-CustomizedPreviewHeader.propTypes = {
-    user: PropTypes.string,
-    date: PropTypes.object,
-    channel: PropTypes.string,
-    variant: PropTypes.string
-};
-
-const getParamsStr = ({user, date, channel, variant}) => {
+/**
+ * Helper method to only add params if they are not empty
+ */
+const getUrlParamsStr = ({user, date, channel, variant}) => {
     const toParamStr = (name, val) => val ? `${name}=${val}` : '';
     let paramsStr = [
         toParamStr('alias', user),
@@ -55,7 +23,13 @@ const getParamsStr = ({user, date, channel, variant}) => {
     return paramsStr ? `?${paramsStr}` : '';
 };
 
-export const CustomizedPreviewApp = () => {
+const CustomizedPreviewAppContainer = () => (
+    <CustomizedPreviewContextProvider>
+        <CustomizedPreviewApp/>
+    </CustomizedPreviewContextProvider>
+);
+
+const CustomizedPreviewApp = () => {
     const [path, language, params] = useSelector(state => [
         state.jcontent.path,
         state.language,
@@ -77,7 +51,7 @@ export const CustomizedPreviewApp = () => {
 
     const node = res?.data?.jcr.result;
     const renderUrl = !res.error && (node?.previewAvailable || node?.displayableNode !== null) && node.renderUrl;
-    const urlParams = getParamsStr(params.openDialog.params);
+    const urlParams = getUrlParamsStr(params.openDialog.params);
     return (
         <Dialog fullScreen open>
             <LayoutContent
@@ -91,3 +65,5 @@ export const CustomizedPreviewApp = () => {
         </Dialog>
     );
 };
+
+export {CustomizedPreviewAppContainer as CustomizedPreviewApp};

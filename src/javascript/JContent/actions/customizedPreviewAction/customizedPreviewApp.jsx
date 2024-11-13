@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 const CustomizedPreviewHeader = ({user, date, channel, variant}) => {
     const path = useSelector(state => state.jcontent.path);
 
-    // TODO get channel and variant labels
+    // TODO get channel and variant labels for display
     return (
         <Header
             className={styles.header}

@@ -7,18 +7,27 @@ import rison from 'rison';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {CustomizedPreviewContextProvider, useCustomizedPreviewContext} from './customizedPreview.context';
+import {DateSelector} from './DateSelector';
 
 /**
  * @return an onclick() function handler to handle window redirection to the customized preview with the given params
  */
-const useDialogHandler = ({user, date, channel, variant = ''}) => {
+const useDialogHandler = () => {
     const dispatch = useDispatch();
     const params = useSelector(state => state.jcontent.params || {});
-    const loadCustomizedPreview = () => {
+    const loadCustomizedPreview = ({user, date, channel, variant}) => {
         const openDialog = {
             key: 'customizedPreview',
-            params: {user, date: date.valueOf(), channel, variant}
+            params: {}
         };
+
+        // do not include param if not defined
+        const setValue = (key, val) => val && (openDialog.params[key] = val);
+        setValue('user', user);
+        setValue('date', date?.valueOf());
+        setValue('channel', channel);
+        setValue('variant', variant);
+
 
         // Check if customized preview is already open
         const isDialogOpen = params.openDialog?.key === 'customizedPreview';
@@ -32,7 +41,6 @@ const useDialogHandler = ({user, date, channel, variant = ''}) => {
             window.open(`${urlWithoutAnchors}?params=${encodedParams}`, '_blank');
         }
     };
-
     return {loadCustomizedPreview};
 };
 
@@ -45,7 +53,7 @@ const CustomizedPreviewDialogContainer = props => (
 const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited}) => {
     const {t} = useTranslation('jcontent');
     const {user, date, channel, variant} = useCustomizedPreviewContext();
-    const {loadCustomizedPreview} = useDialogHandler({user, date, channel, variant});
+    const {loadCustomizedPreview} = useDialogHandler();
 
     return (
         <Dialog
@@ -60,11 +68,12 @@ const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited}) => {
             </DialogTitle>
             <DialogContent>
                 <div>
-                    Date: {date.format()}<br/>
+                    Date: {date?.format()}<br/>
                     Channel: {channel}<br/>
                     Variant: {variant}<br/>
                     User: {user}<br/>
                 </div>
+                <DateSelector/>
             </DialogContent>
             <DialogActions>
                 <Button
@@ -72,7 +81,7 @@ const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited}) => {
                     data-sel-role="show-preview-confirm"
                     label={t('jcontent:label.contentManager.actions.customizedPreview.showPreview')}
                     onClick={() => {
-                        loadCustomizedPreview();
+                        loadCustomizedPreview({user, date, channel, variant});
                         onClose();
                     }}
                 />

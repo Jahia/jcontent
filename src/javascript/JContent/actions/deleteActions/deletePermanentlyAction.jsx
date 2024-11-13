@@ -3,7 +3,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
+import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
 import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 
@@ -35,7 +35,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
         },
         {
             fetchPolicy: 'network-only'

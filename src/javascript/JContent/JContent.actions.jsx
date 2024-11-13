@@ -68,7 +68,12 @@ import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
-import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions/actions.constants';
+import {
+    ACTION_PERMISSIONS,
+    PATH_CATEGORIES_ITSELF,
+    PATH_CONTENTS_ITSELF,
+    PATH_FILES_ITSELF
+} from './actions/actions.constants';
 import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
 import {CopyMenuComponent} from '~/JContent/actions/copyPaste/CopyMenuComponent';
@@ -272,7 +277,7 @@ export const jContentActions = registry => {
         targets: ['contentActions:3.9', 'accordionContentActions:3.9', 'selectedContentActions:3.9', 'narrowHeaderSelectionMenu:3.9'],
         copyCutType: 'cut',
         hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
         component: CopyCutActionComponent
     });
     registry.add('action', 'paste', {

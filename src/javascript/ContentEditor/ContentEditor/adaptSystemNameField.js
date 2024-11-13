@@ -1,7 +1,7 @@
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
-const isContentOrFileNode = formData => {
-    const pattern = '^/sites/[^/]*/(contents|files)$';
+const isContentOrFileOrCategoriesNode = formData => {
+    const pattern = '^/sites/[^/]*/(contents|files|categories)$';
     const regex = RegExp(pattern);
     return formData.technicalInfo.filter(info => {
         return regex.test(info.value);
@@ -18,7 +18,7 @@ export const adaptSystemNameField = (formData, primaryNodeType) => {
 
     if (systemNameField) {
         // System name should be readonly for this specific nodetypes / should be in json overrides
-        if (Constants.systemName.READONLY_FOR_NODE_TYPES.includes(primaryNodeType.name) || isContentOrFileNode(formData)) {
+        if (Constants.systemName.READONLY_FOR_NODE_TYPES.includes(primaryNodeType.name) || isContentOrFileOrCategoriesNode(formData)) {
             systemNameField.readOnly = true;
         }
     }

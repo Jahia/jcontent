@@ -1,5 +1,6 @@
 export const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 export const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
+export const PATH_CATEGORIES_ITSELF = '^/sites/((?!/).)+/categories/?$';
 
 export const ACTION_PERMISSIONS = {
     copyAction: 'copyAction',

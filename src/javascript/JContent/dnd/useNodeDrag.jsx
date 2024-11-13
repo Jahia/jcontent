@@ -6,6 +6,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
 import {JahiaAreasUtil} from '../JContent.utils';
+import {PATH_CATEGORIES_ITSELF} from '../actions/actions.constants';
 
 export function useNodeDrag({dragSource}) {
     const {selection, language, displayLanguage} = useSelector(state => ({
@@ -21,7 +22,7 @@ export function useNodeDrag({dragSource}) {
             getPrimaryNodeType: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockUiMove'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
             getLockInfo: true
         }
     );

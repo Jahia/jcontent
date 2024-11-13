@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import React, {useContext} from 'react';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
+import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import Delete from './Delete';
 
@@ -23,7 +23,7 @@ export const UndeleteActionComponent = ({path, paths, buttonProps, onDeleted, re
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
         },
         {
             fetchPolicy: 'network-only'

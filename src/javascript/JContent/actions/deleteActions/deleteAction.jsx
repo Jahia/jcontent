@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import React, {useContext} from 'react';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
+import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 
@@ -22,7 +22,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
             getDisplayName: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
             getLockInfo: true,
             ...others
         },

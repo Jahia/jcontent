@@ -316,7 +316,7 @@
         "openInPreview": "Preview",
         "compareStagingToLive": "Compare staging vs live version",
         "customizedPreview": {
-          "label": "Customized preview",
+          "label": "Customize preview",
           "showPreview": "Show customized preview"
         },
         "menuLabel": {

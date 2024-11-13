@@ -1,30 +1,48 @@
 import React from 'react';
-import {Header, LayoutContent, Loading, Typography} from '@jahia/moonstone';
+import {Calendar, Group, Header, IconTextIcon, LayoutContent, Loading, Typography, WebPage} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {Dialog} from '@material-ui/core';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel} from '~/ContentEditor/utils';
 import {useQuery} from '@apollo/client';
 import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
-import dayjs from 'dayjs';
 
-const CustomizedPreviewHeader = ({user, date, channel}) => {
+import dayjs from 'dayjs';
+import styles from './customizedPreview.scss';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+
+const CustomizedPreviewHeader = ({user, date, channel, variant}) => {
     const path = useSelector(state => state.jcontent.path);
+
+    // TODO get channel and variant labels
     return (
         <Header
-            title={`User: ${user} | Date: ${dayjs(date).format('YYYY-MMM-DD')} | Channel: ${channel}`}
-            mainActions={
-                <DisplayAction
-                    actionKey="customizedPreview"
-                    path={path}
-                    render={ButtonRendererShortLabel}
-                    buttonProps={{size: 'big', color: 'accent'}}
-                />
+            className={styles.header}
+            title={
+                <div className={clsx('flexRow_nowrap', styles.headerItems)}>
+                    <DisplayAction
+                        className={styles.headerItem}
+                        actionKey="customizedPreview"
+                        path={path}
+                        render={ButtonRendererShortLabel}
+                        buttonProps={{isReversed: true, variant: 'outlined'}}
+                    />
+                    <IconTextIcon className={styles.headerItem} iconStart={<Group/>}>{user}</IconTextIcon>
+                    <IconTextIcon className={styles.headerItem} iconStart={<Calendar/>}>{dayjs(date).format('DD / MMM / YYYY')}</IconTextIcon>
+                    <IconTextIcon className={styles.headerItem} iconStart={<WebPage/>}>{channel}{variant ? `- ${variant}` : ''}</IconTextIcon>
+                </div>
             }
         />
     );
+};
 
-}
+CustomizedPreviewHeader.propTypes = {
+    user: PropTypes.string,
+    date: PropTypes.object,
+    channel: PropTypes.string,
+    variant: PropTypes.string
+};
 
 const getParamsStr = ({user, date, channel, variant}) => {
     const toParamStr = (name, val) => val ? `${name}=${val}` : '';
@@ -32,10 +50,10 @@ const getParamsStr = ({user, date, channel, variant}) => {
         toParamStr('alias', user),
         toParamStr('prevdate', date),
         toParamStr('channel', channel),
-        toParamStr('variant', variant),
+        toParamStr('variant', variant)
     ].join('&');
     return paramsStr ? `?${paramsStr}` : '';
-}
+};
 
 export const CustomizedPreviewApp = () => {
     const [path, language, params] = useSelector(state => [
@@ -66,10 +84,10 @@ export const CustomizedPreviewApp = () => {
                 header={<CustomizedPreviewHeader {...params.openDialog?.params}/>}
                 content={
                     (renderUrl) ?
-                        (<iframe src={`${renderUrl}${urlParams}`} width="100%" height="100%" />)
-                        : (<Typography variant="heading">No preview to render</Typography>)
+                        (<iframe className={styles.iframe} src={`${renderUrl}${urlParams}`}/>) :
+                        (<Typography variant="heading">No preview to render</Typography>)
                 }
             />
         </Dialog>
     );
-}
+};

@@ -3,33 +3,28 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useQuery} from '@apollo/client';
 import rison from 'rison';
-import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {CustomizedPreviewContextProvider, useCustomizedPreviewContext} from './customizedPreview.context';
 
-
-const useDialogHandler = ({path}) => {
+/**
+ * @return an onclick() function handler to handle window redirection to the customized preview with the given params
+ */
+const useDialogHandler = ({user, date, channel, variant = ''}) => {
     const dispatch = useDispatch();
-    const [language, params] = useSelector(state => [
-        state.language,
-        state.jcontent.params || {},
-    ]);
-
+    const params = useSelector(state => state.jcontent.params || {});
     const loadCustomizedPreview = () => {
-        // check if customized preview is already open
-        const isDialogOpen = params.openDialog?.key === 'customizedPreview';
         const openDialog = {
             key: 'customizedPreview',
-            params: {
-                user: 'root',
-                date: '2021-09-01',
-                channel : 'default'
-            }
+            params: {user, date: date.valueOf(), channel, variant}
         };
+
+        // Check if customized preview is already open
+        const isDialogOpen = params.openDialog?.key === 'customizedPreview';
         if (isDialogOpen) {
-            openDialog.params.channel = 'newChannel';
+            openDialog.params.channel = 'generic'; // TODO FIXME only for testing
+            openDialog.params.variant = ''; // TODO FIXME only for testing
             dispatch(cmGoto({params: {openDialog}}));
         } else {
             const urlWithoutAnchors = window.location.href.split(/[?#]/)[0];
@@ -39,11 +34,18 @@ const useDialogHandler = ({path}) => {
     };
 
     return {loadCustomizedPreview};
-}
+};
 
-export const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited, ...others}) => {
+const CustomizedPreviewDialogContainer = props => (
+    <CustomizedPreviewContextProvider>
+        <CustomizedPreviewDialog {...props}/>
+    </CustomizedPreviewContextProvider>
+);
+
+const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited}) => {
     const {t} = useTranslation('jcontent');
-    const {loadCustomizedPreview} = useDialogHandler({path, ...others});
+    const {user, date, channel, variant} = useCustomizedPreviewContext();
+    const {loadCustomizedPreview} = useDialogHandler({user, date, channel, variant});
 
     return (
         <Dialog
@@ -57,12 +59,17 @@ export const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited, ...oth
                 {t('jcontent:label.contentManager.actions.customizedPreview.label')}
             </DialogTitle>
             <DialogContent>
-                "Well hello there"
+                <div>
+                    Date: {date.format()}<br/>
+                    Channel: {channel}<br/>
+                    Variant: {variant}<br/>
+                    User: {user}<br/>
+                </div>
             </DialogContent>
             <DialogActions>
                 <Button
                     size="big"
-                    data-sel-role="close"
+                    data-sel-role="show-preview-confirm"
                     label={t('jcontent:label.contentManager.actions.customizedPreview.showPreview')}
                     onClick={() => {
                         loadCustomizedPreview();
@@ -73,6 +80,8 @@ export const CustomizedPreviewDialog = ({path, isOpen, onClose, onExited, ...oth
         </Dialog>
     );
 };
+
+export {CustomizedPreviewDialogContainer as CustomizedPreviewDialog};
 
 CustomizedPreviewDialog.propTypes = {
     onClose: PropTypes.func.isRequired,

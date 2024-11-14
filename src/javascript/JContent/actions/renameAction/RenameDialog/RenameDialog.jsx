@@ -94,7 +94,7 @@ export const RenameDialog = ({path, contentType, onExit}) => {
                 <TextField
                     fullWidth
                     autoFocus
-                    inputProps={{maxLength: 32}}
+                    inputProps={{maxLength: contextJsParameters.config.maxNameSize}}
                     error={Boolean(errMsg)}
                     value={name}
                     id="folder-name"

@@ -243,7 +243,7 @@ export const jContentActions = registry => {
         targets: ['contentActions:3.8', 'accordionContentActions:3.8', 'selectedContentActions:3.8', 'narrowHeaderSelectionMenu:3.8'],
         copyCutType: 'copy',
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:isAreaList'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
         component: CopyCutActionComponent
     });
     registry.add('action', 'copyPageMenu', menuActionWithRenderer, {

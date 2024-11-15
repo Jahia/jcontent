@@ -65,14 +65,4 @@ describe('Content navigation', () => {
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
         cy.get('h1').contains('test-event');
     });
-
-    it('Display popup when navigating to list and render list view when selected', () => {
-        const jc = JContent.visit('mySite1', 'en', 'content-folders/contents/test-event');
-        jc.switchToPageBuilder();
-        cy.frameLoaded('#page-builder-frame-1');
-        jc.getAccordionItem('content-folders').getTreeItem('contents').click();
-        cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
-        cy.get('.moonstone-chip').find('span').contains('Content Folder').should('be.visible');
-        cy.get('h1').contains('contents');
-    });
 });

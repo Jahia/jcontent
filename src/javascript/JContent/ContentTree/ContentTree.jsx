@@ -191,7 +191,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           selected: path,
                           isReversed,
                           contentMenu: contextualMenuAction,
-                          itemProps: {item}
+                          itemProps: {item},
+                          viewMode: viewMode
                       })}
                       openedItems={openPaths}
                       highlightedItems={highlighted}
@@ -207,8 +208,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                               const {node} = object.treeItemProps;
                               if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
                                   openLinkDialog(node);
-                              } else if (node.primaryNodeType.name !== 'jnt:page' && !node.isMainResource && viewMode === 'pageBuilder') {
-                                  // Do nothing, it used to open a dialog on Menu titles prompting to change to listView
                               } else {
                                   dispatch(setPathAction(object.id, {sub: false}));
                               }

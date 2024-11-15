@@ -41,7 +41,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps}) {
+function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode}) {
     const tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -79,7 +79,8 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
                 node: treeEntry.node,
                 treeEntries,
                 ...itemProps
-            }
+            },
+            isDisabled: treeEntry.node.primaryNodeType.name !== 'jnt:page' && !treeEntry.node.isMainResource && viewMode === 'pageBuilder'
         };
         const parent = findInTree(tree, parentPath);
         if (parent !== undefined && !findInTree(parent, element.id)) {

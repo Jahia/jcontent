@@ -25,6 +25,11 @@ package org.jahia.modules.contenteditor.graphql.api;
 
 import graphql.annotations.annotationTypes.*;
 import org.jahia.ajax.gwt.helper.DiffHelper;
+import org.jahia.modules.contenteditor.graphql.api.channels.GqlChannel;
+import org.jahia.services.channels.ChannelService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The root class for the jContent API
@@ -41,4 +46,15 @@ public class GqlJContent {
         @GraphQLName("newHtml") @GraphQLDescription("New html") String newHtml) {
         return new DiffHelper().getHighlighted(originalHtml, newHtml);
     }
+
+    @GraphQLField
+    @GraphQLName("channels")
+    @GraphQLDescription("Returns all available channels")
+    public List<GqlChannel> getChannels(
+
+    ) {
+        List<String> channels = ChannelService.getInstance().getAllChannels();
+        return channels.stream().map(GqlChannel::new).collect(Collectors.toList());
+    }
+
 }

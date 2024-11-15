@@ -106,7 +106,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     const {t} = useTranslation('jcontent');
     const {lang, siteKey, path, openPaths, viewMode} = useSelector(selector, shallowEqual);
     const {openDialog: openLinkDialog, ...linkDialogProps} = useNodeDialog();
-    const {openDialog: openNonDisplayableNodeDialog, ...nonDisplayableNodeDialogProps} = useNodeDialog();
     const rootPath = item.getRootPath(siteKey);
     const ulRef = useRef(null);
     const ulScrollRef = useRef(0);
@@ -209,7 +208,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                               if (['jnt:externalLink', 'jnt:nodeLink'].includes(node.primaryNodeType.name)) {
                                   openLinkDialog(node);
                               } else if (node.primaryNodeType.name !== 'jnt:page' && !node.isMainResource && viewMode === 'pageBuilder') {
-                                  openNonDisplayableNodeDialog(node);
+                                  // Do nothing, it used to open a dialog on Menu titles prompting to change to listView
                               } else {
                                   dispatch(setPathAction(object.id, {sub: false}));
                               }
@@ -223,7 +222,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />
             <LinkDialog {...linkDialogProps}/>
-            <NonDisplayableNodeDialog {...nonDisplayableNodeDialogProps} setPathAction={setPathAction}/>
             {item.treeConfig.showContextMenuOnRootPath && (
                 <>
                     <ContextualMenu setOpenRef={rootContextualMenu} actionKey="rootContentMenu"/>

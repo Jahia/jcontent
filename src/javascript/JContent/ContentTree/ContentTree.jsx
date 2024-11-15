@@ -14,7 +14,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
-import {NonDisplayableNodeDialog, LinkDialog, useNodeDialog} from '~/JContent/NavigationDialogs';
+import {LinkDialog, useNodeDialog} from '~/JContent/NavigationDialogs';
 import {useTranslation} from 'react-i18next';
 
 export const accordionPropType = PropTypes.shape({

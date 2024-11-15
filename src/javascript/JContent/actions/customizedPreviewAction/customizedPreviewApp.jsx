@@ -8,6 +8,9 @@ import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gq
 import styles from './customizedPreview.scss';
 import {CustomizedPreviewHeader} from './customizedPreviewHeader';
 import {CustomizedPreviewContextProvider} from './customizedPreview.context';
+import {useTranslation} from 'react-i18next';
+import {resolveUrlForLiveOrPreview} from '~/JContent/JContent.utils';
+import {useChannelData} from '~/JContent/actions/customizedPreviewAction/useChannelData';
 
 /**
  * Helper method to only add params if they are not empty
@@ -19,58 +22,30 @@ const getUrlParamsStr = ({user, date, channel, variant}) => {
         toParamStr('prevdate', date),
         toParamStr('channel', channel),
         toParamStr('variant', variant)
-    ].join('&');
+    ].filter(Boolean).join('&');
     return paramsStr ? `?${paramsStr}` : '';
 };
 
-const getIframeWidth = params => {
+const useIframeDimensions = ({channel, variant} = {}) => {
+    const {getVariant} = useChannelData();
+    const variantData = getVariant(channel, variant);
+    const {width, height} = variantData?.imageSize || {};
+
     const bodyPadding = 8 * 2;
-
-    if (params.variant === 'landscape') {
-        switch (params.channel) {
-            case 'generic_android':
-                return 770 + bodyPadding;
-            case 'apple_iphone_ver1':
-                return 797 + bodyPadding;
-            case 'android_tablet':
-                return 1174 + bodyPadding;
-            case 'apple_ipad_ver1':
-                return 1174 + bodyPadding;
-            default:
-                return 770 + bodyPadding;
-        }
-    }
-
-    if (params.variant === 'portrait') {
-        switch (params.channel) {
-            case 'generic_android':
-                return 480 + bodyPadding;
-            case 'apple_iphone_ver1':
-                return 495 + bodyPadding;
-            case 'android_tablet':
-                return 845 + bodyPadding;
-            case 'apple_ipad_ver1':
-                return 1024 + bodyPadding;
-            default:
-                return 480 + bodyPadding;
-        }
-    }
-
-    return '100%';
+    return {
+        width: Number(width) + bodyPadding || '100%',
+        height: Number(height) + bodyPadding || '100%'
+    };
 };
 
-const CustomizedPreviewAppContainer = () => (
-    <CustomizedPreviewContextProvider>
-        <CustomizedPreviewApp/>
-    </CustomizedPreviewContextProvider>
-);
-
-const CustomizedPreviewApp = () => {
+export const CustomizedPreviewApp = () => {
+    const {t} = useTranslation('jcontent');
     const [path, language, params] = useSelector(state => [
         state.jcontent.path,
         state.language,
         state.jcontent.params || {}
     ]);
+    const {width, height} = useIframeDimensions(params?.openDialog?.params);
 
     const res = useQuery(OpenInActionQuery, {
         variables: {path, language, workspace: 'EDIT'},
@@ -94,13 +69,17 @@ const CustomizedPreviewApp = () => {
             <LayoutContent
                 header={<CustomizedPreviewHeader {...params.openDialog?.params}/>}
                 content={
-                    (renderUrl) ?
-                        (<iframe className={styles.iframe} width={getIframeWidth(params.openDialog.params)} src={`${renderUrl}${urlParams}`}/>) :
-                        (<Typography variant="heading">No preview to render</Typography>)
+                    <div className={styles.iframeContainer}>
+                        {(renderUrl) ?
+                            (<iframe width={width} height={height} src={`${resolveUrlForLiveOrPreview(renderUrl)}${urlParams}`}/>) :
+                            (
+                                <Typography variant="title">
+                                    {t('jcontent:label.contentManager.actions.customizedPreview.noRenderUrl')}
+                                </Typography>
+                            )}
+                    </div>
                 }
             />
         </Dialog>
     );
 };
-
-export {CustomizedPreviewAppContainer as CustomizedPreviewApp};

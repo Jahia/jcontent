@@ -335,7 +335,7 @@ export const JahiaAreasUtil = {
 };
 
 export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
-    if (url.match(/^https*:\/\//)) {
+    if (!url || url.match(/^https*:\/\//)) {
         return url;
     }
 

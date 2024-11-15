@@ -7,15 +7,14 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel} from '~/ContentEditor/utils';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
-import {useCustomizedPreviewContext} from './customizedPreview.context';
+import {useChannelData} from './useChannelData';
 
 export const CustomizedPreviewHeader = ({user, date, channel, variant}) => {
     const path = useSelector(state => state.jcontent.path);
-    const {channelContext} = useCustomizedPreviewContext();
-    const {getChannel} = channelContext;
+    const {getChannel} = useChannelData();
 
     const channelLabel = getChannel(channel).label;
-    const variantLabel = getChannel(channel).variant?.find(v => v.value === variant)?.label;
+    const variantLabel = getChannel(channel).variants?.find(v => v.value === variant)?.label;
     return (
         <Header
             className={styles.header}

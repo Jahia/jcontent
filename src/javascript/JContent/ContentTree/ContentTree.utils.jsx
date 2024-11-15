@@ -80,7 +80,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
                 treeEntries,
                 ...itemProps
             },
-            isDisabled: treeEntry.node.primaryNodeType.name !== 'jnt:page' && !treeEntry.node.isMainResource && viewMode === 'pageBuilder'
+            isDisabled: treeEntry.node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageBuilder'
         };
         const parent = findInTree(tree, parentPath);
         if (parent !== undefined && !findInTree(parent, element.id)) {

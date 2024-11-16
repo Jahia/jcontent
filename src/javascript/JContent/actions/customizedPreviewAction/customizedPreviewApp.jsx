@@ -40,11 +40,11 @@ const useIframeDimensions = ({channel, variant} = {}) => {
 
 export const CustomizedPreviewApp = () => {
     const {t} = useTranslation('jcontent');
-    const [path, language, params] = useSelector(state => [
-        state.jcontent.path,
-        state.language,
-        state.jcontent.params || {}
-    ]);
+    const {path, language, params} = useSelector(state => ({
+        path: state.jcontent.path,
+        language: state.language,
+        params: state.jcontent.params
+    }));
     const {width, height} = useIframeDimensions(params?.openDialog?.params);
 
     const res = useQuery(OpenInActionQuery, {
@@ -52,7 +52,7 @@ export const CustomizedPreviewApp = () => {
         skip: !path
     });
 
-    if (params.openDialog?.key !== 'customizedPreview') {
+    if (params?.openDialog?.key !== 'customizedPreview') {
         return null;
     }
 
@@ -62,12 +62,12 @@ export const CustomizedPreviewApp = () => {
 
     const node = res?.data?.jcr.result;
     const renderUrl = !res.error && (node?.previewAvailable || node?.displayableNode !== null) && node.renderUrl;
-    const urlParams = getUrlParamsStr(params.openDialog.params);
+    const urlParams = getUrlParamsStr(params?.openDialog.params);
 
     return (
         <Dialog fullScreen open>
             <LayoutContent
-                header={<CustomizedPreviewHeader {...params.openDialog?.params}/>}
+                header={<CustomizedPreviewHeader {...params?.openDialog?.params}/>}
                 content={
                     <div className={styles.iframeContainer}>
                         {(renderUrl) ?

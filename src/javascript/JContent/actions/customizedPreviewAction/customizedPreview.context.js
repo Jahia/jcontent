@@ -9,14 +9,11 @@ const CustomizedPreviewContext = React.createContext({});
 export const useCustomizedPreviewContext = () => useContext(CustomizedPreviewContext);
 
 export const CustomizedPreviewContextProvider = ({children}) => {
-    const [lang] = useSelector(state => [
-        state.language
-    ]);
-    const jcontentParams = useSelector(state => state.jcontent.params) || {};
-    const isOpen = jcontentParams.openDialog?.key === 'customizedPreview';
-    const params = isOpen ? jcontentParams.openDialog.params : {};
+    const jContentParams = useSelector(state => state.jcontent.params);
+    const isOpen = jContentParams?.openDialog?.key === 'customizedPreview';
+    const params = isOpen ? jContentParams?.openDialog.params : {};
 
-    const [user, setUser] = useState(params.user || 'root'); // TODO remove default value
+    const [user, setUser] = useState(params.user);
     const [date, setDate] = useState(params.date && dayjs(params.date));
     const [channel, setChannel] = useState(params.channel);
     const [variant, setVariant] = useState(params.variant);
@@ -34,7 +31,7 @@ export const CustomizedPreviewContextProvider = ({children}) => {
         setVariant(null);
     };
 
-    const context = {isOpen, lang, user, setUser, date, setDate: setDayJs, clearAll, channel, setChannel, variant, setVariant};
+    const context = {isOpen, user, setUser, date, setDate: setDayJs, clearAll, channel, setChannel, variant, setVariant};
     return (
         <CustomizedPreviewContext.Provider value={context}>
             {children}

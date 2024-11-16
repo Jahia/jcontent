@@ -9,13 +9,14 @@ import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {CustomizedPreviewContextProvider, useCustomizedPreviewContext} from '../customizedPreview.context';
 import {DateSelector} from './dateSelector';
 import {ChannelSelector} from './channelSelector';
+import {UserSelector} from './userSelector';
 
 /**
  * @return an onclick() function handler to handle window redirection to the customized preview with the given params
  */
 const useDialogHandler = () => {
     const dispatch = useDispatch();
-    const params = useSelector(state => state.jcontent.params || {});
+    const params = useSelector(state => state.jcontent.params) || {};
     const loadCustomizedPreview = ({user, date, channel, variant}) => {
         const openDialog = {
             key: 'customizedPreview',
@@ -71,6 +72,7 @@ const CustomizedPreviewDialog = ({isOpen, onClose, onExited}) => {
                 {t('jcontent:label.contentManager.actions.customizedPreview.label')}
             </DialogTitle>
             <DialogContent>
+                <UserSelector/>
                 <ChannelSelector/>
                 <DateSelector/>
             </DialogContent>

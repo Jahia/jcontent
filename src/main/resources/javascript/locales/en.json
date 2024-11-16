@@ -322,6 +322,8 @@
           "clearAll": "Clear All",
           "noRenderUrl": "No preview to render",
           "dialog": {
+            "userLabel": "User",
+            "userDescription": "Select a user to preview the content",
             "channelLabel": "Devices",
             "channelDescription": "Select a device to preview the content",
             "variantLabel": "Orientation",

@@ -14,6 +14,7 @@ import {useLocation} from 'react-router-dom';
 import {decodeHashString} from './util';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '../../utils/getButtonRenderer';
+import {triggerRefetchAll} from '../JContent.refetches';
 
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {size: 'big'}});
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {size: 'big'}});
@@ -54,7 +55,10 @@ const CompareDialog = () => {
                                     className={styles.actionItem}
                                     icon={<Reload/>}
                                     label={t('jcontent:label.contentManager.refresh')}
-                                    onClick={() => dispatch(compareStagingLiveReload())}/>
+                                    onClick={() => {
+                                        triggerRefetchAll();
+                                        dispatch(compareStagingLiveReload());
+                                    }}/>
                             <Button variant="outlined"
                                     size="big"
                                     color="accent"

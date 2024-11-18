@@ -71,7 +71,6 @@ describe('Content navigation', () => {
         jc.switchToPageBuilder();
         cy.frameLoaded('#page-builder-frame-1');
         jc.getAccordionItem('content-folders').getTreeItem('contents').click();
-        cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Content Folder').should('be.visible');
         cy.get('h1').contains('contents');
     });

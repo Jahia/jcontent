@@ -241,7 +241,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             const type = element.getAttribute('jahiatype');
             const modulePath = element.getAttribute('path');
 
-            if (type === 'module' && modulePath !== '*' && modulePath !== path) {
+            if (type === 'module' && modulePath !== '*') {
                 if (modulePath.startsWith('/')) {
                     element.dataset.jahiaPath = modulePath;
                 } else {

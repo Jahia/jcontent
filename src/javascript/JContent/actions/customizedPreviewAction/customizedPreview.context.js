@@ -1,9 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import dayjs from 'dayjs';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/client';
-import {GET_CHANNEL_DATA} from '~/JContent/actions/customizedPreviewAction/channels.gql-queries';
 
 const CustomizedPreviewContext = React.createContext({});
 export const useCustomizedPreviewContext = () => useContext(CustomizedPreviewContext);

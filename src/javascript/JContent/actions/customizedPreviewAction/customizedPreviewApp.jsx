@@ -3,14 +3,13 @@ import {LayoutContent, Loading, Typography} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {Dialog} from '@material-ui/core';
 import {useQuery} from '@apollo/client';
-import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
-
-import styles from './customizedPreview.scss';
-import {CustomizedPreviewHeader} from './customizedPreviewHeader';
-import {CustomizedPreviewContextProvider} from './customizedPreview.context';
 import {useTranslation} from 'react-i18next';
+
 import {resolveUrlForLiveOrPreview} from '~/JContent/JContent.utils';
 import {useChannelData} from '~/JContent/actions/customizedPreviewAction/useChannelData';
+import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
+import {CustomizedPreviewHeader} from './customizedPreviewHeader';
+import styles from './customizedPreview.scss';
 
 /**
  * Helper method to only add params if they are not empty

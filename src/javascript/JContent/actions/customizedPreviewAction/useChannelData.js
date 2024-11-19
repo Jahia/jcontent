@@ -1,4 +1,3 @@
-import React from 'react';
 import {useQuery} from '@apollo/client';
 import {GET_CHANNEL_DATA} from './channels.gql-queries';
 
@@ -19,7 +18,6 @@ export const useChannelData = () => {
         loading,
         error,
         getChannel,
-        getVariant,
-    }
-
+        getVariant
+    };
 };

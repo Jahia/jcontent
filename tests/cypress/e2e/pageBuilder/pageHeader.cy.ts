@@ -1,6 +1,5 @@
 import {JContent} from '../../page-object';
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
-import gql from 'graphql-tag';
 
 describe('Page header test', () => {
     before(() => {

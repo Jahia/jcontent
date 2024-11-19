@@ -13,6 +13,7 @@ export const DateSelector = () => {
         <div className={styles.selector}>
             <SelectorLabel name="date"/>
             <DatePickerInput
+                data-sel-role="date-selector-input"
                 variant="datetime"
                 initialValue={date}
                 lang={lang}

@@ -9,10 +9,10 @@ export const SelectorLabel = ({name}) => {
     const labelPrefix = 'jcontent:label.contentManager.actions.customizedPreview.dialog';
     return (
         <>
-            <Typography variant="subheading" weight="bold">
+            <Typography variant="subheading" weight="bold" data-sel-role={`${name}-selector-label`}>
                 {t(`${labelPrefix}.${name}Label`)}
             </Typography>
-            <Typography className={styles.label} variant="caption">
+            <Typography className={styles.label} variant="caption" data-sel-role={`${name}-selector-description`}>
                 {t(`${labelPrefix}.${name}Description`)}
             </Typography>
         </>

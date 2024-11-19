@@ -312,7 +312,23 @@
         "openInLive": "Live",
         "openInPreview": "Aperçu",
         "compareStagingToLive": "Comparer la version de travail et la version publiée",
-        "customizedPreview": "Prévisualisation personnalisée",
+        "customizedPreview": {
+          "label": "Prévisualisation personnalisée",
+          "showPreview": "Appliquer",
+          "channelPlaceholder": "Sélectionnez appareil",
+          "clearAll": "Effacer tout",
+          "noRenderUrl": "Aucun aperçu à rendre",
+          "dialog": {
+            "userLabel": "Utilisateur",
+            "userDescription": "Sélectionnez un utilisateur pour prévisualiser le contenu",
+            "channelLabel": "Appareils",
+            "channelDescription": "Sélectionnez un appareil pour prévisualiser le contenu",
+            "variantLabel": "Orientation",
+            "variantDescription": "Sélectionnez l'orientation disponible pour l'appareil donné",
+            "dateLabel": "Date",
+            "dateDescription": "Sélectionnez une date pour prévisualiser le contenu"
+          }
+        },
         "menuLabel": {
           "actions": "Actions",
           "moreActions": "Plus d'actions",

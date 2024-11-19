@@ -310,7 +310,23 @@
         "openInLive": "Live",
         "openInPreview": "Vorschau",
         "compareStagingToLive": "Vergleich Staging vs Live Version",
-        "customizedPreview": "Angepasste Vorschau",
+        "customizedPreview": {
+          "label": "Angepasste Vorschau",
+          "showPreview": "Anwenden",
+          "channelPlaceholder": "Gerät auswählen",
+          "clearAll": "Alles löschen",
+          "noRenderUrl": "Keine Vorschau zum Rendern",
+          "dialog": {
+            "userLabel": "Benutzer",
+            "userDescription": "Wählen Sie einen Benutzer aus, um den Inhalt in der Vorschau anzuzeigen",
+            "channelLabel": "Geräte",
+            "channelDescription": "Wählen Sie ein Gerät aus, um den Inhalt in der Vorschau anzuzeigen",
+            "variantLabel": "Ausrichtung",
+            "variantDescription": "Wählen Sie die für das angegebene Gerät verfügbare Ausrichtung aus",
+            "dateLabel": "Datum",
+            "dateDescription": "Wählen Sie ein Datum aus, um den Inhalt in der Vorschau anzuzeigen"
+          }
+        },
         "menuLabel": {
           "actions": "Aktionen",
           "moreActions": "Weitere Aktionen",

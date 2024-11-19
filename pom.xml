@@ -64,15 +64,20 @@
             javax.servlet.http,
             org.apache.commons.lang;version="[2.6,3)",
             org.apache.commons.lang3;version="[3.12,4)",
+            org.apache.naming.java,
             org.jahia.bin.filters.jcr,
             org.jahia.bin.listeners,
             org.jahia.data.templates,
+            org.jahia.defaults.config.spring,
+            org.jahia.exceptions,
             org.jahia.modules.graphql.provider.dxm;version="[2.20,4)",
             org.jahia.modules.graphql.provider.dxm.node;version="[2.20,4)",
             org.jahia.modules.graphql.provider.dxm.nodetype;version="[2.20,4)",
             org.jahia.modules.graphql.provider.dxm.osgi.annotations;version="[2.20,4)",
             org.jahia.modules.graphql.provider.dxm.predicate;version="[2.20,4)",
             org.jahia.registries,
+            org.jahia.services,
+            org.jahia.services.channels,
             org.jahia.services.content,
             org.jahia.services.content.decorator,
             org.jahia.services.content.nodetypes,
@@ -81,6 +86,7 @@
             org.jahia.services.render.filter,
             org.jahia.services.templates,
             org.jahia.services.usermanager,
+            org.jahia.settings
             org.jahia.utils,
             org.jahia.utils.i18n,
             org.osgi.framework;version="[1.8,2)",
@@ -88,11 +94,6 @@
             org.slf4j;version="[1.7,2)",
             org.springframework.context;version="[3.2,4)",
             org.springframework.core.io;version="[3.2,4)",
-            org.apache.naming.java,
-            org.jahia.defaults.config.spring,
-            org.jahia.exceptions,
-            org.jahia.services,
-            org.jahia.settings
         </import-package>
         <sonar.sources>src/javascript</sonar.sources>
     </properties>

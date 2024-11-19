@@ -318,7 +318,7 @@
         "customizedPreview": {
           "label": "Customize preview",
           "showPreview": "Apply",
-          "channelPlaceholder": "Select channel",
+          "channelPlaceholder": "Select device",
           "clearAll": "Clear All",
           "noRenderUrl": "No preview to render",
           "dialog": {

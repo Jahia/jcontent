@@ -66,6 +66,7 @@
         "uploaded": "Téléchargé",
         "wrongInput": "Format de fichier invalide",
         "exists": "Le fichier existe déjà",
+        "fileNameSizeExceedLimit": "Le nom du fichier dépasse {{maxNameSize}} caractères",
         "cannotStore": "L'import du fichier a échoué : La taille du fichier dépasse la limite de {{maxUploadSize}}Mo",
         "uploading": "Téléchargement ...",
         "retry": "Réessayer",

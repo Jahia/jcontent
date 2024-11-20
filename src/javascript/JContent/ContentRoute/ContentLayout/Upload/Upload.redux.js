@@ -105,6 +105,10 @@ export const fileuploadRedux = registry => {
 
     registry.add('fileUpload', 'default', {
         handleUpload: ({path, file, filename, client}) => {
+            if (filename.length > contextJsParameters.config.maxNameSize) {
+                throw new Error('FILE_NAME_SIZE');
+            }
+
             return client.mutate({
                 mutation: uploadFile,
                 variables: {

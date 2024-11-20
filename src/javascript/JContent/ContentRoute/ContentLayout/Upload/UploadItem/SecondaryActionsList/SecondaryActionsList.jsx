@@ -28,11 +28,27 @@ const SecondaryActionsList = props => {
             );
         }
 
-        if (error === 'FOLDER_EXISTS') {
+        if (error === 'FILE_NAME_SIZE') {
             return (
                 <>
+                    <RenameButton {...props}/>
                     <DontUploadButton {...props}/>
                 </>
+            );
+        }
+
+        if (error === 'FOLDER_FILE_NAME_SIZE' || error === 'FOLDER_FILE_NAME_INVALID') {
+            return (
+                <>
+                    <RenameButton {...props}/>
+                    <DontUploadButton {...props}/>
+                </>
+            );
+        }
+
+        if (error === 'FOLDER_EXISTS') {
+            return (
+                <DontUploadButton {...props}/>
             );
         }
 
@@ -49,7 +65,8 @@ const SecondaryActionsList = props => {
 
 SecondaryActionsList.propTypes = {
     status: PropTypes.string,
-    error: PropTypes.string
+    error: PropTypes.string,
+    showRenameDialog: PropTypes.func
 };
 
 export default SecondaryActionsList;

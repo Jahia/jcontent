@@ -77,6 +77,8 @@ export const EditFrame = ({isDeviceView}) => {
 
     const [currentDocument, setCurrentDocument] = useState(null);
     const [device, setDevice] = useState(null);
+    const [currentVariantParam, setCurrentVariantParam] = useState('');
+    const [previousVariantParam, setPreviousVariantParam] = useState('');
     const previousDevice = useRef();
 
     const iframe = useRef();
@@ -208,13 +210,15 @@ export const EditFrame = ({isDeviceView}) => {
     useEffect(() => {
         const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
-        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}`;
+        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}${currentVariantParam}`;
+        
         if (currentDocument) {
             const mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
             console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, template);
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
-            if (path === framePath && locale === language && previousDevice.current === deviceParam) {
+            if (path === framePath && locale === language && previousDevice.current === deviceParam && currentVariantParam === previousVariantParam) {
+                console.log(1);
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {
@@ -226,21 +230,22 @@ export const EditFrame = ({isDeviceView}) => {
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
                 iframe.current.contentWindow.location.href = url;
                 previousDevice.current = deviceParam;
+                setPreviousVariantParam(currentVariantParam);
             }
         } else if (path && !path.endsWith('/')) {
             console.debug('Loading', url, 'in iframe');
             iframe.current.contentWindow.location.href = url;
             previousDevice.current = deviceParam;
+            setPreviousVariantParam(currentVariantParam);
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language, template]);
+    }, [currentDocument, path, previousDevice, deviceParam, language, template, currentVariantParam]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
     }
-
     return (
         <>
-            <PageHeaderContainer/>
+            <PageHeaderContainer setCurrentVariantParam={setCurrentVariantParam}/>
             <DeviceContainer isEnabled={isDeviceView} device={device} setDevice={setDevice}>
                 {!currentDocument && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}

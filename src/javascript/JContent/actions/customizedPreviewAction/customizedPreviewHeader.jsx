@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {Calendar, Group, Header, IconTextIcon, WebPage} from '@jahia/moonstone';
+import {Calendar, Group, Header, IconTextIcon, ResponsiveDevices} from '@jahia/moonstone';
 import styles from '~/JContent/actions/customizedPreviewAction/customizedPreview.scss';
 import clsx from 'clsx';
 import {DisplayAction} from '@jahia/ui-extender';
@@ -36,7 +36,7 @@ export const CustomizedPreviewHeader = ({user, date, channel, variant}) => {
                             {dayjs(date).format('DD / MMM / YYYY')}
                         </IconTextIcon>}
                     {channel &&
-                        <IconTextIcon className={styles.headerItem} iconStart={<WebPage/>}>
+                        <IconTextIcon className={styles.headerItem} iconStart={<ResponsiveDevices/>}>
                             {channelLabel}{variantLabel ? ` (${variantLabel})` : ''}
                         </IconTextIcon>}
                 </div>

@@ -35,7 +35,7 @@ export const ChannelSelector = () => {
                 <SelectorLabel name="channel"/>
                 <Dropdown
                     isDisabled={loading || error}
-                    data-sel-role="channel-selector"
+                    data-sel-role="channel-selector-dropdown"
                     placeholder={t('jcontent:label.contentManager.actions.customizedPreview.channelPlaceholder')}
                     variant="outlined"
                     data={channelData}
@@ -47,7 +47,7 @@ export const ChannelSelector = () => {
                 <div className={styles.selector}>
                     <SelectorLabel name="variant"/>
                     <Dropdown
-                        data-sel-role="variant-selector"
+                        data-sel-role="variant-selector-dropdown"
                         variant="outlined"
                         data={variantData}
                         value={variant}

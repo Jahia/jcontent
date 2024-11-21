@@ -72,22 +72,22 @@ export const UserSelector = () => {
 
                     <DialogActions>
                         <Button
-                        data-sel-picker-dialog-action="cancel"
-                        size="big"
-                        label={t('jcontent:label.contentEditor.edit.fields.modalCancel').toUpperCase()}
-                        onClick={onClose}
-                    />
+                            data-sel-picker-dialog-action="cancel"
+                            size="big"
+                            label={t('jcontent:label.contentEditor.edit.fields.modalCancel').toUpperCase()}
+                            onClick={onClose}
+                        />
                         <Button
-                        data-sel-picker-dialog-action="select-user"
-                        disabled={!newValue}
-                        color="accent"
-                        size="big"
-                        label={t('jcontent:label.contentEditor.edit.fields.modalDone').toUpperCase()}
-                        onClick={() => {
-                            setUser(newValue);
-                            setDialogOpen(false);
-                        }}
-                    />
+                            data-sel-picker-dialog-action="done"
+                            disabled={!newValue}
+                            color="accent"
+                            size="big"
+                            label={t('jcontent:label.contentEditor.edit.fields.modalDone').toUpperCase()}
+                            onClick={() => {
+                                setUser(newValue);
+                                setDialogOpen(false);
+                            }}
+                        />
                     </DialogActions>
                 </Dialog>
             </div>

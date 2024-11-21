@@ -17,6 +17,7 @@ export const CustomizedPreviewHeader = ({user, date, channel, variant}) => {
     const variantLabel = getChannel(channel).variants?.find(v => v.value === variant)?.label;
     return (
         <Header
+            data-sel-role="customized-preview-header"
             className={styles.header}
             title={
                 <div className={clsx('flexRow_nowrap', styles.headerItems)}>

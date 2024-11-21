@@ -93,7 +93,7 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
         <>
             <UserSearch tableConfig={tableConfig} {...userQueryOptions}/>
             <Table
-                data-cm-role="user-selector-table"
+                data-cm-role="table-content-list"
                 className={styles.userTable}
                 {...getTableProps()}
             >

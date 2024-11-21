@@ -30,8 +30,8 @@ export const ContentRoute = () => {
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
-    const isOpenDialog = params?.openDialog?.key;
-    const canShowEditFrame = res?.node && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
+    const isOpenDialog = Boolean(params?.openDialog?.key);
+    const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {

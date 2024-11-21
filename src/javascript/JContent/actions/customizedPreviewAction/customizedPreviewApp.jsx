@@ -30,7 +30,8 @@ const useIframeDimensions = ({channel, variant} = {}) => {
     const variantData = getVariant(channel, variant);
     const {width, height} = variantData?.imageSize || {};
 
-    const bodyPadding = 8 * 2;
+    // We need to add both sizes padding - 8px * 2
+    const bodyPadding = 16;
     return {
         width: Number(width) + bodyPadding || '100%',
         height: Number(height) + bodyPadding || '100%'

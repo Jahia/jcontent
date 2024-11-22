@@ -2543,13 +2543,13 @@
     uuid "^8.3.1"
     xml-js "^1.6.11"
 
-"@jahia/moonstone@^2.9.0":
-  version "2.9.0"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.9.0.tgz#c3f673bb254eade63d8b3635fe8c5cc559340aa3"
-  integrity sha512-+JcI0HFuESe3lILDiYh5Am3g4sQtJbDGcHp/YBa+YxN4BOa6zbfB7xIbdMGNnwF0YJbnBGwDWk5/bmF7inix7Q==
+"@jahia/moonstone@^2.9.1":
+  version "2.9.1"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.9.1.tgz#bf9ddaaba3d4d46fb4d0d6f3487e2a87b5850275"
+  integrity sha512-dUQxVIiSrpgr79vvgM0wUOPesqbx1PCbqF9fw54Cem9zZGTlrHHBz8UeXdbzfwCFOetpkPRZuz3DeHlu7b0/YA==
   dependencies:
     "@babel/runtime" "^7.26.0"
-    "@jahia/scripts" "^1.3.5"
+    "@jahia/scripts" "^1.3.6"
     clsx "^2.1.1"
     prop-types "^15.8.1"
     re-resizable "^6.10.1"
@@ -2566,7 +2566,7 @@
     react-select "^2.4.2"
     recompose "^0.30.0"
 
-"@jahia/scripts@^1.3.5":
+"@jahia/scripts@^1.3.6":
   version "1.3.6"
   resolved "https://npm.jahia.com/@jahia%2fscripts/-/scripts-1.3.6.tgz#606c6fdbc6ca58b5340ab1ace4dfae9db400be43"
   integrity sha512-x0I+cw6m7K4Z7FlaxDebRKrDbXpJRjTbSk6IWx1WIKwslN+DwOnvqLKvpGcYOKY6Kawq75MsWBBMiGMkLv/LZw==

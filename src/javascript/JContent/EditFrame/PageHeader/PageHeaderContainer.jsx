@@ -2,7 +2,7 @@ import React from 'react';
 import {registry} from '@jahia/ui-extender';
 import * as PropTypes from 'prop-types';
 
-export const PageHeaderContainer = ({setCurrentVariantParam}) => {
+export const PageHeaderContainer = ({setCurrentUrlParams}) => {
     const headers = registry.find({type: 'pageHeader'});
 
     if (!headers || !headers.length) {
@@ -13,7 +13,7 @@ export const PageHeaderContainer = ({setCurrentVariantParam}) => {
             {
                 headers.map(header => {
                     const Component = header.Component;
-                    return <Component key={header.key} setCurrentVariantParam={setCurrentVariantParam}/>;
+                    return <Component key={header.key} setCurrentUrlParams={setCurrentUrlParams}/>;
                 })
             }
         </div>
@@ -21,5 +21,5 @@ export const PageHeaderContainer = ({setCurrentVariantParam}) => {
 };
 
 PageHeaderContainer.propTypes = {
-    setCurrentVariantParam: PropTypes.func
+    setCurrentUrlParams: PropTypes.func
 };

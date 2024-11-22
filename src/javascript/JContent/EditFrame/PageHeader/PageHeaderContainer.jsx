@@ -8,6 +8,7 @@ export const PageHeaderContainer = ({setCurrentUrlParams}) => {
     if (!headers || !headers.length) {
         return null;
     }
+
     return (
         <div data-sel-role="page-header-list">
             {

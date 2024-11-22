@@ -211,7 +211,7 @@ export const EditFrame = ({isDeviceView}) => {
         const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}${currentUrlParams}`;
-        
+
         if (currentDocument) {
             const mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
             console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, template);
@@ -238,11 +238,12 @@ export const EditFrame = ({isDeviceView}) => {
             previousDevice.current = deviceParam;
             setPreviousUrlParams(currentUrlParams);
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language, template, currentUrlParams]);
+    }, [currentDocument, path, previousDevice, deviceParam, language, template, currentUrlParams, previousUrlParams]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
     }
+
     return (
         <>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams}/>

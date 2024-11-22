@@ -7,6 +7,7 @@ import {JContentApi} from '~/JContent/JContentApi/JContentApi';
 import {SnackbarProvider} from 'notistack';
 import PublicationNotification from './PublicationStatus/PublicationNotification';
 import CompareDialog from './CompareDialog';
+import {CustomizedPreviewApp} from '~/JContent/actions/customizedPreviewAction/customizedPreviewApp';
 
 export const jContentAppRoot = registry => {
     registry.add('app', 'jcontent-ds-provider', {
@@ -24,6 +25,18 @@ export const jContentAppRoot = registry => {
         render: next => (
             <>
                 <CompareDialog/>
+                {next}
+            </>
+        )
+    });
+
+    registry.add('app', 'jcontent-customized-preview', {
+        // After component-renderer [root:16] app
+        // https://github.com/Jahia/jahia-ui-root/blob/master/src/javascript/JahiaUiRoot.app.register.js#L22
+        targets: ['root:17'],
+        render: next => (
+            <>
+                <CustomizedPreviewApp/>
                 {next}
             </>
         )

@@ -1,0 +1,23 @@
+header.header {
+    min-height: var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-large) 0 var(--spacing-large);
+
+    background-color: var(--color-gray_dark);
+}
+
+.headerItems {
+    gap: var(--spacing-big);
+
+    color: var(--color-light);
+
+    .headerItem {
+        width: auto;
+    }
+}
+
+.iframeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

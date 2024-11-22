@@ -11,6 +11,7 @@
     - 'mvn:org.jahia.modules/dx-base-demo-core'
     - 'mvn:org.jahia.modules/dx-base-demo-components'
     - 'mvn:org.jahia.modules/dx-base-demo-templates'
+    - 'mvn:org.jahia.modules/channels'
     - 'mvn:org.jahia.modules/qa-module'
     - 'mvn:org.jahia.modules/press'
     - 'mvn:org.jahia.modules/person'

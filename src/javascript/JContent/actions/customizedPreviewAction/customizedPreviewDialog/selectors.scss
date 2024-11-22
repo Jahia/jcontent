@@ -1,0 +1,22 @@
+.label {
+    margin-bottom: var(--spacing-small);
+}
+
+.selector {
+    margin-bottom: var(--spacing-medium);
+}
+
+.userSearchInput {
+    width: 400px;
+}
+
+.userTable {
+    flex-grow: 1;
+    width: 100%;
+    min-width: 1100px;
+    min-height: 512px;
+
+    .userContent {
+        flex-grow: 1;
+    }
+}

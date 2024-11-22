@@ -78,6 +78,7 @@ import {ViewUsagesComponent} from '~/JContent/actions/viewUsages';
 import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBuilderAction';
 import {CopyMenuComponent} from '~/JContent/actions/copyPaste/CopyMenuComponent';
 import {OpenInRepositoryExplorerActionComponent} from '~/JContent/actions/openInRepositoryExplorerAction';
+import {CustomizedPreviewActionComponent} from '~/JContent/actions/customizedPreviewAction/customizedPreviewAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -450,9 +451,9 @@ export const jContentActions = registry => {
 
     registry.add('action', 'customizedPreview', {
         buttonIcon: <Visibility/>,
-        buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview',
+        buttonLabel: 'jcontent:label.contentManager.actions.customizedPreview.label',
         targets: ['openInPreviewMenu:1'],
-        component: OpenInPreviewActionComponent
+        component: CustomizedPreviewActionComponent
     });
 
     registry.add('action', 'compareStagingToLive', {

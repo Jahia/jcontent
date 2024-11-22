@@ -15,13 +15,14 @@ import {JahiaAreasUtil} from '../JContent.utils';
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
-    const {path, mode, tableView, viewMode, template, language} = useSelector(state => ({
+    const {path, mode, tableView, viewMode, template, language, params} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
         mode: state.jcontent.mode,
         tableView: state.jcontent.tableView,
         viewMode: state.jcontent.tableView.viewMode,
-        template: state.jcontent.template
+        template: state.jcontent.template,
+        params: state.jcontent.params
     }), shallowEqual);
     const dispatch = useDispatch();
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
@@ -29,13 +30,14 @@ export const ContentRoute = () => {
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
-    const canShowEditFrame = res?.node && nodeTypes.some(nt => res.node[nt]);
+    const isOpenDialog = Boolean(params?.openDialog?.key);
+    const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
 
     useEffect(() => {
-        if (accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
+        if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
             dispatch(setTableViewMode(accordionItem.tableConfig.defaultViewMode || FLAT));
         }
-    }, [dispatch, mode, viewMode, FLAT, accordionItem]);
+    }, [dispatch, mode, viewMode, FLAT, accordionItem, isOpenDialog]);
 
     // Captured area information is used to block delete/move/copy/cut actions on areas
     useEffect(() => {
@@ -68,6 +70,10 @@ export const ContentRoute = () => {
             console.error('Failed to capture areas for page', e);
         });
     };
+
+    if (isOpenDialog) {
+        return null;
+    }
 
     if (res.loading) {
         return <LoaderOverlay/>;

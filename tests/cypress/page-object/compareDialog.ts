@@ -1,4 +1,4 @@
-import {BaseComponent, getComponentBySelector} from '@jahia/cypress';
+import {BaseComponent} from '@jahia/cypress';
 
 export class CompareDialog extends BaseComponent {
     static defaultSelector = 'div[data-sel-role="compare-dialog"]';

@@ -14,7 +14,7 @@ const getViewProperty = properties => {
 export const PreviewComponentContainer = ({previewMode, previewSelection, previewState, notificationContext}) => {
     const {t} = useTranslation('jcontent');
     const language = useSelector(state => state.language);
-    const {loading: nodeInfoLoading, error: nodeInfoError, node} = useNodeInfo({
+    const {node, loading: nodeInfoLoading, error: nodeInfoError} = useNodeInfo({
         path: previewSelection && previewSelection.path,
         language
     }, {
@@ -24,7 +24,7 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
     const {data, loading, error, refetch} = useContentPreview({
         path: previewSelection && previewSelection.path,
         templateType: 'html',
-        view: getViewProperty(node?.properties) ?? 'cm',
+        view: getViewProperty(node?.properties) || 'cm',
         contextConfiguration: 'preview',
         language,
         workspace: previewMode

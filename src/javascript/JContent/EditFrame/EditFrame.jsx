@@ -218,7 +218,6 @@ export const EditFrame = ({isDeviceView}) => {
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
             if (path === framePath && locale === language && previousDevice.current === deviceParam && currentUrlParams === previousUrlParams) {
-                console.log(1);
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {

@@ -24,7 +24,7 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
     const {data, loading, error, refetch} = useContentPreview({
         path: previewSelection && previewSelection.path,
         templateType: 'html',
-        view: getViewProperty(node?.properties) ?? 'cm',
+        view: getViewProperty(node?.properties) || 'cm',
         contextConfiguration: 'preview',
         language,
         workspace: previewMode

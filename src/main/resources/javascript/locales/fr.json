@@ -563,6 +563,7 @@
       "edit": {
         "title": "Éditer le contenu",
         "contentEdit": "Editer le contenu",
+        "contentEditAdvanced": "Edition avancée",
         "contentEditSource": "Modifier la source référée",
         "validation": {
           "required": "Requis",

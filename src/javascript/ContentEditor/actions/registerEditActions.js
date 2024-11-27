@@ -24,6 +24,18 @@ export const registerEditActions = actionsRegistry => {
         getDisplayName: true
     });
 
+    actionsRegistry.add('action', 'editAdvanced', editContentAction, {
+        buttonIcon: <Edit/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.contentEditAdvanced',
+        targets: showPageBuilder ?
+            ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.6'] :
+            ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.6'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'], // For edit content
+        requiredSitePermission: ['editAction'],
+        getDisplayName: true,
+        isFullscreen: true
+    });
+
     // Edit action button in JContent; need separate actions for content and pages
     actionsRegistry.add('action', 'editSource', editContentSourceAction, {
         buttonIcon: <Edit/>,
@@ -44,6 +56,18 @@ export const registerEditActions = actionsRegistry => {
         showOnNodeTypes: ['jnt:page'], // For edit pages
         requiredSitePermission: ['editPageAction'],
         getDisplayName: true
+    });
+
+    actionsRegistry.add('action', 'editPageAdvanced', editContentAction, {
+        buttonIcon: <Edit/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.contentEditAdvanced',
+        targets: showPageBuilder ?
+            ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.6'] :
+            ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.6'],
+        showOnNodeTypes: ['jnt:page'], // For edit pages
+        requiredSitePermission: ['editPageAction'],
+        getDisplayName: true,
+        isFullscreen: true
     });
 
     // Edit action button in JContent

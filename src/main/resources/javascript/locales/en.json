@@ -568,6 +568,7 @@
       "edit": {
         "title": "Edit content",
         "contentEdit": "Edit",
+        "contentEditAdvanced": "Advanced editing",
         "contentEditSource": "Edit reference source",
         "validation": {
           "required": "Required",

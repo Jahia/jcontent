@@ -560,6 +560,7 @@
       "edit": {
         "title": "Content bearbeiten",
         "contentEdit": "Content bearbeiten",
+        "contentEditAdvanced": "Erweitertes Editieren",
         "contentEditSource": "Referenzquelle bearbeiten",
         "validation": {
           "required": "erforderlich",

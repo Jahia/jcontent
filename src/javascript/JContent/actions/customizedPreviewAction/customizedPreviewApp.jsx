@@ -46,13 +46,14 @@ export const CustomizedPreviewApp = () => {
         params: state.jcontent.params
     }));
     const {width, height} = useIframeDimensions(params?.openDialog?.params);
+    const isCustomizedPreview = params?.openDialog?.key === 'customizedPreview';
 
     const res = useQuery(OpenInActionQuery, {
         variables: {path, language, workspace: 'EDIT'},
-        skip: !path
+        skip: !path || !isCustomizedPreview
     });
 
-    if (params?.openDialog?.key !== 'customizedPreview') {
+    if (!isCustomizedPreview) {
         return null;
     }
 

@@ -165,3 +165,5 @@
 
 [jmix:freezeSystemName] mixin
  extends=jnt:page
+
+[cent:noDefaultView] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent

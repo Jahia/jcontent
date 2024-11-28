@@ -17,6 +17,7 @@ export const RenderUrl = gql`
                 renderUrlLive: renderUrl(workspace: LIVE, language: $language)
                 renderUrlEdit: renderUrl(workspace: EDIT, language: $language)
                 site {
+                    ...NodeCacheRequiredFields
                     serverName
                 }
             }

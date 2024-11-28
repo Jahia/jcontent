@@ -17,6 +17,7 @@ const OpenInActionQuery = gql`
                 }
                 renderUrl(workspace: $workspace, language: $language)
                 site {
+                    ...NodeCacheRequiredFields
                     serverName
                 }
             }

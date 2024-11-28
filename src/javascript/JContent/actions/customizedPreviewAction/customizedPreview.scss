@@ -17,7 +17,10 @@ header.header {
 
 .iframeContainer {
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100%;
+    overflow: scroll;
+
+    .iframe {
+        margin: 0 auto;
+    }
 }

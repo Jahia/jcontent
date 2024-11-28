@@ -92,7 +92,7 @@ export const PickerFilesGrid = ({totalCount, rows, isLoading, pickerConfig, isMu
         }
     }, [pagination.currentPage]);
 
-    const [{isCanDrop}, dropFile] = useFileDrop({
+    const [{isCanDrop, allowDrop}, dropFile] = useFileDrop({
         uploadType: 'upload',
         uploadPath: path,
         uploadFilter: file => !tableConfig?.uploadFilter || tableConfig.uploadFilter(file, mode, pickerConfig)
@@ -102,7 +102,7 @@ export const PickerFilesGrid = ({totalCount, rows, isLoading, pickerConfig, isMu
 
     if ((!rows || rows.length === 0) && !isLoading) {
         return (
-            <FilesGridEmptyDropZone uploadType="upload" reference={mainPanelRef} isCanDrop={isCanDrop}/>
+            <FilesGridEmptyDropZone uploadType="upload" reference={mainPanelRef} isCanDrop={isCanDrop} allowDrop={allowDrop}/>
         );
     }
 

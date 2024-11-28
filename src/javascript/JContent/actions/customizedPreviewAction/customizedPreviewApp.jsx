@@ -72,7 +72,13 @@ export const CustomizedPreviewApp = () => {
                 content={
                     <div className={styles.iframeContainer}>
                         {(renderUrl) ?
-                            (<iframe data-sel-role="customized-preview-iframe" width={width} height={height} src={`${resolveUrlForLiveOrPreview(renderUrl)}${urlParams}`}/>) :
+                            (<iframe
+                                data-sel-role="customized-preview-iframe"
+                                width={width}
+                                height={height}
+                                className={styles.iframe}
+                                src={`${resolveUrlForLiveOrPreview(renderUrl)}${urlParams}`}
+                            />) :
                             (
                                 <Typography variant="title">
                                     {t('jcontent:label.contentManager.actions.customizedPreview.noRenderUrl')}

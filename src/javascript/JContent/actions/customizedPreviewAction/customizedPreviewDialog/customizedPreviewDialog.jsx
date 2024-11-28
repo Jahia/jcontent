@@ -79,6 +79,12 @@ const CustomizedPreviewDialog = ({isOpen, onClose, onExited}) => {
             <DialogActions>
                 <Button
                     size="big"
+                    data-sel-role="cancel"
+                    label={t('jcontent:label.contentEditor.edit.fields.modalCancel')}
+                    onClick={onClose}
+                />
+                <Button
+                    size="big"
                     data-sel-role="clear-all"
                     label={t('jcontent:label.contentManager.actions.customizedPreview.clearAll')}
                     onClick={clearAll}

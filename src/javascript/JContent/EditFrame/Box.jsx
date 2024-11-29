@@ -187,6 +187,8 @@ export const Box = React.memo(({
         className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
     };
 
+    const headerBackgroundColor = type === 'area' ? 'var(--color-gray_light)' : 'var(--color-gray_light40)';
+
     const Header = (
         <div {...headerProps}
              jahiatype="header" // eslint-disable-line react/no-unknown-property
@@ -197,7 +199,10 @@ export const Box = React.memo(({
              onClick={onClick}
              onDoubleClick={onDoubleClick}
         >
-            <div ref={dragWithChecks} className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}>
+            <div ref={dragWithChecks}
+                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}
+                 style={{'--colorHeaderBackground': headerBackgroundColor}}
+            >
                 <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
                 {node &&
                     <Bar

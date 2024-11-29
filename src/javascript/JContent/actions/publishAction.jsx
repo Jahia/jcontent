@@ -75,7 +75,7 @@ const constraintsByType = {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder', 'jmix:autoPublish']
     },
     publishAll: {
-        showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
+        showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page', 'jnt:navMenuText'],
         hideOnNodeTypes: ['jmix:autoPublish']
     },
     unpublish: {

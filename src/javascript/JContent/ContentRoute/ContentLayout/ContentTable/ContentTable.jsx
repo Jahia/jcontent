@@ -109,7 +109,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
-    const [{isCanDrop}, drop] = useFileDrop({uploadType: tableConfig?.uploadType, uploadPath: path});
+    const [{isCanDrop, allowDrop}, drop] = useFileDrop({uploadType: tableConfig?.uploadType, uploadPath: path});
 
     if (isContentNotFound) {
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
@@ -125,7 +125,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return (
             <>
                 {tableHeader}
-                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop} selector={selector}/>
+                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop} allowDrop={allowDrop} selector={selector}/>
             </>
         );
     }

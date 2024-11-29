@@ -143,7 +143,8 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
         canDrop: (item, monitor) => allowDrop && monitor.isOver({shallow: true}),
         collect: monitor => ({
             isOver: monitor.isOver({shallow: true}),
-            isCanDrop: monitor.canDrop()
+            isCanDrop: monitor.canDrop(),
+            allowDrop
         })
     }), [client, dispatch, uploadFilter, uploadPath, uploadType, uploadMaxSize, uploadMinSize, allowDrop]);
 }

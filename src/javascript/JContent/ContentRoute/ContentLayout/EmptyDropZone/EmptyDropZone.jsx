@@ -13,7 +13,7 @@ import {getButtonRenderer} from '~/utils/getButtonRenderer';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {className: styles.button, size: 'big'}});
 
-const EmptyDropZone = ({component: Component, isCanDrop, uploadType, selector}) => {
+const EmptyDropZone = ({component: Component, isCanDrop, allowDrop, uploadType, selector}) => {
     const currentState = useSelector(selector, shallowEqual);
     const {t} = useTranslation('jcontent');
 
@@ -63,7 +63,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType, selector}) 
         );
     }
 
-    if (uploadType === JContentConstants.mode.UPLOAD && permissions.node.site.uploadFilesAction) {
+    if (uploadType === JContentConstants.mode.UPLOAD && permissions.node.site.uploadFilesAction && allowDrop) {
         return (
             <Component data-type="upload" className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
                 {!isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>}
@@ -73,7 +73,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType, selector}) 
         );
     }
 
-    if (uploadType === JContentConstants.mode.IMPORT && permissions.node.site.importAction) {
+    if (uploadType === JContentConstants.mode.IMPORT && permissions.node.site.importAction && allowDrop) {
         return (
             <Component data-type="import" className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
                 {!isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>}
@@ -95,6 +95,7 @@ EmptyDropZone.propTypes = {
     component: PropTypes.string.isRequired,
     uploadType: PropTypes.string,
     isCanDrop: PropTypes.bool,
+    allowDrop: PropTypes.bool,
     selector: PropTypes.func
 };
 

@@ -98,7 +98,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
-    const [{isCanDrop}, drop] = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path});
+    const [{isCanDrop, allowDrop}, drop] = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path});
 
     if ((!rows || rows.length === 0) && isLoading) {
         return null;
@@ -116,12 +116,15 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
 
     if ((!rows || rows.length === 0) && !isLoading) {
         return (
-            <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD}
-                                    reference={el => {
-                                        mainPanelRef.current = el;
-                                        drop(mainPanelRef);
-                                    }}
-                                    isCanDrop={isCanDrop}/>
+            <FilesGridEmptyDropZone
+                uploadType={JContentConstants.mode.UPLOAD}
+                reference={el => {
+                    mainPanelRef.current = el;
+                    drop(mainPanelRef);
+                }}
+                isCanDrop={isCanDrop}
+                allowDrop={allowDrop}
+            />
         );
     }
 

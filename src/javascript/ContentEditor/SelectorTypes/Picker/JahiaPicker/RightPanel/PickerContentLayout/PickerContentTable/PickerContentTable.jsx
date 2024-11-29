@@ -140,7 +140,7 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
         dispatch(batchActions(actions));
     };
 
-    const [{isCanDrop}, drop] = useFileDrop({
+    const [{isCanDrop, allowDrop}, drop] = useFileDrop({
         uploadType: tableConfig?.uploadType,
         uploadPath: path,
         uploadFilter: file => !tableConfig?.uploadFilter || tableConfig.uploadFilter(file, mode, pickerConfig)
@@ -160,7 +160,7 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
         return (
             <>
                 {tableHeader}
-                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop}/>
+                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop} allowDrop={allowDrop}/>
             </>
         );
     }

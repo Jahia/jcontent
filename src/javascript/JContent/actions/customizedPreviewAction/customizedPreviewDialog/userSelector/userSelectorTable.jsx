@@ -7,13 +7,14 @@ import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 import {useTable} from 'react-table';
 import {ContentListHeader, ContentNotFound, EmptyTable} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
+import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
 import {UserSearch} from './userSearch';
 import PropTypes from 'prop-types';
 import styles from '../selectors.scss';
 import clsx from 'clsx';
 
-export const useUserQueryOptions = ({currentPage, pageSize}) => {
+export const useUserQueryOptions = ({tableConfig, currentPage, pageSize}) => {
     const siteKey = useSelector(state => state.site);
     const lang = useSelector(state => state.language);
     const uilang = useSelector(state => state.uilang);
@@ -21,6 +22,7 @@ export const useUserQueryOptions = ({currentPage, pageSize}) => {
     const [pickerMode, setPickerMode] = useState('picker-user');
     const [searchPath, setSearchPath] = useState('/');
     const [searchTerms, setSearchTerms] = useState('');
+    const [sort, setSort] = useState(tableConfig?.defaultSort || {orderBy: 'displayName', order: 'ASC'});
 
     const {selectableTypesTable, searchContentType} = registry.get(Constants.pickerConfig, 'user');
     return {
@@ -37,10 +39,8 @@ export const useUserQueryOptions = ({currentPage, pageSize}) => {
         searchContentType,
         selectableTypesTable,
         filesMode: 'list',
-        sort: {
-            orderBy: 'displayName',
-            order: 'ASC'
-        },
+        sort,
+        setSort,
         tableView: {
             viewMode: 'flatList',
             viewType: 'content'
@@ -57,7 +57,7 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
     const {tableConfig} = registry.get(Constants.ACCORDION_ITEM_NAME, 'picker-user') || {};
 
     const userQueryOptions = useUserQueryOptions({tableConfig, currentPage, pageSize});
-    const {mode, searchTerms} = userQueryOptions;
+    const {mode, searchTerms, sort, setSort} = userQueryOptions;
     const {result, error, loading} = useLayoutQuery(userQueryOptions);
 
     const {
@@ -68,8 +68,10 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
         prepareRow
     } = useTable({
         data: result?.nodes || [],
-        columns: tableConfig.columns
-    });
+        columns: tableConfig.columns,
+        sort,
+        onSort: (column, order) => setSort({orderBy: column.property, order})
+    }, reactTable.useSort);
 
     if (!loading && !result?.nodes?.length) {
         if (error) {

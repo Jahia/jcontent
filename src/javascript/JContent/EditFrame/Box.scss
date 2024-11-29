@@ -105,7 +105,7 @@
 
     padding: 0 var(--spacing-small);
 
-    background-color: var(--color-gray_light40);
+    background-color: var(--colorHeaderBackground);
 
     button {
         min-width: max-content;
@@ -160,7 +160,8 @@
     z-index: 18000;
 
     border-radius: 4px;
-    outline: 2px solid var(--colorCurrent);
+    outline: 2px solid var(--color-accent_light);
+    outline-style: dashed;
     box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }
 

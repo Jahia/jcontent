@@ -309,7 +309,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
 
-    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, errorPolicy: 'all'});
+    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
     useEffect(() => {
         setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});

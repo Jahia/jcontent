@@ -141,6 +141,8 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
     mergedConfig.onClosedCallback = () => {
         if (onClosedCallback) {
             onClosedCallback(mergedConfig, needRefresh.current);
+            // Mark as refreshed after callback to avoid multiple refreshes
+            needRefresh.current = false;
         }
     };
 

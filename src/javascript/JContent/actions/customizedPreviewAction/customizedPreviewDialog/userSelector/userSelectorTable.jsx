@@ -58,7 +58,7 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
 
     const userQueryOptions = useUserQueryOptions({tableConfig, currentPage, pageSize});
     const {mode, searchTerms, sort, setSort} = userQueryOptions;
-    const fragments = tableConfig?.queryHandler?.getFragments();
+    const fragments = (tableConfig?.queryHandler?.getFragments) ? (tableConfig?.queryHandler?.getFragments() || []) : [];
     const {result, error, loading} = useLayoutQuery(userQueryOptions, fragments.filter(Boolean));
 
     const {

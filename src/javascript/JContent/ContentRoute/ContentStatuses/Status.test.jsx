@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {Cloud, Delete, File, Lock, NoCloud, Warning, Build} from '@jahia/moonstone';
+import {Delete, File, Lock, NoCloud, Warning, Build, CloudCheck} from '@jahia/moonstone';
 
 import Status from './Status';
 
@@ -28,7 +28,7 @@ describe('Status', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.modified');
-        expect(wrapper.props().color).toBe('default');
+        expect(wrapper.props().color).toBe('accent');
         expect(wrapper.props().icon).toStrictEqual(<File/>);
     });
 
@@ -37,7 +37,7 @@ describe('Status', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.notPublished');
-        expect(wrapper.props().color).toBe('warning');
+        expect(wrapper.props().color).toBe('default');
         expect(wrapper.props().icon).toStrictEqual(<NoCloud/>);
     });
 
@@ -46,8 +46,8 @@ describe('Status', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.published');
-        expect(wrapper.props().color).toBe('accent');
-        expect(wrapper.props().icon).toStrictEqual(<Cloud/>);
+        expect(wrapper.props().color).toBe('success');
+        expect(wrapper.props().icon).toStrictEqual(<CloudCheck/>);
     });
 
     it('should be \'Warning\'', () => {
@@ -64,7 +64,7 @@ describe('Status', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.workInProgress');
-        expect(wrapper.props().color).toBe('default');
+        expect(wrapper.props().color).toBe('warning');
         expect(wrapper.props().icon).toStrictEqual(<Build/>);
     });
 });

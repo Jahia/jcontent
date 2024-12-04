@@ -31,10 +31,10 @@ export const CellStatus = ({cell, column, row}) => {
                         t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) :
                         t('jcontent:label.contentManager.workInProgressAll')}
                 >
-                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>}/>
+                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>} color="warning"/>
                 </Tooltip>}
             {node.lockOwner !== null &&
-            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color="danger"/></Tooltip>}
+            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color="warning"/></Tooltip>}
             {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${subNodesCountText} item(s)`} icon={<Subdirectory/>}/>}
         </TableBodyCell>
     );

@@ -29,6 +29,7 @@ export const WipInfoChip = () => {
                 <Chip
                     data-sel-role="wip-info-chip"
                     label={getChipContent(field.value, lang, t)}
+                    color="warning"
                 />
             )}
         </Field>

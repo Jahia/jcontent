@@ -49,31 +49,61 @@
 .published {
     color: var(--color-light);
 
-    background-color: var(--color-publicationStatus-published);
+    background-color: var(--color-success);
+}
+
+.publishedBody {
+    color: var(--color-success_dark);
+
+    background-color: var(--color-success_plain20);
 }
 
 .modified {
     color: var(--color-light);
 
-    background-color: var(--color-publicationStatus-modified);
+    background-color: var(--color-warning);
+}
+
+.modifiedBody {
+    color: var(--color-warning_dark);
+
+    background-color: var(--color-warning_plain20);
 }
 
 .notPublished {
     color: var(--color-light);
 
-    background-color: var(--color-publicationStatus-notPublished);
+    background-color: var(--color-gray_dark);
+}
+
+.notPublishedBody {
+    color: var(--color-gray_dark);
+
+    background-color: var(--color-gray_dark_plain20);
 }
 
 .unPublished {
     color: var(--color-dark);
 
-    background-color: var(--color-publicationStatus-unpublished);
+    background-color: var(--color-gray);
+}
+
+.unPublishedBody {
+    color: var(--color-gray_dark);
+
+    background-color: var(--color-gray_plain20);
 }
 
 .markedForDeletion {
     color: var(--color-light);
 
-    background-color: var(--color-publicationStatus-markedForDeletion);
+    background-color: var(--color-danger);
+}
+
+.markedForDeletionBody {
+    color: var(--color-danger_dark);
+
+    background-color: var(--color-danger_plain20);
 }
 
 .mandatoryLanguageUnpublishable {

@@ -46,7 +46,7 @@ export const UnsavedChip = () => {
             icon={<Edit/>}
             data-sel-role="unsaved-info-chip"
             label={t('jcontent:label.contentEditor.header.chips.unsavedLabel') + message}
-            color="warning"
+            color="accent"
         />
     );
 };

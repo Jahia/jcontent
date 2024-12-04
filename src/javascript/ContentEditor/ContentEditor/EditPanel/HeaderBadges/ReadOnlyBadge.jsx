@@ -17,7 +17,7 @@ export const ReadOnlyBadge = ({isGlobal, isReadOnly}) => {
               data-sel-role="read-only-badge"
               label={t('jcontent:label.contentEditor.readOnly')}
               icon={<Visibility/>}
-              color="warning"
+              color="accent"
         />
     );
 

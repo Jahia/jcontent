@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
 import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {CloudCheck, Delete, File, Information, NoCloud} from '@jahia/moonstone';
 
 function getFormattedDate(date, locale) {
     return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');
@@ -19,6 +20,14 @@ class PublicationStatusUnpublished {
     getContentClass(classes) {
         return classes.unPublished;
     }
+
+    getBodyClass(classes) {
+        return classes.unPublishedBody;
+    }
+
+    getIcon(props) {
+        return <NoCloud {...props}/>;
+    }
 }
 
 class PublicationStatusNotPublished {
@@ -28,6 +37,14 @@ class PublicationStatusNotPublished {
 
     getContentClass(classes) {
         return classes.notPublished;
+    }
+
+    getBodyClass(classes) {
+        return classes.notPublishedBody;
+    }
+
+    getIcon(props) {
+        return <NoCloud {...props}/>;
     }
 }
 
@@ -47,6 +64,14 @@ class PublicationStatusPublished {
     getContentClass(classes) {
         return classes.published;
     }
+
+    getBodyClass(classes) {
+        return classes.publishedBody;
+    }
+
+    getIcon(props) {
+        return <CloudCheck {...props}/>;
+    }
 }
 
 class PublicationStatusModified {
@@ -64,6 +89,14 @@ class PublicationStatusModified {
 
     getContentClass(classes) {
         return classes.modified;
+    }
+
+    getBodyClass(classes) {
+        return classes.modifiedBody;
+    }
+
+    getIcon(props) {
+        return <File {...props}/>;
     }
 }
 
@@ -86,6 +119,14 @@ class PublicationStatusMarkedForDeletion {
     getContentClass(classes) {
         return classes.markedForDeletion;
     }
+
+    getBodyClass(classes) {
+        return classes.markedForDeletionBody;
+    }
+
+    getIcon(props) {
+        return <Delete {...props}/>;
+    }
 }
 
 class PublicationStatusMandatoryLanguageUnpublishable {
@@ -101,6 +142,14 @@ class PublicationStatusMandatoryLanguageUnpublishable {
 
     getContentClass(classes) {
         return classes.mandatoryLanguageUnpublishable;
+    }
+
+    getBodyClass(classes) {
+        return classes.mandatoryLanguageUnpublishable;
+    }
+
+    getIcon(props) {
+        return <Information {...props}/>;
     }
 }
 
@@ -118,6 +167,14 @@ class PublicationStatusMandatoryLanguageValid {
     getContentClass(classes) {
         return classes.mandatoryLanguageValid;
     }
+
+    getBodyClass(classes) {
+        return classes.mandatoryLanguageValid;
+    }
+
+    getIcon(props) {
+        return <Information {...props}/>;
+    }
 }
 
 class PublicationStatusConflict {
@@ -134,6 +191,14 @@ class PublicationStatusConflict {
     getContentClass(classes) {
         return classes.conflict;
     }
+
+    getBodyClass(classes) {
+        return classes.conflict;
+    }
+
+    getIcon(props) {
+        return <Information {...props}/>;
+    }
 }
 
 class PublicationStatusUnknown {
@@ -143,6 +208,14 @@ class PublicationStatusUnknown {
 
     getContentClass(classes) {
         return classes.unknown;
+    }
+
+    getBodyClass(classes) {
+        return classes.unknown;
+    }
+
+    getIcon(props) {
+        return <Information {...props}/>;
     }
 }
 

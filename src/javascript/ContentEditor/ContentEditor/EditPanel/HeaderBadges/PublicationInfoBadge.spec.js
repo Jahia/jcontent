@@ -1,7 +1,7 @@
 import {PublicationInfoBadge} from './PublicationInfoBadge';
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {PublicationStatus} from './PublicationStatus';
+import PublicationStatus from '../../../../JContent/ContentRoute/ContentStatuses/Status';
 
 jest.mock('react-redux', () => {
     return {
@@ -66,14 +66,14 @@ describe('PublicationInfoBadge', () => {
     it('Should not display any badge when publication info is polling', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
-        expect(wrapper.find('PublicationStatus')).toHaveLength(0);
+        expect(wrapper.find('Status')).toHaveLength(0);
     });
 
     it('Should not display "publishing" badge when publication info is not polling', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="notPublished"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "modified" and "live" badges when MODIFIED publication info', () => {
@@ -81,55 +81,55 @@ describe('PublicationInfoBadge', () => {
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="modified" tooltip="translated_label.contentEditor.publicationStatusTooltip.modified"/>)).toBeTruthy();
         expect(wrapper.containsMatchingElement(<PublicationStatus type="published" tooltip="translated_label.contentEditor.publicationStatusTooltip.published"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(2);
+        expect(wrapper.find('Status')).toHaveLength(2);
     });
 
     it('Should display "not published" badge when NOT_PUBLISHED publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="notPublished"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "live" badge when PUBLISHED publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="published" tooltip="translated_label.contentEditor.publicationStatusTooltip.published"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "not published" badge when UNPUBLISHED publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="notPublished"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "warning" badge when CONFLICT publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="warning" tooltip="translated_label.contentEditor.publicationStatusTooltip.conflict"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "warning" badge when MANDATORY_LANGUAGE_VALID publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="warning" tooltip="translated_label.contentEditor.publicationStatusTooltip.mandatoryLanguageValid"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "warning" badge when MANDATORY_LANGUAGE_UNPUBLISHABLE publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="warning" tooltip="translated_label.contentEditor.publicationStatusTooltip.mandatoryLanguageUnpublishable"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('Should display "warning" badge when unknown publication info', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="warning" tooltip="translated_label.contentEditor.publicationStatusTooltip.unknown"/>)).toBeTruthy();
-        expect(wrapper.find('PublicationStatus')).toHaveLength(1);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 });

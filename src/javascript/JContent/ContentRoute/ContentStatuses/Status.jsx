@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Build, Chip, Cloud, Delete, File, Lock, NoCloud, Warning} from '@jahia/moonstone';
+import {Build, Chip, CloudCheck, Delete, File, FileContent, Lock, NoCloud, Warning} from '@jahia/moonstone';
 
-const config = {
+export const config = {
     locked: {
         color: 'warning',
         icon: <Lock/>
@@ -13,24 +13,28 @@ const config = {
         icon: <Delete/>
     },
     modified: {
-        color: 'default',
+        color: 'accent',
         icon: <File/>
     },
     notPublished: {
-        color: 'warning',
+        color: 'default',
         icon: <NoCloud/>
     },
     published: {
-        color: 'accent',
-        icon: <Cloud/>
+        color: 'success',
+        icon: <CloudCheck/>
     },
     warning: {
         color: 'warning',
         icon: <Warning/>
     },
     workInProgress: {
-        color: 'default',
+        color: 'warning',
         icon: <Build/>
+    },
+    publishing: {
+        color: 'accent',
+        icon: <FileContent/>
     }
 };
 

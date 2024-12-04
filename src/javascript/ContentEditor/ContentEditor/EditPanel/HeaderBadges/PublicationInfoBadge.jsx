@@ -2,9 +2,9 @@ import React from 'react';
 import {usePublicationInfoContext} from '~/ContentEditor/contexts';
 import {useTranslation} from 'react-i18next';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {PublicationStatus} from './PublicationStatus';
 import {getTooltip} from './PublicationInfoBadge.tooltip';
 import {useSelector} from 'react-redux';
+import Status from '../../../../JContent/ContentRoute/ContentStatuses/Status';
 
 export const PublicationInfoBadge = () => {
     const {t} = useTranslation('jcontent');
@@ -35,7 +35,7 @@ export const PublicationInfoBadge = () => {
 
     const supportedUiLang = Constants.supportedLocales.includes(uilang) ? uilang : Constants.defaultLocale;
     const renderStatus = type => (
-        <PublicationStatus type={type} tooltip={getTooltip(type, publicationInfoContext, supportedUiLang, t)}/>
+        <Status type={type} tooltip={getTooltip(type, publicationInfoContext, supportedUiLang, t)}/>
     );
     return (
         <>

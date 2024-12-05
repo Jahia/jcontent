@@ -49,7 +49,7 @@ export const MainActionBar = () => {
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction isMediumLabel actionKey={publishAction} path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
-                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', icon: <ChevronDown/>}}/>
+                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>
             </ButtonGroup>
             <DisplayAction actionKey="publishDeletion" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel}/>
             <DisplayAction actionKey="deletePermanently" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel}/>

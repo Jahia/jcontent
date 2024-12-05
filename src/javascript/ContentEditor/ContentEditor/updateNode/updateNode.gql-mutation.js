@@ -5,10 +5,9 @@ export const SavePropertiesMutation = gql`
     mutation saveNodeProperties(
         $uuid:String!,
         $propertiesToSave: [InputJCRProperty],
-        $propertiesToDelete: [String],
+        $propertiesToDelete: [InputJCRPropertyI18n],
         $mixinsToAdd: [String]!,
         $mixinsToDelete: [String]!,
-        $language: String,
         $shouldModifyChildren: Boolean!,
         $childrenOrder: [String]!,
         $shouldRename: Boolean!,
@@ -27,8 +26,8 @@ export const SavePropertiesMutation = gql`
                 setPropertiesBatch(properties: $propertiesToSave) {
                     path
                 }
-                mutateProperties(names: $propertiesToDelete) {
-                    delete(language: $language)
+                mutateLocalizedProperties(properties: $propertiesToDelete) {
+                    delete
                 }
                 reorderChildren(names: $childrenOrder) @include(if: $shouldModifyChildren)
                 node {

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Checkbox} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -23,25 +23,23 @@ const processCustomBoxConfigIfExists = node => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
-    let borderColorCurrent = 'var(--color-accent_light)';
+    let borderColorCurrent = 'var(--color-gray)';
     let borderColorSelected = 'var(--color-accent)';
-    let backgroundColorCurrent;
-    let backgroundColorSelected;
     if (pageBuilderBoxConfig) {
         const borderColors = pageBuilderBoxConfig.borderColors;
-        const backgroundColors = pageBuilderBoxConfig.backgroundColors;
         if (borderColors) {
             borderColorCurrent = borderColors.hover ? borderColors.hover : borderColorCurrent;
             borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
         }
-
-        if (backgroundColors) {
-            backgroundColorCurrent = backgroundColors.hover ? backgroundColors.hover : backgroundColorCurrent;
-            backgroundColorSelected = backgroundColors.selected ? backgroundColors.selected : backgroundColorSelected;
-        }
     }
 
-    return {Bar, borderColorCurrent, borderColorSelected, backgroundColorCurrent, backgroundColorSelected, isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed};
+    return {
+        Bar,
+        borderColorCurrent,
+        borderColorSelected,
+        isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
+        isSticky: pageBuilderBoxConfig?.isSticky ?? true
+    };
 };
 
 const adaptContentPositionAndSize = element => {
@@ -50,7 +48,6 @@ const adaptContentPositionAndSize = element => {
     } else {
         element.classList.add(editStyles.marginTop);
     }
-
     element.classList.add(editStyles.smallerBox);
 };
 
@@ -169,7 +166,7 @@ export const Box = React.memo(({
         )
     ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    const {Bar, borderColorCurrent, borderColorSelected, backgroundColorCurrent, isBarAlwaysDisplayed} = processCustomBoxConfigIfExists(node);
+    const {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed, isSticky} = useMemo(() => processCustomBoxConfigIfExists(node), [node]);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isCurrent && !isSelected) {
@@ -192,7 +189,7 @@ export const Box = React.memo(({
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerProps = {
-        className: clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
+        className: clsx(styles.headerContainer, !isSticky && styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
     };
 
     const headerBackgroundColor = type === 'area' ? 'var(--color-gray_light)' : 'var(--color-gray_light40)';
@@ -209,7 +206,7 @@ export const Box = React.memo(({
         >
             <div ref={dragWithChecks}
                  className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}
-                 style={{'--colorHeaderBackground': backgroundColorCurrent || headerBackgroundColor}}
+                 style={{'--colorHeaderBackground': headerBackgroundColor}}
             >
                 <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
                 {node &&
@@ -234,8 +231,8 @@ export const Box = React.memo(({
         >
             <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, (isCurrent || isClicked) && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
                  style={{
-                    '--colorCurrent': borderColorCurrent,
-                    '--colorSelected': borderColorSelected
+                     '--colorCurrent': borderColorCurrent,
+                     '--colorSelected': borderColorSelected
                  }}
             >
                 {isHeaderDisplayed && Header}

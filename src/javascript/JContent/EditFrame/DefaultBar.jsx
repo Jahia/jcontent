@@ -27,16 +27,22 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
     />
 );
 
+export const LabelBar = ({node}) => {
+    const title = truncate(node.displayName, 24);
+    return (<>
+        <NodeIcon node={node} className={styles.icon}/>
+        <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
+    </>);
+}
+
 export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden}) => {
     const WrappedButtonRendererNoLabel = headerButtonWrapper(ButtonRendererNoLabel, currentFrameRef);
     const WrappedButtonRenderer = headerButtonWrapper(ButtonRenderer, currentFrameRef);
 
     const displayLabels = width > 400;
-    const title = truncate(node.displayName, 24);
     return (
         <>
-            <NodeIcon node={node} className={styles.icon}/>
-            <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
+            <LabelBar node={node}/>
 
             {!isStatusHidden && <ContentStatuses node={node}
                                                  hasLabel={displayLabels}

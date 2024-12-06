@@ -12,11 +12,12 @@
 
     display: flex;
     flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
 
     & > button {
         z-index: 10000;
 
-        flex: 1;
         overflow: hidden;
 
         margin: 0 4px;

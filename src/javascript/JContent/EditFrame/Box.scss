@@ -67,8 +67,7 @@
     overflow: hidden;
 }
 
-.sticky {
-    position: sticky;
+.headerContainer {
     top: 0;
     left: 0;
 
@@ -82,6 +81,10 @@
     pointer-events: all;
 
     overflow: hidden;
+
+    .sticky {
+        position: sticky;
+    }
 }
 
 .absolute {

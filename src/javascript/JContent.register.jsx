@@ -29,6 +29,7 @@ import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import SvgJContent from '~/icons/JContent';
 import {compareStagingAndLiveRedux} from './JContent/redux/compareStagingAndLive.redux';
+import {pageBuilderConfig} from '~/JContent/EditFrame/JContent.pageBuilderConfig';
 
 window.jahia.localeFiles = window.jahia.localeFiles || {};
 window.jahia.localeFiles.jcontent = hashes;
@@ -171,6 +172,7 @@ export default function () {
 
     jContentRoutes(registry);
     jContentActions(registry);
+    pageBuilderConfig(registry);
 
     fileuploadRedux(registry);
     previewRedux(registry);

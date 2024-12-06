@@ -175,7 +175,8 @@
 }
 
 :global(.noprefix) .marginTop {
-    margin-top: 36px;
+    // FIXME override margin-top for empty area in iframe without !important
+    margin-top: 46px !important;
 }
 
 :global(.noprefix) .parentPadding {

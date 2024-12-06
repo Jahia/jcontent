@@ -5,7 +5,7 @@ export const SavePropertiesMutation = gql`
     mutation saveNodeProperties(
         $uuid:String!,
         $propertiesToSave: [InputJCRProperty],
-        $propertiesToDelete: [InputJCRPropertyI18n],
+        $propertiesToDelete: [InputJCRDeletedProperty],
         $mixinsToAdd: [String]!,
         $mixinsToDelete: [String]!,
         $shouldModifyChildren: Boolean!,

@@ -22,7 +22,7 @@ function getBoundingBox(element) {
     return {
         ...rect,
         maxWidth: rect.width,
-        height: 25
+        minHeight: 28
     };
 }
 
@@ -38,8 +38,16 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
 
     useEffect(() => {
-        element.style.height = '28px';
+        element.style['min-height'] = '28px';
     });
+
+    useEffect(() => {
+        if (parent && node?.subNodes.pageInfo.totalCount === 0) {
+            element.style['height'] = '96px';
+            [...parent.childNodes].find(node => node.nodeType === Node.TEXT_NODE)?.remove();
+            setCurrentOffset(getBoundingBox(element));
+        }
+    }, [node, parent])
 
     const parentPath = parent.getAttribute('path');
 

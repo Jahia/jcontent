@@ -26,9 +26,7 @@ export const SavePropertiesMutation = gql`
                 setPropertiesBatch(properties: $propertiesToSave) {
                     path
                 }
-                mutateLocalizedProperties(properties: $propertiesToDelete) {
-                    delete
-                }
+                deletePropertiesBatch(properties: $propertiesToDelete)
                 reorderChildren(names: $childrenOrder) @include(if: $shouldModifyChildren)
                 node {
                     ...NodeCacheRequiredFields

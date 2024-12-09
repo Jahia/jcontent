@@ -41,8 +41,8 @@ describe('Test the consistency of the validation of regular expressions added to
         const contentEditorToCreate = pageComposer
             .openCreateContent()
             .getContentTypeSelector()
-            .searchForContentType('testRegExp')
-            .selectContentType('testRegExp')
+            .searchForContentType('cent:testRegExp')
+            .selectContentType('cent:testRegExp')
             .create();
         contentEditorToCreate.getSmallTextField('cent:testRegExp_badge').addNewValue('badge01', true);
         contentEditorToCreate.getSmallTextField('cent:testRegExp_comment').addNewValue('my comment', true);

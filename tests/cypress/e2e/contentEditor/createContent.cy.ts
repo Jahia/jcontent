@@ -19,11 +19,11 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     it('Can create content', function () {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         cy.get('.moonstone-chip').contains('Rich text');
-        const contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test');
+        const contentSection = contentEditor.openSection('content');
+        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Test');
         contentEditor.create();
@@ -31,23 +31,23 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     it('Can create multiple content in same modal', {retries: 0}, function () {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
-        let contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-test-multiple-1');
+        let contentSection = contentEditor.openSection('content');
+        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-test-multiple-1');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Multiple Content Test 1');
         contentEditor.addAnotherContent();
         contentEditor.create();
-        contentEditor.closeSection('Content');
+        contentEditor.closeSection('content');
         contentEditor
-            .openSection('Options')
+            .openSection('options')
             .get()
             .find('input[type="text"]')
             .should('have.value', 'rich-text')
             .clear()
             .type('cypress-test-multiple-2');
-        contentSection = contentEditor.openSection('Content');
+        contentSection = contentEditor.openSection('content');
         // CKEditor will stay in source mode so no need to click on source again
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Multiple Content Test 2');
@@ -58,12 +58,12 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     it('Can create work in progress content', {retries: 0}, function () {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode();
-        const contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-wip-test');
+        const contentSection = contentEditor.openSection('content');
+        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress Test');
         contentEditor.create();
@@ -71,9 +71,9 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     it('Can create a news and edit it from the successful alert', {retries: 0}, function () {
-        const contentEditor = jcontent.createContent('News entry');
+        const contentEditor = jcontent.createContent('jnt:news');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create News entry');
-        const contentSection = contentEditor.openSection('Content');
+        const contentSection = contentEditor.openSection('content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress news titlez', {force: true});
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').type('Cypress news content');
@@ -91,21 +91,21 @@ describe('Create content tests', {retries: 10}, () => {
     });
 
     it('keeps "create another" checkbox state after save', () => {
-        const contentEditor = jcontent.createContent('Simple text');
+        const contentEditor = jcontent.createContent('jnt:text');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Simple text');
 
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('create-another-1');
-        contentEditor.closeSection('Options');
-        contentEditor.openSection('Content').get().find('input[name="jnt:text_text"]')
+        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('create-another-1');
+        contentEditor.closeSection('options');
+        contentEditor.openSection('content').get().find('input[name="jnt:text_text"]')
             .type('Create another - test 1');
         contentEditor.addAnotherContent();
         contentEditor.create();
 
         cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('create-another-2');
-        contentEditor.openSection('Content').get().find('input[type="text"]').type('Create another - test 2');
+        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('create-another-2');
+        contentEditor.openSection('content').get().find('input[type="text"]').type('Create another - test 2');
         contentEditor.removeAnotherContent();
         contentEditor.create();
         jcontent.getTable().getRowByLabel('Create another - test 1');

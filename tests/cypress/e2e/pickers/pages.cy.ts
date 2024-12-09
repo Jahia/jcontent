@@ -16,7 +16,7 @@ describe('Picker - Pages', () => {
 
     // Tests
     it('Page Picker - Ensure we can open navMenuItem like navMenuText element and find sub-pages', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_pagepicker').open();
         picker.getTable().getRowByName('ce-picker-pages').getCellByRole('name').scrollIntoView({
             offset: {

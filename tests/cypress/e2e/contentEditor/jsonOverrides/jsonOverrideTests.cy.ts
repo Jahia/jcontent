@@ -28,14 +28,14 @@ describe('json override tests', {testIsolation: false}, () => {
         const contentEditor = jcontent.editComponentByText('json overrides');
 
         cy.log('Test custom section, label and expanded by default');
-        const section = contentEditor.getSection('My custom section label');
+        const section = contentEditor.getSection('myCustomSection');
         section.shouldBeExpanded();
         section.get().scrollIntoView();
         // Verify fields have been moved in the specified section
         section.getField('cent:testJsonOverrides_valueConstraintField').should('exist');
 
         cy.log('Test hide section');
-        cy.get('div[data-sel-content-editor-fields-group="SEO"]').should('not.exist');
+        cy.get('div[data-sel-content-editor-fields-group="seo"]').should('not.exist');
 
         cy.log('Test read only field');
         const readOnly = contentEditor.getField(SmallTextField, 'cent:testJsonOverrides_readOnlyField');
@@ -50,10 +50,10 @@ describe('json override tests', {testIsolation: false}, () => {
         contentEditor.getField(Field, 'cent:testJsonOverrides_mandatoryField').hasMandatory();
 
         cy.log('Test field rank');
-        contentEditor.getSection('My custom section label').get()
+        contentEditor.getSection('myCustomSection').get()
             .find('[data-sel-content-editor-field]').first()
             .should('have.attr', 'data-sel-content-editor-field', 'cent:testJsonOverrides_valueConstraintField');
-        contentEditor.getSection('My custom section label').get()
+        contentEditor.getSection('myCustomSection').get()
             .find('[data-sel-content-editor-field]').last()
             .should('have.attr', 'data-sel-content-editor-field', 'cent:testJsonOverrides_mandatoryField');
 
@@ -91,7 +91,7 @@ describe('json override tests', {testIsolation: false}, () => {
 
     it('supports default value override on create', () => {
         const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        const contentEditor = jcontent.createContent('testJsonOverrides');
+        const contentEditor = jcontent.createContent('cent:testJsonOverrides');
 
         cy.log('Test default value');
         const defaultValue = contentEditor.getField(SmallTextField, 'cent:testJsonOverrides_defaultValueField');

@@ -19,12 +19,12 @@ describe('Create content tests in I18N site', () => {
     });
 
     it('Can create work in progress content for en/fr properties', {retries: 0}, function () {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode('en,fr');
-        const contentSection = contentEditor.openSection('Content');
-        contentEditor.openSection('Options').get().find('input[type="text"]').clear().type('cypress-wip-en_fr-test');
+        const contentSection = contentEditor.openSection('content');
+        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-en_fr-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').type('Cypress Work In Progress EN/FR Test');
         // Switch to French
@@ -40,7 +40,7 @@ describe('Create content tests in I18N site', () => {
     });
 
     it('keeps "create another" checkbox state when switching languages ', () => {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Rich text');
@@ -54,9 +54,9 @@ describe('Create content tests in I18N site', () => {
     });
 
     it('Can create a news in en -> fr and then create a new one in en only ', {retries: 0}, function () {
-        const contentEditor = jcontent.createContent('News entry');
+        const contentEditor = jcontent.createContent('jnt:news');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create News entry');
-        const contentSection = contentEditor.openSection('Content');
+        const contentSection = contentEditor.openSection('content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress news title', {force: true});
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress news content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});

@@ -49,7 +49,7 @@ describe('Test the save publish buttons flow', () => {
         const jcontent = JContent.visit(siteKey, langEN, 'pages/home');
         const module = jcontent.switchToPageBuilder().getModule(sitePath + '/home/area-main');
         module.getCreateButtons().getButton('New content').click();
-        const contentEditor = new CreateContent(jcontent).getContentTypeSelector().searchForContentType('Rich text').selectContentType('Rich text').create();
+        const contentEditor = new CreateContent(jcontent).getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
         contentEditor.getRichTextField('jnt:bigText_text').type('Newly Created Content');
         contentEditor.create();
         jcontent.getHeaderActionButton('publish').should('exist').and('be.visible').click(); // Verify header is loaded first

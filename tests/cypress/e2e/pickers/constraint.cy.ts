@@ -48,7 +48,7 @@ describe('Picker tests - Constraints', {retries: 3}, () => {
     });
 
     it('should see one employee', () => {
-        const contentEditor = jcontent.createContent('employee');
+        const contentEditor = jcontent.createContent('qant:employee');
         const pickerField = contentEditor.getPickerField('qant:employee_supervisor');
         const picker = pickerField.open();
         picker.wait();

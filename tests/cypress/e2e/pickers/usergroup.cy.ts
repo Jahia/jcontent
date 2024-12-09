@@ -17,13 +17,13 @@ describe('Picker tests - Usergroup', () => {
 
     // Tests
     it('Usergroup Picker - Search for admin', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_usergrouppicker').open();
         picker.search('admin');
         picker.verifyResultsLength(3);
     });
     it('Usergroup Picker - Select administrators', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_usergrouppicker').open();
         picker.getTableRow('site-administrators').click();
         picker.getSelectionCaption().should('be.visible').and('contain.text', 'site-administrators');

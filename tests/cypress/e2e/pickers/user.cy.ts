@@ -17,7 +17,7 @@ describe('Picker tests - User', () => {
 
     // Tests
     it('User Picker - base display', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_userpicker').open();
         const firstRow = picker.getTable().getRowByIndex(1);
         firstRow.get().find('td').should('have.length', 3);
@@ -27,7 +27,7 @@ describe('Picker tests - User', () => {
     });
 
     it('User Picker - search', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_userpicker').open();
         picker.search('irina');
         picker.verifyResultsLength(1);

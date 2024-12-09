@@ -30,8 +30,8 @@ describe('Create content tests', () => {
                 .getCreateContent()
                 .open()
                 .getContentTypeSelector()
-                .selectContentType('Jahia - Basic')
-                .selectContentType('Rich text')
+                .selectContentType('jmix:basicContent')
+                .selectContentType('jnt:bigText')
                 .create();
         });
     });
@@ -50,7 +50,7 @@ describe('Create content tests', () => {
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.get().scrollIntoView();
             buttons.getButton('New content').click();
-            const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('Rich text').selectContentType('Rich text').create();
+            const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
             contentEditor.getRichTextField('jnt:bigText_text').type('Newly created content');
             contentEditor.create();
             // eslint-disable-next-line cypress/no-unnecessary-waiting

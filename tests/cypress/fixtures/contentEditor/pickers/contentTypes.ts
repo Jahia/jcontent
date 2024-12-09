@@ -14,193 +14,193 @@ interface ContentType {
 
 const contentTypes: ContentTypes = {
     contentReference: {
-        typeName: 'Content reference',
+        typeName: 'jnt:contentReference',
         fieldNodeType: 'jnt:contentReference_j:node',
         multiple: false
     },
     fileReference: {
-        typeName: 'File reference',
+        typeName: 'jnt:fileReference',
         fieldNodeType: 'jnt:fileReference_j:node',
         multiple: false
     },
     imageReference: {
-        typeName: 'Image (Internationalized)',
+        typeName: 'jnt:imageReferenceLink',
         fieldNodeType: 'jnt:imageReferenceLink_j:node',
         multiple: false
     },
     // From qa-module
     fileMultipleReference: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_imagepicker',
         multiple: true
     },
     filepicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_filepicker',
         multiple: false
     },
     imagepicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_imagepicker',
         multiple: false
     },
     folderpicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_folderpicker',
         multiple: false
     },
     contentfolderpicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_contentfolderpicker',
         multiple: false
     },
     portletpicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_portletpicker',
         multiple: false
     },
     editorialpicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_editorialpicker',
         multiple: false
     },
     editoriallinkpicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_editoriallinkpicker',
         multiple: false
     },
     categorypicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_categorypicker',
         multiple: false
     },
     sitepicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_sitepicker',
         multiple: false
     },
     userpicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_userpicker',
         multiple: false
     },
     usergrouppicker: {
-        typeName: 'Pickers',
+        typeName: 'qant:pickers',
         fieldNodeType: 'qant:pickers_usergrouppicker',
         multiple: false
     },
     filepickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_filepicker',
         multiple: false
     },
     imagepickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_imagepicker',
         multiple: false
     },
     folderpickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_folderpicker',
         multiple: false
     },
     contentfolderpickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_contentfolderpicker',
         multiple: false
     },
     portletpickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_portletpicker',
         multiple: false
     },
     editorialpickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_editorialpicker',
         multiple: false
     },
     editoriallinkpickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_editoriallinkpicker',
         multiple: false
     },
     categorypickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_categorypicker',
         multiple: false
     },
     sitepickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_sitepicker',
         multiple: false
     },
     userpickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_userpicker',
         multiple: false
     },
     usergrouppickerMultiple: {
-        typeName: 'Pickers Multiple',
+        typeName: 'qant:pickersMultiple',
         fieldNodeType: 'qant:pickersMultiple_usergrouppicker',
         multiple: false
     },
     customPicker: {
-        typeName: 'customPicker',
+        typeName: 'qant:customPicker',
         fieldNodeType: 'qant:customPicker_myCategoryPicker',
         multiple: false
     },
     pickerWithOverride: {
-        typeName: 'customPicker',
+        typeName: 'qant:customPicker',
         fieldNodeType: 'qant:customPicker_myOverridenEditorialPicker',
         multiple: false
     },
     pageDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_page',
         multiple: false
     },
     contentfolderDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_contentFolder',
         multiple: false
     },
     folderDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_folder',
         multiple: false
     },
     fileDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_file',
         multiple: false
     },
     imageDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_image',
         multiple: false
     },
     editoriallinkDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_editoriallink',
         multiple: false
     },
     userDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_user',
         multiple: false
     },
     usergroupDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_usergroup',
         multiple: false
     },
     siteDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_site',
         multiple: false
     },
     categoryDefault: {
-        typeName: 'pickersDefault',
+        typeName: 'qant:pickersDefault',
         fieldNodeType: 'qant:pickersDefault_category',
         multiple: false
     }

@@ -76,7 +76,7 @@ describe('Create multi language content and verify that it is different in all l
     };
 
     it('Can create content in 3 languages', {retries: 0}, function () {
-        const contentEditor = jcontent.createContent('News entry');
+        const contentEditor = jcontent.createContent('jnt:news');
 
         cy.log('Create news entry in 3 languages');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create News entry');

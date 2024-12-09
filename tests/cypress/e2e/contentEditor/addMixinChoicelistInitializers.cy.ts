@@ -33,8 +33,8 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         const contentEditor = pageComposer
             .openCreateContent()
             .getContentTypeSelector()
-            .searchForContentType('Image (Internationalized)')
-            .selectContentType('Image (Internationalized)')
+            .searchForContentType('jnt:imageReferenceLink')
+            .selectContentType('jnt:imageReferenceLink')
             .create();
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')

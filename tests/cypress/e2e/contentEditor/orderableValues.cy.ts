@@ -17,7 +17,7 @@ describe('Test ordering properties with multiple values', {retries: 0}, () => {
     });
 
     it('Drag value test2=2 in shared small text over test1=1', () => {
-        const contentEditor = jcontent.createContent('All fields multiple');
+        const contentEditor = jcontent.createContent('qant:allFieldsMultiple');
         cy.get('div[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
         const smallTextField = contentEditor.getSmallTextField('qant:allFieldsMultiple_sharedSmallText', true);
         const expectedValues = ['test1=1', 'test2=2'];
@@ -32,7 +32,7 @@ describe('Test ordering properties with multiple values', {retries: 0}, () => {
     });
 
     it('Can add a new value test3=3 and drag it between test2=2 and test1=1', () => {
-        const contentEditor = jcontent.createContent('All fields multiple');
+        const contentEditor = jcontent.createContent('qant:allFieldsMultiple');
         cy.get('div[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
         const smallTextField = contentEditor.getSmallTextField('qant:allFieldsMultiple_sharedSmallText', true);
         const expectedValues = ['test1=1', 'test2=2'];

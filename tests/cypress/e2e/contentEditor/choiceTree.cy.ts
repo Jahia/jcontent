@@ -82,7 +82,7 @@ describe('Test Choicetree selector type', () => {
 
     it('can handle choice tree selector with a custom root path', () => {
         // Create content
-        const contentEditor = jcontent.createContent('testChoiceTree');
+        const contentEditor = jcontent.createContent('cent:testChoiceTree');
         const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTree', true);
         const choiceTree = choiceTreeField.openTree();
         // Show 2 roots entries
@@ -121,7 +121,7 @@ describe('Test Choicetree selector type', () => {
     });
     it('can handle choice tree selector for multiple types', () => {
         // Check tree is opened at category root, open it to see other types
-        const contentEditor = jcontent.createContent('testChoiceTree');
+        const contentEditor = jcontent.createContent('cent:testChoiceTree');
         const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTreeWithTypes', true);
         const choiceTree = choiceTreeField.openTree();
         // Show 2 roots entries
@@ -134,8 +134,8 @@ describe('Test Choicetree selector type', () => {
     });
 
     it.skip('displays the Choice tree selector for single value', () => {
-        const contentEditor = jcontent.createContent('testChoiceTree');
-        contentEditor.openSection('Content');
+        const contentEditor = jcontent.createContent('cent:testChoiceTree');
+        contentEditor.openSection('content');
         const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_singleChoiceTree', false);
         choiceTreeField.getChoiceTreeInput().should('exist');
         // Open tree and select value
@@ -152,8 +152,8 @@ describe('Test Choicetree selector type', () => {
 
     it('can display the category selector', () => {
         // Check tree is opened at category root, open it to see other types
-        const contentEditor = jcontent.createContent('testChoiceTree');
-        contentEditor.openSection('Classification and Metadata');
+        const contentEditor = jcontent.createContent('cent:testChoiceTree');
+        contentEditor.openSection('metadata');
         contentEditor.toggleOption('jmix:categorized', 'Categories');
         const categoryField = contentEditor.getChoiceTreeField('jmix:categorized_j:defaultCategory', true);
         const choiceTree = categoryField.openTree();

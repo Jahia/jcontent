@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {Tooltip} from '@material-ui/core';
 import classes from './Cells.scss';
+import {isMarkedForDeletion} from '../../../../../../JContent.utils';
 
 export const CellStatus = ({cell, column, row}) => {
     const {t} = useTranslation('jcontent');
@@ -31,10 +32,10 @@ export const CellStatus = ({cell, column, row}) => {
                         t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) :
                         t('jcontent:label.contentManager.workInProgressAll')}
                 >
-                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>} color="warning"/>
+                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>} color="danger"/>
                 </Tooltip>}
             {node.lockOwner !== null &&
-            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color="warning"/></Tooltip>}
+            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color={isMarkedForDeletion(node) ? 'danger' : 'warning'}/></Tooltip>}
             {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${subNodesCountText} item(s)`} icon={<Subdirectory/>}/>}
         </TableBodyCell>
     );

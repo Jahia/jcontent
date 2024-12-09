@@ -6,7 +6,6 @@ import Preview from './Preview';
 import {Button, ButtonGroup, Close, Maximize, Minimize, Typography} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
-import PublicationStatus from './PublicationStatus';
 import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/redux/preview.redux';
 import PreviewSize from './PreviewSize';
 import clsx from 'clsx';
@@ -95,7 +94,6 @@ const PreviewDrawer = ({previewSelection}) => {
                     <Typography isNowrap variant="body">
                         <PreviewSize node={previewSelection} previewMode={effectiveMode}/>
                     </Typography>
-                    <PublicationStatus previewSelection={previewSelection}/>
                 </CardContent>
             </Card>}
         </React.Fragment>

@@ -24,7 +24,7 @@ describe('Picker tests', () => {
 
     it('should display content reference picker', () => {
         const pickerField = jcontent
-            .createContent('Pickers')
+            .createContent('qant:pickers')
             .getPickerField('qant:pickers_filepicker');
         pickerField.open();
         getComponentByRole(Dropdown, 'picker-selector').select('Custom picker');

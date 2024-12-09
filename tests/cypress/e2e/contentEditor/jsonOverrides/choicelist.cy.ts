@@ -26,7 +26,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
 
     it('should select from basic static choicelist with no default value', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        jcontent.createContent('choiceListSelectorTypeOverride');
+        jcontent.createContent('cent:choiceListSelectorTypeOverride');
         const field: Dropdown = getComponentBySelector(Dropdown, '[data-sel-content-editor-field="cent:choiceListSelectorTypeOverride_noDefaultList"]');
         field.select('choice1');
         field.get().click();
@@ -35,7 +35,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
 
     it('should override choice list with radio button selectorType', {defaultCommandTimeout: 10000}, () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        let contentEditor = jcontent.createContent('choiceListSelectorTypeOverride');
+        let contentEditor = jcontent.createContent('cent:choiceListSelectorTypeOverride');
         let field: RadioChoiceList = contentEditor.getField(
             RadioChoiceList, 'cent:choiceListSelectorTypeOverride_radioButton', false);
 
@@ -85,7 +85,7 @@ describe('radio button and checkbox selectorType overrides', {defaultCommandTime
 
     it('should not override choice list with no selectorType defined', () => {
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        const contentEditor = jcontent.createContent('choiceListSelectorTypeOverride');
+        const contentEditor = jcontent.createContent('cent:choiceListSelectorTypeOverride');
         const field = contentEditor.getField(Field, 'cent:choiceListSelectorTypeOverride_list', false);
         // Verify field still contains standard dropdown selector
         field.get().scrollIntoView()

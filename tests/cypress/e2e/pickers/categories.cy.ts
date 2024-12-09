@@ -17,13 +17,13 @@ describe('Picker - Categories', () => {
 
     // Tests
     it('Categories Picker - Search for transportation - letter by letter', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_categorypicker').open();
         picker.search('transportation');
         picker.verifyResultsLength(1);
     });
     it('Categories Picker - Select Polymer Manufacturing', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_categorypicker').open();
         picker.getTable().getRowByName('105').expand();
         picker.getTableRow('Chemical And Plastic Industry').find('svg');

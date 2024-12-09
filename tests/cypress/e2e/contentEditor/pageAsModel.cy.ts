@@ -23,7 +23,7 @@ describe('Page as model', () => {
         let templateField = contentEditor.getField(Field, 'jmix:hasTemplateNode_j:templateName');
         templateField.get().click();
         getComponentBySelector(Menu, '[role="listbox"]').select('simple');
-        contentEditor.openSection('Options');
+        contentEditor.openSection('options');
         contentEditor.toggleOption('jmix:canBeUseAsTemplateModel', 'Page Model name');
         cy.get('input[name="jmix:canBeUseAsTemplateModel_j:pageTemplateTitle"]').type(model);
         contentEditor.create();

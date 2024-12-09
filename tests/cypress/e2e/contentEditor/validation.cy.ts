@@ -21,7 +21,7 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
     });
 
     it('should handle constraint on create/normal prop', () => {
-        const ce = jcontent.createContent('textFieldInitializer');
+        const ce = jcontent.createContent('cent:textFieldInitializer');
         ce.getField(SmallTextField, 'nt:base_ce:systemName', false).addNewValue('test-validator-shared');
         ce.getField(SmallTextField, 'cent:textFieldInitializer_defaultString', false).clearValue();
         ce.createUnchecked();
@@ -40,7 +40,7 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
     });
 
     it('should handle constraint on create/i18n prop', () => {
-        const ce = jcontent.createContent('textFieldInitializer');
+        const ce = jcontent.createContent('cent:textFieldInitializer');
         ce.getField(SmallTextField, 'nt:base_ce:systemName', false).addNewValue('test-validator-i18n');
         ce.getField(SmallTextField, 'cent:textFieldInitializer_defaultI18nString', false).addNewValue('1');
         ce.createUnchecked();

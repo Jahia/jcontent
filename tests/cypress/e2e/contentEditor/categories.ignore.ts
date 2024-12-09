@@ -24,7 +24,7 @@ describe('Category tests', () => {
         const sectionAttr = 'data-sel-content-editor-fields-group';
         cy.get(`[${sectionAttr}]`)
             .should('have.length', 1)
-            .and('have.attr', sectionAttr, 'Content');
+            .and('have.attr', sectionAttr, 'content');
     });
 
     it('Displays limited advanced options', () => {

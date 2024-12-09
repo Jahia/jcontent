@@ -222,8 +222,8 @@ describe('Test the text field initializer', () => {
         const contentEditorToCreate = pageComposer
             .openCreateContent()
             .getContentTypeSelector()
-            .searchForContentType('textFieldInitializer')
-            .selectContentType('textFieldInitializer')
+            .searchForContentType('cent:textFieldInitializer')
+            .selectContentType('cent:textFieldInitializer')
             .create();
         checkFieldValues(contentEditorToCreate, initialFields, langEN);
         contentEditorToCreate.getSmallTextField('cent:textFieldInitializer_jcr:title').addNewValue('englishTitle', true);

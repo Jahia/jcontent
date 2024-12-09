@@ -26,7 +26,7 @@ describe('Picker tests - Site', () => {
     });
 
     it('Site Picker - base display', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_sitepicker').open();
         const firstRow = picker.getTable().getRowByIndex(1);
         firstRow.get().find('td').should('have.length', 1);
@@ -36,7 +36,7 @@ describe('Picker tests - Site', () => {
     });
 
     it('Site Picker - select site', () => {
-        const contentEditor = jcontent.createContent('Pickers');
+        const contentEditor = jcontent.createContent('qant:pickers');
         const pickerField = contentEditor.getPickerField('qant:pickers_sitepicker');
         const picker = pickerField.open();
 
@@ -48,7 +48,7 @@ describe('Picker tests - Site', () => {
     });
 
     it('Site Picker - select site - multiple', () => {
-        const contentEditor = jcontent.createContent('Pickers Multiple');
+        const contentEditor = jcontent.createContent('qant:pickersMultiple');
         const pickerField = contentEditor.getPickerField('qant:pickersMultiple_sitepicker', true);
         const picker = pickerField.open();
 

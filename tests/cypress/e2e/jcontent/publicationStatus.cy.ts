@@ -5,9 +5,9 @@ describe('Publication status badge test', () => {
     it('should show the last publisher, not the last editor', () => {
         cy.login('mathias', 'password');
         let jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
-        let ce = jcontent.createContent('Simple text');
+        let ce = jcontent.createContent('jnt:text');
         ce.getSmallTextField('jnt:text_text').addNewValue('Test 1');
-        cy.get('[data-sel-content-editor-fields-group="Options"]').click();
+        cy.get('[data-sel-content-editor-fields-group="options"]').click();
         ce.getSmallTextField('nt:base_ce:systemName').addNewValue('test-text');
         ce.create();
 

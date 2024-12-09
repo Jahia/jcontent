@@ -8,6 +8,23 @@ import {useTranslation} from 'react-i18next';
 import {filterTree, isOpenableEntry} from './ContentTypeSelectorModal.utils';
 import styles from './ContentTypeSelectorModal.scss';
 
+const addContentTypeHtmlAnnotationsToTree = nodeTypesTree => {
+    const addContentTypeHtmlAnnotationsToNode = node => {
+        const typeName = node?.nodeType?.name;
+        const children = node?.children?.map(addContentTypeHtmlAnnotationsToNode);
+        return {
+            ...node,
+            children,
+            treeItemProps: {
+                'data-sel-role': 'content-type-tree-item',
+                'data-sel-content-type': typeName
+            }
+        };
+    };
+
+    return nodeTypesTree?.map(addContentTypeHtmlAnnotationsToNode);
+};
+
 export const ContentTypeSelectorModal = ({nodeTypesTree, isOpen, onExited, onClose, onCreateContent}) => {
     const {t} = useTranslation('jcontent');
     const [selectedType, setSelectedType] = useState(null);
@@ -15,6 +32,7 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, isOpen, onExited, onClo
 
     // Filtering the tree
     const filteredTree = filterTree(nodeTypesTree, selectedType, filter);
+    const annotatedFilteredTree = addContentTypeHtmlAnnotationsToTree(filteredTree);
 
     return (
         <Dialog classes={{paper: styles.modalRoot}} open={isOpen} aria-labelledby="dialog-createNewContent" onExited={onExited} onClose={onClose}>
@@ -38,9 +56,9 @@ export const ContentTypeSelectorModal = ({nodeTypesTree, isOpen, onExited, onClo
 
             <div className={styles.treeContainer} data-sel-role="content-type-tree">
                 <TreeView
-                    data={filteredTree}
+                    data={annotatedFilteredTree}
                     selectedItems={selectedType ? [selectedType.id] : []}
-                    openedItems={filter ? filteredTree.map(n => n.id) : undefined}
+                    openedItems={filter ? annotatedFilteredTree.map(n => n.id) : undefined}
                     onClickItem={(item, ev, toggle) => {
                         if (!isOpenableEntry(item)) {
                             setSelectedType(item);

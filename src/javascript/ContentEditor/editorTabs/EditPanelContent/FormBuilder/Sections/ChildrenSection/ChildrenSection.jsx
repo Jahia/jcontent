@@ -42,7 +42,7 @@ export const ChildrenSection = ({section, isExpanded, onClick}) => {
     };
 
     return (
-        <Collapsible data-sel-content-editor-fields-group={sec.displayName}
+        <Collapsible data-sel-content-editor-fields-group={section.name}
                      label={sec.displayName}
                      isExpanded={isExpanded}
                      onClick={onClick}

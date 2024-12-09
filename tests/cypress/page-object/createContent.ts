@@ -31,7 +31,7 @@ export class ContentTypeSelector extends BaseComponent {
     }
 
     selectContentType(contentType: string): ContentTypeSelector {
-        getElement('[data-sel-role="content-type-tree"] span', this).contains(contentType).click();
+        getElement(`[data-sel-role="content-type-tree"] li[data-sel-content-type="${contentType}"]`, this).click();
         return this;
     }
 

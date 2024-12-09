@@ -34,7 +34,7 @@ describe('constraints', () => {
             .visit('jcontentSite', 'en', 'pages/home')
             .switchToStructuredView();
         const contentEditor = jcontent.editComponentByText('list');
-        contentEditor.closeSection('Content');
+        contentEditor.closeSection('content');
         contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
         contentEditor.getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
             .addNewValue('Banner')
@@ -47,7 +47,7 @@ describe('constraints', () => {
             .visit('jcontentSite', 'en', 'content-folders/contents')
             .switchToListMode();
         const contentEditor = jcontent.editComponentByText('folder1');
-        contentEditor.closeSection('Content');
+        contentEditor.closeSection('content');
         contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
         contentEditor
             .getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
@@ -82,7 +82,7 @@ describe('constraints', () => {
             .visit('jcontentSite', 'en', 'content-folders/contents')
             .switchToListMode();
         const contentEditor = jcontent.editComponentByText('folder1');
-        contentEditor.closeSection('Content');
+        contentEditor.closeSection('content');
         contentEditor
             .getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
             .addNewValue('Simple text');

@@ -64,6 +64,7 @@ export class JContent extends BasePage {
     }
 
     createContent(contentType: string): ContentEditor {
+        // Since we added content type to html annotations, try those first
         return this.getCreateContent()
             .open()
             .getContentTypeSelector()

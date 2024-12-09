@@ -62,7 +62,7 @@ describe('Content editor form', () => {
     }
 
     it('Should display custom title label and error message', function () {
-        const contentEditor = jcontent.createContent('testOverride');
+        const contentEditor = jcontent.createContent('cent:testOverride');
         const field = contentEditor.getField(SmallTextField, 'cent:testOverride_jcr:title', false);
 
         field.get().find('label').should('contain', 'My title 1234');
@@ -79,13 +79,13 @@ describe('Content editor form', () => {
     });
 
     it('Should display overridden title label for boolean buttons', function () {
-        const contentEditor = jcontent.createContent('mesiHeaderBanner');
+        const contentEditor = jcontent.createContent('cent:mesiHeaderBanner');
         const field = contentEditor.getField(Field, 'cemix:mesiBannerStory_buttonTransverse', false);
         field.get().find('label').should('contain', 'Contribuer le bouton transverse Header ?');
     });
 
     it('Should display overridden property in correct section', function () {
-        jcontent.createContent('myComponent');
+        jcontent.createContent('cent:myComponent');
         cy.get('article').contains('myComponent').parents('article').find('div[data-sel-content-editor-field]').should('have.length', 2);
         cy.get('article').contains('categorizedContent').parents('article').find('div[data-sel-content-editor-field]').should('have.length', 2).as('categorizedContentFields');
         cy.get('@categorizedContentFields').first().should('contain.text', 'category');
@@ -93,8 +93,8 @@ describe('Content editor form', () => {
     });
 
     it('Should update dependent property "j:subNodesView" in content retrieval when changing "j:type"', () => {
-        const contentEditor = jcontent.createContent('contentRetrievalCETest');
-        contentEditor.openSection('Layout');
+        const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
+        contentEditor.openSection('layout');
         getComponentBySelector(Dropdown, '[data-sel-content-editor-field="jmix:renderableList_j:subNodesView"]').get().click();
         getComponentBySelector(Dropdown, '[data-sel-content-editor-field="jmix:renderableList_j:subNodesView"]').get().find('.moonstone-menuItem').should('have.length', 1).first().click();
         getComponentBySelector(Dropdown, '[data-sel-content-editor-field="cent:contentRetrievalCETest_j:type"]').select('News entry');
@@ -109,7 +109,7 @@ describe('Content editor form', () => {
     });
 
     it('Should use site default template value', () => {
-        const contentTypeName = 'testDefaultTemplate';
+        const contentTypeName = 'cent:testDefaultTemplate';
         const templateName = 'events';
         const fieldName = 'cent:testDefaultTemplate_j:templateName';
 
@@ -126,7 +126,7 @@ describe('Content editor form', () => {
     });
 
     it('Should display hidden property with overridden hide flag', () => {
-        const contentEditor = jcontent.createContent('contentRetrievalCETest');
+        const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         const field = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_j:invalidLanguagesHiddenTest', true);
         field.addNewValue('fr', true);
         field.addNewValue('de', true);
@@ -137,21 +137,21 @@ describe('Content editor form', () => {
     });
 
     it('Should display overridden title label and description label from json overrides define by labelKey and descriptionKey', () => {
-        const contentEditor = jcontent.createContent('contentRetrievalCETest');
+        const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         const field = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_jcr:title', false);
         field.get().find('label').should('contain', 'Title JSON override');
         field.get().scrollIntoView().contains('Information').should('be.visible');
     });
 
     it('Should display overridden system name and description labels from json overrides', () => {
-        const contentEditor = jcontent.createContent('contentRetrievalCETest');
+        const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         const field = contentEditor.getField(SmallTextField, 'nt:base_ce:systemName', false);
         field.get().find('label').should('contain', 'Customized system name');
         field.get().scrollIntoView().contains('Customized description').should('be.visible');
     });
 
     it('Should enable automatically cemix:testAutoActivatedMixin on jnt:bigText for create', () => {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         contentEditor.getField(SmallTextField, 'cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField');
         contentEditor.getField(SmallTextField, 'cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField');
     });
@@ -163,35 +163,35 @@ describe('Content editor form', () => {
     });
 
     it('Should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText for create', () => {
-        jcontent.createContent('Simple text');
+        jcontent.createContent('jnt:text');
         cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
         cy.get('[data-sel-content-editor-field="cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField"]').should('not.exist');
     });
 
     it('Should not see readonly text field for reviewer', () => {
-        const contentEditor = jcontent.createContent('Simple text');
+        const contentEditor = jcontent.createContent('jnt:text');
         const field = contentEditor.getField(SmallTextField, 'jnt:text_text');
         field.get().find('input').should('not.have.attr', 'readonly', 'readonly');
         cy.login('mathias', 'password');
 
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        const contentEditor2 = jcontent.createContent('Simple text');
+        const contentEditor2 = jcontent.createContent('jnt:text');
         const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
         field2.get().find('input').should('have.attr', 'readonly', 'readonly');
     });
 
     it('Should not see see field for reviewer', () => {
-        const contentEditor = jcontent.createContent('News');
+        const contentEditor = jcontent.createContent('jnt:news');
         contentEditor.getField(SmallTextField, 'jnt:news_desc');
         cy.login('mathias', 'password');
 
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        jcontent.createContent('News');
+        jcontent.createContent('jnt:news');
         cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');
     });
 
     it('Should render only one title field', () => {
-        const contentTypeName = 'epSifeRestaurant';
+        const contentTypeName = 'cent:epSifeRestaurant';
 
         cy.log('verify there is only one title field');
         const contentEditor = jcontent.createContent(contentTypeName);
@@ -201,7 +201,7 @@ describe('Content editor form', () => {
     });
 
     it('should display default resource key when module is disabled', () => {
-        let contentEditor = jcontent.createContent('Default Value Test');
+        let contentEditor = jcontent.createContent('cent:defaultValueTest');
         let field = contentEditor.getField(SmallTextField, 'cent:defaultValueTest_defaultDate', false);
         field.get().find('label').should('contain', 'Default date label');
         contentEditor.create();

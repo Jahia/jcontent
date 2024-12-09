@@ -16,7 +16,7 @@ describe('Picker tests - richtext', () => {
     });
 
     it('Content picker in richtext', () => {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         const richText = contentEditor.getRichTextField('jnt:bigText_text');
 
         richText.type('Hello');
@@ -31,7 +31,7 @@ describe('Picker tests - richtext', () => {
     });
 
     it('File picker in richtext', () => {
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         const richText = contentEditor.getRichTextField('jnt:bigText_text');
 
         richText.type('Hello');
@@ -68,7 +68,7 @@ describe('Picker tests - richtext', () => {
                 // eslint-disable-next-line cypress/no-unnecessary-waiting
                 cy.wait(1000);
             });
-        const contentEditor = jcontent.createContent('Rich text');
+        const contentEditor = jcontent.createContent('jnt:bigText');
         const richText = contentEditor.getRichTextField('jnt:bigText_text');
 
         richText.type('Hello');

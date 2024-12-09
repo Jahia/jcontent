@@ -17,6 +17,6 @@ describe('Test list ordering', {retries: 0}, () => {
         jcontent = JContent.visit(siteKey, 'en', 'pages/home/investors/events');
         jcontent.switchToStructuredView();
         jcontent.editComponentByText('Events');
-        getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="Content list & ordering"]').get().should('exist');
+        getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="listOrdering"]').get().should('exist');
     });
 });

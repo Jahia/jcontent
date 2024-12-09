@@ -44,7 +44,7 @@ describe('Language switcher tests', () => {
     }
 
     it('Create content - should have all language options in "Create translation" group', () => {
-        const ce = jcontent.createContent('Simple text');
+        const ce = jcontent.createContent('jnt:text');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Simple text');
@@ -60,7 +60,7 @@ describe('Language switcher tests', () => {
     });
 
     it('Create content - should have edited language in "View language" group after edit', () => {
-        const ce = jcontent.createContent('Simple text');
+        const ce = jcontent.createContent('jnt:text');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Simple text');
@@ -111,7 +111,7 @@ describe('Language switcher tests', () => {
 
     it('Create content - saves multiple languages', () => {
         const contentName = 'langSwitcherMultipleLang';
-        const ce: ContentEditor = jcontent.createContent('Simple text');
+        const ce: ContentEditor = jcontent.createContent('jnt:text');
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')
             .and('contain', 'Create Simple text');
@@ -130,7 +130,7 @@ describe('Language switcher tests', () => {
             .log('Language set to French');
         ce.getSmallTextField('jnt:text_text').addNewValue(frText);
 
-        ce.openSection('Options');
+        ce.openSection('options');
         ce.getSmallTextField('nt:base_ce:systemName', false)
             .addNewValue(contentName);
         ce.create();

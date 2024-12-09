@@ -69,7 +69,7 @@ const renderField = (
                                 className={styles.badge}
                                 data-sel-role="wip-info-chip-field"
                                 label={t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelField')}
-                                color="accent"
+                                color="warning"
                             />
                         )}
                     {(!field.i18n && editorContext.siteInfo.languages.length > 1) &&

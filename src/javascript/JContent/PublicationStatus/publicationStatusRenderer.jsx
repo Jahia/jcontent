@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
 import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {CloudCheck, Delete, File, Information, NoCloud} from '@jahia/moonstone';
+import {CloudCheck, Delete, File, NoCloud, Warning} from '@jahia/moonstone';
 
 function getFormattedDate(date, locale) {
     return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');
@@ -141,15 +141,15 @@ class PublicationStatusMandatoryLanguageUnpublishable {
     }
 
     getContentClass(classes) {
-        return classes.mandatoryLanguageUnpublishable;
+        return classes.modified;
     }
 
     getBodyClass(classes) {
-        return classes.mandatoryLanguageUnpublishable;
+        return classes.modifiedBody;
     }
 
     getIcon(props) {
-        return <Information {...props}/>;
+        return <Warning {...props}/>;
     }
 }
 
@@ -165,15 +165,15 @@ class PublicationStatusMandatoryLanguageValid {
     }
 
     getContentClass(classes) {
-        return classes.mandatoryLanguageValid;
+        return classes.modified;
     }
 
     getBodyClass(classes) {
-        return classes.mandatoryLanguageValid;
+        return classes.modifiedBody;
     }
 
     getIcon(props) {
-        return <Information {...props}/>;
+        return <Warning {...props}/>;
     }
 }
 
@@ -189,15 +189,15 @@ class PublicationStatusConflict {
     }
 
     getContentClass(classes) {
-        return classes.conflict;
+        return classes.modified;
     }
 
     getBodyClass(classes) {
-        return classes.conflict;
+        return classes.modifiedBody;
     }
 
     getIcon(props) {
-        return <Information {...props}/>;
+        return <Warning {...props}/>;
     }
 }
 
@@ -207,15 +207,15 @@ class PublicationStatusUnknown {
     }
 
     getContentClass(classes) {
-        return classes.unknown;
+        return classes.modified;
     }
 
     getBodyClass(classes) {
-        return classes.unknown;
+        return classes.modifiedBody;
     }
 
     getIcon(props) {
-        return <Information {...props}/>;
+        return <Warning {...props}/>;
     }
 }
 

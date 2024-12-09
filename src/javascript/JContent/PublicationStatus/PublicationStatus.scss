@@ -56,6 +56,10 @@
     color: var(--color-success_dark);
 
     background-color: var(--color-success_plain20);
+
+    > div > .moonstone-icon {
+      fill: var(--color-success_dark)
+    }
 }
 
 .modified {
@@ -107,27 +111,27 @@
 }
 
 .mandatoryLanguageUnpublishable {
-    color: var(--color-dark);
+    color: var(--color-warning_dark);
 
-    background-color: var(--color-publicationStatus-mandatoryLanguageUnpublishable);
+    background-color: var(--color-warning);
 }
 
 .mandatoryLanguageValid {
-    color: var(--color-dark);
+    color: var(--color-warning_dark);
 
-    background-color: var(--color-publicationStatus-mandatoryLanguageValid);
+    background-color: var(--color-warning);
 }
 
 .conflict {
-    color: var(--color-dark);
+    color: var(--color-warning_dark);
 
-    background-color: var(--color-publicationStatus-conflict);
+    background-color: var(--color-warning);
 }
 
 .unknown {
-    color: var(--color-dark);
+    color: var(--color-warning_dark);
 
-    background-color: var(--color-publicationStatus-conflict);
+    background-color: var(--color-warning);
 }
 
 .noStatus {

@@ -32,7 +32,7 @@ export const LockInfoChip = () => {
                 data-sel-role="lock-info-badge"
                 label={getBadgeContent(nodeData, t)}
                 icon={<Lock/>}
-                color="warning"
+                color="danger"
             />}
         </>
     );

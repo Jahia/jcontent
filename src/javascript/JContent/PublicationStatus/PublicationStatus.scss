@@ -5,6 +5,10 @@
     display: flex;
     min-width: 6px;
     height: 100%;
+
+    .publicationInfo :global(.moonstone-icon) {
+        fill: currentColor;
+    }
 }
 
 .publicationInfoWrapper {

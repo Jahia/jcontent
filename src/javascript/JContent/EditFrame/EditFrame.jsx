@@ -242,6 +242,7 @@ export const EditFrame = ({isDeviceView}) => {
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
     }
+
     return (
         <>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams} setLoading={setLoading}/>

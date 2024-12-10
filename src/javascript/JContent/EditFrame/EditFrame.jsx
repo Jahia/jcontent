@@ -79,6 +79,7 @@ export const EditFrame = ({isDeviceView}) => {
     const [device, setDevice] = useState(null);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
+    const [loading, setLoading] = useState(false);
     const previousDevice = useRef();
 
     const iframe = useRef();
@@ -206,7 +207,6 @@ export const EditFrame = ({isDeviceView}) => {
     }, []);
 
     const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
-
     useEffect(() => {
         const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
@@ -242,12 +242,11 @@ export const EditFrame = ({isDeviceView}) => {
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
     }
-
     return (
         <>
-            <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams}/>
+            <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams} setLoading={setLoading}/>
             <DeviceContainer isEnabled={isDeviceView} device={device} setDevice={setDevice}>
-                {!currentDocument && <TransparentLoaderOverlay/>}
+                {(!currentDocument || loading) && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}
                         width="100%"
                         height="100%"

@@ -1,33 +1,33 @@
 .publicationInfoModified {
     padding: var(--spacing-nano);
 
-    border-left: 5px solid var(--color-publicationStatus-modified);
+    border-left: 5px solid var(--color-warning);
 }
 
 .publicationInfoNotPublished {
     padding: var(--spacing-nano);
 
-    border-left: 5px solid var(--color-publicationStatus-notPublished);
+    border-left: 5px solid var(--color-gray_dark);
 }
 
 .publicationInfoPublished {
     padding: var(--spacing-nano);
 
-    border-left: 5px solid var(--color-publicationStatus-published);
+    border-left: 5px solid var(--color-success);
 }
 
 .publicationInfoMarkedForDeletion {
     padding: var(--spacing-nano);
 
-    color: var(--color-publicationStatus-markedForDeletion);
+    color: var(--color-danger);
 
-    border-left: 5px solid  var(--color-publicationStatus-markedForDeletion);
+    border-left: 5px solid  var(--color-danger);
 }
 
 .publicationInfoUnpublished {
     padding: var(--spacing-nano);
 
-    border-left: 5px solid  var(--color-publicationStatus-unpublished);
+    border-left: 5px solid  var(--color-gray);
 }
 
 .publicationInfoMandatoryLanguageUnpublishable {

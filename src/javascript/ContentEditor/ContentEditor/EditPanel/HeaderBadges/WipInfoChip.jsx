@@ -1,5 +1,5 @@
 import React from 'react';
-import {Chip} from '@jahia/moonstone';
+import {Build, Chip} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {Field} from 'formik';
@@ -30,6 +30,7 @@ export const WipInfoChip = () => {
                     data-sel-role="wip-info-chip"
                     label={getChipContent(field.value, lang, t)}
                     color="warning"
+                    icon={<Build/>}
                 />
             )}
         </Field>

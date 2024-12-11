@@ -100,14 +100,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const {notify} = useNotifications();
     const dispatch = useDispatch();
 
-    const {language, displayLanguage, selection, path, site, uilang} = useSelector(state => ({
-        language: state.language,
-        displayLanguage: state.uilang,
-        path: state.jcontent.path,
-        selection: state.jcontent.selection,
-        site: state.site,
-        uilang: state.uilang
-    }), shallowEqual);
+    const language = useSelector(state => state.language);
+    const displayLanguage = useSelector(state => state.uilang);
+    const path = useSelector(state => state.jcontent.path);
+    const selection = useSelector(state => state.jcontent.selection);
+    const site = useSelector(state => state.site);
+    const uilang = useSelector(state => state.uilang);
 
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
     // It helps determine box visibility and header visibility.
@@ -475,6 +473,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
+                         isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}

@@ -76,6 +76,7 @@ export const EditFrame = () => {
     const [currentDocument, setCurrentDocument] = useState(null);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
+    const [clickedElement, setClickedElement] = useState();
     const [loading, setLoading] = useState(false);
 
     const iframe = useRef();
@@ -257,7 +258,7 @@ export const EditFrame = () => {
                         onLoad={iFrameOnLoad}
                 />
             </div>
-            {currentDocument && <LinkInterceptor document={currentDocument}/>}
+            {currentDocument && <LinkInterceptor document={currentDocument} onDocumentClick={() => setClickedElement(undefined)}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="jahia-portal-root" className={styles.root}>
@@ -265,6 +266,8 @@ export const EditFrame = () => {
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}
                                addIntervalCallback={addIntervalCallback}
+                               clickedElement={clickedElement}
+                               setClickedElement={setClickedElement}
                                onSaved={() => {
                                    refresh();
                                }}

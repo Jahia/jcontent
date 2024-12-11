@@ -342,7 +342,7 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
     let host = location.hostname;
 
     // Use current host for preview urls
-    if (isLive && serverName) {
+    if (isLive && serverName !== 'localhost') {
         host = serverName;
     }
 

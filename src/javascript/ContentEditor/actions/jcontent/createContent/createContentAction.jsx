@@ -23,6 +23,7 @@ export const CreateContent = ({
     templateLimit,
     onCreate,
     onClosed,
+    isDisabled,
     render: Render,
     loading: Loading,
     ...otherProps}) => {
@@ -85,7 +86,7 @@ export const CreateContent = ({
     return (actions || [{key: 'allTypes', nodeTypeIcon: otherProps.defaultIcon}]).map(result => (
         <Render
             key={result.key}
-            enabled={!res.node?.lockOwner}
+            enabled={!isDisabled && !res.node?.lockOwner}
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}
             {...otherProps}
             flattenedNodeTypes={flattenedNodeTypes}

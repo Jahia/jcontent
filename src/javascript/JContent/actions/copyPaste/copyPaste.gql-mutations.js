@@ -7,6 +7,7 @@ const copyPasteQueries = {
             pasteNode(mode: COPY, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, destName: $destName, childNodeTypesToSkip: $nodeTypesToSkip, namingConflictResolution: RENAME) {
                 node {
                     ...NodeCacheRequiredFields
+                    name
                     path
                 }
             }
@@ -20,6 +21,7 @@ const copyPasteQueries = {
             pasteNode(mode: MOVE, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, destName: $destName, namingConflictResolution: RENAME) {
                 node {
                     ...NodeCacheRequiredFields
+                    name
                     path
                 }
             }
@@ -36,6 +38,7 @@ const copyPasteQueries = {
                 }
                 node {
                     ...NodeCacheRequiredFields
+                    name
                     path
                 }
             }

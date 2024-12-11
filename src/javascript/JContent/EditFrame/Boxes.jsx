@@ -64,7 +64,38 @@ function getRelativePos(coord1, coord2) {
     return (offPY >= 0) ? 'bottom' : 'top';
 }
 
-export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved}) => {
+const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
+    if (!clickedElement || currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`).length === 0) {
+        return null;
+    }
+
+    const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
+        element: e,
+        parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
+    }));
+
+    return (
+        <div data-sel-role="insertion-points">
+            {
+                childrenElem.map(({element, parentNode}) => (
+                    <Create isInsertionPoint
+                        key={`insertion-point-${element.getAttribute('id')}`}
+                        node={parentNode}
+                        element={element}
+                        addIntervalCallback={addIntervalCallback}
+                        onMouseOver={() => {}}
+                        onMouseOut={() => {}}
+                        onSaved={onSaved}
+                    />
+                ))
+            }
+        </div>
+    );
+};
+
+
+
+export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const dispatch = useDispatch();
@@ -83,7 +114,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [currentElement, setCurrentElement] = useState();
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
-    const [clickedElement, setClickedElement] = useState();
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
@@ -151,7 +181,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 const path = moduleElement.getAttribute('path');
 
                 if (clickedElement && clickedElement.path === path) {
-                    setClickedElement(() => undefined);
+                    setClickedElement(undefined);
                 } else {
                     setClickedElement(() => ({element: moduleElement, path: path}));
                 }
@@ -162,7 +192,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return false;
-    }, [onSelect, currentDocument, clickedElement]);
+    }, [onSelect, currentDocument, clickedElement, setClickedElement]);
 
     const clearSelection = useCallback(event => {
         if (selection.length === 1 && !event.defaultPrevented) {
@@ -485,9 +515,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                             addIntervalCallback={addIntervalCallback}
                             onMouseOver={onMouseOver}
                             onMouseOut={onMouseOut}
+                            onClick={onClick}
+                            clickedElement={clickedElement}
                             onSaved={onSaved}
                     />
                 ))}
+            <InsertionPoints currentDocument={currentDocument} addIntervalCallback={addIntervalCallback} clickedElement={clickedElement} nodes={nodes} onSaved={onSaved}/>
         </div>
     );
 };

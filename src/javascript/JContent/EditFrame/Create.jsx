@@ -10,6 +10,9 @@ import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
+import {useApolloClient} from '@apollo/client';
+import {SavePropertiesMutation} from '~/ContentEditor/ContentEditor/updateNode/updateNode.gql-mutation';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
 const ButtonRenderer = getButtonRenderer({
     showTooltip: true,
@@ -26,16 +29,79 @@ function getBoundingBox(element) {
     };
 }
 
-const reposition = function (element, currentOffset, setCurrentOffset) {
+function reposition(element, currentOffset, setCurrentOffset) {
     const box = getBoundingBox(element);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
         setCurrentOffset(box);
     }
 };
 
-export const Create = React.memo(({element, node, addIntervalCallback, onMouseOver, onMouseOut, onSaved}) => {
-    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
+const useElemAttributes = ({element, parent, isInsertionPoint}) => {
+    const nodePath = (element.getAttribute('path') === '*' || isInsertionPoint) ? null : element.getAttribute('path');
+    const nodeName = element.getAttribute('path').split('/').pop();
+
+    let nodeTypes = null;
+    if (element.getAttribute('nodetypes')) {
+        nodeTypes = element.getAttribute('nodetypes').split(' ');
+    } else if (parent.getAttribute('nodetypes') &&
+        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
+        nodeTypes = parent.getAttribute('nodetypes').split(' ');
+    }
+
+    // Extract limit defined on template set
+    let templateLimit = null;
+    if (parent.getAttribute('listLimit') &&
+        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
+        templateLimit = Number(parent.getAttribute('listLimit'));
+    }
+    return {nodeName, nodePath, nodeTypes, templateLimit};
+}
+
+const useReorderNodes = ({parentPath}) => {
+    const client = useApolloClient();
+    const reorderNodes = (names, beforeNodeName) => {
+        if (!Array.isArray(names) || !names.filter(Boolean).length) {
+            return;
+        }
+
+        names = names.filter(Boolean);
+        names.push(beforeNodeName);
+        console.debug(`Reordering node ${names.join(',')}`);
+        client.mutate({
+            variables: {
+                uuid: parentPath,
+                shouldModifyChildren: true,
+                shouldRename: false,
+                newName: "",
+                propertiesToSave: [],
+                propertiesToDelete: [],
+                mixinsToAdd: [],
+                mixinsToDelete: [],
+                wipInfo: {
+                    status: "DISABLED",
+                    languages: []
+                },
+                shouldSetWip: false,
+                childrenOrder: names,
+            },
+            mutation: SavePropertiesMutation,
+        }).then(() => {
+            console.debug(`Node ${names.join(',')} reordered`);
+            triggerRefetchAll();
+        }, error => {
+            console.error(`Error reordering node ${names.join(',')}: ${error}`);
+        });
+    };
+
+    return {reorderNodes};
+}
+
+export const Create = React.memo(({element, node, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint}) => {
+    const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+    const parentPath = parent.getAttribute('path');
+    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
+    const {nodeName, nodePath, nodeTypes, templateLimit} = useElemAttributes({element, parent, isInsertionPoint});
 
     useEffect(() => {
         element.style['min-height'] = '28px';
@@ -49,43 +115,16 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
         }
     }, [node, parent])
 
-    const parentPath = parent.getAttribute('path');
 
     const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved});
-
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
     }));
 
-    const copyPaste = useSelector(state => state.jcontent.copyPaste);
-
-    const sizers = [];
-    Array(10).fill(0).forEach((_, i) => {
-        if (currentOffset.width < (i * 150)) {
-            sizers.push('sizer' + i);
-        }
-    });
-
-    const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
-    let nodetypes = null;
-    if (element.getAttribute('nodetypes')) {
-        nodetypes = element.getAttribute('nodetypes').split(' ');
-    } else if (parent.getAttribute('nodetypes') &&
-        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
-        nodetypes = parent.getAttribute('nodetypes').split(' ');
-    }
-
-    // Extract limit defined on template set
-    let templateLimit = null;
-    if (parent.getAttribute('listLimit') &&
-        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
-        templateLimit = Number(parent.getAttribute('listLimit'));
-    }
-
-    const {nodes} = copyPaste;
-
-    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, currentOffset, element, setCurrentOffset]);
-    reposition(element, currentOffset, setCurrentOffset);
+    useEffect(
+        () => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)),
+        [addIntervalCallback, currentOffset, element, setCurrentOffset]);
+    useEffect(() => reposition(element, currentOffset, setCurrentOffset), []);
 
     useEffect(() => {
         if (isCanDrop) {
@@ -97,36 +136,46 @@ export const Create = React.memo(({element, node, addIntervalCallback, onMouseOv
         };
     }, [isCanDrop, element]);
 
+    const {reorderNodes} = useReorderNodes({parentPath});
+
     const tooltipProps = {enterDelay: 800, PopperProps: {container: element.ownerDocument.getElementById('jahia-portal-root')}};
+    const sizers = [...Array(10).keys()].filter(i => currentOffset.width < i * 150).map(i => `sizer${i}`);
 
     return !anyDragging && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}
              className={clsx(styles.root, editStyles.enablePointerEvents, sizers)}
-             style={currentOffset}
+             style={{...currentOffset, height: isInsertionPoint ? 0 : currentOffset.height}}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
+             onClick={onClick}
         >
-            {nodes.length === 0 &&
+            {copyPasteNodes.length === 0 &&
                 <DisplayAction actionKey="createContent"
                                tooltipProps={tooltipProps}
                                path={parentPath}
                                name={nodePath}
-                               nodeTypes={nodetypes}
+                               isDisabled={clickedElement && clickedElement.path !== parentPath}
+                               nodeTypes={nodeTypes}
+                               onCreate={({name}) => reorderNodes([name], nodeName)}
                                templateLimit={templateLimit}
                                loading={() => false}
                                render={ButtonRenderer}/>}
             <DisplayAction actionKey="paste"
                            tooltipProps={tooltipProps}
+                           isDisabled={clickedElement && clickedElement.path !== parentPath}
                            path={parentPath}
                            loading={() => false}
+                           onAction={(data) => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName)}
                            render={ButtonRenderer}/>
             <DisplayAction actionKey="pasteReference"
                            tooltipProps={tooltipProps}
+                           isDisabled={clickedElement && clickedElement.path !== parentPath}
                            path={parentPath}
                            loading={() => false}
+                           onAction={(data) => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName)}
                            render={ButtonRenderer}/>
         </div>
     );

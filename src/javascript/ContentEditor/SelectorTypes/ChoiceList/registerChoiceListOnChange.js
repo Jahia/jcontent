@@ -45,7 +45,9 @@ export const registerChoiceListOnChange = registry => {
                 helper.moveMixinToTargetFieldset(mixin, field.nodeType, editorSection, field, onChangeContext.formik);
             });
 
-            onChangeContext.onSectionsUpdate();
+            if (onChangeContext.onSectionsUpdate) {
+                onChangeContext.onSectionsUpdate();
+            }
         }
     });
 };

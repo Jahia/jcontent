@@ -9,8 +9,11 @@ import styles from './LinkInterceptor.scss';
 const absoluteRegex = /^(?:[a-zA-Z+]+:)?\/\//;
 const jahiaRegex = /\/cms\/editframe\/default\/([a-zA-Z0-9_-]+)\/(sites\/([^/]+))?\/(.*)/;
 
-function intercept(doc, site, setModal) {
-    doc.addEventListener('click', e => {
+function intercept(doc, site, setModal, onDocumentClick) {
+    const handler = e => {
+        if (typeof onDocumentClick === 'function') {
+            onDocumentClick(e);
+        }
         const target = e.target.tagName === 'A' ? e.target : e.target.closest('a');
         if (target) {
             const url = target.getAttribute('href');
@@ -29,18 +32,19 @@ function intercept(doc, site, setModal) {
                 }
             }
         }
-    });
+    };
+    doc.addEventListener('click', handler);
+    return handler;
 }
 
-export const LinkInterceptor = ({document}) => {
+export const LinkInterceptor = ({document, onDocumentClick}) => {
     const site = useSelector(state => state.site);
     const {t} = useTranslation('jcontent');
     const [modal, setModal] = useState({isOpen: false});
 
     useEffect(() => {
-        if (document) {
-            intercept(document, site, setModal);
-        }
+        let handler = document && intercept(document, site, setModal, onDocumentClick);
+        return () => document?.removeEventListener('click', handler);
     }, [document, site, setModal]);
 
     const handleClose = useCallback(() => {

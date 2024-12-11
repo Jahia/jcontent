@@ -64,13 +64,10 @@ function addEventListeners(target, manager, iframeRef) {
 export const EditFrame = ({isDeviceView}) => {
     const manager = useDragDropManager();
 
-    const {path, site, language, template} = useSelector(state => ({
-        language: state.language,
-        site: state.site,
-        path: state.jcontent.path,
-        template: state.jcontent.template,
-        selection: state.jcontent.selection
-    }), shallowEqual);
+    const path = useSelector(state => state.jcontent.path);
+    const site = useSelector(state => state.site);
+    const language = useSelector(state => state.language);
+    const template = useSelector(state => state.jcontent.template);
 
     const client = useApolloClient();
     const dispatch = useDispatch();
@@ -79,6 +76,7 @@ export const EditFrame = ({isDeviceView}) => {
     const [device, setDevice] = useState(null);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
+    const [clickedElement, setClickedElement] = useState();
     const previousDevice = useRef();
 
     const iframe = useRef();
@@ -265,7 +263,7 @@ export const EditFrame = ({isDeviceView}) => {
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>
-            {currentDocument && <LinkInterceptor document={currentDocument}/>}
+            {currentDocument && <LinkInterceptor document={currentDocument} onDocumentClick={() => setClickedElement(undefined)}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="jahia-portal-root" className={styles.root}>
@@ -273,6 +271,8 @@ export const EditFrame = ({isDeviceView}) => {
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}
                                addIntervalCallback={addIntervalCallback}
+                               clickedElement={clickedElement}
+                               setClickedElement={setClickedElement}
                                onSaved={() => {
                                    refresh();
                                }}

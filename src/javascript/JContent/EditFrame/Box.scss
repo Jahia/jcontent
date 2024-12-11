@@ -108,11 +108,19 @@
 
     padding: 0 var(--spacing-small);
 
-    background-color: var(--colorHeaderBackground, var(--color-gray_light40));
+    background-color: var(--color-gray_light40);
 
     button {
         min-width: max-content;
     }
+}
+
+.header.isArea {
+    background-color: var(--color-gray_light);
+}
+
+.header.isClicked {
+    background-color: var(--color-accent_light_plain20);
 }
 
 .dragHandle {

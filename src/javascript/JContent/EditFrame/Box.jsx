@@ -69,6 +69,7 @@ export const Box = React.memo(({
     rootElementRef,
     currentFrameRef,
     isHeaderDisplayed,
+    isHeaderHighlighted,
     isCurrent,
     isClicked,
     isSelected,
@@ -189,10 +190,8 @@ export const Box = React.memo(({
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerProps = {
-        className: clsx(styles.headerContainer, !isSticky && styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
+        className: clsx(styles.headerContainer, isSticky && styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
     };
-
-    const headerBackgroundColor = type === 'area' ? 'var(--color-gray_light)' : 'var(--color-gray_light40)';
 
     const Header = (
         <div {...headerProps}
@@ -205,8 +204,8 @@ export const Box = React.memo(({
              onDoubleClick={onDoubleClick}
         >
             <div ref={dragWithChecks}
-                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap', 'alignCenter')}
-                 style={{'--colorHeaderBackground': headerBackgroundColor}}
+                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap alignCenter',
+                     type === 'area' && styles.isArea, (isClicked || isHeaderHighlighted) && styles.isClicked)}
             >
                 <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
                 {node &&
@@ -229,7 +228,10 @@ export const Box = React.memo(({
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, (isCurrent || isClicked) && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
+            <div className={clsx(styles.rel,
+                isHeaderDisplayed ? boxStyle : styles.relNoHeader,
+                (isCurrent) && !(isSelected || isClicked) ? styles.current : '',
+                (isSelected || isClicked) ? styles.selected : '')}
                  style={{
                      '--colorCurrent': borderColorCurrent,
                      '--colorSelected': borderColorSelected

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {Dropdown, toIconComponent} from '@jahia/moonstone';
@@ -30,6 +30,7 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
         onChange,
         onBlur
     };
+    const prevValueRef = useRef();
 
     const {readOnly, label, iconName, dropdownData} = React.useMemo(() => ({
         readOnly: field.readOnly || field.valueConstraints.length === 0,
@@ -57,7 +58,11 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
     React.useEffect(() => {
         // Reset value if constraints doesnt contains the actual value.
         if (value && field.valueConstraints.find(v => v.value.string === value) === undefined) {
+            prevValueRef.current = value;
             onChange(null);
+        // In case constraints change (async call) and expected value becomes available, undo previous reset to null
+        } else if (value === null && field.valueConstraints.find(v => v.value.string === prevValueRef.current)) {
+            onChange(prevValueRef.current);
         }
     }, [value, field.valueConstraints, onChange]);
 

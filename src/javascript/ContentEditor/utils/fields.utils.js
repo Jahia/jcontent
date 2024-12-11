@@ -40,6 +40,10 @@ export function getDynamicFieldSets(sections) {
  * @returns {array} fields    array object contains fields
  */
 export function getFields(sections, sectionName, fieldSetFilter) {
+    if (!sections) {
+        return [];
+    }
+
     return sections.reduce((result, section) => {
         let fields = [];
 

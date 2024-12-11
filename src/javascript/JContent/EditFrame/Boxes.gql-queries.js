@@ -6,6 +6,9 @@ export const BoxesQuery = gql`
         jcr {
             nodesByPath(paths: $paths) {
                 ...NodeFields
+                primaryNodeType {
+                    icon
+                }
                 subNodes: children {
                     pageInfo {
                         totalCount

@@ -79,6 +79,7 @@ export const EditFrame = ({isDeviceView}) => {
     const [device, setDevice] = useState(null);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
+    const [clickedElement, setClickedElement] = useState();
     const [loading, setLoading] = useState(false);
     const previousDevice = useRef();
 
@@ -265,7 +266,7 @@ export const EditFrame = ({isDeviceView}) => {
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>
-            {currentDocument && <LinkInterceptor document={currentDocument}/>}
+            {currentDocument && <LinkInterceptor document={currentDocument} onDocumentClick={() => setClickedElement(undefined)}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="jahia-portal-root" className={styles.root}>
@@ -273,6 +274,8 @@ export const EditFrame = ({isDeviceView}) => {
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}
                                addIntervalCallback={addIntervalCallback}
+                               clickedElement={clickedElement}
+                               setClickedElement={setClickedElement}
                                onSaved={() => {
                                    refresh();
                                }}

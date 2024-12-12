@@ -118,6 +118,7 @@ CreateContent.propTypes = {
     templateLimit: PropTypes.number,
     onCreate: PropTypes.func,
     onClosed: PropTypes.func,
+    isDisabled: PropTypes.bool,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

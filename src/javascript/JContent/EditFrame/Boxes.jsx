@@ -65,10 +65,12 @@ function getRelativePos(coord1, coord2) {
 }
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
+    // If current clicked element does not have any create content buttons [type="placeholder"], then we do not need to show insertion points
     if (!clickedElement || currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`).length === 0) {
         return null;
     }
 
+    // Get all children of the clicked element that are create content buttons [type="placeholder"] and add insertion points for each
     const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
         element: e,
         parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
@@ -78,14 +80,14 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         <div data-sel-role="insertion-points">
             {
                 childrenElem.map(({element, parentNode}) => (
-                    <Create isInsertionPoint
-                        key={`insertion-point-${element.getAttribute('id')}`}
-                        node={parentNode}
-                        element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
-                        onSaved={onSaved}
+                    <Create key={`insertion-point-${element.getAttribute('id')}`}
+                            isInsertionPoint
+                            node={parentNode}
+                            element={element}
+                            addIntervalCallback={addIntervalCallback}
+                            onMouseOver={() => {}}
+                            onMouseOut={() => {}}
+                            onSaved={onSaved}
                     />
                 ))
             }
@@ -93,7 +95,13 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
     );
 };
 
-
+InsertionPoints.propTypes = {
+    currentDocument: PropTypes.any,
+    clickedElement: PropTypes.object,
+    nodes: PropTypes.object,
+    addIntervalCallback: PropTypes.func,
+    onSaved: PropTypes.func
+};
 
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
@@ -101,9 +109,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const dispatch = useDispatch();
 
     const language = useSelector(state => state.language);
-    const displayLanguage = useSelector(state => state.uilang);
     const path = useSelector(state => state.jcontent.path);
-    const selection = useSelector(state => state.jcontent.selection);
+    const selection = useSelector(state => state.jcontent.selection, shallowEqual);
     const site = useSelector(state => state.site);
     const uilang = useSelector(state => state.uilang);
 
@@ -337,7 +344,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
 
-    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, fetchPolicy: 'network-only', errorPolicy: 'all'});
+    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
     useEffect(() => {
         setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
@@ -486,7 +493,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                              []}
                          entries={entries}
                          language={language}
-                         displayLanguage={displayLanguage}
+                         displayLanguage={uilang}
                          color="default"
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
@@ -512,10 +519,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                             element={element}
                             parent={element}
                             addIntervalCallback={addIntervalCallback}
+                            clickedElement={clickedElement}
                             onMouseOver={onMouseOver}
                             onMouseOut={onMouseOut}
                             onClick={onClick}
-                            clickedElement={clickedElement}
                             onSaved={onSaved}
                     />
                 ))}
@@ -529,5 +536,7 @@ Boxes.propTypes = {
     currentFrameRef: PropTypes.any,
     currentDndInfo: PropTypes.object,
     addIntervalCallback: PropTypes.func,
-    onSaved: PropTypes.func
+    onSaved: PropTypes.func,
+    clickedElement: PropTypes.any,
+    setClickedElement: PropTypes.func
 };

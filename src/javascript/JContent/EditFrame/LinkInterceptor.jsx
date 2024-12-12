@@ -14,6 +14,7 @@ function intercept(doc, site, setModal, onDocumentClick) {
         if (typeof onDocumentClick === 'function') {
             onDocumentClick(e);
         }
+
         const target = e.target.tagName === 'A' ? e.target : e.target.closest('a');
         if (target) {
             const url = target.getAttribute('href');
@@ -33,6 +34,7 @@ function intercept(doc, site, setModal, onDocumentClick) {
             }
         }
     };
+
     doc.addEventListener('click', handler);
     return handler;
 }
@@ -45,7 +47,7 @@ export const LinkInterceptor = ({document, onDocumentClick}) => {
     useEffect(() => {
         let handler = document && intercept(document, site, setModal, onDocumentClick);
         return () => document?.removeEventListener('click', handler);
-    }, [document, site, setModal]);
+    }, [document, site, setModal, onDocumentClick]);
 
     const handleClose = useCallback(() => {
         setModal(modal => ({...modal, isOpen: false}));
@@ -95,6 +97,7 @@ export const LinkInterceptor = ({document, onDocumentClick}) => {
 };
 
 LinkInterceptor.propTypes = {
-    document: PropTypes.object.isRequired
+    document: PropTypes.object.isRequired,
+    onDocumentClick: PropTypes.func
 };
 

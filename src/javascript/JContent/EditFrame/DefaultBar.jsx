@@ -29,11 +29,17 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
 
 export const LabelBar = ({node}) => {
     const title = truncate(node.displayName, 24);
-    return (<>
-        <NodeIcon node={node} className={styles.icon}/>
-        <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
-    </>);
-}
+    return (
+        <>
+            <NodeIcon node={node} className={styles.icon}/>
+            <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
+        </>
+    );
+};
+
+LabelBar.propTypes = {
+    node: {displayName: PropTypes.string}
+};
 
 export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden}) => {
     const WrappedButtonRendererNoLabel = headerButtonWrapper(ButtonRendererNoLabel, currentFrameRef);

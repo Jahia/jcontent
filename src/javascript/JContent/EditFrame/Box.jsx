@@ -48,6 +48,7 @@ const adaptContentPositionAndSize = element => {
     } else {
         element.classList.add(editStyles.marginTop);
     }
+
     element.classList.add(editStyles.smallerBox);
 };
 
@@ -204,8 +205,7 @@ export const Box = React.memo(({
              onDoubleClick={onDoubleClick}
         >
             <div ref={dragWithChecks}
-                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap alignCenter',
-                     type === 'area' && styles.isArea, (isClicked || isHeaderHighlighted) && styles.isClicked)}
+                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap alignCenter', type === 'area' && styles.isArea, (isClicked || isHeaderHighlighted) && styles.isClicked)}
             >
                 <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
                 {node &&
@@ -285,6 +285,8 @@ Box.propTypes = {
     currentFrameRef: PropTypes.any,
 
     isHeaderDisplayed: PropTypes.bool,
+
+    isHeaderHighlighted: PropTypes.bool,
 
     isCurrent: PropTypes.bool,
 

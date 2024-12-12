@@ -130,6 +130,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
                     if (typeof onAction === 'function') {
                         onAction(datas);
                     }
+
                     notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton', 'closeAfter5s']);
 
                     const moveResults = datas.map(d => d.data.jcr.pasteNode.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});

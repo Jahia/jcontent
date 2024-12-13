@@ -10,6 +10,7 @@ export const ContentEditorSectionContextProvider = ({formSections, children}) =>
     const [, setChangeCount] = useState(0);
 
     const onSectionsUpdate = () => {
+        //sections.current = JSON.parse(JSON.stringify(sections.current));
         setChangeCount(i => i + 1);
     };
 
@@ -22,6 +23,7 @@ export const ContentEditorSectionContextProvider = ({formSections, children}) =>
         onSectionsUpdate();
     };
 
+    console.log('sec ctx');
     return (
         <ContentEditorSectionContext.Provider value={{sections: sections.current, getSections, onSectionsUpdate, setSections}}>
             {children}

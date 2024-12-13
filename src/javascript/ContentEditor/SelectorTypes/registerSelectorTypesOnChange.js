@@ -104,6 +104,7 @@ export const registerSelectorTypesOnChange = registry => {
                     }
                 });
                 if (updated) {
+                    console.log('onSecUpdate');
                     onChangeContext.onSectionsUpdate();
                 }
             });

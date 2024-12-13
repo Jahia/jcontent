@@ -58,10 +58,12 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
     React.useEffect(() => {
         // Reset value if constraints doesnt contains the actual value.
         if (value && field.valueConstraints.find(v => v.value.string === value) === undefined) {
+            console.log('set null value');
             prevValueRef.current = value;
             onChange(null);
         // In case constraints change (async call) and expected value becomes available, undo previous reset to null
         } else if (value === null && field.valueConstraints.find(v => v.value.string === prevValueRef.current)) {
+            console.log('reset from null');
             onChange(prevValueRef.current);
         }
     }, [value, field.valueConstraints, onChange]);

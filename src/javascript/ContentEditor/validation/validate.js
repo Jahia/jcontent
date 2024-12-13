@@ -167,7 +167,9 @@ export const validate = sections => {
                         systemNameValidation(values, field)
                     );
 
+                    console.log('validate');
                     if (fieldError) {
+                        console.log(values, field, fieldError);
                         fieldErrors[field.name] = fieldError;
                     }
 

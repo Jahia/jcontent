@@ -28,7 +28,7 @@
           "unpublishedNoLang": "Unpublication completed"
         },
         "notPublished": "This content has never been published",
-        "unPublished": "This item has been unpublished",
+        "unPublished": "This content has been unpublished",
         "modified": "Modified by {{userName}} on {{timestamp}}",
         "published": "Published by {{userName}} on {{timestamp}}",
         "mandatoryLanguageUnpublishable": {

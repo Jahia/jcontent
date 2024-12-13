@@ -32,7 +32,7 @@ export const CellStatus = ({cell, column, row}) => {
                         t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) :
                         t('jcontent:label.contentManager.workInProgressAll')}
                 >
-                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>} color="danger"/>
+                    <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>} color="warning"/>
                 </Tooltip>}
             {node.lockOwner !== null &&
             <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color={isMarkedForDeletion(node) ? 'danger' : 'warning'}/></Tooltip>}

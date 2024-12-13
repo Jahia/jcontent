@@ -26,7 +26,7 @@
           "publishedNoLang": "Publication terminée"
         },
         "notPublished": "Ce contenu n'a jamais été publié",
-        "unPublished": "Cet élément a été dépublié",
+        "unPublished": "Ce contenu a été dépublié",
         "modified": "Modifié par {{userName}} le {{timestamp}}",
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": {

@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {Dropdown, toIconComponent} from '@jahia/moonstone';
@@ -26,6 +26,7 @@ const getLabel = (field, value, t) => {
 
 export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur}) => {
     const {t} = useTranslation();
+    const [count, setCount] = useState(0);
     inputContext.actionContext = {
         onChange,
         onBlur

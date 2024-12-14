@@ -195,8 +195,8 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
         // Update formik
         setFieldValue(field.name, _currentValue);
 
-        // Trigger on changes
         registeredOnChange(_currentValue);
+        // Trigger on changes
     }, [field.name, registeredOnChange, setFieldValue]);
 
     const onBlur = useCallback(() => {

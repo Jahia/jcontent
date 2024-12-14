@@ -10,6 +10,8 @@ export const ContentEditorSectionContextProvider = ({formSections, children}) =>
     const [, setChangeCount] = useState(0);
 
     const onSectionsUpdate = () => {
+        // USE Collapse content with filter value for subfield.
+        // IF you uncomment this you will see that field value is no longer set
         //sections.current = JSON.parse(JSON.stringify(sections.current));
         setChangeCount(i => i + 1);
     };

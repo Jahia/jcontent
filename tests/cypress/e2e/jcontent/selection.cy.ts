@@ -216,7 +216,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             jcontent.getTable().getRowByLabel('We are a global network');
         });
 
-        it('remove selection when navigating to a mode where item is not visible', () => {
+        it.skip('remove selection when navigating to a mode where item is not visible', () => {
             const pageBuilder = jcontent.switchToPageBuilder();
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
 

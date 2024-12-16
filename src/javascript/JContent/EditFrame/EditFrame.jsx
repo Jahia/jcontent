@@ -21,6 +21,7 @@ import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -241,6 +242,11 @@ export const EditFrame = ({isDeviceView}) => {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
     }
 
+    const onDocumentClick = () => {
+        setClickedElement(undefined);
+        dispatch(cmClearSelection());
+    }
+
     return (
         <>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams}/>
@@ -263,7 +269,7 @@ export const EditFrame = ({isDeviceView}) => {
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>
-            {currentDocument && <LinkInterceptor document={currentDocument} onDocumentClick={() => setClickedElement(undefined)}/>}
+            {currentDocument && <LinkInterceptor document={currentDocument} onDocumentClick={onDocumentClick}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="jahia-portal-root" className={styles.root}>

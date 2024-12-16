@@ -355,6 +355,8 @@ class PageBuilderModule extends BaseComponent {
         this.get().invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
         });
+        
+        // FIXME we need to specify the jahia-id when querying header
         return getComponent(PageBuilderModuleHeader, this.parentFrame);
     }
 
@@ -363,6 +365,8 @@ class PageBuilderModule extends BaseComponent {
         this.get().invoke('attr', 'id').then(id => {
             this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
         });
+
+        // FIXME we need to specify the jahia-id when querying footer
         return getComponent(PageBuilderModuleFooter, this.parentFrame);
     }
 

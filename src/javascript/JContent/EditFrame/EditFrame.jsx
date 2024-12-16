@@ -240,7 +240,7 @@ export const EditFrame = () => {
     const onDocumentClick = () => {
         setClickedElement(undefined);
         dispatch(cmClearSelection());
-    }
+    };
 
     return (
         <>

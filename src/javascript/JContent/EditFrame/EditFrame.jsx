@@ -245,7 +245,7 @@ export const EditFrame = ({isDeviceView}) => {
     const onDocumentClick = () => {
         setClickedElement(undefined);
         dispatch(cmClearSelection());
-    }
+    };
 
     return (
         <>

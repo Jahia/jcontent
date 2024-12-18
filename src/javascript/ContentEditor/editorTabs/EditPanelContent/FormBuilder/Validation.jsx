@@ -61,7 +61,7 @@ export const Validation = () => {
     };
 
     return (fieldsInError.length > 0 || Object.keys(i18nErrors).length > 0) && (
-        <div className={clsx(styles.validationWarningBox, 'flexRow_nowrap', 'alignCenter')}>
+        <div data-sel-role="validation-errors" className={clsx(styles.validationWarningBox, 'flexRow_nowrap', 'alignCenter')}>
             <Warning size="big" color="yellow" className={styles.icon}/>
             <div className="flexCol">
                 <Typography weight="semiBold">{t('label.contentEditor.edit.validation.invalidForm')}</Typography>

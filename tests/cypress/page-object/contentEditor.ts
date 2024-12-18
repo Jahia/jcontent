@@ -177,6 +177,10 @@ export class ContentEditor extends BasePage {
         });
     }
 
+    assertValidationErrorsNotExist() {
+        cy.get('[data-sel-role="validation-errors"]').should('not.exist');
+    }
+
     getRichTextField(fieldName: string): RichTextField {
         cy.window().its('CKEDITOR').its('instances').should(instances => {
             assert(instances[Object.keys(instances)[0]].instanceReady);

@@ -30,7 +30,7 @@ function childrenLimitReachedOrExceeded(node) {
     return false;
 }
 
-export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, ...others}) => {
+export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -127,6 +127,10 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
                 }))).then(datas => {
                     dispatch(copypasteClear());
                     setLocalStorage(copyPasteConstants.COPY, [], client);
+                    if (typeof onAction === 'function') {
+                        onAction(datas);
+                    }
+
                     notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton', 'closeAfter5s']);
 
                     const moveResults = datas.map(d => d.data.jcr.pasteNode.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});

@@ -5,6 +5,10 @@ import PropTypes from 'prop-types';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 
 export const DropArea = ({dropTarget, isDropAllowed}) => {
+    if (!isDropAllowed) {
+        return null;
+    }
+
     return (
         <div className={clsx(styles.root, styles.dropArea, isDropAllowed ? '' : styles.notAllowed)}
              style={dropTarget.position}

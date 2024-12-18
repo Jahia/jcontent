@@ -67,8 +67,7 @@
     overflow: hidden;
 }
 
-.sticky {
-    position: sticky;
+.headerContainer {
     top: 0;
     left: 0;
 
@@ -82,6 +81,10 @@
     pointer-events: all;
 
     overflow: hidden;
+
+    .sticky {
+        position: sticky;
+    }
 }
 
 .absolute {
@@ -105,11 +108,19 @@
 
     padding: 0 var(--spacing-small);
 
-    background-color: var(--colorHeaderBackground, var(--color-gray_light40));
+    background-color: var(--color-gray_light40);
 
     button {
         min-width: max-content;
     }
+}
+
+.header.isArea {
+    background-color: var(--color-gray_light);
+}
+
+.header.isClicked {
+    background-color: var(--color-accent_light_plain20);
 }
 
 .dragHandle {

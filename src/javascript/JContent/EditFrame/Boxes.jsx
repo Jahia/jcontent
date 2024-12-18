@@ -64,26 +64,61 @@ function getRelativePos(coord1, coord2) {
     return (offPY >= 0) ? 'bottom' : 'top';
 }
 
-export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved}) => {
+const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
+    // If current clicked element does not have any create content buttons [type="placeholder"], then we do not need to show insertion points
+    if (!clickedElement || currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`).length === 0) {
+        return null;
+    }
+
+    // Get all children of the clicked element that are create content buttons [type="placeholder"] and add insertion points for each
+    const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
+        element: e,
+        parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
+    }));
+
+    return (
+        <div data-sel-role="insertion-points">
+            {
+                childrenElem.map(({element, parentNode}) => (
+                    <Create key={`insertion-point-${element.getAttribute('id')}`}
+                            isInsertionPoint
+                            node={parentNode}
+                            element={element}
+                            addIntervalCallback={addIntervalCallback}
+                            onMouseOver={() => {}}
+                            onMouseOut={() => {}}
+                            onSaved={onSaved}
+                    />
+                ))
+            }
+        </div>
+    );
+};
+
+InsertionPoints.propTypes = {
+    currentDocument: PropTypes.any,
+    clickedElement: PropTypes.object,
+    nodes: PropTypes.object,
+    addIntervalCallback: PropTypes.func,
+    onSaved: PropTypes.func
+};
+
+export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const dispatch = useDispatch();
 
-    const {language, displayLanguage, selection, path, site, uilang} = useSelector(state => ({
-        language: state.language,
-        displayLanguage: state.uilang,
-        path: state.jcontent.path,
-        selection: state.jcontent.selection,
-        site: state.site,
-        uilang: state.uilang
-    }), shallowEqual);
+    const language = useSelector(state => state.language);
+    const path = useSelector(state => state.jcontent.path);
+    const selection = useSelector(state => state.jcontent.selection, shallowEqual);
+    const site = useSelector(state => state.site);
+    const uilang = useSelector(state => state.uilang);
 
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
     // It helps determine box visibility and header visibility.
     const [currentElement, setCurrentElement] = useState();
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
-    const [clickedElement, setClickedElement] = useState();
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
@@ -151,7 +186,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 const path = moduleElement.getAttribute('path');
 
                 if (clickedElement && clickedElement.path === path) {
-                    setClickedElement(() => undefined);
+                    setClickedElement(undefined);
                 } else {
                     setClickedElement(() => ({element: moduleElement, path: path}));
                 }
@@ -162,7 +197,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return false;
-    }, [onSelect, currentDocument, clickedElement]);
+    }, [onSelect, currentDocument, clickedElement, setClickedElement]);
 
     const clearSelection = useCallback(event => {
         if (selection.length === 1 && !event.defaultPrevented) {
@@ -309,7 +344,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
 
-    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, fetchPolicy: 'network-only', errorPolicy: 'all'});
+    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
     useEffect(() => {
         setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
@@ -445,6 +480,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
+                         isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
                          isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
@@ -457,7 +493,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                              []}
                          entries={entries}
                          language={language}
-                         displayLanguage={displayLanguage}
+                         displayLanguage={uilang}
                          color="default"
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
@@ -483,11 +519,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                             element={element}
                             parent={element}
                             addIntervalCallback={addIntervalCallback}
+                            clickedElement={clickedElement}
                             onMouseOver={onMouseOver}
                             onMouseOut={onMouseOut}
+                            onClick={onClick}
                             onSaved={onSaved}
                     />
                 ))}
+            <InsertionPoints currentDocument={currentDocument} addIntervalCallback={addIntervalCallback} clickedElement={clickedElement} nodes={nodes} onSaved={onSaved}/>
         </div>
     );
 };
@@ -497,5 +536,7 @@ Boxes.propTypes = {
     currentFrameRef: PropTypes.any,
     currentDndInfo: PropTypes.object,
     addIntervalCallback: PropTypes.func,
-    onSaved: PropTypes.func
+    onSaved: PropTypes.func,
+    clickedElement: PropTypes.any,
+    setClickedElement: PropTypes.func
 };

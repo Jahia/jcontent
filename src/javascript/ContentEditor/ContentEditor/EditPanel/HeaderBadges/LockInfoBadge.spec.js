@@ -48,7 +48,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.user'
+            expected: {label: 'translated_jcontent:label.contentEditor.edit.action.lock.user', color: 'warning'}
         };
 
         const nodeDataLockWithWorkFlowLock = {
@@ -64,7 +64,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.validation'
+            expected: {label: 'translated_jcontent:label.contentEditor.edit.action.lock.validation', color: 'warning'}
         };
 
         const nodeDataUnknownLock = {
@@ -77,7 +77,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.unknown'
+            expected: {label: 'translated_jcontent:label.contentEditor.edit.action.lock.unknown', color: 'warning'}
         };
 
         const nodeDataDeletion = {
@@ -90,7 +90,7 @@ describe('Lock Utils', () => {
                     }]
                 }
             },
-            expected: 'translated_jcontent:label.contentEditor.edit.action.lock.deletion'
+            expected: {label: 'translated_jcontent:label.contentEditor.edit.action.lock.deletion', color: 'danger'}
         };
 
         [nodeDataLockUser, nodeDataLockWithWorkFlowLock, nodeDataUnknownLock, nodeDataDeletion].forEach(

@@ -7,32 +7,37 @@ export const getBadgeContent = (nodeData, t) => {
     const LOCK_TYPE_VALIDATION = 'validation';
     const LOCK_TYPE_DELETION = 'deletion';
 
-    if (nodeData && nodeData.lockInfo && nodeData.lockInfo.details && nodeData.lockInfo.details.length > 0) {
+    let color = 'warning';
+    let label = t('jcontent:label.contentEditor.edit.action.lock.unknown');
+
+    if (nodeData?.lockInfo?.details && nodeData.lockInfo.details.length > 0) {
         let lockInfoDetails = nodeData.lockInfo.details.find(detail => detail.type === LOCK_TYPE_VALIDATION || detail.type === LOCK_TYPE_DELETION);
         if (lockInfoDetails) {
-            return t('jcontent:label.contentEditor.edit.action.lock.' + lockInfoDetails.type);
-        }
-
-        lockInfoDetails = nodeData.lockInfo.details[0];
-        if (lockInfoDetails && (lockInfoDetails.type === 'user' || lockInfoDetails.type === 'engine')) {
-            return t('jcontent:label.contentEditor.edit.action.lock.' + lockInfoDetails.type, {userName: lockInfoDetails.owner});
+            label = t('jcontent:label.contentEditor.edit.action.lock.' + lockInfoDetails.type);
+            color = (lockInfoDetails.type === LOCK_TYPE_DELETION) ? 'danger' : 'warning';
+        } else {
+            lockInfoDetails = nodeData.lockInfo.details[0];
+            if (lockInfoDetails && (lockInfoDetails.type === 'user' || lockInfoDetails.type === 'engine')) {
+                label = t('jcontent:label.contentEditor.edit.action.lock.' + lockInfoDetails.type, {userName: lockInfoDetails.owner});
+            }
         }
     }
 
-    return t('jcontent:label.contentEditor.edit.action.lock.unknown');
+    return {label, color};
 };
 
 export const LockInfoChip = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData} = useContentEditorContext();
+    const {label, color} = getBadgeContent(nodeData, t);
     return (
         <>
             {nodeData.lockedAndCannotBeEdited &&
             <Chip
                 data-sel-role="lock-info-badge"
-                label={getBadgeContent(nodeData, t)}
+                label={label}
                 icon={<Lock/>}
-                color="warning"
+                color={color}
             />}
         </>
     );

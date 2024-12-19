@@ -3,6 +3,7 @@ import {RenameDialog} from './RenameDialog';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
+import {PATH_FILES_ITSELF} from '../actions.constants';
 
 export const RenameActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
@@ -10,7 +11,8 @@ export const RenameActionComponent = ({path, render: Render, loading: Loading, .
         {path},
         {
             requiredPermission: ['jcr:write'],
-            showOnNodeTypes: ['jnt:folder', 'jnt:file']
+            showOnNodeTypes: ['jnt:folder', 'jnt:file'],
+            hideForPaths: [PATH_FILES_ITSELF]
         }
     );
 

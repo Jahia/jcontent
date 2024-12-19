@@ -12,6 +12,24 @@ import {registry} from '@jahia/ui-extender';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
 import {JahiaAreasUtil} from '../JContent.utils';
+import {NonDisplayableNodeDialog, useNodeDialog} from '~/JContent/NavigationDialogs';
+import {useQuery} from '@apollo/client';
+import {RenderCheckQuery} from './renderedContent.gql-queries';
+
+const useRenderCheck = ({path, language, template, node, skip}) => {
+    const {openDialog, ...dialogProps} = useNodeDialog();
+    const renderCheck = useQuery(RenderCheckQuery, {
+        variables: {path, language, view: template || 'default'},
+        skip
+    });
+    useEffect(() => {
+        if (node && !renderCheck?.loading && renderCheck?.error) {
+            openDialog(node);
+        }
+    }, [node, renderCheck]);
+
+    return {renderCheck, dialogProps};
+};
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
@@ -32,6 +50,9 @@ export const ContentRoute = () => {
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
     const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
+    const {renderCheck, dialogProps} = useRenderCheck({
+        path, language, template, node: res?.node, skip: !Boolean(res?.node && isPageBuilderView && canShowEditFrame)
+    });
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
@@ -75,7 +96,7 @@ export const ContentRoute = () => {
         return null;
     }
 
-    if (res.loading) {
+    if (res.loading || renderCheck?.loading) {
         return <LoaderOverlay/>;
     }
 
@@ -96,13 +117,17 @@ export const ContentRoute = () => {
     }
 
     return (
-        <MainLayout header={<ContentHeader/>}>
-            <LoaderSuspense>
-                <ErrorBoundary>
-                    {(isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
-                </ErrorBoundary>
-            </LoaderSuspense>
-        </MainLayout>
+        <>
+            <MainLayout header={<ContentHeader/>}>
+                <LoaderSuspense>
+                    <ErrorBoundary>
+                        {renderCheck?.error && <></>}
+                        {(!renderCheck?.error && isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
+                    </ErrorBoundary>
+                </LoaderSuspense>
+            </MainLayout>
+            <NonDisplayableNodeDialog {...dialogProps}/>;
+        </>
     );
 };
 

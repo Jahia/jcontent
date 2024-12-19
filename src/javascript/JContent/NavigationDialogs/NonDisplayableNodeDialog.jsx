@@ -20,12 +20,18 @@ export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, 
     const dispatch = useDispatch();
 
     const handleParentNavigation = () => {
-        dispatch(setPathAction(parentPage.path));
+        if (setPathAction) {
+            dispatch(setPathAction(parentPage.path));
+        }
         onClose();
     };
 
     const handleListNavigation = () => {
-        dispatch(batchActions([setTableViewMode(JContentConstants.tableView.viewMode.FLAT), setPathAction(node.path, {sub: false})]));
+        const actions = [setTableViewMode(JContentConstants.tableView.viewMode.FLAT)];
+        if (setPathAction) {
+            actions.push(setPathAction(node.path, {sub: false}))
+        }
+        dispatch(batchActions(actions));
         onClose();
     };
 

@@ -55,6 +55,11 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         }
     });
 
+    const viewAwareColumns = useMemo(() => columns.map(column => ({
+        ...column,
+        sortable: column.sortable && !isStructured
+    })), [columns, isStructured]);
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -63,7 +68,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         prepareRow
     } = useTable(
         {
-            columns: columns,
+            columns: viewAwareColumns,
             data: rows,
             isStructured: isStructured,
             isExpanded: row => tableOpenPaths.indexOf(row.path) > -1,

@@ -62,7 +62,7 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
             onChange(null);
         // In case constraints change (async call) and expected value becomes available, undo previous reset to null
         } else if (value === null && field.valueConstraints.find(v => v.value.string === prevValueRef.current)) {
-            onChange(prevValueRef.current);
+            onChange(prevValueRef.current, true);
         }
     }, [value, field.valueConstraints, onChange]);
 

@@ -203,7 +203,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
 
         // Trigger on changes
         registeredOnChange(_currentValue);
-    }, [field.name, registeredOnChange, setFieldValue]);
+    }, [field.name, registeredOnChange, setFieldValue, setFieldTouched]);
 
     const onBlur = useCallback(() => {
         setFieldTouched(field.name);

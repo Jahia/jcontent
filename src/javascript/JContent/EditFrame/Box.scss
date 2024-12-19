@@ -1,3 +1,8 @@
+$barHeight: 32px;
+$barMargin: 2px;
+$indexSelected: 25000;
+$indexHovered: 18000;
+
 .root {
     position: absolute;
 
@@ -12,31 +17,47 @@
     z-index: auto;
 }
 
-.rel {
+.box {
     position: relative;
 
     display: block;
 
-    margin-left: -2px;
+    outline-color: transparent;
+
+    transition: all 0.15s ease-out;
 }
 
-.relHeader {
-    top: -34px;
+.boxSelected {
+    z-index: $indexSelected;
+
+    outline: 2px solid var(--borderColorSelected);
+    box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
+}
+
+// Hover
+.boxCurrent {
+    z-index: $indexHovered;
+
+    outline: 2px dashed var(--color-accent_light);
+}
+
+.withHeader {
+    top: calc($barHeight + $barMargin) * -1;
     left: 0;
 
-    width: calc(100% + 4px);
-    height: calc(100% + 36px);
+    width: 100%;
+    height: calc(100% + $barHeight + $barMargin);
 }
 
-.relHeaderAndFooter {
-    top: -34px;
+.withHeaderAndFooter {
+    top: ($barHeight + $barMargin) * -1;
     left: 0;
 
-    width: calc(100% + 4px);
-    height: calc(100% + 64px);
+    width: 100%;
+    height: calc(100% + $barHeight * 2 + $barMargin);
 }
 
-.relNoHeader {
+.withNoHeader {
     top: 0;
     left: 0;
 
@@ -44,142 +65,107 @@
     height: 100%;
 }
 
-.relFooter {
+.boxFooter {
     position: absolute;
     bottom: 0;
 
-    z-index: 15000;
+    z-index: $indexSelected;
 
     display: flex;
 
     align-items: center;
 
     width: 100%;
-    height: 32px;
+    height: $barHeight;
 
-    border-radius: 0 0 4px 4px;
-
-    //This is equivalent to grey_light40 but with full opacity
-    background-color: rgb(237, 237, 237);
+    background-color: var(--color-accent_plain20);
 
     pointer-events: all;
-
-    overflow: hidden;
 }
 
-.headerContainer {
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 32px;
-
-    border-radius: 4px 4px 0 0;
-
-    background-color: var(--color-light);
-
-    pointer-events: all;
-
-    overflow: hidden;
-
-    .sticky {
-        position: sticky;
-    }
-}
-
-.absolute {
-    position: absolute;
-    z-index: 15000;
-
-    width: 100%;
-    height: 32px;
-
-    background-color: var(--color-light);
-
-    pointer-events: all;
-
-    overflow: hidden;
-}
-
-.header {
+.boxHeader {
     gap: var(--spacing-small);
-    align-self: stretch;
+
     width: 100%;
+
+    height: $barHeight;
 
     padding: 0 var(--spacing-small);
 
-    background-color: var(--color-gray_light40);
+    border-radius: 4px;
+
+    background-color: var(--color-gray_light_plain40);
+
+    transition: background 0.4s ease-in-out;
+
+    // box-shadow: 0 1px 3px 0 rgba(19, 28, 33, 0.3);
+
+    pointer-events: all;
+
+    &.isHovered,
+    &:hover {
+        background-color: var(--color-gray_light);
+    }
+
+    &.isClicked {
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: $indexSelected;
+
+        border-radius: 0;
+
+        background-color: var(--color-accent_plain20);
+    }
 
     button {
         min-width: max-content;
     }
 }
 
-.header.isArea {
-    background-color: var(--color-gray_light);
+.sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: $indexSelected;
 }
 
-.header.isClicked {
-    background-color: var(--color-accent_light_plain20);
-}
+// .button {
+//     flex: 0 0 auto;
+//     margin: 0 4px;
+// }
 
-.dragHandle {
-    flex: 0 0 auto;
-    height: 32px;
-}
+// .icon {
+//     flex: 0 0 auto;
+//     width: 1rem;
+//     height: 1rem;
+//     margin: 0 var(--spacing-nano);
 
-.button {
-    flex: 0 0 auto;
-    margin: 0 4px;
-}
+//     vertical-align: top;
+// }
 
-.icon {
-    flex: 0 0 auto;
-    width: 1rem;
-    height: 1rem;
-    margin: 0 var(--spacing-nano);
-
-    vertical-align: top;
-}
-
-.title {
-    flex-grow: 3;
-    flex-shrink: 2;
-}
+// .title {
+//     flex-grow: 3;
+//     flex-shrink: 2;
+// }
 
 .horizontalInsert {
-    border-bottom: 2px dashed rgb(99, 209, 255);
+    border-bottom: 2px dashed var(--color-accent_light);
 }
 
 .verticalInsert {
-    border-right: 2px dashed rgb(99, 209, 255);
+    border-right: 2px dashed var(--color-accent_light);
 }
 
 :global .moonstone-tableHead {
     background-color: transparent;
 }
 
-.selected {
-    z-index: 15000;
-
-    border-radius: 4px;
-    outline: 2px solid var(--colorSelected);
-    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
-}
-
-.current {
-    z-index: 18000;
-
-    border-radius: 4px;
-    outline: 2px solid var(--color-accent_light);
-    outline-style: dashed;
-    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
-}
-
 .dropArea {
-    border: 2px solid var(--color-accent_light);
-    border-radius: 4px;
-    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
+    outline: 2px solid var(--color-accent_light);
+
+    // border-radius: 4px;
+    box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
 }
 
 .dropAreaHeader {
@@ -195,31 +181,4 @@
 
 .draggedOverlay {
     background-color: var(--color-gray_light60);
-}
-
-.notAllowed {
-    z-index: 16000;
-
-    //background-color: rgba(240, 0, 0, 0.45);
-    //background-clip: content-box;
-    //background-blend-mode: overlay;
-    //-webkit-backdrop-filter: blur(5px);
-    //backdrop-filter: blur(5px);
-    border: 3px solid #ec7481;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
-}
-
-.dropAreaHeaderNotAllowed {
-    position: relative;
-    top: -36px;
-    z-index: 16000;
-
-    display: flex;
-    width: calc(100% + 6px);
-    height: 36px;
-    margin-left: -3px;
-
-    background-color: #ec7481;
-    background-blend-mode: overlay;
 }

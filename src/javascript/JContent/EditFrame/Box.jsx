@@ -23,8 +23,10 @@ const processCustomBoxConfigIfExists = node => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
+    // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
+    // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
     let borderColorCurrent = 'var(--color-gray)';
-    let borderColorSelected = 'var(--color-accent)';
+    let borderColorSelected = 'var(--color-accent_light)';
     if (pageBuilderBoxConfig) {
         const borderColors = pageBuilderBoxConfig.borderColors;
         if (borderColors) {
@@ -190,64 +192,70 @@ export const Box = React.memo(({
     const type = element.getAttribute('type');
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
-    const headerProps = {
-        className: clsx(styles.headerContainer, isSticky && styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
-    };
-
-    const Header = (
-        <div {...headerProps}
-             jahiatype="header" // eslint-disable-line react/no-unknown-property
-             data-current={isCurrent}
-             data-jahia-id={element.getAttribute('id')}
-             onMouseOver={onMouseOver}
-             onMouseOut={onMouseOut}
-             onClick={onClick}
-             onDoubleClick={onDoubleClick}
-        >
-            <div ref={dragWithChecks}
-                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap alignCenter', type === 'area' && styles.isArea, (isClicked || isHeaderHighlighted) && styles.isClicked)}
-            >
-                <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
-                {node &&
-                    <Bar
-                        isActionsHidden={isActionsHidden}
-                        node={node}
-                        language={language}
-                        displayLanguage={displayLanguage}
-                        width={currentOffset.width}
-                        currentFrameRef={currentFrameRef}
-                        element={element}/>}
-            </div>
-        </div>
+    const headerStyles = clsx(
+        styles.boxHeader,
+        isSticky && styles.sticky,
+        'flexRow_nowrap',
+        'alignCenter',
+        editStyles.enablePointerEvents,
+        isClicked && styles.isClicked,
+        isHeaderHighlighted && styles.isHovered
     );
 
-    const boxStyle = !isAnythingDragging && (isCurrent || isClicked) && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
+    const Header = (
+        <header ref={dragWithChecks}
+                className={headerStyles}
+                jahiatype="header" // eslint-disable-line react/no-unknown-property
+                data-current={isCurrent}
+                data-clicked={isClicked}
+                data-hovered={isHeaderHighlighted}
+                data-jahia-id={element.getAttribute('id')}
+                onMouseOver={onMouseOver}
+                onMouseOut={onMouseOut}
+                onClick={onClick}
+                onDoubleClick={onDoubleClick}
+        >
+            <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
+            {node &&
+                <Bar
+                    isActionsHidden={isActionsHidden}
+                    node={node}
+                    language={language}
+                    displayLanguage={displayLanguage}
+                    width={currentOffset.width}
+                    currentFrameRef={currentFrameRef}
+                    element={element}/>}
+        </header>
+    );
+
+    const boxStyle = !isAnythingDragging && isClicked && breadcrumbs.length > 0 ? styles.withHeaderAndFooter : styles.withHeader;
 
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel,
-                isHeaderDisplayed ? boxStyle : styles.relNoHeader,
-                (isCurrent) && !(isSelected || isClicked) ? styles.current : '',
-                (isSelected || isClicked) ? styles.selected : '')}
+            <div className={clsx(
+                styles.box,
+                isHeaderDisplayed ? boxStyle : styles.withNoHeader,
+                (isCurrent) && !(isSelected || isClicked) ? styles.boxCurrent : '',
+                (isSelected || isClicked) ? styles.boxSelected : '')}
                  style={{
-                     '--colorCurrent': borderColorCurrent,
-                     '--colorSelected': borderColorSelected
+                     '--borderColorCurrent': borderColorCurrent,
+                     '--borderColorSelected': borderColorSelected
                  }}
             >
                 {isHeaderDisplayed && Header}
 
                 {!isAnythingDragging && (isCurrent || isClicked || isSelected) && breadcrumbs.length > 0 &&
-                    <div className={clsx(styles.relFooter)}
-                         data-current={isCurrent}
-                         data-jahia-id={element.getAttribute('id')}
-                         jahiatype="footer" // eslint-disable-line react/no-unknown-property
-                         onClick={onClick}
+                    <footer className={clsx(styles.boxFooter)}
+                            data-current={isCurrent}
+                            data-jahia-id={element.getAttribute('id')}
+                            jahiatype="footer" // eslint-disable-line react/no-unknown-property
+                            onClick={onClick}
                     >
                         <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
-                    </div>}
+                    </footer>}
             </div>
         </div>
     );

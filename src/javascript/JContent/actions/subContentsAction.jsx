@@ -12,10 +12,8 @@ import {isInSearchMode} from '~/JContent/ContentRoute/ContentLayout/ContentLayou
 export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
-    const {mode, viewMode} = useSelector(state => ({
-        mode: state.jcontent.mode,
-        viewMode: state.jcontent.tableView.viewMode
-    }));
+    const mode = useSelector(state => state.jcontent.mode);
+    const viewMode = useSelector(state => state.jcontent.tableView.viewMode);
 
     const subNodesType = ['jnt:file', 'jnt:folder', 'jnt:content', 'jnt:contentFolder'];
     const res = useNodeChecks({path}, {

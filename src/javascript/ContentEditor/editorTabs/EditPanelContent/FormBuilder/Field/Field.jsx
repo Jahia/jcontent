@@ -191,13 +191,19 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
         onChangeValue.current = _currentValue;
     }, [field, registeredOnChanges, selectorType]);
 
-    const onChange = useCallback(_currentValue => {
+    // We do not usually want to trigger touch field on change so we do bulk validation for performance.
+    // use forceTouch if needed to force validation.
+    const onChange = useCallback((_currentValue, forceTouch) => {
         // Update formik
         setFieldValue(field.name, _currentValue);
+        if (forceTouch) {
+            // https://github.com/jaredpalmer/formik/issues/2059
+            setTimeout(() => setFieldTouched(field.name, true));
+        }
 
         // Trigger on changes
         registeredOnChange(_currentValue);
-    }, [field.name, registeredOnChange, setFieldValue]);
+    }, [field.name, registeredOnChange, setFieldValue, setFieldTouched]);
 
     const onBlur = useCallback(() => {
         setFieldTouched(field.name);

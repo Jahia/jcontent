@@ -38,6 +38,7 @@ export const registerSelectorTypesOnChange = registry => {
     registry.add('selectorType.onChange', 'dependentProperties', {
         targets: ['*'],
         onChange: (previousValue, currentValue, field, onChangeContext) => {
+            console.debug(`Processing field ${field.name}: currentValue: ${currentValue}, previousValue: ${previousValue}`);
             const sections = onChangeContext.sections;
             const fields = getFields(sections);
             const dependentPropertiesFields = fields
@@ -105,6 +106,7 @@ export const registerSelectorTypesOnChange = registry => {
                 });
                 if (updated) {
                     onChangeContext.onSectionsUpdate();
+                    console.debug(`Triggering update to field ${field.name} due to dependentProperties change.`);
                 }
             });
         }

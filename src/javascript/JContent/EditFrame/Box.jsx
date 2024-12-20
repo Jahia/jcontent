@@ -23,19 +23,21 @@ const processCustomBoxConfigIfExists = node => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
-    let borderColorCurrent = 'var(--color-gray)';
-    let borderColorSelected = 'var(--color-accent)';
+    // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
+    // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
+    let borderColorHovered = 'var(--color-accent_light)';
+    let borderColorSelected = 'var(--color-accent_light)';
     if (pageBuilderBoxConfig) {
         const borderColors = pageBuilderBoxConfig.borderColors;
         if (borderColors) {
-            borderColorCurrent = borderColors.hover ? borderColors.hover : borderColorCurrent;
+            borderColorHovered = borderColors.hover ? borderColors.hover : borderColorHovered;
             borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
         }
     }
 
     return {
         Bar,
-        borderColorCurrent,
+        borderColorHovered,
         borderColorSelected,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
         isSticky: pageBuilderBoxConfig?.isSticky ?? true
@@ -71,7 +73,7 @@ export const Box = React.memo(({
     currentFrameRef,
     isHeaderDisplayed,
     isHeaderHighlighted,
-    isCurrent,
+    isHovered,
     isClicked,
     isSelected,
     isActionsHidden,
@@ -100,7 +102,7 @@ export const Box = React.memo(({
         };
     }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
 
-    element.dataset.current = isCurrent;
+    element.dataset.hovered = isHovered;
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -168,10 +170,10 @@ export const Box = React.memo(({
         )
     ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    const {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed, isSticky} = useMemo(() => processCustomBoxConfigIfExists(node), [node]);
+    const {Bar, borderColorHovered, borderColorSelected, isBarAlwaysDisplayed, isSticky} = useMemo(() => processCustomBoxConfigIfExists(node), [node]);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
-    if (!isHeaderDisplayed && !isCurrent && !isSelected) {
+    if (!isHeaderDisplayed && !isHovered && !isSelected) {
         return false;
     }
 
@@ -190,64 +192,70 @@ export const Box = React.memo(({
     const type = element.getAttribute('type');
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
-    const headerProps = {
-        className: clsx(styles.headerContainer, isSticky && styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)
-    };
-
-    const Header = (
-        <div {...headerProps}
-             jahiatype="header" // eslint-disable-line react/no-unknown-property
-             data-current={isCurrent}
-             data-jahia-id={element.getAttribute('id')}
-             onMouseOver={onMouseOver}
-             onMouseOut={onMouseOut}
-             onClick={onClick}
-             onDoubleClick={onDoubleClick}
-        >
-            <div ref={dragWithChecks}
-                 className={clsx(editStyles.enablePointerEvents, styles.header, 'flexRow_nowrap alignCenter', type === 'area' && styles.isArea, (isClicked || isHeaderHighlighted) && styles.isClicked)}
-            >
-                <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
-                {node &&
-                    <Bar
-                        isActionsHidden={isActionsHidden}
-                        node={node}
-                        language={language}
-                        displayLanguage={displayLanguage}
-                        width={currentOffset.width}
-                        currentFrameRef={currentFrameRef}
-                        element={element}/>}
-            </div>
-        </div>
+    const headerStyles = clsx(
+        styles.boxHeader,
+        isSticky && styles.sticky,
+        'flexRow_nowrap',
+        'alignCenter',
+        editStyles.enablePointerEvents,
+        isClicked && styles.isClicked,
+        isHeaderHighlighted && styles.isHighlighted
     );
 
-    const boxStyle = !isAnythingDragging && (isCurrent || isClicked) && breadcrumbs.length > 0 ? styles.relHeaderAndFooter : styles.relHeader;
+    const Header = (
+        <header ref={dragWithChecks}
+                className={headerStyles}
+                jahiatype="header" // eslint-disable-line react/no-unknown-property
+                data-hovered={isHovered}
+                data-clicked={isClicked}
+                data-highlighted={isHeaderHighlighted}
+                data-jahia-id={element.getAttribute('id')}
+                onMouseOver={onMouseOver}
+                onMouseOut={onMouseOut}
+                onClick={onClick}
+                onDoubleClick={onDoubleClick}
+        >
+            <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
+            {node &&
+                <Bar
+                    isActionsHidden={isActionsHidden}
+                    node={node}
+                    language={language}
+                    displayLanguage={displayLanguage}
+                    width={currentOffset.width}
+                    currentFrameRef={currentFrameRef}
+                    element={element}/>}
+        </header>
+    );
+
+    const boxStyle = !isAnythingDragging && isClicked && breadcrumbs.length > 0 ? styles.withHeaderAndFooter : styles.withHeader;
 
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              style={currentOffset}
         >
-            <div className={clsx(styles.rel,
-                isHeaderDisplayed ? boxStyle : styles.relNoHeader,
-                (isCurrent) && !(isSelected || isClicked) ? styles.current : '',
-                (isSelected || isClicked) ? styles.selected : '')}
+            <div className={clsx(
+                styles.box,
+                isHeaderDisplayed ? boxStyle : styles.withNoHeader,
+                isHovered ? styles.boxHovered : '',
+                (isSelected || isClicked) ? styles.boxSelected : '')}
                  style={{
-                     '--colorCurrent': borderColorCurrent,
-                     '--colorSelected': borderColorSelected
+                     '--borderColorHovered': borderColorHovered,
+                     '--borderColorSelected': borderColorSelected
                  }}
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && (isCurrent || isClicked || isSelected) && breadcrumbs.length > 0 &&
-                    <div className={clsx(styles.relFooter)}
-                         data-current={isCurrent}
-                         data-jahia-id={element.getAttribute('id')}
-                         jahiatype="footer" // eslint-disable-line react/no-unknown-property
-                         onClick={onClick}
+                {!isAnythingDragging && (isHovered || isClicked) && breadcrumbs.length > 0 &&
+                    <footer className={clsx(styles.boxFooter)}
+                            data-hovered={isHovered}
+                            data-jahia-id={element.getAttribute('id')}
+                            jahiatype="footer" // eslint-disable-line react/no-unknown-property
+                            onClick={onClick}
                     >
                         <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
-                    </div>}
+                    </footer>}
             </div>
         </div>
     );
@@ -288,7 +296,7 @@ Box.propTypes = {
 
     isHeaderHighlighted: PropTypes.bool,
 
-    isCurrent: PropTypes.bool,
+    isHovered: PropTypes.bool,
 
     isClicked: PropTypes.bool,
 

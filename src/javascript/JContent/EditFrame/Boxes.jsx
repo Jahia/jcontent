@@ -475,7 +475,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     <Box key={element.getAttribute('id')}
                          node={node}
                          isClicked={clickedElement && node.path === clickedElement.path}
-                         isCurrent={element === el}
+                         isHovered={element === el}
                          isSelected={selection.includes(node.path)}
                          isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||

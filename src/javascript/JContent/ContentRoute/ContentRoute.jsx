@@ -26,7 +26,7 @@ const useRenderCheck = ({path, language, template, node, skip}) => {
         if (node && !renderCheck?.loading && renderCheck?.error) {
             openDialog(node);
         }
-    }, [node, renderCheck]);
+    }, [node, renderCheck, openDialog]);
 
     return {renderCheck, dialogProps};
 };
@@ -51,7 +51,7 @@ export const ContentRoute = () => {
     const isOpenDialog = Boolean(params?.openDialog?.key);
     const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
     const {renderCheck, dialogProps} = useRenderCheck({
-        path, language, template, node: res?.node, skip: !Boolean(res?.node && isPageBuilderView && canShowEditFrame)
+        path, language, template, node: res?.node, skip: !(res?.node && isPageBuilderView && canShowEditFrame)
     });
 
     useEffect(() => {
@@ -121,12 +121,12 @@ export const ContentRoute = () => {
             <MainLayout header={<ContentHeader/>}>
                 <LoaderSuspense>
                     <ErrorBoundary>
-                        {renderCheck?.error && <></>}
+                        {renderCheck?.error && null}
                         {(!renderCheck?.error && isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
                     </ErrorBoundary>
                 </LoaderSuspense>
             </MainLayout>
-            <NonDisplayableNodeDialog {...dialogProps}/>;
+            <NonDisplayableNodeDialog hasCancel={false} {...dialogProps}/>;
         </>
     );
 };

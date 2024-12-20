@@ -25,19 +25,19 @@ const processCustomBoxConfigIfExists = node => {
 
     // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
     // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
-    let borderColorCurrent = 'var(--color-gray)';
+    let borderColorHovered = 'var(--color-accent_light)';
     let borderColorSelected = 'var(--color-accent_light)';
     if (pageBuilderBoxConfig) {
         const borderColors = pageBuilderBoxConfig.borderColors;
         if (borderColors) {
-            borderColorCurrent = borderColors.hover ? borderColors.hover : borderColorCurrent;
+            borderColorHovered = borderColors.hover ? borderColors.hover : borderColorHovered;
             borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
         }
     }
 
     return {
         Bar,
-        borderColorCurrent,
+        borderColorHovered,
         borderColorSelected,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
         isSticky: pageBuilderBoxConfig?.isSticky ?? true
@@ -73,7 +73,7 @@ export const Box = React.memo(({
     currentFrameRef,
     isHeaderDisplayed,
     isHeaderHighlighted,
-    isCurrent,
+    isHovered,
     isClicked,
     isSelected,
     isActionsHidden,
@@ -102,7 +102,7 @@ export const Box = React.memo(({
         };
     }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
 
-    element.dataset.current = isCurrent;
+    element.dataset.hovered = isHovered;
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -170,10 +170,10 @@ export const Box = React.memo(({
         )
     ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    const {Bar, borderColorCurrent, borderColorSelected, isBarAlwaysDisplayed, isSticky} = useMemo(() => processCustomBoxConfigIfExists(node), [node]);
+    const {Bar, borderColorHovered, borderColorSelected, isBarAlwaysDisplayed, isSticky} = useMemo(() => processCustomBoxConfigIfExists(node), [node]);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
-    if (!isHeaderDisplayed && !isCurrent && !isSelected) {
+    if (!isHeaderDisplayed && !isHovered && !isSelected) {
         return false;
     }
 
@@ -199,16 +199,16 @@ export const Box = React.memo(({
         'alignCenter',
         editStyles.enablePointerEvents,
         isClicked && styles.isClicked,
-        isHeaderHighlighted && styles.isHovered
+        isHeaderHighlighted && styles.isHighlighted
     );
 
     const Header = (
         <header ref={dragWithChecks}
                 className={headerStyles}
                 jahiatype="header" // eslint-disable-line react/no-unknown-property
-                data-current={isCurrent}
+                data-hovered={isHovered}
                 data-clicked={isClicked}
-                data-hovered={isHeaderHighlighted}
+                data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
@@ -238,18 +238,18 @@ export const Box = React.memo(({
             <div className={clsx(
                 styles.box,
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
-                (isCurrent) && !(isSelected || isClicked) ? styles.boxCurrent : '',
+                isHovered ? styles.boxHovered : '',
                 (isSelected || isClicked) ? styles.boxSelected : '')}
                  style={{
-                     '--borderColorCurrent': borderColorCurrent,
+                     '--borderColorHovered': borderColorHovered,
                      '--borderColorSelected': borderColorSelected
                  }}
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && (isCurrent || isClicked || isSelected) && breadcrumbs.length > 0 &&
+                {!isAnythingDragging && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}
-                            data-current={isCurrent}
+                            data-hovered={isHovered}
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             onClick={onClick}
@@ -296,7 +296,7 @@ Box.propTypes = {
 
     isHeaderHighlighted: PropTypes.bool,
 
-    isCurrent: PropTypes.bool,
+    isHovered: PropTypes.bool,
 
     isClicked: PropTypes.bool,
 

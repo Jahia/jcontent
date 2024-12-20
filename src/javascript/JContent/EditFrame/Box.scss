@@ -35,10 +35,10 @@ $indexHovered: 18000;
 }
 
 // Hover
-.boxCurrent {
+.boxHovered:not(.boxSelected) {
     z-index: $indexHovered;
 
-    outline: 2px dashed var(--color-accent_light);
+    outline: 2px dashed var(--borderColorHovered);
 }
 
 .withHeader {
@@ -102,7 +102,7 @@ $indexHovered: 18000;
 
     pointer-events: all;
 
-    &.isHovered,
+    &.isHighlighted,
     &:hover {
         background-color: var(--color-gray_light);
     }

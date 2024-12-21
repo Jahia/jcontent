@@ -46,7 +46,7 @@ mutation createLockContent {
                     primaryNodeType: "jnt:page",
                     properties: [
                         { name: "jcr:title", language: "en", value: "Page test 1" },
-                        { name: "j:templateName", value: "default" }
+                        { name: "j:templateName", value: "home" }
                     ]
                 }
             ]) {

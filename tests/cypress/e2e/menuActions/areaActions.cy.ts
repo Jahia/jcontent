@@ -37,14 +37,20 @@ describe('Area actions', () => {
 
     it('Checks that content can be pasted into the area', () => {
         const jcontentPageBuilder = jcontent.switchToPageBuilder();
-        jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true).select('Copy');
-        jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing')
-            .contextMenu(true, false)
+        jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing/test-content-path2').contextMenu(true).select('Copy');
+
+        // Clicking on area header is very tricky due to overlapping contents. Select area header using footer instead.
+        const moduleItem = jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main/test-content1');
+        moduleItem.click();
+        moduleItem.getFooter().getBreadcrumbs().select('area-main');
+
+        jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main')
+            .contextMenu(false)
             .select('Paste');
         jcontentPageBuilder.refresh();
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);
-        jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing/test-content1').should('exist');
+        jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main/test-content-path2').should('exist');
     });
 
     it('Checks that delete, copy and cut menu items are not present on areas in structured view', () => {

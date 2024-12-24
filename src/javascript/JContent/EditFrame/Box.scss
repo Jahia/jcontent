@@ -153,6 +153,7 @@
 
     border-radius: 4px;
     outline: 2px solid var(--colorSelected);
+    background-color: var(--colorBackgroundSelected);
     box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }
 
@@ -160,7 +161,8 @@
     z-index: 18000;
 
     border-radius: 4px;
-    outline: 2px solid var(--color-accent_light);
+    outline: 2px solid var(--colorCurrent);
+    background-color: var(--colorBackgroundCurrent);
     outline-style: dashed;
     box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
 }

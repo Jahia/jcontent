@@ -23,10 +23,10 @@ const processCustomBoxConfigIfExists = node => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
-    let borderColorCurrent = 'var(--color-accent_light)'; 
+    let borderColorCurrent = 'var(--color-accent_light)';
     let borderColorSelected = 'var(--color-accent)';
-    let backgroundColorCurrent = undefined;
-    let backgroundColorSelected = undefined;
+    let backgroundColorCurrent;
+    let backgroundColorSelected;
     if (pageBuilderBoxConfig) {
         const borderColors = pageBuilderBoxConfig.borderColors;
         const backgroundColors = pageBuilderBoxConfig.backgroundColors;
@@ -34,7 +34,8 @@ const processCustomBoxConfigIfExists = node => {
             borderColorCurrent = borderColors.hover ? borderColors.hover : borderColorCurrent;
             borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
         }
-        if(backgroundColors) {
+
+        if (backgroundColors) {
             backgroundColorCurrent = backgroundColors.hover ? backgroundColors.hover : backgroundColorCurrent;
             backgroundColorSelected = backgroundColors.selected ? backgroundColors.selected : backgroundColorSelected;
         }
@@ -168,7 +169,7 @@ export const Box = React.memo(({
         )
     ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    const {Bar, borderColorCurrent, borderColorSelected, backgroundColorCurrent, backgroundColorSelected,isBarAlwaysDisplayed} = processCustomBoxConfigIfExists(node);
+    const {Bar, borderColorCurrent, borderColorSelected, backgroundColorCurrent, isBarAlwaysDisplayed} = processCustomBoxConfigIfExists(node);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isCurrent && !isSelected) {
@@ -234,7 +235,7 @@ export const Box = React.memo(({
             <div className={clsx(styles.rel, isHeaderDisplayed ? boxStyle : styles.relNoHeader, (isCurrent || isClicked) && !isSelected ? styles.current : '', isSelected ? styles.selected : '')}
                  style={{
                     '--colorCurrent': borderColorCurrent,
-                    '--colorSelected': borderColorSelected,
+                    '--colorSelected': borderColorSelected
                  }}
             >
                 {isHeaderDisplayed && Header}

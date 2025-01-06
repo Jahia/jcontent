@@ -69,8 +69,7 @@ export const EditFrame = ({isDeviceView}) => {
         language: state.language,
         site: state.site,
         path: state.jcontent.path,
-        template: state.jcontent.template,
-        selection: state.jcontent.selection
+        template: state.jcontent.template
     }), shallowEqual);
 
     const client = useApolloClient();

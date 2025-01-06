@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import styles from './EditFrame.scss';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';

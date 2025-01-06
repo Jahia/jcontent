@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useNodeInfo} from '@jahia/data-helper';
 
-export const PickerDialog = ({onItemSelection}) => {
+export const PickerDialog = ({pickerConfig, onItemSelection}) => {
     const {node, loading} = useNodeInfo({path: '/sites/digitall/files/images/people/user.jpg'});
+    console.log(`test picker config - ${JSON.stringify(pickerConfig)}`)
 
     if (loading) {
         return false;

@@ -1,0 +1,28 @@
+{
+    "name": "qant:customPicker",
+    "priority": 2.0,
+    "fields": [
+        {
+            "name": "myFilePicker",
+            "selectorOptionsMap": {
+                "pickerConfig": {
+                    "pickerDialog": {
+                        "keepeek": {
+                            "permanentFilters": [
+                                {
+                                    "values": ["2"],
+                                    "type": "LISTFIELD",
+                                    "internalFieldName": "metaModelType",
+                                    "fieldType": "MEDIAFIELD",
+                                    "modifier": "EQUALS_ONE"
+                                },
+                                "toto",
+                                "tata"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

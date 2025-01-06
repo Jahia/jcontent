@@ -182,3 +182,9 @@ $indexHovered: 18000;
 .draggedOverlay {
     background-color: var(--color-gray_light60);
 }
+
+.boldTitle {
+  font-weight: 700;
+  font-size: var(--spacing-medium);
+  line-height: var(--spacing-medium);
+}

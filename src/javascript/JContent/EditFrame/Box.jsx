@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {Checkbox} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
@@ -35,7 +34,7 @@ const processCustomBoxConfigIfExists = (node, type) => {
         }
     }
 
-    const config= {
+    const config = {
         Bar,
         borderColorHovered,
         borderColorSelected,
@@ -45,7 +44,7 @@ const processCustomBoxConfigIfExists = (node, type) => {
     };
 
     const isArea = type === 'area';
-    const isList = type === 'list'
+    const isList = type === 'list';
     const isAbsolute = type === 'absoluteArea';
 
     // Handle area, list and absoluteArea cases based on type
@@ -58,7 +57,7 @@ const processCustomBoxConfigIfExists = (node, type) => {
             isAbsolute,
             isArea,
             isList
-        }
+        };
     }
 
     return config;
@@ -193,7 +192,6 @@ export const Box = React.memo(({
     const type = element.getAttribute('type');
 
     const {Bar, borderColorHovered, borderColorSelected, isBarAlwaysDisplayed, isSticky, isActionsHidden: isActionsHiddenOverride, isStatusHidden, area} = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
-
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isHovered && !isSelected) {

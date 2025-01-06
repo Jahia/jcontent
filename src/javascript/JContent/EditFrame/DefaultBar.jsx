@@ -40,7 +40,9 @@ export const LabelBar = ({node, area}) => {
         return (
             <>
                 <Typography isNowrap className={styles.boldTitle} variant="caption">{title}</Typography>
-                <Chip variant="default" color="accent" label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
+                <Chip variant="default"
+                      color="accent"
+                      label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
                       icon={area.isList ? toIconComponent('/modules/assets/icons/jnt_contentList.png') : <Area/>}/>
             </>
         );

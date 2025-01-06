@@ -1,6 +1,6 @@
 import {NodeIcon} from '~/utils';
 import styles from '~/JContent/EditFrame/Box.scss';
-import {Typography} from '@jahia/moonstone';
+import {Area, Chip, toIconComponent, Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {includes} from 'lodash';
@@ -8,6 +8,12 @@ import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 import {truncate} from '~/ContentEditor/utils';
+
+const AreaShape = PropTypes.shape({
+    isAbsolute: PropTypes.bool,
+    isList: PropTypes.bool,
+    isArea: PropTypes.bool
+});
 
 // eslint-disable-next-line react/prop-types
 export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...props}) => (
@@ -27,8 +33,19 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
     />
 );
 
-export const LabelBar = ({node}) => {
+export const LabelBar = ({node, area}) => {
     const title = truncate(node.displayName, 24);
+
+    if (area) {
+        return (
+            <>
+                <Typography isNowrap className={styles.boldTitle} variant="caption">{title}</Typography>
+                <Chip variant="default" color="accent" label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
+                      icon={area.isList ? toIconComponent('/modules/assets/icons/jnt_contentList.png') : <Area/>}/>
+            </>
+        );
+    }
+
     return (
         <>
             <NodeIcon node={node} className={styles.icon}/>
@@ -38,17 +55,18 @@ export const LabelBar = ({node}) => {
 };
 
 LabelBar.propTypes = {
-    node: {displayName: PropTypes.string}
+    node: {displayName: PropTypes.string},
+    area: PropTypes.objectOf(AreaShape)
 };
 
-export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden}) => {
+export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden, area}) => {
     const WrappedButtonRendererNoLabel = headerButtonWrapper(ButtonRendererNoLabel, currentFrameRef);
     const WrappedButtonRenderer = headerButtonWrapper(ButtonRenderer, currentFrameRef);
 
     const displayLabels = width > 400;
     return (
         <>
-            <LabelBar node={node}/>
+            <LabelBar node={node} area={area}/>
 
             {!isStatusHidden && <ContentStatuses node={node}
                                                  hasLabel={displayLabels}
@@ -91,5 +109,7 @@ DefaultBar.propTypes = {
 
     isActionsHidden: PropTypes.bool,
 
-    isStatusHidden: PropTypes.bool
+    isStatusHidden: PropTypes.bool,
+
+    area: PropTypes.objectOf(AreaShape)
 };

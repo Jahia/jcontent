@@ -18,7 +18,7 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
     }
 };
 
-const processCustomBoxConfigIfExists = node => {
+const processCustomBoxConfigIfExists = (node, type) => {
     const pageBuilderBoxConfig = findAvailableBoxConfig(node);
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
@@ -35,13 +35,33 @@ const processCustomBoxConfigIfExists = node => {
         }
     }
 
-    return {
+    const config= {
         Bar,
         borderColorHovered,
         borderColorSelected,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
-        isSticky: pageBuilderBoxConfig?.isSticky ?? true
+        isSticky: pageBuilderBoxConfig?.isSticky ?? true,
+        isAbsolute: false
     };
+
+    const isArea = type === 'area';
+    const isList = type === 'list'
+    const isAbsolute = type === 'absoluteArea';
+
+    // Handle area, list and absoluteArea cases based on type
+    if (isArea || isList || isAbsolute) {
+        config.isBarAlwaysDisplayed = true;
+        config.isSticky = false;
+        config.isActionsHidden = true;
+        config.isStatusHidden = true;
+        config.area = {
+            isAbsolute,
+            isArea,
+            isList
+        }
+    }
+
+    return config;
 };
 
 const adaptContentPositionAndSize = element => {
@@ -170,7 +190,10 @@ export const Box = React.memo(({
         )
     ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
-    const {Bar, borderColorHovered, borderColorSelected, isBarAlwaysDisplayed, isSticky} = useMemo(() => processCustomBoxConfigIfExists(node), [node]);
+    const type = element.getAttribute('type');
+
+    const {Bar, borderColorHovered, borderColorSelected, isBarAlwaysDisplayed, isSticky, isActionsHidden: isActionsHiddenOverride, isStatusHidden, area} = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
+
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isHovered && !isSelected) {
@@ -188,8 +211,6 @@ export const Box = React.memo(({
             drag(n);
         }
     };
-
-    const type = element.getAttribute('type');
 
     // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerStyles = clsx(
@@ -215,16 +236,17 @@ export const Box = React.memo(({
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
         >
-            <Checkbox checked={isSelected} data-sel-role="selection-checkbox" onChange={onSelect}/>
             {node &&
                 <Bar
-                    isActionsHidden={isActionsHidden}
+                    isActionsHidden={(isActionsHidden || isActionsHiddenOverride) && !isClicked}
+                    isStatusHidden={isStatusHidden && !isClicked}
                     node={node}
                     language={language}
                     displayLanguage={displayLanguage}
                     width={currentOffset.width}
                     currentFrameRef={currentFrameRef}
-                    element={element}/>}
+                    element={element}
+                    area={area}/>}
         </header>
     );
 

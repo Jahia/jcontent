@@ -306,7 +306,7 @@ class PageBuilderModuleHeader extends BaseComponent {
     }
 
     select() {
-        this.get().find('[data-sel-role="selection-checkbox"]').click();
+        this.get().click({metaKey: true, force: true});
     }
 }
 
@@ -357,22 +357,16 @@ class PageBuilderModule extends BaseComponent {
             this.click(); // Header shows up only when selected
         }
 
-        this.get().invoke('attr', 'id').then(id => {
-            this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
-        });
-
-        // FIXME we need to specify the jahia-id when querying header
-        return getComponent(PageBuilderModuleHeader, this.parentFrame);
+        return new PageBuilderModuleHeader(this.get().invoke('attr', 'id').then(id => {
+            return this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
+        }));
     }
 
     getFooter() {
         this.hover();
-        this.get().invoke('attr', 'id').then(id => {
-            this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
-        });
-
-        // FIXME we need to specify the jahia-id when querying footer
-        return getComponent(PageBuilderModuleFooter, this.parentFrame);
+        return new PageBuilderModuleFooter(this.get().invoke('attr', 'id').then(id => {
+            return this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
+        }));
     }
 
     getCreateButtons() {

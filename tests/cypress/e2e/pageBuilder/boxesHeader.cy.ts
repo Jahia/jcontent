@@ -22,7 +22,7 @@ describe('Page builder', () => {
             jcontent = JContent
                 .visit('jcontentSite', 'en', 'pages/home')
                 .switchToPageBuilder();
-            jcontent.getModule('/sites/jcontentSite/home/landing').hover().should('have.attr', 'data-current', 'true');
+            jcontent.getModule('/sites/jcontentSite/home/landing').hover().should('have.attr', 'data-hovered', 'true');
         });
 
         it('should show box with name, status and edit buttons', () => {

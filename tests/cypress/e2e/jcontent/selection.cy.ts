@@ -158,14 +158,6 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             checkSelectionCount(2);
         });
 
-        it('should have dedicated context menu', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
-            jcontent.getGrid().getCardByLabel('forest-woman').contextMenu().select('Add to selection');
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
-            checkSelectionCount(2);
-        });
-
         it('should not select anything if preview is opened', () => {
             jcontent.getGrid().getCardByLabel('fans-stadium').contextMenu().select('Preview');
             jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});

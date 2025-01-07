@@ -32,7 +32,7 @@ describe('Page builder', () => {
             module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-            jcontent.iframe().get().find('.wrapper').parent().parent().click('left', {timeout: 1000});
+            jcontent.iframe().get().find('.wrapper').parent().parent().click('left', {timeout: 1000, force: true});
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 
@@ -70,7 +70,7 @@ describe('Page builder', () => {
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
-            module.parentFrame.get().find('div[data-current="true"]').should('exist');
+            module.parentFrame.get().find('div[data-hovered="true"]').should('exist');
 
             jcontent.clearSelection();
 

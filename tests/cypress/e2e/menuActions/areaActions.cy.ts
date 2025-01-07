@@ -35,8 +35,7 @@ describe('Area actions', () => {
         menu.shouldHaveItem('Edit');
     });
 
-    // FIXME issue with right click probably due to empty content with new centered buttons
-    it.skip('Checks that content can be pasted into the area', () => {
+    it('Checks that content can be pasted into the area', () => {
         const jcontentPageBuilder = jcontent.switchToPageBuilder();
         jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true).select('Copy');
         jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing')

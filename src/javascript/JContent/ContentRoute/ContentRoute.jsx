@@ -16,21 +16,19 @@ import {NonDisplayableNodeDialog, useNodeDialog} from '~/JContent/NavigationDial
 import {useQuery} from '@apollo/client';
 import {RenderCheckQuery} from './renderedContent.gql-queries';
 
-const useRenderCheck = ({path, node, skip}) => {
+const useRenderCheck = ({path, language, template, node, skip}) => {
     const {openDialog, ...dialogProps} = useNodeDialog();
     const renderCheck = useQuery(RenderCheckQuery, {
-        variables: {path},
+        variables: {path, language, view: template || 'default'},
         skip
     });
-
-    const isDisplayableNode = !renderCheck?.error && Boolean(renderCheck.data?.jcr.nodeByPath.isDisplayableNode);
     useEffect(() => {
-        if (node && !renderCheck?.loading && !skip && !isDisplayableNode) {
+        if (node && !renderCheck?.loading && renderCheck?.error) {
             openDialog(node);
         }
-    }, [node, renderCheck, isDisplayableNode, skip, openDialog]);
+    }, [node, renderCheck, openDialog]);
 
-    return {renderCheck, isDisplayableNode, dialogProps};
+    return {renderCheck, dialogProps};
 };
 
 export const ContentRoute = () => {
@@ -52,8 +50,8 @@ export const ContentRoute = () => {
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
     const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
-    const {renderCheck, isDisplayableNode, dialogProps} = useRenderCheck({
-        path, node: res?.node, skip: !(res?.node && isPageBuilderView && canShowEditFrame)
+    const {renderCheck, dialogProps} = useRenderCheck({
+        path, language, template, node: res?.node, skip: !(res?.node && isPageBuilderView && canShowEditFrame)
     });
 
     useEffect(() => {
@@ -123,8 +121,8 @@ export const ContentRoute = () => {
             <MainLayout header={<ContentHeader/>}>
                 <LoaderSuspense>
                     <ErrorBoundary>
-                        {(!isDisplayableNode) && null}
-                        {(isDisplayableNode && isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
+                        {renderCheck?.error && null}
+                        {(!renderCheck?.error && isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
                     </ErrorBoundary>
                 </LoaderSuspense>
             </MainLayout>

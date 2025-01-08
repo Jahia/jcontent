@@ -20,7 +20,6 @@ import {Media} from './media';
 import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
-import {BreadcrumbPageBuilder} from './breadcrumb';
 import ClickOptions = Cypress.ClickOptions;
 import VisitOptions = Cypress.VisitOptions;
 import {CompareDialog} from './compareDialog';
@@ -313,8 +312,25 @@ class PageBuilderModuleHeader extends BaseComponent {
 class PageBuilderModuleFooter extends BaseComponent {
     static defaultSelector = '[jahiatype="footer"]';
 
-    getBreadcrumbs(): BreadcrumbPageBuilder {
-        return getComponentByRole(BreadcrumbPageBuilder, 'pagebuilder-breadcrumb', this);
+    getItemPathDropdown(): ItemPathDropdown {
+        return getComponentByRole(ItemPathDropdown, 'pagebuilder-itempath-dropdown', this);
+    }
+}
+
+class ItemPathDropdown extends BaseComponent {
+    static defaultSelector = '[data-sel-role="pagebuilder-itempath-dropdown"]';
+
+    open(): ItemPathDropdown {
+        this.element.click({waitForAnimations: true});
+        return this;
+    }
+
+    shouldHaveCount(length: number) {
+        this.get().find('[role="option"]').should('have.length', length);
+    }
+
+    select(item: string) {
+        this.get().find('[role="option"]').contains(item).click({force: true});
     }
 }
 

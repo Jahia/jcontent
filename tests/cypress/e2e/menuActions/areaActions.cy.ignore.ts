@@ -46,7 +46,7 @@ describe('Area actions', () => {
         // Clicking on area header is very tricky due to overlapping contents. Select area header using footer instead.
         const moduleItem = jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main/test-content1');
         moduleItem.click();
-        moduleItem.getFooter().getBreadcrumbs().select('area-main');
+        moduleItem.getFooter().getItemPathDropdown().open().select('area-main');
 
         jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main')
             .contextMenu(false)

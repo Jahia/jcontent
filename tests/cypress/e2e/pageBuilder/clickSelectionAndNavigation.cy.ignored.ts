@@ -21,7 +21,8 @@ describe('Page builder navigation tests', () => {
         let module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
         module.click();
         module.getHeader().assertHeaderText('Our Companies');
-        const breadcrumbs = module.getFooter().getBreadcrumbs();
+        const breadcrumbs = module.getFooter().getItemPathDropdown();
+        breadcrumbs.open();
         breadcrumbs.select('highlights');
 
         module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights');
@@ -34,7 +35,8 @@ describe('Page builder navigation tests', () => {
         let module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
         module.click();
         module.getHeader().assertHeaderText('Our Companies');
-        const breadcrumbs = module.getFooter().getBreadcrumbs();
+        const breadcrumbs = module.getFooter().getItemPathDropdown();
+        breadcrumbs.open();
         breadcrumbs.select('highlights');
 
         module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights');

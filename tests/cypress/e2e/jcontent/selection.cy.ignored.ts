@@ -228,7 +228,9 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
              */
             const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main/global-network-rich-text', false);
             module.click(); // Bring up footer
-            module.getFooter().getBreadcrumbs().selectPos(5); // Navigate to area-main
+            const dropdown = module.getFooter().getItemPathDropdown();
+            dropdown.open();
+            dropdown.select('area-main');
             module.parentFrame.get().find('[data-clicked="true"]').click({force: true, metaKey: true});
             checkSelectionCount(1);
 

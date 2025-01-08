@@ -274,7 +274,7 @@ export const Box = React.memo(({
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             onClick={onClick}
                     >
-                        <Breadcrumbs nodes={breadcrumbs} isResponsiveMode={element.getBoundingClientRect().width < 350} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
+                        <Breadcrumbs nodes={breadcrumbs} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
                     </footer>}
             </div>
         </div>

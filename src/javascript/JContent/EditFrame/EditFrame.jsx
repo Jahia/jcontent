@@ -13,8 +13,6 @@ import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
 import {Portal} from './Portal';
 import {Infos} from './Infos';
-import {DeviceContainer} from './DeviceContainer';
-import PropTypes from 'prop-types';
 import {useDragDropManager} from 'react-dnd';
 import {LinkInterceptor} from './LinkInterceptor';
 import {batchActions} from 'redux-batched-actions';
@@ -61,7 +59,7 @@ function addEventListeners(target, manager, iframeRef) {
     });
 }
 
-export const EditFrame = ({isDeviceView}) => {
+export const EditFrame = () => {
     const manager = useDragDropManager();
 
     const {path, site, language, template} = useSelector(state => ({
@@ -76,11 +74,9 @@ export const EditFrame = ({isDeviceView}) => {
     const dispatch = useDispatch();
 
     const [currentDocument, setCurrentDocument] = useState(null);
-    const [device, setDevice] = useState(null);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
     const [loading, setLoading] = useState(false);
-    const previousDevice = useRef();
 
     const iframe = useRef();
     const iframeSwap = useRef();
@@ -206,18 +202,16 @@ export const EditFrame = ({isDeviceView}) => {
         };
     }, []);
 
-    const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
     useEffect(() => {
-        const renderMode = 'editframe';
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
-        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false${deviceParam}${currentUrlParams}`;
+        const url = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${encodedPath}.html?redirect=false${currentUrlParams}`;
 
         if (currentDocument) {
             const mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
-            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, deviceParam, previousDevice.current, deviceParam, template);
+            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, template);
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
-            if (path === framePath && locale === language && previousDevice.current === deviceParam && currentUrlParams === previousUrlParams) {
+            if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {
@@ -228,16 +222,14 @@ export const EditFrame = ({isDeviceView}) => {
                 });
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
                 iframe.current.contentWindow.location.href = url;
-                previousDevice.current = deviceParam;
                 setPreviousUrlParams(currentUrlParams);
             }
         } else if (path && !path.endsWith('/')) {
             console.debug('Loading', url, 'in iframe');
             iframe.current.contentWindow.location.href = url;
-            previousDevice.current = deviceParam;
             setPreviousUrlParams(currentUrlParams);
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language, template, currentUrlParams, previousUrlParams]);
+    }, [currentDocument, path, language, template, currentUrlParams, previousUrlParams]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
@@ -246,7 +238,7 @@ export const EditFrame = ({isDeviceView}) => {
     return (
         <>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams} setLoading={setLoading}/>
-            <DeviceContainer isEnabled={isDeviceView} device={device} setDevice={setDevice}>
+            <div className={styles.frame}>
                 {(!currentDocument || loading) && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}
                         width="100%"
@@ -264,7 +256,7 @@ export const EditFrame = ({isDeviceView}) => {
                         data-sel-role="page-builder-frame-inactive"
                         onLoad={iFrameOnLoad}
                 />
-            </DeviceContainer>
+            </div>
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
@@ -287,5 +279,4 @@ export const EditFrame = ({isDeviceView}) => {
 };
 
 EditFrame.propTypes = {
-    isDeviceView: PropTypes.bool
 };

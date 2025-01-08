@@ -174,9 +174,8 @@
     opacity: 0.2;
 }
 
-:global(.noprefix) .marginTop {
-    // FIXME override margin-top for empty area in iframe without !important
-    margin-top: 46px !important;
+:global(.noprefix) .marginTop.marginTop.marginTop.marginTop {
+    margin-top: 46px;
 }
 
 :global(.noprefix) .parentPadding {

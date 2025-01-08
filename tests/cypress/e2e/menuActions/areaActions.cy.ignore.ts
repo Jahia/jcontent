@@ -1,4 +1,8 @@
 import {JContent} from '../../page-object';
+// TODO: Fix contextMenu right click position
+// depending on content in a given area the target for rightclick may resolve differently leading to inconsistency
+// I tried different position values and rightlick on header but as the header is sticky and moves slightly it looks like
+// cypress gets the wrong coords in the end.
 describe('Area actions', () => {
     let jcontent: JContent;
 

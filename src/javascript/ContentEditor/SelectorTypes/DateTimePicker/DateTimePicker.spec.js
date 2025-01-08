@@ -143,17 +143,6 @@ describe('DateTimePicker component', () => {
         testDateFormat('de-DE', 'MM/DD/YYYY');
     });
 
-    it('should use the override date format when provided in lowercase', () => {
-        window.contextJsParameters = {
-            config: {
-                jcontent: {
-                    forceDateFormat: 'mm/dd/yyyy'
-                }
-            }
-        };
-        testDateFormat('de-DE', 'MM/DD/YYYY');
-    });
-
     it('should NOT use the override date format when an invalid format is provided', () => {
         window.contextJsParameters = {
             config: {

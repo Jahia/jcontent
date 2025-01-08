@@ -57,6 +57,7 @@
     },
     {
       "name": "seo",
+      "hide": true,
       "labelKey": "label.engineTab.seo",
       "rank": 6.0,
       "requiredPermission": "viewSeoTab",

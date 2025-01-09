@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, Button, createSite, deleteSite, enableModule, getComponentByRole} from '@jahia/cypress';
 
 describe('Content navigation', () => {
     const specialCharsName = '@#$^&€§¢ª¶ø°£™¥‰œæÀ-ž--';
@@ -7,9 +7,15 @@ describe('Content navigation', () => {
     before(() => {
         createSite('mySite1');
         createSite('mySite2');
+        createSite('mySite3', {
+            serverName: 'localhost',
+            locale: 'en',
+            templateSet: 'jcontent-test-template'
+        });
         enableModule('jcontent-test-module', 'mySite1');
         enableModule('events', 'mySite1');
         addNode({parentPathOrId: '/sites/mySite1/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
+        addNode({parentPathOrId: '/sites/mySite3/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
         addNode({
             name: specialCharsName,
             parentPathOrId: '/sites/mySite1/home',
@@ -24,6 +30,7 @@ describe('Content navigation', () => {
     after(() => {
         deleteSite('mySite1');
         deleteSite('mySite2');
+        deleteSite('mySite3');
     });
 
     beforeEach(() => {
@@ -58,7 +65,7 @@ describe('Content navigation', () => {
 
     it('can open news in page builder', () => {
         const jc = JContent.visit('mySite1', 'en', 'content-folders/contents');
-        jc.getTable().getRowByLabel('test-event').contextMenu().select('Open in Page Builder');
+        jc.getTable().getRowByLabel('test-event').contextMenu().selectByRole('openInPageBuilder');
         cy.frameLoaded('#page-builder-frame-1');
         jc.shouldBeInMode('Page Builder - Beta');
         jc.getAccordionItem('content-folders').getTreeItem('contents').get().invoke('attr', 'aria-current').should('eq', 'page');
@@ -73,5 +80,17 @@ describe('Content navigation', () => {
         jc.getAccordionItem('content-folders').getTreeItem('contents').click();
         cy.get('.moonstone-chip').find('span').contains('Content Folder').should('be.visible');
         cy.get('h1').contains('contents');
+    });
+
+    it('Display popup when viewing content that does not have valid template', () => {
+        const jc = JContent.visit('mySite3', 'en', 'content-folders/contents');
+        jc.getTable().getRowByLabel('test-event').contextMenu().selectByRole('openInPageBuilder');
+        cy.get('[data-sel-role="node-content-dialog"]')
+            .should('be.visible')
+            .find('#form-dialog-title')
+            .contains('Page Builder view not available')
+            .should('be.visible');
+        getComponentByRole(Button, 'view-list').click();
+        jc.shouldBeInMode('List');
     });
 });

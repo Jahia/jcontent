@@ -14,7 +14,7 @@ export const StatusIcon = ({isLocked, isNotPublished, path, contentMenu, ...prop
             </span>
             {contentMenu && (
                 <span className={styles.ContentTree_ItemMenuIcon}>
-                    <DisplayAction isReversed actionKey={contentMenu} path={path} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'small'}} {...props}/>
+                    <DisplayAction actionKey={contentMenu} path={path} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'small', isReversed: true}} {...props}/>
                 </span>
             )}
         </>

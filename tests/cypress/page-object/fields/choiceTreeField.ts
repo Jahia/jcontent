@@ -15,7 +15,7 @@ export class ChoiceTreeField extends Field {
     }
 
     closeTree(): ChoiceTreeField {
-        cy.get('body').click();
+        cy.get('body').click('topLeft');
         return this;
     }
 

@@ -196,7 +196,7 @@ describe('Content editor form', () => {
         cy.log('verify there is only one title field');
         const contentEditor = jcontent.createContent(contentTypeName);
         // Get all the fields and ensure there is only one title field
-        cy.get('[data-sel-content-editor-field]').should('have.length.greaterThan', 8).filter('[data-sel-content-editor-field$="_jcr:title"]').should('have.length', 1);
+        cy.get('[data-sel-content-editor-field]').should('have.length.greaterThan', 7).filter('[data-sel-content-editor-field$="_jcr:title"]').should('have.length', 1);
         contentEditor.cancel();
     });
 

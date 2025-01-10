@@ -20,6 +20,7 @@ import {ContentNotFound} from './ContentNotFound';
 import {EmptyTable} from './EmptyTable';
 import {Table, TableBody, TablePagination} from '@jahia/moonstone';
 import {useTable} from 'react-table';
+import {useVirtualizer} from '@tanstack/react-virtual';
 import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import {ContentListHeader} from './ContentListHeader/ContentListHeader';
 import {mainColumnData, reducedColumnData} from './reactTable/columns';
@@ -90,6 +91,18 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         useExpandedControlled
     );
 
+    const rowVirtualizer = useVirtualizer({
+        count: tableRows.length,
+        estimateSize: () => 48,
+        getScrollElement: () => mainPanelRef.current,
+        measureElement:
+            typeof window !== 'undefined' &&
+            navigator.userAgent.indexOf('Firefox') === -1 ?
+                element => element?.getBoundingClientRect().height :
+                undefined,
+        overscan: 10
+    });
+
     useUnselect({selection, isLoading, rows, isStructured, path, tableOpenPaths});
 
     const doubleClickNavigation = useCallback(node => {
@@ -148,12 +161,19 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"
-                       style={{width: '100%', minWidth: '1100px'}}
+                       style={{width: '100%', minWidth: '1100px', display: 'grid'}}
                        {...getTableProps()}
                 >
                     <ContentListHeader headerGroups={headerGroups}/>
-                    <TableBody {...getTableBodyProps()}>
-                        {tableRows.map((row, index) => {
+                    <TableBody {...getTableBodyProps()}
+                               style={{
+                                   display: 'grid',
+                                   height: `${rowVirtualizer.getTotalSize()}px`, // Tells scrollbar how big the table is
+                                   position: 'relative' // Needed for absolute positioning of rows
+                               }}
+                    >
+                        {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                            const row = tableRows[virtualRow.index];
                             prepareRow(row);
                             return (
                                 <Row key={'row' + row.original.uuid}
@@ -164,7 +184,9 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                                      isPreviewOpened={isPreviewOpened}
                                      setSelectedItemIndex={setSelectedItemIndex}
                                      doubleClickNavigation={doubleClickNavigation}
-                                     index={index}
+                                     index={virtualRow.index}
+                                     virtualizer={rowVirtualizer}
+                                     virtualRow={virtualRow}
                                      onPreviewSelect={onPreviewSelect}
                                 />
                             );

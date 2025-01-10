@@ -1,24 +1,24 @@
-import {createSite, deleteSite} from "@jahia/cypress";
-import {JContent} from "../../../page-object";
+import {createSite, deleteSite} from '@jahia/cypress';
+import {JContent} from '../../../page-object';
 
 describe('default override tests', () => {
-    const siteKey = 'defaultOverrideTests'
+    const siteKey = 'defaultOverrideTests';
 
     before(function () {
-        createSite(siteKey)
-    })
+        createSite(siteKey);
+    });
 
     after(function () {
-        deleteSite(siteKey)
-        cy.logout()
-    })
+        deleteSite(siteKey);
+        cy.logout();
+    });
 
     beforeEach(function () {
-        cy.loginAndStoreSession()
-    })
+        cy.loginAndStoreSession();
+    });
 
     it('should not have SEO section for non-displayable types', function () {
-        JContent.visit(siteKey, 'en', 'content-folders/contents').createContent('jnt:bigText')
-        cy.get(`[data-sel-content-editor-fields-group="seo"]`).should('not.exist', { timeout: 10000 })
+        JContent.visit(siteKey, 'en', 'content-folders/contents').createContent('jnt:bigText');
+        cy.get('[data-sel-content-editor-fields-group="seo"]').should('not.exist', {timeout: 10000});
     });
 });

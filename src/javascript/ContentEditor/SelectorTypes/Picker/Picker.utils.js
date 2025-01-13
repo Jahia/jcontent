@@ -59,7 +59,7 @@ export const set = (target, path, value) => {
 
         if (match) {
             key = key.replace(match[0], '');
-            position = parseInt(match[0].replace(/[\[\]]/g, ''), 10);
+            position = parseInt(match[0].replace(/[[\]]/g, ''), 10);
         }
 
         if (!current[key]) {
@@ -90,7 +90,7 @@ export const set = (target, path, value) => {
 
     if (match) {
         key = key.replace(match[0], '');
-        position = parseInt(match[0].replace(/[\[\]]/g, ''), 10);
+        position = parseInt(match[0].replace(/[[\]]/g, ''), 10);
 
         if (!current[key]) {
             current[key] = [];

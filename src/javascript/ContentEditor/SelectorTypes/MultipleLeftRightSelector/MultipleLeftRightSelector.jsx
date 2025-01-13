@@ -43,7 +43,7 @@ export const MultipleLeftRightSelector = ({field, onChange, value, labels}) => {
         }
     }
 
-    return (arrayValue.length !== actualValues.length) ? null : (
+    return (arrayValue.length === actualValues.length) ? (
         <ListSelector
             isReadOnly={field.readOnly || field.valueConstraints.length === 0}
             label={listLabels}
@@ -51,7 +51,7 @@ export const MultipleLeftRightSelector = ({field, onChange, value, labels}) => {
             options={options}
             onChange={onChange}
         />
-    );
+    ) : null;
 };
 
 MultipleLeftRightSelector.propTypes = {

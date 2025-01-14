@@ -52,7 +52,8 @@ export class ContentEditor extends BasePage {
     }
 
     getSection(sectionName: string) {
-        const section = getComponentBySelector(Section, `[data-sel-content-editor-fields-group="${sectionName}"]`);
+        // Works with both display name and system name
+        const section = getComponentBySelector(Section, `[data-sel-content-editor-fields-group="${sectionName}"], [data-sel-content-editor-fields-group-display-name="${sectionName}"]`);
         section.sectionName = sectionName;
         return section;
     }

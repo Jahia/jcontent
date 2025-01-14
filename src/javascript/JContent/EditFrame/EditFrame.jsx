@@ -118,7 +118,7 @@ export const EditFrame = () => {
             const framePath = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
             const frameLanguage = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('locale');
             const frameTemplate = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('template');
-            if (framePath && (framePath !== path || frameLanguage !== language || frameTemplate !== template)) {
+            if (framePath && (framePath !== path || frameLanguage !== language)) {
                 console.debug('Updating path to', framePath, 'and language to', frameLanguage, 'in redux', 'template', frameTemplate, 'older path', path, 'older language', language, 'older template', template);
                 dispatch(batchActions([
                     cmGoto({path: framePath, language: frameLanguage, template: frameTemplate}),

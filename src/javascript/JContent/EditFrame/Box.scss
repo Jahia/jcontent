@@ -130,25 +130,6 @@ $indexHovered: 18000;
     z-index: $indexSelected;
 }
 
-// .button {
-//     flex: 0 0 auto;
-//     margin: 0 4px;
-// }
-
-// .icon {
-//     flex: 0 0 auto;
-//     width: 1rem;
-//     height: 1rem;
-//     margin: 0 var(--spacing-nano);
-
-//     vertical-align: top;
-// }
-
-// .title {
-//     flex-grow: 3;
-//     flex-shrink: 2;
-// }
-
 .horizontalInsert {
     border-bottom: 2px dashed var(--color-accent_light);
 }

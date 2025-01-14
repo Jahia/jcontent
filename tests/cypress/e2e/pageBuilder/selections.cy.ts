@@ -32,7 +32,7 @@ describe('Page builder', () => {
             module.click();
             module.getHeader().select();
             jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
-            jcontent.iframe().get().find('.wrapper').parent().parent().click('left', {timeout: 1000, force: true});
+            jcontent.iframe(true).get().find('.wrapper').parent().parent().click('left', {timeout: 1000, force: true});
             cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         });
 

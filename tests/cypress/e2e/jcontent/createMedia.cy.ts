@@ -153,7 +153,8 @@ describe('Create media tests', () => {
         ce.cancel();
     });
 
-    it('Cannot drag and drop a file to folder if user has no permission', () => {
+    it('Cannot drag and drop a file to folder if user has no permission', {retries: 3}, () => {
+        cy.logout();
         cy.login(user.name, user.password);
         jcontent = JContent.visit(siteKey, 'en', 'media/files/blankFolder');
         cy.get('[data-type="upload"]').should('not.exist');

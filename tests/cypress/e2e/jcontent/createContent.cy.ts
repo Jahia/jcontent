@@ -53,12 +53,13 @@ describe('Create content tests', () => {
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
             contentEditor.getRichTextField('jnt:bigText_text').type('Newly created content');
             contentEditor.create();
+
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
             cy.iframe(iframeSel).find('p').first().then(el => {
                 el.closest('html')[0].scroll(0, -2000);
+                cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly created content');
             });
-            cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly created content');
         });
         it('Update newly created content', () => {
             jcontent = new JContentPageBuilder(new JContent());
@@ -68,12 +69,13 @@ describe('Create content tests', () => {
             const richTextField = contentEditor.getRichTextField('jnt:bigText_text');
             richTextField.setData('Newly updated content');
             contentEditor.save();
+
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(2500);
             cy.iframe(iframeSel).find('p').first().then(el => {
                 el.closest('html')[0].scroll(0, -2000);
+                cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated content');
             });
-            cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated content');
         });
     });
 });

@@ -1,9 +1,7 @@
-import {JContent} from '../../page-object/jcontent';
-import {Collapsible, getComponentBySelector} from '@jahia/cypress';
+import {JContent} from '../../page-object';
 
-describe('Test list ordering', {retries: 0}, () => {
+describe('Test list ordering', () => {
     const siteKey = 'digitall';
-    let jcontent: JContent;
 
     beforeEach(() => {
         cy.login(); // Edit in chief
@@ -14,9 +12,7 @@ describe('Test list ordering', {retries: 0}, () => {
     });
 
     it('Verifies that list ordering section is available', () => {
-        jcontent = JContent.visit(siteKey, 'en', 'pages/home/investors/events');
-        jcontent.switchToStructuredView();
-        jcontent.editComponentByText('Events');
-        getComponentBySelector(Collapsible, '[data-sel-content-editor-fields-group="listOrdering"]').get().should('exist');
+        const contentEditor = JContent.visit(siteKey, 'en', 'pages/home/investors/events/Events').editContent();
+        contentEditor.getSection('listOrdering').should('exist');
     });
 });

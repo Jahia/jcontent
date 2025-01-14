@@ -4,15 +4,16 @@ import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 describe('Page builder - Navigation', () => {
     let jcontent: JContentPageBuilder;
 
-    beforeEach(() => {
+    it('should switch language', () => {
         cy.loginAndStoreSession();
         jcontent = JContent.visit('digitall', 'en', 'pages/home').switchToPageBuilder();
-    });
-
-    it('should switch language', () => {
         jcontent.iframe().get().find('#languages.pull-right').children('a').click();
         jcontent.iframe().get().find('#languages.pull-right').contains('German').click({multiple: true});
         jcontent.getLanguageSwitcher().get().contains('de');
+    });
+
+    after(() => {
+        cy.logout();
     });
 
     describe('Non Default Content Template', () => {
@@ -36,10 +37,15 @@ describe('Page builder - Navigation', () => {
 
         beforeEach(() => {
             cy.loginAndStoreSession();
-            jcontent = JContent.visit(pressReleaseSite, 'en', 'pages/home').switchToPageBuilder();
         });
 
-        it.skip('Should show the non default content template named fullpage for press releases', () => {
+        it('verify fullpage template exists', () => {
+            cy.visit(`cms/render/default/en/sites/${pressReleaseSite}/home/pagecontent/test-press-release.fullpage.html`);
+            cy.get('body').should('contain', 'Press Release 1 body');
+        });
+
+        it('Should show the non default content template named fullpage for press releases', () => {
+            jcontent = JContent.visit(pressReleaseSite, 'en', 'pages/home').switchToPageBuilder();
             jcontent.getModule(`/sites/${pressReleaseSite}/home/pagecontent/test-press-release`).get().contains('Press Release 1 title').click({force: true});
             cy.frameLoaded('[data-sel-role="page-builder-frame-active"]', {url: '/test-press-release.fullpage.html'});
             jcontent = new JContentPageBuilder(new JContent(), 'fullpage');
@@ -50,6 +56,7 @@ describe('Page builder - Navigation', () => {
         });
 
         it('Should switch site and kept track of templates', () => {
+            jcontent = JContent.visit(pressReleaseSite, 'en', 'pages/home').switchToPageBuilder();
             jcontent.getModule(`/sites/${pressReleaseSite}/home/pagecontent/test-press-release`).get().contains('Press Release 1 title').click({force: true});
             cy.frameLoaded('[data-sel-role="page-builder-frame-active"]', {url: '/test-press-release.fullpage.html'});
             jcontent.getSiteSwitcher().select('Digitall');
@@ -63,6 +70,7 @@ describe('Page builder - Navigation', () => {
         });
 
         it('Should switch accordion and kept track of templates', () => {
+            jcontent = JContent.visit(pressReleaseSite, 'en', 'pages/home').switchToPageBuilder();
             jcontent.getModule(`/sites/${pressReleaseSite}/home/pagecontent/test-press-release`).get().contains('Press Release 1 title').click({force: true});
             cy.frameLoaded('[data-sel-role="page-builder-frame-active"]', {url: '/test-press-release.fullpage.html'});
             jcontent.getAccordionItem('content-folders').click();

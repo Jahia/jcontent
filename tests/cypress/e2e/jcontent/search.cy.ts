@@ -118,7 +118,7 @@ describe('Search tests', () => {
         });
     });
 
-    describe('advanced search', {testIsolation: false}, () => {
+    describe('advanced search', () => {
         beforeEach(() => {
             cy.loginAndStoreSession();
         });

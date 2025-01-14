@@ -133,9 +133,8 @@ describe('Test Choicetree selector type', () => {
         choiceTree.getEntries().should('contain', 'choiceTreeContent2');
     });
 
-    it.skip('displays the Choice tree selector for single value', () => {
+    it('displays the Choice tree selector for single value', () => {
         const contentEditor = jcontent.createContent('cent:testChoiceTree');
-        contentEditor.openSection('content');
         const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_singleChoiceTree', false);
         choiceTreeField.getChoiceTreeInput().should('exist');
         // Open tree and select value
@@ -144,7 +143,7 @@ describe('Test Choicetree selector type', () => {
         choiceTreeField.getValue().should('contain', 'choiceTreeContent2');
         contentEditor.create();
         // Validate saved content
-        getNodeByPath(`/sites/${siteKey}/contents/testchoicetree`, ['singleChoiceTree']).then(res => {
+        getNodeByPath(`/sites/${siteKey}/contents/testchoicetree-1`, ['singleChoiceTree']).then(res => {
             const savedValue = res.data.jcr.nodeByPath.properties[0].value;
             expect(savedValue).eq(choicetreeContent2Uuid);
         });

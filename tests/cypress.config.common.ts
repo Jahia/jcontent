@@ -17,7 +17,7 @@ export const baseConfig = {
     viewportHeight: 768,
     watchForFileChanges: false,
     experimentalMemoryManagement: true,
-    numTestsKeptInMemory: 20,
+    numTestsKeptInMemory: 10,
     e2e: {
         specPattern: ['**/**.cy.ts'],
         // We've imported your old cypress plugins here.

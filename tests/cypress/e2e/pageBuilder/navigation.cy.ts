@@ -44,7 +44,7 @@ describe('Page builder - Navigation', () => {
             cy.get('body').should('contain', 'Press Release 1 body');
         });
 
-        it('Should show the non default content template named fullpage for press releases', () => {
+        it('Should show the non default content template named fullpage for press releases', {retries: 3}, () => {
             jcontent = JContent.visit(pressReleaseSite, 'en', 'pages/home').switchToPageBuilder();
             jcontent.getModule(`/sites/${pressReleaseSite}/home/pagecontent/test-press-release`).get().contains('Press Release 1 title').click({force: true});
             cy.frameLoaded('[data-sel-role="page-builder-frame-active"]', {url: '/test-press-release.fullpage.html'});

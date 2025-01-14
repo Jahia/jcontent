@@ -126,7 +126,7 @@ export const ContentRoute = () => {
                     </ErrorBoundary>
                 </LoaderSuspense>
             </MainLayout>
-            <NonDisplayableNodeDialog hasCancel={false} {...dialogProps}/>;
+            {renderCheck.error && <NonDisplayableNodeDialog hasCancel={false} {...dialogProps}/>}
         </>
     );
 };

@@ -67,7 +67,7 @@ describe('Page builder', () => {
                 .assertHasNoButton();
         });
 
-        //Skipping for now
+        // Skipping for now
         it.skip('should not show paste button when limit is reached', () => {
             jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1')
                 .contextMenu(true)

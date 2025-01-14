@@ -20,6 +20,12 @@ const ButtonRenderer = getButtonRenderer({
     defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}}
 );
 
+const ButtonRendererNoLabel = getButtonRenderer({
+    defaultButtonProps: {size: 'default', color: 'default', label: ' '},
+    showTooltip: true,
+    defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}
+});
+
 function getBoundingBox(element) {
     const rect = getCoords(element);
     return {
@@ -97,7 +103,7 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint}) => {
+export const Create = React.memo(({element, node, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
@@ -145,13 +151,30 @@ export const Create = React.memo(({element, node, addIntervalCallback, clickedEl
     const tooltipProps = {enterDelay: 800, PopperProps: {container: element.ownerDocument.getElementById('jahia-portal-root')}};
     const sizers = [...Array(10).keys()].filter(i => currentOffset.width < i * 150).map(i => `sizer${i}`);
     const isDisabled = clickedElement && clickedElement.path !== parentPath;
+    const btnRenderer = isInsertionPoint ? ButtonRendererNoLabel : ButtonRenderer;
+
+    const insertionStyle = {};
+    if (isInsertionPoint) {
+        insertionStyle.height = 0;
+        insertionStyle.zIndex = 1000000;
+
+        if (isVertical) {
+            const btnWidth = 42;
+            insertionStyle.height = element.offsetHeight;
+            insertionStyle.width = btnWidth;
+            insertionStyle.left = currentOffset.left - (btnWidth / 2);
+            insertionStyle.flexDirection = 'column';
+        } else {
+            insertionStyle.top = currentOffset.top - 16;
+        }
+    }
 
     return !anyDragging && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}
              className={clsx(styles.root, editStyles.enablePointerEvents, sizers)}
-             style={{...currentOffset, height: isInsertionPoint ? 0 : currentOffset.height}}
+             style={{...currentOffset, ...insertionStyle}}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
@@ -166,21 +189,21 @@ export const Create = React.memo(({element, node, addIntervalCallback, clickedEl
                                nodeTypes={nodeTypes}
                                templateLimit={templateLimit}
                                loading={() => false}
-                               render={ButtonRenderer}
+                               render={btnRenderer}
                                onCreate={({name}) => reorderNodes([name], nodeName)}/>}
             <DisplayAction actionKey="paste"
                            tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
                            loading={() => false}
-                           render={ButtonRenderer}
+                           render={btnRenderer}
                            onAction={data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName)}/>
             <DisplayAction actionKey="pasteReference"
                            tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
                            loading={() => false}
-                           render={ButtonRenderer}
+                           render={btnRenderer}
                            onAction={data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName)}/>
         </div>
     );
@@ -195,5 +218,6 @@ Create.propTypes = {
     onMouseOut: PropTypes.func,
     onSaved: PropTypes.func,
     onClick: PropTypes.func,
-    isInsertionPoint: PropTypes.bool
+    isInsertionPoint: PropTypes.bool,
+    isVertical: PropTypes.bool
 };

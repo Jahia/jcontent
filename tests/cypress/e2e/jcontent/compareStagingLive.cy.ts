@@ -38,6 +38,11 @@ describe('JContent preview tests', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', path);
         const compareDialog = jcontent.getCompareDialog();
         compareDialog.get().get('h1').contains('Compare staging vs live version').should('exist');
+
+        // Wait until frames are loaded before proceeding
+        compareDialog.getStagingFrame();
+        compareDialog.getLiveFrame();
+
         compareDialog.highlightToggle();
         compareDialog.getStagingFrame().find('span[class="diff-html-added"]').should('exist');
         compareDialog.highlightToggle();
@@ -48,6 +53,11 @@ describe('JContent preview tests', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', path);
         const compareDialog = jcontent.getCompareDialog();
         compareDialog.get().get('h1').contains('Compare staging vs live version').should('exist');
+
+        // Wait until frames are loaded before proceeding
+        compareDialog.getStagingFrame();
+        compareDialog.getLiveFrame();
+
         compareDialog.highlightToggle();
         compareDialog.getStagingFrame().find('span[class="diff-html-added"]').should('exist');
         compareDialog.refresh();

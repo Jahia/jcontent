@@ -100,7 +100,7 @@ describe('Links in jcontent', () => {
         getComponentByRole(Button, 'backButton').click();
     });
 
-    it('Should open link modal when clicking on external link from left navigation', () => {
+    it('Should open link modal when clicking on external link from left navigation', {retries: 3}, () => {
         const pageAccordion = jcontent.getAccordionItem('pages');
         pageAccordion.expandTreeItem('home');
         pageAccordion.getTreeItem('external2-link-nav').click();

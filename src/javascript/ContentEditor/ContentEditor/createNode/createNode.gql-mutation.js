@@ -36,6 +36,7 @@ export const CreateNode = gql`
                 ...NodeCacheRequiredFields
                 path
                 uuid
+                name
             }
         }
     }

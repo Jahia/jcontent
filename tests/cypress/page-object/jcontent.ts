@@ -248,8 +248,8 @@ export class JContentPageBuilder extends JContent {
         cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
     }
 
-    getModule(path: string): PageBuilderModule {
-        const parentFrame = this.iframe();
+    getModule(path: string, bypassFrameLoadedCheck = true): PageBuilderModule {
+        const parentFrame = this.iframe(bypassFrameLoadedCheck);
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;
@@ -306,7 +306,7 @@ class PageBuilderModuleHeader extends BaseComponent {
     }
 
     select() {
-        this.get().find('[data-sel-role="selection-checkbox"]').click();
+        this.get().click({metaKey: true, force: true});
     }
 }
 
@@ -357,18 +357,16 @@ class PageBuilderModule extends BaseComponent {
             this.click(); // Header shows up only when selected
         }
 
-        this.get().invoke('attr', 'id').then(id => {
-            this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
-        });
-        return getComponent(PageBuilderModuleHeader, this.parentFrame);
+        return new PageBuilderModuleHeader(this.get().invoke('attr', 'id').then(id => {
+            return this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
+        }));
     }
 
     getFooter() {
         this.hover();
-        this.get().invoke('attr', 'id').then(id => {
-            this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
-        });
-        return getComponent(PageBuilderModuleFooter, this.parentFrame);
+        return new PageBuilderModuleFooter(this.get().invoke('attr', 'id').then(id => {
+            return this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
+        }));
     }
 
     getCreateButtons() {

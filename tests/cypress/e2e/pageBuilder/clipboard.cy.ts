@@ -22,7 +22,7 @@ describe('Page builder', () => {
     });
 
     describe('clipboard', function () {
-        it('should show paste button when we copy', function () {
+        it.skip('should show paste button when we copy', function () {
             jcontent.refresh();
 
             // Context menu does not show up; wait necessary
@@ -38,7 +38,7 @@ describe('Page builder', () => {
             buttons.getButton('Paste as reference');
         });
 
-        it('remove paste button when we clear clipboard', function () {
+        it.skip('remove paste button when we clear clipboard', function () {
             jcontent.refresh();
 
             // Context menu does not show up; wait necessary

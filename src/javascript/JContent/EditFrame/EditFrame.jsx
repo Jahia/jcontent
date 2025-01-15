@@ -19,6 +19,7 @@ import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -66,8 +67,7 @@ export const EditFrame = () => {
         language: state.language,
         site: state.site,
         path: state.jcontent.path,
-        template: state.jcontent.template,
-        selection: state.jcontent.selection
+        template: state.jcontent.template
     }), shallowEqual);
 
     const client = useApolloClient();
@@ -76,6 +76,7 @@ export const EditFrame = () => {
     const [currentDocument, setCurrentDocument] = useState(null);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
+    const [clickedElement, setClickedElement] = useState();
     const [loading, setLoading] = useState(false);
 
     const iframe = useRef();
@@ -235,6 +236,11 @@ export const EditFrame = () => {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
     }
 
+    const onDocumentClick = () => {
+        setClickedElement(undefined);
+        dispatch(cmClearSelection());
+    };
+
     return (
         <>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams} setLoading={setLoading}/>
@@ -257,7 +263,7 @@ export const EditFrame = () => {
                         onLoad={iFrameOnLoad}
                 />
             </div>
-            {currentDocument && <LinkInterceptor document={currentDocument}/>}
+            {currentDocument && <LinkInterceptor document={currentDocument} onDocumentClick={onDocumentClick}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="jahia-portal-root" className={styles.root}>
@@ -265,6 +271,8 @@ export const EditFrame = () => {
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}
                                addIntervalCallback={addIntervalCallback}
+                               clickedElement={clickedElement}
+                               setClickedElement={setClickedElement}
                                onSaved={() => {
                                    refresh();
                                }}

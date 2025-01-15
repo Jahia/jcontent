@@ -226,10 +226,10 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
              * As a workaround, we go through the rich text and select area-main using footer.
              * Then use the selector from parentFrame to check the checkbox (we cannot use module here).
              */
-            const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main/global-network-rich-text');
+            const module = pageBuilder.getModule('/sites/digitall/home/area-main/area/area/area/area-main/global-network-rich-text', false);
             module.click(); // Bring up footer
             module.getFooter().getBreadcrumbs().selectPos(5); // Navigate to area-main
-            module.parentFrame.get().find('[data-sel-role="selection-checkbox"]').click({force: true});
+            module.parentFrame.get().find('[data-clicked="true"]').click({force: true, metaKey: true});
             checkSelectionCount(1);
 
             // Check selection in structured mode

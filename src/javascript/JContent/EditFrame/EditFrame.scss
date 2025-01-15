@@ -174,8 +174,8 @@
     opacity: 0.2;
 }
 
-:global(.noprefix) .marginTop {
-    margin-top: 36px;
+:global(.noprefix) .marginTop.marginTop.marginTop.marginTop {
+    margin-top: 46px;
 }
 
 :global(.noprefix) .parentPadding {
@@ -183,8 +183,8 @@
 }
 
 :global(.noprefix) .smallerBox {
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .frame {

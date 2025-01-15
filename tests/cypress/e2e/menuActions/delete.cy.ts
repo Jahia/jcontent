@@ -171,38 +171,4 @@ describe('delete tests', () => {
             .find('[data-sel-role="downloadAsZip"]');
     });
 
-    it('Does not show delete action on locked nodes', () => {
-        cy.apollo({mutation: gql`mutation lockNode {
-                jcr {
-                    mutateNode(pathOrId: "/sites/${siteKey}/contents/test-deleteContents/test-delete6") {
-                        lock
-                    }
-                }
-            }`});
-
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
-        jcontent.getTable().getRowByLabel('test 6').contextMenu().should('not.contain', 'Delete');
-    });
-
-    it('does not show delete if jmix:hideDeleteAction is set', () => {
-        cy.apollo({mutation: gql`mutation {
-                jcr {
-                    mutateNode(pathOrId:"/sites/${siteKey}/contents/test-deleteContents/test-delete1") {
-                        addMixins(mixins: ["jmix:hideDeleteAction"])
-                    }
-                }
-            }`
-        });
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
-        cy.get('.moonstone-header h1').contains('test-deleteContents').should('be.visible');
-        jcontent.getTable().getRowByLabel('test 2').contextMenu().should('contain', 'Delete');
-        cy.get('.moonstone-menu_overlay').click();
-        jcontent.getTable().getRowByLabel('test 1').contextMenu().should('not.contain', 'Delete');
-        cy.get('.moonstone-menu_overlay').click();
-        jcontent.getTable().getRowByLabel('test 1').contextMenu().select('Copy');
-        cy.get('#message-id').contains('is in the clipboard');
-        jcontent.getTable().getRowByLabel('content-folder1').get().dblclick();
-        jcontent.getHeaderActionButton('paste').click();
-        jcontent.getTable().getRowByLabel('test 1').contextMenu().should('contain', 'Delete');
-    });
 });

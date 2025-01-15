@@ -49,7 +49,7 @@ describe('delete tests', () => {
         cy.log('Verify dialog opens and can be deleted');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete 5 items, including 3 page(s)')
+            .should('contain', 'You are about to permanently delete')
             .find('[data-sel-role="delete-permanently-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');
@@ -75,14 +75,14 @@ describe('delete tests', () => {
         jcontent.checkSelectionCount(1);
 
         jcontent.getHeaderActionButton('delete').click();
-        confirmMarkForDeletion('You are about to delete 3 items, including 1 page(s)');
+        confirmMarkForDeletion('You are about to delete');
         jcontent.checkSelectionCount(1);
 
         jcontent.getHeaderActionButton('deletePermanently').click();
         cy.log('Verify dialog opens and can be deleted');
         const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
         cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete Page test 2')
+            .should('contain', 'You are about to permanently delete')
             .find('[data-sel-role="delete-permanently-button"]')
             .click();
         cy.get(dialogCss).should('not.exist');

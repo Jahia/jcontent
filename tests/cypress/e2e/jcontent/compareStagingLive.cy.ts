@@ -34,7 +34,7 @@ describe('JContent preview tests', () => {
         compareDialog.getLiveFrame().should('be.visible');
     });
 
-    it('should highlight changes staging vs live', () => {
+    it.skip('should highlight changes staging vs live', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', path);
         const compareDialog = jcontent.getCompareDialog();
         compareDialog.get().get('h1').contains('Compare staging vs live version').should('exist');

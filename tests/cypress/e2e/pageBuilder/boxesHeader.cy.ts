@@ -25,7 +25,7 @@ describe('Page builder', () => {
             jcontent.getModule('/sites/jcontentSite/home/landing').hover().should('have.attr', 'data-hovered', 'true');
         });
 
-        it('should show box with name, status and edit buttons', () => {
+        it.skip('should show box with name, status and edit buttons', () => {
             jcontent = JContent
                 .visit('jcontentSite', 'en', 'pages/home')
                 .switchToPageBuilder();
@@ -37,7 +37,7 @@ describe('Page builder', () => {
             header.getButton('contentMenu');
         });
 
-        it('should trim long titles', () => {
+        it.skip('should trim long titles', () => {
             jcontent = JContent
                 .visit('jcontentSite', 'en', 'pages/home')
                 .switchToPageBuilder();

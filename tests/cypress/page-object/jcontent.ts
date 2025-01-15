@@ -248,8 +248,8 @@ export class JContentPageBuilder extends JContent {
         cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
     }
 
-    getModule(path: string): PageBuilderModule {
-        const parentFrame = this.iframe(true);
+    getModule(path: string, bypassFrameLoadedCheck = true): PageBuilderModule {
+        const parentFrame = this.iframe(bypassFrameLoadedCheck);
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;

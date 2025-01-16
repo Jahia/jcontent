@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
-import {Breadcrumb, BreadcrumbItem, Dropdown} from '@jahia/moonstone';
+import {Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
 import {NodeIcon} from '~/utils';
 
-export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMode}) => {
+export const Breadcrumbs = ({nodes, setCurrentElement, onSelect}) => {
     const {t} = useTranslation('jcontent');
     const {selection} = useSelector(state => ({
         selection: state.jcontent.selection
@@ -26,39 +26,25 @@ export const Breadcrumbs = ({nodes, setCurrentElement, onSelect, isResponsiveMod
         return false;
     }, [onSelect, selection.length, setCurrentElement]);
 
-    if (isResponsiveMode) {
-        const data = nodes.map(n => ({
-            label: n.name,
-            value: n.path,
-            image: <NodeIcon node={n}/>
-        }));
-
-        return (
-            <Dropdown data={data}
-                      placeholder={t('jcontent:label.contentManager.pageBuilder.breadcrumbs.dropdownLabel')}
-                      onChange={(e, v) => {
-                          handleItemOnClick(e, v.value);
-                      }}
-            />
-        );
-    }
+    const data = nodes.toReversed().map((n, index) => ({
+        label: n.name,
+        value: n.path,
+        image: <NodeIcon node={n} style={{marginLeft: 8 * index}}/>
+    }));
 
     return (
-        <Breadcrumb data-sel-role="pagebuilder-breadcrumb">
-            {nodes.map(n => (
-                <BreadcrumbItem key={n.path}
-                                label={n.name}
-                                icon={<NodeIcon node={n}/>}
-                                onClick={event => handleItemOnClick(event, n.path)}
-                />
-            ))}
-        </Breadcrumb>
+        <Dropdown data={data}
+                  data-sel-role="pagebuilder-itempath-dropdown"
+                  placeholder={t('jcontent:label.contentManager.pageBuilder.breadcrumbs.dropdownLabel')}
+                  onChange={(e, v) => {
+                      handleItemOnClick(e, v.value);
+                  }}
+        />
     );
 };
 
 Breadcrumbs.propTypes = {
     nodes: PropTypes.array,
     setCurrentElement: PropTypes.func,
-    onSelect: PropTypes.func,
-    isResponsiveMode: PropTypes.bool
+    onSelect: PropTypes.func
 };

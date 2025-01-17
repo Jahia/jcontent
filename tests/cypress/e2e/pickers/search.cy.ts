@@ -52,6 +52,7 @@ describe('Picker tests - Search', () => {
         picker.cancel();
         contentEditor.cancel();
         jcontent.switchToListMode();
+        cy.get('table[data-cm-role="table-content-list"]').parent().scrollTo(0, 500);
         picker = jcontent.editComponentByText('Leading by Example').getPickerField('jdmix:imgView_image').open();
         picker.getSearchInput().should('be.empty');
     });

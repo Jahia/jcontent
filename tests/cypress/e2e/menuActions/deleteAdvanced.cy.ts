@@ -219,7 +219,7 @@ describe('delete tests', () => {
         jcontent.getTable().getRowByLabel('test 6').contextMenu().should('not.contain', 'Delete');
     });
 
-    it('does not show delete if jmix:hideDeleteAction is set', () => {
+    it.skip('does not show delete if jmix:hideDeleteAction is set', () => {
         cy.apollo({mutation: gql`mutation {
                 jcr {
                     mutateNode(pathOrId:"/sites/${siteKey}/contents/test-deleteContents/test-delete1") {

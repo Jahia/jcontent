@@ -45,9 +45,9 @@ export const PickerRow = ({
 
     return (
         <TableRow {...rowProps}
+                  ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
                   data-cm-role="table-content-list-row"
                   data-sel-name={node.name}
-                  ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
                   data-index={virtualRow.index} // Needed for dynamic row height measurement
                   style={{
                       display: 'flex',

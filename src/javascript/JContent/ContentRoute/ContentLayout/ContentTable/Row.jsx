@@ -19,6 +19,7 @@ export const Row = ({
     onPreviewSelect,
     doubleClickNavigation,
     tableConfig,
+    index,
     virtualizer,
     virtualRow
 }) => {
@@ -107,6 +108,7 @@ Row.propTypes = {
             canDropFile: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
         })
     }).isRequired,
+    index: PropTypes.number,
     virtualizer: PropTypes.object.isRequired,
     virtualRow: PropTypes.object.isRequired
 };

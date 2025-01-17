@@ -214,8 +214,8 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
                     <TableBody {...getTableBodyProps()}
                                style={{
                                    display: 'grid',
-                                   height: `${rowVirtualizer.getTotalSize()}px`,
-                                   position: 'relative'
+                                   height: `${rowVirtualizer.getTotalSize()}px`, // Tells scrollbar how big the table is
+                                   position: 'relative' // Needed for absolute positioning of rows
                                }}
                     >
                         {rowVirtualizer.getVirtualItems().map(virtualRow => {
@@ -234,8 +234,8 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
                                            virtualizer={rowVirtualizer}
                                            virtualRow={virtualRow}
                                 />
-                            )})
-                        }
+                            );
+})}
                     </TableBody>
                 </Table>
             </ContentTableWrapper>

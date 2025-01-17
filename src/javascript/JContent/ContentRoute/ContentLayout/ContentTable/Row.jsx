@@ -19,7 +19,9 @@ export const Row = ({
     onPreviewSelect,
     doubleClickNavigation,
     tableConfig,
-    index
+    index,
+    virtualizer,
+    virtualRow
 }) => {
     const rowProps = row.getRowProps();
     const node = row.original;
@@ -52,6 +54,14 @@ export const Row = ({
 
     return (
         <TableRow {...rowProps}
+                  ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
+                  data-index={virtualRow.index} // Needed for dynamic row height measurement
+                  style={{
+                      display: 'flex',
+                      position: 'absolute',
+                      transform: `translateY(${virtualRow.start}px)`, // This should always be a `style` as it changes on scroll
+                      width: '100%'
+                  }}
                   data-cm-role="table-content-list-row"
                   className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isPreviewSelected}
@@ -98,5 +108,7 @@ Row.propTypes = {
             canDropFile: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
         })
     }).isRequired,
-    index: PropTypes.number
+    index: PropTypes.number,
+    virtualizer: PropTypes.object.isRequired,
+    virtualRow: PropTypes.object.isRequired
 };

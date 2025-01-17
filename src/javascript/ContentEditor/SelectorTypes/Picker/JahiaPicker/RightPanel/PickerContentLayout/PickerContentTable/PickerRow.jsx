@@ -14,7 +14,9 @@ export const PickerRow = ({
     isMultiple,
     previousModeTableConfig,
     handleOnDoubleClick,
-    handleOnClick
+    handleOnClick,
+    virtualizer,
+    virtualRow
 }) => {
     const rowProps = row.getRowProps();
     const selectionProps = row.getToggleRowSelectedProps();
@@ -43,8 +45,16 @@ export const PickerRow = ({
 
     return (
         <TableRow {...rowProps}
+                  ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
                   data-cm-role="table-content-list-row"
                   data-sel-name={node.name}
+                  data-index={virtualRow.index} // Needed for dynamic row height measurement
+                  style={{
+                      display: 'flex',
+                      position: 'absolute',
+                      transform: `translateY(${virtualRow.start}px)`, // This should always be a `style` as it changes on scroll
+                      width: '100%'
+                  }}
                   className={clsx({
                       [className]: !selectionProps.checked,
                       'moonstone-drop_row': (isCanDrop || isCanDropFile),
@@ -78,5 +88,7 @@ PickerRow.propTypes = {
     tableConfig: PropTypes.object,
     doubleClickNavigation: PropTypes.func,
     handleOnClick: PropTypes.func,
-    handleOnDoubleClick: PropTypes.func
+    handleOnDoubleClick: PropTypes.func,
+    virtualizer: PropTypes.object.isRequired,
+    virtualRow: PropTypes.object.isRequired
 };

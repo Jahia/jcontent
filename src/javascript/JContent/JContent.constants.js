@@ -46,7 +46,8 @@ const JContentConstants = {
             CONTENT: 'content',
             PAGES: 'pages'
         }
-    }
+    },
+    tableRowHeight: 48
 };
 
 export default JContentConstants;

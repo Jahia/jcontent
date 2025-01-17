@@ -29,12 +29,14 @@ import {
     ContentTableWrapper,
     EmptyTable
 } from '~/JContent/ContentRoute/ContentLayout/ContentTable';
+import {useVirtualizer} from '@tanstack/react-virtual';
 import {registry} from '@jahia/ui-extender';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import {
     PickerRow
 } from '~/ContentEditor/SelectorTypes/Picker/JahiaPicker/RightPanel/PickerContentLayout/PickerContentTable/PickerRow';
 import clsx from 'clsx';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const reduxActions = {
     onPreviewSelectAction: () => ({}),
@@ -126,6 +128,18 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
 
     const mainPanelRef = useRef(null);
 
+    const rowVirtualizer = useVirtualizer({
+        count: tableRows.length,
+        estimateSize: () => JContentConstants.tableRowHeight,
+        getScrollElement: () => mainPanelRef.current,
+        measureElement:
+            typeof window !== 'undefined' &&
+            navigator.userAgent.indexOf('Firefox') === -1 ?
+                element => element?.getBoundingClientRect().height :
+                undefined,
+        overscan: 10
+    });
+
     useEffect(() => {
         if (mainPanelRef.current) {
             mainPanelRef.current.scroll(0, 0);
@@ -193,12 +207,19 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"
-                       style={{width: '100%', minWidth: '1100px'}}
+                       style={{width: '100%', minWidth: '1100px', display: 'grid'}}
                        {...getTableProps()}
                 >
                     <ContentListHeader headerGroups={headerGroups}/>
-                    <TableBody {...getTableBodyProps()}>
-                        {tableRows.map(row => {
+                    <TableBody {...getTableBodyProps()}
+                               style={{
+                                   display: 'grid',
+                                   height: `${rowVirtualizer.getTotalSize()}px`, // Tells scrollbar how big the table is
+                                   position: 'relative' // Needed for absolute positioning of rows
+                               }}
+                    >
+                        {rowVirtualizer.getVirtualItems().map(virtualRow => {
+                            const row = tableRows[virtualRow.index];
                             prepareRow(row);
                             return (
                                 <PickerRow key={'row' + row.id}
@@ -210,9 +231,11 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
                                            handleOnDoubleClick={handleOnDoubleClick}
                                            previousModeTableConfig={previousModeTableConfig}
                                            doubleClickNavigation={doubleClickNavigation}
+                                           virtualizer={rowVirtualizer}
+                                           virtualRow={virtualRow}
                                 />
                             );
-                        })}
+})}
                     </TableBody>
                 </Table>
             </ContentTableWrapper>

@@ -7,11 +7,6 @@ export const ContentTableWrapper = ({children, reference, dropReference, uploadT
     return (
         <div ref={reference}
              className={clsx(css.tableWrapper, 'flexFluid')}
-             style={{
-                 overflow: 'auto', // Our scrollable table container
-                 position: 'relative' // Needed for sticky header
-                 // height: '600px', //should be a fixed height
-             }}
              tabIndex="1"
              onClick={onClick}
              onKeyDown={onKeyDown}

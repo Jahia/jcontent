@@ -15,7 +15,6 @@ export const PickerRow = ({
     previousModeTableConfig,
     handleOnDoubleClick,
     handleOnClick,
-    index,
     virtualizer,
     virtualRow
 }) => {
@@ -49,7 +48,7 @@ export const PickerRow = ({
                   data-cm-role="table-content-list-row"
                   data-sel-name={node.name}
                   ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
-                  data-index={index} // Needed for dynamic row height measurement
+                  data-index={virtualRow.index} // Needed for dynamic row height measurement
                   style={{
                       display: 'flex',
                       position: 'absolute',
@@ -90,7 +89,6 @@ PickerRow.propTypes = {
     doubleClickNavigation: PropTypes.func,
     handleOnClick: PropTypes.func,
     handleOnDoubleClick: PropTypes.func,
-    index: PropTypes.number,
     virtualizer: PropTypes.object.isRequired,
     virtualRow: PropTypes.object.isRequired
 };

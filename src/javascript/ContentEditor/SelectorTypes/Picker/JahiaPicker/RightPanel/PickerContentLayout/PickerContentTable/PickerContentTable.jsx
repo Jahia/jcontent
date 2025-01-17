@@ -36,6 +36,7 @@ import {
     PickerRow
 } from '~/ContentEditor/SelectorTypes/Picker/JahiaPicker/RightPanel/PickerContentLayout/PickerContentTable/PickerRow';
 import clsx from 'clsx';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const reduxActions = {
     onPreviewSelectAction: () => ({}),
@@ -129,7 +130,7 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
 
     const rowVirtualizer = useVirtualizer({
         count: tableRows.length,
-        estimateSize: () => 48,
+        estimateSize: () => JContentConstants.tableRowHeight,
         getScrollElement: () => mainPanelRef.current,
         measureElement:
             typeof window !== 'undefined' &&
@@ -213,8 +214,8 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
                     <TableBody {...getTableBodyProps()}
                                style={{
                                    display: 'grid',
-                                   height: `${rowVirtualizer.getTotalSize()}px`, // Tells scrollbar how big the table is
-                                   position: 'relative' // Needed for absolute positioning of rows
+                                   height: `${rowVirtualizer.getTotalSize()}px`,
+                                   position: 'relative'
                                }}
                     >
                         {rowVirtualizer.getVirtualItems().map(virtualRow => {
@@ -230,7 +231,6 @@ export const PickerContentTable = ({rows, isContentNotFound, totalCount, isLoadi
                                            handleOnDoubleClick={handleOnDoubleClick}
                                            previousModeTableConfig={previousModeTableConfig}
                                            doubleClickNavigation={doubleClickNavigation}
-                                           index={virtualRow.index}
                                            virtualizer={rowVirtualizer}
                                            virtualRow={virtualRow}
                                 />

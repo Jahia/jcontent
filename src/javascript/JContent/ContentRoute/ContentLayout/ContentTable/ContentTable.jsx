@@ -93,7 +93,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     const rowVirtualizer = useVirtualizer({
         count: tableRows.length,
-        estimateSize: () => 48,
+        estimateSize: () => JContentConstants.tableRowHeight,
         getScrollElement: () => mainPanelRef.current,
         measureElement:
             typeof window !== 'undefined' &&
@@ -184,7 +184,6 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                                      isPreviewOpened={isPreviewOpened}
                                      setSelectedItemIndex={setSelectedItemIndex}
                                      doubleClickNavigation={doubleClickNavigation}
-                                     index={virtualRow.index}
                                      virtualizer={rowVirtualizer}
                                      virtualRow={virtualRow}
                                      onPreviewSelect={onPreviewSelect}

@@ -19,7 +19,6 @@ export const Row = ({
     onPreviewSelect,
     doubleClickNavigation,
     tableConfig,
-    index,
     virtualizer,
     virtualRow
 }) => {
@@ -55,7 +54,7 @@ export const Row = ({
     return (
         <TableRow {...rowProps}
                   ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
-                  data-index={index} // Needed for dynamic row height measurement
+                  data-index={virtualRow.index} // Needed for dynamic row height measurement
                   style={{
                       display: 'flex',
                       position: 'absolute',
@@ -108,7 +107,6 @@ Row.propTypes = {
             canDropFile: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
         })
     }).isRequired,
-    index: PropTypes.number,
     virtualizer: PropTypes.object.isRequired,
     virtualRow: PropTypes.object.isRequired
 };

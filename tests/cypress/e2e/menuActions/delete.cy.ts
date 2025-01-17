@@ -1,5 +1,4 @@
 import {JContent} from '../../page-object';
-import gql from 'graphql-tag';
 import {createSite, deleteSite, enableModule, publishAndWaitJobEnding} from '@jahia/cypress';
 
 describe('delete tests', () => {
@@ -170,5 +169,4 @@ describe('delete tests', () => {
         cy.get(dialogCss)
             .find('[data-sel-role="downloadAsZip"]');
     });
-
 });

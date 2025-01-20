@@ -115,7 +115,7 @@ export const Box = React.memo(({
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
-    const [{dragging, isAnythingDragging}, drag] = useNodeDrag({dragSource: node});
+    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node});
 
     useEffect(() => {
         // Disable mouse events to prevent showing boxes when dragging
@@ -204,7 +204,19 @@ export const Box = React.memo(({
 
     const type = element.getAttribute('type');
 
-    const {Bar, borderColorHovered, borderColorSelected, backgroundColorBase, backgroundColorHovered, backgroundColorSelected, isBarAlwaysDisplayed, isSticky, isActionsHidden: isActionsHiddenOverride, isStatusHidden, area} = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
+    const {
+        Bar,
+        borderColorHovered,
+        borderColorSelected,
+        backgroundColorBase,
+        backgroundColorHovered,
+        backgroundColorSelected,
+        isBarAlwaysDisplayed,
+        isSticky,
+        isActionsHidden: isActionsHiddenOverride,
+        isStatusHidden,
+        area
+    } = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isHovered && !isSelected) {
@@ -262,6 +274,7 @@ export const Box = React.memo(({
                     width={currentOffset.width}
                     currentFrameRef={currentFrameRef}
                     element={element}
+                    dragProps={{isDraggable, isCanDrag}}
                     area={area}/>}
         </header>
     );

@@ -27,12 +27,16 @@ export function useNodeDrag({dragSource}) {
         }
     );
 
+    const isDraggable = Boolean(res.checksResult) && !JahiaAreasUtil.isJahiaArea(dragSource?.path);
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({
         type: 'node',
         item: dragSource,
-        canDrag: () => Boolean(res.checksResult) && !JahiaAreasUtil.isJahiaArea(dragSource?.path) && !res.node?.lockOwner,
+        isDraggable,
+        canDrag: () => isDraggable && !res.node?.lockOwner,
         collect: monitor => ({
-            dragging: monitor.isDragging()
+            dragging: monitor.isDragging(),
+            isDraggable,
+            isCanDrag: isDraggable && !res.node?.lockOwner
         })
     }) : ({
         type: 'nodes',

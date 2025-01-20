@@ -1,6 +1,6 @@
 import {NodeIcon} from '~/utils';
 import styles from '~/JContent/EditFrame/Box.scss';
-import {Area, Chip, toIconComponent, Typography} from '@jahia/moonstone';
+import {Area, Chip, HandleDrag, toIconComponent, Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {includes} from 'lodash';
@@ -33,7 +33,7 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
     />
 );
 
-export const LabelBar = ({node, area}) => {
+export const LabelBar = ({node, area, dragProps}) => {
     const title = truncate(node.displayName, 24);
 
     if (area) {
@@ -50,6 +50,7 @@ export const LabelBar = ({node, area}) => {
 
     return (
         <>
+            {dragProps?.isDraggable && <HandleDrag color={dragProps?.isCanDrag ? undefined : 'gray'}/>}
             <NodeIcon node={node} className={styles.icon}/>
             <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
         </>
@@ -58,17 +59,21 @@ export const LabelBar = ({node, area}) => {
 
 LabelBar.propTypes = {
     node: {displayName: PropTypes.string},
-    area: PropTypes.objectOf(AreaShape)
+    area: PropTypes.objectOf(AreaShape),
+    dragProps: PropTypes.shape({
+        isDraggable: PropTypes.bool,
+        isCanDrag: PropTypes.bool
+    })
 };
 
-export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden, area}) => {
+export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef, isActionsHidden, isStatusHidden, area, dragProps}) => {
     const WrappedButtonRendererNoLabel = headerButtonWrapper(ButtonRendererNoLabel, currentFrameRef);
     const WrappedButtonRenderer = headerButtonWrapper(ButtonRenderer, currentFrameRef);
 
     const displayLabels = width > 400;
     return (
         <>
-            <LabelBar node={node} area={area}/>
+            <LabelBar node={node} area={area} dragProps={dragProps}/>
 
             {!isStatusHidden && <ContentStatuses node={node}
                                                  hasLabel={displayLabels}
@@ -100,18 +105,15 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
 
 DefaultBar.propTypes = {
     node: PropTypes.object,
-
     language: PropTypes.string,
-
     displayLanguage: PropTypes.string,
-
     width: PropTypes.number,
-
     currentFrameRef: PropTypes.any,
-
     isActionsHidden: PropTypes.bool,
-
     isStatusHidden: PropTypes.bool,
-
-    area: PropTypes.objectOf(AreaShape)
+    area: PropTypes.objectOf(AreaShape),
+    dragProps: PropTypes.shape({
+        isDraggable: PropTypes.bool,
+        isCanDrag: PropTypes.bool
+    })
 };

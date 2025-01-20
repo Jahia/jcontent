@@ -121,7 +121,7 @@ export const Box = React.memo(({
         };
     }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
 
-    element.dataset.hovered = isHovered;
+    element.dataset.hovered = isHovered && !isAnythingDragging;
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -225,7 +225,7 @@ export const Box = React.memo(({
         <header ref={dragWithChecks}
                 className={headerStyles}
                 jahiatype="header" // eslint-disable-line react/no-unknown-property
-                data-hovered={isHovered}
+                data-hovered={isHovered && !isAnythingDragging}
                 data-clicked={isClicked}
                 data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
@@ -258,8 +258,8 @@ export const Box = React.memo(({
             <div className={clsx(
                 styles.box,
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
-                isHovered ? styles.boxHovered : '',
-                (isSelected || isClicked) ? styles.boxSelected : '')}
+                isHovered && !isAnythingDragging ? styles.boxHovered : '',
+                (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
                  style={{
                      '--borderColorHovered': borderColorHovered,
                      '--borderColorSelected': borderColorSelected

@@ -150,11 +150,15 @@ $indexHovered: 18000;
 // }
 
 .horizontalInsert {
-    border-bottom: 2px dashed var(--color-accent_light);
+    margin: 4px;
+
+    border-bottom: 2px dashed var(--color-success);
 }
 
 .verticalInsert {
-    border-right: 2px dashed var(--color-accent_light);
+    margin: 4px;
+
+    border-right: 2px dashed var(--color-succes);
 }
 
 :global .moonstone-tableHead {
@@ -162,7 +166,7 @@ $indexHovered: 18000;
 }
 
 .dropArea {
-    outline: 2px solid var(--color-accent_light);
+    outline: 2px solid var(--color-success);
 
     // border-radius: 4px;
     box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
@@ -170,17 +174,24 @@ $indexHovered: 18000;
 
 .dropAreaHeader {
     position: relative;
-    top: -34px;
+    top: $barHeight * -1;
+    left: -2px; // border width
 
     display: flex;
-    width: calc(100% + 10px);
-    height: 36px;
+    gap: 2px;
+    width: max-content;
+    height: $barHeight;
+    padding: 0 8px;
 
-    background-color: var(--color-accent_light);
+    font-weight: bold;
+    color: var(--color-white);
+
+    border-radius: 4px 4px 0 0;
+    background-color: var(--color-success);
 }
 
 .draggedOverlay {
-    background-color: var(--color-gray_light60);
+    background-color: var(--color-dark20);
 }
 
 .boldTitle {

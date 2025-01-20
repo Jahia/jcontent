@@ -1,14 +1,18 @@
 import {enqueueSnackbar} from 'notistack';
 
+const booleanValue = v => typeof v === 'string' ? v === 'true' : Boolean(v);
+
 export const registerLegacyGwt = registry => {
     const pcNavigateTo = path => registry.get('redux-action', 'pagecomposerNavigateTo').action(path);
 
     registry.add('content-editor-config', 'gwtedit', {
         editCallback: (updatedNode, originalNode) => {
             // Trigger Page Composer to reload iframe if system name was renamed
-            if (originalNode.path !== updatedNode.path) {
-                const dispatch = window.jahia.reduxStore.dispatch;
-                dispatch(pcNavigateTo({oldPath: originalNode.path, newPath: updatedNode.path}));
+            if (!booleanValue(contextJsParameters.config.jcontent?.hideLegacyPageComposer)) {
+                if (originalNode.path !== updatedNode.path) {
+                    const dispatch = window.jahia.reduxStore.dispatch;
+                    dispatch(pcNavigateTo({oldPath: originalNode.path, newPath: updatedNode.path}));
+                }
             }
         },
         onClosedCallback: (envProps, needRefresh) => {
@@ -34,11 +38,13 @@ export const registerLegacyGwt = registry => {
             if (config.newPath) {
                 const dispatch = window.jahia.reduxStore.dispatch;
                 // Legacy page composer
-                const currentPcPath = window.jahia.reduxStore.getState().pagecomposer?.currentPage?.path;
-                dispatch(pcNavigateTo({
-                    oldPath: currentPcPath,
-                    newPath: encodeURIComponent(config.newPath).replaceAll('%2F', '/')
-                }));
+                if (!booleanValue(contextJsParameters.config.jcontent?.hideLegacyPageComposer)) {
+                    const currentPcPath = window.jahia.reduxStore.getState().pagecomposer?.currentPage?.path;
+                    dispatch(pcNavigateTo({
+                        oldPath: currentPcPath,
+                        newPath: encodeURIComponent(config.newPath).replaceAll('%2F', '/')
+                    }));
+                }
 
                 // Refresh content in repository explorer to see added page
                 if (window.authoringApi.refreshContent && window.location.pathname.endsWith('/jahia/repository-explorer')) {

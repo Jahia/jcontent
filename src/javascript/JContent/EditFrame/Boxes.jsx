@@ -501,7 +501,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                              selection.includes(node.path) ||
                              (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
                          isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
-                         isActionsHidden={selection.length > 0 && !selection.includes(node.path) && element === el}
+                         isActionsHidden={selection.length > 0}
                          currentFrameRef={currentFrameRef}
                          rootElementRef={rootElement}
                          element={element}

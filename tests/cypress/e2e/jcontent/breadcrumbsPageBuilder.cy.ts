@@ -5,7 +5,7 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         cy.loginAndStoreSession();
     });
 
-    it('Verifies breadcrumbs are displayed and can be used to make selection', () => {
+    it('Verifies breadcrumbs are displayed and can be used to make click selection of ancestor', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
         const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies', false);

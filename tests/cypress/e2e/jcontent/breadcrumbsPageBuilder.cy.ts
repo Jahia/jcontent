@@ -15,15 +15,4 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         breadcrumbs.select('landing');
         pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies').hasNoHeaderAndFooter();
     });
-
-    it('Selects multiple elements', () => {
-        const jcontent = JContent.visit('digitall', 'en', 'pages/home');
-        const pageBuilder = new JContentPageBuilder(jcontent);
-        const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies', false);
-        module.click();
-        const breadcrumbs = module.getFooter().getItemPathDropdown().open();
-        breadcrumbs.shouldHaveCount(2);
-        breadcrumbs.select('landing');
-        pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies').hasNoHeaderAndFooter();
-    });
 });

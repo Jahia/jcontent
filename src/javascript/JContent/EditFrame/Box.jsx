@@ -26,11 +26,21 @@ const processCustomBoxConfigIfExists = (node, type) => {
     // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
     let borderColorHovered = 'var(--color-accent_light)';
     let borderColorSelected = 'var(--color-accent_light)';
+    let backgroundColorBase = 'var(--color-gray_light_plain40)';
+    let backgroundColorHovered = 'var(--color-gray_light)';
+    let backgroundColorSelected = 'var(--color-accent_plain20)';
     if (pageBuilderBoxConfig) {
         const borderColors = pageBuilderBoxConfig.borderColors;
+        const backgroundColors = pageBuilderBoxConfig.backgroundColors;
         if (borderColors) {
             borderColorHovered = borderColors.hover ? borderColors.hover : borderColorHovered;
             borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
+        }
+
+        if (backgroundColors) {
+            backgroundColorBase = backgroundColors.base;
+            backgroundColorHovered = backgroundColors.hover;
+            backgroundColorSelected = backgroundColors.selected;
         }
     }
 
@@ -38,6 +48,9 @@ const processCustomBoxConfigIfExists = (node, type) => {
         Bar,
         borderColorHovered,
         borderColorSelected,
+        backgroundColorBase,
+        backgroundColorHovered,
+        backgroundColorSelected,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
         isSticky: pageBuilderBoxConfig?.isSticky ?? true,
         isAbsolute: false
@@ -191,7 +204,7 @@ export const Box = React.memo(({
 
     const type = element.getAttribute('type');
 
-    const {Bar, borderColorHovered, borderColorSelected, isBarAlwaysDisplayed, isSticky, isActionsHidden: isActionsHiddenOverride, isStatusHidden, area} = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
+    const {Bar, borderColorHovered, borderColorSelected, backgroundColorBase, backgroundColorHovered, backgroundColorSelected, isBarAlwaysDisplayed, isSticky, isActionsHidden: isActionsHiddenOverride, isStatusHidden, area} = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isHovered && !isSelected) {
@@ -229,6 +242,11 @@ export const Box = React.memo(({
                 data-clicked={isClicked}
                 data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
+                style={{
+                    '--backgroundColorBase': backgroundColorBase,
+                    '--backgroundColorHovered': backgroundColorHovered,
+                    '--backgroundColorSelected': backgroundColorSelected
+                }}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
                 onClick={onClick}

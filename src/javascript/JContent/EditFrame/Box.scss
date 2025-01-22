@@ -94,7 +94,7 @@ $indexHovered: 18000;
 
     border-radius: 4px;
 
-    background-color: var(--color-gray_light_plain40);
+    background-color: var(--backgroundColorBase);
 
     transition: background 0.4s ease-in-out;
 
@@ -104,7 +104,7 @@ $indexHovered: 18000;
 
     &.isHighlighted,
     &:hover {
-        background-color: var(--color-gray_light);
+        background-color: var(--backgroundColorHovered);
     }
 
     &.isClicked {
@@ -115,7 +115,7 @@ $indexHovered: 18000;
 
         border-radius: 0;
 
-        background-color: var(--color-accent_plain20);
+        background-color: var(--backgroundColorSelected);
     }
 
     button {

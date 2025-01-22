@@ -199,6 +199,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             event.preventDefault();
             event.stopPropagation();
             if (isMultipleSelectionMode) {
+                setClickedElement(undefined);
                 onSelect(event);
             } else {
                 const target = event.currentTarget;

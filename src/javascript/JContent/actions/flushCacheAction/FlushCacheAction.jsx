@@ -6,6 +6,8 @@ import {FlushPageCacheMutation, FlushSiteCacheMutation} from './FlushCacheAction
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 
+const homePageProp = 'j:isHomePage';
+
 export const FlushCacheActionComponent = ({path, render: Render, loading: Loading, showOnNodeTypes, ...others}) => {
     const {t} = useTranslation('jcontent');
     const client = useApolloClient();
@@ -14,17 +16,19 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
         {path},
         {
             getIsNodeTypes: showOnNodeTypes,
-            requiredPermission: ['adminCache']
+            requiredPermission: ['adminCache'],
+            getProperties: [homePageProp]
         }
     );
 
     const isSiteFlush = showOnNodeTypes.includes('jnt:virtualsite');
+    const isHomePage = res.node && Boolean(res.node.properties.find(p => p.name === homePageProp)?.value);
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && showOnNodeTypes.some(nt => res?.node[nt]);
+    const isVisible = res.checksResult && showOnNodeTypes.some(nt => res?.node[nt]) && (!isSiteFlush || isSiteFlush === isHomePage);
 
     return (
         <Render

@@ -61,6 +61,7 @@ describe('Create content tests', () => {
                 cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly created content');
             });
         });
+
         it.skip('Update newly created content', () => {
             jcontent = new JContentPageBuilder(new JContent());
             jcontent.getModule('/sites/jcontentSite/home/landing').get().scrollIntoView();
@@ -75,6 +76,23 @@ describe('Create content tests', () => {
             cy.iframe(iframeSel).find('p').first().then(el => {
                 el.closest('html')[0].scroll(0, -2000);
                 cy.iframe(iframeSel).find('p').first().should('contain.text', 'Newly updated content');
+            });
+        });
+
+        it('Create content in page builder using insertion points', () => {
+            const module = jcontent.getModule('/sites/jcontentSite/home/landing');
+            module.click();
+            const buttons = module.getCreateButtons();
+            buttons.getFirstInsertionButton().click();
+            const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
+            contentEditor.getRichTextField('jnt:bigText_text').type('Newly inserted content');
+            contentEditor.create();
+
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(2500);
+            cy.iframe(iframeSel).find('p').first().then(el => {
+                el.closest('html')[0].scroll(0, -2000);
+                cy.iframe(iframeSel).find('p').should('contain.text', 'Newly inserted content');
             });
         });
     });

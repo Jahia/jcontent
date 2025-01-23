@@ -341,6 +341,10 @@ class PageBuilderModuleCreateButton extends BaseComponent {
         return new Button(this.get().find('.moonstone-button').contains(type));
     }
 
+    getFirstInsertionButton(): Button {
+        return new Button(this.get().find('button[data-sel-role="createContent"]').first());
+    }
+
     assertHasNoButton(): void {
         this.get().find('.moonstone-button').should('not.exist');
     }

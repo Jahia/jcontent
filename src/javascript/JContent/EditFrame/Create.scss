@@ -43,6 +43,6 @@
     }
 }
 
-.tooltipPopper {
-    z-index: 5000000;
+div[role="tooltip"].tooltipPopper {
+    z-index: 1100000;
 }

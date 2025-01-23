@@ -260,6 +260,8 @@
         "publishMediumPublished": "Veröffentlicht - {{language}}",
         "publishShort": "Veröffentlichen",
         "publishShortPublished": "Veröffentlicht",
+        "publishPublishedMedium": "Veröffentlicht - {{language}}",
+        "publishPublishedShort": "Veröffentlicht",
         "undelete": "Wiederherstellen",
         "publishDeletion": "Löschen veröffentlichen",
         "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am",
@@ -415,7 +417,7 @@
         "modified": "Geändert",
         "new": "Neu",
         "notPublished": "Nicht veröffentlicht",
-        "published": "Published",
+        "published": "Veröffentlicht",
         "warning": "Achtung",
         "workInProgress": "In Arbeit"
       },

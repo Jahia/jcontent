@@ -1,0 +1,126 @@
+
+import gql from 'graphql-tag';
+
+export const createContentMutation = (siteKey: string) => {
+    return gql`mutation {
+        jcr {
+            mutateNode(pathOrId: "/sites/${siteKey}/home") {
+                addChildrenBatch(
+                    nodes: [
+                        {
+                            name: "area-main"
+                            primaryNodeType: "jnt:contentList"
+                            children: [
+                                {
+                                    name: "test-content1"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 1" }]
+                                }
+                                {
+                                    name: "test-content2"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 2" }]
+                                }
+                                {
+                                    name: "test-content3"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 3" }]
+                                }
+                                {
+                                    name: "test-content4"
+                                    primaryNodeType: "jnt:event"
+                                    properties: [
+                                        { name: "body", language: "en", value: "test event 1" }
+                                    ]
+                                }
+                                {
+                                    name: "test-content5"
+                                    primaryNodeType: "jnt:event"
+                                    properties: [
+                                        { name: "body", language: "en", value: "test event 2" }
+                                    ]
+                                }
+                                {
+                                    name: "lookForMeSystemName"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [
+                                        {
+                                            name: "text"
+                                            language: "en"
+                                            value: "Very Rich text to find with system name"
+                                        }
+                                    ]
+                                }
+                                {
+                                    name: "lookForMeTag"
+                                    primaryNodeType: "jnt:bigText"
+                                    mixins: ["jmix:tagged"]
+                                    properties: [
+                                        { name: "text", language: "en", value: "Very Rich text to find with tag" }
+                                        { name: "j:tagList", language: "en", values: ["tagToLookFor"] }
+                                    ]
+                                }
+                                {
+                                    name: "test-content6-linkview"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 6" }, {name: "j:view", language: "en", value: "link"}]
+                                    mixins: ["jmix:renderable"],
+                                }
+                                {
+                                    name: "test-content7-defaultview"
+                                    primaryNodeType: "jnt:bigText"
+                                    properties: [{ name: "text", language: "en", value: "test 7" }]
+                                }
+                                {
+                                    name: "test-content8-long-text",
+                                    primaryNodeType: "jnt:bigText",
+                                    properties: [
+                                        { name: "text", language: "en", value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." }
+                                    ]
+                                }
+                            ]
+                        }
+                        {
+                            name: "external-link"
+                            primaryNodeType: "jnt:externalLink"
+                            properties: [
+                                { name: "j:url", value: "http://www.google.com" }
+                            ]
+                        }
+                        {
+                            name: "internal-link"
+                            primaryNodeType: "jnt:nodeLink"
+                            properties: [
+                                { name: "j:node", value: "/sites/${siteKey}/home", type: REFERENCE }
+                                { name: "jcr:title", language: "en", value: "internal-xxx" }
+                            ]
+                        }
+                        {
+                            name: "menu"
+                            primaryNodeType: "jnt:navMenuText"
+                            children: [
+                                {
+                                    name: "submenu1"
+                                    primaryNodeType: "jnt:navMenuText"
+                                }
+                                {
+                                    name: "submenu2"
+                                    primaryNodeType: "jnt:navMenuText"
+                                }
+                            ]
+                        }
+                        {
+                            name: "events"
+                            primaryNodeType: "jnt:page"
+                            properties: [
+                                { name: "j:templateName" value: "events" }
+                            ]
+                        }
+                    ]
+                ) {
+                    uuid
+                }
+            }
+        }
+    }`;
+};

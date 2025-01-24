@@ -21,7 +21,8 @@ const ButtonRenderer = getButtonRenderer({
 );
 
 const ButtonRendererNoLabel = getButtonRenderer({
-    defaultButtonProps: {size: 'default', color: 'default', label: ' '},
+    labelStyle: 'none',
+    defaultButtonProps: {className: styles.insertionPoint},
     showTooltip: true,
     defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}
 });

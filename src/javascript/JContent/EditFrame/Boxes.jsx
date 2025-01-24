@@ -15,6 +15,7 @@ import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
 import {getBoundingBox} from './EditFrame.utils';
+import InsertionPoints from './InsertionPoints';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -63,65 +64,6 @@ function getRelativePos(coord1, coord2) {
 
     return (offPY >= 0) ? 'bottom' : 'top';
 }
-
-const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
-    const originalInsertionButtons = clickedElement ? [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
-        element: e,
-        parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
-    })) : [];
-
-    // If current clicked element does not have any create content buttons [type="placeholder"], then we do not need to show insertion points
-    if (originalInsertionButtons.length === 0) {
-        return null;
-    }
-
-    // Get all children of the clicked element that are create content buttons [type="placeholder"] and add insertion points for each
-    const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
-        element: e,
-        parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
-    }));
-
-    // Check only first two elements to know alignment.
-    const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;
-
-    return (
-        [
-            ...childrenElem.map(({element, parentNode}) => (
-                <Create key={`insertion-point-${element.getAttribute('id')}`}
-                        isInsertionPoint
-                        isVertical={isVertical}
-                        node={parentNode}
-                        element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
-                        onSaved={onSaved}
-            />
-            )),
-            ...originalInsertionButtons.map(({element, parentNode}) => (
-            // Insertion point for original placeholder, this is necessary since default placeholders are muted once something is clicked
-                <Create key={`insertion-point-${element.getAttribute('id')}`}
-                        isInsertionPoint
-                        isVertical={false}
-                        node={parentNode}
-                        element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
-                        onSaved={onSaved}
-            />
-            ))
-        ]
-    );
-};
-
-InsertionPoints.propTypes = {
-    currentDocument: PropTypes.any,
-    clickedElement: PropTypes.object,
-    nodes: PropTypes.object,
-    addIntervalCallback: PropTypes.func,
-    onSaved: PropTypes.func
-};
 
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');

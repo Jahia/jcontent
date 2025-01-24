@@ -2,6 +2,8 @@ $barHeight: 32px;
 $barMargin: 2px;
 $indexSelected: 25000;
 $indexHovered: 18000;
+$bgColorDragging: var(--color-success);
+$colorDragging: var(--color-white);
 
 .root {
     position: absolute;
@@ -121,6 +123,10 @@ $indexHovered: 18000;
     button {
         min-width: max-content;
     }
+
+     &.dragging {
+         background: transparent;
+     }
 }
 
 .sticky {
@@ -131,11 +137,11 @@ $indexHovered: 18000;
 }
 
 .horizontalInsert {
-    border-bottom: 2px dashed var(--color-accent_light);
+    border-bottom: 2px dashed $bgColorDragging;
 }
 
 .verticalInsert {
-    border-right: 2px dashed var(--color-accent_light);
+    border-right: 2px dashed $bgColorDragging;
 }
 
 :global .moonstone-tableHead {
@@ -143,25 +149,28 @@ $indexHovered: 18000;
 }
 
 .dropArea {
-    outline: 2px solid var(--color-accent_light);
+    outline: 2px solid $bgColorDragging;
 
-    // border-radius: 4px;
     box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
 }
 
 .dropAreaHeader {
     position: relative;
-    top: -34px;
+    top: $barHeight * -1;
+    left: -2px; // border width
 
     display: flex;
-    width: calc(100% + 10px);
-    height: 36px;
+    width: calc(100% + 4px);
+    height: calc($barHeight + 4px);
+    padding: 0 var(--spacing-small);
 
-    background-color: var(--color-accent_light);
+    color: $colorDragging;
+
+    background-color: $bgColorDragging;
 }
 
 .draggedOverlay {
-    background-color: var(--color-gray_light60);
+    background-color: var(--color-dark20);
 }
 
 .boldTitle {

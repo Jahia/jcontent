@@ -545,7 +545,8 @@
       },
       "pageBuilder": {
         "breadcrumbs": {
-          "dropdownLabel": "Item path"
+          "dropdownLabel": "Item path",
+          "currentItem": "Current item"
         }
       }
     },

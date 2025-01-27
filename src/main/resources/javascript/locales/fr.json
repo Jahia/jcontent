@@ -538,7 +538,8 @@
       },
       "pageBuilder": {
         "breadcrumbs": {
-          "dropdownLabel": "Chemin de l’élément"
+          "dropdownLabel": "Chemin de l’élément",
+          "currentItem": "Elément courant"
         }
       }
     },

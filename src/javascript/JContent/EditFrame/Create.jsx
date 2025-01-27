@@ -22,7 +22,6 @@ const ButtonRenderer = getButtonRenderer({
 
 const ButtonRendererNoLabel = getButtonRenderer({
     labelStyle: 'none',
-    defaultButtonProps: {className: styles.insertionPoint},
     showTooltip: true,
     defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}
 });
@@ -174,7 +173,7 @@ export const Create = React.memo(({element, node, addIntervalCallback, clickedEl
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}
-             className={clsx(styles.root, editStyles.enablePointerEvents, sizers)}
+             className={clsx(styles.root, editStyles.enablePointerEvents, sizers, isInsertionPoint && styles.insertionPoint)}
              style={{...currentOffset, ...insertionStyle}}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}

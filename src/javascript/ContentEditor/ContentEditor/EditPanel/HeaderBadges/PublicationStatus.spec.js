@@ -18,7 +18,7 @@ describe('PublicationStatus', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.modified');
-        expect(wrapper.props().color).toBe('accent');
+        expect(wrapper.props().color).toBe('warning');
         expect(wrapper.props().icon).toStrictEqual(<File/>);
     });
 

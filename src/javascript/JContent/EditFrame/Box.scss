@@ -136,6 +136,20 @@ $colorDragging: var(--color-white);
     z-index: $indexSelected;
 }
 
+.icon {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    margin-right: var(--spacing-nano);
+
+    vertical-align: top;
+}
+
+.title {
+    flex-grow: 3;
+    flex-shrink: 2;
+}
+
 .horizontalInsert {
     border-bottom: 2px dashed $bgColorDragging;
 }
@@ -171,10 +185,4 @@ $colorDragging: var(--color-white);
 
 .draggedOverlay {
     background-color: var(--color-dark20);
-}
-
-.boldTitle {
-    font-weight: 700;
-    font-size: var(--spacing-medium);
-    line-height: var(--spacing-medium);
 }

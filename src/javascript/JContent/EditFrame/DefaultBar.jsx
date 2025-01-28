@@ -1,5 +1,5 @@
 import {NodeIcon} from '~/utils';
-import styles from '~/JContent/EditFrame/Box.scss';
+import styles from './Box.scss';
 import {Area, Chip, HandleDrag, toIconComponent, Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
@@ -39,7 +39,7 @@ export const LabelBar = ({node, area, dragProps}) => {
     if (area) {
         return (
             <>
-                <Typography isNowrap className={styles.boldTitle} variant="caption">{title}</Typography>
+                <Typography isNowrap weight="bold" variant="caption">{title}</Typography>
                 <Chip variant="default"
                       color="accent"
                       label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
@@ -52,7 +52,14 @@ export const LabelBar = ({node, area, dragProps}) => {
         <>
             {dragProps?.isDraggable && <HandleDrag color={dragProps?.isCanDrag ? undefined : 'gray'}/>}
             <NodeIcon node={node} className={styles.icon}/>
-            <Typography isNowrap className={styles.title} variant="caption">{title}</Typography>
+            <Typography
+                isNowrap
+                className={styles.title}
+                weight={dragProps?.isDropAllowed ? 'bold' : 'default'}
+                variant="caption"
+            >
+                {title}
+            </Typography>
         </>
     );
 };
@@ -62,7 +69,8 @@ LabelBar.propTypes = {
     area: PropTypes.objectOf(AreaShape),
     dragProps: PropTypes.shape({
         isDraggable: PropTypes.bool,
-        isCanDrag: PropTypes.bool
+        isCanDrag: PropTypes.bool,
+        isDropAllowed: PropTypes.bool
     })
 };
 
@@ -114,6 +122,7 @@ DefaultBar.propTypes = {
     area: PropTypes.objectOf(AreaShape),
     dragProps: PropTypes.shape({
         isDraggable: PropTypes.bool,
-        isCanDrag: PropTypes.bool
+        isCanDrag: PropTypes.bool,
+        isDropAllowed: PropTypes.bool
     })
 };

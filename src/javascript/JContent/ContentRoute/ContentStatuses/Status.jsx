@@ -5,7 +5,7 @@ import {Build, Chip, CloudCheck, Delete, File, FileContent, Lock, NoCloud, Warni
 
 export const config = {
     locked: {
-        color: 'warning',
+        color: 'default',
         icon: <Lock/>
     },
     markedForDeletion: {
@@ -13,7 +13,7 @@ export const config = {
         icon: <Delete/>
     },
     modified: {
-        color: 'accent',
+        color: 'warning',
         icon: <File/>
     },
     notPublished: {

@@ -171,3 +171,9 @@
 [cent:dependentProperties] > jnt:content, jmix:list, jmix:renderableList, jmix:queryContent, mix:title, jmix:cache
  - j:type (string, choicelist[subnodetypes = 'jnt:page,jmix:basicContent,jmix:editorialContent,jmix:retrievableContent']) indexed=no mandatory
  - j:subNodesView (string, choicelist[templates=subnodes,dependentProperties='j:type']) nofulltext
+
+[jmix:testPropOverrides] mixin
+ - testprop (string) i18n
+
+[cent:testPropOverridesA] > jnt:content, jmix:basicContent, jmix:testPropOverrides
+[cent:testPropOverridesB] > jnt:content, jmix:basicContent, jmix:testPropOverrides

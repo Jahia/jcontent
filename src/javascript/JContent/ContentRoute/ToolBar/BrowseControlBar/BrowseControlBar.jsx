@@ -1,37 +1,17 @@
-import React, {useMemo} from 'react';
-import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
+import React from 'react';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {Separator} from '@jahia/moonstone';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {shallowEqual, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
-const excludedActions = [
-    'subContents',
-    'edit',
-    'editPage',
-    'publishMenu',
-    'cut',
-    'deletePermanently',
-    'publishDeletion',
-    'copy',
-    'paste',
-    'createFolder',
-    'createContentFolder',
-    'createContent',
-    'fileUpload'
-];
-
-export const BrowseControlBar = ({isShowingActions, actionsToExcludeFromMenu}) => {
+export const BrowseControlBar = ({isShowingActions}) => {
     const {path, siteKey, selection} = useSelector(state => ({
         path: state.jcontent.path,
         siteKey: state.site,
         selection: state.jcontent.selection
     }), shallowEqual);
 
-    const contentActions = useMemo(() => [
-        ...registry.find({type: 'action', target: 'headerPrimaryActions'}).map(action => action.key),
-        ...actionsToExcludeFromMenu
-    ], [actionsToExcludeFromMenu]);
     const isRootNode = (path === ('/sites/' + siteKey));
     const editPath = selection && selection.length === 1 ? selection[0] : path;
 
@@ -48,9 +28,8 @@ export const BrowseControlBar = ({isShowingActions, actionsToExcludeFromMenu}) =
             <div className="flexRow">
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <DisplayAction isMenuPreload
-                               actionKey="contentMenu"
+                               actionKey="browseControlBarMenu"
                                path={editPath}
-                               menuFilter={action => contentActions.indexOf(action.key) === -1}
                                buttonProps={{size: 'default', variant: 'ghost'}}
                                render={ButtonRendererNoLabel}
                                loading={() => false}
@@ -61,13 +40,11 @@ export const BrowseControlBar = ({isShowingActions, actionsToExcludeFromMenu}) =
 };
 
 BrowseControlBar.propTypes = {
-    isShowingActions: PropTypes.bool,
-    actionsToExcludeFromMenu: PropTypes.array
+    isShowingActions: PropTypes.bool
 };
 
 BrowseControlBar.defaultProps = {
-    isShowingActions: true,
-    actionsToExcludeFromMenu: excludedActions
+    isShowingActions: true
 };
 
 export default BrowseControlBar;

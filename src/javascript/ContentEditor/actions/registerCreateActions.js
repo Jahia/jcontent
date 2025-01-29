@@ -8,11 +8,17 @@ import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 export const registerCreateActions = registry => {
+    const actionTargets = {
+        createNavMenuItemMenu: ['createMenuActions:-1', 'contentActions:-1', 'accordionContentActions:1.1', 'rootContentActions:-1'],
+        createPage: ['createMenuActions:-2', 'contentActions:-2', 'accordionContentActions:1', 'rootContentActions:-2', 'headerPrimaryActions:1', 'narrowHeaderMenu:1'],
+        createButton: ['content-editor/header/main-save-actions'],
+        createNavMenuItem: ['createNavMenuItemMenu']
+    };
+
     registry.addOrReplace('action', 'createContent', createContentAction, {
         defaultIcon: <AddCircle/>,
         buttonLabel:
             'jcontent:label.contentEditor.CMMActions.createNewContent.menu',
-        targets: ['createMenuActions:3', 'contentActions:3', 'accordionContentActions:3', 'headerPrimaryActions:1', 'narrowHeaderMenu:1'],
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
         hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
         requiredPermission: ['jcr:addChildNodes'],
@@ -22,7 +28,6 @@ export const registerCreateActions = registry => {
     if (booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
         registry.addOrReplace('action', 'createPage', createContentAction, {
             buttonIcon: <AddCircle/>,
-            targets: ['createMenuActions:-2', 'contentActions:-2', 'accordionContentActions:-2', 'rootContentActions:-2', 'headerPrimaryActions:1', 'narrowHeaderMenu:1'],
             showOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite'],
             requiredPermission: ['jcr:addChildNodes'],
             nodeTypes: ['jnt:page'],
@@ -38,14 +43,12 @@ export const registerCreateActions = registry => {
         registry.add('action', 'createNavMenuItemMenu', registry.get('action', 'menuAction'), {
             buttonIcon: <AddCircle/>,
             buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.newMenu',
-            targets: ['createMenuActions:-1', 'contentActions:-1', 'accordionContentActions:-1', 'rootContentActions:-1'],
             menuTarget: 'createNavMenuItemMenu',
             isMenuPreload: true
         });
 
         registry.addOrReplace('action', 'createNavMenuItem', createContentAction, {
             buttonIcon: <AddCircle/>,
-            targets: ['createNavMenuItemMenu'],
             showOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite'],
             requiredPermission: ['jcr:addChildNodes'],
             nodeTypes: ['jnt:navMenuText', 'jnt:nodeLink', 'jnt:externalLink'],
@@ -60,7 +63,14 @@ export const registerCreateActions = registry => {
         buttonIcon: <Save/>,
         color: 'accent',
         variant: 'outlined',
-        targets: ['content-editor/header/main-save-actions'],
         dataSelRole: 'createButton'
+    });
+
+    // Add targets to actions
+    Object.keys(actionTargets).forEach(key => {
+        registry.get('action', key).targets = actionTargets[key].map(t => {
+            const spl = t.split(':');
+            return {id: spl[0], priority: spl[1] ? spl[1] : 0};
+        });
     });
 };

@@ -171,7 +171,6 @@ export default function () {
 
     jContentRoutes(registry);
     jContentActions(registry);
-    console.log('register actions');
 
     fileuploadRedux(registry);
     previewRedux(registry);

@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
 import {NodeIcon} from '~/utils';
 
-export const Breadcrumbs = ({nodes, setCurrentElement, onSelect}) => {
+export const Breadcrumbs = ({currentNode, nodes, setCurrentElement, onSelect}) => {
     const {t} = useTranslation('jcontent');
     const {selection} = useSelector(state => ({
         selection: state.jcontent.selection
@@ -26,8 +26,8 @@ export const Breadcrumbs = ({nodes, setCurrentElement, onSelect}) => {
         return false;
     }, [onSelect, selection.length, setCurrentElement]);
 
-    const data = nodes.toReversed().map((n, index) => ({
-        label: n.name,
+    const data = nodes.concat(currentNode).map((n, index) => ({
+        label: n.path === currentNode.path ? t('label.contentManager.pageBuilder.breadcrumbs.currentItem') : n.name,
         value: n.path,
         image: <NodeIcon node={n} style={{marginLeft: 8 * index}}/>
     }));
@@ -44,6 +44,7 @@ export const Breadcrumbs = ({nodes, setCurrentElement, onSelect}) => {
 };
 
 Breadcrumbs.propTypes = {
+    currentNode: PropTypes.object,
     nodes: PropTypes.array,
     setCurrentElement: PropTypes.func,
     onSelect: PropTypes.func

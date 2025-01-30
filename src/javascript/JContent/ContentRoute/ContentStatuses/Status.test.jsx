@@ -10,7 +10,7 @@ describe('Status', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.locked');
-        expect(wrapper.props().color).toBe('warning');
+        expect(wrapper.props().color).toBe('default');
         expect(wrapper.props().icon).toStrictEqual(<Lock/>);
     });
 
@@ -28,7 +28,7 @@ describe('Status', () => {
 
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.modified');
-        expect(wrapper.props().color).toBe('accent');
+        expect(wrapper.props().color).toBe('warning');
         expect(wrapper.props().icon).toStrictEqual(<File/>);
     });
 

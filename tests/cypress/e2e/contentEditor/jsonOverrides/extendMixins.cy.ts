@@ -65,4 +65,21 @@ describe('Extend Mixins tests with CE', () => {
 
         contentEditor.cancel();
     });
+
+    it('Allows overriding prop UI metadata on inherited nodes', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/content');
+
+        let contentEditor = jcontent.createContent('cent:testPropOverridesA');
+        let field = contentEditor.getSmallTextField('jmix:testPropOverrides_testprop');
+        field.get()
+            .should('contain.text', 'Test Prop Overrides A')
+            .should('contain.text', 'Test Tooltip for Prop Overrides A');
+        contentEditor.cancel();
+
+        contentEditor = jcontent.createContent('cent:testPropOverridesB');
+        field = contentEditor.getSmallTextField('jmix:testPropOverrides_testprop');
+        field.get()
+            .should('contain.text', 'Test Prop Overrides B')
+            .should('contain.text', 'Test Tooltip for Prop Overrides B');
+    });
 });

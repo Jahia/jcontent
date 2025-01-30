@@ -33,7 +33,8 @@ describe('validate', () => {
                         name: 'fieldSet3',
                         dynamic: false,
                         fields: [
-                            buildField('field4', 'fieldSet3')
+                            buildField('field4', 'fieldSet3'),
+                            buildField('field5', 'fieldSet3')
                         ]
                     }
                 ]
@@ -394,6 +395,95 @@ describe('validate', () => {
             expect(validate(sections)(values)).toEqual({
                 field3: 'invalidDate',
                 field4: 'invalidDate'
+            });
+        });
+    });
+
+    describe('range', () => {
+        it('should trigger errors when field is out of range for LONG', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG',
+                valueConstraints: [
+                    {value: {string: '[10,100]'}}
+                ]
+            });
+            const values = {
+                field1: '9',
+                field2: '10',
+                field3: '50',
+                field4: '100',
+                field5: '101'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field1: 'invalidRange',
+                field5: 'invalidRange'
+            });
+        });
+
+        it('should trigger errors when field is out of range for LONG (boundaries not include)', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG',
+                valueConstraints: [
+                    {value: {string: '(10,100)'}}
+                ]
+            });
+            const values = {
+                field1: '9',
+                field2: '10',
+                field3: '50',
+                field4: '100',
+                field5: '101'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field1: 'invalidRange',
+                field2: 'invalidRange',
+                field4: 'invalidRange',
+                field5: 'invalidRange'
+            });
+        });
+        it('should trigger errors when field is out of range for DOUBLE', () => {
+            const {sections} = buildSections({
+                requiredType: 'DOUBLE',
+                valueConstraints: [
+                    {value: {string: '[1.5,4.6]'}}
+                ]
+            });
+            const values = {
+                field1: '1.49',
+                field2: '1.5',
+                field3: '3.999999',
+                field4: '4.6',
+                field5: '4.61'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field1: 'invalidRange',
+                field5: 'invalidRange'
+            });
+        });
+
+        it('should trigger errors when field is out of range for DECIMAL (boundaries not include)', () => {
+            const {sections} = buildSections({
+                requiredType: 'DOUBLE',
+                valueConstraints: [
+                    {value: {string: '(1.5,4.6)'}}
+                ]
+            });
+            const values = {
+                field1: '1.49',
+                field2: '1.5',
+                field3: '3.999999',
+                field4: '4.6',
+                field5: '4.61'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field1: 'invalidRange',
+                field2: 'invalidRange',
+                field4: 'invalidRange',
+                field5: 'invalidRange'
             });
         });
     });

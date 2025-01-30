@@ -70,6 +70,44 @@ const colorFieldValidation = (values, field) => {
     return undefined;
 };
 
+const rangeFieldValidation = (values, field) => {
+    const error = 'invalidRange';
+    const supportedTypes = ['LONG', 'DECIMAL', 'DOUBLE'];
+    if (!supportedTypes.includes(field.requiredType) || !values[field.name]) {
+        return;
+    }
+
+    const fieldValues = Array.isArray(values[field.name]) ? values[field.name] : [values[field.name]];
+    // If one value is invalid, error !
+    if (fieldValues.some(value => isNaN(value))) {
+        return error;
+    }
+
+    if (!field.valueConstraints || field.valueConstraints.length === 0) {
+        return;
+    }
+
+    return field.valueConstraints
+        .map(constraint => {
+            try {
+                const {lowerBoundary, disableLowerBoundary, upperBoundary, disableUpperBoundary} = extractRangeConstraints(constraint.value.string);
+
+                return fieldValues
+                    .every(fieldValue => {
+                        // Lower boundary Check
+                        const checkStr = `${fieldValue} >${disableLowerBoundary ? '' : '='} ${lowerBoundary} && ${fieldValue} <${disableUpperBoundary ? '' : '='} ${upperBoundary}`;
+                        // eslint-disable-next-line no-eval
+                        return eval(checkStr);
+                    });
+            } catch (e) {
+                // In case we cannot read the constraint
+                console.error(e);
+                return true;
+            }
+        })
+        .some(isConstraintRespected => isConstraintRespected === true) ? undefined : error;
+};
+
 const patternFieldValidation = (values, field) => {
     const error = 'invalidPattern';
 
@@ -83,7 +121,8 @@ const patternFieldValidation = (values, field) => {
         return;
     }
 
-    if (constraints && constraints.length > 0 && field.requiredType === 'STRING') {
+    const supportedTypes = ['URI', 'STRING'];
+    if (constraints && constraints.length > 0 && supportedTypes.includes(field.requiredType)) {
         const fieldValues = field.multiple ? (values[field.name] || []) : [values[field.name]];
         const constraintTestFn = (strictValidation) ?
             (constraint, value) => constraint === value :
@@ -162,6 +201,7 @@ export const validate = sections => {
                         requiredFieldValidation(values, field) ||
                         dateFieldValidation(values, field) ||
                         colorFieldValidation(values, field) ||
+                        rangeFieldValidation(values, field) ||
                         patternFieldValidation(values, field) ||
                         maxLengthFieldValidation(values, field) ||
                         systemNameValidation(values, field)

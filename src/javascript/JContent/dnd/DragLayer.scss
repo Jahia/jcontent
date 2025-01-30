@@ -18,6 +18,8 @@
     color: var(--color-gray_dark);
 
     border-radius: 2px;
+
+    outline: 2px solid var(--color-accent_light);
     background-color: var(--color-light);
     box-shadow: 2px 2px 20px 0 rgba(19, 28, 33, 0.2);
 }

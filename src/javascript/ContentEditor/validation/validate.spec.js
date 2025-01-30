@@ -33,8 +33,7 @@ describe('validate', () => {
                         name: 'fieldSet3',
                         dynamic: false,
                         fields: [
-                            buildField('field4', 'fieldSet3'),
-                            buildField('field5', 'fieldSet3')
+                            buildField('field4', 'fieldSet3')
                         ]
                     }
                 ]
@@ -410,14 +409,13 @@ describe('validate', () => {
             const values = {
                 field1: '9',
                 field2: '10',
-                field3: '50',
-                field4: '100',
-                field5: '101'
+                field3: '100',
+                field4: '101'
             };
 
             expect(validate(sections)(values)).toEqual({
                 field1: 'invalidRange',
-                field5: 'invalidRange'
+                field4: 'invalidRange'
             });
         });
 
@@ -432,15 +430,13 @@ describe('validate', () => {
                 field1: '9',
                 field2: '10',
                 field3: '50',
-                field4: '100',
-                field5: '101'
+                field4: '100'
             };
 
             expect(validate(sections)(values)).toEqual({
                 field1: 'invalidRange',
                 field2: 'invalidRange',
-                field4: 'invalidRange',
-                field5: 'invalidRange'
+                field4: 'invalidRange'
             });
         });
         it('should trigger errors when field is out of range for DOUBLE', () => {
@@ -453,14 +449,13 @@ describe('validate', () => {
             const values = {
                 field1: '1.49',
                 field2: '1.5',
-                field3: '3.999999',
-                field4: '4.6',
-                field5: '4.61'
+                field3: '4.6',
+                field4: '4.61'
             };
 
             expect(validate(sections)(values)).toEqual({
                 field1: 'invalidRange',
-                field5: 'invalidRange'
+                field4: 'invalidRange'
             });
         });
 
@@ -475,15 +470,13 @@ describe('validate', () => {
                 field1: '1.49',
                 field2: '1.5',
                 field3: '3.999999',
-                field4: '4.6',
-                field5: '4.61'
+                field4: '4.6'
             };
 
             expect(validate(sections)(values)).toEqual({
                 field1: 'invalidRange',
                 field2: 'invalidRange',
-                field4: 'invalidRange',
-                field5: 'invalidRange'
+                field4: 'invalidRange'
             });
         });
     });

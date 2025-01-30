@@ -94,10 +94,12 @@ const rangeFieldValidation = (values, field) => {
 
                 return fieldValues
                     .every(fieldValue => {
+                        const fieldValueAsNumber = Number(fieldValue);
                         // Lower boundary Check
-                        const checkStr = `${fieldValue} >${disableLowerBoundary ? '' : '='} ${lowerBoundary} && ${fieldValue} <${disableUpperBoundary ? '' : '='} ${upperBoundary}`;
-                        // eslint-disable-next-line no-eval
-                        return eval(checkStr);
+                        const lowerBoundaryOk = disableLowerBoundary ? fieldValueAsNumber > Number(lowerBoundary) : fieldValueAsNumber >= Number(lowerBoundary);
+                        // Upper boundary Check
+                        const upperBoundaryOk = disableUpperBoundary ? fieldValueAsNumber < Number(upperBoundary) : fieldValueAsNumber <= Number(upperBoundary);
+                        return lowerBoundaryOk && upperBoundaryOk;
                     });
             } catch (e) {
                 // In case we cannot read the constraint

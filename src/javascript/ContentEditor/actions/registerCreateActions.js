@@ -8,13 +8,6 @@ import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 export const registerCreateActions = registry => {
-    const actionTargets = {
-        createNavMenuItemMenu: ['createMenuActions:-1', 'contentActions:-1', 'accordionContentActions:1.1', 'rootContentActions:-1'],
-        createPage: ['createMenuActions:-2', 'contentActions:-2', 'accordionContentActions:1', 'rootContentActions:-2', 'headerPrimaryActions:1', 'narrowHeaderMenu:1'],
-        createButton: ['content-editor/header/main-save-actions'],
-        createNavMenuItem: ['createNavMenuItemMenu']
-    };
-
     registry.addOrReplace('action', 'createContent', createContentAction, {
         defaultIcon: <AddCircle/>,
         buttonLabel:
@@ -64,13 +57,5 @@ export const registerCreateActions = registry => {
         color: 'accent',
         variant: 'outlined',
         dataSelRole: 'createButton'
-    });
-
-    // Add targets to actions
-    Object.keys(actionTargets).forEach(key => {
-        registry.get('action', key).targets = actionTargets[key].map(t => {
-            const spl = t.split(':');
-            return {id: spl[0], priority: spl[1] ? spl[1] : 0};
-        });
     });
 };

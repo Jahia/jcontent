@@ -6,32 +6,9 @@ import {CloudUpload, Edit, MoreVert, Save} from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
-import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 
 export const registerEditActions = registry => {
-    const showPageBuilder = booleanValue(contextJsParameters.config.jcontent?.showPageBuilder);
-
-    const actionTargets = {
-        edit: showPageBuilder ?
-            ['contentActions:2', 'accordionContentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1.5', 'visibleContentItemActions:1', 'contentItemContextActions:1'] :
-            ['contentActions:2', 'accordionContentActions:2', 'narrowHeaderMenu:1.5', 'visibleContentItemActions:1', 'contentItemContextActions:1'],
-        editAdvanced: ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.6', 'browseControlBar:1', 'contentItemActions:1', 'contentItemContextActions:1'],
-        editSource: ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.1'],
-        editPage: showPageBuilder ?
-            ['contentActions:2', 'accordionContentActions:2', 'headerPrimaryActions:1.5', 'narrowHeaderMenu:1.5', 'visibleContentItemActions:1', 'contentItemContextActions:1'] :
-            ['contentActions:2', 'accordionContentActions:2', 'narrowHeaderMenu:1.5', 'visibleContentItemActions:1', 'contentItemContextActions:1'],
-        editPageAdvanced: ['contentActions:2.1', 'accordionContentActions:2.1', 'narrowHeaderMenu:1.6', 'browseControlBar:1', 'contentItemActions:1', 'contentItemContextActions:1'],
-        quickEdit: [],
-        submitSave: ['content-editor/header/main-save-actions'],
-        publishAction: ['content-editor/header/main-publish-actions:1'],
-        startWorkflowMainButton: ['content-editor/header/main-publish-actions:1'],
-        'content-editor/header/3dots': [],
-        'content-editor/field/3dots': [],
-        goToWorkInProgress: ['content-editor/header/3dots:1'],
-        copyLanguageAction: ['content-editor/header/3dots:2']
-    };
-
     // Edit action button in JContent; need separate actions for content and pages
     registry.add('action', 'edit', editContentAction, {
         buttonIcon: <Edit/>,
@@ -131,13 +108,5 @@ export const registerEditActions = registry => {
 
     registry.add('action', 'copyLanguageAction', copyLanguageAction, {
         buttonLabel: 'jcontent:label.contentEditor.edit.action.copyLanguage.name'
-    });
-
-    // Add targets to actions
-    Object.keys(actionTargets).forEach(key => {
-        registry.get('action', key).targets = actionTargets[key].map(t => {
-            const spl = t.split(':');
-            return {id: spl[0], priority: spl[1] ? spl[1] : 0};
-        });
     });
 };

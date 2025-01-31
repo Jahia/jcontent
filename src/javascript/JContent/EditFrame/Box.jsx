@@ -291,6 +291,9 @@ export const Box = React.memo(({
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             onClick={onClick}
+                            style={{
+                                '--backgroundColorSelected': backgroundColorSelected
+                            }}
                     >
                         <Breadcrumbs currentNode={node} nodes={breadcrumbs} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
                     </footer>}

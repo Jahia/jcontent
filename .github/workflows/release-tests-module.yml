@@ -18,6 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org'
       - name: Setting up github configuration
         shell: bash
         run: |
@@ -25,14 +26,10 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.email "jahia-ci@jahia.com"
           git config --global user.name "Jahia CI"
-      - name: Setting up NPM publish config/credentials in tests/
-        shell: bash
-        run: |
-          cd tests
-          echo "registry=https://registry.npmjs.org/" > .npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_PUBLISH_TOKEN }}" >> .npmrc
       - name: Build and publish jContent test module
         shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
         run: |
           cd tests
           npm get
@@ -44,14 +41,18 @@ jobs:
           echo; echo "Building tests module..."
           yarn build
 
+          echo; echo "Incrementing version for release.."
+          yarn version --prerelease --preid=tests
+          git push --follow-tags 
+
           if "${{ inputs.is_dry_run }}"; then
-            if ${{ github.ref }} == 'refs/heads/master'; then
+            if "${{ github.ref }}" == 'refs/heads/master'; then
               echo "Dry run should be executed in non-master branch"
             else
               echo "Executing npm publish in dry-run mode"
-              yarn publish-tests --dry-run
+              npm publish --provenance --access public --dry-run
             fi
           else 
             echo "Publishing jContent tests in npm..."
-            yarn publish-tests
+            npm publish --provenance --access public
           fi

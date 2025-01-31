@@ -15,6 +15,7 @@ Contains cypress page objects and utils for implementing jContent-related tests 
 Trigger `Publish tests module to NPM registry` workflow [here](https://github.com/Jahia/jcontent/actions/workflows/release-tests-module.ymlhttps:/). This will:
 
 - Increment current version and use this as the release version
+  - If publishing test module first time after release, the `SNAPSHOT` prerelease identifier will be automatically reset back to `tests.0`
 - Create a tag, then push version change commit and tag to the branch where workflow is initiated.
 - Publish module to [NPM registry](https://www.npmjs.com/package/@jahia/jcontent-cypress)
 

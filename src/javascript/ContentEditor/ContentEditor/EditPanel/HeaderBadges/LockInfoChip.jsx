@@ -7,14 +7,14 @@ export const getBadgeContent = (nodeData, t) => {
     const LOCK_TYPE_VALIDATION = 'validation';
     const LOCK_TYPE_DELETION = 'deletion';
 
-    let color = 'warning';
+    let color = 'default';
     let label = t('jcontent:label.contentEditor.edit.action.lock.unknown');
 
     if (nodeData?.lockInfo?.details && nodeData.lockInfo.details.length > 0) {
         let lockInfoDetails = nodeData.lockInfo.details.find(detail => detail.type === LOCK_TYPE_VALIDATION || detail.type === LOCK_TYPE_DELETION);
         if (lockInfoDetails) {
             label = t('jcontent:label.contentEditor.edit.action.lock.' + lockInfoDetails.type);
-            color = (lockInfoDetails.type === LOCK_TYPE_DELETION) ? 'danger' : 'warning';
+            color = (lockInfoDetails.type === LOCK_TYPE_DELETION) ? 'danger' : 'default';
         } else {
             lockInfoDetails = nodeData.lockInfo.details[0];
             if (lockInfoDetails && (lockInfoDetails.type === 'user' || lockInfoDetails.type === 'engine')) {

@@ -25,11 +25,12 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.email "jahia-ci@jahia.com"
           git config --global user.name "Jahia CI"
-      - name: Setting up NPM publish config/credentials
+      - name: Setting up NPM publish config/credentials in tests/
         shell: bash
         run: |
-          echo "registry=https://registry.npmjs.org/" > ./.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_PUBLISH_TOKEN }}" >> ./.npmrc
+          cd tests
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMJS_PUBLISH_TOKEN }}" >> .npmrc
       - name: Build and publish jContent test module
         shell: bash
         run: |
@@ -43,7 +44,6 @@ jobs:
           echo; echo "Building tests module..."
           yarn build
 
-          cat ~/.npmrc
           if "${{ inputs.is_dry_run }}"; then
             if ${{ github.ref }} == 'refs/heads/master'; then
               echo "Dry run should be executed in non-master branch"

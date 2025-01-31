@@ -140,13 +140,29 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
             event.preventDefault();
             event.stopPropagation();
+            const target = event.currentTarget;
+            const moduleElement = getModuleElement(currentDocument, target);
+            const path = moduleElement.getAttribute('path');
+
             if (isMultipleSelectionMode) {
+                // Previously clicked element is added to selection if not ancestor and "unclicked"
+                if (clickedElement && !isDescendant(path, clickedElement.path)) {
+                    const e = {
+                        currentTarget: clickedElement.element,
+                        target: clickedElement.element,
+                        preventDefault: () => {},
+                        stopPropagation: () => {}
+                    };
+                    onSelect(e);
+                }
+
                 setClickedElement(undefined);
+
                 onSelect(event);
             } else {
-                const target = event.currentTarget;
-                const moduleElement = getModuleElement(currentDocument, target);
-                const path = moduleElement.getAttribute('path');
+                if (selection.length > 0) {
+                    dispatch(cmClearSelection());
+                }
 
                 if (clickedElement && clickedElement.path === path) {
                     setClickedElement(undefined);

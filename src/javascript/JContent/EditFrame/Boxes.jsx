@@ -176,7 +176,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return false;
-    }, [onSelect, currentDocument, clickedElement, setClickedElement]);
+    }, [onSelect, currentDocument, clickedElement, setClickedElement, dispatch, selection]);
 
     const clearSelection = useCallback(event => {
         if (selection.length === 1 && !event.defaultPrevented) {

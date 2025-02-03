@@ -14,7 +14,7 @@ export const DropArea = ({dropTarget, isDropAllowed}) => {
              style={dropTarget.position}
         >
             <div className={clsx(styles.dropAreaHeader, 'flexRow_nowrap', 'alignCenter')}>
-                <DefaultBar isActionsHidden isStatusHidden node={dropTarget.node}/>
+                <DefaultBar isActionsHidden isStatusHidden node={dropTarget.node} dragProps={{isDropAllowed: true}}/>
             </div>
         </div>
     );

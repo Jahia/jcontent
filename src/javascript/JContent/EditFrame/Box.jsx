@@ -115,7 +115,7 @@ export const Box = React.memo(({
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
-    const [{dragging, isAnythingDragging}, drag] = useNodeDrag({dragSource: node});
+    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node});
 
     useEffect(() => {
         // Disable mouse events to prevent showing boxes when dragging
@@ -134,7 +134,7 @@ export const Box = React.memo(({
         };
     }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
 
-    element.dataset.hovered = isHovered;
+    element.dataset.hovered = isHovered && !isAnythingDragging;
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -204,7 +204,19 @@ export const Box = React.memo(({
 
     const type = element.getAttribute('type');
 
-    const {Bar, borderColorHovered, borderColorSelected, backgroundColorBase, backgroundColorHovered, backgroundColorSelected, isBarAlwaysDisplayed, isSticky, isActionsHidden: isActionsHiddenOverride, isStatusHidden, area} = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
+    const {
+        Bar,
+        borderColorHovered,
+        borderColorSelected,
+        backgroundColorBase,
+        backgroundColorHovered,
+        backgroundColorSelected,
+        isBarAlwaysDisplayed,
+        isSticky,
+        isActionsHidden: isActionsHiddenOverride,
+        isStatusHidden,
+        area
+    } = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
 
     isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
     if (!isHeaderDisplayed && !isHovered && !isSelected) {
@@ -229,6 +241,7 @@ export const Box = React.memo(({
         isSticky && styles.sticky,
         'flexRow_nowrap',
         'alignCenter',
+        dragging && styles.dragging,
         editStyles.enablePointerEvents,
         isClicked && styles.isClicked,
         isHeaderHighlighted && styles.isHighlighted
@@ -238,7 +251,7 @@ export const Box = React.memo(({
         <header ref={dragWithChecks}
                 className={headerStyles}
                 jahiatype="header" // eslint-disable-line react/no-unknown-property
-                data-hovered={isHovered}
+                data-hovered={isHovered && !isAnythingDragging}
                 data-clicked={isClicked}
                 data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
@@ -252,16 +265,17 @@ export const Box = React.memo(({
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
         >
-            {node &&
+            {node && !dragging &&
                 <Bar
                     isActionsHidden={(isActionsHidden || isActionsHiddenOverride) && !isClicked}
-                    isStatusHidden={isStatusHidden && !isClicked}
+                    isStatusHidden={(isStatusHidden && !isClicked)}
                     node={node}
                     language={language}
                     displayLanguage={displayLanguage}
                     width={currentOffset.width}
                     currentFrameRef={currentFrameRef}
                     element={element}
+                    dragProps={{isDraggable, isCanDrag}}
                     area={area}/>}
         </header>
     );
@@ -276,8 +290,8 @@ export const Box = React.memo(({
             <div className={clsx(
                 styles.box,
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
-                isHovered ? styles.boxHovered : '',
-                (isSelected || isClicked) ? styles.boxSelected : '')}
+                (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
+                (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
                  style={{
                      '--borderColorHovered': borderColorHovered,
                      '--borderColorSelected': borderColorSelected
@@ -287,7 +301,7 @@ export const Box = React.memo(({
 
                 {!isAnythingDragging && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}
-                            data-hovered={isHovered}
+                            data-hovered={isHovered && !isAnythingDragging}
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             onClick={onClick}

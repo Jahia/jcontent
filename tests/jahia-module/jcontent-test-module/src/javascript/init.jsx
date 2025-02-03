@@ -27,14 +27,14 @@ export default function () {
     registry.add('pageBuilderBoxConfig', 'defaultValueTest', {
         Bar: CustomBar,
         isBarAlwaysDisplayed: true,
-        borderColors: {hover: 'rgba(224, 24, 45)', selected: 'var(--color-purple)'},
+        borderColor: 'rgba(224, 24, 45)',
         targets: [{id: 'cent:defaultValueTest', priority: 0}]
     });
 
     registry.add('pageBuilderBoxConfig', 'withCustomBar', {
         Bar: CustomBar,
         isBarAlwaysDisplayed: true,
-        borderColors: {hover: 'rgba(224, 24, 45)', selected: 'var(--color-purple)'},
+        borderColor: 'rgba(224, 24, 45)',
         targets: [{id: 'cemix:withCustomBar', priority: 0}]
     });
 

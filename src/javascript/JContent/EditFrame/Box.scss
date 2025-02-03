@@ -32,7 +32,7 @@ $colorDragging: var(--color-white);
 .boxSelected {
     z-index: $indexSelected;
 
-    outline: 2px solid var(--borderColorSelected);
+    outline: 2px solid var(--borderColor);
     box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
 }
 
@@ -40,7 +40,7 @@ $colorDragging: var(--color-white);
 .boxHovered:not(.boxSelected) {
     z-index: $indexHovered;
 
-    outline: 2px dashed var(--borderColorHovered);
+    outline: 2px dashed var(--borderColor);
 }
 
 .withHeader {

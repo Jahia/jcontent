@@ -116,7 +116,6 @@ export const ContentRoute = () => {
         dispatch(setTableViewMode(viewMode));
     }
 
-    console.log(renderCheck);
     return (
         <>
             <MainLayout header={<ContentHeader/>}>

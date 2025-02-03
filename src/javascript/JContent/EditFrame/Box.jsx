@@ -51,6 +51,8 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
         backgroundColorBase,
         backgroundColorHovered,
         backgroundColorSelected,
+        isActionsHidden: pageBuilderBoxConfig?.isActionsHidden,
+        isStatusHidden: pageBuilderBoxConfig?.isStatusHidden,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
         isSticky: pageBuilderBoxConfig?.isSticky ?? true,
         isAbsolute: false

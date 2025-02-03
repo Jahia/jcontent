@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 import {useTranslation} from 'react-i18next';
-import {Button} from '@jahia/moonstone';
+import {Button, Typography} from '@jahia/moonstone';
 import styles from './Dialog.scss';
 import {useDispatch} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -15,7 +15,7 @@ const messageRegistry = {
     default: 'jcontent:label.contentManager.contentPath.dialog'
 };
 
-export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, parentPage, hasCancel = true}) => {
+export const NonDisplayableNodeDialog = ({error, node, isOpen, onClose, setPathAction, parentPage, hasCancel = true}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
@@ -53,6 +53,7 @@ export const NonDisplayableNodeDialog = ({node, isOpen, onClose, setPathAction, 
             <DialogContent className={styles.dialogContent}>
                 <DialogContentText>
                     {t(`${message}.body`)}
+                    {error && <Typography variant="caption">{error.message}</Typography>}
                 </DialogContentText>
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
@@ -70,6 +71,7 @@ NonDisplayableNodeDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
     setPathAction: PropTypes.func,
-    hasCancel: PropTypes.bool
+    hasCancel: PropTypes.bool,
+    error: PropTypes.object
 };
 

@@ -116,6 +116,7 @@ export const ContentRoute = () => {
         dispatch(setTableViewMode(viewMode));
     }
 
+    console.log(renderCheck);
     return (
         <>
             <MainLayout header={<ContentHeader/>}>
@@ -126,7 +127,7 @@ export const ContentRoute = () => {
                     </ErrorBoundary>
                 </LoaderSuspense>
             </MainLayout>
-            {renderCheck.error && <NonDisplayableNodeDialog hasCancel={false} {...dialogProps}/>}
+            {renderCheck.error && <NonDisplayableNodeDialog hasCancel={false} error={renderCheck.error} {...dialogProps}/>}
         </>
     );
 };

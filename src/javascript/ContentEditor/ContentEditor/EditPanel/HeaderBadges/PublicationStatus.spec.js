@@ -1,7 +1,7 @@
 import PublicationStatus from '../../../../JContent/ContentRoute/ContentStatuses/Status';
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {CloudCheck, File, FileContent, NoCloud, Warning} from '@jahia/moonstone';
+import {CloudCheck, Modified, FileContent, NoCloud, Warning} from '@jahia/moonstone';
 
 describe('PublicationStatus', () => {
     it('Should display not published chip', () => {
@@ -19,7 +19,7 @@ describe('PublicationStatus', () => {
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.modified');
         expect(wrapper.props().color).toBe('warning');
-        expect(wrapper.props().icon).toStrictEqual(<File/>);
+        expect(wrapper.props().icon).toStrictEqual(<Modified/>);
     });
 
     it('Should display published chip', () => {

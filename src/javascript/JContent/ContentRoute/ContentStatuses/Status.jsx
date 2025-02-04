@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Build, Chip, CloudCheck, Delete, File, FileContent, Lock, NoCloud, Warning} from '@jahia/moonstone';
+import {Build, Chip, CloudCheck, Delete, Modified, FileContent, Lock, NoCloud, Warning} from '@jahia/moonstone';
 
 export const config = {
     locked: {
@@ -14,7 +14,7 @@ export const config = {
     },
     modified: {
         color: 'warning',
-        icon: <File/>
+        icon: <Modified/>
     },
     notPublished: {
         color: 'default',

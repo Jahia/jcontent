@@ -24,8 +24,8 @@ const processCustomBoxConfigIfExists = (node, type) => {
 
     // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
     // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
-    let borderColorHovered = 'var(--color-accent_light)';
-    let borderColorSelected = 'var(--color-accent_light)';
+    let borderColorHovered = 'var(--color-accent_dark)';
+    let borderColorSelected = 'var(--color-accent_dark)';
     let backgroundColorBase = 'var(--color-gray_light_plain40)';
     let backgroundColorHovered = 'var(--color-gray_light)';
     let backgroundColorSelected = 'var(--color-accent_plain20)';
@@ -218,7 +218,7 @@ export const Box = React.memo(({
         area
     } = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
 
-    isHeaderDisplayed = isBarAlwaysDisplayed || isHeaderDisplayed;
+    isHeaderDisplayed = !isSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
     if (!isHeaderDisplayed && !isHovered && !isSelected) {
         return false;
     }
@@ -299,7 +299,7 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && (isHovered || isClicked) && breadcrumbs.length > 0 &&
+                {!isAnythingDragging && !isSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}
                             data-hovered={isHovered && !isAnythingDragging}
                             data-jahia-id={element.getAttribute('id')}

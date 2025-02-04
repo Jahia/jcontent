@@ -99,7 +99,7 @@ export const Box = React.memo(({
     onMouseOut,
     onClick,
     onSelect,
-    setCurrentElement,
+    setClickedElement,
     onSaved,
     rootElementRef,
     currentFrameRef,
@@ -151,7 +151,10 @@ export const Box = React.memo(({
         dropTarget: node,
         orderable: Boolean(parent),
         entries,
-        onSaved,
+        onSaved: () => {
+            onSaved();
+            setClickedElement(undefined);
+        },
         pos: {before: element.dataset.prevPos, after: element.dataset.nextPos}
     });
 
@@ -306,7 +309,7 @@ export const Box = React.memo(({
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             onClick={onClick}
                     >
-                        <Breadcrumbs currentNode={node} nodes={breadcrumbs} setCurrentElement={setCurrentElement} onSelect={onSelect}/>
+                        <Breadcrumbs currentNode={node} nodes={breadcrumbs} setClickedElement={setClickedElement} onSelect={onSelect}/>
                     </footer>}
             </div>
         </div>
@@ -334,7 +337,7 @@ Box.propTypes = {
 
     onMouseOut: PropTypes.func,
 
-    setCurrentElement: PropTypes.func,
+    setClickedElement: PropTypes.func,
 
     onSelect: PropTypes.func,
 

@@ -337,6 +337,11 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         [n.path]: n
     }), {}), [data?.jcr]);
 
+    // Update clickedElement if it doesn't exist anymore
+    if (clickedElement && data?.jcr.nodesByPath && !nodes[clickedElement?.path]) {
+        setClickedElement(undefined);
+    }
+
     const getBreadcrumbsForPath = _path => {
         const breadcrumbs = [];
         const node = nodes[_path];
@@ -477,7 +482,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
-                         setCurrentElement={setClickedElement}
+                         setClickedElement={setClickedElement}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onSelect={onSelect}

@@ -456,6 +456,10 @@ export const jContentActions = registry => {
         isSeparator: true
     });
 
+    registry.add('action', 'contentActionsSeparator3', {
+        isSeparator: true
+    });
+
     registry.add('action', 'clearClipboard', {
         buttonIcon: <ClearPaste/>,
         buttonLabel: 'jcontent:label.contentManager.copyPaste.clear',

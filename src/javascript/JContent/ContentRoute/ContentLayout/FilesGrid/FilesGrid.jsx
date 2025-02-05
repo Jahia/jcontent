@@ -155,7 +155,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   index={index}
                                   node={node}
                                   setPath={setPath}
-                                  contextualMenuAction="contentMenu"
+                                  contextualMenuAction="contentItemActionsMenu"
                                   tableConfig={tableConfig}
                                   onClick={e => {
                                       if (allowDoubleClickNavigation(node.primaryNodeType.name)) {

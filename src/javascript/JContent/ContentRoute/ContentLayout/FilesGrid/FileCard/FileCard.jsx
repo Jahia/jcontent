@@ -125,7 +125,7 @@ export const FileCard = ({
         >
             {contextualMenuAction && (<ContextualMenu
                     setOpenRef={contextualMenu}
-                    actionKey={selection.length === 0 ? 'contentMenu' : (selection.indexOf(node.path) === -1 ? 'notSelectedContentMenu' : 'selectedContentMenu')}
+                    actionKey={selection.length === 0 ? 'contentItemContextActionsMenu' : (selection.indexOf(node.path) === -1 ? 'notSelectedContentMenu' : 'selectedContentMenu')}
                     currentPath={node.path}
                     path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
                     paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
@@ -137,7 +137,7 @@ export const FileCard = ({
             <div className={styles.infoContainer}>
                 <div className={styles.nameAndActions}>
                     <FileName node={node}/>
-                    {contextualMenuAction && <Actions node={node} className={styles.actions} action={contextualMenuAction}/>}
+                    {contextualMenuAction && selection.length === 0 && <Actions node={node} className={styles.actions} action={contextualMenuAction}/>}
                 </div>
                 <div className={styles.fileInfo}>
                     <ContentStatuses hasLabel={false}

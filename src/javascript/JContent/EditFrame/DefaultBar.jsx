@@ -99,7 +99,7 @@ export const DefaultBar = ({node, language, displayLanguage, width, currentFrame
                     />
 
                     <DisplayAction
-                        actionKey="contentMenu"
+                        actionKey="contentItemActionsMenu"
                         path={node.path}
                         menuFilter={value => !includes(['edit'], value.key)}
                         render={WrappedButtonRendererNoLabel}

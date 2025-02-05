@@ -1,4 +1,3 @@
-import {booleanValue} from './JContent/JContent.utils';
 import {registry} from '@jahia/ui-extender';
 
 /**
@@ -32,24 +31,22 @@ const assignTargetsForActions = (targetActions, registry) => {
     });
 };
 
-const showPageBuilder = booleanValue(contextJsParameters.config.jcontent?.showPageBuilder);
-
 const actionTargetAssignments = {
     contentActions: ['createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'createContent', 'replaceFile', 'locate', 'preview', 'createContentFolder', 'rename', 'edit', 'editPage', 'zip', 'editAdvanced', 'editSource', 'editPageAdvanced', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'createFolder', 'downloadFile', 'copy', 'copyPageMenu', 'cut', 'paste', 'pasteReference', 'fileUpload', 'publishDeletion', 'delete', 'deletePermanently', 'undelete', 'exportPage', 'export', 'downloadAsZip', 'import', 'lock', 'unlock', 'clearAllLocks', 'publishMenu', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2', 'subContents'],
     createMenuActions: ['createPage', 'createNavMenuItemMenu', 'createContentFolder', 'createFolder', 'import', 'fileUpload'],
-    headerPrimaryActions: showPageBuilder ? ['createPage', 'createContentFolder', 'createFolder', 'createContent', 'edit', 'editPage', 'fileUpload', 'import', 'paste', 'pasteReference', 'clearClipboard', 'refresh', 'separator'] : ['createPage', 'createContentFolder', 'createFolder', 'createContent', 'fileUpload', 'import', 'paste', 'pasteReference', 'clearClipboard', 'refresh', 'separator'],
+    headerPrimaryActions: ['createPage', 'createContentFolder', 'createFolder', 'createContent', 'edit', 'editPage', 'fileUpload', 'import', 'paste', 'pasteReference', 'clearClipboard', 'refresh', 'separator'],
     narrowHeaderMenu: ['actionsLabel', 'createPage', 'editSource', 'edit', 'editPage', 'editAdvanced', 'editPageAdvanced', 'createContentFolder', 'fileUpload', 'createFolder', 'paste', 'import', 'refresh', 'contentActionsSeparator2', 'replaceFile', 'locate', 'moreActionsLabel', 'rename', 'delete', 'deletePermanently', 'undelete', 'zip', 'unzip', 'openInPageBuilder', 'editImage', 'exportPage', 'export', 'downloadFile', 'publishDeletion', 'lock', 'unlock', 'clearAllLocks', 'downloadAsZip', 'clearClipboard'],
-    accordionContentActions: ['createFolder', 'createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'edit', 'editPage', 'editAdvanced', 'editSource', 'editPageAdvanced', 'lock', 'publishMenu', 'publishDeletion', 'copy', 'copyPageMenu', 'cut', 'paste', 'pasteReference', 'delete', 'deletePermanently', 'undelete'],
-    '--accordionContentActions': ['replaceFile', 'locate', 'zip', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'downloadFile', 'fileUpload', 'exportPage', 'export', 'downloadAsZip', 'import', 'unlock', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2'],
+    accordionContentActions: ['createFolder', 'createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'edit', 'editPage', 'editAdvanced', 'editSource', 'editPageAdvanced', 'lock', 'publishMenu', 'contentActionsSeparator2', 'publishDeletion', 'copy', 'copyPageMenu', 'cut', 'paste', 'pasteReference', 'delete', 'deletePermanently', 'undelete', 'contentActionsSeparator3'],
     selectedContentActions: ['selectionAction', 'downloadAsZip', 'zip', 'publishMenu', 'export', 'copy', 'copyPageMenu', 'cut', 'publishDeletion', 'delete', 'deletePermanently', 'undelete'],
-    contentItemActions: ['editAdvanced', 'editPageAdvanced', 'lock', 'unlock', 'publishMenu', 'copy', 'cut', 'paste', 'pasteReference', 'delete', 'deletePermanently', 'undelete', 'export', 'import', 'openInRepositoryExplorer'],
-    contentItemContextActions: ['edit', 'editAdvanced', 'editPage', 'editPageAdvanced', 'lock', 'unlock', 'publishMenu', 'copy', 'cut', 'paste', 'pasteReference', 'delete', 'deletePermanently', 'undelete', 'export', 'import', 'openInRepositoryExplorer'],
+    contentItemActions: ['rename', 'editAdvanced', 'editPageAdvanced', 'editImage', 'replaceFile', 'downloadFile', 'downloadAsZip', 'lock', 'unlock', 'publishMenu', 'contentActionsSeparator1', 'copy', 'cut', 'paste', 'pasteReference', 'delete', 'deletePermanently', 'undelete', 'contentActionsSeparator2', 'export', 'import', 'openInRepositoryExplorer', 'contentActionsSeparator3'],
+    contentItemContextActions: ['edit', 'editAdvanced', 'editPage', 'editPageAdvanced', 'editImage', 'replaceFile', 'downloadFile', 'downloadAsZip', 'lock', 'unlock', 'publishMenu', 'contentActionsSeparator1', 'copy', 'cut', 'paste', 'pasteReference', 'delete', 'deletePermanently', 'undelete', 'contentActionsSeparator2', 'export', 'import', 'openInRepositoryExplorer', 'contentActionsSeparator3'],
+    browseControlBar: ['rename', 'editAdvanced', 'editPageAdvanced', 'editImage', 'replaceFile', 'downloadFile', 'downloadAsZip', 'exportPage', 'export', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'openInRepositoryExplorer', 'contentActionsSeparator3'],
+    '--accordionContentActions': ['replaceFile', 'locate', 'zip', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'downloadFile', 'fileUpload', 'exportPage', 'export', 'downloadAsZip', 'import', 'unlock', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2'],
     publishMenu: ['publish', 'publishInAllLanguages', 'publishAll', 'publishAllInAllLanguages', 'unpublish', 'unpublishInAllLanguages'],
-    narrowHeaderSelectionMenu: ['actionsLabel', 'zip', 'downloadAsZip', 'copy', 'copyPageMenu', 'cut', 'delete', 'deletePermanently', 'undelete', 'import', 'publicationActionsLabel', 'publish', 'publishInAllLanguages', 'publishAll', 'publishAllInAllLanguages', 'publishDeletion', 'unpublish', 'unpublishInAllLanguages'],
+    narrowHeaderSelectionMenu: ['actionsLabel', 'zip', 'downloadAsZip', 'contentActionsSeparator1', 'copy', 'copyPageMenu', 'cut', 'delete', 'deletePermanently', 'undelete', 'contentActionsSeparator2', 'import', 'publicationActionsLabel', 'publish', 'publishInAllLanguages', 'publishAll', 'publishAllInAllLanguages', 'publishDeletion', 'unpublish', 'unpublishInAllLanguages'],
     copyPageMenu: ['copyPageOnly', 'copyPageWithSubPages'],
     rootContentActions: ['createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'paste'],
     visibleContentItemActions: ['edit', 'editPage', 'lock', 'unlock'],
-    browseControlBar: ['editAdvanced', 'editPageAdvanced', 'import', 'exportPage', 'export', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'openInRepositoryExplorer'],
     openInPreviewMenu: ['customizedPreview', 'compareStagingToLive'],
     notSelectedContentMenu: ['selectionAction'],
     'content-editor/header/main-save-actions': ['createButton', 'submitSave'],

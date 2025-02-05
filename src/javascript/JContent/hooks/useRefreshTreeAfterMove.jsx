@@ -41,6 +41,6 @@ export const useRefreshTreeAfterMove = () => {
             }
         });
 
-        triggerRefetchAll();
+        setTimeout(triggerRefetchAll, 0);
     };
 };

@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
 import {NodeIcon} from '~/utils';
 
-export const Breadcrumbs = ({currentNode, nodes, setCurrentElement, onSelect}) => {
+export const Breadcrumbs = ({currentNode, nodes, setClickedElement, onSelect}) => {
     const {t} = useTranslation('jcontent');
     const {selection} = useSelector(state => ({
         selection: state.jcontent.selection
@@ -16,7 +16,7 @@ export const Breadcrumbs = ({currentNode, nodes, setCurrentElement, onSelect}) =
         event.stopPropagation();
         const element = event.target.ownerDocument.querySelector(`[jahiatype="module"][path="${path}"]`);
         if (element) {
-            setCurrentElement({element, path, breadcrumb: true});
+            setClickedElement({element, path, breadcrumb: true});
         }
 
         if (selection.length > 0) {
@@ -24,7 +24,7 @@ export const Breadcrumbs = ({currentNode, nodes, setCurrentElement, onSelect}) =
         }
 
         return false;
-    }, [onSelect, selection.length, setCurrentElement]);
+    }, [onSelect, selection.length, setClickedElement]);
 
     const data = nodes.concat(currentNode).map((n, index) => ({
         label: n.path === currentNode.path ? t('label.contentManager.pageBuilder.breadcrumbs.currentItem') : n.name,
@@ -46,6 +46,6 @@ export const Breadcrumbs = ({currentNode, nodes, setCurrentElement, onSelect}) =
 Breadcrumbs.propTypes = {
     currentNode: PropTypes.object,
     nodes: PropTypes.array,
-    setCurrentElement: PropTypes.func,
+    setClickedElement: PropTypes.func,
     onSelect: PropTypes.func
 };

@@ -9,7 +9,6 @@ import {ellipsizeText, getName, isDescendantOrSelf} from '~/JContent/JContent.ut
 import {useNodeTypeCheck} from '~/JContent';
 import {useConnector} from './useConnector';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
-import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useSelector} from 'react-redux';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
@@ -170,7 +169,6 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
 
                 if (onSaved) {
                     onSaved();
-                    setTimeout(triggerRefetchAll, 1000);
                 } else {
                     const moveResults = data.jcr.mutateNodes.map(n => n.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});
                     refreshTree(destParent.path, nodes, moveResults);

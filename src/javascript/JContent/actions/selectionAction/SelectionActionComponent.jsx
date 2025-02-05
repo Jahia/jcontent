@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Add} from '@jahia/moonstone';
 import {cmAddSelection} from '../../redux/selection.redux';
+import {isDescendant} from '../../JContent.utils';
 
 export const SelectionActionComponent = ({render: Render, ...others}) => {
     const dispatch = useDispatch();
@@ -25,11 +26,13 @@ export const SelectionActionComponent = ({render: Render, ...others}) => {
         isTitle = true;
     }
 
+    const isVisible = !selection.some(s => isDescendant(others.currentPath, s));
+
     return (
         <Render
             {...others}
-            isVisible
             enabled
+            isVisible={isVisible}
             isTitle={isTitle}
             buttonIcon={buttonIcon}
             buttonLabel={buttonLabel}

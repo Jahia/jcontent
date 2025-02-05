@@ -80,7 +80,7 @@ $colorDragging: var(--color-white);
     width: 100%;
     height: $barHeight;
 
-    background-color: var(--color-accent_plain20);
+    background-color: var(--backgroundColorSelected);
 
     pointer-events: all;
 }

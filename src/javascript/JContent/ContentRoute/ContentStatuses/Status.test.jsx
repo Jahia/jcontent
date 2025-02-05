@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {Delete, File, Lock, NoCloud, Warning, Build, CloudCheck} from '@jahia/moonstone';
+import {Delete, Modified, Lock, NoCloud, Warning, Build, CloudCheck} from '@jahia/moonstone';
 
 import Status from './Status';
 
@@ -29,7 +29,7 @@ describe('Status', () => {
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.modified');
         expect(wrapper.props().color).toBe('warning');
-        expect(wrapper.props().icon).toStrictEqual(<File/>);
+        expect(wrapper.props().icon).toStrictEqual(<Modified/>);
     });
 
     it('should be \'Not published\'', () => {

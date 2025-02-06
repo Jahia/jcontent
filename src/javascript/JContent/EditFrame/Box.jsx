@@ -17,15 +17,15 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
     }
 };
 
-const processCustomBoxConfigIfExists = (node, type) => {
+const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
     const pageBuilderBoxConfig = findAvailableBoxConfig(node);
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
     // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
     // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
-    let borderColorHovered = 'var(--color-accent_dark)';
-    let borderColorSelected = 'var(--color-accent_dark)';
+    let borderColorHovered = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
+    let borderColorSelected = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
     let backgroundColorBase = 'var(--color-gray_light_plain40)';
     let backgroundColorHovered = 'var(--color-gray_light)';
     let backgroundColorSelected = 'var(--color-accent_plain20)';
@@ -108,6 +108,7 @@ export const Box = React.memo(({
     isHovered,
     isClicked,
     isSelected,
+    isSomethingSelected,
     isActionsHidden,
     onDoubleClick,
     setDraggedOverlayPosition,
@@ -219,9 +220,9 @@ export const Box = React.memo(({
         isActionsHidden: isActionsHiddenOverride,
         isStatusHidden,
         area
-    } = useMemo(() => processCustomBoxConfigIfExists(node, type), [node, type]);
+    } = useMemo(() => processCustomBoxConfigIfExists(node, type, isSomethingSelected), [node, type, isSomethingSelected]);
 
-    isHeaderDisplayed = !isSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
+    isHeaderDisplayed = !isSomethingSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
     if (!isHeaderDisplayed && !isHovered && !isSelected) {
         return false;
     }
@@ -302,7 +303,7 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
 
-                {!isAnythingDragging && !isSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
+                {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}
                             data-hovered={isHovered && !isAnythingDragging}
                             data-jahia-id={element.getAttribute('id')}
@@ -356,6 +357,8 @@ Box.propTypes = {
     isClicked: PropTypes.bool,
 
     isSelected: PropTypes.bool,
+
+    isSomethingSelected: PropTypes.bool,
 
     isActionsHidden: PropTypes.bool,
 

@@ -26,9 +26,9 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
     const config = {
         Bar,
         borderColor: pageBuilderBoxConfig?.borderColor || defaultBorderColor,
-        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors.base || 'var(--color-gray_light_plain40)',
-        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors.hover || 'var(--color-gray_light)',
-        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors.selected || 'var(--color-accent_plain20)',
+        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors?.base || 'var(--color-gray_light_plain40)',
+        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors?.hover || 'var(--color-gray_light)',
+        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors?.selected || 'var(--color-accent_plain20)',
         isActionsHidden: pageBuilderBoxConfig?.isActionsHidden,
         isStatusHidden: pageBuilderBoxConfig?.isStatusHidden,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,

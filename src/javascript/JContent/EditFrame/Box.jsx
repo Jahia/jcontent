@@ -17,15 +17,15 @@ const reposition = function (element, currentOffset, setCurrentOffset, isHeaderD
     }
 };
 
-const processCustomBoxConfigIfExists = (node, type, isSelected) => {
+const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
     const pageBuilderBoxConfig = findAvailableBoxConfig(node);
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
     // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
     // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
-    let borderColorHovered = isSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
-    let borderColorSelected = isSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
+    let borderColorHovered = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
+    let borderColorSelected = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
     let backgroundColorBase = 'var(--color-gray_light_plain40)';
     let backgroundColorHovered = 'var(--color-gray_light)';
     let backgroundColorSelected = 'var(--color-accent_plain20)';

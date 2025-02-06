@@ -191,7 +191,13 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}
-             className={clsx(styles.root, editStyles.enablePointerEvents, sizers, (isInsertionPoint && !isEmpty) && styles.insertionPoint)}
+             className={clsx(
+                 styles.root,
+                 editStyles.enablePointerEvents,
+                 sizers,
+                 (isInsertionPoint) && styles.insertionPoint,
+                 isEmpty ? styles.isEmpty : styles.isNotEmpty
+             )}
              style={{...currentOffset, ...insertionStyle}}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}

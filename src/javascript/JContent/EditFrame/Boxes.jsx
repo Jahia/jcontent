@@ -461,6 +461,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          isClicked={clickedElement && node.path === clickedElement.path}
                          isHovered={element === el}
                          isSelected={selection.includes(node.path)}
+                         isSomethingSelected={selection.length > 0}
                          isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}

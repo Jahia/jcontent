@@ -3,15 +3,14 @@ import {Create} from './Create';
 import PropTypes from 'prop-types';
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
-    const originalInsertionButtons = clickedElement ? [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
-        element: e,
-        parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
-    })) : [];
-
-    // If current clicked element does not have any create content buttons [type="placeholder"], then we do not need to show insertion points
-    if (originalInsertionButtons.length === 0) {
+    if (!clickedElement) {
         return null;
     }
+
+    const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
+        element: e,
+        parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
+    }));
 
     // Get all children of the clicked element that are create content buttons [type="placeholder"] and add insertion points for each
     const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)].map(e => ({
@@ -29,6 +28,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                         isInsertionPoint
                         isVertical={isVertical}
                         node={parentNode}
+                        nodes={nodes}
                         element={element}
                         addIntervalCallback={addIntervalCallback}
                         onMouseOver={() => {}}
@@ -40,8 +40,8 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                 // Insertion point for original placeholder, this is necessary since default placeholders are muted once something is clicked
                 <Create key={`insertion-point-${element.getAttribute('id')}`}
                         isInsertionPoint
-                        isVertical={false}
                         node={parentNode}
+                        nodes={nodes}
                         element={element}
                         addIntervalCallback={addIntervalCallback}
                         onMouseOver={() => {}}

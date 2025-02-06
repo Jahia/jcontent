@@ -15,7 +15,7 @@
     justify-content: center;
     align-items: center;
 
-    &.insertionPoint:has(*)::before {
+    &.insertionPoint.isNotEmpty::before {
         content: "";
 
         position: absolute;
@@ -31,6 +31,10 @@
         margin: auto;
 
         background: var(--color-gray20);
+    }
+
+    &.isEmpty {
+        background: var(--color-gray_light_plain20);
     }
 
     & > button {
@@ -49,7 +53,7 @@
         }
     }
 
-    &.insertionPoint.insertionPoint.insertionPoint > button {
+    &.insertionPoint.insertionPoint.insertionPoint.isNotEmpty > button {
         width: var(--spacing-big);
 
         border-radius: var(--spacing-nano);

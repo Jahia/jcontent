@@ -399,6 +399,40 @@ describe('validate', () => {
     });
 
     describe('range', () => {
+        it('should not produce errors on empty (undefined) values as they are ignored during save', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG'
+            });
+            const values = {
+                field1: undefined,
+                field2: [undefined],
+                field3: [undefined, 20, 55, undefined],
+            };
+
+            // No errors when field is not defined
+            expect(validate(sections)(values)).toEqual({});
+        });
+
+        it('should trigger errors when field is not a number', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG',
+            });
+            const values = {
+                field1: '3!',
+                field2: 'two',
+                field3: 'undefined',
+                field4: '3235'
+            };
+
+            const result = validate(sections)(values);
+            expect(result).toEqual({
+                field1: 'invalidNumber',
+                field2: 'invalidNumber',
+                field3: 'invalidNumber',
+                field4: undefined
+            });
+        });
+
         it('should trigger errors when field is out of range for LONG', () => {
             const {sections} = buildSections({
                 requiredType: 'LONG',

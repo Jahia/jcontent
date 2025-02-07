@@ -406,7 +406,7 @@ describe('validate', () => {
             const values = {
                 field1: undefined,
                 field2: [undefined],
-                field3: [undefined, 20, 55, undefined],
+                field3: [undefined, 20, 55, undefined]
             };
 
             // No errors when field is not defined
@@ -415,7 +415,7 @@ describe('validate', () => {
 
         it('should trigger errors when field is not a number', () => {
             const {sections} = buildSections({
-                requiredType: 'LONG',
+                requiredType: 'LONG'
             });
             const values = {
                 field1: '3!',

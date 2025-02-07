@@ -22,35 +22,15 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
-    // TODO: As we use the same color for hover and selection we can simplify this, but jExperience still use it.
-    // borderColor, backgroundColor, backgroundColorHovered, backgroundColorSelected
-    let borderColorHovered = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
-    let borderColorSelected = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
-    let backgroundColorBase = 'var(--color-gray_light_plain40)';
-    let backgroundColorHovered = 'var(--color-gray_light)';
-    let backgroundColorSelected = 'var(--color-accent_plain20)';
-    if (pageBuilderBoxConfig) {
-        const borderColors = pageBuilderBoxConfig.borderColors;
-        const backgroundColors = pageBuilderBoxConfig.backgroundColors;
-        if (borderColors) {
-            borderColorHovered = borderColors.hover ? borderColors.hover : borderColorHovered;
-            borderColorSelected = borderColors.selected ? borderColors.selected : borderColorSelected;
-        }
-
-        if (backgroundColors) {
-            backgroundColorBase = backgroundColors.base;
-            backgroundColorHovered = backgroundColors.hover;
-            backgroundColorSelected = backgroundColors.selected;
-        }
-    }
-
+    const defaultBorderColor = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
     const config = {
         Bar,
-        borderColorHovered,
-        borderColorSelected,
-        backgroundColorBase,
-        backgroundColorHovered,
-        backgroundColorSelected,
+        borderColor: pageBuilderBoxConfig?.borderColor || defaultBorderColor,
+        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors?.base || 'var(--color-gray_light_plain40)',
+        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors?.hover || 'var(--color-gray_light)',
+        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors?.selected || 'var(--color-accent_plain20)',
+        isActionsHidden: pageBuilderBoxConfig?.isActionsHidden,
+        isStatusHidden: pageBuilderBoxConfig?.isStatusHidden,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
         isSticky: pageBuilderBoxConfig?.isSticky ?? true,
         isAbsolute: false
@@ -210,8 +190,7 @@ export const Box = React.memo(({
 
     const {
         Bar,
-        borderColorHovered,
-        borderColorSelected,
+        borderColor,
         backgroundColorBase,
         backgroundColorHovered,
         backgroundColorSelected,
@@ -297,8 +276,7 @@ export const Box = React.memo(({
                 (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
                 (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
                  style={{
-                     '--borderColorHovered': borderColorHovered,
-                     '--borderColorSelected': borderColorSelected
+                     '--borderColor': borderColor
                  }}
             >
                 {isHeaderDisplayed && Header}
@@ -308,6 +286,9 @@ export const Box = React.memo(({
                             data-hovered={isHovered && !isAnythingDragging}
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
+                            style={{
+                                '--backgroundColorSelected': backgroundColorSelected
+                            }}
                             onClick={onClick}
                     >
                         <Breadcrumbs currentNode={node} nodes={breadcrumbs} setClickedElement={setClickedElement} onSelect={onSelect}/>

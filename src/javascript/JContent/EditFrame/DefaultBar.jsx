@@ -39,11 +39,11 @@ export const LabelBar = ({node, area, dragProps}) => {
     if (area) {
         return (
             <>
-                <Typography isNowrap weight="bold" variant="caption">{title}</Typography>
                 <Chip variant="default"
                       color="accent"
                       label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
                       icon={area.isList ? toIconComponent(`${window.contextJsParameters.contextPath}/modules/assets/icons/jnt_contentList.png`) : <Area/>}/>
+                <Typography isNowrap weight="bold" variant="caption">{title}</Typography>
             </>
         );
     }

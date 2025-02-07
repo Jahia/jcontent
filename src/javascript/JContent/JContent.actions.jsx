@@ -192,7 +192,7 @@ export const jContentActions = registry => {
     registry.add('action', 'browseControlBarMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
-        menuTarget: 'browseControlBar',
+        menuTarget: ['browseControlBar', 'contentActions'],
         menuItemProps: {
             isShowIcons: true
         }
@@ -200,7 +200,7 @@ export const jContentActions = registry => {
     registry.add('action', 'contentItemActionsMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
-        menuTarget: 'contentItemActions',
+        menuTarget: ['contentItemActions', 'contentActions'],
         menuItemProps: {
             isShowIcons: true
         }
@@ -208,7 +208,7 @@ export const jContentActions = registry => {
     registry.add('action', 'contentItemContextActionsMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
-        menuTarget: 'contentItemContextActions',
+        menuTarget: ['contentItemContextActions', 'contentActions'],
         menuItemProps: {
             isShowIcons: true
         }
@@ -216,7 +216,7 @@ export const jContentActions = registry => {
     registry.add('action', 'accordionContentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
-        menuTarget: 'accordionContentActions',
+        menuTarget: ['accordionContentActions', 'contentActions'],
         menuItemProps: {
             isShowIcons: true
         }

@@ -5,6 +5,31 @@ import React from 'react';
 import {ellipsizeText} from '~/JContent/JContent.utils';
 import {Tooltip} from '@material-ui/core';
 
+const useLabel = labelProps => {
+    const {
+        buttonLabelNamespace,
+        labelStyle,
+        buttonLabel,
+        buttonLabelShort,
+        buttonLabelParams,
+        ellipsis,
+        showTooltip
+    } = labelProps;
+
+    const {t} = useTranslation(buttonLabelNamespace);
+
+    let label = (labelStyle === 'short' && buttonLabelShort) || buttonLabel;
+    label = t(label, buttonLabelParams);
+    if (ellipsis) {
+        label = ellipsizeText(label, ellipsis);
+    }
+
+    return {
+        label: (labelStyle === 'none') ? null : label,
+        tooltipLabel: showTooltip ? label : null
+    };
+};
+
 export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultButtonProps, defaultTooltipProps} = {}) => {
     const ButtonRenderer = props => {
         const {
@@ -23,20 +48,16 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
             buttonProps,
             tooltipProps
         } = props;
-        const {t} = useTranslation(buttonLabelNamespace);
 
-        let label = buttonLabel;
-        if (labelStyle === 'none') {
-            label = null;
-        } else if (labelStyle === 'short' && buttonLabelShort) {
-            label = buttonLabelShort;
-        }
-
-        label = t(label, buttonLabelParams);
-
-        if (ellipsis) {
-            label = ellipsizeText(label, ellipsis);
-        }
+        const {label, tooltipLabel} = useLabel({
+            buttonLabelNamespace,
+            labelStyle,
+            buttonLabel,
+            buttonLabelShort,
+            buttonLabelParams,
+            ellipsis,
+            showTooltip
+        });
 
         if (isVisible === false) {
             return false;
@@ -62,15 +83,11 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
             />
         );
 
-        if (showTooltip) {
-            return (
-                <Tooltip title={label} {...defaultTooltipProps} {...tooltipProps}>
-                    {button}
-                </Tooltip>
-            );
-        }
-
-        return button;
+        return (showTooltip) ? (
+            <Tooltip title={tooltipLabel} {...defaultTooltipProps} {...tooltipProps}>
+                {button}
+            </Tooltip>
+        ) : button;
     };
 
     ButtonRenderer.propTypes = {

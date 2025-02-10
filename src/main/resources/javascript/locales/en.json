@@ -722,10 +722,12 @@
         "errors": {
           "invalidDate": "Please provide a valid date value",
           "invalidColor": "Please provide a valid color code",
-          "invalidPattern": "The value does not match the constraints defined in the content type definitions file.",
+          "invalidPattern": "The value does not match the constraints defined in the content type definitions file",
+          "invalidNumber": "Please provide a valid number",
+          "invalidRange": "The value does not match the constraints defined in the content type definitions file",
           "invalidSystemName": "System name cannot consist of special characters such as '/:*?\"<>|%'",
           "required": "",
-          "alreadyExist": "An item with the same system name already exists, please choose another one.",
+          "alreadyExist": "An item with the same system name already exists, please choose another one",
           "maxLength": "{{selectorOptions.maxLength}} characters maximum",
           "invalidLink": "The link {{0}} is broken",
           "constraintViolation": "{{0}}"

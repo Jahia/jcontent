@@ -71,16 +71,17 @@ const colorFieldValidation = (values, field) => {
 };
 
 const rangeFieldValidation = (values, field) => {
-    const error = 'invalidRange';
     const supportedTypes = ['LONG', 'DECIMAL', 'DOUBLE'];
     if (!supportedTypes.includes(field.requiredType) || !values[field.name]) {
         return;
     }
 
-    const fieldValues = Array.isArray(values[field.name]) ? values[field.name] : [values[field.name]];
+    let fieldValues = Array.isArray(values[field.name]) ? values[field.name] : [values[field.name]];
+    // Ok to not validate empty (undefined) values; they are ignored when saving
+    fieldValues = fieldValues.filter(value => typeof value !== 'undefined');
     // If one value is invalid, error !
     if (fieldValues.some(value => isNaN(value))) {
-        return error;
+        return 'invalidNumber';
     }
 
     if (!field.valueConstraints || field.valueConstraints.length === 0) {
@@ -107,7 +108,7 @@ const rangeFieldValidation = (values, field) => {
                 return true;
             }
         })
-        .some(isConstraintRespected => isConstraintRespected === true) ? undefined : error;
+        .some(isConstraintRespected => isConstraintRespected === true) ? undefined : 'invalidRange';
 };
 
 const patternFieldValidation = (values, field) => {

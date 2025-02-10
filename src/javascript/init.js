@@ -4,6 +4,7 @@ import {register as ceRegister} from './ContentEditor/register';
 import {MoreVert} from '@jahia/moonstone';
 import {Constants} from './ContentEditor/SelectorTypes/Picker/Picker.constants';
 import React from 'react';
+import {assignActionAndMenuTargets} from './JContent.assignActionAndMenuTargets';
 
 export default function () {
     registry.add('callback', 'jContent', {
@@ -11,6 +12,7 @@ export default function () {
         callback: () => {
             register();
             ceRegister();
+            assignActionAndMenuTargets();
         }
     });
 

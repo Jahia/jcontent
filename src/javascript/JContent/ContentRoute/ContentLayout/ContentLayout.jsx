@@ -1,6 +1,5 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper} from '@material-ui/core';
 import {ContentTable} from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
@@ -13,12 +12,11 @@ import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {flattenTree} from './ContentLayout.utils';
 import styles from './ContentLayout.scss';
 
-export const ContentLayout = ({mode, path, previewState, filesMode, previewSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
+export const ContentLayout = ({mode, previewState, filesMode, previewSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const contextualMenu = useRef();
     const previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
     return (
         <div className={styles.root}>
-            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
             <div
                     className={classNames(styles.content)}
                     style={{
@@ -66,7 +64,6 @@ export const ContentLayout = ({mode, path, previewState, filesMode, previewSelec
 
 ContentLayout.propTypes = {
     mode: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
     filesMode: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.string,

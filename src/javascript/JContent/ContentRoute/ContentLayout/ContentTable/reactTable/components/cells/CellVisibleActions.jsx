@@ -1,7 +1,6 @@
 import React from 'react';
 import {TableBodyCell} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
-import {includes} from 'lodash';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import PropTypes from 'prop-types';
 import classes from './Cells.scss';
@@ -18,9 +17,8 @@ export const CellVisibleActions = ({row, cell, column}) => {
         >
             {selection.length === 0 &&
                 <DisplayAction
-                    actionKey="contentMenu"
+                    actionKey="contentItemActionsMenu"
                     path={row.original.path}
-                    menuFilter={value => !includes(['edit', 'preview', 'subContents', 'locate'], value.key)}
                     render={ButtonRendererNoLabel}
                     buttonProps={{variant: 'ghost', size: 'big'}}
                 />}

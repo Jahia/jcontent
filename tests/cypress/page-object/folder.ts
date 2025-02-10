@@ -1,7 +1,5 @@
 import {
-    BasePage,
-    getComponentByRole,
-    Menu
+    BasePage
 } from '@jahia/cypress';
 import {JContent} from './jcontent';
 import {Media} from './media';
@@ -10,12 +8,14 @@ export class Folder extends BasePage {
     media: Media;
     name : string;
     parentPath : string;
+    jcontent : JContent;
 
     constructor(media: Media, parentPath : string, name : string) {
         super();
         this.media = media;
         this.name = name;
         this.parentPath = parentPath;
+        this.jcontent = new JContent();
     }
 
     visitFolder() : Folder {
@@ -29,9 +29,7 @@ export class Folder extends BasePage {
     }
 
     markForDeletion() : Folder {
-        cy.get('div[data-sel-role-card=' + this.name + ']').should('be.visible').rightclick({force: true});
-        getComponentByRole(Menu, 'jcontent-contentMenu').should('be.visible');
-        getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('delete');
+        this.jcontent.getGrid().getCardByName(this.name).contextMenu().selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();
         // Verify dialog has been dismissed before proceeding
         cy.get('[data-sel-role="delete-mark-dialog"]').should('not.exist');
@@ -40,9 +38,7 @@ export class Folder extends BasePage {
 
     // Delete the folder we just created permanently
     deletePermanently() : Folder {
-        cy.get('div[data-sel-role-card=' + this.name + ']').should('be.visible').rightclick({force: true});
-
-        getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('deletePermanently');
+        this.jcontent.getGrid().getCardByName(this.name).contextMenu().selectByRole('deletePermanently');
         cy.get('[data-sel-role="delete-permanently-button"]').click();
         return this;
     }

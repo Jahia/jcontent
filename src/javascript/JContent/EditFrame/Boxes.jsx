@@ -395,7 +395,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             pathObject = {path: currentPath, actionKey: 'notSelectedContentMenu'};
         }
     } else {
-        pathObject = {path: currentPath, actionKey: 'contentMenu'};
+        pathObject = {path: currentPath, actionKey: 'contentItemContextActionsMenu'};
     }
 
     const setDraggedOverlayPosition = position => {

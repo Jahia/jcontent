@@ -1,11 +1,11 @@
-import {BasePage, Button, getComponentByAttr, getComponentByRole, Menu} from '@jahia/cypress';
+import {BasePage, Button, getComponentByAttr, getComponentByRole} from '@jahia/cypress';
 import {Media} from './media';
 import * as path from 'path';
+import {JContent} from './jcontent';
 
 export class File extends BasePage {
     media: Media;
     fileName : string;
-    selector : string;
 
     constructor(media: Media, fileName : string) {
         super();
@@ -23,13 +23,11 @@ export class File extends BasePage {
         // The wait is very important otherwise the upload will never complete
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
-        this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
         return this;
     }
 
     download() : File {
-        cy.get(this.selector).should('be.visible').rightclick({force: true});
-        getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('downloadFile');
+        this.getGridCard().contextMenu().selectByRole('downloadFile');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
         getComponentByRole(Button, 'do-download').click();
@@ -61,13 +59,11 @@ export class File extends BasePage {
     }
 
     rename(newFileName : string) : File {
-        cy.get(this.selector).should('be.visible').rightclick({force: true});
-        getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('rename');
+        this.getGridCard().threeDotsMenu().selectByRole('rename');
         cy.get('input#folder-name').clear();
         cy.get('input#folder-name').type(newFileName);
         getComponentByAttr(Button, 'data-cm-role', 'create-folder-as-confirm').get().click();
         this.fileName = newFileName;
-        this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
         return this;
     }
 
@@ -78,13 +74,11 @@ export class File extends BasePage {
         cy.get('input#rename-dialog-text').type(newFileName);
         getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().click();
         this.fileName = newFileName;
-        this.selector = 'div[data-sel-role-card="' + this.fileName + '"]';
         return this;
     }
 
     markForDeletion() : File {
-        cy.get(this.selector).should('be.visible').rightclick({force: true});
-        getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('delete');
+        this.getGridCard().contextMenu().selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();
         // Verify dialog has been dismissed before proceeding
         cy.get('[data-sel-role="delete-mark-dialog"]').should('not.exist');
@@ -93,15 +87,14 @@ export class File extends BasePage {
 
     deletePermanently() : File {
         // Delete the folder we just created permanently
-        cy.get(this.selector).should('be.visible').rightclick({force: true});
-        getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('deletePermanently');
+        this.getGridCard().contextMenu().selectByRole('deletePermanently');
         cy.get('[data-sel-role="delete-permanently-button"]').click();
         return this;
     }
 
-    contentMenu() : Menu {
-        cy.get(this.selector).should('be.visible').rightclick({force: true});
-        return getComponentByRole(Menu, 'jcontent-contentMenu');
+    getGridCard() {
+        const jcontent = new JContent();
+        return jcontent.getGrid().getCardByName(this.fileName);
     }
 }
 

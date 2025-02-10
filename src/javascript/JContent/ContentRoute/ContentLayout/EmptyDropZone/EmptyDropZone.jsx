@@ -94,6 +94,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, allowDrop, uploadType, 
 EmptyDropZone.propTypes = {
     component: PropTypes.string.isRequired,
     uploadType: PropTypes.string,
+    // eslint-disable-next-line react/boolean-prop-naming
     isCanDrop: PropTypes.bool,
     allowDrop: PropTypes.bool,
     selector: PropTypes.func

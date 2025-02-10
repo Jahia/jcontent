@@ -1,4 +1,4 @@
-import {BaseComponent, getComponentBySelector, Menu} from '@jahia/cypress';
+import {BaseComponent, Button, getComponentByRole, getComponentBySelector, Menu} from '@jahia/cypress';
 
 export class ContentGrid extends BaseComponent {
     static defaultSelector = '[data-cm-role="grid-content-list"]';
@@ -8,6 +8,13 @@ export class ContentGrid extends BaseComponent {
         cy.get('@rowByLabel').scrollIntoView();
         cy.get('@rowByLabel').should('be.visible');
         return new GridCard(cy.get('@rowByLabel'));
+    }
+
+    getCardByName(name: string): GridCard {
+        cy.get(`[data-cm-role="grid-content-list-card"][data-sel-role-card="${name}"]`).first().as('rowByName');
+        cy.get('@rowByName').scrollIntoView();
+        cy.get('@rowByName').should('be.visible');
+        return new GridCard(cy.get('@rowByName'));
     }
 }
 
@@ -24,6 +31,12 @@ export class GridCard extends BaseComponent {
 
     contextMenu() {
         this.get().rightclick();
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+    }
+
+    threeDotsMenu() {
+        this.get().realHover();
+        getComponentByRole(Button, 'contentItemActionsMenu').click();
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 }

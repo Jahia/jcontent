@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {getDefaultLocale} from '~/JContent/JContent.utils';
 import {DisplayActions} from '@jahia/ui-extender';
-import {includes} from 'lodash';
 import PropTypes from 'prop-types';
 
 export const CellLastModified = ({row, value, cell, column}) => {
@@ -26,10 +25,7 @@ export const CellLastModified = ({row, value, cell, column}) => {
                          data-cm-role="table-content-list-cell-actions"
                     >
                         <DisplayActions
-                            target="contentActions"
-                            filter={_value => {
-                                return includes(['edit', 'preview', 'subContents', 'locate'], _value.key);
-                            }}
+                            target="visibleContentItemActions"
                             path={row.original.path}
                             render={ButtonRendererNoLabel}
                             buttonProps={{variant: 'ghost', size: 'big'}}

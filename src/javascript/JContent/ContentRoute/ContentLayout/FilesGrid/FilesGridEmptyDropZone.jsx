@@ -20,6 +20,7 @@ FilesGridEmptyDropZone.propTypes = {
     uploadType: PropTypes.string,
     reference: PropTypes.object,
     isCanDrop: PropTypes.bool,
+    // eslint-disable-next-line react/boolean-prop-naming
     allowDrop: PropTypes.bool
 };
 

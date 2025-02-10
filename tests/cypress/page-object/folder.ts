@@ -1,7 +1,5 @@
 import {
-    BasePage,
-    getComponentByRole,
-    Menu
+    BasePage
 } from '@jahia/cypress';
 import {JContent} from './jcontent';
 import {Media} from './media';

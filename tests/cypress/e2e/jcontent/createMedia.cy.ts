@@ -84,7 +84,6 @@ describe('Create media tests', () => {
             .deletePermanently();
     });
 
-
     it('Can upload, download, rename and delete accented file', function () {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');

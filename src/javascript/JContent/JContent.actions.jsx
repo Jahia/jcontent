@@ -21,6 +21,7 @@ import {
     OpenInBrowser,
     OpenInNew,
     Paste,
+    PasteAsReference,
     Publish,
     Reload,
     Replay,
@@ -288,7 +289,7 @@ export const jContentActions = registry => {
         component: PasteActionComponent
     });
     registry.add('action', 'pasteReference', {
-        buttonIcon: <Paste/>,
+        buttonIcon: <PasteAsReference/>,
         buttonLabel: 'jcontent:label.contentManager.copyPaste.pasteReference',
         hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:category'],
         referenceTypes: ['jnt:contentReference'],

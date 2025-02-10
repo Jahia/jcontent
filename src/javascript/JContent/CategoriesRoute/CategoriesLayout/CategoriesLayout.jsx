@@ -1,6 +1,5 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {ContextualMenu} from '@jahia/ui-extender';
 import {Paper} from '@material-ui/core';
 import {ContentTable} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import classNames from 'clsx';
@@ -15,7 +14,6 @@ import {
 } from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 
 export const CategoriesLayout = ({
-    path,
     filesMode,
     rows,
     isContentNotFound,
@@ -61,7 +59,6 @@ export const CategoriesLayout = ({
 };
 
 CategoriesLayout.propTypes = {
-    path: PropTypes.string.isRequired,
     filesMode: PropTypes.string.isRequired,
     rows: PropTypes.array.isRequired,
     isContentNotFound: PropTypes.bool,

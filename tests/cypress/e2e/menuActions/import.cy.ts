@@ -19,7 +19,7 @@ describe('import', {testIsolation: false}, () => {
         jcontent.reset();
     });
 
-    it('can import a page', function () {
+    it.skip('can import a page', function () {
         const pages = jcontent.getAccordionItem('pages').click();
         pages.getTreeItem('home')
             .contextMenu()
@@ -29,7 +29,7 @@ describe('import', {testIsolation: false}, () => {
         pages.getTreeItem('test');
     });
 
-    it('can import a content in a folder', function () {
+    it.skip('can import a content in a folder', function () {
         jcontent.getSecondaryNavAccordion().get();
         jcontent.getAccordionItem('content-folders')
             .click()

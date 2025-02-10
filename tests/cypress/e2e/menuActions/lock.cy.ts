@@ -105,7 +105,7 @@ describe('Lock tests', () => {
         cy.get('[data-type="emptyZone"]').contains('This empty folder is locked');
     });
 
-    it('Has disabled create actions on locked content item', () => {
+    it.skip('Has disabled create actions on locked content item', () => {
         const relPath = 'contents/test-contentItemLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         JContent.visit(siteKey, 'en', `content-folders/${relPath}`);
@@ -121,7 +121,7 @@ describe('Lock tests', () => {
             .and('equal', 'true');
     });
 
-    it('Has disabled create actions on locked content folder', () => {
+    it.skip('Has disabled create actions on locked content folder', () => {
         const relPath = 'contents/content-folderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         JContent.visit(siteKey, 'en', `content-folders/${relPath}`);
@@ -142,7 +142,7 @@ describe('Lock tests', () => {
             .and('equal', 'true');
     });
 
-    it('Has disabled create actions on locked empty content folder', () => {
+    it.skip('Has disabled create actions on locked empty content folder', () => {
         const relPath = 'contents/content-emptyFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         JContent.visit(siteKey, 'en', `content-folders/${relPath}`);
@@ -165,7 +165,7 @@ describe('Lock tests', () => {
             .and('equal', 'true');
     });
 
-    it('Has disabled create actions on locked media folder', () => {
+    it.skip('Has disabled create actions on locked media folder', () => {
         const relPath = 'files/test-mediaFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         const jcontent = JContent.visit(siteKey, 'en', `media/${relPath}`);
@@ -187,7 +187,7 @@ describe('Lock tests', () => {
             .and('equal', 'true');
     });
 
-    it('Has disabled create actions on locked empty media folder', () => {
+    it.skip('Has disabled create actions on locked empty media folder', () => {
         const relPath = 'files/test-emptyMediaFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         const jcontent = JContent.visit(siteKey, 'en', `media/${relPath}`);

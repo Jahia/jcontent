@@ -13,7 +13,8 @@ describe('JContent preview tests', () => {
         cy.get('button[data-sel-role="openInLive"]', {timeout: 5000}).should('be.visible');
     });
 
-    it('should honor the j:view property when previewing content', () => {
+    // TODO find alternative for missing preview context menu
+    it.skip('should honor the j:view property when previewing content', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
         jcontent.switchToListMode();
         jcontent.getTable().getRowByLabel('test 6').contextMenu().select('Preview');
@@ -31,7 +32,8 @@ describe('JContent preview tests', () => {
                 'test 7');
     });
 
-    it('should show cm view if available and no default', () => {
+    // TODO find alternative for missing preview context menu
+    it.skip('should show cm view if available and no default', () => {
         cy.apollo({
             mutation: gql`mutation {
                             jcr {

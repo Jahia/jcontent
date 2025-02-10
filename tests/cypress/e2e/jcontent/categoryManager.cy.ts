@@ -85,7 +85,7 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
         categoryManager = CategoryManager.visitCategoryManager('en');
         categoryManager.getTreeItem('rootTestCategory').click({multiple: true});
         cy.contains('test-category1').should('be.visible');
-        const primaryActions = ['New category', 'Edit', 'Import content', 'Refresh'];
+        const primaryActions = ['New category', 'Edit', 'Refresh'];
         cy.get('.moonstone-header').children('.moonstone-header_toolbar').children('.moonstone-header_actions')
             .find('.moonstone-button')
             .should('have.length', primaryActions.length + 1) // +1 for 3-menu button

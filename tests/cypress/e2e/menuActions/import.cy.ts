@@ -19,23 +19,17 @@ describe('import', {testIsolation: false}, () => {
         jcontent.reset();
     });
 
-    it.skip('can import a page', function () {
-        const pages = jcontent.getAccordionItem('pages').click();
-        pages.getTreeItem('home')
-            .contextMenu()
-            .select('Import content');
+    it('can import a page', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.getBrowseControlMenu().selectByRole('import');
         cy.get('#file-upload-input').selectFile('cypress/fixtures/jcontent/menuActions/test-page.zip', {force: true});
-        pages.getTreeItem('home').expand();
-        pages.getTreeItem('test');
+        jcontent.getAccordionItem('pages').expandTreeItem('home');
+        jcontent.getAccordionItem('pages').getTreeItem('test');
     });
 
-    it.skip('can import a content in a folder', function () {
-        jcontent.getSecondaryNavAccordion().get();
-        jcontent.getAccordionItem('content-folders')
-            .click()
-            .getTreeItem('contents')
-            .contextMenu()
-            .select('Import content');
+    it('can import a content in a folder', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.getBrowseControlMenu().selectByRole('import');
         cy.get('#file-upload-input').selectFile('cypress/fixtures/jcontent/menuActions/test-content.zip', {force: true});
         jcontent.getTable().getRowByLabel('import-text');
     });

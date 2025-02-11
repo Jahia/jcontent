@@ -1,21 +1,15 @@
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
+import {createSite, deleteSite, enableModule, grantRoles} from "@jahia/cypress";
 
 describe('Lock tests', () => {
     const siteKey = 'jContentSite-lock';
 
     before(() => {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
+        createSite(siteKey);
+        enableModule('article', siteKey);
         cy.apollo({mutationFile: 'jcontent/menuActions/createLockContent.graphql'});
-        cy.apollo({
-            mutation: gql`mutation GrantRoles {
-                jcr {
-                    mutateNode(pathOrId: "/sites/jContentSite-lock") {
-                        grantRoles(roleNames: "editor", principalType: USER, principalName: "mathias")
-                    }
-                }
-            }`
-        });
+        grantRoles(`/sites/${siteKey}`, ['editor'], 'mathias', 'USER');
     });
 
     beforeEach(() => {
@@ -50,7 +44,7 @@ describe('Lock tests', () => {
     }
 
     after(function () {
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
+        deleteSite(siteKey);
         cy.logout();
     });
 
@@ -105,23 +99,16 @@ describe('Lock tests', () => {
         cy.get('[data-type="emptyZone"]').contains('This empty folder is locked');
     });
 
-    it.skip('Has disabled create actions on locked content item', () => {
+    it('Has disabled create actions on locked content item', () => {
         const relPath = 'contents/test-contentItemLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         JContent.visit(siteKey, 'en', `content-folders/${relPath}`);
 
         cy.log('header create action is disabled');
         cy.get('button[data-sel-role="jnt:paragraph"]').should('be.disabled');
-
-        cy.log('Right-click create actions is disabled');
-        cy.get('[class*="tableWrapper"]').rightclick({force: true});
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="jnt:paragraph"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
     });
 
-    it.skip('Has disabled create actions on locked content folder', () => {
+    it('Has disabled create actions on locked content folder', () => {
         const relPath = 'contents/content-folderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         JContent.visit(siteKey, 'en', `content-folders/${relPath}`);
@@ -129,20 +116,9 @@ describe('Lock tests', () => {
         cy.log('header create actions are disabled');
         cy.get('button[data-sel-role="createContent"]').should('be.disabled');
         cy.get('button[data-sel-role="createContentFolder"]').should('be.disabled');
-
-        cy.log('Right-click create actions are disabled');
-        cy.get('[class*="tableWrapper"]').rightclick({force: true});
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="createContentFolder"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="createContentFolder"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
     });
 
-    it.skip('Has disabled create actions on locked empty content folder', () => {
+    it('Has disabled create actions on locked empty content folder', () => {
         const relPath = 'contents/content-emptyFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         JContent.visit(siteKey, 'en', `content-folders/${relPath}`);
@@ -150,22 +126,9 @@ describe('Lock tests', () => {
         cy.log('header create actions are disabled');
         cy.get('button[data-sel-role="createContent"]').should('be.disabled');
         cy.get('button[data-sel-role="createContentFolder"]').should('be.disabled');
-
-        cy.log('Right-click create actions are disabled');
-        cy.get('[data-type="emptyZone"]')
-            .contains('This empty folder is locked')
-            .rightclick({force: true});
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="createContentFolder"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="createContentFolder"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
     });
 
-    it.skip('Has disabled create actions on locked media folder', () => {
+    it('Has disabled create actions on locked media folder', () => {
         const relPath = 'files/test-mediaFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         const jcontent = JContent.visit(siteKey, 'en', `media/${relPath}`);
@@ -173,21 +136,9 @@ describe('Lock tests', () => {
         cy.log('header create actions are disabled');
         cy.get('button[data-sel-role="fileUpload"]').should('be.disabled');
         cy.get('button[data-sel-role="createFolder"]').should('be.disabled');
-
-        cy.log('Right-click create actions are disabled');
-        jcontent.switchToListMode();
-        cy.get('[class*="tableWrapper"]').rightclick({force: true});
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="createFolder"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="fileUpload"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
     });
 
-    it.skip('Has disabled create actions on locked empty media folder', () => {
+    it('Has disabled create actions on locked empty media folder', () => {
         const relPath = 'files/test-emptyMediaFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
         const jcontent = JContent.visit(siteKey, 'en', `media/${relPath}`);
@@ -208,19 +159,5 @@ describe('Lock tests', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
         assertFileNotExist(`/sites/${siteKey}/${relPath}/testdnd.txt`);
-
-        cy.log('Right-click create actions are disabled');
-        jcontent.switchToListMode();
-        cy.get('[data-type="emptyZone"]')
-            .contains('This empty folder is locked')
-            .rightclick({force: true});
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="createFolder"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
-        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
-            .find('li[data-sel-role="fileUpload"]')
-            .should('have.attr', 'aria-disabled')
-            .and('equal', 'true');
     });
 });

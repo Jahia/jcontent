@@ -89,6 +89,11 @@ export class JContent extends BasePage {
         return new ContentEditor();
     }
 
+    getBrowseControlMenu(): Menu {
+        getComponentByRole(Button, 'browseControlBarMenu').click();
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+    }
+
     viewSubContentComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
         row.get().scrollIntoView();

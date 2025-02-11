@@ -28,7 +28,7 @@ describe('Open in repo explorer tests', () => {
         cy.logout();
     });
 
-    it.skip('shows preview on content folder item', () => {
+    it('shows preview on content folder item', () => {
         const jcontent = JContent.visit('digitall', 'en', 'content-folders/contents', {
             onBeforeLoad(win: Window) {
                 // @ts-expect-error window definition does not have "open" for some reason

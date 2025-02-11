@@ -1,25 +1,24 @@
 import {ContentEditor, JContent} from '../../page-object';
 import {RichTextField} from '../../page-object/fields';
+import {createSite, deleteSite} from '@jahia/cypress';
 
-describe('Create content tests', {retries: 10}, () => {
+describe('Create content tests', () => {
     let jcontent: JContent;
+    const siteKey = 'contentEditorSite';
 
-    before(function () {
-        cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: 'contentEditorSite'});
+    before(() => {
+        createSite(siteKey);
         cy.apollo({mutationFile: 'contentEditor/references.graphql'});
     });
 
-    after(function () {
-        cy.executeGroovy('contentEditor/deleteSite.groovy', {SITEKEY: 'contentEditorSite'});
+    after(() => {
+        deleteSite(siteKey);
+        cy.logout();
     });
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-    });
-
-    afterEach(() => {
-        cy.logout();
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });
 
     it('can edit content', () => {
@@ -30,7 +29,7 @@ describe('Create content tests', {retries: 10}, () => {
         contentEditor.cancel();
     });
 
-    it.skip('can edit source ref', () => {
+    it('can edit source ref', () => {
         jcontent.getTable().getRowByLabel('Content reference').contextMenu().select('Edit reference source');
         const contentEditor = new ContentEditor();
         contentEditor.getField(RichTextField, 'jnt:bigText_text');

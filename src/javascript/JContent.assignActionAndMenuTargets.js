@@ -37,7 +37,7 @@ const actionTargetAssignments = {
         'createPage',
         'createNavMenuItemMenu',
         'createContentFolder',
-        'createFolder', 
+        'createFolder',
         'import',
         'fileUpload'
     ],

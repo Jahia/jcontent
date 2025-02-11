@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
-import {createSite, deleteSite, enableModule, grantRoles} from "@jahia/cypress";
+import {createSite, deleteSite, enableModule, grantRoles} from '@jahia/cypress';
 
 describe('Lock tests', () => {
     const siteKey = 'jContentSite-lock';

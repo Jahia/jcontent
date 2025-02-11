@@ -2,21 +2,15 @@ import {JContent} from '../../page-object';
 
 describe('import', {testIsolation: false}, () => {
     const siteKey = 'jContentSite-import';
-    let jcontent: JContent;
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.loginAndStoreSession(); // Edit in chief
-        jcontent = JContent.visit(siteKey, 'en', 'pages/home');
     });
 
     after(function () {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
         cy.logout();
-    });
-
-    beforeEach(function () {
-        jcontent.reset();
     });
 
     it('can import a page', function () {

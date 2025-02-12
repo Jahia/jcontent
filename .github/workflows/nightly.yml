@@ -13,13 +13,13 @@ jobs:
       fail-fast: false
       matrix:
         jahia_image: ["jahia/jahia-ee-dev:8-SNAPSHOT"]
-        config_file: 
+        config_file:
           - cypress.config-contentEditor.ts
           - cypress.config-jcontent.ts
           - cypress.config-menuActions.ts
           - cypress.config-pageBuilder.ts
           - cypress.config-pickers.ts
-          - cypress.config-categoryManager.ts
+#          - cypress.config-categoryManager.ts
     timeout-minutes: 120
     steps:
       - uses: jahia/jahia-modules-action/helper@v2

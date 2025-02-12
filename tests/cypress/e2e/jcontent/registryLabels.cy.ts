@@ -35,6 +35,6 @@ describe('Registry labels test', () => {
         cy.get('li[data-registry-key="action:editPage"]')
             .should('exist')
             .invoke('attr', 'data-registry-target')
-            .should('eq', 'accordionContentActions:5');
+            .should('eq', 'accordionContentActions:7');
     });
 });

@@ -43,6 +43,9 @@ jobs:
 
           echo; echo "Incrementing version for release.."
           yarn version --prerelease --preid=tests
+
+          git config --global user.email "jahia-ci@jahia.com"
+          git config --global user.name "Jahia CI"
           git push --follow-tags 
 
           if "${{ inputs.is_dry_run }}"; then

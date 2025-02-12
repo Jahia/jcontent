@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 
-describe('Lock tests', () => {
+describe('Menu actions preview tests', () => {
     before(() => {
         cy.loginAndStoreSession(); // Edit in chief
     });

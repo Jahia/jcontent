@@ -14,6 +14,7 @@ describe('Content navigation', () => {
         });
         enableModule('jcontent-test-module', 'mySite1');
         enableModule('events', 'mySite1');
+        enableModule('events', 'mySite3');
         addNode({parentPathOrId: '/sites/mySite1/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
         addNode({parentPathOrId: '/sites/mySite3/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
         addNode({
@@ -63,12 +64,9 @@ describe('Content navigation', () => {
         jcontent.shouldBeInMode('List');
     });
 
-    // TODO check if still valid since openInPageBuilder is missing
-    it.skip('can open news in page builder', () => {
-        const jc = JContent.visit('mySite1', 'en', 'content-folders/contents');
-        jc.getTable().getRowByLabel('test-event').contextMenu().selectByRole('openInPageBuilder');
-        cy.frameLoaded('#page-builder-frame-1');
-        jc.shouldBeInMode('Page Builder - Beta');
+    it('can open event in page builder', () => {
+        const jc = JContent.visit('mySite1', 'en', 'content-folders/contents/test-event');
+        jc.switchToPageBuilder();
         jc.getAccordionItem('content-folders').getTreeItem('contents').get().invoke('attr', 'aria-current').should('eq', 'page');
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
         cy.get('h1').contains('test-event');
@@ -83,10 +81,9 @@ describe('Content navigation', () => {
         cy.get('h1').contains('contents');
     });
 
-    // TODO check if still valid since openInPageBuilder is missing
-    it.skip('Display popup when viewing content that does not have valid template', () => {
-        const jc = JContent.visit('mySite3', 'en', 'content-folders/contents');
-        jc.getTable().getRowByLabel('test-event').contextMenu().selectByRole('openInPageBuilder');
+    it('Display popup when viewing content that does not have valid template', () => {
+        const jc = JContent.visit('mySite3', 'en', 'content-folders/contents/test-event');
+        jc.switchToPageBuilder();
         cy.get('[data-sel-role="node-content-dialog"]')
             .should('be.visible')
             .find('#form-dialog-title')

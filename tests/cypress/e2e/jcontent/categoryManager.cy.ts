@@ -1,5 +1,5 @@
 import {CategoryManager} from '../../page-object';
-import {BaseComponent, Button, deleteNode, Dropdown, getComponentByAttr} from '@jahia/cypress';
+import {BaseComponent, Button, deleteNode, Dropdown, getComponentByAttr, getComponentByRole} from '@jahia/cypress';
 import * as path from 'path';
 
 describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
@@ -143,7 +143,8 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
         cy.exec(`mkdir -p ${downloadsFolder}`, {failOnNonZeroExit: false});
 
         // Export zip
-        categoryManager.getTreeItem('companies').contextMenu().select('Export');
+        categoryManager.getTreeItem('companies').click();
+        categoryManager.getBrowseControlMenu().selectByRole('export');
         const dialog = getComponentByAttr(BaseComponent, 'data-cm-role', 'export-options');
         dialog.should('be.visible');
         getComponentByAttr(Dropdown, 'data-cm-role', 'select-workspace', dialog).select('Staging and live content');
@@ -157,7 +158,8 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
         }), {timeout: 30000, interval: 1000, errorMsg: 'Unable to download companies.zip'});
 
         // Import zip
-        categoryManager.getTreeItem('import-zip').contextMenu().select('Import content');
+        categoryManager.getTreeItem('import-zip').click();
+        categoryManager.getBrowseControlMenu().selectByRole('import');
         cy.get('#file-upload-input').selectFile(path.join(downloadsFolder, 'companies.zip'), {force: true});
         categoryManager.getTreeItem('import-zip').get()
             .find('.moonstone-treeView_itemToggle svg').should('be.visible');
@@ -170,7 +172,8 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
         const downloadsFolder = Cypress.config('downloadsFolder');
 
         // Export xml
-        categoryManager.getTreeItem('companies').contextMenu().select('Export');
+        categoryManager.getTreeItem('companies').click();
+        categoryManager.getBrowseControlMenu().selectByRole('export');
         const dialog = getComponentByAttr(BaseComponent, 'data-cm-role', 'export-options');
         dialog.should('be.visible');
         getComponentByAttr(Dropdown, 'data-cm-role', 'select-workspace', dialog).select('Staging content only');
@@ -184,7 +187,8 @@ describe('Category Manager', {defaultCommandTimeout: 10000}, () => {
         }), {timeout: 30000, interval: 1000, errorMsg: 'Unable to download companies.xml'});
 
         // Import xml
-        categoryManager.getTreeItem('import-xml').contextMenu().select('Import content');
+        categoryManager.getTreeItem('import-xml').click();
+        categoryManager.getBrowseControlMenu().selectByRole('import');
         cy.get('#file-upload-input').selectFile({
             contents: path.join(downloadsFolder, 'companies.xml'),
             mimeType: 'text/xml' // Need to override default mimeType application/xml

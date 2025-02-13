@@ -2,6 +2,7 @@ import {ContentEditor} from './contentEditor';
 import {SmallTextField} from './fields';
 import {JContent} from './jcontent';
 import {AccordionItem, TreeItem} from './accordionItem';
+import {Button, getComponentByRole} from '@jahia/cypress';
 
 export class CategoryManager extends JContent {
     categoryAccordion: AccordionItem;
@@ -35,7 +36,8 @@ export class CategoryManager extends JContent {
 
     createCategoryNav(parentName: string, fields: {title?: string, name?: string}) {
         const accordionItem = this.getAccordionItem();
-        accordionItem.getTreeItem(parentName).contextMenu().select('New category');
+        accordionItem.getTreeItem(parentName).click();
+        getComponentByRole(Button, 'jnt:category').click(); // New Category header menu
         this.editFields(fields).create();
     }
 

@@ -10,24 +10,21 @@ const assignTargetsForActions = (targetActions, registry) => {
     const actionTargets = {};
 
     // Construct target arrays for each action
-    Object.keys(targetActions).forEach(targetName => {
-        const actions = targetActions[targetName];
-
-        actions.forEach((actionName, index) => {
+    Object.entries(targetActions).forEach(([targetName, actions]) => {
+        actions.forEach((name, index) => {
+            // Priority can also be specified for a given target from the specified action in the array
+            const [actionName, priority] = name?.split(':') || [];
             if (!actionTargets[actionName]) {
                 actionTargets[actionName] = [];
             }
 
-            actionTargets[actionName].push(`${targetName}:${index}`);
+            actionTargets[actionName].push({id: targetName, priority: priority || index});
         });
     });
 
     // Assign target arrays
     Object.keys(actionTargets).forEach(key => {
-        registry.get('action', key).targets = actionTargets[key].map(t => {
-            const spl = t.split(':');
-            return {id: spl[0], priority: spl[1] ? spl[1] : 0};
-        });
+        registry.get('action', key).targets = actionTargets[key];
     });
 };
 
@@ -89,7 +86,9 @@ const actionTargetAssignments = {
         'unlock',
         'clearAllLocks',
         'downloadAsZip',
-        'clearClipboard'
+        'clearClipboard',
+        // Hardcoded so 'Open in page composer' can be always added at the end of this list
+        'contentActionsSeparator3:50'
     ],
     accordionContentActions: [
         'createFolder',
@@ -102,6 +101,7 @@ const actionTargetAssignments = {
         'editPage',
         'editPageAdvanced',
         'downloadAsZip',
+        'fileUpload',
         'lock',
         'publishMenu',
         'contentActionsSeparator2',
@@ -111,11 +111,11 @@ const actionTargetAssignments = {
         'cut',
         'paste',
         'pasteReference',
-        'fileUpload',
         'delete',
         'deletePermanently',
         'undelete',
-        'contentActionsSeparator3'
+        // Hardcoded so 'Open in page composer' can be always added at the end of this list
+        'contentActionsSeparator3:50'
     ],
     selectedContentActions: [
         'selectionAction',
@@ -148,6 +148,7 @@ const actionTargetAssignments = {
         'preview',
         'downloadFile',
         'downloadAsZip',
+        'fileUpload',
         'lock',
         'unlock',
         'clearAllLocks',
@@ -158,7 +159,6 @@ const actionTargetAssignments = {
         'cut',
         'paste',
         'pasteReference',
-        'fileUpload',
         'delete',
         'deletePermanently',
         'undelete',
@@ -168,7 +168,8 @@ const actionTargetAssignments = {
         'exportPage',
         'import',
         'openInRepositoryExplorer',
-        'contentActionsSeparator3'
+        // Hardcoded so 'Open in page composer' can be always added at the end of this list
+        'contentActionsSeparator3:50'
     ],
     contentItemContextActions: [
         'createContentFolder',
@@ -186,6 +187,7 @@ const actionTargetAssignments = {
         'preview',
         'downloadFile',
         'downloadAsZip',
+        'fileUpload',
         'lock',
         'unlock',
         'clearAllLocks',
@@ -196,7 +198,6 @@ const actionTargetAssignments = {
         'cut',
         'paste',
         'pasteReference',
-        'fileUpload',
         'delete',
         'deletePermanently',
         'undelete',
@@ -206,7 +207,8 @@ const actionTargetAssignments = {
         'exportPage',
         'import',
         'openInRepositoryExplorer',
-        'contentActionsSeparator3'
+        // Hardcoded so 'Open in page composer' can be always added at the end of this list
+        'contentActionsSeparator3:50'
     ],
     // 3 dots header menu
     browseControlBar: [
@@ -229,7 +231,8 @@ const actionTargetAssignments = {
         'exportPage',
         'import',
         'openInRepositoryExplorer',
-        'contentActionsSeparator3'
+        // Hardcoded so 'Open in page composer' can be always added at the end of this list
+        'contentActionsSeparator3:50'
     ],
     '--accordionContentActions': ['replaceFile', 'locate', 'zip', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'downloadFile', 'fileUpload', 'exportPage', 'export', 'downloadAsZip', 'import', 'unlock', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2'],
     publishMenu: [

@@ -24,7 +24,13 @@ const assignTargetsForActions = (targetActions, registry) => {
 
     // Assign target arrays
     Object.keys(actionTargets).forEach(key => {
-        registry.get('action', key).targets = actionTargets[key];
+        const action = registry.get('action', key);
+        if (!action) {
+            console.debug(`Unable to set target for action ${key}`);
+            return;
+        }
+
+        action.targets = actionTargets[key];
     });
 };
 

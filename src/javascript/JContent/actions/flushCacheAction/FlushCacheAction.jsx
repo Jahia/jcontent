@@ -28,7 +28,7 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && showOnNodeTypes.some(nt => res?.node[nt]) && (!isSiteFlush || isSiteFlush === isHomePage);
+    const isVisible = res.checksResult && showOnNodeTypes.some(nt => res.node?.[nt]) && (!isSiteFlush || isSiteFlush === isHomePage);
 
     return (
         <Render

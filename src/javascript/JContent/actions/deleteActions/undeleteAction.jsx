@@ -38,7 +38,7 @@ export const UndeleteActionComponent = ({path, paths, buttonProps, onDeleted, re
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
+    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes?.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
         <Render

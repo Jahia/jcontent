@@ -53,7 +53,7 @@ export const CopyCutActionComponent = withNotifications()(({
     const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) &&
         (res.node ?
             !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
-            res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)
+            res.nodes?.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)
         );
     const isEnabled = !others.hideIfHasNoSubPages || (res.node?.['subNodesCount_jnt:page'] + res.node?.['subNodesCount_jmix:navMenuItem']) !== 0;
 

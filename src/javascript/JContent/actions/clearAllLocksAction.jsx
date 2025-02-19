@@ -19,7 +19,7 @@ export const ClearAllLocksActionComponent = ({path, render: Render, loading: Loa
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes !== null && res.node.lockTypes.values.indexOf(' deletion :deletion') === -1;
+    const isVisible = res.checksResult && res.node && res.node.operationsSupport.lock && res.node.lockTypes !== null && res.node.lockTypes.values.indexOf(' deletion :deletion') === -1;
 
     return (
         <Render

@@ -71,8 +71,8 @@ export const ViewUsagesComponent = ({path, render: Render, loading: Loading, usa
             onClick={() => {
                 componentRenderer.render('usagesDialog', UsagesDialog, {
                         isOpen: true,
-                        path: res.node.path,
-                        name: res.node.displayName,
+                        path: res.node?.path,
+                        name: res.node?.displayName,
                         language,
                         onClose: () => {
                             componentRenderer.setProperties('usagesDialog', {isOpen: false});

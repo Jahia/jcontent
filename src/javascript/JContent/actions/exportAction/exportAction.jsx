@@ -19,7 +19,7 @@ export const ExportActionComponent = ({path, render: Render, loading: Loading, .
             onClick={() => {
                 componentRenderer.render('exportDialog', Export, {
                         isOpen: true,
-                        path: res.node.path,
+                        path: res.node?.path,
                         onClose: () => {
                             componentRenderer.setProperties('exportDialog', {isOpen: false});
                         },

@@ -22,7 +22,7 @@ export const LockActionComponent = ({path, render: Render, loading: Loading, ...
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult &&
+    const isVisible = res.checksResult && res.node &&
         res.node.operationsSupport.lock &&
         res.node.lockTypes === null &&
         (!res.node['jnt:page'] || res.node.lockPageAction) &&

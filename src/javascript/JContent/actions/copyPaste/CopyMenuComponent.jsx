@@ -21,7 +21,7 @@ export const CopyMenuComponent = ({path, render: Render, loading: Loading, ...ot
     const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) &&
         (res.node ?
             !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
-            res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)
+            res.nodes?.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)
         );
 
     if (!isVisible) {

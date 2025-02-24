@@ -42,11 +42,11 @@ export const ZipActionComponent = withNotifications()(({path, paths, render: Ren
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                let name = res.node ? res.node.name : (res.nodes.length > 1 ? res.nodes[0].parent.name : res.nodes[0].name);
+                let name = res.node ? res.node.name : (res.nodes?.length > 1 ? res.nodes[0].parent.name : res.nodes?.[0].name);
                 let nameWithoutExtension = removeFileExtension(name);
-                let paths = res.node ? [res.node.path] : res.nodes.map(n => n.path);
-                let uuid = res.node ? res.node.uuid : res.nodes[0].uuid;
-                let parentPath = res.node ? res.node.parent.path : res.nodes[0].parent.path;
+                let paths = res.node ? [res.node.path] : res.nodes?.map(n => n.path);
+                let uuid = res.node ? res.node.uuid : res.nodes?.[0].uuid;
+                let parentPath = res.node ? res.node.parent.path : res.nodes?.[0].parent.path;
 
                 // Query to have zip files in the same directory with the same name to add a counter
                 let siblings = client.query({

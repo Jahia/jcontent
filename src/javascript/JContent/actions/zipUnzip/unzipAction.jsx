@@ -33,7 +33,7 @@ export const UnzipActionComponent = withNotifications()(({path, paths, render: R
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let isVisible = res.checksResult && (res.node.mimeType === 'application/zip' || res.node.mimeType === 'application/x-zip-compressed') && !isMarkedForDeletion(res.node);
+    let isVisible = res.checksResult && res.node && (res.node.mimeType === 'application/zip' || res.node.mimeType === 'application/x-zip-compressed') && !isMarkedForDeletion(res.node);
 
     return (
         <Render
@@ -43,7 +43,7 @@ export const UnzipActionComponent = withNotifications()(({path, paths, render: R
             onClick={() => {
                 componentRenderer.render('progressOverlay', TransparentLoaderOverlay);
                 client.mutate({
-                    variables: {pathOrId: res.node.path, path: res.node.parent.path},
+                    variables: {pathOrId: res.node?.path, path: res.node?.parent.path},
                     mutation: zipUnzipMutations.unzip
                 }).then(() => {
                     triggerRefetchAll();

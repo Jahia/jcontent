@@ -27,7 +27,7 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
     }
 
     const isContainerType = ['jnt:page', 'jnt:folder', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name);
-    const hasSubNodes = subNodesType.some(type => (res?.node[`subNodesCount_${type}`] || 0) > 0);
+    const hasSubNodes = subNodesType.some(type => (res?.node?.[`subNodesCount_${type}`] || 0) > 0);
     const isPageBuilderView = viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER;
 
     const isVisible = res.checksResult && !isInSearchMode(mode) && (isContainerType || (hasSubNodes && !isPageBuilderView));

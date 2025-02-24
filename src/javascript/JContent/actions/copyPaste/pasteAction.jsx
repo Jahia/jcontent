@@ -73,7 +73,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
     const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? ['jnt:page', 'jmix:navMenuItem'] : [];
 
-    let isVisible = res.checksResult && res.node.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
+    let isVisible = res.checksResult && res.node?.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
     let isEnabled = true;
 
     if (nodes.length === 0) {

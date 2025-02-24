@@ -152,6 +152,7 @@ const actionTargetAssignments = {
         'replaceFile',
         'locate',
         'preview',
+        'unzip',
         'downloadFile',
         'downloadAsZip',
         'fileUpload',

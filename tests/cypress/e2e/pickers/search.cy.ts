@@ -59,6 +59,7 @@ describe('Picker tests - Search', () => {
 
     it('Editorial Picker- Search for tab - letter by letter', () => {
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
+        picker.switchSearchContext('Digitall');
         picker.search('t');
         picker.verifyResultsAtLeast(82);
         picker.search('a');
@@ -67,19 +68,11 @@ describe('Picker tests - Search', () => {
         picker.verifyResultsLength(7);
     });
 
-    it('Editorial Picker- Search for tab - ensure all accordions are closed', () => {
-        const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
-        picker.search('tab');
-        picker.verifyResultsLength(7);
-        picker.getTableRow('Taber').should('be.visible');
-        // Verify whole left nav is gone
-        picker.get().find(SecondaryNav.defaultSelector, {timeout: 2000}).should('not.exist');
-    });
-
     it('Editorial Picker- Search for tab and them empty search - ensure previous context is restored', () => {
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.wait();
 
+        picker.switchSearchContext('Digitall');
         picker.getTab('content').click().then(tabItem => {
             picker.wait();
             cy.wrap(tabItem).should('have.class', 'moonstone-selected');

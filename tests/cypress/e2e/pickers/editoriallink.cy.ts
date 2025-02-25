@@ -1,6 +1,7 @@
 import {contentTypes} from '../../fixtures/contentEditor/pickers/contentTypes';
 import gql from 'graphql-tag';
 import {JContent} from '../../page-object/jcontent';
+import {SecondaryNav} from '@jahia/cypress';
 
 describe('Picker - Editorial link', {testIsolation: false}, () => {
     const siteKey = 'digitall';
@@ -91,6 +92,10 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
                 const allTypes = texts.sort().every(content => ['Content Folder', 'Person portrait', 'Article (title and introduction)'].includes(content));
                 expect(allTypes).to.be.true;
             });
+
+        // Verify whole left nav is gone
+        picker.get().find(SecondaryNav.defaultSelector, {timeout: 2000}).should('not.exist');
+
         picker.cancel();
         contentEditor.cancel();
     });

@@ -1,6 +1,6 @@
-mutation {
+mutation($homePath: String! = "/sites/jcontentSite/home") {
     jcr {
-        mutateNode(pathOrId: "/sites/jcontentSite/home") {
+        mutateNode(pathOrId: $homePath) {
             addChildrenBatch(
                 nodes: [
                     {
@@ -87,7 +87,7 @@ mutation {
                         name: "internal-link"
                         primaryNodeType: "jnt:nodeLink"
                         properties: [
-                            { name: "j:node", value: "/sites/jcontentSite/home", type: REFERENCE }
+                            { name: "j:node", value: $homePath, type: REFERENCE }
                             { name: "jcr:title", language: "en", value: "internal-xxx" }
                         ]
                     }

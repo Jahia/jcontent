@@ -2,53 +2,37 @@ import {JContent, JContentPageBuilder} from '../../page-object';
 import {createSite, deleteSite} from '@jahia/cypress';
 import {addPageGql, addContentGql} from '../../fixtures/jcontent/pageComposer/setLimitContent';
 
-describe('Page builder', () => {
+describe('Page builder - list limit restrictions tests', () => {
     let jcontent: JContentPageBuilder;
+    const siteKey = 'pbLimitSite';
 
     before(() => {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
+        createSite(siteKey, {
+            serverName: 'localhost',
+            locale: 'en',
+            templateSet: 'jcontent-test-template'
+        });
+        cy.apollo({
+            mutationFile: 'jcontent/createContent.graphql',
+            variables: {homePath: `/sites/${siteKey}/home`}
+        });
         cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
     });
 
     after(() => {
         cy.logout();
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+        deleteSite(siteKey);
     });
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        jcontent = JContent
-            .visit('jcontentSite', 'en', 'pages/home')
-            .switchToPageBuilder();
     });
 
-    describe('list limit', function () {
-        const limitSiteKey = 'limitSite';
-
-        function removeLimit() {
-            cy.apollo({
-                mutationFile: 'jcontent/removeLimit.graphql',
-                variables: {path: '/sites/jcontentSite/home/landing'},
-                errorPolicy: 'ignore'
-            });
-        }
-
-        before(() => {
-            removeLimit();
-            createSite(limitSiteKey, {
-                serverName: 'localhost',
-                locale: 'en',
-                templateSet: 'jcontent-test-template'
-            });
-        });
-
-        after(() => {
-            removeLimit();
-            deleteSite(limitSiteKey);
-        });
-
+    describe('Content type limit', () => {
         it('should show buttons before removing limit', () => {
+            const jcontent = JContent
+                .visit(siteKey, 'en', 'pages/home')
+                .switchToPageBuilder();
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.getButton('New content');
         });
@@ -56,7 +40,7 @@ describe('Page builder', () => {
         it('Set limit to landing section - graphql mutation', () => {
             cy.apollo({
                 mutationFile: 'jcontent/pageComposer/setLimit.graphql',
-                variables: {path: '/sites/jcontentSite/home/landing'}
+                variables: {path: `/sites/${siteKey}/home/landing`}
             });
         });
 
@@ -67,8 +51,7 @@ describe('Page builder', () => {
                 .assertHasNoButton();
         });
 
-        // Skipping for now
-        it.skip('should not show paste button when limit is reached', () => {
+        it('should not show paste button when limit is reached', () => {
             jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1')
                 .contextMenu(true)
                 .select('Copy');
@@ -78,29 +61,27 @@ describe('Page builder', () => {
                 .getCreateButtons()
                 .assertHasNoButton();
         });
+    });
 
-        // Template 'simple' from 'jcontent-test-template' has an area list limit = 3
-
+    // Template 'simple' from 'jcontent-test-template' has an area list limit = 3
+    describe('Template limit', () => {
         const limitPage = 'limitPage';
 
         it('should show create button when template limit is not reached', () => {
-            cy.apollo({
-                mutation: addPageGql(limitSiteKey, limitPage)
-            });
-            JContent.visit(limitSiteKey, 'en', `pages/home/${limitPage}`);
-            jcontent.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`)
+            cy.apollo({mutation: addPageGql(siteKey, limitPage)});
+            JContent.visit(siteKey, 'en', `pages/home/${limitPage}`);
+            jcontent.getModule(`/sites/${siteKey}/home/${limitPage}/my-area`)
                 .getCreateButtons()
                 .getButton('New content');
         });
 
         it('should not show create button when template limit is reached', () => {
-            cy.apollo({
-                mutation: addContentGql(limitSiteKey, limitPage)
-            });
-            JContent.visit(limitSiteKey, 'en', `pages/home/${limitPage}`);
-            jcontent.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`)
+            cy.apollo({mutation: addContentGql(siteKey, limitPage)});
+            JContent.visit(siteKey, 'en', `pages/home/${limitPage}`);
+            jcontent.getModule(`/sites/${siteKey}/home/${limitPage}/my-area`)
                 .getCreateButtons()
                 .assertHasNoButton();
         });
     });
+
 });

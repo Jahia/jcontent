@@ -41,7 +41,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode}) {
+function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode, virtualizer}) {
     const tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -74,10 +74,22 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
                 [styles.notPublishedReversed]: isReversed && notPublished && selected !== treeEntry.path
             }),
             children: [],
+            virtualRow: treeEntry.virtualRow,
             treeItemProps: {
                 'data-sel-role': treeEntry.node.name,
                 node: treeEntry.node,
                 treeEntries,
+                virtualRow: treeEntry.virtualRow,
+                virtualizer,
+                style: {
+                    '--treeItem-depth': treeEntry.depth,
+                    height: '32px',
+                    top: 0,
+                    left: 0,
+                    position: 'absolute',
+                    transform: `translateY(${treeEntry.virtualRow.start}px)`, // This should always be a `style` as it changes on scroll
+                    width: '100%'
+                },
                 ...itemProps
             },
             isReadonly: treeEntry.node.primaryNodeType.name === 'jnt:navMenuText' && viewMode === 'pageBuilder'

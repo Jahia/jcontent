@@ -219,7 +219,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
-            <div ref={mainRef} style={{height: '500px', overflow: 'auto'}}>
+            <div ref={mainRef} style={{height: '100%', overflow: 'auto'}}>
                 <TreeView ref={ulRefSet}
                           padFlatData
                           isReversed={isReversed}

@@ -1,69 +1,46 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-describe('Page builder', () => {
+import {createSite, deleteSite} from '@jahia/cypress';
+
+describe('Page builder - boxes and header tests', () => {
     let jcontent: JContentPageBuilder;
+    const siteKey = 'jcontentSite';
 
     before(() => {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
+        createSite(siteKey);
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
     });
 
     after(() => {
         cy.logout();
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+        deleteSite(siteKey);
     });
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-    });
-
-    describe('boxes and header', function () {
-        it('should show box when hovering', () => {
-            jcontent = JContent
-                .visit('jcontentSite', 'en', 'pages/home')
-                .switchToPageBuilder();
-            jcontent.getModule('/sites/jcontentSite/home/landing').hover().should('have.attr', 'data-hovered', 'true');
-        });
-
-        it.skip('should show box with name, status and edit buttons', () => {
-            jcontent = JContent
-                .visit('jcontentSite', 'en', 'pages/home')
-                .switchToPageBuilder();
-            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').click();
-            const header = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content4').getHeader();
-            header.get().find('p').contains('test-content4');
-            header.assertStatus('Not published');
-            header.getButton('edit');
-            header.getButton('contentMenu');
-        });
-
-        it.skip('should trim long titles', () => {
-            jcontent = JContent
-                .visit('jcontentSite', 'en', 'pages/home')
-                .switchToPageBuilder();
-            jcontent.getModule('/sites/jcontentSite/home/area-main/test-content8-long-text').click();
-            const header = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content8-long-text').getHeader();
-            header.get().find('p').contains('Lorem ipsum dolor sit am...');
-        });
-
-        it('should show create buttons', () => {
-            jcontent = JContent
-                .visit('jcontentSite', 'en', 'pages/home')
-                .switchToPageBuilder();
-            jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons().getButton('New content');
-        });
-    });
-
-    it('Click on links should open modal', () => {
         jcontent = JContent
-            .visit('jcontentSite', 'en', 'pages/home')
+            .visit(siteKey, 'en', 'pages/home')
             .switchToPageBuilder();
-        jcontent.getSecondaryNav().get().find('[data-sel-role="home"] .moonstone-treeView_itemToggle').click();
-        cy.contains('external-link').click();
-        cy.contains('The link redirects to an external URL');
-        cy.get('[data-sel-role="cancel-button"]').click();
-        cy.contains('internal-xxx').click();
-        cy.contains('The link redirects to Home');
-        cy.get('[data-sel-role="cancel-button"]').click();
+    });
+
+    it('should show create buttons and box when hovering', () => {
+        jcontent.getModule(`/sites/${siteKey}/home/landing`).getCreateButtons().getButton('New content');
+        jcontent.getModule(`/sites/${siteKey}/home/landing`).hover()
+            .should('have.attr', 'data-hovered', 'true');
+    });
+
+    it('should show box with name, status and edit buttons', () => {
+        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`).click();
+        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`).getHeader();
+        header.get().find('p').contains('test-content4');
+        header.assertStatus('Not published');
+        header.getButton('edit');
+        header.getButton('contentItemActionsMenu');
+    });
+
+    it('should trim long titles', () => {
+        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`).click();
+        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`).getHeader();
+        header.get().find('p').contains('Lorem ipsum dolor sit am...');
     });
 });

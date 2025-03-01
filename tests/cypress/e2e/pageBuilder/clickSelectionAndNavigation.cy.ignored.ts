@@ -46,4 +46,17 @@ describe('Page builder navigation tests', () => {
         module.click();
         module.getHeader().assertHeaderText('Our Companies');
     });
+
+    it('Click on links should open modal', () => {
+        const jcontent = JContent
+            .visit('jcontentSite', 'en', 'pages/home')
+            .switchToPageBuilder();
+        jcontent.getSecondaryNav().get().find('[data-sel-role="home"] .moonstone-treeView_itemToggle').click();
+        cy.contains('external-link').click();
+        cy.contains('The link redirects to an external URL');
+        cy.get('[data-sel-role="cancel-button"]').click();
+        cy.contains('internal-xxx').click();
+        cy.contains('The link redirects to Home');
+        cy.get('[data-sel-role="cancel-button"]').click();
+    });
 });

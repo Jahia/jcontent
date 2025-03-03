@@ -547,6 +547,9 @@
         "breadcrumbs": {
           "dropdownLabel": "Item path",
           "currentItem": "Current item"
+        },
+        "box": {
+          "linkedTo": "Linked to:"
         }
       }
     },

@@ -70,6 +70,13 @@ export const QueryHandlersFragments = {
                 wipLangs: property(name: "j:workInProgressLanguages") {
                     values
                 }
+                boundComponent: property(name: "j:bindedComponent") {
+                    refNode {
+                      ...NodeCacheRequiredFields
+                      path
+                      displayName(language: $language)
+                    }
+                  }
                 ancestors(fieldFilter: {filters: {fieldName: "deletionDate", evaluation: NOT_EMPTY}}) {
                     ...NodeCacheRequiredFields
                     deletionDate:property(name: "j:deletionDate") {

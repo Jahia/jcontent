@@ -540,6 +540,9 @@
         "breadcrumbs": {
           "dropdownLabel": "Chemin de l’élément",
           "currentItem": "Elément courant"
+        },
+        "box": {
+          "linkedTo": "Lié à:"
         }
       }
     },

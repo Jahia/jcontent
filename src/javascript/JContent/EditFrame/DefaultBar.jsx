@@ -8,6 +8,7 @@ import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 import {truncate} from '~/ContentEditor/utils';
+import {useTranslation} from 'react-i18next';
 
 const AreaShape = PropTypes.shape({
     isAbsolute: PropTypes.bool,
@@ -34,7 +35,9 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
 );
 
 export const LabelBar = ({node, area, dragProps}) => {
+    const {t} = useTranslation('jcontent');
     const title = truncate(node.displayName, 24);
+    const boundComponentTitleAddOn = node?.boundComponent?.refNode?.displayName ? ` - ${t('jcontent:label.contentManager.pageBuilder.box.linkedTo')} ${node?.boundComponent?.refNode?.displayName}` : '';
 
     if (area) {
         return (
@@ -43,7 +46,7 @@ export const LabelBar = ({node, area, dragProps}) => {
                       color="accent"
                       label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
                       icon={area.isList ? toIconComponent(`${window.contextJsParameters.contextPath}/modules/assets/icons/jnt_contentList.png`) : <Area/>}/>
-                <Typography isNowrap weight="bold" variant="caption">{title}</Typography>
+                <Typography isNowrap weight="bold" variant="caption">{title}{boundComponentTitleAddOn}</Typography>
             </>
         );
     }
@@ -58,7 +61,7 @@ export const LabelBar = ({node, area, dragProps}) => {
                 weight={dragProps?.isDropAllowed ? 'bold' : 'default'}
                 variant="caption"
             >
-                {title}
+                {title}{boundComponentTitleAddOn}
             </Typography>
         </>
     );

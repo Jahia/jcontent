@@ -1,0 +1,21 @@
+{
+  "nodeType": "jmix:bindedComponent",
+  "priority": 1,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "jmix:bindedComponent",
+          "fields": [
+            {
+              "rank": 0.0,
+              "name": "j:bindedComponent",
+              "hide": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

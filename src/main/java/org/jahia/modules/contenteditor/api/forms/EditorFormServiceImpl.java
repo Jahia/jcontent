@@ -197,6 +197,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                     for (Field field : fieldSet.getFields()) {
                         // Set field label and description if not set
                         field.initializeLabel(uiLocale, site, primaryNodeType);
+                        // j:bindedComponent property is normally hidden, but we want to have it in the form in order to choose component to bind
                         field.setVisible((field.isHide() == null || !field.isHide()) &&
                             (field.getRequiredPermission() == null || site.hasPermission(field.getRequiredPermission())));
                         field.setI18n(field.isI18n() != null && field.isI18n());

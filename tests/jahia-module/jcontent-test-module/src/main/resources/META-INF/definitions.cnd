@@ -177,3 +177,6 @@
 
 [cent:testPropOverridesA] > jnt:content, jmix:basicContent, jmix:testPropOverrides
 [cent:testPropOverridesB] > jnt:content, jmix:basicContent, jmix:testPropOverrides
+
+[cent:boundComponent] > jnt:content, jmix:siteComponent, jmix:droppableContent, jmix:bindedComponent
+- text (string, richtext)

@@ -539,6 +539,9 @@
         "breadcrumbs": {
           "dropdownLabel": "Element-Pfad",
           "currentItem": "Aktuellen element"
+        },
+        "box": {
+          "linkedTo": "Verbunden mit:"
         }
       }
     },

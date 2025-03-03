@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object/jcontent';
 import {enableModule} from '@jahia/cypress';
-import {PickerField} from "../../page-object/fields";
+import {PickerField} from '../../page-object/fields';
 
 describe('Bound component tests', () => {
     const siteKey = 'boundComponentSite';

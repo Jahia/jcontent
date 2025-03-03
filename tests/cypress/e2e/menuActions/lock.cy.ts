@@ -131,7 +131,7 @@ describe('Lock tests', () => {
     it('Has disabled create actions on locked media folder', () => {
         const relPath = 'files/test-mediaFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
-        const jcontent = JContent.visit(siteKey, 'en', `media/${relPath}`);
+        JContent.visit(siteKey, 'en', `media/${relPath}`);
 
         cy.log('header create actions are disabled');
         cy.get('button[data-sel-role="fileUpload"]').should('be.disabled');
@@ -141,7 +141,7 @@ describe('Lock tests', () => {
     it('Has disabled create actions on locked empty media folder', () => {
         const relPath = 'files/test-emptyMediaFolderLock1';
         lockNode(`/sites/${siteKey}/${relPath}`);
-        const jcontent = JContent.visit(siteKey, 'en', `media/${relPath}`);
+        JContent.visit(siteKey, 'en', `media/${relPath}`);
 
         cy.log('header create actions are disabled');
         cy.get('button[data-sel-role="fileUpload"]').should('be.disabled');

@@ -1,38 +1,33 @@
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
+import {createSite, deleteSite} from '@jahia/cypress';
 
 describe('Create content tests', () => {
+    const siteKey = 'jcontentSite2';
+
     before(function () {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
+        createSite(siteKey);
+        cy.apollo({
+            mutationFile: 'jcontent/createContent.graphql',
+            variables: {homePath: `/sites/${siteKey}/home`}
+        });
 
         cy.loginAndStoreSession(); // Edit in chief
     });
 
     after(function () {
         cy.logout();
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+        deleteSite(siteKey);
     });
 
     describe('Content Folders creation', () => {
-        let jcontent: JContent;
         beforeEach(() => {
             cy.loginAndStoreSession();
-            JContent.visit('jcontentSite', 'en', 'content-folders/contents');
-            jcontent = new JContent();
-            jcontent.selectAccordion('content-folders');
         });
 
         it('Can create content in content folders', function () {
-            JContent.visit('jcontentSite', 'en', 'content-folders/contents');
-            jcontent = new JContent();
+            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             jcontent.selectAccordion('content-folders');
-            jcontent
-                .getCreateContent()
-                .open()
-                .getContentTypeSelector()
-                .selectContentType('jmix:basicContent')
-                .selectContentType('jnt:bigText')
-                .create();
+            jcontent.createContent('jnt:bigText').create();
         });
     });
 
@@ -42,12 +37,12 @@ describe('Create content tests', () => {
         beforeEach(() => {
             cy.loginAndStoreSession();
             jcontent = JContent
-                .visit('jcontentSite', 'en', 'pages/home')
+                .visit(siteKey, 'en', 'pages/home')
                 .switchToPageBuilder();
         });
 
         it('Create content in page builder', () => {
-            const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
+            const buttons = jcontent.getModule(`/sites/${siteKey}/home/landing`).getCreateButtons();
             buttons.get().scrollIntoView();
             buttons.getButton('New content').click();
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
@@ -62,10 +57,11 @@ describe('Create content tests', () => {
             });
         });
 
-        it.skip('Update newly created content', () => {
-            jcontent = new JContentPageBuilder(new JContent());
-            jcontent.getModule('/sites/jcontentSite/home/landing').get().scrollIntoView();
-            jcontent.getModule('/sites/jcontentSite/home/landing/rich-text').doubleClick();
+        it('Update newly created content', () => {
+            jcontent.getModule(`/sites/${siteKey}/home/landing`).get().scrollIntoView();
+            jcontent.getModule(`/sites/${siteKey}/home/landing/rich-text`, false).doubleClick();
+            // Jcontent.getModule(`/sites/${siteKey}/home/landing/rich-text`, false).contextMenu(true).selectByRole('edit');
+
             const contentEditor = new ContentEditor();
             const richTextField = contentEditor.getRichTextField('jnt:bigText_text');
             richTextField.setData('Newly updated content');
@@ -80,7 +76,7 @@ describe('Create content tests', () => {
         });
 
         it('Create content in page builder using insertion points', () => {
-            const module = jcontent.getModule('/sites/jcontentSite/home/landing');
+            const module = jcontent.getModule(`/sites/${siteKey}/home/landing`);
             module.click();
             const buttons = module.getCreateButtons();
             buttons.getFirstInsertionButton().click();

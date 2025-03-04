@@ -254,6 +254,9 @@ export class JContentPageBuilder extends JContent {
 
     getModule(path: string, bypassFrameLoadedCheck = true): PageBuilderModule {
         const parentFrame = this.iframe(bypassFrameLoadedCheck);
+        // I see cypress querying the module even before iFrame has settled and verified.
+        // Force a wait here to settle the iframe first before continuing
+        cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;
@@ -400,8 +403,19 @@ class PageBuilderModule extends BaseComponent {
         }));
     }
 
+    assertHasNoCreateButtons() {
+        this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
+            return cy.get('iframe[data-sel-role="page-builder-frame-active"]').find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`).should('not.exist');
+        });
+    }
+
     contextMenu(selectFirst = false, force = true): Menu {
-        this.getHeader(selectFirst);
+        if (selectFirst) {
+            this.getHeader(selectFirst);
+        } else {
+            this.hover();
+        }
+
         this.get().rightclick({force});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }

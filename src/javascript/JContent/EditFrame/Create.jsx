@@ -187,6 +187,10 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         };
     };
 
+    if (isDisabled) {
+        return null;
+    }
+
     return !anyDragging && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property

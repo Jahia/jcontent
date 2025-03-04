@@ -1,64 +1,55 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
+import {createSite, deleteSite} from '@jahia/cypress';
 
-describe('Page builder', () => {
+describe('Page builder - clipboard tests', () => {
     let jcontent: JContentPageBuilder;
+    const siteKey = 'jcontentSite';
 
     before(() => {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
+        createSite(siteKey);
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
     });
 
     after(() => {
         cy.logout();
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+        deleteSite(siteKey);
     });
 
     beforeEach(() => {
         cy.loginAndStoreSession();
         jcontent = JContent
-            .visit('jcontentSite', 'en', 'pages/home')
+            .visit(siteKey, 'en', 'pages/home')
             .switchToPageBuilder();
     });
 
-    describe('clipboard', function () {
-        it.skip('should show paste button when we copy', function () {
-            jcontent.refresh();
+    it('should show paste button when we copy', function () {
+        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`).contextMenu(true).selectByRole('copy');
 
-            // Context menu does not show up; wait necessary
-            // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(3000);
+        const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);
+        landingArea.click(); // Deselect copied content
+        const buttons = landingArea.getCreateButtons();
+        buttons.assertHasNoButtonForType('New content');
+        buttons.getButton('Paste');
+        buttons.getButton('Paste as reference');
+    });
 
-            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true);
-            menu.select('Copy');
+    it('should remove paste button when we clear clipboard', function () {
+        const menu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true).selectByRole('copy');
 
-            const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons.assertHasNoButtonForType('New content');
-            buttons.getButton('Paste');
-            buttons.getButton('Paste as reference');
-        });
+        // Clearing selection should keep paste buttons
+        const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);
+        landingArea.click(); // Deselect copied content
+        let buttons = landingArea.getCreateButtons();
+        buttons.assertHasNoButtonForType('New content');
+        buttons.getButton('Paste');
+        buttons.getButton('Paste as reference');
+        jcontent.clearClipboard();
 
-        it.skip('remove paste button when we clear clipboard', function () {
-            jcontent.refresh();
-
-            // Context menu does not show up; wait necessary
-            // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(3000);
-
-            const menu = jcontent.getModule('/sites/jcontentSite/home/area-main/test-content1').contextMenu(true);
-            menu.select('Copy');
-
-            // Clearing selection should keep paste buttons
-            let buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons.assertHasNoButtonForType('New content');
-            buttons.getButton('Paste');
-            buttons.getButton('Paste as reference');
-            jcontent.clearClipboard();
-
-            buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
-            buttons.getButton('New content');
-            buttons.assertHasNoButtonForType('Paste');
-            buttons.assertHasNoButtonForType('Paste as reference');
-        });
+        jcontent.getModule(`/sites/${siteKey}/home/landing`).getCreateButtons();
+        buttons = landingArea.getCreateButtons();
+        buttons.getButton('New content');
+        buttons.assertHasNoButtonForType('Paste');
+        buttons.assertHasNoButtonForType('Paste as reference');
     });
 });

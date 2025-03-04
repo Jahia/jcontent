@@ -12,29 +12,22 @@ describe('Create content tests', () => {
                 pathOrId: '/sites/digitall/contents'
             }
         });
+        cy.loginAndStoreSession();
     });
 
     after(function () {
+        cy.logout();
         cy.apollo({
             mutationFile: 'jcontent/jcrDeleteNode.graphql',
             variables: {
                 pathOrId: '/sites/digitall/contents/ce-usages-contents'
             }
         });
-
         deleteSite(usagesSite);
     });
 
-    beforeEach(() => {
-        cy.loginAndStoreSession();
-        jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
-    });
-
-    afterEach(() => {
-        cy.logout();
-    });
-
     it('display 16 usages', () => {
+        jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
         jcontent.switchToListMode().getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         const advancedOptions = contentEditor.switchToAdvancedOptions();
@@ -48,7 +41,7 @@ describe('Create content tests', () => {
         pagination.select('20');
         cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable2').should('be.visible');
         cy.get('@usagesTable2').find('tbody > tr').should('have.length', 16);
-        contentEditor.cancel();
+        // contentEditor.cancel();
     });
 
     it('displays 31 usages and restriction message', () => {

@@ -3,11 +3,9 @@ import {addNode, createSite, deleteSite} from '@jahia/cypress';
 import {addPageGql, addContentGql} from '../../fixtures/jcontent/pageComposer/setLimitContent';
 
 describe('Page builder - list limit restrictions tests', () => {
-
     before(() => {
         cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
     });
-
 
     beforeEach(() => {
         cy.loginAndStoreSession();
@@ -26,12 +24,12 @@ describe('Page builder - list limit restrictions tests', () => {
 
             addNode({
                 parentPathOrId: `/sites/${contentSiteKey}/home`,
-                name: "landing",
-                primaryNodeType: "jnt:contentList",
+                name: 'landing',
+                primaryNodeType: 'jnt:contentList',
                 children: [{
-                    name: "test-content1",
-                    primaryNodeType: "jnt:bigText",
-                    properties: [{name: "text", language: "en", value: "test 1"}],
+                    name: 'test-content1',
+                    primaryNodeType: 'jnt:bigText',
+                    properties: [{name: 'text', language: 'en', value: 'test 1'}]
                 }]
             });
         });
@@ -45,7 +43,7 @@ describe('Page builder - list limit restrictions tests', () => {
         after(() => {
             cy.logout();
             deleteSite(contentSiteKey);
-        })
+        });
 
         it('should show buttons before removing limit', () => {
             jcontent.getModule(`/sites/${contentSiteKey}/home/landing`)
@@ -61,9 +59,9 @@ describe('Page builder - list limit restrictions tests', () => {
         });
 
         it('should not show create button after adding limit', () => {
-            cy.wait(3000);
+            cy.wait(3000); // eslint-disable-line cypress/no-unnecessary-waiting
             jcontent.refresh();
-            jcontent.getModule(`/sites/${contentSiteKey}/home/landing`).assertHasNoCreateButtons()
+            jcontent.getModule(`/sites/${contentSiteKey}/home/landing`).assertHasNoCreateButtons();
         });
 
         it('should not show paste button when limit is reached', () => {
@@ -92,7 +90,7 @@ describe('Page builder - list limit restrictions tests', () => {
         after(() => {
             cy.logout();
             deleteSite(limitSiteKey);
-        })
+        });
 
         it('should show create button when template limit is not reached', () => {
             cy.apollo({
@@ -112,5 +110,4 @@ describe('Page builder - list limit restrictions tests', () => {
             pageBuilder.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`).assertHasNoCreateButtons();
         });
     });
-
 });

@@ -35,7 +35,7 @@ describe('Page builder - clipboard tests', () => {
     });
 
     it('should remove paste button when we clear clipboard', function () {
-        const menu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true).selectByRole('copy');
+        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true).selectByRole('copy');
 
         // Clearing selection should keep paste buttons
         const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);

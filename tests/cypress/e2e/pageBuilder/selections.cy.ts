@@ -1,6 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
 import {ContentEditor} from '../../page-object';
-import {getComponentBySelector, Menu} from "@jahia/cypress";
 
 describe('Page builder - selections test', () => {
     let jcontent: JContentPageBuilder;

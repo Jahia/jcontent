@@ -4,11 +4,7 @@ import {Field} from './field';
 export class ChoicelistField extends Field {
     addNewValue(value: string): void {
         this.get().click();
-        const choicelistMenu = getComponentBySelector(Menu, '[role="listbox"]');
-
-        const itemSel = `.moonstone-menuItem[data-value="${value}"]`;
-        choicelistMenu.get().find(itemSel).scrollIntoView().should('be.visible');
-        choicelistMenu.get().find(itemSel).click();
+        getComponentBySelector(Menu, '[role="listbox"]').selectByValue(value);
     }
 
     assertSelected(value: string): void {

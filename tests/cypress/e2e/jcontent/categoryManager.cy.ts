@@ -1,5 +1,5 @@
 import {CategoryManager} from '../../page-object';
-import {BaseComponent, Button, deleteNode, Dropdown, getComponentByAttr, getComponentByRole} from '@jahia/cypress';
+import {BaseComponent, Button, deleteNode, Dropdown, getComponentByAttr} from '@jahia/cypress';
 import * as path from 'path';
 
 describe('Category Manager', {defaultCommandTimeout: 10000}, () => {

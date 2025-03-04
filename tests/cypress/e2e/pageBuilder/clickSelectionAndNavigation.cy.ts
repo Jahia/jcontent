@@ -1,27 +1,25 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {addNode, deleteNode} from "@jahia/cypress";
+import {addNode, deleteNode} from '@jahia/cypress';
 
 describe('Page builder - navigation tests', () => {
-
     before(() => {
         addNode({
             parentPathOrId: '/sites/digitall/home',
-            name: "external-link",
-            primaryNodeType: "jnt:externalLink",
-            properties: [{name: "j:url", value: "http://www.google.com"}]
+            name: 'external-link',
+            primaryNodeType: 'jnt:externalLink',
+            properties: [{name: 'j:url', value: 'http://www.google.com'}]
         });
 
         addNode({
             parentPathOrId: '/sites/digitall/home',
-            name: "internal-link",
-            primaryNodeType: "jnt:nodeLink",
+            name: 'internal-link',
+            primaryNodeType: 'jnt:nodeLink',
             properties: [
-                { name: "j:node", value: '/sites/digitall/home', type: 'REFERENCE' },
-                { name: "jcr:title", language: "en", value: "internal-xxx" }
+                {name: 'j:node', value: '/sites/digitall/home', type: 'REFERENCE'},
+                {name: 'jcr:title', language: 'en', value: 'internal-xxx'}
             ]
         });
     });
-
 
     beforeEach(function () {
         cy.loginAndStoreSession();

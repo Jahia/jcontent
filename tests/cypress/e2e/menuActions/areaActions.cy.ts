@@ -1,12 +1,12 @@
 import {JContent} from '../../page-object';
-import {getComponentBySelector, Menu} from "@jahia/cypress";
+import {getComponentBySelector, Menu} from '@jahia/cypress';
 
 describe('Area actions', () => {
     let jcontent: JContent;
 
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-        cy.apollo({mutationFile: 'jcontent/createContent.graphql'})
+        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({
             mutationFile: 'jcontent/createTextContentUnderPath.graphql',
             variables: {path: '/sites/jcontentSite/home'}
@@ -31,11 +31,11 @@ describe('Area actions', () => {
         header.getButton('contentItemActionsMenu').click();
         const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
 
-        menu.get().find(`.moonstone-menuItem[data-sel-role="editAdvanced"]`).should('be.visible');
-        menu.get().find(`.moonstone-menuItem[data-sel-role="delete"]`).should('not.exist');
-        menu.get().find(`.moonstone-menuItem[data-sel-role="copy"]`).should('not.exist');
-        menu.get().find(`.moonstone-menuItem[data-sel-role="cut"]`).should('not.exist');
-        menu.get().find(`.moonstone-menuItem[data-sel-role="edit"]`).should('not.exist');
+        menu.get().find('.moonstone-menuItem[data-sel-role="editAdvanced"]').should('be.visible');
+        menu.get().find('.moonstone-menuItem[data-sel-role="delete"]').should('not.exist');
+        menu.get().find('.moonstone-menuItem[data-sel-role="copy"]').should('not.exist');
+        menu.get().find('.moonstone-menuItem[data-sel-role="cut"]').should('not.exist');
+        menu.get().find('.moonstone-menuItem[data-sel-role="edit"]').should('not.exist');
     });
 
     it('Checks that content can be pasted into the area', () => {

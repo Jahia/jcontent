@@ -41,7 +41,7 @@ describe('Create content tests', () => {
         pagination.select('20');
         cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable2').should('be.visible');
         cy.get('@usagesTable2').find('tbody > tr').should('have.length', 16);
-        // contentEditor.cancel();
+        // ContentEditor.cancel();
     });
 
     it('displays 31 usages and restriction message', () => {

@@ -1,14 +1,16 @@
 import {JContent} from '../../page-object';
-// TODO: Fix contextMenu right click position
-// depending on content in a given area the target for rightclick may resolve differently leading to inconsistency
-// I tried different position values and rightlick on header but as the header is sticky and moves slightly it looks like
-// cypress gets the wrong coords in the end.
+import {getComponentBySelector, Menu} from "@jahia/cypress";
+
 describe('Area actions', () => {
     let jcontent: JContent;
 
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
-        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
+        cy.apollo({mutationFile: 'jcontent/createContent.graphql'})
+        cy.apollo({
+            mutationFile: 'jcontent/createTextContentUnderPath.graphql',
+            variables: {path: '/sites/jcontentSite/home'}
+        });
     });
 
     after(() => {
@@ -23,34 +25,37 @@ describe('Area actions', () => {
 
     it('Checks that delete, copy and cut menu items are not present on areas in page builder', () => {
         const jcontentPageBuilder = jcontent.switchToPageBuilder();
-        cy.apollo({mutationFile: 'jcontent/createTextContentUnderPath.graphql', variables: {
-            path: '/sites/jcontentSite/home/landing'
-        }});
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(3000);
-        jcontentPageBuilder.refresh();
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(3000);
-        const menu = jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing')
-            .contextMenu(true);
-        menu.shouldNotHaveItem('Delete');
-        menu.shouldNotHaveItem('Copy');
-        menu.shouldNotHaveItem('Cut');
-        menu.shouldHaveItem('Edit');
+        const header = jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing', false)
+            .getHeader(false);
+        header.get().click();
+        header.getButton('contentItemActionsMenu').click();
+        const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+
+        menu.get().find(`.moonstone-menuItem[data-sel-role="editAdvanced"]`).should('be.visible');
+        menu.get().find(`.moonstone-menuItem[data-sel-role="delete"]`).should('not.exist');
+        menu.get().find(`.moonstone-menuItem[data-sel-role="copy"]`).should('not.exist');
+        menu.get().find(`.moonstone-menuItem[data-sel-role="cut"]`).should('not.exist');
+        menu.get().find(`.moonstone-menuItem[data-sel-role="edit"]`).should('not.exist');
     });
 
     it('Checks that content can be pasted into the area', () => {
         const jcontentPageBuilder = jcontent.switchToPageBuilder();
-        jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing/test-content-path2').contextMenu(true).select('Copy');
+        jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing/test-content-path2', false)
+            .contextMenu(false, false)
+            .selectByRole('copy');
 
         // Clicking on area header is very tricky due to overlapping contents. Select area header using footer instead.
         const moduleItem = jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main/test-content1');
         moduleItem.click();
         moduleItem.getFooter().getItemPathDropdown().open().select('area-main');
 
-        jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main')
-            .contextMenu(false)
-            .select('Paste');
+        const header = jcontentPageBuilder.getModule('/sites/jcontentSite/home/area-main', false)
+            .getHeader(false);
+        header.get().scrollIntoView();
+        header.getButton('contentItemActionsMenu').click();
+        const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.selectByRole('paste');
+        cy.get('#message-id').contains('successfully pasted');
         jcontentPageBuilder.refresh();
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);

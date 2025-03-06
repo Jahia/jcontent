@@ -15,6 +15,11 @@
     justify-content: center;
     align-items: center;
 
+    // Hide container if there is no children
+    &:empty {
+        display: none;
+    }
+
     &.insertionPoint.isNotEmpty::before {
         content: "";
 

@@ -15,7 +15,8 @@ import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.re
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
 import {getBoundingBox} from '../EditFrame.utils';
 import InsertionPoints from '../InsertionPoints';
-import {BoxesContextMenu} from './BoxesContextMenu';
+import BoxesContextMenu from './BoxesContextMenu';
+import useClearSelection from './useClearSelection';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -168,27 +169,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         return false;
     }, [onSelect, currentDocument, clickedElement, setClickedElement, dispatch, selection]);
 
-    const clearSelection = useCallback(event => {
-        if (selection.length === 1 && !event.defaultPrevented) {
-            dispatch(cmClearSelection());
-        }
-    }, [selection, dispatch]);
-
-    const handleKeyboardNavigation = useCallback(event => {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-            dispatch(cmClearSelection());
-        }
-    }, [dispatch]);
-    // Clear selection when clicking outside any module or if pressing escape key
-    useEffect(() => {
-        currentDocument.addEventListener('click', clearSelection);
-        currentDocument.addEventListener('keydown', handleKeyboardNavigation);
-        return () => {
-            currentDocument.removeEventListener('click', clearSelection);
-            currentDocument.removeEventListener('keydown', handleKeyboardNavigation);
-        };
-    }, [selection, dispatch, currentDocument, clearSelection, handleKeyboardNavigation]);
-
+    useClearSelection({currentDocument, setClickedElement});
     useEffect(() => {
         const _placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {

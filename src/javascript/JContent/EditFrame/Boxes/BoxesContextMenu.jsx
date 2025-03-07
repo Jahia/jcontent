@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 
-export const BoxesContextMenu = ({currentFrameRef, currentDocument, currentPath, selection}) => {
+const BoxesContextMenu = ({currentFrameRef, currentDocument, currentPath, selection}) => {
     const contextualMenu = useRef();
 
     useEffect(() => {
@@ -72,3 +72,5 @@ BoxesContextMenu.propTypes = {
     currentPath: PropTypes.string,
     selection: PropTypes.arrayOf(PropTypes.string)
 };
+
+export default BoxesContextMenu;

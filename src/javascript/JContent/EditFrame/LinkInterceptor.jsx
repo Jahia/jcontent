@@ -9,12 +9,8 @@ import styles from './LinkInterceptor.scss';
 const absoluteRegex = /^(?:[a-zA-Z+]+:)?\/\//;
 const jahiaRegex = /\/cms\/editframe\/default\/([a-zA-Z0-9_-]+)\/(sites\/([^/]+))?\/(.*)/;
 
-function intercept(doc, site, setModal, onDocumentClick) {
+function intercept(doc, site, setModal) {
     const handler = e => {
-        if (typeof onDocumentClick === 'function') {
-            onDocumentClick(e);
-        }
-
         const target = e.target.tagName === 'A' ? e.target : e.target.closest('a');
         if (target) {
             const url = target.getAttribute('href');
@@ -39,15 +35,15 @@ function intercept(doc, site, setModal, onDocumentClick) {
     return handler;
 }
 
-export const LinkInterceptor = ({document, onDocumentClick}) => {
+export const LinkInterceptor = ({document}) => {
     const site = useSelector(state => state.site);
     const {t} = useTranslation('jcontent');
     const [modal, setModal] = useState({isOpen: false});
 
     useEffect(() => {
-        let handler = document && intercept(document, site, setModal, onDocumentClick);
+        let handler = document && intercept(document, site, setModal);
         return () => document?.removeEventListener('click', handler);
-    }, [document, site, setModal, onDocumentClick]);
+    }, [document, site, setModal]);
 
     const handleClose = useCallback(() => {
         setModal(modal => ({...modal, isOpen: false}));
@@ -97,7 +93,6 @@ export const LinkInterceptor = ({document, onDocumentClick}) => {
 };
 
 LinkInterceptor.propTypes = {
-    document: PropTypes.object.isRequired,
-    onDocumentClick: PropTypes.func
+    document: PropTypes.object.isRequired
 };
 

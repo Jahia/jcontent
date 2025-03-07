@@ -1,21 +1,22 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {ContextualMenu} from '@jahia/ui-extender';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {Box} from './Box';
-import {Create} from './Create';
+import {Box} from '../Box';
+import {Create} from '../Create';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
-import {BoxesQuery} from '~/JContent/EditFrame/Boxes.gql-queries';
+import {BoxesQuery} from './Boxes.gql-queries';
 import {hasMixin, isDescendant, isDescendantOrSelf, isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../redux/selection.redux';
+import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {findAvailableBoxConfig, pathExistsInTree} from '../JContent.utils';
+import {findAvailableBoxConfig, pathExistsInTree} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
-import {getBoundingBox} from './EditFrame.utils';
-import InsertionPoints from './InsertionPoints';
+import {getBoundingBox} from '../EditFrame.utils';
+import InsertionPoints from '../InsertionPoints';
+import BoxesContextMenu from './BoxesContextMenu';
+import useClearSelection from './useClearSelection';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -40,16 +41,6 @@ const disallowSelection = element => {
 };
 
 let timeout;
-
-const elementIsInBreadcrumbFooter = element => {
-    // Detects element to be a breadcrumb item or list item found in dropdown menus
-    return element.closest('[data-sel-role="pagebuilder-breadcrumb"]') !== null || element.closest('.moonstone-listItem') !== null;
-};
-
-const checkClickInBreadcrumbFooter = event => {
-    const element = event.target;
-    return element && elementIsInBreadcrumbFooter(element);
-};
 
 function getRelativePos(coord1, coord2) {
     if (!coord1 || !coord2) {
@@ -178,29 +169,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         return false;
     }, [onSelect, currentDocument, clickedElement, setClickedElement, dispatch, selection]);
 
-    const clearSelection = useCallback(event => {
-        if (selection.length === 1 && !event.defaultPrevented) {
-            dispatch(cmClearSelection());
-        }
-    }, [selection, dispatch]);
-
-    const rootElement = useRef();
-    const contextualMenu = useRef();
-    const handleKeyboardNavigation = useCallback(event => {
-        if (event.key === 'Escape' || event.keyCode === 27) {
-            dispatch(cmClearSelection());
-        }
-    }, [dispatch]);
-    // Clear selection when clicking outside any module or if pressing escape key
-    useEffect(() => {
-        currentDocument.addEventListener('click', clearSelection);
-        currentDocument.addEventListener('keydown', handleKeyboardNavigation);
-        return () => {
-            currentDocument.removeEventListener('click', clearSelection);
-            currentDocument.removeEventListener('keydown', handleKeyboardNavigation);
-        };
-    }, [selection, dispatch, currentDocument, clearSelection, handleKeyboardNavigation]);
-
+    useClearSelection({currentDocument, setClickedElement});
     useEffect(() => {
         const _placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
@@ -282,40 +251,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         TableViewModeChangeTracker.resetChanged();
 
         setModules(_modules);
-
-        currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
-            // Prevent showing contextual menu if clicked on breadcrumb, note that ctrl + click counts as right click and triggers contextmenu
-            if (checkClickInBreadcrumbFooter(event)) {
-                event.preventDefault();
-                event.stopPropagation();
-                // Ignore for right click and other button + click combinations
-                if (event.ctrlKey) {
-                    const clickEvent = new MouseEvent('click', {
-                        bubbles: true,
-                        cancelable: true,
-                        ctrlKey: true,
-                        detail: 1,
-                        screenX: event.screenX,
-                        screenY: event.screenY,
-                        clientX: event.clientX,
-                        clientY: event.clientY
-                    });
-                    event.target.dispatchEvent(clickEvent);
-                }
-
-                return;
-            }
-
-            // Show context menu
-            const rect = currentFrameRef.current.getBoundingClientRect();
-            const dup = new MouseEvent(event.type, {
-                ...event,
-                clientX: event.clientX + rect.x,
-                clientY: event.clientY + rect.y
-            });
-            contextualMenu.current(dup);
-            event.preventDefault();
-        });
     }, [path, currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
 
     const paths = [...new Set([
@@ -385,19 +320,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         depth: m.dataset.jahiaPath.split('/').length
     })), [modules]);
 
-    let pathObject;
-
-    if (selection.length > 0) {
-        if (selection.includes(currentPath)) {
-            pathObject = selection.length === 1 ? {path: selection[0]} : {paths: selection};
-            pathObject.actionKey = 'selectedContentMenu';
-        } else {
-            pathObject = {path: currentPath, actionKey: 'notSelectedContentMenu'};
-        }
-    } else {
-        pathObject = {path: currentPath, actionKey: 'contentItemContextActionsMenu'};
-    }
-
     const setDraggedOverlayPosition = position => {
         currentDndInfo.current.draggedOverlayPosition = position;
     };
@@ -445,12 +367,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const el = currentElement?.element;
 
     return (
-        <div ref={rootElement}>
-            <ContextualMenu
-                setOpenRef={contextualMenu}
+        <div>
+            <BoxesContextMenu
+                currentFrameRef={currentFrameRef}
+                currentDocument={currentDocument}
                 currentPath={currentPath}
-                documentElement={currentDocument.documentElement}
-                {...pathObject}
+                selection={selection}
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
@@ -468,7 +390,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
                          isActionsHidden={selection.length > 0}
                          currentFrameRef={currentFrameRef}
-                         rootElementRef={rootElement}
                          element={element}
                          breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||

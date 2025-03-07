@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from '../Box';
 import {Create} from '../Create';
@@ -174,7 +174,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     }, [selection, dispatch]);
 
-    const rootElement = useRef();
     const handleKeyboardNavigation = useCallback(event => {
         if (event.key === 'Escape' || event.keyCode === 27) {
             dispatch(cmClearSelection());
@@ -387,7 +386,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const el = currentElement?.element;
 
     return (
-        <div ref={rootElement}>
+        <div>
             <BoxesContextMenu
                 currentFrameRef={currentFrameRef}
                 currentDocument={currentDocument}
@@ -410,7 +409,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
                          isActionsHidden={selection.length > 0}
                          currentFrameRef={currentFrameRef}
-                         rootElementRef={rootElement}
                          element={element}
                          breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||

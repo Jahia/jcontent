@@ -81,7 +81,6 @@ export const Box = React.memo(({
     onSelect,
     setClickedElement,
     onSaved,
-    rootElementRef,
     currentFrameRef,
     isHeaderDisplayed,
     isHeaderHighlighted,
@@ -151,8 +150,7 @@ export const Box = React.memo(({
             setDraggedOverlayPosition(null);
             element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dragging, element, rootElementRef, setDraggedOverlayPosition]);
+    }, [dragging, element, currentOffset, setDraggedOverlayPosition]);
 
     useEffect(() => {
         element.classList.add(editStyles.enablePointerEvents);
@@ -324,8 +322,6 @@ Box.propTypes = {
     onSelect: PropTypes.func,
 
     onClick: PropTypes.func,
-
-    rootElementRef: PropTypes.any,
 
     currentFrameRef: PropTypes.any,
 

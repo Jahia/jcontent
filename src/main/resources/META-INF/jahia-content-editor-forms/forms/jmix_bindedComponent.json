@@ -7,6 +7,7 @@
       "fieldSets": [
         {
           "name": "jmix:bindedComponent",
+          "labelKey": "label.contentEditor.boundComponent.label",
           "fields": [
             {
               "rank": 0.0,

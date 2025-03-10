@@ -158,7 +158,7 @@
       "noResults": "Aucun résultat",
       "noResultsText": "Aucun résultat pour votre recherche \"{{text}}\"",
       "create": {
-        "contentFolder": "Nouveau répertoire de contenu",
+        "contentFolder": "Nouveau dossier",
         "folder": "Nouveau dossier",
         "create": "Créer",
         "contentOfType": "Nouveau : {{typeName}}",
@@ -564,7 +564,7 @@
       },
       "edit": {
         "title": "Éditer le contenu",
-        "contentEdit": "Editer le contenu",
+        "contentEdit": "Editer",
         "contentEditAdvanced": "Edition avancée",
         "contentEditSource": "Modifier la source référée",
         "validation": {

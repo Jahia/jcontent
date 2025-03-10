@@ -39,7 +39,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
+    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path || paths) && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
         <Render

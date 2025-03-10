@@ -50,7 +50,7 @@ export const CopyCutActionComponent = withNotifications()(({
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) &&
+    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path || paths) &&
         (res.node ?
             !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
             res.nodes?.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)

@@ -255,5 +255,21 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
             cy.get('[data-sel-role="selection-infos"]').should('not.exist');
         });
+
+        it('Does not show modify actions if in multiselection and jahia area is selected', () => {
+            cy.log('select item');
+            jcontent = JContent.visit('digitall', 'en', 'pages/home').switchToStructuredView();
+            jcontent.getTable().selectRowByLabel('bootstrap-container');
+            checkSelectionCount(1);
+            cy.get('[data-sel-role="delete"]').should('exist');
+            cy.get('[data-sel-role="copy"]').should('exist');
+            cy.get('[data-sel-role="cut"]').should('exist');
+
+            jcontent.getTable().selectRowByLabel('landing');
+            checkSelectionCount(2);
+            cy.get('[data-sel-role="delete"]').should('not.exist');
+            cy.get('[data-sel-role="copy"]').should('not.exist');
+            cy.get('[data-sel-role="cut"]').should('not.exist');
+        });
     });
 });

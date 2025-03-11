@@ -49,7 +49,7 @@ export const CategoriesLayout = ({
                                       isStructured={isStructured}
                                       isLoading={isLoading}
                                       selector={selector}
-                                      columns={[selection, name, visibleActions]}
+                                      columns={[selection, {...name, sortable: false}, visibleActions]}
                             />
                     </ErrorBoundary>
                 </Paper>

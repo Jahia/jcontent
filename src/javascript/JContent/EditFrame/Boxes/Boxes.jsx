@@ -87,7 +87,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         visibilityCondition: new Set(),
         liveRole: new Set()
     });
-    console.log(`status count: published: ${statusCount.modified.size}`);
+    console.log(`status count - modified: ${statusCount.modified.size}`);
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();

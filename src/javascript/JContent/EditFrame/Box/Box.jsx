@@ -201,7 +201,7 @@ export const Box = React.memo(({
         area
     } = useMemo(() => processCustomBoxConfigIfExists(node, type, isSomethingSelected), [node, type, isSomethingSelected]);
 
-    const {isStatusHighlighted, BoxStatus} = useBoxStatus({
+    const {isStatusHighlighted, displayStatuses, BoxStatus} = useBoxStatus({
         nodes,
         node,
         element,
@@ -285,6 +285,7 @@ export const Box = React.memo(({
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
                 (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
                 (isStatusHighlighted) && styles.boxHighlighted,
+                (displayStatuses.has('notTranslated')) && styles.notVisible,
                 (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
                  style={{
                      '--borderColor': borderColor
@@ -292,6 +293,12 @@ export const Box = React.memo(({
             >
                 {isHeaderDisplayed && Header}
                 {BoxStatus}
+
+                {displayStatuses.has('notTranslated') && (!isSelected && !isClicked) &&
+                    <div className={styles.overlayLabel}>
+                        Not translated in {language}
+                    </div>
+                }
 
                 {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}

@@ -48,8 +48,11 @@ $colorDragging: var(--color-white);
 
   outline: 2px solid var(--color-warning);
 
-  &.notVisible {
+  &.notVisible:not(.boxSelected) {
     background: var(--color-warning60);
+    .overlayLabel {
+      font-size: 1rem;
+    }
   }
 
   &.boxHovered {

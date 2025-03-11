@@ -5,7 +5,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {includes} from 'lodash';
 import React from 'react';
-import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
+import {ContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 import {truncate} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';

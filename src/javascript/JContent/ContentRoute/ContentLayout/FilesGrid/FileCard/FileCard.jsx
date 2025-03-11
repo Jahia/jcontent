@@ -11,7 +11,7 @@ import FileName from './FileName';
 import Actions from './Actions';
 import FileSize from './FileSize';
 import styles from './FileCard.scss';
-import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
+import {ContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';

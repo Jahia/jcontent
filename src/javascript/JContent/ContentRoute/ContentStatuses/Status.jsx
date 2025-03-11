@@ -40,11 +40,18 @@ export const config = {
 
 const types = Object.keys(config);
 
-const Status = ({type, tooltip, isDisabled, hasLabel}) => {
+const Status = ({type, tooltip, isDisabled, hasLabel, ...props}) => {
     const {t} = useTranslation('jcontent');
     const label = t(`label.contentManager.contentStatus.${type}`);
     return (
-        <Chip label={hasLabel ? label : null} isDisabled={isDisabled} title={tooltip || label} {...config[type]} data-sel-role="content-status"/>
+        <Chip
+            label={hasLabel ? label : null}
+            isDisabled={isDisabled}
+            title={tooltip || label}
+            data-sel-role="content-status"
+            {...config[type]}
+            {...props}
+        />
     );
 };
 

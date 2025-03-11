@@ -2,10 +2,10 @@ import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/client';
 import {GetContentStatuses} from './ContentStatuses.gql-queries';
-import ContentStatuses from './ContentStatuses';
+import {ContentStatuses} from './ContentStatuses';
 import PropTypes from 'prop-types';
 
-const ContentStatusesContainer = ({node, nodePath}) => {
+const ContentStatusesContainer = ({node, nodePath, ...props}) => {
     const {isDisabled, language, uilang, path} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
@@ -33,7 +33,7 @@ const ContentStatusesContainer = ({node, nodePath}) => {
     }
 
     return (
-        <ContentStatuses node={n} isDisabled={isDisabled} language={language} uilang={uilang}/>
+        <ContentStatuses node={n} isDisabled={isDisabled} language={language} uilang={uilang} {...props}/>
     );
 };
 

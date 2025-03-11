@@ -43,6 +43,28 @@ $colorDragging: var(--color-white);
     outline: 2px dashed var(--borderColor);
 }
 
+.boxHighlighted {
+  z-index: $indexSelected;
+
+  outline: 2px solid var(--color-warning);
+
+  &.notVisible {
+    background: var(--color-warning60);
+  }
+
+  &.boxHovered {
+    outline-color: var(--color-warning);
+
+    box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
+  }
+
+  .displayStatus {
+    float: right;
+    transform: translateY(-50%);
+    margin: 0 var(--spacing-small);
+  }
+}
+
 .withHeader {
     top: calc($barHeight + $barMargin) * -1;
     left: 0;

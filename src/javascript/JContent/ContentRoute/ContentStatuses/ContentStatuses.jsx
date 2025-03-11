@@ -14,10 +14,11 @@ const useContentStatuses = ({node, language}) => {
         markedForDeletion: isMarkedForDeletion(node),
         modified: false,
         published: false,
+        notPublished: true,
         warning: false,
         workInProgress: isWorkInProgress(node, language),
         invalidLanguage: Boolean(node.invalidLanguages?.values.includes(language)),
-        notTranslated: !Boolean(node.translationLanguages?.includes(language))
+        notTranslated: !node.translationLanguages?.includes(language)
     };
 
     if (node.aggregatedPublicationInfo) {
@@ -36,8 +37,10 @@ const useContentStatuses = ({node, language}) => {
             statuses.warning = true;
         }
     }
+
+    statuses.notPublished = !statuses.published;
     return statuses;
-}
+};
 
 const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, ...props}) => {
     const {t} = useTranslation('jcontent');

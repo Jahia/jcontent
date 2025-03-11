@@ -79,6 +79,15 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             setClickedElement(undefined);
         }
     }, [currentDocument, clickedElement, setClickedElement]);
+    
+    // TODO Remove and convert to a redux state
+    const [statusCount, setStatusCount] = useState({
+        modified: new Set(),
+        notPublished: new Set(),
+        visibilityCondition: new Set(),
+        liveRole: new Set()
+    });
+    console.log(`status count: published: ${statusCount.modified.size}`);
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
@@ -87,12 +96,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         timeout = window.setTimeout(() => {
             const moduleElement = getModuleElement(currentDocument, target);
             setCurrentElement(() => ({element: moduleElement, path: moduleElement.getAttribute('path')}));
-        }, 10);
+        }, 0);
     }, [setCurrentElement, currentDocument]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && event.currentTarget.dataset.current === 'true' &&
+        setCurrentElement(null);
+        if (event.relatedTarget && event.currentTarget.id === currentElement?.id &&
             !isDescendantOrSelf(
                 getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),
                 getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')
@@ -102,7 +112,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             window.clearTimeout(timeout);
             setCurrentElement(null);
         }
-    }, [setCurrentElement, currentDocument]);
+    }, [setCurrentElement, currentDocument, currentElement]);
 
     const onSelect = useCallback((event, _path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
@@ -261,6 +271,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     }, [path, currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
 
     const paths = [...new Set([
+        path,
         ...modules.map(m => m.dataset.jahiaPath),
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
@@ -381,6 +392,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
+                         nodes={nodes}
                          node={node}
                          isClicked={clickedElement && node.path === clickedElement.path}
                          isHovered={element === el}
@@ -407,6 +419,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
                          setClickedElement={setClickedElement}
+                         statusCountState={[statusCount, setStatusCount]}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onSelect={onSelect}

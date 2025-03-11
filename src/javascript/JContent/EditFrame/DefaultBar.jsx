@@ -1,5 +1,5 @@
 import {NodeIcon} from '~/utils';
-import styles from './Box.scss';
+import styles from './Box/Box.scss';
 import {Area, Chip, HandleDrag, toIconComponent, Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';

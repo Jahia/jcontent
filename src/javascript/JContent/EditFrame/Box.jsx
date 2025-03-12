@@ -133,7 +133,6 @@ export const Box = React.memo(({
         entries,
         onSaved: () => {
             onSaved();
-            setClickedElement(undefined);
         },
         pos: {before: element.dataset.prevPos, after: element.dataset.nextPos}
     });

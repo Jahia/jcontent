@@ -73,6 +73,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
 
+    // When document is updated after save, clicked element in memory no longer matches what's in the DOM
+    useEffect(() => {
+        if (clickedElement && !currentDocument.getElementById(clickedElement.element.getAttribute('id'))) {
+            setClickedElement(undefined);
+        }
+    }, [currentDocument, clickedElement, setClickedElement]);
+
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
         const target = event.currentTarget;
@@ -271,11 +278,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ...acc,
         [n.path]: n
     }), {}), [data?.jcr]);
-
-    // Update clickedElement if it doesn't exist anymore
-    if (clickedElement && data?.jcr.nodesByPath && !nodes[clickedElement?.path]) {
-        setClickedElement(undefined);
-    }
 
     const getBreadcrumbsForPath = _path => {
         const breadcrumbs = [];

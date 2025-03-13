@@ -44,28 +44,30 @@ $colorDragging: var(--color-white);
 }
 
 .boxHighlighted {
-  z-index: $indexSelected;
+    z-index: $indexSelected;
 
-  outline: 2px solid var(--color-warning);
+    outline: 2px solid var(--color-warning);
 
-  &.notVisible:not(.boxSelected) {
-    background: var(--color-warning60);
-    .overlayLabel {
-      font-size: 1rem;
+    &.notVisible:not(.boxSelected) {
+        background: var(--color-gray_light_plain20);
+
+        .overlayLabel {
+            font-size: 1rem;
+        }
     }
-  }
 
-  &.boxHovered {
-    outline-color: var(--color-warning);
+    &.boxHovered {
+        outline-color: var(--color-warning);
 
-    box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
-  }
+        box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
+    }
 
-  .displayStatus {
-    float: right;
-    transform: translateY(-50%);
-    margin: 0 var(--spacing-small);
-  }
+    .displayStatus {
+        float: right;
+        margin: 0 var(--spacing-small);
+
+        transform: translateY(-50%);
+    }
 }
 
 .withHeader {

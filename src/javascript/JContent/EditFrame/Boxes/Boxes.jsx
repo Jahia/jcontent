@@ -17,6 +17,7 @@ import {getBoundingBox} from '../EditFrame.utils';
 import InsertionPoints from '../InsertionPoints';
 import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
+import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -79,15 +80,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             setClickedElement(undefined);
         }
     }, [currentDocument, clickedElement, setClickedElement]);
-    
-    // TODO Remove and convert to a redux state
-    const [statusCount, setStatusCount] = useState({
-        modified: new Set(),
-        notPublished: new Set(),
-        visibilityCondition: new Set(),
-        liveRole: new Set()
-    });
-    console.log(`status count - modified: ${statusCount.modified.size}`);
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
@@ -276,6 +268,11 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
 
+    // Count for content status selector needs to be reset when document is refreshed
+    useEffect(() => {
+        dispatch(resetContentStatusPaths());
+    }, [dispatch, currentDocument]);
+
     const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
     useEffect(() => {
@@ -419,7 +416,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
                          setClickedElement={setClickedElement}
-                         statusCountState={[statusCount, setStatusCount]}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onSelect={onSelect}

@@ -93,8 +93,7 @@ export const Box = React.memo(({
     isActionsHidden,
     onDoubleClick,
     setDraggedOverlayPosition,
-    calculateDropTarget,
-    statusCountState
+    calculateDropTarget
 }) => {
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
@@ -206,8 +205,7 @@ export const Box = React.memo(({
         node,
         element,
         language,
-        isEnabled: !isClicked && !isAnythingDragging,
-        statusCountState
+        isEnabled: !isClicked && !isAnythingDragging
     });
 
     isHeaderDisplayed = !isSomethingSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
@@ -297,8 +295,7 @@ export const Box = React.memo(({
                 {displayStatuses.has('notTranslated') && (!isSelected && !isClicked) &&
                     <div className={styles.overlayLabel}>
                         Not translated in {language}
-                    </div>
-                }
+                    </div>}
 
                 {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}

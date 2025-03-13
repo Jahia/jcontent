@@ -425,6 +425,12 @@
         "warning": "Warning",
         "workInProgress": "Work in progress"
       },
+      "contentStatusSelector": {
+        "noStatus": "No status",
+        "published": "Show publication status",
+        "visibility": "Show visibility status",
+        "liveRole": "Show live role status"
+      },
       "view": {
         "flatList": "List",
         "structuredView": "Structured",

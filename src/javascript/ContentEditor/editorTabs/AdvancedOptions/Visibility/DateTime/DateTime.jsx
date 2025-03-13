@@ -55,7 +55,15 @@ function render(props, t) {
     );
 }
 
-export const DateTime = ({rules, refresh}) => {
+const ButtonRenderer = getButtonRenderer({
+    defaultButtonProps: {
+        variant: 'outlined',
+        size: 'default',
+        color: 'accent'
+    }
+});
+
+export const DateTime = ({rules, refresh, node}) => {
     const {t} = useTranslation('jcontent');
     const {sections} = useContentEditorSectionContext();
     const section = sections.filter(s => s.name === 'visibility');
@@ -124,6 +132,17 @@ export const DateTime = ({rules, refresh}) => {
                                            }}
                             />}
                     </div>
+                    <div className={stylesFieldset.fields}>
+                        {activatedSection &&
+                            <div className={styles.row}>
+                                <DisplayAction isIncludeSubTypes
+                                               actionKey="createContent"
+                                               path={`${node.path}/j:conditionalVisibility`}
+                                               nodeTypes={['jnt:condition']}
+                                               showOnNodeTypes={['jnt:conditionalVisibility']}
+                                               render={ButtonRenderer}/>
+                            </div>}
+                    </div>
                 </article>
             </section>
         </div>
@@ -132,5 +151,6 @@ export const DateTime = ({rules, refresh}) => {
 
 DateTime.propTypes = {
     rules: PropTypes.number.isRequired,
-    refresh: PropTypes.func.isRequired
+    refresh: PropTypes.func.isRequired,
+    node: PropTypes.object.isRequired
 };

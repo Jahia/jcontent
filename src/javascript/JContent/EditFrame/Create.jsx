@@ -193,12 +193,11 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     useEffect(() => {
         // Hide placeholder if not possible to add any content to the list
         // and insertion points/buttons are not shown
-        const oldDisplay = element.style.display;
         const callback = () => {
             if (isPlaceholder && !isEmpty && createButtonRef.current?.children?.length === 0) {
                 element.style.display = 'none';
             } else {
-                element.style.display = oldDisplay;
+                element.style.display = undefined;
             }
         };
 

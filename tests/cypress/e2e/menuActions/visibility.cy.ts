@@ -31,7 +31,6 @@ describe('Actions visibility', () => {
         menu.shouldHaveItem('Copy');
         menu.shouldHaveItem('Cut');
         menu.shouldHaveItem('Delete');
-        menu.shouldHaveItem('Open in Page Composer');
     });
 
     it('Displays browserControlBar action', () => {

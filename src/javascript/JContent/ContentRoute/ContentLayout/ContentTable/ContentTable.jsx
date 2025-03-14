@@ -23,7 +23,7 @@ import {useTable} from 'react-table';
 import {useVirtualizer} from '@tanstack/react-virtual';
 import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import {ContentListHeader} from './ContentListHeader/ContentListHeader';
-import {mainColumnData, reducedColumnData} from './reactTable/columns';
+import {mainColumnData, mediaColumnData, reducedColumnData} from './reactTable/columns';
 import {ContentTableWrapper} from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
@@ -33,12 +33,18 @@ import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import styles from './ContentTable.scss';
 import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
 
-export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, columns, selector}) => {
+export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, columns: propColumns, selector}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
     const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
+    const columns = useMemo(() => {
+        if (propColumns) {
+            return propColumns;
+        }
 
+        return mode === JContentConstants.mode.MEDIA ? mediaColumnData : mainColumnData;
+    }, [mode, propColumns]);
     const onPreviewSelect = useCallback(_previewSelection => dispatch(cmSetPreviewSelection(_previewSelection)), [dispatch]);
     const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);
     const setPageSize = useCallback(pageSize => dispatch(cmSetPageSize(pageSize)), [dispatch]);
@@ -234,8 +240,7 @@ ContentTable.defaultProps = {
         searchTerms: state.jcontent.params.searchTerms,
         tableOpenPaths: state.jcontent.tableOpenPaths,
         sort: state.jcontent.sort
-    }),
-    columns: mainColumnData
+    })
 };
 
 export default ContentTable;

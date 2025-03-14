@@ -19,6 +19,7 @@ import {ResizeContext} from '~/JContent/MainLayout/ResizeObserver';
 import {NarrowHeaderActions} from './NarrowHeaderActions';
 import {batchActions} from 'redux-batched-actions';
 import {contentStatusFragment} from '../ContentRoute/ContentStatuses/ContentStatuses.gql-queries';
+import {ContentStatusSelector} from '~/JContent/ContentRoute/ToolBar/ContentStatusSelector';
 
 const NARROW_HEADER_WIDTH = 750;
 
@@ -113,7 +114,7 @@ const ContentHeader = () => {
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={<ContentStatuses node={node}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
-            toolbarRight={viewSelector}
+            toolbarRight={<><ContentStatusSelector/>{viewSelector}</>}
         />
     ) : (
         <Header
@@ -128,7 +129,7 @@ const ContentHeader = () => {
                     <BrowseControlBar isShowingActions={selection.length === 0}/>
                 </>
             }
-            toolbarRight={viewSelector}
+            toolbarRight={<><ContentStatusSelector/>{viewSelector}</>}
         />
     );
 };

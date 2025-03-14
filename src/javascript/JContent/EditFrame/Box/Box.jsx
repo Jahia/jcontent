@@ -2,13 +2,14 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
+import {useBoxStatus} from './useBoxStatus';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
-import editStyles from './EditFrame.scss';
+import editStyles from '../EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
-import {Breadcrumbs} from './Breadcrumbs';
-import {findAvailableBoxConfig} from '../JContent.utils';
+import {Breadcrumbs} from '../Breadcrumbs';
+import {findAvailableBoxConfig, hasMixin} from '../../JContent.utils';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -68,6 +69,7 @@ const adaptContentPositionAndSize = element => {
 
 // eslint-disable-next-line complexity
 export const Box = React.memo(({
+    nodes,
     node,
     element,
     breadcrumbs,
@@ -198,8 +200,16 @@ export const Box = React.memo(({
         area
     } = useMemo(() => processCustomBoxConfigIfExists(node, type, isSomethingSelected), [node, type, isSomethingSelected]);
 
+    const {isStatusHighlighted, displayStatuses, BoxStatus} = useBoxStatus({
+        nodes,
+        node,
+        element,
+        language,
+        isEnabled: !isClicked && !isAnythingDragging
+    });
+
     isHeaderDisplayed = !isSomethingSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
-    if (!isHeaderDisplayed && !isHovered && !isSelected) {
+    if (!isHeaderDisplayed && !isHovered && !isSelected && !isStatusHighlighted) {
         return false;
     }
 
@@ -261,22 +271,31 @@ export const Box = React.memo(({
     );
 
     const boxStyle = !isAnythingDragging && isClicked && breadcrumbs.length > 0 ? styles.withHeaderAndFooter : styles.withHeader;
+    const hasNoTranslationOverlay = displayStatuses.has('noTranslation') &&
+        !hasMixin(node, 'jmix:markedForDeletionRoot') &&
+        !element.hasChildNodes();
 
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
+             data-node-path={node.path}
              style={currentOffset}
         >
             <div className={clsx(
                 styles.box,
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
                 (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
+                (isStatusHighlighted) && styles.boxHighlighted,
+                (hasNoTranslationOverlay) && styles.noDisplayOverlay,
                 (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
                  style={{
                      '--borderColor': borderColor
                  }}
             >
                 {isHeaderDisplayed && Header}
+                {BoxStatus}
+
+                {hasNoTranslationOverlay && <div className={styles.overlayLabel}>Nothing to display</div>}
 
                 {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}
@@ -299,6 +318,8 @@ Box.propTypes = {
     element: PropTypes.any,
 
     breadcrumbs: PropTypes.array,
+
+    nodes: PropTypes.array,
 
     node: PropTypes.any,
 

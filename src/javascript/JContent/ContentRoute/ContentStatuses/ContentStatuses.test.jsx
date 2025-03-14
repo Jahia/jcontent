@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
-import ContentStatuses from './ContentStatuses';
+import {ContentStatuses} from './ContentStatuses';
 import Status from './Status';
 
 describe('ContentStatuses', () => {

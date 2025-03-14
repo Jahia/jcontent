@@ -6,6 +6,10 @@ export const BoxesQuery = gql`
         jcr {
             nodesByPath(paths: $paths) {
                 ...NodeFields
+                translationLanguages,
+                invalidLanguages: property(name: "j:invalidLanguages") {
+                    values
+                }
                 primaryNodeType {
                     icon
                 }

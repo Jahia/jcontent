@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from '~/JContent/EditFrame/Box.scss';
+import styles from '~/JContent/EditFrame/Box/Box.scss';
 import PropTypes from 'prop-types';
 import React from 'react';
 

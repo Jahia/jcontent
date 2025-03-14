@@ -8,16 +8,17 @@ import styles from './ContentStatuses.scss';
 import Status from './Status';
 import clsx from 'clsx';
 
-const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel}) => {
-    const {t} = useTranslation('jcontent');
-
+const useContentStatuses = ({node, language}) => {
     const statuses = {
         locked: node.lockOwner,
         markedForDeletion: isMarkedForDeletion(node),
         modified: false,
         published: false,
+        notPublished: true,
         warning: false,
-        workInProgress: isWorkInProgress(node, language)
+        workInProgress: isWorkInProgress(node, language),
+        invalidLanguage: Boolean(node.invalidLanguages?.values.includes(language)),
+        noTranslation: !node.translationLanguages?.includes(language)
     };
 
     if (node.aggregatedPublicationInfo) {
@@ -37,8 +38,27 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
         }
     }
 
+    statuses.notPublished = !statuses.published;
+    return statuses;
+};
+
+const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, ...props}) => {
+    const {t} = useTranslation('jcontent');
+    const statuses = useContentStatuses({node, language});
+    const labelParams = {
+        noTranslation: {language: language.toUpperCase()}
+    };
+
     const renderStatus = type => (
-        <Status key={type} type={type} isDisabled={isDisabled} tooltip={getTooltip(node, type, t, uilang)} hasLabel={hasLabel}/>
+        <Status
+            key={type}
+            type={type}
+            isDisabled={isDisabled}
+            tooltip={getTooltip(node, type, t, uilang)}
+            hasLabel={hasLabel}
+            labelParams={labelParams?.[type]}
+            {...props}
+        />
     );
 
     const statusesToRender = renderedStatuses.map(s => {
@@ -97,6 +117,7 @@ ContentStatuses.propTypes = {
         wipLangs: PropTypes.shape({
             values: PropTypes.arrayOf(PropTypes.string)
         }),
+        translationLanguages: PropTypes.arrayOf(PropTypes.string),
         ancestors: PropTypes.arrayOf(PropTypes.shape({
             deleted: PropTypes.shape({
                 value: PropTypes.string
@@ -120,4 +141,4 @@ ContentStatuses.defaultProps = {
     renderedStatuses: ['modified', 'markedForDeletion', 'workInProgress', 'locked', 'published', 'warning']
 };
 
-export default ContentStatuses;
+export {ContentStatuses, useContentStatuses};

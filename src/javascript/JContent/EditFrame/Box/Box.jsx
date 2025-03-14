@@ -9,7 +9,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';
-import {findAvailableBoxConfig} from '../../JContent.utils';
+import {findAvailableBoxConfig, hasMixin} from '../../JContent.utils';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -271,6 +271,9 @@ export const Box = React.memo(({
     );
 
     const boxStyle = !isAnythingDragging && isClicked && breadcrumbs.length > 0 ? styles.withHeaderAndFooter : styles.withHeader;
+    const hasNoTranslationOverlay = displayStatuses.has('noTranslation') &&
+        !hasMixin(node, 'jmix:markedForDeletionRoot') &&
+        !element.hasChildNodes();
 
     return (
         <div ref={rootDiv}
@@ -283,7 +286,7 @@ export const Box = React.memo(({
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
                 (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
                 (isStatusHighlighted) && styles.boxHighlighted,
-                (displayStatuses.has('notTranslated')) && styles.notVisible,
+                (hasNoTranslationOverlay) && styles.noDisplayOverlay,
                 (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
                  style={{
                      '--borderColor': borderColor
@@ -292,10 +295,7 @@ export const Box = React.memo(({
                 {isHeaderDisplayed && Header}
                 {BoxStatus}
 
-                {displayStatuses.has('notTranslated') && (!isSelected && !isClicked) &&
-                    <div className={styles.overlayLabel}>
-                        Not translated in {language}
-                    </div>}
+                {hasNoTranslationOverlay && <div className={styles.overlayLabel}>Nothing to display</div>}
 
                 {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}

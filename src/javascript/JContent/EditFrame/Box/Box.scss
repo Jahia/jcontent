@@ -44,17 +44,7 @@ $colorDragging: var(--color-white);
 }
 
 .boxHighlighted {
-    z-index: $indexSelected;
-
     outline: 2px solid var(--color-warning);
-
-    &.notVisible:not(.boxSelected) {
-        background: var(--color-gray_light_plain20);
-
-        .overlayLabel {
-            font-size: 1rem;
-        }
-    }
 
     &.boxHovered {
         outline-color: var(--color-warning);
@@ -67,6 +57,14 @@ $colorDragging: var(--color-white);
         margin: 0 var(--spacing-small);
 
         transform: translateY(-50%);
+    }
+}
+
+.noDisplayOverlay {
+    background: var(--color-gray_light_plain20);
+
+    .overlayLabel {
+        font-size: 1rem;
     }
 }
 

@@ -1,7 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Build, Chip, CloudCheck, Delete, Modified, FileContent, Lock, NoCloud, Warning} from '@jahia/moonstone';
+import {
+    Build,
+    Chip,
+    CloudCheck,
+    Delete,
+    Modified,
+    FileContent,
+    Lock,
+    NoCloud,
+    Warning,
+    Language
+} from '@jahia/moonstone';
 
 export const config = {
     locked: {
@@ -35,14 +46,18 @@ export const config = {
     publishing: {
         color: 'accent',
         icon: <FileContent/>
+    },
+    noTranslation: {
+        color: 'accent',
+        icon: <Language/>
     }
 };
 
 const types = Object.keys(config);
 
-const Status = ({type, tooltip, isDisabled, hasLabel, ...props}) => {
+const Status = ({type, tooltip, isDisabled, hasLabel, labelParams, ...props}) => {
     const {t} = useTranslation('jcontent');
-    const label = t(`label.contentManager.contentStatus.${type}`);
+    const label = t(`label.contentManager.contentStatus.${type}`, labelParams);
     return (
         <Chip
             label={hasLabel ? label : null}
@@ -59,7 +74,8 @@ Status.propTypes = {
     type: PropTypes.oneOf(types).isRequired,
     tooltip: PropTypes.string,
     isDisabled: PropTypes.bool,
-    hasLabel: PropTypes.bool
+    hasLabel: PropTypes.bool,
+    labelParams: PropTypes.object
 };
 
 Status.defaultProps = {

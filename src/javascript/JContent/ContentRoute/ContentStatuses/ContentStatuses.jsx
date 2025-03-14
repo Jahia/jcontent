@@ -18,7 +18,7 @@ const useContentStatuses = ({node, language}) => {
         warning: false,
         workInProgress: isWorkInProgress(node, language),
         invalidLanguage: Boolean(node.invalidLanguages?.values.includes(language)),
-        notTranslated: !node.translationLanguages?.includes(language)
+        noTranslation: !node.translationLanguages?.includes(language)
     };
 
     if (node.aggregatedPublicationInfo) {
@@ -45,6 +45,9 @@ const useContentStatuses = ({node, language}) => {
 const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, ...props}) => {
     const {t} = useTranslation('jcontent');
     const statuses = useContentStatuses({node, language});
+    const labelParams = {
+        noTranslation: {language: language.toUpperCase()}
+    };
 
     const renderStatus = type => (
         <Status
@@ -53,6 +56,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
             isDisabled={isDisabled}
             tooltip={getTooltip(node, type, t, uilang)}
             hasLabel={hasLabel}
+            labelParams={labelParams?.[type]}
             {...props}
         />
     );

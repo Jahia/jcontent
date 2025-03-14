@@ -7,3 +7,4 @@ export * from './Cell';
 export * from './CellStatus';
 export * from './CellType';
 export * from './CellNameNoIcon';
+export * from './CellFileSize';

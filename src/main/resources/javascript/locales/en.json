@@ -184,7 +184,8 @@
         "name": "Name",
         "lastModified": "Last modified on",
         "type": "Type",
-        "status": "Status"
+        "status": "Status",
+        "size": "Size"
       },
       "export": {
         "actionLabel": "Export",

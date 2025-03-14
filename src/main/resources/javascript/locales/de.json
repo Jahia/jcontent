@@ -179,7 +179,8 @@
         "name": "Name",
         "lastModified": "Geändert am",
         "type": "Typ",
-        "status": "Status"
+        "status": "Status",
+        "size": "Größe"
       },
       "export": {
         "actionLabel": "Exportieren",

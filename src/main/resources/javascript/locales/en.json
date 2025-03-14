@@ -423,7 +423,8 @@
         "notPublished": "Not published",
         "published": "Published",
         "warning": "Warning",
-        "workInProgress": "Work in progress"
+        "workInProgress": "Work in progress",
+        "noTranslation": "No translation - {{language}}"
       },
       "contentStatusSelector": {
         "noStatus": "No status",

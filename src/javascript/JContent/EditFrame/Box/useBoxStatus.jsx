@@ -15,14 +15,14 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
     const displayStatuses = useMemo(() => {
         // Statuses that are currently toggled/should be highlighted; values should match `contentStatuses` keys
         // TODO change this array depending on which status is activated from header status dropdown
-        const activeStatuses = ['workInProgress', 'modified', 'notPublished', 'notTranslated'];
+        const activeStatuses = ['workInProgress', 'modified', 'notPublished', 'noTranslation'];
         const displayStatuses = activeStatuses.filter(s => {
             if (s === 'notPublished') {
                 // For 'notPublished' status, we display status only when parent is published
                 return Boolean(parentStatuses.published && contentStatuses[s]);
             }
 
-            if (s === 'notTranslated') {
+            if (s === 'noTranslation') {
                 return Boolean(element.getAttribute('translatable') && contentStatuses[s]);
             }
 
@@ -53,7 +53,7 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
     }, [dispatch, displayStatuses, node.path]);
 
     const isStatusHighlighted = displayStatuses.size > 0 && isEnabled;
-    const badgedStatuses = new Set(['workInProgress', 'modified', 'notPublished', 'visibilityCondition']);
+    const badgedStatuses = new Set(['workInProgress', 'modified', 'notPublished', 'visibilityCondition', 'noTranslation']);
     const BoxStatus = isStatusHighlighted ? (
         <ContentStatuses
             color="warning"
@@ -65,7 +65,7 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
     ) : null;
 
     // Add minHeight so we can add overlay if element is not translated
-    if (displayStatuses.has('notTranslated')) {
+    if (displayStatuses.has('noTranslation')) {
         element.style['min-height'] = '100px';
     }
 

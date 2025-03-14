@@ -48,7 +48,7 @@ $colorDragging: var(--color-white);
 
     outline: 2px solid var(--color-warning);
 
-    &.notVisible:not(.boxSelected) {
+    &.noDisplayOverlay:not(.boxSelected) {
         background: var(--color-gray_light_plain20);
 
         .overlayLabel {

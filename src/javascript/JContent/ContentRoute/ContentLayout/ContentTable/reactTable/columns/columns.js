@@ -6,7 +6,8 @@ import {
     CellSelection,
     CellStatus,
     CellType,
-    CellVisibleActions
+    CellVisibleActions,
+    CellFileSize
 } from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 
@@ -79,6 +80,17 @@ export const visibleActions = {
     Cell: CellVisibleActions,
     width: '60px'
 };
+export const fileSize = {
+    id: 'fileSize',
+    accessor: 'content.data.size',
+    property: 'content.data.size',
+    label: 'jcontent:label.contentManager.listColumns.size',
+    sortable: true,
+    Cell: CellFileSize,
+    Header: Header,
+    width: '120px'
+};
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
+export const mediaColumnData = [publicationStatus, selection, name, fileSize, type, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

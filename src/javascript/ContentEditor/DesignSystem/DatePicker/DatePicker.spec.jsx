@@ -124,4 +124,22 @@ describe('DatePicker', () => {
 
         expect(cmp.find('TimeSelector').props().disabledHours).toEqual({before: '03:03', after: undefined});
     });
+
+    it('should select today when clicking on today button', () => {
+        const cmp = shallowWithTheme(
+            <DatePicker {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        ).dive();
+
+        const todayButton = cmp.find('Button');
+        todayButton.simulate('click');
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to midnight
+        const callArgs = defaultProps.onSelectDateTime.mock.calls[0][0];
+        expect(callArgs.getFullYear()).toBe(today.getFullYear());
+        expect(callArgs.getMonth()).toBe(today.getMonth());
+        expect(callArgs.getDate()).toBe(today.getDate());
+    });
 });

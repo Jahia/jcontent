@@ -11,7 +11,9 @@ import {
     Lock,
     NoCloud,
     Warning,
-    Language
+    Language,
+    Group,
+    Visibility
 } from '@jahia/moonstone';
 
 export const config = {
@@ -50,6 +52,14 @@ export const config = {
     noTranslation: {
         color: 'accent',
         icon: <Language/>
+    },
+    permissions: {
+        color: 'accent',
+        icon: <Group/>
+    },
+    visibilityConditions: {
+        color: 'default',
+        icon: <Visibility/>
     }
 };
 
@@ -58,15 +68,16 @@ const types = Object.keys(config);
 const Status = ({type, tooltip, isDisabled, hasLabel, labelParams, ...props}) => {
     const {t} = useTranslation('jcontent');
     const label = t(`label.contentManager.contentStatus.${type}`, labelParams);
+    const hasDefinedLabel = label !== `label.contentManager.contentStatus.${type}`;
     return (
         <Chip
-            label={hasLabel ? label : null}
-            isDisabled={isDisabled}
-            title={tooltip || label}
-            data-sel-role="content-status"
-            {...config[type]}
-            {...props}
-        />
+        label={(hasLabel && hasDefinedLabel) ? label : null}
+        isDisabled={isDisabled}
+        title={tooltip || label}
+        data-sel-role="content-status"
+        {...config[type]}
+        {...props}
+    />
     );
 };
 

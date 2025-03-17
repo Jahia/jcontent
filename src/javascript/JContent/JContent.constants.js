@@ -15,7 +15,7 @@ const JContentConstants = {
         NO_STATUS: 'noStatus',
         PUBLISHED: 'published',
         VISIBILITY: 'visibility',
-        LIVE_ROLE: 'liveRole'
+        PERMISSIONS: 'permissions'
     },
     mode: {
         CONTENT_FOLDERS: 'content-folders',

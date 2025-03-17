@@ -13,6 +13,10 @@ $colorDragging: var(--color-white);
 
 .defaultZIndex {
     z-index: 15000;
+
+    &:has(.boxSelected) {
+        z-index: 15001;
+    }
 }
 
 .alwaysDisplayedZIndex {
@@ -46,6 +50,10 @@ $colorDragging: var(--color-white);
 .boxHighlighted {
     outline: 2px solid var(--color-warning);
 
+    &.boxSelected {
+        outline-color: var(--borderColor);
+    }
+
     &.boxHovered {
         outline-color: var(--color-warning);
 
@@ -53,8 +61,9 @@ $colorDragging: var(--color-white);
     }
 
     .displayStatus {
-        float: right;
-        margin: 0 var(--spacing-small);
+        position: absolute;
+        top: 0;
+        right: var(--spacing-small);
 
         transform: translateY(-50%);
     }
@@ -64,6 +73,10 @@ $colorDragging: var(--color-white);
     background: var(--color-gray_light_plain20);
 
     .overlayLabel {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         font-size: 1rem;
     }
 }

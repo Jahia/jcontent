@@ -7,7 +7,7 @@ import {setActiveContentStatus} from '~/JContent/redux/contentStatus.redux';
 import styles from './ContentStatusSelector.scss';
 
 export const ContentStatusSelector = () => {
-    const {PUBLISHED, LIVE_ROLE, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
+    const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
     const statusMode = useSelector(state => state.jcontent.contentStatus.active) || NO_STATUS;
     const contentStatus = useSelector(state => state.jcontent.contentStatus.statusPaths, shallowEqual);
     const {t} = useTranslation('jcontent');
@@ -17,7 +17,7 @@ export const ContentStatusSelector = () => {
         [NO_STATUS]: <Not/>,
         [PUBLISHED]: <Cloud/>,
         [VISIBILITY]: <Visibility/>,
-        [LIVE_ROLE]: <Group/>
+        [PERMISSIONS]: <Group/>
     };
 
     const dropdownData = Object.values(JContentConstants.statusView).map(v => ({

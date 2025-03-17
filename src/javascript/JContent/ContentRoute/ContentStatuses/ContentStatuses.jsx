@@ -18,7 +18,12 @@ const useContentStatuses = ({node, language}) => {
         warning: false,
         workInProgress: isWorkInProgress(node, language),
         invalidLanguage: Boolean(node.invalidLanguages?.values.includes(language)),
-        noTranslation: !node.translationLanguages?.includes(language)
+        noTranslation: !node.translationLanguages?.includes(language),
+        permissions: Boolean(node.permissions?.children?.nodes?.length > 0),
+        visibilityConditions: Boolean(
+            node.visibilityConditions?.children?.nodes?.length > 0 ||
+            node.invalidLanguages?.values.length > 0 ||
+            node.channelConditions?.values.length > 0)
     };
 
     if (node.aggregatedPublicationInfo) {

@@ -20,12 +20,12 @@ export const {
 );
 
 export const contentStatusRedux = registry => {
-    const {PUBLISHED, LIVE_ROLE, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
+    const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
     const localStorageKey = 'jcontent-status-selector-active';
     const defaultState = {
         active: localStorage.getItem(localStorageKey) || NO_STATUS,
         // We keep track of unique paths to avoid repetition and derive the count from unique paths added
-        statusPaths: {[PUBLISHED]: new Set(), [VISIBILITY]: new Set(), [LIVE_ROLE]: new Set()}
+        statusPaths: {[PUBLISHED]: new Set(), [VISIBILITY]: new Set(), [PERMISSIONS]: new Set()}
     };
 
     // Clone state and add path to set if it does not exist in one of state.statusPaths, for each [statusPathKeys]
@@ -72,7 +72,7 @@ export const contentStatusRedux = registry => {
         [addContentStatusPaths]: (state, action) => addStatusPaths(state, action.payload.path, action.payload?.statusKeys),
         [resetContentStatusPaths]: state => ({
             ...state,
-            statusPaths: {[PUBLISHED]: new Set(), [VISIBILITY]: new Set(), [LIVE_ROLE]: new Set()}
+            statusPaths: {[PUBLISHED]: new Set(), [VISIBILITY]: new Set(), [PERMISSIONS]: new Set()}
         })
     }, defaultState);
 

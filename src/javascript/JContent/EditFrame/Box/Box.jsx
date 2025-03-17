@@ -10,6 +10,7 @@ import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';
 import {findAvailableBoxConfig, hasMixin} from '../../JContent.utils';
+import {useTranslation} from 'react-i18next';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -98,6 +99,8 @@ export const Box = React.memo(({
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
     const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node});
+    const {t} = useTranslation('jcontent');
+    const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
 
     useEffect(() => {
         // Disable mouse events to prevent showing boxes when dragging
@@ -205,7 +208,7 @@ export const Box = React.memo(({
         node,
         element,
         language,
-        isEnabled: !isClicked && !isAnythingDragging
+        isEnabled: !isClicked && !isAnythingDragging && !isMarkedForDeletionRoot
     });
 
     isHeaderDisplayed = !isSomethingSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
@@ -272,7 +275,7 @@ export const Box = React.memo(({
 
     const boxStyle = !isAnythingDragging && isClicked && breadcrumbs.length > 0 ? styles.withHeaderAndFooter : styles.withHeader;
     const hasNoTranslationOverlay = displayStatuses.has('noTranslation') &&
-        !hasMixin(node, 'jmix:markedForDeletionRoot') &&
+        !isMarkedForDeletionRoot &&
         !element.hasChildNodes();
 
     return (
@@ -285,9 +288,9 @@ export const Box = React.memo(({
                 styles.box,
                 isHeaderDisplayed ? boxStyle : styles.withNoHeader,
                 (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
+                (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '',
                 (isStatusHighlighted) && styles.boxHighlighted,
-                (hasNoTranslationOverlay) && styles.noDisplayOverlay,
-                (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '')}
+                (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
                  style={{
                      '--borderColor': borderColor
                  }}
@@ -295,7 +298,10 @@ export const Box = React.memo(({
                 {isHeaderDisplayed && Header}
                 {BoxStatus}
 
-                {hasNoTranslationOverlay && <div className={styles.overlayLabel}>Nothing to display</div>}
+                {hasNoTranslationOverlay &&
+                    <div className={styles.overlayLabel} style={{height: currentOffset.height}}>
+                        {t('label.contentManager.pageBuilder.emptyContent')}
+                    </div>}
 
                 {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
                     <footer className={clsx(styles.boxFooter)}

@@ -7,14 +7,14 @@ import {addContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 
 export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
-    const {PUBLISHED, LIVE_ROLE, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
+    const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
     const statusMode = useSelector(state => state.jcontent.contentStatus.active) || NO_STATUS;
     const contentStatuses = useContentStatuses({node, language});
     const parentStatuses = useContentStatuses({node: nodes[node.parent?.path] || {}, language});
     const dispatch = useDispatch();
 
     const nodeStatuses = useMemo(() => {
-        const statuses = ['workInProgress', 'modified', 'notPublished', 'visibilityCondition', 'noTranslation'];
+        const statuses = ['permissions', 'workInProgress', 'modified', 'notPublished', 'visibilityConditions', 'noTranslation'];
         const activeStatuses = statuses.filter(s => {
             if (s === 'notPublished') {
                 // For 'notPublished' status, we display status only when parent is published
@@ -32,28 +32,31 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
 
     // Update path in content status redux state to track status count
     useEffect(() => {
-        const {PUBLISHED, LIVE_ROLE, VISIBILITY} = JContentConstants.statusView;
+        const {PUBLISHED, PERMISSIONS, VISIBILITY} = JContentConstants.statusView;
         const statusToViewKeyMapping = {
             modified: PUBLISHED,
             notPublished: PUBLISHED,
-            visibilityCondition: VISIBILITY,
-            liveRole: LIVE_ROLE
+            visibilityConditions: VISIBILITY,
+            permissions: PERMISSIONS
         };
 
         // Collect statuses that this node has and map it to the redux state keys
         const statusKeys = Object.keys(statusToViewKeyMapping)
             .filter(status => nodeStatuses.has(status))
             .map(status => statusToViewKeyMapping[status]);
-        dispatch(addContentStatusPaths({statusKeys, path: node.path}));
+        if (statusKeys.length > 0) {
+            dispatch(addContentStatusPaths({statusKeys, path: node.path}));
+        }
     }, [dispatch, nodeStatuses, node.path]);
 
+    // Mapping of selected status in header dropdown to the status badges to be displayed
     const selectedStatus = {
         [PUBLISHED]: ['modified', 'notPublished'],
-        [VISIBILITY]: ['visibilityCondition'],
-        [LIVE_ROLE]: []
+        [VISIBILITY]: ['visibilityConditions'],
+        [PERMISSIONS]: ['permissions']
     };
 
-    const activeStatuses = ['workInProgress', 'noTranslation'].concat(selectedStatus[statusMode]);
+    const activeStatuses = (selectedStatus[statusMode] || []).concat(['workInProgress', 'noTranslation']);
     const displayStatuses = activeStatuses.filter(s => nodeStatuses.has(s));
 
     const isStatusHighlighted = isEnabled && displayStatuses.length > 0;

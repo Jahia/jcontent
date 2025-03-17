@@ -26,6 +26,6 @@ describe('Table view tests', () => {
         jcontent.switchToListMode();
         cy.get('[data-cm-role="table-content-list-cell-fileSize"]')
             .should('be.visible')
-            .and('contain', '142.64 KB')
+            .and('contain', '142.64 KB');
     });
 });

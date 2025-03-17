@@ -1,32 +1,23 @@
 .root {
     position: absolute;
 
-    z-index: 14000;
+    z-index: 25000;
 
-    display: flex;
     align-items: center;
 
     box-sizing: border-box;
 
-    border: 2px solid var(--color-danger_dark);
+    border: 2px solid var(--color-danger);
 
     background: var(--color-danger60);
 
     pointer-events: none;
-    justify-items: center;
 }
 
-.label {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    margin: auto;
+.badge {
+    position: absolute;
+    top: 0;
+    right: var(--spacing-small);
 
-    color: var(--color-light);
-
-    text-transform: uppercase;
-
-    & p {
-        color: var(--color-light);
-    }
+    transform: translateY(-50%);
 }

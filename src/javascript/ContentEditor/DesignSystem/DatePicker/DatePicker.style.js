@@ -20,9 +20,9 @@ export const style = theme => ({
     datePickerContainer: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 8,
+        gap: '8px',
         alignItems: 'center',
-        paddingBottom: 8
+        paddingBottom: '8px'
     },
 
     // DayPicker styling

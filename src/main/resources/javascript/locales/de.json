@@ -900,7 +900,8 @@
         },
         "dateTimePicker": {
           "displayValue": "Date time",
-          "description": "Datum und Uhrzeit aus einem Kalender wählen"
+          "description": "Datum und Uhrzeit aus einem Kalender wählen",
+          "today": "Heute"
         },
         "datePicker": {
           "displayValue": "Date",

@@ -17,6 +17,14 @@ export const style = theme => ({
         paddingRight: '150px'
     },
 
+    datePickerContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        alignItems: 'center',
+        paddingBottom: '8px'
+    },
+
     // DayPicker styling
     '@global': {
         '.DayPicker': {

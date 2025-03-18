@@ -13,7 +13,7 @@ export class DateField extends Field {
     }
 
     public close() {
-        cy.get('.DayPicker').parent().parent().parent().click({waitForAnimations: true, multiple: true});
+        cy.get('.DayPicker').parent().parent().parent().parent().click({waitForAnimations: true, multiple: true});
         cy.get('.DayPicker').should('not.exist');
     }
 

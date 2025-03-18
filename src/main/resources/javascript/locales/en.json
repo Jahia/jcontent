@@ -918,7 +918,8 @@
         },
         "dateTimePicker": {
           "displayValue": "Date time",
-          "description": "Select date and time from a calendar"
+          "description": "Select date and time from a calendar",
+          "today": "Today"
         },
         "datePicker": {
           "displayValue": "Date",

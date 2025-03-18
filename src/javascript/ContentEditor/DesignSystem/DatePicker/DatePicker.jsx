@@ -16,6 +16,8 @@ import itLocale from 'dayjs/locale/it';
 
 import dayjs from 'dayjs';
 import {generateWeekdaysShort, getDateTime, getHourFromDisabledDays} from '../DatePickerInput/date.util';
+import {Button} from '@jahia/moonstone';
+import {useTranslation} from 'react-i18next';
 
 const locales = {
     fr: generateWeekdaysShort(frLocale),
@@ -36,42 +38,50 @@ const DatePickerCmp = ({
     ...props
 }) => {
     const [month, setMonth] = useState(selectedDateTime ? new Date(selectedDateTime) : new Date());
-
+    const {t} = useTranslation('jcontent');
     const isDateTime = variant === 'datetime';
     const locale = locales[lang] || locales.en;
 
     const selectedDays = selectedDateTime ? [selectedDateTime] : [];
     const selectedHour = selectedDateTime ? dayjs(selectedDateTime).format('HH:mm') : '00:00';
 
+    const onToday = () => {
+        setMonth(new Date());
+        onSelectDateTime(getDateTime(new Date(), selectedHour));
+    };
+
     return (
         <div className={`${classes.container} ${isDateTime ? classes.containerDateTime : ''}`}>
-            <DayPicker
-                locale={lang}
-                disabledDays={disabledDays}
-                selectedDays={selectedDays}
-                month={month}
-                months={locale.months}
-                weekdaysLong={locale.weekdays}
-                weekdaysShort={locale.weekdaysShort}
-                firstDayOfWeek={locale.weekStart || 0}
-                captionElement={({date}) => (
-                    <YearMonthSelector
-                        date={date}
-                        months={locale.months}
-                        disabledDays={disabledDays}
-                        onChange={setMonth}
-                    />
-                )}
-                onDayClick={(day, modifiers) => {
-                    if (modifiers && modifiers.disabled) {
-                        return;
-                    }
+            <div className={classes.datePickerContainer}>
+                <DayPicker
+                    locale={lang}
+                    disabledDays={disabledDays}
+                    selectedDays={selectedDays}
+                    month={month}
+                    months={locale.months}
+                    weekdaysLong={locale.weekdays}
+                    weekdaysShort={locale.weekdaysShort}
+                    firstDayOfWeek={locale.weekStart || 0}
+                    captionElement={({date}) => (
+                        <YearMonthSelector
+                            date={date}
+                            months={locale.months}
+                            disabledDays={disabledDays}
+                            onChange={setMonth}
+                        />
+                    )}
+                    onDayClick={(day, modifiers) => {
+                        if (modifiers && modifiers.disabled) {
+                            return;
+                        }
 
-                    setMonth(day);
-                    onSelectDateTime(getDateTime(day, selectedHour));
-                }}
-                {...props}
-            />
+                        setMonth(day);
+                        onSelectDateTime(getDateTime(day, selectedHour));
+                    }}
+                    {...props}
+                />
+                <Button label={t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.today')} onClick={onToday}/>
+            </div>
             {isDateTime && (
                 <TimeSelector
                     disabledHours={{

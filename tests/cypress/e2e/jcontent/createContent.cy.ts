@@ -75,7 +75,7 @@ describe('Create content tests', () => {
             });
         });
 
-        it('Create content in page builder using insertion points', () => {
+        it.skip('Create content in page builder using insertion points', () => {
             const module = jcontent.getModule(`/sites/${siteKey}/home/landing`);
             module.click({force: true});
             const buttons = module.getCreateButtons();

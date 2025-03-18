@@ -11,7 +11,7 @@ describe('Breadcrumbs inside boxes of page builder', () => {
         const module = pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies', false);
         module.click();
         const breadcrumbs = module.getFooter().getItemPathDropdown().open();
-        breadcrumbs.shouldHaveCount(3);
+        breadcrumbs.shouldHaveCount(4); // Home, landing, slider, current item
         breadcrumbs.select('landing');
         pageBuilder.getModule('/sites/digitall/home/landing/slider/innovating-technologies').hasNoHeaderAndFooter();
     });

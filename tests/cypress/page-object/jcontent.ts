@@ -416,7 +416,7 @@ class PageBuilderModule extends BaseComponent {
             this.hover();
         }
 
-        this.get().rightclick({force});
+        this.get().rightclick({force, waitForAnimations: true});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

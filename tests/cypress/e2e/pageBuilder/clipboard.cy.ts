@@ -24,10 +24,12 @@ describe('Page builder - clipboard tests', () => {
     });
 
     it('should show paste button when we copy', function () {
-        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`).contextMenu(true).selectByRole('copy');
+        // We don't force right-click otherwise it might bring up page context menu
+        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`).contextMenu(false, false).selectByRole('copy');
+        cy.get('#message-id').contains('in the clipboard');
 
         const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);
-        landingArea.click(); // Deselect copied content
+        // LandingArea.click(); // Deselect copied content
         const buttons = landingArea.getCreateButtons();
         buttons.assertHasNoButtonForType('New content');
         buttons.getButton('Paste');
@@ -35,11 +37,13 @@ describe('Page builder - clipboard tests', () => {
     });
 
     it('should remove paste button when we clear clipboard', function () {
-        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true).selectByRole('copy');
+        // We don't force right-click otherwise it might bring up page context menu
+        jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(false, false).selectByRole('copy');
+        cy.get('#message-id').contains('in the clipboard');
 
         // Clearing selection should keep paste buttons
         const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);
-        landingArea.click(); // Deselect copied content
+        // LandingArea.click(); // Deselect copied content
         let buttons = landingArea.getCreateButtons();
         buttons.assertHasNoButtonForType('New content');
         buttons.getButton('Paste');

@@ -59,7 +59,13 @@ export const allColumnData = [
     },
     {
         id: 'fileSize',
-        Cell: FileSizeCell
+        Cell: FileSizeCell,
+        label: 'jcontent:label.contentManager.listColumns.size',
+        sortable: true,
+        accessor: 'content.data.size',
+        property: 'content.data.size',
+        Header: reactTable.Header,
+        width: '120px'
     },
     {
         id: 'relPath',

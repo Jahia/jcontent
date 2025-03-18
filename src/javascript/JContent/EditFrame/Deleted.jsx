@@ -37,7 +37,7 @@ export const Deleted = ({element, addIntervalCallback}) => {
              className={clsx(styles.root)}
              style={currentOffset}
         >
-            <Status type="markedForDeletion" hasLabel={false} className={styles.badge}/>
+            <Status type="markedForDeletion" hasLabel={false} className={styles.badge} variant="bright"/>
         </div>
     );
 };

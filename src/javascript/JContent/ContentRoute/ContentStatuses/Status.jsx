@@ -60,6 +60,10 @@ export const config = {
     visibilityConditions: {
         color: 'default',
         icon: <Visibility/>
+    },
+    notVisible: {
+        color: 'default',
+        icon: <Visibility/>
     }
 };
 

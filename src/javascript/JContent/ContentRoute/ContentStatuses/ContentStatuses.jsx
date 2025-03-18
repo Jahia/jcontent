@@ -17,7 +17,7 @@ const useContentStatuses = ({node, language}) => {
         notPublished: true,
         warning: false,
         workInProgress: isWorkInProgress(node, language),
-        invalidLanguage: Boolean(node.invalidLanguages?.values.includes(language)),
+        notVisible: Boolean(node.invalidLanguages?.values.includes(language)),
         noTranslation: !node.translationLanguages?.includes(language),
         permissions: Boolean(node.permissions?.children?.nodes?.length > 0),
         visibilityConditions: Boolean(
@@ -47,7 +47,7 @@ const useContentStatuses = ({node, language}) => {
     return statuses;
 };
 
-const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, ...props}) => {
+const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, statusProps, ...props}) => {
     const {t} = useTranslation('jcontent');
     const statuses = useContentStatuses({node, language});
     const labelParams = {
@@ -63,6 +63,8 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
             hasLabel={hasLabel}
             labelParams={labelParams?.[type]}
             {...props}
+            // Specific override object from a given status type
+            {...statusProps?.[type]}
         />
     );
 
@@ -137,7 +139,8 @@ ContentStatuses.propTypes = {
     isDisabled: PropTypes.bool,
     renderedStatuses: PropTypes.array,
     className: PropTypes.string,
-    hasLabel: PropTypes.bool
+    hasLabel: PropTypes.bool,
+    statusProps: PropTypes.object
 };
 
 ContentStatuses.defaultProps = {

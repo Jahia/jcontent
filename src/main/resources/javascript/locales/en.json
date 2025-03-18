@@ -426,7 +426,8 @@
         "workInProgress": "Work in progress",
         "noTranslation": "No translation - {{language}}",
         "visibilityConditions": "Visibility Condition",
-        "permissions": "Permission"
+        "permissions": "Permission",
+        "notVisible": "Not visible now"
       },
       "contentStatusSelector": {
         "noStatus": "No status",

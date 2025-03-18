@@ -54,6 +54,12 @@ $colorDragging: var(--color-white);
         outline-color: var(--borderColor);
     }
 
+    &.boxNotVisible,
+    &.boxNotVisible.boxHovered {
+        outline-color: var(--color-gray);
+        background: var(--color-gray_light60);
+    }
+
     &.boxHovered {
         outline-color: var(--color-warning);
 

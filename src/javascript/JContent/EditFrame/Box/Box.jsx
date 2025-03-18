@@ -208,6 +208,7 @@ export const Box = React.memo(({
         node,
         element,
         language,
+        isMarkedForDeletionRoot,
         isEnabled: !isClicked && !isAnythingDragging && !isMarkedForDeletionRoot
     });
 
@@ -290,6 +291,7 @@ export const Box = React.memo(({
                 (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
                 (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '',
                 (isStatusHighlighted) && styles.boxHighlighted,
+                displayStatuses.has('notVisible') && styles.boxNotVisible,
                 (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
                  style={{
                      '--borderColor': borderColor

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 
-export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
+export const useBoxStatus = ({node, nodes, element, language, isEnabled, isMarkedForDeletionRoot}) => {
     const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
     const statusMode = useSelector(state => state.jcontent.contentStatus.active) || NO_STATUS;
     const contentStatuses = useContentStatuses({node, language});
@@ -14,7 +14,7 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
     const dispatch = useDispatch();
 
     const nodeStatuses = useMemo(() => {
-        const statuses = ['permissions', 'workInProgress', 'modified', 'notPublished', 'visibilityConditions', 'noTranslation'];
+        const statuses = ['permissions', 'workInProgress', 'modified', 'notPublished', 'notVisible', 'visibilityConditions', 'noTranslation'];
         const activeStatuses = statuses.filter(s => {
             if (s === 'notPublished') {
                 // For 'notPublished' status, we display status only when parent is published
@@ -32,6 +32,10 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
 
     // Update path in content status redux state to track status count
     useEffect(() => {
+        if (isMarkedForDeletionRoot) {
+            return;
+        }
+
         const {PUBLISHED, PERMISSIONS, VISIBILITY} = JContentConstants.statusView;
         const statusToViewKeyMapping = {
             modified: PUBLISHED,
@@ -47,7 +51,7 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
         if (statusKeys.length > 0) {
             dispatch(addContentStatusPaths({statusKeys, path: node.path}));
         }
-    }, [dispatch, nodeStatuses, node.path]);
+    }, [dispatch, nodeStatuses, node.path, isMarkedForDeletionRoot]);
 
     // Mapping of selected status in header dropdown to the status badges to be displayed
     const selectedStatus = {
@@ -56,17 +60,23 @@ export const useBoxStatus = ({node, nodes, element, language, isEnabled}) => {
         [PERMISSIONS]: ['permissions']
     };
 
-    const activeStatuses = (selectedStatus[statusMode] || []).concat(['workInProgress', 'noTranslation']);
+    const activeStatuses = ['notVisible']
+        .concat(selectedStatus[statusMode] || [])
+        .concat(['workInProgress', 'noTranslation']);
     const displayStatuses = activeStatuses.filter(s => nodeStatuses.has(s));
 
     const isStatusHighlighted = isEnabled && displayStatuses.length > 0;
+    const displayLabel = element.getBoundingClientRect().width > 300; // Responsive badges
     const BoxStatus = isStatusHighlighted ? (
         <ContentStatuses
             color="warning"
             variant="bright"
+            hasLabel={displayLabel}
+            statusProps={{notVisible: {color: 'default', variant: 'default'}}}
             className={styles.displayStatus}
             node={node}
-            renderedStatuses={displayStatuses}
+            // We don't want to show notVisible badge if VISIBILITY status (visibilityConditions badge) is enabled
+            renderedStatuses={displayStatuses.filter(s => statusMode !== VISIBILITY || s !== 'notVisible')}
         />
     ) : null;
 

@@ -41,7 +41,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode, virtualizer}) {
+function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode, virtualizer, loading, openPaths}) {
     const tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -62,7 +62,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
             hasChildren: treeEntry.hasChildren && treeEntry.openable,
             parent: parentPath,
             isSelectable: treeEntry.selectable,
-            isClosable: treeEntry.depth > 0,
+            isClosable: treeEntry.depth > 0 && treeEntry.hasChildren,
             iconStart: displayIcon(treeEntry.node),
             iconEnd: <StatusIcon path={treeEntry.path} contentMenu={contentMenu} isLocked={locked} isNotPublished={notPublished}/>,
             typographyOptions: {
@@ -75,6 +75,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
             }),
             children: [],
             virtualRow: treeEntry.virtualRow,
+            isLoading: loading && !treeEntry.open && treeEntry.openable && openPaths.includes(treeEntry.path),
             treeItemProps: {
                 'data-sel-role': treeEntry.node.name,
                 node: treeEntry.node,

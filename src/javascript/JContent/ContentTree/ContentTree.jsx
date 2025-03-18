@@ -109,6 +109,8 @@ ItemComponent.propTypes = {
     treeEntries: PropTypes.array
 };
 
+const TREE_ITEM_SIZE = 32;
+
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction, pageTitlePrefix}) => {
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -145,7 +147,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     };
 
     const nodeInfo = useNodeInfo({path}, {getParent: true});
-    const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
+    const {treeEntries, refetch, loading} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
 
     if (dataRef.current === null || treeEntries.length > 0) {
         dataRef.current = treeEntries;
@@ -178,7 +180,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
     const rowVirtualizer = useVirtualizer({
         count: dataRef?.current?.length,
-        estimateSize: () => 32,
+        estimateSize: () => TREE_ITEM_SIZE,
         getScrollElement: () => mainRef.current,
         measureElement:
             typeof window !== 'undefined' &&
@@ -210,10 +212,10 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         contentMenu: contextualMenuAction,
         itemProps: {item},
         viewMode: viewMode,
-        virtualizer: rowVirtualizer
+        virtualizer: rowVirtualizer,
+        loading,
+        openPaths
     });
-
-    console.log('tree', dataRef.current, data);
 
     return (
         <React.Fragment>

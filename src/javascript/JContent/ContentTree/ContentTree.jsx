@@ -106,7 +106,9 @@ ItemComponent.propTypes = {
     item: accordionPropType,
     children: PropTypes.node,
     node: PropTypes.object,
-    treeEntries: PropTypes.array
+    treeEntries: PropTypes.array,
+    virtualizer: PropTypes.object,
+    virtualRow: PropTypes.object
 };
 
 const TREE_ITEM_SIZE = 32;
@@ -223,7 +225,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <div ref={mainRef} style={{height: '100%', overflow: 'auto'}}>
                 <TreeView ref={ulRefSet}
-                          padFlatData
+                          isPadVirtualizedRow
                           isReversed={isReversed}
                           itemComponent={ItemComponent}
                           style={{

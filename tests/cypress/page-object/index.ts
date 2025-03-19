@@ -6,3 +6,9 @@ export * from './pageComposer';
 export * from './accordionItem';
 export * from './categoryManager';
 export {AdvancedOptions} from './advancedOptions';
+export {
+    PageBuilderModule,
+    PageBuilderModuleHeader,
+    PageBuilderModuleFooter,
+    PageBuilderModuleCreateButton
+} from './pageBuilder';

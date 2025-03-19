@@ -418,7 +418,17 @@
         "notPublished": "Non publié",
         "published": "Publié",
         "warning": "Attention",
-        "workInProgress": "Travail en cours"
+        "workInProgress": "Travail en cours",
+        "noTranslation": "Aucune traduction - {{language}}",
+        "visibilityConditions": "Condition de visibilité",
+        "permissions": "Permission",
+        "notVisible": "Non visible maintenant"
+      },
+      "contentStatusSelector": {
+        "noStatus": "Aucun statut",
+        "published": "Afficher les statuts de publication",
+        "visibility": "Afficher les statuts de visibilité",
+        "permissions": "Afficher les statuts des permissions"
       },
       "view": {
         "flatList": "Liste",
@@ -544,7 +554,8 @@
         },
         "box": {
           "linkedTo": "Lié à:"
-        }
+        },
+        "emptyContent": "Rien à afficher"
       }
     },
     "categoryManager": {

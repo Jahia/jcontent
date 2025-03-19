@@ -418,7 +418,17 @@
         "notPublished": "Nicht veröffentlicht",
         "published": "Veröffentlicht",
         "warning": "Achtung",
-        "workInProgress": "In Arbeit"
+        "workInProgress": "In Arbeit",
+        "noTranslation": "Keine Übersetzung - {{language}}",
+        "visibilityConditions": "Sichtbarkeitsbedingung",
+        "permissions": "Berechtigung",
+        "notVisible": "Jetzt nicht sichtbar"
+      },
+      "contentStatusSelector": {
+        "noStatus": "Kein Status",
+        "published": "Veröffentlichung-Status anzeigen",
+        "visibility": "Zeige Sichtbarkeitsstatus",
+        "permissions": "Berechtigung-Status anzeigen"
       },
       "view": {
         "flatList": "Listenansicht",
@@ -543,7 +553,8 @@
         },
         "box": {
           "linkedTo": "Verbunden mit:"
-        }
+        },
+        "emptyContent": "Nichts anzuzeigen"
       }
     },
     "categoryManager": {

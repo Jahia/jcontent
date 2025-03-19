@@ -52,11 +52,11 @@ const useElemAttributes = ({element, parent}) => {
     const nodeName = element.getAttribute('path').split('/').pop();
 
     let nodeTypes = null;
-    if (element.getAttribute('nodetypes')) {
-        nodeTypes = element.getAttribute('nodetypes').split(' ');
-    } else if (parent.getAttribute('nodetypes') &&
+    if (parent.getAttribute('nodetypes') &&
         (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
+    } else if (element.getAttribute('nodetypes')) {
+        nodeTypes = element.getAttribute('nodetypes').split(' ');
     }
 
     // Extract limit defined on template set

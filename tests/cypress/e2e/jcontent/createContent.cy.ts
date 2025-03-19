@@ -75,9 +75,9 @@ describe('Create content tests', () => {
             });
         });
 
-        it.skip('Create content in page builder using insertion points', () => {
+        it('Create content in page builder using insertion points', () => {
             const module = jcontent.getModule(`/sites/${siteKey}/home/landing`);
-            module.click({force: true});
+            module.click();
             const buttons = module.getCreateButtons();
             buttons.getFirstInsertionButton().click();
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();

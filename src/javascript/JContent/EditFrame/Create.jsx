@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
@@ -118,8 +118,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
 
     // Used mostly when rendering insertion points as we only want to style it specifically if it's not empty,
     // otherwise we use the regular buttons; Also used to create space for empty areas and lists.
-    const isPlaceholder = element.getAttribute('type') === 'placeholder';
-    const isEmpty = (isPlaceholder && !nodePath) ?
+    const isEmpty = (element.getAttribute('type') === 'placeholder' && !nodePath) ?
         node?.subNodes.pageInfo.totalCount === 0 : !nodes[element.dataset.jahiaPath];
 
     // Set a minimum height to be able to drop content if node is empty
@@ -188,47 +187,22 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         };
     };
 
-    const createButtonRef = useRef(null);
-
-    useEffect(() => {
-        // Hide placeholder if not possible to add any content to the list
-        // and insertion points/buttons are not shown
-        const callback = () => {
-            if (isPlaceholder && !isEmpty && createButtonRef.current?.children?.length === 0) {
-                element.style.display = 'none';
-            } else {
-                element.style.display = undefined;
-            }
-        };
-
-        // Observe the create button because its children are updated outside of this component
-        const observer = new MutationObserver(callback);
-        observer.observe(createButtonRef.current, {childList: true});
-        callback();
-
-        return () => observer.disconnect();
-    }, [isPlaceholder, isEmpty, createButtonRef, element]);
-
     return !anyDragging && (
-        <div
-            ref={el => {
-                drop(el);
-                createButtonRef.current = el;
-            }}
-            jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
-            data-jahia-id={element.getAttribute('id')}
-            className={clsx(
+        <div ref={drop}
+             jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
+             data-jahia-id={element.getAttribute('id')}
+             className={clsx(
                  styles.root,
                  editStyles.enablePointerEvents,
                  sizers,
                  (isInsertionPoint) && styles.insertionPoint,
                  isEmpty ? styles.isEmpty : styles.isNotEmpty
              )}
-            style={{...currentOffset, ...insertionStyle}}
-            data-jahia-parent={parent.getAttribute('id')}
-            onMouseOver={onMouseOver}
-            onMouseOut={onMouseOut}
-            onClick={onClick}
+             style={{...currentOffset, ...insertionStyle}}
+             data-jahia-parent={parent.getAttribute('id')}
+             onMouseOver={onMouseOver}
+             onMouseOut={onMouseOut}
+             onClick={onClick}
         >
             {copyPasteNodes.length === 0 &&
                 <DisplayAction actionKey="createContent"

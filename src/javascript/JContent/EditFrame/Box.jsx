@@ -287,6 +287,9 @@ export const Box = React.memo(({
                                 '--backgroundColorSelected': backgroundColorSelected
                             }}
                             onClick={onClick}
+                            style={{
+                                '--backgroundColorSelected': backgroundColorSelected
+                            }}
                     >
                         <Breadcrumbs currentNode={node} nodes={breadcrumbs} setClickedElement={setClickedElement} onSelect={onSelect}/>
                     </footer>}

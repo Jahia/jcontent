@@ -17,6 +17,7 @@ import {getBoundingBox} from '../EditFrame.utils';
 import InsertionPoints from '../InsertionPoints';
 import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
+import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -87,12 +88,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         timeout = window.setTimeout(() => {
             const moduleElement = getModuleElement(currentDocument, target);
             setCurrentElement(() => ({element: moduleElement, path: moduleElement.getAttribute('path')}));
-        }, 10);
+        }, 0);
     }, [setCurrentElement, currentDocument]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && event.currentTarget.dataset.current === 'true' &&
+        setCurrentElement(null);
+        if (event.relatedTarget && event.currentTarget.id === currentElement?.id &&
             !isDescendantOrSelf(
                 getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),
                 getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')
@@ -102,7 +104,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             window.clearTimeout(timeout);
             setCurrentElement(null);
         }
-    }, [setCurrentElement, currentDocument]);
+    }, [setCurrentElement, currentDocument, currentElement]);
 
     const onSelect = useCallback((event, _path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
@@ -261,9 +263,15 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     }, [path, currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
 
     const paths = [...new Set([
+        path,
         ...modules.map(m => m.dataset.jahiaPath),
         ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
+
+    // Count for content status selector needs to be reset when document is refreshed
+    useEffect(() => {
+        dispatch(resetContentStatusPaths());
+    }, [dispatch, currentDocument]);
 
     const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
@@ -381,6 +389,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
+                         nodes={nodes}
                          node={node}
                          isClicked={clickedElement && node.path === clickedElement.path}
                          isHovered={element === el}

@@ -424,7 +424,17 @@
         "notPublished": "Not published",
         "published": "Published",
         "warning": "Warning",
-        "workInProgress": "Work in progress"
+        "workInProgress": "Work in progress",
+        "noTranslation": "No translation - {{language}}",
+        "visibilityConditions": "Visibility Condition",
+        "permissions": "Permission",
+        "notVisible": "Not visible now"
+      },
+      "contentStatusSelector": {
+        "noStatus": "No status",
+        "published": "Show publication status",
+        "visibility": "Show visibility status",
+        "permissions": "Show permission status"
       },
       "view": {
         "flatList": "List",
@@ -551,7 +561,8 @@
         },
         "box": {
           "linkedTo": "Linked to:"
-        }
+        },
+        "emptyContent": "Nothing to display"
       }
     },
     "categoryManager": {

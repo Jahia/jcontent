@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './Box.scss';
+import styles from './Box/Box.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';

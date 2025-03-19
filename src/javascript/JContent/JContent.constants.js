@@ -11,6 +11,12 @@ const JContentConstants = {
         MANDATORY_LANGUAGE_VALID: 'MANDATORY_LANGUAGE_VALID',
         CONFLICT: 'CONFLICT'
     },
+    statusView: {
+        NO_STATUS: 'noStatus',
+        PUBLISHED: 'published',
+        VISIBILITY: 'visibility',
+        PERMISSIONS: 'permissions'
+    },
     mode: {
         CONTENT_FOLDERS: 'content-folders',
         PAGES: 'pages',

@@ -19,12 +19,12 @@ export const getNewNodePath = (oldPath, oldAncestorPath, newAncestorPath) => {
 
 export const hasMixin = (node, mixin) => {
     if (node.mixinTypes) {
-        return _.find(node.mixinTypes, t => t.name === mixin) !== undefined;
+        return node.mixinTypes.some(t => t.name === mixin);
     }
 
-    let mixinTypesProperty = _.find(node.properties, property => property.name === 'jcr:mixinTypes');
+    let mixinTypesProperty = node.properties?.find(prop => prop.name === 'jcr:mixinTypes');
     if (mixinTypesProperty) {
-        return _.includes(mixinTypesProperty.values, mixin);
+        return mixinTypesProperty.values?.includes(mixin);
     }
 
     return false;

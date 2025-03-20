@@ -13,7 +13,8 @@ import {
     Warning,
     Language,
     Group,
-    Visibility
+    Visibility,
+    Hidden
 } from '@jahia/moonstone';
 
 export const config = {
@@ -63,7 +64,7 @@ export const config = {
     },
     notVisible: {
         color: 'default',
-        icon: <Visibility/>
+        icon: <Hidden/>
     }
 };
 
@@ -75,13 +76,14 @@ const Status = ({type, tooltip, isDisabled, hasLabel, labelParams, ...props}) =>
     const hasDefinedLabel = label !== `label.contentManager.contentStatus.${type}`;
     return (
         <Chip
-        label={(hasLabel && hasDefinedLabel) ? label : null}
-        isDisabled={isDisabled}
-        title={tooltip || label}
-        data-sel-role="content-status"
-        {...config[type]}
-        {...props}
-    />
+            label={(hasLabel && hasDefinedLabel) ? label : null}
+            isDisabled={isDisabled}
+            title={tooltip || label}
+            data-sel-role="content-status"
+            data-status-type={type}
+            {...config[type]}
+            {...props}
+        />
     );
 };
 

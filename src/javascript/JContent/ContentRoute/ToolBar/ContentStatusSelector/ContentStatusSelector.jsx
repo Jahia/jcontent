@@ -6,19 +6,19 @@ import {useTranslation} from 'react-i18next';
 import {setActiveContentStatus} from '~/JContent/redux/contentStatus.redux';
 import styles from './ContentStatusSelector.scss';
 
+const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
+const icons = {
+    [NO_STATUS]: <Not/>,
+    [PUBLISHED]: <Cloud/>,
+    [VISIBILITY]: <Visibility/>,
+    [PERMISSIONS]: <Group/>
+};
+
 export const ContentStatusSelector = () => {
-    const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.statusView;
     const statusMode = useSelector(state => state.jcontent.contentStatus.active) || NO_STATUS;
     const contentStatus = useSelector(state => state.jcontent.contentStatus.statusPaths, shallowEqual);
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-
-    const icons = {
-        [NO_STATUS]: <Not/>,
-        [PUBLISHED]: <Cloud/>,
-        [VISIBILITY]: <Visibility/>,
-        [PERMISSIONS]: <Group/>
-    };
 
     const dropdownData = Object.values(JContentConstants.statusView).map(v => ({
         label: t(`jcontent:label.contentManager.contentStatusSelector.${v}`),

@@ -282,7 +282,9 @@ export const Box = React.memo(({
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
-             data-node-path={node.path}
+             data-sel-role="page-builder-box"
+             data-jahia-path={node.path}
+             data-jahia-id={element.getAttribute('id')}
              style={currentOffset}
         >
             <div className={clsx(

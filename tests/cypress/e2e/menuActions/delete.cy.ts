@@ -1,17 +1,9 @@
 import {JContent} from '../../page-object';
-import {createSite, deleteSite, enableModule, publishAndWaitJobEnding} from '@jahia/cypress';
+import {createSite, deleteSite, enableModule, getComponent, getComponentByRole, publishAndWaitJobEnding} from '@jahia/cypress';
+import {DeleteDialog, DeletePermanentlyDialog} from '../../page-object/deleteDialog';
 
 describe('delete tests', () => {
     const siteKey = 'jContentSite-delete';
-
-    const confirmMarkForDeletion = verifyMsg => {
-        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', verifyMsg)
-            .find('[data-sel-role="delete-mark-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
-    };
 
     before(() => {
         createSite(siteKey);
@@ -32,12 +24,7 @@ describe('delete tests', () => {
     it('Can cancel mark for deletion', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home/test-pageDelete1');
         jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete');
-
-        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .find('[data-sel-role="cancel-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        getComponent(DeleteDialog).close();
     });
 
     it('Can mark root and subnodes for deletion', function () {
@@ -45,7 +32,7 @@ describe('delete tests', () => {
         jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete');
 
         cy.log('Verify dialog opens and can be mark for deletion');
-        confirmMarkForDeletion('You are about to delete 5 items, including 3 page(s)');
+        getComponent(DeleteDialog).markForDeletion('You are about to delete 5 items, including 3 page(s)');
 
         cy.log('Verify menu and subpages has been marked for deletion');
         cy.apollo({
@@ -70,12 +57,7 @@ describe('delete tests', () => {
         jcontent.getAccordionItem('pages').getTreeItem('test-subpage1').contextMenu().select('Delete (permanently)');
 
         cy.log('Verify dialog opens and cannot be deleted permanently');
-        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'cannot currently be deleted')
-            .find('[data-sel-role="close-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        getComponent(DeletePermanentlyDialog).assertMessage('cannot currently be deleted').close();
     });
 
     it('Cannot undelete non-root node', function () {

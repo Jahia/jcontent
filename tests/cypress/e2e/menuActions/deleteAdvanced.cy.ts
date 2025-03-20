@@ -1,7 +1,16 @@
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
 import {PageComposer} from '../../page-object/pageComposer';
-import {createSite, deleteSite, enableModule, publishAndWaitJobEnding} from '@jahia/cypress';
+import {
+    createSite,
+    deleteSite,
+    enableModule,
+    getComponent,
+    getComponentByRole,
+    markForDeletion,
+    publishAndWaitJobEnding
+} from '@jahia/cypress';
+import {DeleteDialog, DeletePermanentlyDialog, UndeleteDialog} from '../../page-object/deleteDialog';
 
 /**
  * Split from delete.cy.ts due to crashing from too many tests
@@ -10,27 +19,12 @@ import {createSite, deleteSite, enableModule, publishAndWaitJobEnding} from '@ja
 describe('delete tests', () => {
     const siteKey = 'jContentSite-delete';
 
-    const markForDeletionMutation = path => {
-        return gql`mutation MarkForDeletionMutation {
-            jcr { markNodeForDeletion(pathOrId: "${path}") }
-        }`;
-    };
-
-    const confirmMarkForDeletion = verifyMsg => {
-        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', verifyMsg)
-            .find('[data-sel-role="delete-mark-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
-    };
-
     before(() => {
         createSite(siteKey);
         enableModule('jcontent-test-module', siteKey);
         cy.apollo({mutationFile: 'jcontent/menuActions/createDeleteContent.graphql'})
             .then(() => publishAndWaitJobEnding(`/sites/${siteKey}/home/test-pageDelete3/test-subpage3`));
-        cy.apollo({mutation: markForDeletionMutation(`/sites/${siteKey}/home/test-pageDelete1`)});
+        markForDeletion(`/sites/${siteKey}/home/test-pageDelete1`);
     });
 
     beforeEach(() => {
@@ -47,12 +41,7 @@ describe('delete tests', () => {
         jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete (permanently)');
 
         cy.log('Verify dialog opens and can be deleted');
-        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete')
-            .find('[data-sel-role="delete-permanently-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        getComponent(DeletePermanentlyDialog).delete();
 
         cy.log('Verify root node is deleted');
         cy.apollo({
@@ -75,17 +64,12 @@ describe('delete tests', () => {
         jcontent.checkSelectionCount(1);
 
         jcontent.getHeaderActionButton('delete').click();
-        confirmMarkForDeletion('You are about to delete');
+        getComponent(DeleteDialog).markForDeletion('You are about to delete');
         jcontent.checkSelectionCount(1);
 
         jcontent.getHeaderActionButton('deletePermanently').click();
         cy.log('Verify dialog opens and can be deleted');
-        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete')
-            .find('[data-sel-role="delete-permanently-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        getComponent(DeletePermanentlyDialog).delete();
         jcontent.checkSelectionCount(0);
     });
 
@@ -95,7 +79,7 @@ describe('delete tests', () => {
 
         cy.log('mark published page for deletion');
         jcontent.getAccordionItem('pages').getTreeItem('test-subpage3').contextMenu().select('Delete');
-        confirmMarkForDeletion('You are about to delete 3 items, including 1 page(s)');
+        getComponent(DeleteDialog).markForDeletion('You are about to delete 3 items, including 1 page(s)');
 
         cy.log('Publish deletion');
         jcontent.getHeaderActionButton('publishDeletion').get().should('be.visible').click();
@@ -127,22 +111,14 @@ describe('delete tests', () => {
         jcontent.getTable().selectRowByLabel('Soon to be deleted');
         jcontent.checkSelectionCount(1);
         jcontent.getHeaderActionButton('delete').click();
+
         cy.log('Verify dialog opens and can be deleted');
-        let dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'You are about to delete Soon to be deleted')
-            .find('[data-sel-role="delete-mark-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        getComponent(DeleteDialog).markForDeletion('You are about to delete Soon to be deleted');
         jcontent.checkSelectionCount(1);
-        jcontent.getHeaderActionButton('deletePermanently').click();
+
         cy.log('Verify dialog opens and can be deleted');
-        dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-        cy.get(dialogCss)
-            .should('contain', 'You are about to permanently delete Soon to be deleted')
-            .find('[data-sel-role="delete-permanently-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        jcontent.getHeaderActionButton('deletePermanently').click();
+        getComponent(DeletePermanentlyDialog).delete();
         jcontent.checkSelectionCount(0);
     });
 
@@ -162,11 +138,7 @@ describe('delete tests', () => {
             .select('Delete (permanently)');
 
         cy.log('Verify dialog opens and can be deleted');
-        const dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-        cy.get(dialogCss)
-            .find('[data-sel-role="delete-permanently-button"]')
-            .click();
-        cy.get(dialogCss).should('not.exist');
+        getComponent(DeletePermanentlyDialog).delete();
 
         cy.log('Verify autopublished node is deleted');
         cy.apollo({
@@ -280,31 +252,18 @@ describe('delete tests', () => {
 
         it('opens JContent delete dialog in legacy', () => {
             pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog();
-            let dialogCss = '[data-sel-role="delete-mark-dialog"]';
-            cy.get(dialogCss)
-                .should('be.visible')
-                .find('[data-sel-role="delete-mark-button"]')
-                .click();
+            getComponent(DeleteDialog).markForDeletion();
             pageComposer.refresh();
+
             pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openUndeleteDialog();
-            dialogCss = '[data-sel-role="delete-undelete-dialog"]';
-            cy.get(dialogCss)
-                .should('be.visible')
-                .find('[data-sel-role="delete-undelete-button"]')
-                .click();
+            getComponent(UndeleteDialog).undelete();
             pageComposer.refresh();
+
             pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeleteDialog();
-            dialogCss = '[data-sel-role="delete-mark-dialog"]';
-            cy.get(dialogCss)
-                .should('be.visible')
-                .find('[data-sel-role="delete-mark-button"]').should('be.visible')
-                .click();
+            getComponent(DeleteDialog).markForDeletion();
+
             pageComposer.openContextualMenuOnContent('div[path="/sites/deleteInLegacy/home/area-main/rich-text"]').openDeletePermanentlyDialog();
-            dialogCss = '[data-sel-role="delete-permanently-dialog"]';
-            cy.get(dialogCss)
-                .should('be.visible')
-                .find('[data-sel-role="delete-permanently-button"]')
-                .click();
+            getComponent(DeletePermanentlyDialog).delete();
         });
     });
 });

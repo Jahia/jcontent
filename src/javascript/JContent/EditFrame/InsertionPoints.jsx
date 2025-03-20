@@ -7,7 +7,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         return null;
     }
 
-    const clickedPath = clickedElement.element.getAttribute("path");
+    const clickedPath = clickedElement.element.getAttribute('path');
 
     const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)]
         .map(e => ({
@@ -15,7 +15,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
     }));
 
-    // Get all children of the clicked element that are create content buttons [type="placeholder"] and add insertion points for each
+    // Get all children of the clicked element that are create content buttons [type="existingNode"] and add insertion points for each
     const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)]
         // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
         .filter(e => e.getAttribute('path').startsWith(clickedPath))
@@ -23,7 +23,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         element: e,
         parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
     }));
-
+    
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;
 

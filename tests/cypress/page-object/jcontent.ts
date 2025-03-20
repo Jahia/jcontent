@@ -20,8 +20,9 @@ import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
 import {CompareDialog} from './compareDialog';
-import {PageBuilderHeaders, PageBuilderModule} from "./pageBuilder";
+import {PageBuilderHeaders, PageBuilderModule} from './pageBuilder';
 import VisitOptions = Cypress.VisitOptions;
+import {ContentStatusSelector} from './contentStatusSelector';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -117,6 +118,10 @@ export class JContent extends BasePage {
         }
 
         return this.languageSwitcher;
+    }
+
+    getStatusSelector(): ContentStatusSelector {
+        return getComponent(ContentStatusSelector);
     }
 
     getTable(): ContentTable {
@@ -218,9 +223,17 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
-    publishAll() {
+    publish() {
         cy.get('[data-sel-role="publish"]').click();
         this.clickPublishNow();
+    }
+
+    publishAll() {
+        cy.get('[data-sel-role="publishAll"]').click();
+        this.clickPublishNow();
+        cy.get('div[id="notistack-snackbar"]', {timeout: 5000})
+            .contains('Publication completed', {timeout: 5000})
+            .should('be.visible');
     }
 
     clickPublishNow() {

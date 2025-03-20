@@ -7,10 +7,44 @@ import {PageBuilderModuleCreateButton} from './pageBuilderModuleCreateButton';
 export class PageBuilderModule extends BaseComponent {
     static defaultSelector = '[jahiatype="module"]';
     parentFrame: BaseComponent;
+    path: string;
 
     hover() {
         this.get().realHover();
         return this.get();
+    }
+
+    getBox() {
+        return cy.get(`@component${this.parentFrame.id}`)
+            .find(`[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]`);
+    }
+
+    assertNoBox() {
+        return cy.get(`@component${this.parentFrame.id}`)
+            .find(`[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]`).should('not.exist');
+    }
+
+    getBoxStatus(status: string) {
+        this.getBox().find(`[data-sel-role="content-status"][data-status-type="${status}"]`).scrollIntoView();
+        return this.getBox().find(`[data-sel-role="content-status"][data-status-type="${status}"]`);
+    }
+
+    /*
+     * Use specifically to check when expected for content to have other statuses displayed (i.e. box element exists)
+     * Otherwise use `assertBoxNotExist` when there are no badges displayed
+     */
+    assertNoBoxStatus(status: string) {
+        this.getBox().scrollIntoView();
+        return this.getBox().find(`[data-sel-role="content-status"][data-status-type="${status}"]`).should('not.exist');
+    }
+
+    getForDeletionStatus() {
+        cy.get(`@component${this.parentFrame.id}`)
+            .find(`[data-sel-role="infos-deleted"][data-jahia-path="${this.path}"]`)
+            .scrollIntoView();
+        return cy.get(`@component${this.parentFrame.id}`)
+            .find(`[data-sel-role="infos-deleted"][data-jahia-path="${this.path}"]`)
+            .find('[data-sel-role="content-status"][data-status-type="markedForDeletion"]');
     }
 
     hasNoHeaderAndFooter() {
@@ -68,5 +102,10 @@ export class PageBuilderModule extends BaseComponent {
 
     doubleClick(clickOptions?: Partial<ClickOptions>) {
         this.get().scrollIntoView().dblclick(clickOptions);
+    }
+
+    select() {
+        this.get().click({metaKey: true, force: true});
+        cy.get('[data-sel-role="selection-infos"]').should('be.visible').and('contain', 'selected');
     }
 }

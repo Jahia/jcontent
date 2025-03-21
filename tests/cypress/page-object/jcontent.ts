@@ -187,7 +187,7 @@ export class JContent extends BasePage {
 
     switchToPageBuilder(): JContentPageBuilder {
         cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
-        this.switchToMode('Page Builder - Beta');
+        this.switchToMode('Page Builder');
         return new JContentPageBuilder(this);
     }
 

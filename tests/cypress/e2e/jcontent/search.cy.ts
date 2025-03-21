@@ -106,7 +106,7 @@ describe('Search tests', () => {
             jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
             jcontent.getBasicSearch().openSearch().searchTerm('test').executeSearch().close();
             jcontent.getAccordionItem('pages').getTreeItem('home').shouldBeSelected();
-            jcontent.shouldBeInMode('Page Builder - Beta');
+            jcontent.shouldBeInMode('Page Builder');
         });
 
         it('should go back to default', () => {
@@ -114,7 +114,7 @@ describe('Search tests', () => {
             jcontent = new JContent();
             new BasicSearch(jcontent).close();
             jcontent.getAccordionItem('pages').getTreeItem('home').shouldBeSelected();
-            jcontent.shouldBeInMode('Page Builder - Beta');
+            jcontent.shouldBeInMode('Page Builder');
         });
     });
 

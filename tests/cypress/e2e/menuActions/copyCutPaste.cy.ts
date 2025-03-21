@@ -80,9 +80,9 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             // Confirm they are visible before proceeding
             contextMenu.shouldHaveItem('New Page');
             contextMenu.shouldHaveItem('New...');
-            contextMenu
-                .submenu('Copy', 'jcontent-copyPageMenu')
-                .select(copyActionName);
+            const menu = contextMenu.submenu('Copy', 'jcontent-copyPageMenu');
+            menu.should('be.visible');
+            menu.select(copyActionName);
         };
 
         it('Does not display paste as reference action on a page', () => {

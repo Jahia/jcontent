@@ -83,8 +83,8 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
             .should('be.visible')
             .click();
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
-        cy.get('.moonstone-tab-item[data-cm-view-type="pages"]').should('be.visible').click();
-        cy.get('.moonstone-tab-item[data-cm-view-type="pages"]').should('have.class', 'moonstone-selected');
+        cy.get('.moonstone-tabItem[data-cm-view-type="pages"]').should('be.visible').click();
+        cy.get('.moonstone-tabItem[data-cm-view-type="pages"]').should('have.class', 'moonstone-tabItem_selected');
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
         cy.get('tr[data-cm-role="table-content-list-row"]').contains('Search Results').click();
         cy.get('button[data-sel-picker-dialog-action="done"]').click();

@@ -42,7 +42,7 @@ describe('Page builder - content status', () => {
     });
 
     it('hide status selector when not in page builder', () => {
-        const jcontent = JContent
+        JContent
             .visit(siteKey, 'en', 'pages/home')
             .switchToListMode();
         cy.get(ContentStatusSelector.defaultSelector).should('not.exist');

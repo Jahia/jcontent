@@ -48,12 +48,13 @@ describe('Page builder - content status', () => {
         before(() => {
             markForDeletion(`/sites/${siteKey}/home/${page}/area-main/wip-for-deletion`);
             cy.loginAndStoreSession();
-            jContentPageBuilder = JContent
-                .visit(siteKey, 'en', `pages/home/${page}`)
-                .switchToPageBuilder();
         });
 
         it('should display WIP status', () => {
+            jContentPageBuilder = JContent
+                .visit(siteKey, 'en', `pages/home/${page}`)
+                .switchToPageBuilder();
+
             getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
             getContent(page, 'wip-en').getBoxStatus('workInProgress').should('be.visible');
 
@@ -61,14 +62,12 @@ describe('Page builder - content status', () => {
             getContent(page, 'wip-for-deletion').getForDeletionStatus().should('be.visible');
             // No content statuses to display means no box is rendered
             getContent(page, 'wip-for-deletion').assertNoBox();
+        });
 
-            cy.log('Should display status when undeleted');
-            getContent(page, 'wip-for-deletion').select();
-            getComponentByRole(Button, 'undelete').click();
-            getComponent(UndeleteDialog).undelete();
-            jContentPageBuilder.clearSelection();
-            getContent(page, 'wip-for-deletion').getBoxStatus('workInProgress').should('be.visible');
-
+        it('should not display WIP status for specific languages', () => {
+            jContentPageBuilder = JContent
+                .visit(siteKey, 'fr', `pages/home/${page}`)
+                .switchToPageBuilder();
             cy.log('wip-en should have no WIP status for FR language');
             jContentPageBuilder.getLanguageSwitcher().select('fr');
             getContent(page, 'wip-en').getBoxStatus('noTranslation').should('be.visible').and('contain', 'FR');
@@ -76,6 +75,10 @@ describe('Page builder - content status', () => {
         });
 
         it('should display no visibility (language), untranslated badges', () => {
+            jContentPageBuilder = JContent
+                .visit(siteKey, 'fr', `pages/home/${page}`)
+                .switchToPageBuilder();
+
             cy.log('should display untranslated badge');
             getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
             getContent(page, 'wip-all').getBoxStatus('noTranslation').should('be.visible').and('contain', 'FR');

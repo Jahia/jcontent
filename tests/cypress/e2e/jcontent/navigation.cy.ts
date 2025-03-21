@@ -54,7 +54,7 @@ describe('Content navigation', () => {
         const jcontent = JContent.visit('mySite1', 'en', 'pages/home');
         jcontent.getAccordionItem('pages').expandTreeItem('home');
         jcontent.getAccordionItem('pages').getTreeItem(specialCharsName).click();
-        jcontent.shouldBeInMode('Page Builder - Beta');
+        jcontent.shouldBeInMode('Page Builder');
         cy.get('h1').contains('special chars page');
     });
 

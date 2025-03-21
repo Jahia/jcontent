@@ -32,6 +32,7 @@ module.exports = (env, argv) => {
             extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
             alias: {
                 '~': path.resolve(__dirname, './src/javascript'),
+                'react/jsx-runtime': 'react/jsx-runtime.js',
             },
             fallback: { "url": false }
         },

@@ -8,6 +8,7 @@ import {
     grantRoles,
     markForDeletion
 } from '@jahia/cypress';
+import {ContentStatusSelector} from '../../page-object/contentStatusSelector';
 
 describe('Page builder - content status', () => {
     let jContentPageBuilder: JContentPageBuilder;
@@ -31,6 +32,7 @@ describe('Page builder - content status', () => {
             variables: {homePath: `/sites/${siteKey}/home`}
         });
         createUser(user.name, user.password);
+        cy.loginAndStoreSession();
     });
 
     after(() => {
@@ -39,11 +41,17 @@ describe('Page builder - content status', () => {
         deleteSite(siteKey);
     });
 
+    it('hide status selector when not in page builder', () => {
+        JContent
+            .visit(siteKey, 'en', 'pages/home')
+            .switchToListMode();
+        cy.get(ContentStatusSelector.defaultSelector).should('not.exist');
+    });
+
     describe('test always-on statuses', {testIsolation: false}, () => {
         const page = 'alwaysPage';
         before(() => {
             markForDeletion(`/sites/${siteKey}/home/${page}/area-main/wip-for-deletion`);
-            cy.loginAndStoreSession();
         });
 
         it('should display WIP status', () => {
@@ -93,7 +101,6 @@ describe('Page builder - content status', () => {
     describe('Publication status', {testIsolation: false}, () => {
         const page = 'publicationPage';
         before(() => {
-            cy.loginAndStoreSession();
             jContentPageBuilder = JContent
                 .visit(siteKey, 'en', `pages/home/${page}`)
                 .switchToPageBuilder();
@@ -126,7 +133,6 @@ describe('Page builder - content status', () => {
         before(() => {
             // Add ACL permission override
             grantRoles(`/sites/${siteKey}/home/${page}/area-main/permission`, ['editor'], user.name, 'USER');
-            cy.loginAndStoreSession();
             jContentPageBuilder = JContent
                 .visit(siteKey, 'en', `pages/home/${page}`)
                 .switchToPageBuilder();

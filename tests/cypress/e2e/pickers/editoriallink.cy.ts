@@ -64,7 +64,7 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
             .should('be.visible');
         picker.getTab('pages')
             .should('be.visible')
-            .and('have.class', 'moonstone-selected'); // Default selected
+            .and('have.class', 'moonstone-tabItem_selected'); // Default selected
 
         // Select pages tab; verify types
         cy.log('Verify content types in pages tab');
@@ -125,7 +125,7 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
 
         cy.log('verify tab is restored and selection is expanded');
         pickerField.open();
-        picker.getTab('pages').should('have.class', 'moonstone-selected');
+        picker.getTab('pages').should('have.class', 'moonstone-tabItem_selected');
         picker.getTable().getRowByName('all-organic-foods-network-gains').get().scrollIntoView();
         picker.getTable().getRowByName('all-organic-foods-network-gains')
             .should('be.visible') // Expanded

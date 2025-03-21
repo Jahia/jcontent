@@ -133,11 +133,11 @@ export class Picker extends BaseComponent {
     }
 
     getTab(viewType: string) {
-        return this.get().find(`.moonstone-tab-item[data-cm-view-type="${viewType}"]`);
+        return this.get().find(`.moonstone-tabItem[data-cm-view-type="${viewType}"]`);
     }
 
     selectTab(viewType: string) {
-        this.getTab(viewType).click().should('have.class', 'moonstone-selected');
+        this.getTab(viewType).click().should('have.class', 'moonstone-tabItem_selected');
         this.wait();
     }
 

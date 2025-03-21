@@ -223,6 +223,10 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
+    assertHeaderActionSelected(role: string) {
+        this.getHeaderActionButton(role).should('have.class', 'moonstone-tabItem_selected');
+    }
+
     publish() {
         cy.get('[data-sel-role="publish"]').click();
         this.clickPublishNow();

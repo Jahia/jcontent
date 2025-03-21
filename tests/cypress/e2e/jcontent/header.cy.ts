@@ -35,7 +35,7 @@ describe('jContent header tests', () => {
         jcontent.getHeaderActionButton('openInPreview').click();
     });
 
-    it.only('Should open preview in french in new tab', () => {
+    it('Should open preview in french in new tab', () => {
         const language = 'fr';
         jcontent = JContent.visit('digitall', 'en', 'pages/home');
         jcontent.getLanguageSwitcher().select('fr');

@@ -74,7 +74,7 @@ describe('Picker tests - Search', () => {
         picker.switchSearchContext('Digitall');
         picker.getTab('content').click().then(tabItem => {
             picker.wait();
-            cy.wrap(tabItem).should('have.class', 'moonstone-selected');
+            cy.wrap(tabItem).should('have.class', 'moonstone-tabItem_selected');
         });
         picker.search('tab');
         picker.verifyResultsLength(7);
@@ -83,7 +83,7 @@ describe('Picker tests - Search', () => {
         // Selection is not able to expand yet in structured view
         // Verify tabs are visible and previous tab is selected
         cy.log('empty search restores context');
-        picker.getTab('content').should('have.class', 'moonstone-selected');
+        picker.getTab('content').should('have.class', 'moonstone-tabItem_selected');
     });
 
     it('Media Picker- Search for xylophone and should find nothing no matter the context', () => {

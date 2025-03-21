@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {createSite, deleteSite, enableModule, getComponent, getComponentByRole, publishAndWaitJobEnding} from '@jahia/cypress';
+import {createSite, deleteSite, enableModule, getComponent, publishAndWaitJobEnding} from '@jahia/cypress';
 import {DeleteDialog, DeletePermanentlyDialog} from '../../page-object/deleteDialog';
 
 describe('delete tests', () => {

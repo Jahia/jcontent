@@ -1,17 +1,13 @@
 import {JContent, JContentPageBuilder} from '../../page-object/jcontent';
 import {
-    Button,
     createSite,
     createUser,
     deleteSite,
     deleteUser,
     enableModule,
-    getComponent,
-    getComponentByRole,
     grantRoles,
     markForDeletion
 } from '@jahia/cypress';
-import {UndeleteDialog} from '../../page-object/deleteDialog';
 
 describe('Page builder - content status', () => {
     let jContentPageBuilder: JContentPageBuilder;

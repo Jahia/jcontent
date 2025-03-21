@@ -1,4 +1,4 @@
-import {BaseComponent, Button, getComponent, getComponentByRole} from '@jahia/cypress';
+import {BaseComponent, Button, getComponentByRole} from '@jahia/cypress';
 
 export class DeleteDialog extends BaseComponent {
     static defaultSelector = 'div[data-sel-role="delete-mark-dialog"]';

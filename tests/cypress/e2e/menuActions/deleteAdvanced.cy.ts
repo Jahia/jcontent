@@ -6,7 +6,6 @@ import {
     deleteSite,
     enableModule,
     getComponent,
-    getComponentByRole,
     markForDeletion,
     publishAndWaitJobEnding
 } from '@jahia/cypress';

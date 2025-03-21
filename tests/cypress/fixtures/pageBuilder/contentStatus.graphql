@@ -1,0 +1,151 @@
+mutation createStatusContent($homePath: String! = "/sites/contentStatusSite/home") {
+    jcr {
+        mutateNode(pathOrId: $homePath) {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "alwaysPage",
+                        primaryNodeType: "jnt:page",
+                        properties: [
+                            { name: "jcr:title", language: "en", value: "Always-on statuses" },
+                            { name: "j:templateName", value: "home" }
+                        ]
+                        children: [
+                            {
+                                name: "area-main"
+                                primaryNodeType: "jnt:contentList"
+                                children: [
+                                    {
+                                        name: "wip-all"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Work In Progress - ALL" }
+                                            { name: "j:workInProgressStatus", value: "ALL_CONTENT"}
+                                        ]
+                                    }
+                                    {
+                                        name: "wip-en"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Work in Progress - EN" }
+                                            { name: "j:workInProgressStatus", value: "LANGUAGES"}
+                                            { name: "j:workInProgressLanguages", values: ["en"]}
+                                        ]
+                                    }
+                                    {
+                                        name: "wip-for-deletion"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Work In Progress - Marked for deletion" }
+                                            { name: "j:workInProgressStatus", value: "ALL_CONTENT"}
+                                        ]
+                                    }
+                                    {
+                                        name: "visibility-lang"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Visibility Language - EN only" }
+                                            { name: "j:invalidLanguages", values: ["fr", "de"]}
+                                        ]
+                                    }
+                                    {
+                                        name: "visibility-lang-with-display-content"
+                                        primaryNodeType: "qant:allFields",
+                                        properties:[
+                                            { name: "textarea", language: "en", value: "Visibility Language - EN only (with display content)" }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    {
+                        name: "publicationPage",
+                        primaryNodeType: "jnt:page",
+                        properties: [
+                            { name: "jcr:title", language: "en", value: "publication statuses" },
+                            { name: "j:templateName", value: "home" }
+                        ]
+                        children: [
+                            {
+                                name: "area-main"
+                                primaryNodeType: "jnt:contentList"
+                                children: [
+                                    {
+                                        name: "wip-all"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Work In Progress - ALL" }
+                                            { name: "j:workInProgressStatus", value: "ALL_CONTENT"}
+                                        ]
+                                    }
+                                    {
+                                        name: "wip-en"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Work in Progress - EN" }
+                                            { name: "j:workInProgressStatus", value: "LANGUAGES"}
+                                            { name: "j:workInProgressLanguages", values: ["en"]}
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    {
+                        name: "visibilityPermissionPage",
+                        primaryNodeType: "jnt:page",
+                        properties: [
+                            { name: "jcr:title", language: "en", value: "visibility statuses" },
+                            { name: "j:templateName", value: "home" }
+                        ]
+                        children: [
+                            {
+                                name: "area-main"
+                                primaryNodeType: "jnt:contentList"
+                                children: [
+                                    {
+                                        name: "visibility-lang"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Visibility content - lang" }
+                                            { name: "j:invalidLanguages", values: ["de"]}
+                                        ]
+                                    }
+                                    {
+                                        name: "visibility-datetime"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Visibility content - datetime" }
+                                        ]
+                                        children: [{
+                                            name: "j:conditionalVisibility",
+                                            primaryNodeType: "jnt:conditionalVisibility"
+                                            children: [{
+                                                name: "jnt:dayOfWeekCondition1742500424469",
+                                                primaryNodeType: "jnt:dayOfWeekCondition",
+                                                properties: {name: "dayOfWeek", values: ["wednesday"]}
+                                            }]
+                                        }]
+                                    }
+                                    {
+                                        name: "permission"
+                                        primaryNodeType: "jnt:bigText"
+                                        properties: [
+                                            { name: "text", language: "en", value: "Permission content" }
+                                            { name: "j:workInProgressStatus", value: "LANGUAGES"}
+                                            { name: "j:workInProgressLanguages", values: ["en"]}
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+    }
+}
+

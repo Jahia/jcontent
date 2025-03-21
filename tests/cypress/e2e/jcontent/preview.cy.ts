@@ -9,7 +9,7 @@ describe('JContent preview tests', () => {
         enableModule('jcontent-test-module', 'jcontentSite');
         cy.loginAndStoreSession(); // Edit in chief
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
-        jcontent.publishAll();
+        jcontent.publish();
         cy.get('button[data-sel-role="openInLive"]', {timeout: 5000}).should('be.visible');
     });
 

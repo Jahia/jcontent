@@ -1,6 +1,5 @@
 import {
-    Accordion,
-    BaseComponent,
+    Accordion, BaseComponent,
     BasePage,
     Button,
     Dropdown,
@@ -20,9 +19,10 @@ import {Media} from './media';
 import {ContentTable} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
-import ClickOptions = Cypress.ClickOptions;
-import VisitOptions = Cypress.VisitOptions;
 import {CompareDialog} from './compareDialog';
+import {PageBuilderHeaders, PageBuilderModule} from './pageBuilder';
+import VisitOptions = Cypress.VisitOptions;
+import {ContentStatusSelector} from './contentStatusSelector';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -79,6 +79,10 @@ export class JContent extends BasePage {
         return new ContentEditor();
     }
 
+    getCreatePage(): void {
+        cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
+    }
+
     editPage() {
         cy.get('[data-sel-role="editPage"]').click();
         return new ContentEditor();
@@ -114,6 +118,10 @@ export class JContent extends BasePage {
         }
 
         return this.languageSwitcher;
+    }
+
+    getStatusSelector(): ContentStatusSelector {
+        return getComponent(ContentStatusSelector);
     }
 
     getTable(): ContentTable {
@@ -215,13 +223,23 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
-    publishAll() {
+    publish() {
         cy.get('[data-sel-role="publish"]').click();
         this.clickPublishNow();
     }
 
+    publishAll() {
+        cy.get('[data-sel-role="publishAll"]').click();
+        this.clickPublishNow();
+        cy.get('div[id="notistack-snackbar"]', {timeout: 5000})
+            .contains('Publication completed', {timeout: 5000})
+            .should('be.visible');
+    }
+
     clickPublishNow() {
-        cy.get('#publishNowButton').should('be.visible').find('button').contains('Publish now').click();
+        cy.get('#publishNowButton').should('be.visible')
+            .find('button').contains('Publish now')
+            .click();
     }
 
     getCompareDialog(): CompareDialog {
@@ -230,7 +248,7 @@ export class JContent extends BasePage {
 }
 
 export class JContentPageBuilder extends JContent {
-    private alias: string;
+    private readonly alias: string;
 
     constructor(base: JContent, alias = 'pcIframe') {
         super();
@@ -248,10 +266,6 @@ export class JContentPageBuilder extends JContent {
         return new BaseComponent(cy.get(`@${this.alias}`));
     }
 
-    getCreatePage(): void {
-        cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
-    }
-
     getModule(path: string, bypassFrameLoadedCheck = true): PageBuilderModule {
         const parentFrame = this.iframe(bypassFrameLoadedCheck);
         // I see cypress querying the module even before iFrame has settled and verified.
@@ -260,6 +274,7 @@ export class JContentPageBuilder extends JContent {
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;
+        module.path = path;
         return module;
     }
 
@@ -281,150 +296,8 @@ export class JContentPageBuilder extends JContent {
         return this;
     }
 
-    clickPublishNow() {
-        cy.get('#publishNowButton').should('be.visible')
-            .find('button').contains('Publish now')
-            .click();
-    }
-
     getPageHeaderList(): PageBuilderHeaders {
         return getComponentByRole(PageBuilderHeaders, 'page-header-list');
     }
 }
 
-class PageBuilderHeaders extends BaseComponent {
-    items() {
-        return this.get().find('div');
-    }
-}
-class PageBuilderModuleHeader extends BaseComponent {
-    static defaultSelector = '[jahiatype="header"]';
-
-    assertStatus(value: string) {
-        this.get().find('[data-sel-role="content-status"]').contains(value);
-    }
-
-    getButton(role: string): Button {
-        return getComponentByRole(Button, role, this);
-    }
-
-    assertHeaderText(text: string) {
-        this.get().find('p').contains(text);
-    }
-
-    select() {
-        this.get().click({metaKey: true, force: true});
-    }
-}
-
-class PageBuilderModuleFooter extends BaseComponent {
-    static defaultSelector = '[jahiatype="footer"]';
-
-    getItemPathDropdown(): ItemPathDropdown {
-        return getComponentByRole(ItemPathDropdown, 'pagebuilder-itempath-dropdown', this);
-    }
-}
-
-class ItemPathDropdown extends BaseComponent {
-    static defaultSelector = '[data-sel-role="pagebuilder-itempath-dropdown"]';
-
-    open(): ItemPathDropdown {
-        this.element.click({waitForAnimations: true});
-        return this;
-    }
-
-    shouldHaveCount(length: number) {
-        this.get().find('[role="option"]').should('have.length', length);
-    }
-
-    select(item: string) {
-        this.get().find('[role="option"]').contains(item).click({force: true});
-    }
-}
-
-class PageBuilderModuleCreateButton extends BaseComponent {
-    static defaultSelector = '[jahiatype="createbuttons"]';
-
-    getButton(type: string): Button {
-        return new Button(this.get().find('.moonstone-button').contains(type));
-    }
-
-    getFirstInsertionButton(): Button {
-        return new Button(this.get().find('button[data-sel-role="createContent"]').first());
-    }
-
-    assertHasNoButton(): void {
-        this.get().find('.moonstone-button').should('not.exist');
-    }
-
-    assertHasNoButtonForType(type: string): void {
-        this.get().find('.moonstone-button').contains(type).should('not.exist');
-    }
-}
-
-class PageBuilderModule extends BaseComponent {
-    static defaultSelector = '[jahiatype="module"]';
-    parentFrame: BaseComponent;
-
-    hover() {
-        this.get().realHover();
-        return this.get();
-    }
-
-    hasNoHeaderAndFooter() {
-        this.hover();
-        this.get().invoke('attr', 'id').then(id => {
-            this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`).should('not.exist');
-            this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`).should('not.exist');
-        });
-    }
-
-    getHeader(selectFirst = false) {
-        this.hover();
-        if (selectFirst) {
-            this.click(); // Header shows up only when selected
-        }
-
-        return new PageBuilderModuleHeader(this.get().invoke('attr', 'id').then(id => {
-            return this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
-        }));
-    }
-
-    getFooter() {
-        this.hover();
-        return new PageBuilderModuleFooter(this.get().invoke('attr', 'id').then(id => {
-            return this.parentFrame.get().find(`[jahiatype="footer"][data-jahia-id="${id}"]`);
-        }));
-    }
-
-    getCreateButtons() {
-        return new PageBuilderModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
-            return this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
-        }));
-    }
-
-    assertHasNoCreateButtons() {
-        this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
-            return cy.get('iframe[data-sel-role="page-builder-frame-active"]').find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`).should('not.exist');
-        });
-    }
-
-    contextMenu(selectFirst = false, force = true): Menu {
-        if (selectFirst) {
-            this.getHeader(selectFirst);
-        } else {
-            this.hover();
-        }
-
-        this.get().rightclick({force, waitForAnimations: true});
-        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
-    }
-
-    click(clickOptions?: Partial<ClickOptions>) {
-        this.get().scrollIntoView().click(clickOptions);
-    }
-
-    doubleClick(clickOptions?: Partial<ClickOptions>) {
-        this.get().scrollIntoView().dblclick(clickOptions);
-    }
-}

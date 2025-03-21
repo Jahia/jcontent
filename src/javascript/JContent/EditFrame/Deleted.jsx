@@ -35,6 +35,8 @@ export const Deleted = ({element, addIntervalCallback}) => {
     return (
         <div ref={ref}
              className={clsx(styles.root)}
+             data-sel-role="infos-deleted"
+             data-jahia-path={element.getAttribute('path')}
              style={currentOffset}
         >
             <Status type="markedForDeletion" hasLabel={false} className={styles.badge} variant="bright"/>

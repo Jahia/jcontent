@@ -38,7 +38,7 @@ const setCopyLanguage = uuid => {
 describe('test copyFromOneLanguageToCurrentLanguage', () => {
     before('Create testsites', () => {
         cy.login();
-        createSite(TwoLanguagesSiteKey, {languages: 'en,fr', templateSet: 'dx-base-demo-template', serverName: 'localhost', locale: 'en'});
+        createSite(TwoLanguagesSiteKey, {languages: 'en,fr', templateSet: 'dx-base-demo-templates', serverName: 'localhost', locale: 'en'});
         createSite(OneLanguageSiteKey, {templateSet: 'qa-simpleTemplateSet', serverName: 'localhost', locale: 'en'});
         createUser(editorLogin.username, editorLogin.password);
         grantRoles(`/sites/${TwoLanguagesSiteKey}`, ['editor'], editorLogin.username, 'USER');

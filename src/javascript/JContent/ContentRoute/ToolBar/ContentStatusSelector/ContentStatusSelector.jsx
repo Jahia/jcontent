@@ -39,6 +39,7 @@ export const ContentStatusSelector = () => {
     return (
         <Dropdown
             size="small"
+            imageSize="big"
             data-sel-role="status-view-mode-dropdown"
             data={dropdownData}
             value={statusMode}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Cloud, Dropdown, Group, Not, Pill, Visibility} from '@jahia/moonstone';
+import {Cloud, Dropdown, Group, Not, Pill, VisibilityCondition} from '@jahia/moonstone';
 import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -10,12 +10,13 @@ const {PUBLISHED, PERMISSIONS, VISIBILITY, NO_STATUS} = JContentConstants.status
 const icons = {
     [NO_STATUS]: <Not/>,
     [PUBLISHED]: <Cloud/>,
-    [VISIBILITY]: <Visibility/>,
+    [VISIBILITY]: <VisibilityCondition/>,
     [PERMISSIONS]: <Group/>
 };
 
 export const ContentStatusSelector = () => {
     const statusMode = useSelector(state => state.jcontent.contentStatus.active) || NO_STATUS;
+    const viewMode = useSelector(state => state.jcontent.tableView.viewMode);
     const contentStatus = useSelector(state => state.jcontent.contentStatus.statusPaths, shallowEqual);
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
@@ -36,7 +37,8 @@ export const ContentStatusSelector = () => {
         dispatch(setActiveContentStatus(item.value));
     };
 
-    return (
+    const isPageBuilderView = viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER;
+    return isPageBuilderView ? (
         <Dropdown
             size="small"
             imageSize="big"
@@ -46,5 +48,5 @@ export const ContentStatusSelector = () => {
             icon={icons[statusMode]}
             onChange={setContentStatus}
         />
-    );
+    ) : null;
 };

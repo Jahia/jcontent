@@ -190,8 +190,9 @@ describe('Editor url test', () => {
         const baseUrl = '/jahia/jcontent/digitall/en/pages/home/about';
         const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:digitall,uilang:en,uuid:'${validUuid}')))`;
         cy.visit(`${baseUrl}#${ceParams}`);
-        cy.get('[data-sel-role="tab-advanced-options"]').click();
-        cy.get('[data-sel-role="tab-advanced-options"]').should('have.class', 'moonstone-selected');
+        jcontent = new JContent();
+        jcontent.getHeaderActionButton('tab-advanced-options').click();
+        jcontent.assertHeaderActionSelected('tab-advanced-options');
         cy.get('[data-sel-role="advanced-options-nav"] li')
             .contains('Edit roles')
             .click();
@@ -217,8 +218,9 @@ describe('Editor url test', () => {
         const baseUrl = '/jahia/jcontent/digitall/en/pages/home/about';
         const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:digitall,uilang:en,uuid:'${validUuid}')))`;
         cy.visit(`${baseUrl}#${ceParams}`);
-        cy.get('[data-sel-role="tab-advanced-options"]').click();
-        cy.get('[data-sel-role="tab-advanced-options"]').should('have.class', 'moonstone-selected');
+        jcontent = new JContent();
+        jcontent.getHeaderActionButton('tab-advanced-options').click();
+        jcontent.assertHeaderActionSelected('tab-advanced-options');
         cy.get('[data-sel-role="advanced-options-nav"] li')
             .contains('Edit roles')
             .click();

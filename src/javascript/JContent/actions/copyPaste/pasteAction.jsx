@@ -7,7 +7,7 @@ import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {useApolloClient} from '@apollo/client';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -30,7 +30,7 @@ function childrenLimitReachedOrExceeded(node) {
     return false;
 }
 
-export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, ...others}) => {
+export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -69,38 +69,52 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
     const nodeTypeCheck = useNodeTypeCheck();
 
-    if (res.loading) {
-        return (Loading && <Loading {...others}/>) || false;
-    }
+    const {isVisible, isEnabled, loading, type, possibleReferenceTypes, nodeTypesToSkip, nodes} = useMemo(() => {
+        const defaultProps = {
+            isVisible: false, isEnabled: false, loading: false, type: null, possibleReferenceTypes: [], nodeTypesToSkip: [], nodes: []
+        };
+        if (res.loading) {
+            return defaultProps;
+        }
 
-    const {nodes, type} = copyPaste;
+        const {nodes, type} = copyPaste;
 
-    const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? ['jnt:page', 'jmix:navMenuItem'] : [];
+        const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? ['jnt:page', 'jmix:navMenuItem'] : [];
 
-    let isVisible = res.checksResult && res.node?.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
-    let isEnabled = true;
+        let isVisible = res.checksResult && res.node?.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
+        let isEnabled = true;
 
-    if (nodes.length === 0) {
-        isEnabled = false;
-        isVisible = false;
-    }
+        if (nodes.length === 0) {
+            isEnabled = false;
+            isVisible = false;
+        }
 
-    if (isVisible && isEnabled && nodes.reduce((acc, nodeToPaste) => acc ||
-        (type === copyPasteConstants.CUT && nodeToPaste.path === res.node.path + '/' + nodeToPaste.name) ||
-        (isDescendantOrSelf(res.node.path, nodeToPaste.path)), false)) {
-        isEnabled = false;
-    }
+        if (isVisible && isEnabled && nodes.reduce((acc, nodeToPaste) => acc ||
+            (type === copyPasteConstants.CUT && nodeToPaste.path === res.node.path + '/' + nodeToPaste.name) ||
+            (isDescendantOrSelf(res.node.path, nodeToPaste.path)), false)) {
+            isEnabled = false;
+        }
 
-    if (isVisible && referenceTypes && type === copyPasteConstants.CUT) {
-        isVisible = false;
-    }
+        if (isVisible && referenceTypes && type === copyPasteConstants.CUT) {
+            isVisible = false;
+        }
 
-    const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, referenceTypes);
+        const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, referenceTypes);
+
+        if (loading) {
+            return defaultProps;
+        }
+
+        return {isVisible, isEnabled: Boolean(checkResult), loading, possibleReferenceTypes, nodeTypesToSkip, type};
+    }, [copyPaste, res, nodeTypeCheck, referenceTypes]);
+
+    useEffect(() => {
+        onVisibilityChanged?.(!loading && isVisible);
+    }, [loading, isVisible, onVisibilityChanged]);
+
     if (loading) {
         return <Loading {...others}/>;
     }
-
-    isEnabled = Boolean(checkResult);
 
     return (
         <Render
@@ -157,5 +171,7 @@ PasteActionComponent.propTypes = {
 
     loading: PropTypes.func,
 
-    referenceTypes: PropTypes.arrayOf(PropTypes.string)
+    referenceTypes: PropTypes.arrayOf(PropTypes.string),
+
+    onVisibilityChanged: PropTypes.func
 };

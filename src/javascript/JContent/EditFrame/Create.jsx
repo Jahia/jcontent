@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
@@ -115,6 +115,15 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
     const {nodeName, nodePath, nodeTypes, templateLimit} = useElemAttributes({element, parent, isInsertionPoint});
+    const [actionVisibility, setActionVisibility] = useState({
+        createContent: false,
+        paste: false,
+        pasteAsReference: false
+    });
+    const [onCreateVisibilityChanged, onPasteVisibilityChanged, onPasteReferenceVisibilityChanged] =
+        useMemo(() => ['createContent', 'paste', 'pasteReference'].map(key => {
+            return visible => setActionVisibility(prev => ({...prev, [key]: visible}));
+        }), [setActionVisibility]);
 
     // Used mostly when rendering insertion points as we only want to style it specifically if it's not empty,
     // otherwise we use the regular buttons; Also used to create space for empty areas and lists.
@@ -123,14 +132,16 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
 
     // Set a minimum height to be able to drop content if node is empty
     useEffect(() => {
-        if (isEmpty) {
+        if (!Object.keys(actionVisibility).some(key => actionVisibility[key])) {
+            element.style['min-height'] = '0px';
+        } else if (isEmpty) {
             element.style['min-height'] = '96px';
             [...parent.childNodes].find(node => node.nodeType === Node.TEXT_NODE)?.remove();
             setCurrentOffset(getBoundingBox(element));
         } else {
             element.style['min-height'] = '28px';
         }
-    }, [node, parent, element, isEmpty]);
+    }, [node, parent, element, isEmpty, actionVisibility]);
 
     const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved});
     const {anyDragging} = useDragLayer(monitor => ({
@@ -214,6 +225,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                                templateLimit={templateLimit}
                                loading={() => false}
                                render={btnRenderer}
+                               onVisibilityChanged={onCreateVisibilityChanged}
                                onCreate={onAction(({name}) => reorderNodes([name], nodeName))}/>}
             <DisplayAction actionKey="paste"
                            tooltipProps={tooltipProps}
@@ -221,6 +233,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            path={parentPath}
                            loading={() => false}
                            render={btnRenderer}
+                           onVisibilityChanged={onPasteVisibilityChanged}
                            onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
             <DisplayAction actionKey="pasteReference"
                            tooltipProps={tooltipProps}
@@ -228,6 +241,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            path={parentPath}
                            loading={() => false}
                            render={btnRenderer}
+                           onVisibilityChanged={onPasteReferenceVisibilityChanged}
                            onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
         </div>
     );

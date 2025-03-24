@@ -156,11 +156,11 @@ export class JContent extends BasePage {
         return this;
     }
 
-    switchToMode(name: string): JContent {
+    switchToMode(modeRole: string): JContent {
         const dropdown = getComponentByRole(Dropdown, 'sel-view-mode-dropdown');
         // Wait for dropdown to be available
         dropdown.get().find('[role=dropdown]:not(.moonstone-disabled)');
-        dropdown.select(name).get().should('contain', name);
+        getComponentByRole(Menu, `sel-view-mode-${modeRole}`, dropdown).get();
         return this;
     }
 
@@ -170,24 +170,24 @@ export class JContent extends BasePage {
     }
 
     switchToThumbnails(): JContent {
-        this.switchToMode('Thumbnails');
+        this.switchToMode('grid');
         return this;
     }
 
     switchToListMode(): JContent {
-        this.switchToMode('List');
+        this.switchToMode('flatList');
         cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
         return this;
     }
 
     switchToStructuredView(): JContent {
-        this.switchToMode('Structured');
+        this.switchToMode('structuredView');
         return this;
     }
 
     switchToPageBuilder(): JContentPageBuilder {
         cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
-        this.switchToMode('Page Builder');
+        this.switchToMode('pageBuilder');
         return new JContentPageBuilder(this);
     }
 

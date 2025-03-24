@@ -287,10 +287,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         [n.path]: n
     }), {}), [data?.jcr]);
 
-    const getBreadcrumbsForPath = _path => {
+    const getBreadcrumbsForPath = node => {
         const breadcrumbs = [];
-        const node = nodes[_path];
-
         if (!node) {
             return breadcrumbs;
         }
@@ -299,7 +297,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         pathFragments.pop();
 
         let lookUpPath = pathFragments.join('/');
-        while (nodes[lookUpPath]) {
+        while (lookUpPath !== path && nodes[lookUpPath]) {
             breadcrumbs.unshift(nodes[lookUpPath]);
             pathFragments.pop();
             lookUpPath = pathFragments.join('/');
@@ -406,8 +404,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                              selection.includes(node.path) ||
                              (selection.length > 0 &&
                                  !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
-                             getBreadcrumbsForPath(node.path) :
-                             []}
+                             getBreadcrumbsForPath(node) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={uilang}

@@ -105,7 +105,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
             return defaultProps;
         }
 
-        return {isVisible, isEnabled: Boolean(checkResult), loading, possibleReferenceTypes, nodeTypesToSkip, type};
+        return {isVisible, isEnabled: Boolean(checkResult), loading, possibleReferenceTypes, nodeTypesToSkip, type, nodes};
     }, [copyPaste, res, nodeTypeCheck, referenceTypes]);
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-  ```yaml
+
   version: '3.6'
   services:
     mariadb:

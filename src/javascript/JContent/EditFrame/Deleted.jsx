@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Deleted.scss';
-import {isVisible, getCoords} from '~/JContent/EditFrame/EditFrame.utils';
+import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 import Status from '~/JContent/ContentRoute/ContentStatuses/Status';
 
 function getBoundingBox(element) {

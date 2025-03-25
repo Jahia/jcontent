@@ -28,6 +28,13 @@
                      <my-area j:allowedTypes="" j:numberOfItems="3" jcr:primaryType="jnt:area"/>
                   </pagecontent>
                </simple>
+                <contentType jcr:primaryType="jnt:pageTemplate">
+                    <pagecontent jcr:mixinTypes="jmix:systemNameReadonly"
+                                 jcr:primaryType="jnt:contentList">
+                        <any-area jcr:primaryType="jnt:area"/>
+                        <restricted-area j:allowedTypes="pbnt:contentRestriction" jcr:primaryType="jnt:area"/>
+                    </pagecontent>
+                </contentType>
             </base>
             <content-template j:applyOn="jnt:content"
                               j:hiddenTemplate="true"

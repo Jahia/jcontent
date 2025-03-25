@@ -1,5 +1,6 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {addNode, deleteNode} from '@jahia/cypress';
+import {addNode, createSite, deleteNode, deleteSite} from '@jahia/cypress';
+import {addRestrictedPage} from '../../fixtures/jcontent/pageBuilder/restrictions.js';
 
 describe('Page builder', () => {
     let jcontent: JContentPageBuilder;
@@ -17,9 +18,6 @@ describe('Page builder', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        jcontent = JContent
-            .visit('jcontentSite', 'en', 'pages/home')
-            .switchToPageBuilder();
     });
 
     describe('restrictions', function () {
@@ -29,6 +27,9 @@ describe('Page builder', () => {
                 variables: {path: '/sites/jcontentSite/home/landing'},
                 errorPolicy: 'ignore'
             });
+            jcontent = JContent
+                .visit('jcontentSite', 'en', 'pages/home')
+                .switchToPageBuilder();
         });
 
         afterEach(() => {
@@ -105,6 +106,9 @@ describe('Page builder', () => {
                     {name: 'j:level', value: 0}
                 ]
             });
+            jcontent = JContent
+                .visit('jcontentSite', 'en', 'pages/home')
+                .switchToPageBuilder();
         });
 
         afterEach(() => {
@@ -120,6 +124,56 @@ describe('Page builder', () => {
             const buttons = absoluteArea.getCreateButtons();
             buttons.assertHasNoButtonForType('New content');
             buttons.getButton('New Event');
+        });
+    });
+
+    // Template 'simple' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
+    describe('Template content type restriction', () => {
+        const siteKey = 'restrictedSite';
+        const pageName = 'myPage';
+
+        before(() => {
+            createSite(siteKey, {
+                serverName: 'localhost',
+                locale: 'en',
+                templateSet: 'jcontent-test-template'
+            });
+            cy.apollo({mutation: addRestrictedPage(siteKey, pageName)});
+        });
+
+        after(() => {
+            cy.logout();
+            deleteSite(siteKey);
+        });
+
+        it('should check restrictions when displaying paste button', () => {
+            const pageBuilder = JContent
+                .visit(siteKey, 'en', `pages/home/${pageName}`)
+                .switchToPageBuilder();
+
+            cy.log('disable button when not allowed');
+            pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/any-area/notAllowedText`, false)
+                .contextMenu(false, false)
+                .selectByRole('copy');
+            cy.get('#message-id').contains('in the clipboard');
+
+            const restrictedArea = pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/restricted-area`, false);
+            let buttons = restrictedArea.getCreateButtons();
+            buttons.get().scrollIntoView();
+            buttons.getButtonByRole('paste').should('be.visible').and('have.attr', 'disabled');
+            buttons.getButtonByRole('pasteReference').should('be.visible').and('have.attr', 'disabled');
+
+            cy.log('enable button when allowed');
+            pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/any-area/allowedText`, false)
+                .contextMenu(false, false)
+                .selectByRole('copy');
+            cy.get('#message-id').contains('in the clipboard');
+
+            const restrictedArea = pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/restricted-area`, false);
+            let buttons = restrictedArea.getCreateButtons();
+            buttons.get().scrollIntoView();
+            buttons.getButtonByRole('paste').should('be.visible').and('not.have.attr', 'disabled');
+            buttons.getButtonByRole('pasteReference').should('be.visible').and('not.have.attr', 'disabled');
         });
     });
 });

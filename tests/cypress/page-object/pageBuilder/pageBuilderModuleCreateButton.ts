@@ -1,10 +1,14 @@
-import {BaseComponent, Button} from '@jahia/cypress';
+import {BaseComponent, Button, getComponentByRole} from '@jahia/cypress';
 
 export class PageBuilderModuleCreateButton extends BaseComponent {
     static defaultSelector = '[jahiatype="createbuttons"]';
 
     getButton(type: string): Button {
         return new Button(this.get().find('.moonstone-button').contains(type));
+    }
+
+    getButtonByRole(role: string): Button {
+        return getComponentByRole(Button, role, this);
     }
 
     getFirstInsertionButton(): Button {

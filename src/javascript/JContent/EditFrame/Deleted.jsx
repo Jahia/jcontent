@@ -6,10 +6,6 @@ import {isVisible, getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 import Status from '~/JContent/ContentRoute/ContentStatuses/Status';
 
 function getBoundingBox(element) {
-    if (!isVisible(element)) {
-        return {top: 0, left: 0, width: 0, height: 0};
-    }
-
     return getCoords(element);
 }
 

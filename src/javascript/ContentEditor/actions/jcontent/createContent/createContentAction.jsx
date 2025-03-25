@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {
     childrenLimitReachedOrExceeded,
     flattenNodeTypes,
@@ -24,6 +24,7 @@ export const CreateContent = ({
     onCreate,
     onClosed,
     isDisabled,
+    onVisibilityChanged,
     render: Render,
     loading: Loading,
     ...otherProps}) => {
@@ -56,7 +57,39 @@ export const CreateContent = ({
         showOnNodeTypes
     });
 
-    if (Loading && (loadingTypes || res.loading || nodeInfo.loading)) {
+    const {loading, isVisible, flattenedNodeTypes, actions, missingNodes} = useMemo(() => {
+        const defaultProps = {
+            loading: Loading && (loadingTypes || res.loading || nodeInfo.loading),
+            isVisible: false,
+            flattenedNodeTypes: [],
+            actions: [],
+            missingNodes: true
+        };
+        if (defaultProps.loading) {
+            return defaultProps;
+        }
+
+        if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
+            return {...defaultProps, loading: false};
+        }
+
+        const flattenedNodeTypes = flattenNodeTypes(nodeTypesTree);
+        const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit);
+
+        return {
+            loading: false,
+            isVisible: res.checksResult,
+            flattenedNodeTypes,
+            actions,
+            missingNodes: false
+        };
+    }, [Loading, hasBypassChildrenLimit, loadingTypes, res, nodeInfo, nodeTypesTree, templateLimit]);
+
+    useEffect(() => {
+        onVisibilityChanged?.(isVisible);
+    }, [onVisibilityChanged, isVisible]);
+
+    if (loading) {
         return <Loading {...otherProps}/>;
     }
 
@@ -72,12 +105,9 @@ export const CreateContent = ({
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
 
-    if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
+    if (missingNodes) {
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
-
-    const flattenedNodeTypes = flattenNodeTypes(nodeTypesTree);
-    const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit);
 
     const onClick = ({nodeTypesTree}) => {
         api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
@@ -120,7 +150,8 @@ CreateContent.propTypes = {
     onClosed: PropTypes.func,
     isDisabled: PropTypes.bool,
     render: PropTypes.func.isRequired,
-    loading: PropTypes.func
+    loading: PropTypes.func,
+    onVisibilityChanged: PropTypes.func
 };
 
 export const createContentAction = {

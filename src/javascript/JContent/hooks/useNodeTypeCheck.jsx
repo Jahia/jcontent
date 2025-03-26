@@ -20,14 +20,18 @@ export function useNodeTypeCheck() {
         }
     `);
 
-    return useCallback((target, sources, referenceTypes) => {
+    return useCallback((target, sources, nodeTypes, referenceTypes) => {
         const primaryNodeTypesToPaste = [...new Set(sources.map(n => n.primaryNodeType.name))];
 
         const childNodeTypes = target.allowedChildNodeTypes.map(t => t.name);
-        const contributeTypesProperty = target.contributeTypes ||
-            (target.ancestors && target.ancestors.length > 0 && target.ancestors[target.ancestors.length - 1].contributeTypes);
+
+        // Merge restrictions from content and template definitions
+        const contributeTypesSet = new Set([...(nodeTypes || []), ...(target.contributeTypes?.values || [])]);
+        contributeTypesSet.delete('jmix:droppableContent'); // ignore if only contains default allowedType
+        const contributeTypesProperties = (contributeTypesSet.size > 0 && [...contributeTypesSet]) ||
+            (target.ancestors?.length > 0 && target.ancestors[target.ancestors.length - 1].contributeTypes?.values);
         const targetIsContentTypeRestrictCapable = ['jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'].find(type => target[type] || target.primaryNodeType?.name === type) !== undefined;
-        const contributeTypes = (targetIsContentTypeRestrictCapable && contributeTypesProperty) ? contributeTypesProperty.values : [];
+        const contributeTypes = (targetIsContentTypeRestrictCapable && contributeTypesProperties) ? contributeTypesProperties : [];
 
         if (contributeTypes.length === 0 && childNodeTypes.length === 0) {
             return {loading: false, checkResult: false};

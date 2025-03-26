@@ -30,7 +30,7 @@ function childrenLimitReachedOrExceeded(node) {
     return false;
 }
 
-export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, ...others}) => {
+export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, nodeTypes, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -99,14 +99,14 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
             isVisible = false;
         }
 
-        const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, referenceTypes);
+        const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, nodeTypes, referenceTypes);
 
         if (loading) {
             return defaultProps;
         }
 
         return {isVisible, isEnabled: Boolean(checkResult), loading, possibleReferenceTypes, nodeTypesToSkip, type, nodes};
-    }, [copyPaste, res, nodeTypeCheck, referenceTypes]);
+    }, [copyPaste, res, nodeTypeCheck, nodeTypes, referenceTypes]);
 
     useEffect(() => {
         onVisibilityChanged?.(!loading && isVisible);
@@ -166,12 +166,11 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
 PasteActionComponent.propTypes = {
     path: PropTypes.string,
-
-    render: PropTypes.func.isRequired,
-
-    loading: PropTypes.func,
-
     referenceTypes: PropTypes.arrayOf(PropTypes.string),
-
-    onVisibilityChanged: PropTypes.func
+    render: PropTypes.func.isRequired,
+    loading: PropTypes.func,
+    notificationContext: {notify: PropTypes.func},
+    onAction: PropTypes.func,
+    onVisibilityChanged: PropTypes.func,
+    nodeTypes: [PropTypes.string]
 };

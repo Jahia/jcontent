@@ -51,7 +51,7 @@ const useElemAttributes = ({element, parent}) => {
     const nodePath = (isInsertionPoint || isContainer) ? null : element.getAttribute('path');
     const nodeName = element.getAttribute('path').split('/').pop();
 
-    let nodeTypes = null;
+    let nodeTypes;
     if (parent.getAttribute('nodetypes') &&
         (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
@@ -231,6 +231,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
+                           nodeTypes={nodeTypes}
                            loading={() => false}
                            render={btnRenderer}
                            onVisibilityChanged={onPasteVisibilityChanged}
@@ -239,6 +240,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
+                           nodeTypes={nodeTypes}
                            loading={() => false}
                            render={btnRenderer}
                            onVisibilityChanged={onPasteReferenceVisibilityChanged}

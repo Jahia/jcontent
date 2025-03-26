@@ -13,7 +13,7 @@ import {
     Cut,
     Delete,
     Download,
-    Edit,
+    EditImage,
     FileZip,
     Lock,
     MoreVert,
@@ -24,15 +24,16 @@ import {
     PasteAsReference,
     Publish,
     Reload,
+    Rename,
     Replay,
     Search,
     Separator,
     Subdirectory,
+    SwapHoriz,
     Undelete,
     Unlock,
     Upload,
-    Visibility,
-    SwapHoriz
+    Visibility
 } from '@jahia/moonstone';
 import {
     ClearAllLocksActionComponent,
@@ -99,7 +100,7 @@ export const jContentActions = registry => {
         component: CreateFolderActionComponent
     });
     registry.add('action', 'rename', {
-        buttonIcon: <Edit/>,
+        buttonIcon: <Rename/>,
         buttonLabel: 'jcontent:label.contentManager.rename',
         component: RenameActionComponent
     });
@@ -367,7 +368,7 @@ export const jContentActions = registry => {
         component: FileUploadActionComponent
     });
     registry.add('action', 'editImage', {
-        buttonIcon: <Edit/>,
+        buttonIcon: <EditImage/>,
         buttonLabel: 'jcontent:label.contentManager.editImage.action',
         component: EditImageActionComponent
     });

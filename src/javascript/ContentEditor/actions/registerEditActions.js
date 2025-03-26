@@ -2,7 +2,7 @@ import React from 'react';
 import {saveAction} from './contenteditor/save/saveAction';
 import {publishAction} from './contenteditor/publish/publishAction';
 import {startWorkflowAction} from './contenteditor/startWorkflow/startWorkflowAction';
-import {CloudUpload, Edit, MoreVert, Save} from '@jahia/moonstone';
+import {AdvancedEdit, CloudUpload, Edit, MoreVert, Save} from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
@@ -19,7 +19,7 @@ export const registerEditActions = registry => {
     });
 
     registry.add('action', 'editAdvanced', editContentAction, {
-        buttonIcon: <Edit/>,
+        buttonIcon: <AdvancedEdit/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.contentEditAdvanced',
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'], // For edit content
         requiredSitePermission: ['editAction'],
@@ -46,7 +46,7 @@ export const registerEditActions = registry => {
     });
 
     registry.add('action', 'editPageAdvanced', editContentAction, {
-        buttonIcon: <Edit/>,
+        buttonIcon: <AdvancedEdit/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.contentEditAdvanced',
         showOnNodeTypes: ['jnt:page'], // For edit pages
         requiredSitePermission: ['editPageAction'],

@@ -223,7 +223,17 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
-            <div ref={mainRef} style={{height: '100%', overflow: 'auto'}}>
+            {item.treeConfig.showContextMenuOnRootPath && <ContextualMenu setOpenRef={rootContextualMenu} actionKey="rootContentMenu"/>}
+            <div ref={mainRef}
+                 data-cm-role="navtree-holder"
+                 style={{height: '100%', overflow: 'auto'}}
+                 onContextMenu={event => {
+                    event.stopPropagation();
+                    if (item.treeConfig.showContextMenuOnRootPath) {
+                        rootContextualMenu.current(event, {path: rootPath});
+                    }
+                }}
+            >
                 <TreeView ref={ulRefSet}
                           isPadVirtualizedRow
                           isReversed={isReversed}
@@ -261,15 +271,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                 />
             </div>
             <LinkDialog {...linkDialogProps}/>
-            {item.treeConfig.showContextMenuOnRootPath && (
-                <>
-                    <ContextualMenu setOpenRef={rootContextualMenu} actionKey="rootContentMenu"/>
-                    <div
-                        className="flexFluid"
-                        data-cm-role="rootpath-context-menu-holder"
-                        onContextMenu={event => rootContextualMenu.current(event, {path: rootPath})}
-                    />
-                </>)}
         </React.Fragment>
     );
 };

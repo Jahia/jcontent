@@ -19,7 +19,10 @@
             {
               "rank": 1.0,
               "name": "j:contributeTypes",
-              "selectorType": "MultipleLeftRightSelector"
+              "selectorType": "MultipleLeftRightSelector",
+              "selectorOptionsMap": {
+                "componenttypes": "jmix:droppableContent"
+              }
             }
           ]
         }

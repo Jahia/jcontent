@@ -2,6 +2,7 @@ import {useLazyQuery} from '@apollo/client';
 import gql from 'graphql-tag';
 import * as _ from 'lodash';
 import {useCallback} from 'react';
+import {JahiaAreasUtil} from '~/JContent/JContent.utils';
 
 export function useNodeTypeCheck() {
     const [loadContentTypes, contentTypesResult] = useLazyQuery(gql`
@@ -20,13 +21,15 @@ export function useNodeTypeCheck() {
         }
     `);
 
-    return useCallback((target, sources, nodeTypes, referenceTypes) => {
+    return useCallback((target, sources, referenceTypes) => {
         const primaryNodeTypesToPaste = [...new Set(sources.map(n => n.primaryNodeType.name))];
 
+        const areaElem = JahiaAreasUtil.getArea(target.path) || {};
+        const areaNodeTypes = areaElem.nodeTypes?.split(' ');
         const childNodeTypes = target.allowedChildNodeTypes.map(t => t.name);
 
         // Merge restrictions from content and template definitions
-        const contributeTypesSet = new Set([...(nodeTypes || []), ...(target.contributeTypes?.values || [])]);
+        const contributeTypesSet = new Set([...(areaNodeTypes || []), ...(target.contributeTypes?.values || [])]);
         contributeTypesSet.delete('jmix:droppableContent'); // ignore if only contains default allowedType
         const contributeTypesProperties = (contributeTypesSet.size > 0 && [...contributeTypesSet]) ||
             (target.ancestors?.length > 0 && target.ancestors[target.ancestors.length - 1].contributeTypes?.values);

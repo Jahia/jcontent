@@ -63,6 +63,7 @@ export const Row = ({
                       width: '100%'
                   }}
                   data-cm-role="table-content-list-row"
+                  data-node-name={node.name}
                   className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isPreviewSelected}
                   onClick={() => {

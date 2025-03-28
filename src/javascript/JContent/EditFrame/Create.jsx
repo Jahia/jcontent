@@ -231,7 +231,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
-                           nodeTypes={nodeTypes}
                            loading={() => false}
                            render={btnRenderer}
                            onVisibilityChanged={onPasteVisibilityChanged}
@@ -240,7 +239,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
-                           nodeTypes={nodeTypes}
                            loading={() => false}
                            render={btnRenderer}
                            onVisibilityChanged={onPasteReferenceVisibilityChanged}

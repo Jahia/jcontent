@@ -137,7 +137,12 @@ export class Picker extends BaseComponent {
     }
 
     selectTab(viewType: string) {
-        this.getTab(viewType).click().should('have.class', 'moonstone-tabItem_selected');
+        this.getTab(viewType).then($tab => {
+            if (!$tab.hasClass('moonstone-tabItem_selected')) {
+                cy.wrap($tab).click();
+                cy.wrap($tab).should('have.class', 'moonstone-tabItem_selected');
+            }
+        });
         this.wait();
     }
 

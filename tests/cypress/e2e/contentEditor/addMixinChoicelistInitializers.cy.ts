@@ -1,4 +1,6 @@
 import {JContent, PageComposer} from '../../page-object/';
+import {getComponentByRole} from '@jahia/cypress';
+import {Picker} from '../../page-object/picker';
 
 const sitekey = 'contentEditorSiteAddMixin';
 describe('Add Mixin by using choice list initializers (Image Reference)', () => {
@@ -83,8 +85,8 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
             .should('be.visible')
             .click();
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
-        cy.get('.moonstone-tabItem[data-cm-view-type="pages"]').should('be.visible').click();
-        cy.get('.moonstone-tabItem[data-cm-view-type="pages"]').should('have.class', 'moonstone-tabItem_selected');
+        const picker = getComponentByRole(Picker, 'picker-dialog');
+        picker.selectTab('pages');
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
         cy.get('tr[data-cm-role="table-content-list-row"]').contains('Search Results').click();
         cy.get('button[data-sel-picker-dialog-action="done"]').click();

@@ -2,7 +2,6 @@ import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useFormikContext} from 'formik';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import React from 'react';
-import styles from './PublishMenu.scss';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer, isDirty} from '~/ContentEditor/utils';
 import {ChevronDown} from '@jahia/moonstone';
@@ -12,7 +11,6 @@ const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
         size: 'big',
         color: 'accent',
-        className: styles.menu,
         'data-sel-role': 'ContentEditorHeaderMenu'
     }
 });

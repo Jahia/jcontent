@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
-import {createSite, deleteSite} from "@jahia/cypress";
+import {createSite, deleteSite} from '@jahia/cypress';
 import {addRestrictedPage} from '../../fixtures/jcontent/restrictions.gql.js';
 
 describe('Copy Cut and Paste tests with jcontent', () => {
@@ -136,7 +136,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         const siteKey = 'restrictedStructuredSite';
         const pageName = 'myPage';
 
-        function getRoleItem(menu: Menu, role: string ) {
+        function getRoleItem(menu: Menu, role: string) {
             menu.get().find(`.moonstone-menuItem[data-sel-role="${role}"]`).scrollIntoView();
             return menu.get().find(`.moonstone-menuItem[data-sel-role="${role}"]`);
         }
@@ -174,7 +174,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             cy.log('enable button when allowed');
             jcontent.getTable().getRowByName('allowedText').contextMenu().selectByRole('copy');
             cy.get('#message-id').contains('in the clipboard');
-            menu = jcontent.getTable().getRowByName('restricted-area').contextMenu()
+            menu = jcontent.getTable().getRowByName('restricted-area').contextMenu();
             menu.shouldHaveRoleItem('paste');
             menu.shouldHaveRoleItem('pasteReference');
             menu.close();

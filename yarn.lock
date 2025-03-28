@@ -2546,10 +2546,10 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
-"@jahia/moonstone@^2.12.3":
-  version "2.12.3"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.12.3.tgz#441ddd4cd0bbdde4f20d6d4298829ea574de1733"
-  integrity sha512-0TYhDbiRYhgZ6GsHBxyF4DsXszxAaxcpbHR1qlK6iswU3YKuQjfThYidc1oMn0+scGVL1WL5+Mft1olm41CgNA==
+"@jahia/moonstone@^2.12.2":
+  version "2.12.2"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.12.2.tgz#0bfb6422c0a8dff53cf0ffd114053a3f1df534c5"
+  integrity sha512-qEGGpT0CA6hmZpjW5lyOr+Gab/9krrPGQC0dEH/nddXgTEpOsK4Q+SgSI8tInH1arlDlwvp9MIqdbQGXpYY0Rw==
   dependencies:
     "@babel/runtime" "^7.26.9"
     "@floating-ui/react" "^0.27.5"

@@ -1,4 +1,4 @@
-import {BaseComponent, Table, TableRow} from '@jahia/cypress';
+import {BaseComponent, getComponentByRole, getComponentBySelector, Table, TableRow} from '@jahia/cypress';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
@@ -7,6 +7,13 @@ export class ContentTable extends Table {
         cy.get('@rowByLabel').scrollIntoView();
         cy.get('@rowByLabel').should('be.visible');
         return new TableRow(cy.get('@rowByLabel'));
+    }
+
+    getRowByName(name: string) {
+        cy.get(`[data-cm-role="table-content-list-row"][data-node-name="${name}"]`).first().as('rowByName');
+        cy.get('@rowByName').scrollIntoView();
+        cy.get('@rowByName').should('be.visible');
+        return new TableRow(cy.get('@rowByName'));
     }
 
     selectRowByLabel(label: string, isSelected = true): Chainable {

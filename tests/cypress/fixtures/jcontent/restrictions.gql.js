@@ -17,7 +17,7 @@ export const addRestrictedPage = (siteKey, page) => gql`
                                 {
                                     name: "allowedText",
                                     primaryNodeType: "pbnt:contentRestriction",
-                                    properties: [{ name: "text", language: "en", value: "allowed text" }]
+                                    properties: [{ name: "text", language: "en", value: "allowed text ok" }]
                                 }
                                 {
                                     name: "notAllowedText",

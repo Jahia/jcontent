@@ -81,10 +81,11 @@ export const ContentRoute = () => {
             dom.querySelectorAll('[jahiatype]').forEach((element => {
                 const jahiatype = element.getAttribute('jahiatype');
                 const modulePath = element.getAttribute('path');
-                const type = element.getAttribute('type');
+                const elemType = element.getAttribute('type');
+                const nodeTypes = element.getAttribute('nodetypes');
 
-                if (jahiatype === 'module' && modulePath !== '*' && modulePath !== path && (type === 'area' || type === 'absoluteArea')) {
-                    JahiaAreasUtil.addArea(modulePath);
+                if (jahiatype === 'module' && modulePath !== '*' && modulePath !== path && (elemType === 'area' || elemType === 'absoluteArea')) {
+                    JahiaAreasUtil.addArea(modulePath, {elemType, nodeTypes});
                 }
             }));
         }).catch(e => {

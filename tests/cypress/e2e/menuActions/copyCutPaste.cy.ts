@@ -1,5 +1,7 @@
 import {JContent} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
+import {createSite, deleteSite} from '@jahia/cypress';
+import {addRestrictedPage} from '../../fixtures/jcontent/restrictions.gql.js';
 
 describe('Copy Cut and Paste tests with jcontent', () => {
     describe('Copy paste functionality', function () {
@@ -125,6 +127,57 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             const jcontent = JContent.visit('digitall', 'en', 'content-folders/contents/testFolder1');
             jcontent.getTable().getRowByLabel('testText1').contextMenu().select('Cut');
             jcontent.getAccordionItem('content-folders').getTreeItem('testFolder2').contextMenu().shouldNotHaveItem('Paste as reference');
+        });
+    });
+
+    // Template 'simple' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
+    // We have the same test in pageBuilder/restrictions as well
+    describe('Template content type restriction', () => {
+        const siteKey = 'restrictedStructuredSite';
+        const pageName = 'myPage';
+
+        function getRoleItem(menu: Menu, role: string) {
+            menu.get().find(`.moonstone-menuItem[data-sel-role="${role}"]`).scrollIntoView();
+            return menu.get().find(`.moonstone-menuItem[data-sel-role="${role}"]`);
+        }
+
+        before(() => {
+            createSite(siteKey, {
+                serverName: 'localhost',
+                locale: 'en',
+                templateSet: 'jcontent-test-template'
+            });
+            cy.apollo({mutation: addRestrictedPage(siteKey, pageName)});
+            cy.loginAndStoreSession();
+        });
+
+        after(() => {
+            cy.logout();
+            deleteSite(siteKey);
+        });
+
+        it('should check restrictions when displaying paste button', () => {
+            const jcontent = JContent
+                .visit(siteKey, 'en', `pages/home/${pageName}`)
+                .switchToPageBuilder()
+                .switchToStructuredView();
+
+            cy.log('disable button when not allowed');
+            jcontent.getTable().getRowByName('notAllowedText').contextMenu().selectByRole('copy');
+            cy.get('#message-id').contains('in the clipboard');
+            let menu = jcontent.getTable().getRowByName('restricted-area').contextMenu();
+            getRoleItem(menu, 'paste').should('be.visible').invoke('attr', 'aria-disabled').should('eq', 'true');
+            getRoleItem(menu, 'pasteReference').should('be.visible').invoke('attr', 'aria-disabled').should('eq', 'true');
+            menu.close();
+            jcontent.clearClipboard();
+
+            cy.log('enable button when allowed');
+            jcontent.getTable().getRowByName('allowedText').contextMenu().selectByRole('copy');
+            cy.get('#message-id').contains('in the clipboard');
+            menu = jcontent.getTable().getRowByName('restricted-area').contextMenu();
+            menu.shouldHaveRoleItem('paste');
+            menu.shouldHaveRoleItem('pasteReference');
+            menu.close();
         });
     });
 });

@@ -326,12 +326,15 @@ export const getTitle = (t, item, prefix = 'jContent') => {
 
 export const JahiaAreasUtil = {
     jahiaAreas: {},
-    addArea: function (path) {
-        this.jahiaAreas[path] = true;
+    addArea: function (path, elemAttrs) {
+        this.jahiaAreas[path] = elemAttrs;
     },
     isJahiaArea: function (path) {
         const p = Array.isArray(path) ? path : [path];
         return p.some(value => Boolean(this.jahiaAreas[value]));
+    },
+    getArea: function (path) {
+        return this.jahiaAreas[path];
     }
 };
 

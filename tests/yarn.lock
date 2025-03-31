@@ -123,10 +123,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.3.tgz#4a2868d75d6d6963e423bcf90b7fd1be343409d3"
   integrity sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==
 
-"@jahia/cypress@^4.2.0":
-  version "4.2.0"
-  resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-4.2.0.tgz#e2ad6f7710565ea7d2e2bfc95cbf1ec0bd768e43"
-  integrity sha512-mhhm60DYku6Q0bM12p8RgOFHNeQ5T/SxszZUkGI7qrZfVXkr4wLCp3YzOj4uFrkkQkk4fZaWShsIlYQc5w8cag==
+"@jahia/cypress@^4.3.0":
+  version "4.3.0"
+  resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-4.3.0.tgz#9bc34bc2ca24e5ff0a55aac0c6c0352bbca8d184"
+  integrity sha512-s8WeNz6P7u18k80Tqq4yvWBe+whQ6HMKA4tkss7QcAM28IDFyVrauIYOWgYw3f6gOawqRRNoHEHPGv9wSWkrwg==
   dependencies:
     "@apollo/client" "^3.4.9"
     cypress-real-events "^1.11.0"

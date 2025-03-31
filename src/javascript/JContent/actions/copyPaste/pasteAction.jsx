@@ -30,7 +30,7 @@ function childrenLimitReachedOrExceeded(node) {
     return false;
 }
 
-export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, nodeTypes, ...others}) => {
+export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -99,14 +99,14 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
             isVisible = false;
         }
 
-        const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, nodeTypes, referenceTypes);
+        const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, referenceTypes);
 
         if (loading) {
             return defaultProps;
         }
 
         return {isVisible, isEnabled: Boolean(checkResult), loading, possibleReferenceTypes, nodeTypesToSkip, type, nodes};
-    }, [copyPaste, res, nodeTypeCheck, nodeTypes, referenceTypes]);
+    }, [copyPaste, res, nodeTypeCheck, referenceTypes]);
 
     useEffect(() => {
         onVisibilityChanged?.(!loading && isVisible);

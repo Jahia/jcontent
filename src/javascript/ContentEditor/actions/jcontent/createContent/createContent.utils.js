@@ -111,6 +111,6 @@ export function childrenLimitReachedOrExceeded(node, templateLimit) {
         }
     }
 
-    return typeof (templateLimit) === 'number' && childrenCount >= templateLimit;
+    return typeof (templateLimit) === 'number' && !isNaN(templateLimit) && childrenCount >= templateLimit;
 }
 

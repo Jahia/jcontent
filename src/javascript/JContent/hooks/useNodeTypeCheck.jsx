@@ -24,8 +24,7 @@ export function useNodeTypeCheck() {
     return useCallback((target, sources, referenceTypes) => {
         const primaryNodeTypesToPaste = [...new Set(sources.map(n => n.primaryNodeType.name))];
 
-        const areaElem = JahiaAreasUtil.getArea(target.path) || {};
-        const areaNodeTypes = areaElem.nodeTypes?.split(' ');
+        const areaNodeTypes = JahiaAreasUtil.getArea(target.path)?.nodeTypes;
         const childNodeTypes = target.allowedChildNodeTypes.map(t => t.name);
 
         // Merge restrictions from content and template definitions

@@ -10,6 +10,7 @@ import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
+import {JahiaAreasUtil} from '~/JContent/JContent.utils';
 
 export const CreateContent = ({
     contextNodePath,
@@ -20,7 +21,6 @@ export const CreateContent = ({
     isIncludeSubTypes,
     isFullscreen,
     hasBypassChildrenLimit,
-    templateLimit,
     onCreate,
     onClosed,
     isDisabled,
@@ -47,8 +47,9 @@ export const CreateContent = ({
         }
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
+    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
     const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
-        nodeTypes,
+        nodeTypes: areaNodeTypes,
         childNodeName: name,
         includeSubTypes: isIncludeSubTypes || false,
         path: contextNodePath || path,
@@ -69,6 +70,7 @@ export const CreateContent = ({
             return defaultProps;
         }
 
+        const templateLimit = JahiaAreasUtil.getArea(path)?.limit;
         if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
             return {...defaultProps, loading: false};
         }
@@ -83,7 +85,7 @@ export const CreateContent = ({
             actions,
             missingNodes: false
         };
-    }, [Loading, hasBypassChildrenLimit, loadingTypes, res, nodeInfo, nodeTypesTree, templateLimit]);
+    }, [path, Loading, hasBypassChildrenLimit, loadingTypes, res, nodeInfo, nodeTypesTree]);
 
     useEffect(() => {
         onVisibilityChanged?.(isVisible);

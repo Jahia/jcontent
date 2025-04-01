@@ -1,5 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {addNode, createSite, deleteNode, deleteSite} from '@jahia/cypress';
+import {addNode, createSite, deleteNode, deleteSite, getComponentBySelector, Menu} from '@jahia/cypress';
 import {addRestrictedPage} from '../../fixtures/jcontent/restrictions.gql.js';
 
 describe('Page builder', () => {
@@ -127,7 +127,7 @@ describe('Page builder', () => {
         });
     });
 
-    // Template 'simple' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
+    // Template 'contentType' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
     describe('Template content type restriction', () => {
         const siteKey = 'restrictedSite';
         const pageName = 'myPage';
@@ -174,6 +174,26 @@ describe('Page builder', () => {
             buttons.get().scrollIntoView();
             buttons.getButtonByRole('paste').should('be.visible').and('not.have.attr', 'disabled');
             buttons.getButtonByRole('pasteReference').should('be.visible').and('not.have.attr', 'disabled');
+        });
+
+        it('should restrict create content with page builder create buttons and context menu', () => {
+            const pageBuilder = JContent
+                .visit(siteKey, 'en', `pages/home/${pageName}`)
+                .switchToPageBuilder();
+
+            cy.log('restricted-area should restrict create buttons for pbnt:contentRestriction only');
+            const restrictedArea = pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/restricted-area`, false);
+            const buttons = restrictedArea.getCreateButtons();
+            buttons.get().scrollIntoView();
+            buttons.assertHasNoButtonForRole('createContent');
+            buttons.getButtonByRole('pbnt:contentRestriction').should('be.visible');
+
+            cy.log('restricted-area should restrict context menu create buttons for pbnt:contentRestriction only');
+            const contextMenu = pageBuilder
+                .getModule(`/sites/${siteKey}/home/${pageName}/restricted-area`, false)
+                .emptyAreaContextMenu();
+            contextMenu.shouldNotHaveRoleItem('createContent');
+            contextMenu.shouldHaveRoleItem('pbnt:contentRestriction');
         });
     });
 });

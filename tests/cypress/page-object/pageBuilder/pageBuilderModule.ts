@@ -96,6 +96,12 @@ export class PageBuilderModule extends BaseComponent {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
+    /* Use specifically for areas with empty content as empty create button takes over content and cannot right-click the regular way */
+    emptyAreaContextMenu() {
+        this.getHeader().get().rightclick();
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+    }
+
     click(clickOptions?: Partial<ClickOptions>) {
         this.get().scrollIntoView().click(clickOptions);
     }

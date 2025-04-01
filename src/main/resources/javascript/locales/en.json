@@ -789,6 +789,8 @@
           "menu": "New content",
           "newMenu": "New...",
           "contentOfType": "New {{typeName}}",
+          "tooltipGeneric": "New content in {{parent}}",
+          "tooltipForType": "New {{typeName}} in {{parent}}",
           "labelModal": "Select Content Type",
           "btnDiscard": "CANCEL",
           "btnCreate": "CREATE",

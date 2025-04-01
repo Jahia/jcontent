@@ -12,6 +12,8 @@ const useLabel = labelProps => {
         buttonLabel,
         buttonLabelShort,
         buttonLabelParams,
+        tooltipLabel,
+        tooltipParams,
         ellipsis,
         showTooltip
     } = labelProps;
@@ -26,7 +28,7 @@ const useLabel = labelProps => {
 
     return {
         label: (labelStyle === 'none') ? null : label,
-        tooltipLabel: showTooltip ? label : null
+        tooltipLabel: showTooltip ? tooltipLabel ? t(tooltipLabel, tooltipParams) : label : null
     };
 };
 
@@ -46,17 +48,21 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
             onClick,
             renderOnClick,
             buttonProps,
-            tooltipProps
+            tooltipProps,
+            tooltipLabel,
+            tooltipParams
         } = props;
 
-        const {label, tooltipLabel} = useLabel({
+        const {label, tooltipLabel: tooltip} = useLabel({
             buttonLabelNamespace,
             labelStyle,
             buttonLabel,
             buttonLabelShort,
             buttonLabelParams,
             ellipsis,
-            showTooltip
+            showTooltip,
+            tooltipLabel,
+            tooltipParams
         });
 
         if (isVisible === false) {
@@ -84,7 +90,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
         );
 
         return (showTooltip) ? (
-            <Tooltip title={tooltipLabel} {...defaultTooltipProps} {...tooltipProps}>
+            <Tooltip title={tooltip} {...defaultTooltipProps} {...tooltipProps}>
                 {button}
             </Tooltip>
         ) : button;
@@ -105,7 +111,9 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
         onClick: PropTypes.func,
         renderOnClick: PropTypes.func,
         buttonProps: PropTypes.object,
-        tooltipProps: PropTypes.object
+        tooltipProps: PropTypes.object,
+        tooltipLabel: PropTypes.string,
+        tooltipParams: PropTypes.object
     };
 
     return ButtonRenderer;

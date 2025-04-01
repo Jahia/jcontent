@@ -28,7 +28,7 @@ const useLabel = labelProps => {
 
     return {
         label: (labelStyle === 'none') ? null : label,
-        tooltipLabel: showTooltip ? t(tooltipLabel, tooltipParams) : null
+        tooltipLabel: showTooltip ? tooltipLabel ? t(tooltipLabel, tooltipParams) : label : null
     };
 };
 

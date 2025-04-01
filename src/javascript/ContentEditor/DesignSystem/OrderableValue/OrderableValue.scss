@@ -25,6 +25,10 @@
     margin: 8px 0;
 }
 
+.referenceCardActions {
+    display: none;
+}
+
 .draggableCard {
     display: flex;
     flex-direction: row;
@@ -34,6 +38,10 @@
 
     :global(.moonstone-checkbox) {
         margin-left: 0 !important;
+    }
+
+    &:hover .referenceCardActions {
+        display: flex;
     }
 }
 

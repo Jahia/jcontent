@@ -24,13 +24,15 @@ export const useMediaPickerInputData = uuids => {
         const sizeInfo = (imageData.height && imageData.width) ? ` - ${parseInt(imageData.width.value, 10)}x${parseInt(imageData.height.value, 10)}px` : '';
         const url = imageData.thumbnailUrl + (imageData.thumbnailUrl.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + imageData.lastModified?.value;
         const mimeType = getMimeType(imageData) || '';
+        const size = (imageData.content.data.size / 1024).toFixed(2) + 'KB';
 
         return {
             uuid: imageData.uuid,
             url,
             name: imageData.displayName,
             path: imageData.path,
-            info: `${mimeType}${sizeInfo}`
+            type: `${mimeType}`,
+            info: `${mimeType}${sizeInfo} ${size}`
         };
     });
 

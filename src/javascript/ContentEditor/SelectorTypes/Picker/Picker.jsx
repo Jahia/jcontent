@@ -51,20 +51,21 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
                 onClick={() => setDialogOpen(!isDialogOpen)}
             />
             {inputContext.displayActions && value && (
-                <DisplayAction
-                    actionKey="content-editor/field/Picker"
-                    value={value}
-                    field={field}
-                    inputContext={inputContext}
-                    render={ButtonRenderer}
-                />
+            <DisplayAction
+                        actionKey="content-editor/field/Picker"
+                        value={value}
+                        field={field}
+                        inputContext={inputContext}
+                        render={ButtonRenderer}
+                    />
             )}
         </>
+
     );
 };
 
 // eslint-disable-next-line max-params
-const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
+const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
     return (
         <div className="flexFluid">
             {fieldData && fieldData.length > 0 && fieldData.map((fieldVal, index) => {
@@ -77,6 +78,8 @@ const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, 
                             fieldData={fieldVal}/>}
                         field={field}
                         index={index}
+                        lastIndex={fieldData.length - 1}
+                        onValueMove={onValueMove}
                         onValueReorder={onValueReorder}
                         onFieldRemove={onFieldRemove}/>
                 );
@@ -170,6 +173,42 @@ export const Picker = ({
         onItemSelection(updatedValues);
     };
 
+    const onValueMove = (droppedName, direction) => {
+        let childrenWithoutDropped = [];
+        let droppedChild = null;
+        let droppedItemIndex = -1;
+        value.forEach((item, index) => {
+            if (droppedItemIndex === -1 && droppedName === `${field.name}[${index}]`) {
+                droppedChild = item;
+                droppedItemIndex = index;
+            } else {
+                childrenWithoutDropped.push(item);
+            }
+        });
+
+        if (droppedChild !== null && droppedItemIndex >= 0) {
+            let newIndex = droppedItemIndex;
+
+            if (direction === 'up' && droppedItemIndex > 0) {
+                newIndex = droppedItemIndex - 1;
+            } else if (direction === 'down' && droppedItemIndex < value.length - 1) {
+                newIndex = droppedItemIndex + 1;
+            } else if (direction === 'first') {
+                newIndex = 0;
+            } else if (direction === 'last') {
+                newIndex = value.length - 1;
+            }
+
+            if (newIndex !== droppedItemIndex) {
+                const newValue = [...childrenWithoutDropped];
+                newValue.splice(newIndex, 0, droppedChild);
+
+                setFieldValue(field.name, newValue);
+                setFieldTouched(field.name, true, false);
+            }
+        }
+    };
+
     const onValueReorder = (droppedName, index) => {
         let childrenWithoutDropped = [];
         let droppedChild = null;
@@ -195,7 +234,7 @@ export const Picker = ({
     return (
         <div className="flexFluid flexRow_nowrap alignCenter">
             {field.multiple ?
-                getMultipleElement(fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) :
+                getMultipleElement(fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) :
                 getSimpleElement(field, error, notFound, t, pickerConfig, fieldData, setDialogOpen, isDialogOpen, inputContext, value)}
 
             <PickerDialog

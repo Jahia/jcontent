@@ -778,6 +778,8 @@
           "menu": "Neuer Content",
           "newMenu": "Hinzufügen...",
           "contentOfType": "Hinzufügen: {{typeName}}",
+          "tooltipGeneric": "Neuer Content in {{parent}}",
+          "tooltipForType": "Neuer Content-Typ {{typeName}} in {{parent}}",
           "labelModal": "Content-Typ Auswählen",
           "btnDiscard": "ABBRECHEN",
           "btnCreate": "ERSTELLEN",

@@ -779,6 +779,8 @@
           "menu": "Nouveau contenu",
           "newMenu": "Nouveau...",
           "contentOfType": "Nouveau : {{typeName}}",
+          "tooltipGeneric": "Nouveau contenu dans {{parent}}",
+          "tooltipForType": "Nouveau {{typeName}} dans {{parent}}",
           "labelModal": "Sélectionner un type de contenu",
           "btnDiscard": "ANNULER",
           "btnCreate": "CRÉER",

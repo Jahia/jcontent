@@ -74,7 +74,7 @@ export const CreateContent = ({
         }
 
         const flattenedNodeTypes = flattenNodeTypes(nodeTypesTree);
-        const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit);
+        const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit, nodeInfo.node?.name);
 
         return {
             loading: false,
@@ -113,11 +113,17 @@ export const CreateContent = ({
         api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
     };
 
-    return (actions || [{key: 'allTypes', nodeTypeIcon: otherProps.defaultIcon}]).map(result => (
-        <Render
+    return (actions || [{
+        key: 'allTypes',
+        nodeTypeIcon: otherProps.defaultIcon,
+        tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric',
+        tooltipParams: {parent: nodeInfo.node?.name}}]).map(result => (
+            <Render
             key={result.key}
             enabled={!isDisabled && !res.node?.lockOwner}
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}
+            tooltipLabel={result.tooltipLabel}
+            tooltipParams={result.tooltipParams}
             {...otherProps}
             flattenedNodeTypes={flattenedNodeTypes}
             nodeTypesTree={nodeTypesTree}

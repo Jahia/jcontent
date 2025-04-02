@@ -71,7 +71,7 @@ export function flattenNodeTypes(nodeTypes) {
     return resolvedTypes || [];
 }
 
-export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
+export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, parentName) {
     const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
 
     function getNodeTypeIcon(nodeType) {
@@ -93,7 +93,9 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit) {
                 nodeTypes: [nodeType.name],
                 nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
-                buttonLabelParams: {typeName: nodeType.label}
+                buttonLabelParams: {typeName: nodeType.label},
+                tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipForType',
+                tooltipParams: {typeName: nodeType.label, parent: parentName}
             }));
     }
 }

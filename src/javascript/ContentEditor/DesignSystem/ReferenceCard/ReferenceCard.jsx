@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {CardSelector, Chip, EmptyCardSelector} from '@jahia/moonstone';
+import clsx from 'clsx';
 
 const ReferenceCardCmp = ({
     id,
-    classes,
+    className,
     isReadOnly,
     isError,
     emptyLabel,
@@ -13,14 +14,15 @@ const ReferenceCardCmp = ({
     labelledBy,
     onClick,
     isDraggable,
-    cardAction
+    cardAction,
+    ...props
 }) => {
     // If card have already data
     if (fieldData) {
         return (
             <CardSelector
                 id={id}
-                isDraggable={isDraggable}
+                className={clsx(isDraggable && 'draggable', className)}
                 thumbnailType="icon"
                 thumbnailURL={fieldData.url && fieldData.url}
                 displayName={fieldData.name && fieldData.name}
@@ -34,6 +36,7 @@ const ReferenceCardCmp = ({
                 data-sel-field-picker-action="openPicker"
                 cardAction={cardAction}
                 onClick={onClick}
+                {...props}
             />
         );
     }
@@ -50,6 +53,7 @@ const ReferenceCardCmp = ({
             aria-disabled={isReadOnly}
             aria-labelledby={labelledBy}
             onClick={onClick}
+            {...props}
         />
     );
 };
@@ -67,7 +71,7 @@ ReferenceCardCmp.propTypes = {
     id: PropTypes.string,
     isReadOnly: PropTypes.bool,
     isError: PropTypes.bool,
-    classes: PropTypes.object,
+    className: PropTypes.object,
     onClick: PropTypes.func,
     fieldData: PropTypes.shape({
         url: PropTypes.string.isRequired,

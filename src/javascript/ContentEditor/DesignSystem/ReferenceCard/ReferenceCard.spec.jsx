@@ -62,6 +62,8 @@ describe('reference card filled', () => {
             fieldData: {
                 url: 'iconUrl',
                 name: 'name part',
+                type: 'type part',
+                systemname: 'system name',
                 info: 'info part'
             },
             id: 'yoloID',
@@ -104,6 +106,24 @@ describe('reference card filled', () => {
         expect(cmp.debug()).toContain(defaultProps.fieldData.info);
     });
 
+    it('should display the system name part from field data', () => {
+        const cmp = shallowWithTheme(
+            <ReferenceCard {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        ).dive();
+        expect(cmp.debug()).toContain(defaultProps.fieldData.systemname);
+    });
+
+    it('should display the type part from field data', () => {
+        const cmp = shallowWithTheme(
+            <ReferenceCard {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        ).dive();
+        expect(cmp.debug()).toContain(defaultProps.fieldData.type);
+    });
+
     it('should be in read only', () => {
         defaultProps.isReadOnly = true;
         const cmp = shallowWithTheme(
@@ -111,7 +131,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.find('article').props().className).toContain('fieldContainerReadOnly');
+        expect(cmp.find('div#yoloID').prop('aria-disabled')).toBe(true);
     });
 
     it('should NOT be in read only', () => {
@@ -120,7 +140,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.find('article').props().className).not.toContain('fieldContainerReadOnly');
+        expect(cmp.find('div#yoloID').prop('aria-disabled')).toBe(false);
     });
 
     it('should send onClick event when clicking on the component', () => {
@@ -131,7 +151,8 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        cmp.find('article').simulate('click');
+        // Cannot read properties of undefined (reading 'currentTarget')
+        cmp.find('div#yoloID').prop('onClick')();
 
         expect(defaultProps.onClick).toHaveBeenCalled();
     });
@@ -145,7 +166,7 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        cmp.find('article').simulate('click');
+        cmp.find('div#yoloID').simulate('click');
 
         expect(defaultProps.onClick).not.toHaveBeenCalled();
     });

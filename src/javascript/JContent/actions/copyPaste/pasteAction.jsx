@@ -2,7 +2,7 @@ import pasteMutations from './copyPaste.gql-mutations';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {copypasteClear} from './copyPaste.redux';
 import {withNotifications} from '@jahia/react-material';
-import {isDescendantOrSelf} from '~/JContent/JContent.utils';
+import {isDescendantOrSelf, JahiaAreasUtil} from '~/JContent/JContent.utils';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
@@ -15,20 +15,7 @@ import {ACTION_PERMISSIONS} from '../actions.constants';
 import {useNodeTypeCheck} from '~/JContent';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
-
-function childrenLimitReachedOrExceeded(node) {
-    if (!node) {
-        return false;
-    }
-
-    if (node['jmix:listSizeLimit']) {
-        const limit = node?.properties?.find(property => property.name === 'limit')?.value;
-        const childrenNumber = node?.['subNodesCount_nt:base'] || 0;
-        return limit && childrenNumber >= Number(limit);
-    }
-
-    return false;
-}
+import {childrenLimitReachedOrExceeded} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 
 export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, ...others}) => {
     const client = useApolloClient();
@@ -81,7 +68,8 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
         const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? ['jnt:page', 'jmix:navMenuItem'] : [];
 
-        let isVisible = res.checksResult && res.node?.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
+        const templateLimit = JahiaAreasUtil.getArea(path)?.limit;
+        let isVisible = res.checksResult && res.node?.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node, templateLimit);
         let isEnabled = true;
 
         if (nodes.length === 0) {
@@ -106,7 +94,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
         }
 
         return {isVisible, isEnabled: Boolean(checkResult), loading, possibleReferenceTypes, nodeTypesToSkip, type, nodes};
-    }, [copyPaste, res, nodeTypeCheck, referenceTypes]);
+    }, [path, copyPaste, res, nodeTypeCheck, referenceTypes]);
 
     useEffect(() => {
         onVisibilityChanged?.(!loading && isVisible);

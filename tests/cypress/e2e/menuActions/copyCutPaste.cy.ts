@@ -130,8 +130,8 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         });
     });
 
-    // Template 'simple' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
-    // We have the same test in pageBuilder/restrictions as well
+    // Template 'contentType' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
+    // We have the same test in pageBuilder/restrictions as well for page builder
     describe('Template content type restriction', () => {
         const siteKey = 'restrictedStructuredSite';
         const pageName = 'myPage';

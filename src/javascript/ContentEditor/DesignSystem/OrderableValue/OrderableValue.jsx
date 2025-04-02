@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
 import styles from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue.scss';
-import {Button, Close, HandleDrag, ChevronLastPage, ChevronFirstPage, ChevronUp, ChevronDown} from '@jahia/moonstone';
+import {Button, Close, HandleDrag, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ReferenceCard} from '../ReferenceCard/ReferenceCard';
@@ -43,8 +43,8 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, onValueMov
                             cardAction: lastIndex !== 0 &&
                             <div className={styles.referenceCardActions}>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstPage style={{transform: 'rotate(90deg)'}}/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(name, 'first')}/>
-                                    <Button isDisabled={index === lastIndex} variant="ghost" icon={<ChevronLastPage style={{transform: 'rotate(90deg)'}}/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(name, 'last')}/>
+                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(name, 'first')}/>
+                                    <Button isDisabled={index === lastIndex} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(name, 'last')}/>
                                 </div>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                                     <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(name, 'up')}/>

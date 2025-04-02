@@ -10,7 +10,7 @@ import {
 } from '@jahia/cypress';
 import {ContentStatusSelector} from '../../page-object/contentStatusSelector';
 
-describe.skip('Page builder - content status', () => {
+describe('Page builder - content status', () => {
     let jContentPageBuilder: JContentPageBuilder;
     const siteKey = 'contentStatusSite';
     const user = {name: 'myUser', password: 'password'};

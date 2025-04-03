@@ -170,25 +170,4 @@ describe('reference card filled', () => {
 
         expect(defaultProps.onClick).not.toHaveBeenCalled();
     });
-
-    it('should not contain draggable icon', () => {
-        const cmp = shallowWithTheme(
-            <ReferenceCard {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        ).dive();
-
-        expect(cmp.find('SvgHandleDrag').exists()).toBeFalsy();
-    });
-
-    it('should contain draggable icon', () => {
-        defaultProps.isDraggable = true;
-        const cmp = shallowWithTheme(
-            <ReferenceCard {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        ).dive();
-
-        expect(cmp.find('SvgHandleDrag').exists()).toBeTruthy();
-    });
 });

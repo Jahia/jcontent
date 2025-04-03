@@ -151,8 +151,8 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        // Cannot read properties of undefined (reading 'currentTarget')
-        cmp.find('div#yoloID').prop('onClick')();
+        const mockEvent = {currentTarget: {blur: () => {}}};
+        cmp.find('div#yoloID').simulate('click', mockEvent);
 
         expect(defaultProps.onClick).toHaveBeenCalled();
     });

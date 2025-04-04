@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {CardSelector, Chip, EmptyCardSelector} from '@jahia/moonstone';
+import './ReferenceCard.scss';
 import clsx from 'clsx';
 
 const ReferenceCardCmp = ({

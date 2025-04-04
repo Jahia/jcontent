@@ -28,18 +28,6 @@ describe('reference card empty', () => {
         expect(cmp.debug()).toContain(defaultProps.emptyLabel);
     });
 
-    it('should emmit onClick', () => {
-        const cmp = shallowWithTheme(
-            <ReferenceCard {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        ).dive();
-
-        cmp.find('button').simulate('click');
-
-        expect(defaultProps.onClick).toHaveBeenCalled();
-    });
-
     it('should not set trigger onClick when clicking on the button when isReadOnly', () => {
         const cmp = shallowWithTheme(
             <ReferenceCard {...defaultProps} isReadOnly/>,

@@ -32,6 +32,10 @@
     width: 100%;
     margin-bottom: var(--spacing-nano);
 
+    &:hover * > * {
+        display: flex;
+    }
+
     :global(.moonstone-checkbox) {
         margin-left: 0 !important;
     }

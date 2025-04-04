@@ -25,10 +25,6 @@
     margin: 8px 0;
 }
 
-.referenceCardActions {
-    display: none;
-}
-
 .draggableCard {
     display: flex;
     flex-direction: row;
@@ -36,12 +32,12 @@
     width: 100%;
     margin-bottom: var(--spacing-nano);
 
-    :global(.moonstone-checkbox) {
-        margin-left: 0 !important;
+    &:hover * > * {
+        display: flex;
     }
 
-    &:hover .referenceCardActions {
-        display: flex;
+    :global(.moonstone-checkbox) {
+        margin-left: 0 !important;
     }
 }
 

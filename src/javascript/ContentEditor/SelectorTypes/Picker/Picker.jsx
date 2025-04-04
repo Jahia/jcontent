@@ -9,7 +9,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/ContentEditor/utils';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './Picker.scss';
-import {Button} from '@jahia/moonstone';
+import {Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
 import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
@@ -72,14 +72,25 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                 return (
                     <OrderableValue
                         key={`${field.name}_${fieldVal.name}`}
+                        isReferenceCard
                         component={<ReferenceCard
-                            isReadOnly
+                            isDraggable
+                            isReadOnly={field.readOnly}
                             labelledBy={`${fieldVal.name}-label`}
-                            fieldData={fieldVal}/>}
+                            fieldData={fieldVal}
+                            cardAction={fieldData.length > 1 &&
+                                <div className={styles.referenceCardActions}>
+                                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'first')}/>
+                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'last')}/>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'up')}/>
+                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'down')}/>
+                                    </div>
+                                </div>}/>}
                         field={field}
                         index={index}
-                        lastIndex={fieldData.length - 1}
-                        onValueMove={onValueMove}
                         onValueReorder={onValueReorder}
                         onFieldRemove={onFieldRemove}/>
                 );

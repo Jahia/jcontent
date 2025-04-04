@@ -1,12 +1,11 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
 import styles from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue.scss';
-import {Button, Close, HandleDrag, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
+import {Button, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ReferenceCard} from '../ReferenceCard/ReferenceCard';
 
-export const OrderableValue = ({field, onFieldRemove, onValueReorder, onValueMove, index, component, lastIndex}) => {
+export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard}) => {
     const {t} = useTranslation('jcontent');
     const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
@@ -34,39 +33,14 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, onValueMov
                 <div className={styles.draggableCard}>
                     {component}
                 </div>
-                ) :
-                component.type === ReferenceCard ? (
-                    <div ref={drag} className={styles.draggableCard}>
-                        {React.cloneElement(component, {
-                            isDraggable: true,
-                            isReadOnly: false,
-                            cardAction: lastIndex !== 0 &&
-                            <div className={styles.referenceCardActions}>
-                                <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(name, 'first')}/>
-                                    <Button isDisabled={index === lastIndex} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(name, 'last')}/>
-                                </div>
-                                <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(name, 'up')}/>
-                                    <Button isDisabled={index === lastIndex} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} onClick={() => onValueMove(name, 'down')}/>
-                                </div>
-                            </div>
-                    })}
-                        {!isDragging &&
-                        <Button variant="ghost"
-                                data-sel-action={`removeField_${index}`}
-                                aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
-                                icon={<Close/>}
-                                onClick={() => onFieldRemove(index)}
-                        />}
-                    </div>
                 ) : (
                     <div className={styles.draggableCard}>
                         {!isDragging &&
                             <>
+                                {!isReferenceCard &&
                                 <div ref={drag} className={styles.draggableIcon}>
                                     <HandleDrag size="big"/>
-                                </div>
+                                </div>}
                                 {component}
                             </>}
                         {!isDragging && <Button variant="ghost"
@@ -85,8 +59,7 @@ OrderableValue.propTypes = {
     field: PropTypes.object.isRequired,
     onFieldRemove: PropTypes.func,
     onValueReorder: PropTypes.func,
-    onValueMove: PropTypes.func,
     index: PropTypes.number.isRequired,
     component: PropTypes.object,
-    lastIndex: PropTypes.number
+    isReferenceCard: PropTypes.bool
 };

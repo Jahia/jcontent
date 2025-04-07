@@ -38,7 +38,6 @@ jobs:
           testrail_project: jContent Module
           tests_manifest: provisioning-manifest-snapshot.yml
           tests_profile: ${{ matrix.config_file }}
-          should_use_build_artifacts: false
           should_skip_artifacts: true
           should_skip_notifications: false
           should_skip_testrail: false
@@ -61,7 +60,7 @@ jobs:
           incident_google_api_key_base64: ${{ secrets.INCIDENT_GOOGLE_PRIVATE_KEY_BASE64 }}
           zencrepes_secret: ${{ secrets.ZENCREPES_WEBHOOK_SECRET }}
       - name: Test Report
-        uses: phoenix-actions/test-reporting@v12
+        uses: phoenix-actions/test-reporting@v15
         id: test-report
         if: success() || failure()
         with:

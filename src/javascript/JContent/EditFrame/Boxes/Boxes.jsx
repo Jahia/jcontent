@@ -217,12 +217,21 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             element.style['pointer-events'] = 'none';
         });
 
+        function isHydratedSsr(element) {
+            const parentDiv = element.closest('div[style="display:contents"]');
+            return parentDiv && parentDiv.firstElementChild.tagName === 'SCRIPT' && parentDiv.firstElementChild.getAttribute('data-hydration-mode') === 'hydrate';
+        }
+
         currentDocument.querySelectorAll('a').forEach(element => {
-            element.style['pointer-events'] = 'all';
+            if (!isHydratedSsr(element)) {
+                element.style['pointer-events'] = 'all';
+            }
         });
 
         currentDocument.querySelectorAll('button').forEach(element => {
-            element.style['pointer-events'] = 'all';
+            if (!isHydratedSsr(element)) {
+                element.style['pointer-events'] = 'all';
+            }
         });
 
         setPlaceholders(_placeholders);

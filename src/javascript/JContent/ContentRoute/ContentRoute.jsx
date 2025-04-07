@@ -31,6 +31,7 @@ const useRenderCheck = ({path, language, template, node, skip}) => {
     return {renderCheck, dialogProps};
 };
 
+// eslint-disable-next-line complexity
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
     const {path, mode, tableView, viewMode, template, language, params} = useSelector(state => ({

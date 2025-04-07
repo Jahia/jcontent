@@ -1,5 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {addNode, createSite, deleteNode, deleteSite, getComponentBySelector, Menu} from '@jahia/cypress';
+import {addNode, createSite, deleteNode, deleteSite} from '@jahia/cypress';
 import {addRestrictedPage} from '../../fixtures/jcontent/restrictions.gql.js';
 
 describe('Page builder', () => {

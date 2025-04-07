@@ -45,9 +45,8 @@ describe('delete tests', () => {
             expect(mixinTypes.map(m => m.name)).to.include('jmix:markedForDeletionRoot');
 
             // Verify all children have been marked for deletion
-            const allMarkedForDeletion = children.nodes.every(n => {
-                return n.mixinTypes.map(m => m.name).includes('jmix:markedForDeletion');
-            });
+            const markedForDeletion = node => node.mixinTypes.map(m => m.name).includes('jmix:markedForDeletion');
+            const allMarkedForDeletion = children.nodes.every(markedForDeletion);
             expect(allMarkedForDeletion).to.be.true;
         });
     });

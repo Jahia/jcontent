@@ -58,6 +58,7 @@
 
     <properties>
         <yarn.arguments>build:production</yarn.arguments>
+        <jahia-depends>default</jahia-depends>
     </properties>
     <repositories>
         <repository>
@@ -80,11 +81,6 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Jahia-Depends>default</Jahia-Depends>
-                    </instructions>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.eirslett</groupId>

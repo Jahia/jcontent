@@ -47,7 +47,7 @@ jobs:
     needs: update-signature
     runs-on: ubuntu-latest
     env:
-      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     container:
       image: jahia/cimg-mvn-cache:ga_cimg_openjdk_11.0.20-node
       credentials:
@@ -65,19 +65,19 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: jahia/jahia-modules-action/sonar-analysis@v2
         with:
           primary_release_branch: master
+          github_slug: jahia/jcontent
           github_pr_id: ${{github.event.number}}
           sonar_url: ${{ secrets.SONAR_URL }}
           sonar_token: ${{ secrets.SONAR_TOKEN }}
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
 
-  # can we use reusable-integration-tests.yml ?
   integration-tests-standalone:
     name: Integration Tests ${{ matrix.config_file }}
     needs: build

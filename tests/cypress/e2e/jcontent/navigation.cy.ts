@@ -14,9 +14,7 @@ describe('Content navigation', () => {
         });
         enableModule('jcontent-test-module', 'mySite1');
         enableModule('events', 'mySite1');
-        enableModule('events', 'mySite3');
         addNode({parentPathOrId: '/sites/mySite1/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
-        addNode({parentPathOrId: '/sites/mySite3/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
         addNode({
             name: specialCharsName,
             parentPathOrId: '/sites/mySite1/home',
@@ -26,6 +24,11 @@ describe('Content navigation', () => {
                 {name: 'j:templateName', value: '2-column'}
             ]
         });
+        addNode({parentPathOrId: '/sites/mySite1/files', name: 'll.js', primaryNodeType: 'jnt:folder'});
+        addNode({parentPathOrId: '/sites/mySite1/contents', name: 'll.js', primaryNodeType: 'jnt:contentFolder'});
+
+        enableModule('events', 'mySite3');
+        addNode({parentPathOrId: '/sites/mySite3/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
     });
 
     after(() => {
@@ -56,6 +59,20 @@ describe('Content navigation', () => {
         jcontent.getAccordionItem('pages').getTreeItem(specialCharsName).click();
         jcontent.shouldBeInMode('Page Builder');
         cy.get('h1').contains('special chars page');
+    });
+
+    it('can open media folders with dots', () => {
+        JContent.visit('mySite1', 'en', 'media/files/ll.js');
+        cy.get('h1').contains('ll.js');
+        cy.get('[data-type="upload"]').should('be.visible');
+        cy.url().should('contain', 'll.js');
+    });
+
+    it('can open content folders with dots', () => {
+        JContent.visit('mySite1', 'en', 'content-folders/contents/ll.js');
+        cy.get('h1').contains('ll.js');
+        cy.get('[data-type="import"]').should('be.visible');
+        cy.url().should('contain', 'll.js');
     });
 
     it('can open page with the correct view mode selection', () => {

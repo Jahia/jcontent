@@ -27,6 +27,7 @@ export const DraggableReference = ({child}) => {
                 labelledBy={`${child.name}-label`}
                 fieldData={{
                     name: child.displayName,
+                    systemname: child.name,
                     info: child.primaryNodeType.displayName,
                     url: encodeJCRPath(`${child.primaryNodeType.icon}.png`)
                 }}

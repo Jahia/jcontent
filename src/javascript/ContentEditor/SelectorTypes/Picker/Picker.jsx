@@ -9,7 +9,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/ContentEditor/utils';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './Picker.scss';
-import {Button} from '@jahia/moonstone';
+import {Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
 import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
@@ -51,30 +51,44 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
                 onClick={() => setDialogOpen(!isDialogOpen)}
             />
             {inputContext.displayActions && value && (
-                <DisplayAction
-                    actionKey="content-editor/field/Picker"
-                    value={value}
-                    field={field}
-                    inputContext={inputContext}
-                    render={ButtonRenderer}
-                />
+            <DisplayAction
+                        actionKey="content-editor/field/Picker"
+                        value={value}
+                        field={field}
+                        inputContext={inputContext}
+                        render={ButtonRenderer}
+                    />
             )}
         </>
+
     );
 };
 
 // eslint-disable-next-line max-params
-const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
+const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
     return (
         <div className="flexFluid">
             {fieldData && fieldData.length > 0 && fieldData.map((fieldVal, index) => {
                 return (
                     <OrderableValue
                         key={`${field.name}_${fieldVal.name}`}
+                        isReferenceCard
                         component={<ReferenceCard
-                            isReadOnly
+                            isDraggable
+                            isReadOnly={field.readOnly}
                             labelledBy={`${fieldVal.name}-label`}
-                            fieldData={fieldVal}/>}
+                            fieldData={fieldVal}
+                            cardAction={fieldData.length > 1 &&
+                                <div className={styles.referenceCardActions}>
+                                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'first')}/>
+                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'last')}/>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'up')}/>
+                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'down')}/>
+                                    </div>
+                                </div>}/>}
                         field={field}
                         index={index}
                         onValueReorder={onValueReorder}
@@ -170,6 +184,42 @@ export const Picker = ({
         onItemSelection(updatedValues);
     };
 
+    const onValueMove = (droppedName, direction) => {
+        let childrenWithoutDropped = [];
+        let droppedChild = null;
+        let droppedItemIndex = -1;
+        value.forEach((item, index) => {
+            if (droppedItemIndex === -1 && droppedName === `${field.name}[${index}]`) {
+                droppedChild = item;
+                droppedItemIndex = index;
+            } else {
+                childrenWithoutDropped.push(item);
+            }
+        });
+
+        if (droppedChild !== null && droppedItemIndex >= 0) {
+            let newIndex = droppedItemIndex;
+
+            if (direction === 'up' && droppedItemIndex > 0) {
+                newIndex = droppedItemIndex - 1;
+            } else if (direction === 'down' && droppedItemIndex < value.length - 1) {
+                newIndex = droppedItemIndex + 1;
+            } else if (direction === 'first') {
+                newIndex = 0;
+            } else if (direction === 'last') {
+                newIndex = value.length - 1;
+            }
+
+            if (newIndex !== droppedItemIndex) {
+                const newValue = [...childrenWithoutDropped];
+                newValue.splice(newIndex, 0, droppedChild);
+
+                setFieldValue(field.name, newValue);
+                setFieldTouched(field.name, true, false);
+            }
+        }
+    };
+
     const onValueReorder = (droppedName, index) => {
         let childrenWithoutDropped = [];
         let droppedChild = null;
@@ -195,7 +245,7 @@ export const Picker = ({
     return (
         <div className="flexFluid flexRow_nowrap alignCenter">
             {field.multiple ?
-                getMultipleElement(fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) :
+                getMultipleElement(fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) :
                 getSimpleElement(field, error, notFound, t, pickerConfig, fieldData, setDialogOpen, isDialogOpen, inputContext, value)}
 
             <PickerDialog

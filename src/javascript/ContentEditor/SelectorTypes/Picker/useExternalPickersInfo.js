@@ -49,7 +49,7 @@ export const useExternalPickersInfo = (site, values, pickerConfig) => {
         .filter(({pickerConfigs}) => !pickerConfigs || pickerConfigs.indexOf(pickerConfig.key) > -1);
 
     // Get Dam Modules selector config.
-    // Todo: cleanup how the pickers detect they can handle the file.
+    // Cleanup how the pickers detect they can handle the file.
     // This is currently done by specific code, either checking the selectableTypes (if values are nodes identified by uuid or path, so based on  valueNodeTypes)
     // Or by checking if "keyUrlPath" is part of the url (if values are only identified by url)
     const externalPickerConfig =

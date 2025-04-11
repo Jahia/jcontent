@@ -1,4 +1,4 @@
-import {BaseComponent, getComponentByRole, getComponentBySelector, Table, TableRow} from '@jahia/cypress';
+import {BaseComponent, Table, TableRow} from '@jahia/cypress';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {

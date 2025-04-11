@@ -7,7 +7,7 @@ on:
     types: [prereleased]
 
 jobs:
-  on-release:
+  release-module:
     uses: Jahia/jahia-modules-action/.github/workflows/reusable-release-module.yml@v2
     secrets: inherit 
     with:

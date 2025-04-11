@@ -1,6 +1,6 @@
-mutation createContent {
+mutation createContent($contentFolderPath: String! =  "/sites/digitall/contents") {
     jcr {
-        content: mutateNode(pathOrId: "/sites/digitall/contents") {
+        content: mutateNode(pathOrId: $contentFolderPath) {
             addChild(name: "ce-picker-custom-contents", primaryNodeType: "jnt:contentFolder") {
                 addChildrenBatch(
                     nodes: [

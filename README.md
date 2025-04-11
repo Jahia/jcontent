@@ -43,12 +43,6 @@ The application is packaged using Webpack and is composed of the following main 
     - React Material, https://material-ui.com
     - Apollo GraphQL client, https://www.apollographql.com
     - i18next (for internationalization support), https://www.i18next.com
-
-### Entry point 
-
-The entry point to the React app is in 
-
-    src/javascript/ContentManagerApp.jsx
     
 ### Redux
 
@@ -58,7 +52,7 @@ are bookmarkeable.
 ### Main view routing
 
 The main route contains the site key and the language of the content as well as the mode in which we are (pages, search,
-apps). The routing is done in the `ContentManager` component.
+apps) which is parsed in `JContent.redux.js`. The routing is done in the `ContentRoute` component.
 
 ## Open-Source
 

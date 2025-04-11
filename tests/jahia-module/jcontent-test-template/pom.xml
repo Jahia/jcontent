@@ -66,6 +66,10 @@
         <developerConnection>scm:dummy:uri</developerConnection>
     </scm>
 
+    <properties>
+        <jahia-depends>default</jahia-depends>
+    </properties>
+
     <repositories>
         <repository>
             <id>jahia-public</id>
@@ -90,7 +94,6 @@
                 <configuration>
                     <instructions>
                         <Jahia-Module-Type>templatesSet</Jahia-Module-Type>
-                        <Jahia-Depends>default</Jahia-Depends>
                     </instructions>
                 </configuration>
             </plugin>

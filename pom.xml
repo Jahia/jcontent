@@ -53,7 +53,7 @@
         <import-package>
             com.fasterxml.jackson.annotation;version="[2.10,3)",
             com.fasterxml.jackson.databind;version="[2.10,3)",
-            graphql.annotations.annotationTypes;version="[7.2,99)",
+            graphql.annotations.annotationTypes;version="21.1",
             io.reactivex;version="[2.1,3)",
             io.reactivex.functions;version="[2.1,3)",
             javax.inject,
@@ -62,21 +62,27 @@
             javax.jcr.nodetype;version="[2.0,3)",
             javax.jcr.query;version="[2.0,3)",
             javax.servlet.http,
+            org.apache.commons.collections4,
             org.apache.commons.lang;version="[2.6,3)",
             org.apache.commons.lang3;version="[3.12,4)",
             org.apache.naming.java,
+            org.jahia.api,
+            org.jahia.api.templates,
+            org.jahia.ajax.gwt.helper,
             org.jahia.bin.filters.jcr,
             org.jahia.bin.listeners,
             org.jahia.data.templates,
             org.jahia.defaults.config.spring,
             org.jahia.exceptions,
-            org.jahia.modules.graphql.provider.dxm;version="[2.20,4)",
-            org.jahia.modules.graphql.provider.dxm.node;version="[2.20,4)",
-            org.jahia.modules.graphql.provider.dxm.nodetype;version="[2.20,4)",
-            org.jahia.modules.graphql.provider.dxm.osgi.annotations;version="[2.20,4)",
-            org.jahia.modules.graphql.provider.dxm.predicate;version="[2.20,4)",
+            org.jahia.modules.graphql.provider.dxm;version="3.2",
+            org.jahia.modules.graphql.provider.dxm.node;version="3.2",
+            org.jahia.modules.graphql.provider.dxm.nodetype;version="3.2",
+            org.jahia.modules.graphql.provider.dxm.osgi.annotations;version="3.2",
+            org.jahia.modules.graphql.provider.dxm.predicate;version="3.2",
+            org.jahia.osgi,
             org.jahia.registries,
             org.jahia.services,
+            org.jahia.services.cache,
             org.jahia.services.channels,
             org.jahia.services.content,
             org.jahia.services.content.decorator,
@@ -84,16 +90,24 @@
             org.jahia.services.content.nodetypes.initializers,
             org.jahia.services.render,
             org.jahia.services.render.filter,
+            org.jahia.services.scheduler,
+            org.jahia.services.seo.urlrewrite,
             org.jahia.services.templates,
             org.jahia.services.usermanager,
-            org.jahia.settings
+            org.jahia.settings,
             org.jahia.utils,
             org.jahia.utils.i18n,
-            org.osgi.framework;version="[1.8,2)",
+            org.osgi.framework;version="[1.9,2)",
+            <!-- Referenced import but no exporting OSGi packages -->
+            <!-- org.osgi.service.component.annotations, -->
+            <!-- org.owasp.html, -->
+            org.quartz,
             org.reactivestreams;version="[1.0,2)",
-            org.slf4j;version="[1.7,2)",
-            org.springframework.context;version="[3.2,4)",
-            org.springframework.core.io;version="[3.2,4)",
+            org.slf4j;version="[1.7,3)",
+            org.springframework.context;version="[3.2,5)",
+            org.springframework.core.io;version="[3.2,5)",
+            pl.touk.throwing,
+            pl.touk.throwing.exception
         </import-package>
         <sonar.sources>src/javascript</sonar.sources>
     </properties>
@@ -133,15 +147,8 @@
 
         <dependency>
             <groupId>org.jahia.modules</groupId>
-            <artifactId>app-shell</artifactId>
-            <version>2.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jahia.modules</groupId>
             <artifactId>graphql-dxm-provider</artifactId>
-            <version>3.0.0</version>
+            <version>3.2.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -203,7 +210,7 @@
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
-            <version>20220608.1</version>
+            <version>20240325.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.guava</groupId>

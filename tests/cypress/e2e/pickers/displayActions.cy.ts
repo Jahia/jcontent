@@ -3,35 +3,27 @@ import {assertUtils} from '../../utils/assertUtils';
 import {AccordionItem} from '../../page-object/accordionItem';
 import {JContent} from '../../page-object/jcontent';
 import gql from 'graphql-tag';
-import {slowCypressDown} from 'cypress-slow-down';
+import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Picker tests - Display actions', () => {
-    const siteKey = 'digitall';
+    const siteKey = 'pickerDisplayAction';
     let jcontent: JContent;
 
-    beforeEach(() => {
-        slowCypressDown(200);
-        // I have issues adding these to before()/after() so have to add to beforeEach()/afterEach()
-        cy.login(); // Edit in chief
-        cy.apollo({mutationFile: 'contentEditor/pickers/createCustomContent.graphql'});
-
-        // BeforeEach()
+    before('setup', () => {
+        createSite(siteKey);
+        enableModule('qa-module', siteKey);
+        cy.apollo({
+            mutationFile: 'contentEditor/pickers/createCustomContent.graphql',
+            variables: {contentFolderPath: `/sites/${siteKey}/contents`}
+        });
+        cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });
 
-    afterEach(() => {
-        cy.apollo({mutation: gql`
-                mutation deleteContent {
-                    jcr {
-                        content: deleteNode(pathOrId: "/sites/digitall/contents/ce-picker-custom-contents")
-                    }
-                }
-            `});
+    after('teardown', () => {
+        deleteSite(siteKey);
         cy.logout();
-        slowCypressDown(false);
     });
-
-    // Tests
 
     it('should refresh picker dialog', () => {
         const picker = jcontent
@@ -59,10 +51,10 @@ describe('Picker tests - Display actions', () => {
         cy.apollo({mutation: gql`
                 mutation addContent {
                     jcr {
-                        addFolder: mutateNode(pathOrId: "/sites/digitall/contents") {
+                        addFolder: mutateNode(pathOrId: "/sites/${siteKey}/contents") {
                             addChild(name: "refresh1", primaryNodeType: "jnt:contentFolder") {uuid}
                         }
-                        addContent: mutateNode(pathOrId: "/sites/digitall/contents/ce-picker-custom-contents") {
+                        addContent: mutateNode(pathOrId: "/sites/${siteKey}/contents/ce-picker-custom-contents") {
                             addChild(name: "refresh2", primaryNodeType: "qant:location", properties: [
                                 { name: "jcr:title", language: "en", value: "refresh2" }
                             ]) {uuid}
@@ -80,11 +72,5 @@ describe('Picker tests - Display actions', () => {
         picker.getTable().getRowByName('test-loc1')
             .should('be.visible') // Expanded
             .and('have.class', 'moonstone-TableRow-highlighted'); // Selected
-
-        cy.apollo({mutation: gql`
-                mutation deleteContent {
-                    jcr {folder: deleteNode(pathOrId: "/sites/digitall/contents/refresh1")}
-                }
-            `});
     });
 });

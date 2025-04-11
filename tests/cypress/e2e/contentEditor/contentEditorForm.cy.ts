@@ -32,8 +32,7 @@ describe('Content editor form', () => {
 
     after(function () {
         cy.runProvisioningScript({
-            fileContent: '- startBundle: jcontent-test-module',
-            type: 'application/yaml'
+            script: { fileContent: '- startBundle: "jcontent-test-module"', type: 'application/yaml' }
         });
         cy.logout();
         cy.executeGroovy('contentEditor/deleteSite.groovy', {SITEKEY: siteKey});
@@ -207,8 +206,7 @@ describe('Content editor form', () => {
         contentEditor.create();
 
         cy.runProvisioningScript({
-            fileContent: '- stopBundle: jcontent-test-module',
-            type: 'application/yaml'
+            script: { fileContent: '- stopBundle: "jcontent-test-module"', type: 'application/yaml' }
         });
         jcontent.getTable().getRowByLabel('default-value-test').contextMenu().select('Edit');
         contentEditor = new ContentEditor();

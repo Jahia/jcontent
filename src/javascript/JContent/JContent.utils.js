@@ -150,6 +150,10 @@ export const isObject = item => {
     return (item && typeof item === 'object' && !Array.isArray(item));
 };
 
+export const isSafeKey = (key) => {
+    return !["__proto__", "prototype", "constructor"].includes(key);
+}
+
 export const mergeDeep = (target, ...sources) => {
     if (!sources.length) {
         return target;
@@ -159,6 +163,10 @@ export const mergeDeep = (target, ...sources) => {
 
     if (isObject(target) && isObject(source)) {
         for (const key in source) {
+            if (!isSafeKey(key)) {
+                continue;
+            }
+
             if (isObject(source[key])) {
                 if (!target[key]) {
                     Object.assign(target, {[key]: {}});
@@ -205,7 +213,9 @@ export const getCanDisplayItemParams = node => {
 
 export const getAccordionItem = (accordion, accordionItemProps) => {
     if (accordionItemProps && accordion && accordionItemProps[accordion.key]) {
-        return mergeDeep({}, accordion, accordionItemProps[accordion.key]);
+        // Avoid proto pollution by creating an empty object with no Object.prototype
+        const emptyObj = Object.create(null);
+        return mergeDeep(emptyObj, accordion, accordionItemProps[accordion.key]);
     }
 
     return accordion;

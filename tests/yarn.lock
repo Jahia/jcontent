@@ -130,7 +130,7 @@
     wrap-ansi "^8.1.0"
     wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
-"@jahia/cypress@^5.0.0":
+"@jahia/cypress@^5.2.0":
   version "5.2.0"
   resolved "https://npm.jahia.com/@jahia%2fcypress/-/cypress-5.2.0.tgz#69cb8c8b13fdb97e918df8423f5ad1cf728405b9"
   integrity sha512-0OeM0U7UBbKS2noMGUw5kCFIN0yhgOHL0iAWLGE9Nst2btNuChoVUQq1lIVDFNSopEgCM+gm8vdSsEhOidybgw==

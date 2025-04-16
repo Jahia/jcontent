@@ -82,7 +82,7 @@ const ItemComponent = ({children, node, item, treeEntries, virtualizer, virtualR
         if (ref.current) {
             virtualizer.measureElement(ref.current);
         }
-    }, [ref.current, virtualizer]);
+    }, [virtualizer]);
 
     return (
         <li ref={ref}

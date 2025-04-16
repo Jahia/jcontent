@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FastField, useFormikContext} from 'formik';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
+import {onListReorder} from '~/ContentEditor/utils';
 import styles from './MultipleField.scss';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 
@@ -32,26 +33,9 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
         onBlur();
     };
 
-    const onValueReorder = (droppedName, index) => {
-        let childrenWithoutDropped = [];
-        let droppedChild = null;
-        let droppedItemIndex = -1;
-        values[field.name].forEach((item, index) => {
-            if (droppedItemIndex === -1 && droppedName === `${field.name}[${index}]`) {
-                droppedChild = item;
-                droppedItemIndex = index;
-            } else {
-                childrenWithoutDropped.push(item);
-            }
-        });
-
-        if (droppedChild !== null && droppedItemIndex >= 0) {
-            // +1 for droppedItemIndex here as index parameter from handleReOrder is starting from 1 instead of 0
-            const spliceIndex = ((droppedItemIndex + 1) < index) ? index - 1 : index;
-            const newValue = [...childrenWithoutDropped.slice(0, spliceIndex), droppedChild, ...childrenWithoutDropped.slice(spliceIndex, childrenWithoutDropped.length)];
-            setFieldValue(field.name, newValue);
-            setFieldTouched(field.name, true, false);
-        }
+    const onValueReorder = (droppedId, index) => {
+        setFieldValue(field.name, onListReorder(values[field.name], droppedId, index));
+        setFieldTouched(field.name, true, false);
     };
 
     return (

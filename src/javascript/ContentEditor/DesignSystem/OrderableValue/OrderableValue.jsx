@@ -6,29 +6,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component}) => {
+    console.log(field);
+    console.log(component);
     const {t} = useTranslation('jcontent');
-    const name = `${field.name}[${index}]`;
+    const id = component?.props.id;
+    const uuid = component?.props.fieldData.uuid;
+    const value = component?.props.value;
+    const droppedId = id ? id : uuid ? uuid : value ? value : '';
+    console.log(droppedId);
     const [{isDropping}, drop] = useDrop({
-        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.name, index), collect: monitor => {
+        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.droppedId, index), collect: monitor => {
             return {
-                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().name !== name
+                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().id !== id
             };
         }
     });
     const [{isDragging}, drag] = useDrag({
-        type: `REFERENCE_CARD_${field.name}`, item: {name: name}, collect: monitor => ({
+        type: `REFERENCE_CARD_${field.name}`, item: {droppedId: droppedId}, collect: monitor => ({
             isDragging: monitor.isDragging()
         })
     });
     return (
-        <div key={name}
+        <div key={id}
              ref={field.readOnly ? null : drop}
+             id={id}
              className={styles.fieldComponentContainer}
-             data-sel-content-editor-multiple-generic-field={name}
+             data-sel-content-editor-multiple-generic-field={id}
              data-sel-content-editor-field-readonly={field.readOnly}
         >
-            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
-            {(field.readOnly || !component) ? (
+            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={id}/>
+            {/* If !component return component, why? */}
+            {/* {(field.readOnly || !component) ? ( */}
+            {field.readOnly ? (
                 <div className={styles.draggableCard}>
                     {component}
                 </div>

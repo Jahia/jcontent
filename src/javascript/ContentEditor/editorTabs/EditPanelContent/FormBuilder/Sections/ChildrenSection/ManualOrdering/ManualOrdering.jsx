@@ -1,6 +1,7 @@
 import {FastField} from 'formik';
 import React, {Fragment} from 'react';
 import {DraggableReference, DropableSpace} from './DragDrop';
+import {onListReorder} from '~/ContentEditor/utils';
 
 export const ManualOrdering = () => {
     return (
@@ -11,29 +12,9 @@ export const ManualOrdering = () => {
                     return null;
                 }
 
-                const handleReorder = (droppedName, index) => {
-                    let childrenWithoutDropped = [];
-                    let droppedChild = null;
-                    let droppedItemIndex = -1;
-                    field.value.forEach((item, index) => {
-                        if (droppedItemIndex === -1 && item.name === droppedName) {
-                            droppedChild = item;
-                            droppedItemIndex = index;
-                        } else {
-                            childrenWithoutDropped.push(item);
-                        }
-                    });
-
-                    if (droppedChild !== null && droppedItemIndex >= 0) {
-                        // +1 for droppedItemIndex here as index parameter from handleReOrder is starting from 1 instead of 0
-                        const spliceIndex = ((droppedItemIndex + 1) < index) ? index - 1 : index;
-                        setFieldValue(field.name, [
-                            ...childrenWithoutDropped.slice(0, spliceIndex),
-                            droppedChild,
-                            ...childrenWithoutDropped.slice(spliceIndex, childrenWithoutDropped.length)
-                        ]);
-                        setFieldTouched(field.name, true, false);
-                    }
+                const handleReorder = (droppedId, index) => {
+                    setFieldValue(field.name, onListReorder(field.value, droppedId, index));
+                    setFieldTouched(field.name, true, false);
                 };
 
                 return (

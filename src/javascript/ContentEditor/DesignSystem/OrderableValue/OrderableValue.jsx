@@ -1,33 +1,41 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
-import styles from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue.scss';
+import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {Button, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component}) => {
+    console.log(field);
+    console.log(component);
     const {t} = useTranslation('jcontent');
-    const name = `${field.name}[${index}]`;
+    const id = component?.props.id;
+    const uuid = component?.props?.fieldData?.uuid;
+    const value = component?.props?.value;
+    const droppedId = uuid ? uuid : id ? id : value ? value : '';
+    console.log(uuid + ' or ' + id + ' or ' + value);
     const [{isDropping}, drop] = useDrop({
-        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.name, index), collect: monitor => {
+        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.droppedId, index), collect: monitor => {
             return {
-                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().name !== name
+                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().id !== id
             };
         }
     });
     const [{isDragging}, drag] = useDrag({
-        type: `REFERENCE_CARD_${field.name}`, item: {name: name}, collect: monitor => ({
+        type: `REFERENCE_CARD_${field.name}`, item: {droppedId: droppedId}, collect: monitor => ({
             isDragging: monitor.isDragging()
         })
     });
     return (
-        <div key={name}
+        <div key={id}
              ref={field.readOnly ? null : drop}
+             id={id}
              className={styles.fieldComponentContainer}
-             data-sel-content-editor-multiple-generic-field={name}
+             data-sel-content-editor-multiple-generic-field={id}
              data-sel-content-editor-field-readonly={field.readOnly}
         >
-            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
+            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={id}/>
+            {/* Empty div needed to avoid an extra empty visible selector div */}
             {(field.readOnly || !component) ? (
                 <div className={styles.draggableCard}>
                     {component}

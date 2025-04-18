@@ -22,6 +22,7 @@ export const DraggableReference = ({child}) => {
             {!isDragging &&
             <ReferenceCard
                 isDraggable
+                id={child.name}
                 emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                 emptyIcon={<File/>}
                 labelledBy={`${child.name}-label`}

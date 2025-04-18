@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
-import styles from '~/ContentEditor/utils';
+import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {Button, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';

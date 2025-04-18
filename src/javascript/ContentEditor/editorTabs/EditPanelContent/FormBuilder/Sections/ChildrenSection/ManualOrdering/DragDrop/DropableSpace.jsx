@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useDrop} from 'react-dnd';
-import styles from '~/ContentEditor/utils';
+import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 
 export const DropableSpace = ({childDown, childUp, index, onReorder}) => {
     const [{isDropping}, drop] = useDrop({

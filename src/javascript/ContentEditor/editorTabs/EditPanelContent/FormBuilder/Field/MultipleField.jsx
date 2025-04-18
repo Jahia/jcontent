@@ -4,7 +4,8 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FastField, useFormikContext} from 'formik';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {styles, onListReorder} from '~/ContentEditor/utils';
+import {onListReorder} from '~/ContentEditor/utils';
+import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 
 export const MultipleField = ({editorContext, inputContext, field, onChange, onBlur}) => {

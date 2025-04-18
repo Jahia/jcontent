@@ -4,8 +4,7 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FastField, useFormikContext} from 'formik';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {onListReorder} from '~/ContentEditor/utils';
-import styles from './MultipleField.scss';
+import {styles, onListReorder} from '~/ContentEditor/utils';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 
 export const MultipleField = ({editorContext, inputContext, field, onChange, onBlur}) => {
@@ -44,7 +43,6 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
                 {values[field.name] && values[field.name].length > 0 && (
                     values[field.name].map((value, index) => {
                         const FieldComponent = inputContext.selectorType.cmp;
-                        const name = `${field.name}[${index}]`;
 
                         return (
                             // eslint-disable-next-line react/no-array-index-key
@@ -53,7 +51,6 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
                                                                   field={field}
                                                                   value={value}
                                                                   values={values}
-                                                                  id={name}
                                                                   editorContext={editorContext}
                                                                   inputContext={inputContext}
                                                                   onChange={newData => {

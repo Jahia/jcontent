@@ -1,3 +1,5 @@
+import * as styles from './dragAndDrop.scss';
+export default {styles};
 export * from './dragAndDrop.utils';
 export * from './encodeJCRPath';
 export * from './extractRangeConstraints';

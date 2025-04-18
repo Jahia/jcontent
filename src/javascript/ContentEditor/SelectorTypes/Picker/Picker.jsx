@@ -6,9 +6,8 @@ import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {mergeDeep, set, toArray} from './Picker.utils';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer, onListReorder} from '~/ContentEditor/utils';
+import {styles, getButtonRenderer, onListReorder} from '~/ContentEditor/utils';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import styles from './Picker.scss';
 import {Button} from '@jahia/moonstone';
 import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
@@ -73,7 +72,6 @@ const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, 
                         key={`${field.name}_${fieldVal.name}`}
                         component={<ReferenceCard
                             isReadOnly
-                            id={`${field.name}[${index}]`}
                             labelledBy={`${fieldVal.name}-label`}
                             fieldData={fieldVal}/>}
                         field={field}

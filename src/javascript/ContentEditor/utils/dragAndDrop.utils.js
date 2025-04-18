@@ -16,7 +16,7 @@ export function onListReorder(list, droppedId, index) {
     console.log(droppedId);
     list.forEach((item, index) => {
         console.log(item);
-        if (droppedItemIndex === -1 && droppedId === (item.id || item)) {
+        if (droppedItemIndex === -1 && droppedId === (item.name || item)) {
             droppedChild = item;
             droppedItemIndex = index;
         } else {

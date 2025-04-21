@@ -1,4 +1,3 @@
-/* eslint complexity: 0 */
 import React, {useEffect, useRef, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
@@ -114,6 +113,7 @@ ItemComponent.propTypes = {
 
 const TREE_ITEM_SIZE = 32;
 
+// eslint-disable-next-line complexity
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction, pageTitlePrefix}) => {
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');

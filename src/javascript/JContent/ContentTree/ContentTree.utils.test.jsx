@@ -43,7 +43,10 @@ describe('convertPathsToTree', () => {
             },
             displayName: 'Testsite'
         },
-        hasChildren: true
+        hasChildren: true,
+        virtualRow: {
+            start: 0
+        }
     }, {
         path: '/sites/testsite/home',
         node: {
@@ -52,7 +55,10 @@ describe('convertPathsToTree', () => {
             },
             displayName: 'Home'
         },
-        hasChildren: true
+        hasChildren: true,
+        virtualRow: {
+            start: 0
+        }
     }, {
         path: '/sites/testsite/home/about',
         node: {
@@ -61,7 +67,10 @@ describe('convertPathsToTree', () => {
             },
             displayName: 'About'
         },
-        hasChildren: true
+        hasChildren: true,
+        virtualRow: {
+            start: 0
+        }
     }, {
         path: '/sites/testsite/home/about/history',
         node: {
@@ -70,7 +79,10 @@ describe('convertPathsToTree', () => {
             },
             displayName: 'History'
         },
-        hasChildren: true
+        hasChildren: true,
+        virtualRow: {
+            start: 0
+        }
     }];
 
     let tree = convertPathsToTree({treeEntries: entries});

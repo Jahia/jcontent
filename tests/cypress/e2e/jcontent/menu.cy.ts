@@ -38,7 +38,7 @@ describe('Menu tests', () => {
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
         const navAccordion = jcontent.getSecondaryNavAccordion();
         navAccordion.click('pages');
-        navAccordion.getContent().get('div[data-cm-role="rootpath-context-menu-holder"]').rightclick('top', {scrollBehavior: 'top'});
+        navAccordion.getContent().get('div[data-cm-role="navtree-holder"]').rightclick('bottom');
         // There's a bug in selectByRole that needs to be fixed
         // then revert back to helper function; temp fix to revert when released. https://github.com/Jahia/jahia-cypress/pull/125/files
         // getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)').selectByRole('jnt:page');

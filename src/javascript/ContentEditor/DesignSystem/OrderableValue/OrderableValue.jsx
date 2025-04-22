@@ -17,7 +17,7 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
     const [{isDropping}, drop] = useDrop({
         accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.droppedId, index), collect: monitor => {
             return {
-                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().id !== id
+                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().droppedId !== droppedId
             };
         }
     });
@@ -27,14 +27,14 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         })
     });
     return (
-        <div key={id}
+        <div key={droppedId}
              ref={field.readOnly ? null : drop}
-             id={id}
+             id={droppedId}
              className={styles.fieldComponentContainer}
-             data-sel-content-editor-multiple-generic-field={id}
+             data-sel-content-editor-multiple-generic-field={droppedId}
              data-sel-content-editor-field-readonly={field.readOnly}
         >
-            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={id}/>
+            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={droppedId}/>
             {/* Empty div needed to avoid an extra empty visible selector div */}
             {(field.readOnly || !component) ? (
                 <div className={styles.draggableCard}>

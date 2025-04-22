@@ -81,12 +81,12 @@ const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, 
                         onFieldRemove={onFieldRemove}/>
                 );
             })}
-            {/* No idea what this does except add an extra div & an undefined extra item in the list */}
-            {/* {fieldData && fieldData.length > 0 && (
+            {/* Needed for droppable div at the bottom */}
+            {fieldData && fieldData.length > 0 && (
                 <OrderableValue field={field}
                                 index={fieldData.length}
                                 onValueReorder={onValueReorder}/>
-            )} */}
+            )}
             {!field.readOnly &&
                 <Button className={styles.addButton}
                         data-sel-action="addField"

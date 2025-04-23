@@ -65,6 +65,8 @@ export const ContentEditorApi = () => {
             editorConfig.formKey = 'modal_' + editorConfigs.length;
         }
 
+        editorConfig.uilang = window.jahiaGWTParameters.uilang;
+
         setEditorConfigs([...editorConfigs, editorConfig]);
     };
 

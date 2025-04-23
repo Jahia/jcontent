@@ -6,14 +6,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component}) => {
-    console.log(field);
-    console.log(component);
     const {t} = useTranslation('jcontent');
     const id = component?.props.id;
     const uuid = component?.props?.fieldData?.uuid;
     const value = component?.props?.value;
-    const droppedId = uuid ? uuid : id ? id : value ? value : '';
-    console.log(uuid + ' or ' + id + ' or ' + value);
+    const droppedId = uuid || id || value || '';
     const [{isDropping}, drop] = useDrop({
         accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.droppedId, index), collect: monitor => {
             return {

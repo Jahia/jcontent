@@ -10,6 +10,10 @@
 
 .ceDialogContent.ceDialogContent {
     width: 1080px;
-    max-width: calc(100vw - 80px);
-    height: calc(100vh - 80px);
+    max-width: calc(100vw - 56px);
+    height: calc(100vh - 56px);
+
+    // override css from material-ui
+    max-height: calc(100vh - 56px);
+    margin: 0;
 }

@@ -9,6 +9,7 @@
 }
 
 .ceDialogContent.ceDialogContent {
-    width: 960px;
-    height: calc(100vh - 96px);
+    width: 1080px;
+    max-width: calc(100vw - 80px);
+    height: calc(100vh - 80px);
 }

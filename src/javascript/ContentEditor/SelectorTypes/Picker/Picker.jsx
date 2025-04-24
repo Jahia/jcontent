@@ -172,7 +172,7 @@ export const Picker = ({
     };
 
     const onValueReorder = (droppedId, index) => {
-        setFieldValue(field.name, onListReorder(value, droppedId, index));
+        setFieldValue(field.name, onListReorder(value, droppedId, index, field.name));
         setFieldTouched(field.name, true, false);
     };
 

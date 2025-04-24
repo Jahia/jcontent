@@ -10,6 +10,7 @@ export class SmallTextField extends Field {
             // Prevent field from being hidden by sticky header
             this.get().scrollIntoView();
             cy.get('@textinput').type(newValue, {force: force});
+            cy.get('@textinput').should('have.value', newValue);
         } else {
             this.get().find('input[type="text"]').as('textinput');
             // Prevent field from being hidden by sticky header

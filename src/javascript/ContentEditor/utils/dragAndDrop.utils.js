@@ -5,15 +5,16 @@
  * @param {array} list    array of all items in the list
  * @param {string} droppedId    dragged and dropped id
  * @param {number} index    index in the array
+ * @param {string} fieldName    dragged and dropped id
  * @returns {array} newList    array object contains items in new order
  */
-export function onListReorder(list, droppedId, index) {
+export function onListReorder(list, droppedId, index, fieldName) {
     let childrenWithoutDropped = [];
     let droppedChild = null;
     let droppedItemIndex = -1;
 
     list.forEach((item, index) => {
-        if (droppedItemIndex === -1 && droppedId === (item.name || item)) {
+        if (droppedItemIndex === -1 && droppedId === fieldName[index]) {
             droppedChild = item;
             droppedItemIndex = index;
         } else {

@@ -7,31 +7,28 @@ import PropTypes from 'prop-types';
 
 export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component}) => {
     const {t} = useTranslation('jcontent');
-    const id = component?.props.id;
-    const uuid = component?.props?.fieldData?.uuid;
-    const value = component?.props?.value;
-    const droppedId = uuid || id || value || '';
+    const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
-        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.droppedId, index), collect: monitor => {
+        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.name, index), collect: monitor => {
             return {
-                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().droppedId !== droppedId
+                isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().name !== name
             };
         }
     });
     const [{isDragging}, drag] = useDrag({
-        type: `REFERENCE_CARD_${field.name}`, item: {droppedId: droppedId}, collect: monitor => ({
+        type: `REFERENCE_CARD_${field.name}`, item: {name: name}, collect: monitor => ({
             isDragging: monitor.isDragging()
         })
     });
     return (
-        <div key={droppedId}
+        <div key={name}
              ref={field.readOnly ? null : drop}
-             id={droppedId}
+             id={name}
              className={styles.fieldComponentContainer}
-             data-sel-content-editor-multiple-generic-field={droppedId}
+             data-sel-content-editor-multiple-generic-field={name}
              data-sel-content-editor-field-readonly={field.readOnly}
         >
-            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={droppedId}/>
+            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {/* Empty div needed to avoid an extra empty visible selector div */}
             {(field.readOnly || !component) ? (
                 <div className={styles.draggableCard}>

@@ -33,7 +33,8 @@ describe('Manual ordering component', () => {
 
     it('should display children', () => {
         const cmp = buildFieldCmp();
-        expect(cmp.find('DraggableReference').length).toBe(props.field.value.length);
+        // +1 for the bottom droppable div
+        expect(cmp.find('DraggableReference').length).toBe(props.field.value.length + 1);
     });
 
     let buildFieldCmp = () => {

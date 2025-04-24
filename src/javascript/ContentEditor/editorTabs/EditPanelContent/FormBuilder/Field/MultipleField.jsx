@@ -34,7 +34,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
     };
 
     const onValueReorder = (droppedId, index) => {
-        setFieldValue(field.name, onListReorder(values[field.name], droppedId, index));
+        setFieldValue(field.name, onListReorder(values[field.name], droppedId, index, field.name));
         setFieldTouched(field.name, true, false);
     };
 
@@ -44,11 +44,13 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
                 {values[field.name] && values[field.name].length > 0 && (
                     values[field.name].map((value, index) => {
                         const FieldComponent = inputContext.selectorType.cmp;
+                        const name = `${field.name}[${index}]`;
 
                         return (
                             // eslint-disable-next-line react/no-array-index-key
                             <OrderableValue key={`${field.name}_${index}`}
                                             component={<FastField component={FieldComponent}
+                                                                  id={name}
                                                                   field={field}
                                                                   value={value}
                                                                   values={values}

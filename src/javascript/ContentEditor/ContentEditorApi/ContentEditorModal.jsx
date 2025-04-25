@@ -115,7 +115,7 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
             needRefresh.current = false;
             updateEditorConfig({
                 uuid: newNode.uuid,
-                lang: language ? language : mergedConfig.lang,
+                lang: language || mergedConfig.lang,
                 mode: Constants.routes.baseEditRoute
             });
         } else if (!mergedConfig.isFullscreen) {

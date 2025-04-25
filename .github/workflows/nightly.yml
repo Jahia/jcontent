@@ -35,7 +35,7 @@ jobs:
           module_id: jcontent
           incident_service: jcontent-${{ matrix.config_file }}
           jahia_image: ${{ matrix.jahia_image }}
-          ahia_cluster_enabled: false
+          jahia_cluster_enabled: false
           testrail_project: jContent Module
           tests_manifest: provisioning-manifest-snapshot.yml
           tests_profile: ${{ matrix.config_file }}

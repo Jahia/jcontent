@@ -1,7 +1,6 @@
 .fieldComponentContainer {
     display: flex;
 
-    // v in picker & orderablevalue but not in multiplefields
     flex-direction: column;
     align-items: center;
     margin-bottom: var(--spacing-nano);
@@ -34,7 +33,6 @@
     width: 100%;
     margin-bottom: var(--spacing-nano);
 
-    // v only in orderableValue
     :global(.moonstone-checkbox) {
         margin-left: 0 !important;
     }
@@ -42,8 +40,6 @@
 
 //DropableSpace
 .dropable {
-    display: flex;
-    justify-content: center;
     align-items: center;
     width: 100%;
     padding: 8px 0;

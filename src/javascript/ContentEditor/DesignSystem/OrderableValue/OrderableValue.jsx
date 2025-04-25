@@ -29,28 +29,22 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
              data-sel-content-editor-field-readonly={field.readOnly}
         >
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
-            {/* Empty div needed to avoid an extra empty visible selector div */}
-            {(field.readOnly || !component) ? (
+            {component &&
                 <div className={styles.draggableCard}>
-                    {component}
-                </div>
-                ) : (
-                    <div className={styles.draggableCard}>
-                        {!isDragging &&
-                            <>
-                                <div ref={drag} className={styles.draggableIcon}>
-                                    <HandleDrag size="big"/>
-                                </div>
-                                {component}
-                            </>}
-                        {!isDragging && <Button variant="ghost"
-                                                data-sel-action={`removeField_${index}`}
-                                                aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
-                                                icon={<Close/>}
-                                                onClick={() => onFieldRemove(index)}
-                        />}
-                    </div>
-                )}
+                    {!isDragging &&
+                        <>
+                            <div ref={drag} className={styles.draggableIcon}>
+                                <HandleDrag size="big"/>
+                            </div>
+                            {component}
+                        </>}
+                    {!isDragging && <Button variant="ghost"
+                                            data-sel-action={`removeField_${index}`}
+                                            aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
+                                            icon={<Close/>}
+                                            onClick={() => onFieldRemove(index)}
+                    />}
+                </div>}
         </div>
     );
 };

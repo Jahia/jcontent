@@ -2,28 +2,27 @@
     display: flex;
 
     flex-direction: column;
-    align-items: center;
-    margin-bottom: var(--spacing-nano);
 }
 
 .addButton {
     margin: var(--spacing-small) 0;
-
-    text-transform: uppercase;
 }
 
 .referenceDropGhostHidden {
-    width: 100%;
-    height: 0;
-
-    background-color: var(--color-accent);
+    height: 8px;
 
     transition: all 0.3s ease;
 }
 
 .referenceDropGhost {
     height: 72px;
-    margin: 8px 0;
+    margin: var(--spacing-small) 0;
+
+    background-color: var(--color-accent_light_plain20);
+
+    &:only-child {
+        margin-top: var(--spacing-small);
+    }
 }
 
 .draggableCard {
@@ -36,13 +35,6 @@
     :global(.moonstone-checkbox) {
         margin-left: 0 !important;
     }
-}
-
-//DropableSpace
-.dropable {
-    align-items: center;
-    width: 100%;
-    padding: 8px 0;
 }
 
 //OrderableValue

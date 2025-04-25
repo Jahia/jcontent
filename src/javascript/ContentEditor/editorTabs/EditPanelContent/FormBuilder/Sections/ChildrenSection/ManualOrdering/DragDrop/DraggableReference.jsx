@@ -31,34 +31,31 @@ export const DraggableReference = ({child, index, onReorder, fieldName}) => {
         })
     });
 
-    if (typeof child === 'undefined' || child === null) {
-        return null;
-    }
-
     return (
-        <div ref={drop} className={styles.dropable}>
-            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`}/>
-            <div ref={drag}>
-                {!isDragging &&
-                <ReferenceCard
-                isDraggable
-                id={child.name}
-                emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
-                emptyIcon={<File/>}
-                labelledBy={`${child.name}-label`}
-                fieldData={{
-                    name: child.displayName,
-                    info: child.primaryNodeType.displayName,
-                    url: encodeJCRPath(`${child.primaryNodeType.icon}.png`)
-                }}
-                />}
-            </div>
+        <div ref={drop} className={styles.fieldComponentContainer} data-test="draggableReference">
+            <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
+            {child &&
+                <div ref={drag}>
+                    {!isDragging &&
+                        <ReferenceCard
+                            isDraggable
+                            id={child.name}
+                            emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
+                            emptyIcon={<File/>}
+                            labelledBy={`${child.name}-label`}
+                            fieldData={{
+                                name: child.displayName,
+                                info: child.primaryNodeType.displayName,
+                                url: encodeJCRPath(`${child.primaryNodeType.icon}.png`)
+                            }}
+                        />}
+                </div>}
         </div>
     );
 };
 
 DraggableReference.propTypes = {
-    child: PropTypes.object.isRequired,
+    child: PropTypes.object,
     fieldName: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
     onReorder: PropTypes.func.isRequired

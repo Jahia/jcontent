@@ -13,10 +13,10 @@ export function onListReorder(list, droppedId, index, fieldName) {
     let droppedChild = null;
     let droppedItemIndex = -1;
 
-    list.forEach((item, index) => {
-        if (droppedItemIndex === -1 && droppedId === fieldName[index]) {
+    list.forEach((item, i) => {
+        if (droppedItemIndex === -1 && droppedId === `${fieldName}[${i}]`) {
             droppedChild = item;
-            droppedItemIndex = index;
+            droppedItemIndex = i;
         } else {
             childrenWithoutDropped.push(item);
         }

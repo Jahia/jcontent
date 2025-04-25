@@ -31,6 +31,10 @@ export const DraggableReference = ({child, index, onReorder, fieldName}) => {
         })
     });
 
+    if (typeof child === 'undefined' || child === null) {
+        return null;
+    }
+
     return (
         <div ref={drop} className={styles.dropable}>
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`}/>

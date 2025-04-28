@@ -1,11 +1,11 @@
 /**
- * The function used to reorder items in the list after an item has been drag and dropped
+ * The function used to reorder items in the field after an item has been drag and dropped
  *
  *
- * @param {array} list    array of all items in the list
+ * @param {array} list    array of all items in the field
  * @param {string} droppedId    dragged and dropped id
  * @param {number} index    index in the array
- * @param {string} fieldName    dragged and dropped id
+ * @param {string} fieldName    name of dropped item field
  * @returns {array} newList    array object contains items in new order
  */
 export function onListReorder(list, droppedId, index, fieldName) {

@@ -1,5 +1,21 @@
 version: '3.6'
 services:
+    mariadb:
+        image: library/mariadb:10-focal
+        container_name: mariadb
+        deploy:
+            resources:
+                limits:
+                    memory: 1gb
+        networks:
+            - stack
+        command: --max_allowed_packet=1073741824 --transaction-isolation=READ-UNCOMMITTED --innodb-lock-wait-timeout=10
+        environment:
+            MYSQL_ROOT_PASSWORD: root1234
+            MYSQL_DATABASE: jahia
+            MYSQL_USER: jahia
+            MYSQL_PASSWORD: jahia
+            TZ: ${TIMEZONE}
     jahia:
         image: '${JAHIA_IMAGE}'
         container_name: jahia
@@ -19,6 +35,12 @@ services:
             NEXUS_PASSWORD: ${NEXUS_PASSWORD}
             TZ: ${TIMEZONE}
             JPDA: 'true'
+            jahia_cfg_karaf_remoteShellHost: 0.0.0.0
+            DB_VENDOR: mariadb
+            DB_HOST: mariadb
+            DB_NAME: jahia
+            DB_USER: jahia
+            DB_PASS: jahia
         ports:
             - '8000:8000'
             - '8080:8080'
@@ -27,6 +49,8 @@ services:
             - jahia:127.0.0.1
         networks:
             - stack
+        depends_on:
+            - mariadb
     # Cypress container
     cypress:
         profiles: ["test"]

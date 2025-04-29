@@ -6,7 +6,7 @@ services:
         deploy:
             resources:
                 limits:
-                    memory: 2gb
+                    memory: 4gb
         networks:
             - stack
         command: --max_allowed_packet=1073741824 --transaction-isolation=READ-UNCOMMITTED --innodb-lock-wait-timeout=10
@@ -24,7 +24,7 @@ services:
         deploy:
             resources:
                 limits:
-                    memory: 6gb
+                    memory: 8gb
         environment:
             JAHIA_LICENSE: ${JAHIA_LICENSE}
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}

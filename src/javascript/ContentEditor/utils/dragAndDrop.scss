@@ -9,7 +9,7 @@
 }
 
 .referenceDropGhostHidden {
-    height: 8px;
+    height: var(--spacing-small);
 
     transition: all 0.3s ease;
 }

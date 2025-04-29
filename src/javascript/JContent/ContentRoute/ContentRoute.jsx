@@ -31,6 +31,7 @@ const useRenderCheck = ({path, language, template, node, skip}) => {
     return {renderCheck, dialogProps};
 };
 
+// eslint-disable-next-line complexity
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
     const {path, mode, tableView, viewMode, template, language, params} = useSelector(state => ({
@@ -82,10 +83,11 @@ export const ContentRoute = () => {
                 const jahiatype = element.getAttribute('jahiatype');
                 const modulePath = element.getAttribute('path');
                 const elemType = element.getAttribute('type');
-                const nodeTypes = element.getAttribute('nodetypes');
+                const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
+                const limit = element.getAttribute('listlimit') ?? undefined;
 
                 if (jahiatype === 'module' && modulePath !== '*' && modulePath !== path && (elemType === 'area' || elemType === 'absoluteArea')) {
-                    JahiaAreasUtil.addArea(modulePath, {elemType, nodeTypes});
+                    JahiaAreasUtil.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
                 }
             }));
         }).catch(e => {

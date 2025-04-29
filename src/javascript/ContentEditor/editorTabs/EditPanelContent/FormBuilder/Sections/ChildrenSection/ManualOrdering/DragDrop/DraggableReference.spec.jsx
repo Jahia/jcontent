@@ -3,11 +3,13 @@ import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 
 import {DraggableReference} from './DraggableReference';
-import {useDrag} from 'react-dnd';
+import {useDrag, useDrop} from 'react-dnd';
 
 jest.mock('react-dnd', () => {
     return {
-        useDrag: jest.fn()
+        ...jest.requireActual('react-dnd'),
+        useDrop: jest.fn(() => ['drop', 'drop']),
+        useDrag: jest.fn(() => ['drop', 'drop'])
     };
 });
 
@@ -55,5 +57,24 @@ describe('DraggableReference component', () => {
         );
 
         expect(cmp.find('ReferenceCard').props().fieldData.name).toBe(child.displayName);
+    });
+
+    it('should call onReorder when drop', () => {
+        const item = {name: 'subNode1'};
+        useDrag.mockImplementation(() => ([{isDragging: true}]));
+        useDrop.mockImplementation(obj => {
+            obj.drop(item);
+            return [jest.fn(), {}];
+        });
+
+        const handleReorder = jest.fn();
+
+        shallowWithTheme(
+            <DraggableReference child={child} index={42} onReorder={handleReorder}/>,
+            {},
+            dsGenericTheme
+        );
+
+        expect(handleReorder).toHaveBeenCalledWith(item.name, 42);
     });
 });

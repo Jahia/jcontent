@@ -22,4 +22,8 @@ export class PageBuilderModuleCreateButton extends BaseComponent {
     assertHasNoButtonForType(type: string): void {
         this.get().find('.moonstone-button').contains(type).should('not.exist');
     }
+
+    assertHasNoButtonForRole(role: string): void {
+        this.get().find(`.moonstone-button[data-sel-role="${role}"]`).should('not.exist');
+    }
 }

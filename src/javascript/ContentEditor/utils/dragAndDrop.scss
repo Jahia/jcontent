@@ -1,0 +1,47 @@
+.fieldComponentContainer {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.addButton {
+    margin: var(--spacing-small) 0;
+}
+
+.referenceDropGhostHidden {
+    height: 8px;
+
+    transition: all 0.3s ease;
+}
+
+.referenceDropGhost {
+    height: 72px;
+    margin: var(--spacing-small) 0;
+
+    background-color: var(--color-accent_light_plain20);
+
+    &:only-child {
+        margin-top: var(--spacing-small);
+    }
+}
+
+.draggableCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-bottom: var(--spacing-nano);
+
+    &:hover * > * {
+        display: flex;
+    }
+
+    :global(.moonstone-checkbox) {
+        margin-left: 0 !important;
+    }
+}
+
+//OrderableValue
+.draggableIcon {
+    cursor: grab;
+}

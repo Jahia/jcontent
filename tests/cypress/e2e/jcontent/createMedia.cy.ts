@@ -78,7 +78,7 @@ describe('Create media tests', () => {
             .createFile('testdnd.txt')
             .dndUpload('div[data-sel-role-card=bootstrap]')
             .download()
-            // TODO Find way to trigger hover for 3 dots menu
+            // Find way to trigger hover for 3 dots menu
             // .rename('testdnd-rename.txt')
             .markForDeletion()
             .deletePermanently();
@@ -92,7 +92,7 @@ describe('Create media tests', () => {
             .createFile('testdnd.txt')
             .dndUpload('div[data-sel-role-card=bootstrap]')
             .download()
-            // TODO Find way to trigger hover for 3 dots menu
+            // Find way to trigger hover for 3 dots menu
             // .rename('testdnd-éàöäè¨ç.txt')
             .markForDeletion()
             .deletePermanently();
@@ -106,7 +106,7 @@ describe('Create media tests', () => {
             .createFile('这是一个测验.txt')
             .dndUpload('div[data-sel-role-card=bootstrap]')
             .download()
-            // TODO Find way to trigger hover for 3 dots menu
+            // Find way to trigger hover for 3 dots menu
             // .rename('testdnd-rename.txt')
             .markForDeletion()
             .deletePermanently();

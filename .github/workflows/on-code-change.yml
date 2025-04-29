@@ -47,7 +47,7 @@ jobs:
     needs: update-signature
     runs-on: ubuntu-latest
     env:
-      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     container:
       image: jahia/cimg-mvn-cache:ga_cimg_openjdk_11.0.20-node
       credentials:
@@ -65,12 +65,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: jahia/jahia-modules-action/sonar-analysis@v2
         with:
           primary_release_branch: master
+          github_slug: jahia/jcontent
           github_pr_id: ${{github.event.number}}
           sonar_url: ${{ secrets.SONAR_URL }}
           sonar_token: ${{ secrets.SONAR_TOKEN }}
@@ -107,7 +108,6 @@ jobs:
           testrail_project: jContent Module
           tests_manifest: provisioning-manifest-build.yml
           jahia_image: jahia/jahia-ee-dev:8-SNAPSHOT
-          should_use_build_artifacts: true
           should_skip_testrail: true
           tests_profile: ${{ matrix.config_file }}
           github_artifact_name: jcontent-standalone-${{ matrix.config_file }}-${{ github.run_number }}
@@ -130,7 +130,7 @@ jobs:
           zencrepes_secret: ${{ secrets.ZENCREPES_WEBHOOK_SECRET }}
           timeout_minutes: 90
       - name: Test Report
-        uses: phoenix-actions/test-reporting@v12
+        uses: phoenix-actions/test-reporting@v15
         if: success() || failure()
         with:
           name: Tests Report ${{ matrix.config_file }}

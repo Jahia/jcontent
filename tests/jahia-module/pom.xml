@@ -48,9 +48,13 @@
     <groupId>org.jahia.test</groupId>
     <artifactId>jcontent-test-module-root</artifactId>
     <name>jContent Test Module Root</name>
-    <version>3.3.0-SNAPSHOT</version>
+    <version>3.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>This is the custom module (text-field-initializer) for content-editor cypress tests.</description>
+
+    <properties>
+        <jahia-depends>default</jahia-depends>
+    </properties>
 
     <repositories>
         <repository>
@@ -66,18 +70,12 @@
             </snapshots>
         </repository>
     </repositories>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Jahia-Depends>default</Jahia-Depends>
-                    </instructions>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
-import styles from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue.scss';
+import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {Button, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -24,33 +24,29 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
     return (
         <div key={name}
              ref={field.readOnly ? null : drop}
+             id={name}
              className={styles.fieldComponentContainer}
              data-sel-content-editor-multiple-generic-field={name}
              data-sel-content-editor-field-readonly={field.readOnly}
         >
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
-            {(field.readOnly || !component) ? (
+            {component &&
                 <div className={styles.draggableCard}>
-                    {component}
-                </div>
-                ) : (
-                    <div className={styles.draggableCard}>
-                        {!isDragging &&
-                            <>
-                                {!isReferenceCard &&
-                                <div ref={drag} className={styles.draggableIcon}>
-                                    <HandleDrag size="big"/>
-                                </div>}
-                                {component}
-                            </>}
-                        {!isDragging && <Button variant="ghost"
-                                                data-sel-action={`removeField_${index}`}
-                                                aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
-                                                icon={<Close/>}
-                                                onClick={() => onFieldRemove(index)}
-                        />}
-                    </div>
-                )}
+                    {!isDragging &&
+                        <>
+                            {isReferenceCard &&
+                            <div ref={drag} className={styles.draggableIcon}>
+                                <HandleDrag size="big"/>
+                            </div>}
+                            {component}
+                        </>}
+                    {!isDragging && <Button variant="ghost"
+                                            data-sel-action={`removeField_${index}`}
+                                            aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
+                                            icon={<Close/>}
+                                            onClick={() => onFieldRemove(index)}
+                    />}
+                </div>}
         </div>
     );
 };

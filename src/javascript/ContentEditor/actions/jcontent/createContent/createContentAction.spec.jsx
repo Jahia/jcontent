@@ -16,8 +16,10 @@ jest.mock('react-redux', () => {
     return {useSelector: jest.fn()};
 });
 jest.mock('@jahia/data-helper', () => {
-    return {useNodeChecks: jest.fn(),
-        useNodeInfo: jest.fn()};
+    return {
+        useNodeChecks: jest.fn(),
+        useNodeInfo: jest.fn()
+    };
 });
 jest.mock('~/ContentEditor/ContentTypeSelectorModal', () => jest.fn());
 jest.mock('./createContent.utils', () => {
@@ -26,6 +28,13 @@ jest.mock('./createContent.utils', () => {
         flattenNodeTypes: jest.fn(),
         transformNodeTypesToActions: jest.fn(),
         childrenLimitReachedOrExceeded: jest.fn()
+    };
+});
+jest.mock('~/JContent/JContent.utils', () => {
+    return {
+        JahiaAreasUtil: {
+            getArea: () => {}
+        }
     };
 });
 

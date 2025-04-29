@@ -18,7 +18,7 @@
 import './commands';
 import addContext from 'mochawesome/addContext';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('cypress-terminal-report/src/installLogsCollector')({
     xhr: {
         printHeaderData: true,
@@ -27,7 +27,8 @@ require('cypress-terminal-report/src/installLogsCollector')({
     enableExtendedCollector: true,
     collectTypes: ['cons:log', 'cons:info', 'cons:warn', 'cons:error', 'cy:log', 'cy:xhr', 'cy:request', 'cy:intercept', 'cy:command']
 });
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('@jahia/cypress/dist/support/registerSupport').registerSupport();
 
 Cypress.on('uncaught:exception', () => {

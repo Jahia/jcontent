@@ -103,11 +103,24 @@ describe('Page builder - list limit restrictions tests', () => {
                 .getButton('New content');
         });
 
-        it('should not show create button when template limit is reached', () => {
+        it('should not show create button or paste buttons when template limit is reached', () => {
             cy.apollo({mutation: addContentGql(limitSiteKey, limitPage)});
             const jcontent = JContent.visit(limitSiteKey, 'en', `pages/home/${limitPage}`);
             const pageBuilder = new JContentPageBuilder(jcontent);
+
+            cy.log('it should not show create buttons');
             pageBuilder.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`).assertHasNoCreateButtons();
+
+            cy.log('it should not show paste buttons');
+            pageBuilder.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area/abc1`, false)
+                .contextMenu(false, false)
+                .selectByRole('copy');
+            cy.get('#message-id').contains('in the clipboard');
+            const restrictedArea = pageBuilder.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`, false);
+            const buttons = restrictedArea.getCreateButtons();
+            buttons.get().scrollIntoView();
+            buttons.assertHasNoButtonForRole('paste');
+            buttons.assertHasNoButtonForRole('pasteReference');
         });
     });
 });

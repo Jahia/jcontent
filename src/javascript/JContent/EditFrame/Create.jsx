@@ -59,14 +59,7 @@ const useElemAttributes = ({element, parent}) => {
         nodeTypes = element.getAttribute('nodetypes').split(' ');
     }
 
-    // Extract limit defined on template set
-    let templateLimit = null;
-    if (parent.getAttribute('listLimit') &&
-        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
-        templateLimit = Number(parent.getAttribute('listLimit'));
-    }
-
-    return {nodeName, nodePath, nodeTypes, templateLimit};
+    return {nodeName, nodePath, nodeTypes};
 };
 
 const useReorderNodes = ({parentPath}) => {
@@ -114,7 +107,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
-    const {nodeName, nodePath, nodeTypes, templateLimit} = useElemAttributes({element, parent, isInsertionPoint});
+    const {nodeName, nodePath, nodeTypes} = useElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: false,
         paste: false,
@@ -222,7 +215,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                                name={nodePath}
                                isDisabled={isDisabled}
                                nodeTypes={nodeTypes}
-                               templateLimit={templateLimit}
                                loading={() => false}
                                render={btnRenderer}
                                onVisibilityChanged={onCreateVisibilityChanged}

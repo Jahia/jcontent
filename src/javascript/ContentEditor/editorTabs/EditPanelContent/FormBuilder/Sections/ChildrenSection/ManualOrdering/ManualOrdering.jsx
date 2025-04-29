@@ -1,6 +1,7 @@
 import {FastField} from 'formik';
 import React, {Fragment} from 'react';
-import {DraggableReference, DropableSpace} from './DragDrop';
+import {DraggableReference} from './DragDrop';
+import {onListReorder} from '~/ContentEditor/utils';
 
 export const ManualOrdering = () => {
     return (
@@ -11,52 +12,30 @@ export const ManualOrdering = () => {
                     return null;
                 }
 
-                const handleReorder = (droppedName, index) => {
-                    let childrenWithoutDropped = [];
-                    let droppedChild = null;
-                    let droppedItemIndex = -1;
-                    field.value.forEach((item, index) => {
-                        if (droppedItemIndex === -1 && item.name === droppedName) {
-                            droppedChild = item;
-                            droppedItemIndex = index;
-                        } else {
-                            childrenWithoutDropped.push(item);
-                        }
-                    });
-
-                    if (droppedChild !== null && droppedItemIndex >= 0) {
-                        // +1 for droppedItemIndex here as index parameter from handleReOrder is starting from 1 instead of 0
-                        const spliceIndex = ((droppedItemIndex + 1) < index) ? index - 1 : index;
-                        setFieldValue(field.name, [
-                            ...childrenWithoutDropped.slice(0, spliceIndex),
-                            droppedChild,
-                            ...childrenWithoutDropped.slice(spliceIndex, childrenWithoutDropped.length)
-                        ]);
-                        setFieldTouched(field.name, true, false);
-                    }
+                const handleReorder = (droppedId, index) => {
+                    setFieldValue(field.name, onListReorder(field.value, droppedId, index, field.name));
+                    setFieldTouched(field.name, true, false);
                 };
 
                 return (
                     <>
-                        <DropableSpace
-                            childUp={null}
-                            childDown={field.value[0]}
-                            index={0}
-                            onReorder={handleReorder}
-                        />
                         {field.value.map((child, i) => {
                             return (
                                 <Fragment key={`${child.name}-grid`}>
-                                    <DraggableReference child={child}/>
-                                    <DropableSpace
-                                        childUp={child}
-                                        childDown={field.value[i + 1]}
-                                        index={i + 1}
-                                        onReorder={handleReorder}
+                                    <DraggableReference child={child}
+                                                        fieldName={field.name}
+                                                        index={i}
+                                                        onReorder={handleReorder}
                                     />
                                 </Fragment>
                             );
                         })}
+                        {field.value && field.value.length > 0 && (
+                        <DraggableReference
+                                        fieldName={field.name}
+                                        index={field.value.length}
+                                        onReorder={handleReorder}/>
+                                    )}
                     </>
                 );
             }}

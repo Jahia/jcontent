@@ -1,3 +1,4 @@
+export * from './dragAndDrop.utils';
 export * from './encodeJCRPath';
 export * from './extractRangeConstraints';
 export * from './fields.utils';

@@ -6,9 +6,9 @@ import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {mergeDeep, set, toArray} from './Picker.utils';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '~/ContentEditor/utils';
+import {getButtonRenderer, onListReorder} from '~/ContentEditor/utils';
+import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import styles from './Picker.scss';
 import {Button} from '@jahia/moonstone';
 import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
@@ -81,6 +81,7 @@ const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, 
                         onFieldRemove={onFieldRemove}/>
                 );
             })}
+            {/* Needed for droppable div at the bottom */}
             {fieldData && fieldData.length > 0 && (
                 <OrderableValue field={field}
                                 index={fieldData.length}
@@ -170,26 +171,9 @@ export const Picker = ({
         onItemSelection(updatedValues);
     };
 
-    const onValueReorder = (droppedName, index) => {
-        let childrenWithoutDropped = [];
-        let droppedChild = null;
-        let droppedItemIndex = -1;
-        value.forEach((item, index) => {
-            if (droppedItemIndex === -1 && droppedName === `${field.name}[${index}]`) {
-                droppedChild = item;
-                droppedItemIndex = index;
-            } else {
-                childrenWithoutDropped.push(item);
-            }
-        });
-
-        if (droppedChild !== null && droppedItemIndex >= 0) {
-            // +1 for droppedItemIndex here as index parameter from handleReOrder is starting from 1 instead of 0
-            const spliceIndex = ((droppedItemIndex + 1) < index) ? index - 1 : index;
-            const newValue = [...childrenWithoutDropped.slice(0, spliceIndex), droppedChild, ...childrenWithoutDropped.slice(spliceIndex, childrenWithoutDropped.length)];
-            setFieldValue(field.name, newValue);
-            setFieldTouched(field.name, true, false);
-        }
+    const onValueReorder = (droppedId, index) => {
+        setFieldValue(field.name, onListReorder(value, droppedId, index, field.name));
+        setFieldTouched(field.name, true, false);
     };
 
     return (

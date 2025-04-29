@@ -6,7 +6,7 @@ import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {mergeDeep, set, toArray} from './Picker.utils';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer, onListReorder} from '~/ContentEditor/utils';
+import {getButtonRenderer, onListReorder, onDirectionalReorder} from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
@@ -185,40 +185,9 @@ export const Picker = ({
         onItemSelection(updatedValues);
     };
 
-    const onValueMove = (droppedName, direction) => {
-        let childrenWithoutDropped = [];
-        let droppedChild = null;
-        let droppedItemIndex = -1;
-        value.forEach((item, index) => {
-            if (droppedItemIndex === -1 && droppedName === `${field.name}[${index}]`) {
-                droppedChild = item;
-                droppedItemIndex = index;
-            } else {
-                childrenWithoutDropped.push(item);
-            }
-        });
-
-        if (droppedChild !== null && droppedItemIndex >= 0) {
-            let newIndex = droppedItemIndex;
-
-            if (direction === 'up' && droppedItemIndex > 0) {
-                newIndex = droppedItemIndex - 1;
-            } else if (direction === 'down' && droppedItemIndex < value.length - 1) {
-                newIndex = droppedItemIndex + 1;
-            } else if (direction === 'first') {
-                newIndex = 0;
-            } else if (direction === 'last') {
-                newIndex = value.length - 1;
-            }
-
-            if (newIndex !== droppedItemIndex) {
-                const newValue = [...childrenWithoutDropped];
-                newValue.splice(newIndex, 0, droppedChild);
-
-                setFieldValue(field.name, newValue);
-                setFieldTouched(field.name, true, false);
-            }
-        }
+    const onValueMove = (droppedId, direction) => {
+        setFieldValue(field.name, onDirectionalReorder(value, droppedId, direction, field.name));
+        setFieldTouched(field.name, true, false);
     };
 
     const onValueReorder = (droppedId, index) => {

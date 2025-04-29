@@ -25,12 +25,18 @@
     }
 }
 
+.referenceCardActions {
+    display: none;
+}
+
 .draggableCard {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
     margin-bottom: var(--spacing-nano);
+
+    cursor: grab;
 
     &:hover * > * {
         display: flex;

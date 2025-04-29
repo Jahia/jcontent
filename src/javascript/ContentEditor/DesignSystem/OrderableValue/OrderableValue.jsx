@@ -31,10 +31,10 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         >
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {component &&
-                <div className={styles.draggableCard}>
+                <div className={styles.draggableCard} {...(isReferenceCard && {ref: drag})}>
                     {!isDragging &&
                         <>
-                            {isReferenceCard &&
+                            {!isReferenceCard &&
                             <div ref={drag} className={styles.draggableIcon}>
                                 <HandleDrag size="big"/>
                             </div>}

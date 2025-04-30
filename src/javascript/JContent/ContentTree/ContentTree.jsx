@@ -113,6 +113,7 @@ ItemComponent.propTypes = {
 
 const TREE_ITEM_SIZE = 32;
 
+// eslint-disable-next-line complexity
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction, pageTitlePrefix}) => { // NOSONAR
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');

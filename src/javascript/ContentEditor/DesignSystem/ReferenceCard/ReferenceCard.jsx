@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {CardSelector, Chip, EmptyCardSelector} from '@jahia/moonstone';
-import './ReferenceCard.scss';
 import clsx from 'clsx';
 
 const ReferenceCardCmp = ({
@@ -14,7 +13,6 @@ const ReferenceCardCmp = ({
     fieldData,
     labelledBy,
     onClick,
-    isDraggable,
     cardAction,
     ...props
 }) => {
@@ -23,7 +21,7 @@ const ReferenceCardCmp = ({
         return (
             <CardSelector
                 id={id}
-                className={clsx(isDraggable && 'draggable', className)}
+                className={clsx(className)}
                 thumbnailType="icon"
                 thumbnailURL={fieldData.url && fieldData.url}
                 displayName={fieldData.name && fieldData.name}
@@ -60,7 +58,6 @@ const ReferenceCardCmp = ({
 };
 
 ReferenceCardCmp.defaultProps = {
-    isDraggable: false,
     isReadOnly: false,
     fieldData: null,
     emptyLabel: '',
@@ -82,7 +79,6 @@ ReferenceCardCmp.propTypes = {
         info: PropTypes.string.isRequired
     }),
     cardAction: PropTypes.element,
-    isDraggable: PropTypes.bool,
     emptyLabel: PropTypes.string,
     emptyIcon: PropTypes.element,
     labelledBy: PropTypes.string

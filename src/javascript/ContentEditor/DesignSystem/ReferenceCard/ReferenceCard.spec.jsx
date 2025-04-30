@@ -54,8 +54,7 @@ describe('reference card filled', () => {
                 systemname: 'system name',
                 info: 'info part'
             },
-            id: 'yoloID',
-            isDraggable: false
+            id: 'yoloID'
         };
 
         window.contextJsParameters = {

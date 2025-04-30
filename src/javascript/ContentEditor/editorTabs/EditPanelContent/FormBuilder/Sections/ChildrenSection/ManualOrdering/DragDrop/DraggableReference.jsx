@@ -38,7 +38,6 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                 <div ref={drag} className={styles.draggableCard}>
                     {!isDragging &&
                         <ReferenceCard
-                            isDraggable
                             id={child.name}
                             emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                             emptyIcon={<File/>}
@@ -46,17 +45,17 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                             cardAction={fieldLength > 1 &&
                             <div className={styles.referenceCardActions}>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(`${fieldName}[${index}]`, 'first')}/>
-                                    <Button isDisabled={index === fieldLength - 1} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(`${fieldName}[${index}]`, 'last')}/>
+                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')} onClick={() => onValueMove(`${fieldName}[${index}]`, 'first')}/>
+                                    <Button isDisabled={index === fieldLength - 1} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')} onClick={() => onValueMove(`${fieldName}[${index}]`, 'last')}/>
                                 </div>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(`${fieldName}[${index}]`, 'up')}/>
-                                    <Button isDisabled={index === fieldLength - 1} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} onClick={() => onValueMove(`${fieldName}[${index}]`, 'down')}/>
+                                    <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveUp')} onClick={() => onValueMove(`${fieldName}[${index}]`, 'up')}/>
+                                    <Button isDisabled={index === fieldLength - 1} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')} onClick={() => onValueMove(`${fieldName}[${index}]`, 'down')}/>
                                 </div>
                             </div>}
                             fieldData={{
                                 name: child.displayName,
-                                info: child.primaryNodeType.displayName,
+                                type: child.primaryNodeType.displayName,
                                 url: encodeJCRPath(`${child.primaryNodeType.icon}.png`)
                             }}
                         />}

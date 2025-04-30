@@ -74,7 +74,6 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                         key={`${field.name}_${fieldVal.name}`}
                         isReferenceCard
                         component={<ReferenceCard
-                            isDraggable
                             isReadOnly={field.readOnly}
                             labelledBy={`${fieldVal.name}-label`}
                             fieldData={fieldVal}

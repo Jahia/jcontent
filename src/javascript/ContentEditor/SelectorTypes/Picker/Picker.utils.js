@@ -1,6 +1,8 @@
 import React from 'react';
 import {SiteWeb} from '@jahia/moonstone';
 import {NodeIcon} from '~/utils/NodeIcon';
+import {mergeDeep} from '~/JContent/JContent.utils';
+export {mergeDeep};
 
 export const getPathWithoutFile = fullPath => {
     return fullPath && fullPath.split('/').slice(0, -1).join('/');
@@ -100,34 +102,6 @@ export const set = (target, path, value) => {
     } else {
         current[key] = value;
     }
-};
-
-export const isObject = item => {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-};
-
-export const mergeDeep = (target, ...sources) => {
-    if (!sources.length) {
-        return target;
-    }
-
-    const source = sources.shift();
-
-    if (isObject(target) && isObject(source)) {
-        for (const key in source) {
-            if (isObject(source[key])) {
-                if (!target[key]) {
-                    Object.assign(target, {[key]: {}});
-                }
-
-                mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(target, {[key]: source[key]});
-            }
-        }
-    }
-
-    return mergeDeep(target, ...sources);
 };
 
 export const getBaseSearchContextData = ({t, currentSite, accordion, node, currentPath}) => (

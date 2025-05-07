@@ -805,6 +805,10 @@
         "listAndOrdering": {
           "title": "Liste de contenu & ordre",
           "ordering": "Ordre",
+          "btnMoveFirst": "Déplacer en première position",
+          "btnMoveLast": "Déplacer en dernière position",
+          "btnMoveUp": "Remonter d'une place",
+          "btnMoveDown": "Descendre d'une place",
           "automatic": "Classement automatique",
           "orderBy": "Trier par",
           "description": "Activez le classement automatique pour organiser vos sous-contenus en utilisant au maximum de trois critères, ou réorganisez vos sous-contenus manuellement, par glisser-déposer."

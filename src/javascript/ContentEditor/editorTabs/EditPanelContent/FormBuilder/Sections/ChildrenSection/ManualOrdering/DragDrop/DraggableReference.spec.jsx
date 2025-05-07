@@ -56,7 +56,7 @@ describe('DraggableReference component', () => {
             dsGenericTheme
         );
 
-        expect(cmp.find('ReferenceCard').props().fieldData.name).toBe(child.displayName);
+        expect(cmp.find('ReferenceCard').props().fieldData.displayName).toBe(child.displayName);
     });
 
     it('should call onReorder when drop', () => {

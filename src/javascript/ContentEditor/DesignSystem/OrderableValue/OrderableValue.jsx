@@ -5,7 +5,7 @@ import {Button, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component}) => {
+export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard}) => {
     const {t} = useTranslation('jcontent');
     const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
@@ -20,6 +20,7 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
             isDragging: monitor.isDragging()
         })
     });
+
     return (
         <div key={name}
              ref={field.readOnly ? null : drop}
@@ -30,12 +31,13 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         >
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {component &&
-                <div className={styles.draggableCard}>
+                <div className={styles.draggableCard} {...(isReferenceCard && {ref: drag})}>
                     {!isDragging &&
                         <>
+                            {!isReferenceCard &&
                             <div ref={drag} className={styles.draggableIcon}>
                                 <HandleDrag size="big"/>
-                            </div>
+                            </div>}
                             {component}
                         </>}
                     {!isDragging && <Button variant="ghost"
@@ -54,5 +56,6 @@ OrderableValue.propTypes = {
     onFieldRemove: PropTypes.func,
     onValueReorder: PropTypes.func,
     index: PropTypes.number.isRequired,
-    component: PropTypes.object
+    component: PropTypes.object,
+    isReferenceCard: PropTypes.bool
 };

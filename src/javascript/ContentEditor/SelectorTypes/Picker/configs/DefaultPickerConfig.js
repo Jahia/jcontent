@@ -26,8 +26,9 @@ const usePickerInputData = uuids => {
         uuid: contentData.uuid,
         path: contentData.path,
         url: encodeJCRPath(`${contentData.primaryNodeType.icon}.png`),
-        name: contentData.displayName,
-        info: contentData.primaryNodeType.displayName
+        name: contentData.name,
+        displayName: contentData.displayName,
+        type: contentData.primaryNodeType.displayName
     }));
 
     return {fieldData, error, loading};

@@ -1,0 +1,11 @@
+.referenceCard[disabled="false"] {
+    cursor: pointer;
+
+    &[draggable="true"] {
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}

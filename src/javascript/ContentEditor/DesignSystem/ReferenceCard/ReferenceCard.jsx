@@ -1,7 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {CardSelector, Chip, EmptyCardSelector} from '@jahia/moonstone';
+import styles from './ReferenceCard.scss';
 import clsx from 'clsx';
+
+const getThumbnailType = type => {
+    if (typeof type === 'undefined') {
+        return null;
+    }
+
+    if (type.startsWith('image')) {
+        return 'preview';
+    }
+
+    return 'icon';
+};
 
 const ReferenceCardCmp = ({
     id,
@@ -11,7 +24,6 @@ const ReferenceCardCmp = ({
     emptyLabel,
     emptyIcon,
     fieldData,
-    labelledBy,
     onClick,
     cardAction,
     ...props
@@ -21,15 +33,14 @@ const ReferenceCardCmp = ({
         return (
             <CardSelector
                 id={id}
-                className={clsx(className)}
-                thumbnailType="icon"
-                thumbnailURL={fieldData.url && fieldData.url}
-                displayName={fieldData.name && fieldData.name}
-                chips={fieldData.type && [<Chip key={fieldData.name && fieldData.name} color="accent" label={fieldData.type}/>]}
-                systemName={fieldData.systemname && fieldData.systemname}
-                information={fieldData.info && fieldData.info}
+                className={clsx(styles.referenceCard, className)}
+                thumbnailType={getThumbnailType(fieldData.type)}
+                thumbnailURL={fieldData.url}
+                displayName={fieldData.displayName}
+                chips={fieldData.type && [<Chip key={fieldData.name} color="accent" label={fieldData.type}/>]}
+                systemName={fieldData.name}
+                information={fieldData.info}
                 isReadOnly={isReadOnly}
-                isDisabled={false}
                 hasError={isError}
                 data-sel-field-picker="filled"
                 data-sel-field-picker-action="openPicker"
@@ -50,7 +61,6 @@ const ReferenceCardCmp = ({
             data-sel-field-picker-action="openPicker"
             type="button"
             aria-disabled={isReadOnly}
-            aria-labelledby={labelledBy}
             onClick={onClick}
             {...props}
         />
@@ -66,22 +76,21 @@ ReferenceCardCmp.defaultProps = {
 };
 
 ReferenceCardCmp.propTypes = {
-    id: PropTypes.string,
+    id: PropTypes.string.isRequired,
     isReadOnly: PropTypes.bool,
     isError: PropTypes.bool,
     className: PropTypes.object,
     onClick: PropTypes.func,
     fieldData: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
+        displayName: PropTypes.string.isRequired,
         type: PropTypes.string,
-        systemname: PropTypes.string,
-        info: PropTypes.string.isRequired
+        name: PropTypes.string,
+        info: PropTypes.string
     }),
     cardAction: PropTypes.element,
     emptyLabel: PropTypes.string,
-    emptyIcon: PropTypes.element,
-    labelledBy: PropTypes.string
+    emptyIcon: PropTypes.element
 };
 
 export const ReferenceCard = (ReferenceCardCmp);

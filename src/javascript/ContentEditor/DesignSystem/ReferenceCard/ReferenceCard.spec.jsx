@@ -49,9 +49,9 @@ describe('reference card filled', () => {
             field: {},
             fieldData: {
                 url: 'iconUrl',
-                name: 'name part',
+                displayName: 'name part',
                 type: 'type part',
-                systemname: 'system name',
+                name: 'system name',
                 info: 'info part'
             },
             id: 'yoloID'
@@ -81,7 +81,7 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        expect(cmp.debug()).toContain(defaultProps.fieldData.name);
+        expect(cmp.debug()).toContain(defaultProps.fieldData.displayName);
     });
 
     it('should display the info part from field data', () => {
@@ -99,7 +99,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.debug()).toContain(defaultProps.fieldData.systemname);
+        expect(cmp.debug()).toContain(defaultProps.fieldData.name);
     });
 
     it('should display the type part from field data', () => {

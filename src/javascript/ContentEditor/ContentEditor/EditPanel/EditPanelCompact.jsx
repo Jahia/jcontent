@@ -64,9 +64,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 </div>
             </DialogTitle>
             <DialogContent className="flexCol" id="contenteditor-dialog-content" data-sel-role="form-container">
-                <div className={clsx('flexFluid', 'flexCol')}>
-                    <EditPanelContent/>
-                </div>
+                <EditPanelContent/>
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
                 {createAnother && (

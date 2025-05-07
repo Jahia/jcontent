@@ -34,7 +34,7 @@ storiesOf('ReferenceCard', module)
                     fieldData={{
                         url:
                             'http://www.open-source-guide.com/var/site_smile/storage/images/guide-os/solutions/applications/cms/jahia-digital-factory/362440-239-fre-FR/Jahia-Digital-Factory_logo_solution_categorie.png',
-                        name: 'Jahia',
+                        displayName: 'Jahia',
                         info: 'best company in the world'
                     }}
                 />

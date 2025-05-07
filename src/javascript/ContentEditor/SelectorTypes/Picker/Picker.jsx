@@ -42,11 +42,11 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
     return (
         <>
             <ReferenceCard
+                id={field.name}
                 isReadOnly={field.readOnly}
                 isError={error || notFound}
                 emptyLabel={t((error || notFound) ? pickerConfig.pickerInput.notFoundLabel : pickerConfig.pickerInput.emptyLabel)}
                 emptyIcon={(error || notFound) ? pickerConfig.pickerInput.notFoundIcon : pickerConfig.pickerInput.emptyIcon}
-                labelledBy={`${field.name}-label`}
                 fieldData={fieldData && fieldData[0]}
                 onClick={() => setDialogOpen(!isDialogOpen)}
             />
@@ -74,8 +74,8 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                         key={`${field.name}_${fieldVal.name}`}
                         isReferenceCard
                         component={<ReferenceCard
+                            id={fieldVal.name}
                             isReadOnly={field.readOnly}
-                            labelledBy={`${fieldVal.name}-label`}
                             fieldData={fieldVal}
                             cardAction={fieldData.length > 1 &&
                                 <div className={styles.referenceCardActions}>

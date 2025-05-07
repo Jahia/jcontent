@@ -6,6 +6,7 @@ const MediaPickerFilledQuery = gql`
         jcr {
             result: nodesById(uuids: $uuids) {
                 displayName(language: $language)
+                name
                 width: property(name: "j:width") {
                     value
                 }

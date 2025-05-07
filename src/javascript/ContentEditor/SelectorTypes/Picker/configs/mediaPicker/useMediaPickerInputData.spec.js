@@ -56,6 +56,7 @@ describe('useMediaPickerInputData', () => {
                     width: {value: '1920'},
                     lastModified: {value: 'tomorrow'},
                     displayName: 'a cake',
+                    name: 'cake',
                     path: 'placeholder.jpg',
                     content: {
                         mimeType: {value: 'image/jpeg'},
@@ -71,9 +72,10 @@ describe('useMediaPickerInputData', () => {
             error: undefined,
             fieldData: [{
                 uuid: 'this-is-uuid',
-                info: 'image/jpeg - 1920x1080px 976.56KB',
+                info: '1920 x 1080 - 976.56 KB',
                 type: 'image/jpeg',
-                name: 'a cake',
+                displayName: 'a cake',
+                name: 'cake',
                 path: 'placeholder.jpg',
                 url: 'http://placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
             }]

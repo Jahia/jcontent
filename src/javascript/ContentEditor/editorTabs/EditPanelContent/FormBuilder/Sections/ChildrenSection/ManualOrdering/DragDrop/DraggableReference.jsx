@@ -41,7 +41,6 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                             id={child.name}
                             emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                             emptyIcon={<File/>}
-                            labelledBy={`${child.name}-label`}
                             cardAction={fieldLength > 1 &&
                             <div className={styles.referenceCardActions}>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -54,7 +53,8 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                                 </div>
                             </div>}
                             fieldData={{
-                                name: child.displayName,
+                                displayName: child.displayName,
+                                name: child.name,
                                 type: child.primaryNodeType.displayName,
                                 url: encodeJCRPath(`${child.primaryNodeType.icon}.png`)
                             }}

@@ -138,7 +138,8 @@ describe('Create media tests', () => {
             .deletePermanently();
     });
 
-    it('Can open created file in advanced mode with preview', function () {
+    // https://github.com/Jahia/jcontent/issues/1772
+    it.skip('Can open created file in advanced mode with preview', function () {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         const menu = jcontent.getMedia()

@@ -3,3 +3,5 @@
 <pbnt = 'http://www.jahia.org/pb/nt/1.0'>
 
 [pbnt:contentRestriction] > jnt:bigText
+
+[pbnt:crashingView] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery

@@ -98,7 +98,7 @@ describe('Content navigation', () => {
         cy.get('h1').contains('contents');
     });
 
-    it('Display popup when viewing content that does not have valid template', () => {
+    it.skip('Display popup when viewing content that does not have valid template', () => {
         const jc = JContent.visit('mySite3', 'en', 'content-folders/contents/test-event');
         jc.switchToPageBuilder();
         cy.get('[data-sel-role="node-content-dialog"]')

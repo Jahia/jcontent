@@ -17,6 +17,7 @@ graphql.schema.json
 
 coverage/
 /storybook-static
+jest-shims
 
 # macOS
 .DS_Store

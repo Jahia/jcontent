@@ -10,7 +10,7 @@
     "watch": "yarn webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node",
-    "test": "jest --env=jsdom --coverage ./src/javascript",
+    "test": "yarn esbuild:moonstone && jest --env=jsdom --coverage ./src/javascript",
     "test:clear": "jest --clearCache",
     "tdd": "jest --env=jsdom --watch ./src/javascript",
     "lint:js": "eslint --ext js,jsx src",
@@ -20,7 +20,8 @@
     "lint": "yarn lint:scss && yarn lint:js",
     "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix && cd tests && yarn lint:fix && cd ..",
     "sync-pom": "sync-pom-version --use-yarn",
-    "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json"
+    "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json",
+    "esbuild:moonstone": "npx esbuild ./node_modules/@jahia/moonstone/dist/index.js --bundle --platform=node --format=cjs --external:react --external:react-dom --outfile=./jest-shims/@jahia/moonstone/dist/index.cjs"
   },
   "description": "jContent for Jahia",
   "main": "index.js",
@@ -49,7 +50,7 @@
     "@jahia/data-helper": "^1.1.14",
     "@jahia/design-system-kit": "^1.2.1",
     "@jahia/icons": "^1.1.2",
-    "@jahia/moonstone": "^2.12.4",
+    "@jahia/moonstone": "2.13.0",
     "@jahia/react-material": "^3.0.5",
     "@jahia/ui-extender": "^1.1.1",
     "@material-ui/core": "^3.9.3",

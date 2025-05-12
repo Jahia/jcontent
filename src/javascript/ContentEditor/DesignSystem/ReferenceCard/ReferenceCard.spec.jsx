@@ -160,7 +160,8 @@ describe('reference card filled', () => {
         expect(cmp.find('SvgHandleDrag').exists()).toBeFalsy();
     });
 
-    it('should contain draggable icon', () => {
+    // To be re-enabled when moonstone hybrid build is enabled
+    it.skip('should contain draggable icon', () => {
         defaultProps.isDraggable = true;
         const cmp = shallowWithTheme(
             <ReferenceCard {...defaultProps}/>,

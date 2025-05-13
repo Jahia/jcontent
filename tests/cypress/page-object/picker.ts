@@ -148,12 +148,12 @@ export class Picker extends BaseComponent {
 
     search(query?: string, expectNoResult = false) {
         if (query === undefined) {
-            this.get().find('input[role="search"]').should('be.visible').click().clear({waitForAnimations: true});
+            this.get().find('input[role="searchbox"]').should('be.visible').click().clear({waitForAnimations: true});
             this.table = undefined;
             this.selectionTable = undefined;
             this.get().find('[data-cm-role="table-content-list"]').find('.moonstone-TableRow').should('be.visible');
         } else {
-            this.get().find('input[role="search"]')
+            this.get().find('input[role="searchbox"]')
                 .should('be.visible')
                 .click()
                 .type(query, {waitForAnimations: true, delay: 200});
@@ -168,7 +168,7 @@ export class Picker extends BaseComponent {
     }
 
     getSearchInput() {
-        return this.get().find('input[role="search"]').should('be.visible');
+        return this.get().find('input[role="searchbox"]').should('be.visible');
     }
 
     verifyResultsLength(length: number) {

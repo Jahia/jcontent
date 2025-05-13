@@ -118,7 +118,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.find('div#yoloID').prop('aria-disabled')).toBe(true);
+        expect(cmp.find('#yoloID').prop('disabled')).toBe(true);
     });
 
     it('should NOT be in read only', () => {
@@ -127,7 +127,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.find('div#yoloID').prop('aria-disabled')).toBe(false);
+        expect(cmp.find('#yoloID').prop('disabled')).toBe(false);
     });
 
     it('should send onClick event when clicking on the component', () => {
@@ -139,7 +139,7 @@ describe('reference card filled', () => {
         ).dive();
 
         const mockEvent = {currentTarget: {blur: () => {}}};
-        cmp.find('div#yoloID').simulate('click', mockEvent);
+        cmp.find('#yoloID').simulate('click', mockEvent);
 
         expect(defaultProps.onClick).toHaveBeenCalled();
     });
@@ -153,7 +153,7 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        cmp.find('div#yoloID').simulate('click');
+        cmp.find('#yoloID').simulate('click');
 
         expect(defaultProps.onClick).not.toHaveBeenCalled();
     });

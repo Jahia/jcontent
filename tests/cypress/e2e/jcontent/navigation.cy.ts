@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {addNode, Button, createSite, deleteSite, enableModule, getComponentByRole} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Content navigation', () => {
     const specialCharsName = '@#$^&€§¢ª¶ø°£™¥‰œæÀ-ž--';
@@ -28,7 +28,12 @@ describe('Content navigation', () => {
         addNode({parentPathOrId: '/sites/mySite1/contents', name: 'll.js', primaryNodeType: 'jnt:contentFolder'});
 
         enableModule('events', 'mySite3');
-        addNode({parentPathOrId: '/sites/mySite3/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
+        addNode({
+            name: 'pagecontent',
+            parentPathOrId: '/sites/mySite3/home',
+            primaryNodeType: 'jnt:contentList',
+            children: [{name: 'crashingView', primaryNodeType: 'pbnt:crashingView'}]
+        });
     });
 
     after(() => {
@@ -98,15 +103,12 @@ describe('Content navigation', () => {
         cy.get('h1').contains('contents');
     });
 
-    it('Display popup when viewing content that does not have valid template', () => {
-        const jc = JContent.visit('mySite3', 'en', 'content-folders/contents/test-event');
-        jc.switchToPageBuilder();
-        cy.get('[data-sel-role="node-content-dialog"]')
-            .should('be.visible')
-            .find('#form-dialog-title')
-            .contains('Page Builder view not available')
-            .should('be.visible');
-        getComponentByRole(Button, 'view-list').click();
-        jc.shouldBeInMode('List');
+    it('shows the default rendered view for errors', () => {
+        const siteKey = 'mySite3';
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home').switchToPageBuilder();
+        cy.frameLoaded('#page-builder-frame-1', {url: `/sites/${siteKey}/home`});
+        jcontent.getModule(`/sites/${siteKey}/home/pagecontent/crashingView`).get()
+            .should('contain', 'An error occurred during the rendering of the content')
+            .and('contain', 'Toggle the full error');
     });
 });

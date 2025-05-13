@@ -32,7 +32,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
     });
 
     return (
-        <div ref={drop} className={styles.fieldComponentContainer} data-test="draggableReference">
+        <div ref={drop} className={styles.fieldComponentContainer}>
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {child &&
                 <div ref={drag} className={styles.draggableCard}>
@@ -41,6 +41,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                             id={child.name}
                             emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                             emptyIcon={<File/>}
+                            isReadOnly={child.readOnly}
                             cardAction={fieldLength > 1 &&
                             <div className={styles.referenceCardActions}>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>

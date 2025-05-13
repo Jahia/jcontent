@@ -45,6 +45,7 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
                 id={field.name}
                 isReadOnly={field.readOnly}
                 isError={error || notFound}
+                draggable={false}
                 emptyLabel={t((error || notFound) ? pickerConfig.pickerInput.notFoundLabel : pickerConfig.pickerInput.emptyLabel)}
                 emptyIcon={(error || notFound) ? pickerConfig.pickerInput.notFoundIcon : pickerConfig.pickerInput.emptyIcon}
                 fieldData={fieldData && fieldData[0]}

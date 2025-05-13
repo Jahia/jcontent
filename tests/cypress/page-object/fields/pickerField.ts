@@ -13,10 +13,10 @@ export class PickerField extends Field {
     }
 
     assertValue(value: string) {
-        this.get().find('[data-sel-field-picker-name]').contains(value);
+        this.get().find('[data-testid="displayName"]').contains(value);
     }
 
     assertHasNoValue() {
-        this.get().find('[data-sel-field-picker-name]').should('not.exist');
+        this.get().find('[data-testid="displayName"]').should('not.exist');
     }
 }

@@ -37,7 +37,7 @@ const ReferenceCardCmp = ({
                 thumbnailType={getThumbnailType(fieldData.type)}
                 thumbnailURL={fieldData.url}
                 displayName={fieldData.displayName}
-                chips={fieldData.type && [<Chip key={fieldData.name} color="accent" label={fieldData.type}/>]}
+                chips={fieldData.type && [<Chip key={fieldData.name} data-sel-referenceCard-type color="accent" label={fieldData.type}/>]}
                 systemName={fieldData.name}
                 information={fieldData.info}
                 isReadOnly={isReadOnly}
@@ -45,6 +45,7 @@ const ReferenceCardCmp = ({
                 data-sel-field-picker="filled"
                 data-sel-field-picker-action="openPicker"
                 cardAction={cardAction}
+                draggable={!isReadOnly}
                 onClick={onClick}
                 {...props}
             />

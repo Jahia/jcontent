@@ -1599,7 +1599,7 @@
   dependencies:
     "@floating-ui/dom" "^1.0.0"
 
-"@floating-ui/react@^0.27.5":
+"@floating-ui/react@^0.27.7":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@floating-ui/react/-/react-0.27.8.tgz#6d7f4bf7bfe2065934ba18d54f7383b777f87dd5"
   integrity sha512-EQJ4Th328y2wyHR3KzOUOoTW2UKjFk53fmyahfwExnFQ8vnsMYqKc+fFPOkeYtj5tcp1DUMiNJ7BFhed7e9ONw==
@@ -1721,12 +1721,12 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
-"@jahia/moonstone@^2.13.0":
-  version "^2.13.0"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.13.0.tgz#b27be3a2f69e5d91784a8ad4c9b90abb262ed197"
-  integrity sha512-qBYgD07gx5AowybNuQeoU0tl0AT9+V0BwzfiVJjD7wTUb/lE+HAoOUJlk5I2qrtqdsWU4BAdvscdEDR5hHerqw==
+"@jahia/moonstone@^2.14.0":
+  version "2.14.0"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.14.0.tgz#afc09cc72f399b071106b22587d8c5e3fab1ad20"
+  integrity sha512-HR3Kv0hJ090xd1pGQHu8nRT5DwQ7fYvEq9Ah5uVo9R/VoqVlkEcSWMXLq3HA2v3GjOpSmmOYUGI+cfCz7J/O6A==
   dependencies:
-    "@floating-ui/react" "^0.27.5"
+    "@floating-ui/react" "^0.27.7"
     clsx "^2.1.1"
     prop-types "^15.8.1"
     re-resizable "^6.11.2"

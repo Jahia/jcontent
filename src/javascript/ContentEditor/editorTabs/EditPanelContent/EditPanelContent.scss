@@ -4,6 +4,8 @@
 }
 
 .fullWidthRoot.fullWidthRoot {
+    max-width: 100%;
+
     background-color: var(--color-light);
     overflow: auto;
 }

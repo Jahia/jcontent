@@ -26,7 +26,11 @@
 }
 
 .referenceCardActions {
-    display: none;
+    display: flex;
+
+    visibility: hidden;
+
+    pointer-events: none;
 }
 
 .draggableCard {
@@ -39,7 +43,9 @@
     cursor: grab;
 
     &:hover * > * {
-        display: flex;
+        visibility: visible;
+
+        pointer-events: auto;
     }
 
     :global(.moonstone-checkbox) {

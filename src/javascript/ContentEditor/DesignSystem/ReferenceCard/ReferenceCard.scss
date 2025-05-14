@@ -1,6 +1,8 @@
 .referenceCard {
-    &[disabled="false"] {
-        cursor: pointer;
+    cursor: pointer;
+
+    &[disabled="true"] {
+        cursor: default;
     }
 
     &[draggable="true"] {

@@ -804,6 +804,10 @@
         "listAndOrdering": {
           "title": "Listensortierung",
           "ordering": "Anordnung",
+          "btnMoveFirst": "An die erste Position",
+          "btnMoveLast": "An die letzte Position",
+          "btnMoveUp": "Nach oben",
+          "btnMoveDown": "Nach unten",
           "automatic": "Automatische Listenreihenfolge",
           "orderBy": "Sortierfeld",
           "description": "Aktivieren Sie die automatische Listenreihenfolge, um Ihre Unterinhalte anhand von maximal drei Kriterien zu ordnen, oder ordnen Sie Ihre Unterinhalte manuell per Drag & Drop neu."

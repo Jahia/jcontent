@@ -53,6 +53,7 @@ describe('ContentPicker config', () => {
                     jcr: {
                         result: [{
                             uuid: 'this-is-uuid',
+                            name: 'cake',
                             displayName: 'a cake',
                             path: 'florent/bestArticles',
                             primaryNodeType: {
@@ -69,8 +70,9 @@ describe('ContentPicker config', () => {
                 error: undefined,
                 fieldData: [{
                     uuid: 'this-is-uuid',
-                    info: 'article',
-                    name: 'a cake',
+                    type: 'article',
+                    name: 'cake',
+                    displayName: 'a cake',
                     path: 'florent/bestArticles',
                     url: 'anUrl.png'
                 }]

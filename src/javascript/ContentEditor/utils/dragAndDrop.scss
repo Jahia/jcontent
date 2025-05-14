@@ -9,7 +9,7 @@
 }
 
 .referenceDropGhostHidden {
-    height: 8px;
+    height: var(--spacing-small);
 
     transition: all 0.3s ease;
 }
@@ -25,12 +25,28 @@
     }
 }
 
+.referenceCardActions {
+    display: flex;
+
+    visibility: hidden;
+
+    pointer-events: none;
+}
+
 .draggableCard {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
     margin-bottom: var(--spacing-nano);
+
+    cursor: grab;
+
+    &:hover * > * {
+        visibility: visible;
+
+        pointer-events: auto;
+    }
 
     :global(.moonstone-checkbox) {
         margin-left: 0 !important;

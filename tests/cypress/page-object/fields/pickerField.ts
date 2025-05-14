@@ -13,10 +13,10 @@ export class PickerField extends Field {
     }
 
     assertValue(value: string) {
-        this.get().find('[data-testid="displayName"]').contains(value);
+        this.get().find('[data-testid="cardSelector-displayName"]').contains(value);
     }
 
     assertHasNoValue() {
-        this.get().find('[data-testid="displayName"]').should('not.exist');
+        this.get().find('[data-testid="cardSelector-displayName"]').should('not.exist');
     }
 }

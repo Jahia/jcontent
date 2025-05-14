@@ -50,7 +50,7 @@ describe('Menu tests', () => {
             .should('have.value', 'New Root Level Page');
         const templateField = contentEditor.getField(Field, 'jmix:hasTemplateNode_j:templateName');
         templateField.get().click();
-        getComponentBySelector(Menu, '[role="listbox"]').select('3 Column');
+        getComponentBySelector(Menu, '[role="list"]').select('3 Column');
         contentEditor.create();
         navAccordion.click('pages').getContent().find('[role="tree"]').find('[data-sel-role="new-root-level-page"]').should('be.visible').click();
     });

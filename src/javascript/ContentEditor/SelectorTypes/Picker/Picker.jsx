@@ -6,10 +6,10 @@ import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {mergeDeep, set, toArray} from './Picker.utils';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer, onListReorder} from '~/ContentEditor/utils';
+import {getButtonRenderer, onListReorder, onDirectionalReorder} from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {Button} from '@jahia/moonstone';
+import {Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
 import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
@@ -42,39 +42,53 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
     return (
         <>
             <ReferenceCard
+                id={field.name}
                 isReadOnly={field.readOnly}
                 isError={error || notFound}
+                draggable={false}
                 emptyLabel={t((error || notFound) ? pickerConfig.pickerInput.notFoundLabel : pickerConfig.pickerInput.emptyLabel)}
                 emptyIcon={(error || notFound) ? pickerConfig.pickerInput.notFoundIcon : pickerConfig.pickerInput.emptyIcon}
-                labelledBy={`${field.name}-label`}
                 fieldData={fieldData && fieldData[0]}
                 onClick={() => setDialogOpen(!isDialogOpen)}
             />
             {inputContext.displayActions && value && (
-                <DisplayAction
-                    actionKey="content-editor/field/Picker"
-                    value={value}
-                    field={field}
-                    inputContext={inputContext}
-                    render={ButtonRenderer}
-                />
+            <DisplayAction
+                        actionKey="content-editor/field/Picker"
+                        value={value}
+                        field={field}
+                        inputContext={inputContext}
+                        render={ButtonRenderer}
+                    />
             )}
         </>
+
     );
 };
 
 // eslint-disable-next-line max-params
-const getMultipleElement = (fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
+const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
     return (
         <div className="flexFluid">
             {fieldData && fieldData.length > 0 && fieldData.map((fieldVal, index) => {
                 return (
                     <OrderableValue
                         key={`${field.name}_${fieldVal.name}`}
+                        isReferenceCard
                         component={<ReferenceCard
-                            isReadOnly
-                            labelledBy={`${fieldVal.name}-label`}
-                            fieldData={fieldVal}/>}
+                            id={fieldVal.name}
+                            isReadOnly={field.readOnly}
+                            fieldData={fieldVal}
+                            cardAction={fieldData.length > 1 &&
+                                <div className={styles.referenceCardActions}>
+                                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'first')}/>
+                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'last')}/>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'up')}/>
+                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'down')}/>
+                                    </div>
+                                </div>}/>}
                         field={field}
                         index={index}
                         onValueReorder={onValueReorder}
@@ -171,6 +185,11 @@ export const Picker = ({
         onItemSelection(updatedValues);
     };
 
+    const onValueMove = (droppedId, direction) => {
+        setFieldValue(field.name, onDirectionalReorder(value, droppedId, direction, field.name));
+        setFieldTouched(field.name, true, false);
+    };
+
     const onValueReorder = (droppedId, index) => {
         setFieldValue(field.name, onListReorder(value, droppedId, index, field.name));
         setFieldTouched(field.name, true, false);
@@ -179,7 +198,7 @@ export const Picker = ({
     return (
         <div className="flexFluid flexRow_nowrap alignCenter">
             {field.multiple ?
-                getMultipleElement(fieldData, field, onValueReorder, onFieldRemove, t, setDialogOpen, isDialogOpen) :
+                getMultipleElement(fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) :
                 getSimpleElement(field, error, notFound, t, pickerConfig, fieldData, setDialogOpen, isDialogOpen, inputContext, value)}
 
             <PickerDialog

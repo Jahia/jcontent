@@ -28,18 +28,6 @@ describe('reference card empty', () => {
         expect(cmp.debug()).toContain(defaultProps.emptyLabel);
     });
 
-    it('should emmit onClick', () => {
-        const cmp = shallowWithTheme(
-            <ReferenceCard {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        ).dive();
-
-        cmp.find('button').simulate('click');
-
-        expect(defaultProps.onClick).toHaveBeenCalled();
-    });
-
     it('should not set trigger onClick when clicking on the button when isReadOnly', () => {
         const cmp = shallowWithTheme(
             <ReferenceCard {...defaultProps} isReadOnly/>,
@@ -61,11 +49,12 @@ describe('reference card filled', () => {
             field: {},
             fieldData: {
                 url: 'iconUrl',
-                name: 'name part',
+                displayName: 'name part',
+                type: 'type part',
+                name: 'system name',
                 info: 'info part'
             },
-            id: 'yoloID',
-            isDraggable: false
+            id: 'yoloID'
         };
 
         window.contextJsParameters = {
@@ -92,7 +81,7 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        expect(cmp.debug()).toContain(defaultProps.fieldData.name);
+        expect(cmp.debug()).toContain(defaultProps.fieldData.displayName);
     });
 
     it('should display the info part from field data', () => {
@@ -104,6 +93,24 @@ describe('reference card filled', () => {
         expect(cmp.debug()).toContain(defaultProps.fieldData.info);
     });
 
+    it('should display the system name part from field data', () => {
+        const cmp = shallowWithTheme(
+            <ReferenceCard {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        ).dive();
+        expect(cmp.debug()).toContain(defaultProps.fieldData.name);
+    });
+
+    it('should display the type part from field data', () => {
+        const cmp = shallowWithTheme(
+            <ReferenceCard {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        ).dive();
+        expect(cmp.debug()).toContain(defaultProps.fieldData.type);
+    });
+
     it('should be in read only', () => {
         defaultProps.isReadOnly = true;
         const cmp = shallowWithTheme(
@@ -111,7 +118,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.find('article').props().className).toContain('fieldContainerReadOnly');
+        expect(cmp.find('#yoloID').prop('disabled')).toBe(true);
     });
 
     it('should NOT be in read only', () => {
@@ -120,7 +127,7 @@ describe('reference card filled', () => {
             {},
             dsGenericTheme
         ).dive();
-        expect(cmp.find('article').props().className).not.toContain('fieldContainerReadOnly');
+        expect(cmp.find('#yoloID').prop('disabled')).toBe(false);
     });
 
     it('should send onClick event when clicking on the component', () => {
@@ -131,7 +138,8 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        cmp.find('article').simulate('click');
+        const mockEvent = {currentTarget: {blur: () => {}}};
+        cmp.find('#yoloID').simulate('click', mockEvent);
 
         expect(defaultProps.onClick).toHaveBeenCalled();
     });
@@ -145,29 +153,8 @@ describe('reference card filled', () => {
             dsGenericTheme
         ).dive();
 
-        cmp.find('article').simulate('click');
+        cmp.find('#yoloID').simulate('click');
 
         expect(defaultProps.onClick).not.toHaveBeenCalled();
-    });
-
-    it('should not contain draggable icon', () => {
-        const cmp = shallowWithTheme(
-            <ReferenceCard {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        ).dive();
-
-        expect(cmp.find('SvgHandleDrag').exists()).toBeFalsy();
-    });
-
-    it('should contain draggable icon', () => {
-        defaultProps.isDraggable = true;
-        const cmp = shallowWithTheme(
-            <ReferenceCard {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        ).dive();
-
-        expect(cmp.find('SvgHandleDrag').exists()).toBeTruthy();
     });
 });

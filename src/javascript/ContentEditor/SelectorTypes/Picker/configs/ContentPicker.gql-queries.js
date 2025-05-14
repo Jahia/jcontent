@@ -6,6 +6,7 @@ export const ContentPickerFilledQuery = gql`
         jcr {
             result: nodesById(uuids: $uuids) {
                 displayName(language: $language)
+                name
                 primaryNodeType {
                     name
                     displayName(language: $language)

@@ -64,7 +64,8 @@ import {
     UnzipActionComponent,
     ZipActionComponent,
     CompareHtmlActionComponent,
-    FlushCacheActionComponent
+    FlushCacheActionComponent,
+    PublishManagerActionComponent
 } from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
@@ -181,6 +182,12 @@ export const jContentActions = registry => {
         publishType: 'unpublish',
         isPublishingAllLanguages: true,
         component: PublishActionComponent
+    });
+    registry.add('action', 'showPublicationManager', {
+        buttonIcon: <Publish/>,
+        buttonLabel: 'jcontent:label.contentManager.publicationDashboard.label',
+        publicationNodeTypes: ['jmix:publication', 'jmix:workflowRulesable', 'jnt:navMenuText'],
+        component: PublishManagerActionComponent
     });
     registry.add('action', 'contentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,

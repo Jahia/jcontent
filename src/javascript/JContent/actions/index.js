@@ -22,3 +22,4 @@ export * from './downloadAsZip';
 export * from './editImage';
 export * from './compareHtmlAction';
 export * from './flushCacheAction';
+export * from './showPublicationManagerAction';

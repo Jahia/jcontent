@@ -555,6 +555,9 @@
           "linkedTo": "Verbunden mit:"
         },
         "emptyContent": "Nichts anzuzeigen"
+      },
+      "publicationDashboard": {
+        "label": "Publication dashboard"
       }
     },
     "categoryManager": {

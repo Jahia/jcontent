@@ -4,5 +4,3 @@
 // Deprecated now use core type [jmix:visibleInContentTree] instead
 // [jmix:cmContentTreeDisplayable] mixin
 
-[jnt:myarticle] > jnt:content, jmix:mainResource, jmix:siteComponent, jmix:droppableContent
-- image (weakreference, picker[type='image']) i18n multiple < jmix:image

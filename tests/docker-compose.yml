@@ -1,12 +1,30 @@
 version: '3.6'
 services:
+    mariadb:
+        image: library/mariadb:10-focal
+        container_name: mariadb
+        deploy:
+            resources:
+                limits:
+                    memory: 4gb
+        networks:
+            - stack
+        command: --max_allowed_packet=1073741824 --transaction-isolation=READ-UNCOMMITTED --innodb-lock-wait-timeout=10
+        environment:
+            MYSQL_ROOT_PASSWORD: root1234
+            MYSQL_DATABASE: jahia
+            MYSQL_USER: jahia
+            MYSQL_PASSWORD: jahia
+            TZ: ${TIMEZONE}
+
     jahia:
         image: '${JAHIA_IMAGE}'
         container_name: jahia
+        restart: 'no'
         deploy:
-          resources:
-            limits:
-              memory: 4gb
+            resources:
+                limits:
+                    memory: 8gb
         environment:
             JAHIA_LICENSE: ${JAHIA_LICENSE}
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
@@ -19,6 +37,13 @@ services:
             NEXUS_PASSWORD: ${NEXUS_PASSWORD}
             TZ: ${TIMEZONE}
             JPDA: 'true'
+            CLUSTER_ENABLED: '${JAHIA_CLUSTER_ENABLED}'
+            jahia_cfg_karaf_remoteShellHost: 0.0.0.0
+            DB_VENDOR: mariadb
+            DB_HOST: mariadb
+            DB_NAME: jahia
+            DB_USER: jahia
+            DB_PASS: jahia
         ports:
             - '8000:8000'
             - '8080:8080'
@@ -27,15 +52,93 @@ services:
             - jahia:127.0.0.1
         networks:
             - stack
-    # Cypress container
+        depends_on:
+            - mariadb
+
+    jahia-browsing-a:
+        image: '${JAHIA_IMAGE}'
+        container_name: jahia-browsing-a
+        restart: 'no'
+        profiles:
+            - cluster
+        deploy:
+            resources:
+                limits:
+                    memory: 4gb
+        depends_on:
+            - mariadb
+            - jahia
+        networks:
+            - stack
+        ports:
+            - '8081:8080'
+            - '8102:8101'
+        environment:
+            jahia_cfg_karaf_remoteShellHost: 0.0.0.0
+            DB_VENDOR: mariadb
+            DB_HOST: mariadb
+            DB_NAME: jahia
+            DB_USER: jahia
+            DB_PASS: jahia
+            JAHIA_LICENSE: ${JAHIA_LICENSE}
+            SUPER_USER_PASSWORD: ${JAHIA_PASSWORD}
+            CLUSTER_ENABLED: ${JAHIA_CLUSTER_ENABLED}
+            PROCESSING_SERVER: 'false'
+            PROCESSING_HOST: jahia
+            MAX_RAM_PERCENTAGE: 95
+            JAHIA_PROPERTIES: ${JAHIA_PROPERTIES}
+            CATALINA_OPTS: ${CATALINA_OPTS}
+            RESTORE_MODULE_STATES: 'false'
+            NEXUS_USERNAME: ${NEXUS_USERNAME}
+            NEXUS_PASSWORD: ${NEXUS_PASSWORD}
+            TZ: ${TIMEZONE}
+
+    jahia-browsing-b:
+        image: '${JAHIA_IMAGE}'
+        profiles:
+            - cluster
+        container_name: jahia-browsing-b
+        restart: 'no'
+        deploy:
+            resources:
+                limits:
+                    memory: 4gb
+        depends_on:
+            - mariadb
+            - jahia
+        networks:
+            - stack
+        ports:
+            - '8082:8080'
+            - '8103:8101'
+        environment:
+            jahia_cfg_karaf_remoteShellHost: 0.0.0.0
+            DB_VENDOR: mariadb
+            DB_HOST: mariadb
+            DB_NAME: jahia
+            DB_USER: jahia
+            DB_PASS: jahia
+            JAHIA_LICENSE: ${JAHIA_LICENSE}
+            SUPER_USER_PASSWORD: ${JAHIA_PASSWORD}
+            CLUSTER_ENABLED: ${JAHIA_CLUSTER_ENABLED}
+            PROCESSING_SERVER: 'false'
+            PROCESSING_HOST: jahia
+            MAX_RAM_PERCENTAGE: 95
+            JAHIA_PROPERTIES: ${JAHIA_PROPERTIES}
+            CATALINA_OPTS: ${CATALINA_OPTS}
+            RESTORE_MODULE_STATES: 'false'
+            TZ: ${TIMEZONE}
+            NEXUS_USERNAME: ${NEXUS_USERNAME}
+            NEXUS_PASSWORD: ${NEXUS_PASSWORD}
+
     cypress:
         profiles: ["test"]
         image: '${TESTS_IMAGE}'
         container_name: cypress
         deploy:
-          resources:
-            limits:
-              memory: 4gb
+            resources:
+                limits:
+                    memory: 4gb
         depends_on:
             - jahia
         environment:
@@ -53,5 +156,6 @@ services:
             TESTS_PROFILE: ${TESTS_PROFILE:-}
         networks:
             - stack
+
 networks:
     stack:

@@ -558,7 +558,7 @@
         "emptyContent": "Rien à afficher"
       },
       "publicationDashboard": {
-        "label": "Publication dashboard"
+        "label": "Gestionnaire de publication"
       }
     },
     "categoryManager": {

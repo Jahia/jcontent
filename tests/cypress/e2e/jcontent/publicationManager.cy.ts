@@ -1,7 +1,7 @@
 import {JContent} from '../../page-object';
 import {createSite, deleteSite} from '@jahia/cypress';
 
-describe('Publication dashboard tests', () => {
+describe('Publication manager tests', () => {
     const siteKey = 'jcontentPublicationSite';
 
     before(function () {
@@ -21,13 +21,15 @@ describe('Publication dashboard tests', () => {
         cy.loginAndStoreSession();
     });
 
-    it('Allows publication with Publication dashboard', function () {
+    // If run on Jahia that doesn't have access to PM this will fail although the action is designed to handle such case
+    // and technically no strong dependency is required for jcontent operation
+    it('Allows publication with Publication manager', function () {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         const pageAccordion = jcontent.getAccordionItem('pages');
         let menu = pageAccordion.getTreeItem('home').contextMenu();
         menu = menu.submenu('Publish', 'jcontent-publishMenu');
         menu.should('be.visible');
-        menu.select('Publication dashboard');
+        menu.select('Publication manager');
         cy.get('div[class=" x-grid3-check-col x-grid3-cc-publicationInfos-en x-component"]').first().click();
         cy.get('button').contains('Publish').click({force: true});
         jcontent.clickPublishNow();

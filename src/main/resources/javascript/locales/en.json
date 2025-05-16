@@ -565,7 +565,7 @@
         "emptyContent": "Nothing to display"
       },
       "publicationDashboard": {
-        "label": "Publication dashboard"
+        "label": "Publication manager"
       }
     },
     "categoryManager": {

@@ -249,7 +249,8 @@ const actionTargetAssignments = {
         'publishAll',
         'publishAllInAllLanguages',
         'unpublish',
-        'unpublishInAllLanguages'
+        'unpublishInAllLanguages',
+        'showPublicationManager'
     ],
     narrowHeaderSelectionMenu: [
         'actionsLabel',

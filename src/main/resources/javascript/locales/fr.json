@@ -556,6 +556,9 @@
           "linkedTo": "Lié à:"
         },
         "emptyContent": "Rien à afficher"
+      },
+      "publicationDashboard": {
+        "label": "Gestionnaire de publication"
       }
     },
     "categoryManager": {

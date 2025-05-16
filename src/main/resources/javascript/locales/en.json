@@ -563,6 +563,9 @@
           "linkedTo": "Linked to:"
         },
         "emptyContent": "Nothing to display"
+      },
+      "publicationDashboard": {
+        "label": "Publication manager"
       }
     },
     "categoryManager": {

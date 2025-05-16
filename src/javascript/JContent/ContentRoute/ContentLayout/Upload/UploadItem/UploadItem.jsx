@@ -22,8 +22,38 @@ import {
     fileuploadUpdateUpload
 } from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {createMissingFolders, onFilesSelected} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
+import {uploadErrors} from '../Upload.constants';
+import clsx from 'clsx';
 
 const UPLOAD_DELAY = 200;
+
+// Set status and error object for displaying upload status
+function setServerErrorStatus(newUpload, filePath, gqlError) {
+    newUpload.status = uploadStatuses.HAS_ERROR;
+    console.error(`Server exception during upload of file ${filePath}: ${gqlError.message}`);
+
+    if (gqlError.message.indexOf('GqlJcrWrongInputException') !== -1) {
+        newUpload.error = {type: uploadErrors.WRONG_INPUT};
+    }
+
+    if (gqlError.message.indexOf('ItemExistsException') !== -1) {
+        newUpload.error = {type: uploadErrors.FILE_EXISTS};
+    }
+
+    if (gqlError.message.indexOf('FileSizeLimitExceededException') !== -1) {
+        newUpload.error = {type: uploadErrors.INCORRECT_SIZE};
+    }
+
+    if (gqlError.message.indexOf('FileNameSizeLimitExceededException') !== -1) {
+        newUpload.error = {type: gqlError.message};
+    }
+
+    if (gqlError.message.indexOf('ConstraintViolationException') !== -1) {
+        const [, messagePart] = gqlError.message.split('ConstraintViolationException:');
+        const errMsgs = messagePart ? messagePart.trim().split('\n') : [];
+        newUpload.error = {type: uploadErrors.CONSTRAINT_VIOLATION, messages: errMsgs};
+    }
+}
 
 export const UploadItem = ({upload, index}) => {
     const [userChosenName, setUserChosenName] = useState();
@@ -100,28 +130,16 @@ export const UploadItem = ({upload, index}) => {
                 }, UPLOAD_DELAY);
             }).catch(e => {
                 // Server side errors
-                newUpload.status = uploadStatuses.HAS_ERROR;
-
-                if (e.message.indexOf('GqlJcrWrongInputException') !== -1) {
-                    newUpload.error = 'WRONG_INPUT';
-                }
-
-                if (e.message.indexOf('ItemExistsException') !== -1) {
-                    newUpload.error = 'FILE_EXISTS';
-                }
-
-                if (e.message.indexOf('FileSizeLimitExceededException') !== -1) {
-                    newUpload.error = 'INCORRECT_SIZE';
-                }
-
+                setServerErrorStatus(newUpload, upload.entryPath, e);
                 setTimeout(() => {
                     dispatch(batchActions([fileuploadUpdateUpload(newUpload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
                 }, UPLOAD_DELAY);
             });
         } catch (error) {
-            // Client side errors
+            console.error(`Client exception during upload of file ${upload.entryPath}: ${error.message}`);
+            // Client side exceptions throws the error type as the message
             newUpload.status = uploadStatuses.HAS_ERROR;
-            newUpload.error = error.message;
+            newUpload.error = {type: error.message};
 
             setTimeout(() => {
                 dispatch(batchActions([fileuploadUpdateUpload(newUpload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
@@ -172,8 +190,9 @@ export const UploadItem = ({upload, index}) => {
         }
     }, [doUploadAndStatusUpdate, upload]);
 
+    const hasError = upload.status === uploadStatuses.HAS_ERROR;
     return (
-        <div className={styles.listItem}>
+        <div className={clsx(styles.listItem, hasError && styles.hasError)}>
             <Typography className={styles.fileNameText}>
                 {fileName}
             </Typography>

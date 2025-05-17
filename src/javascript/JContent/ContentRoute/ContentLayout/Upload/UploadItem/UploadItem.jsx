@@ -44,10 +44,6 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
         newUpload.error = {type: uploadErrors.INCORRECT_SIZE};
     }
 
-    if (gqlError.message.indexOf('FileNameSizeLimitExceededException') !== -1) {
-        newUpload.error = {type: gqlError.message};
-    }
-
     if (gqlError.message.indexOf('ConstraintViolationException') !== -1) {
         const [, messagePart] = gqlError.message.split('ConstraintViolationException:');
         const errMsgs = messagePart ? messagePart.trim().split('\n') : [];

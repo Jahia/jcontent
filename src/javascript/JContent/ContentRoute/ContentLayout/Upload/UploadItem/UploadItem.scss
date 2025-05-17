@@ -1,9 +1,26 @@
 .listItem {
     display: flex;
     align-items: center;
-    height: 32px;
+    height: 100%;
 
     color: var(--color-light);
+}
+
+.listItem.hasError {
+    align-items: flex-start;
+}
+
+.uploadErrors {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+
+    p {
+        white-space: nowrap;
+        text-align: right;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 .grow {
@@ -28,7 +45,7 @@
 }
 
 .actionButton {
-    margin: var(--spacing-small) 0;
+    align-items: flex-start;
 }
 
 .progressText {

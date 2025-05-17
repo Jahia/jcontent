@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {uploadStatuses} from '../../Upload.constants';
+import {uploadErrors, uploadStatuses} from '../../Upload.constants';
 import DontUploadButton from './DontUploadButton';
 import OverwriteButton from './OverwriteButton';
 import RenameButton from './RenameButton';
@@ -14,11 +14,11 @@ const SecondaryActionsList = ({upload, index, doUploadAndStatusUpdate, showRenam
     }
 
     if (status === uploadStatuses.HAS_ERROR) {
-        if (error === 'WRONG_INPUT') {
+        if (error.type === uploadErrors.WRONG_INPUT) {
             return <DontUploadButton upload={upload} index={index}/>;
         }
 
-        if (error === 'FILE_EXISTS') {
+        if (error.type === uploadErrors.FILE_EXISTS) {
             return (
                 <>
                     <RenameButton showRenameDialog={showRenameDialog}/>
@@ -28,7 +28,7 @@ const SecondaryActionsList = ({upload, index, doUploadAndStatusUpdate, showRenam
             );
         }
 
-        if (error === 'FILE_NAME_SIZE' || error === 'FILE_NAME_INVALID') {
+        if ([uploadErrors.FILE_NAME_SIZE, uploadErrors.FILE_NAME_INVALID].includes(error.type)) {
             return (
                 <>
                     <RenameButton upload={upload} showRenameDialog={showRenameDialog}/>
@@ -37,7 +37,7 @@ const SecondaryActionsList = ({upload, index, doUploadAndStatusUpdate, showRenam
             );
         }
 
-        if (error === 'FOLDER_CONFLICT' || error === 'FOLDER_FILE_NAME_SIZE' || error === 'FOLDER_FILE_NAME_INVALID') {
+        if ([uploadErrors.FOLDER_CONFLICT, uploadErrors.FOLDER_FILE_NAME_SIZE, uploadErrors.FOLDER_FILE_NAME_INVALID].includes(error.type)) {
             return (
                 <>
                     <RenameButton upload={upload} showRenameDialog={showRenameDialog}/>

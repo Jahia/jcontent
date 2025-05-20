@@ -75,7 +75,7 @@
         "exists": "Le fichier existe déjà",
         "fileNameSizeExceedLimit": "Le nom du fichier dépasse {{maxNameSize}} caractères",
         "folderExists": "Un fichier avec ce nom existe déjà, impossible de créer un dossier",
-        "constraintViolations": "Il y a des erreurs de validation de contraintes.",
+        "constraintViolations": "Erreur due aux contraintes de validation non respectées",
         "cannotStore": "L'import du fichier a échoué : La taille du fichier dépasse la limite de {{maxUploadSize}}Mo",
         "uploading": "Téléchargement ...",
         "retry": "Réessayer",

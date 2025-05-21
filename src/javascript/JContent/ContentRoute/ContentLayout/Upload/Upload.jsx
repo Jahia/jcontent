@@ -72,8 +72,8 @@ export const Upload = ({uploadUpdateCallback}) => {
     }, [uploadUpdateCallback, uploadStatus, dispatch]);
 
     return (
-        <Snackbar open={uploads.length > 0} classes={{root: styles.snackBar}}>
-            <React.Fragment>
+        <Snackbar open={uploads.length > 0} classes={{root: styles.snackBar}} data-sel-role="upload-status">
+            <>
                 <UploadHeader status={uploadStatus}/>
                 <div className={styles.snackBarScroll}>
                     {uploads.map((upload, index) => (
@@ -88,7 +88,7 @@ export const Upload = ({uploadUpdateCallback}) => {
                         className={styles.closeButton}
                         onClick={() => dispatch(fileuploadSetUploads([]))}
                 />
-            </React.Fragment>
+            </>
         </Snackbar>
     );
 };

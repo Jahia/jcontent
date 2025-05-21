@@ -1,8 +1,23 @@
-import {uploadStatuses} from '../Upload.constants';
+import {uploadErrors, uploadStatuses} from '../Upload.constants';
 import React from 'react';
 import {AddCircle, Check, Information, Loader, Typography} from '@jahia/moonstone';
 import styles from './UploadItem.scss';
 import {useTranslation} from 'react-i18next';
+
+function getErrorMessages(uploadType, error, t) {
+    switch (error.type) {
+        case uploadErrors.WRONG_INPUT: return [t('jcontent:label.contentManager.fileUpload.wrongInput')];
+        case uploadErrors.FILE_EXISTS: return [t('jcontent:label.contentManager.fileUpload.exists')];
+        case uploadErrors.FILE_NAME_INVALID: return [t('jcontent:label.contentManager.fileUpload.invalidChars')];
+        case uploadErrors.FILE_NAME_SIZE: return [t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize})];
+        case uploadErrors.FOLDER_CONFLICT: return [t('jcontent:label.contentManager.fileUpload.folderExists')];
+        case uploadErrors.FOLDER_FILE_NAME_INVALID: return [t('jcontent:label.contentManager.fileUpload.invalidChars')];
+        case uploadErrors.FOLDER_FILE_NAME_SIZE: return [t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize})];
+        case uploadErrors.INCORRECT_SIZE: return [t('jcontent:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.config.maxUploadSize})];
+        case uploadErrors.CONSTRAINT_VIOLATION: return (error.messages?.length) ? error.messages : [t('jcontent:label.contentManager.fileUpload.constraintViolation')];
+        default: return uploadType === 'import' ? [t('jcontent:label.contentManager.fileUpload.failedImport')] : [t('jcontent:label.contentManager.fileUpload.failedUpload')];
+    }
+}
 
 const Status = ({upload}) => {
     const {status, error, type} = upload;
@@ -28,26 +43,16 @@ const Status = ({upload}) => {
             </React.Fragment>
         );
     } else if (status === uploadStatuses.HAS_ERROR) {
-        let getErrorMessage = (error => {
-            switch (error) {
-                case 'WRONG_INPUT': return t('jcontent:label.contentManager.fileUpload.wrongInput');
-                case 'FILE_EXISTS': return t('jcontent:label.contentManager.fileUpload.exists');
-                case 'FILE_NAME_INVALID': return t('jcontent:label.contentManager.fileUpload.invalidChars');
-                case 'FILE_NAME_SIZE': return t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
-                case 'FOLDER_CONFLICT': return t('jcontent:label.contentManager.fileUpload.folderExists');
-                case 'FOLDER_FILE_NAME_INVALID': return t('jcontent:label.contentManager.fileUpload.invalidChars');
-                case 'FOLDER_FILE_NAME_SIZE': return t('jcontent:label.contentManager.fileUpload.fileNameSizeExceedLimit', {maxNameSize: contextJsParameters.config.maxNameSize});
-                case 'INCORRECT_SIZE': return t('jcontent:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.config.maxUploadSize});
-                default: return type === 'import' ? t('jcontent:label.contentManager.fileUpload.failedImport') : t('jcontent:label.contentManager.fileUpload.failedUpload');
-            }
-        });
-
         content = (
             <React.Fragment>
                 <Information className={styles.statusIcon} color="inherit"/>
-                <Typography className={styles.progressText} weight="bold">
-                    {getErrorMessage(error)}
-                </Typography>
+                <div className={styles.uploadErrors}>
+                    {getErrorMessages(type, error, t).map(message => (
+                        <Typography key={message} className={styles.progressText} weight="bold" data-sel-role="upload-error-msg">
+                            {message}
+                        </Typography>
+                    ))}
+                </div>
             </React.Fragment>
         );
     } else if (status === uploadStatuses.UPLOADING) {

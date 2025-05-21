@@ -1,5 +1,5 @@
 import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Upload.redux';
-import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
+import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadErrors} from './Upload.constants';
 import {v4} from 'uuid';
 import {
     CheckNodeFolder
@@ -82,13 +82,13 @@ export const createMissingFolders = async (client, directories) => {
 
     const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && n.isNodeType));
     directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.entryPath && !n.isNodeType)).forEach(dir => {
-        dir.error = 'FOLDER_CONFLICT';
+        dir.error = uploadErrors.FOLDER_CONFLICT;
     });
     directories.filter(dir => (dir.userChosenName || dir.entry.name.normalize('NFC')).length > contextJsParameters.config.maxNameSize).forEach(dir => {
-        dir.error = 'FOLDER_FILE_NAME_SIZE';
+        dir.error = uploadErrors.FOLDER_FILE_NAME_SIZE;
     });
     directories.filter(dir => (dir.userChosenName || dir.entry.name.normalize('NFC')).match(JContentConstants.namingInvalidCharactersRegexp)).forEach(dir => {
-        dir.error = 'FOLDER_FILE_NAME_INVALID';
+        dir.error = uploadErrors.FOLDER_FILE_NAME_INVALID;
     });
     const cannotCreate = directories.filter(dir => dir.error);
     // Add sub-folders that cannot be created because parent is invalid

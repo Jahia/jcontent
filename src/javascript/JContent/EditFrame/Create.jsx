@@ -15,15 +15,13 @@ import {SavePropertiesMutation} from '~/ContentEditor/ContentEditor/updateNode/u
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
 const ButtonRenderer = getButtonRenderer({
-    showTooltip: true,
-    defaultButtonProps: {color: 'default'},
-    defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}}
-);
+    showTooltip: false,
+    defaultButtonProps: {color: 'default'}
+});
 
 const ButtonRendererNoLabel = getButtonRenderer({
     labelStyle: 'none',
-    showTooltip: true,
-    defaultTooltipProps: {placement: 'top', classes: {popper: styles.tooltipPopper}}
+    showTooltip: true
 });
 
 function getBoundingBox(element) {
@@ -161,7 +159,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
 
     const {reorderNodes} = useReorderNodes({parentPath});
 
-    const tooltipProps = {enterDelay: 800, PopperProps: {container: element.ownerDocument.getElementById('jahia-portal-root')}};
     const sizers = [...Array(10).keys()].filter(i => currentOffset.width < i * 150).map(i => `sizer${i}`);
     const isDisabled = clickedElement && clickedElement.path !== parentPath;
     const btnRenderer = (isInsertionPoint && !isEmpty) ? ButtonRendererNoLabel : ButtonRenderer;
@@ -200,7 +197,8 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                  editStyles.enablePointerEvents,
                  sizers,
                  (isInsertionPoint) && styles.insertionPoint,
-                 isEmpty ? styles.isEmpty : styles.isNotEmpty
+                 isEmpty ? styles.isEmpty : styles.isNotEmpty,
+                 isInsertionPoint && !isEmpty && styles.iconButtonGap
              )}
              style={{...currentOffset, ...insertionStyle}}
              data-jahia-parent={parent.getAttribute('id')}
@@ -210,7 +208,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         >
             {copyPasteNodes.length === 0 &&
                 <DisplayAction actionKey="createContent"
-                               tooltipProps={tooltipProps}
                                path={parentPath}
                                name={nodePath}
                                isDisabled={isDisabled}
@@ -220,7 +217,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                                onVisibilityChanged={onCreateVisibilityChanged}
                                onCreate={onAction(({name}) => reorderNodes([name], nodeName))}/>}
             <DisplayAction actionKey="paste"
-                           tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
                            loading={() => false}
@@ -228,7 +224,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            onVisibilityChanged={onPasteVisibilityChanged}
                            onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
             <DisplayAction actionKey="pasteReference"
-                           tooltipProps={tooltipProps}
                            isDisabled={isDisabled}
                            path={parentPath}
                            loading={() => false}

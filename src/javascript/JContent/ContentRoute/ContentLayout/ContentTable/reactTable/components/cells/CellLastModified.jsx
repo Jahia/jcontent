@@ -3,7 +3,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 import css from '../../../ContentTable.scss';
 import dayjs from 'dayjs';
-import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
+import {ButtonRendererIconButton} from '~/utils/getButtonRenderer';
 import {getDefaultLocale} from '~/JContent/JContent.utils';
 import {DisplayActions} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
@@ -27,7 +27,7 @@ export const CellLastModified = ({row, value, cell, column}) => {
                         <DisplayActions
                             target="visibleContentItemActions"
                             path={row.original.path}
-                            render={ButtonRendererNoLabel}
+                            render={ButtonRendererIconButton}
                             buttonProps={{variant: 'ghost', size: 'big'}}
                         />
                     </div>}

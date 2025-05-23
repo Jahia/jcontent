@@ -290,6 +290,24 @@ export class JContentPageBuilder extends JContent {
         return module;
     }
 
+
+    getModuleIfExist(path: string, shouldExist: boolean, bypassFrameLoadedCheck = true): PageBuilderModule | null {
+        if (shouldExist) {
+            return this.getModule(path, bypassFrameLoadedCheck);
+        }
+
+        const parentFrame = this.iframe(bypassFrameLoadedCheck);
+
+        // Wait for the iframe to settle before querying the module
+        cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+
+        getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame)
+            .should('not.exist');
+
+        return null;
+    }
+
+
     refresh(): JContentPageBuilder {
         cy.get('[data-sel-role="page-builder-frame-active"]').invoke('attr', 'id').then(() => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();

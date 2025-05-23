@@ -20,6 +20,7 @@ const ReferenceCardCmp = ({
     id,
     className,
     isReadOnly,
+    isDraggable,
     isError,
     emptyLabel,
     emptyIcon,
@@ -33,7 +34,7 @@ const ReferenceCardCmp = ({
         return (
             <CardSelector
                 id={id}
-                className={clsx(styles.referenceCard, className)}
+                className={clsx(styles.referenceCard, {[styles.referenceCard_hasClick]: typeof onClick === 'function'}, className)}
                 thumbnailType={getThumbnailType(fieldData.type)}
                 thumbnailURL={fieldData.url}
                 displayName={fieldData.displayName}
@@ -45,7 +46,7 @@ const ReferenceCardCmp = ({
                 data-sel-field-picker="filled"
                 data-sel-field-picker-action="openPicker"
                 cardAction={cardAction}
-                draggable={!isReadOnly}
+                draggable={!isReadOnly && isDraggable}
                 onClick={onClick}
                 {...props}
             />
@@ -79,6 +80,7 @@ ReferenceCardCmp.defaultProps = {
 ReferenceCardCmp.propTypes = {
     id: PropTypes.string.isRequired,
     isReadOnly: PropTypes.bool,
+    isDraggable: PropTypes.bool,
     isError: PropTypes.bool,
     className: PropTypes.object,
     onClick: PropTypes.func,

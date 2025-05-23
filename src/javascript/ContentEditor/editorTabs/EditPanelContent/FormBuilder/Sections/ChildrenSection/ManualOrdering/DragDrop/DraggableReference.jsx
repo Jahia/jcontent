@@ -10,6 +10,7 @@ import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 export const DraggableReference = ({child, index, onReorder, onValueMove, fieldName, fieldLength}) => {
     const {t} = useTranslation('jcontent');
     const name = `${fieldName}[${index}]`;
+    const isDraggable = fieldLength > 1;
 
     const [{isDropping}, drop] = useDrop({
         accept: 'REFERENCE_CARD',
@@ -26,6 +27,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
     const [{isDragging}, drag] = useDrag({
         type: 'REFERENCE_CARD',
         item: {name: name},
+        canDrag: () => isDraggable,
         collect: monitor => ({
             isDragging: monitor.isDragging()
         })
@@ -42,6 +44,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                             emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                             emptyIcon={<File/>}
                             isReadOnly={child.readOnly}
+                            isDraggable={isDraggable}
                             cardAction={fieldLength > 1 &&
                             <div className={styles.referenceCardActions}>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>

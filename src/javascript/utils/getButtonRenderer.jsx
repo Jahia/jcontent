@@ -1,9 +1,8 @@
 import {useTranslation} from 'react-i18next';
-import {Button} from '@jahia/moonstone';
+import {Button, Tooltip} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {ellipsizeText} from '~/JContent/JContent.utils';
-import {Tooltip} from '@material-ui/core';
 
 const useLabel = labelProps => {
     const {
@@ -90,7 +89,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
         );
 
         return (showTooltip) ? (
-            <Tooltip title={tooltip} {...defaultTooltipProps} {...tooltipProps}>
+            <Tooltip label={tooltip} {...defaultTooltipProps} {...tooltipProps}>
                 {button}
             </Tooltip>
         ) : button;
@@ -121,4 +120,5 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
 
 export const ButtonRenderer = getButtonRenderer();
 export const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
+export const ButtonRendererIconButton = getButtonRenderer({labelStyle: 'none', showTooltip: true});
 export const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});

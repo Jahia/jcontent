@@ -1,6 +1,4 @@
 .referenceCard {
-    cursor: pointer;
-
     &[disabled="true"] {
         cursor: default;
     }
@@ -12,4 +10,8 @@
             cursor: grabbing;
         }
     }
+}
+
+.referenceCard_hasClick {
+    cursor: pointer;
 }

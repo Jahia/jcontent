@@ -6,6 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard}) => {
+    const isDraggable = component ? component.props.isDraggable : false;
     const {t} = useTranslation('jcontent');
     const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
@@ -16,6 +17,7 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         }
     });
     const [{isDragging}, drag] = useDrag({
+        canDrag: () => isDraggable,
         type: `REFERENCE_CARD_${field.name}`, item: {name: name}, collect: monitor => ({
             isDragging: monitor.isDragging()
         })

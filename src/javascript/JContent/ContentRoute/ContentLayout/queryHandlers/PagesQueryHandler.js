@@ -9,6 +9,14 @@ export const PagesQueryHandler = {
 
     getQuery: () => BaseDescendantsQuery,
 
+    structureTreeEntries: (treeEntries, {hideRoot}) => {
+        // Filter out internal/external links and menu titles off the tree
+        const typesToFilterOut = ['jnt:nodeLink', 'jnt:externalLink', 'jnt:navMenuText'];
+        const filteredTreeEntries = treeEntries.filter(entry => !typesToFilterOut.includes(entry.node.primaryNodeType.name));
+
+        return BaseTreeQueryHandler.structureTreeEntries(filteredTreeEntries, {hideRoot});
+    },
+
     getTreeParams: options => {
         const {openPaths, tableView} = options;
         if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED && tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {

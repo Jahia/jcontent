@@ -197,8 +197,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                  editStyles.enablePointerEvents,
                  sizers,
                  (isInsertionPoint) && styles.insertionPoint,
-                 isEmpty ? styles.isEmpty : styles.isNotEmpty,
-                 isInsertionPoint && !isEmpty && styles.iconButtonGap
+                 isEmpty ? styles.isEmpty : styles.isNotEmpty
              )}
              style={{...currentOffset, ...insertionStyle}}
              data-jahia-parent={parent.getAttribute('id')}

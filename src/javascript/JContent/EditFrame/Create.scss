@@ -2,7 +2,7 @@
     // Hide button label depending on size and number of children
     @for $i from 1 through 10 {
         &:global(.sizer#{$i}) {
-            & > button:first-child:nth-last-child(#{$i}) > span, & > button:first-child:nth-last-child(#{$i}) ~ button > span {
+            & button:first-child:nth-last-child(#{$i}) > span, & button:first-child:nth-last-child(#{$i}) ~ button > span {
                 display: none;
             }
         }
@@ -42,7 +42,7 @@
         background: var(--color-gray_light_plain20);
     }
 
-    & > button {
+    & button {
         z-index: 10000;
 
         overflow: hidden;
@@ -58,15 +58,11 @@
         }
     }
 
-    &.insertionPoint.insertionPoint.insertionPoint.isNotEmpty > button {
+    &.insertionPoint.insertionPoint.insertionPoint.isNotEmpty button {
         width: var(--spacing-big);
 
         border-radius: var(--spacing-nano);
     }
-}
-
-.iconButtonGap {
-    gap: var(--spacing-small);
 }
 
 :global(.noprefix) .dropTarget {

@@ -57,7 +57,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                                 displayName: child.displayName,
                                 name: child.name,
                                 type: child.primaryNodeType.displayName,
-                                url: child.thumbnailUrl || getIconFromNode(child)
+                                thumbnail: child.thumbnailUrl || getIconFromNode(child)
                             }}
                         />}
                 </div>}

@@ -76,7 +76,7 @@ describe('useMediaPickerInputData', () => {
                 type: 'image/jpeg',
                 displayName: 'cake',
                 path: 'placeholder.jpg',
-                url: 'http://placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
+                thumbnail: 'http://placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
             }]
         });
     });

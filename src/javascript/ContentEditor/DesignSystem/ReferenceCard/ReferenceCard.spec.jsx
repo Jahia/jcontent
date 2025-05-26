@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Image} from '@jahia/moonstone';
 
-import {shallowWithTheme} from '@jahia/test-framework';
+import {shallowWithTheme, mount} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import {ReferenceCard} from './ReferenceCard';
 
@@ -48,7 +48,7 @@ describe('reference card filled', () => {
         defaultProps = {
             field: {},
             fieldData: {
-                url: 'iconUrl',
+                thumbnail: 'my-thumpnail-url',
                 displayName: 'name part',
                 type: 'type part',
                 name: 'system name',
@@ -63,14 +63,14 @@ describe('reference card filled', () => {
     });
 
     it('should display the url from field data', () => {
-        const cmp = shallowWithTheme(
+        const cmp = mount(
             <ReferenceCard {...defaultProps}/>,
             {},
             dsGenericTheme
-        ).dive();
+        );
 
-        expect(cmp.find('img').props().src).toContain(
-            defaultProps.fieldData.url
+        expect(cmp.find('img').props().src).toBe(
+            defaultProps.fieldData.thumbnail
         );
     });
 

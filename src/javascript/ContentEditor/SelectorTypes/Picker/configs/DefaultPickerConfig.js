@@ -25,7 +25,7 @@ const usePickerInputData = uuids => {
     const fieldData = data.jcr.result.map(contentData => ({
         uuid: contentData.uuid,
         path: contentData.path,
-        url: contentData.thumbnailUrl || getIconFromNode(contentData),
+        thumbnail: contentData.thumbnailUrl || getIconFromNode(contentData),
         name: contentData.name,
         displayName: contentData.displayName,
         type: contentData.primaryNodeType.displayName

@@ -25,12 +25,12 @@ export const useMediaPickerInputData = uuids => {
     const fieldData = data.jcr.result.map(imageData => {
         const sizeInfo = (imageData.height && imageData.width) ? `${parseInt(imageData.width.value, 10)} x ${parseInt(imageData.height.value, 10)}` : '';
         const mimeType = getMimeType(imageData) || '';
-        const url = imageData.thumbnailUrl ? imageData.thumbnailUrl + (imageData.thumbnailUrl.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + imageData.lastModified?.value : getIconFromMimeType(mimeType);
+        const thumbnail = imageData.thumbnailUrl ? imageData.thumbnailUrl + (imageData.thumbnailUrl.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + imageData.lastModified?.value : getIconFromMimeType(mimeType);
         const size = imageData.content.data.size && bytes(imageData.content.data.size, {unitSeparator: ' '});
 
         return {
             uuid: imageData.uuid,
-            url,
+            thumbnail,
             displayName: imageData.name,
             path: imageData.path,
             type: `${mimeType}`,

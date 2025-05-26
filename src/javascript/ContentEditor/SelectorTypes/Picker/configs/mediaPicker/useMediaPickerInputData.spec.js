@@ -74,7 +74,8 @@ describe('useMediaPickerInputData', () => {
                 uuid: 'this-is-uuid',
                 info: '1920 x 1080 - 976.56 KB',
                 type: 'image/jpeg',
-                displayName: 'cake',
+                displayName: 'a cake',
+                name: 'cake',
                 path: 'placeholder.jpg',
                 thumbnail: 'http://placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
             }]

@@ -31,7 +31,8 @@ export const useMediaPickerInputData = uuids => {
         return {
             uuid: imageData.uuid,
             thumbnail,
-            displayName: imageData.name,
+            displayName: imageData.property?.value || imageData.displayName,
+            name: imageData.name,
             path: imageData.path,
             type: `${mimeType}`,
             info: sizeInfo ? `${sizeInfo} - ${size}` : size

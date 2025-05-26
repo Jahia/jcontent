@@ -3,7 +3,7 @@
 name: Manual Tests Run
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
     inputs:
       jahia_image:
         description: 'Jahia Image'
@@ -17,6 +17,10 @@ on:
         description: 'Cypress config file to use'
         required: false
         default: 'cypress.config-jcontent.ts'
+      jahia_cluster_enabled:
+        description: 'set true if you want the tests to be executed on a jahia cluster'
+        required: false
+        default: 'false'
 
 jobs:
   integration-tests:

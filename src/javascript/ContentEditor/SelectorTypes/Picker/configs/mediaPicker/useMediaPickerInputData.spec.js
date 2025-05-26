@@ -62,7 +62,7 @@ describe('useMediaPickerInputData', () => {
                         mimeType: {value: 'image/jpeg'},
                         data: {size: 1000000}
                     },
-                    thumbnailUrl: 'http://placeholder.jpg?t=thumbnail2'
+                    thumbnailUrl: 'placeholder.jpg?t=thumbnail2'
                 }]
             }
         }});
@@ -77,7 +77,7 @@ describe('useMediaPickerInputData', () => {
                 displayName: 'a cake',
                 name: 'cake',
                 path: 'placeholder.jpg',
-                thumbnail: 'http://placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
+                thumbnail: 'placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
             }]
         });
     });

@@ -35,7 +35,7 @@ const ReferenceCardCmp = ({
                 id={id}
                 className={clsx(styles.referenceCard, className)}
                 thumbnailType={getThumbnailType(fieldData.type)}
-                thumbnailURL={fieldData.url}
+                thumbnail={fieldData.url}
                 displayName={fieldData.displayName}
                 chips={fieldData.type && [<Chip key={fieldData.name} data-sel-referenceCard-type color="accent" label={fieldData.type}/>]}
                 systemName={fieldData.name}

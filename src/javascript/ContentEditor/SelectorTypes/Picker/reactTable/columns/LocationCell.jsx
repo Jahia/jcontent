@@ -1,11 +1,11 @@
 import {Chip, TableBodyCell, Typography} from '@jahia/moonstone';
 import React from 'react';
 import {DisplayAction} from '@jahia/ui-extender';
-import {ButtonRendererNoLabel} from '~/ContentEditor/utils';
 import {Tooltip} from '@material-ui/core';
 import styles from './Cells.scss';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
+import {ButtonRendererIconButton} from '~/utils/getButtonRenderer';
 
 const MAX_BADGES = 3;
 
@@ -26,17 +26,17 @@ export const LocationCell = ({row, column}) => {
                     {sortedLanguages.map(l => <Chip key={l} color="accent" label={l}/>)}
                     {sortedLanguagesLength > sortedLanguages.length && <Chip color="accent" label={'+' + (sortedLanguagesLength - sortedLanguages.length)}/>}
                 </div>
-                <div data-cm-role="table-usages-cell-actions">
+                <div data-cm-role="table-usages-cell-actions" className={styles.buttons}>
                     <DisplayAction
                         actionKey="previewInNewTab"
                         path={row.original.path}
-                        render={ButtonRendererNoLabel}
+                        render={ButtonRendererIconButton}
                         buttonProps={{variant: 'ghost', size: 'big'}}
                     />
                     <DisplayAction
                         actionKey="openInNewTab"
                         path={row.original.path}
-                        render={ButtonRendererNoLabel}
+                        render={ButtonRendererIconButton}
                         buttonProps={{variant: 'ghost', size: 'big'}}
                     />
                 </div>

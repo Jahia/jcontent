@@ -15,7 +15,13 @@ import {
     FileVideo,
     FileWord,
     Folder,
-    Page, Tag
+    Group,
+    Link,
+    Page,
+    Person,
+    Section,
+    Tag,
+    SiteWeb
 } from '@jahia/moonstone';
 
 const imgExtensions = ['avif', 'png', 'jpeg', 'jpg', 'gif', 'svg', 'img', 'webp'];
@@ -84,17 +90,11 @@ export function getIconFromMimeType(mimetype, props = {}) {
     }
 
     if (mimetype.startsWith('text/')) {
-        switch (mimetype.split('/').pop().toLowerCase()) {
-            case codeExtensions.includes(mimetype.split('/').pop().toLowerCase()):
-                return (
-                    <FileCode {...props}/>
-                );
-
-            default:
-                return (
-                    <FileText {...props}/>
-                );
+        if (codeExtensions.includes(mimetype.split('/').pop().toLowerCase())) {
+            return <FileCode {...props}/>;
         }
+
+        return <FileText {...props}/>;
     }
 
     return <File {...props}/>;
@@ -189,8 +189,20 @@ export function getIconFromNode(node, props = {}) {
             return <Folder {...props}/>;
         case 'jnt:page':
             return <Page {...props}/>;
+        case 'jnt:virtualsite':
+            return <SiteWeb {...props}/>;
+        case 'jnt:user':
+            return <Person {...props}/>;
+        case 'jnt:group':
+            return <Group {...props}/>;
         case 'jnt:category':
             return <Tag {...props}/>;
+        case 'jnt:externalLink':
+            return <Link {...props}/>;
+        case 'jnt:nodeLink':
+            return <Link {...props}/>;
+        case 'jnt:navMenuText':
+            return <Section {...props}/>;
         case 'jnt:file':
             if (node.content !== undefined || node.resourceChildren !== undefined) {
                 const mimetype = node.content === undefined ? node.resourceChildren.nodes.pop().mimeType.value : node.content.mimeType.value;

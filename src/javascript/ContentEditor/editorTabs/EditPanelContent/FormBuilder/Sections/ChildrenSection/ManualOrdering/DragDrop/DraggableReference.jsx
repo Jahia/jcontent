@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
 import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {File, Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
-import {encodeJCRPath} from '~/ContentEditor/utils';
+import {getIconFromNode} from '~/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 
 export const DraggableReference = ({child, index, onReorder, onValueMove, fieldName, fieldLength}) => {
@@ -57,7 +57,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
                                 displayName: child.displayName,
                                 name: child.name,
                                 type: child.primaryNodeType.displayName,
-                                url: encodeJCRPath(`${child.primaryNodeType.icon}.png`)
+                                url: child.thumbnailUrl || getIconFromNode(child)
                             }}
                         />}
                 </div>}

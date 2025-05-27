@@ -4,7 +4,7 @@ import {createSite, deleteSite} from '@jahia/cypress';
 describe('Export tests', () => {
     const siteKey = 'jContentSite-export';
     const downloadsFolder = Cypress.config('downloadsFolder');
-    const labelWithSpecialCharacters =  "With spëciaŁ chracters"
+    const labelWithSpecialCharacters =  "With spëc!aŁ + ch@racters"
 
     before(() => {
         createSite(siteKey);

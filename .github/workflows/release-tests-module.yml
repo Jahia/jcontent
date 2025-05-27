@@ -50,9 +50,9 @@ jobs:
               echo "Dry run should be executed in non-master branch"
             else
               echo "Executing npm publish in dry-run mode"
-              npm publish --provenance --access public --dry-run
+              npm publish --access public --dry-run
             fi
           else 
             echo "Publishing jContent tests in npm..."
-            npm publish --provenance --access public
+            npm publish --access public
           fi

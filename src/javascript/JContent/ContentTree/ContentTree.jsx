@@ -50,7 +50,7 @@ const ItemComponent = ({children, node, item, treeEntries, virtualizer, virtualR
         dropTarget: node,
         orderable: item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canReorder),
         entries: treeEntries,
-        refetchQueries: ['PickerQuery__DisplayName_LockInfo_MixinTypes_ParentNodeWithName_PickerPrimaryNodeTypeName_PublicationStatus']
+        refetchQueries: ['PickerQuery__DisplayName_LockInfo_PickerMixinTypes_ParentNodeWithName_PickerPrimaryNodeTypeName_PublicationStatus']
     });
     const [{isCanDrop: isCanDropFile}, dropFile] = useFileDrop({
         uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD,

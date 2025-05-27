@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 const PickerItemsFragment = {
     mixinTypes: {
         applyFor: 'node',
-        gql: gql`fragment MixinTypes on JCRNode {
+        gql: gql`fragment PickerMixinTypes on JCRNode {
             mixinTypes {
                 name
             }

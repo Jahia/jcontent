@@ -108,6 +108,7 @@ jobs:
           testrail_project: jContent Module
           tests_manifest: provisioning-manifest-build.yml
           jahia_image: jahia/jahia-ee-dev:8-SNAPSHOT
+          jahia_cluster_enabled: false
           should_skip_testrail: true
           tests_profile: ${{ matrix.config_file }}
           github_artifact_name: jcontent-standalone-${{ matrix.config_file }}-${{ github.run_number }}

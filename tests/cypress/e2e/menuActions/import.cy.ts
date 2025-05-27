@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 
-describe('import', {testIsolation: false}, () => {
+describe('Import tests', {testIsolation: false}, () => {
     const siteKey = 'jContentSite-import';
 
     before(function () {
@@ -26,5 +26,12 @@ describe('import', {testIsolation: false}, () => {
         jcontent.getBrowseControlMenu().selectByRole('import');
         cy.get('#file-upload-input').selectFile('cypress/fixtures/jcontent/menuActions/test-content.zip', {force: true});
         jcontent.getTable().getRowByLabel('import-text');
+    });
+
+    it('can import a content with special character in a folder', function () {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.getBrowseControlMenu().selectByRole('import');
+        cy.get('#file-upload-input').selectFile('cypress/fixtures/jcontent/menuActions/test-content-special-characters.zip', {force: true});
+        jcontent.getTable().getRowByLabel('$ome [text] with spéciǎ| ch@řācters : "test" & \'test\' ! ');
     });
 });

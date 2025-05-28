@@ -196,9 +196,9 @@
       "navigation": {
         "savedSearches": "Recherches sauvegardées",
         "workflow": "Workflow",
-        "media": "Média",
+        "media": "Médias",
         "pages": "Pages",
-        "contentFolders": "Dossier de contenu",
+        "contentFolders": "Dossiers de contenu",
         "forms": "Formulaires",
         "apps": {
           "title": "Extensions",
@@ -808,7 +808,7 @@
           }
         },
         "listAndOrdering": {
-          "title": "Liste de contenu & ordre",
+          "title": "Liste de contenus & ordre de tri",
           "ordering": "Ordre",
           "btnMoveFirst": "Déplacer en première position",
           "btnMoveLast": "Déplacer en dernière position",
@@ -816,11 +816,11 @@
           "btnMoveDown": "Descendre d'une place",
           "automatic": "Classement automatique",
           "orderBy": "Trier par",
-          "description": "Activez le classement automatique pour organiser vos sous-contenus en utilisant au maximum de trois critères, ou réorganisez vos sous-contenus manuellement, par glisser-déposer."
+          "description": "Activez le tri automatique pour organiser vos contenus en utilisant au maximum trois critères, ou réorganisez vos contenus manuellement."
         },
         "listSizeLimit": {
           "name": "Nombre d'éléments",
-          "description": "Définissez un nombre limite d'éléments qui peuvent être affichés/créés dans cette zone. Désactivez pour enlever la limite. Si la liste contient plus d'éléments que la limite, alors ces éléments ne seront simplement pas affichés, ils ne seront pas supprimés."
+          "description": "Définissez un nombre maximum d'éléments qui peuvent être affichés/créés dans cette zone. Désactivez pour enlever la limite. Si la liste contient plus d'éléments que la limite, alors ces éléments ne seront simplement pas affichés, ils ne seront pas supprimés."
         }
       },
       "siteSwitcher": {
@@ -838,7 +838,7 @@
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
         "mandatoryLanguageValid": "Le contenu ne sera visible en ligne qu'après publication dans toutes les langues obligatoires.",
-        "conflict": "Un contenu avec le même nom existe déjà en ligne et ne fera pas partie de cette publication",
+        "conflict": "Un contenu avec le même nom existe déjà en ligne et sera exclu de cette publication.",
         "unknown": "Statut de publication indisponible"
       },
       "global": {
@@ -883,7 +883,7 @@
           },
           "tabs": {
             "pages": "Pages",
-            "contentFolders": "Dossier de contenu"
+            "contentFolders": "Dossiers de contenu"
           }
         },
         "selectors": {
@@ -898,31 +898,31 @@
       "readOnly": "Lecture seule",
       "selectorTypes": {
         "checkbox": {
-          "displayValue": "Checkbox",
-          "description": "Affiche une checkbox"
+          "displayValue": "Case à cocher",
+          "description": "Affiche une case à cocher"
         },
         "color": {
-          "displayValue": "Color",
-          "description": "Sélectionner une couleur visuellement ou entrer une valeur hexadécimale"
+          "displayValue": "Couleur",
+          "description": "Sélectionner une couleur visuellement ou saisir une valeur hexadécimale"
         },
         "textArea": {
-          "displayValue": "Text Area",
+          "displayValue": "Zone de texte",
           "description": "Textes non-formatés, sur plusieurs lignes."
         },
         "richText": {
-          "displayValue": "Rich text",
+          "displayValue": "Text riche",
           "description": "Textes formatés sur plusieurs lignes (titres, images, liens, ...)"
         },
         "dropdown": {
-          "displayValue": "Dropdown",
-          "description": "Sélectionner une/des valeur(s) à partir d'une liste"
+          "displayValue": "Liste déroulante",
+          "description": "Sélectionner une ou plusieurs valeurs depuis une liste déroulante"
         },
         "picker": {
           "displayValue": "Picker",
           "description": "Choisir des médias, fichiers ou contenus"
         },
         "dateTimePicker": {
-          "displayValue": "Date time",
+          "displayValue": "Date & heure",
           "description": "Sélectionner une date et un horaire dans un calendrier",
           "today": "Aujourd'hui"
         },
@@ -935,19 +935,19 @@
           "description": "Champ texte"
         },
         "category": {
-          "displayValue": "Hierarchical Tree selector",
-          "description": "Sélectionner une valeur à partir de données en arbre"
+          "displayValue": "Sélecteur en arbre",
+          "description": "Sélectionner une valeur à partir de données hiérarchiques présentées en arbre"
         },
         "tag": {
-          "displayValue": "Tag",
+          "displayValue": "Etiquettes",
           "description": "Sélectionner à partir d'une liste ou créer de nouvelles valeurs"
         },
         "multipleLeftRightSelector": {
-          "displayValue": "Multiple list",
-          "description": "Sélectionner de nombreuses valeurs à partir d'une liste"
+          "displayValue": "Liste multiple",
+          "description": "Sélectionner une ou plusieurs valeurs à partir d'une liste"
         },
         "radioButton": {
-          "displayValue": "Radio button",
+          "displayValue": "Bouton radio",
           "description": "Alternative à la liste déroulante à choix unique pour sélectionner un élément"
         }
       },

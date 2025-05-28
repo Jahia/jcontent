@@ -40,7 +40,13 @@
     width: 100%;
     margin-bottom: var(--spacing-nano);
 
-    cursor: grab;
+    &[draggable="true"] {
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
 
     &:hover * > * {
         visibility: visible;
@@ -56,4 +62,8 @@
 //OrderableValue
 .draggableIcon {
     cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
 }

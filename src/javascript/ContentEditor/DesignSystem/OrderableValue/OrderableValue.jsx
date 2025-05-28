@@ -1,24 +1,47 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
+import clsx from 'clsx';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {Button, Close, HandleDrag} from '@jahia/moonstone';
-import React from 'react';
+import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 
-export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard}) => {
-    const isDraggable = component ? component.props.isDraggable : false;
+const isDraggable = component => {
+    if (!component) {
+        return false;
+    }
+
+    if (typeof component.props.readOnly === 'boolean') {
+        return !component.props.readOnly;
+    }
+
+    if (typeof component.props.isDraggable === 'boolean') {
+        return component.props.isDraggable;
+    }
+
+    // Check if the component has multiple values
+    return (component.props.values?.[component.props.field?.name]?.length ?? 0) > 1;
+};
+
+export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard = false}) => {
+    const canDrag = useMemo(() => isDraggable(component), [component]);
+
     const {t} = useTranslation('jcontent');
     const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
-        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.name, index), collect: monitor => {
+        accept: `REFERENCE_CARD_${field.name}`,
+        drop: item => onValueReorder(item.name, index),
+        collect: monitor => {
             return {
                 isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().name !== name
             };
         }
     });
     const [{isDragging}, drag] = useDrag({
-        canDrag: () => isDraggable,
-        type: `REFERENCE_CARD_${field.name}`, item: {name: name}, collect: monitor => ({
+        canDrag: () => canDrag,
+        type: `REFERENCE_CARD_${field.name}`,
+        item: {name: name},
+        collect: monitor => ({
             isDragging: monitor.isDragging()
         })
     });
@@ -33,11 +56,11 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         >
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {component &&
-                <div className={styles.draggableCard} {...(isReferenceCard && {ref: drag})}>
+                <div ref={isReferenceCard ? drag : null} className={styles.draggableCard} draggable={canDrag}>
                     {!isDragging &&
                         <>
                             {!isReferenceCard &&
-                            <div ref={drag} className={styles.draggableIcon}>
+                            <div ref={drag} className={clsx({[styles.draggableIcon]: canDrag})} draggable={canDrag}>
                                 <HandleDrag size="big"/>
                             </div>}
                             {component}

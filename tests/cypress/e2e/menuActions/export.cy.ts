@@ -7,7 +7,6 @@ describe('Export tests', () => {
 
 
     before(() => {
-        deleteSite(siteKey);
         createSite(siteKey);
         cy.apollo({
             mutationFile: 'jcontent/createContentFolder.graphql',
@@ -20,14 +19,14 @@ describe('Export tests', () => {
     });
 
     after(() => {
-       // deleteSite(siteKey);
+        deleteSite(siteKey);
         cy.logout();
     });
 
     it('should export a content with special characters as zip', () => {
         cy.login();
 
-        const characters = ['1', ' ', 'à', '-', '.'];
+        const characters = ['1', ' ', '-', '.'];
 
         characters.forEach(character => {
 

@@ -20,34 +20,34 @@ describe('Export tests', () => {
     });
 
     it('should export a content with characters 1 as zip', () => {
-        exportAndReimport('1');
+        exportAndReimportAsZip('1');
     });
 
     it('should export a content with characters quote as zip', () => {
-        exportAndReimport('\'');
+        exportAndReimportAsZip('\'');
     });
 
     it('should export a content with characters & as zip', () => {
-        exportAndReimport('&');
+        exportAndReimportAsZip('&');
     });
 
     it('should export a content with characters + as zip', () => {
-        exportAndReimport('+');
+        exportAndReimportAsZip('+');
     });
 
     it('should export a content with characters . as zip', () => {
-        exportAndReimport('.');
+        exportAndReimportAsZip('.');
     });
 
     it('should export a content with characters - as zip', () => {
-        exportAndReimport('-');
+        exportAndReimportAsZip('-');
     });
 
     it('should export a content with characters space as zip', () => {
-        exportAndReimport(' ');
+        exportAndReimportAsZip(' ');
     });
 
-    function exportAndReimport(character: string) {
+    function exportAndReimportAsZip(character: string) {
         cy.login();
         const labelWithSpecialCharacters = 'Special' + character + 'characters';
 

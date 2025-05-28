@@ -146,7 +146,7 @@
         "searchPath": "Recherche sous: {{path}}",
         "clear": "Effacer la recherche",
         "refresh": "Rafraîchir les résultats",
-        "normalPrompt": "Que cherchez-vous?",
+        "normalPrompt": "Que cherchez-vous ?",
         "sql2Prompt": "Vous utilisez des requêtes SQL2. Consultez l'<0>Academy</0> pour plus d'informations.",
         "modal": {
           "cancel": "Annuler"

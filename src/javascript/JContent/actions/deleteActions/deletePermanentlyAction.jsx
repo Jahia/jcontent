@@ -30,6 +30,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
         {
             getDisplayName: true,
             getPrimaryNodeType: true,
+            getIsNodeTypes: ['jmix:autoPublish'],
             getProperties: ['jcr:mixinTypes'],
             getAggregatedPublicationInfo: true,
             getOperationSupport: true,

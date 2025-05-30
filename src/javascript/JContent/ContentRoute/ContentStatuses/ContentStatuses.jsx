@@ -7,6 +7,7 @@ import {getTooltip} from './ContentStatuses.utils';
 import styles from './ContentStatuses.scss';
 import Status from './Status';
 import clsx from 'clsx';
+import {setPublicationStatus} from '~/utils/contentStatus';
 
 const useContentStatuses = ({node, language}) => {
     const statuses = {
@@ -26,24 +27,9 @@ const useContentStatuses = ({node, language}) => {
             node.channelConditions?.values.length > 0)
     };
 
-    if (node.aggregatedPublicationInfo) {
-        const {publicationStatus, existsInLive} = node.aggregatedPublicationInfo;
-        statuses.published = existsInLive;
-        if (publicationStatus === JContentConstants.availablePublicationStatuses.MODIFIED) {
-            statuses.modified = true;
-            statuses.published = true;
-        } else if (publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED) {
-            statuses.published = false;
-        } else if (publicationStatus === JContentConstants.availablePublicationStatuses.PUBLISHED) {
-            statuses.published = true;
-        } else if (publicationStatus === JContentConstants.availablePublicationStatuses.UNPUBLISHED) {
-            statuses.published = false;
-        } else if (publicationStatus && publicationStatus !== JContentConstants.availablePublicationStatuses.MARKED_FOR_DELETION) {
-            statuses.warning = true;
-        }
-    }
+    const {publicationStatus, existsInLive} = node.aggregatedPublicationInfo || {};
+    setPublicationStatus(statuses, publicationStatus, existsInLive);
 
-    statuses.notPublished = !statuses.published;
     return statuses;
 };
 

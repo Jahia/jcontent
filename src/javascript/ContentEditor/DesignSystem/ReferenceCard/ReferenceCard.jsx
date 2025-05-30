@@ -45,7 +45,6 @@ const ReferenceCardCmp = ({
                 data-sel-field-picker="filled"
                 data-sel-field-picker-action="openPicker"
                 cardAction={cardAction}
-                draggable={!isReadOnly}
                 onClick={onClick}
                 {...props}
             />

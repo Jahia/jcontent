@@ -35,7 +35,7 @@ const ReferenceCardCmp = ({
                 id={id}
                 className={clsx(styles.referenceCard, className)}
                 thumbnailType={getThumbnailType(fieldData.type)}
-                thumbnailURL={fieldData.url}
+                thumbnail={fieldData.thumbnail}
                 displayName={fieldData.displayName}
                 chips={fieldData.type && [<Chip key={fieldData.name} data-sel-referenceCard-type color="accent" label={fieldData.type}/>]}
                 systemName={fieldData.name}
@@ -83,13 +83,13 @@ ReferenceCardCmp.propTypes = {
     className: PropTypes.object,
     onClick: PropTypes.func,
     fieldData: PropTypes.shape({
-        url: PropTypes.string.isRequired,
+        thumbnail: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         displayName: PropTypes.string.isRequired,
         type: PropTypes.string,
         name: PropTypes.string,
         info: PropTypes.string
     }),
-    cardAction: PropTypes.element,
+    cardAction: PropTypes.node,
     emptyLabel: PropTypes.string,
     emptyIcon: PropTypes.element
 };

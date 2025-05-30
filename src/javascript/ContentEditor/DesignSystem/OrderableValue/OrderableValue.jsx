@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
-import {Button, Close, HandleDrag} from '@jahia/moonstone';
+import {Button, Tooltip, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -40,12 +40,15 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
                             </div>}
                             {component}
                         </>}
-                    {!isDragging && <Button variant="ghost"
-                                            data-sel-action={`removeField_${index}`}
-                                            aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
-                                            icon={<Close/>}
-                                            onClick={() => onFieldRemove(index)}
-                    />}
+                    {!isDragging &&
+                    <Tooltip label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}>
+                        <Button variant="ghost"
+                                data-sel-action={`removeField_${index}`}
+                                aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
+                                icon={<Close/>}
+                                onClick={() => onFieldRemove(index)}
+                        />
+                    </Tooltip>}
                 </div>}
         </div>
     );

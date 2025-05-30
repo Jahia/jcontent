@@ -2,7 +2,7 @@ import React from 'react';
 import {File, FileBroken} from '@jahia/moonstone';
 import {useQuery} from '@apollo/client';
 import {ContentPickerFilledQuery} from './ContentPicker.gql-queries';
-import {encodeJCRPath} from '~/ContentEditor/utils';
+import {getIconFromNode} from '~/utils';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 const usePickerInputData = uuids => {
@@ -25,7 +25,7 @@ const usePickerInputData = uuids => {
     const fieldData = data.jcr.result.map(contentData => ({
         uuid: contentData.uuid,
         path: contentData.path,
-        url: encodeJCRPath(`${contentData.primaryNodeType.icon}.png`),
+        thumbnail: contentData.thumbnailUrl || getIconFromNode(contentData),
         name: contentData.name,
         displayName: contentData.displayName,
         type: contentData.primaryNodeType.displayName

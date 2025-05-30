@@ -9,7 +9,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer, onListReorder, onDirectionalReorder} from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
+import {Button, Tooltip, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
 import {DefaultPickerConfig} from '~/ContentEditor/SelectorTypes/Picker/configs/DefaultPickerConfig';
 import {useFormikContext} from 'formik';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
@@ -81,12 +81,48 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                             cardAction={fieldData.length > 1 &&
                                 <div className={styles.referenceCardActions}>
                                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronFirstList/>} data-sel-action={`moveToFirst_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'first')}/>
-                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronLastList/>} data-sel-action={`moveToLast_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'last')}/>
+                                        <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}>
+                                            <Button
+                                                isDisabled={index === 0}
+                                                variant="ghost"
+                                                icon={<ChevronFirstList/>}
+                                                data-sel-action={`moveToFirst_${index}`}
+                                                aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}
+                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'first')}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}>
+                                            <Button
+                                                isDisabled={index === fieldData.length - 1}
+                                                variant="ghost"
+                                                icon={<ChevronLastList/>}
+                                                data-sel-action={`moveToLast_${index}`}
+                                                aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}
+                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'last')}
+                                            />
+                                        </Tooltip>
                                     </div>
                                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                                        <Button isDisabled={index === 0} variant="ghost" icon={<ChevronUp/>} data-sel-action={`moveUp_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'up')}/>
-                                        <Button isDisabled={index === fieldData.length - 1} variant="ghost" icon={<ChevronDown/>} data-sel-action={`moveDown_${index}`} onClick={() => onValueMove(`${field.name}[${index}]`, 'down')}/>
+                                        <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveUp')}>
+                                            <Button
+                                                isDisabled={index === 0}
+                                                variant="ghost"
+                                                icon={<ChevronUp/>}
+                                                data-sel-action={`moveUp_${index}`}
+                                                aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveUp')}
+                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'up')}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}>
+                                            <Button
+                                                isDisabled={index === fieldData.length - 1}
+                                                variant="ghost"
+                                                icon={<ChevronDown/>}
+                                                data-sel-action={`moveDown_${index}`}
+                                                aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}
+                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'down')}
+                                            />
+                                        </Tooltip>
                                     </div>
                                 </div>}/>}
                         field={field}

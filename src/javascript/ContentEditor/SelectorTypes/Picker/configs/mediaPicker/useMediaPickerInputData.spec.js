@@ -62,7 +62,7 @@ describe('useMediaPickerInputData', () => {
                         mimeType: {value: 'image/jpeg'},
                         data: {size: 1000000}
                     },
-                    thumbnailUrl: 'http://placeholder.jpg?t=thumbnail2'
+                    thumbnailUrl: 'placeholder.jpg?t=thumbnail2'
                 }]
             }
         }});
@@ -74,9 +74,10 @@ describe('useMediaPickerInputData', () => {
                 uuid: 'this-is-uuid',
                 info: '1920 x 1080 - 976.56 KB',
                 type: 'image/jpeg',
-                displayName: 'cake',
+                displayName: 'a cake',
+                name: 'cake',
                 path: 'placeholder.jpg',
-                url: 'http://placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
+                thumbnail: 'placeholder.jpg?t=thumbnail2&lastModified=tomorrow'
             }]
         });
     });

@@ -17,7 +17,8 @@ export const PublishManagerActionComponent = props => {
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
-        getPermissions: ['publish', 'publication-start']
+        getPermissions: ['publish', 'publication-start'],
+        hideOnNodeTypes: ['jnt:category']
     });
 
     if (res.loading) {

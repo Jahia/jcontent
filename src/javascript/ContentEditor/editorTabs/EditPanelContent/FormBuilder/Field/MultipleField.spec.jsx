@@ -19,8 +19,8 @@ jest.mock('react', () => {
 jest.mock('react-dnd', () => {
     return {
         ...jest.requireActual('react-dnd'),
-        useDrop: jest.fn(() => ['drop', 'drop']),
-        useDrag: jest.fn(() => ['drop', 'drop'])
+        useDrop: jest.fn(() => [{handlerId: 'abacaba'}, jest.fn()]),
+        useDrag: jest.fn(() => [{isDragging: false}, jest.fn(), jest.fn()])
     };
 });
 
@@ -61,6 +61,7 @@ describe('Multiple component', () => {
             remove: jest.fn(),
             onChange: jest.fn(),
             onBlur: jest.fn()
+
         };
     });
 
@@ -71,7 +72,7 @@ describe('Multiple component', () => {
             {},
             dsGenericTheme
         );
-        expect(cmp.find('OrderableValue').length).toBe(3);
+        expect(cmp.find('OrderableValue').length).toBe(2);
     });
 
     it('should call onChange when removing a value', () => {

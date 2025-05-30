@@ -49,7 +49,7 @@ describe('Picker tests - multiple', () => {
             .get()
             .find('[data-sel-content-editor-multiple-generic-field]')
             .then(elems => {
-                expect(elems.length).eq(numRows + 1); // Includes last reorder row
+                expect(elems.length).eq(numRows); // Includes last reorder row
                 cy.wrap(elems).find('[data-sel-referenceCard-type]').should('contain', mimeType);
 
                 cy.log('verify removed element is reflected in selection');

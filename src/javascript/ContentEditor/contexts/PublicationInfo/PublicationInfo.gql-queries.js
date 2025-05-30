@@ -2,12 +2,13 @@ import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
 export const PublicationInfoQuery = gql`
-    query getNodeProperties($uuid:String!, $language:String!) {
+    query getNodePublicationProperties($uuid:String!, $language:String!) {
         jcr {
             nodeById(uuid: $uuid) {
                 ...NodeCacheRequiredFields
                 aggregatedPublicationInfo(language: $language, subNodes: false, references: false) {
                     publicationStatus
+                    existsInLive
                 }
                 lastModifiedBy:property(name:"jcr:lastModifiedBy", language: $language){
                     value

@@ -33,5 +33,6 @@ export function setPublicationStatus(statuses, publicationStatus, existsInLive) 
         default:
             statuses.warning = true;
     }
+
     statuses.notPublished = !statuses.published;
 }

@@ -77,6 +77,7 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                         component={<ReferenceCard
                             id={fieldVal.name}
                             isReadOnly={field.readOnly}
+                            isDraggable={!field.readOnly && fieldData.length > 1}
                             fieldData={fieldVal}
                             cardAction={fieldData.length > 1 &&
                                 <div className={styles.referenceCardActions}>

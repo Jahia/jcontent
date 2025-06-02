@@ -16,12 +16,12 @@
     pointer-events: none;
 }
 
-.draggingCard {
-    background-color: var(--color-accent_light_plain20) !important;
+.draggableCard.draggingCard {
+    background-color: var(--color-accent_light_plain20);
 }
 
-.draggingCard * {
-    visibility: hidden !important;
+.draggableCard.draggingCard * {
+    visibility: hidden;
 }
 
 .draggableCard {

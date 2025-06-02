@@ -60,7 +60,7 @@ export function useReorderList(items) {
         }
 
         setReorderedItems(newReorderedItems);
-        itemsRef.current = {items, serialized: JSON.stringify(items)};
+        itemsRef.current = {items, serialized: currentItemsSerialized};
         return {reorderedItems: newReorderedItems, handleReorder, reset};
     }
 
@@ -73,6 +73,7 @@ export function useReorderList(items) {
 
 /**
  * Custom hook to handle the drop event for reordering items.
+ * This hook main purpose is to provide a reusable hover function, designed to work with useReorderList
  * @param {object} args    object contains the following properties:
  * @param {object} args.ref    reference to the drop target
  * @param {number} args.index    index of the item being hovered

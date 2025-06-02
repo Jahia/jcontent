@@ -7,6 +7,7 @@ import {
     getComponentByAttr,
     getComponentByRole,
     getComponentBySelector,
+    getComponentByContent,
     getElement,
     Menu,
     SecondaryNav,
@@ -23,6 +24,7 @@ import {CompareDialog} from './compareDialog';
 import {PageBuilderHeaders, PageBuilderModule} from './pageBuilder';
 import VisitOptions = Cypress.VisitOptions;
 import {ContentStatusSelector} from './contentStatusSelector';
+import {ContentStatus} from './contentStatus';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -191,8 +193,16 @@ export class JContent extends BasePage {
         return new JContentPageBuilder(this);
     }
 
+    getHeader() {
+        return getComponentBySelector(BaseComponent, '.moonstone-header');
+    }
+
     assertStatus(value: string) {
-        cy.get('.moonstone-header [data-sel-role="content-status"]').contains(value);
+        getComponentByContent(ContentStatus, value, this.getHeader());
+    }
+
+    assertStatusType(value: string) {
+        getComponentByAttr(ContentStatus, 'data-status-type', value, this.getHeader()).should('be.visible');
     }
 
     clearClipboard(): JContent {

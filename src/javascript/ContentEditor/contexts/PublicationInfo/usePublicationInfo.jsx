@@ -31,6 +31,7 @@ export const usePublicationInfo = (queryParams, t) => {
 
     return {
         publicationStatus: data.jcr.nodeById.aggregatedPublicationInfo.publicationStatus,
+        existsInLive: data.jcr.nodeById.aggregatedPublicationInfo.existsInLive,
         lastModified: data.jcr.nodeById.lastModified?.value,
         lastModifiedBy: data.jcr.nodeById.lastModifiedBy?.value,
         lastPublished: data.jcr.nodeById.lastPublished?.value,

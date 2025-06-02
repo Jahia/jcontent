@@ -47,6 +47,7 @@ export const GetContentStatuses = gql`
                 ...NodeCacheRequiredFields
                 aggregatedPublicationInfo(language: $language, subNodes: true) {
                     publicationStatus
+                    existsInLive
                 }
                 lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {
                     value

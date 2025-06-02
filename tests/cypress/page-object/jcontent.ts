@@ -79,27 +79,6 @@ export class JContent extends BasePage {
         return new ContentEditor();
     }
 
-    exportComponentByText(text: string, downloadsFolder:string, workspace:string = 'Staging content only', exportFormat: string = 'zip') {
-        this.getTable().getRowByLabel(text).contextMenu().select('Export');
-
-        const dialog = getComponentByAttr(BaseComponent, 'data-cm-role', 'export-options');
-        dialog.should('be.visible');
-
-        getComponentByAttr(Dropdown, 'data-cm-role', 'select-workspace', dialog).select(workspace);
-
-        if (exportFormat === 'xml') {
-            dialog.get().find('[data-cm-role="export-as-xml"] input[type="checkbox"]').should('not.be.disabled').check();
-        }
-
-        getComponentByAttr(Button, 'data-cm-role', 'export-button').click();
-        dialog.should('not.exist');
-
-        cy.waitUntil(() => cy.exec(`ls ${downloadsFolder}`).then(result => {
-            console.log(result.stdout);
-            return result.stdout.includes(`${text}.zip`);
-        }), {timeout: 30000, interval: 1000, errorMsg: 'Unable to download content as zip'});
-    }
-
     getCreatePage(): void {
         cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
     }
@@ -115,7 +94,7 @@ export class JContent extends BasePage {
     }
 
     getBrowseControlMenu(): Menu {
-        getComponentByRole(Button, 'browseControlBarMenu').click();
+        getComponentByRole(Button, 'contentMenu').click();
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
@@ -251,6 +230,10 @@ export class JContent extends BasePage {
     publish() {
         cy.get('[data-sel-role="publish"]').click();
         this.clickPublishNow();
+    }
+
+    startImport() {
+        cy.get('[data-sel-role="import"]').click();
     }
 
     publishAll() {

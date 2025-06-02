@@ -205,7 +205,7 @@ export function getIconFromNode(node, props = {}) {
             return <Section {...props}/>;
         case 'jnt:file':
             if (node.content !== undefined || node.resourceChildren !== undefined) {
-                const mimetype = node.content === undefined ? node.resourceChildren.nodes.pop().mimeType.value : node.content.mimeType.value;
+                const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType.value : node.content.mimeType.value;
                 return getIconFromMimeType(mimetype, props);
             }
 

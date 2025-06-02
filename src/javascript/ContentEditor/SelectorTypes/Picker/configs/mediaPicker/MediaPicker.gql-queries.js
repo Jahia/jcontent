@@ -6,7 +6,7 @@ const MediaPickerFilledQuery = gql`
         jcr {
             result: nodesById(uuids: $uuids) {
                 displayName(language: $language)
-                property(language: $language, name: "jcr:title"){value}
+                title: property(language: $language, name: "jcr:title"){value}
                 name
                 width: property(name: "j:width") {
                     value

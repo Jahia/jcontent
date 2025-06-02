@@ -34,13 +34,13 @@ export const useMediaPickerInputData = uuids => {
     const fieldData = data.jcr.result.map(imageData => {
         const sizeInfo = (imageData.height && imageData.width) ? `${parseInt(imageData.width.value, 10)} x ${parseInt(imageData.height.value, 10)}` : '';
         const mimeType = getMimeType(imageData) || '';
-        const thumbnail = imageData.thumbnailUrl ? getThumbnailUrl(imageData) : getIconFromMimeType(mimeType);
+        const thumbnail = getThumbnailUrl(imageData) || getIconFromMimeType(mimeType);
         const size = imageData.content.data.size && bytes(imageData.content.data.size, {unitSeparator: ' '});
 
         return {
             uuid: imageData.uuid,
             thumbnail,
-            displayName: imageData.property?.value || imageData.displayName,
+            displayName: imageData.title?.value || imageData.displayName,
             name: imageData.name,
             path: imageData.path,
             type: `${mimeType}`,

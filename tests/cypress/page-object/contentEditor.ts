@@ -1,6 +1,7 @@
 import {
     BasePage,
     Button,
+    getComponent,
     getComponentByAttr,
     getComponentByRole,
     getComponentBySelector,
@@ -13,6 +14,7 @@ import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
 import {AdvancedOptions} from './advancedOptions';
 import {Section} from './section';
+import {ContentStatus} from './contentStatus';
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
@@ -48,7 +50,11 @@ export class ContentEditor extends BasePage {
     }
 
     static getContentEditor() : ContentEditor {
-        return getComponentBySelector(ContentEditor, ContentEditor.defaultSelector);
+        return getComponent(ContentEditor);
+    }
+
+    assertStatusType(statusType: string) {
+        return getComponentByAttr(ContentStatus, 'data-status-type', statusType).should('be.visible');
     }
 
     getSection(sectionName: string) {

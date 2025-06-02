@@ -94,7 +94,7 @@ export class JContent extends BasePage {
     }
 
     getBrowseControlMenu(): Menu {
-        getComponentByRole(Button, 'contentMenu').click();
+        getComponentByRole(Button, 'browseControlBarMenu').click();
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

@@ -37,7 +37,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
         <div ref={drop} className={styles.fieldComponentContainer}>
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {child &&
-                <div ref={isDraggable ? drag : null} data-remove="draggableReference" className={styles.draggableCard}>
+                <div ref={isDraggable ? drag : null} className={styles.draggableCard}>
                     {!isDragging &&
                         <ReferenceCard
                             id={child.name}

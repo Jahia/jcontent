@@ -8,23 +8,6 @@
     margin: var(--spacing-small) 0;
 }
 
-.referenceDropGhostHidden {
-    height: var(--spacing-small);
-
-    transition: all 0.3s ease;
-}
-
-.referenceDropGhost {
-    height: 72px;
-    margin: var(--spacing-small) 0;
-
-    background-color: var(--color-accent_light_plain20);
-
-    &:only-child {
-        margin-top: var(--spacing-small);
-    }
-}
-
 .referenceCardActions {
     display: flex;
 
@@ -33,12 +16,20 @@
     pointer-events: none;
 }
 
+.draggableCard.draggingCard {
+    background-color: var(--color-accent_light_plain20);
+}
+
+.draggableCard.draggingCard * {
+    visibility: hidden;
+}
+
 .draggableCard {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
-    margin-bottom: var(--spacing-nano);
+    margin: var(--spacing-small) 0;
 
     &[draggable="true"] {
         cursor: grab;

@@ -232,10 +232,6 @@ export class JContent extends BasePage {
         this.clickPublishNow();
     }
 
-    startImport() {
-        cy.get('[data-sel-role="import"]').click();
-    }
-
     publishAll() {
         cy.get('[data-sel-role="publishAll"]').click();
         this.clickPublishNow();

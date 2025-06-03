@@ -1,3 +1,4 @@
+import React from 'react';
 import {DefaultPickerConfig} from './DefaultPickerConfig';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {useQuery} from '@apollo/client';
@@ -74,7 +75,7 @@ describe('ContentPicker config', () => {
                     name: 'cake',
                     displayName: 'a cake',
                     path: 'florent/bestArticles',
-                    url: 'anUrl.png'
+                    thumbnail: <img src="anUrl.png"/>
                 }]
             });
         });

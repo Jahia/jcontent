@@ -6,6 +6,7 @@ const MediaPickerFilledQuery = gql`
         jcr {
             result: nodesById(uuids: $uuids) {
                 displayName(language: $language)
+                title: property(language: $language, name: "jcr:title"){value}
                 name
                 width: property(name: "j:width") {
                     value
@@ -22,7 +23,7 @@ const MediaPickerFilledQuery = gql`
                         value
                     }
                 }
-                thumbnailUrl(name: "thumbnail2")
+                thumbnailUrl(name: "thumbnail2", checkIfExists: true) 
                 lastModified: property(name: "jcr:lastModified") {
                     value
                 }

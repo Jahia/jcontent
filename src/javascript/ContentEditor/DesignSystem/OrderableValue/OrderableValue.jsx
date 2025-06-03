@@ -1,22 +1,28 @@
 import {useTranslation} from 'react-i18next';
 import {useDrag, useDrop} from 'react-dnd';
+import clsx from 'clsx';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {Button, Tooltip, Close, HandleDrag} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard}) => {
+export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, component, isReferenceCard = false, isDraggable = false}) => {
     const {t} = useTranslation('jcontent');
     const name = `${field.name}[${index}]`;
     const [{isDropping}, drop] = useDrop({
-        accept: `REFERENCE_CARD_${field.name}`, drop: item => onValueReorder(item.name, index), collect: monitor => {
+        accept: `REFERENCE_CARD_${field.name}`,
+        drop: item => onValueReorder(item.name, index),
+        collect: monitor => {
             return {
                 isDropping: monitor.isOver() && monitor.canDrop() && monitor.getItem().name !== name
             };
         }
     });
     const [{isDragging}, drag] = useDrag({
-        type: `REFERENCE_CARD_${field.name}`, item: {name: name}, collect: monitor => ({
+        canDrag: () => isDraggable,
+        type: `REFERENCE_CARD_${field.name}`,
+        item: {name: name},
+        collect: monitor => ({
             isDragging: monitor.isDragging()
         })
     });
@@ -31,11 +37,11 @@ export const OrderableValue = ({field, onFieldRemove, onValueReorder, index, com
         >
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {component &&
-                <div className={styles.draggableCard} {...(isReferenceCard && {ref: drag})}>
+                <div ref={isReferenceCard && isDraggable ? drag : null} className={styles.draggableCard}>
                     {!isDragging &&
                         <>
                             {!isReferenceCard &&
-                            <div ref={drag} className={styles.draggableIcon}>
+                            <div ref={isDraggable ? drag : null} className={clsx(isDraggable ? styles.draggableIcon : styles.notDraggableIcon)}>
                                 <HandleDrag size="big"/>
                             </div>}
                             {component}
@@ -60,5 +66,6 @@ OrderableValue.propTypes = {
     onValueReorder: PropTypes.func,
     index: PropTypes.number.isRequired,
     component: PropTypes.object,
-    isReferenceCard: PropTypes.bool
+    isReferenceCard: PropTypes.bool,
+    isDraggable: PropTypes.bool
 };

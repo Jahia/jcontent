@@ -10,6 +10,7 @@ import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 export const DraggableReference = ({child, index, onReorder, onValueMove, fieldName, fieldLength}) => {
     const {t} = useTranslation('jcontent');
     const name = `${fieldName}[${index}]`;
+    const isDraggable = fieldLength > 1;
 
     const [{isDropping}, drop] = useDrop({
         accept: 'REFERENCE_CARD',
@@ -26,6 +27,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
     const [{isDragging}, drag] = useDrag({
         type: 'REFERENCE_CARD',
         item: {name: name},
+        canDrag: () => isDraggable,
         collect: monitor => ({
             isDragging: monitor.isDragging()
         })
@@ -35,7 +37,7 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
         <div ref={drop} className={styles.fieldComponentContainer}>
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {child &&
-                <div ref={drag} className={styles.draggableCard}>
+                <div ref={isDraggable ? drag : null} className={styles.draggableCard}>
                     {!isDragging &&
                         <ReferenceCard
                             id={child.name}

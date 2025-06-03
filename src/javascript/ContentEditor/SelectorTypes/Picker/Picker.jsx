@@ -6,7 +6,11 @@ import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {mergeDeep, set, toArray} from './Picker.utils';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer, onListReorder, onDirectionalReorder} from '~/ContentEditor/utils';
+import {
+    getButtonRenderer,
+    onDirectionalReorder,
+    useReorderList
+} from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Button, Tooltip, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
@@ -64,20 +68,26 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
     );
 };
 
-// eslint-disable-next-line max-params
-const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) => {
+const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen}) => {
+    const {handleReorder, reorderedItems, reset} = useReorderList(fieldData);
+    const handleReorderDropped = () => {
+        // Once reorder is finalized, commit to formik
+        setValue(reorderedItems.map(({item}) => item.uuid));
+    };
+
     return (
         <div className="flexFluid">
-            {fieldData && fieldData.length > 0 && fieldData.map((fieldVal, index) => {
+            {reorderedItems.map(({index, item, id}) => {
                 return (
                     <OrderableValue
-                        key={`${field.name}_${fieldVal.name}`}
+                        key={id}
                         isReferenceCard
+                        id={id}
                         isDraggable={!field.readOnly && fieldData.length > 1}
                         component={<ReferenceCard
-                            id={fieldVal.name}
+                            id={item.name}
                             isReadOnly={field.readOnly}
-                            fieldData={fieldVal}
+                            fieldData={item}
                             cardAction={fieldData.length > 1 &&
                                 <div className={styles.referenceCardActions}>
                                     <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -127,16 +137,12 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                                 </div>}/>}
                         field={field}
                         index={index}
-                        onValueReorder={onValueReorder}
+                        onValueReorder={handleReorder}
+                        onValueReorderDropped={handleReorderDropped}
+                        onValueReorderAborted={reset}
                         onFieldRemove={onFieldRemove}/>
                 );
             })}
-            {/* Needed for droppable div at the bottom */}
-            {fieldData && fieldData.length > 0 && (
-                <OrderableValue field={field}
-                                index={fieldData.length}
-                                onValueReorder={onValueReorder}/>
-            )}
             {!field.readOnly &&
                 <Button className={styles.addButton}
                         data-sel-action="addField"
@@ -147,6 +153,17 @@ const getMultipleElement = (fieldData, field, onValueReorder, onValueMove, onFie
                 />}
         </div>
     );
+};
+
+MultipleElement.propTypes = {
+    fieldData: PropTypes.array.isRequired,
+    field: PropTypes.object.isRequired,
+    setValue: PropTypes.func.isRequired,
+    onValueMove: PropTypes.func.isRequired,
+    onFieldRemove: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
+    setDialogOpen: PropTypes.func.isRequired,
+    isDialogOpen: PropTypes.bool
 };
 
 export const Picker = ({
@@ -222,19 +239,22 @@ export const Picker = ({
     };
 
     const onValueMove = (droppedId, direction) => {
+        // Reordering using buttons (move up/down, move to first/last)
         setFieldValue(field.name, onDirectionalReorder(value, droppedId, direction, field.name));
         setFieldTouched(field.name, true, false);
     };
 
-    const onValueReorder = (droppedId, index) => {
-        setFieldValue(field.name, onListReorder(value, droppedId, index, field.name));
+    const onValueChanged = newValue => {
+        // This is called when reordering is done by dropping the
+        // dragged item on a valid drop target
+        setFieldValue(field.name, newValue);
         setFieldTouched(field.name, true, false);
     };
 
     return (
         <div className="flexFluid flexRow_nowrap alignCenter">
             {field.multiple ?
-                getMultipleElement(fieldData, field, onValueReorder, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen) :
+                <MultipleElement fieldData={fieldData || []} field={field} t={t} setDialogOpen={setDialogOpen} isDialogOpen={isDialogOpen} setValue={onValueChanged} onValueMove={onValueMove} onFieldRemove={onFieldRemove}/> :
                 getSimpleElement(field, error, notFound, t, pickerConfig, fieldData, setDialogOpen, isDialogOpen, inputContext, value)}
 
             <PickerDialog

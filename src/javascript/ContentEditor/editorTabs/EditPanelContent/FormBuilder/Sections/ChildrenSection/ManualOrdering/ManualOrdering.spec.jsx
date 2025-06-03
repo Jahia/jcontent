@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
-import {ManualOrdering} from './ManualOrdering';
+import {ManualOrderingField} from './ManualOrdering';
 
 describe('Manual ordering component', () => {
     let props;
@@ -33,17 +33,16 @@ describe('Manual ordering component', () => {
 
     it('should display children', () => {
         const cmp = buildFieldCmp();
-        // +1 for the bottom droppable div
-        expect(cmp.find('DraggableReference').length).toBe(props.field.value.length + 1);
+        expect(cmp.find('DraggableReference').length).toBe(props.field.value.length);
     });
 
     let buildFieldCmp = () => {
         const cmp = shallowWithTheme(
-            <ManualOrdering/>,
+            <ManualOrderingField {...props}/>,
             {},
             dsGenericTheme
         );
 
-        return cmp.find('FormikConnect(FastFieldInner)').renderProp('children')(props);
+        return cmp;
     };
 });

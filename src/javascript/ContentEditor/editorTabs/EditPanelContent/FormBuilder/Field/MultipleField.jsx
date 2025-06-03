@@ -63,6 +63,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
                                             />}
                                             field={field}
                                             index={index}
+                                            isDraggable={!field.readOnly && values[field.name].length > 1}
                                             onFieldRemove={onFieldRemove}
                                             onValueReorder={onValueReorder}/>
                         );

@@ -37,14 +37,13 @@ export const DraggableReference = ({child, index, onReorder, onValueMove, fieldN
         <div ref={drop} className={styles.fieldComponentContainer}>
             <div className={`${styles.referenceDropGhostHidden} ${isDropping ? styles.referenceDropGhost : ''}`} data-droppable-zone={name}/>
             {child &&
-                <div ref={drag} className={styles.draggableCard}>
+                <div ref={isDraggable ? drag : null} data-remove="draggableReference" className={styles.draggableCard}>
                     {!isDragging &&
                         <ReferenceCard
                             id={child.name}
                             emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                             emptyIcon={<File/>}
                             isReadOnly={child.readOnly}
-                            isDraggable={isDraggable}
                             cardAction={fieldLength > 1 &&
                             <div className={styles.referenceCardActions}>
                                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>

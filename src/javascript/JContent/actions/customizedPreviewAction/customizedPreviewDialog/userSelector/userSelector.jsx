@@ -47,7 +47,6 @@ export const UserSelector = () => {
                 <ReferenceCard
                     emptyLabel={t(pickerConfig.pickerInput.emptyLabel)}
                     emptyIcon={DefaultPickerConfig.pickerInput.emptyIcon}
-                    draggable={false}
                     id="user-selector-label"
                     fieldData={user && {url: userTypeIcon, displayName: user, type: 'user'}}
                     onClick={() => setDialogOpen(true)}

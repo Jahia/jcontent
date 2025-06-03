@@ -1,4 +1,4 @@
-name: Nightly Test run
+name: Weekly Test run
 
 on:
   workflow_dispatch:

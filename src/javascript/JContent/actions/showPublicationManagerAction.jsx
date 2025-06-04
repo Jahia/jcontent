@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 
 export const PublishManagerActionComponent = props => {
-    const {id, path, publicationNodeTypes, buttonIcon, buttonLabel, render: Render, loading: Loading} = props;
+    const {id, path, paths, publicationNodeTypes, buttonIcon, buttonLabel, render: Render, loading: Loading} = props;
     const {language, siteKey} = useSelector(state => ({
         language: state.language,
         siteKey: state.site
@@ -25,7 +25,7 @@ export const PublishManagerActionComponent = props => {
         return (Loading && <Loading {...props}/>) || false;
     }
 
-    const isVisible = res.checksResult && typeof window?.authoringApi?.showPublicationManager === 'function';
+    const isVisible = !paths && res.checksResult && typeof window?.authoringApi?.showPublicationManager === 'function';
     const mixinTypes = res.node?.mixinTypes ? res.node.mixinTypes.map(mixinType => mixinType.name) : [];
 
     return (

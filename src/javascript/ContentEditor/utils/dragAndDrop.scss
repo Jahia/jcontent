@@ -1,9 +1,3 @@
-.fieldComponentContainer {
-    display: flex;
-
-    flex-direction: column;
-}
-
 .addButton {
     margin: var(--spacing-small) 0;
 }
@@ -18,10 +12,10 @@
 
 .draggableCard.draggingCard {
     background-color: var(--color-accent_light_plain20);
-}
 
-.draggableCard.draggingCard * {
-    visibility: hidden;
+    * {
+        opacity: 0;
+    }
 }
 
 .draggableCard {

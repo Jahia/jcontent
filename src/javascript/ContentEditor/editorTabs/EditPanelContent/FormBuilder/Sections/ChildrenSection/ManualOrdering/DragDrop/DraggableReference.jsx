@@ -40,7 +40,7 @@ export const DraggableReference = ({
 
     return (
         <div
-            ref={ref}
+            ref={isDraggable ? ref : null}
             className={clsx(
                 styles.draggableCard,
                 isDragging && styles.draggingCard

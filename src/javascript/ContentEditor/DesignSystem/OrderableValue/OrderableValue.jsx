@@ -29,31 +29,29 @@ export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValu
     }
 
     return (
-        <div className={styles.fieldComponentContainer}>
-            <div
-                ref={field.readOnly ? undefined : ref}
-                className={clsx(
-                    styles.draggableCard,
-                    isDragging && styles.draggingCard
-                )}
-                data-sel-content-editor-multiple-generic-field={name}
-                data-sel-content-editor-field-readonly={field.readOnly}
-                data-handler-id={handlerId}
-            >
-                {!isReferenceCard &&
-                    <div ref={isDraggable ? drag : null} className={clsx(isDraggable ? styles.draggableIcon : styles.notDraggableIcon)}>
-                        <HandleDrag size="big"/>
-                    </div>}
-                {component}
-                <Tooltip label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}>
-                    <Button variant="ghost"
-                            data-sel-action={`removeField_${index}`}
-                            aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
-                            icon={<Close/>}
-                            onClick={() => onFieldRemove(index)}
+        <div
+            ref={isDraggable ? ref : undefined}
+            className={clsx(
+                styles.draggableCard,
+                isDragging && styles.draggingCard
+            )}
+            data-sel-content-editor-multiple-generic-field={name}
+            data-sel-content-editor-field-readonly={field.readOnly}
+            data-handler-id={handlerId}
+        >
+            {!isReferenceCard &&
+            <div ref={isDraggable ? drag : null} className={clsx(isDraggable ? styles.draggableIcon : styles.notDraggableIcon)}>
+                <HandleDrag size="big"/>
+            </div>}
+            {component}
+            <Tooltip label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}>
+                <Button variant="ghost"
+                        data-sel-action={`removeField_${index}`}
+                        aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
+                        icon={<Close/>}
+                        onClick={() => onFieldRemove(index)}
                     />
-                </Tooltip>
-            </div>
+            </Tooltip>
         </div>
     );
 };

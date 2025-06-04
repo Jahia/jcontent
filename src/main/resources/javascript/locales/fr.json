@@ -316,7 +316,7 @@
         "customizedPreview": {
           "label": "Prévisualisation personnalisée",
           "showPreview": "Appliquer",
-          "channelPlaceholder": "Sélectionnez appareil",
+          "channelPlaceholder": "Sélectionnez un appareil",
           "clearAll": "Effacer tout",
           "noRenderUrl": "Aucun aperçu à rendre",
           "dialog": {
@@ -353,7 +353,7 @@
         "resize": "Redimensionner",
         "crop": "Recadrage",
         "rotate": "Pivoter",
-        "rotateInfo": "Pivotez l'image et sauvegardez la, ou sauvegardez la en tant que nouveau fichier",
+        "rotateInfo": "Pivotez l'image et enregistrez-la, ou enregistrez-la en tant que nouveau fichier",
         "rotateLeft": "Gauche",
         "rotateRight": "Droite",
         "width": "Largeur",
@@ -572,7 +572,7 @@
       "create": {
         "title": "Créer {{type}}",
         "createButton": {
-          "name": "Sauvegarder",
+          "name": "Enregistrer",
           "createAnother": "Créer un nouveau",
           "success": "Contenu enregistré avec succès",
           "error": "Une erreur s'est produite lors de la création du contenu"
@@ -604,7 +604,7 @@
             "name": "Copier depuis une langue"
           },
           "save": {
-            "name": "Sauvegarder",
+            "name": "Enregistrer",
             "success": "Contenu enregistré avec succès",
             "error": "Une erreur s'est produite lors de l'enregistrement du contenu",
             "validation": {
@@ -623,8 +623,8 @@
             },
             "create": {
               "title": "Contenu non enregistré",
-              "message": "Le contenu n'a pas été sauvegardé. Que souhaitez-vous faire avant de fermer ?",
-              "switchLanguage": "Le contenu n'a pas été sauvegardé en {{langName}}. Que souhaitez-vous faire avant de changer de langue ?"
+              "message": "Le contenu n'a pas été enregistré. Que souhaitez-vous faire avant de fermer ?",
+              "switchLanguage": "Le contenu n'a pas été enregistré en {{langName}}. Que souhaitez-vous faire avant de changer de langue ?"
             },
             "alert": "Les modifications que vous avez apportées ne seront pas enregistrées.",
             "btnContinue": "Annuler",
@@ -756,7 +756,7 @@
           }
         },
         "chips": {
-          "unsavedLabel": "Modifications non sauvegardées",
+          "unsavedLabel": "Modifications non enregistrées",
           "inCountLanguages": "dans {{count}} langues",
           "inAllLanguages": "dans toutes les langues"
         }
@@ -764,7 +764,7 @@
       "error": {
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
         "changeSystemName": "Veuillez choisir un autre nom système",
-        "constraintViolations": "Il y a des erreurs de validation! Corrigez les entrées et sauvegarder à nouveau",
+        "constraintViolations": "Il y a des erreurs de validation! Corrigez les entrées et enregistrez à nouveau",
         "accessDenied": "Certains contenus ne peuvent pas être affichés en raison des autorisations qui ont été appliquées",
         "cannotOpen": "Content Editor n’a pas pu être ouvert",
         "notFound": "Le contenu n’existe pas ou vous n’avez pas la permission de le voir"

@@ -100,6 +100,11 @@ export class JContent extends BasePage {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
+    import(filename:string) {
+        getComponentByRole(Button, 'import').click();
+        cy.get('#file-upload-input').selectFile(filename, {force: true});
+    }
+
     viewSubContentComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
         row.get().scrollIntoView();

@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {createSite, deleteSite, getComponent} from '@jahia/cypress';
+import {createSite, deleteSite, getComponent, getComponentByRole} from '@jahia/cypress';
 import {ExportDialog} from '../../page-object/exportDialog';
 
 describe('Export tests', () => {
@@ -27,9 +27,8 @@ describe('Export tests', () => {
 
         // Reimport exported content
         jcontent.getTable().getRowByLabel('importFolder').get().dblclick();
-        jcontent.getBrowseControlMenu().selectByRole('import');
+        jcontent.import(`${downloadsFolder}/${labelWithSpecialCharacters}.zip`)
 
-        cy.get('#file-upload-input').selectFile(`${downloadsFolder}/${labelWithSpecialCharacters}.zip`, {force: true});
         jcontent.getTable().getRowByLabel(labelWithSpecialCharacters).get().dblclick();
         jcontent.getTable().getRowByLabel('test path 1').should('exist');
         jcontent.getTable().getRowByLabel('test path 2').should('exist');

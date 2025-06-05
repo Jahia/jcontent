@@ -189,6 +189,7 @@ const actionTargetAssignments = {
         'editPageAdvanced',
         'editSource',
         'editImage',
+        'openInNewTab',
         'replaceFile',
         'locate',
         'preview',

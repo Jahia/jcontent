@@ -101,7 +101,8 @@ export class JContent extends BasePage {
     }
 
     import(filename:string) {
-        getComponentByRole(Button, 'import').click();
+        getComponentByRole(Button, 'browseControlBarMenu').click();
+        cy.get('li[data-sel-role="import"]').should('exist').and('be.visible').click();
         cy.get('#file-upload-input').selectFile(filename, {force: true});
     }
 

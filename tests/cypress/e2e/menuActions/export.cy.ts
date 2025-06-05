@@ -27,7 +27,7 @@ describe('Export tests', () => {
 
         // Reimport exported content
         jcontent.getTable().getRowByLabel('importFolder').get().dblclick();
-        this.getBrowseControlMenu().selectByRole('import');
+        jcontent.getBrowseControlMenu().selectByRole('import');
 
         cy.get('#file-upload-input').selectFile(`${downloadsFolder}/${labelWithSpecialCharacters}.zip`, {force: true});
         jcontent.getTable().getRowByLabel(labelWithSpecialCharacters).get().dblclick();

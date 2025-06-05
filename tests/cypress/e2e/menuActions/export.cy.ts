@@ -1,7 +1,7 @@
 
 import {createSite, deleteSite, getComponent} from '@jahia/cypress';
 import {ExportDialog} from '../../page-object/exportDialog';
-import {JContent} from "../../page-object";
+import {JContent} from '../../page-object';
 
 describe('Export tests', () => {
     const siteKey = 'jContentSite-export';

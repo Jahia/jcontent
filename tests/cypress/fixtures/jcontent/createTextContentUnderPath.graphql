@@ -1,10 +1,10 @@
-mutation($path: String!) {
+mutation($path: String!, $contentName: String = "landing") {
     jcr {
         mutateNode(pathOrId: $path) {
             addChildrenBatch(
                 nodes: [
                     {
-                        name: "landing",
+                        name: $contentName,
                         primaryNodeType: "jnt:contentList",
                         children: [
                             {

@@ -18,7 +18,7 @@ def patchConfigForComponentVisibility() {
             // Add or update the property for component visibility
             props.put("hideLegacyPageComposer", "true");
             props.put("showPageBuilder", "true");
-            props.put("createChildrenDirectButtons", "true");
+            props.put("createChildrenDirectButtons.limit", "5");
             props.remove("showPageComposer");
             props.remove("showCatMan");
 

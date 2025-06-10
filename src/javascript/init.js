@@ -34,7 +34,7 @@ export default function () {
             registry.add('action', 'contentPickerMenu', registry.get('action', 'menuAction'), {
                 buttonIcon: <MoreVert/>,
                 buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
-                menuTarget: 'contentItemContextActions',
+                menuTarget: 'contentItemPickerContextActions',
                 menuItemProps: {
                     isShowIcons: true
                 }

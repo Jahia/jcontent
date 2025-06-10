@@ -30,7 +30,12 @@ const assignTargetsForActions = (targetActions, registry) => {
             return;
         }
 
-        action.targets = actionTargets[key];
+        // If the action already has targets, append to them
+        if (action.targets) {
+            action.targets = [...(new Set([...action.targets, ...actionTargets[key]]))];
+        } else {
+            action.targets = actionTargets[key];
+        }
     });
 };
 
@@ -193,6 +198,43 @@ const actionTargetAssignments = {
         'replaceFile',
         'locate',
         'preview',
+        'unzip',
+        'downloadFile',
+        'downloadAsZip',
+        'fileUpload',
+        'lock',
+        'unlock',
+        'clearAllLocks',
+        'publishMenu',
+        'contentActionsSeparator1',
+        'copy',
+        'copyPageMenu',
+        'cut',
+        'paste',
+        'pasteReference',
+        'delete',
+        'deletePermanently',
+        'undelete',
+        'publishDeletion',
+        'contentActionsSeparator2',
+        'export',
+        'exportPage',
+        'import',
+        'openInRepositoryExplorer',
+        // Hardcoded so 'Open in page composer' can be always added at the end of this list
+        'contentActionsSeparator3:50'
+    ],
+    contentItemPickerContextActions: [
+        'createContentFolder',
+        'createFolder',
+        'rename',
+        'edit',
+        'editPage',
+        'editSource',
+        'editImage',
+        'openInNewTab',
+        'replaceFile',
+        'locate',
         'unzip',
         'downloadFile',
         'downloadAsZip',

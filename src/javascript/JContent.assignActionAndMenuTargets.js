@@ -32,7 +32,7 @@ const assignTargetsForActions = (targetActions, registry) => {
 
         // If the action already has targets, append to them
         if (action.targets) {
-            action.targets = [...action.targets, ...actionTargets[key]];
+            action.targets = [...(new Set([...action.targets, ...actionTargets[key]]))];
         } else {
             action.targets = actionTargets[key];
         }

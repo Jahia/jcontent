@@ -4,14 +4,19 @@ import {useQuery} from '@apollo/client';
 import {ContentPickerFilledQuery} from './ContentPicker.gql-queries';
 import {getIconFromNode} from '~/utils';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
+import {shallowEqual, useSelector} from 'react-redux';
 
 const usePickerInputData = uuids => {
     const {lang} = useContentEditorContext();
+    const {uiLang} = useSelector(state => ({
+        uiLang: state?.uilang
+    }), shallowEqual);
 
     const {data, error, loading} = useQuery(ContentPickerFilledQuery, {
         variables: {
             uuids: uuids || [],
-            language: lang
+            language: lang,
+            uiLanguage: uiLang || lang
         },
         skip: !uuids,
         errorPolicy: 'ignore',

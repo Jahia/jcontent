@@ -2,6 +2,7 @@ import React from 'react';
 import {DefaultPickerConfig} from './DefaultPickerConfig';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {useQuery} from '@apollo/client';
+import {useSelector} from 'react-redux';
 
 jest.mock('@apollo/client', () => {
     return {useQuery: jest.fn()};
@@ -14,15 +15,24 @@ jest.mock('../Picker', () => {
 });
 
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn(),
+    shallowEqual: jest.fn()
+}));
 
 describe('ContentPicker config', () => {
     describe('usePickerInputData', () => {
         let contentEditorContext;
+        let state;
         beforeEach(() => {
             contentEditorContext = {
                 lang: 'fr'
             };
+            state = {
+                uilang: 'de'
+            };
             useContentEditorContext.mockReturnValue(contentEditorContext);
+            useSelector.mockImplementation(selector => selector(state));
         });
 
         const usePickerInputData = DefaultPickerConfig.pickerInput.usePickerInputData;

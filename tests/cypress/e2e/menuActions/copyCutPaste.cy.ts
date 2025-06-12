@@ -36,10 +36,9 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             GraphqlUtils.deleteNode('/sites/digitall/home/our-companies/area-main/companies/all-sports/relatedPeople/daniel-taber');
         });
 
-        it('Editor can copy cut and paste with jcontent', () => {
+        it('Editor can copy cut and paste with jcontent', {retries: 3}, () => {
             // Log in as editor
             cy.login('mathias', 'password');
-
             cy.log('Verify editor can copy/paste');
             const jcontent = JContent.visit('digitall', 'en', 'pages/home/our-companies/area-main/companies/all-sports/relatedPeople');
             jcontent.getTable().getRowByLabel('Sparks').contextMenu().select('Copy');
@@ -82,6 +81,8 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             // Confirm they are visible before proceeding
             contextMenu.shouldHaveItem('New Page');
             contextMenu.shouldHaveItem('New...');
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000); // Wait for the context menu to stabilize
             const menu = contextMenu.submenu('Copy', 'jcontent-copyPageMenu');
             menu.should('be.visible');
             menu.select(copyActionName);

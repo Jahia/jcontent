@@ -47,14 +47,22 @@ function addEventListeners(target, manager, iframeRef) {
     target.addEventListener('drop', backend.handleTopDropCapture, true);
     target.addEventListener('mouseup', event => {
         if (monitor.isDragging()) {
-            console.debug('Mouse up event happened while monitor is still dragging, cancelling previous DND operation', event, monitor.isDragging());
+            console.debug('Mouse up event happened while monitor is still dragging, cancelling previous DND operation', event);
             backend.handleTopDragEndCapture(event);
+            if (monitor.isDragging()) {
+                manager.getActions()?.endDrag();
+            }
         }
     });
+
     target.addEventListener('mousemove', event => {
-        if (monitor.isDragging() && event.buttons === 0) {
-            console.debug('Mouse move event happened while monitor is still dragging, cancelling previous DND operation', event, monitor.isDragging());
+        const isMouseUp = event.buttons === 0;
+        if (monitor.isDragging() && isMouseUp) {
+            console.debug('Mouse move event happened while monitor is still dragging, cancelling previous DND operation', event);
             backend.handleTopDragEndCapture(event);
+            if (monitor.isDragging()) {
+                manager.getActions()?.endDrag();
+            }
         }
     });
 }

@@ -84,7 +84,7 @@
         "failedImport": "Impossible d'importer ce fichier",
         "errorActionMessage": "Veuillez résoudre le(s) problème(s)",
         "dialogRenameTitle": "Renommer le fichier importé",
-        "dialogRenameText": "Quel nom voulez-vous pour le fichier importé ?",
+        "dialogRenameText": "Quel nom voulez-vous donner au fichier importé ?",
         "dialogRenameExample": "ex: nomdefichier",
         "dialogRenameCancel": "Annuler",
         "dialogRename": "Renommer",
@@ -104,7 +104,7 @@
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
-        "missingFolder" : "Répertoire non trouvé"
+        "missingFolder" : "Dossier non trouvé"
       },
       "title": {
         "media": "Média",
@@ -146,7 +146,7 @@
         "searchPath": "Recherche sous: {{path}}",
         "clear": "Effacer la recherche",
         "refresh": "Rafraîchir les résultats",
-        "normalPrompt": "Que cherchez-vous?",
+        "normalPrompt": "Que cherchez-vous ?",
         "sql2Prompt": "Vous utilisez des requêtes SQL2. Consultez l'<0>Academy</0> pour plus d'informations.",
         "modal": {
           "cancel": "Annuler"
@@ -167,7 +167,7 @@
         "content": "Nouveau contenu"
       },
       "locked": "Le contenu est verrouillé",
-      "saveAsWip": "Marquer comme travail en cours",
+      "saveAsWip": "Marquer comme \"travail en cours\"",
       "browseFiles": "Parcourir les fichiers",
       "tree": {
         "hide": "Masquer l'arborescence",
@@ -196,9 +196,9 @@
       "navigation": {
         "savedSearches": "Recherches sauvegardées",
         "workflow": "Workflow",
-        "media": "Média",
+        "media": "Médias",
         "pages": "Pages",
-        "contentFolders": "Dossier de contenu",
+        "contentFolders": "Dossiers de contenu",
         "forms": "Formulaires",
         "apps": {
           "title": "Extensions",
@@ -316,7 +316,7 @@
         "customizedPreview": {
           "label": "Prévisualisation personnalisée",
           "showPreview": "Appliquer",
-          "channelPlaceholder": "Sélectionnez appareil",
+          "channelPlaceholder": "Sélectionnez un appareil",
           "clearAll": "Effacer tout",
           "noRenderUrl": "Aucun aperçu à rendre",
           "dialog": {
@@ -336,7 +336,7 @@
           "publication": "Publication"
         }
       },
-      "browseFolders": "Parcourir les répertoires",
+      "browseFolders": "Parcourir les dossiers",
       "selection": {
         "itemsSelected": "{{count}} élément sélectionné",
         "itemsSelected_plural": "{{count}} éléments sélectionnés",
@@ -353,7 +353,7 @@
         "resize": "Redimensionner",
         "crop": "Recadrage",
         "rotate": "Pivoter",
-        "rotateInfo": "Pivotez l'image et sauvegardez la, ou sauvegardez la en tant que nouveau fichier",
+        "rotateInfo": "Pivotez l'image et enregistrez-la, ou enregistrez-la en tant que nouveau fichier",
         "rotateLeft": "Gauche",
         "rotateRight": "Droite",
         "width": "Largeur",
@@ -361,7 +361,7 @@
         "undo": "Annuler les modifications",
         "saveAs": "Enregistrer sous ...",
         "save": "Enregistrer",
-        "unsavedChanges": "Modifications non sauvegardées",
+        "unsavedChanges": "Modifications non enregistrées",
         "resizeInfo": "Vous pouvez saisir vos propres valeurs",
         "cropInfo": "Tapez la taille du recadrage",
         "tooltip": "Enregistrez ou annulez vos modifications avant d'effectuer d'autres opérations",
@@ -372,7 +372,7 @@
         "discardChangesButton": "Annuler les modifications",
         "saveAsDialog": {
           "title": "Enregistrer sous",
-          "text": "Entrez un nom de fichier",
+          "text": "Saisissez un nom de fichier",
           "filename": "Nom du fichier",
           "cancel": "Annuler",
           "save": "Enregistrer"
@@ -392,13 +392,13 @@
       "subContent_plural": "({{count}} sous-contenus)",
       "createFolderAction": {
         "title": "Nouveau dossier",
-        "text": "Entrez un nom de dossier",
+        "text": "Saisissez un nom de dossier",
         "exists": "Un dossier de ce nom existe déjà",
         "invalidChars": "Caractères invalides: \/:*?\"<>|%"
       },
       "renameAction": {
         "title": "Renommer",
-        "text": "Entrez un nouveau nom",
+        "text": "Saisissez un nouveau nom",
         "exists": "Un fichier de ce nom existe déjà",
         "invalidChars": "Caractères invalides: \/:*?\"<>|%"
       },
@@ -456,9 +456,9 @@
         "info": {
           "title": "A propos de la suppression",
           "text1": "La suppression se fait en deux étapes :",
-          "text1-1": "Les éléments sont marqués pour suppression dans un premier temps. Cette opération va marquer pour suppression tous les sous-éléments, ce qui inclut les pages.",
+          "text1-1": "Les éléments sont marqués pour suppression dans un premier temps. Cette opération marque pour suppression tous les sous-éléments, ce qui inclut les pages.",
           "text1-1-1": "A cette étape, il est encore possible d’annuler la suppression, afin que les éléments ne soient plus marqués pour suppression.",
-          "text1-2": "Vous devez ensuite procéder à la suppression définitive :",
+          "text1-2": "Vous pouvez ensuite procéder à la suppression définitive :",
           "text1-2-1": "Si les éléments ont été précédemment publiés, vous devez “publier la suppression”, afin que les éléments soient supprimés dans les versions en ligne et d’édition.",
           "text1-2-2": "Si les éléments n’ont jamais été publiés, dans ce cas vous devez utiliser l’option “Supprimer définitivement”.",
           "text1-2-3": "Ces opérations ne peuvent pas être annulées : les éléments ainsi supprimés ne peuvent pas être restaurés.",
@@ -502,7 +502,7 @@
           },
           "undelete": {
             "title": "Impossible d'annuler la suppression",
-            "content": "Il n’est actuellement pas possible d’annuler la seule suppression de l’élément <strong>{{name}}</strong>. Merci d’annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
+            "content": "Il n’est actuellement pas possible d’annuler directement la suppression de l’élément <strong>{{name}}</strong>. Veuillez annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
             "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           }
         },
@@ -539,7 +539,7 @@
       "textMenu": {
         "editDialog": {
           "title": "Titres de menu",
-          "body": "Les titres de menu sont utilisés pour organiser les pages, et ne peuvent être affichés dans la vue actuelle. Néanmoins ils peuvent être affichés en vue liste.",
+          "body": "Les titres de menu sont utilisés pour organiser les pages et ne peuvent être affichés dans la vue actuelle. Néanmoins ils peuvent être affichés en vue liste.",
           "openInList": "Ouvrir en vue liste"
         }
       },
@@ -572,7 +572,7 @@
       "create": {
         "title": "Créer {{type}}",
         "createButton": {
-          "name": "Sauvegarder",
+          "name": "Enregistrer",
           "createAnother": "Créer un nouveau",
           "success": "Contenu enregistré avec succès",
           "error": "Une erreur s'est produite lors de la création du contenu"
@@ -583,7 +583,7 @@
         "title": "Éditer le contenu",
         "contentEdit": "Editer",
         "contentEditAdvanced": "Edition avancée",
-        "contentEditSource": "Modifier la source référée",
+        "contentEditSource": "Modifier la source référencée",
         "validation": {
           "required": "Requis",
           "invalidForm": "Formulaire non valide",
@@ -604,7 +604,7 @@
             "name": "Copier depuis une langue"
           },
           "save": {
-            "name": "Sauvegarder",
+            "name": "Enregistrer",
             "success": "Contenu enregistré avec succès",
             "error": "Une erreur s'est produite lors de l'enregistrement du contenu",
             "validation": {
@@ -617,19 +617,19 @@
           "goBack": {
             "name": "Retour à {{parentNodeDisplayName}}",
             "edit": {
-              "title": "Modifications non sauvegardées",
-              "message": "Vous avez des modifications non sauvegardées. Que souhaitez-vous faire avant de fermer?",
-              "switchLanguage": "Vous avez des modifications non sauvegardées. Que souhaitez-vous faire avant de changer de langue?"
+              "title": "Modifications non enregistrées",
+              "message": "Vous avez des modifications non enregistrées. Que souhaitez-vous faire avant de fermer?",
+              "switchLanguage": "Vous avez des modifications non enregistrées. Que souhaitez-vous faire avant de changer de langue?"
             },
             "create": {
-              "title": "Contenu non sauvegardé",
-              "message": "Le contenu n'a pas été sauvegardé. Que souhaitez-vous faire avant de fermer ?",
-              "switchLanguage": "Le contenu n'a pas été sauvegardé en {{langName}}. Que souhaitez-vous faire avant de changer de langue ?"
+              "title": "Contenu non enregistré",
+              "message": "Le contenu n'a pas été enregistré. Que souhaitez-vous faire avant de fermer ?",
+              "switchLanguage": "Le contenu n'a pas été enregistré en {{langName}}. Que souhaitez-vous faire avant de changer de langue ?"
             },
             "alert": "Les modifications que vous avez apportées ne seront pas enregistrées.",
             "btnContinue": "Annuler",
-            "btnDiscard": "Fermer sans sauvegarder",
-            "btnSave": "Sauvegarder"
+            "btnDiscard": "Fermer sans enregistrer",
+            "btnSave": "Enregistrer"
           },
           "lock": {
             "deletion": "Verrouillé: Contenu marqué pour suppression",
@@ -667,10 +667,10 @@
             "checkboxSubLabel": "Le contenu peut être publié dans toutes les langues.",
             "clickHere": "Cliquez ici.",
             "dialogTitle": "Travail en cours (WIP)",
-            "dialogSubTitle": "Vous pouvez marquer le contenu comme travail en cours pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
+            "dialogSubTitle": "Vous pouvez marquer le contenu comme \"travail en cours\" pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
             "label" : {
-              "mark": "Marquer comme travail en cours",
-              "unmark": "Ne pas marquer comme travail en cours"
+              "mark": "Marquer comme \"travail en cours\"",
+              "unmark": "Ne pas marquer comme \"travail en cours\""
             },
             "localizedPropertiesOnly": "Propriétés internationalisées seulement",
             "localizedPropertiesOnlySubText": "Le contenu ne sera pas publiable dans les langues sélectionnées. Les propriétés communes à toutes les langues peuvent cependant faire partie d'une publication.",
@@ -756,7 +756,7 @@
           }
         },
         "chips": {
-          "unsavedLabel": "Modifications non sauvegardées",
+          "unsavedLabel": "Modifications non enregistrées",
           "inCountLanguages": "dans {{count}} langues",
           "inAllLanguages": "dans toutes les langues"
         }
@@ -764,7 +764,7 @@
       "error": {
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
         "changeSystemName": "Veuillez choisir un autre nom système",
-        "constraintViolations": "Il y a des erreurs de validation! Corrigez les entrées et sauvegarder à nouveau",
+        "constraintViolations": "Il y a des erreurs de validation! Corrigez les entrées et enregistrez à nouveau",
         "accessDenied": "Certains contenus ne peuvent pas être affichés en raison des autorisations qui ont été appliquées",
         "cannotOpen": "Content Editor n’a pas pu être ouvert",
         "notFound": "Le contenu n’existe pas ou vous n’avez pas la permission de le voir"
@@ -808,7 +808,7 @@
           }
         },
         "listAndOrdering": {
-          "title": "Liste de contenu & ordre",
+          "title": "Liste de contenus & ordre de tri",
           "ordering": "Ordre",
           "btnMoveFirst": "Déplacer en première position",
           "btnMoveLast": "Déplacer en dernière position",
@@ -816,11 +816,11 @@
           "btnMoveDown": "Descendre d'une place",
           "automatic": "Classement automatique",
           "orderBy": "Trier par",
-          "description": "Activez le classement automatique pour organiser vos sous-contenus en utilisant au maximum de trois critères, ou réorganisez vos sous-contenus manuellement, par glisser-déposer."
+          "description": "Activez le tri automatique pour organiser vos contenus en utilisant au maximum trois critères, ou réorganisez vos contenus manuellement."
         },
         "listSizeLimit": {
           "name": "Nombre d'éléments",
-          "description": "Définissez un nombre limite d'éléments qui peuvent être affichés/créés dans cette zone. Désactivez pour enlever la limite. Si la liste contient plus d'éléments que la limite, alors ces éléments ne seront simplement pas affichés, ils ne seront pas supprimés."
+          "description": "Définissez un nombre maximum d'éléments qui peuvent être affichés/créés dans cette zone. Désactivez pour enlever la limite. Si la liste contient plus d'éléments que la limite, alors ces éléments ne seront simplement pas affichés, ils ne seront pas supprimés."
         }
       },
       "siteSwitcher": {
@@ -838,7 +838,7 @@
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
         "mandatoryLanguageValid": "Le contenu ne sera visible en ligne qu'après publication dans toutes les langues obligatoires.",
-        "conflict": "Un contenu avec le même nom existe déjà en ligne et ne fera pas partie de cette publication",
+        "conflict": "Un contenu avec le même nom existe déjà en ligne et sera exclu de cette publication.",
         "unknown": "Statut de publication indisponible"
       },
       "global": {
@@ -883,7 +883,7 @@
           },
           "tabs": {
             "pages": "Pages",
-            "contentFolders": "Dossier de contenu"
+            "contentFolders": "Dossiers de contenu"
           }
         },
         "selectors": {
@@ -898,31 +898,31 @@
       "readOnly": "Lecture seule",
       "selectorTypes": {
         "checkbox": {
-          "displayValue": "Checkbox",
-          "description": "Affiche une checkbox"
+          "displayValue": "Case à cocher",
+          "description": "Affiche une case à cocher"
         },
         "color": {
-          "displayValue": "Color",
-          "description": "Sélectionner une couleur visuellement ou entrer une valeur hexadécimale"
+          "displayValue": "Couleur",
+          "description": "Sélectionner une couleur visuellement ou saisir une valeur hexadécimale"
         },
         "textArea": {
-          "displayValue": "Text Area",
+          "displayValue": "Zone de texte",
           "description": "Textes non-formatés, sur plusieurs lignes."
         },
         "richText": {
-          "displayValue": "Rich text",
+          "displayValue": "Text riche",
           "description": "Textes formatés sur plusieurs lignes (titres, images, liens, ...)"
         },
         "dropdown": {
-          "displayValue": "Dropdown",
-          "description": "Sélectionner une/des valeur(s) à partir d'une liste"
+          "displayValue": "Liste déroulante",
+          "description": "Sélectionner une ou plusieurs valeurs depuis une liste déroulante"
         },
         "picker": {
           "displayValue": "Picker",
-          "description": "Choisir des médias, fichiers ou contenus"
+          "description": "Sélectionner des médias, des fichiers ou des contenus"
         },
         "dateTimePicker": {
-          "displayValue": "Date time",
+          "displayValue": "Date & heure",
           "description": "Sélectionner une date et un horaire dans un calendrier",
           "today": "Aujourd'hui"
         },
@@ -935,19 +935,19 @@
           "description": "Champ texte"
         },
         "category": {
-          "displayValue": "Hierarchical Tree selector",
-          "description": "Sélectionner une valeur à partir de données en arbre"
+          "displayValue": "Sélecteur en arbre",
+          "description": "Sélectionner une valeur à partir de données hiérarchiques présentées en arbre"
         },
         "tag": {
-          "displayValue": "Tag",
+          "displayValue": "Etiquettes",
           "description": "Sélectionner à partir d'une liste ou créer de nouvelles valeurs"
         },
         "multipleLeftRightSelector": {
-          "displayValue": "Multiple list",
-          "description": "Sélectionner de nombreuses valeurs à partir d'une liste"
+          "displayValue": "Liste multiple",
+          "description": "Sélectionner une ou plusieurs valeurs à partir d'une liste"
         },
         "radioButton": {
-          "displayValue": "Radio button",
+          "displayValue": "Bouton radio",
           "description": "Alternative à la liste déroulante à choix unique pour sélectionner un élément"
         }
       },

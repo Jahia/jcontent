@@ -106,7 +106,7 @@ export class ContentEditor extends BasePage {
 
     cancel() {
         getComponentByRole(Button, 'backButton').click();
-        getComponentByRole(Button, 'backButton').should('not.be.visible')
+        getComponentByRole(Button, 'backButton').should('not.be.visible');
     }
 
     cancelAndDiscard() {

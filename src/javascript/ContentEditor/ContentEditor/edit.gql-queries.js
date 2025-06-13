@@ -54,7 +54,7 @@ const NodeDataFragment = {
                         displayName(language: $language)
                         primaryNodeType {
                             name
-                            displayName(language: $language)
+                            displayName(language: $uilang)
                             icon
                             supertypes {
                                 name

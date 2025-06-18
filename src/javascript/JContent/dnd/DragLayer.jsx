@@ -6,6 +6,8 @@ import styles from './DragLayer.scss';
 import clsx from 'clsx';
 import {useTranslation} from 'react-i18next';
 
+const acceptedDnDItemTypes = Object.freeze(['node', 'nodes']);
+
 function getItemStyles(clientOffset, additionalOffset) {
     if (!clientOffset) {
         return {
@@ -82,15 +84,11 @@ export const DragLayer = () => {
         }
     }
 
-    if (!isDragging) {
-        return null;
-    }
-
-    return (
+    return (isDragging && acceptedDnDItemTypes.includes(itemType)) ? (
         <div className={styles.layer}>
             <div className={clsx('flexRow_nowrap', 'alignCenter', styles.box)} style={getItemStyles(clientOffset, additionalOffset)}>
                 {renderItem()}
             </div>
         </div>
-    );
+    ) : null;
 };

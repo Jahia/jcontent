@@ -21,6 +21,7 @@ describe('Picker tests - Search', () => {
     it('Media Picker - Search for tab - letter by letter', () => {
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
+        // No search until 3 chars
         picker.search('t');
         picker.verifyResultsLength(43);
         picker.search('a');
@@ -59,6 +60,7 @@ describe('Picker tests - Search', () => {
     it('Editorial Picker- Search for tab - letter by letter', () => {
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.switchSearchContext('Digitall');
+        // No search until 3 chars
         picker.search('t');
         picker.getResults().should('not.exist');
         picker.search('a');

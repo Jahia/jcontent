@@ -48,7 +48,7 @@ export const Search = ({accordionItemProps}) => {
 
         if (v === '') {
             handleClearTerms();
-        } else if (v.length >= 3) {
+        } else if (v.length >= Constants.search.SEARCH_OFFSET) {
             clearTimeout(timeout.current);
             timeout.current = setTimeout(() => {
                 clearTimeout(timeout.current);
@@ -56,7 +56,7 @@ export const Search = ({accordionItemProps}) => {
                     cePickerSetSearchPath(searchPath === '' ? currentPath : searchPath),
                     cePickerSetSearchTerm(v)
                 ]));
-            }, 300);
+            }, Constants.search.DEBOUNCE_TIME);
         }
     };
 

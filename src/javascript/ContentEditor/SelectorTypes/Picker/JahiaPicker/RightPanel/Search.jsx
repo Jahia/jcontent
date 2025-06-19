@@ -61,6 +61,7 @@ export const Search = ({accordionItemProps}) => {
     };
 
     const handleClearTerms = () => {
+        setSearchValue('');
         dispatch(batchActions([
             cePickerSetSearchTerm(''),
             cePickerSetSearchPath(currentPath)

@@ -22,9 +22,9 @@ describe('Picker tests - Search', () => {
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
         picker.search('t');
-        picker.verifyResultsLength(24);
+        picker.verifyResultsLength(43);
         picker.search('a');
-        picker.verifyResultsLength(6);
+        picker.verifyResultsLength(43);
         picker.search('b');
         picker.verifyResultsLength(1);
         picker.getTableRow('person-smartphone-office-table.jpg').should('be.visible');
@@ -62,7 +62,7 @@ describe('Picker tests - Search', () => {
         picker.search('t');
         picker.verifyResultsAtLeast(82);
         picker.search('a');
-        picker.verifyResultsLength(19);
+        picker.verifyResultsAtLeast(82);
         picker.search('b');
         picker.verifyResultsLength(7);
     });

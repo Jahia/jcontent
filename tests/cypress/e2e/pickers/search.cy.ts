@@ -60,9 +60,9 @@ describe('Picker tests - Search', () => {
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.switchSearchContext('Digitall');
         picker.search('t');
-        picker.verifyResultsAtLeast(82);
+        picker.getResults().should('not.exist');
         picker.search('a');
-        picker.verifyResultsAtLeast(82);
+        picker.getResults().should('not.exist');
         picker.search('b');
         picker.verifyResultsLength(7);
     });

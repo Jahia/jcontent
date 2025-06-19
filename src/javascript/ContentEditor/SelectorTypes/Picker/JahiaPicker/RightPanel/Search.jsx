@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {Dropdown, SearchContextInput} from '@jahia/moonstone';
 import styles from './Search.scss';
 import {cePickerSetSearchPath, cePickerSetSearchTerm} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
@@ -16,9 +16,10 @@ import * as jcontentUtils from '~/JContent/JContent.utils';
 export const Search = ({accordionItemProps}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {searchTerms, searchPath, preSearchModeMemo, currentPath, currentSite, language, uilang, mode} = useSelector(state => ({
+    const [searchValue, setSearchValue] = useState('');
+    const timeout = useRef(null);
+    const {searchPath, preSearchModeMemo, currentPath, currentSite, language, uilang, mode} = useSelector(state => ({
         mode: state.contenteditor.picker.mode,
-        searchTerms: state.contenteditor.picker.searchTerms,
         searchPath: state.contenteditor.picker.searchPath,
         preSearchModeMemo: state.contenteditor.picker.preSearchModeMemo,
         currentPath: state.contenteditor.picker.path,
@@ -42,17 +43,25 @@ export const Search = ({accordionItemProps}) => {
     const previousMode = mode === Constants.mode.SEARCH ? preSearchModeMemo : mode;
 
     const handleChangeTerms = e => {
-        if (e.target.value === '') {
+        const v = e.target.value;
+        setSearchValue(v);
+
+        if (v === '') {
             handleClearTerms();
-        } else {
-            dispatch(batchActions([
-                cePickerSetSearchPath(searchPath === '' ? currentPath : searchPath),
-                cePickerSetSearchTerm(e.target.value)
-            ]));
+        } else if (v.length >= Constants.search.SEARCH_OFFSET) {
+            clearTimeout(timeout.current);
+            timeout.current = setTimeout(() => {
+                clearTimeout(timeout.current);
+                dispatch(batchActions([
+                    cePickerSetSearchPath(searchPath === '' ? currentPath : searchPath),
+                    cePickerSetSearchTerm(v)
+                ]));
+            }, Constants.search.DEBOUNCE_TIME);
         }
     };
 
     const handleClearTerms = () => {
+        setSearchValue('');
         dispatch(batchActions([
             cePickerSetSearchTerm(''),
             cePickerSetSearchPath(currentPath)
@@ -73,7 +82,7 @@ export const Search = ({accordionItemProps}) => {
                                      icon={currentSearchContext.iconStart}
                                      onChange={handleChangeContext}/>}
             size="big"
-            value={searchTerms}
+            value={searchValue}
             className={styles.searchInput}
             onChange={e => handleChangeTerms(e)}
             onClear={e => handleClearTerms(e)}

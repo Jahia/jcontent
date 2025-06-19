@@ -21,10 +21,11 @@ describe('Picker tests - Search', () => {
     it('Media Picker - Search for tab - letter by letter', () => {
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getViewMode().select('List');
+        // No search until 3 chars
         picker.search('t');
-        picker.verifyResultsLength(24);
+        picker.verifyResultsLength(43);
         picker.search('a');
-        picker.verifyResultsLength(6);
+        picker.verifyResultsLength(43);
         picker.search('b');
         picker.verifyResultsLength(1);
         picker.getTableRow('person-smartphone-office-table.jpg').should('be.visible');
@@ -59,10 +60,11 @@ describe('Picker tests - Search', () => {
     it('Editorial Picker- Search for tab - letter by letter', () => {
         const picker = contentEditor.getPickerField('jdmix:hasLink_internalLink').open();
         picker.switchSearchContext('Digitall');
+        // No search until 3 chars
         picker.search('t');
-        picker.verifyResultsAtLeast(82);
+        picker.getResults().should('not.exist');
         picker.search('a');
-        picker.verifyResultsLength(19);
+        picker.getResults().should('not.exist');
         picker.search('b');
         picker.verifyResultsLength(7);
     });

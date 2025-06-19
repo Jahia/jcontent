@@ -1,4 +1,8 @@
 export const Constants = {
+    search: {
+        SEARCH_OFFSET: 3,
+        DEBOUNCE_TIME: 300
+    },
     pickerConfig: 'pickerConfiguration',
     ACCORDION_ITEM_NAME: 'accordionItem',
     ACCORDION_ITEM_TYPES: {

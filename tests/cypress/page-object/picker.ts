@@ -171,8 +171,12 @@ export class Picker extends BaseComponent {
         return this.get().find('input[role="searchbox"]').should('be.visible');
     }
 
+    getResults() {
+        return this.get().find('[data-sel-role="table-pagination-total-rows"]');
+    }
+
     verifyResultsLength(length: number) {
-        this.get().find('[data-sel-role="table-pagination-total-rows"]').should('be.visible').and('contain', `of ${length}`);
+        this.getResults().should('be.visible').and('contain', `of ${length}`);
     }
 
     verifyResultsAtLeast(length: number) {

@@ -43,17 +43,18 @@ export const Search = ({accordionItemProps}) => {
     const previousMode = mode === Constants.mode.SEARCH ? preSearchModeMemo : mode;
 
     const handleChangeTerms = e => {
-        setSearchValue(e.target.value);
+        const v = e.target.value;
+        setSearchValue(v);
 
-        if (e.target.value === '') {
+        if (v === '') {
             handleClearTerms();
-        } else if (e.target.value.length >= 3) {
+        } else if (v.length >= 3) {
             clearTimeout(timeout.current);
             timeout.current = setTimeout(() => {
                 clearTimeout(timeout.current);
                 dispatch(batchActions([
                     cePickerSetSearchPath(searchPath === '' ? currentPath : searchPath),
-                    cePickerSetSearchTerm(e.target.value)
+                    cePickerSetSearchTerm(v)
                 ]));
             }, 300);
         }

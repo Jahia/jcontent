@@ -150,7 +150,7 @@ export const isObject = item => {
     return (item && typeof item === 'object' && !Array.isArray(item));
 };
 
-export const isSafeKey = key => {
+const isSafeProp = key => {
     return !['__proto__', 'prototype', 'constructor'].includes(key);
 };
 
@@ -161,22 +161,24 @@ export const mergeDeep = (target, ...sources) => {
 
     const source = sources.shift();
 
-    if (isObject(target) && isObject(source)) {
-        for (const key in source) {
-            if (!isSafeKey(key)) {
-                continue;
-            }
-
-            if (isObject(source[key])) {
-                if (!target[key]) {
-                    Object.assign(target, {[key]: {}});
-                }
-
-                mergeDeep(target[key], source[key]);
-            } else {
-                Object.assign(target, {[key]: source[key]});
-            }
+    const mergeProps = ([propKey, value]) => {
+        if (!isSafeProp(propKey)) {
+            return;
         }
+
+        if (isObject(value)) {
+            if (!target[propKey]) {
+                Object.assign(target, {[propKey]: {}});
+            }
+
+            mergeDeep(target[propKey], value);
+        } else {
+            Object.assign(target, {[propKey]: source[propKey]});
+        }
+    };
+
+    if (isObject(target) && isObject(source)) {
+        Object.entries(source).forEach(mergeProps);
     }
 
     return mergeDeep(target, ...sources);

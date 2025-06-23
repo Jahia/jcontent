@@ -152,6 +152,9 @@
  - defaultValueField (string)
  - valueConstraintField (string)
 
+[cent:testProtoMerge] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - pickerOverrideField (weakreference)
+
  [cent:testChoiceTreeContent] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
   + * (cent:testChoiceTreeContent) = cent:testChoiceTreeContent
 

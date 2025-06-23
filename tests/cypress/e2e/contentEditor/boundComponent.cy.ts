@@ -27,7 +27,8 @@ describe('Bound component tests', () => {
         jcontent.switchToListMode();
         const contentEditor = jcontent.createContent('cent:boundComponent');
         const picker = contentEditor.getPickerField('jmix:bindedComponent_j:bindedComponent').open();
-        picker.getTableRow('Search Results').click();
+        picker.getAccordionItem('picker-pages').getTreeItem('home').click();
+        picker.getTable().getRowByName('search-results').should('be.visible').click();
         picker.select();
         contentEditor.create();
 
@@ -36,6 +37,5 @@ describe('Bound component tests', () => {
 
         const pickerField = contentEditor.getPickerField('jmix:bindedComponent_j:bindedComponent');
         pickerField.assertValue('Search Results');
-        pickerField.open();
     });
 });

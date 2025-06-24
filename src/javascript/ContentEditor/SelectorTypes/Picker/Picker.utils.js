@@ -1,8 +1,7 @@
 import React from 'react';
 import {SiteWeb} from '@jahia/moonstone';
 import {NodeIcon} from '~/utils/NodeIcon';
-import {mergeDeep} from '~/JContent/JContent.utils';
-export {mergeDeep};
+export {mergeDeep} from '~/JContent/JContent.utils';
 
 export const getPathWithoutFile = fullPath => {
     return fullPath && fullPath.split('/').slice(0, -1).join('/');

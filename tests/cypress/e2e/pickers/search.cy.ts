@@ -33,6 +33,8 @@ describe('Picker tests - Search', () => {
 
     it('Media Picker - Search for tab - in different context', () => {
         const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
+        // Verify existing image is selected i.e. files/images/slides folder is selected
+        picker.getAccordionItem('picker-media').getTreeItem('slides').shouldBeSelected();
         picker.getViewMode().select('List');
         picker.search('tab');
         picker.verifyResultsLength(1);
@@ -45,6 +47,7 @@ describe('Picker tests - Search', () => {
 
     it('Media Picker - Search for tab - cancel and reopen - search should be empty', () => {
         let picker = contentEditor.getPickerField('jdmix:imgView_image').open();
+        picker.getAccordionItem('picker-media').getTreeItem('slides').shouldBeSelected();
         picker.getViewMode().select('List');
         picker.search('tab');
         picker.verifyResultsLength(1);

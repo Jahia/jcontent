@@ -37,6 +37,7 @@ describe('Picker tests', () => {
         cy.log('assert pages accordion is visible');
         const pagesAccordion: AccordionItem = picker.getAccordionItem('picker-pages');
         pagesAccordion.getHeader().should('be.visible').and('have.attr', 'aria-expanded').and('equal', 'true');
+        pagesAccordion.getTreeItem(siteKey).should('be.visible'); // Show site as root tree item in pages
 
         cy.log('assert content folder accordion is expanded and populated');
         const contentAccordion: AccordionItem = picker.getAccordionItem('picker-content-folders');

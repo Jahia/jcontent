@@ -64,6 +64,7 @@ export const registerEditorialPicker = registry => {
             },
             treeConfig: {
                 ...pagesItem.treeConfig,
+                hideRoot: false,
                 dnd: {}
             }
         }, renderer);

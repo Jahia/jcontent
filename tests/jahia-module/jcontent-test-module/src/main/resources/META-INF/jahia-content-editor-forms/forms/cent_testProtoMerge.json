@@ -1,0 +1,25 @@
+{
+  "nodeType": "cent:testProtoMerge",
+  "priority": 1.0,
+  "hasPreview": false,
+  "sections": [
+    {
+      "name": "myCustomSection",
+      "fieldSets": [
+        {
+          "name": "cent:testProtoMerge",
+          "fields": [
+            {
+              "name": "pickerOverrideField",
+              "selectorType": "Picker",
+              "selectorOptionsMap": {
+                "type": "default",
+                "__proto__": {"polluted": "Yes, I am polluted!"}
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

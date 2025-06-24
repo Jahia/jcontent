@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
-import {mergeDeep, set, toArray} from './Picker.utils';
+import {mergeDeep, toArray} from './Picker.utils';
+import {set} from 'es-toolkit/compat';
 import {PickerDialog} from './PickerDialog/PickerDialog';
 import {DisplayAction} from '@jahia/ui-extender';
 import {

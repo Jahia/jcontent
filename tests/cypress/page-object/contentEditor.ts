@@ -57,6 +57,10 @@ export class ContentEditor extends BasePage {
         return getComponentByAttr(ContentStatus, 'data-status-type', statusType).should('be.visible');
     }
 
+    getTitle() {
+        return cy.get('#contenteditor-dialog-title');
+    }
+
     getSection(sectionName: string) {
         // Works with both display name and system name
         const section = getComponentBySelector(Section, `[data-sel-content-editor-fields-group="${sectionName}"], [data-sel-content-editor-fields-group-display-name="${sectionName}"]`);

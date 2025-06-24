@@ -1,5 +1,5 @@
 import {JContent} from '../../../page-object';
-import {createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {Field, SmallTextField} from '../../../page-object/fields';
 
 describe('json override tests', {testIsolation: false}, () => {
@@ -9,6 +9,13 @@ describe('json override tests', {testIsolation: false}, () => {
     before(() => {
         createSite(siteKey);
         cy.apollo({mutationFile: 'contentEditor/overrideTests/references.graphql'});
+        enableModule(moduleName, siteKey);
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'testProtoMerge',
+            primaryNodeType: 'cent:testProtoMerge',
+            properties: [{name: 'jcr:title', language: 'en', value: 'proto merge'}]
+        });
         cy.loginAndStoreSession();
     });
 
@@ -17,7 +24,6 @@ describe('json override tests', {testIsolation: false}, () => {
     });
 
     it('can hide advancedMode button with json override', () => {
-        enableModule(moduleName, siteKey);
         const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         jcontent.editComponentByText('test-content1');
         cy.get('button[data-sel-role="advancedMode"]').should('not.exist');
@@ -96,6 +102,18 @@ describe('json override tests', {testIsolation: false}, () => {
         cy.log('Test default value');
         const defaultValue = contentEditor.getField(SmallTextField, 'cent:testJsonOverrides_defaultValueField');
         defaultValue.checkValue('json override default value');
+    });
+
+    it('can filter out proto fields in json overrides', () => {
+        const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        const ce = jcontent.editComponentByText('proto merge');
+        ce.getTitle().should('be.visible').and('contain', 'testProtoMerge');
+
+        cy.log('Test proto field does not pollute js objects');
+        cy.window().then(win => {
+            const result = win.eval('({}).polluted');
+            expect(result).to.be.undefined;
+        });
     });
 
     it('can restore advanced mode button when module is undeployed', () => {

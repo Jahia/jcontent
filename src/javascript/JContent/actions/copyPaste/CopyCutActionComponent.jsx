@@ -11,6 +11,7 @@ import {ACTION_PERMISSIONS} from '../actions.constants';
 import {withNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 import {JahiaAreasUtil} from '../../JContent.utils';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
 export const CopyCutActionComponent = withNotifications()(({
     path,
@@ -70,6 +71,9 @@ export const CopyCutActionComponent = withNotifications()(({
                     t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length});
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
                 dispatch(copypaste({type, nodes}));
+                // Note that this is used to clear currently selected element without the need to have complex piping
+                // of exposing setClickedElement of EditFrame
+                triggerRefetchAll();
             }}
         />
     );

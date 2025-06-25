@@ -10,6 +10,7 @@ export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValu
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
     const name = `${field.name}[${index}]`;
+    const readOnly = field.readOnly;
     const [{handlerId}, drop] = useReorderDrop(
         {ref, index, onReorder: onValueReorder},
         {
@@ -39,19 +40,20 @@ export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValu
             data-sel-content-editor-field-readonly={field.readOnly}
             data-handler-id={handlerId}
         >
-            {!isReferenceCard &&
+            {!isReferenceCard && !readOnly &&
             <div ref={isDraggable ? drag : null} className={clsx(isDraggable ? styles.draggableIcon : styles.notDraggableIcon)}>
                 <HandleDrag size="big"/>
             </div>}
             {component}
-            <Tooltip label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}>
-                <Button variant="ghost"
-                        data-sel-action={`removeField_${index}`}
-                        aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
-                        icon={<Close/>}
-                        onClick={() => onFieldRemove(index)}
-                    />
-            </Tooltip>
+            {!readOnly &&
+                <Tooltip label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}>
+                    <Button variant="ghost"
+                            data-sel-action={`removeField_${index}`}
+                            aria-label={t('jcontent:label.contentEditor.edit.fields.actions.clear')}
+                            icon={<Close/>}
+                            onClick={() => onFieldRemove(index)}
+                        />
+                </Tooltip>}
         </div>
     );
 };

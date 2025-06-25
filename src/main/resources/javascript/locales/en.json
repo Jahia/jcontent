@@ -749,6 +749,7 @@
           "alreadyExist": "An item with the same system name already exists, please choose another one",
           "maxLength": "{{selectorOptions.maxLength}} characters maximum",
           "invalidLink": "The link {{0}} is broken",
+          "invalidSelectorType": "The selector defined for this property is not compatible with the property type and cannot be displayed. Please review your definitions.",
           "constraintViolation": "{{0}}"
         },
         "tab": {

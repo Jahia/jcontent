@@ -67,6 +67,17 @@ function addEventListeners(target, manager, iframeRef) {
     });
 }
 
+// This hook is used to clear clicked element outside on EditFrame context, specifically in copy/paste actions
+let clickedElementHook = () => {};
+
+const setClickedElementHook = fcn => {
+    clickedElementHook = fcn;
+};
+
+export const getClickedElementHook = () => {
+    return clickedElementHook;
+};
+
 export const EditFrame = () => {
     const manager = useDragDropManager();
 
@@ -84,6 +95,7 @@ export const EditFrame = () => {
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
     const [clickedElement, setClickedElement] = useState();
+    setClickedElementHook(setClickedElement);
     const [loading, setLoading] = useState(false);
 
     const iframe = useRef();

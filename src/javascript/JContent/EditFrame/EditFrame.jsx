@@ -68,7 +68,7 @@ function addEventListeners(target, manager, iframeRef) {
 }
 
 // This hook is used to clear clicked element outside on EditFrame context, specifically in copy/paste actions
-let clickedElementHook = () => {};
+let clickedElementHook = () => undefined;
 
 const setClickedElementHook = fcn => {
     clickedElementHook = fcn;

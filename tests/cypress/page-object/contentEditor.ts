@@ -109,7 +109,7 @@ export class ContentEditor extends BasePage {
     }
 
     cancel() {
-        getComponentByRole(Button, 'backButton').click().should('not.be.visible');
+        getComponentByRole(Button, 'backButton').click().get().should('not.exist');
     }
 
     cancelAndDiscard() {

@@ -11,6 +11,7 @@ import {ACTION_PERMISSIONS} from '../actions.constants';
 import {withNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 import {JahiaAreasUtil} from '../../JContent.utils';
+import {getClickedElementHook} from '~/JContent/EditFrame';
 
 export const CopyCutActionComponent = withNotifications()(({
     path,
@@ -70,6 +71,9 @@ export const CopyCutActionComponent = withNotifications()(({
                     t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length});
                 notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
                 dispatch(copypaste({type, nodes}));
+                // In case an element was clicked, which give it selected look with header and footer, we want to
+                // unclick it so that paste buttons appear where they can.
+                getClickedElementHook()(undefined);
             }}
         />
     );

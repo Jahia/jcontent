@@ -218,6 +218,7 @@ export const EditFrame = () => {
         }, 50);
 
         return () => {
+            setClickedElementHook(() => undefined)
             clearInterval(interval);
         };
     }, []);

@@ -74,6 +74,7 @@ const actionTargetAssignments = {
         'createContentFolder',
         'fileUpload',
         'createFolder',
+        'createContent',
         'paste',
         'import',
         'refresh',

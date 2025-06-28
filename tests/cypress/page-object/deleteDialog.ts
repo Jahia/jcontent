@@ -4,6 +4,7 @@ export class DeleteDialog extends BaseComponent {
     static defaultSelector = 'div[data-sel-role="delete-mark-dialog"]';
 
     markForDeletion(verifyMsg?: string) {
+        cy.get('.moonstone-TableCell[title="Toggle Row Expanded"] > svg').click({force: true});
         if (verifyMsg) {
             this.assertMessage(verifyMsg);
         }

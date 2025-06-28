@@ -43,6 +43,9 @@
 [cent:testOverride] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
  - jcr:title (string) < '^.{0,10}$'
 
+[cent:selectorTypeTest] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+ - errorTag (string, tag) // multiple keyword is required here
+
 [cent:choiceListSelectorTypeOverride] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
  - radioButton (string, choicelist) = 'choice1' < 'choice1', 'choice2', 'choice3'
  - list (string, choicelist) = 'choice4' < 'choice4', 'choice5', 'choice6'

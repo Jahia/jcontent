@@ -7,14 +7,29 @@ import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {useApolloClient} from '@apollo/client';
 import {getSuggestionsTagsQuery} from './Tag.gql-queries';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import styles from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.scss';
+import {Typography} from '@jahia/moonstone';
+
+const TagMultipleError = () => {
+    const {t} = useTranslation('jcontent');
+    return (
+        <Typography className={styles.errorMessage} data-sel-error="tag-multiple-error">
+            {t('label.contentEditor.edit.errors.invalidSelectorType')}
+        </Typography>
+    );
+};
 
 export const Tag = ({field, value, id, onChange, onBlur}) => {
     const {t} = useTranslation('jcontent');
     const client = useApolloClient();
     const {site} = useContentEditorContext();
 
-    const selectorOption = field.selectorOptions && field.selectorOptions.find(option => option.name === 'separator');
-    const separator = selectorOption ? selectorOption.value : ',';
+    /** Error message for when tag selector type is enabled, but is not marked as multiple */
+    if (!field.multiple) {
+        return <TagMultipleError/>;
+    }
+
+    const separator = field.selectorOptions?.find(option => option.name === 'separator')?.value || ',';
 
     const adaptOptions = options => (
         options.map(data => ({
@@ -30,15 +45,14 @@ export const Tag = ({field, value, id, onChange, onBlur}) => {
             startPath: '/sites/' + site
         };
 
-        const val = await client.query({query: getSuggestionsTagsQuery, variables: variables, fetchPolicy: 'network-only'});
+        const val = await client.query({
+            query: getSuggestionsTagsQuery,
+            variables,
+            fetchPolicy: 'network-only'
+        });
 
-        if (val.data && val.data.tag && val.data.tag.suggest) {
-            return val.data.tag.suggest.map(element => {
-                return {value: element.name, label: element.name};
-            });
-        }
-
-        return [];
+        return (val.data?.tag?.suggest) ?
+            val.data.tag.suggest.map(e => ({value: e.name, label: e.name})) : [];
     };
 
     return (

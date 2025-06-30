@@ -86,7 +86,7 @@
     "react-fast-compare": "^3.2.2",
     "react-file-viewer": "^1.2.1",
     "react-i18next": "^11.7.2",
-    "react-image-crop": "^11.0.7",
+    "react-image-crop": "^6.0.18",
     "react-pdf-js": "^5.1.0",
     "react-redux": "^9.2.0",
     "react-router": "^5.2.1",

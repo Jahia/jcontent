@@ -11,17 +11,11 @@ import {getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/util
 import {EditPanelLanguageSwitcher} from './EditPanelLanguageSwitcher';
 import {useTranslation} from 'react-i18next';
 import {HeaderBadges} from './HeaderBadges';
+import {HeaderButtonActions, HeaderThreeDotsActions} from './HeaderActions';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big'},
     noIcon: true
-});
-
-const DotsButtonRenderer = getButtonRenderer({
-    labelStyle: 'none',
-    defaultButtonProps: {
-        variant: 'ghost'
-    }
 });
 
 const accentColorButtonProps = {
@@ -54,12 +48,12 @@ export const EditPanelCompact = ({title, createAnother}) => {
                             data-sel-role="advancedMode"
                             onClick={setFullscreen}
                         />}
-                    <DisplayAction actionKey="content-editor/header/3dots" render={DotsButtonRenderer}/>
+                    <HeaderThreeDotsActions/>
                 </div>
                 <div className={clsx('flexRow', 'alignCenter', styles.languageSwitcher)}>
                     <EditPanelLanguageSwitcher/>
                     <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)}/>
-                    <div className="flexFluid"/>
+                    <HeaderButtonActions/>
                     <HeaderBadges mode={mode}/>
                 </div>
             </DialogTitle>

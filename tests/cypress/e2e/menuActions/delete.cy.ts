@@ -32,7 +32,7 @@ describe('delete tests', () => {
         jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete');
 
         cy.log('Verify dialog opens and can be mark for deletion');
-        getComponent(DeleteDialog).markForDeletion('You are about to delete 5 items, including 3 page(s)');
+        getComponent(DeleteDialog).toggleRowExpanded().markForDeletion('You are about to delete 5 items, including 3 page(s)');
 
         cy.log('Verify menu and subpages has been marked for deletion');
         cy.apollo({

@@ -12,6 +12,11 @@ export class DeleteDialog extends BaseComponent {
         cy.get(DeleteDialog.defaultSelector).should('not.exist');
     }
 
+    toggleRowExpanded() {
+        cy.get('.moonstone-TableCell[title="Toggle Row Expanded"] > svg').click({force: true});
+        return this;
+    }
+
     assertMessage(verifyMsg: string) {
         this.get().should('contain', verifyMsg);
         return this;

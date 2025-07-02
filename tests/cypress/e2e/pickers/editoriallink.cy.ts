@@ -131,8 +131,7 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
             .should('be.visible') // Expanded
             .and('have.class', 'moonstone-TableRow-highlighted'); // Selected
         picker.cancel();
-        contentEditor.cancel();
-        cy.get('[data-sel-role="close-dialog-discard"]').click();
+        contentEditor.cancelAndDiscard();
     });
 
     it('can select main resource and sub-main resource', () => {
@@ -149,7 +148,6 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
         picker.getTable().getRowByName('paragraph').should('be.visible').click();
         picker.select();
 
-        contentEditor.cancel();
-        cy.get('[data-sel-role="close-dialog-discard"]').click();
+        contentEditor.cancelAndDiscard();
     });
 });

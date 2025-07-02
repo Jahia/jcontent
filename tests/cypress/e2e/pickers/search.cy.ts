@@ -6,11 +6,10 @@ describe('Picker tests - Search', () => {
     let jcontent: JContent;
 
     beforeEach(() => {
-        // I have issues adding these to before()/after() so have to add to beforeEach()/afterEach()
         cy.login(); // Edit in chief
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
-        contentEditor = ContentEditor.visit('/sites/digitall/home/area-main/highlights/leading-by-example', 'digitall', 'en', 'pages/home');
-        jcontent = new JContent();
+        jcontent = JContent.visit('digitall', 'en', 'pages/home/area-main/highlights/leading-by-example');
+        contentEditor = jcontent.editContent();
     });
 
     afterEach(() => {
@@ -46,7 +45,7 @@ describe('Picker tests - Search', () => {
     });
 
     it('Media Picker - Search for tab - cancel and reopen - search should be empty', () => {
-        let picker = contentEditor.getPickerField('jdmix:imgView_image').open();
+        const picker = contentEditor.getPickerField('jdmix:imgView_image').open();
         picker.getAccordionItem('picker-media').getTreeItem('slides').shouldBeSelected();
         picker.getViewMode().select('List');
         picker.search('tab');
@@ -54,9 +53,8 @@ describe('Picker tests - Search', () => {
         picker.getTableRow('person-smartphone-office-table.jpg').should('be.visible');
         picker.cancel();
         contentEditor.cancel();
-        jcontent.switchToListMode();
-        cy.get('table[data-cm-role="table-content-list"]').parent().scrollTo(0, 500);
-        picker = jcontent.editComponentByText('Leading by Example').getPickerField('jdmix:imgView_image').open();
+
+        jcontent.editContent().getPickerField('jdmix:imgView_image').open();
         picker.getSearchInput().should('be.empty');
     });
 

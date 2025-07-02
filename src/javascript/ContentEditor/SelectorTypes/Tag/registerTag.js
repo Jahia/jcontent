@@ -8,6 +8,7 @@ export const registerTag = ceRegistry => {
             {name: 'description', value: 'jcontent:label.contentEditor.selectorTypes.tag.description'},
             {name: 'iconStart', value: 'Label'}
         ],
-        cmp: Tag, supportMultiple: true
+        cmp: Tag,
+        supportMultiple: true
     });
 };

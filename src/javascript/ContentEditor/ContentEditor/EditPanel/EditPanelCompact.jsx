@@ -50,11 +50,14 @@ export const EditPanelCompact = ({title, createAnother}) => {
                         />}
                     <HeaderThreeDotsActions/>
                 </div>
-                <div className={clsx('flexRow', 'alignCenter', styles.languageSwitcher)}>
-                    <EditPanelLanguageSwitcher/>
+                <div className={clsx('flexRow', 'alignCenter')}>
                     <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)}/>
-                    <HeaderButtonActions/>
+                    <div className="flexFluid"/>
                     <HeaderBadges mode={mode}/>
+                </div>
+                <div className={clsx('flexRow', 'alignCenter', styles.languageSwitcherActionButtons)}>
+                    <EditPanelLanguageSwitcher/>
+                    <HeaderButtonActions/>
                 </div>
             </DialogTitle>
             <DialogContent className="flexCol" id="contenteditor-dialog-content" data-sel-role="form-container">

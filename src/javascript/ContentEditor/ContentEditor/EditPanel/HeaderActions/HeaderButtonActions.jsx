@@ -12,10 +12,11 @@ const ButtonRenderer = getButtonRenderer({
     }
 });
 
-const HeaderButtonActions = ({limit}) => {
+const HeaderButtonActions = ({limit, offset}) => {
     const actionsToDisplay = registry
         .find({type: 'action', target: 'content-editor/header/3dots'})
-        .filter((action, index) => index < limit)
+        .filter((action, index) =>
+            index >= offset && index < (offset + limit))
         .map(action => action.key);
 
     if (actionsToDisplay.length === 0) {
@@ -39,11 +40,15 @@ const HeaderButtonActions = ({limit}) => {
 };
 
 HeaderButtonActions.propTypes = {
+    // How many actions to skip
+    offset: PropTypes.number,
+    // How many actions to display in total
     limit: PropTypes.number
 };
 
 HeaderButtonActions.defaultProps = {
-    limit: Constants.editPanel.defaultHeaderButtonCount
+    limit: Constants.editPanel.defaultHeaderButtonCount,
+    offset: 0
 };
 
 export default HeaderButtonActions;

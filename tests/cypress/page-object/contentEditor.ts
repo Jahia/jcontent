@@ -131,21 +131,18 @@ export class ContentEditor extends BasePage {
 
     activateWorkInProgressMode(language?: string) {
         if (language === undefined) {
-            getComponentByRole(Button, '3dotsMenuAction').click();
-            getComponentBySelector(Menu, '#menuHolder').selectByRole('goToWorkInProgress');
+            getComponentByRole(Button, 'goToWorkInProgress').click();
             cy.get('[data-sel-role="wip-info-chip"]').should('contain', 'Work in progress');
         } else if (language === 'ALL') {
             // Activate all properties
-            getComponentByRole(Button, '3dotsMenuAction').click();
-            getComponentBySelector(Menu, '#menuHolder').selectByRole('goToWorkInProgress');
+            getComponentByRole(Button, 'goToWorkInProgress').click();
             cy.get('[data-sel-role="WIP"]').click();
             cy.get('input[type="radio"]').filter('input[value="ALL_CONTENT"]').click();
             cy.get('.moonstone-button').filter(':contains("Done")').click();
             cy.get('[data-sel-role="wip-info-chip"]').should('contain', 'Work in progress');
         } else {
             // Activate all properties
-            getComponentByRole(Button, '3dotsMenuAction').click();
-            getComponentBySelector(Menu, '#menuHolder').selectByRole('goToWorkInProgress');
+            getComponentByRole(Button, 'goToWorkInProgress').click();
             cy.get('[data-sel-role="WIP"]').click();
             language.split(',').forEach(value => {
                 cy.get('input[type="checkbox"]').check(value);

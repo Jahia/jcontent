@@ -5,12 +5,13 @@ import {MenuItemRenderer} from '~/JContent/MenuItemRenderer';
 import PropTypes from 'prop-types';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
-const HeaderThreeDotsActions = ({limit}) => {
+const HeaderThreeDotsActions = ({limit, offset}) => {
     const menuContainerRef = React.useRef(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const actionsToDisplay = registry
         .find({type: 'action', target: 'content-editor/header/3dots'})
-        .filter((action, index) => index >= limit)
+        .filter((action, index) =>
+            index >= offset && index < (offset + limit))
         .map(action => action.key);
 
     if (actionsToDisplay.length === 0) {
@@ -44,11 +45,15 @@ const HeaderThreeDotsActions = ({limit}) => {
 };
 
 HeaderThreeDotsActions.propTypes = {
+    // How many actions to skip
+    offset: PropTypes.number,
+    // How many actions to display in total
     limit: PropTypes.number
 };
 
 HeaderThreeDotsActions.defaultProps = {
-    limit: Constants.editPanel.defaultHeaderButtonCount
+    limit: Constants.editPanel.defaultHeaderButtonCount,
+    offset: Constants.editPanel.defaultHeaderButtonCount
 };
 
 export default HeaderThreeDotsActions;

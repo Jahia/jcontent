@@ -4,8 +4,7 @@ import {
     getComponent,
     getComponentByAttr,
     getComponentByRole,
-    getComponentBySelector,
-    Menu
+    getComponentBySelector
 } from '@jahia/cypress';
 import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
 import {ChoiceTreeField, DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';

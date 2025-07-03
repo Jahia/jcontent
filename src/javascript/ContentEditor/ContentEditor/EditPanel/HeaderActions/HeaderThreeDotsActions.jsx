@@ -52,7 +52,7 @@ HeaderThreeDotsActions.propTypes = {
 };
 
 HeaderThreeDotsActions.defaultProps = {
-    limit: Constants.editPanel.defaultHeaderButtonCount,
+    limit: 99,
     offset: Constants.editPanel.defaultHeaderButtonCount
 };
 

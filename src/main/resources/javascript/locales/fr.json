@@ -62,10 +62,10 @@
         "dontUpload": "Ne pas télécharger",
         "dontImport": "Ne pas importer",
         "uploadButtonLabel": "Importer des fichiers",
-        "successfulUploadMessage": "Fichier téléchargé avec succès",
-        "successfulUploadMessage_plural": "{{number}} fichiers téléchargés avec succès",
-        "successfulImportMessage": "Fichier importé avec succès",
-        "successfulImportMessage_plural": "{{number}} fichiers importés avec succès",
+        "successfulUploadMessage_one": "Fichier téléchargé avec succès",
+        "successfulUploadMessage_other": "{{number}} fichiers téléchargés avec succès",
+        "successfulImportMessage_one": "Fichier importé avec succès",
+        "successfulImportMessage_other": "{{number}} fichiers importés avec succès",
         "newName": "Nouveau nom",
         "uploadingMessage": "Téléchargement ({{uploaded}} sur {{total}} terminé)",
         "importingMessage": "Importation ({{uploaded}} sur {{total}} terminé)",
@@ -91,7 +91,7 @@
         "replaceWith": "Remplacer par",
         "edit": "Editer",
         "drop": "Déposez vos fichiers et dossiers ici",
-        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>|%"
       },
       "import": {
         "dropMessage": "Glisser-déposer un fichier à importer",
@@ -104,7 +104,7 @@
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
-        "missingFolder" : "Dossier non trouvé"
+        "missingFolder": "Dossier non trouvé"
       },
       "title": {
         "media": "Média",
@@ -201,8 +201,8 @@
         "contentFolders": "Dossiers de contenu",
         "forms": "Formulaires",
         "apps": {
-          "title": "Extensions",
-          "404": "Application introuvable"
+          "404": "Application introuvable",
+          "title": "Extensions"
         },
         "content": "Contenu",
         "manage": {
@@ -293,12 +293,12 @@
         }
       },
       "move": {
-        "success": "{{count}} élément a été déplacé dans {{dest}}",
-        "success_plural": "{{count}} éléments ont été déplacés dans {{dest}}.",
+        "success_one": "{{count}} élément a été déplacé dans {{dest}}",
+        "success_other": "{{count}} éléments ont été déplacés dans {{dest}}.",
         "error_itemExists": "Un élément ne peut pas être déplacé car un élément avec le même nom système existe déjà.",
         "error_itemExists_name": "{{name}} ne peut pas être déplacé car un élément avec le même nom système existe déjà.",
-        "error": "L'élément ne peut pas être déplacé vers {{dest}}.",
-        "error_plural": "Les éléments ne peuvent pas être déplacés vers {{dest}}.",
+        "error_one": "L'élément ne peut pas être déplacé vers {{dest}}.",
+        "error_other": "Les éléments ne peuvent pas être déplacés vers {{dest}}.",
         "error_name": "{{name}} ne peut pas être déplacé vers {{dest}}."
       },
       "actions": {
@@ -338,10 +338,10 @@
       },
       "browseFolders": "Parcourir les dossiers",
       "selection": {
-        "itemsSelected": "{{count}} élément sélectionné",
-        "itemsSelected_plural": "{{count}} éléments sélectionnés",
-        "items": "{{count}} éléments",
-        "items_plural": "{{count}} éléments",
+        "itemsSelected_one": "{{count}} élément sélectionné",
+        "itemsSelected_other": "{{count}} éléments sélectionnés",
+        "items_one": "{{count}} éléments",
+        "items_other": "{{count}} éléments",
         "clearMultipleSelection": "Vider la sélection",
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments",
         "removed": "{{count}} éléments précédemment sélectionnés ont été enlevés de la sélection, car non affichés dans cette vue",
@@ -388,19 +388,19 @@
           "yes": "Oui"
         }
       },
-      "subContent": "({{count}} sous-contenu)",
-      "subContent_plural": "({{count}} sous-contenus)",
+      "subContent_one": "({{count}} sous-contenu)",
+      "subContent_other": "({{count}} sous-contenus)",
       "createFolderAction": {
         "title": "Nouveau dossier",
         "text": "Saisissez un nom de dossier",
         "exists": "Un dossier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>|%"
       },
       "renameAction": {
         "title": "Renommer",
         "text": "Saisissez un nouveau nom",
         "exists": "Un fichier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>|%"
       },
       "downloadFile": {
         "title": "Télécharger le fichier",
@@ -442,14 +442,14 @@
       },
       "viewUsages": {
         "title": "Utilisations pour \"{{name}}\"",
-        "usage": "{{count}} utilisation",
-        "usage_plural": "{{count}} utilisations"
+        "usage_one": "{{count}} utilisation",
+        "usage_other": "{{count}} utilisations"
       },
       "deleteAction": {
         "infoTable": {
           "usages": "Utilisations",
-          "usage": "{{count}} utilisation",
-          "usage_plural": "{{count}} utilisations",
+          "usage_one": "{{count}} utilisation",
+          "usage_other": "{{count}} utilisations",
           "usageZero": "-"
         },
         "loading": "Chargement...",
@@ -494,16 +494,16 @@
           "some": "Certains de ces éléments sont actuellement utilisés par d’autres contenus. Leur suppression engendrera des références cassées.",
           "tooMany": "Le système n'a pas pu vérifier si les éléments à supprimer sont actuellement utilisés par d’autres contenus (trop d'éléments à vérifier). Vous pouvez vérifier les utilisations manuellement dans le tableau ci-dessous."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Impossible de supprimer",
-            "content": "L’élément <strong>{{name}}</strong> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content_one": "L’élément <strong>{{name}}</strong> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
+            "content_other": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           },
           "undelete": {
             "title": "Impossible d'annuler la suppression",
-            "content": "Il n’est actuellement pas possible d’annuler directement la suppression de l’élément <strong>{{name}}</strong>. Veuillez annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content_one": "Il n’est actuellement pas possible d’annuler directement la suppression de l’élément <strong>{{name}}</strong>. Veuillez annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
+            "content_other": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
           }
         },
         "error": "Impossible d'exécuter l'opération demandée. Fermeture de la fenêtre et rafraîchissement des données."
@@ -565,7 +565,7 @@
     },
     "categoryManager": {
       "noSubCategory": "Pas de sous-catégorie",
-      "name":"Gestionnaire de Catégories",
+      "name": "Gestionnaire de Catégories",
       "pageTitle": "Catégories"
     },
     "contentEditor": {
@@ -587,8 +587,8 @@
         "validation": {
           "required": "Requis",
           "invalidForm": "Formulaire non valide",
-          "fieldsInError": "Un champ en erreur",
-          "fieldsInError_plural": "{{count}} champs en erreur",
+          "fieldsInError_one": "Un champ en erreur",
+          "fieldsInError_other": "{{count}} champs en erreur",
           "otherLanguages": "Autres langues en erreur"
         },
         "action": {
@@ -609,8 +609,8 @@
             "error": "Une erreur s'est produite lors de l'enregistrement du contenu",
             "validation": {
               "modalTitle": "Le contenu n’a pas pu être enregistré",
-              "modalMessage": "Il y a une erreur de validation dans le formulaire.",
-              "modalMessage_plural": "Il y a {{count}} erreurs de validation dans le formulaire.",
+              "modalMessage_one": "Il y a une erreur de validation dans le formulaire.",
+              "modalMessage_other": "Il y a {{count}} erreurs de validation dans le formulaire.",
               "modalButton": "OK"
             }
           },
@@ -668,7 +668,7 @@
             "clickHere": "Cliquez ici.",
             "dialogTitle": "Travail en cours (WIP)",
             "dialogSubTitle": "Vous pouvez marquer le contenu comme \"travail en cours\" pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
-            "label" : {
+            "label": {
               "mark": "Marquer comme \"travail en cours\"",
               "unmark": "Ne pas marquer comme \"travail en cours\""
             },
@@ -748,7 +748,7 @@
           "advanced": "Options avancées"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Changer de langue",
           "addTranslation": {
@@ -793,7 +793,7 @@
           "filterLabel": "Rechercher un type de contenu"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Contenu"
@@ -865,17 +865,17 @@
         "noPermissionLabel": "Vous n'avez pas la permission de gérer les URLs personnalisées."
       },
       "selection": {
-        "itemsSelected": "{{count}} élément sélectionné",
-        "itemsSelected_plural": "{{count}} éléments sélectionnés"
+        "itemsSelected_one": "{{count}} élément sélectionné",
+        "itemsSelected_other": "{{count}} éléments sélectionnés"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Catégories",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Les éléments non-sélectionnables ne sont pas affichés dans cette vue",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Chercher dans",
             "allUsers": "Tous les utilisateurs",
             "globalUsers": "Utilisateurs globaux",
@@ -891,8 +891,8 @@
           "multipleLeftRightSelector": {
             "addAll": "Tout ajouter",
             "removeAll": "Tout enlever",
-            "selected": "{{count}} élément sélectionné",
-            "selected_plural": "{{count}} éléments sélectionnés"
+            "selected_one": "{{count}} élément sélectionné",
+            "selected_other": "{{count}} éléments sélectionnés"
           }
         }
       },
@@ -953,18 +953,18 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Langues",
+        "languages": {
+          "title": "Langues",
           "description": "Le contenu sera visible dans les langues sélectionnées",
-          "label" : "Visibilité du contenu par langue",
-          "leftList" : "Le contenu sera visible en:",
-          "rightList" : "Le contenu ne sera pas visible en:"
+          "label": "Visibilité du contenu par langue",
+          "leftList": "Le contenu sera visible en:",
+          "rightList": "Le contenu ne sera pas visible en:"
         },
-        "conditions" : {
-          "title" : "Jour et heure",
-          "rules" : "{{rulesNumber}} conditions définies",
-          "rule" : "1 condition définie",
-          "norules" : "Pas de condition définie"
+        "conditions": {
+          "title": "Jour et heure",
+          "rules": "{{rulesNumber}} conditions définies",
+          "rule": "1 condition définie",
+          "norules": "Pas de condition définie"
         }
       }
     },

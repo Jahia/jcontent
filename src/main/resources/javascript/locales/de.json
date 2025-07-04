@@ -62,10 +62,10 @@
         "dontUpload": "Nicht hochladen",
         "dontImport": "Nicht importieren",
         "uploadButtonLabel": "Datei(en) hochladen",
-        "successfulUploadMessage": "Die Datei wurde erfolgreich hochgeladen",
-        "successfulUploadMessage_plural": "{{number}} Dateien erfolgreich hochgeladen",
-        "successfulImportMessage": "Datei erfolgreich hochgeladen",
-        "successfulImportMessage_plural": "{{number}} Dateien erfolgreich hochgeladen",
+        "successfulUploadMessage_one": "Die Datei wurde erfolgreich hochgeladen",
+        "successfulUploadMessage_other": "{{number}} Dateien erfolgreich hochgeladen",
+        "successfulImportMessage_one": "Datei erfolgreich hochgeladen",
+        "successfulImportMessage_other": "{{number}} Dateien erfolgreich hochgeladen",
         "newName": "Neuer Name",
         "uploadingMessage": "Hochladen ({{uploaded}} von {{total}} abgeschlossen)",
         "importingMessage": "Import ({{uploaded}} von {{total}} vollständig)",
@@ -90,7 +90,7 @@
         "dialogRename": "Umbenennen",
         "replaceWith": "Ersetzen mit",
         "drop": "Drop Datei und Ordner hier ab",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>|%"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",
@@ -201,8 +201,8 @@
         "contentFolders": "Inhalts-Ordner",
         "forms": "Formulare",
         "apps": {
-          "title": "Zusätzlich",
-          "404": "App nicht gefunden"
+          "404": "App nicht gefunden",
+          "title": "Zusätzlich"
         },
         "content": "Content",
         "manage": {
@@ -293,12 +293,12 @@
         }
       },
       "move": {
-        "success": "{{count}} Element wurde nach {{dest}} verschoben",
-        "success_plural": "{{count}} Elemente wurden nach {{dest}} verschoben.",
+        "success_one": "{{count}} Element wurde nach {{dest}} verschoben",
+        "success_other": "{{count}} Elemente wurden nach {{dest}} verschoben.",
         "error_itemExists": "Ein Element kann nicht verschoben werden, da ein bereits ein Element mit diesem Namen existiert.",
         "error_itemExists_name": "{{name}} kann nicht verschoben werden, da ein bereits ein Element mit diesem Namen existiert.",
-        "error": "Das Element kann nicht verschoben werden.",
-        "error_plural": "Die Elemente können nicht verschoben werden.",
+        "error_one": "Das Element kann nicht verschoben werden.",
+        "error_other": "Die Elemente können nicht verschoben werden.",
         "error_name": "{{name}} kann nicht verschoben werden."
       },
       "actions": {
@@ -338,10 +338,10 @@
       },
       "browseFolders": "Ordner durchsuchen",
       "selection": {
-        "itemsSelected": "{{count}} Element ausgewählt",
-        "itemsSelected_plural": "{{count}} Elemente ausgewählt",
-        "items": "{{count}} Element",
-        "items_plural": "{{count}} Elemente",
+        "itemsSelected_one": "{{count}} Element ausgewählt",
+        "itemsSelected_other": "{{count}} Elemente ausgewählt",
+        "items_one": "{{count}} Element",
+        "items_other": "{{count}} Elemente",
         "clearMultipleSelection": "Auswahl aufheben",
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar",
         "removed": "Zuvor selektierte Elemente, die nicht in dieser Ansicht angezeigt werden können, wurden von der Selektion entfernt",
@@ -388,19 +388,19 @@
           "yes": "Ja"
         }
       },
-      "subContent": "({{count}} sub-Inhalt)",
-      "subContent_plural": "({{count}} sub-Inhalte)",
+      "subContent_one": "({{count}} sub-Inhalt)",
+      "subContent_other": "({{count}} sub-Inhalte)",
       "createFolderAction": {
         "title": "Neuer Ordner",
         "text": "Geben Sie einen Ordner-Namen ein",
         "exists": "Ein Ordner mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>|%"
       },
       "renameAction": {
         "title": "Umbenennen",
         "text": "Geben Sie einen Namen ein",
         "exists": "Eine Datei mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>|%"
       },
       "downloadFile": {
         "title": "Datei herunterladen",
@@ -442,14 +442,14 @@
       },
       "viewUsages": {
         "title": "Verwendungen \"{{name}}\"",
-        "usage": "{{count}} Verwendung",
-        "usage_plural": "{{count}} Verwendungen"
+        "usage_one": "{{count}} Verwendung",
+        "usage_other": "{{count}} Verwendungen"
       },
       "deleteAction": {
         "infoTable": {
           "usages": "Verwendungen",
-          "usage": "{{count}} Verwendung",
-          "usage_plural": "{{count}} Verwendungen"
+          "usage_one": "{{count}} Verwendung",
+          "usage_other": "{{count}} Verwendungen"
         },
         "loading": "Laden...",
         "info": {
@@ -493,16 +493,16 @@
           "some": "Einige dieser Elemente werden aktuell durch andere Elemente referenziert. Die Löschung dieser Elemente erzeugt zerstörte Referenzen.",
           "tooMany": "Das System konnte nicht verifizieren, ob die zu löschenden Elemente aktuell durch andere Elemente referenziert werden (Anzahl zur Verifizierung ist zu groß). Sie können die Verwendung der aufgelisteten Elemente manuell verifizieren."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Löschung nicht möglich",
-            "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde.",
-            "content_plural": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein gelöscht werden. Bitte stellen Sie diese wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde."
+            "content_one": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde.",
+            "content_other": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein gelöscht werden. Bitte stellen Sie diese wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde."
           },
           "undelete": {
             "title": "Wiederherstellung nicht möglich",
-            "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde.",
-            "content_plural": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde."
+            "content_one": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde.",
+            "content_other": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde."
           }
         },
         "error": "Die angeforderte Operation konnte am ausgewählten Content nicht durchgeführt werden. Dialog wird geschlossen und Daten werden neu geladen."
@@ -586,8 +586,8 @@
         "validation": {
           "required": "erforderlich",
           "invalidForm": "Fehler im Formular",
-          "fieldsInError": "Ein Feld mit Fehler",
-          "fieldsInError_plural": "{{count}} Felder mit Fehler",
+          "fieldsInError_one": "Ein Feld mit Fehler",
+          "fieldsInError_other": "{{count}} Felder mit Fehler",
           "otherLanguages": "Weitere Sprachen mit Fehler"
         },
         "action": {
@@ -608,8 +608,8 @@
             "error": "Beim Speichern des Inhalts ist ein Fehler aufgetreten",
             "validation": {
               "modalTitle": "Ihre Änderungen konnten nicht gespeichert werden.",
-              "modalMessage": "Es ist ein Validierungsfehler im Formular aufgetreten.",
-              "modalMessage_plural": "Es sind {{count}} Validierungsfehler im Formular aufgetreten.",
+              "modalMessage_one": "Es ist ein Validierungsfehler im Formular aufgetreten.",
+              "modalMessage_other": "Es sind {{count}} Validierungsfehler im Formular aufgetreten.",
               "modalButton": "OK"
             }
           },
@@ -667,7 +667,7 @@
             "clickHere": "klicken Sie hier.",
             "dialogTitle": "In Arbeit (WIP)",
             "dialogSubTitle": "Markieren Sie Ihren Content als Work in Progress wenn Sie die Veröffentlichung des Contents verhindern wollen. Um mehr über das Work in Progress Feature zu erfahren, ",
-            "label" : {
+            "label": {
               "mark": "Als \"In Arbeit\" markieren",
               "unmark": "Nicht als \"In Arbeit\" markieren"
             },
@@ -747,7 +747,7 @@
           "advanced": "Erweiterte Optionen"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Sprache wechseln",
           "addTranslation": {
@@ -792,7 +792,7 @@
           "filterLabel": "Nach Content-Typen suchen"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -864,17 +864,17 @@
         "noPermissionLabel": "Sie haben keine Berechtigung, Vanity URLs zu verwalten."
       },
       "selection": {
-        "itemsSelected": "{{count}} element ausgewählt",
-        "itemsSelected_plural": "{{count}} elemente ausgewählt"
+        "itemsSelected_one": "{{count}} element ausgewählt",
+        "itemsSelected_other": "{{count}} elemente ausgewählt"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Kategorien",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Nicht auswählbare Elemente werden in dieser Ansicht nicht gelistet",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "Alle Nutzer",
             "globalUsers": "Globale Benutzer",
@@ -890,8 +890,8 @@
           "multipleLeftRightSelector": {
             "addAll": "Alle hinzufügen",
             "removeAll": "Alle entfernen",
-            "selected": "{{count}} Element ausgewählt",
-            "selected_plural": "{{count}} Elemente ausgewählt"
+            "selected_one": "{{count}} Element ausgewählt",
+            "selected_other": "{{count}} Elemente ausgewählt"
           }
         }
       },
@@ -952,18 +952,18 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Anzeigesprachen",
+        "languages": {
+          "title": "Anzeigesprachen",
           "description": "Content ist in den gewählten Sprachen sichtbar",
-          "label" : "Content in spezifischer Sprache verstecken",
-          "leftList" : "Der Content wird sichtbar sein in:",
-          "rightList" : "Der Content wird nicht sichtbar sein in:"
+          "label": "Content in spezifischer Sprache verstecken",
+          "leftList": "Der Content wird sichtbar sein in:",
+          "rightList": "Der Content wird nicht sichtbar sein in:"
         },
-        "conditions" : {
-          "title" : "Datum und Uhrzeit",
-          "rules" : "{{rulesNumber}} Bedingungen definiert",
-          "rule" : "Eine Bedingung definiert",
-          "norules" : "Keine Bedingung definiert"
+        "conditions": {
+          "title": "Datum und Uhrzeit",
+          "rules": "{{rulesNumber}} Bedingungen definiert",
+          "rule": "Eine Bedingung definiert",
+          "norules": "Keine Bedingung definiert"
         }
       }
     },

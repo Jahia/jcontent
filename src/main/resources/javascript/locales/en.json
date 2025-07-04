@@ -621,7 +621,6 @@
             }
           },
           "goBack": {
-            "name": "Back to {{parentNodeDisplayName}}",
             "edit": {
               "title": "Unsaved changes",
               "message": "There are unsaved changes. What do you want to do with them before closing?"

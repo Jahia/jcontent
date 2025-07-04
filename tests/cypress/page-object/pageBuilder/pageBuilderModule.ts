@@ -61,9 +61,7 @@ export class PageBuilderModule extends BaseComponent {
             this.click(); // Header shows up only when selected
         }
 
-        return new PageBuilderModuleHeader(this.get().invoke('attr', 'id').then(id => {
-            return this.parentFrame.get().find(`[jahiatype="header"][data-jahia-id="${id}"]`);
-        }));
+        return new PageBuilderModuleHeader(this.getBox().find('[jahiatype="header"]'));
     }
 
     getFooter() {
@@ -87,12 +85,13 @@ export class PageBuilderModule extends BaseComponent {
 
     contextMenu(selectFirst = false, force = true): Menu {
         if (selectFirst) {
-            this.getHeader(selectFirst);
+            this.click();
+            this.getHeader().get().should('be.visible').rightclick({force, waitForAnimations: true});
         } else {
             this.hover();
+            this.get().rightclick({force, waitForAnimations: true});
         }
 
-        this.get().rightclick({force, waitForAnimations: true});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

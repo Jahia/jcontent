@@ -25,7 +25,9 @@ describe('Page builder - clipboard tests', () => {
 
     it('should show paste button when we copy', function () {
         // We don't force right-click otherwise it might bring up page context menu
-        const contextMenu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`).contextMenu(false, false);
+        const contentPath = `/sites/${siteKey}/home/area-main/test-content1`;
+        const contextMenu = jcontent.getModule(contentPath).contextMenu(true, false);
+
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000); // Wait for the context menu to appear
         contextMenu.selectByRole('copy');
@@ -41,7 +43,7 @@ describe('Page builder - clipboard tests', () => {
 
     it('should remove paste button when we clear clipboard', function () {
         // We don't force right-click otherwise it might bring up page context menu
-        const contextMenu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(false, false);
+        const contextMenu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true, false);
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000); // Wait for the context menu to appear
         contextMenu.selectByRole('copy');

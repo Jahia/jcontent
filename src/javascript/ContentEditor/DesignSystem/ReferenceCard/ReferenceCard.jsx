@@ -72,7 +72,7 @@ ReferenceCardCmp.defaultProps = {
     fieldData: null,
     emptyLabel: '',
     emptyIcon: null,
-    onClick: undefined
+    onClick: () => {}
 };
 
 ReferenceCardCmp.propTypes = {

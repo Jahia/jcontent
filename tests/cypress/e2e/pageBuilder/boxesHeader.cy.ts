@@ -30,19 +30,15 @@ describe('Page builder - boxes and header tests', () => {
     });
 
     it('should show box with name, status and edit buttons', () => {
-        const module = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`);
-        module.hover().should('have.attr', 'data-hovered', 'true').click();
-        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`).getHeader();
-        header.get().find('p').contains('test-content4');
+        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`).getHeader(true);
+        header.get().should('be.visible').find('p').contains('test-content4');
         header.assertStatus('Not published');
         header.getButton('edit');
         header.getButton('contentItemActionsMenu');
     });
 
     it('should trim long titles', () => {
-        const module = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`);
-        module.hover().should('have.attr', 'data-hovered', 'true').click();
-        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`).getHeader();
-        header.get().find('p').contains('Lorem ipsum dolor sit am...');
+        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`).getHeader(true);
+        header.get().should('be.visible').find('p').contains('Lorem ipsum dolor sit am...');
     });
 });

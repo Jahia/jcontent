@@ -64,10 +64,10 @@
         "dontUpload": "Don't upload",
         "dontImport": "Don't import",
         "uploadButtonLabel": "Upload file(s)",
-        "successfulUploadMessage": "File successfully uploaded",
-        "successfulUploadMessage_plural": "Successfully uploaded {{number}} files",
-        "successfulImportMessage": "File successfully imported",
-        "successfulImportMessage_plural": "Successfully imported {{number}} files",
+        "successfulUploadMessage_one": "File successfully uploaded",
+        "successfulUploadMessage_other": "Successfully uploaded {{number}} files",
+        "successfulImportMessage_one": "File successfully imported",
+        "successfulImportMessage_other": "Successfully imported {{number}} files",
         "newName": "New name",
         "uploadingMessage": "Uploading ({{uploaded}} of {{total}} complete)",
         "importingMessage": "Importing ({{uploaded}} of {{total}} complete)",
@@ -107,7 +107,7 @@
       "error": {
         "contentUnavailable": "The requested content is unavailable",
         "queryingContent": "Error querying content: {{details}}",
-        "missingFolder" : "Folder not found"
+        "missingFolder": "Folder not found"
       },
       "title": {
         "media": "Media",
@@ -205,8 +205,8 @@
         "contentFolders": "Content Folders",
         "forms": "Forms",
         "apps": {
-          "title": "Additional",
-          "404": "App not found"
+          "404": "App not found",
+          "title": "Additional"
         },
         "content": "Content",
         "manage": {
@@ -297,12 +297,12 @@
         }
       },
       "move": {
-        "success": "{{count}} item has been moved to {{dest}}",
-        "success_plural": "{{count}} items have been moved to {{dest}}.",
+        "success_one": "{{count}} item has been moved to {{dest}}",
+        "success_other": "{{count}} items have been moved to {{dest}}.",
         "error_itemExists": "An item cannot be moved as another item with the same name already exists.",
         "error_itemExists_name": "{{name}} cannot be moved as another item with the same name already exists.",
-        "error": "Item cannot be moved to {{dest}}.",
-        "error_plural": "Items cannot be moved to {{dest}}.",
+        "error_one": "Item cannot be moved to {{dest}}.",
+        "error_other": "Items cannot be moved to {{dest}}.",
         "error_name": "{{name}} cannot be moved to {{dest}}."
       },
       "actions": {
@@ -342,10 +342,10 @@
       },
       "browseFolders": "Browse Folders",
       "selection": {
-        "itemsSelected": "{{count}} item selected",
-        "itemsSelected_plural": "{{count}} items selected",
-        "items": "{{count}} item",
-        "items_plural": "{{count}} items",
+        "itemsSelected_one": "{{count}} item selected",
+        "itemsSelected_other": "{{count}} items selected",
+        "items_one": "{{count}} item",
+        "items_other": "{{count}} items",
         "clearMultipleSelection": "Clear selection",
         "emptyContextMenu": "No actions available for those items",
         "removed": "{{count}} previously selected items have been removed from the selection, as they are not displayed in this view",
@@ -393,8 +393,8 @@
         },
         "close": "Close"
       },
-      "subContent": "({{count}} sub-content)",
-      "subContent_plural": "({{count}} sub-contents)",
+      "subContent_one": "({{count}} sub-content)",
+      "subContent_other": "({{count}} sub-contents)",
       "createFolderAction": {
         "title": "New folder",
         "text": "Enter a folder name",
@@ -449,8 +449,8 @@
       },
       "viewUsages": {
         "title": "Usages for \"{{name}}\"",
-        "usage": "{{count}} usage",
-        "usage_plural": "{{count}} usages"
+        "usage_one": "{{count}} usage",
+        "usage_other": "{{count}} usages"
       },
       "deleteAction": {
         "infoTable": {
@@ -499,22 +499,22 @@
           "some": "Some of these items are currently referenced by other items. Deleting them will create broken references.",
           "tooMany": "The system could not verify if the items to be deleted are currently referenced by other items (too many items to verify). You can manually verify the usages of all items in the table below."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Cannot be deleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
-            "content_plural": "{{count}} items <strong>{{name}}</strong> cannot currently be deleted on their own. Please undelete, or permanently delete, their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "content_one": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
+            "content_other": "{{count}} items <strong>{{name}}</strong> cannot currently be deleted on their own. Please undelete, or permanently delete, their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
           },
           "undelete": {
             "title": "Cannot be undeleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
-            "content_plural": "{{count}} items <strong>{{name}}</strong> cannot currently be undeleted on their own. Please undelete their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "content_one": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
+            "content_other": "{{count}} items <strong>{{name}}</strong> cannot currently be undeleted on their own. Please undelete their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
           }
         },
         "details": "DETAILS",
         "error": "Could not perform the requested operation on selected content. Closing dialog and refreshing data."
       },
-      "links":{
+      "links": {
         "external": {
           "title": "External link",
           "content": "You are leaving Jahia. Do you want to open the external URL in a new tab ?",
@@ -593,8 +593,8 @@
         "validation": {
           "required": "Required",
           "invalidForm": "Invalid form",
-          "fieldsInError": "There is one validation error",
-          "fieldsInError_plural": "There are {{count}} validation errors",
+          "fieldsInError_one": "There is one validation error",
+          "fieldsInError_other": "There are {{count}} validation errors",
           "otherLanguages": "Other languages in error"
         },
         "action": {
@@ -615,8 +615,8 @@
             "error": "An error occurred when saving the content",
             "validation": {
               "modalTitle": "Your content couldn’t be saved",
-              "modalMessage": "There is one validation error in the form.",
-              "modalMessage_plural": "There are {{count}} validation errors in the form.",
+              "modalMessage_one": "There is one validation error in the form.",
+              "modalMessage_other": "There are {{count}} validation errors in the form.",
               "modalButton": "OK"
             }
           },
@@ -673,7 +673,7 @@
             "clickHere": "click here.",
             "dialogTitle": "Work in progress (WIP)",
             "dialogSubTitle": "Mark your content as work in progress to prevent the publication of your content. To find out more about Work in progress ",
-            "label" : {
+            "label": {
               "mark": "Mark as Work in progress",
               "unmark": "Unmark as Work in progress"
             },
@@ -757,7 +757,7 @@
           "advanced": "Advanced options"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Switch language",
           "addTranslation": {
@@ -802,7 +802,7 @@
           "filterLabel": "Search for types of content"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -874,17 +874,17 @@
         "noPermissionLabel": "You do not have permission to manage vanity URLs."
       },
       "selection": {
-        "itemsSelected": "{{count}} item selected",
-        "itemsSelected_plural": "{{count}} items selected"
+        "itemsSelected_one": "{{count}} item selected",
+        "itemsSelected_other": "{{count}} items selected"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Categories",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Non-selectable items are not listed in this view",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "All users",
             "globalUsers": "Global users",
@@ -900,8 +900,8 @@
           "multipleLeftRightSelector": {
             "addAll": "Add all",
             "removeAll": "Remove all",
-            "selected": "{{count}} item selected",
-            "selected_plural": "{{count}} items selected"
+            "selected_one": "{{count}} item selected",
+            "selected_other": "{{count}} items selected"
           }
         }
       },
@@ -969,22 +969,20 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Languages",
+        "languages": {
+          "title": "Languages",
           "description": "Content will display in selected languages",
-          "label" : "Content visibility by language",
-          "leftList" : "The content will be visible in:",
-          "rightList" : "The content will not be visible in:"
+          "label": "Content visibility by language",
+          "leftList": "The content will be visible in:",
+          "rightList": "The content will not be visible in:"
         },
-        "conditions" : {
-          "title" : "Date and time",
-          "rules" : "{{rulesNumber}} rules set",
-          "rule" : "1 rule is set",
-          "norules" : "No rules set"
+        "conditions": {
+          "title": "Date and time",
+          "rules": "{{rulesNumber}} rules set",
+          "rule": "1 rule is set",
+          "norules": "No rules set"
         },
-        "channels": {
-
-        }
+        "channels": {}
       }
     },
     "cache": {

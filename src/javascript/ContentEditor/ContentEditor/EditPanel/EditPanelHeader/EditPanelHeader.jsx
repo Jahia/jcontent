@@ -10,6 +10,7 @@ import {EditPanelLanguageSwitcher} from '../EditPanelLanguageSwitcher';
 import {HeaderBadges} from '../HeaderBadges';
 import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
+import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 
 const TabItemRenderer = renderProps => {
     const {t} = useTranslation('jcontent');
@@ -31,13 +32,6 @@ const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
         size: 'big',
         color: 'accent'
-    }
-});
-
-const DotsButtonRenderer = getButtonRenderer({
-    labelStyle: 'none',
-    defaultButtonProps: {
-        variant: 'ghost'
     }
 });
 
@@ -101,10 +95,8 @@ export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab})
                         </Tab>
 
                         <Separator variant="vertical" size="medium"/>
-
-                        <DisplayAction
-                            actionKey="content-editor/header/3dots"
-                            render={DotsButtonRenderer}/>
+                        <HeaderButtonActions/>
+                        <HeaderThreeDotsActions/>
                     </div>
                 )}
                 status={<HeaderBadges mode={mode}/>}

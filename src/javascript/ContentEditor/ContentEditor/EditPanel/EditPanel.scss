@@ -2,6 +2,18 @@
     display: none;
 }
 
+.dialogTitle {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
+.languageSwitcherActionButtons {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-nano);
+}
+
 .dialogTitle.dialogTitle {
     margin: var(--spacing-small);
 }
@@ -15,10 +27,6 @@
 
 .checkbox {
     margin: 0 var(--spacing-nano);
-}
-
-.languageSwitcher {
-    margin: var(--spacing-small) 0;
 }
 
 .saveActions {

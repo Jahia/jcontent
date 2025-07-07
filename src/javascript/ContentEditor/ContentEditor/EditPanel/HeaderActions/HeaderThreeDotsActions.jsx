@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {DisplayAction} from '@jahia/ui-extender';
 import {Button, Menu, MoreVert} from '@jahia/moonstone';
 import {MenuItemRenderer} from '~/JContent/MenuItemRenderer';
-import {getButtonLimitValue, getMenuActions} from './utils';
+import {getButtonLimitValue, getMenuActions} from './utils.headerActions';
 
 const HeaderThreeDotsActions = () => {
     const menuContainerRef = React.useRef(null);

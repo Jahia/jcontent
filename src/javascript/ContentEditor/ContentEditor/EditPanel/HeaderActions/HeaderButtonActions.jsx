@@ -2,7 +2,7 @@ import React from 'react';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import styles from './HeaderButtonActions.scss';
-import {getButtonLimitValue, getMenuActions} from './utils';
+import {getButtonLimitValue, getMenuActions} from './utils.headerActions';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {

@@ -7,7 +7,7 @@ def patchConfigForComponentVisibility() {
     def configs = configAdmin.listConfigurations("(service.pid=org.jahia.modules.jcontent)");
 
     if (configs == null || configs.length == 0) {
-        log.warn("ABACABA No JContent configuration found to update for component visibility.");
+        log.warn("No JContent configuration found to update for component visibility.");
         return;
     }
     def config = configs[0];

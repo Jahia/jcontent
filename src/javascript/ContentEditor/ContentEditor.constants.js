@@ -4,8 +4,7 @@ export const Constants = {
     editPanel: {
         // DEPRECATED: use JContentConstants.availablePublicationStatuses instead
         publicationStatus: JContentConstants.availablePublicationStatuses,
-        editTab: 'EDIT',
-        defaultHeaderButtonCount: 5
+        editTab: 'EDIT'
     },
     field: {
         selectorType: {

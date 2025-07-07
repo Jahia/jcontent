@@ -1,18 +1,14 @@
 import React, {useState} from 'react';
-import {DisplayAction, registry} from '@jahia/ui-extender';
+import {DisplayAction} from '@jahia/ui-extender';
 import {Button, Menu, MoreVert} from '@jahia/moonstone';
 import {MenuItemRenderer} from '~/JContent/MenuItemRenderer';
-import PropTypes from 'prop-types';
-import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {getButtonLimitValue, getMenuActions} from './utils.headerActions';
 
-const HeaderThreeDotsActions = ({limit, offset}) => {
+const HeaderThreeDotsActions = () => {
     const menuContainerRef = React.useRef(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const actionsToDisplay = registry
-        .find({type: 'action', target: 'content-editor/header/3dots'})
-        .filter((action, index) =>
-            index >= offset && index < (offset + limit))
-        .map(action => action.key);
+    const limit = getButtonLimitValue();
+    const actionsToDisplay = getMenuActions(limit, 99);
 
     if (actionsToDisplay.length === 0) {
         return null;
@@ -42,18 +38,6 @@ const HeaderThreeDotsActions = ({limit, offset}) => {
             </Menu>
         </div>
     );
-};
-
-HeaderThreeDotsActions.propTypes = {
-    // How many actions to skip
-    offset: PropTypes.number,
-    // How many actions to display in total
-    limit: PropTypes.number
-};
-
-HeaderThreeDotsActions.defaultProps = {
-    limit: 99,
-    offset: Constants.editPanel.defaultHeaderButtonCount
 };
 
 export default HeaderThreeDotsActions;

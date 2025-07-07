@@ -614,7 +614,6 @@
             }
           },
           "goBack": {
-            "name": "Zurück zu {{parentNodeDisplayName}}",
             "edit": {
               "title": "Nicht gespeicherte Änderungen",
               "message": "Änderungen wurden noch nicht gespeichert. Was möchten Sie vor dem Schließen tun?",

@@ -615,7 +615,6 @@
             }
           },
           "goBack": {
-            "name": "Retour à {{parentNodeDisplayName}}",
             "edit": {
               "title": "Modifications non enregistrées",
               "message": "Vous avez des modifications non enregistrées. Que souhaitez-vous faire avant de fermer?",

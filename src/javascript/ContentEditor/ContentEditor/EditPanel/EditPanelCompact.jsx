@@ -74,7 +74,6 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 )}
                 <div className="flexFluid"/>
                 <DisplayAction
-                    buttonLabel={t('label.contentEditor.cancel')}
                     actionKey="backButton"
                     render={ButtonRenderer}
                 />

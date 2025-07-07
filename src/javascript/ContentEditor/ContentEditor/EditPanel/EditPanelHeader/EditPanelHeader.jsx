@@ -1,7 +1,7 @@
 import React from 'react';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {ButtonRendererNoLabel, ButtonRendererShortLabel, getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/utils';
-import {ArrowLeft, ButtonGroup, Chip, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
+import {ButtonRendererShortLabel, getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/utils';
+import {ButtonGroup, Chip, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -29,21 +29,20 @@ const TabItemRenderer = renderProps => {
 };
 
 const ButtonRenderer = getButtonRenderer({
-    defaultButtonProps: {
-        size: 'big',
-        color: 'accent'
-    }
+    defaultButtonProps: {size: 'big', color: 'accent'}
+});
+
+const BackButtonRenderer = getButtonRenderer({
+    defaultButtonProps: {size: 'big', variant: 'ghost'},
+    noIcon: true
 });
 
 export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab}) => {
     const {nodeData, nodeTypeName, nodeTypeDisplayName, mode} = useContentEditorContext();
-
-    const backButton = (
-        <DisplayAction actionKey="backButton" render={ButtonRendererNoLabel} buttonProps={{variant: 'outlined', icon: <ArrowLeft/>}}/>
-    );
+    const {t} = useTranslation('jcontent');
 
     return (
-        <Header backButton={backButton}
+        <Header
                 title={truncate(title, 60)}
                 breadcrumb={(
                     nodeData?.path?.startsWith('/sites') && <ContentPath path={nodeData.path}/>
@@ -53,6 +52,11 @@ export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab})
                 )}
                 mainActions={(
                     <div className="flexRow_center alignCenter">
+                        <DisplayAction
+                            actionKey="backButton"
+                            render={BackButtonRenderer}
+                            buttonLabel={t('label.contentEditor.close')}
+                        />
                         <div className={styles.saveActions}>
                             <DisplayActions
                                 target="content-editor/header/main-save-actions"

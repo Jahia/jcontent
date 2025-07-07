@@ -12,7 +12,7 @@ export const registerActions = registry => {
 
     registry.add('action', 'backButton', goBackAction, {
         buttonIcon: <ArrowLeft/>,
-        buttonLabel: 'jcontent:label.contentEditor.edit.action.goBack.name',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.goBack.btnContinue',
         targets: ['editHeaderPathActions:1'],
         showIcons: true
     });

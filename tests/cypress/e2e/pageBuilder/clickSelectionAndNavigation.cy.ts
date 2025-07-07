@@ -33,10 +33,10 @@ describe('Page builder - navigation tests', () => {
     it('Can unselect self', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
-        const module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.get().scrollIntoView();
-        module.hover().should('have.attr', 'data-hovered', 'true').click();
-        module.getHeader().assertHeaderText('Our Companies');
+        const contentPath = '/sites/digitall/home/area-main/highlights/our-companies';
+        pageBuilder.getModule(contentPath).get().scrollIntoView();
+        const module = pageBuilder.getModule(contentPath);
+        module.getHeader(true).assertHeaderText('Our Companies');
         module.click();
         module.hasNoHeaderAndFooter();
     });
@@ -44,10 +44,10 @@ describe('Page builder - navigation tests', () => {
     it('Can use breadcrumbs to navigate up and down hierarchy', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home');
         const pageBuilder = new JContentPageBuilder(jcontent);
-        let module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.get().scrollIntoView();
-        module.hover().should('have.attr', 'data-hovered', 'true').click();
-        module.getHeader().assertHeaderText('Our Companies');
+        const contentPath = '/sites/digitall/home/area-main/highlights/our-companies';
+        pageBuilder.getModule(contentPath).get().scrollIntoView();
+        let module = pageBuilder.getModule(contentPath);
+        module.getHeader(true).assertHeaderText('Our Companies');
         const breadcrumbs = module.getFooter().getItemPathDropdown();
         breadcrumbs.open();
         breadcrumbs.select('highlights');
@@ -56,9 +56,8 @@ describe('Page builder - navigation tests', () => {
         module.getHeader().assertHeaderText('highlights');
 
         cy.log('Navigate back to the previous module');
-        module = pageBuilder.getModule('/sites/digitall/home/area-main/highlights/our-companies');
-        module.hover().should('have.attr', 'data-hovered', 'true').click();
-        module.getHeader().assertHeaderText('Our Companies');
+        module = pageBuilder.getModule(contentPath);
+        module.getHeader(true).assertHeaderText('Our Companies');
     });
 
     it('Click on links should open modal', () => {

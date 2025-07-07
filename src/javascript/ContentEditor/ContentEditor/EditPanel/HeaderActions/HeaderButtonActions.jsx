@@ -1,9 +1,8 @@
 import React from 'react';
-import {DisplayAction, registry} from '@jahia/ui-extender';
+import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import styles from './HeaderButtonActions.scss';
-import PropTypes from 'prop-types';
-import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {getButtonLimitValue, getMenuActions} from './utils';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
@@ -12,12 +11,9 @@ const ButtonRenderer = getButtonRenderer({
     }
 });
 
-const HeaderButtonActions = ({limit, offset}) => {
-    const actionsToDisplay = registry
-        .find({type: 'action', target: 'content-editor/header/3dots'})
-        .filter((action, index) =>
-            index >= offset && index < (offset + limit))
-        .map(action => action.key);
+const HeaderButtonActions = () => {
+    const limit = getButtonLimitValue();
+    const actionsToDisplay = getMenuActions(0, limit);
 
     if (actionsToDisplay.length === 0) {
         return null;
@@ -37,18 +33,6 @@ const HeaderButtonActions = ({limit, offset}) => {
             {buttons}
         </div>
     );
-};
-
-HeaderButtonActions.propTypes = {
-    // How many actions to skip
-    offset: PropTypes.number,
-    // How many actions to display in total
-    limit: PropTypes.number
-};
-
-HeaderButtonActions.defaultProps = {
-    limit: Constants.editPanel.defaultHeaderButtonCount,
-    offset: 0
 };
 
 export default HeaderButtonActions;

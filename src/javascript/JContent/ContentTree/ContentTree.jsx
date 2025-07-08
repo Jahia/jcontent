@@ -116,6 +116,14 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         }
     }, []);
 
+    // Scroll to selected item in picker dialog
+    useEffect(() => {
+        const el = ulRef.current?.querySelector('[aria-selected="true"]');
+        if (el?.closest('[data-sel-role="picker-dialog"]')) { // Only for pickers
+            el?.scrollIntoView({behavior: 'auto', block: 'center'});
+        }
+    }, [path]);
+
     const useTreeEntriesOptionsJson = {
         fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.isTreeSelectable, lockInfo, PickerItemsFragment.parentNode, displayName],
         rootPaths: [rootPath],

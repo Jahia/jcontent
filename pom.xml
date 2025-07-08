@@ -48,7 +48,7 @@
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
         <jahia-module-signature>MCwCFFMjeVEJROijOE0/yBSRCDAMPH/GAhQzxjzBBmW4K3E+ZzBgtxoVuxXmYw==</jahia-module-signature>
-        <jahia-depends>jahia-ui-root</jahia-depends>
+        <jahia-depends>jahia-ui-root,graphql-dxm-provider=2.19</jahia-depends>
         <jahia-plugin-version>6.9</jahia-plugin-version>
     </properties>
 
@@ -194,7 +194,11 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Package>org.jahia.modules.graphql.provider.dxm;version="2.19.0",${jahia.plugin.projectPackageImport},*</Import-Package>
+                        <Import-Package>
+                            org.jahia.modules.graphql.provider.dxm;version="2.19.0",
+                            ${jahia.plugin.projectPackageImport},
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

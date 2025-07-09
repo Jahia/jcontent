@@ -1,6 +1,7 @@
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {createSubpages} from '../../fixtures/contentEditor/referenceCard/referenceCard.utils';
 import {JContent} from '../../page-object';
+import {SmallTextField} from '../../page-object/fields';
 
 describe('Content Editor - Reference Card', () => {
     const siteKey = 'referenceCardTestSite';
@@ -23,8 +24,8 @@ describe('Content Editor - Reference Card', () => {
     it('should display reference card with correct content', () => {
         const ce = JContent.visit(siteKey, 'en', 'pages/home').editPage();
 
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1000); // Delay for focusing on the first field before scrolling to view
+        // Assertion for waiting on focusing on the first field before scrolling to view
+        ce.getField(SmallTextField, 'jnt:page_jcr:title').get().find('input').should('have.focus');
         const listOrdering = ce.getSection('listOrdering').get();
         listOrdering.scrollIntoView();
         // Get original order of IDs as @orderIds

@@ -212,7 +212,7 @@ export class ContentEditor extends BasePage {
     }
 
     getField<FieldType extends Field>(FieldComponent: ComponentType<FieldType>, fieldName: string,
-        multiple?: boolean = false): FieldType {
+        multiple: boolean = false): FieldType {
         const r = getComponentByAttr(FieldComponent, 'data-sel-content-editor-field', fieldName);
         r.fieldName = fieldName;
         r.multiple = multiple;

@@ -84,7 +84,7 @@ describe('Page builder - selections test', () => {
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         module = jcontent.getModule(item3);
-        module.contextMenu(false, false).selectByRole('selectionAction');
+        module.contextMenu(false).selectByRole('selectionAction');
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
         jcontent.clearSelection();

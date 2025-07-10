@@ -153,7 +153,7 @@ describe('Page builder', () => {
 
             cy.log('disable button when not allowed');
             pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/any-area/notAllowedText`, false)
-                .contextMenu(false, false)
+                .contextMenu(false)
                 .selectByRole('copy');
             cy.get('#message-id').contains('in the clipboard');
 
@@ -165,7 +165,7 @@ describe('Page builder', () => {
 
             cy.log('enable button when allowed');
             pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/any-area/allowedText`, false)
-                .contextMenu(false, false)
+                .contextMenu(false)
                 .selectByRole('copy');
             cy.get('#message-id').contains('in the clipboard');
 

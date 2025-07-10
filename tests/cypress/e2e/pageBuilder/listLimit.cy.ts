@@ -113,7 +113,7 @@ describe('Page builder - list limit restrictions tests', () => {
 
             cy.log('it should not show paste buttons');
             pageBuilder.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area/abc1`, false)
-                .contextMenu(false, false)
+                .contextMenu(false)
                 .selectByRole('copy');
             cy.get('#message-id').contains('in the clipboard');
             const restrictedArea = pageBuilder.getModule(`/sites/${limitSiteKey}/home/${limitPage}/my-area`, false);

@@ -83,14 +83,9 @@ export class PageBuilderModule extends BaseComponent {
         });
     }
 
-    contextMenu(selectFirst = false, force = true): Menu {
-        if (selectFirst) {
-            this.click();
-            this.getHeader().get().should('be.visible').rightclick({force, waitForAnimations: true});
-        } else {
-            this.hover();
-            this.get().rightclick({force, waitForAnimations: true});
-        }
+    contextMenu(force = true, menuName = 'contentItemActionsMenu'): Menu {
+        this.click();
+        this.getHeader().get().should('be.visible').get(`button[data-sel-role="${menuName}"]`).should('be.visible').click({force, waitForAnimations: true});
 
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }

@@ -41,7 +41,7 @@ describe('Area actions', () => {
     it('Checks that content can be pasted into the area', () => {
         const jcontentPageBuilder = jcontent.switchToPageBuilder();
         jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing/test-content-path2', false)
-            .contextMenu(false)
+            .contextMenu()
             .selectByRole('copy');
 
         // Clicking on area header is very tricky due to overlapping contents. Select area header using footer instead.

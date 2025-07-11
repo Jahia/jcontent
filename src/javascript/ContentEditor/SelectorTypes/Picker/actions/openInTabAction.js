@@ -10,7 +10,7 @@ import {useSelector} from 'react-redux';
 
 export const OpenInTabActionComponent = ({render: Render, loading: Loading, path, field, inputContext, ...others}) => {
     const {lang} = useContentEditorContext();
-    const fallbackLanguage = useSelector(state => state.language);
+    const {fallbackLanguage, currentUILang} = useSelector(state => ({fallbackLanguage: state.language, currentUILang: state.uilang}));
     const client = useApolloClient();
 
     let uuid;
@@ -38,7 +38,7 @@ export const OpenInTabActionComponent = ({render: Render, loading: Loading, path
             {...others}
             onClick={() => {
                 jcontentUtils.expandTree({uuid}, client).then(({mode, parentPath, site}) => {
-                    const hash = rison.encode_uri({contentEditor: [{uuid, lang: lang || fallbackLanguage, mode: Constants.routes.baseEditRoute, isFullscreen: true}]});
+                    const hash = rison.encode_uri({contentEditor: [{uuid, uilang: currentUILang, lang: lang || fallbackLanguage, mode: Constants.routes.baseEditRoute, isFullscreen: true}]});
                     const url = jcontentUtils.buildUrl({site, language: lang || fallbackLanguage, mode, path: parentPath});
                     window.open(`${window.contextJsParameters.urlbase}${url}#${hash}`, '_blank');
                 });

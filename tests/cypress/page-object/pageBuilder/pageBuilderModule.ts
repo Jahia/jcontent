@@ -84,7 +84,7 @@ export class PageBuilderModule extends BaseComponent {
     }
 
     contextMenu(force = true, menuName = 'contentItemActionsMenu'): Menu {
-        this.click();
+        this.click({force});
         this.getHeader().get().should('be.visible').find(`button[data-sel-role="${menuName}"]`).should('be.visible').click({force, waitForAnimations: true});
 
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');

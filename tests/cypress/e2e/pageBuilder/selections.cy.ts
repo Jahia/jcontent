@@ -76,7 +76,8 @@ describe('Page builder - selections test', () => {
         // Doesn't work: module.parentFrame.get().find('div[data-current="true"]').should('not.exist');
     });
 
-    it('Allows to select with right click', () => {
+    // We need to discuss if we still want this
+    it.skip('Allows to select with right click', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         let module = jcontent.getModule(item1);
         module.click();

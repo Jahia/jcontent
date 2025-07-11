@@ -38,9 +38,10 @@ const BackButtonRenderer = getButtonRenderer({
     noIcon: true
 });
 
-export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab}) => {
+export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, activeTabState}) => {
     const {nodeData, nodeTypeName, nodeTypeDisplayName, mode} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
+    const [activeTab, setActiveTab] = activeTabState || [];
 
     return (
         <Header
@@ -83,21 +84,27 @@ export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab})
                 )}
                 toolbarLeft={(
                     <div className={styles.headerToolBar}>
-                        <EditPanelLanguageSwitcher/>
+                        {!hideLanguageSwitcher &&
+                            <>
+                                <EditPanelLanguageSwitcher/>
+                                <Separator variant="vertical" size="medium"/>
+                            </>}
 
-                        <Separator variant="vertical" size="medium"/>
+                        {activeTab && (
+                            <>
+                                <Tab>
+                                    <DisplayActions
+                                        setActiveTab={setActiveTab}
+                                        activeTab={activeTab}
+                                        target="editHeaderTabsActions"
+                                        nodeData={nodeData}
+                                        render={TabItemRenderer}
+                                    />
+                                </Tab>
+                                <Separator variant="vertical" size="medium"/>
+                            </>
+                        )}
 
-                        <Tab>
-                            <DisplayActions
-                                setActiveTab={setActiveTab}
-                                activeTab={activeTab}
-                                target="editHeaderTabsActions"
-                                nodeData={nodeData}
-                                render={TabItemRenderer}
-                            />
-                        </Tab>
-
-                        <Separator variant="vertical" size="medium"/>
                         <HeaderButtonActions/>
                         <HeaderThreeDotsActions/>
                     </div>
@@ -110,6 +117,11 @@ export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab})
 EditPanelHeader.propTypes = {
     title: PropTypes.string.isRequired,
     isShowPublish: PropTypes.bool,
-    setActiveTab: PropTypes.func.isRequired,
-    activeTab: PropTypes.string.isRequired
+    isShowLanguageSwitcher: PropTypes.bool,
+    activeTabState: PropTypes.arrayOf(
+        PropTypes.exact({
+            0: PropTypes.string.isRequired,
+            1: PropTypes.func.isRequired,
+        })
+    )
 };

@@ -4,7 +4,7 @@ import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useContentEditorApiContext} from '../../../contexts';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
-import TranslatePanel from './TranslatePanel';
+import {TranslatePanel} from './TranslatePanel';
 
 export const TranslateActionComponent = ({path, render: Render, ...otherProps}) => {
     // const {render, destroy} = useContext(ComponentRendererContext);
@@ -27,7 +27,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
                         dialogProps: {
                             classes: {}
                         },
-                        // layout: TranslatePanel,
+                        layout: TranslatePanel,
                         // layout: RenameLayout,
                         // useFormDefinition: useRenameFormDefinition,
                         // useConfirmationDialog: false

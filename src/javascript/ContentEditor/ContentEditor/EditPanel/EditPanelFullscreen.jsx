@@ -8,7 +8,7 @@ import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader';
 
-export const EditPanelFullscreen = ({title}) => {
+export const EditPanelFullscreen = ({title, enableTabs}) => {
     const [activeTab, setActiveTab] = useState(Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
 
@@ -24,8 +24,7 @@ export const EditPanelFullscreen = ({title}) => {
             header={(
                 <EditPanelHeader title={title}
                                  isShowPublish={mode === Constants.routes.baseEditRoute}
-                                 activeTab={activeTab}
-                                 setActiveTab={setActiveTab}
+                                 activeTabState={[activeTab, setActiveTab]}
                 />
             )}
             content={(

@@ -76,7 +76,8 @@ describe('Page builder - selections test', () => {
         // Doesn't work: module.parentFrame.get().find('div[data-current="true"]').should('not.exist');
     });
 
-    it('Allows to select with right click', () => {
+    // We need to discuss if we still want this
+    it.skip('Allows to select with right click', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         let module = jcontent.getModule(item1);
         module.click();
@@ -84,7 +85,7 @@ describe('Page builder - selections test', () => {
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         module = jcontent.getModule(item3);
-        module.contextMenu(false, false).selectByRole('selectionAction');
+        module.contextMenu(false).selectByRole('selectionAction');
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
         jcontent.clearSelection();

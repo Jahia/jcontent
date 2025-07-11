@@ -15,7 +15,6 @@ import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.re
 import {TableViewModeChangeTracker} from '~/JContent/ContentRoute/ToolBar/ViewModeSelector/tableViewChangeTracker';
 import {getBoundingBox} from '../EditFrame.utils';
 import InsertionPoints from '../InsertionPoints';
-import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 
@@ -321,7 +320,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         });
     }, [nodes, site, language, uilang, currentDocument]);
 
-    const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({
         name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
         path: m.dataset.jahiaPath,
@@ -374,15 +372,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     const el = currentElement?.element;
 
+    // Note that context menu was removed but that component is still available here ./BoxesContextMenu
     return (
         <div>
-            <BoxesContextMenu
-                currentFrameRef={currentFrameRef}
-                currentDocument={currentDocument}
-                currentPath={currentPath}
-                selection={selection}
-            />
-
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
                 .map(({node, element}) => (

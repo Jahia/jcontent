@@ -11,6 +11,7 @@ import {HeaderBadges} from '../HeaderBadges';
 import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
+import clsx from 'clsx';
 
 const TabItemRenderer = renderProps => {
     const {t} = useTranslation('jcontent');
@@ -51,18 +52,16 @@ export const EditPanelHeader = ({title, isShowPublish, activeTab, setActiveTab})
                     <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)}/>
                 )}
                 mainActions={(
-                    <div className="flexRow_center alignCenter">
+                    <div className={clsx(styles.headerMainActions, 'flexRow_center', 'alignCenter')}>
                         <DisplayAction
                             actionKey="backButton"
                             render={BackButtonRenderer}
                             buttonLabel={t('label.contentEditor.close')}
                         />
-                        <div className={styles.saveActions}>
-                            <DisplayActions
-                                target="content-editor/header/main-save-actions"
-                                render={ButtonRenderer}
-                            />
-                        </div>
+                        <DisplayActions
+                            target="content-editor/header/main-save-actions"
+                            render={ButtonRenderer}
+                        />
 
                         {isShowPublish && (
                             <ButtonGroup

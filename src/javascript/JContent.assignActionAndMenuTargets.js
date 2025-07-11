@@ -196,6 +196,7 @@ const actionTargetAssignments = {
         'editSource',
         'editImage',
         'openInNewTab',
+        'sbsTranslate',
         'replaceFile',
         'locate',
         'preview',

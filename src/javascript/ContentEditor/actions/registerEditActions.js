@@ -2,11 +2,12 @@ import React from 'react';
 import {saveAction} from './contenteditor/save/saveAction';
 import {publishAction} from './contenteditor/publish/publishAction';
 import {startWorkflowAction} from './contenteditor/startWorkflow/startWorkflowAction';
-import {AdvancedEdit, CloudUpload, Copy, Edit, MoreVert, Save, WorkInProgress} from '@jahia/moonstone';
+import {AdvancedEdit, CloudUpload, Copy, Edit, Language, MoreVert, Save, WorkInProgress} from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
+import {translateAction} from './contenteditor/translate/translateAction';
 
 export const registerEditActions = registry => {
     // Edit action button in JContent; need separate actions for content and pages
@@ -110,5 +111,10 @@ export const registerEditActions = registry => {
     registry.add('action', 'copyLanguageAction', copyLanguageAction, {
         buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.copyLanguage.name'
+    });
+
+    registry.add('action', 'sbsTranslate', translateAction, {
+       buttonIcon: <Language/>,
+       buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name'
     });
 };

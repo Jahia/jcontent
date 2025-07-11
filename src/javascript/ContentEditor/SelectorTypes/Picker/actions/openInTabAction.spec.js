@@ -16,7 +16,10 @@ jest.mock('@apollo/client', () => {
 });
 
 jest.mock('react-redux', () => ({
-    useSelector: jest.fn()
+    useSelector: () => ({
+        fallbackLanguage: 'en',
+        currentUILang: 'en'
+    })
 }));
 
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
@@ -59,6 +62,6 @@ describe('openInTab action', () => {
         const cmp = shallow(<OpenInTabActionComponent {...context} render={button}/>);
         cmp.simulate('click');
 
-        expect(window.open).toHaveBeenCalledWith('/jahia/jahia/jcontent/url#(contentEditor:!((isFullscreen:!t,lang:fr,mode:edit,uuid:this-is-an-id)))', '_blank');
+        expect(window.open).toHaveBeenCalledWith('/jahia/jahia/jcontent/url#(contentEditor:!((isFullscreen:!t,lang:fr,mode:edit,uilang:en,uuid:this-is-an-id)))', '_blank');
     });
 });

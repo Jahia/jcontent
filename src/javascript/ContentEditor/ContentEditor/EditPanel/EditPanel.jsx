@@ -13,7 +13,6 @@ export const EditPanel = React.memo(props => {
             <Layout {...props}/>
             <WindowListeners/>
             {confirmationDialog}
-            <I18nContextHandler/>
         </>
     );
 });

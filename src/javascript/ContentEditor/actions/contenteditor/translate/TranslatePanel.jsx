@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './styles.scss';
@@ -10,13 +10,35 @@ import {FormBuilder} from '../../../editorTabs/EditPanelContent/FormBuilder';
 import {EditPanelLanguageSwitcher} from '../../../ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 import {useSyncScroll} from './useSyncScroll';
 import clsx from 'clsx';
+import {Formik} from 'formik';
+import {I18nContextHandler} from '../../../ContentEditor/EditPanel/I18nContextHandler';
+import {ContentEditorConfigContextProvider, ContentEditorContextProvider, useContentEditorConfigContext} from '../../../contexts';
+import {useEditFormDefinition} from '../../../ContentEditor/useEditFormDefinition';
 
-const ReadOnlyFormBuilder = ({lang, mode}) => {
+const ReadOnlyFormikEditor = memo(({lang}) => {
+    const {initialValues} = useContentEditorContext();
+    const {mode} = useContentEditorContext();
     return (
-        <>
-            <EditPanelLanguageSwitcher/>
-            <FormBuilder mode={mode}/>
-        </>
+        <Formik initialValues={{...initialValues, blah: lang}} onSubmit={() => {}}>
+            <>
+                <EditPanelLanguageSwitcher/>
+                <FormBuilder mode={mode}/>
+            </>
+        </Formik>
+    );
+});
+ReadOnlyFormikEditor.propTypes = {lang: PropTypes.string}
+
+const ReadOnlyFormBuilder = ({lang}) => {
+    const ceConfigContext = useContentEditorConfigContext();
+    const [readOnlyParams, setReadOnlyParams] = useState({lang});
+
+    return (
+        <ContentEditorConfigContextProvider config={{...ceConfigContext, lang: readOnlyParams.lang, readOnly: true, setReadOnlyParams}}>
+            <ContentEditorContextProvider useFormDefinition={useEditFormDefinition}>
+                <ReadOnlyFormikEditor lang={readOnlyParams.lang}/>
+            </ContentEditorContextProvider>
+        </ContentEditorConfigContextProvider>
     );
 }
 
@@ -36,14 +58,11 @@ const TwoPanelsContent = ({leftCol, rightCol}) => {
 };
 
 export const TranslatePanel = ({title}) => {
-    const [activeTab, setActiveTab] = useState(Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
-
-    const tabs = registry.find({target: 'editHeaderTabsActions'});
-    const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
 
     return (
         <LayoutContent
+            className={styles.layoutContent}
             hasPadding={false}
             header={(
                 <EditPanelHeader title={title} hideLanguageSwitcher/>
@@ -51,12 +70,14 @@ export const TranslatePanel = ({title}) => {
             content={(
                 <TwoPanelsContent
                     leftCol={
-                        <ReadOnlyFormBuilder/>
+                        // TODO set initial readOnly language
+                        <ReadOnlyFormBuilder lang="fr"/>
                     }
                     rightCol={
                         <>
                             <EditPanelLanguageSwitcher/>
                             <FormBuilder mode={mode}/>
+                            <I18nContextHandler/>
                         </>
                     }
                 />

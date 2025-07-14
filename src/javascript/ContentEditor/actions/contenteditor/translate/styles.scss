@@ -4,6 +4,7 @@
   flex-direction: row;
   background-color: var(--color-light);
   min-height: 0;
+  padding-top: var(--spacing-medium);
 
   .col {
     flex: 1 1 0;
@@ -23,25 +24,10 @@
 }
 
 
-.twoColumnsRoot.twoColumnsRoot {
-  min-height: 0;
-  padding: 0;
-}
-
-.fullWidthRoot.fullWidthRoot {
-  max-width: 100%;
-
-  background-color: var(--color-light);
-  overflow: auto;
-}
-
-.col.col {
-  padding: 0;
-  overflow: auto;
-}
-
-.toggleButtons.toggleButtons {
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 1rem;
+// TODO check if this is something in moonstone
+.layoutContent {
+  header {
+    box-shadow: 0 2px 12px var(--color-gray60);
+    z-index: 1;
+  }
 }

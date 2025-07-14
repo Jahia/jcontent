@@ -6,11 +6,11 @@ import {useApolloClient, useQuery} from '@apollo/client';
 import rison from 'rison-node';
 import {OpenInTabActionQuery} from '~/ContentEditor/SelectorTypes/Picker/actions/openInTabAction.gql-queries';
 import * as jcontentUtils from '~/JContent/JContent.utils';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 
 export const OpenInTabActionComponent = ({render: Render, loading: Loading, path, field, inputContext, ...others}) => {
     const {lang} = useContentEditorContext();
-    const {fallbackLanguage, currentUILang} = useSelector(state => ({fallbackLanguage: state.language, currentUILang: state.uilang}));
+    const {fallbackLanguage, currentUILang} = useSelector(state => ({fallbackLanguage: state.language, currentUILang: state.uilang}), shallowEqual);
     const client = useApolloClient();
 
     let uuid;

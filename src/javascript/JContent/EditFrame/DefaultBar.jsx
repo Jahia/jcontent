@@ -34,6 +34,30 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
     />
 );
 
+const getAreaIcon = (node, area) => {
+    const contextPath = window.contextJsParameters.contextPath;
+
+    if (!node || !area) {
+        return null;
+    }
+
+    if (area.isArea || area.isAbsolute) {
+        return <Area/>;
+    }
+
+    if (node.primaryNodeType?.icon) {
+        const url = node.primaryNodeType.icon;
+        const iconUrl = `${contextPath}${url}${url.endsWith('.png') ? '' : '.png'}`;
+        return toIconComponent(iconUrl);
+    }
+
+    if (area.isList) {
+        return toIconComponent(`${contextPath}/modules/assets/icons/jnt_contentList.png`);
+    }
+
+    return <Area/>;
+};
+
 export const LabelBar = ({node, area, dragProps}) => {
     const {t} = useTranslation('jcontent');
     const title = truncate(node.displayName, 24);
@@ -45,7 +69,7 @@ export const LabelBar = ({node, area, dragProps}) => {
                 <Chip variant="default"
                       color="accent"
                       label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
-                      icon={area.isList ? toIconComponent(`${window.contextJsParameters.contextPath}/modules/assets/icons/jnt_contentList.png`) : <Area/>}/>
+                      icon={getAreaIcon(node, area)}/>
                 <Typography isNowrap weight="bold" variant="caption">{title}{boundComponentTitleAddOn}</Typography>
             </>
         );

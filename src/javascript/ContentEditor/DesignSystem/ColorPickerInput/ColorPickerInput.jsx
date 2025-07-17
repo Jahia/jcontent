@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Popover} from '@material-ui/core';
-import {Input} from '@jahia/design-system-kit';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {HexColorPicker} from 'react-colorful';
-import {Button, Palette} from '@jahia/moonstone';
+import {Button, Palette, Input} from '@jahia/moonstone';
 import styles from './ColorPickerInput.scss';
 
 const defaultVisualColor = '#fff';
@@ -15,7 +14,7 @@ const getVisualValue = value => {
 export const ColorPickerInput = ({onChange, onBlur, initialValue, readOnly, inputProps}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [internalValue, setInternalValue] = useState(initialValue);
-    const htmlInput = useRef();
+    const containerRef = useRef();
 
     useEffect(() => {
         setInternalValue(initialValue);
@@ -23,11 +22,11 @@ export const ColorPickerInput = ({onChange, onBlur, initialValue, readOnly, inpu
 
     const handleOpenPicker = () => {
         if (!readOnly) {
-            setAnchorEl(htmlInput.current.parentElement);
+            setAnchorEl(containerRef.current);
         }
     };
 
-    const InteractiveVariant = (
+    const postfixComponent = (
         <Button aria-label="Open color picker"
                 variant="ghost"
                 icon={<Palette/>}
@@ -36,13 +35,11 @@ export const ColorPickerInput = ({onChange, onBlur, initialValue, readOnly, inpu
     );
 
     return (
-        <div className={styles.root} style={{borderColor: getVisualValue(internalValue)}}>
+        <div ref={containerRef} className={styles.root} style={{borderColor: getVisualValue(internalValue)}}>
             <Input
-                inputRef={htmlInput}
+                className={styles.input}
                 data-sel-readonly={readOnly}
-                variant={{
-                    interactive: InteractiveVariant
-                }}
+                postfixComponents={postfixComponent}
                 readOnly={readOnly}
                 value={internalValue}
                 onChange={e => {

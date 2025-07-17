@@ -42,6 +42,11 @@
     height: calc(100vh - 96px);
 }
 
+:root {
+    --ce-disabled-input-border: 1px solid var(--color-gray_dark);
+    --ce-disabled-input-background: var(--color-gray_light);
+}
+
 .main {
     :global(.moonstone-layoutContent) {
         margin-top: var(--spacing-small);

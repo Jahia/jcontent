@@ -22,7 +22,22 @@ const renderError = (siteInfoResult, t, notificationContext) => {
     return null;
 };
 
-export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
+const useInitI18nContext = contextProps => {
+    const [i18nContext, setI18nContext] = useState({
+        memo: {count: 1}
+    });
+    // Used to reset when selecting 'create another' option in content editor
+    const resetI18nContext = useCallback(() => {
+        setI18nContext(prev => ({
+            memo: {count: (prev.memo?.count || 0) + 1}
+        }));
+    }, [setI18nContext]);
+
+    return (contextProps && contextProps.i18nContext && contextProps.setI18nContext && contextProps.resetI18nContext) ?
+        contextProps : {i18nContext, setI18nContext, resetI18nContext};
+};
+
+export const ContentEditorContextProvider = ({useFormDefinition, overrides, children}) => {
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
     const [errors, setErrors] = useState(null);
@@ -33,25 +48,13 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
         pageComposerActive: state?.pagecomposer?.active,
         uiLanguage: state?.uilang
     }), shallowEqual);
-    const [i18nContext, setI18nContext] = useState({
-        memo: {
-            count: 1
-        }
-    });
+    const {i18nContext, setI18nContext, resetI18nContext} = useInitI18nContext(overrides);
 
     // Persist 'create another' chekbox state during language switch
     const createAnotherState = useState(false);
     const createAnother = {
         value: createAnotherState[0], set: createAnotherState[1]
     };
-
-    const resetI18nContext = useCallback(() => {
-        setI18nContext(prev => ({
-            memo: {
-                count: (prev.memo?.count || 0) + 1
-            }
-        }));
-    }, [setI18nContext]);
 
     const {lang, mode, name} = contentEditorConfigContext;
 
@@ -128,6 +131,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     currentPage.config = isFullPage ? 'page' : 'module';
 
     // Build editor context
+    // TODO memoization of context values
     const editorContext = {
         path: nodeData.path,
         currentPage,

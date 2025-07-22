@@ -2,9 +2,7 @@ import React, {memo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './styles.scss';
-import {registry} from '@jahia/ui-extender';
 import {LayoutContent} from '@jahia/moonstone';
-import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelHeader';
 import {FormBuilder} from '../../../editorTabs/EditPanelContent/FormBuilder';
 import {EditPanelLanguageSwitcher} from '../../../ContentEditor/EditPanel/EditPanelLanguageSwitcher';
@@ -12,8 +10,8 @@ import {useSyncScroll} from './useSyncScroll';
 import clsx from 'clsx';
 import {Formik} from 'formik';
 import {I18nContextHandler} from '../../../ContentEditor/EditPanel/I18nContextHandler';
-import {ContentEditorConfigContextProvider, ContentEditorContextProvider, useContentEditorConfigContext} from '../../../contexts';
-import {useEditFormDefinition} from '../../../ContentEditor/useEditFormDefinition';
+import {ContentEditorConfigContextProvider, ContentEditorContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts';
+import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
 const ReadOnlyFormikEditor = memo(({lang}) => {
     const {initialValues} = useContentEditorContext();
@@ -31,11 +29,18 @@ ReadOnlyFormikEditor.propTypes = {lang: PropTypes.string}
 
 const ReadOnlyFormBuilder = ({lang}) => {
     const ceConfigContext = useContentEditorConfigContext();
+    const ceContext = useContentEditorContext();
     const [readOnlyParams, setReadOnlyParams] = useState({lang});
 
     return (
-        <ContentEditorConfigContextProvider config={{...ceConfigContext, lang: readOnlyParams.lang, readOnly: true, setReadOnlyParams}}>
-            <ContentEditorContextProvider useFormDefinition={useEditFormDefinition}>
+        <ContentEditorConfigContextProvider config={{
+            ...ceConfigContext,
+            lang: readOnlyParams.lang,
+            translateLang: ceConfigContext.lang,
+            readOnly: true,
+            setReadOnlyParams
+        }}>
+            <ContentEditorContextProvider useFormDefinition={useTranslateFormDefinition} overrides={ceContext}>
                 <ReadOnlyFormikEditor lang={readOnlyParams.lang}/>
             </ContentEditorContextProvider>
         </ContentEditorConfigContextProvider>

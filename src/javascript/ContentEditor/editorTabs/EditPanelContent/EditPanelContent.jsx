@@ -6,7 +6,6 @@ import {PublicationInfoProgress} from './PublicationInfoProgress';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './EditPanelContent.scss';
-import {I18nContextHandler} from '../../ContentEditor/EditPanel/I18nContextHandler';
 
 export const EditPanelContent = () => {
     const {mode, isFullscreen} = useContentEditorConfigContext();
@@ -33,7 +32,6 @@ export const EditPanelContent = () => {
                         <FormBuilder mode={mode}/>
                     </FullWidthContent>
                 )}
-            <I18nContextHandler/>
         </>
     );
 };

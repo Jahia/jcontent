@@ -5,9 +5,9 @@ import {useContentEditorApiContext} from '../../../contexts';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {TranslatePanel} from './TranslatePanel';
+import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
 export const TranslateActionComponent = ({path, render: Render, ...otherProps}) => {
-    // const {render, destroy} = useContext(ComponentRendererContext);
     const api = useContentEditorApiContext();
     const lang = useSelector(state => state.language);
     const res = useNodeChecks(
@@ -17,7 +17,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
 
     return (res.loading) ? null : (
         <Render {...otherProps}
-                // enabled={siteInfo.languages.length > 1 && nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited}
+                enabled={res.node?.site?.languages.length > 1 /*&& nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited*/}
                 onClick={() => {
                     api.edit({
                         uuid: res.node.uuid,
@@ -28,9 +28,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
                             classes: {}
                         },
                         layout: TranslatePanel,
-                        // layout: RenameLayout,
-                        // useFormDefinition: useRenameFormDefinition,
-                        // useConfirmationDialog: false
+                        useFormDefinition: useTranslateFormDefinition
                     });
                 }}
         />

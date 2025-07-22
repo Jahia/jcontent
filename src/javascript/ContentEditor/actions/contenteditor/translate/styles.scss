@@ -23,6 +23,16 @@
   }
 }
 
+.translate {
+  padding-left: var(--spacing-small);
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  &:hover {
+    border-left: 4px solid var(--color-accent);
+  }
+}
 
 // TODO check if this is something in moonstone
 .layoutContent {

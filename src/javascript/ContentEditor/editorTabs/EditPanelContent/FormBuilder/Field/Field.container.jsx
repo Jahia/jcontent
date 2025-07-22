@@ -3,6 +3,10 @@ import * as PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {Field} from './Field';
+import styles from './styles.scss';
+import {DisplayAction} from '@jahia/ui-extender';
+import {ButtonRendererNoLabel} from '~/ContentEditor/utils';
+import {useFormikContext} from 'formik';
 
 export const FieldContainer = React.memo(({field, inputContext}) => {
     const selectorType = resolveSelectorType(field);
@@ -14,13 +18,23 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
         selectorType,
         ...inputContext
     }), [inputContext, selectorType]);
+    const {values} = useFormikContext();
 
     return (
-        <Field
-            idInput={field.name}
-            inputContext={context}
-            selectorType={selectorType}
-            field={field}/>
+        <div className={styles.fieldContainer}>
+            <Field
+                idInput={field.name}
+                inputContext={context}
+                selectorType={selectorType}
+                field={field}/>
+            <DisplayAction
+                actionKey="translateField"
+                render={ButtonRendererNoLabel}
+                field={field}
+                value={values[field.name]}
+            />
+        </div>
+
     );
 });
 

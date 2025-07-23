@@ -35,7 +35,7 @@ export const useSwitchLanguage = () => {
     const formik = useFormikContext();
     const {setI18nContext} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
-    const {lang: previousLanguage, updateEditorConfig, readOnly, setReadOnlyParams} = useContentEditorConfigContext();
+    const {lang: previousLanguage, updateEditorConfig, sbsContext, setSbsContext} = useContentEditorConfigContext();
 
     return useCallback(newLanguage => {
         const fields = sections && getFields(sections).filter(field => !field.readOnly);
@@ -89,13 +89,12 @@ export const useSwitchLanguage = () => {
             };
         });
 
-        if (readOnly && typeof setReadOnlyParams === 'function') {
-            setReadOnlyParams(prev => ({...prev, lang: newLanguage}));
+        if (sbsContext.enabled) {
+            setSbsContext(prev => ({...prev, lang: newLanguage}));
         } else {
             updateEditorConfig({
                 lang: newLanguage
             });
         }
-
-    }, [updateEditorConfig, formik, sections, setI18nContext, previousLanguage]);
+    }, [updateEditorConfig, formik, sections, setI18nContext, previousLanguage, sbsContext.enabled, setSbsContext]);
 };

@@ -1,21 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {ArrowRight} from '@jahia/moonstone';
 import styles from './styles.scss';
 
 export const TranslateFieldActionComponent = ({field, value, render: Render}) => {
-    const {translateLang, readOnly} = useContentEditorConfigContext();
+    const {sbsContext} = useContentEditorConfigContext();
     const {setI18nContext} = useContentEditorContext();
 
-    if (!readOnly || !field.i18n || !translateLang) {
+    const {enabled, translateLang} = sbsContext || {};
+    if (!enabled || !field.i18n || !translateLang) {
         return null;
     }
 
-
-    const handleOnClick = (props, e) => {
+    const handleOnClick = () => {
         setI18nContext(prevState => {
             const prev = prevState || {};
-            console.debug('clicked translate field action', field.name);
 
             const result = {
                 ...prev,
@@ -29,7 +29,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
                         ...prev[translateLang]?.validation
                     }
                 }
-            }
+            };
 
             return (value) ? result : prev;
         });
@@ -37,15 +37,21 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
 
     return (
         <div className={styles.translate}>
-          <Render
+            <Render
               buttonIcon={<ArrowRight/>}
-              onClick={handleOnClick}
-              enabled={!!value}
+              enabled={Boolean(value)}
               aria-label="translate-field"
               variant="ghost"
+              onClick={handleOnClick}
           />
         </div>
     );
+};
+
+TranslateFieldActionComponent.propTypes = {
+    field: PropTypes.object.isRequired,
+    value: PropTypes.any,
+    render: PropTypes.func.isRequired
 };
 
 export const translateFieldAction = {

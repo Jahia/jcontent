@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './styles.scss';
@@ -13,71 +13,75 @@ import {I18nContextHandler} from '../../../ContentEditor/EditPanel/I18nContextHa
 import {ContentEditorConfigContextProvider, ContentEditorContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
-const ReadOnlyFormikEditor = memo(({lang}) => {
+const ReadOnlyFormikEditor = () => {
     const {initialValues} = useContentEditorContext();
-    const {mode} = useContentEditorContext();
+    const {mode} = useContentEditorConfigContext();
     return (
-        <Formik initialValues={{...initialValues, blah: lang}} onSubmit={() => {}}>
+        <Formik initialValues={{...initialValues}} onSubmit={() => {}}>
             <>
                 <EditPanelLanguageSwitcher/>
                 <FormBuilder mode={mode}/>
             </>
         </Formik>
     );
-});
-ReadOnlyFormikEditor.propTypes = {lang: PropTypes.string}
+};
 
-const ReadOnlyFormBuilder = ({lang}) => {
+const ReadOnlyFormBuilder = () => {
     const ceConfigContext = useContentEditorConfigContext();
     const ceContext = useContentEditorContext();
-    const [readOnlyParams, setReadOnlyParams] = useState({lang});
 
     return (
         <ContentEditorConfigContextProvider config={{
             ...ceConfigContext,
-            lang: readOnlyParams.lang,
-            translateLang: ceConfigContext.lang,
-            readOnly: true,
-            setReadOnlyParams
-        }}>
+            lang: ceConfigContext.sbsContext.lang,
+            sbsContext: {
+                ...ceConfigContext.sbsContext,
+                enabled: true,
+                readOnly: true,
+                translateLang: ceConfigContext.lang,
+            }
+        }}
+        >
             <ContentEditorContextProvider useFormDefinition={useTranslateFormDefinition} overrides={ceContext}>
-                <ReadOnlyFormikEditor lang={readOnlyParams.lang}/>
+                <ReadOnlyFormikEditor/>
             </ContentEditorContextProvider>
         </ContentEditorConfigContextProvider>
     );
-}
+};
 
 const TwoPanelsContent = ({leftCol, rightCol}) => {
     const {leftColRef, rightColRef} = useSyncScroll();
 
     return (
         <div className={styles.twoColumnsRoot}>
-            <div className={clsx(styles.col, styles.leftCol)} data-sel-role="left-column" ref={leftColRef}>
+            <div ref={leftColRef} className={clsx(styles.col, styles.leftCol)} data-sel-role="left-column">
                 {leftCol}
             </div>
-            <div className={styles.col} data-sel-role="right-column" ref={rightColRef}>
+            <div ref={rightColRef} className={styles.col} data-sel-role="right-column">
                 {rightCol}
             </div>
         </div>
     );
 };
 
+TwoPanelsContent.propTypes = {
+    leftCol: PropTypes.node,
+    rightCol: PropTypes.node
+};
+
 export const TranslatePanel = ({title}) => {
-    const {mode} = useContentEditorContext();
+    const {mode} = useContentEditorConfigContext();
 
     return (
         <LayoutContent
             className={styles.layoutContent}
             hasPadding={false}
             header={(
-                <EditPanelHeader title={title} hideLanguageSwitcher/>
+                <EditPanelHeader hideLanguageSwitcher title={title}/>
             )}
             content={(
                 <TwoPanelsContent
-                    leftCol={
-                        // TODO set initial readOnly language
-                        <ReadOnlyFormBuilder lang="fr"/>
-                    }
+                    leftCol={<ReadOnlyFormBuilder/>}
                     rightCol={
                         <>
                             <EditPanelLanguageSwitcher/>

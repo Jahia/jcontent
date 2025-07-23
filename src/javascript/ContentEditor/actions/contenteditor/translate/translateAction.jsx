@@ -1,6 +1,5 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useContentEditorApiContext} from '../../../contexts';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
@@ -15,18 +14,20 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
         {...otherProps, getSiteLanguages: true}
     );
 
+    const languages = res.node?.site?.languages?.filter(l => l.activeInEdit) || [];
+    const sourceLang = languages.find(l => l.language !== lang) || languages[0];
     return (res.loading) ? null : (
         <Render {...otherProps}
-                enabled={res.node?.site?.languages.length > 1 /*&& nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited*/}
+                enabled={languages.length > 2 /* && nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited */}
                 onClick={() => {
                     api.edit({
                         uuid: res.node.uuid,
-                        lang,
+                        lang: sourceLang.language,
                         isFullscreen: true,
-                        // editCallback,
                         dialogProps: {
                             classes: {}
                         },
+                        sbsContext: {lang},
                         layout: TranslatePanel,
                         useFormDefinition: useTranslateFormDefinition
                     });
@@ -36,7 +37,8 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
 };
 
 TranslateActionComponent.propTypes = {
-    render: PropTypes.func.isRequired
+    render: PropTypes.func.isRequired,
+    path: PropTypes.string.isRequired
 };
 
 export const translateAction = {

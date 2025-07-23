@@ -2,20 +2,23 @@ import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDe
 import {useContentEditorConfigContext} from '../../../contexts';
 
 export const useTranslateFormDefinition = () => {
-    const {readOnly} = useContentEditorConfigContext();
+    const {sbsContext} = useContentEditorConfigContext();
     const {data, refetch, loading, error, errorMessage} = useEditFormDefinition();
 
     if (data) {
         data.sections?.forEach(section => {
             section.fieldSets?.forEach(fieldSet => {
                 fieldSet.fields = fieldSet.fields.filter(field => field.i18n === true);
-                if (readOnly) {
-                    fieldSet.fields.forEach(field => field.readOnly = true);
+                if (sbsContext.readOnly) {
+                    fieldSet.readOnly = true;
+                    fieldSet.fields.forEach(field => {
+                        field.readOnly = true;
+                    });
                 }
 
-                // If (fieldSet.fields.length === 0) {
-                //     fieldSet.visible = false;
-                // }
+                if (fieldSet.fields.length === 0) {
+                    fieldSet.visible = false;
+                }
             });
         });
     }

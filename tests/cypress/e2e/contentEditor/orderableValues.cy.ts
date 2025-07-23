@@ -18,11 +18,11 @@ describe('Test ordering properties with multiple values', {retries: 0}, () => {
 
     it('Drag value test2=2 in shared small text over test1=1', () => {
         const contentEditor = jcontent.createContent('qant:allFieldsMultiple');
-        cy.get('div[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
         const smallTextField = contentEditor.getSmallTextField('qant:allFieldsMultiple_sharedSmallText', true);
         const expectedValues = ['test1=1', 'test2=2'];
         smallTextField.checkValues(expectedValues);
-        smallTextField.get().find('input[name="qant:allFieldsMultiple_sharedSmallText[1]"]').parent().parent().children('div[draggable="true"]').drag('input[name="qant:allFieldsMultiple_sharedSmallText[0]"]', {
+        smallTextField.get().find('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_sharedSmallText[1]"]').children('[draggable="true"]').drag('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_sharedSmallText[0]"]', {
             force: true,
             waitForAnimations: true,
             target: {
@@ -37,7 +37,7 @@ describe('Test ordering properties with multiple values', {retries: 0}, () => {
 
     it('Can add a new value test3=3 and drag it between test2=2 and test1=1', () => {
         const contentEditor = jcontent.createContent('qant:allFieldsMultiple');
-        cy.get('div[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
         const smallTextField = contentEditor.getSmallTextField('qant:allFieldsMultiple_sharedSmallText', true);
         const expectedValues = ['test1=1', 'test2=2'];
         const expectedValuesAfterAdd = ['test1=1', 'test2=2', 'test3=3'];
@@ -45,7 +45,8 @@ describe('Test ordering properties with multiple values', {retries: 0}, () => {
         smallTextField.checkValues(expectedValues);
         smallTextField.addNewValue('test3=3');
         smallTextField.checkValues(expectedValuesAfterAdd);
-        smallTextField.get().find('input[name="qant:allFieldsMultiple_sharedSmallText[2]"]').parent().parent().children('div[draggable="true"]').drag('input[name="qant:allFieldsMultiple_sharedSmallText[1]"]', {
+        smallTextField.get().scrollIntoView({offset: {top: -200, left: 0}});
+        smallTextField.get().find('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_sharedSmallText[2]"]').children('[draggable="true"]').drag('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_sharedSmallText[1]"]', {
             force: true,
             waitForAnimations: true,
             target: {
@@ -54,7 +55,7 @@ describe('Test ordering properties with multiple values', {retries: 0}, () => {
             }
         }).then(success => {
             assert.isTrue(success);
-            cy.get('div[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
+            cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_weakreference"]').scrollIntoView();
             smallTextField.checkValues(expectedValuesAfterDrag);
         });
     });

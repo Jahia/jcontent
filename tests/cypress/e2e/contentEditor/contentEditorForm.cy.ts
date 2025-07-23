@@ -118,7 +118,7 @@ describe('Content editor form', () => {
         cy.log('verify default template is shown in new component');
         const contentEditor = jcontent.createContent(contentTypeName);
         const field = contentEditor.getField(Field, fieldName);
-        field.get().find('[role="dropdown"]')
+        field.get().find('[role="listbox"]')
             .should('contain', templateName)
             .and('have.class', 'moonstone-disabled'); // Read-only
         contentEditor.create(); // No errors on create

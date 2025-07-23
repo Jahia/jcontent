@@ -17,10 +17,10 @@ export class ItemPathDropdown extends BaseComponent {
     }
 
     shouldHaveCount(length: number) {
-        this.get().find('[role="option"]').should('have.length', length);
+        this.get().find('[role="list"] [role="option"]').should('have.length', length);
     }
 
     select(item: string) {
-        this.get().find('[role="option"]').contains(item).click({force: true});
+        this.get().find('[role="list"] [role="option"]').contains(item).click({force: true});
     }
 }

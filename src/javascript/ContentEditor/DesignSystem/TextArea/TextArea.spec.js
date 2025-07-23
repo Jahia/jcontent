@@ -17,11 +17,9 @@ describe('TextArea', () => {
             <TextArea {...defaultProps}/>,
             {},
             dsGenericTheme
-        )
-            .dive()
-            .find('textarea');
+        );
 
-        expect(cmp.debug()).toContain('uuidValue');
+        expect(cmp.props().value).toContain('uuidValue');
     });
 
     it('it should have 5 rows by default', () => {
@@ -29,9 +27,7 @@ describe('TextArea', () => {
             <TextArea {...defaultProps}/>,
             {},
             dsGenericTheme
-        )
-            .dive()
-            .find('textarea');
+        );
 
         expect(cmp.props().rows).toBe(5);
     });
@@ -42,9 +38,7 @@ describe('TextArea', () => {
             <TextArea {...defaultProps}/>,
             {},
             dsGenericTheme
-        )
-            .dive()
-            .find('textarea');
+        );
 
         expect(cmp.props().rows).toBe(defaultProps.rows);
     });
@@ -55,9 +49,7 @@ describe('TextArea', () => {
             <TextArea {...defaultProps}/>,
             {},
             dsGenericTheme
-        )
-            .dive()
-            .find('textarea');
+        );
 
         expect(cmp.props()['data-yolo']).toBe('42');
     });
@@ -68,10 +60,8 @@ describe('TextArea', () => {
             <TextArea {...defaultProps}/>,
             {},
             dsGenericTheme
-        )
-            .dive()
-            .find('textarea');
+        );
 
-        expect(cmp.props().disabled).toBe(true);
+        expect(cmp.props().isDisabled).toBe(true);
     });
 });

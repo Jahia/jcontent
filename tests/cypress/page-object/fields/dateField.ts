@@ -9,7 +9,7 @@ export class DateField extends Field {
     }
 
     public open() {
-        this.get().find('button').click();
+        this.get().parent().find('button').click();
     }
 
     public close() {

@@ -42,6 +42,7 @@ export const ColorPickerInput = ({onChange, onBlur, initialValue, readOnly, inpu
                 postfixComponents={postfixComponent}
                 readOnly={readOnly}
                 value={internalValue}
+                size="big"
                 onChange={e => {
                     if (e && e.target) {
                         onChange(e.target.value);

@@ -12,10 +12,12 @@ import {Formik} from 'formik';
 import {I18nContextHandler} from '../../../ContentEditor/EditPanel/I18nContextHandler';
 import {ContentEditorConfigContextProvider, ContentEditorContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useTranslateFormDefinition} from './useTranslateFormDefinition';
+import {useResizeWatcher} from './useResizeWatcher';
 
 const ReadOnlyFormikEditor = () => {
     const {initialValues} = useContentEditorContext();
     const {mode} = useContentEditorConfigContext();
+    useResizeWatcher({columnSelector: 'left-column'});
     return (
         <Formik initialValues={{...initialValues}} onSubmit={() => {}}>
             <>
@@ -71,6 +73,7 @@ TwoPanelsContent.propTypes = {
 
 export const TranslatePanel = ({title}) => {
     const {mode} = useContentEditorConfigContext();
+    useResizeWatcher({columnSelector: 'right-column'});
 
     return (
         <LayoutContent

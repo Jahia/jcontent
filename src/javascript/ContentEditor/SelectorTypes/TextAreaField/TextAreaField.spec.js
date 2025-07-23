@@ -40,7 +40,7 @@ describe('TextArea component', () => {
 
     it('should call onChange on change', () => {
         const cmp = shallow(<TextAreaField {...props}/>);
-        cmp.find('WithStyles(TextAreaCmp)').simulate('change', {
+        cmp.find('TextArea').simulate('change', {
             target: {
                 value: 'text'
             }

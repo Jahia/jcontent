@@ -53,9 +53,7 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
             readOnly={field.readOnly}
             variant={variant}
             id={id}
-            inputProps={{
-                'aria-labelledby': `${field.name}-label`
-            }}
+            aria-labelledby={`${field.name}-label`}
             onChange={date => {
                 onChange(date && dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSS'));
             }}

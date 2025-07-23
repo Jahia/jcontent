@@ -1,43 +1,51 @@
 .twoColumnsRoot {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: row;
-  background-color: var(--color-light);
-  min-height: 0;
-  padding-top: var(--spacing-medium);
-
-  .col {
-    flex: 1 1 0;
     display: flex;
-    flex-direction: column;
-    padding-right: var(--spacing-medium);
-  }
+    flex: 1 1 0;
+    flex-direction: row;
+    min-height: 0;
+    padding-top: var(--spacing-medium);
 
-  /* This hides scrollbars across modern browsers */
-  .leftCol form {
-    scrollbar-width: none;     /* Firefox */
-    -ms-overflow-style: none;  /* IE 10+ */
-  }
-  .leftCol form::-webkit-scrollbar {
-    display: none; /* For WebKit browsers */
-  }
+    background-color: var(--color-light);
+
+    .col {
+        display: flex;
+        flex: 1 1 0;
+        flex-direction: column;
+        padding-right: var(--spacing-medium);
+    }
+
+    /* This hides scrollbars across modern browsers */
+    .hideScrollbar form {
+        scrollbar-width: none;     /* Firefox */
+        -ms-overflow-style: none;  /* IE 10+ */
+    }
+
+    .hideScrollbar form::-webkit-scrollbar {
+        display: none; /* For WebKit browsers */
+    }
+}
+
+.languageDropDown {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-medium);
 }
 
 .translate {
-  padding-left: var(--spacing-small);
-  display: flex;
-  align-items: center;
-  margin-left: auto;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-left: var(--spacing-small);
 
-  &:hover {
-    border-left: 4px solid var(--color-accent);
-  }
+    &:has(> button:not(:disabled)):hover {
+        border-left: 4px solid var(--color-accent);
+    }
 }
 
-// TODO check if this is something in moonstone
 .layoutContent {
-  header {
-    box-shadow: 0 2px 12px var(--color-gray60);
-    z-index: 1;
-  }
+    header {
+        z-index: 1;
+
+        box-shadow: 0 2px 12px var(--color-gray60);
+    }
 }

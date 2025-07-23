@@ -131,7 +131,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     currentPage.config = isFullPage ? 'page' : 'module';
 
     // Build editor context
-    // TODO memoization of context values
+    // Memoize context values
     const editorContext = {
         path: nodeData.path,
         currentPage,
@@ -175,6 +175,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
 
 ContentEditorContextProvider.propTypes = {
     useFormDefinition: PropTypes.func.isRequired,
+    overrides: PropTypes.object,
     children: PropTypes.node.isRequired
 };
 

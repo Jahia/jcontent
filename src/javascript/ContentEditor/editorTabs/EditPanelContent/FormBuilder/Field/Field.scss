@@ -1,6 +1,8 @@
 .formControl.formControl {
     position: relative;
 
+    flex: 1;
+
     max-width: 100%;
 
     margin-bottom: var(--spacing-small);
@@ -10,7 +12,6 @@
     border-left: 4px solid transparent;
 
     scroll-margin-top: var(--spacing-big);
-    flex: 1;
 }
 
 .formControlError.formControlError {

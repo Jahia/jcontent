@@ -58,7 +58,7 @@ export function useSyncScroll() {
 
             observer.disconnect();
         };
-    }, [leftColRef.current, rightColRef.current]);
+    }, []);
 
     return {leftColRef, rightColRef};
 }

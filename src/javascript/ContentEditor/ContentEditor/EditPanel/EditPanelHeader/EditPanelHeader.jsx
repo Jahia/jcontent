@@ -117,11 +117,11 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
 EditPanelHeader.propTypes = {
     title: PropTypes.string.isRequired,
     isShowPublish: PropTypes.bool,
-    isShowLanguageSwitcher: PropTypes.bool,
+    hideLanguageSwitcher: PropTypes.bool,
     activeTabState: PropTypes.arrayOf(
         PropTypes.exact({
             0: PropTypes.string.isRequired,
-            1: PropTypes.func.isRequired,
+            1: PropTypes.func.isRequired
         })
     )
 };

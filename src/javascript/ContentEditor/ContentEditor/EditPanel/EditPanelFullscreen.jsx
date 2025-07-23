@@ -8,7 +8,7 @@ import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader';
 
-export const EditPanelFullscreen = ({title, enableTabs}) => {
+export const EditPanelFullscreen = ({title}) => {
     const [activeTab, setActiveTab] = useState(Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
 

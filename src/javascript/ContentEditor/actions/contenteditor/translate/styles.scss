@@ -37,8 +37,10 @@
     margin-left: auto;
     padding-left: var(--spacing-small);
 
+    border-left: 4px solid transparent;
+
     &:has(> button:not(:disabled)):hover {
-        border-left: 4px solid var(--color-accent);
+        border-left-color: var(--color-accent);
     }
 }
 

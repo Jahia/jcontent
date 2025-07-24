@@ -40,8 +40,11 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
             <Render
               buttonIcon={<ArrowRight/>}
               enabled={Boolean(value)}
-              aria-label="translate-field"
-              variant="ghost"
+              dataSelRole="translate-field"
+              buttonProps={{
+                  variant: 'ghost',
+                  color: 'accent'
+              }}
               onClick={handleOnClick}
           />
         </div>

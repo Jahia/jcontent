@@ -7,7 +7,6 @@ import {FormBuilder} from '../../../editorTabs/EditPanelContent/FormBuilder';
 import {EditPanelLanguageSwitcher} from '../../../ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 import {useSyncScroll} from './useSyncScroll';
 import clsx from 'clsx';
-import {I18nContextHandler} from '../../../ContentEditor/EditPanel/I18nContextHandler';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useResizeWatcher} from './useResizeWatcher';
 import {SourceContentPanel} from './SourceContentPanel';
@@ -54,7 +53,6 @@ export const TranslatePanel = ({title}) => {
                                 <EditPanelLanguageSwitcher/>
                             </div>
                             <FormBuilder mode={mode}/>
-                            <I18nContextHandler/>
                         </>
                     }
                 />

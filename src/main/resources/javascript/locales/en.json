@@ -621,15 +621,7 @@
             }
           },
           "translate": {
-            "name": "Translate",
-            "success": "Content successfully translated",
-            "error": "An error occurred when translating the content",
-            "validation": {
-              "modalTitle": "Your content couldn’t be translated",
-              "modalMessage": "There is one validation error in the form.",
-              "modalMessage_plural": "There are {{count}} validation errors in the form.",
-              "modalButton": "OK"
-            }
+            "name": "Translate"
           },
           "goBack": {
             "edit": {

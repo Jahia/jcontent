@@ -85,7 +85,7 @@ describe('Create content tests in I18N site', () => {
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress titre actualite 3', {force: true});
         contentEditor.removeAnotherContent();
         contentEditor.create();
-        
+
         jcontent.getTable().getRowByLabel('Cypress news title');
         jcontent.getTable().getRowByLabel('Cypress news title 2');
     });

@@ -10,7 +10,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
 
     const {enabled, translateLang} = sbsContext || {};
     if (!enabled || !field.i18n || !translateLang) {
-        return null;
+        return <div className={styles.spacing}></div>;
     }
 
     const handleOnClick = () => {

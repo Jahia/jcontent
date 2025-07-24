@@ -60,13 +60,17 @@ describe('Create content tests in I18N site', () => {
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress news title', {force: true});
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress news content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
-        // Switch to French
+
+
+        cy.log('Switch to French language');
         contentEditor.getLanguageSwitcher().select('French');
         contentEditor.addAnotherContent();
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress titre actualite', {force: true});
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress contenu actualite');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
         contentEditor.create();
+
+        cy.log('Creating another in english')
         contentSection.get().find('#jnt\\:news_jcr\\:title').click({force: true}).focus();
         contentEditor.getLanguageSwitcher().select('English');
         cy.get('#contenteditor-dialog-content').should('not.contain.text', 'Invalid form');
@@ -74,11 +78,14 @@ describe('Create content tests in I18N site', () => {
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress news content 2');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
         contentEditor.create();
+
+        cy.log('Creating another in french');
         contentEditor.getLanguageSwitcher().select('French');
         cy.get('#contenteditor-dialog-content', {timeout: 1000}).should('not.contain.text', 'Invalid form');
         contentSection.get().find('#jnt\\:news_jcr\\:title').clear({force: true}).type('Cypress titre actualite 3', {force: true});
+        contentEditor.removeAnotherContent();
         contentEditor.create();
-        contentEditor.cancelAndDiscard();
+        
         jcontent.getTable().getRowByLabel('Cypress news title');
         jcontent.getTable().getRowByLabel('Cypress news title 2');
     });

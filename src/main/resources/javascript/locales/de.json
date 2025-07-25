@@ -614,7 +614,9 @@
             }
           },
           "translate": {
-            "name": "Übersetzen"
+            "name": "Übersetzen",
+            "sourceLanguage": "Ausgangssprache",
+            "translateToLanguage": "Übersetzen nach"
           },
           "goBack": {
             "edit": {

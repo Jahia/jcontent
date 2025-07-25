@@ -35,7 +35,7 @@ export const useSwitchLanguage = () => {
     const formik = useFormikContext();
     const {setI18nContext} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
-    const {lang: previousLanguage, updateEditorConfig, sbsContext, setSbsContext} = useContentEditorConfigContext();
+    const {lang: previousLanguage, updateEditorConfig, sideBySideContext, setSideBySideContext} = useContentEditorConfigContext();
 
     return useCallback(newLanguage => {
         const fields = sections && getFields(sections).filter(field => !field.readOnly);
@@ -89,12 +89,12 @@ export const useSwitchLanguage = () => {
             };
         });
 
-        if (sbsContext.enabled) {
-            setSbsContext(prev => ({...prev, lang: newLanguage}));
+        if (sideBySideContext.enabled) {
+            setSideBySideContext(prev => ({...prev, lang: newLanguage}));
         } else {
             updateEditorConfig({
                 lang: newLanguage
             });
         }
-    }, [updateEditorConfig, formik, sections, setI18nContext, previousLanguage, sbsContext.enabled, setSbsContext]);
+    }, [updateEditorConfig, formik, sections, setI18nContext, previousLanguage, sideBySideContext.enabled, setSideBySideContext]);
 };

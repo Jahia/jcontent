@@ -13,7 +13,7 @@ jest.mock('react-redux', () => {
 jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
     return {
         useContentEditorConfigContext: () => ({
-            sbsContext: {}
+            sideBySideContext: {}
         })
     };
 });

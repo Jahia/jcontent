@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useResizeWatcher} from './useResizeWatcher';
 import {SourceContentPanel} from './SourceContentPanel';
+import {useTranslation} from 'react-i18next';
 
 const TwoPanelsContent = ({leftCol, rightCol}) => {
     const {leftColRef, rightColRef} = useSyncScroll();
@@ -34,6 +35,7 @@ TwoPanelsContent.propTypes = {
 
 export const TranslatePanel = ({title}) => {
     const {mode} = useContentEditorConfigContext();
+    const {t} = useTranslation('jcontent');
 
     return (
         <LayoutContent
@@ -49,7 +51,7 @@ export const TranslatePanel = ({title}) => {
                         <>
 
                             <div className={styles.languageDropDown}>
-                                <span>Translate to</span>
+                                <span>{t('label.contentEditor.edit.action.translate.translateToLanguage')}</span>
                                 <EditPanelLanguageSwitcher/>
                             </div>
                             <FormBuilder mode={mode}/>

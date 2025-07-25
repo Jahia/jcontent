@@ -32,7 +32,7 @@ jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.cont
     return {
         useContentEditorConfigContext: () => ({
             lang: 'fr',
-            sbsContext: {}
+            sideBySideContext: {}
         })
     };
 });

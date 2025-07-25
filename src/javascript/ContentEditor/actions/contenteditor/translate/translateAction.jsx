@@ -27,7 +27,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
                         dialogProps: {
                             classes: {}
                         },
-                        sbsContext: {lang},
+                        sideBySideContext: {lang},
                         layout: TranslatePanel,
                         useFormDefinition: useTranslateFormDefinition
                     });

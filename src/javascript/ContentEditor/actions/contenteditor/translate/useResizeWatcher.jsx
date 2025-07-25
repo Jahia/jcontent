@@ -15,6 +15,7 @@ export const useResizeWatcher = ({columnSelector}) => {
             if (frameId) {
                 cancelAnimationFrame(frameId);
             }
+
             const requestCallback = processResizeEntries(columnSelector, entries);
             frameId = requestAnimationFrame(requestCallback);
         });
@@ -72,5 +73,5 @@ function processResizeEntries(columnSelector, entries) {
                 elPair.style.minHeight = `${minHeight}px`;
             }
         }
-    }
+    };
 }

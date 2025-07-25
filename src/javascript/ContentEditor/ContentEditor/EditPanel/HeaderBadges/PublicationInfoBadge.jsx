@@ -33,7 +33,7 @@ export const PublicationInfoBadge = () => {
             {!publicationInfoPolling &&
             <>
                 {statuses.modified ? renderStatus('modified') : null}
-                {(!statuses.warning && !translateMode) ? renderStatus(publishStatusType): null}
+                {(!statuses.warning && !translateMode) ? renderStatus(publishStatusType) : null}
                 {statuses.warning ? renderStatus('warning') : null}
             </>}
         </>

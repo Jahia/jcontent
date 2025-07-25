@@ -61,7 +61,6 @@ describe('Create content tests in I18N site', () => {
         contentEditor.getRichTextField('jnt:news_desc').type('Cypress news content');
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
 
-
         cy.log('Switch to French language');
         contentEditor.getLanguageSwitcher().select('French');
         contentEditor.addAnotherContent();
@@ -70,7 +69,7 @@ describe('Create content tests in I18N site', () => {
         contentSection.get().find('#jnt\\:news_jcr\\:title').focus().click({force: true});
         contentEditor.create();
 
-        cy.log('Creating another in english')
+        cy.log('Creating another in english');
         contentSection.get().find('#jnt\\:news_jcr\\:title').click({force: true}).focus();
         contentEditor.getLanguageSwitcher().select('English');
         cy.get('#contenteditor-dialog-content').should('not.contain.text', 'Invalid form');

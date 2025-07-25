@@ -10,6 +10,14 @@ jest.mock('react-redux', () => {
     };
 });
 
+jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
+    return {
+        useContentEditorConfigContext: () => ({
+            sbsContext: {}
+        })
+    };
+});
+
 jest.mock('~/ContentEditor/contexts/PublicationInfo', () => {
     let callCount = 0;
     const contexts = [

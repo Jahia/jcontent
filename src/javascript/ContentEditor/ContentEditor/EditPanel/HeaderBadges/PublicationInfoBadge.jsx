@@ -6,12 +6,15 @@ import {getTooltip} from './PublicationInfoBadge.tooltip';
 import {useSelector} from 'react-redux';
 import Status from '../../../../JContent/ContentRoute/ContentStatuses/Status';
 import {setPublicationStatus} from '~/utils/contentStatus';
+import {useContentEditorConfigContext} from '../../../contexts';
 
 export const PublicationInfoBadge = () => {
     const {t} = useTranslation('jcontent');
     const publicationInfoContext = usePublicationInfoContext();
+    const {sbsContext} = useContentEditorConfigContext();
     const {publicationStatus, existsInLive, publicationInfoPolling} = publicationInfoContext;
     const uilang = useSelector(state => state.uilang);
+    const translateMode = Boolean(sbsContext.lang);
 
     const statuses = {
         modified: false,
@@ -24,13 +27,14 @@ export const PublicationInfoBadge = () => {
     const renderStatus = type => (
         <Status type={type} tooltip={getTooltip(type, publicationInfoContext, supportedUiLang, t)}/>
     );
+    const publishStatusType = statuses.published ? 'published' : 'notPublished';
     return (
         <>
             {!publicationInfoPolling &&
             <>
-                {statuses.modified && renderStatus('modified')}
-                {!statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished')}
-                {statuses.warning && renderStatus('warning')}
+                {statuses.modified ? renderStatus('modified') : null}
+                {(!statuses.warning && !translateMode) ? renderStatus(publishStatusType) : null}
+                {statuses.warning ? renderStatus('warning') : null}
             </>}
         </>
     );

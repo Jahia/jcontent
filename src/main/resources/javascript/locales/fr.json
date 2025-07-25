@@ -614,6 +614,9 @@
               "modalButton": "OK"
             }
           },
+          "translate": {
+            "name": "Traduire"
+          },
           "goBack": {
             "edit": {
               "title": "Modifications non enregistrées",

@@ -39,9 +39,10 @@ export const FormBuilder = ({mode}) => {
     // On mount/unmount hook
     useEffect(() => {
         document.querySelector('div[data-first-field=true] input')?.focus();
-        const sections = (toggleStates || expandedSections);
-        dispatch(ceToggleSections({key: formKey, sections}));
-    }, [dispatch, mode, formKey, expandedSections]); // eslint-disable-line react-hooks/exhaustive-deps
+        if (!toggleStates) {
+            dispatch(ceToggleSections({key: formKey, sections: expandedSections}));
+        }
+    }, [dispatch, toggleStates, mode, formKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!nodeData || !sections || sections.length === 0) {
         /* eslint-disable react/jsx-no-useless-fragment */

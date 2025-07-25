@@ -1,0 +1,58 @@
+.twoColumnsRoot {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: row;
+    min-height: 0;
+    padding-top: var(--spacing-medium);
+
+    background-color: var(--color-light);
+
+    .col {
+        display: flex;
+        flex: 1 1 0;
+        flex-direction: column;
+        padding-right: var(--spacing-medium);
+    }
+
+    /* This hides scrollbars across modern browsers */
+    .hideScrollbar form {
+        scrollbar-width: none;     /* Firefox */
+        -ms-overflow-style: none;  /* IE 10+ */
+    }
+
+    .hideScrollbar form::-webkit-scrollbar {
+        display: none; /* For WebKit browsers */
+    }
+}
+
+.languageDropDown {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-medium);
+}
+
+.translate {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-left: var(--spacing-small);
+
+    border-left: 4px solid transparent;
+
+    &:has(> button:not(:disabled)):hover {
+        border-left-color: var(--color-accent);
+    }
+}
+
+// Used to align when translate buttons are missing
+.spacing {
+    width: 36px;
+}
+
+.layoutContent {
+    header {
+        z-index: 1;
+
+        box-shadow: 0 2px 12px var(--color-gray60);
+    }
+}

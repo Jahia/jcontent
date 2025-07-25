@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {EditPanelFullscreen} from './EditPanelFullscreen';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
-import {I18nContextHandler} from './I18nContextHandler';
 import {WindowListeners} from '~/ContentEditor/ContentEditor/EditPanel/WindowListeners';
+import {I18nContextHandler} from './I18nContextHandler';
 
 export const EditPanel = React.memo(props => {
     const {layout, confirmationDialog} = useContentEditorConfigContext();

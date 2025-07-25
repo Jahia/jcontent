@@ -620,6 +620,9 @@
               "modalButton": "OK"
             }
           },
+          "translate": {
+            "name": "Translate"
+          },
           "goBack": {
             "edit": {
               "title": "Unsaved changes",

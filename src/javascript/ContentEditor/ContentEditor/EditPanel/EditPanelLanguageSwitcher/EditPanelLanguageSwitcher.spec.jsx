@@ -31,7 +31,8 @@ jest.mock('formik');
 jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context', () => {
     return {
         useContentEditorConfigContext: () => ({
-            lang: 'fr'
+            lang: 'fr',
+            sbsContext: {}
         })
     };
 });

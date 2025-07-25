@@ -4,7 +4,9 @@ import {shallow} from '@jahia/test-framework';
 import {FieldContainer} from './Field.container';
 import {registerSelectorTypes} from '~/ContentEditor/SelectorTypes';
 import {registry} from '@jahia/ui-extender';
+import {useFormikContext} from 'formik';
 
+jest.mock('formik');
 jest.mock('~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable', () => ({}));
 jest.mock('~/JContent/ContentRoute/ContentLayout/queryHandlers', () => {
     return {
@@ -33,6 +35,9 @@ describe('Field container component', () => {
             targets: [{name: 'test'}],
             editorContext: {}
         };
+        useFormikContext.mockReturnValue({
+            values: {x: 'testValue'}
+        });
     });
 
     it('should render a Text component when field type is "Text"', () => {

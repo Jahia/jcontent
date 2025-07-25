@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {Dialog, IconButton, Slide} from '@material-ui/core';
 import styles from './ContentEditorModal.scss';
@@ -52,6 +52,12 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
         ...editorConfigFromRegistry,
         ...editorConfig
     };
+
+    // Support for side-by-side editing;
+    // Can be initialized from CE api but need to recreate state getter/setters at this level
+    const [sbsContext, setSbsContext] = useState(mergedConfig.sbsContext || {});
+    mergedConfig.sbsContext = sbsContext;
+    mergedConfig.setSbsContext = setSbsContext;
 
     const {createCallback, editCallback, onClosedCallback} = mergedConfig;
 

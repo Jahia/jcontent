@@ -613,6 +613,9 @@
               "modalButton": "OK"
             }
           },
+          "translate": {
+            "name": "Übersetzen"
+          },
           "goBack": {
             "edit": {
               "title": "Nicht gespeicherte Änderungen",

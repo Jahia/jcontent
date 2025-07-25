@@ -15,7 +15,8 @@ export const CopyLanguageDialog = ({
     isOpen,
     onCloseDialog,
     uuid,
-    formik
+    formik,
+    sbsContext
 }) => {
     const client = useApolloClient();
 
@@ -39,7 +40,12 @@ export const CopyLanguageDialog = ({
         onCloseDialog();
     };
 
-    const defaultOption = {
+    // Override selected option with sbsOption from translate action if it exists and use that as source language
+    const sbsOption = availableLanguages
+        .map(e => ({value: e.language, label: e.uiLanguageDisplayName}))
+        .find(e => e.value === sbsContext.lang);
+
+    const defaultOption = sbsOption || {
         label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),
         value: 'void'
     };
@@ -61,7 +67,7 @@ export const CopyLanguageDialog = ({
         onCloseDialog();
     };
 
-    const isApplyDisabled = defaultOption.value === currentOption.value;
+    const isApplyDisabled = currentOption.value === 'void' || currentOption.label === language;
 
     return (
         <Dialog fullWidth
@@ -83,12 +89,12 @@ export const CopyLanguageDialog = ({
                 <Typography className={styles.copyFromLabel}>
                     {t('jcontent:label.contentEditor.edit.action.copyLanguage.listLabel')}
                 </Typography>
-                <Dropdown
+                {sbsOption ? <Typography>{sbsOption.label}</Typography> : <Dropdown
                     className={styles.language}
                     label={currentOption.label}
                     value={currentOption.value}
                     size="medium"
-                    isDisabled={false}
+                    isDisabled={Boolean(sbsOption)}
                     data={[defaultOption].concat(availableLanguages.filter(element => element.displayName !== language).map(element => {
                         return {
                             value: element.language,
@@ -96,7 +102,7 @@ export const CopyLanguageDialog = ({
                         };
                     }))}
                     onChange={handleOnChange}
-                />
+                />}
                 <Typography className={styles.label}>
                     {t('jcontent:label.contentEditor.edit.action.copyLanguage.currentLanguage')}
                 </Typography>
@@ -131,5 +137,6 @@ CopyLanguageDialog.propTypes = {
     availableLanguages: PropTypes.array.isRequired,
     isOpen: PropTypes.bool.isRequired,
     uuid: PropTypes.string.isRequired,
-    onCloseDialog: PropTypes.func.isRequired
+    onCloseDialog: PropTypes.func.isRequired,
+    sbsContext: PropTypes.shape({lang: PropTypes.string})
 };

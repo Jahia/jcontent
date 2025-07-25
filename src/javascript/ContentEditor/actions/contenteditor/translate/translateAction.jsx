@@ -18,7 +18,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
     const sourceLang = languages.find(l => l.language !== lang) || languages[0];
     return (res.loading) ? null : (
         <Render {...otherProps}
-                enabled={languages.length > 2 /* && nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited */}
+                enabled={languages.length > 2}
                 onClick={() => {
                     api.edit({
                         uuid: res.node.uuid,

@@ -1,23 +1,32 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
+import {debounce} from 'es-toolkit';
 
 /**
  * Custom hook to watch for resize events on content editor fields and sync field heights using max-height
  * @param columnSelector one of 'left-column' or 'right-column'
  */
 export const useResizeWatcher = ({columnSelector}) => {
+    // Memoized version of the resize processing function only if columnSelector changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const processEntriesFn = useCallback(processResizeEntries(columnSelector), [columnSelector]);
+
     useEffect(() => {
         if (!columnSelector) {
             return;
         }
 
-        let frameId = null; // Use to track if elements already being processed
-        const observer = new ResizeObserver(entries => {
-            if (frameId) {
-                cancelAnimationFrame(frameId);
-            }
+        // Use pendingEntries to collect and process ResizeObserver entries in a debounced manner
+        // This needs to be outside of observer callback to avoid recreating every event.
+        let pendingEntries = [];
+        const debouncedProcessEntries = debounce(() => {
+            processEntriesFn(pendingEntries);
+            pendingEntries = [];
+        }, 16); // 16ms frame duration debounce to batch resize events
 
-            const requestCallback = processResizeEntries(columnSelector, entries);
-            frameId = requestAnimationFrame(requestCallback);
+        // ResizeObserver collects entries and debounces processing
+        const observer = new ResizeObserver(entries => {
+            pendingEntries.push(...entries);
+            debouncedProcessEntries();
         });
 
         const elements = document.querySelectorAll(
@@ -26,17 +35,16 @@ export const useResizeWatcher = ({columnSelector}) => {
         elements.forEach(el => observer.observe(el));
 
         return () => {
-            if (frameId) {
-                cancelAnimationFrame(frameId);
-            }
-
             observer.disconnect();
         };
-    }, [columnSelector]);
+    }, [columnSelector, processEntriesFn]);
 };
 
-function processResizeEntries(columnSelector, entries) {
-    return () => {
+/**
+ * Util function to bind columnSelector to the resize processing logic to be used in useCallback fn.
+ */
+function processResizeEntries(columnSelector) {
+    return entries => {
         const processedFields = new Set();
 
         for (const entry of entries) {

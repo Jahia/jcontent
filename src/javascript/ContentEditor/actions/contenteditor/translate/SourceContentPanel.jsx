@@ -11,6 +11,7 @@ import {
     useContentEditorContext
 } from '~/ContentEditor/contexts';
 import styles from './styles.scss';
+import {useTranslation} from 'react-i18next';
 
 /** Override contexts */
 export const SourceContentPanel = () => {
@@ -39,6 +40,7 @@ export const SourceContentPanel = () => {
 
 const SourceContentFormBuilder = () => {
     const {initialValues, mode} = useContentEditorContext();
+    const {t} = useTranslation('jcontent');
     useResizeWatcher({columnSelector: 'left-column'});
     return (
         <Formik initialValues={{...initialValues}}
@@ -47,7 +49,7 @@ const SourceContentFormBuilder = () => {
         >
             <>
                 <div className={styles.languageDropDown}>
-                    <span>Source language</span>
+                    <span>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</span>
                     <EditPanelLanguageSwitcher/>
                 </div>
                 <FormBuilder mode={mode}/>

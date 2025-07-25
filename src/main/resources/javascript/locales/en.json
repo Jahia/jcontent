@@ -621,7 +621,9 @@
             }
           },
           "translate": {
-            "name": "Translate"
+            "name": "Translate",
+            "sourceLanguage": "Source language",
+            "translateToLanguage": "Translate to"
           },
           "goBack": {
             "edit": {

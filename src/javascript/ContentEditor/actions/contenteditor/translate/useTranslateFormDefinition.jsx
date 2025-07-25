@@ -2,7 +2,7 @@ import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDe
 import {useContentEditorConfigContext} from '../../../contexts';
 
 export const useTranslateFormDefinition = () => {
-    const {sbsContext} = useContentEditorConfigContext();
+    const {sideBySideContext} = useContentEditorConfigContext();
     const {data, refetch, loading, error, errorMessage} = useEditFormDefinition();
 
     if (data) {
@@ -13,7 +13,7 @@ export const useTranslateFormDefinition = () => {
                 fieldSet.fields.filter(field => !field.i18n).forEach(f => {
                     f.readOnly = true;
                 });
-                if (sbsContext.readOnly) {
+                if (sideBySideContext.readOnly) {
                     fieldSet.readOnly = true;
                     fieldSet.fields.forEach(field => {
                         field.readOnly = true;

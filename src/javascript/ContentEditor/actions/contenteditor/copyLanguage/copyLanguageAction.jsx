@@ -9,7 +9,7 @@ import {useFormikContext} from 'formik';
 export const CopyLanguageActionComponent = ({render: Render, ...otherProps}) => {
     const {render, destroy} = useContext(ComponentRendererContext);
     const {nodeData, lang, siteInfo} = useContentEditorContext();
-    const {sbsContext} = useContentEditorConfigContext();
+    const {sideBySideContext} = useContentEditorConfigContext();
     const formik = useFormikContext();
 
     return (
@@ -21,7 +21,7 @@ export const CopyLanguageActionComponent = ({render: Render, ...otherProps}) => 
                         uuid: nodeData.uuid,
                         formik,
                         language: getFullLanguageName(siteInfo.languages, lang),
-                        sbsContext,
+                        sideBySideContext,
                         availableLanguages: siteInfo.languages,
                         onCloseDialog: () => destroy('CopyLanguageDialog')
                     });

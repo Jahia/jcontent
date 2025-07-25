@@ -55,9 +55,9 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
 
     // Support for side-by-side editing;
     // Can be initialized from CE api but need to recreate state getter/setters at this level
-    const [sbsContext, setSbsContext] = useState(mergedConfig.sbsContext || {});
-    mergedConfig.sbsContext = sbsContext;
-    mergedConfig.setSbsContext = setSbsContext;
+    const [sideBySideContext, setSideBySideContext] = useState(mergedConfig.sideBySideContext || {});
+    mergedConfig.sideBySideContext = sideBySideContext;
+    mergedConfig.setSideBySideContext = setSideBySideContext;
 
     const {createCallback, editCallback, onClosedCallback} = mergedConfig;
 

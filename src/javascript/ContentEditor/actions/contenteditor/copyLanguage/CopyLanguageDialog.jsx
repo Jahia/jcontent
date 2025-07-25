@@ -16,7 +16,7 @@ export const CopyLanguageDialog = ({
     onCloseDialog,
     uuid,
     formik,
-    sbsContext
+    sideBySideContext
 }) => {
     const client = useApolloClient();
 
@@ -43,7 +43,7 @@ export const CopyLanguageDialog = ({
     // Override selected option with sbsOption from translate action if it exists and use that as source language
     const sbsOption = availableLanguages
         .map(e => ({value: e.language, label: e.uiLanguageDisplayName}))
-        .find(e => e.value === sbsContext.lang);
+        .find(e => e.value === sideBySideContext.lang);
 
     const defaultOption = sbsOption || {
         label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),
@@ -138,5 +138,5 @@ CopyLanguageDialog.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     uuid: PropTypes.string.isRequired,
     onCloseDialog: PropTypes.func.isRequired,
-    sbsContext: PropTypes.shape({lang: PropTypes.string})
+    sideBySideContext: PropTypes.shape({lang: PropTypes.string})
 };

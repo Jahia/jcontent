@@ -19,9 +19,9 @@ export const SourceContentPanel = () => {
 
     const contextConfig = {
         ...ceConfigContext,
-        lang: ceConfigContext.sbsContext.lang,
-        sbsContext: {
-            ...ceConfigContext.sbsContext,
+        lang: ceConfigContext.sideBySideContext.lang,
+        sideBySideContext: {
+            ...ceConfigContext.sideBySideContext,
             enabled: true,
             readOnly: true,
             translateLang: ceConfigContext.lang

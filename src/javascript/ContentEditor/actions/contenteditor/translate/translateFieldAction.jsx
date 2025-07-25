@@ -5,10 +5,10 @@ import {ArrowRight} from '@jahia/moonstone';
 import styles from './styles.scss';
 
 export const TranslateFieldActionComponent = ({field, value, render: Render}) => {
-    const {sbsContext} = useContentEditorConfigContext();
+    const {sideBySideContext} = useContentEditorConfigContext();
     const {setI18nContext} = useContentEditorContext();
 
-    const {enabled, translateLang} = sbsContext || {};
+    const {enabled, translateLang} = sideBySideContext || {};
     if (!enabled || !field.i18n || !translateLang) {
         return <div className={styles.spacing}/>;
     }

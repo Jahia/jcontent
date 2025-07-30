@@ -76,6 +76,8 @@ public class GqlEditorFormField {
             String key = String.format("%s[%d]", baseKey, i++);
             if (o instanceof String) {
                 flattenedOptions.add(new GqlEditorFormProperty(key, String.valueOf(o)));
+            } else if (o instanceof List) {
+                flattenedOptions.add(new GqlEditorFormProperty(key, (List<String>) o));
             } else if (o instanceof Map) {
                 serializeMap(flattenedOptions, key + ".", (Map<String, Object>) o);
             }

@@ -34,11 +34,7 @@ module.exports = (env, argv) => {
                 '~': path.resolve(__dirname, './src/javascript')
             },
             fallback: {
-                "url": false,
-                // Issue with upgrading to @jahia/moonstone 2.12.0, @floating-ui/react dependency
-                // https://github.com/carbon-design-system/carbon/issues/18714#issuecomment-2691357012
-                // Resolving with fallback but proper fix would be to update dependency to React 18
-                "react/jsx-runtime": "react/jsx-runtime.js"
+                "url": false
             }
         },
         module: {
@@ -121,8 +117,7 @@ module.exports = (env, argv) => {
                     './init': './src/javascript/init'
                 },
                 remotes: {
-                    '@jahia/jahia-ui-root': 'appShell.remotes.jahiaUi',
-                    '@jahia/app-shell': 'appShellRemote',
+                    '@jahia/jahia-ui-root': 'appShell.remotes.jahiaUi'
                 },
             }, Object.keys(packageJson.dependencies))),
             new CleanWebpackPlugin({

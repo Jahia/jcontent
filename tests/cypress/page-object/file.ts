@@ -26,6 +26,14 @@ export class File extends BasePage {
         return this;
     }
 
+    dndUploadFromFixtures(selector: string, subFolder: string = '.'): File {
+        cy.get(selector).parent().selectFile(`cypress/fixtures/${subFolder}/${this.fileName}`, {action: 'drag-drop'});
+        // The wait is very important otherwise the upload will never complete
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
+        return this;
+    }
+
     getUploadStatus() {
         return cy.get('div[data-sel-role="upload-status"]');
     }

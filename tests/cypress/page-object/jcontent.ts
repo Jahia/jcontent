@@ -167,7 +167,7 @@ export class JContent extends BasePage {
     switchToMode(name: string): JContent {
         const dropdown = getComponentByRole(Dropdown, 'sel-view-mode-dropdown');
         // Wait for dropdown to be available
-        dropdown.get().find('[role=dropdown]:not(.moonstone-disabled)');
+        dropdown.get().find('[role=listbox]:not(.moonstone-disabled)');
         dropdown.select(name).get().should('contain', name);
         return this;
     }

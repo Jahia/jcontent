@@ -2,13 +2,13 @@ import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import {DatePicker} from '../DatePicker';
-import {Input} from '@jahia/design-system-kit';
 
 import dayjs from '../../date.config';
 
 import {Popover} from '@material-ui/core';
 import NumberFormat from 'react-number-format';
-import {Button, Calendar} from '@jahia/moonstone';
+import {Button, Calendar, Input} from '@jahia/moonstone';
+import styles from './DatePickerInput.scss';
 
 const datetimeFormat = {
     date: 'L',
@@ -32,15 +32,6 @@ export const getMaskOptions = (displayDateMask, isDateTime) => {
         mask: mask.replace(/_/g, '#'),
         empty: mask
     };
-};
-
-const CustomInput = ({value, ...others}) => {
-    return (
-        <Input
-            value={value}
-            {...others}
-        />
-    );
 };
 
 export const DatePickerInput = ({
@@ -67,12 +58,12 @@ export const DatePickerInput = ({
     }, [setDatetime, setDatetimeString, initialValue, lang, variant, displayDateFormat]);
 
     const isDateTime = variant === 'datetime';
-    const htmlInput = useRef();
+    const containerRef = useRef();
     const maskOptions = getMaskOptions(displayDateMask, isDateTime);
 
     const handleOpenPicker = () => {
         if (!readOnly) {
-            setAnchorEl(htmlInput.current.parentElement);
+            setAnchorEl(containerRef.current);
         }
     };
 
@@ -96,7 +87,7 @@ export const DatePickerInput = ({
         }
     };
 
-    const InteractiveVariant = (
+    const postfixComponent = (
         <Button aria-label="Open date picker"
                 variant="ghost"
                 icon={<Calendar/>}
@@ -105,18 +96,17 @@ export const DatePickerInput = ({
     );
 
     return (
-        <div>
+        <div ref={containerRef}>
             <NumberFormat
-                inputRef={htmlInput}
-                customInput={CustomInput}
+                customInput={Input}
+                className={styles.input}
+                size="big"
                 format={maskOptions.mask}
                 placeholder={maskOptions.empty}
                 mask="_"
                 data-sel-readonly={readOnly}
-                variant={{
-                    interactive: InteractiveVariant
-                }}
-                readOnly={readOnly}
+                postfixComponents={postfixComponent}
+                isReadOnly={readOnly}
                 value={datetimeString}
                 onChange={handleInputChange}
                 onBlur={onBlur}
@@ -153,14 +143,6 @@ export const DatePickerInput = ({
             </Popover>
         </div>
     );
-};
-
-CustomInput.propTypes = {
-    value: PropTypes.string
-};
-
-CustomInput.defaultProps = {
-    value: ''
 };
 
 DatePickerInput.defaultProps = {

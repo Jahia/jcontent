@@ -2,6 +2,10 @@
     border-left: var(--spacing-large) solid #000;
 }
 
+.input {
+    max-width: 200px;
+}
+
 .overlay.overlay {
     overflow-y: initial;
     overflow-x: initial;

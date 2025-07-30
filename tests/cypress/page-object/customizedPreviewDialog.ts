@@ -26,13 +26,13 @@ export class CustomizedPreviewDialog extends BaseComponent {
 
     selectChannel(name: string) {
         const dropdown = this.getChannelDropdown();
-        dropdown.get().find('[role=dropdown]:not(.moonstone-disabled)');
+        dropdown.get().find('[role=listbox]:not(.moonstone-disabled)');
         dropdown.select(name).get().should('contain', name);
     }
 
     selectVariant(name: string) {
         const dropdown = this.getVariantDropdown();
-        dropdown.get().find('[role=dropdown]:not(.moonstone-disabled)');
+        dropdown.get().find('[role=listbox]:not(.moonstone-disabled)');
         dropdown.select(name).get().should('contain', name);
     }
 

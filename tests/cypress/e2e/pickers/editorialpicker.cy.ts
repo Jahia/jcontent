@@ -22,7 +22,7 @@ describe('Editorial picker tests', () => {
             .getPickerField(contentType.fieldNodeType, contentType.multiple)
             .open();
 
-        cy.get('div[data-sel-type="editorial"] div[data-sel-role="sel-view-mode-dropdown"] > div[role="dropdown"] > span')
+        cy.get('div[data-sel-type="editorial"] div[data-sel-role="sel-view-mode-dropdown"] > div[role="listbox"] > span')
             .should('have.text', 'Structured')
             .should('not.have.text', 'List');
     });
@@ -34,7 +34,7 @@ describe('Editorial picker tests', () => {
             .getPickerField(contentType.fieldNodeType, contentType.multiple)
             .open();
 
-        cy.get('div[data-sel-type="editorial"] div[data-sel-role="sel-view-mode-dropdown"] > div[role="dropdown"] > span')
+        cy.get('div[data-sel-type="editorial"] div[data-sel-role="sel-view-mode-dropdown"] > div[role="listbox"] > span')
             .should('have.text', 'Structured')
             .should('not.have.text', 'List');
 

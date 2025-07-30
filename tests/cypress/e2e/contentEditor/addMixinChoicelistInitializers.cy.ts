@@ -3,6 +3,7 @@ import {getComponentByRole} from '@jahia/cypress';
 import {Picker} from '../../page-object/picker';
 
 const sitekey = 'contentEditorSiteAddMixin';
+const fieldOffset = {top: -200, left: 0};
 describe('Add Mixin by using choice list initializers (Image Reference)', () => {
     let pageComposer: PageComposer;
     const cypressDocumentManagerImageReferenceLinkTest = 'Cypress document manager image reference link Test';
@@ -47,9 +48,9 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
             .click();
 
         const selector = '[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]';
-        cy.get(selector).scrollIntoView();
+        cy.get(selector).scrollIntoView({offset: fieldOffset});
         contentEditor.getLanguageSwitcher().select('French');
-        cy.get(selector).as('fr_internal_link').scrollIntoView();
+        cy.get(selector).as('fr_internal_link').scrollIntoView({offset: fieldOffset});
         cy.get(selector).should('be.visible');
 
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
@@ -57,17 +58,17 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
             .find('li[role="option"][data-value="external"]')
             .click();
         cy.get('@fr_internal_link').should('not.exist');
-        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').should('be.visible');
-        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]').should('be.visible');
         contentEditor.getLanguageSwitcher().select('German');
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('not.exist');
-        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:linkTitle"]').should('be.visible');
         cy.get('[data-sel-content-editor-field="jmix\\:externalLink_j\\:url"]')
             .as('de_external_link_url')
-            .scrollIntoView();
+            .scrollIntoView({offset: fieldOffset});
         cy.get('@de_external_link_url').should('be.visible');
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').click();
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
@@ -80,9 +81,8 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
             .find('li[role="option"][data-value="internal"]')
             .click();
-        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
-            .should('be.visible')
             .click();
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
         const picker = getComponentByRole(Picker, 'picker-dialog');
@@ -90,11 +90,11 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.get('.moonstone-loader').should('not.exist'); // Wait to load
         cy.get('tr[data-cm-role="table-content-list-row"]').contains('Search Results').click();
         cy.get('button[data-sel-picker-dialog-action="done"]').click();
-        cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_jcr\\:title"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_jcr\\:title"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_jcr\\:title"]')
             .should('be.visible')
             .type(cypressDocumentManagerImageReferenceLinkTest);
-        cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_j\\:node"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_j\\:node"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_j\\:node"]')
             .should('be.visible')
             .click();
@@ -126,13 +126,13 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType')
             .find('li[role="option"][data-value="internal"]')
             .click();
-        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').scrollIntoView();
+        cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('be.visible');
         contentEditor.getLanguageSwitcher().select('English');
         cy.get('#select-jnt\\:imageReferenceLink_j\\:linkType').contains('Internal');
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]')
             .should('exist')
-            .scrollIntoView();
+            .scrollIntoView({offset: fieldOffset});
         cy.get('[data-sel-content-editor-field="jmix\\:internalLink_j\\:linknode"]').should('be.visible');
         // ContentEditor.cancelAndDiscard()
         contentEditor.cancel();

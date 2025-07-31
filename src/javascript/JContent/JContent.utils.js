@@ -362,5 +362,5 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
         host = serverName;
     }
 
-    return `${location.protocol}//${host}:${location.port}${url}`;
+    return `${location.protocol}//${host}:${location.port}${url}?hidePersonaPanel`;
 };

@@ -64,6 +64,12 @@ export const registerEditorialPicker = registry => {
             },
             treeConfig: {
                 ...pagesItem.treeConfig,
+                selectableTypes: [
+                    'jnt:page',
+                    'jnt:virtualsite',
+                    'jnt:navMenuText',
+                    'jmix:visibleInPagesTree'
+                ],
                 hideRoot: false,
                 dnd: {}
             }

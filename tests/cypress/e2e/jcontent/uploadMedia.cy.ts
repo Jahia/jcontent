@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {createUser, deleteUser, grantRoles} from '@jahia/cypress';
+import {createUser, deleteUser, getNodeByPath, grantRoles} from '@jahia/cypress';
 
 describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
     let jcontent: JContent;
@@ -102,5 +102,27 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
 
         fileUpload.getUploadMessage('validation constraint1').should('be.visible');
         fileUpload.getUploadMessage('constraint2').should('be.visible');
+    });
+
+    const extensionToMimeType = [
+        {filename: 'myfile.pdf', mimeType: 'application/pdf'},
+        {filename: 'myfile.txt', mimeType: 'text/plain'},
+        {filename: 'myfile.hol', mimeType: 'application/octet-stream'}, // Unknown extension: use the fallback MIME type
+        {filename: 'myfile', mimeType: 'application/octet-stream'} // No extension: use the fallback MIME type
+    ];
+    extensionToMimeType.forEach(({filename, mimeType}) => {
+        it.only(`Should get the MIME type '${mimeType}' for the file extension '${filename}'`, function () {
+            cy.loginAndStoreSession();
+            jcontent = JContent.visit(siteKey, 'en', 'media/files');
+            jcontent.getMedia()
+                .open()
+                .createFile(filename)
+                .dndUploadFromFixtures('div[data-sel-role-card=bootstrap]', 'assets/uploadMedia')
+                .download();
+            // Check the MIME type property in the JCR matches what's expected
+            getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {
+                expect(res?.data?.jcr?.nodeByPath?.properties[0]?.value).to.eq(mimeType);
+            });
+        });
     });
 });

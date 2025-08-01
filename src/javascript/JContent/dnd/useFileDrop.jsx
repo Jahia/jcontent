@@ -21,6 +21,8 @@ import mime from 'mime';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
+const DEFAULT_MIME_TYPE = 'application/octet-stream';
+
 async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath}) {
     const files = [];
     const directories = [];
@@ -41,10 +43,11 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
             let file = await new Promise((res, rej) => {
                 entry.file(res, rej);
             });
-            if (!file.type) {
+            if (!file.type || file.type === 'null') {
                 // Crappy hack for bugged firefox
+                let newType = file.name.includes('.') ? (mime.getType(file.name) || DEFAULT_MIME_TYPE) : DEFAULT_MIME_TYPE;
                 file = new File([file], file.name, {
-                    type: file.name.includes('.') ? mime.getType(file.name) : ''
+                    type: newType
                 });
             }
 

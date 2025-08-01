@@ -102,7 +102,7 @@ describe('Picker tests - Trees', () => {
 
         // Verify tree with selection can collapse
         mediaAccordion.getTreeItem('images').collapse();
-        mediaAccordion.getTreeItem('images').should('not.have.attr', 'aria-expanded');
+        mediaAccordion.getTreeItem('images').should('have.attr', 'aria-expanded', null);
         mediaAccordion.shouldNotHaveTreeItem('backgrounds');
     });
 });

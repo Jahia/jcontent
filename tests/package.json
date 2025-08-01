@@ -17,6 +17,7 @@
     "lint:fix": "yarn lint:js:fix --resolve-plugins-relative-to ."
   },
   "main": "index.js",
+  "type": "module",
   "files": [
     "dist"
   ],

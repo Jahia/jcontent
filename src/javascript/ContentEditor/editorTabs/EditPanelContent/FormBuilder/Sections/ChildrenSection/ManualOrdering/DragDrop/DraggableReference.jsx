@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {Tooltip, File, Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
 import {useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
-import {getIconFromNode} from '~/utils';
+import {getIconFromNode, getWebpUrl} from '~/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import clsx from 'clsx';
 
@@ -103,7 +103,7 @@ export const DraggableReference = ({
                     displayName: child.displayName,
                     name: child.name,
                     type: child.primaryNodeType.displayName,
-                    thumbnail: child.thumbnailUrl || getIconFromNode(child)
+                    thumbnail: child.thumbnailUrl || getWebpUrl(child) || getIconFromNode(child)
                 }}
             />
         </div>

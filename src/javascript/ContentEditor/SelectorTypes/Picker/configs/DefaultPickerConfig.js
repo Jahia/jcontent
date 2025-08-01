@@ -2,7 +2,7 @@ import React from 'react';
 import {File, FileBroken} from '@jahia/moonstone';
 import {useQuery} from '@apollo/client';
 import {ContentPickerFilledQuery} from './ContentPicker.gql-queries';
-import {getIconFromNode} from '~/utils';
+import {getIconFromNode, getWebpUrl} from '~/utils';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {shallowEqual, useSelector} from 'react-redux';
 
@@ -30,7 +30,7 @@ const usePickerInputData = uuids => {
     const fieldData = data.jcr.result.map(contentData => ({
         uuid: contentData.uuid,
         path: contentData.path,
-        thumbnail: contentData.thumbnailUrl || getIconFromNode(contentData),
+        thumbnail: contentData.thumbnailUrl || getWebpUrl(contentData) || getIconFromNode(contentData),
         name: contentData.name,
         displayName: contentData.displayName,
         type: contentData.primaryNodeType.displayName

@@ -3,7 +3,7 @@ import {BaseComponent, Button, Dropdown, getComponentByAttr} from '@jahia/cypres
 export class ExportDialog extends BaseComponent {
     static defaultSelector = '[data-cm-role="export-options"]';
 
-    export(downloadsFolder:string, workspace:string = 'Staging content only', exportFormat: string = 'zip') {
+    export(downloadsFolder:string, workspace = 'Staging content only', exportFormat = 'zip') {
         this.should('be.visible');
 
         getComponentByAttr(Dropdown, 'data-cm-role', 'select-workspace', this).select(workspace);

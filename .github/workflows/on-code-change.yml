@@ -7,6 +7,9 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
+permissions:
+  read-all
+
 jobs:
   update-signature:
     name: Update module signature
@@ -32,6 +35,10 @@ jobs:
     name: Javascript unit tests (yarn test)
     runs-on: ubuntu-latest
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: start-measurement
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -41,6 +48,15 @@ jobs:
         run: |
           yarn
           yarn test
+      - name: Checkout Repo Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: get-measurement
+          label: 'yarn test'
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
+        with:
+          task: display-results
 
   build:
     name: Build Module
@@ -94,6 +110,10 @@ jobs:
           - cypress.config-categoryManager.ts
     timeout-minutes: 120
     steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: start-measurement
       - uses: jahia/jahia-modules-action/helper@v2
       - uses: KengoTODA/actions-setup-docker-compose@main
         with:
@@ -139,3 +159,12 @@ jobs:
           reporter: java-junit
           fail-on-error: 'false'
           output-to: 'checks'
+      - name: Checkout Repo Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: get-measurement
+          label: 'integration tests'
+      - name: Show Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
+        with:
+          task: display-results

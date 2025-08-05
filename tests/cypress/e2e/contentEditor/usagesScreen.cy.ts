@@ -26,12 +26,12 @@ describe('Create content tests', () => {
         deleteSite(usagesSite);
     });
 
-    it('display 16 usages', () => {
+    it('display 18 usages', () => {
         jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
         jcontent.switchToListMode().getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         const advancedOptions = contentEditor.switchToAdvancedOptions();
-        advancedOptions.checkOption('Usages', '16');
+        advancedOptions.checkOption('Usages', '18');
         advancedOptions.switchToOption('Usages');
         cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable').should('be.visible');
         cy.get('@usagesTable').find('tbody > tr').should('have.length', 10);
@@ -44,7 +44,7 @@ describe('Create content tests', () => {
         // ContentEditor.cancel();
     });
 
-    it('displays 31 usages and restriction message', () => {
+    it('displays 35 usages and restriction message', () => {
         createSite(usagesSite);
         cy.apollo({
             mutationFile: 'contentEditor/usages/createUsages.graphql',
@@ -58,7 +58,7 @@ describe('Create content tests', () => {
         jcontent.switchToListMode().getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         const advancedOptions = contentEditor.switchToAdvancedOptions();
-        advancedOptions.checkOption('Usages', '31');
+        advancedOptions.checkOption('Usages', '35');
         advancedOptions.switchToOption('Usages');
         cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable').should('be.visible');
         cy.get('@usagesTable').find('tbody > tr').should('have.length', 10);

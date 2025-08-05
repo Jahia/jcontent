@@ -9,6 +9,8 @@ mutation($pathOrId: String!) {
                             primaryNodeType: "jnt:imageReferenceLink"
                             properties: [
                                 { name: "j:node", language: "en", type: REFERENCE, value: "/sites/digitall/files/images/backgrounds/boy-father.jpg" },
+                                { name: "j:node", language: "de", type: REFERENCE, value: "/sites/digitall/files/images/backgrounds/boy-father.jpg" },
+                                { name: "j:node", language: "fr", type: REFERENCE, value: "/sites/digitall/files/images/backgrounds/boy-father.jpg" },
                                 { name: "j:linkType", value: "none"}
                             ]
                         },

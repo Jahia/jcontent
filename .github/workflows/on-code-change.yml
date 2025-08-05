@@ -52,7 +52,7 @@ jobs:
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: get-measurement
-          label: 'yarn test'
+          label: 'Measure yarn test'
       - name: Show Energy Results
         uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
         with:
@@ -163,7 +163,7 @@ jobs:
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: get-measurement
-          label: 'integration tests'
+          label: 'Measure integration tests'
       - name: Show Energy Results
         uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
         with:

@@ -28,6 +28,23 @@ const ReferenceCardCmp = ({
     cardAction,
     ...props
 }) => {
+    // If card is in error state
+    if (isError) {
+        return (
+            <CardSelector
+                id={id}
+                className={clsx(styles.referenceCard, className)}
+                isReadOnly={isReadOnly}
+                hasError={isError}
+                errorMessage={emptyLabel}
+                data-sel-field-picker="error"
+                data-sel-field-picker-action="openPicker"
+                onClick={onClick}
+                {...props}
+            />
+        );
+    }
+
     // If card have already data
     if (fieldData) {
         return (

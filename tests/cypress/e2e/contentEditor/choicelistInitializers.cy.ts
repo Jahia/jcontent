@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {ChoicelistField} from '../../page-object/fields/choicelistField';
+import {ChoiceListField} from '../../page-object/fields';
 
 describe('ChoiceList initializers tests', () => {
     const siteKey = 'choiceListInitializerSite';
@@ -31,8 +31,8 @@ describe('ChoiceList initializers tests', () => {
 
     it('should initialize choice list with a value', () => {
         const contentEditor = JContent.visit(siteKey, 'en', `content-folders/contents/${name}`).editContent();
-        contentEditor.getField(ChoicelistField, 'cent:dependentProperties_j:type').assertSelected('contentRetrievalCETest');
-        contentEditor.getField(ChoicelistField, 'jmix:renderableList_j:subNodesView').assertSelected('default');
+        contentEditor.getField(ChoiceListField, 'cent:dependentProperties_j:type').assertSelected('contentRetrievalCETest');
+        contentEditor.getField(ChoiceListField, 'jmix:renderableList_j:subNodesView').assertSelected('default');
         contentEditor.assertValidationErrorsNotExist();
     });
 });

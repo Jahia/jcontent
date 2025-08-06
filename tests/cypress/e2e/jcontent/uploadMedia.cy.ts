@@ -7,14 +7,14 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
     const siteKey = 'uploadMediaSite';
     const user = {name: 'editoruser', password: 'password'};
 
-    before(function () {
+    beforeEach(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         createUser(user.name, user.password);
         grantRoles(`/sites/${siteKey}/home`, ['editor'], user.name, 'USER');
     });
 
-    after(function () {
+    afterEach(function () {
         cy.logout();
         deleteUser(user.name);
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
@@ -111,13 +111,26 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
         {filename: 'myfile', mimeType: 'application/octet-stream'} // No extension: use the fallback MIME type
     ];
     extensionToMimeType.forEach(({filename, mimeType}) => {
-        it.only(`Should get the MIME type '${mimeType}' for the file extension '${filename}'`, function () {
+        it(`Should get the MIME type '${mimeType}' for the file extension '${filename}' (upload via drag and drop)`, function () {
             cy.loginAndStoreSession();
             jcontent = JContent.visit(siteKey, 'en', 'media/files');
             jcontent.getMedia()
                 .open()
-                .createFile(filename)
-                .dndUploadFromFixtures('div[data-sel-role-card=bootstrap]', 'assets/uploadMedia')
+                .uploadFileViaDragAndDrop(filename, 'assets/uploadMedia')
+                .download();
+            // Check the MIME type property in the JCR matches what's expected
+            getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {
+                expect(res?.data?.jcr?.nodeByPath?.properties[0]?.value).to.eq(mimeType);
+            });
+        });
+    });
+    extensionToMimeType.forEach(({filename, mimeType}) => {
+        it(`Should get the MIME type '${mimeType}' for the file extension '${filename} (upload via dialog)'`, function () {
+            cy.loginAndStoreSession();
+            jcontent = JContent.visit(siteKey, 'en', 'media/files');
+            jcontent.getMedia()
+                .open()
+                .uploadFileViaDialog(filename, 'assets/uploadMedia')
                 .download();
             // Check the MIME type property in the JCR matches what's expected
             getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {

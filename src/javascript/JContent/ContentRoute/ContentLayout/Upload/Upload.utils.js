@@ -10,6 +10,7 @@ import {
 import JContentConstants from '~/JContent/JContent.constants';
 
 const IGNORED_FILES = ['.DS_Store', '.localized'];
+export const DEFAULT_MIME_TYPE = 'application/octet-stream';
 
 export const onFilesSelected = ({acceptedFiles, dispatchBatch, type, additionalActions = []}) => {
     if (acceptedFiles.length > 0) {

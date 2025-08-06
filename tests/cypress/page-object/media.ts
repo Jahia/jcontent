@@ -22,14 +22,14 @@ export class Media extends BasePage {
         return this;
     }
 
-    createFolder(parentPath : string, folderName : string) : Folder {
+    createFolder(parentPath: string, folderName: string): Folder {
         getComponentByRole(Button, 'createFolder').click();
         getElement('input#folder-name').type(folderName);
         getComponentByAttr(Button, 'data-cm-role', 'create-folder-as-confirm').click();
         return new Folder(this, parentPath, folderName);
     }
 
-    createInvalidFolder(parentPath : string, folderName : string) : Media {
+    createInvalidFolder(parentPath: string, folderName: string): Media {
         getComponentByRole(Button, 'createFolder').click();
         getElement('input#folder-name').type(folderName);
         cy.get('#folder-name-helper-text').should('contain', 'Invalid characters');
@@ -37,8 +37,27 @@ export class Media extends BasePage {
         return this;
     }
 
-    createFile(fileName : string) : File {
+    createFile(fileName: string): File {
         return new File(this, fileName);
+    }
+
+    uploadFileViaDragAndDrop(fileName: string, fixtureSubFolder: string): File {
+        cy.get('div[data-sel-role-card=bootstrap]').parent().selectFile(`cypress/fixtures/${fixtureSubFolder}/${fileName}`, {action: 'drag-drop'});
+        this.waitForUploadToComplete();
+        return new File(this, fileName);
+    }
+
+    uploadFileViaDialog(fileName: string, fixtureSubFolder: string = '.'): File {
+        cy.get('button[data-sel-role="fileUpload"]').should('be.visible').click();
+        cy.get('input#file-upload-input[type="file"]').selectFile(`cypress/fixtures/${fixtureSubFolder}/${fileName}`, {force: true});
+        this.waitForUploadToComplete();
+        return new File(this, fileName);
+    }
+
+    private waitForUploadToComplete(): void {
+        cy.get('[data-cm-role="upload-status-success"]').should('be.visible');
+        cy.get('[data-cm-role="upload-close-button"]').click();
+        cy.get('[data-cm-role="upload-status-success"]').should('not.be.visible');
     }
 
     switchView(displayMode: 'list' | 'grid') {

@@ -1,12 +1,13 @@
 import imageExtensions from 'image-extensions';
 import JContentConstants from '~/JContent/JContent.constants';
 import mime from 'mime';
+import {DEFAULT_MIME_TYPE} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 const imageExtensionSet = new Set(imageExtensions);
 
 export const isBrowserImage = node => {
     if (node.isFile) {
         const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
-        if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
+        if (mimetype === 'application/binary' || mimetype === DEFAULT_MIME_TYPE) {
             switch (node.path.split('.').pop().toLowerCase()) {
                 case 'avif':
                 case 'png':
@@ -36,7 +37,7 @@ export const isImageFile = filename => {
 export const isPDF = node => {
     if (node.isFile) {
         const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
-        if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
+        if (mimetype === 'application/binary' || mimetype === DEFAULT_MIME_TYPE) {
             if (node.path.split('.').pop().toLowerCase() === 'pdf') {
                 return true;
             }
@@ -53,7 +54,7 @@ export const isPDF = node => {
 export const getFileExtension = node => {
     if (node.isFile) {
         const mimetype = node.content === undefined ? node.resourceChildren.nodes[0].mimeType.value : node.content.mimeType.value;
-        if (mimetype === 'application/binary' || mimetype === 'application/octet-stream') {
+        if (mimetype === 'application/binary' || mimetype === DEFAULT_MIME_TYPE) {
             return node.path.split('.').pop().toLowerCase();
         }
 
@@ -98,5 +99,13 @@ export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode
 // Note that as with the browsers spoofing is a possibility.
 export const getUploadedFileMimeType = file => {
     const type = file.name.includes('.') ? mime.getType(file.name) : null;
-    return type || file.type;
+    if (type) {
+        return type;
+    }
+
+    if (file.type && file.type !== 'null') {
+        return file.type;
+    }
+
+    return DEFAULT_MIME_TYPE;
 };

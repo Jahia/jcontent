@@ -7,14 +7,14 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
     const siteKey = 'uploadMediaSite';
     const user = {name: 'editoruser', password: 'password'};
 
-    beforeEach(function () {
+    before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         createUser(user.name, user.password);
         grantRoles(`/sites/${siteKey}/home`, ['editor'], user.name, 'USER');
     });
 
-    afterEach(function () {
+    after(function () {
         cy.logout();
         deleteUser(user.name);
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
@@ -114,28 +114,36 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
         it(`Should get the MIME type '${mimeType}' for the file extension '${filename}' (upload via drag and drop)`, function () {
             cy.loginAndStoreSession();
             jcontent = JContent.visit(siteKey, 'en', 'media/files');
-            jcontent.getMedia()
+            const file = jcontent.getMedia()
                 .open()
                 .uploadFileViaDragAndDrop(filename, 'assets/uploadMedia')
                 .download();
+
             // Check the MIME type property in the JCR matches what's expected
             getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {
                 expect(res?.data?.jcr?.nodeByPath?.properties[0]?.value).to.eq(mimeType);
             });
+
+            // Clean up
+            file.markForDeletion().deletePermanently();
         });
     });
     extensionToMimeType.forEach(({filename, mimeType}) => {
         it(`Should get the MIME type '${mimeType}' for the file extension '${filename} (upload via dialog)'`, function () {
             cy.loginAndStoreSession();
             jcontent = JContent.visit(siteKey, 'en', 'media/files');
-            jcontent.getMedia()
+            const file = jcontent.getMedia()
                 .open()
                 .uploadFileViaDialog(filename, 'assets/uploadMedia')
                 .download();
+
             // Check the MIME type property in the JCR matches what's expected
             getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {
                 expect(res?.data?.jcr?.nodeByPath?.properties[0]?.value).to.eq(mimeType);
             });
+
+            // Clean up
+            file.markForDeletion().deletePermanently();
         });
     });
 });

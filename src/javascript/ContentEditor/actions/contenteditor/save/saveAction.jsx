@@ -15,7 +15,7 @@ import {isDirty, useKeydownListener} from '~/ContentEditor/utils';
 const Save = ({render: Render, loading: Loading, ...otherProps}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const {publicationInfoPolling} = usePublicationInfoContext();
-    const {mode, i18nContext, siteInfo, lang, resetI18nContext, setErrors} = useContentEditorContext();
+    const {mode, i18nContext, siteInfo, lang, resetI18nContext, setErrors, nodeData} = useContentEditorContext();
     const {onSavedCallback} = useContentEditorConfigContext();
     const {sections} = useContentEditorSectionContext();
     const formik = useFormikContext();
@@ -63,7 +63,7 @@ const Save = ({render: Render, loading: Loading, ...otherProps}) => {
             {...otherProps}
             hasWarningBadge={Object.keys(formik.errors).length > 0}
             isVisible={mode === Constants.routes.baseEditRoute}
-            disabled={!dirty || publicationInfoPolling}
+            disabled={!dirty || publicationInfoPolling || !nodeData.hasWritePermission || nodeData.lockedAndCannotBeEdited}
             onClick={() => save(formik)}
         />
     );

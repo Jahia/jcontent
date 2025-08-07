@@ -9,6 +9,12 @@ export const useTranslateFormDefinition = () => {
         // Display only content and SEO sections in the translation panel
         data.sections = data.sections.filter(s => ['content', 'seo'].includes(s.name));
         data.sections?.forEach(section => {
+            // Expand all sections by default in translation mode
+            section.expanded = true;
+            if (data.expandedSections) {
+                data.expandedSections[section.name] = true;
+            }
+
             section.fieldSets?.forEach(fieldSet => {
                 fieldSet.fields.filter(field => !field.i18n).forEach(f => {
                     f.readOnly = true;

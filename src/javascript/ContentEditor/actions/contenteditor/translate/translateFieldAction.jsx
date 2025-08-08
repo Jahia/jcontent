@@ -8,7 +8,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
     const {sideBySideContext} = useContentEditorConfigContext();
     const {setI18nContext} = useContentEditorContext();
 
-    const {enabled, translateLang} = sideBySideContext || {};
+    const {enabled, translateLang, hasWritePermission, lockedAndCannotBeEdited} = sideBySideContext || {};
     if (!enabled || !field.i18n || !translateLang) {
         return <div className={styles.spacing}/>;
     }
@@ -22,7 +22,6 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
                 [translateLang]: {
                     ...prev[translateLang],
                     values: {
-                        ...prev[translateLang]?.values,
                         [field.name]: value
                     },
                     validation: {
@@ -39,7 +38,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
         <div className={styles.translate}>
             <Render
               buttonIcon={<ArrowRight/>}
-              enabled={Boolean(value)}
+              enabled={Boolean(value) && hasWritePermission && !lockedAndCannotBeEdited}
               dataSelRole="translate-field"
               buttonProps={{
                   variant: 'ghost',

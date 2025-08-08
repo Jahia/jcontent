@@ -155,6 +155,7 @@ const actionTargetAssignments = {
         'editAdvanced',
         'editPage',
         'editPageAdvanced',
+        'sbsTranslate',
         'editSource',
         'editImage',
         'replaceFile',

@@ -60,7 +60,10 @@ export const CopyLanguageDialog = ({
     const handleApply = () => {
         getDataFromSelectedLanguage(currentOption.value).then(data => {
             for (const [key, value] of Object.entries(data)) {
-                formik.setFieldValue(key, value);
+                // Set to empty string if value is null or undefined to ensure field is cleared
+                // This is necessary to avoid issues with formik not updating the field if the value is null
+                // or undefined, as it will not trigger a change event
+                formik.setFieldValue(key, value || '');
             }
         });
 

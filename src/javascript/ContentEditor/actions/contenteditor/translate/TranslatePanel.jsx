@@ -42,7 +42,7 @@ export const TranslatePanel = ({title}) => {
             className={styles.layoutContent}
             hasPadding={false}
             header={(
-                <EditPanelHeader hideLanguageSwitcher title={title}/>
+                <EditPanelHeader hideLanguageSwitcher title={title} targetActionKey='translate/header/3dots'/>
             )}
             content={(
                 <TwoPanelsContent

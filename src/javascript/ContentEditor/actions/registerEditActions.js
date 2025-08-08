@@ -95,6 +95,14 @@ export const registerEditActions = registry => {
         dataSelRole: '3dotsMenuAction'
     });
 
+    /* SBS translate 3-dots/header actions */
+    registry.add('action', 'translate/header/3dots', registry.get('action', 'menuAction'), {
+        buttonIcon: <MoreVert/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.moreOptions',
+        menuTarget: 'translate/header/3dots',
+        dataSelRole: '3dotsMenuAction'
+    });
+
     /* 3 dots menu actions (for each field) */
     registry.add('action', 'content-editor/field/3dots', registry.get('action', 'menuAction'), {
         buttonIcon: <MoreVert/>,

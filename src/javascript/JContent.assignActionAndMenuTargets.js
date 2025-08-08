@@ -357,6 +357,10 @@ const actionTargetAssignments = {
     'content-editor/header/3dots': [
         'goToWorkInProgress',
         'copyLanguageAction'
+    ],
+    'translate/header/3dots': [
+        'goToWorkInProgress',
+        'copyLanguageAction'
     ]
 };
 

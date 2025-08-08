@@ -38,7 +38,7 @@ const BackButtonRenderer = getButtonRenderer({
     noIcon: true
 });
 
-export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, activeTabState}) => {
+export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, activeTabState, targetActionKey = 'content-editor/header/3dots'}) => {
     const {nodeData, nodeTypeName, nodeTypeDisplayName, mode} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
@@ -105,8 +105,8 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
                             </>
                         )}
 
-                        <HeaderButtonActions/>
-                        <HeaderThreeDotsActions/>
+                        <HeaderButtonActions targetActionKey={targetActionKey}/>
+                        <HeaderThreeDotsActions targetActionKey={targetActionKey}/>
                     </div>
                 )}
                 status={<HeaderBadges mode={mode}/>}
@@ -123,5 +123,6 @@ EditPanelHeader.propTypes = {
             0: PropTypes.string.isRequired,
             1: PropTypes.func.isRequired
         })
-    )
+    ),
+    targetActionKey: PropTypes.string
 };

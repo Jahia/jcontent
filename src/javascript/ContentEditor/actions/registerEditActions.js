@@ -7,8 +7,7 @@ import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
-import {translateAction} from './contenteditor/translate/translateAction';
-import {translateFieldAction} from './contenteditor/translate';
+import {translateFieldAction, translateAction, translateEditAction} from './contenteditor/translate';
 
 export const registerEditActions = registry => {
     // Edit action button in JContent; need separate actions for content and pages
@@ -120,6 +119,12 @@ export const registerEditActions = registry => {
     registry.add('action', 'copyLanguageAction', copyLanguageAction, {
         buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.copyLanguage.name'
+    });
+
+    registry.add('action', 'sbsTranslateEdit', translateEditAction, {
+        buttonIcon: <Translate/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
+        dataSelRole: 'sbsTranslateEdit',
     });
 
     registry.add('action', 'sbsTranslate', translateAction, {

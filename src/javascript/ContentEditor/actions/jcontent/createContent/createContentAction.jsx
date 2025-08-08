@@ -1,9 +1,8 @@
 import React, {useEffect, useMemo} from 'react';
 import {
     childrenLimitReachedOrExceeded,
-    flattenNodeTypes,
     transformNodeTypesToActions,
-    useCreatableNodetypesTree
+    useCreateButtonsData
 } from './createContent.utils';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
@@ -48,21 +47,18 @@ export const CreateContent = ({
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
-    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
+    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreateButtonsData({
         nodeTypes: areaNodeTypes,
-        childNodeName: name,
-        includeSubTypes: isIncludeSubTypes || false,
         path: contextNodePath || path,
         uilang,
         excludedNodeTypes,
         showOnNodeTypes
     });
 
-    const {loading, isVisible, flattenedNodeTypes, actions, missingNodes} = useMemo(() => {
+    const {loading, isVisible, actions, missingNodes} = useMemo(() => {
         const defaultProps = {
             loading: Loading && (loadingTypes || res.loading || nodeInfo.loading),
             isVisible: false,
-            flattenedNodeTypes: [],
             actions: [],
             missingNodes: true
         };
@@ -75,13 +71,11 @@ export const CreateContent = ({
             return {...defaultProps, loading: false};
         }
 
-        const flattenedNodeTypes = flattenNodeTypes(nodeTypesTree);
-        const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit, nodeInfo.node?.name);
+        const actions = transformNodeTypesToActions(nodeTypesTree, hasBypassChildrenLimit, nodeInfo.node?.name);
 
         return {
             loading: false,
             isVisible: res.checksResult,
-            flattenedNodeTypes,
             actions,
             missingNodes: false
         };
@@ -127,7 +121,6 @@ export const CreateContent = ({
             tooltipLabel={result.tooltipLabel}
             tooltipParams={result.tooltipParams}
             {...otherProps}
-            flattenedNodeTypes={flattenedNodeTypes}
             nodeTypesTree={nodeTypesTree}
             path={path}
             uilang={uilang}

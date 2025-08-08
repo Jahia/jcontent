@@ -41,6 +41,8 @@ import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.content.JCRSessionWrapper;
+import org.jahia.services.content.nodetypes.ExtendedNodeType;
+import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.utils.LanguageCodeConverters;
 import org.jahia.utils.NodeTypeTreeEntry;
 import org.jahia.utils.NodeTypesUtils;
@@ -144,6 +146,50 @@ public class GqlEditorForms {
         Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
         List<String> allowedNodeTypes = new ArrayList<>(ContentEditorUtils.getAllowedNodeTypesAsChildNode(parentNode, childNodeName, useContribute, includeSubTypes, nodeTypes));
         Set<NodeTypeTreeEntry> entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
+        return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+    }
+
+    @GraphQLField
+    @GraphQLName("createButtonsData")
+    @GraphQLDescription("Get a tree starting with root node (for each nodeTypes) with allowed child nodeTypes for a given nodeType and path. (Note that it returns nothing for type [jnt:page]. [jnt:contentFolder] is filterered by [jmix:editorialContent])")
+    public List<GqlNodeTypeTreeEntry> getCreateButtonsData(
+        @GraphQLName("nodeTypes") @GraphQLDescription("List of types we want to retrieve") List<String> nodeTypes,
+        @GraphQLName("excludedNodeTypes") @GraphQLDescription("List of types we want to exclude, null for all") List<String> excludedNodeTypes,
+        @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("Path or id of an existing node under with the new content will be created.") String uuidOrPath,
+        @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale)
+        throws RepositoryException {
+        JCRNodeWrapper parentNode = null;
+        try {
+            parentNode = StringUtils.startsWith(uuidOrPath, "/") ? getSession().getNode(uuidOrPath) : getSession().getNodeByIdentifier(uuidOrPath);
+        } catch (PathNotFoundException e) {
+            return Collections.emptyList();
+        }
+
+        // Only jmix:editorialContent on jnt:contentFolder
+        if (parentNode.isNodeType("jnt:contentFolder") && (nodeTypes == null || nodeTypes.isEmpty())) {
+            nodeTypes = Collections.singletonList("jmix:droppableContent");
+        }
+        // check write access
+        if (!parentNode.hasPermission("jcr:addChildNodes")) {
+            return Collections.emptyList();
+        }
+        final String nodeIdentifier = parentNode.getIdentifier();
+        Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
+        Set<NodeTypeTreeEntry> entries = new HashSet<>();
+
+        if (nodeTypes == null) {
+            return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+        }
+
+        // This achieves similar effect seen in GWT implementation where getContentTypesAsTree is called individually for every type and thus returns expected information
+        for (String nodeType : nodeTypes) {
+            ExtendedNodeType extendedNodeType = NodeTypeRegistry.getInstance().getNodeType(nodeType);
+            NodeTypeTreeEntry root = new NodeTypeTreeEntry(extendedNodeType, locale);
+            Set<NodeTypeTreeEntry> e = NodeTypesUtils.getContentTypesAsTree(Arrays.asList(nodeType), excludedNodeTypes, true, parentNode.getPath(), getSession(locale), locale);
+            root.setChildren(e);
+            entries.add(root);
+        }
+
         return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
     }
 

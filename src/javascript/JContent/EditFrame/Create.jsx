@@ -53,7 +53,9 @@ const useElemAttributes = ({element, parent}) => {
     if (parent.getAttribute('nodetypes') &&
         (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
-    } else if (element.getAttribute('nodetypes')) {
+    }
+
+    if (element.getAttribute('nodetypes')) {
         nodeTypes = element.getAttribute('nodetypes').split(' ');
     }
 

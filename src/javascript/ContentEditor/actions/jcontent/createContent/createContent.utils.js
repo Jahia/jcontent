@@ -1,11 +1,13 @@
+import React from 'react';
 import {
+    getCreateButtonsDataPath,
+    getCreateButtonsDataUuid,
     getNodeByPath,
     getTreeOfContentWithRequirements,
     getTreeOfContentWithRequirementsFromUuid
 } from './createContent.gql-queries';
 import {useQuery} from '@apollo/client';
 import {Tag, toIconComponent} from '@jahia/moonstone';
-import React from 'react';
 
 export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
     const {data, error, loadingTypes} = useQuery(uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements, {
@@ -27,6 +29,35 @@ export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubT
         error,
         loadingTypes,
         nodetypes: nodeTypeNotDisplayed ? [] : data.forms.contentTypesAsTree
+    };
+};
+
+export const useCreateButtonsData = ({nodeTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
+    const {data, error, loadingTypes} = useQuery(uuid ? getCreateButtonsDataUuid : getCreateButtonsDataPath, {
+        fetchPolicy: 'network-only',
+        variables: {
+            nodeTypes,
+            uilang,
+            path,
+            uuid,
+            excludedNodeTypes,
+            showOnNodeTypes
+        }
+    });
+
+    const hasShowOnNodeTypes = showOnNodeTypes?.length > 0;
+    const nodeByPath = data?.jcr?.nodeByPath;
+    const nodeById = data?.jcr?.nodeById;
+    const nodeTypeNotDisplayed = !data?.jcr || (
+        hasShowOnNodeTypes && (
+            (nodeByPath && !nodeByPath.isNodeType) ||
+            (nodeById && !nodeById.isNodeType)
+        )
+    );
+    return {
+        error,
+        loadingTypes,
+        nodetypes: nodeTypeNotDisplayed ? [] : data.forms.createButtonsData.sort((a, b) => a.label.localeCompare(b.label))
     };
 };
 
@@ -88,9 +119,7 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
             .map(nodeType => ({
                 key: nodeType.name,
                 actionKey: nodeType.name,
-                flattenedNodeTypes: [nodeType],
-                nodeTypesTree: [nodeType],
-                nodeTypes: [nodeType.name],
+                nodeTypesTree: nodeType.children ? nodeType.children.map(c => ({...c, children: []})) : [nodeType],
                 nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: nodeType.label},

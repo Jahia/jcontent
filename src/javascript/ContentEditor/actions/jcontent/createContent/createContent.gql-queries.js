@@ -63,6 +63,42 @@ export const getTreeOfContentWithRequirementsFromUuid = gql`
     ${TreeOfContentDataFragment}
 `;
 
+export const getCreateButtonsDataPath = gql`
+    query getCreateButtonsData($nodeTypes:[String], $path:String!, $excludedNodeTypes:[String], $showOnNodeTypes:[String]!, $uilang:String!){
+        forms {
+            createButtonsData(nodeTypes:$nodeTypes, uuidOrPath:$path, uiLocale:$uilang, excludedNodeTypes:$excludedNodeTypes) {
+                ...TreeOfContentData
+            }
+        }
+        jcr {
+            nodeByPath(path: $path) {
+                isNodeType(type: {types:$showOnNodeTypes})
+                ...NodeCacheRequiredFields
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+    ${TreeOfContentDataFragment}
+`;
+
+export const getCreateButtonsDataUuid = gql`
+    query getCreateButtonsData($nodeTypes:[String], $excludedNodeTypes:[String], $showOnNodeTypes:[String]!, $uilang:String!, $uuid:String!){
+        forms {
+            createButtonsData(nodeTypes:$nodeTypes, uuidOrPath:$uuid, uiLocale:$uilang, excludedNodeTypes:$excludedNodeTypes) {
+                ...TreeOfContentData
+            }
+        }
+        jcr {
+            nodeById(uuid: $uuid) {
+                isNodeType(type: {types:$showOnNodeTypes})
+                ...NodeCacheRequiredFields
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+    ${TreeOfContentDataFragment}
+`;
+
 export const getNodeByPath = gql`
     query($path:String!) {
         jcr {

@@ -78,9 +78,9 @@ export const getTreeOfContentWithRequirementsFromUuid = gql`
 `;
 
 export const getCreateButtonsDataPath = gql`
-    query getCreateButtonsData($nodeTypes:[String], $path:String!, $excludedNodeTypes:[String], $showOnNodeTypes:[String]!, $uilang:String!){
+    query getCreateButtonsData($includeSubTypes: Boolean, $nodeTypes:[String], $path:String!, $excludedNodeTypes:[String], $showOnNodeTypes:[String]!, $uilang:String!){
         forms {
-            createButtonsData(nodeTypes:$nodeTypes, uuidOrPath:$path, uiLocale:$uilang, excludedNodeTypes:$excludedNodeTypes) {
+            createButtonsData(includeSubTypes:$includeSubTypes, nodeTypes:$nodeTypes, uuidOrPath:$path, uiLocale:$uilang, excludedNodeTypes:$excludedNodeTypes) {
                 ...TreeOfContentData
             }
         }
@@ -96,9 +96,9 @@ export const getCreateButtonsDataPath = gql`
 `;
 
 export const getCreateButtonsDataUuid = gql`
-    query getCreateButtonsData($nodeTypes:[String], $excludedNodeTypes:[String], $showOnNodeTypes:[String]!, $uilang:String!, $uuid:String!){
+    query getCreateButtonsData($includeSubTypes: Boolean, $nodeTypes:[String], $excludedNodeTypes:[String], $showOnNodeTypes:[String]!, $uilang:String!, $uuid:String!){
         forms {
-            createButtonsData(nodeTypes:$nodeTypes, uuidOrPath:$uuid, uiLocale:$uilang, excludedNodeTypes:$excludedNodeTypes) {
+            createButtonsData(includeSubTypes:$includeSubTypes, nodeTypes:$nodeTypes, uuidOrPath:$uuid, uiLocale:$uilang, excludedNodeTypes:$excludedNodeTypes) {
                 ...TreeOfContentData
             }
         }

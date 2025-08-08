@@ -154,6 +154,7 @@ public class GqlEditorForms {
     @GraphQLDescription("Get a tree starting with root node (for each nodeTypes) with allowed child nodeTypes for a that nodeType and path. (Note that it returns nothing for type [jnt:page]. [jnt:contentFolder] is filterered by [jmix:editorialContent])")
     public List<GqlNodeTypeTreeEntry> getCreateButtonsData(
         @GraphQLName("nodeTypes") @GraphQLDescription("List of types we want to retrieve") List<String> nodeTypes,
+        @GraphQLName("includeSubTypes") @GraphQLDefaultValue(GqlUtils.SupplierTrue.class) @GraphQLDescription("if true, retrieves all the sub types of the given node types, if false, returns the type only. Default value is true") boolean includeSubTypes,
         @GraphQLName("excludedNodeTypes") @GraphQLDescription("List of types we want to exclude, null for all") List<String> excludedNodeTypes,
         @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("Path or id of an existing node under with the new content will be created.") String uuidOrPath,
         @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale)
@@ -185,7 +186,7 @@ public class GqlEditorForms {
         for (String nodeType : nodeTypes) {
             ExtendedNodeType extendedNodeType = NodeTypeRegistry.getInstance().getNodeType(nodeType);
             NodeTypeTreeEntry root = new NodeTypeTreeEntry(extendedNodeType, locale);
-            Set<NodeTypeTreeEntry> e = NodeTypesUtils.getContentTypesAsTree(Arrays.asList(nodeType), excludedNodeTypes, true, parentNode.getPath(), getSession(locale), locale);
+            Set<NodeTypeTreeEntry> e = NodeTypesUtils.getContentTypesAsTree(Arrays.asList(nodeType), excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
             root.setChildren(e);
             entries.add(root);
         }

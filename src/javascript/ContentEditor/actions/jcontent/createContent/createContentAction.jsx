@@ -48,6 +48,7 @@ export const CreateContent = ({
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
     let {loadingTypes, error, nodetypes: nodeTypesTree} = useCreateButtonsData({
+        isIncludeSubTypes,
         nodeTypes: areaNodeTypes,
         path: contextNodePath || path,
         uilang,

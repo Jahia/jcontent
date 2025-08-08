@@ -32,10 +32,11 @@ export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubT
     };
 };
 
-export const useCreateButtonsData = ({nodeTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
+export const useCreateButtonsData = ({nodeTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes, isIncludeSubTypes}) => {
     const {data, error, loadingTypes} = useQuery(uuid ? getCreateButtonsDataUuid : getCreateButtonsDataPath, {
         fetchPolicy: 'network-only',
         variables: {
+            includeSubTypes: isIncludeSubTypes !== false,
             nodeTypes,
             uilang,
             path,

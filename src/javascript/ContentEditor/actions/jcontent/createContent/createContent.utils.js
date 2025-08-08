@@ -119,7 +119,7 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
             .map(nodeType => ({
                 key: nodeType.name,
                 actionKey: nodeType.name,
-                nodeTypesTree: nodeType.children ? nodeType.children.map(c => ({...c, children: []})) : [nodeType],
+                nodeTypesTree: nodeType.children ? nodeType.children : [nodeType],
                 nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: nodeType.label},

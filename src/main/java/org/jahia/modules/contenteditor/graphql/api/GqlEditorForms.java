@@ -151,7 +151,7 @@ public class GqlEditorForms {
 
     @GraphQLField
     @GraphQLName("createButtonsData")
-    @GraphQLDescription("Get a tree starting with root node (for each nodeTypes) with allowed child nodeTypes for a given nodeType and path. (Note that it returns nothing for type [jnt:page]. [jnt:contentFolder] is filterered by [jmix:editorialContent])")
+    @GraphQLDescription("Get a tree starting with root node (for each nodeTypes) with allowed child nodeTypes for a that nodeType and path. (Note that it returns nothing for type [jnt:page]. [jnt:contentFolder] is filterered by [jmix:editorialContent])")
     public List<GqlNodeTypeTreeEntry> getCreateButtonsData(
         @GraphQLName("nodeTypes") @GraphQLDescription("List of types we want to retrieve") List<String> nodeTypes,
         @GraphQLName("excludedNodeTypes") @GraphQLDescription("List of types we want to exclude, null for all") List<String> excludedNodeTypes,

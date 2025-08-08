@@ -23,6 +23,20 @@ const TreeOfContentDataFragment = gql`fragment TreeOfContentData on NodeTypeTree
         }
         label
         iconURL
+        children {
+            id
+            name
+            nodeType {
+                name
+                mixin
+            }
+            parent {
+                id
+                name
+            }
+            label
+            iconURL
+        }
     }
 } 
 `;

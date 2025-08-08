@@ -46,8 +46,8 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
     if (isArea || isList || isAbsolute) {
         config.isBarAlwaysDisplayed = true;
         config.isSticky = false;
-        config.isActionsHidden = true;
-        config.isStatusHidden = true;
+        config.isActionsHidden = isAbsolute || isArea;
+        config.isStatusHidden = isAbsolute || isArea;
         config.area = {
             isAbsolute,
             isArea,
@@ -224,8 +224,11 @@ export const Box = React.memo(({
     reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);
 
     const dragWithChecks = n => {
-        if (type === 'existingNode' && !isActionsHidden) {
+        const draggableTypes = ['existingNode', 'list'];
+        if (draggableTypes.includes(type) && !isActionsHidden) {
             drag(n);
+        } else {
+            console.debug('Will not drag!', JSON.stringify({type, isActionsHidden}));
         }
     };
 

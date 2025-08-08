@@ -66,6 +66,7 @@ export const LabelBar = ({node, area, dragProps}) => {
     if (area) {
         return (
             <>
+                {dragProps?.isDraggable && <HandleDrag color={dragProps?.isCanDrag ? undefined : 'gray'}/>}
                 <Chip variant="default"
                       color="accent"
                       label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}

@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 import {
-    childrenLimitReachedOrExceeded,
+    childrenLimitReachedOrExceeded, flattenNodeTypes,
     transformNodeTypesToActions,
     useCreateButtonsData
 } from './createContent.utils';
@@ -47,7 +47,7 @@ export const CreateContent = ({
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
-    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreateButtonsData({
+    let {loadingTypes, error, nodetypes: nodeTypesTree} = useCreateButtonsData({
         nodeTypes: areaNodeTypes,
         path: contextNodePath || path,
         uilang,
@@ -71,7 +71,12 @@ export const CreateContent = ({
             return {...defaultProps, loading: false};
         }
 
-        const actions = transformNodeTypesToActions(nodeTypesTree, hasBypassChildrenLimit, nodeInfo.node?.name);
+        const actions = nodeTypesTree[0].name === 'jmix:droppableContent' ? null : transformNodeTypesToActions(nodeTypesTree, hasBypassChildrenLimit, nodeInfo.node?.name);
+
+        // We want to get rid of the root node type here which is jmix:droppableContent so that we have a flat display of content choices
+        if (!actions) {
+            nodeTypesTree = flattenNodeTypes(nodeTypesTree);
+        }
 
         return {
             loading: false,

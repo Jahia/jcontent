@@ -1,4 +1,4 @@
-import {Dropdown, getComponent, getComponentByRole, Menu} from '@jahia/cypress';
+import {Dropdown, getComponent, getComponentBySelector, Menu} from '@jahia/cypress';
 import {Field} from './field';
 
 export class ChoiceListField extends Field {
@@ -8,7 +8,7 @@ export class ChoiceListField extends Field {
      */
     addNewValue(value: string): void {
         this.get().click();
-        getComponentByRole(Menu, 'list').selectByValue(value);
+        getComponentBySelector(Menu, '[role="list"]').selectByValue(value);
     }
 
     /**

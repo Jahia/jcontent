@@ -356,6 +356,11 @@ const actionTargetAssignments = {
     ],
     'content-editor/header/3dots': [
         'goToWorkInProgress',
+        'sbsTranslateEdit',
+        'copyLanguageAction'
+    ],
+    'translate/header/3dots': [
+        'goToWorkInProgress',
         'copyLanguageAction'
     ]
 };

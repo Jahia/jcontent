@@ -7,9 +7,9 @@ export const getButtonLimitValue = () => {
     return isNaN(parsedValue) ? 5 : parsedValue; // Default is 5 quick buttons
 };
 
-export const getMenuActions = (offset, limit) => {
+export const getMenuActions = (offset, limit, actionTarget = 'content-editor/header/3dots') => {
     return registry
-        .find({type: 'action', target: 'content-editor/header/3dots'})
+        .find({type: 'action', target: actionTarget})
         .filter((action, index) =>
             index >= offset && index < (offset + limit))
         .map(action => action.key);

@@ -6,7 +6,7 @@ import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
 export const TranslateEditActionComponent = ({path, render: Render, ...otherProps}) => {
     const api = useContentEditorApiContext();
-    const {nodeData, lang, siteInfo, refetchFormData} = useContentEditorContext();
+    const {nodeData, lang, siteInfo} = useContentEditorContext();
 
     const languages = siteInfo.languages?.filter(l => l.activeInEdit) || [];
     const sourceLang = languages.find(l => l.language !== lang) || languages[0];

@@ -124,7 +124,7 @@ export const registerEditActions = registry => {
     registry.add('action', 'sbsTranslateEdit', translateEditAction, {
         buttonIcon: <Translate/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
-        dataSelRole: 'sbsTranslateEdit',
+        dataSelRole: 'sbsTranslateEdit'
     });
 
     registry.add('action', 'sbsTranslate', translateAction, {

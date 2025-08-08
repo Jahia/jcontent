@@ -38,6 +38,6 @@ const HeaderButtonActions = ({targetActionKey}) => {
 
 HeaderButtonActions.propTypes = {
     targetActionKey: PropTypes.string.isRequired
-}
+};
 
 export default HeaderButtonActions;

@@ -179,7 +179,11 @@ public class GqlEditorForms {
         Set<NodeTypeTreeEntry> entries = new HashSet<>();
 
         if (nodeTypes == null) {
-            return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+             nodeTypes = new ArrayList<>(ContentEditorUtils.getAllowedNodeTypesAsChildNode(parentNode, null, true, includeSubTypes, nodeTypes));
+
+             if (nodeTypes.isEmpty()) {
+                 return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+             }
         }
 
         // This achieves similar effect seen in GWT implementation where getContentTypesAsTree is called individually for every type and thus returns expected information

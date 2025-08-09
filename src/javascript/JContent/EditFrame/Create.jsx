@@ -53,7 +53,9 @@ const useElemAttributes = ({element, parent}) => {
     if (parent.getAttribute('nodetypes') &&
         (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
-    } else if (element.getAttribute('nodetypes')) {
+    }
+
+    if (element.getAttribute('nodetypes')) {
         nodeTypes = element.getAttribute('nodetypes').split(' ');
     }
 
@@ -206,7 +208,8 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              onClick={onClick}
         >
             {copyPasteNodes.length === 0 &&
-                <DisplayAction actionKey="createContent"
+                <DisplayAction isIncludeSubTypes
+                               actionKey="createContent"
                                path={parentPath}
                                name={nodePath}
                                isDisabled={isDisabled}

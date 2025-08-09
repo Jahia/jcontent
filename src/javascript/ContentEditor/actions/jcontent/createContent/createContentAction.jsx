@@ -1,9 +1,8 @@
 import React, {useEffect, useMemo} from 'react';
 import {
-    childrenLimitReachedOrExceeded,
-    flattenNodeTypes,
+    childrenLimitReachedOrExceeded, flattenNodeTypes,
     transformNodeTypesToActions,
-    useCreatableNodetypesTree
+    useCreateButtonsData
 } from './createContent.utils';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
@@ -48,21 +47,19 @@ export const CreateContent = ({
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
-    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
+    let {loadingTypes, error, nodetypes: nodeTypesTree} = useCreateButtonsData({
+        isIncludeSubTypes,
         nodeTypes: areaNodeTypes,
-        childNodeName: name,
-        includeSubTypes: isIncludeSubTypes || false,
         path: contextNodePath || path,
         uilang,
         excludedNodeTypes,
         showOnNodeTypes
     });
 
-    const {loading, isVisible, flattenedNodeTypes, actions, missingNodes} = useMemo(() => {
+    const {loading, isVisible, actions, missingNodes} = useMemo(() => {
         const defaultProps = {
             loading: Loading && (loadingTypes || res.loading || nodeInfo.loading),
             isVisible: false,
-            flattenedNodeTypes: [],
             actions: [],
             missingNodes: true
         };
@@ -75,13 +72,16 @@ export const CreateContent = ({
             return {...defaultProps, loading: false};
         }
 
-        const flattenedNodeTypes = flattenNodeTypes(nodeTypesTree);
-        const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit, nodeInfo.node?.name);
+        const actions = nodeTypesTree[0].name === 'jmix:droppableContent' ? null : transformNodeTypesToActions(nodeTypesTree, hasBypassChildrenLimit, nodeInfo.node?.name);
+
+        // We want to get rid of the root node type here which is jmix:droppableContent so that we have a flat display of content choices
+        if (!actions) {
+            nodeTypesTree = flattenNodeTypes(nodeTypesTree);
+        }
 
         return {
             loading: false,
             isVisible: res.checksResult,
-            flattenedNodeTypes,
             actions,
             missingNodes: false
         };
@@ -127,7 +127,6 @@ export const CreateContent = ({
             tooltipLabel={result.tooltipLabel}
             tooltipParams={result.tooltipParams}
             {...otherProps}
-            flattenedNodeTypes={flattenedNodeTypes}
             nodeTypesTree={nodeTypesTree}
             path={path}
             uilang={uilang}

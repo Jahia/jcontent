@@ -73,3 +73,15 @@ export const getNodeByPath = gql`
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
+
+export const getNodeTypeInfo = gql`
+    query getNodeTypeInfo($nodeTypes: [String]!, $uiLocale: String!) {
+        forms {
+            nodeTypeInfo(nodeTypes: $nodeTypes, uiLocale: $uiLocale) {
+                name
+                label
+                iconUrl
+            }
+        }
+    }
+`;

@@ -27,6 +27,7 @@ export const CreateContent = ({
     onVisibilityChanged,
     render: Render,
     loading: Loading,
+    labelProps,
     ...otherProps}) => {
     const api = useContentEditorApiContext();
     const {t} = useTranslation('jcontent');
@@ -115,6 +116,10 @@ export const CreateContent = ({
         api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
     };
 
+    const additionalProps = labelProps ? {
+        ...labelProps
+    } : {};
+
     return (actions || [{
         key: 'allTypes',
         nodeTypeIcon: otherProps.defaultIcon,
@@ -134,6 +139,7 @@ export const CreateContent = ({
             isVisible={res.checksResult}
             isAllTypes={result.key === 'allTypes'}
             {...result}
+            {...additionalProps}
             onClick={onClick}
         />
     ));
@@ -159,7 +165,8 @@ CreateContent.propTypes = {
     isDisabled: PropTypes.bool,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func,
-    onVisibilityChanged: PropTypes.func
+    onVisibilityChanged: PropTypes.func,
+    labelProps: PropTypes.object
 };
 
 export const createContentAction = {

@@ -1,6 +1,9 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 import {CreateContent} from '~/ContentEditor/actions/jcontent/createContent/createContentAction';
+import {useQuery} from '@apollo/client';
+import {getNodeTypeInfo} from '~/ContentEditor/actions/jcontent/createContent/createContent.gql-queries';
+import {toIconComponent} from '@jahia/moonstone';
 
 export const CreateContentWrapper = ({
     contextNodePath,
@@ -18,47 +21,64 @@ export const CreateContentWrapper = ({
     render,
     loading,
     ...otherProps}) => {
-    if (nodeTypes && nodeTypes.length > 1) {
-        const actions = [];
+    const skipQuery = !nodeTypes || nodeTypes.length <= 1;
 
-        nodeTypes.forEach(nodeType => actions.push(
-            <CreateContent contextNodePath={contextNodePath}
-                           path={path}
-                           showOnNodeTypes={showOnNodeTypes}
-                           name={name}
-                           isIncludeSubTypes={isIncludeSubTypes}
-                           isFullscreen={isFullscreen}
-                           hasBypassChildrenLimit={hasBypassChildrenLimit}
-                           isDisabled={isDisabled}
-                           render={render}
-                           loading={loading}
-                           nodeTypes={[nodeType]}
-                           onCreate={onCreate}
-                           onClosed={onClosed}
-                           onVisibilityChanged={onVisibilityChanged}
-                           {...otherProps}/>
-        ));
+    const {data} = useQuery(getNodeTypeInfo, {
+        variables: {
+            nodeTypes: nodeTypes,
+            uiLocale: window.contextJsParameters.uilang
+        },
+        fetchPolicy: 'cache-first',
+        skip: skipQuery
+    });
 
-        return actions;
+    if (skipQuery) {
+        return (
+            <CreateContent
+                contextNodePath={contextNodePath}
+                path={path}
+                showOnNodeTypes={showOnNodeTypes}
+                name={name}
+                isIncludeSubTypes={isIncludeSubTypes}
+                isFullscreen={isFullscreen}
+                hasBypassChildrenLimit={hasBypassChildrenLimit}
+                isDisabled={isDisabled}
+                render={render}
+                loading={loading}
+                nodeTypes={nodeTypes}
+                onCreate={onCreate}
+                onClosed={onClosed}
+                onVisibilityChanged={onVisibilityChanged}
+                {...otherProps}
+            />
+        );
     }
 
-    return (
-        <CreateContent contextNodePath={contextNodePath}
-                       path={path}
-                       showOnNodeTypes={showOnNodeTypes}
-                       name={name}
-                       isIncludeSubTypes={isIncludeSubTypes}
-                       isFullscreen={isFullscreen}
-                       hasBypassChildrenLimit={hasBypassChildrenLimit}
-                       isDisabled={isDisabled}
-                       render={render}
-                       loading={loading}
-                       nodeTypes={nodeTypes}
-                       onCreate={onCreate}
-                       onClosed={onClosed}
-                       onVisibilityChanged={onVisibilityChanged}
-                       {...otherProps}/>
-    );
+    return data?.forms?.nodeTypeInfo.map(nodeType => (
+        <CreateContent
+            key={nodeType.name}
+            contextNodePath={contextNodePath}
+            path={path}
+            showOnNodeTypes={showOnNodeTypes}
+            name={name}
+            isIncludeSubTypes={isIncludeSubTypes}
+            isFullscreen={isFullscreen}
+            hasBypassChildrenLimit={hasBypassChildrenLimit}
+            isDisabled={isDisabled}
+            render={render}
+            loading={loading}
+            nodeTypes={[nodeType.name]}
+            labelProps={{
+                buttonIcon: toIconComponent(nodeType.iconUrl),
+                buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
+                buttonLabelParams: {typeName: nodeType.label}
+            }}
+            onCreate={onCreate}
+            onClosed={onClosed}
+            onVisibilityChanged={onVisibilityChanged}
+            {...otherProps}
+        />
+    ));
 };
 
 CreateContentWrapper.defaultProps = {

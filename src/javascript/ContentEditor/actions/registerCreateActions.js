@@ -1,14 +1,15 @@
 import React from 'react';
 import {AddCircle, Save} from '@jahia/moonstone';
 
-import {createContentAction} from './jcontent/createContent/createContentAction';
+// Import {createContentAction} from './jcontent/createContent/createContentAction';
+import {createContentActionWrapper} from './jcontent/createContent/createContentWrapper';
 import {createAction} from './contenteditor/create/createAction';
 import {batchActions} from 'redux-batched-actions';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 export const registerCreateActions = registry => {
-    registry.addOrReplace('action', 'createContent', createContentAction, {
+    registry.addOrReplace('action', 'createContent', createContentActionWrapper, {
         defaultIcon: <AddCircle/>,
         buttonLabel:
             'jcontent:label.contentEditor.CMMActions.createNewContent.menu',
@@ -19,7 +20,7 @@ export const registerCreateActions = registry => {
     });
 
     if (booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
-        registry.addOrReplace('action', 'createPage', createContentAction, {
+        registry.addOrReplace('action', 'createPage', createContentActionWrapper, {
             buttonIcon: <AddCircle/>,
             showOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite'],
             requiredPermission: ['jcr:addChildNodes'],
@@ -40,7 +41,7 @@ export const registerCreateActions = registry => {
             isMenuPreload: true
         });
 
-        registry.addOrReplace('action', 'createNavMenuItem', createContentAction, {
+        registry.addOrReplace('action', 'createNavMenuItem', createContentActionWrapper, {
             buttonIcon: <AddCircle/>,
             showOnNodeTypes: ['jnt:page', 'jnt:navMenuText', 'jnt:virtualsite'],
             requiredPermission: ['jcr:addChildNodes'],

@@ -1,6 +1,7 @@
-import {JContent, JContentPageBuilder} from '../../page-object';
+import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 import {addNode, createSite, deleteNode, deleteSite} from '@jahia/cypress';
 import {addRestrictedPage} from '../../fixtures/jcontent/restrictions.gql.js';
+import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
 
 describe('Page builder', () => {
     let jcontent: JContentPageBuilder;
@@ -124,6 +125,26 @@ describe('Page builder', () => {
             const buttons = absoluteArea.getCreateButtons();
             buttons.assertHasNoButtonForType('New content');
             buttons.getButton('New Event');
+        });
+
+        it('should display multiple create buttons consistently with restriction', () => {
+            jcontent.switchToStructuredView();
+            const row = jcontent.getTable().getRowByLabel('landing');
+            row.contextMenu().selectByRole('edit');
+            const contentEditor = new ContentEditor();
+            contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
+            contentEditor.getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
+                .addNewValue('Banner')
+                .addNewValue('Collapse');
+            contentEditor.save();
+
+            jcontent.switchToPageBuilder();
+
+            const restrictedArea = jcontent.getModule('/sites/jcontentSite/home/landing', false);
+            const buttons = restrictedArea.getCreateButtons();
+            buttons.get().scrollIntoView();
+            buttons.getButtonByRole('bootstrap3nt:collapse').should('exist');
+            buttons.getButtonByRole('jnt:banner').should('exist');
         });
     });
 

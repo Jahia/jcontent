@@ -30,6 +30,7 @@ import org.jahia.data.templates.JahiaTemplatesPackage;
 import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.EditorFormService;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
+import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfo;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeTreeEntry;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorForm;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorFormValueConstraint;
@@ -41,6 +42,8 @@ import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.content.JCRSessionWrapper;
+import org.jahia.services.content.nodetypes.ExtendedNodeType;
+import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.utils.LanguageCodeConverters;
 import org.jahia.utils.NodeTypeTreeEntry;
 import org.jahia.utils.NodeTypesUtils;
@@ -145,6 +148,21 @@ public class GqlEditorForms {
         List<String> allowedNodeTypes = new ArrayList<>(ContentEditorUtils.getAllowedNodeTypesAsChildNode(parentNode, childNodeName, useContribute, includeSubTypes, nodeTypes));
         Set<NodeTypeTreeEntry> entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
         return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+    }
+
+    @GraphQLField
+    @GraphQLName("nodeTypeInfo")
+    @GraphQLDescription("Retrieve info for given node types")
+    public List<GqlNodeTypeInfo> nodeTypeInfo(@GraphQLNonNull @GraphQLName("nodeTypes") @GraphQLDescription("node types") List<String> nodeTypes, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
+        List<GqlNodeTypeInfo> nts = new ArrayList<>();
+
+        for (String nodeType : nodeTypes) {
+            ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
+            nts.add(new GqlNodeTypeInfo(nt, LanguageCodeConverters.getLocaleFromCode(uiLocale)));
+
+        }
+
+        return nts;
     }
 
     @GraphQLField

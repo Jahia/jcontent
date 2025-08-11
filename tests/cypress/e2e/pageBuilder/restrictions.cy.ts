@@ -1,7 +1,7 @@
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 import {addNode, createSite, deleteNode, deleteSite} from '@jahia/cypress';
 import {addRestrictedPage} from '../../fixtures/jcontent/restrictions.gql.js';
-import {MultipleLeftRightField} from "../../page-object/fields/multipleLeftRightField";
+import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
 
 describe('Page builder', () => {
     let jcontent: JContentPageBuilder;
@@ -140,11 +140,11 @@ describe('Page builder', () => {
 
             jcontent.switchToPageBuilder();
 
-            let restrictedArea = jcontent.getModule(`/sites/jcontentSite/home/landing`, false);
+            const restrictedArea = jcontent.getModule('/sites/jcontentSite/home/landing', false);
             const buttons = restrictedArea.getCreateButtons();
             buttons.get().scrollIntoView();
-            buttons.getButtonByRole('bootstrap3nt:collapse').should('exist')
-            buttons.getButtonByRole('jnt:banner').should('exist')
+            buttons.getButtonByRole('bootstrap3nt:collapse').should('exist');
+            buttons.getButtonByRole('jnt:banner').should('exist');
         });
     });
 

@@ -65,7 +65,7 @@ const FrameManager = () => {
     // Load frames
     useEffect(() => {
         if (leftFrame.current && data?.jcr?.result?.renderUrlEdit) {
-            leftFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false);
+            leftFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false, null, true);
         }
 
         if (rightFrame.current && data?.jcr?.result?.renderUrlLive) {

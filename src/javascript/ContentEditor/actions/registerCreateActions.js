@@ -1,7 +1,6 @@
 import React from 'react';
 import {AddCircle, Save} from '@jahia/moonstone';
 
-// Import {createContentAction} from './jcontent/createContent/createContentAction';
 import {createContentActionWrapper} from './jcontent/createContent/createContentWrapper';
 import {createAction} from './contenteditor/create/createAction';
 import {batchActions} from 'redux-batched-actions';

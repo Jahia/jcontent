@@ -21,7 +21,7 @@ export const CreateContentWrapper = ({
     render,
     loading,
     ...otherProps}) => {
-    const skipQuery = !nodeTypes || nodeTypes.length <= 1;
+    const skipQuery = !nodeTypes || nodeTypes.length <= 1 || nodeTypes.length > Number(contextJsParameters.config.jcontent['createChildrenDirectButtons.limit']);
 
     const {data} = useQuery(getNodeTypeInfo, {
         variables: {

@@ -3,12 +3,13 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {Button, Menu, MoreVert} from '@jahia/moonstone';
 import {MenuItemRenderer} from '~/JContent/MenuItemRenderer';
 import {getButtonLimitValue, getMenuActions} from './utils.headerActions';
+import PropTypes from 'prop-types';
 
-const HeaderThreeDotsActions = () => {
+const HeaderThreeDotsActions = ({targetActionKey}) => {
     const menuContainerRef = React.useRef(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const limit = getButtonLimitValue();
-    const actionsToDisplay = getMenuActions(limit, 99);
+    const actionsToDisplay = getMenuActions(limit, 99, targetActionKey);
 
     if (actionsToDisplay.length === 0) {
         return null;
@@ -38,6 +39,10 @@ const HeaderThreeDotsActions = () => {
             </Menu>
         </div>
     );
+};
+
+HeaderThreeDotsActions.propTypes = {
+    targetActionKey: PropTypes.string.isRequired
 };
 
 export default HeaderThreeDotsActions;

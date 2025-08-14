@@ -105,7 +105,7 @@ describe('constraints', () => {
     it('should list all constraints when 4 or less constraints exist', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents');
-        jcontent.openContextualMenu("constraintList4");
+        jcontent.openContextualMenu('constraintList4');
 
         // Verify all constraint options are displayed
         const expectedConstraints = [
@@ -125,7 +125,7 @@ describe('constraints', () => {
     it('should list "new content" when more than 4 constraints exist', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents');
-        jcontent.openContextualMenu("constraintList6");
+        jcontent.openContextualMenu('constraintList6');
 
         // Verify "New content" option is displayed
         cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]')

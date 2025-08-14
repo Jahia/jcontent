@@ -88,18 +88,18 @@ describe('Preview tests', () => {
         jcontent.editComponentByText('Simple text');
         contentEditor.switchToAdvancedMode();
 
-        // check preview badge is not displayed
+        // Check preview badge is not displayed
         cy.contains('span', 'Preview will update on save').should('not.exist');
 
-        // update content
+        // Update content
         cy.get('input[id="jnt:text_text"]').clear().type('Text updated', {force: true});
 
-        // check preview badge is displayed
+        // Check preview badge is displayed
         cy.contains('span', 'Preview will update on save').should('exist');
 
         contentEditor.save();
 
-        // check preview badge is not displayed
+        // Check preview badge is not displayed
         cy.contains('span', 'Preview will update on save').should('not.exist');
         contentEditor.validateContentIsVisibleInPreview('Text updated');
     });

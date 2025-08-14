@@ -9,6 +9,7 @@ import {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel
 import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
+import PropTypes from 'prop-types';
 
 /**
  * Displays read-only content from a source language on translation panel UI.
@@ -63,4 +64,14 @@ const SourceContentFormBuilderInner = ({data}) => {
             </>
         </Formik>
     );
+};
+
+SourceContentFormBuilderInner.propTypes = {
+    data: PropTypes.oneOfType([
+        PropTypes.shape({
+            initialValues: PropTypes.object,
+            sections: PropTypes.array
+        }),
+        PropTypes.oneOf([null])
+    ])
 };

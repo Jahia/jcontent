@@ -59,6 +59,7 @@ export const useTranslationReadOnlyFormDefinition = ({lang, uuid, contentType}) 
 
         // Skip if we already have data for this language
         return !languageChanged && hasDataForLanguage;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lang, hasCachedData]); // Add hasCachedData dependency in order to trigger skip re-evaluation
 
     const {loading, error, data: queryData} = useQuery(EditFormQuery, {

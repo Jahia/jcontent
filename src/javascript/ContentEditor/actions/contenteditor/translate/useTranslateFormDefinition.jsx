@@ -1,4 +1,3 @@
-import React from 'react';
 import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 
 /*
@@ -7,7 +6,7 @@ import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDe
  */
 export const useTranslateFormDefinition = () => {
     const {data, refetch, loading, error, errorMessage} = useEditFormDefinition();
-    const transformedData = adaptTranslateSections(data)
+    const transformedData = adaptTranslateSections(data);
     return {data: transformedData, refetch, loading, error, errorMessage};
 };
 

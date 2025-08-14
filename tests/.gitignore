@@ -11,3 +11,4 @@ build-dependencies
 dist
 results
 **/src/main/resources/javascript/apps
+jahia-jcontent-cypress-*.tgz

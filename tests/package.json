@@ -1,7 +1,7 @@
 {
   "name": "@jahia/jcontent-cypress",
   "private": false,
-  "version": "3.4.0-tests.0",
+  "version": "3.4.0-tests.3",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",

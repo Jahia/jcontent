@@ -29,7 +29,7 @@ export const Breadcrumbs = ({currentNode, nodes, setClickedElement, onSelect}) =
     const data = nodes.concat(currentNode).map((n, index) => ({
         label: n.path === currentNode.path ? t('label.contentManager.pageBuilder.breadcrumbs.currentItem') : n.name,
         value: n.path,
-        image: <NodeIcon node={n} style={{marginLeft: 8 * index}}/>
+        iconStart: <NodeIcon node={n} style={{marginLeft: 8 * index}}/>
     }));
 
     return (

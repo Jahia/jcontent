@@ -3,7 +3,7 @@ import bytes from 'bytes';
 import {MediaPickerFilledQuery} from './MediaPicker.gql-queries';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {getMimeType} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
-import {getIconFromMimeType} from '~/utils';
+import {getIconFromMimeType, getWebpUrl} from '~/utils';
 
 const getThumbnailUrl = node => {
     const url = node.thumbnailUrl;
@@ -34,7 +34,7 @@ export const useMediaPickerInputData = uuids => {
     const fieldData = data.jcr.result.map(imageData => {
         const sizeInfo = (imageData.height && imageData.width) ? `${parseInt(imageData.width.value, 10)} x ${parseInt(imageData.height.value, 10)}` : '';
         const mimeType = getMimeType(imageData) || '';
-        const thumbnail = getThumbnailUrl(imageData) || getIconFromMimeType(mimeType);
+        const thumbnail = getThumbnailUrl(imageData) || getWebpUrl(imageData) || getIconFromMimeType(mimeType);
         const size = imageData.content.data.size && bytes(imageData.content.data.size, {unitSeparator: ' '});
 
         return {

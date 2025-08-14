@@ -7,7 +7,7 @@ import {
     getComponentBySelector
 } from '@jahia/cypress';
 import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
-import {ChoiceTreeField, DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';
+import {ChoiceListField, ChoiceTreeField, DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
@@ -207,12 +207,16 @@ export class ContentEditor extends BasePage {
         return this.getField(SmallTextField, fieldName, multiple);
     }
 
+    getChoiceListField(fieldName: string, multiple?: boolean): ChoiceListField {
+        return this.getField(ChoiceListField, fieldName, multiple);
+    }
+
     getDateField(fieldName: string): DateField {
         return this.getField(DateField, fieldName);
     }
 
     getField<FieldType extends Field>(FieldComponent: ComponentType<FieldType>, fieldName: string,
-        multiple?: boolean = false): FieldType {
+        multiple = false): FieldType {
         const r = getComponentByAttr(FieldComponent, 'data-sel-content-editor-field', fieldName);
         r.fieldName = fieldName;
         r.multiple = multiple;

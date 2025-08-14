@@ -3,6 +3,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import styles from './HeaderButtonActions.scss';
 import {getButtonLimitValue, getMenuActions} from './utils.headerActions';
+import PropTypes from 'prop-types';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
@@ -11,9 +12,9 @@ const ButtonRenderer = getButtonRenderer({
     }
 });
 
-const HeaderButtonActions = () => {
+const HeaderButtonActions = ({targetActionKey}) => {
     const limit = getButtonLimitValue();
-    const actionsToDisplay = getMenuActions(0, limit);
+    const actionsToDisplay = getMenuActions(0, limit, targetActionKey);
 
     if (actionsToDisplay.length === 0) {
         return null;
@@ -33,6 +34,10 @@ const HeaderButtonActions = () => {
             {buttons}
         </div>
     );
+};
+
+HeaderButtonActions.propTypes = {
+    targetActionKey: PropTypes.string.isRequired
 };
 
 export default HeaderButtonActions;

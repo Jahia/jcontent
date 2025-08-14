@@ -1,7 +1,6 @@
 import {JContent, ContentEditor} from '../../../page-object';
-import {SmallTextField} from '../../../page-object/fields';
+import {ChoiceListField, SmallTextField} from '../../../page-object/fields';
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {ChoicelistField} from '../../../page-object/fields/choicelistField';
 
 // This test makes use of jmix_freezeSystemName.json form override from jcontent-test-module
 describe('Extend Mixins tests with CE', () => {
@@ -54,7 +53,7 @@ describe('Extend Mixins tests with CE', () => {
         cy.log('Enable the mixin');
         contentEditor.toggleOption('jmix:freezeSystemName');
         contentEditor.getField(SmallTextField, 'jnt:page_jcr:title').addNewValue('Test page');
-        contentEditor.getField(ChoicelistField, 'jmix:hasTemplateNode_j:templateName').addNewValue('2-column');
+        contentEditor.getField(ChoiceListField, 'jmix:hasTemplateNode_j:templateName').addNewValue('2-column');
         contentEditor.create();
 
         cy.log('Verify conditional override is applied to created page after applying mixin');

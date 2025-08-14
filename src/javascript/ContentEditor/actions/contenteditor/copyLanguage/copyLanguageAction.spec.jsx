@@ -58,17 +58,17 @@ describe('copy language action', () => {
         expect(cmp.props().enabled).toBeFalsy();
     });
 
-    it('should render be enabled when there is more than one language', () => {
+    it('should be visible when there is more than one language', () => {
         const cmp = shallowWithTheme(
             <CopyLanguageActionComponent {...defaultProps}/>,
             {},
             dsGenericTheme
         );
 
-        expect(cmp.props().enabled).toBeTruthy();
+        expect(cmp.props().isVisible).toBeTruthy();
     });
 
-    it('should render not be enabled when there is only one language', () => {
+    it('should not be visible when there is only one language', () => {
         contentEditorContext.language = 'en';
         contentEditorContext.siteInfo.languages = [
             {displayName: 'English', language: 'en', activeInEdit: true}
@@ -78,7 +78,7 @@ describe('copy language action', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().enabled).toBeFalsy();
+        expect(cmp.props().isVisible).toBeFalsy();
     });
 
     it('should destroy copy language dialog when onCloseDialog has been called', () => {

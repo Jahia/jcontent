@@ -13,10 +13,17 @@ export const MultipleSelect = ({field, id, value, inputContext, onChange, onBlur
         onBlur
     };
 
-    const options = field.valueConstraints.map(constraint => ({
-        label: constraint.displayValue,
-        value: constraint.value.string
-    }));
+    const options = field.valueConstraints.map(constraint => {
+        const isSelected = value && value.includes(constraint.value.string);
+        return {
+            label: constraint.displayValue,
+            value: constraint.value.string,
+            attributes: {
+                'data-value': constraint.value.string,
+                ...(isSelected && {'data-selected': true})
+            }
+        };
+    });
 
     const readOnly = field.readOnly || field.valueConstraints.length === 0;
     // Reset value if constraints doesnt contains the actual value.

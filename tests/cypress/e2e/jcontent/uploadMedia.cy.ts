@@ -111,18 +111,39 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
         {filename: 'myfile', mimeType: 'application/octet-stream'} // No extension: use the fallback MIME type
     ];
     extensionToMimeType.forEach(({filename, mimeType}) => {
-        it.only(`Should get the MIME type '${mimeType}' for the file extension '${filename}'`, function () {
+        it(`Should get the MIME type '${mimeType}' for the file extension '${filename}' (upload via drag and drop)`, function () {
             cy.loginAndStoreSession();
             jcontent = JContent.visit(siteKey, 'en', 'media/files');
-            jcontent.getMedia()
+            const file = jcontent.getMedia()
                 .open()
-                .createFile(filename)
-                .dndUploadFromFixtures('div[data-sel-role-card=bootstrap]', 'assets/uploadMedia')
+                .uploadFileViaDragAndDrop(filename, 'assets/uploadMedia')
                 .download();
+
             // Check the MIME type property in the JCR matches what's expected
             getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {
                 expect(res?.data?.jcr?.nodeByPath?.properties[0]?.value).to.eq(mimeType);
             });
+
+            // Clean up
+            file.markForDeletion().deletePermanently();
+        });
+    });
+    extensionToMimeType.forEach(({filename, mimeType}) => {
+        it(`Should get the MIME type '${mimeType}' for the file extension '${filename} (upload via dialog)'`, function () {
+            cy.loginAndStoreSession();
+            jcontent = JContent.visit(siteKey, 'en', 'media/files');
+            const file = jcontent.getMedia()
+                .open()
+                .uploadFileViaDialog(filename, 'assets/uploadMedia')
+                .download();
+
+            // Check the MIME type property in the JCR matches what's expected
+            getNodeByPath(`/sites/${siteKey}/files/${filename}/jcr:content`, ['jcr:mimeType']).then(res => {
+                expect(res?.data?.jcr?.nodeByPath?.properties[0]?.value).to.eq(mimeType);
+            });
+
+            // Clean up
+            file.markForDeletion().deletePermanently();
         });
     });
 });

@@ -2,13 +2,12 @@ import React from 'react';
 import {saveAction} from './contenteditor/save/saveAction';
 import {publishAction} from './contenteditor/publish/publishAction';
 import {startWorkflowAction} from './contenteditor/startWorkflow/startWorkflowAction';
-import {AdvancedEdit, ArrowRight, CloudUpload, Copy, Edit, Language, MoreVert, Save, WorkInProgress} from '@jahia/moonstone';
+import {AdvancedEdit, ArrowRight, CloudUpload, Copy, Edit, MoreVert, Save, Translate, WorkInProgress} from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
-import {translateAction} from './contenteditor/translate/translateAction';
-import {translateFieldAction} from './contenteditor/translate';
+import {translateFieldAction, translateAction, translateEditAction} from './contenteditor/translate';
 
 export const registerEditActions = registry => {
     // Edit action button in JContent; need separate actions for content and pages
@@ -95,6 +94,14 @@ export const registerEditActions = registry => {
         dataSelRole: '3dotsMenuAction'
     });
 
+    /* SBS translate 3-dots/header actions */
+    registry.add('action', 'translate/header/3dots', registry.get('action', 'menuAction'), {
+        buttonIcon: <MoreVert/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.moreOptions',
+        menuTarget: 'translate/header/3dots',
+        dataSelRole: '3dotsMenuAction'
+    });
+
     /* 3 dots menu actions (for each field) */
     registry.add('action', 'content-editor/field/3dots', registry.get('action', 'menuAction'), {
         buttonIcon: <MoreVert/>,
@@ -114,8 +121,14 @@ export const registerEditActions = registry => {
         buttonLabel: 'jcontent:label.contentEditor.edit.action.copyLanguage.name'
     });
 
+    registry.add('action', 'sbsTranslateEdit', translateEditAction, {
+        buttonIcon: <Translate/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
+        dataSelRole: 'sbsTranslateEdit'
+    });
+
     registry.add('action', 'sbsTranslate', translateAction, {
-        buttonIcon: <Language/>,
+        buttonIcon: <Translate/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         dataSelRole: 'sbsTranslate',
         requiredSitePermission: ['editAction']

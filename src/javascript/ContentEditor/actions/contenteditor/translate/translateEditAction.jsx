@@ -1,27 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useContentEditorApiContext} from '../../../contexts';
-import {useSelector} from 'react-redux';
-import {useNodeChecks} from '@jahia/data-helper';
+import {useContentEditorApiContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {TranslatePanel} from './TranslatePanel';
 import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
-export const TranslateActionComponent = ({path, render: Render, ...otherProps}) => {
+export const TranslateEditActionComponent = ({path, render: Render, ...otherProps}) => {
     const api = useContentEditorApiContext();
-    const lang = useSelector(state => state.language);
-    const res = useNodeChecks(
-        {path: path, language: lang},
-        {...otherProps, getSiteLanguages: true}
-    );
+    const {nodeData, lang, siteInfo} = useContentEditorContext();
 
-    const languages = res.node?.site?.languages?.filter(l => l.activeInEdit) || [];
+    const languages = siteInfo.languages?.filter(l => l.activeInEdit) || [];
     const sourceLang = languages.find(l => l.language !== lang) || languages[0];
-    return (res.loading) ? null : (
+
+    return (
         <Render {...otherProps}
-                enabled={languages.length > 1}
+                isVisible={languages.length > 1}
                 onClick={() => {
                     api.edit({
-                        uuid: res.node.uuid,
+                        uuid: nodeData.uuid,
                         lang: sourceLang.language,
                         isFullscreen: true,
                         dialogProps: {
@@ -36,11 +31,11 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
     );
 };
 
-TranslateActionComponent.propTypes = {
+TranslateEditActionComponent.propTypes = {
     render: PropTypes.func.isRequired,
     path: PropTypes.string.isRequired
 };
 
-export const translateAction = {
-    component: TranslateActionComponent
+export const translateEditAction = {
+    component: TranslateEditActionComponent
 };

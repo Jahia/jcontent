@@ -5,29 +5,21 @@ import {JContent} from './jcontent';
 
 export class File extends BasePage {
     media: Media;
-    fileName : string;
+    fileName: string;
 
-    constructor(media: Media, fileName : string) {
+    constructor(media: Media, fileName: string) {
         super();
         this.media = media;
         this.fileName = fileName;
     }
 
-    dndUpload(selector : string) : File {
+    dndUpload(selector: string): File {
         cy.get(selector).parent().selectFile({
             contents: Cypress.Buffer.from('file contents'),
             fileName: this.fileName,
             mimeType: 'text/plain',
             lastModified: Date.now()
         }, {action: 'drag-drop'});
-        // The wait is very important otherwise the upload will never complete
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1000);
-        return this;
-    }
-
-    dndUploadFromFixtures(selector: string, subFolder: string = '.'): File {
-        cy.get(selector).parent().selectFile(`cypress/fixtures/${subFolder}/${this.fileName}`, {action: 'drag-drop'});
         // The wait is very important otherwise the upload will never complete
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
@@ -42,7 +34,7 @@ export class File extends BasePage {
         return this.getUploadStatus().find('[data-sel-role="upload-error-msg"]').contains(msg);
     }
 
-    download() : File {
+    download(): File {
         this.getGridCard().contextMenu().selectByRole('downloadFile');
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(500);
@@ -74,7 +66,7 @@ export class File extends BasePage {
         return this;
     }
 
-    rename(newFileName : string) : File {
+    rename(newFileName: string): File {
         this.getGridCard().threeDotsMenu().selectByRole('rename');
         cy.get('input#folder-name').clear();
         cy.get('input#folder-name').type(newFileName);
@@ -83,7 +75,7 @@ export class File extends BasePage {
         return this;
     }
 
-    renameAfterUpload(newFileName : string) : File {
+    renameAfterUpload(newFileName: string): File {
         getComponentByAttr(Button, 'data-cm-role', 'upload-rename').get().click();
         getComponentByAttr(Button, 'data-cm-role', 'rename-dialog').get().should('be.disabled');
         cy.get('input#rename-dialog-text').clear();
@@ -93,7 +85,7 @@ export class File extends BasePage {
         return this;
     }
 
-    markForDeletion() : File {
+    markForDeletion(): File {
         this.getGridCard().contextMenu().selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();
         // Verify dialog has been dismissed before proceeding
@@ -101,7 +93,7 @@ export class File extends BasePage {
         return this;
     }
 
-    deletePermanently() : File {
+    deletePermanently(): File {
         // Delete the folder we just created permanently
         this.getGridCard().contextMenu().selectByRole('deletePermanently');
         cy.get('[data-sel-role="delete-permanently-button"]').click();

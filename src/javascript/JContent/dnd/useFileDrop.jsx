@@ -9,6 +9,7 @@ import {NativeTypes} from 'react-dnd-html5-backend';
 import JContentConstants from '~/JContent/JContent.constants';
 import {
     createMissingFolders,
+    DEFAULT_MIME_TYPE,
     fileIgnored,
     fileMatchSize,
     onFilesSelected
@@ -20,8 +21,6 @@ import {batchActions} from 'redux-batched-actions';
 import mime from 'mime';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
-
-const DEFAULT_MIME_TYPE = 'application/octet-stream';
 
 async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath}) {
     const files = [];

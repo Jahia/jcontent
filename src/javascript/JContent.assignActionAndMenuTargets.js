@@ -155,6 +155,7 @@ const actionTargetAssignments = {
         'editAdvanced',
         'editPage',
         'editPageAdvanced',
+        'sbsTranslate',
         'editSource',
         'editImage',
         'replaceFile',
@@ -197,7 +198,6 @@ const actionTargetAssignments = {
         'editPageAdvanced',
         'editSource',
         'editImage',
-        'openInNewTab',
         'sbsTranslate',
         'replaceFile',
         'locate',
@@ -236,7 +236,6 @@ const actionTargetAssignments = {
         'editPage',
         'editSource',
         'editImage',
-        'openInNewTab',
         'replaceFile',
         'locate',
         'unzip',
@@ -356,6 +355,11 @@ const actionTargetAssignments = {
         'startWorkflowMainButton'
     ],
     'content-editor/header/3dots': [
+        'goToWorkInProgress',
+        'sbsTranslateEdit',
+        'copyLanguageAction'
+    ],
+    'translate/header/3dots': [
         'goToWorkInProgress',
         'copyLanguageAction'
     ]

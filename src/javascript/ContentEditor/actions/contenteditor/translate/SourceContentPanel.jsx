@@ -25,7 +25,9 @@ export const SourceContentPanel = () => {
             ...ceConfigContext.sideBySideContext,
             enabled: true,
             readOnly: true,
-            translateLang: ceConfigContext.lang
+            translateLang: ceConfigContext.lang,
+            hasWritePermission: ceContext.nodeData?.hasWritePermission,
+            lockedAndCannotBeEdited: ceContext.nodeData?.lockedAndCannotBeEdited
         }
     };
 

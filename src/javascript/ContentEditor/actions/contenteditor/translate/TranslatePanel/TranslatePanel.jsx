@@ -1,37 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.scss';
+import styles from '../styles.scss';
 import {LayoutContent} from '@jahia/moonstone';
 import {EditPanelHeader} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelHeader';
-import {FormBuilder} from '../../../editorTabs/EditPanelContent/FormBuilder';
-import {EditPanelLanguageSwitcher} from '../../../ContentEditor/EditPanel/EditPanelLanguageSwitcher';
-import {useSyncScroll} from './useSyncScroll';
-import clsx from 'clsx';
+import {FormBuilder} from '../../../../editorTabs/EditPanelContent/FormBuilder';
+import {EditPanelLanguageSwitcher} from '../../../../ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
-import {useResizeWatcher} from './useResizeWatcher';
 import {SourceContentPanel} from './SourceContentPanel';
 import {useTranslation} from 'react-i18next';
-
-const TwoPanelsContent = ({leftCol, rightCol}) => {
-    const {leftColRef, rightColRef} = useSyncScroll();
-    useResizeWatcher({columnSelector: 'right-column'});
-
-    return (
-        <div className={styles.twoColumnsRoot}>
-            <div ref={leftColRef} className={clsx(styles.col, styles.hideScrollbar)} data-sel-role="left-column">
-                {leftCol}
-            </div>
-            <div ref={rightColRef} className={styles.col} data-sel-role="right-column">
-                {rightCol}
-            </div>
-        </div>
-    );
-};
-
-TwoPanelsContent.propTypes = {
-    leftCol: PropTypes.node,
-    rightCol: PropTypes.node
-};
+import {TwoPanelsContent} from './TwoPanelsContent';
 
 export const TranslatePanel = ({title}) => {
     const {mode} = useContentEditorConfigContext();

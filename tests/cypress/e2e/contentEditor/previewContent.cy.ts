@@ -1,6 +1,6 @@
 import {PageComposer} from '../../page-object/pageComposer';
 import {addNode, deleteNode, enableModule, disableModule} from '@jahia/cypress';
-import {ContentEditor} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
 
 describe('Preview tests', () => {
     const siteKey = 'digitall';
@@ -72,5 +72,35 @@ describe('Preview tests', () => {
         contentEditor.switchToAdvancedMode();
 
         contentEditor.validateContentIsVisibleInPreview('This is a simple text');
+    });
+
+    it('It updates preview after save', () => {
+        addNode({
+            parentPathOrId: '/sites/digitall/contents',
+            name: 'Simple text',
+            primaryNodeType: 'jnt:text'
+        });
+
+        cy.loginAndStoreSession();
+        const jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
+        const contentEditor = new ContentEditor();
+
+        jcontent.editComponentByText('Simple text');
+        contentEditor.switchToAdvancedMode();
+
+        // check preview badge is not displayed
+        cy.contains('span', 'Preview will update on save').should('not.exist');
+
+        // update content
+        cy.get('input[id="jnt:text_text"]').clear().type('Text updated', {force: true});
+
+        // check preview badge is displayed
+        cy.contains('span', 'Preview will update on save').should('exist');
+
+        contentEditor.save();
+
+        // check preview badge is not displayed
+        cy.contains('span', 'Preview will update on save').should('not.exist');
+        contentEditor.validateContentIsVisibleInPreview('Text updated');
     });
 });

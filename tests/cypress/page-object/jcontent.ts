@@ -265,6 +265,12 @@ export class JContent extends BasePage {
     getCompareDialog(): CompareDialog {
         return getComponent(CompareDialog);
     }
+
+    openContextualMenu(text: string) {
+        const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
+        row.get().scrollIntoView();
+        row.contextMenu();
+    }
 }
 
 export class JContentPageBuilder extends JContent {

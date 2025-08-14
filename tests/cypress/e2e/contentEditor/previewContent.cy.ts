@@ -92,7 +92,8 @@ describe('Preview tests', () => {
         cy.contains('span', 'Preview will update on save').should('not.exist');
 
         // Update content
-        cy.get('input[id="jnt:text_text"]').clear().type('Text updated', {force: true});
+        cy.get('input[id="jnt:text_text"]').clear();
+        cy.get('input[id="jnt:text_text"]').type('Text updated', { force: true });
 
         // Check preview badge is displayed
         cy.contains('span', 'Preview will update on save').should('exist');

@@ -31,6 +31,12 @@ describe('Publication manager tests', () => {
             .then(() => {
                 const pageAccordion = jcontent.getAccordionItem('pages');
                 let menu = pageAccordion.getTreeItem('home').contextMenu();
+
+                // There is some registry action pop-in that happens here that messes up with hover
+                // Confirm they are visible before proceeding
+                menu.shouldHaveItem('New Page');
+                menu.shouldHaveItem('New...');
+
                 menu = menu.submenu('Publish', 'jcontent-publishMenu');
                 menu.should('be.visible');
                 menu.select('Publication manager');

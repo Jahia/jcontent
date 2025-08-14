@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorApiContext, useContentEditorContext} from '~/ContentEditor/contexts';
-import {TranslatePanel} from './TranslatePanel';
+import {TranslatePanel} from './TranslatePanel/TranslatePanel';
 import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
 export const TranslateEditActionComponent = ({path, render: Render, ...otherProps}) => {

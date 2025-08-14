@@ -101,5 +101,36 @@ describe('constraints', () => {
         // Verify content created
         jcontent.getTable().getRowByLabel('simple-text').should('be.visible');
     });
+
+    it('should list all constraints when 4 or less constraints exist', () => {
+        jcontent = JContent
+            .visit('jcontentSite', 'en', 'content-folders/contents');
+        jcontent.openContextualMenu("constraintList4");
+
+        // Verify all constraint options are displayed
+        const expectedConstraints = [
+            'New constraintChild1',
+            'New constraintChild2',
+            'New constraintChild3',
+            'New constraintChild4'
+        ];
+
+        expectedConstraints.forEach(constraintText => {
+            cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]')
+                .contains(constraintText)
+                .should('be.visible');
+        });
+    });
+
+    it('should list "new content" when more than 4 constraints exist', () => {
+        jcontent = JContent
+            .visit('jcontentSite', 'en', 'content-folders/contents');
+        jcontent.openContextualMenu("constraintList6");
+
+        // Verify "New content" option is displayed
+        cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]')
+            .contains('New content')
+            .should('be.visible');
+    });
 });
 

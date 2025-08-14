@@ -46,6 +46,7 @@ describe('test Copy Language action', () => {
         });
     };
 
+    /** Open FR editor and copy from 'fromLang' language */
     const setCopyLanguage = (path: string, fromLang: string, buttonRole: string) => {
         JContent.visit(TwoLanguagesSiteKey, 'fr', path).editContent();
         getComponentByRole(Button, 'copyLanguageAction').click();
@@ -101,7 +102,7 @@ describe('test Copy Language action', () => {
         setCopyLanguage('content-folders/contents/all-fields-empty', 'English', 'apply-button');
         contentEditor.save();
 
-        getNodeByPath(`/sites/${TwoLanguagesSiteKey}/contents/all-fields-empty`, ['smallText', 'textarea'], 'fr').then(result => {
+        getNodeByPath(path, ['smallText', 'textarea'], 'fr').then(result => {
             const props = result.data.jcr.nodeByPath.properties;
 
             cy.log('Check that smallText value has been removed and does not exist anymore in French');
@@ -111,6 +112,33 @@ describe('test Copy Language action', () => {
             cy.log('Check that text area value has been copied from English to French');
             const textareaProp = props.find((prop: { name: string; }) => prop.name === 'textarea');
             expect(textareaProp.value).to.eq('Other text in English');
+        });
+    });
+
+    it('copies values for multiple field and saves', () => {
+        addNode({
+            parentPathOrId: `/sites/${TwoLanguagesSiteKey}/contents`,
+            primaryNodeType: 'qant:allFieldsMultiple',
+            name: 'all-fields-multiple',
+            properties: [
+                {name: 'bigtext', values: ['en1', 'en2'], language: 'en'},
+                {name: 'bigtext', values: ['fr1', 'fr2'], language: 'fr'}
+            ]
+        });
+        const path = `/sites/${TwoLanguagesSiteKey}/contents/all-fields-multiple`;
+
+        const contentEditor = new ContentEditor();
+
+        setCopyLanguage('content-folders/contents/all-fields-multiple', 'English', 'apply-button');
+        contentEditor.save();
+
+        getNodeByPath(path, ['bigtext'], 'fr').then(result => {
+            const props = result.data.jcr.nodeByPath.properties;
+
+            cy.log('Check that smallText value has been removed and does not exist anymore in French');
+            const bigtextProp = props.find((prop: { name: string; }) => prop.name === 'bigtext');
+            expect(bigtextProp.values).to.contains('en1');
+            expect(bigtextProp.values).to.contains('en2');
         });
     });
 });

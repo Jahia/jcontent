@@ -109,8 +109,7 @@ export const CopyLanguageDialog = ({
                             };
                         }))}
                         onChange={handleOnChange}
-                    />
-                }
+                    />}
                 <Typography className={styles.label}>
                     {t('jcontent:label.contentEditor.edit.action.copyLanguage.currentLanguage')}
                 </Typography>

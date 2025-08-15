@@ -11,7 +11,7 @@ import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/Ordera
 export const MultipleField = ({editorContext, inputContext, field, onChange, onBlur}) => {
     const {values, setFieldValue, setFieldTouched} = useFormikContext();
     const {t} = useTranslation('jcontent');
-    const fieldValue = values[field.name] ?? [];
+    const fieldValue = Array.isArray(values[field.name]) ? values[field.name] : [];
 
     const {reorderedItems, handleReorder, reset} = useReorderList(fieldValue);
 

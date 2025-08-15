@@ -67,6 +67,7 @@ export const Edit = () => {
                 <Formik
                     validateOnMount
                     validateOnChange={false}
+                    validateOnBlur={false}
                     initialValues={initialValues}
                     validate={validate(sections)}
                     onSubmit={handleSubmit}

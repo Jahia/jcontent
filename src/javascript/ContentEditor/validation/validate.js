@@ -123,8 +123,6 @@ const rangeFieldValidation = (values, field) => {
             }
         })
         .some(isConstraintRespected => isConstraintRespected === true) ? undefined : 'invalidRange';
-    console.log(r);
-    return r;
 };
 
 const patternFieldValidation = (values, field) => {

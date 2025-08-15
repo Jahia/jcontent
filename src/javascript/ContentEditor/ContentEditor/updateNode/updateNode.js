@@ -72,6 +72,8 @@ export const updateNode = ({
         refetchPreview(getPreviewPath(info.updatedNode), language);
         return info;
     }, error => {
+        // Log error information as the toast is not very informative
+        console.error(error);
         onServerError(error, actions, i18nContext, language, notificationContext, t, dataToMutate.propFieldNameMapping, 'jcontent:label.contentEditor.edit.action.save.error');
     });
 };

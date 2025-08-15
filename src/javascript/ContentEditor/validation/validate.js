@@ -80,7 +80,21 @@ const rangeFieldValidation = (values, field) => {
     // Ok to not validate empty (undefined) values; they are ignored when saving
     fieldValues = fieldValues.filter(value => typeof value !== 'undefined');
     // If one value is invalid, error !
-    if (fieldValues.some(value => isNaN(value))) {
+    // Note that we need to take into consideration value type otherwise user can input 2.3 for LONG
+    const hasInvalidType = fieldValues.some(value => {
+        const num = Number(value);
+        switch (field.requiredType) {
+            case 'LONG':
+                return !Number.isInteger(num);
+            case 'DECIMAL':
+            case 'DOUBLE':
+                return typeof num !== 'number';
+            default:
+                return false;
+        }
+    });
+
+    if (hasInvalidType) {
         return 'invalidNumber';
     }
 
@@ -109,6 +123,8 @@ const rangeFieldValidation = (values, field) => {
             }
         })
         .some(isConstraintRespected => isConstraintRespected === true) ? undefined : 'invalidRange';
+    console.log(r);
+    return r;
 };
 
 const patternFieldValidation = (values, field) => {

@@ -93,7 +93,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        setCurrentElement(null);
         if (event.relatedTarget && event.currentTarget.id === currentElement?.id &&
             !isDescendantOrSelf(
                 getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),

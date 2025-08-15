@@ -13,7 +13,7 @@ export const TranslateEditActionComponent = ({path, render: Render, ...otherProp
 
     return (
         <Render {...otherProps}
-                isVisible={languages.length > 1}
+                isVisible={nodeData?.hasTranslatePermission && languages.length > 1}
                 onClick={() => {
                     api.edit({
                         uuid: nodeData.uuid,

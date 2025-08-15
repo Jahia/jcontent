@@ -90,6 +90,7 @@ const NodeDataFragment = {
                 }
                 hasWritePermission: hasPermission(permissionName: $writePermission)
                 hasPublishPermission: hasPermission(permissionName: "publish")
+                hasTranslatePermission: hasPermission(permissionName: "translateAction")
                 hasStartPublicationWorkflowPermission: hasPermission(permissionName: "publication-start")
                 lockInfo {
                     details(language: $language) {

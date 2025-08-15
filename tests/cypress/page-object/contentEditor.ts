@@ -103,6 +103,10 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'submitSave').click();
     }
 
+    discardErrorDialog() {
+        getComponentByRole(Button, 'content-type-dialog-cancel').click();
+    }
+
     editSavedContent() {
         cy.get('[role="alertdialog"]').should('be.visible').find('.moonstone-button').click();
     }

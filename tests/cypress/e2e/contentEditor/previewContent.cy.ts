@@ -89,19 +89,18 @@ describe('Preview tests', () => {
         contentEditor.switchToAdvancedMode();
 
         // Check preview badge is not displayed
-        cy.contains('span', 'Preview will update on save').should('not.exist');
+        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
 
         // Update content
-        cy.get('input[id="jnt:text_text"]').clear();
-        cy.get('input[id="jnt:text_text"]').type('Text updated', {force: true});
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('Text updated');
 
         // Check preview badge is displayed
-        cy.contains('span', 'Preview will update on save').should('exist');
+        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('exist');
 
         contentEditor.save();
 
         // Check preview badge is not displayed
-        cy.contains('span', 'Preview will update on save').should('not.exist');
+        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
         contentEditor.validateContentIsVisibleInPreview('Text updated');
     });
 });

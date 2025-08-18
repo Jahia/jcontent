@@ -31,19 +31,19 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
     if (isNumber) {
         return (
             <NumericFormat
+                allowNegative
                 id={id}
                 name={id}
                 size="big"
                 customInput={Input}
                 value={value || ''}
                 decimalSeparator={decimalSeparator}
-                allowNegative={true}
                 decimalScale={fieldType === 'LONG' ? 0 : undefined}
-                onValueChange={(values) => onChange(values.value)}
-                onBlur={onBlur}
                 disabled={field.readOnly}
                 aria-labelledby={`${field.name}-label`}
                 aria-required={field.mandatory}
+                onValueChange={values => onChange(values.value)}
+                onBlur={onBlur}
             />
         );
     }

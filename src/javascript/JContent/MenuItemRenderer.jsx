@@ -19,7 +19,10 @@ export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, men
     }
 
     const onEnter = e => {
-        onMouseEnter(e);
+        if (onMouseEnter) {
+            onMouseEnter(e);
+        }
+
         setHover(true);
     };
 

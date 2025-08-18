@@ -18,6 +18,16 @@ describe('constraints', () => {
             primaryNodeType: 'jnt:contentFolder',
             children: [{name: 'subfolder1', primaryNodeType: 'jnt:contentFolder'}]
         });
+        addNode({
+            name: 'constraintlist4',
+            parentPathOrId: '/sites/jcontentSite/contents',
+            primaryNodeType: 'qant:constraintList4'
+        });
+        addNode({
+            name: 'constraintlist6',
+            parentPathOrId: '/sites/jcontentSite/contents',
+            primaryNodeType: 'qant:constraintList6'
+        });
     });
 
     after(() => {
@@ -102,10 +112,10 @@ describe('constraints', () => {
         jcontent.getTable().getRowByLabel('simple-text').should('be.visible');
     });
 
-    it('should list all constraints when 4 or less constraints exist', () => {
+    it('Should list all constraints when 4 or less constraints exist', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents');
-        jcontent.openContextualMenu('constraintList4');
+        jcontent.openTableContextualMenuByText('constraintList4');
 
         // Verify all constraint options are displayed
         const expectedConstraints = [
@@ -122,10 +132,10 @@ describe('constraints', () => {
         });
     });
 
-    it('should list "new content" when more than 4 constraints exist', () => {
+    it('Should list "new content" when more than 4 constraints exist', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents');
-        jcontent.openContextualMenu('constraintList6');
+        jcontent.openTableContextualMenuByText('constraintList6');
 
         // Verify "New content" option is displayed
         cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]')

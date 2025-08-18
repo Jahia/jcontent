@@ -266,7 +266,7 @@ export class JContent extends BasePage {
         return getComponent(CompareDialog);
     }
 
-    openContextualMenu(text: string) {
+    openTableContextualMenuByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
         row.get().scrollIntoView();
         row.contextMenu();

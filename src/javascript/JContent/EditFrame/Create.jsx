@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
@@ -183,14 +183,14 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         }
     }
 
-    const onAction = onActionFn => {
+    const onAction = useCallback(onActionFn => {
         const needsReorder = element.getAttribute('type') !== 'placeholder';
         return data => {
             if (needsReorder) {
                 onActionFn(data);
             }
         };
-    };
+    }, [element]);
 
     const createAction = useMemo(() => (
         <DisplayAction

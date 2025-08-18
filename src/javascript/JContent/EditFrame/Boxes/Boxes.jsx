@@ -374,6 +374,58 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     const el = currentElement?.element;
 
+    const memoizedPlaceholders = useMemo(() => {
+        if (clickedElement) {
+            return null;
+        }
+
+        return placeholders
+            .map(element => ({
+                element,
+                node: nodes?.[element.dataset.jahiaParent &&
+                element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
+            }))
+            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden)
+            .map(({node, element}) => (
+                <Create key={element.getAttribute('id')}
+                        node={node}
+                        nodes={nodes}
+                        element={element}
+                        addIntervalCallback={addIntervalCallback}
+                        clickedElement={clickedElement}
+                        onMouseOver={onMouseOver}
+                        onMouseOut={onMouseOut}
+                        onClick={onClick}
+                        onSaved={onSaved}
+                />
+            ));
+    }, [
+        clickedElement,
+        placeholders,
+        nodes,
+        addIntervalCallback,
+        onMouseOver,
+        onMouseOut,
+        onClick,
+        onSaved
+    ]);
+
+    const MemoizedInsertionPoints = useMemo(() => (
+        <InsertionPoints
+            currentDocument={currentDocument}
+            addIntervalCallback={addIntervalCallback}
+            clickedElement={clickedElement}
+            nodes={nodes}
+            onSaved={onSaved}
+        />
+    ), [
+        currentDocument,
+        addIntervalCallback,
+        clickedElement,
+        nodes,
+        onSaved
+    ]);
+
     return (
         <div>
             <BoxesContextMenu
@@ -422,25 +474,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     />
                 ))}
 
-            {!clickedElement && placeholders.map(element => ({
-                element,
-                node: nodes?.[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
-            }))
-                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden)
-                .map(({node, element}) => (
-                    <Create key={element.getAttribute('id')}
-                            node={node}
-                            nodes={nodes}
-                            element={element}
-                            addIntervalCallback={addIntervalCallback}
-                            clickedElement={clickedElement}
-                            onMouseOver={onMouseOver}
-                            onMouseOut={onMouseOut}
-                            onClick={onClick}
-                            onSaved={onSaved}
-                    />
-                ))}
-            <InsertionPoints currentDocument={currentDocument} addIntervalCallback={addIntervalCallback} clickedElement={clickedElement} nodes={nodes} onSaved={onSaved}/>
+            {memoizedPlaceholders}
+            {MemoizedInsertionPoints}
         </div>
     );
 };

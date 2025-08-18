@@ -3,21 +3,26 @@ import {Field} from './field';
 export class SmallTextField extends Field {
     static ADD_FIELD_SEL = 'button[data-sel-action="addField"]';
 
-    addNewValue(newValue: string, force = false) {
+    addNewValue(newValue: string, force = false, checked = true) {
         if (this.multiple) {
             this.get().find(SmallTextField.ADD_FIELD_SEL).click();
             this.get().find('input').last().as('textinput');
             // Prevent field from being hidden by sticky header
             this.get().scrollIntoView();
             cy.get('@textinput').type(newValue, {force: force});
-            cy.get('@textinput').should('have.value', newValue);
+
+            if (checked) {
+                cy.get('@textinput').should('have.value', newValue);
+            }
         } else {
             this.get().find('input[type="text"]').as('textinput');
             // Prevent field from being hidden by sticky header
             this.get().scrollIntoView();
             cy.get('@textinput').clear({force: force, scrollBehavior: false});
             cy.get('@textinput').type(newValue, {force: force, scrollBehavior: false});
-            cy.get('@textinput').should('have.value', newValue);
+            if (checked) {
+                cy.get('@textinput').should('have.value', newValue);
+            }
         }
 
         return this;

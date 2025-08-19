@@ -177,9 +177,8 @@ export class ContentEditor extends BasePage {
     }
 
     validateContentIsVisibleInPreview(content: string) {
-        cy.iframe('[data-sel-role="edit-preview-frame"]', {timeout: 90000, log: true}).within(() => {
-            cy.contains(content, {timeout: 90000}).should('be.visible');
-        });
+        cy.iframe('[data-sel-role="edit-preview-frame"]', {timeout: 90000})
+            .contains(content, {timeout: 90000}).should('be.visible'); // Will retry until content is found
     }
 
     validateContentIsNotVisibleInPreview(content: string) {

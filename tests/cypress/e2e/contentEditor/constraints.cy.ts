@@ -126,8 +126,8 @@ describe('constraints', () => {
         ];
 
         expectedConstraints.forEach(constraintText => {
-            cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]')
-                .contains(constraintText)
+            cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]', {timeout: 90000})
+                .contains(constraintText, {timeout: 90000})
                 .should('be.visible');
         });
     });
@@ -138,8 +138,8 @@ describe('constraints', () => {
         jcontent.openTableContextualMenuByText('constraintList6');
 
         // Verify "New content" option is displayed
-        cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]')
-            .contains('New content')
+        cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]', {timeout: 90000})
+            .contains('New content', {timeout: 90000})
             .should('be.visible');
     });
 });

@@ -27,7 +27,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
                         isFullscreen: true,
                         dialogProps: {
                             classes: {},
-                            dataSelRole: 'translate-dialog',
+                            dataSelRole: 'translate-dialog'
                         },
                         sideBySideContext: {lang},
                         layout: TranslatePanel,

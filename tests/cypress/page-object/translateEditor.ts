@@ -1,12 +1,11 @@
-import {ContentEditor} from "./contentEditor";
-import {JContent} from "./jcontent";
-import {Field} from "./fields";
-import {ComponentType} from "@jahia/cypress/src/page-object/baseComponent";
-import {BaseComponent, getComponent, getComponentByAttr, getComponentBySelector} from "@jahia/cypress";
-import {LanguageSwitcher} from "./languageSwitcher";
+import {ContentEditor} from './contentEditor';
+import {JContent} from './jcontent';
+import {Field} from './fields';
+import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
+import {BaseComponent, getComponentByAttr, getComponentBySelector} from '@jahia/cypress';
+import {LanguageSwitcher} from './languageSwitcher';
 
 export class TranslateEditor extends ContentEditor {
-
     sourceColumnComponent: BaseComponent;
     translateColumnComponent: BaseComponent;
 
@@ -33,6 +32,7 @@ export class TranslateEditor extends ContentEditor {
         if (!this.sourceColumnComponent) {
             this.sourceColumnComponent = new BaseComponent(cy.get('[data-sel-role="left-column"]'));
         }
+
         return this.sourceColumnComponent;
     }
 
@@ -40,6 +40,7 @@ export class TranslateEditor extends ContentEditor {
         if (!this.translateColumnComponent) {
             this.translateColumnComponent = new BaseComponent(cy.get('[data-sel-role="right-column"]'));
         }
+
         return this.translateColumnComponent;
     }
 

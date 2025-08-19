@@ -21,7 +21,7 @@ export class Field extends BaseComponent {
     }
 
     isReadOnly() {
-        this.get().should('have.attr', 'data-sel-content-editor-field-readonly', 'true')
+        this.get().should('have.attr', 'data-sel-content-editor-field-readonly', 'true');
     }
 
     getTranslateFieldAction(): Cypress.Chainable {

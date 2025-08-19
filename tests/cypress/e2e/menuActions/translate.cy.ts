@@ -9,9 +9,9 @@ import {
     getComponentByRole, getNodeByPath,
     grantRoles
 } from '@jahia/cypress';
-import {TranslateEditor} from "../../page-object/translateEditor";
-import {JContent} from "../../page-object";
-import {Field, SmallTextField} from "../../page-object/fields";
+import {TranslateEditor} from '../../page-object/translateEditor';
+import {JContent} from '../../page-object';
+import {Field, SmallTextField} from '../../page-object/fields';
 import {Dialog} from '../../page-object/dialog';
 
 describe('translate action tests', () => {
@@ -65,7 +65,7 @@ describe('translate action tests', () => {
         const jcontent = JContent.visit(oneLangSite, 'en', 'pages/home');
         const menu = jcontent.getAccordionItem('pages').getTreeItem('home').contextMenu();
         menu.shouldHaveRoleItem('sbsTranslate');
-        menu.get().find(`.moonstone-menuItem[data-sel-role="sbsTranslate"]`).should('have.attr', 'aria-disabled', 'true');
+        menu.get().find('.moonstone-menuItem[data-sel-role="sbsTranslate"]').should('have.attr', 'aria-disabled', 'true');
     });
 
     it('can open translate dialog on contents and has the correct settings', () => {
@@ -92,7 +92,7 @@ describe('translate action tests', () => {
             'qant:allFields_long',
             'qant:allFields_double',
             'qant:allFields_bigtext',
-            'qant:allFields_color',
+            'qant:allFields_color'
         ].forEach(fieldName => {
             translateEditor.getSourceField(SmallTextField, fieldName)
                 .getTranslateFieldAction()
@@ -125,7 +125,7 @@ describe('translate action tests', () => {
         cy.log('Verify translate fields are `disabled` on empty');
         [
             'htmlHead_jcr:description',
-            'htmlHead_seoKeywords',
+            'htmlHead_seoKeywords'
         ].forEach(fieldName => {
             translateEditor.getSourceField(SmallTextField, fieldName)
                 .getTranslateFieldAction()
@@ -164,7 +164,7 @@ describe('translate action tests', () => {
         translateEditor.getTranslateField(SmallTextField, 'qant:allFields_smallText').checkValue('smallText in English');
 
         cy.log('Verify close prompts unsaved changes');
-        getComponentByRole(Button, 'backButton').click()
+        getComponentByRole(Button, 'backButton').click();
         getComponent(Dialog).get().contains('Unsaved changes').should('be.visible');
         getComponentByRole(Button, 'close-dialog-cancel').click();
 
@@ -173,8 +173,8 @@ describe('translate action tests', () => {
         getNodeByPath(`${parentPath}/${name}`, ['smallText'], 'fr').then(result => {
             cy.log('Verify fr translations');
             const props = result.data.jcr.nodeByPath.properties;
-            const prop = props.find((prop: { name: string; }) => prop.name === 'smallText');
-            expect(prop.value).to.eq('smallText in English');
+            const smallTextProp = props.find((prop: { name: string; }) => prop.name === 'smallText');
+            expect(smallTextProp.value).to.eq('smallText in English');
         });
 
         getNodeByPath(`${parentPath}/${name}`, ['long', 'textarea'], 'de').then(result => {
@@ -186,5 +186,4 @@ describe('translate action tests', () => {
             expect(textareaProp.value).to.eq('textarea in English');
         });
     });
-
 });

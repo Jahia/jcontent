@@ -1,6 +1,6 @@
 import {Dropdown} from '@jahia/cypress';
-import {getComponent} from "@jahia/cypress";
-import {Menu} from "@jahia/cypress";
+import {getComponent} from '@jahia/cypress';
+import {Menu} from '@jahia/cypress';
 
 export class LanguageSwitcher extends Dropdown {
     static defaultSelector = '[data-cm-role="language-switcher"]';

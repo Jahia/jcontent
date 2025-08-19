@@ -100,7 +100,7 @@ export class ContentEditor extends BasePage {
     }
 
     saveUnchecked() {
-        getComponentByRole(Button, 'submitSave').click();
+        this.save(false);
     }
 
     discardErrorDialog() {

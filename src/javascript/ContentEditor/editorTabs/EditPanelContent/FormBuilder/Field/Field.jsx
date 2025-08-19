@@ -244,6 +244,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
             data-sel-content-editor-field-type={seleniumFieldType}
             data-sel-content-editor-field-picker-type={pickerType}
             data-sel-content-editor-field-readonly={field.readOnly}
+            data-sel-i18n={field.i18n}
         >
             {renderField(inputContext, field, isMultipleField, idInput, hasMandatoryError, t, wipInfo, editorContext, selectorType, onChange, onBlur, shouldDisplayErrors, errorName, errorArgs)}
         </div>

@@ -179,7 +179,7 @@ export class ContentEditor extends BasePage {
 
     validateContentIsNotVisibleInPreview(content: string) {
         cy.iframe('[data-sel-role="edit-preview-frame"]', {timeout: 30000, log: true}).within(() => {
-        cy.contains(content, {timeout: 5000}).should('not.exist');
+            cy.contains(content, {timeout: 5000}).should('not.exist');
         });
     }
 

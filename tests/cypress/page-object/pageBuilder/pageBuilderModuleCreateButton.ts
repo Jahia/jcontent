@@ -15,6 +15,10 @@ export class PageBuilderModuleCreateButton extends BaseComponent {
         return new Button(this.get().find('button[data-sel-role="createContent"]').first());
     }
 
+    getInsertionButtonByIndex(index: number): Button {
+        return new Button(this.get().find('button[data-sel-role="createContent"]').eq(index));
+    }
+
     assertHasNoButton(): void {
         this.get().find('.moonstone-button').should('not.exist');
     }

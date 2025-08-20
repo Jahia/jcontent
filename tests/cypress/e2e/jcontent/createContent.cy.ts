@@ -79,7 +79,7 @@ describe('Create content tests', () => {
             const module = jcontent.getModule(`/sites/${siteKey}/home/landing`);
             module.click({force: true});
             const buttons = module.getCreateButtons();
-            buttons.getFirstInsertionButton().click();
+            buttons.getInsertionButtonByIndex(1).click();
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
             contentEditor.getRichTextField('jnt:bigText_text').type('Newly inserted content');
             contentEditor.create();

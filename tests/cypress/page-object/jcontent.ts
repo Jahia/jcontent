@@ -74,11 +74,24 @@ export class JContent extends BasePage {
             .create();
     }
 
+    // @deprecated: use editComponentByRowName instead
     editComponentByText(text: string) {
         const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
         row.get().scrollIntoView();
         row.contextMenu().select('Edit');
         return new ContentEditor();
+    }
+
+    editComponentByRowName(name: string) {
+        this.selectContextMenuByRowName(name, 'edit');
+        return new ContentEditor();
+    }
+
+    selectContextMenuByRowName(rowName: string, menuRole: string): Menu {
+        return this.getTable()
+            .getRowByName(rowName)
+            .contextMenu()
+            .selectByRole(menuRole);
     }
 
     getCreatePage(): void {
@@ -104,12 +117,6 @@ export class JContent extends BasePage {
         getComponentByRole(Button, 'browseControlBarMenu').click();
         cy.get('li[data-sel-role="import"]').should('exist').and('be.visible').click();
         cy.get('#file-upload-input').selectFile(filename, {force: true});
-    }
-
-    viewSubContentComponentByText(text: string) {
-        const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
-        row.get().scrollIntoView();
-        row.contextMenu().select('View sub-contents');
     }
 
     getSiteSwitcher(): Dropdown {

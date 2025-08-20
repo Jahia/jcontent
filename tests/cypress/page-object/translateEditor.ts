@@ -11,12 +11,9 @@ export class TranslateEditor extends ContentEditor {
 
     advancedMode: boolean = true;
 
-    static visitContent(siteKey: string, lang: string, path: string, name) {
+    static visitContent(siteKey: string, lang: string, path: string, name: string) {
         const jcontent = JContent.visit(siteKey, lang, path).switchToListMode();
-        jcontent.getTable()
-            .getRowByName(name)
-            .contextMenu()
-            .selectByRole('sbsTranslate');
+        jcontent.selectContextMenuByRowName(name, 'sbsTranslate');
         return new TranslateEditor();
     }
 

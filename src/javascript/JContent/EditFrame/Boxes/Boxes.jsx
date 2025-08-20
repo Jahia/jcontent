@@ -18,6 +18,7 @@ import InsertionPoints from '../InsertionPoints';
 import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
+import styles from './Boxes.scss';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -374,10 +375,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const el = currentElement?.element;
 
     const memoizedPlaceholders = useMemo(() => {
-        if (clickedElement) {
-            return null;
-        }
-
         return placeholders
             .map(element => ({
                 element,
@@ -386,17 +383,19 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             }))
             .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden)
             .map(({node, element}) => (
-                <Create key={element.getAttribute('id')}
-                        node={node}
-                        nodes={nodes}
-                        element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        clickedElement={clickedElement}
-                        onMouseOver={onMouseOver}
-                        onMouseOut={onMouseOut}
-                        onClick={onClick}
-                        onSaved={onSaved}
-                />
+                <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
+                    <Create key={element.getAttribute('id')}
+                            node={node}
+                            nodes={nodes}
+                            element={element}
+                            addIntervalCallback={addIntervalCallback}
+                            clickedElement={clickedElement}
+                            onMouseOver={onMouseOver}
+                            onMouseOut={onMouseOut}
+                            onClick={onClick}
+                            onSaved={onSaved}
+                    />
+                </div>
             ));
     }, [
         clickedElement,

@@ -11,10 +11,6 @@ export class PageBuilderModuleCreateButton extends BaseComponent {
         return getComponentByRole(Button, role, this);
     }
 
-    getFirstInsertionButton(): Button {
-        return new Button(this.get().find('button[data-sel-role="createContent"]').first());
-    }
-
     getInsertionButtonByIndex(index: number): Button {
         return new Button(this.get().find('button[data-sel-role="createContent"]').eq(index));
     }

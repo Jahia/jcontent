@@ -19,4 +19,12 @@ export class Field extends BaseComponent {
             .should('be.visible')
             .and('have.attr', 'data-sel-content-editor-field-mandatory', 'true');
     }
+
+    isReadOnly() {
+        this.get().should('have.attr', 'data-sel-content-editor-field-readonly', 'true');
+    }
+
+    getTranslateFieldAction(): Cypress.Chainable {
+        return this.get().scrollIntoView().parent().find('[data-sel-role="translate-field"]');
+    }
 }

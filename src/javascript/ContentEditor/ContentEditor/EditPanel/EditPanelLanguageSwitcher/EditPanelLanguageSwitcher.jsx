@@ -32,6 +32,9 @@ export const EditPanelLanguageSwitcher = () => {
             group.options.push({
                 label,
                 value: item.language,
+                attributes: {
+                    'data-value': item.language
+                },
                 iconEnd: i18nContext[item.language] ? <Edit/> : null
             });
         });
@@ -51,6 +54,7 @@ export const EditPanelLanguageSwitcher = () => {
                 value={currentLanguage}
                 label={langLabel}
                 size="small"
+                data-selected-value={currentLanguage}
                 onChange={(e, language) => {
                     if (language.value !== currentLanguage) {
                         switchLanguage(language.value);

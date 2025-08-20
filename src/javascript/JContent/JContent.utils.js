@@ -350,7 +350,7 @@ export const JahiaAreasUtil = {
     }
 };
 
-export const resolveUrlForLiveOrPreview = (url, isLive, serverName, hidePersonaPanel) => {
+export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
     if (!url || url.match(/^https*:\/\//)) {
         return url;
     }
@@ -362,5 +362,5 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName, hidePersonaP
         host = serverName;
     }
 
-    return `${location.protocol}//${host}:${location.port}${url}${hidePersonaPanel ? '?hidePersonaPanel' : ''}`;
+    return `${location.protocol}//${host}:${location.port}${url}`;
 };

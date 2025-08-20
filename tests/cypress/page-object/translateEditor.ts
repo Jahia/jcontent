@@ -14,7 +14,12 @@ export class TranslateEditor extends ContentEditor {
     static visitContent(siteKey: string, lang: string, path: string, name: string) {
         const jcontent = JContent.visit(siteKey, lang, path).switchToListMode();
         jcontent.selectContextMenuByRowName(name, 'sbsTranslate');
-        return new TranslateEditor();
+
+        const _instance = new TranslateEditor();
+        // Make sure the translate editor is loaded before proceeding
+        _instance.getTranslateColumn().get().get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        _instance.getSourceColumn().get().get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        return _instance;
     }
 
     static visitPage(siteKey: string, lang: string, path: string, name) {

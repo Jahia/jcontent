@@ -126,10 +126,10 @@ describe('constraints', () => {
         ];
 
         const contextMenu = jcontent.openContextMenuByRowName('constraintlist4');
-            expectedConstraints.forEach(constraintType => {
-                contextMenu.shouldHaveItem(constraintType);
-            });
+        expectedConstraints.forEach(constraintType => {
+            contextMenu.shouldHaveItem(constraintType);
         });
+    });
 
     it('Should list "new content" when more than 4 constraints exist', () => {
         jcontent = JContent
@@ -138,7 +138,6 @@ describe('constraints', () => {
 
         // Verify "New content" option is displayed
         contextMenu.shouldHaveItem('New content');
-
     });
 });
 

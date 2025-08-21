@@ -11,13 +11,15 @@ export class TranslateEditor extends ContentEditor {
 
     advancedMode: boolean = true;
 
-    static visitContent(siteKey: string, lang: string, path: string, name) {
+    static visitContent(siteKey: string, lang: string, path: string, name: string) {
         const jcontent = JContent.visit(siteKey, lang, path).switchToListMode();
-        jcontent.getTable()
-            .getRowByName(name)
-            .contextMenu()
-            .selectByRole('sbsTranslate');
-        return new TranslateEditor();
+        jcontent.selectContextMenuByRowName(name, 'sbsTranslate');
+
+        const _instance = new TranslateEditor();
+        // Make sure the translate editor is loaded before proceeding
+        _instance.getTranslateColumn().get().get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        _instance.getSourceColumn().get().get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        return _instance;
     }
 
     static visitPage(siteKey: string, lang: string, path: string, name) {

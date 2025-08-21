@@ -68,6 +68,14 @@ describe('translate action tests', () => {
         menu.get().find('.moonstone-menuItem[data-sel-role="sbsTranslate"]').should('have.attr', 'aria-disabled', 'true');
     });
 
+    it('cannot open on invalid node types e.g. folders', () => {
+        const jcontent = JContent.visit(oneLangSite, 'en', 'media/files').switchToListMode();
+        jcontent.getTable()
+            .getRowByName('bootstrap')
+            .contextMenu()
+            .shouldNotHaveRoleItem('sbsTranslate');
+    });
+
     it('can open translate dialog on contents and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 

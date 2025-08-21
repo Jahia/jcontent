@@ -1,5 +1,5 @@
 import {ContentEditor, JContent} from '../../page-object';
-import {addNode} from '@jahia/cypress';
+import {addNode, enableModule} from '@jahia/cypress';
 import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
 
 describe('constraints', () => {
@@ -7,6 +7,7 @@ describe('constraints', () => {
 
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
+        enableModule('qa-module', 'jcontentSite');
         addNode({
             name: 'list',
             parentPathOrId: '/sites/jcontentSite/home',
@@ -115,7 +116,6 @@ describe('constraints', () => {
     it('Should list all constraints when 4 or less constraints exist', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents');
-        jcontent.openTableContextualMenuByText('constraintList4');
 
         // Verify all constraint options are displayed
         const expectedConstraints = [
@@ -125,22 +125,20 @@ describe('constraints', () => {
             'New constraintChild4'
         ];
 
-        expectedConstraints.forEach(constraintText => {
-            cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]', {timeout: 90000})
-                .contains(constraintText, {timeout: 90000})
-                .should('be.visible');
+        const contextMenu = jcontent.openContextMenuByRowName('constraintlist4');
+            expectedConstraints.forEach(constraintType => {
+                contextMenu.shouldHaveItem(constraintType);
+            });
         });
-    });
 
     it('Should list "new content" when more than 4 constraints exist', () => {
         jcontent = JContent
             .visit('jcontentSite', 'en', 'content-folders/contents');
-        jcontent.openTableContextualMenuByText('constraintList6');
+        const contextMenu = jcontent.openContextMenuByRowName('constraintlist6');
 
         // Verify "New content" option is displayed
-        cy.get('[data-sel-role="jcontent-contentItemContextActionsMenu"]', {timeout: 90000})
-            .contains('New content', {timeout: 90000})
-            .should('be.visible');
+        contextMenu.shouldHaveItem('New content');
+
     });
 });
 

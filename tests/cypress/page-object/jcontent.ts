@@ -266,10 +266,10 @@ export class JContent extends BasePage {
         return getComponent(CompareDialog);
     }
 
-    openTableContextualMenuByText(text: string) {
-        const row = new TableRow(getElement(TableRow.defaultSelector, this.getTable()).contains(text));
-        row.get().scrollIntoView();
-        row.contextMenu();
+    openContextMenuByRowName(rowName: string) {
+        return this.getTable()
+            .getRowByName(rowName) // Already scrolls to view
+            .contextMenu();
     }
 }
 

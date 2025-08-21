@@ -59,8 +59,8 @@ describe('Page builder - content status', () => {
                 .visit(siteKey, 'en', `pages/home/${page}`)
                 .switchToPageBuilder();
 
-            getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
-            getContent(page, 'wip-en').getBoxStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-all').getBox().getStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-en').getBox().getStatus('workInProgress').should('be.visible');
 
             cy.log('Should not display status when deleted');
             getContent(page, 'wip-for-deletion').getForDeletionStatus().should('be.visible');
@@ -74,8 +74,8 @@ describe('Page builder - content status', () => {
                 .switchToPageBuilder();
             cy.log('wip-en should have no WIP status for FR language');
             jContentPageBuilder.getLanguageSwitcher().select('fr');
-            getContent(page, 'wip-en').getBoxStatus('noTranslation').should('be.visible').and('contain', 'FR');
-            getContent(page, 'wip-en').assertNoBoxStatus('workInProgress');
+            getContent(page, 'wip-en').getBox().getStatus('noTranslation').should('be.visible').and('contain', 'FR');
+            getContent(page, 'wip-en').getBox().assertNoStatus('workInProgress');
         });
 
         it('should display no visibility (language), untranslated badges', () => {
@@ -84,17 +84,17 @@ describe('Page builder - content status', () => {
                 .switchToPageBuilder();
 
             cy.log('should display untranslated badge');
-            getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
-            getContent(page, 'wip-all').getBoxStatus('noTranslation').should('be.visible').and('contain', 'FR');
-            getContent(page, 'wip-all').getBox().should('contain', 'Nothing to display');
+            getContent(page, 'wip-all').getBox().getStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-all').getBox().getStatus('noTranslation').should('be.visible').and('contain', 'FR');
+            getContent(page, 'wip-all').getBox().get().should('contain', 'Nothing to display');
 
             cy.log('should display untranslated badge (with visible content)');
-            getContent(page, 'visibility-lang-with-display-content').getBoxStatus('noTranslation').should('be.visible').and('contain', 'FR');
-            getContent(page, 'visibility-lang-with-display-content').getBox().should('not.contain', 'Nothing to display');
+            getContent(page, 'visibility-lang-with-display-content').getBox().getStatus('noTranslation').should('be.visible').and('contain', 'FR');
+            getContent(page, 'visibility-lang-with-display-content').getBox().get().should('not.contain', 'Nothing to display');
 
             cy.log('should display no visibility badge');
-            getContent(page, 'visibility-lang').getBoxStatus('notVisible').should('be.visible');
-            getContent(page, 'visibility-lang').getBox().should('contain', 'Nothing to display');
+            getContent(page, 'visibility-lang').getBox().getStatus('notVisible').should('be.visible');
+            getContent(page, 'visibility-lang').getBox().get().should('contain', 'Nothing to display');
         });
     });
 
@@ -109,10 +109,10 @@ describe('Page builder - content status', () => {
         it('does not show any publication status when page is not published', () => {
             jContentPageBuilder.getStatusSelector().assertCount('published', 0);
             jContentPageBuilder.getStatusSelector().showPublication();
-            getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
-            getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
-            getContent(page, 'wip-en').assertNoBoxStatus('notPublished');
-            getContent(page, 'wip-en').assertNoBoxStatus('notPublished');
+            getContent(page, 'wip-all').getBox().getStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-all').getBox().getStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-en').getBox().assertNoStatus('notPublished');
+            getContent(page, 'wip-en').getBox().assertNoStatus('notPublished');
         });
 
         it('shows publication status when page is published', () => {
@@ -121,10 +121,10 @@ describe('Page builder - content status', () => {
 
             jContentPageBuilder.getStatusSelector().assertCount('published', 2);
             jContentPageBuilder.getStatusSelector().showPublication();
-            getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
-            getContent(page, 'wip-all').getBoxStatus('workInProgress').should('be.visible');
-            getContent(page, 'wip-en').getBoxStatus('notPublished').should('be.visible');
-            getContent(page, 'wip-en').getBoxStatus('notPublished').should('be.visible');
+            getContent(page, 'wip-all').getBox().getStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-all').getBox().getStatus('workInProgress').should('be.visible');
+            getContent(page, 'wip-en').getBox().getStatus('notPublished').should('be.visible');
+            getContent(page, 'wip-en').getBox().getStatus('notPublished').should('be.visible');
         });
     });
 
@@ -144,14 +144,14 @@ describe('Page builder - content status', () => {
             getContent(page, 'visibility-datetime').assertNoBox();
 
             jContentPageBuilder.getStatusSelector().showVisibility();
-            getContent(page, 'visibility-lang').getBoxStatus('visibilityConditions').should('be.visible');
-            getContent(page, 'visibility-datetime').getBoxStatus('visibilityConditions').should('be.visible');
+            getContent(page, 'visibility-lang').getBox().getStatus('visibilityConditions').should('be.visible');
+            getContent(page, 'visibility-datetime').getBox().getStatus('visibilityConditions').should('be.visible');
         });
 
         it('shows permission status', () => {
             jContentPageBuilder.getStatusSelector().assertCount('permissions', 1);
             jContentPageBuilder.getStatusSelector().showPermission();
-            getContent(page, 'permission').getBoxStatus('permissions').should('be.visible');
+            getContent(page, 'permission').getBox().getStatus('permissions').should('be.visible');
         });
 
         it('does not include to status count when marked for deletion', () => {

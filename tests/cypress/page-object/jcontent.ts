@@ -272,6 +272,12 @@ export class JContent extends BasePage {
     getCompareDialog(): CompareDialog {
         return getComponent(CompareDialog);
     }
+
+    openContextMenuByRowName(rowName: string) {
+        return this.getTable()
+            .getRowByName(rowName) // Already scrolls to view
+            .contextMenu();
+    }
 }
 
 export class JContentPageBuilder extends JContent {

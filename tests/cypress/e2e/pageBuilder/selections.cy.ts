@@ -36,27 +36,27 @@ describe('Page builder - selections test', () => {
     it('Selects all items with meta key and deselect them with meta key', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
         let module = jcontent.getModule(item1);
-        module.click({metaKey: true});
+        module.select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         module = jcontent.getModule(item2);
-        module.click({metaKey: true});
+        module.select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
         module = jcontent.getModule(item3);
-        module.click({metaKey: true});
+        module.select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '3 items selected');
 
         // Unselect by clicking
-        module.click({metaKey: true});
+        module.unselect();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
         module = jcontent.getModule(item2);
-        module.click({metaKey: true});
+        module.unselect();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         module = jcontent.getModule(item1);
-        module.click({metaKey: true});
+        module.unselect();
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
     });
 

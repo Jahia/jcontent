@@ -12,7 +12,6 @@ export class PageBuilderModule extends BaseComponent {
 
     hover() {
         this.get().realHover();
-        this.getBox().assertIsHovered();
         return this.get();
     }
 
@@ -45,6 +44,7 @@ export class PageBuilderModule extends BaseComponent {
     getHeader(selectFirst = false): PageBuilderModuleHeader {
         this.hover();
         if (selectFirst) {
+            this.getBox().assertIsHovered();
             this.click(); // Header shows up only when selected
         }
         return this.getBox().getHeader();
@@ -88,17 +88,42 @@ export class PageBuilderModule extends BaseComponent {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
-    click(clickOptions?: Partial<ClickOptions>) {
-        this.get().scrollIntoView().click(clickOptions);
-        this.getBox().assertIsClicked();
+    /**
+     * Clicks on the module, optionally with click options.
+     * If click is meant to unselect or unclick the module, assertSelected or assertClicked needs to be set to false; assertion defaults to true.
+     * @param clickOptions
+     */
+    click(clickOptions?: Partial<ClickOptions> & {assertSelected?: boolean, assertClicked?: boolean}): void {
+        this.get().scrollIntoView();
+        this.get().click(clickOptions);
+        if (clickOptions?.metaKey) {
+            const assertSelected = clickOptions?.hasOwnProperty('assertSelected') ? clickOptions.assertSelected : true;
+            if (assertSelected) {
+                this.getBox().assertIsSelected();
+            }
+        } else {
+            const assertClicked = clickOptions?.hasOwnProperty('assertClicked') ? clickOptions.assertClicked : true
+            if (assertClicked) {
+                this.getBox().assertIsClicked();
+            }
+        }
+    }
+
+    unclick(clickOptions?: Partial<ClickOptions>) {
+        this.click({...clickOptions, assertClicked: false, assertSelected: false});
     }
 
     doubleClick(clickOptions?: Partial<ClickOptions>) {
-        this.get().scrollIntoView().dblclick(clickOptions);
+        this.get().scrollIntoView();
+        this.get().dblclick(clickOptions);
     }
 
     select() {
-        this.get().click({metaKey: true, force: true});
+        this.click({metaKey: true, force: true});
         cy.get('[data-sel-role="selection-infos"]').should('be.visible').and('contain', 'selected');
+    }
+
+    unselect() {
+        this.unclick({metaKey: true, force: true});
     }
 }

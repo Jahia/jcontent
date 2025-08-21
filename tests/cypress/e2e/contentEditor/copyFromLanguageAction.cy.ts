@@ -12,25 +12,25 @@ import {BaseComponent, Button, Dropdown} from '@jahia/cypress';
 import {ContentEditor, JContent} from '../../page-object';
 
 describe('test Copy Language action', () => {
-    const TwoLanguagesSiteKey = 'severalLanguages';
+    const ThreeLanguagesSiteKey = 'severalLanguages';
     const editorLogin = {username: 'languagesEditor', password: 'password'};
 
     before('test setup', () => {
-        createSite(TwoLanguagesSiteKey, {
-            languages: 'en,fr',
+        createSite(ThreeLanguagesSiteKey, {
+            languages: 'en,fr,de',
             templateSet: 'dx-base-demo-templates',
             serverName: 'localhost',
             locale: 'en'
         });
-        enableModule('qa-module', TwoLanguagesSiteKey);
+        enableModule('qa-module', ThreeLanguagesSiteKey);
 
         createUser(editorLogin.username, editorLogin.password);
-        grantRoles(`/sites/${TwoLanguagesSiteKey}`, ['editor'], editorLogin.username, 'USER');
+        grantRoles(`/sites/${ThreeLanguagesSiteKey}`, ['editor'], editorLogin.username, 'USER');
     });
 
     after('test cleanup', () => {
         cy.logout();
-        deleteSite(TwoLanguagesSiteKey);
+        deleteSite(ThreeLanguagesSiteKey);
     });
 
     beforeEach(() => {
@@ -46,9 +46,9 @@ describe('test Copy Language action', () => {
         });
     };
 
-    /** Open FR editor and copy from 'fromLang' language */
-    const setCopyLanguage = (path: string, fromLang: string, buttonRole: string) => {
-        JContent.visit(TwoLanguagesSiteKey, 'fr', path).editContent();
+    /** Open 'toLang' editor and copy from 'fromLang' language */
+    const setCopyLanguage = (path: string, toLang: string, fromLang: string, buttonRole: string) => {
+        JContent.visit(ThreeLanguagesSiteKey, toLang, path).editContent();
         getComponentByRole(Button, 'copyLanguageAction').click();
 
         const copyLangDialog = getComponentByRole(BaseComponent, 'copy-language-dialog');
@@ -56,9 +56,25 @@ describe('test Copy Language action', () => {
         getComponentByRole(Button, buttonRole, copyLangDialog).click();
     };
 
+    const checkCopyLanguageHasLang = (path: string, toLang: string, fromLang: string) => {
+        JContent.visit(ThreeLanguagesSiteKey, toLang, path).editContent();
+        getComponentByRole(Button, 'copyLanguageAction').click();
+        getComponentByRole(Dropdown, 'from-language-selector').get().click();
+        getComponentByRole(Dropdown, 'from-language-selector').should('be.visible')
+            .and('contain', fromLang);
+    };
+
+    const checkCopyLanguageDoesNotHaveLang = (path: string, toLang: string, fromLang: string) => {
+        JContent.visit(ThreeLanguagesSiteKey, toLang, path).editContent();
+        getComponentByRole(Button, 'copyLanguageAction').click();
+        getComponentByRole(Dropdown, 'from-language-selector').get().click();
+        getComponentByRole(Dropdown, 'from-language-selector').should('be.visible')
+            .and('not.contain', fromLang);
+    };
+
     it('copies field from English to French and saves', () => {
         addNode({
-            parentPathOrId: `/sites/${TwoLanguagesSiteKey}/contents`,
+            parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,
             primaryNodeType: 'qant:allFields',
             name: 'all-fields',
             properties: [
@@ -66,25 +82,25 @@ describe('test Copy Language action', () => {
                 {name: 'textarea', value: 'Text in English', language: 'en'}
             ]
         });
-        const path = `/sites/${TwoLanguagesSiteKey}/contents/all-fields`;
+        const path = `/sites/${ThreeLanguagesSiteKey}/contents/all-fields`;
         checkFields(path, 'Text in English', 'en');
         checkFields(path, '', 'fr');
 
         const contentEditor = new ContentEditor();
 
         cy.log('Test cancel button works');
-        setCopyLanguage('content-folders/contents/all-fields', 'English', 'cancel-button');
+        setCopyLanguage('content-folders/contents/all-fields', 'fr', 'English', 'cancel-button');
         checkFields(path, '', 'fr');
 
         cy.log('Test apply button saves changes');
-        setCopyLanguage('content-folders/contents/all-fields', 'English', 'apply-button');
+        setCopyLanguage('content-folders/contents/all-fields', 'fr', 'English', 'apply-button');
         contentEditor.save();
         checkFields(path, 'Text in English', 'fr');
     });
 
     it('copies empty values and saves', () => {
         addNode({
-            parentPathOrId: `/sites/${TwoLanguagesSiteKey}/contents`,
+            parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,
             primaryNodeType: 'qant:allFields',
             name: 'all-fields-empty',
             properties: [
@@ -94,12 +110,12 @@ describe('test Copy Language action', () => {
                 {name: 'textarea', value: 'Other text in English', language: 'en'}
             ]
         });
-        const path = `/sites/${TwoLanguagesSiteKey}/contents/all-fields-empty`;
+        const path = `/sites/${ThreeLanguagesSiteKey}/contents/all-fields-empty`;
         checkFields(path, 'Text in French', 'fr');
 
         const contentEditor = new ContentEditor();
 
-        setCopyLanguage('content-folders/contents/all-fields-empty', 'English', 'apply-button');
+        setCopyLanguage('content-folders/contents/all-fields-empty', 'fr', 'English', 'apply-button');
         contentEditor.save();
 
         getNodeByPath(path, ['smallText', 'textarea'], 'fr').then(result => {
@@ -117,7 +133,7 @@ describe('test Copy Language action', () => {
 
     it('copies values for multiple field and saves', () => {
         addNode({
-            parentPathOrId: `/sites/${TwoLanguagesSiteKey}/contents`,
+            parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,
             primaryNodeType: 'qant:allFieldsMultiple',
             name: 'all-fields-multiple',
             properties: [
@@ -125,11 +141,11 @@ describe('test Copy Language action', () => {
                 {name: 'bigtext', values: ['fr1', 'fr2'], language: 'fr'}
             ]
         });
-        const path = `/sites/${TwoLanguagesSiteKey}/contents/all-fields-multiple`;
 
+        const path = `/sites/${ThreeLanguagesSiteKey}/contents/all-fields-multiple`;
         const contentEditor = new ContentEditor();
 
-        setCopyLanguage('content-folders/contents/all-fields-multiple', 'English', 'apply-button');
+        setCopyLanguage('content-folders/contents/all-fields-multiple', 'fr', 'English', 'apply-button');
         contentEditor.save();
 
         getNodeByPath(path, ['bigtext'], 'fr').then(result => {
@@ -137,8 +153,39 @@ describe('test Copy Language action', () => {
 
             cy.log('Check that smallText value has been removed and does not exist anymore in French');
             const bigtextProp = props.find((prop: { name: string; }) => prop.name === 'bigtext');
-            expect(bigtextProp.values).to.contains('en1');
-            expect(bigtextProp.values).to.contains('en2');
+            expect(bigtextProp.values[0]).to.contains('en1');
+            expect(bigtextProp.values[1]).to.contains('en2');
         });
+    });
+
+    it('does not list languages with no translation', () => {
+        addNode({
+            parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,
+            primaryNodeType: 'qant:allFields',
+            name: 'all-fields-two-languages',
+            properties: [
+                {name: 'smallText', value: 'en1', language: 'en'},
+                {name: 'smallText', value: 'fr1', language: 'fr'}
+            ]
+        });
+
+        let path = 'content-folders/contents/contents/all-fields-two-languages';
+
+        checkCopyLanguageDoesNotHaveLang(path, 'en', 'German');
+
+        addNode({
+            parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,
+            primaryNodeType: 'qant:allFields',
+            name: 'all-fields-three-languages',
+            properties: [
+                {name: 'smallText', value: 'en1', language: 'en'},
+                {name: 'smallText', value: 'fr1', language: 'fr'},
+                {name: 'smallText', value: 'de1', language: 'de'}
+            ]
+        });
+
+        path = 'content-folders/contents/all-fields-three-languages';
+
+        checkCopyLanguageHasLang(path, 'en', 'German');
     });
 });

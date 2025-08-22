@@ -3,7 +3,7 @@ import ClickOptions = Cypress.ClickOptions;
 import {PageBuilderModuleHeader} from './pageBuilderModuleHeader';
 import {PageBuilderModuleFooter} from './pageBuilderModuleFooter';
 import {PageBuilderModuleCreateButton} from './pageBuilderModuleCreateButton';
-import {PageBuilderModuleBox} from "./pageBuilderModuleBox";
+import {PageBuilderModuleBox} from './pageBuilderModuleBox';
 
 export class PageBuilderModule extends BaseComponent {
     static defaultSelector = '[jahiatype="module"]';
@@ -44,9 +44,11 @@ export class PageBuilderModule extends BaseComponent {
     getHeader(selectFirst = false): PageBuilderModuleHeader {
         this.hover();
         if (selectFirst) {
+            // Hovered state is only for unselected modules; this fails if the module is already selected
             this.getBox().assertIsHovered();
             this.click(); // Header shows up only when selected
         }
+
         return this.getBox().getHeader();
     }
 
@@ -97,12 +99,12 @@ export class PageBuilderModule extends BaseComponent {
         this.get().scrollIntoView();
         this.get().click(clickOptions);
         if (clickOptions?.metaKey) {
-            const assertSelected = clickOptions?.hasOwnProperty('assertSelected') ? clickOptions.assertSelected : true;
+            const assertSelected = (clickOptions && Object.prototype.hasOwnProperty.call(clickOptions, 'assertSelected')) ? clickOptions.assertSelected : true;
             if (assertSelected) {
                 this.getBox().assertIsSelected();
             }
         } else {
-            const assertClicked = clickOptions?.hasOwnProperty('assertClicked') ? clickOptions.assertClicked : true
+            const assertClicked = (clickOptions && Object.prototype.hasOwnProperty.call(clickOptions, 'assertClicked')) ? clickOptions.assertClicked : true;
             if (assertClicked) {
                 this.getBox().assertIsClicked();
             }

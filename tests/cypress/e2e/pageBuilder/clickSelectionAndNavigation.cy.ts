@@ -1,5 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {addNode, createSite, deleteNode, deleteSite} from '@jahia/cypress';
+import {addNode, createSite, deleteSite} from '@jahia/cypress';
 
 describe('Page builder - navigation tests', () => {
     const siteKey = 'pbNavigationTestSite';
@@ -13,7 +13,7 @@ describe('Page builder - navigation tests', () => {
             children: [{
                 name: 'my-text',
                 primaryNodeType: 'jnt:text',
-                properties: [{ name: "text", language: "en", value: "my sample text" }]
+                properties: [{name: 'text', language: 'en', value: 'my sample text'}]
             }]
         });
         addNode({

@@ -30,7 +30,7 @@ describe('Page builder - boxes and header tests', () => {
     });
 
     it('should show box with name, status and edit buttons', () => {
-        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`).getHeader(true);
+        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content4`, false).getHeader(true);
         header.get().should('be.visible').find('p').contains('test-content4');
         header.assertStatus('Not published');
         header.getButton('edit');
@@ -38,7 +38,7 @@ describe('Page builder - boxes and header tests', () => {
     });
 
     it('should trim long titles', () => {
-        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`).getHeader(true);
+        const header = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content8-long-text`, false).getHeader(true);
         header.get().should('be.visible').find('p').contains('Lorem ipsum dolor sit am...');
     });
 });

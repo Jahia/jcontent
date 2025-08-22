@@ -287,6 +287,9 @@ export const Box = React.memo(({
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
              data-sel-role="page-builder-box"
              data-jahia-path={node.path}
+             data-box-hovered={isHovered}
+             data-box-selected={isSelected}
+             data-box-clicked={isClicked}
              data-jahia-id={element.getAttribute('id')}
              style={currentOffset}
         >

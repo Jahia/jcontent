@@ -1,8 +1,9 @@
-import {BaseComponent, getComponentBySelector, Menu} from '@jahia/cypress';
+import {BaseComponent, getComponentByAttr, getComponentBySelector, Menu} from '@jahia/cypress';
 import ClickOptions = Cypress.ClickOptions;
 import {PageBuilderModuleHeader} from './pageBuilderModuleHeader';
 import {PageBuilderModuleFooter} from './pageBuilderModuleFooter';
 import {PageBuilderModuleCreateButton} from './pageBuilderModuleCreateButton';
+import {PageBuilderModuleBox} from './pageBuilderModuleBox';
 
 export class PageBuilderModule extends BaseComponent {
     static defaultSelector = '[jahiatype="module"]';
@@ -14,28 +15,13 @@ export class PageBuilderModule extends BaseComponent {
         return this.get();
     }
 
-    getBox() {
-        return cy.get(`@component${this.parentFrame.id}`)
-            .find(`[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]`);
+    getBox(): PageBuilderModuleBox {
+        return getComponentByAttr(PageBuilderModuleBox, 'data-jahia-path', this.path, this.parentFrame);
     }
 
     assertNoBox() {
         return cy.get(`@component${this.parentFrame.id}`)
             .find(`[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]`).should('not.exist');
-    }
-
-    getBoxStatus(status: string) {
-        this.getBox().find(`[data-sel-role="content-status"][data-status-type="${status}"]`).scrollIntoView();
-        return this.getBox().find(`[data-sel-role="content-status"][data-status-type="${status}"]`);
-    }
-
-    /*
-     * Use specifically to check when expected for content to have other statuses displayed (i.e. box element exists)
-     * Otherwise use `assertBoxNotExist` when there are no badges displayed
-     */
-    assertNoBoxStatus(status: string) {
-        this.getBox().scrollIntoView();
-        return this.getBox().find(`[data-sel-role="content-status"][data-status-type="${status}"]`).should('not.exist');
     }
 
     getForDeletionStatus() {
@@ -55,13 +41,15 @@ export class PageBuilderModule extends BaseComponent {
         });
     }
 
-    getHeader(selectFirst = false) {
+    getHeader(selectFirst = false): PageBuilderModuleHeader {
         this.hover();
         if (selectFirst) {
+            // Hovered state is only for unselected modules; this fails if the module is already selected
+            this.getBox().assertIsHovered();
             this.click(); // Header shows up only when selected
         }
 
-        return new PageBuilderModuleHeader(this.getBox().find('[jahiatype="header"]'));
+        return this.getBox().getHeader();
     }
 
     getFooter() {
@@ -85,8 +73,9 @@ export class PageBuilderModule extends BaseComponent {
 
     contextMenu(selectFirst = false, force = true): Menu {
         if (selectFirst) {
-            this.click();
-            this.getHeader().get().should('be.visible').rightclick({force, waitForAnimations: true});
+            this.getHeader(selectFirst).get()
+                .should('be.visible')
+                .rightclick({force, waitForAnimations: true});
         } else {
             this.hover();
             this.get().rightclick({force, waitForAnimations: true});
@@ -101,16 +90,42 @@ export class PageBuilderModule extends BaseComponent {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
-    click(clickOptions?: Partial<ClickOptions>) {
-        this.get().scrollIntoView().click(clickOptions);
+    /**
+     * Clicks on the module, optionally with click options.
+     * If click is meant to unselect or unclick the module, assertSelected or assertClicked needs to be set to false; assertion defaults to true.
+     * @param clickOptions
+     */
+    click(clickOptions?: Partial<ClickOptions> & {assertSelected?: boolean, assertClicked?: boolean}): void {
+        this.get().scrollIntoView();
+        this.get().click(clickOptions);
+        if (clickOptions?.metaKey) {
+            const assertSelected = (clickOptions && Object.prototype.hasOwnProperty.call(clickOptions, 'assertSelected')) ? clickOptions.assertSelected : true;
+            if (assertSelected) {
+                this.getBox().assertIsSelected();
+            }
+        } else {
+            const assertClicked = (clickOptions && Object.prototype.hasOwnProperty.call(clickOptions, 'assertClicked')) ? clickOptions.assertClicked : true;
+            if (assertClicked) {
+                this.getBox().assertIsClicked();
+            }
+        }
+    }
+
+    unclick(clickOptions?: Partial<ClickOptions>) {
+        this.click({...clickOptions, assertClicked: false, assertSelected: false});
     }
 
     doubleClick(clickOptions?: Partial<ClickOptions>) {
-        this.get().scrollIntoView().dblclick(clickOptions);
+        this.get().scrollIntoView();
+        this.get().dblclick(clickOptions);
     }
 
     select() {
-        this.get().click({metaKey: true, force: true});
+        this.click({metaKey: true, force: true});
         cy.get('[data-sel-role="selection-infos"]').should('be.visible').and('contain', 'selected');
+    }
+
+    unselect() {
+        this.unclick({metaKey: true, force: true});
     }
 }

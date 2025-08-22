@@ -27,7 +27,7 @@ describe('Page builder - selections test', () => {
 
     it('Selects and unselects one item when clicking outside the selected module', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-        jcontent.getModule(item1).getHeader(true).select();
+        jcontent.getModule(item1, false).getHeader(true).select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
         jcontent.iframe(true).get().find('.wrapper').parent().parent().click('left', {timeout: 1000, force: true});
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
@@ -35,34 +35,34 @@ describe('Page builder - selections test', () => {
 
     it('Selects all items with meta key and deselect them with meta key', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-        let module = jcontent.getModule(item1);
-        module.click({metaKey: true});
+        let module = jcontent.getModule(item1, false);
+        module.select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         module = jcontent.getModule(item2);
-        module.click({metaKey: true});
+        module.select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
         module = jcontent.getModule(item3);
-        module.click({metaKey: true});
+        module.select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '3 items selected');
 
         // Unselect by clicking
-        module.click({metaKey: true});
+        module.unselect();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '2 items selected');
 
         module = jcontent.getModule(item2);
-        module.click({metaKey: true});
+        module.unselect();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         module = jcontent.getModule(item1);
-        module.click({metaKey: true});
+        module.unselect();
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
     });
 
     it('Clears selection when unselected', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-        const module = jcontent.getModule(item1);
+        const module = jcontent.getModule(item1, false);
         jcontent.getModule(item1).getHeader(true).select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
@@ -78,7 +78,7 @@ describe('Page builder - selections test', () => {
 
     it('Allows to select with right click', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-        let module = jcontent.getModule(item1);
+        let module = jcontent.getModule(item1, false);
         module.click();
         module.getHeader().select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
@@ -95,7 +95,7 @@ describe('Page builder - selections test', () => {
         // Note that in some cases it may be possible to just refresh and not be able to select anything,
         // but it appears to be a different issue as we don't get 'language is required' exception from useNodeInfo
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-        jcontent.getModule(item2).getHeader(true).select();
+        jcontent.getModule(item2, false).getHeader(true).select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
 
         jcontent.clearSelection();
@@ -107,7 +107,7 @@ describe('Page builder - selections test', () => {
 
     it('Opens Content Editor on double click', () => {
         cy.get('div[data-sel-role="selection-infos"]').should('not.exist');
-        jcontent.getModule(item1).getHeader(true).select();
+        jcontent.getModule(item1, false).getHeader(true).select();
         jcontent.getSelectionDropdown().get().find('span').should('have.text', '1 item selected');
         jcontent.getModule(item1).doubleClick();
         const contentEditor = new ContentEditor();

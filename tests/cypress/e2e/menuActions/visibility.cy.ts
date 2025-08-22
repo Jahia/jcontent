@@ -25,6 +25,33 @@ describe('Actions visibility', () => {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: SITEKEY});
     });
 
+    it('It verifies that reviewer cannot see creation actions', () => {
+        cy.loginAndStoreSession('irina', 'password');
+        jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
+
+        // Check new content folder action is not displayed
+        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContentFolder"]').should('not.exist');
+        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContent"]').should('not.exist');
+
+        // Check action 'new content' under my-list is not displayed
+        const contextMenu = jcontent.openContextMenuByRowName('my-list');
+        contextMenu.shouldNotHaveItem('New content');
+
+        // Close contextual menu
+        cy.get('.moonstone-menu_overlay').click({force: true});
+
+        // Check actions new constraintChild1... under constraintlist3 are not displayed
+        const expectedConstraints = [
+            'New constraintChild1',
+            'New constraintChild2',
+            'New constraintChild3'
+        ];
+        jcontent.openContextMenuByRowName('constraintlist3');
+        expectedConstraints.forEach(constraintType => {
+            contextMenu.shouldNotHaveItem(constraintType);
+        });
+    });
+
     it('Displays accordionContent actions', () => {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(SITEKEY, 'en', 'pages/home');
@@ -93,32 +120,5 @@ describe('Actions visibility', () => {
         menu.shouldHaveItem('Import content');
         menu.shouldHaveItem('Show in Repository Explorer');
         menu.shouldHaveItem('Open in Page Composer');
-    });
-
-    it('It verifies that reviewer cannot see creation actions', () => {
-        cy.loginAndStoreSession('irina', 'password');
-        jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
-
-        // Check new content folder action is not displayed
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContentFolder"]').should('not.exist');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContent"]').should('not.exist');
-
-        // Check action 'new content' under my-list is not displayed
-        const contextMenu = jcontent.openContextMenuByRowName('my-list');
-        contextMenu.shouldNotHaveItem('New content');
-
-        // Close contextual menu
-        cy.get('.moonstone-menu_overlay').click({force: true});
-
-        // Check actions new constraintChild1... under constraintlist3 are not displayed
-        const expectedConstraints = [
-            'New constraintChild1',
-            'New constraintChild2',
-            'New constraintChild3'
-        ];
-        jcontent.openContextMenuByRowName('constraintlist3');
-        expectedConstraints.forEach(constraintType => {
-            contextMenu.shouldNotHaveItem(constraintType);
-        });
     });
 });

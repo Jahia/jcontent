@@ -46,7 +46,7 @@ describe('Page builder - navigation tests', () => {
         const pageBuilder = new JContentPageBuilder(jcontent);
 
         const contentPath = `/sites/${siteKey}/home/landing/my-text`;
-        const module = pageBuilder.getModule(contentPath);
+        const module = pageBuilder.getModule(contentPath, false);
 
         cy.log('Click on the module to show header');
         module.getHeader(true).assertHeaderText('my sample text');
@@ -61,7 +61,7 @@ describe('Page builder - navigation tests', () => {
         const pageBuilder: JContentPageBuilder = jcontent.switchToPageBuilder();
 
         const contentPath = `/sites/${siteKey}/home/landing/my-text`;
-        let module = pageBuilder.getModule(contentPath);
+        let module = pageBuilder.getModule(contentPath, false);
 
         cy.log('Click on the module to show header');
         module.getHeader(true).assertHeaderText('my sample text');

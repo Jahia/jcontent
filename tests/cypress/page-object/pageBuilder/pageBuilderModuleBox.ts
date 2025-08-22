@@ -1,5 +1,5 @@
-import {BaseComponent} from "@jahia/cypress";
-import {PageBuilderModuleHeader} from "./pageBuilderModuleHeader";
+import {BaseComponent} from '@jahia/cypress';
+import {PageBuilderModuleHeader} from './pageBuilderModuleHeader';
 
 export class PageBuilderModuleBox extends BaseComponent {
     static readonly defaultSelector: string = '[data-sel-role="page-builder-box"]';

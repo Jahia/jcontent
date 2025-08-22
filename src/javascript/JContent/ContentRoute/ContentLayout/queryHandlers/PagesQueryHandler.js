@@ -11,7 +11,7 @@ export const PagesQueryHandler = {
 
     structureTreeEntries: (treeEntries, {hideRoot}) => {
         // Filter out internal/external links and menu titles off the tree
-        const typesToFilterOut = ['jnt:nodeLink', 'jnt:externalLink', 'jnt:navMenuText'];
+        const typesToFilterOut = ['jnt:navMenuText'];
         const filteredTreeEntries = treeEntries.filter(entry => !typesToFilterOut.includes(entry.node.primaryNodeType.name));
 
         return BaseTreeQueryHandler.structureTreeEntries(filteredTreeEntries, {hideRoot});

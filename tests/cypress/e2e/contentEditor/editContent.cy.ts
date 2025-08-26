@@ -1,6 +1,6 @@
 import {ContentEditor, JContent} from '../../page-object';
 import {RichTextField} from '../../page-object/fields';
-import {createSite, deleteSite} from '@jahia/cypress';
+import {addNode, createSite, deleteSite} from '@jahia/cypress';
 
 describe('Create content tests', () => {
     let jcontent: JContent;
@@ -9,6 +9,11 @@ describe('Create content tests', () => {
     before(() => {
         createSite(siteKey);
         cy.apollo({mutationFile: 'contentEditor/references.graphql'});
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'My simple text',
+            primaryNodeType: 'jnt:text'
+        });
     });
 
     after(() => {
@@ -34,5 +39,23 @@ describe('Create content tests', () => {
         const contentEditor = new ContentEditor();
         contentEditor.getField(RichTextField, 'jnt:bigText_text');
         contentEditor.cancel();
+    });
+
+    it('Updates unsaved badge', () => {
+        jcontent.editComponentByRowName('My simple text');
+        const contentEditor = new ContentEditor();
+        contentEditor.switchToAdvancedMode();
+
+        // Check unsaved badge is not displayed
+        cy.get('div[data-sel-role="unsaved-info-chip"]', {timeout: 5000}).should('not.exist');
+
+        // Update content
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('My simple text updated');
+        // Check unsaved badge is displayed
+        cy.get('div[data-sel-role="unsaved-info-chip"]', {timeout: 5000}).should('exist');
+
+        contentEditor.save();
+        // Check unsaved badge is not displayed
+        cy.get('div[data-sel-role="unsaved-info-chip"]', {timeout: 5000}).should('not.exist');
     });
 });

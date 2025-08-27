@@ -165,7 +165,7 @@ export class ContentEditor extends BasePage {
 
     getLanguageSwitcherAdvancedMode(): LanguageSwitcher {
         if (!this.languageSwitcher) {
-            this.languageSwitcher = getComponentBySelector(LanguageSwitcher, '.moonstone-dropdown_container [data-cm-role="language-switcher"]');
+            this.languageSwitcher = getComponentBySelector(LanguageSwitcher, 'div[role="toolbar"] .moonstone-dropdown_container[data-cm-role="language-switcher"]');
         }
 
         return this.languageSwitcher;

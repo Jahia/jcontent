@@ -1,4 +1,5 @@
-import {JContent} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
+import {addNode} from "@jahia/cypress";
 
 interface Subject {
     title: string,
@@ -35,6 +36,14 @@ describe('Create multi language content and verify that it is different in all l
 
     beforeEach(() => {
         cy.executeGroovy('contentEditor/contentMultiLanguage/contentMultiLanguageSite.groovy', {SITEKEY: sitekey});
+        addNode({
+            parentPathOrId: `/sites/${sitekey}/contents`,
+            name: 'My news',
+            primaryNodeType: 'jnt:news',
+            properties: [
+                {name: 'jcr:title', value: 'News in English', language: 'en'}
+            ]
+        });
         cy.apollo({
             mutationFile: 'contentEditor/contentMultiLanguage/setPropertyValue.graphql',
             variables: {
@@ -91,5 +100,31 @@ describe('Create multi language content and verify that it is different in all l
         testNewsCreation(newsByLanguage.en);
         testNewsCreation(newsByLanguage.fr);
         testNewsCreation(newsByLanguage.de);
+    });
+
+    it('Updates warning badge when the site has mandatory languages', () => {
+        jcontent.editComponentByRowName('My news');
+        const contentEditor = new ContentEditor();
+        contentEditor.switchToAdvancedMode();
+
+        // Check warning badge is displayed
+        cy.get('div[data-status-type="warning"]', {timeout: 5000}).should('exist');
+        // Switch to French
+        contentEditor.getLanguageSwitcherAdvancedMode().selectLangByValue('fr');
+        // Check warning badge is displayed
+        cy.get('div[data-status-type="warning"]', {timeout: 5000}).should('exist');
+
+        // Publish in English then check the warning badge
+        contentEditor.getLanguageSwitcherAdvancedMode().selectLangByValue('en');
+        contentEditor.publish();
+        cy.get('div[data-status-type="warning"]', {timeout: 5000}).should('exist');
+        contentEditor.getLanguageSwitcherAdvancedMode().selectLangByValue('fr');
+
+        // Fill the title in French
+        contentEditor.getSmallTextField('jnt:news_jcr:title').addNewValue('News in French');
+
+        contentEditor.save();
+        // Check warning badge is not displayed after save
+        cy.get('div[data-status-type="warning"]', {timeout: 5000}).should('not.exist');
     });
 });

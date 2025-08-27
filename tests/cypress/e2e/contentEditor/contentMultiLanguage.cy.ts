@@ -1,5 +1,5 @@
 import {ContentEditor, JContent} from '../../page-object';
-import {addNode} from "@jahia/cypress";
+import {addNode} from '@jahia/cypress';
 
 interface Subject {
     title: string,

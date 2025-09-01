@@ -262,4 +262,12 @@ export class ContentEditor extends BasePage {
         this.switchToAdvancedMode();
         return this.switchToAdvancedOptions();
     }
+
+    checkSystemName(expectedSystemName: string): ContentEditor {
+        const ce = new ContentEditor();
+        ce.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
+        cy.get('#nt\\:base_ce\\:systemName').should('have.value', expectedSystemName);
+        ce.cancel();
+        return ce;
+    }
 }

@@ -1,14 +1,20 @@
-import {PageComposer} from '../../page-object';
-import {Button, getComponentByRole, getNodeByPath} from '@jahia/cypress';
+import {JContent, PageComposer} from '../../page-object';
+import {addNode, Button, getComponentByRole, getNodeByPath} from '@jahia/cypress';
 
 describe('System name test', () => {
     const site = 'contentEditorSite';
     let pageComposer: PageComposer;
+    let jcontent: JContent;
 
     before(function () {
         cy.loginAndStoreSession();
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: site});
+        addNode({
+            parentPathOrId: '/sites/contentEditorSite/contents',
+            name: 'simple-text',
+            primaryNodeType: 'jnt:text'
+        });
     });
 
     after(function () {
@@ -109,5 +115,33 @@ describe('System name test', () => {
             timeout: 10000,
             interval: 500
         });
+    });
+
+    it('Checks synchronization of next available systemname', function () {
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+
+        // Create simple text Test 2
+        const contentEditor = jcontent.createContent('jnt:text');
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('Test 2');
+        contentEditor.create();
+
+        // Create simple text Test 3
+        jcontent.createContent('jnt:text');
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('Test 3');
+        contentEditor.create();
+
+        // Check systemname is incremented
+        jcontent.editComponentByText('Test 3');
+        contentEditor.checkSystemName('simple-text-2');
+
+        // Create simple text Test 4
+        jcontent.createContent('jnt:text');
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('Test 4');
+        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]').clear().type('simple-text-1');
+        contentEditor.create();
+
+        // Check systemname is incremented
+        jcontent.editComponentByText('Test 4');
+        contentEditor.checkSystemName('simple-text-3');
     });
 });

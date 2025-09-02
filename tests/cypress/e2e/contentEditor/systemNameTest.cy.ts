@@ -208,7 +208,6 @@ describe('System name test', () => {
         contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('my-text-b');
         getComponentByRole(Button, 'submitSave').click();
         // Check an error message is displayed
-        //cy.get('div[data-sel-role="validation-errors"]').should('be.visible');
         contentEditor.assertValidationErrorsExists();
     });
 });

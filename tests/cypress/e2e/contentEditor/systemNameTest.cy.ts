@@ -132,7 +132,9 @@ describe('System name test', () => {
 
         // Check systemname is incremented
         jcontent.editComponentByText('Test 3');
+        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
         contentEditor.checkSystemName('simple-text-2');
+        contentEditor.cancel();
 
         // Create simple text Test 4
         jcontent.createContent('jnt:text');
@@ -142,6 +144,32 @@ describe('System name test', () => {
 
         // Check systemname is incremented
         jcontent.editComponentByText('Test 4');
+        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
         contentEditor.checkSystemName('simple-text-3');
+        contentEditor.cancel();
+    });
+
+    it('Checks default synchronization of systemname with copy title button', function () {
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+
+        // Create a news
+        const contentEditor = jcontent.createContent('jnt:news');
+        contentEditor.getSmallTextField('jnt:news_jcr:title').addNewValue('News Title');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('News system name');
+        contentEditor.create();
+
+        // Edit the news and use copy title button
+        jcontent.editComponentByText('News Title');
+        contentEditor.switchToAdvancedMode();
+        getComponentByRole(Button, 'syncSystemName').click();
+        contentEditor.checkSystemName('news-title');
+
+        // Check copy title button is now disabled
+        getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.disabled');
+        // Edit title into "edited-title"
+        contentEditor.getSmallTextField('jnt:news_jcr:title').addNewValue('edited-title');
+        // Check copy title is enabled
+        getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.enabled');
+        contentEditor.cancelAndDiscard();
     });
 });

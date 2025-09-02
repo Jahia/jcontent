@@ -1,5 +1,5 @@
 import {JContent, PageComposer} from '../../page-object';
-import {addNode, Button, getComponentByRole, getNodeByPath} from '@jahia/cypress';
+import {addNode, Button, enableModule, getComponentByRole, getNodeByPath} from '@jahia/cypress';
 
 describe('System name test', () => {
     const site = 'contentEditorSite';
@@ -10,6 +10,7 @@ describe('System name test', () => {
         cy.loginAndStoreSession();
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: site});
+        enableModule('qa-module', site);
         addNode({
             parentPathOrId: '/sites/contentEditorSite/contents',
             name: 'simple-text',
@@ -170,6 +171,20 @@ describe('System name test', () => {
         contentEditor.getSmallTextField('jnt:news_jcr:title').addNewValue('edited-title');
         // Check copy title is enabled
         getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.enabled');
+        contentEditor.cancelAndDiscard();
+    });
+
+    it('Checks default synchronization of systemname when we have a default value', function () {
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+
+        // Create a news
+        const contentEditor = jcontent.createContent('qant:titleWithDefaultValue');
+        // Check default system name
+        contentEditor.checkSystemName('value-1');
+        // Set a new title
+        contentEditor.getSmallTextField('qant:titleWithDefaultValue_jcr:title').addNewValue('my new value 2');
+        // Check system name is updated
+        contentEditor.checkSystemName('my-new-value-2');
         contentEditor.cancelAndDiscard();
     });
 });

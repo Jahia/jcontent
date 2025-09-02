@@ -71,7 +71,7 @@ const SiteSwitcher = ({selector, onSelectAction, isSiteEnabled}) => {
 
                     if (loading) {
                         return (
-                            <Dropdown isDisabled
+                            <Dropdown isLoading
                                       data={[{label: 'none', value: 'none', name: 'none', site: 'none'}]}
                                       className={styles.siteSwitcher}
                                       onChange={() => {}}

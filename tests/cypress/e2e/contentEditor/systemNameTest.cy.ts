@@ -16,6 +16,16 @@ describe('System name test', () => {
             name: 'simple-text',
             primaryNodeType: 'jnt:text'
         });
+        addNode({
+            parentPathOrId: '/sites/contentEditorSite/contents',
+            name: 'my-text-a',
+            primaryNodeType: 'jnt:text'
+        });
+        addNode({
+            parentPathOrId: '/sites/contentEditorSite/contents',
+            name: 'my-text-b',
+            primaryNodeType: 'jnt:text'
+        });
     });
 
     after(function () {
@@ -186,5 +196,19 @@ describe('System name test', () => {
         // Check system name is updated
         contentEditor.checkSystemName('my-new-value-2');
         contentEditor.cancelAndDiscard();
+    });
+
+    it('Should display an error message if system name already exists', function () {
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+
+        // Try to rename a simple text with a system name that is already used
+        const contentEditor = jcontent.editComponentByText('my-text-a');
+        contentEditor.switchToAdvancedMode();
+        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('my-text-b');
+        getComponentByRole(Button, 'submitSave').click();
+        // Check an error message is displayed
+        //cy.get('div[data-sel-role="validation-errors"]').should('be.visible');
+        contentEditor.assertValidationErrorsExists();
     });
 });

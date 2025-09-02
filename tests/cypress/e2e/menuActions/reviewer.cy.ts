@@ -1,31 +1,37 @@
 import {JContent} from '../../page-object';
-import {addNode, enableModule} from '@jahia/cypress';
+import {addNode, createSite, createUser, deleteSite, enableModule, grantRoles} from '@jahia/cypress';
 
 describe('Reviewer permissions', () => {
     let jcontent: JContent;
+    const SiteKey = 'PermissionsTestSite';
+    const reviewerLogin = {username: 'siteReviewer', password: 'password'};
 
-    before(() => {
-        enableModule('qa-module', 'digitall');
+    before('Test setup', () => {
+        createSite(SiteKey);
+        enableModule('qa-module', SiteKey);
+        createUser(reviewerLogin.username, reviewerLogin.password);
+        grantRoles(`/sites/${SiteKey}`, ['reviewer'], reviewerLogin.username, 'USER');
         addNode({
             name: 'my-list',
-            parentPathOrId: '/sites/digitall/contents',
+            parentPathOrId: '/sites/PermissionsTestSite/contents',
             primaryNodeType: 'jnt:contentList'
         });
         addNode({
             name: 'constraintlist3',
-            parentPathOrId: '/sites/digitall/contents',
+            parentPathOrId: '/sites/PermissionsTestSite/contents',
             primaryNodeType: 'qant:constraintList3'
         });
     });
 
-    after(() => {
+    after('Test cleanup', () => {
         cy.logout();
+        deleteSite(SiteKey);
     });
 
     it('It verifies that reviewer cannot see creation actions', () => {
         cy.logout();
-        cy.login('irina', 'password');
-        jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
+        cy.login('siteReviewer', 'password');
+        jcontent = JContent.visit(SiteKey, 'en', 'content-folders/contents');
 
         // Check new content folder action is not displayed
         cy.get('div[role="toolbar"]').find('button[data-sel-role="createContentFolder"]').should('not.exist');
@@ -34,9 +40,7 @@ describe('Reviewer permissions', () => {
         // Check action 'new content' under my-list is not displayed
         const contextMenu = jcontent.openContextMenuByRowName('my-list');
         contextMenu.shouldNotHaveItem('New content');
-
-        // Close contextual menu
-        cy.get('.moonstone-menu_overlay').click({force: true});
+        contextMenu.close();
 
         // Check actions new constraintChild1... under constraintlist3 are not displayed
         const expectedConstraints = [
@@ -48,5 +52,6 @@ describe('Reviewer permissions', () => {
         expectedConstraints.forEach(constraintType => {
             contextMenu.shouldNotHaveItem(constraintType);
         });
+        contextMenu.close();
     });
 });

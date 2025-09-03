@@ -114,6 +114,8 @@ describe('System name test', () => {
         pageComposer.checkSystemNameSync('[]-{}-()-!!', '');
         pageComposer = PageComposer.visit(site, 'en', 'home.html');
         pageComposer.checkSystemNameSync('test\'fb1’fb2', 'test-fb1-fb2');
+        pageComposer = PageComposer.visit(site, 'en', 'home.html');
+        pageComposer.checkSystemNameSync('$pécial/ch@racters', 'pecial-ch-racters');
     });
 
     it('Should limit the system name of content to 128 characters', function () {

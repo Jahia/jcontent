@@ -266,10 +266,4 @@ export class ContentEditor extends BasePage {
         this.switchToAdvancedMode();
         return this.switchToAdvancedOptions();
     }
-
-    checkSystemName(expectedSystemName: string): ContentEditor {
-        const ce = new ContentEditor();
-        cy.get('#nt\\:base_ce\\:systemName').should('have.value', expectedSystemName);
-        return ce;
-    }
 }

@@ -6,6 +6,10 @@ describe('System name test', () => {
     let pageComposer: PageComposer;
     let jcontent: JContent;
 
+    function checkSystemName(expectedSystemName: string) {
+        cy.get('#nt\\:base_ce\\:systemName').should('have.value', expectedSystemName);
+    }
+
     before(function () {
         cy.loginAndStoreSession();
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
@@ -146,7 +150,7 @@ describe('System name test', () => {
         // Check systemname is incremented
         jcontent.editComponentByText('Test 3');
         contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
-        contentEditor.checkSystemName('simple-text-2');
+        checkSystemName('simple-text-2');
         contentEditor.cancel();
 
         // Create simple text Test 4
@@ -158,7 +162,7 @@ describe('System name test', () => {
         // Check systemname is incremented
         jcontent.editComponentByText('Test 4');
         contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
-        contentEditor.checkSystemName('simple-text-3');
+        checkSystemName('simple-text-3');
         contentEditor.cancel();
     });
 
@@ -175,7 +179,7 @@ describe('System name test', () => {
         jcontent.editComponentByText('News Title');
         contentEditor.switchToAdvancedMode();
         getComponentByRole(Button, 'syncSystemName').click();
-        contentEditor.checkSystemName('news-title');
+        checkSystemName('news-title');
 
         // Check copy title button is now disabled
         getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.disabled');
@@ -192,11 +196,11 @@ describe('System name test', () => {
         // Create a news
         const contentEditor = jcontent.createContent('qant:titleWithDefaultValue');
         // Check default system name
-        contentEditor.checkSystemName('value-1');
+        checkSystemName('value-1');
         // Set a new title
         contentEditor.getSmallTextField('qant:titleWithDefaultValue_jcr:title').addNewValue('my new value 2');
         // Check system name is updated
-        contentEditor.checkSystemName('my-new-value-2');
+        checkSystemName('my-new-value-2');
         contentEditor.cancelAndDiscard();
     });
 

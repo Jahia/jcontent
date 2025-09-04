@@ -78,6 +78,10 @@ describe('delete tests', () => {
 
         cy.log('mark published page for deletion');
         jcontent.getAccordionItem('pages').getTreeItem('test-subpage3').contextMenu().select('Delete');
+        // Sometimes this test fails with dialog showing 'You are about to delete 4 items' instead of 3 items
+        // - page itself + area-main and landing sections
+        // Toggle the row to see what is going on
+        getComponent(DeleteDialog).toggleRowExpanded();
         getComponent(DeleteDialog).markForDeletion('You are about to delete 3 items, including 1 page(s)');
 
         cy.log('Publish deletion');

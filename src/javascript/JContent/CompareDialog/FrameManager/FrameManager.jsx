@@ -65,8 +65,8 @@ const FrameManager = () => {
     // Load frames
     useEffect(() => {
         if (leftFrame.current && data?.jcr?.result?.renderUrlEdit) {
-            //Add hidePersonaPanel parameter to Hide jexperience persona panel in the page
-            leftFrame.current.contentWindow.location.href = `${resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false)}?hidePersonaPanel`;
+            // Add hidePersonaPanel parameter to Hide jexperience persona panel in the page
+            leftFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false);
         }
 
         if (rightFrame.current && data?.jcr?.result?.renderUrlLive) {

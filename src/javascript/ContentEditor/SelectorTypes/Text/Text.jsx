@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {Hidden, Visibility, Input, Button} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
+import NumericFormat from 'react-number-format';
 
 export const Text = ({field, value, id, onChange, onBlur}) => {
     const [hidePassword, setHidePassword] = useState(true);
@@ -26,6 +27,27 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
         />
     ) : null;
     const maxLength = field.selectorOptions?.find(option => option.name === 'maxLength');
+
+    if (isNumber) {
+        return (
+            <NumericFormat
+                allowNegative
+                id={id}
+                name={id}
+                size="big"
+                customInput={Input}
+                value={value || ''}
+                decimalSeparator={decimalSeparator}
+                decimalScale={fieldType === 'LONG' ? 0 : undefined}
+                disabled={field.readOnly}
+                aria-labelledby={`${field.name}-label`}
+                aria-required={field.mandatory}
+                onValueChange={values => onChange(values.value)}
+                onBlur={onBlur}
+            />
+        );
+    }
+
     return (
         <Input
             id={id}
@@ -36,7 +58,7 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
             maxLength={maxLength && maxLength.value}
             value={controlledValue}
             isReadOnly={field.readOnly}
-            type={isPassword && hidePassword ? 'password' : isNumber ? 'number' : 'text'}
+            type={isPassword && hidePassword ? 'password' : 'text'}
             postfixComponents={postfixComponent}
             onChange={evt => onChange(evt?.target?.value)}
             onBlur={onBlur}

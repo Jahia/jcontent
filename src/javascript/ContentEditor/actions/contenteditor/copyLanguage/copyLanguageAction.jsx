@@ -11,6 +11,7 @@ export const CopyLanguageActionComponent = ({render: Render, ...otherProps}) => 
     const {nodeData, lang, siteInfo} = useContentEditorContext();
     const {sideBySideContext} = useContentEditorConfigContext();
     const formik = useFormikContext();
+    const availableLanguages = siteInfo.languages.filter(l => l.language !== lang && nodeData.translationLanguages?.includes(l.language));
 
     return (
         <Render {...otherProps}
@@ -22,7 +23,8 @@ export const CopyLanguageActionComponent = ({render: Render, ...otherProps}) => 
                         formik,
                         language: getFullLanguageName(siteInfo.languages, lang),
                         sideBySideContext,
-                        availableLanguages: siteInfo.languages,
+                        availableLanguages,
+                        defaultLanguage: siteInfo.defaultLanguage,
                         onCloseDialog: () => destroy('CopyLanguageDialog')
                     });
                 }}/>

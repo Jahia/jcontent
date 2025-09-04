@@ -38,6 +38,7 @@ export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValu
             )}
             data-sel-content-editor-multiple-generic-field={name}
             data-sel-content-editor-field-readonly={field.readOnly}
+            data-sel-i18n={field.i18n}
             data-handler-id={handlerId}
         >
             {!isReferenceCard && !readOnly &&

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {Button, Dropdown, Typography, Warning} from '@jahia/moonstone';
 import * as PropTypes from 'prop-types';
@@ -16,7 +16,8 @@ export const CopyLanguageDialog = ({
     onCloseDialog,
     uuid,
     formik,
-    sideBySideContext
+    sideBySideContext,
+    defaultLanguage
 }) => {
     const client = useApolloClient();
 
@@ -45,12 +46,24 @@ export const CopyLanguageDialog = ({
         .map(e => ({value: e.language, label: e.uiLanguageDisplayName}))
         .find(e => e.value === sideBySideContext.lang);
 
+    const defaultLanguageOption = useMemo(() => {
+        if (defaultLanguage !== language) {
+            const availableLanguageOption = availableLanguages.find(al => al.language === defaultLanguage);
+            if (availableLanguageOption) {
+                return {
+                    label: availableLanguageOption.uiLanguageDisplayName,
+                    value: availableLanguageOption.language
+                };
+            }
+        }
+    }, [defaultLanguage, language, availableLanguages]);
+
     const defaultOption = sbsOption || {
         label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),
         value: 'void'
     };
 
-    const [currentOption, setCurrentOption] = useState(defaultOption);
+    const [currentOption, setCurrentOption] = useState(defaultLanguageOption || defaultOption);
 
     const handleOnChange = (e, item) => {
         setCurrentOption(item);
@@ -74,6 +87,7 @@ export const CopyLanguageDialog = ({
 
     return (
         <Dialog fullWidth
+                data-sel-role="copy-language-dialog"
                 aria-labelledby="alert-dialog-slide-title"
                 open={isOpen}
                 maxWidth="sm"
@@ -92,20 +106,23 @@ export const CopyLanguageDialog = ({
                 <Typography className={styles.copyFromLabel}>
                     {t('jcontent:label.contentEditor.edit.action.copyLanguage.listLabel')}
                 </Typography>
-                {sbsOption ? <Typography>{sbsOption.label}</Typography> : <Dropdown
-                    className={styles.language}
-                    label={currentOption.label}
-                    value={currentOption.value}
-                    size="medium"
-                    isDisabled={Boolean(sbsOption)}
-                    data={[defaultOption].concat(availableLanguages.filter(element => element.displayName !== language).map(element => {
-                        return {
-                            value: element.language,
-                            label: element.uiLanguageDisplayName
-                        };
-                    }))}
-                    onChange={handleOnChange}
-                />}
+                {sbsOption ?
+                    <Typography>{sbsOption.label}</Typography> :
+                    <Dropdown
+                        className={styles.language}
+                        label={currentOption.label}
+                        value={currentOption.value}
+                        size="medium"
+                        data-sel-role="from-language-selector"
+                        isDisabled={Boolean(sbsOption)}
+                        data={[defaultOption].concat(availableLanguages.map(element => {
+                            return {
+                                value: element.language,
+                                label: element.uiLanguageDisplayName
+                            };
+                        }))}
+                        onChange={handleOnChange}
+                    />}
                 <Typography className={styles.label}>
                     {t('jcontent:label.contentEditor.edit.action.copyLanguage.currentLanguage')}
                 </Typography>
@@ -120,6 +137,7 @@ export const CopyLanguageDialog = ({
                     size="big"
                     color="default"
                     label={t('jcontent:label.contentEditor.edit.action.copyLanguage.btnCancel')}
+                    data-sel-role="cancel-button"
                     onClick={handleCancel}
                 />
                 <Button
@@ -127,6 +145,7 @@ export const CopyLanguageDialog = ({
                     color="accent"
                     label={t('jcontent:label.contentEditor.edit.action.copyLanguage.btnApply')}
                     disabled={isApplyDisabled}
+                    data-sel-role="apply-button"
                     onClick={handleApply}
                 />
             </DialogActions>
@@ -141,5 +160,6 @@ CopyLanguageDialog.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     uuid: PropTypes.string.isRequired,
     onCloseDialog: PropTypes.func.isRequired,
-    sideBySideContext: PropTypes.shape({lang: PropTypes.string})
+    sideBySideContext: PropTypes.shape({lang: PropTypes.string}),
+    defaultLanguage: PropTypes.string.isRequired
 };

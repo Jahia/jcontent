@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorApiContext, useContentEditorContext} from '~/ContentEditor/contexts';
-import {TranslatePanel} from './TranslatePanel';
+import {TranslatePanel} from './TranslatePanel/TranslatePanel';
 import {useTranslateFormDefinition} from './useTranslateFormDefinition';
 
 export const TranslateEditActionComponent = ({path, render: Render, ...otherProps}) => {
@@ -13,7 +13,7 @@ export const TranslateEditActionComponent = ({path, render: Render, ...otherProp
 
     return (
         <Render {...otherProps}
-                isVisible={languages.length > 1}
+                isVisible={nodeData?.hasTranslatePermission && languages.length > 1}
                 onClick={() => {
                     api.edit({
                         uuid: nodeData.uuid,

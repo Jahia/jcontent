@@ -186,3 +186,8 @@
 
 [cent:boundComponent] > jnt:content, jmix:siteComponent, jmix:droppableContent, jmix:bindedComponent
 - text (string, richtext)
+
+[cent:numbers] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
+- long (long)
+- double (double)
+- longReq (long) mandatory

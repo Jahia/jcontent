@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
@@ -163,7 +163,9 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
 
     const sizers = [...Array(10).keys()].filter(i => currentOffset.width < i * 150).map(i => `sizer${i}`);
     const isDisabled = clickedElement && clickedElement.path !== parentPath;
-    const btnRenderer = (isInsertionPoint && !isEmpty) ? ButtonRendererNoLabel : ButtonRenderer;
+    const btnRenderer = useMemo(() => {
+        return (isInsertionPoint && !isEmpty) ? ButtonRendererNoLabel : ButtonRenderer;
+    }, [isInsertionPoint, isEmpty]);
 
     const insertionStyle = {};
     if (isInsertionPoint && !isEmpty) {
@@ -181,14 +183,29 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         }
     }
 
-    const onAction = onActionFn => {
+    const onAction = useCallback(onActionFn => {
         const needsReorder = element.getAttribute('type') !== 'placeholder';
         return data => {
             if (needsReorder) {
                 onActionFn(data);
             }
         };
-    };
+    }, [element]);
+
+    const createAction = useMemo(() => (
+        <DisplayAction
+            isIncludeSubTypes
+            actionKey="createContent"
+            path={parentPath}
+            name={nodePath}
+            isDisabled={isDisabled}
+            nodeTypes={nodeTypes}
+            loading={() => false}
+            render={btnRenderer}
+            onVisibilityChanged={onCreateVisibilityChanged}
+            onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
+        />
+    ), [parentPath, nodePath, isDisabled, nodeTypes, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
 
     return !anyDragging && (
         <div ref={drop}
@@ -207,17 +224,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              onMouseOut={onMouseOut}
              onClick={onClick}
         >
-            {copyPasteNodes.length === 0 &&
-                <DisplayAction isIncludeSubTypes
-                               actionKey="createContent"
-                               path={parentPath}
-                               name={nodePath}
-                               isDisabled={isDisabled}
-                               nodeTypes={nodeTypes}
-                               loading={() => false}
-                               render={btnRenderer}
-                               onVisibilityChanged={onCreateVisibilityChanged}
-                               onCreate={onAction(({name}) => reorderNodes([name], nodeName))}/>}
+            {copyPasteNodes.length === 0 && createAction}
             <DisplayAction actionKey="paste"
                            isDisabled={isDisabled}
                            path={parentPath}

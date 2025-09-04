@@ -18,6 +18,7 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
     const sourceLang = languages.find(l => l.language !== lang) || languages[0];
     return (res.loading) ? null : (
         <Render {...otherProps}
+                isVisible={res.checksResult}
                 enabled={languages.length > 1}
                 onClick={() => {
                     api.edit({
@@ -25,7 +26,8 @@ export const TranslateActionComponent = ({path, render: Render, ...otherProps}) 
                         lang: sourceLang.language,
                         isFullscreen: true,
                         dialogProps: {
-                            classes: {}
+                            classes: {},
+                            dataSelRole: 'translate-dialog'
                         },
                         sideBySideContext: {lang},
                         layout: TranslatePanel,

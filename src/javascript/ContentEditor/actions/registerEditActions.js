@@ -124,6 +124,7 @@ export const registerEditActions = registry => {
     registry.add('action', 'sbsTranslateEdit', translateEditAction, {
         buttonIcon: <Translate/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
+        showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
         dataSelRole: 'sbsTranslateEdit'
     });
 
@@ -131,7 +132,8 @@ export const registerEditActions = registry => {
         buttonIcon: <Translate/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         dataSelRole: 'sbsTranslate',
-        requiredSitePermission: ['editAction']
+        showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
+        requiredSitePermission: ['translateAction']
     });
 
     registry.add('action', 'translateField', translateFieldAction, {

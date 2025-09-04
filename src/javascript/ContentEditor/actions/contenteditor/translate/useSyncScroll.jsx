@@ -1,5 +1,13 @@
 import {useEffect, useRef} from 'react';
 
+/**
+ * A custom hook that synchronizes scrolling between two form elements in a side-by-side view.
+ *
+ * The hook uses a MutationObserver to handle dynamic form loading and automatically detects when forms are ready in both columns.
+ * It then attaches syncScroll event listeners to left and right form elements to sync scroll positions between them.
+ *
+ * @returns {Object} References to attach to the left and right column containers
+ */
 export function useSyncScroll() {
     const leftColRef = useRef(null);
     const rightColRef = useRef(null);

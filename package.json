@@ -87,6 +87,7 @@
     "react-file-viewer": "^1.2.1",
     "react-i18next": "^11.7.2",
     "react-image-crop": "^6.0.18",
+    "react-number-format": "^4.9.4",
     "react-pdf-js": "^5.1.0",
     "react-redux": "^9.2.0",
     "react-router": "^5.2.1",

@@ -8,7 +8,7 @@ on:
     types: [opened, reopened, synchronize]
 
 permissions:
-  read-all
+  pull-requests: write
 
 jobs:
   update-signature:

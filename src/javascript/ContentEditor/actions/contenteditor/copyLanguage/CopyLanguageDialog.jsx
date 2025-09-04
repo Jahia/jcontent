@@ -54,7 +54,7 @@ export const CopyLanguageDialog = ({
                 value: availableLanguageOption.language
             };
         }
-    }, [defaultLanguage, language, availableLanguages]);
+    }, [defaultLanguage, availableLanguages]);
 
     const defaultOption = sbsOption || {
         label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),

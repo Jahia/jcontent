@@ -47,16 +47,14 @@ export const CopyLanguageDialog = ({
         .find(e => e.value === sideBySideContext.lang);
 
     const defaultLanguageOption = useMemo(() => {
-        if (defaultLanguage !== language) {
-            const availableLanguageOption = availableLanguages.find(al => al.language === defaultLanguage);
-            if (availableLanguageOption) {
-                return {
-                    label: availableLanguageOption.uiLanguageDisplayName,
-                    value: availableLanguageOption.language
-                };
-            }
+        const availableLanguageOption = availableLanguages.find(al => al.language === defaultLanguage) || availableLanguages[0];
+        if (availableLanguageOption) {
+            return {
+                label: availableLanguageOption.uiLanguageDisplayName,
+                value: availableLanguageOption.language
+            };
         }
-    }, [defaultLanguage, language, availableLanguages]);
+    }, [defaultLanguage, availableLanguages]);
 
     const defaultOption = sbsOption || {
         label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),
@@ -115,12 +113,12 @@ export const CopyLanguageDialog = ({
                         size="medium"
                         data-sel-role="from-language-selector"
                         isDisabled={Boolean(sbsOption)}
-                        data={[defaultOption].concat(availableLanguages.map(element => {
+                        data={sbsOption || defaultLanguageOption ? availableLanguages.map(element => {
                             return {
                                 value: element.language,
                                 label: element.uiLanguageDisplayName
                             };
-                        }))}
+                        }) : [defaultOption]}
                         onChange={handleOnChange}
                     />}
                 <Typography className={styles.label}>

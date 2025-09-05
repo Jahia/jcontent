@@ -1,4 +1,4 @@
-import {JContent, PageComposer} from '../../page-object';
+import {ContentEditor, JContent, PageComposer} from '../../page-object';
 import {addNode, Button, enableModule, getComponentByRole, getNodeByPath} from '@jahia/cypress';
 
 describe('System name test', () => {
@@ -6,8 +6,8 @@ describe('System name test', () => {
     let pageComposer: PageComposer;
     let jcontent: JContent;
 
-    function checkSystemName(expectedSystemName: string) {
-        cy.get('#nt\\:base_ce\\:systemName').should('have.value', expectedSystemName);
+    function checkSystemName(contentEditor: ContentEditor, expectedSystemName: string) {
+        contentEditor.getSmallTextField('nt:base_ce:systemName').checkValue(expectedSystemName)
     }
 
     before(function () {
@@ -149,8 +149,8 @@ describe('System name test', () => {
 
         // Check systemname is incremented
         jcontent.editComponentByText('Test 3');
-        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
-        checkSystemName('simple-text-2');
+        contentEditor.openSection('options');
+        checkSystemName(contentEditor,'simple-text-2');
         contentEditor.cancel();
 
         // Create simple text Test 4
@@ -161,8 +161,8 @@ describe('System name test', () => {
 
         // Check systemname is incremented
         jcontent.editComponentByText('Test 4');
-        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
-        checkSystemName('simple-text-3');
+        contentEditor.openSection('options');
+        checkSystemName(contentEditor, 'simple-text-3');
         contentEditor.cancel();
     });
 
@@ -179,7 +179,7 @@ describe('System name test', () => {
         jcontent.editComponentByText('News Title');
         contentEditor.switchToAdvancedMode();
         getComponentByRole(Button, 'syncSystemName').click();
-        checkSystemName('news-title');
+        checkSystemName(contentEditor,'news-title');
 
         // Check copy title button is now disabled
         getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.disabled');
@@ -196,11 +196,11 @@ describe('System name test', () => {
         // Create a news
         const contentEditor = jcontent.createContent('qant:titleWithDefaultValue');
         // Check default system name
-        checkSystemName('value-1');
+        checkSystemName(contentEditor,'value-1');
         // Set a new title
         contentEditor.getSmallTextField('qant:titleWithDefaultValue_jcr:title').addNewValue('my new value 2');
         // Check system name is updated
-        checkSystemName('my-new-value-2');
+        checkSystemName(contentEditor,'my-new-value-2');
         contentEditor.cancelAndDiscard();
     });
 
@@ -210,7 +210,7 @@ describe('System name test', () => {
         // Try to rename a simple text with a system name that is already used
         const contentEditor = jcontent.editComponentByText('my-text-a');
         contentEditor.switchToAdvancedMode();
-        contentEditor.openSection('options').get().find('input[name="nt:base_ce:systemName"]');
+        contentEditor.openSection('options');
         contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('my-text-b');
         getComponentByRole(Button, 'submitSave').click();
         // Check an error message is displayed

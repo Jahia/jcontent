@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 
 export const CellType = ({value, cell, column, row}) => {
+    const node = row.original;
+    let type = value;
+
+    if (node.primaryNodeType.name === 'jnt:file') {
+        type = node.content?.mimeType?.value;
+    }
+
     return (
         <TableBodyCell
             key={row.id + column.id}
@@ -10,7 +17,7 @@ export const CellType = ({value, cell, column, row}) => {
             width={column.width}
             data-cm-role={`table-content-list-cell-${column.id}`}
         >
-            <Typography isNowrap>{value}</Typography>
+            <Typography isNowrap>{type}</Typography>
         </TableBodyCell>
     );
 };

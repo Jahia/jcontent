@@ -186,7 +186,7 @@ export class ContentEditor extends BasePage {
     }
 
     validateContentIsNotVisibleInPreview(content: string) {
-        cy.frameLoaded('[data-sel-role="edit-preview-frame"]'   , {timeout: 30000});
+        cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 30000});
         cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
             expect($body.text()).not.to.include(content);
         }, {timeout: 10000});

@@ -7,7 +7,7 @@ describe('System name test', () => {
     let jcontent: JContent;
 
     function checkSystemName(contentEditor: ContentEditor, expectedSystemName: string) {
-        contentEditor.getSmallTextField('nt:base_ce:systemName').checkValue(expectedSystemName)
+        contentEditor.getSmallTextField('nt:base_ce:systemName').checkValue(expectedSystemName);
     }
 
     before(function () {
@@ -150,7 +150,7 @@ describe('System name test', () => {
         // Check systemname is incremented
         jcontent.editComponentByText('Test 3');
         contentEditor.openSection('options');
-        checkSystemName(contentEditor,'simple-text-2');
+        checkSystemName(contentEditor, 'simple-text-2');
         contentEditor.cancel();
 
         // Create simple text Test 4
@@ -179,7 +179,7 @@ describe('System name test', () => {
         jcontent.editComponentByText('News Title');
         contentEditor.switchToAdvancedMode();
         getComponentByRole(Button, 'syncSystemName').click();
-        checkSystemName(contentEditor,'news-title');
+        checkSystemName(contentEditor, 'news-title');
 
         // Check copy title button is now disabled
         getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.disabled');
@@ -196,11 +196,11 @@ describe('System name test', () => {
         // Create a news
         const contentEditor = jcontent.createContent('qant:titleWithDefaultValue');
         // Check default system name
-        checkSystemName(contentEditor,'value-1');
+        checkSystemName(contentEditor, 'value-1');
         // Set a new title
         contentEditor.getSmallTextField('qant:titleWithDefaultValue_jcr:title').addNewValue('my new value 2');
         // Check system name is updated
-        checkSystemName(contentEditor,'my-new-value-2');
+        checkSystemName(contentEditor, 'my-new-value-2');
         contentEditor.cancelAndDiscard();
     });
 

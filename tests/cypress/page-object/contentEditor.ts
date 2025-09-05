@@ -177,14 +177,19 @@ export class ContentEditor extends BasePage {
     }
 
     validateContentIsVisibleInPreview(content: string) {
-        cy.iframe('[data-sel-role="edit-preview-frame"]', {timeout: 90000})
-            .contains(content, {timeout: 90000}).should('be.visible'); // Will retry until content is found
+        cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 90000});
+        cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
+            // Sometimes iframe is not fully loaded, so we check if body is not empty
+            expect($body.text().trim().length).to.be.greaterThan(0);
+            expect($body.text()).to.include(content);
+        }, {timeout: 10000});
     }
 
     validateContentIsNotVisibleInPreview(content: string) {
-        cy.iframe('[data-sel-role="edit-preview-frame"]', {timeout: 30000, log: true}).within(() => {
-            cy.contains(content, {timeout: 5000}).should('not.exist');
-        });
+        cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 30000});
+        cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
+            expect($body.text()).not.to.include(content);
+        }, {timeout: 10000});
     }
 
     assertValidationErrorsNotExist() {

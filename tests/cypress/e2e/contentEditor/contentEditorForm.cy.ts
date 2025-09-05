@@ -171,8 +171,9 @@ describe('Content editor form', () => {
         const contentEditor = jcontent.createContent('jnt:text');
         const field = contentEditor.getField(SmallTextField, 'jnt:text_text');
         field.get().find('input').should('not.have.attr', 'readonly', 'readonly');
-        cy.login('mathias', 'password');
 
+        cy.logout();
+        cy.login('mathias', 'password');
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         const contentEditor2 = jcontent.createContent('jnt:text');
         const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
@@ -182,8 +183,9 @@ describe('Content editor form', () => {
     it('Should not see see field for reviewer', () => {
         const contentEditor = jcontent.createContent('jnt:news');
         contentEditor.getField(SmallTextField, 'jnt:news_desc');
-        cy.login('mathias', 'password');
 
+        cy.logout();
+        cy.login('mathias', 'password');
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         jcontent.createContent('jnt:news');
         cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');

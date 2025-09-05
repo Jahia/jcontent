@@ -62,11 +62,11 @@ export class TranslateEditor extends ContentEditor {
         return getComponentByAttr(FieldComponent, 'data-sel-content-editor-field', fieldName, this.getTranslateColumn());
     }
 
-    getSourceLanguageSwitcher() {
+    getSourceLanguageSwitcher(): LanguageSwitcher {
         return this.getMultiLanguageSwitcher(this.getSourceColumn());
     }
 
-    getTranslateLanguageSwitcher() {
+    getTranslateLanguageSwitcher(): LanguageSwitcher {
         return this.getMultiLanguageSwitcher(this.getTranslateColumn());
     }
 

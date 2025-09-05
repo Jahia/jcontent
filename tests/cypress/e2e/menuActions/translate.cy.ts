@@ -157,6 +157,9 @@ describe('translate action tests', () => {
 
         cy.log('Add user translation in de for long field');
         translateEditor.getTranslateLanguageSwitcher().selectLangByValue('de');
+        // Need to make sure focus on first field in source column is focused before typing
+        translateEditor.getSourceColumn().get().find('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        translateEditor.getSourceFields().find('input').should('have.focus');
         translateEditor
             .getTranslateField(SmallTextField, 'qant:allFields_long')
             .addNewValue('123');

@@ -8,7 +8,7 @@ describe('Preview tests', () => {
 
     before(() => {
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
-        enableModule('jcontent-test-module', 'digitall');
+        enableModule('jcontent-test-module', siteKey);
         addNode({
             parentPathOrId: `/sites/${siteKey}/home`,
             name: 'chocolate,-sweets,-cakes',
@@ -26,6 +26,7 @@ describe('Preview tests', () => {
 
     after(() => {
         deleteNode(`/sites/${siteKey}/home/chocolate,-sweets,-cakes`);
+        deleteNode(`/sites/${siteKey}/contents/simpleText`);
         disableModule('jcontent-test-module', siteKey);
     });
 
@@ -76,30 +77,28 @@ describe('Preview tests', () => {
 
     it('It updates preview after save', () => {
         addNode({
-            parentPathOrId: '/sites/digitall/contents',
-            name: 'Simple text',
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'simpleText',
             primaryNodeType: 'jnt:text'
         });
 
         cy.loginAndStoreSession();
-        const jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
-        const contentEditor = new ContentEditor();
-
-        jcontent.editComponentByText('Simple text');
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/simpleText');
+        const contentEditor = jcontent.editContent();
         contentEditor.switchToAdvancedMode();
 
-        // Check preview badge is not displayed
+        cy.log('Check preview badge is not displayed');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
 
-        // Update content
+        cy.log('Update content');
         contentEditor.getSmallTextField('jnt:text_text').addNewValue('Text updated');
 
-        // Check preview badge is displayed
+        cy.log('Check preview badge is displayed');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('exist');
 
         contentEditor.save();
 
-        // Check preview badge is not displayed
+        cy.log('Check preview badge is not displayed after save');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
         contentEditor.validateContentIsVisibleInPreview('Text updated');
     });

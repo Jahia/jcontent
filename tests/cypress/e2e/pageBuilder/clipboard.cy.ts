@@ -26,7 +26,7 @@ describe('Page builder - clipboard tests', () => {
     it('should show paste button when we copy', function () {
         // We don't force right-click otherwise it might bring up page context menu
         const contentPath = `/sites/${siteKey}/home/area-main/test-content1`;
-        const contextMenu = jcontent.getModule(contentPath).contextMenu(true, false);
+        const contextMenu = jcontent.getModule(contentPath, false).contextMenu(true, false);
 
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000); // Wait for the context menu to appear

@@ -21,9 +21,12 @@ describe('Create media tests', () => {
     });
 
     after(function () {
-        cy.logout();
         deleteUser(user.name);
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+    });
+
+    afterEach(() => {
+        cy.logout();
     });
 
     it('Can create and delete basic folder', function () {
@@ -70,8 +73,7 @@ describe('Create media tests', () => {
             .createInvalidFolder('media/files', '[]*|/%');
     });
 
-    // https://github.com/Jahia/jcontent/issues/1772
-    it.skip('Can open created file in advanced mode with preview', function () {
+    it('Can open created file in advanced mode with preview', function () {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         const menu = jcontent.getMedia()

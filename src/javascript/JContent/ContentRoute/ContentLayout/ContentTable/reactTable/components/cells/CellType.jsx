@@ -7,7 +7,7 @@ export const CellType = ({value, cell, column, row}) => {
     let type = value;
 
     if (node.primaryNodeType.name === 'jnt:file') {
-        type = node.content?.mimeType?.value;
+        type = node.content?.mimeType?.value || value;
     }
 
     return (

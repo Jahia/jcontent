@@ -92,5 +92,5 @@ export const fileSize = {
 };
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
-export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, type, createdBy, lastModified, visibleActions];
+export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, {...type, property: 'content.mimeType.value'}, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

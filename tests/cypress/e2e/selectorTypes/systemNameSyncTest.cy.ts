@@ -27,11 +27,14 @@ describe('System name sync test', () => {
 
     after(function () {
         deleteSite(siteKey);
-        cy.logout();
     });
 
     beforeEach(function () {
         cy.loginAndStoreSession();
+    });
+
+    afterEach(() => {
+        cy.logout();
     });
 
     function checkSystemName(contentEditor: ContentEditor, expectedSystemName: string) {

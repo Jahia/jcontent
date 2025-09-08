@@ -291,19 +291,19 @@ export class JContentPageBuilder extends JContent {
 
     iframe(bypassCheck = false) {
         const iframeSel = '[data-sel-role="page-builder-frame-active"]';
-        cy.iframe(iframeSel).as(this.alias);
+        cy.frameLoaded(iframeSel).as(this.alias);
         if (!bypassCheck) {
-            cy.get(`@${this.alias}`).find('[jahiatype="createbuttons"]');
+            cy.iframe(`@${this.alias}`).find('[jahiatype="createbuttons"]');
         }
 
-        return new BaseComponent(cy.get(`@${this.alias}`));
+        return new BaseComponent(cy.iframe(`@${this.alias}`));
     }
 
     getModule(path: string, bypassFrameLoadedCheck = true): PageBuilderModule {
         const parentFrame = this.iframe(bypassFrameLoadedCheck);
         // I see cypress querying the module even before iFrame has settled and verified.
         // Force a wait here to settle the iframe first before continuing
-        cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+        // cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;

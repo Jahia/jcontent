@@ -31,7 +31,7 @@ const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
 
     if (loading) {
         return (
-            <Dropdown isDisabled
+            <Dropdown isLoading
                       data={[{label: 'none', value: 'none'}]}
                       className={styles.languageSwitcher}
                       onChange={() => {}}/>

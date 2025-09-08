@@ -91,6 +91,11 @@ export const fileSize = {
     width: '120px'
 };
 
+const mediaType = {
+    ...type,
+    property: 'content.mimeType.value'
+};
+
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
-export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, type, createdBy, lastModified, visibleActions];
+export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, mediaType, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

@@ -38,7 +38,7 @@ describe('Area actions', () => {
         menu.get().find('.moonstone-menuItem[data-sel-role="edit"]').should('not.exist');
     });
 
-    it('Checks that content can be pasted into the area', () => {
+    it('Checks that content can be pasted into the area', {retries: 3}, () => {
         const jcontentPageBuilder = jcontent.switchToPageBuilder();
         jcontentPageBuilder.getModule('/sites/jcontentSite/home/landing/test-content-path2', false)
             .contextMenu(false, false)

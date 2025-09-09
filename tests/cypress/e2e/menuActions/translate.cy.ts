@@ -179,7 +179,7 @@ describe('translate action tests', () => {
         getComponent(Dialog).get().contains('Unsaved changes').should('be.visible');
         getComponentByRole(Button, 'close-dialog-cancel').click();
 
-        translateEditor.saveUnchecked();
+        translateEditor.save();
 
         getNodeByPath(`${parentPath}/${name}`, ['smallText'], 'fr').then(result => {
             cy.log('Verify fr translations');

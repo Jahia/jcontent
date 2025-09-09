@@ -82,7 +82,7 @@ describe('delete tests', () => {
         // - page itself + area-main and landing sections
         // Toggle the row to see what is going on
         getComponent(DeleteDialog).toggleRowExpanded();
-        getComponent(DeleteDialog).markForDeletion('You are about to delete');
+        getComponent(DeleteDialog).markForDeletion('You are about to delete 3 items, including 1 page(s)');
 
         cy.log('Publish deletion');
         jcontent.getHeaderActionButton('publishDeletion').get().should('be.visible').click();

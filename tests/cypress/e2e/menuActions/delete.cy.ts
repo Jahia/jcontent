@@ -32,9 +32,7 @@ describe('delete tests', () => {
         jcontent.getAccordionItem('pages').getTreeItem('test-pageDelete1').contextMenu().select('Delete');
 
         cy.log('Verify dialog opens and can be mark for deletion');
-        // Seeing duplicate items e.g. landing page showing up twice in the dialog but not able to reproduce in normal use
-        // Loosening up the check for now unless we can reproduce it reliably
-        getComponent(DeleteDialog).toggleRowExpanded().markForDeletion('You are about to delete');
+        getComponent(DeleteDialog).toggleRowExpanded().markForDeletion('You are about to delete 5 items, including 3 page(s)');
 
         cy.log('Verify menu and subpages has been marked for deletion');
         cy.apollo({

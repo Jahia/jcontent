@@ -179,17 +179,22 @@ export class ContentEditor extends BasePage {
     validateContentIsVisibleInPreview(content: string) {
         cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 90000});
         cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
-            // Sometimes iframe is not fully loaded, so we check if body is not empty
+            // While iframe is loading the content, "iframe" tag itself" has class which contains "_iframeLoading" in the one of class names.
+            expect(($body.attr('class') || '').split(' ').some(cls => cls.includes('_iframeLoading'))).to.be.false;
+            // Sometimes iframe's content is not fully loaded and ajax spinner is visible, so we check if body is not empty
+            // Retry up to 20 seconds (10 seconds is not enough in some cases with slow environments)
             expect($body.text().trim().length).to.be.greaterThan(0);
             expect($body.text()).to.include(content);
-        }, {timeout: 10000});
+        }, {timeout: 20000});
     }
 
     validateContentIsNotVisibleInPreview(content: string) {
         cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 30000});
         cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
+            // While iframe is loading the content, "iframe" tag itself" has class which contains "_iframeLoading" in the one of class names.
+            expect(($body.attr('class') || '').split(' ').some(cls => cls.includes('_iframeLoading'))).to.be.false;
             expect($body.text()).not.to.include(content);
-        }, {timeout: 10000});
+        }, {timeout: 20000});
     }
 
     assertValidationErrorsNotExist() {

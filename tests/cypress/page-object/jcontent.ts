@@ -293,10 +293,10 @@ export class JContentPageBuilder extends JContent {
         const iframeSel = '[data-sel-role="page-builder-frame-active"]';
         cy.iframe(iframeSel).as(this.alias);
         if (!bypassCheck) {
-            cy.iframe(`@${this.alias}`).find('[jahiatype="createbuttons"]');
+            cy.get(`@${this.alias}`).find('[jahiatype="createbuttons"]');
         }
 
-        return new BaseComponent(cy.iframe(`@${this.alias}`));
+        return new BaseComponent(cy.get(`@${this.alias}`));
     }
 
     getModule(path: string, bypassFrameLoadedCheck = true): PageBuilderModule {

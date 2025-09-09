@@ -291,7 +291,7 @@ export class JContentPageBuilder extends JContent {
 
     iframe(bypassCheck = false) {
         const iframeSel = '[data-sel-role="page-builder-frame-active"]';
-        cy.frameLoaded(iframeSel).as(this.alias);
+        cy.iframe(iframeSel).as(this.alias);
         if (!bypassCheck) {
             cy.iframe(`@${this.alias}`).find('[jahiatype="createbuttons"]');
         }

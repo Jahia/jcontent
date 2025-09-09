@@ -303,7 +303,7 @@ export class JContentPageBuilder extends JContent {
         const parentFrame = this.iframe(bypassFrameLoadedCheck);
         // I see cypress querying the module even before iFrame has settled and verified.
         // Force a wait here to settle the iframe first before continuing
-        // cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+        cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
         const module = getComponentBySelector(PageBuilderModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
         module.should('exist').and('be.visible');
         module.parentFrame = parentFrame;

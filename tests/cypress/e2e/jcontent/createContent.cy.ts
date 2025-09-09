@@ -1,7 +1,5 @@
-import { visit } from 'graphql';
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 import {createSite, deleteSite, addNode} from '@jahia/cypress';
-
 
 describe('Create content tests', () => {
     const siteKey = 'jcontentSite2';
@@ -24,7 +22,7 @@ describe('Create content tests', () => {
             variables: {homePath: `/sites/${siteKey}/home`}
         });
 
-        // Add test node to be updated during the test. 
+        // Add test node to be updated during the test.
         // Added to decouple test scenarios as much as possible and avoid dependencies.
         addNode({
             parentPathOrId: `/sites/${siteKey}/home`,
@@ -51,7 +49,7 @@ describe('Create content tests', () => {
      * @param exists Whether the content is expected to be present or absent
      */
     const validateContentPresence = (value: string, exists: boolean) => {
-        // remove this wait if waitUntil() works fine
+        // Remove this wait if waitUntil() works fine
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         // cy.wait(2500);
         const expectation = exists ? 'contain.text' : 'not.contain.text';

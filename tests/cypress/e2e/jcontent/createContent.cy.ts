@@ -84,11 +84,7 @@ describe('Create content tests', () => {
             buttons.get().scrollIntoView();
             buttons.getButton('New content').click();
 
-            const contentEditor = jcontent.getCreateContent()
-                                        .getContentTypeSelector()
-                                        .searchForContentType('jnt:bigText')
-                                        .selectContentType('jnt:bigText')
-                                        .create();
+            const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
             contentEditor.getRichTextField('jnt:bigText_text').type(createdText);
             contentEditor.create();
 
@@ -116,11 +112,7 @@ describe('Create content tests', () => {
             module.getCreateButtons().getInsertionButtonByIndex(1).click();
 
             // Create content using the create content wizard
-            const contentEditor = jcontent.getCreateContent()
-                                        .getContentTypeSelector()
-                                        .searchForContentType('jnt:bigText')
-                                        .selectContentType('jnt:bigText')
-                                        .create();
+            const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();
             contentEditor.getRichTextField('jnt:bigText_text').type(insertedText);
             contentEditor.create();
 

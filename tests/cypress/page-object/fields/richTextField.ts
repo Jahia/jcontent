@@ -3,6 +3,14 @@ import {Picker} from '../picker';
 import {Field} from './field';
 
 export class RichTextField extends Field {
+    /**
+     * Clears the content of the rich text field.
+     * @returns {Cypress.Chainable<JQuery>} The chainable Cypress object.
+     */
+    clear() {
+        return this.get().iframe('.cke_wysiwyg_frame').clear();
+    }
+
     type(text: string) {
         this.get().iframe('.cke_wysiwyg_frame').type(text);
     }

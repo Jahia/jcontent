@@ -11,8 +11,18 @@ permissions:
   pull-requests: write
 
 jobs:
+  start-measurement:
+    name: Start measurement
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: start-measurement
+
   update-signature:
     name: Update module signature
+    needs: start-measurement
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,9 +30,15 @@ jobs:
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+      - name: Signature update Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: get-measurement
+          label: 'Measure signature update'
 
   static-analysis:
     name: Static Analysis (linting, vulns)
+    needs: start-measurement
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,15 +46,17 @@ jobs:
         with:
           auditci_level: critical
           max_warning: 8
+      - name: Static analysis Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: get-measurement
+          label: 'Measure static analysis'
 
   unit-tests:
     name: Javascript unit tests (yarn test)
+    needs: start-measurement
     runs-on: ubuntu-latest
     steps:
-      - name: Start Measurement
-        uses: green-coding-solutions/eco-ci-energy-estimation@v4
-        with:
-          task: start-measurement
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -48,15 +66,11 @@ jobs:
         run: |
           yarn
           yarn test
-      - name: Checkout Repo Measurement
+      - name: Unit tests Measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: get-measurement
           label: 'Measure yarn test'
-      - name: Show Energy Results
-        uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
-        with:
-          task: display-results
 
   build:
     name: Build Module
@@ -75,6 +89,11 @@ jobs:
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+      - name: Build Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: get-measurement
+          label: 'Measure build'
 
   sonar-analysis:
     name: Sonar Analysis
@@ -93,6 +112,11 @@ jobs:
           sonar_token: ${{ secrets.SONAR_TOKEN }}
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+      - name: Sonar analysis Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: get-measurement
+          label: 'Measure sonar analysis'
 
   integration-tests-standalone:
     name: Integration Tests ${{ matrix.config_file }}
@@ -159,12 +183,18 @@ jobs:
           reporter: java-junit
           fail-on-error: 'false'
           output-to: 'checks'
-      - name: Checkout Repo Measurement
+      - name: Integration tests Measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: get-measurement
           label: 'Measure integration tests'
+
+  display-results:
+    name: Display results
+    needs: [integration-tests-standalone]
+    runs-on: ubuntu-latest
+    steps:
       - name: Show Energy Results
-        uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: display-results

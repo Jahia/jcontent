@@ -40,7 +40,9 @@ describe('Table sorting tests', () => {
         const header = jcontent.getTable().getHeaderByRole('type');
         header.sort();
         jcontent.getTable().getRowByIndex(2).element.contains('myfile.txt');
+        jcontent.getTable().getRowByIndex(2).element.contains('text/plain');
         header.sort();
         jcontent.getTable().getRowByIndex(2).element.contains('myfile.hol');
+        jcontent.getTable().getRowByIndex(2).element.contains('application/octet-stream');
     });
 });

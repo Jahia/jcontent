@@ -180,9 +180,9 @@ export class ContentEditor extends BasePage {
         const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
 
         cy.get(iframeSelector, {timeout: 90000}).should($iframe => {
-                // Wait until the iframe does NOT have any class containing "_iframeLoading"
-                const classList = ($iframe.attr('class') || '').split(' ');
-                expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
+            // Wait until the iframe does NOT have any class containing "_iframeLoading"
+            const classList = ($iframe.attr('class') || '').split(' ');
+            expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
         });
 
         cy.iframe(iframeSelector, {timeout: 90000}).should('include.text', content);
@@ -191,12 +191,11 @@ export class ContentEditor extends BasePage {
     validateContentIsNotVisibleInPreview(content: string) {
         const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
 
-        cy.get(iframeSelector, {timeout: 90000})
-            .should($iframe => {
-                // Wait until the iframe does NOT have any class containing "_iframeLoading"
-                const classList = ($iframe.attr('class') || '').split(' ');
-                expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
-            });
+        cy.get(iframeSelector, {timeout: 90000}).should($iframe => {
+            // Wait until the iframe does NOT have any class containing "_iframeLoading"
+            const classList = ($iframe.attr('class') || '').split(' ');
+            expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
+        });
 
         cy.iframe(iframeSelector, {timeout: 90000}).should('not.include.text', content);
     }

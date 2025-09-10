@@ -10,11 +10,13 @@ describe('Create content tests', () => {
     const createdText = 'Just created content';
     const updatedText = 'Just updated content';
     const insertedText = 'Just inserted content';
-    const iframeSel = '[data-sel-role="page-builder-frame-active"]';
+    const contentIFrame = '[data-sel-role="page-builder-frame-active"]';
+    const contentEditor = '[aria-labelledby="dialog-content-editor"]';
     const visible = true;
     const absent = false;
 
     before(function () {
+        deleteSite(siteKey);
         createSite(siteKey);
 
         cy.apollo({
@@ -40,7 +42,7 @@ describe('Create content tests', () => {
     });
 
     after(() => {
-        deleteSite(siteKey);
+        //deleteSite(siteKey);
     });
 
     /**
@@ -49,15 +51,16 @@ describe('Create content tests', () => {
      * @param exists Whether the content is expected to be present or absent
      */
     const validateContentPresence = (value: string, exists: boolean) => {
-        // Remove this wait if waitUntil() works fine
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        // cy.wait(2500);
-        const expectation = exists ? 'contain.text' : 'not.contain.text';
+        // Make sure Content Editor window is closed
+        cy.get(contentEditor, {timeout: 90000}).should('not.exist');
 
-        cy.enter(iframeSel, {timeout: 20000}).then(getBody => {
+        // Scroll iframe to top to avoid content being outside of the viewport
+        cy.enter(contentIFrame, {timeout: 20000}).then(getBody => {
             getBody().find('p').first().then(el => el.closest('html')[0].scroll(0, -2000));
-           cy.iframe(iframeSel).find('p').should(expectation, value);
         });
+
+        // Validate content presence or absence
+        cy.iframe(contentIFrame).find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
     };
 
     describe('Content Folders Operations', () => {

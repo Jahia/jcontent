@@ -169,7 +169,7 @@ describe('test Copy Language action', () => {
             ]
         });
 
-        let path = 'content-folders/contents/contents/all-fields-two-languages';
+        let path = 'content-folders/contents/all-fields-two-languages';
 
         checkCopyLanguageDoesNotHaveLang(path, 'en', 'German');
 
@@ -187,5 +187,22 @@ describe('test Copy Language action', () => {
         path = 'content-folders/contents/all-fields-three-languages';
 
         checkCopyLanguageHasLang(path, 'en', 'German');
+    });
+
+    it('does not enable action if no translation', () => {
+        addNode({
+            parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,
+            primaryNodeType: 'qant:allFields',
+            name: 'no-action',
+            properties: [
+                {name: 'smallText', value: 'en1', language: 'en'}
+            ]
+        });
+
+        const path = 'content-folders/contents/no-action';
+
+        JContent.visit(ThreeLanguagesSiteKey, 'en', path).editContent();
+
+        getComponentByRole(Button, 'copyLanguageAction').should('have.attr', 'disabled');
     });
 });

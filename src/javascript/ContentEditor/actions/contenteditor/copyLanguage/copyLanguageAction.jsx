@@ -15,7 +15,7 @@ export const CopyLanguageActionComponent = ({render: Render, ...otherProps}) => 
 
     return (
         <Render {...otherProps}
-                enabled={mode !== 'create'}
+                enabled={mode !== 'create' && availableLanguages.length > 0}
                 isVisible={siteInfo.languages.length > 1 && nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited}
                 onClick={() => {
                     render('CopyLanguageDialog', CopyLanguageDialog, {

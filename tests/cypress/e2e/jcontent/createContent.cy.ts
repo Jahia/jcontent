@@ -54,8 +54,8 @@ describe('Create content tests', () => {
         // cy.wait(2500);
         const expectation = exists ? 'contain.text' : 'not.contain.text';
         cy.enter(iframeSel).then(getBody => {
-            getBody().find('p').first().then(el => el.closest('html')[0].scrollIntoView());
-            cy.waitUntil(() => getBody().find('p').should(expectation, value));
+            getBody().find('p').first().then(el => el.closest('html')[0].scroll(0, -2000));
+            cy.waitUntil(() => cy.iframe(iframeSel).find('p').should(expectation, value));
         });
     };
 

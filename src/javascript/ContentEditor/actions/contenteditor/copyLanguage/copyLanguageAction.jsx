@@ -8,13 +8,14 @@ import {useFormikContext} from 'formik';
 
 export const CopyLanguageActionComponent = ({render: Render, ...otherProps}) => {
     const {render, destroy} = useContext(ComponentRendererContext);
-    const {nodeData, lang, siteInfo} = useContentEditorContext();
+    const {mode, nodeData, lang, siteInfo} = useContentEditorContext();
     const {sideBySideContext} = useContentEditorConfigContext();
     const formik = useFormikContext();
     const availableLanguages = siteInfo.languages.filter(l => l.language !== lang && nodeData.translationLanguages?.includes(l.language));
 
     return (
         <Render {...otherProps}
+                enabled={mode !== 'create'}
                 isVisible={siteInfo.languages.length > 1 && nodeData.hasWritePermission && !nodeData.lockedAndCannotBeEdited}
                 onClick={() => {
                     render('CopyLanguageDialog', CopyLanguageDialog, {

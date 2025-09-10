@@ -10,13 +10,12 @@ describe('Create content tests', () => {
     const createdText = 'Just created content';
     const updatedText = 'Just updated content';
     const insertedText = 'Just inserted content';
-    const contentIFrame = '[data-sel-role="page-builder-frame-active"]';
-    const contentEditor = '[aria-labelledby="dialog-content-editor"]';
+    const contentIFrameElt = '[data-sel-role="page-builder-frame-active"]';
+    const contentEditorElt = '[aria-labelledby="dialog-content-editor"]';
     const visible = true;
     const absent = false;
 
     before(function () {
-        deleteSite(siteKey);
         createSite(siteKey);
 
         cy.apollo({
@@ -42,7 +41,7 @@ describe('Create content tests', () => {
     });
 
     after(() => {
-        //deleteSite(siteKey);
+        deleteSite(siteKey);
     });
 
     /**
@@ -52,15 +51,15 @@ describe('Create content tests', () => {
      */
     const validateContentPresence = (value: string, exists: boolean) => {
         // Make sure Content Editor window is closed
-        cy.get(contentEditor, {timeout: 90000}).should('not.exist');
+        cy.get(contentEditorElt, {timeout: 90000}).should('not.exist');
 
         // Scroll iframe to top to avoid content being outside of the viewport
-        cy.enter(contentIFrame, {timeout: 20000}).then(getBody => {
+        cy.enter(contentIFrameElt, {timeout: 20000}).then(getBody => {
             getBody().find('p').first().then(el => el.closest('html')[0].scroll(0, -2000));
         });
 
         // Validate content presence or absence
-        cy.iframe(contentIFrame).find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
+        cy.iframe(contentIFrameElt).find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
     };
 
     describe('Content Folders Operations', () => {

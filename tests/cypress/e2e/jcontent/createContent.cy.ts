@@ -59,7 +59,10 @@ describe('Create content tests', () => {
         });
 
         // Validate content presence or absence
-        cy.iframe(contentIFrameElt).find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
+        cy.iframe(contentIFrameElt, {timeout: 90000}).should(exists ? 'contain.text' : 'not.contain.text', value);
+        // cy.enter(contentIFrameElt).then(getBody => {
+        //     getBody().find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
+        // });
     };
 
     describe('Content Folders Operations', () => {

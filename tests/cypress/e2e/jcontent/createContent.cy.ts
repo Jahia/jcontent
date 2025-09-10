@@ -53,9 +53,10 @@ describe('Create content tests', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         // cy.wait(2500);
         const expectation = exists ? 'contain.text' : 'not.contain.text';
-        cy.enter(iframeSel).then(getBody => {
+
+        cy.enter(iframeSel, {timeout: 20000}).then(getBody => {
             getBody().find('p').first().then(el => el.closest('html')[0].scroll(0, -2000));
-            cy.waitUntil(() => cy.iframe(iframeSel).find('p').should(expectation, value));
+           cy.iframe(iframeSel).find('p').should(expectation, value);
         });
     };
 

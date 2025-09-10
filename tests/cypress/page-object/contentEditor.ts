@@ -179,20 +179,13 @@ export class ContentEditor extends BasePage {
     validateContentIsVisibleInPreview(content: string) {
         const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
 
-        cy.get(iframeSelector, {timeout: 90000})
-            .should($iframe => {
+        cy.get(iframeSelector, {timeout: 90000}).should($iframe => {
                 // Wait until the iframe does NOT have any class containing "_iframeLoading"
                 const classList = ($iframe.attr('class') || '').split(' ');
                 expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
-            });
-
-        cy.enter(iframeSelector, {timeout: 20000}).then(getBody => {
-            getBody().should($body => {
-                const text = $body.text().trim();
-                expect(text.length).to.be.greaterThan(0);
-                expect(text).to.include(content);
-            });
         });
+
+        cy.iframe(iframeSelector, {timeout: 90000}).should('include.text', content);
     }
 
     validateContentIsNotVisibleInPreview(content: string) {
@@ -205,12 +198,7 @@ export class ContentEditor extends BasePage {
                 expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
             });
 
-        cy.enter(iframeSelector, {timeout: 20000}).then(getBody => {
-            getBody().should($body => {
-                const text = $body.text().trim();
-                expect(text).to.not.include(content);
-            });
-        });
+        cy.iframe(iframeSelector, {timeout: 90000}).should('not.include.text', content);
     }
 
     assertValidationErrorsNotExist() {

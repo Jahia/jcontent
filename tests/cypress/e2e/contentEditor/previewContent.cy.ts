@@ -1,10 +1,13 @@
 import {PageComposer} from '../../page-object/pageComposer';
 import {addNode, deleteNode, enableModule, disableModule} from '@jahia/cypress';
 import {ContentEditor, JContent} from '../../page-object';
+import {v4 as uuidv4} from 'uuid';
 
 describe('Preview tests', () => {
     const siteKey = 'digitall';
     let pageComposer: PageComposer;
+    const simpleText = 'Simple Text ' + uuidv4();
+    const updatedText = 'Updated Text ' + uuidv4();
 
     before(() => {
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
@@ -35,8 +38,6 @@ describe('Preview tests', () => {
         pageComposer = PageComposer.visit(siteKey, 'en', 'home.html');
         const contentEditor = pageComposer.editPage('Our Companies');
         contentEditor.switchToAdvancedMode();
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(5000);
         contentEditor.validateContentIsVisibleInPreview('Making a Difference');
     });
 
@@ -62,17 +63,17 @@ describe('Preview tests', () => {
             parentPathOrId: `/sites/${siteKey}/home/chocolate,-sweets,-cakes/area-main`,
             name: 'text',
             primaryNodeType: 'jnt:text',
-            properties: [{language: 'en', name: 'text', type: 'STRING', value: 'This is a simple text'}]
+            properties: [{language: 'en', name: 'text', type: 'STRING', value: simpleText}]
         });
 
         cy.loginAndStoreSession();
         pageComposer = PageComposer.visit(siteKey, 'en', 'home.html');
         pageComposer.navigateToPage('chocolate,-sweets,-cakes');
-        const contentEditor = pageComposer.editComponentByText('This is a simple text');
+        const contentEditor = pageComposer.editComponentByText(simpleText);
 
         contentEditor.switchToAdvancedMode();
 
-        contentEditor.validateContentIsVisibleInPreview('This is a simple text');
+        contentEditor.validateContentIsVisibleInPreview(simpleText);
     });
 
     it('It updates preview after save', () => {
@@ -91,7 +92,7 @@ describe('Preview tests', () => {
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
 
         cy.log('Update content');
-        contentEditor.getSmallTextField('jnt:text_text').addNewValue('Text updated');
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue(updatedText);
 
         cy.log('Check preview badge is displayed');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('exist');
@@ -100,6 +101,6 @@ describe('Preview tests', () => {
 
         cy.log('Check preview badge is not displayed after save');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
-        contentEditor.validateContentIsVisibleInPreview('Text updated');
+        contentEditor.validateContentIsVisibleInPreview(updatedText);
     });
 });

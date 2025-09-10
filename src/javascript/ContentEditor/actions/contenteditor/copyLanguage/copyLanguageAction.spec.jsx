@@ -28,7 +28,8 @@ describe('copy language action', () => {
                     {displayName: 'Deutsch', language: 'de', activeInEdit: true},
                     {displayName: 'Français', language: 'fr', activeInEdit: true}
                 ]
-            }
+            },
+            mode: 'edit'
         };
         useContentEditorContext.mockReturnValue(contentEditorContext);
         defaultProps = {
@@ -44,7 +45,7 @@ describe('copy language action', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().enabled).toBeFalsy();
+        expect(cmp.props().isVisible).toBeFalsy();
     });
 
     it('should render not be enabled when the node is locked', () => {
@@ -55,7 +56,7 @@ describe('copy language action', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().enabled).toBeFalsy();
+        expect(cmp.props().isVisible).toBeFalsy();
     });
 
     it('should be visible when there is more than one language', () => {

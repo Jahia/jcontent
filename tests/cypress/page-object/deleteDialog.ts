@@ -23,7 +23,7 @@ export class DeleteDialog extends BaseComponent {
     }
 
     close() {
-        getComponentByRole(Button, 'close-button').click();
+        getComponentByRole(Button, 'cancel-button').click();
         cy.get(DeleteDialog.defaultSelector).should('not.exist');
     }
 }

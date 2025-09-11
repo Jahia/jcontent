@@ -27,11 +27,9 @@ describe('Page builder - clipboard tests', () => {
         // We don't force right-click otherwise it might bring up page context menu
         const contentPath = `/sites/${siteKey}/home/area-main/test-content1`;
         const contextMenu = jcontent.getModule(contentPath, false).contextMenu(true, false);
-
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1000); // Wait for the context menu to appear
-        contextMenu.selectByRole('copy');
-        cy.get('#message-id').contains('in the clipboard');
+        cy.waitUntil(() => contextMenu.selectByRole('copy')).then(() => {
+            cy.get('#message-id').contains('in the clipboard');
+        });
 
         const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);
         // LandingArea.click(); // Deselect copied content
@@ -44,10 +42,9 @@ describe('Page builder - clipboard tests', () => {
     it('should remove paste button when we clear clipboard', function () {
         // We don't force right-click otherwise it might bring up page context menu
         const contextMenu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true, false);
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1000); // Wait for the context menu to appear
-        contextMenu.selectByRole('copy');
-        cy.get('#message-id').contains('in the clipboard');
+        cy.waitUntil(() => contextMenu.selectByRole('copy')).then(() => {
+            cy.get('#message-id').contains('in the clipboard');
+        });
 
         // Clearing selection should keep paste buttons
         const landingArea = jcontent.getModule(`/sites/${siteKey}/home/landing`);

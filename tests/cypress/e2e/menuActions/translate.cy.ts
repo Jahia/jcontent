@@ -29,7 +29,9 @@ describe('translate action tests', () => {
             serverName: 'localhost',
             locale: 'en'
         });
+
         enableModule('qa-module', siteKey);
+
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
             primaryNodeType: 'qant:allFields',
@@ -156,7 +158,7 @@ describe('translate action tests', () => {
             .click();
 
         cy.log('Add user translation in de for long field');
-        translateEditor.getTranslateLanguageSwitcher().selectLangByValue('de');
+        cy.waitUntil(() => translateEditor.getTranslateLanguageSwitcher().selectLangByValue('de'));
         // Need to make sure focus on first field in source column is focused before typing
         translateEditor.getSourceColumn().get().find('.moonstone-loader', {timeout: 5000}).should('not.exist');
         translateEditor.getSourceFields().find('input').should('have.focus');
@@ -171,7 +173,7 @@ describe('translate action tests', () => {
             .click();
 
         cy.log('Verify smallText changes in fr is still available');
-        translateEditor.getTranslateLanguageSwitcher().selectLangByValue('fr');
+        cy.waitUntil(() => translateEditor.getTranslateLanguageSwitcher().selectLangByValue('fr'));
         translateEditor.getTranslateField(SmallTextField, 'qant:allFields_smallText').checkValue('smallText in English');
 
         cy.log('Verify close prompts unsaved changes');

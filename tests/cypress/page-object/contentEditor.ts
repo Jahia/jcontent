@@ -183,9 +183,20 @@ export class ContentEditor extends BasePage {
             // Wait until the iframe does NOT have any class containing "_iframeLoading"
             const classList = ($iframe.attr('class') || '').split(' ');
             expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
+        }).then(() => {
+            // Use waitUntil to repeatedly check for the content in the iframe
+            // This helps to handle cases where the content might take time to appear
+            cy.waitUntil(() =>
+                cy.iframe(iframeSelector).then($body => {
+                    return $body.text().includes(content);
+                }),
+                {
+                    timeout: 60000, // 60 seconds
+                    interval: 1000, // check every second
+                    errorMsg: `Timed out waiting for text "${content}" to appear in iframe`
+                }
+            );
         });
-
-        cy.iframe(iframeSelector, {timeout: 90000}).should('include.text', content);
     }
 
     validateContentIsNotVisibleInPreview(content: string) {

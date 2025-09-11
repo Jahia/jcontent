@@ -190,12 +190,11 @@ export class ContentEditor extends BasePage {
                 cy.iframe(iframeSelector).then($body => {
                     return $body.text().includes(content);
                 }),
-                {
-                    timeout: 60000, // 60 seconds
-                    interval: 1000, // check every second
-                    errorMsg: `Timed out waiting for text "${content}" to appear in iframe`
-                }
-            );
+            {
+                timeout: 60000, // 60 seconds
+                interval: 1000, // Check every second
+                errorMsg: `Timed out waiting for text "${content}" to appear in iframe`
+            });
         });
     }
 

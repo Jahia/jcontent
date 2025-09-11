@@ -63,12 +63,11 @@ describe('Create content tests', () => {
                         const text = $body.text();
                         return exists ? text.includes(value) : !text.includes(value);
                     }),
-                    {
-                        timeout: 60000, // 60 seconds
-                        interval: 1000, // check every second
-                        errorMsg: `Timed out waiting for text "${value}" to ${exists ? 'appear' : 'disappear'} in iframe`
-                    }
-                );
+                {
+                    timeout: 60000, // 60 seconds
+                    interval: 1000, // Check every second
+                    errorMsg: `Timed out waiting for text "${value}" to ${exists ? 'appear' : 'disappear'} in iframe`
+                });
             });
         });
     };

@@ -51,18 +51,22 @@ describe('Create content tests', () => {
      */
     const validateContentPresence = (value: string, exists: boolean) => {
         // Make sure Content Editor window is closed
-        cy.get(contentEditorElt, {timeout: 90000}).should('not.exist');
+        cy.get(contentEditorElt, {timeout: 90000}).should('not.exist').then(() => {
 
-        // Scroll iframe to top to avoid content being outside of the viewport
-        cy.enter(contentIFrameElt, {timeout: 20000}).then(getBody => {
-            getBody().find('p').first().then(el => el.closest('html')[0].scroll(0, -2000));
+            // Scroll iframe to top to avoid content being outside of the viewport
+            cy.enter(contentIFrameElt, {timeout: 20000}).then(getBody => {
+                getBody().find('p').first().then(el => el.closest('html')[0].scroll(0, -2000));
+            }).then(() => {
+
+                // Validate content presence or absence
+                cy.iframe(contentIFrameElt, {timeout: 90000}).should(exists ? 'contain.text' : 'not.contain.text', value);
+                // cy.enter(contentIFrameElt).then(getBody => {
+                //     getBody().find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
+                // });
+
+            });
+
         });
-
-        // Validate content presence or absence
-        cy.iframe(contentIFrameElt, {timeout: 90000}).should(exists ? 'contain.text' : 'not.contain.text', value);
-        // cy.enter(contentIFrameElt).then(getBody => {
-        //     getBody().find('p').should(exists ? 'contain.text' : 'not.contain.text', value);
-        // });
     };
 
     describe('Content Folders Operations', () => {

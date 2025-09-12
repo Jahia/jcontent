@@ -65,12 +65,11 @@ const FrameManager = () => {
     // Load frames
     useEffect(() => {
         if (leftFrame.current && data?.jcr?.result?.renderUrlEdit) {
-            // Add hidePersonaPanel parameter to Hide jexperience persona panel in the page
-            leftFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false);
+            leftFrame.current.contentWindow.location.href = `${resolveUrlForLiveOrPreview(data.jcr.result.renderUrlEdit, false)}?comparisonMode`;
         }
 
         if (rightFrame.current && data?.jcr?.result?.renderUrlLive) {
-            rightFrame.current.contentWindow.location.href = resolveUrlForLiveOrPreview(data.jcr.result.renderUrlLive, true, data.jcr.result.site.serverName);
+            rightFrame.current.contentWindow.location.href = `${resolveUrlForLiveOrPreview(data.jcr.result.renderUrlLive, true, data.jcr.result.site.serverName)}?comparisonMode`;
         }
     }, [leftFrame, rightFrame, data]);
 

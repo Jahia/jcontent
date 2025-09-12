@@ -1,5 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../page-object';
-import {Button, getComponentByRole} from '@jahia/cypress';
+import {addNode, Button, getComponentByRole} from '@jahia/cypress';
 import {PageComposer} from '../../page-object/pageComposer';
 
 describe('Links in jcontent', () => {
@@ -132,5 +132,21 @@ describe('Links in jcontent', () => {
         PageComposer.visit('digitall', 'en', 'home/demo-roles-and-users.html');
         cy.url().should('include', '/jahia/jcontent/digitall/en/pages/home/demo-roles-and-users');
         jcontent.switchToListMode().getTable().getRowByLabel('How to use this demonstration? You can discover Jahia 7 using the following users (login / password): root / root (if you\'re using the Demo Pack. Otherwise, the root password is the one set using the Jahia');
+    });
+
+    it('Shows links in structured view but not nav items', () => {
+        addNode({
+            parentPathOrId: '/sites/jcontentSite/home',
+            name: 'my-internal-link',
+            primaryNodeType: 'jnt:nodeLink',
+            properties: [
+                {name: 'j:node', value: '/sites/digitall/home/about', type: 'REFERENCE'},
+                {name: 'jcr:title', language: 'en', value: 'my-internal-link'}
+            ]
+        });
+        jcontent.switchToStructuredView();
+        jcontent.getTable().getRowByLabel('external2-link-nav').element.contains('External link');
+        jcontent.getTable().getRowByLabel('About').element.contains('Internal Link');
+        jcontent.getTable().element.contains('Menu Entry').should('not.exist');
     });
 });

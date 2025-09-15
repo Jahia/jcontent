@@ -177,19 +177,37 @@ export class ContentEditor extends BasePage {
     }
 
     validateContentIsVisibleInPreview(content: string) {
-        cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 90000});
-        cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
-            // Sometimes iframe is not fully loaded, so we check if body is not empty
-            expect($body.text().trim().length).to.be.greaterThan(0);
-            expect($body.text()).to.include(content);
-        }, {timeout: 10000});
+        const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
+
+        cy.get(iframeSelector, {timeout: 90000}).should($iframe => {
+            // Wait until the iframe does NOT have any class containing "_iframeLoading"
+            const classList = ($iframe.attr('class') || '').split(' ');
+            expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
+        }).then(() => {
+            // Use waitUntil to repeatedly check for the content in the iframe
+            // This helps to handle cases where the content might take time to appear
+            cy.waitUntil(() =>
+                cy.iframe(iframeSelector).then($body => {
+                    return $body.text().includes(content);
+                }),
+            {
+                timeout: 60000, // 60 seconds
+                interval: 1000, // Check every second
+                errorMsg: `Timed out waiting for text "${content}" to appear in iframe`
+            });
+        });
     }
 
     validateContentIsNotVisibleInPreview(content: string) {
-        cy.frameLoaded('[data-sel-role="edit-preview-frame"]', {timeout: 30000});
-        cy.iframe('[data-sel-role="edit-preview-frame"]').should($body => {
-            expect($body.text()).not.to.include(content);
-        }, {timeout: 10000});
+        const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
+
+        cy.get(iframeSelector, {timeout: 90000}).should($iframe => {
+            // Wait until the iframe does NOT have any class containing "_iframeLoading"
+            const classList = ($iframe.attr('class') || '').split(' ');
+            expect(classList.some(cls => cls.includes('_iframeLoading'))).to.be.false;
+        });
+
+        cy.iframe(iframeSelector, {timeout: 90000}).should('not.include.text', content);
     }
 
     assertValidationErrorsNotExist() {

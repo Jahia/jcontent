@@ -22,7 +22,7 @@ describe('Create media tests', () => {
 
     after(function () {
         deleteUser(user.name);
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
     });
 
     afterEach(() => {
@@ -83,7 +83,7 @@ describe('Create media tests', () => {
             .download()
             .getGridCard().contextMenu();
 
-        menu.selectByRole('edit');
+        cy.waitUntil(() => menu.selectByRole('edit'));
 
         // Should be possible to open and exit out of advanced mode without breaking
         const ce = ContentEditor.getContentEditor();
@@ -92,9 +92,8 @@ describe('Create media tests', () => {
     });
 
     it('Cannot drag and drop a file to folder if user has no permission', {retries: 3}, () => {
-        cy.logout();
-        cy.login(user.name, user.password);
-        jcontent = JContent.visit(siteKey, 'en', 'media/files/blankFolder');
+        cy.loginAndStoreSession(user.name, user.password);
+        JContent.visit(siteKey, 'en', 'media/files/blankFolder');
         cy.get('[data-type="upload"]').should('not.exist');
         cy.get('[data-type="emptyZone"]').should('be.visible');
     });

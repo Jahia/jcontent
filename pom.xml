@@ -109,6 +109,14 @@
             pl.touk.throwing,
             pl.touk.throwing.exception
         </import-package>
+        <export-package>
+            org.jahia.modules.contenteditor.graphql,
+            org.jahia.modules.contenteditor.graphql.api,
+            org.jahia.modules.contenteditor.graphql.api.channels,
+            org.jahia.modules.contenteditor.graphql.api.definitions,
+            org.jahia.modules.contenteditor.graphql.api.forms,
+            org.jahia.modules.contenteditor.graphql.api.types,
+        </export-package>
         <sonar.sources>src/javascript</sonar.sources>
     </properties>
 

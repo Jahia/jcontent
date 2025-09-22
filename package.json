@@ -1,6 +1,6 @@
 {
   "name": "@jahia/jcontent",
-  "version": "3.4.1",
+  "version": "3.5.0-SNAPSHOT",
   "scripts": {
     "build": "yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",

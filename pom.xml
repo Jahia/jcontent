@@ -34,7 +34,7 @@
     </parent>
     <artifactId>jcontent</artifactId>
     <name>jContent</name>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.4.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (jContent) for running on a Jahia server.</description>
 
@@ -47,7 +47,7 @@
     <properties>
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
-        <jahia-module-signature>MCwCFAlLEiSfzTVj6nITh6NOKtYoycJgAhQCDRxniIEeV1TfTkRhQoeyU2Rncg==</jahia-module-signature>
+        <jahia-module-signature>MC0CFQCC+2YN6J76CsM790rrOzwfnmV6iQIUEfF0AaEBdbQlD28N4BTwdneh+EA=</jahia-module-signature>
         <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
         <jahia-depends>jahia-ui-root=1.10.0,app-shell=2.7,graphql-dxm-provider=3.2.0</jahia-depends>
         <import-package>

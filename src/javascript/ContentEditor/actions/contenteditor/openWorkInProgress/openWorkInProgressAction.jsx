@@ -17,10 +17,10 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
 
     const wipInfo = formik.values[Constants.wip.fieldName];
     const singleLanguage = siteInfo.languages.length === 1;
-    const isMarkAsWIP = singleLanguage &&
-        (wipInfo.status === Constants.wip.status.ALL_CONTENT ||
-            wipInfo.status === Constants.wip.status.LANGUAGES);
-    const buttonLabelKind = isMarkAsWIP ? 'unmark' : 'mark';
+    const isWIP = (wipInfo, currentLanguage) => {
+        return wipInfo && ((wipInfo.status === Constants.wip.status.LANGUAGES && wipInfo.languages.indexOf(currentLanguage) > -1) || wipInfo.status === Constants.wip.status.ALL_CONTENT);
+    };
+    const buttonLabelKind = isWIP(wipInfo, lang) ? 'unmark' : 'mark';
     const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${buttonLabelKind}`;
 
     const openModal = () => {

@@ -50,7 +50,7 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
                     nodeData?.path?.startsWith('/sites') && <ContentPath path={nodeData.path}/>
                 )}
                 contentType={(
-                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)}/>
+                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)} title={nodeTypeName}/>
                 )}
                 mainActions={(
                     <div className={clsx(styles.headerMainActions, 'flexRow_center', 'alignCenter')}>

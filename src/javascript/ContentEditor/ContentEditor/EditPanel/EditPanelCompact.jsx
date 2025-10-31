@@ -51,7 +51,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                     <HeaderThreeDotsActions/>
                 </div>
                 <div className={clsx('flexRow', 'alignCenter')}>
-                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)}/>
+                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)} title={nodeTypeName}/>
                     <div className="flexFluid"/>
                     <HeaderBadges mode={mode}/>
                 </div>

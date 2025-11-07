@@ -11,7 +11,7 @@ import {isMarkedForDeletion} from '../../../../../../JContent.utils';
 export const CellStatus = ({cell, column, row}) => {
     const {t} = useTranslation('jcontent');
     const node = row.original;
-    const lang = useSelector(state => state.lang);
+    const lang = useSelector(state => state.language);
     const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
     const subNodesCountText = useMemo(() => {
         if (showSubNodes) {

@@ -38,7 +38,6 @@ export const FormBuilder = ({mode}) => {
 
     // On mount/unmount hook
     useEffect(() => {
-        document.querySelector('div[data-first-field=true] input')?.focus();
         if (!toggleStates) {
             dispatch(ceToggleSections({key: formKey, sections: expandedSections}));
         }

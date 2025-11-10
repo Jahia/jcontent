@@ -119,22 +119,22 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             clearSelection();
         });
 
-        it('should be able to select item', () => {
+        it('should not be able to select item with click', () => {
             jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
-            checkSelectionCount(1);
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldNotBeSelected();
+            checkNoSelection();
         });
 
-        it('should switch selection', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+        it('should be able to select item with meta click', () => {
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('forest-woman').get().click();
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldNotBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
+            jcontent.getGrid().getCardByLabel('forest-woman').shouldNotBeSelected();
             checkSelectionCount(1);
         });
 
         it('should select multiple', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
             jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
@@ -142,7 +142,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('should be able to unselect', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
@@ -151,7 +151,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('should have dedicated context menu', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
+            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
             jcontent.getGrid().getCardByLabel('forest-woman').contextMenu().select('Add to selection');
             jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
             jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();

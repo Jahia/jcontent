@@ -18,7 +18,7 @@ import styles from './FilesGrid.scss';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import {registry} from '@jahia/ui-extender';
 import {batchActions} from 'redux-batched-actions';
-import {cmSetSelection, cmSwitchSelection} from '../../../redux/selection.redux';
+import {cmSwitchSelection} from '../../../redux/selection.redux';
 import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 
@@ -52,7 +52,9 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const onPreviewSelect = _previewSelection => dispatch(batchActions([cmSetPreviewSelection(_previewSelection.path), cmSetPreviewState(CM_DRAWER_STATES.SHOW)]));
     const onSelect = (node, event) => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
-        dispatch(isMultipleSelectionMode ? cmSwitchSelection(node.path) : cmSetSelection(node.path));
+        if (isMultipleSelectionMode) {
+            dispatch(cmSwitchSelection(node.path));
+        }
     };
 
     const onClick = (node, index, event) => {

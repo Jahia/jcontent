@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {WorkInProgressDialog} from './WorkInProgressDialog';
 import {ComponentRendererContext} from '@jahia/ui-extender';
@@ -17,11 +17,13 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
 
     const wipInfo = formik.values[Constants.wip.fieldName];
     const singleLanguage = siteInfo.languages.length === 1;
-    const isMarkAsWIP = singleLanguage &&
-        (wipInfo.status === Constants.wip.status.ALL_CONTENT ||
-            wipInfo.status === Constants.wip.status.LANGUAGES);
-    const buttonLabelKind = isMarkAsWIP ? 'unmark' : 'mark';
-    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${buttonLabelKind}`;
+    const isWIP = (wipInfo, currentLanguage) => {
+        const wipForLang = wipInfo?.status === Constants.wip.status.LANGUAGES && wipInfo?.languages?.includes(currentLanguage);
+        return wipInfo?.status === Constants.wip.status.ALL_CONTENT || wipForLang;
+    };
+
+    const isWIPStatus = isWIP(wipInfo, lang);
+    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${isWIPStatus ? 'unmark' : 'mark'}`;
 
     const openModal = () => {
         componentRenderer.render(
@@ -40,10 +42,10 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
             });
     };
 
-    const switchButton = () => {
-        const status = isMarkAsWIP ? Constants.wip.status.DISABLED : Constants.wip.status.ALL_CONTENT;
+    const switchButton = useCallback(() => {
+        const status = isWIPStatus ? Constants.wip.status.DISABLED : Constants.wip.status.ALL_CONTENT;
         formik.setFieldValue(Constants.wip.fieldName, {status, languages: []});
-    };
+    }, [isWIPStatus, formik]);
 
     return (
         <Render

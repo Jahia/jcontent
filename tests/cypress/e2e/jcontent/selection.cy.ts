@@ -67,6 +67,30 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             checkToolbar();
         });
 
+        it('Can select multiple items with shift selection', () => {
+            const contentTable = jcontent.getTable();
+
+            contentTable.selectRowByName('bootstrap');
+            contentTable.shiftSelectRowByName('images');
+
+            contentTable.getRowByName('bootstrap').isSelected();
+            contentTable.getRowByName('video').isSelected();
+            contentTable.getRowByName('images').isSelected();
+            checkSelectionCount(3);
+        });
+
+        it('Can select multiple items with shift selection backwards', () => {
+            const contentTable = jcontent.getTable();
+
+            contentTable.selectRowByName('images');
+            contentTable.shiftSelectRowByName('bootstrap');
+
+            contentTable.getRowByName('bootstrap').isSelected();
+            contentTable.getRowByName('video').isSelected();
+            contentTable.getRowByName('images').isSelected();
+            checkSelectionCount(3);
+        });
+
         it('Can select/de-select items in dropdown', () => {
             jcontent.getTable().selectRowByName('images');
             jcontent.getTable().selectRowByName('video');
@@ -101,7 +125,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             cy.get('.moonstone-menu_overlay').click();
         });
 
-        it('should show number of items selected in conrtext menu', () => {
+        it('should show number of items selected in context menu', () => {
             jcontent.getTable().selectRowByName('images');
             jcontent.getTable().getRowByName('images').contextMenu().should('contain', '1 item selected');
             cy.get('.moonstone-menu_overlay').click();
@@ -139,6 +163,28 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldBeSelected();
             jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
             checkSelectionCount(2);
+        });
+
+        it('should select multiple by shift-selection', () => {
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('investors-bg.jpg').get().click({shiftKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('road-street-desert-industry.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('boy-father.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('landscape-mountains-nature-clouds.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('investors-bg.jpg').shouldBeSelected();
+            checkSelectionCount(5);
+        });
+
+        it('should select multiple by shift-selection backwards', () => {
+            jcontent.getGrid().getCardByName('investors-bg.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({shiftKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('road-street-desert-industry.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('boy-father.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('landscape-mountains-nature-clouds.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('investors-bg.jpg').shouldBeSelected();
+            checkSelectionCount(5);
         });
 
         it('should be able to unselect', () => {

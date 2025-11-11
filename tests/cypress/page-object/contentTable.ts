@@ -2,6 +2,10 @@ import {BaseComponent, Table, TableRow} from '@jahia/cypress';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
+
+    /**
+     * @deprecated use getRowByName() instead
+     */
     getRowByLabel(label: string): TableRow {
         cy.contains('[data-cm-role="table-content-list-row"]', label).first().as('rowByLabel');
         cy.get('@rowByLabel').scrollIntoView();
@@ -16,8 +20,18 @@ export class ContentTable extends Table {
         return new TableRow(cy.get('@rowByName'));
     }
 
+    /**
+     * @deprecated use selectRowByName() instead
+     */
     selectRowByLabel(label: string, isSelected = true): Chainable {
         return this.getRowByLabel(label).get()
+            .find('[data-cm-role="table-content-list-cell-selection"] input')
+            .click()
+            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+    }
+
+    selectRowByName(name: string, isSelected = true): Chainable {
+        return this.getRowByName(name).get()
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click()
             .should('have.attr', 'aria-checked', Boolean(isSelected).toString());

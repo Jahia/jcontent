@@ -42,34 +42,34 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('Can clear selection', () => {
-            jcontent.getTable().selectRowByLabel('images');
-            jcontent.getTable().selectRowByLabel('video');
+            jcontent.getTable().selectRowByName('images');
+            jcontent.getTable().selectRowByName('video');
             jcontent.clearSelection();
             cy.get('[data-sel-role="selection-infos"]').should('not.exist');
-            jcontent.getTable().selectRowByLabel('images');
+            jcontent.getTable().selectRowByName('images');
         });
 
         it('Can select/de-select items in list mode', () => {
             cy.log('selection: 1');
-            jcontent.getTable().selectRowByLabel('images');
+            jcontent.getTable().selectRowByName('images');
             checkSelectionCount(1);
             checkToolbar();
 
             cy.log('selection: 2');
-            jcontent.getTable().selectRowByLabel('video');
+            jcontent.getTable().selectRowByName('video');
             checkSelectionCount(2);
             checkToolbar();
 
             // Unselect item
             cy.log('unselecting item');
-            jcontent.getTable().selectRowByLabel('images', false);
+            jcontent.getTable().selectRowByName('images', false);
             checkSelectionCount(1);
             checkToolbar();
         });
 
         it('Can select/de-select items in dropdown', () => {
-            jcontent.getTable().selectRowByLabel('images');
-            jcontent.getTable().selectRowByLabel('video');
+            jcontent.getTable().selectRowByName('images');
+            jcontent.getTable().selectRowByName('video');
             checkToolbar();
             checkSelectionCount(2);
             const selectionDropdown = jcontent.getSelectionDropdown();
@@ -81,29 +81,29 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('Can select items in list mode and clear selection', () => {
-            jcontent.getTable().selectRowByLabel('images');
-            jcontent.getTable().selectRowByLabel('video');
+            jcontent.getTable().selectRowByName('images');
+            jcontent.getTable().selectRowByName('video');
             jcontent.getTable().get().type('{esc}');
 
             cy.get('[data-cm-role="selection-infos"]').should('not.exist');
         });
 
         it('Can select items with right-click', () => {
-            jcontent.getTable().selectRowByLabel('images');
-            jcontent.getTable().getRowByLabel('video').contextMenu().select('Add to selection');
+            jcontent.getTable().selectRowByName('images');
+            jcontent.getTable().getRowByName('video').contextMenu().select('Add to selection');
 
             checkToolbar();
             checkSelectionCount(2);
         });
 
         it('should not show "add to selection" if nothing is selected', () => {
-            jcontent.getTable().getRowByLabel('video').contextMenu().should('not.contain', 'Add to selection');
+            jcontent.getTable().getRowByName('video').contextMenu().should('not.contain', 'Add to selection');
             cy.get('.moonstone-menu_overlay').click();
         });
 
         it('should show number of items selected in conrtext menu', () => {
-            jcontent.getTable().selectRowByLabel('images');
-            jcontent.getTable().getRowByLabel('images').contextMenu().should('contain', '1 item selected');
+            jcontent.getTable().selectRowByName('images');
+            jcontent.getTable().getRowByName('images').contextMenu().should('contain', '1 item selected');
             cy.get('.moonstone-menu_overlay').click();
         });
     });
@@ -120,49 +120,49 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('should not be able to select item with click', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click();
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldNotBeSelected();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldNotBeSelected();
             checkNoSelection();
         });
 
         it('should be able to select item with meta click', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('forest-woman').get().click();
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldNotBeSelected();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldNotBeSelected();
             checkSelectionCount(1);
         });
 
         it('should select multiple', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
             checkSelectionCount(2);
         });
 
         it('should be able to unselect', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldNotBeSelected();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldNotBeSelected();
             checkSelectionCount(1);
         });
 
         it('should have dedicated context menu', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('forest-woman').contextMenu().select('Add to selection');
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('forest-woman.jpg').contextMenu().select('Add to selection');
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldBeSelected();
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
             checkSelectionCount(2);
         });
 
         it('should not select anything if preview is opened', () => {
-            jcontent.getGrid().getCardByLabel('fans-stadium').contextMenu().select('Preview');
-            jcontent.getGrid().getCardByLabel('forest-woman').get().click({cmdKey: true});
-            jcontent.getGrid().getCardByLabel('fans-stadium').shouldNotBeSelected();
-            jcontent.getGrid().getCardByLabel('forest-woman').shouldBeSelected();
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').contextMenu().select('Preview');
+            jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({cmdKey: true});
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldNotBeSelected();
+            jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
             checkNoSelection();
         });
     });
@@ -192,8 +192,8 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         it('Maintains selection when navigating back and forth from different modes', () => {
             // Select a couple of rows in list view
             const ct = jcontent.getTable();
-            ct.selectRowByLabel('How to Use');
-            ct.selectRowByLabel('Our Companies');
+            ct.selectRowByName('how-to-use-this-demo');
+            ct.selectRowByName('our-companies');
             checkSelectionCount(2);
 
             // Check selection in structured mode
@@ -209,11 +209,11 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         });
 
         it('opens selected items when navigating to structured view', () => {
-            jcontent.getTable().selectRowByLabel('We are a global network');
+            jcontent.getTable().selectRowByName('global-network-rich-text');
 
             jcontent.switchToStructuredView();
             checkSelectionCount(1);
-            jcontent.getTable().getRowByLabel('We are a global network');
+            jcontent.getTable().getRowByName('global-network-rich-text');
         });
 
         it('remove selection when navigating to a mode where item is not visible', () => {
@@ -247,7 +247,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         it('remove selection when navigating to empty folder', () => {
             cy.log('select item');
             jcontent = JContent.visit('digitall', 'en', 'media/files').switchToListMode();
-            jcontent.getTable().selectRowByLabel('bootstrap');
+            jcontent.getTable().selectRowByName('bootstrap');
             checkSelectionCount(1);
 
             cy.log('check selection is cleared for empty folder');
@@ -259,13 +259,13 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         it('Does not show modify actions if in multiselection and jahia area is selected', () => {
             cy.log('select item');
             jcontent = JContent.visit('digitall', 'en', 'pages/home').switchToStructuredView();
-            jcontent.getTable().selectRowByLabel('bootstrap-container');
+            jcontent.getTable().selectRowByName('bootstrap-container');
             checkSelectionCount(1);
             cy.get('[data-sel-role="delete"]').should('exist');
             cy.get('[data-sel-role="copy"]').should('exist');
             cy.get('[data-sel-role="cut"]').should('exist');
 
-            jcontent.getTable().selectRowByLabel('landing');
+            jcontent.getTable().selectRowByName('landing');
             checkSelectionCount(2);
             cy.get('[data-sel-role="delete"]').should('not.exist');
             cy.get('[data-sel-role="copy"]').should('not.exist');

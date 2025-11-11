@@ -3,6 +3,9 @@ import {BaseComponent, Button, getComponentByRole, getComponentBySelector, Menu}
 export class ContentGrid extends BaseComponent {
     static defaultSelector = '[data-cm-role="grid-content-list"]';
 
+    /**
+     * @deprecated use getCardByName instead
+     */
     getCardByLabel(label: string): GridCard {
         cy.contains('[data-cm-role="grid-content-list-card"]', label).first().as('rowByLabel');
         cy.get('@rowByLabel').scrollIntoView();

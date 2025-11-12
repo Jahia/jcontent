@@ -24,7 +24,7 @@ const accentColorButtonProps = {
 };
 
 export const EditPanelCompact = ({title, createAnother}) => {
-    const {nodeTypeName, nodeTypeDisplayName, mode} = useContentEditorContext();
+    const {nodeTypeName, nodeTypeDisplayName} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
@@ -42,7 +42,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 <div className={clsx('flexRow', 'alignCenter')}>
                     <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)} title={nodeTypeName}/>
                     <div className="flexFluid"/>
-                    <HeaderBadges mode={mode}/>
+                    <HeaderBadges/>
                 </div>
                 <div className={clsx('flexRow', 'alignCenter', styles.languageSwitcherActionButtons)}>
                     <EditPanelLanguageSwitcher/>

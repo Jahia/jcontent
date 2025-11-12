@@ -1,18 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useContentEditorContext} from '~/ContentEditor/contexts';
 import styles from './EditPanel.scss';
 import clsx from 'clsx';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
-import {Checkbox, Chip, Typography} from '@jahia/moonstone';
-import {getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/utils';
-import {EditPanelLanguageSwitcher} from './EditPanelLanguageSwitcher';
+import {Checkbox, Typography} from '@jahia/moonstone';
+import {getButtonRenderer, truncate} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
+
+import {AdvancedModeButton} from './AdvancedModeButton';
+import {ContentTypeChip} from './ContentTypeChip';
+import {EditPanelLanguageSwitcher} from './EditPanelLanguageSwitcher';
 import {HeaderBadges} from './HeaderBadges';
 import {HeaderButtonActions, HeaderThreeDotsActions} from './HeaderActions';
-import {AdvancedModeButton} from '~/ContentEditor/ContentEditor/EditPanel/AdvancedModeButton';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big'},
@@ -24,7 +25,6 @@ const accentColorButtonProps = {
 };
 
 export const EditPanelCompact = ({title, createAnother}) => {
-    const {nodeTypeName, nodeTypeDisplayName} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
@@ -40,7 +40,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                     <HeaderThreeDotsActions/>
                 </div>
                 <div className={clsx('flexRow', 'alignCenter')}>
-                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)} title={nodeTypeName}/>
+                    <ContentTypeChip/>
                     <div className="flexFluid"/>
                     <HeaderBadges/>
                 </div>

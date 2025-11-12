@@ -18,7 +18,7 @@ import styles from './FilesGrid.scss';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import {registry} from '@jahia/ui-extender';
 import {batchActions} from 'redux-batched-actions';
-import {cmSwitchSelection} from '../../../redux/selection.redux';
+import {cmAddSelection, cmSwitchSelection} from '../../../redux/selection.redux';
 import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 
@@ -50,10 +50,26 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
     const onPreviewSelect = _previewSelection => dispatch(batchActions([cmSetPreviewSelection(_previewSelection.path), cmSetPreviewState(CM_DRAWER_STATES.SHOW)]));
-    const onSelect = (node, event) => {
+    const onSelect = (node, event, index) => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
-        if (isMultipleSelectionMode) {
+        const isRangeSelection = event.shiftKey;
+
+        if (isRangeSelection && selection.length > 0 && selectedItemIndex !== -1) {
+            // Range selection: toggle all between last selected and current, EXCLUDING last selected
+            const rangeStart = Math.min(selectedItemIndex + 1, index);
+            const rangeEnd = Math.max(selectedItemIndex - 1, index);
+
+            const selectedPathsSet = new Set(selection);
+            const pathsInRange = rows.slice(rangeStart, rangeEnd + 1)
+                .map(row => row.path)
+                .filter(path => !selectedPathsSet.has(path)); // Exclude already selected
+            pathsInRange.forEach(path => {
+                dispatch(cmAddSelection(path));
+            });
+            setSelectedItemIndex(rangeEnd);
+        } else if (isMultipleSelectionMode) {
             dispatch(cmSwitchSelection(node.path));
+            setSelectedItemIndex(index);
         }
     };
 
@@ -62,7 +78,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
             setSelectedItemIndex(index);
             onPreviewSelect(node);
         } else if (!isPreviewOpened) {
-            onSelect(node, event);
+            onSelect(node, event, index);
         }
     };
 

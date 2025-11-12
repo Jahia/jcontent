@@ -2,6 +2,9 @@ import {BaseComponent, Table, TableRow} from '@jahia/cypress';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
+    /**
+     * @deprecated use getRowByName() instead
+     */
     getRowByLabel(label: string): TableRow {
         cy.contains('[data-cm-role="table-content-list-row"]', label).first().as('rowByLabel');
         cy.get('@rowByLabel').scrollIntoView();
@@ -13,13 +16,30 @@ export class ContentTable extends Table {
         cy.get(`[data-cm-role="table-content-list-row"][data-node-name="${name}"]`).first().as('rowByName');
         cy.get('@rowByName').scrollIntoView();
         cy.get('@rowByName').should('be.visible');
-        return new TableRow(cy.get('@rowByName'));
+        return new ContentTableRow(cy.get('@rowByName'));
     }
 
+    /**
+     * @deprecated use selectRowByName() instead
+     */
     selectRowByLabel(label: string, isSelected = true): Chainable {
         return this.getRowByLabel(label).get()
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click()
+            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+    }
+
+    selectRowByName(name: string, isSelected = true): Chainable {
+        return this.getRowByName(name).get()
+            .find('[data-cm-role="table-content-list-cell-selection"] input')
+            .click()
+            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+    }
+
+    shiftSelectRowByName(name: string, isSelected = true): Chainable {
+        return this.getRowByName(name).get()
+            .find('[data-cm-role="table-content-list-cell-selection"] input')
+            .click({shiftKey: true})
             .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
     }
 
@@ -28,6 +48,14 @@ export class ContentTable extends Table {
         cy.get('@headerByRole').scrollIntoView();
         cy.get('@headerByRole').should('be.visible');
         return new ColumnHeader(cy.get('@headerByRole'));
+    }
+}
+
+export class ContentTableRow extends TableRow {
+    isSelected(isSelected = true) {
+        this.element.find('td[data-cm-role="table-content-list-cell-selection"] input')
+            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+        return this;
     }
 }
 

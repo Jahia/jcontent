@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 import styles from './EditPanel.scss';
 import clsx from 'clsx';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
-import {Button, Checkbox, Chip, Edit, Typography} from '@jahia/moonstone';
+import {Checkbox, Chip, Typography} from '@jahia/moonstone';
 import {getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/utils';
 import {EditPanelLanguageSwitcher} from './EditPanelLanguageSwitcher';
 import {useTranslation} from 'react-i18next';
 import {HeaderBadges} from './HeaderBadges';
 import {HeaderButtonActions, HeaderThreeDotsActions} from './HeaderActions';
+import {AdvancedModeButton} from '~/ContentEditor/ContentEditor/EditPanel/AdvancedModeButton';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big'},
@@ -23,16 +24,11 @@ const accentColorButtonProps = {
 };
 
 export const EditPanelCompact = ({title, createAnother}) => {
-    const {nodeTypeName, nodeTypeDisplayName, mode, showAdvancedMode} = useContentEditorContext();
-    const {updateEditorConfig} = useContentEditorConfigContext();
+    const {nodeTypeName, nodeTypeDisplayName, mode} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
     const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
-
-    const setFullscreen = () => updateEditorConfig({
-        isFullscreen: true
-    });
 
     return (
         <>
@@ -40,14 +36,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 <div className="flexRow">
                     <Typography variant="heading">{truncate(title, 40)}</Typography>
                     <div className="flexFluid"/>
-                    {mode !== Constants.routes.baseCreateRoute && showAdvancedMode &&
-                        <Button
-                            className={styles.uppercase}
-                            label={t('label.contentEditor.create.advanced')}
-                            icon={<Edit/>}
-                            data-sel-role="advancedMode"
-                            onClick={setFullscreen}
-                        />}
+                    <AdvancedModeButton/>
                     <HeaderThreeDotsActions/>
                 </div>
                 <div className={clsx('flexRow', 'alignCenter')}>

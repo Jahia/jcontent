@@ -22,6 +22,7 @@ const NodeDataFragment = {
                 isSite: isNodeType(type: {multi: ANY, types: ["jnt:virtualsite"]})
                 isPage: isNodeType(type: {multi: ANY, types: ["jnt:page"]})
                 isFolder:isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
+                isFile: isNodeType(type: {types: ["jnt:file"]})
                 isSystemNameReadOnlyMixin: isNodeType(type: {multi: ANY, types: ["jmix:systemNameReadonly"]})
                 moveSystemNameToTop: isNodeType(type: {multi: ANY, types: [
                     "jnt:page",
@@ -105,6 +106,12 @@ const NodeDataFragment = {
                 defaultWipInfo {
                     status
                     languages
+                }
+                content: descendant(relPath: "jcr:content") {
+                    ...NodeCacheRequiredFields
+                    mimeType: property(name: "jcr:mimeType") {
+                        value
+                    }
                 }
             }
         }

@@ -13,7 +13,7 @@ describe('HeaderBadges', () => {
 
     beforeEach(() => {
         contentEditorContext = {
-            mode: 'create',
+            mode: Constants.routes.baseCreateRoute,
             i18nContext: {},
             nodeData: {
                 primaryNodeType: {
@@ -36,7 +36,7 @@ describe('HeaderBadges', () => {
     });
 
     it('Shows only WIP chip in create mode', () => {
-        const cmp = shallow(<HeaderBadges mode={Constants.routes.baseCreateRoute}/>);
+        const cmp = shallow(<HeaderBadges/>);
         expect(cmp.children().length).toBe(1);
         expect(cmp.find('WipInfoChip').exists()).toBe(true);
     });

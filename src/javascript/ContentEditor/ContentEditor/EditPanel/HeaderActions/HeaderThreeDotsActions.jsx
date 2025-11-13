@@ -42,7 +42,7 @@ const HeaderThreeDotsActions = ({targetActionKey}) => {
 };
 
 HeaderThreeDotsActions.propTypes = {
-    targetActionKey: PropTypes.string.isRequired
+    targetActionKey: PropTypes.string
 };
 
 export default HeaderThreeDotsActions;

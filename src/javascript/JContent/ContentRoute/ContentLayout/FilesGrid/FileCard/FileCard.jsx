@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {Typography} from '@jahia/moonstone';
+import {Chip, Typography} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {isBrowserImage, isPDF} from '../../ContentLayout.utils';
@@ -12,6 +12,7 @@ import Actions from './Actions';
 import FileSize from './FileSize';
 import styles from './FileCard.scss';
 import {ContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
+import {getMimeType} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
@@ -92,6 +93,7 @@ export const FileCard = ({
     const contextualMenu = useRef();
 
     const isHighlighted = getIsHighlighted(node, previewSelection, isPreviewOpened, selection);
+    const mimetype = getMimeType(node);
 
     // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout
     // let rowNumber = Math.floor(index / 2) + 1;
@@ -140,6 +142,7 @@ export const FileCard = ({
                     {contextualMenuAction && selection.length === 0 && <Actions node={node} className={styles.actions} action={contextualMenuAction}/>}
                 </div>
                 <div className={styles.fileInfo}>
+                    {mimetype ? <Chip label={mimetype} color="accent"/> : null}
                     <ContentStatuses hasLabel={false}
                                      className={styles.statuses}
                                      node={node}

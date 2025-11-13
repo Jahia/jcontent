@@ -1,7 +1,7 @@
 import React from 'react';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {ButtonRendererShortLabel, getButtonRenderer, getNodeTypeIcon, truncate} from '~/ContentEditor/utils';
-import {ButtonGroup, Chip, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
+import {ButtonRendererShortLabel, getButtonRenderer, truncate} from '~/ContentEditor/utils';
+import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 import clsx from 'clsx';
+import {ContentTypeChip} from '../ContentTypeChip';
 
 const TabItemRenderer = renderProps => {
     const {t} = useTranslation('jcontent');
@@ -39,7 +40,7 @@ const BackButtonRenderer = getButtonRenderer({
 });
 
 export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, activeTabState, targetActionKey = 'content-editor/header/3dots'}) => {
-    const {nodeData, nodeTypeName, nodeTypeDisplayName, mode} = useContentEditorContext();
+    const {nodeData} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
 
@@ -49,9 +50,7 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
                 breadcrumb={(
                     nodeData?.path?.startsWith('/sites') && <ContentPath path={nodeData.path}/>
                 )}
-                contentType={(
-                    <Chip color="accent" label={nodeTypeDisplayName || nodeTypeName} icon={getNodeTypeIcon(nodeTypeName)} title={nodeTypeName}/>
-                )}
+                contentType={<ContentTypeChip/>}
                 mainActions={(
                     <div className={clsx(styles.headerMainActions, 'flexRow_center', 'alignCenter')}>
                         <DisplayAction
@@ -109,7 +108,7 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
                         <HeaderThreeDotsActions targetActionKey={targetActionKey}/>
                     </div>
                 )}
-                status={<HeaderBadges mode={mode}/>}
+                status={<HeaderBadges/>}
         />
     );
 };

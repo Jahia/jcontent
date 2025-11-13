@@ -17,13 +17,11 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
 
     const wipInfo = formik.values[Constants.wip.fieldName];
     const singleLanguage = siteInfo.languages.length === 1;
-    const isWIP = (wipInfo, currentLanguage) => {
-        const wipForLang = wipInfo?.status === Constants.wip.status.LANGUAGES && wipInfo?.languages?.includes(currentLanguage);
-        return wipInfo?.status === Constants.wip.status.ALL_CONTENT || wipForLang;
-    };
-
-    const isWIPStatus = isWIP(wipInfo, lang);
-    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${isWIPStatus ? 'unmark' : 'mark'}`;
+    const wipForLang = wipInfo?.status === Constants.wip.status.LANGUAGES && wipInfo?.languages?.includes(lang);
+    // Content is marked as WIP only for this lang; we can just toggle this status instead of showing modal
+    const wipOnlyForLang = wipForLang && wipInfo.languages.length === 1;
+    const isWIP = wipInfo?.status === Constants.wip.status.ALL_CONTENT || wipForLang;
+    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${isWIP ? 'unmark' : 'mark'}`;
 
     const openModal = () => {
         componentRenderer.render(
@@ -43,16 +41,16 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
     };
 
     const switchButton = useCallback(() => {
-        const status = isWIPStatus ? Constants.wip.status.DISABLED : Constants.wip.status.ALL_CONTENT;
+        const status = isWIP ? Constants.wip.status.DISABLED : Constants.wip.status.ALL_CONTENT;
         formik.setFieldValue(Constants.wip.fieldName, {status, languages: []});
-    }, [isWIPStatus, formik]);
+    }, [isWIP, formik]);
 
     return (
         <Render
                 {...otherProps}
                 buttonLabel={buttonLabel}
                 enabled={!nodeData.lockedAndCannotBeEdited && nodeData.hasWritePermission && !Constants.wip.notAvailableFor.includes(nodeData.primaryNodeType.name)}
-                onClick={singleLanguage ? switchButton : openModal}/>
+                onClick={(singleLanguage || wipOnlyForLang) ? switchButton : openModal}/>
     );
 };
 

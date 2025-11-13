@@ -1,4 +1,4 @@
-import {createSite, addNode, deleteSite, getComponentByRole, Button} from '@jahia/cypress';
+import {createSite, addNode, deleteSite, getComponentByRole, Button, getNodeByPath} from '@jahia/cypress';
 import {ContentEditor, JContent} from '../../page-object';
 
 describe('Mark as WIP action tests', () => {
@@ -73,7 +73,14 @@ describe('Mark as WIP action tests', () => {
         ce = jcontent.editComponentByRowName('wipFR');
         cy.get('[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('be.visible');
         getComponentByRole(Button, 'goToWorkInProgress').should('contain', 'Unmark as Work in progress');
-        ce.cancel();
+
+        cy.log('toggle WIP status as unmarked if only one language');
+        getComponentByRole(Button, 'goToWorkInProgress').click(); // No WIP modal
+        ce.save();
+
+        getNodeByPath(`${parentPath}/wipFR`, ['j:workInProgressStatus']).then(resp => {
+            expect(resp?.data.jcr.nodeByPath.properties?.length).to.be.eq(0, 'WIP status for wipFR content has been removed');
+        });
     });
 });
 

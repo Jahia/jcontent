@@ -54,7 +54,7 @@ describe('Text component', () => {
                 id: props.id,
                 name: props.id,
                 decimalSeparator: '.',
-                customInput: expect.any(Function),
+                customInput: expect.any(Object),
                 value: '',
                 disabled: false,
                 'aria-labelledby': 'toto-label',

@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {cmSetSort} from '~/JContent/redux/sort.redux';
 import {ArrowDown, ArrowUp, Dropdown, CustomDropdown, Separator, MenuItem} from '@jahia/moonstone';
 import classes from './SortSelector.scss';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const SORT_DATA = [
     {
@@ -37,14 +38,14 @@ const DROPDOWN_ICON = {
 export const SortSelector = ({selector, setSortAction}) => {
     const {t} = useTranslation('jcontent');
 
-    const {sort} = useSelector(selector, shallowEqual);
+    const {sort, mode} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const sortData = useMemo(() => {
         return SORT_DATA.map(d => ({label: t(d.label), value: d.orderBy}));
     }, [t]);
     const currentLabel = t(SORT_DATA.find(d => d.orderBy === sort?.orderBy)?.label);
 
-    return (
+    return mode === JContentConstants.mode.GRID ? (
         <CustomDropdown size="default"
                         data-sel-role="sel-media-sort-dropdown"
                         label={currentLabel}
@@ -90,11 +91,12 @@ export const SortSelector = ({selector, setSortAction}) => {
             }}
         />
         </CustomDropdown>
-    );
+    ) : null;
 };
 
 const sortSelector = state => ({
-    sort: state.jcontent.sort
+    sort: state.jcontent.sort,
+    mode: state.jcontent.filesGrid.mode
 });
 
 SortSelector.propTypes = {

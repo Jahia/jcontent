@@ -22,6 +22,7 @@ import {
 } from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
 import {CategoriesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/CategoriesQueryHandler';
 import CategoriesRoute from '~/JContent/CategoriesRoute/CategoriesRoute';
+import SortSelector from '~/JContent/ContentRoute/ToolBar/SortSelector';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -195,6 +196,7 @@ export const jContentAccordionItems = registry => {
             queryHandler: FilesQueryHandler,
             typeFilter: ['jnt:file', 'jnt:folder'],
             viewSelector: <FileModeSelector/>,
+            sortSelector: <SortSelector/>,
             uploadType: JContentConstants.mode.UPLOAD,
             dnd: {
                 canDrag: true, canDrop: true, canDropFile: true

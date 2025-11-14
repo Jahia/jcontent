@@ -560,6 +560,12 @@
       },
       "publicationDashboard": {
         "label": "Veröffentlichung-Manager"
+      },
+      "sortSelector": {
+        "orderingBy": "Sortieren nach",
+        "direction": "Richtung",
+        "desc": "Absteigend (Z-A)",
+        "asc": "Aufsteigend (A-Z)"
       }
     },
     "categoryManager": {

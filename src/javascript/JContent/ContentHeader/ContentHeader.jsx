@@ -87,6 +87,7 @@ const ContentHeader = () => {
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
 
     const viewSelector = registry.get('accordionItem', mode)?.tableConfig?.viewSelector;
+    const sortSelector = registry.get('accordionItem', mode)?.tableConfig?.sortSelector;
 
     const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {
         getPrimaryNodeType: true,
@@ -114,7 +115,7 @@ const ContentHeader = () => {
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={<ContentStatuses node={node}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
-            toolbarRight={<><ContentStatusSelector/>{viewSelector}</>}
+            toolbarRight={<><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
         />
     ) : (
         <Header
@@ -129,7 +130,7 @@ const ContentHeader = () => {
                     <BrowseControlBar isShowingActions={selection.length === 0}/>
                 </>
             }
-            toolbarRight={<><ContentStatusSelector/>{viewSelector}</>}
+            toolbarRight={<><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
         />
     );
 };

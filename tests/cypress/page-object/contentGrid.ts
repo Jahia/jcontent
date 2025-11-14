@@ -19,6 +19,15 @@ export class ContentGrid extends BaseComponent {
         cy.get('@rowByName').should('be.visible');
         return new GridCard(cy.get('@rowByName'));
     }
+
+    matchCardNameOrder(values: Array<string>) {
+        cy.get('[data-cm-role="grid-content-list-card"]')
+            .should('have.length.greaterThan', 0)
+            .then($cards => {
+                const names = $cards.map((i, el) => Cypress.$(el).find('[data-cm-role="grid-content-list-card-name"]').text().trim()).get();
+                expect(names).to.deep.equal(values);
+            });
+    }
 }
 
 export class GridCard extends BaseComponent {

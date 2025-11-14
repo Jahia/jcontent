@@ -567,6 +567,12 @@
       },
       "publicationDashboard": {
         "label": "Publication manager"
+      },
+      "sortSelector": {
+        "orderingBy": "Ordering by",
+        "direction": "Direction",
+        "desc": "Descending (Z-A)",
+        "asc": "Ascending (A-Z)"
       }
     },
     "categoryManager": {

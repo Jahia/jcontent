@@ -561,6 +561,12 @@
       },
       "publicationDashboard": {
         "label": "Gestionnaire de publication"
+      },
+      "sortSelector": {
+        "orderingBy": "Trier par",
+        "direction": "Direction",
+        "desc": "Décroissant (Z-A)",
+        "asc": "Croissant (A-Z)"
       }
     },
     "categoryManager": {

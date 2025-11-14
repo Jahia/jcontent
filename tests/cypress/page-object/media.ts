@@ -47,7 +47,7 @@ export class Media extends BasePage {
         return new File(this, fileName);
     }
 
-    uploadFileViaDialog(fileName: string, fixtureSubFolder: string = '.'): File {
+    uploadFileViaDialog(fileName: string, fixtureSubFolder = '.'): File {
         cy.get('button[data-sel-role="fileUpload"]').should('be.visible').click();
         cy.get('input#file-upload-input[type="file"]').selectFile(`cypress/fixtures/${fixtureSubFolder}/${fileName}`, {force: true});
         this.waitForUploadToComplete();
@@ -63,6 +63,28 @@ export class Media extends BasePage {
     switchView(displayMode: 'list' | 'grid') {
         cy.get('div[data-sel-role="sel-view-mode-dropdown"]').click();
         cy.get('li[data-sel-role="sel-view-mode-' + displayMode + '"]').click();
+        return this;
+    }
+
+    switchSortDirection(direction: 'asc' | 'desc') {
+        cy.get('button[data-sel-role="sel-media-sort-dropdown"]').click();
+        cy.get('div[data-sel-role="sel-media-sort-order-dropdown"]')
+            .click();
+        cy.get('div[data-sel-role="sel-media-sort-order-dropdown"]')
+            .find(`li[data-sel-role="sel-media-sort-order-${direction}"]`)
+            .click();
+        cy.get('div[class="moonstone-menu_overlay"]').click();
+        return this;
+    }
+
+    switchSortProperty(property: 'name' | 'type' | 'size' | 'lastModified') {
+        cy.get('button[data-sel-role="sel-media-sort-dropdown"]').click();
+        cy.get('div[data-sel-role="sel-media-sort-property-dropdown"]')
+            .click();
+        cy.get('div[data-sel-role="sel-media-sort-property-dropdown"]')
+            .find(`li[data-sel-role="sel-media-sort-property-${property}"]`)
+            .click();
+        cy.get('div[class="moonstone-menu_overlay"]').click();
         return this;
     }
 }

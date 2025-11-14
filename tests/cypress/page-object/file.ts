@@ -13,9 +13,9 @@ export class File extends BasePage {
         this.fileName = fileName;
     }
 
-    dndUpload(selector: string): File {
+    dndUpload(selector: string, content = 'file contents'): File {
         cy.get(selector).parent().selectFile({
-            contents: Cypress.Buffer.from('file contents'),
+            contents: Cypress.Buffer.from(content),
             fileName: this.fileName,
             mimeType: 'text/plain',
             lastModified: Date.now()

@@ -10,23 +10,38 @@ import JContentConstants from '~/JContent/JContent.constants';
 const SORT_DATA = [
     {
         label: 'jcontent:label.contentManager.listColumns.name',
-        orderBy: 'displayName'
+        orderBy: 'displayName',
+        attributes: {
+            'data-sel-role': 'sel-media-sort-property-name'
+        }
     },
     {
         label: 'jcontent:label.contentManager.listColumns.type',
-        orderBy: 'content.mimeType.value'
+        orderBy: 'content.mimeType.value',
+        attributes: {
+            'data-sel-role': 'sel-media-sort-property-type'
+        }
     },
     {
         label: 'jcontent:label.contentManager.listColumns.createdBy',
-        orderBy: 'createdBy.value'
+        orderBy: 'createdBy.value',
+        attributes: {
+            'data-sel-role': 'sel-media-sort-property-createdBy'
+        }
     },
     {
         label: 'jcontent:label.contentManager.listColumns.lastModified',
-        orderBy: 'lastModified.value'
+        orderBy: 'lastModified.value',
+        attributes: {
+            'data-sel-role': 'sel-media-sort-property-lastModified'
+        }
     },
     {
         label: 'jcontent:label.contentManager.listColumns.size',
-        orderBy: 'content.data.size'
+        orderBy: 'content.data.size',
+        attributes: {
+            'data-sel-role': 'sel-media-sort-property-size'
+        }
     }
 ];
 
@@ -41,7 +56,7 @@ export const SortSelector = ({selector, setSortAction}) => {
     const {sort, mode} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const sortData = useMemo(() => {
-        return SORT_DATA.map(d => ({label: t(d.label), value: d.orderBy}));
+        return SORT_DATA.map(d => ({label: t(d.label), value: d.orderBy, attributes: d.attributes}));
     }, [t]);
     const currentLabel = t(SORT_DATA.find(d => d.orderBy === sort?.orderBy)?.label);
 
@@ -79,11 +94,17 @@ export const SortSelector = ({selector, setSortAction}) => {
                 data={[
                 {
                     label: t('jcontent:label.contentManager.sortSelector.asc'),
-                    value: 'ASC'
+                    value: 'ASC',
+                    attributes: {
+                        'data-sel-role': 'sel-media-sort-order-asc'
+                    }
                 },
                 {
                     label: t('jcontent:label.contentManager.sortSelector.desc'),
-                    value: 'DESC'
+                    value: 'DESC',
+                    attributes: {
+                        'data-sel-role': 'sel-media-sort-order-desc'
+                    }
                 }
             ]}
                 onChange={(e, item) => {

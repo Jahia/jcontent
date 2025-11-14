@@ -66,25 +66,23 @@ export class Media extends BasePage {
         return this;
     }
 
-    switchSortDirection(direction: 'Ascending (A-Z)' | 'Descending (Z-A)') {
+    switchSortDirection(direction: 'asc' | 'desc') {
         cy.get('button[data-sel-role="sel-media-sort-dropdown"]').click();
         cy.get('div[data-sel-role="sel-media-sort-order-dropdown"]')
             .click();
         cy.get('div[data-sel-role="sel-media-sort-order-dropdown"]')
-            .find('li')
-            .contains(direction)
+            .find(`li[data-sel-role="sel-media-sort-order-${direction}"]`)
             .click();
         cy.get('div[class="moonstone-menu_overlay"]').click();
         return this;
     }
 
-    switchSortProperty(property: 'Name' | 'Type' | 'Size' | 'Last modified on') {
+    switchSortProperty(property: 'name' | 'type' | 'size' | 'lastModified') {
         cy.get('button[data-sel-role="sel-media-sort-dropdown"]').click();
         cy.get('div[data-sel-role="sel-media-sort-property-dropdown"]')
             .click();
         cy.get('div[data-sel-role="sel-media-sort-property-dropdown"]')
-            .find('li')
-            .contains(property)
+            .find(`li[data-sel-role="sel-media-sort-property-${property}"]`)
             .click();
         cy.get('div[class="moonstone-menu_overlay"]').click();
         return this;

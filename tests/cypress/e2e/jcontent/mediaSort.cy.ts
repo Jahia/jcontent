@@ -42,13 +42,13 @@ describe('Media sort tests', () => {
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         jcontent.getMedia()
             .switchView('grid')
-            .switchSortProperty('Name')
-            .switchSortDirection('Ascending (A-Z)');
+            .switchSortProperty('name')
+            .switchSortDirection('asc');
         jcontent.getGrid().matchCardNameOrder(['bootstrap', 'zzz', 'abc.txt', 'xyz.txt']);
 
         jcontent.getMedia()
             .switchView('grid')
-            .switchSortDirection('Descending (Z-A)');
+            .switchSortDirection('desc');
         jcontent.getGrid().matchCardNameOrder(['zzz', 'bootstrap', 'xyz.txt', 'abc.txt']);
     });
 
@@ -58,13 +58,13 @@ describe('Media sort tests', () => {
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         jcontent.getMedia()
             .switchView('grid')
-            .switchSortProperty('Last modified on')
-            .switchSortDirection('Ascending (A-Z)');
+            .switchSortProperty('lastModified')
+            .switchSortDirection('asc');
         jcontent.getGrid().matchCardNameOrder(['bootstrap', 'zzz', 'abc.txt', 'xyz.txt']);
 
         jcontent.getMedia()
             .switchView('grid')
-            .switchSortDirection('Descending (Z-A)');
+            .switchSortDirection('desc');
         jcontent.getGrid().matchCardNameOrder(['zzz', 'bootstrap', 'xyz.txt', 'abc.txt']);
     });
 
@@ -74,13 +74,13 @@ describe('Media sort tests', () => {
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         jcontent.getMedia()
             .switchView('grid')
-            .switchSortProperty('Size')
-            .switchSortDirection('Ascending (A-Z)');
+            .switchSortProperty('size')
+            .switchSortDirection('asc');
         jcontent.getGrid().matchCardNameOrder(['bootstrap', 'zzz', 'xyz.txt', 'abc.txt']);
 
         jcontent.getMedia()
             .switchView('grid')
-            .switchSortDirection('Descending (Z-A)');
+            .switchSortDirection('desc');
         jcontent.getGrid().matchCardNameOrder(['bootstrap', 'zzz', 'abc.txt', 'xyz.txt']);
     });
 });

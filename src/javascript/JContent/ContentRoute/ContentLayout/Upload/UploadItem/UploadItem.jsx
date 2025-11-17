@@ -51,6 +51,22 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
     }
 }
 
+function makeJcrAndUrlSafeName(originalName) {
+    let name = originalName.trim();
+    name = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '');
+
+    const parts = name.split('.');
+    const ext = parts.length > 1 ? parts.pop().toLowerCase() : "";
+    let base = parts.join('.');
+
+    base = base.toLowerCase();
+    base = base.replace(/[^a-z0-9._-]+/g, '-');
+    base = base.replace(/-+/g, '-');
+    base = base.replace(/^[-_.]+|[-_.]+$/g, '');
+
+    return ext ? `${base}.${ext}` : base;
+}
+
 export const UploadItem = ({upload, index}) => {
     const [userChosenName, setUserChosenName] = useState();
     const [modalAnchor, setModalAnchor] = useState();
@@ -63,7 +79,7 @@ export const UploadItem = ({upload, index}) => {
     const {file, entry} = upload;
     const client = useApolloClient();
 
-    const getFileName = useCallback(() => userChosenName ? userChosenName : (file ? file.name : entry.name).normalize('NFC'), [entry, file, userChosenName]);
+    const getFileName = useCallback(() => userChosenName ? userChosenName : makeJcrAndUrlSafeName(file ? file.name : entry.name), [entry, file, userChosenName]);
 
     const fileName = getFileName();
     const isNameSizeValid = fileName && fileName.length <= contextJsParameters.config.maxNameSize;

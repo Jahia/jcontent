@@ -5,13 +5,9 @@ import {ContentEditorApi, ContentPickerApi} from './ContentEditorApi';
 import {registerSelectorTypes} from '~/ContentEditor/SelectorTypes';
 import {registerReducer} from './registerReducer';
 import {ContentEditorApiContextProvider} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
-import hashes from './localesHash!.';
 import {ContentEditorError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {registerLegacyGwt} from './registerLegacyGwt';
-
-window.jahia.localeFiles = window.jahia.localeFiles || {};
-window.jahia.localeFiles['content-editor'] = hashes;
 
 export function register() {
     registry.add('app', 'content-editor-api', {

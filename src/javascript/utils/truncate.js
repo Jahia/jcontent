@@ -5,4 +5,3 @@ export const truncate = (string, num) => {
 
     return string.slice(0, num) + '...';
 };
-

@@ -1,6 +1,7 @@
 import React from 'react';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {ButtonRendererShortLabel, getButtonRenderer, truncate} from '~/ContentEditor/utils';
+import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
+import {truncate} from '~/utils';
 import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';

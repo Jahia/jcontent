@@ -20,7 +20,6 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
-import hashes from './localesHash!';
 import CategoryManagerApp from './CategoryManagerApp';
 import {extractPaths} from '~/JContent/JContent.utils';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
@@ -30,9 +29,6 @@ import {batchActions} from 'redux-batched-actions';
 import SvgJContent from '~/icons/JContent';
 import {compareStagingAndLiveRedux} from './JContent/redux/compareStagingAndLive.redux';
 import {contentStatusRedux} from '~/JContent/redux/contentStatus.redux';
-
-window.jahia.localeFiles = window.jahia.localeFiles || {};
-window.jahia.localeFiles.jcontent = hashes;
 
 export default function () {
     const JContentNavItem = props => {

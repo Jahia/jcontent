@@ -56,7 +56,7 @@ function makeJcrAndUrlSafeName(originalName) {
     name = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '');
 
     const parts = name.split('.');
-    const ext = parts.length > 1 ? parts.pop().toLowerCase() : "";
+    const ext = parts.length > 1 ? parts.pop().toLowerCase() : '';
     let base = parts.join('.');
 
     base = base.toLowerCase();
@@ -96,7 +96,7 @@ export const UploadItem = ({upload, index}) => {
 
     const handleUpload = useCallback(type => {
         const {file, path} = upload;
-        const normalizedPath = path.normalize('NFC');
+        const normalizedPath = makeJcrAndUrlSafeName(path);
         if (type === 'import') {
             return registry.get('fileUpload', 'import').handleUpload({path: normalizedPath, file, client});
         }
@@ -164,12 +164,12 @@ export const UploadItem = ({upload, index}) => {
             dispatch(fileuploadRemoveUpload(index));
             upload.subEntries.forEach(file => {
                 file.path = file.path.replace(upload.path + '/' + upload.entry.name, upload.path + '/' + userChosenName);
-                file.entryPath = file.path + '/' + (file.userChosenName || file.entry.name).normalize('NFC');
+                file.entryPath = makeJcrAndUrlSafeName(file.path + '/' + file.userChosenName || file.entry.name);
                 file.invalidParents.splice(file.invalidParents.indexOf(upload.entry), 1);
             });
             upload.userChosenName = userChosenName;
             upload.error = null;
-            upload.entryPath = (upload.path + '/' + userChosenName).normalize('NFC');
+            upload.entryPath = makeJcrAndUrlSafeName(upload.path + '/' + userChosenName);
             if (!upload.invalidParents || upload.invalidParents.length === 0) {
                 const subEntries = upload.subEntries.filter(f => f.invalidParents.length === 0);
                 const missingFolders = [upload, ...subEntries.filter(f => f.isFolder && !f.error)];
@@ -234,7 +234,7 @@ export const UploadItem = ({upload, index}) => {
                         id="rename-dialog-text"
                         name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
                         helperText={errMsg}
-                        defaultValue={(file ? file.name : entry.name).normalize('NFC')}
+                        defaultValue={makeJcrAndUrlSafeName(file ? file.name : entry.name)}
                         onChange={e => setUserChosenName(e.target.value)}
                     />
                 </DialogContent>

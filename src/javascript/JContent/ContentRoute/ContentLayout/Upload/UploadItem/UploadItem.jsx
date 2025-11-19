@@ -61,9 +61,8 @@ const sanitizeName = name => {
     const ext = parts.length > 1 ? parts.pop().toLowerCase() : '';
     let base = parts.join('.');
 
-    // Convert to lowercase and replace invalid characters
-    base = base.toLowerCase();
-    base = base.replace(/[^a-z0-9._-]+/g, '-');
+    // Replace invalid characters (but keep Unicode letters/numbers and case)
+    base = base.replace(/[^\p{L}\p{N}._-]+/gu, '-');
     base = base.replace(/-+/g, '-');
     base = base.replace(/^[-_.]+|[-_.]+$/g, '');
 

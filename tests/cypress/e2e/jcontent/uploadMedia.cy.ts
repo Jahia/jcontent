@@ -62,7 +62,9 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
             .deletePermanently();
     });
 
-    it('Can upload, rename and delete special characters file', function () {
+    // This is no longer possible with updated sanitization routine
+    // see https://github.com/Jahia/jcontent/issues/2033 for reference
+    it.skip('Can upload, rename and delete special characters file', function () {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         jcontent.getMedia()

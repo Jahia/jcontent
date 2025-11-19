@@ -51,21 +51,24 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
     }
 }
 
-function makeJcrAndUrlSafeName(originalName) {
-    let name = originalName.trim();
+const sanitizeName = name => {
+    name = name.trim();
+    // Normalize Unicode and remove diacritics
     name = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '');
 
+    // Split extension if present
     const parts = name.split('.');
     const ext = parts.length > 1 ? parts.pop().toLowerCase() : '';
     let base = parts.join('.');
 
+    // Convert to lowercase and replace invalid characters
     base = base.toLowerCase();
     base = base.replace(/[^a-z0-9._-]+/g, '-');
     base = base.replace(/-+/g, '-');
     base = base.replace(/^[-_.]+|[-_.]+$/g, '');
 
     return ext ? `${base}.${ext}` : base;
-}
+};
 
 export const UploadItem = ({upload, index}) => {
     const [userChosenName, setUserChosenName] = useState();
@@ -79,7 +82,7 @@ export const UploadItem = ({upload, index}) => {
     const {file, entry} = upload;
     const client = useApolloClient();
 
-    const getFileName = useCallback(() => userChosenName ? userChosenName : makeJcrAndUrlSafeName(file ? file.name : entry.name), [entry, file, userChosenName]);
+    const getFileName = useCallback(() => userChosenName ? userChosenName : sanitizeName(file ? file.name : entry.name), [entry, file, userChosenName]);
 
     const fileName = getFileName();
     const isNameSizeValid = fileName && fileName.length <= contextJsParameters.config.maxNameSize;
@@ -96,7 +99,7 @@ export const UploadItem = ({upload, index}) => {
 
     const handleUpload = useCallback(type => {
         const {file, path} = upload;
-        const normalizedPath = makeJcrAndUrlSafeName(path);
+        const normalizedPath = path.normalize('NFC');
         if (type === 'import') {
             return registry.get('fileUpload', 'import').handleUpload({path: normalizedPath, file, client});
         }
@@ -164,12 +167,12 @@ export const UploadItem = ({upload, index}) => {
             dispatch(fileuploadRemoveUpload(index));
             upload.subEntries.forEach(file => {
                 file.path = file.path.replace(upload.path + '/' + upload.entry.name, upload.path + '/' + userChosenName);
-                file.entryPath = makeJcrAndUrlSafeName(file.path + '/' + file.userChosenName || file.entry.name);
+                file.entryPath = file.path + '/' + sanitizeName(file.userChosenName || file.entry.name);
                 file.invalidParents.splice(file.invalidParents.indexOf(upload.entry), 1);
             });
             upload.userChosenName = userChosenName;
             upload.error = null;
-            upload.entryPath = makeJcrAndUrlSafeName(upload.path + '/' + userChosenName);
+            upload.entryPath = (upload.path + '/' + userChosenName).normalize('NFC');
             if (!upload.invalidParents || upload.invalidParents.length === 0) {
                 const subEntries = upload.subEntries.filter(f => f.invalidParents.length === 0);
                 const missingFolders = [upload, ...subEntries.filter(f => f.isFolder && !f.error)];
@@ -234,7 +237,7 @@ export const UploadItem = ({upload, index}) => {
                         id="rename-dialog-text"
                         name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
                         helperText={errMsg}
-                        defaultValue={makeJcrAndUrlSafeName(file ? file.name : entry.name)}
+                        defaultValue={sanitizeName(file ? file.name : entry.name)}
                         onChange={e => setUserChosenName(e.target.value)}
                     />
                 </DialogContent>

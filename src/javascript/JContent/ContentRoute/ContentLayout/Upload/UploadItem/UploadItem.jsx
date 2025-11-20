@@ -10,7 +10,7 @@ import {registry} from '@jahia/ui-extender';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './UploadItem.scss';
 import {useApolloClient} from '@apollo/client';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
     NUMBER_OF_SIMULTANEOUS_UPLOADS,
     uploadStatuses
@@ -51,6 +51,25 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
     }
 }
 
+const sanitizeName = name => {
+    name = name.trim();
+    // Normalize Unicode and remove diacritics
+    name = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '');
+
+    // Split extension if present
+    const parts = name.split('.');
+    const ext = parts.length > 1 ? parts.pop().toLowerCase() : '';
+    let base = parts.join('.');
+
+    // Convert to lowercase and replace invalid characters (but keep Unicode letters/numbers)
+    base = base.toLowerCase();
+    base = base.replace(/[^\p{L}\p{N}._-]+/gu, '-');
+    base = base.replace(/-+/g, '-');
+    base = base.replace(/^[-_.]+|[-_.]+$/g, '');
+
+    return ext ? `${base}.${ext}` : base;
+};
+
 export const UploadItem = ({upload, index}) => {
     const [userChosenName, setUserChosenName] = useState();
     const [modalAnchor, setModalAnchor] = useState();
@@ -62,6 +81,7 @@ export const UploadItem = ({upload, index}) => {
     const {t} = useTranslation();
     const {file, entry} = upload;
     const client = useApolloClient();
+    const {lang} = useSelector(state => ({lang: state.language}));
 
     const getFileName = useCallback(() => userChosenName ? userChosenName : (file ? file.name : entry.name).normalize('NFC'), [entry, file, userChosenName]);
 
@@ -95,8 +115,8 @@ export const UploadItem = ({upload, index}) => {
         }
 
         const filename = getFileName();
-        return registry.get('fileUpload', 'default').handleUpload({path: normalizedPath, file, filename, client});
-    }, [client, getFileName, upload]);
+        return registry.get('fileUpload', 'default').handleUpload({path: normalizedPath, file, filename: sanitizeName(filename), client, lang, title: fileName});
+    }, [client, getFileName, upload, lang]);
 
     const doUploadAndStatusUpdate = useCallback((type = upload.type) => {
         const newUpload = {
@@ -148,7 +168,7 @@ export const UploadItem = ({upload, index}) => {
             dispatch(fileuploadRemoveUpload(index));
             upload.subEntries.forEach(file => {
                 file.path = file.path.replace(upload.path + '/' + upload.entry.name, upload.path + '/' + userChosenName);
-                file.entryPath = file.path + '/' + (file.userChosenName || file.entry.name).normalize('NFC');
+                file.entryPath = file.path + '/' + (file.userChosenName || sanitizeName(file.entry.name)).normalize('NFC');
                 file.invalidParents.splice(file.invalidParents.indexOf(upload.entry), 1);
             });
             upload.userChosenName = userChosenName;

@@ -1,5 +1,5 @@
 const JContentConstants = {
-    namingInvalidCharactersRegexp: /[\\/:*?"<>|%]/g,
+    namingInvalidCharactersRegexp: /[\\/:*?"'<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
     availablePublicationStatuses: {
         PUBLISHED: 'PUBLISHED',

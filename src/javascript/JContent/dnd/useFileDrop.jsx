@@ -22,25 +22,6 @@ import mime from 'mime';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
-const sanitizeName = name => {
-    name = name.trim();
-    // Normalize Unicode and remove diacritics
-    name = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '');
-
-    // Split extension if present
-    const parts = name.split('.');
-    const ext = parts.length > 1 ? parts.pop().toLowerCase() : '';
-    let base = parts.join('.');
-
-    // Convert to lowercase and replace invalid characters (but keep Unicode letters/numbers)
-    base = base.toLowerCase();
-    base = base.replace(/[^\p{L}\p{N}._-]+/gu, '-');
-    base = base.replace(/-+/g, '-');
-    base = base.replace(/^[-_.]+|[-_.]+$/g, '');
-
-    return ext ? `${base}.${ext}` : base;
-};
-
 async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath}) {
     const files = [];
     const directories = [];
@@ -97,7 +78,7 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
     }));
 
     [...files, ...directories].forEach(file => {
-        file.entryPath = (file.path + '/' + sanitizeName(file.entry.name)).normalize('NFC');
+        file.entryPath = (file.path + '/' + file.entry.name).normalize('NFC');
     });
 
     return {files, directories};

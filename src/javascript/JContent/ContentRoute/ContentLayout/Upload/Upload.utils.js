@@ -126,6 +126,7 @@ export const sanitizeName = name => {
     let base = parts.join('.');
 
     // Replace invalid characters (but keep Unicode letters/numbers)
+    base = base.toLowerCase();
     base = base.replace(/[^\p{L}\p{N}._-]+/gu, '-');
     base = base.replace(/-+/g, '-');
     base = base.replace(/^[-_.]+|[-_.]+$/g, '');

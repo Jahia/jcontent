@@ -104,22 +104,22 @@ describe('Create content tests in I18N site', () => {
                 // eslint-disable-next-line cypress/no-unnecessary-waiting
                 cy.wait(2000);
                 cy.apollo({mutationFile: 'contentEditor/createContent/addJcrTitleWithLang.graphql', variables: {
-                    path: `/sites/${sitekey}/files/${fileName}`,
+                    path: `/sites/${sitekey}/files/${fileName.toLowerCase()}`,
                     value: 'No lang'
                 }});
 
                 cy.apollo({mutationFile: 'contentEditor/createContent/addJcrTitleWithLang.graphql', variables: {
-                    path: `/sites/${sitekey}/files/${fileName}`,
+                    path: `/sites/${sitekey}/files/${fileName.toLowerCase()}`,
                     value: 'With lang',
                     lang: 'en'
                 }});
 
                 jcontent.switchToListMode();
-                let contentEditor = jcontent.editComponentByText(fileName);
+                let contentEditor = jcontent.editComponentByText(fileName.toLowerCase());
                 contentEditor.getSmallTextField(fieldName).checkValue('With lang');
                 contentEditor.getSmallTextField(fieldName).addNewValue('New value', true);
                 contentEditor.save();
-                contentEditor = jcontent.editComponentByText(fileName);
+                contentEditor = jcontent.editComponentByText(fileName.toLowerCase());
                 contentEditor.getSmallTextField(fieldName).checkValue('New value');
             });
     });

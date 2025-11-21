@@ -34,7 +34,7 @@ import javax.validation.constraints.AssertTrue;
 public class UploadErrorValidator implements JCRNodeValidator {
 
     private final JCRNodeWrapper node;
-    private static final String TEST_NODE_NAME_PREFIX = "uploadConstraintValidation";
+    private static final String TEST_NODE_NAME_PREFIX = "uploadconstraintvalidation";
 
     public UploadErrorValidator(JCRNodeWrapper node) {
         this.node = node;

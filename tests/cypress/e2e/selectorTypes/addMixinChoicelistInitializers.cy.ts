@@ -19,7 +19,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
                 action: 'drag-drop',
                 waitForAnimations: true
             });
-        cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible');
+        cy.get('[data-sel-role-card="snowbearhome.jpeg"]').should('be.visible');
     });
 
     after(function () {
@@ -98,19 +98,19 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         cy.get('[data-sel-content-editor-field="jnt\\:imageReferenceLink_j\\:node"]')
             .should('be.visible')
             .click();
-        cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible').contains('snowbearHome.jpeg').click();
+        cy.get('[data-sel-role-card="snowbearhome.jpeg"]').should('be.visible').contains('snowbearhome.jpeg').click();
         cy.get('button[data-sel-picker-dialog-action="done"]').click();
         contentEditor.create();
         pageComposer
             .refresh()
             .componentShouldBeVisible(
-                `a[href*="/sites/${sitekey}/home/search-results.html"] > img[src*="/sites/${sitekey}/files/snowbearHome.jpeg"]`
+                `a[href*="/sites/${sitekey}/home/search-results.html"] > img[src*="/sites/${sitekey}/files/snowbearhome.jpeg"]`
             );
     });
 
     it('Can edit a document manager image reference link', () => {
         const contentEditor = pageComposer.editComponent(
-            `a[href*="/sites/${sitekey}/home/search-results.html"] > img[src*="/sites/${sitekey}/files/snowbearHome.jpeg"]`
+            `a[href*="/sites/${sitekey}/home/search-results.html"] > img[src*="/sites/${sitekey}/files/snowbearhome.jpeg"]`
         );
         cy.get('#contenteditor-dialog-title')
             .should('be.visible')

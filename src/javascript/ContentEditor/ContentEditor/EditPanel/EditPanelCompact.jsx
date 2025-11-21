@@ -6,7 +6,8 @@ import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {Checkbox, Typography} from '@jahia/moonstone';
-import {getButtonRenderer, truncate} from '~/ContentEditor/utils';
+import {getButtonRenderer} from '~/ContentEditor/utils';
+import {truncate} from '~/utils';
 import {useTranslation} from 'react-i18next';
 
 import {AdvancedModeButton} from './AdvancedModeButton';

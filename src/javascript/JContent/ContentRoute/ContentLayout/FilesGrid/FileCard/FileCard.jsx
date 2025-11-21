@@ -4,7 +4,7 @@ import {Chip, Typography} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {isBrowserImage, isPDF} from '../../ContentLayout.utils';
-import {NodeIcon} from '~/utils';
+import {NodeIcon, truncateMiddle} from '~/utils';
 import {allowDoubleClickNavigation, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
 import FileName from './FileName';
@@ -142,7 +142,11 @@ export const FileCard = ({
                     {contextualMenuAction && selection.length === 0 && <Actions node={node} className={styles.actions} action={contextualMenuAction}/>}
                 </div>
                 <div className={styles.fileInfo}>
-                    {mimetype ? <Chip label={mimetype} color="accent"/> : null}
+                    {mimetype ?
+                        <Chip
+                            label={truncateMiddle(mimetype, 25)}
+                            title={mimetype.length > 25 ? mimetype : null}
+                            color="accent"/> : null}
                     <ContentStatuses hasLabel={false}
                                      className={styles.statuses}
                                      node={node}

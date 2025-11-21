@@ -7,11 +7,13 @@ import {getMimeType} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.u
 export const ContentTypeChip = () => {
     const {nodeData, nodeTypeName, nodeTypeDisplayName} = useContentEditorContext();
     const mimeType = nodeData.isFile ? getMimeType(nodeData) : null;
+    const tooltip = mimeType ? null : nodeTypeName;
+
     return (
         <Chip
             color="accent"
             label={mimeType || nodeTypeDisplayName || nodeTypeName}
             icon={getNodeTypeIcon(nodeTypeName)}
-            title={nodeTypeName}/>
+            title={tooltip}/>
     );
 };

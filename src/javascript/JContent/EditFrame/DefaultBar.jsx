@@ -1,4 +1,4 @@
-import {NodeIcon} from '~/utils';
+import {NodeIcon, truncate} from '~/utils';
 import styles from './Box/Box.scss';
 import {Area, Chip, HandleDrag, toIconComponent, Typography} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
@@ -7,7 +7,6 @@ import {includes} from 'lodash';
 import React from 'react';
 import {ContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
-import {truncate} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
 
 const AreaShape = PropTypes.shape({

@@ -3,6 +3,7 @@ import {createActions, handleActions} from 'redux-actions';
 import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
 import JContentConstants from '~/JContent/JContent.constants';
 import {getUploadedFileMimeType} from '../ContentLayout.utils';
+import {sanitizeName} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 
 export const {fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue} =
     createActions('FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE');
@@ -105,7 +106,7 @@ export const fileuploadRedux = registry => {
     });
 
     registry.add('fileUpload', 'default', {
-        handleUpload: ({path, file, filename, client}) => {
+        handleUpload: ({path, file, filename, client, lang}) => {
             if (filename.length > contextJsParameters.config.maxNameSize) {
                 throw new Error(uploadErrors.FILE_NAME_SIZE);
             }
@@ -118,7 +119,9 @@ export const fileuploadRedux = registry => {
                 mutation: uploadFile,
                 variables: {
                     fileHandle: file,
-                    nameInJCR: filename,
+                    nameInJCR: sanitizeName(filename),
+                    title: filename,
+                    lang: lang,
                     path: path,
                     mimeType: getUploadedFileMimeType(file)
                 }

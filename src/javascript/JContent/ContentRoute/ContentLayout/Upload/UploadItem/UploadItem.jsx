@@ -10,7 +10,7 @@ import {registry} from '@jahia/ui-extender';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './UploadItem.scss';
 import {useApolloClient} from '@apollo/client';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
     NUMBER_OF_SIMULTANEOUS_UPLOADS,
     uploadStatuses
@@ -62,6 +62,7 @@ export const UploadItem = ({upload, index}) => {
     const {t} = useTranslation();
     const {file, entry} = upload;
     const client = useApolloClient();
+    const {lang} = useSelector(state => ({lang: state.language}));
 
     const getFileName = useCallback(() => userChosenName ? userChosenName : (file ? file.name : entry.name).normalize('NFC'), [entry, file, userChosenName]);
 
@@ -95,8 +96,8 @@ export const UploadItem = ({upload, index}) => {
         }
 
         const filename = getFileName();
-        return registry.get('fileUpload', 'default').handleUpload({path: normalizedPath, file, filename, client});
-    }, [client, getFileName, upload]);
+        return registry.get('fileUpload', 'default').handleUpload({path: normalizedPath, file, filename, client, lang});
+    }, [client, getFileName, upload, lang]);
 
     const doUploadAndStatusUpdate = useCallback((type = upload.type) => {
         const newUpload = {

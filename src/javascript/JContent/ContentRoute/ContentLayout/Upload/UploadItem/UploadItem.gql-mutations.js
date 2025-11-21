@@ -1,8 +1,11 @@
 import gql from 'graphql-tag';
 
-export const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!) {
+export const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!, $title: String!, $lang: String!) {
     jcr {
         addNode(name: $nameInJCR, parentPathOrId: $path, primaryNodeType: "jnt:file") {
+            mutateProperty(name: "jcr:title") {
+                setValue(language: $lang, value: $title)
+            }
             addChild(name: "jcr:content", primaryNodeType: "jnt:resource") {
                 content: mutateProperty(name: "jcr:data") {
                     setValue(type: BINARY, value: $fileHandle)

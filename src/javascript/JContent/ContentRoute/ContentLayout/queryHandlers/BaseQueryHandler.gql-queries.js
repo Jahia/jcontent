@@ -104,17 +104,11 @@ export const QueryHandlersFragments = {
             language: 'String!'
         },
         applyFor: 'node'
-    },
-    usageCounts: {
-        gql: gql`
-        fragment UsageCounts on JCRNode {
-            usagesCount: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
-        }`
     }
 };
 
 export const BaseChildrenQuery = gql`
-    query getNodeChildren($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput, $fieldFilter: InputFieldFiltersInput, $includeUsageCounts: Boolean = false) {
+    query getNodeChildren($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput, $fieldFilter: InputFieldFiltersInput) {
         jcr {
             nodeByPath(path: $path) {
                 ...NodeFields
@@ -126,7 +120,6 @@ export const BaseChildrenQuery = gql`
                         ...NodeFields
                         ...node
                         ...ChildNodesCount
-                        ...UsageCounts @include(if: $includeUsageCounts)
                     }
                 }
             }
@@ -134,7 +127,6 @@ export const BaseChildrenQuery = gql`
     }
     ${QueryHandlersFragments.nodeFields.gql}
     ${QueryHandlersFragments.childNodesCount.gql}
-    ${QueryHandlersFragments.usageCounts.gql}
 `;
 
 export const BaseDescendantsQuery = gql`

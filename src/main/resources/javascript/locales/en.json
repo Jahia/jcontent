@@ -187,7 +187,9 @@
         "type": "Type",
         "status": "Status",
         "size": "Size",
-        "usages": "Usages"
+        "usages": "Usages",
+        "usagesCount": "{{count}} usage",
+        "usagesCount_plural": "{{count}} usages"
       },
       "export": {
         "actionLabel": "Export",

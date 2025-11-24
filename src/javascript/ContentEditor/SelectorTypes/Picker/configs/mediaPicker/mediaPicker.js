@@ -36,7 +36,7 @@ export const registerMediaPickers = registry => {
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,
-            columns: ['publicationStatus', 'name', 'fileSize', 'relPath']
+            columns: ['publicationStatus', 'name', 'usages', 'fileSize', 'relPath']
         },
         searchContentType: 'jnt:file',
         selectableTypesTable: ['jnt:file'],
@@ -58,7 +58,7 @@ export const registerMediaPickers = registry => {
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,
-            columns: ['publicationStatus', 'name', 'fileSize', 'relPath']
+            columns: ['publicationStatus', 'name', 'usages', 'fileSize', 'relPath']
         },
         searchContentType: 'jmix:image',
         selectableTypesTable: ['jmix:image'],
@@ -75,7 +75,7 @@ export const registerMediaPickers = registry => {
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,
-            columns: ['publicationStatus', 'name', 'fileSize', 'relPath']
+            columns: ['publicationStatus', 'name', 'usages', 'fileSize', 'relPath']
         },
         searchContentType: 'jnt:file',
         selectableTypesTable: ['jnt:file'],
@@ -118,7 +118,7 @@ export const registerMediaPickers = registry => {
         },
         selectionTable: {
             getFragments: PickerFilesQueryHandler.getFragments,
-            columns: ['publicationStatus', 'name', 'fileSize', 'relPath']
+            columns: ['publicationStatus', 'name', 'usages', 'fileSize', 'relPath']
         },
         searchContentType: 'jnt:file',
         selectableTypesTable: ['jnt:file'],
@@ -164,7 +164,7 @@ export const registerMediaPickers = registry => {
                 viewSelector: ({pickerConfig}) => <FileModeSelector {...viewModeSelectorProps(pickerConfig)}/>,
                 contextualMenu: 'contentPickerMenu',
                 uploadFilter: (file, mode, pickerConfig) => pickerConfig.key !== 'image' || file.type.startsWith('image/'),
-                columns: ['publicationStatus', 'name', 'fileSize', 'lastModified']
+                columns: ['publicationStatus', 'name', 'usages', 'fileSize', 'lastModified']
             },
             treeConfig: {
                 ...mediaItem.treeConfig,

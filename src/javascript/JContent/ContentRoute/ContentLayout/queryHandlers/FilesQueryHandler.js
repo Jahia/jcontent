@@ -1,5 +1,5 @@
 import {BaseQueryHandler} from './BaseQueryHandler';
-import {imageFields} from './FilesQueryHandler.gql-queries';
+import {imageFields, usagesCount} from './FilesQueryHandler.gql-queries';
 
 export const FilesQueryHandler = {
     ...BaseQueryHandler,
@@ -14,5 +14,5 @@ export const FilesQueryHandler = {
         }
     }),
 
-    getFragments: () => [imageFields]
+    getFragments: () => [imageFields, usagesCount]
 };

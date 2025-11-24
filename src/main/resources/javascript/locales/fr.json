@@ -183,7 +183,9 @@
         "type": "Type",
         "status": "Statut",
         "size": "Taille",
-        "usages": "Utilisations"
+        "usages": "Utilisations",
+        "usagesCount": "{{count}} utilisation",
+        "usagesCount_plural": "{{count}} utilisations"
       },
       "export": {
         "actionLabel": "Exporter",

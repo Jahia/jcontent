@@ -11,7 +11,7 @@ describe('Assets usages count in list and grid', () => {
             .switchToListMode();
 
         const row = jcontent.getTable().getRowByName('editing-digitall-site.jpg');
-        row.get().find('td[data-cm-role="table-content-list-cell-usages"]').should('contain.text', '3');
+        row.get().find('td[data-cm-role="table-content-list-cell-usages"]').should('contain.text', '3 usages');
     });
 
     it('should show media usages in thumbnail view', () => {

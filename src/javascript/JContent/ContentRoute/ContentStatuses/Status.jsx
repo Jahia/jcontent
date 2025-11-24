@@ -14,7 +14,8 @@ import {
     Language,
     Group,
     Visibility,
-    Hidden
+    Hidden,
+    ContentReference
 } from '@jahia/moonstone';
 
 export const config = {
@@ -65,6 +66,10 @@ export const config = {
     notVisible: {
         color: 'default',
         icon: <Hidden/>
+    },
+    usagesCount: {
+        color: 'warning',
+        icon: <ContentReference/>
     }
 };
 

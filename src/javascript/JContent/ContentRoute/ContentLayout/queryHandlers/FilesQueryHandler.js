@@ -6,6 +6,7 @@ export const FilesQueryHandler = {
 
     getQueryVariables: selection => ({
         ...BaseQueryHandler.getQueryVariables(selection),
+        includeUsageCounts: true,
         fieldGrouping: {
             fieldName: 'primaryNodeType.name',
             groups: ['jnt:folder'],

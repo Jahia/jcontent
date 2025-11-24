@@ -182,7 +182,8 @@
         "lastModified": "Modifié le",
         "type": "Type",
         "status": "Statut",
-        "size": "Taille"
+        "size": "Taille",
+        "usages": "Utilisations"
       },
       "export": {
         "actionLabel": "Exporter",
@@ -424,7 +425,9 @@
         "noTranslation": "Aucune traduction - {{language}}",
         "visibilityConditions": "Condition de visibilité",
         "permissions": "Permission",
-        "notVisible": "Non visible maintenant"
+        "notVisible": "Non visible maintenant",
+        "usagesCount": "{{count}} utilisation",
+        "usagesCount_plural": "{{count}} utilisations"
       },
       "contentStatusSelector": {
         "noStatus": "Aucun statut",

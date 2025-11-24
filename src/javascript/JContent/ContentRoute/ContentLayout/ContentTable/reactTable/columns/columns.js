@@ -96,6 +96,17 @@ const mediaType = {
     property: 'content.mimeType.value'
 };
 
+export const usages = {
+    id: 'usages',
+    accessor: 'usagesCount',
+    label: 'jcontent:label.contentManager.listColumns.usages',
+    sortable: true,
+    property: 'usagesCount',
+    Cell: Cell,
+    Header: Header,
+    width: '70px'
+};
+
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
-export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, mediaType, createdBy, lastModified, visibleActions];
+export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, mediaType, usages, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

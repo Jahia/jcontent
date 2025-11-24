@@ -60,10 +60,8 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
             return !statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished');
         }
 
-        if (s === 'usagesCount') {
-            if (statuses[s] === 0) {
-                return null;
-            }
+        if (s === 'usagesCount' && statuses[s] === 0) {
+            return null;
         }
 
         return statuses[s] && renderStatus(s);

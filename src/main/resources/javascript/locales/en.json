@@ -93,7 +93,7 @@
         "replaceWith": "Replace with",
         "edit": "Edit",
         "drop": "Drop your file(s) and folder(s) here",
-        "invalidChars": "Invalid characters:  \/:*?\"<>|%"
+        "invalidChars": "Invalid characters:  \/:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Drag and drop a file to import",
@@ -399,13 +399,13 @@
         "title": "New folder",
         "text": "Enter a folder name",
         "exists": "A folder with this name already exists",
-        "invalidChars": "Invalid characters:  \/:*?\"<>|%"
+        "invalidChars": "Invalid characters:  \/:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Rename",
         "text": "Enter a new name",
         "exists": "A file with this name already exists",
-        "invalidChars": "Invalid characters:  \/:*?\"<>|%"
+        "invalidChars": "Invalid characters:  \/:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Download file",

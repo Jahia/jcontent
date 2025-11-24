@@ -91,7 +91,7 @@
         "replaceWith": "Remplacer par",
         "edit": "Editer",
         "drop": "Déposez vos fichiers et dossiers ici",
-        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Glisser-déposer un fichier à importer",
@@ -394,13 +394,13 @@
         "title": "Nouveau dossier",
         "text": "Saisissez un nom de dossier",
         "exists": "Un dossier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Renommer",
         "text": "Saisissez un nouveau nom",
         "exists": "Un fichier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Télécharger le fichier",

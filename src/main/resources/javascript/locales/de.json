@@ -90,7 +90,7 @@
         "dialogRename": "Umbenennen",
         "replaceWith": "Ersetzen mit",
         "drop": "Drop Datei und Ordner hier ab",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",
@@ -394,13 +394,13 @@
         "title": "Neuer Ordner",
         "text": "Geben Sie einen Ordner-Namen ein",
         "exists": "Ein Ordner mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Umbenennen",
         "text": "Geben Sie einen Namen ein",
         "exists": "Eine Datei mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Datei herunterladen",

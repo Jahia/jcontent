@@ -46,7 +46,6 @@ const SORT_DATA = [
 ];
 
 const getOrderLabels = orderBy => {
-
     // Date fields
     if (orderBy === 'lastModified.value') {
         return {

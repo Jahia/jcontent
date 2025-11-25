@@ -170,7 +170,7 @@ export const FileCard = ({
                         </Typography>
                     )}
                 </div>
-                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'modified', 'markedForDeletion']}/>
+                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'modified', 'markedForDeletion', 'usagesCount']}/>
             </div>
         </div>
     );

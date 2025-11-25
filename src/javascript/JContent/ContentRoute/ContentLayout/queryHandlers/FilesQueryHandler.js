@@ -1,11 +1,12 @@
 import {BaseQueryHandler} from './BaseQueryHandler';
-import {imageFields} from './FilesQueryHandler.gql-queries';
+import {imageFields, usagesCount} from './FilesQueryHandler.gql-queries';
 
 export const FilesQueryHandler = {
     ...BaseQueryHandler,
 
     getQueryVariables: selection => ({
         ...BaseQueryHandler.getQueryVariables(selection),
+        includeUsageCounts: true,
         fieldGrouping: {
             fieldName: 'primaryNodeType.name',
             groups: ['jnt:folder'],
@@ -13,5 +14,5 @@ export const FilesQueryHandler = {
         }
     }),
 
-    getFragments: () => [imageFields]
+    getFragments: () => [imageFields, usagesCount]
 };

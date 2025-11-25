@@ -182,7 +182,10 @@
         "lastModified": "Geändert am",
         "type": "Typ",
         "status": "Status",
-        "size": "Größe"
+        "size": "Größe",
+        "usages": "Verwendungen",
+        "usagesCount": "{{count}} Verwendung",
+        "usagesCount_plural": "{{count}} Verwendungen"
       },
       "export": {
         "actionLabel": "Exportieren",
@@ -424,7 +427,9 @@
         "noTranslation": "Keine Übersetzung - {{language}}",
         "visibilityConditions": "Sichtbarkeitsbedingung",
         "permissions": "Berechtigung",
-        "notVisible": "Jetzt nicht sichtbar"
+        "notVisible": "Jetzt nicht sichtbar",
+        "usagesCount": "{{count}} Verwendung",
+        "usagesCount_plural": "{{count}} Verwendungen"
       },
       "contentStatusSelector": {
         "noStatus": "Kein Status",

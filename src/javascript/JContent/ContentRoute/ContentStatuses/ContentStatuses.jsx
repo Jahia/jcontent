@@ -23,7 +23,8 @@ const useContentStatuses = ({node, language}) => {
         visibilityConditions: Boolean(
             node.visibilityConditions?.children?.nodes?.length > 0 ||
             node.invalidLanguages?.values.length > 0 ||
-            node.channelConditions?.values.length > 0)
+            node.channelConditions?.values.length > 0),
+        usagesCount: node.usagesCount
     };
 
     const {publicationStatus, existsInLive} = node.aggregatedPublicationInfo || {};
@@ -36,7 +37,8 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
     const {t} = useTranslation('jcontent');
     const statuses = useContentStatuses({node, language});
     const labelParams = {
-        noTranslation: {language: language.toUpperCase()}
+        noTranslation: {language: language.toUpperCase()},
+        usagesCount: {count: statuses.usagesCount}
     };
 
     const renderStatus = type => (
@@ -56,6 +58,10 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
     const statusesToRender = renderedStatuses.map(s => {
         if (s === 'published') {
             return !statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished');
+        }
+
+        if (s === 'usagesCount' && statuses[s] === 0) {
+            return null;
         }
 
         return statuses[s] && renderStatus(s);

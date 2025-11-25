@@ -10,6 +10,7 @@ import {
     CellFileSize
 } from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
+import {CellUsages} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable/components/cells/CellUsages';
 
 export const publicationStatus = {
     id: 'publicationStatus',
@@ -96,6 +97,17 @@ const mediaType = {
     property: 'content.mimeType.value'
 };
 
+export const usages = {
+    id: 'usages',
+    accessor: 'usagesCount',
+    label: 'jcontent:label.contentManager.listColumns.usages',
+    sortable: true,
+    property: 'usagesCount',
+    Cell: CellUsages,
+    Header: Header,
+    width: '120px'
+};
+
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
-export const mediaColumnData = [publicationStatus, selection, name, status, fileSize, mediaType, createdBy, lastModified, visibleActions];
+export const mediaColumnData = [publicationStatus, selection, name, status, usages, fileSize, mediaType, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

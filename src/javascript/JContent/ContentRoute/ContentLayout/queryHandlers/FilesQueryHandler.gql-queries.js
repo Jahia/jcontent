@@ -27,3 +27,12 @@ export const imageFields = {
     `,
     applyFor: 'node'
 };
+
+export const usagesCount = {
+    gql: gql`
+        fragment UsageCounts on JCRNode {
+            usagesCount: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
+        }
+    `,
+    applyFor: 'node'
+};

@@ -150,3 +150,4 @@ export const BaseDescendantsQuery = gql`
     ${QueryHandlersFragments.nodeFields.gql}
     ${QueryHandlersFragments.childNodesCount.gql}
 `;
+

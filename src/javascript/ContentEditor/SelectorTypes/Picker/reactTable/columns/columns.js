@@ -3,6 +3,8 @@ import {CellVisibleActions} from '~/ContentEditor/SelectorTypes/Picker/reactTabl
 import {FileSizeCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/FileSizeCell';
 import {RelPathCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/RelPathCell';
 import {LocationCell} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns/LocationCell';
+import {CellUsages} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable/components/cells/CellUsages';
+import {Header} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 
 export const allColumnData = [
     {
@@ -93,5 +95,15 @@ export const allColumnData = [
         Cell: CellVisibleActions,
         width: '60px',
         sortable: false
+    },
+    {
+        id: 'usages',
+        accessor: 'usagesCount',
+        label: 'jcontent:label.contentManager.listColumns.usages',
+        sortable: true,
+        property: 'usagesCount',
+        Cell: CellUsages,
+        Header: Header,
+        width: '120px'
     }
 ];

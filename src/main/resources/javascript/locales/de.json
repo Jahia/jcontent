@@ -565,7 +565,11 @@
         "orderingBy": "Sortieren nach",
         "direction": "Richtung",
         "desc": "Absteigend (Z-A)",
-        "asc": "Aufsteigend (A-Z)"
+        "asc": "Aufsteigend (A-Z)",
+        "numDesc": "Hoch zu niedrig",
+        "numAsc": "Niedrig zu hoch",
+        "dateDesc": "Neu zu alt",
+        "dateAsc": "Alt zu neu"
       }
     },
     "categoryManager": {

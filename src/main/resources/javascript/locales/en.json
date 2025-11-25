@@ -572,7 +572,11 @@
         "orderingBy": "Ordering by",
         "direction": "Direction",
         "desc": "Descending (Z-A)",
-        "asc": "Ascending (A-Z)"
+        "asc": "Ascending (A-Z)",
+        "numDesc": "High to low",
+        "numAsc": "Low to high",
+        "dateDesc": "New to old",
+        "dateAsc": "Old to new"
       }
     },
     "categoryManager": {

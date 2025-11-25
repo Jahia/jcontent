@@ -45,6 +45,31 @@ const SORT_DATA = [
     }
 ];
 
+const getOrderLabels = orderBy => {
+
+    // Date fields
+    if (orderBy === 'lastModified.value') {
+        return {
+            asc: 'jcontent:label.contentManager.sortSelector.dateAsc',
+            desc: 'jcontent:label.contentManager.sortSelector.dateDesc'
+        };
+    }
+
+    // Numeric fields
+    if (orderBy === 'content.data.size') {
+        return {
+            asc: 'jcontent:label.contentManager.sortSelector.numAsc',
+            desc: 'jcontent:label.contentManager.sortSelector.numDesc'
+        };
+    }
+
+    // Default text fields
+    return {
+        asc: 'jcontent:label.contentManager.sortSelector.asc',
+        desc: 'jcontent:label.contentManager.sortSelector.desc'
+    };
+};
+
 const DROPDOWN_ICON = {
     DESC: <ArrowDown/>,
     ASC: <ArrowUp/>
@@ -59,6 +84,22 @@ export const SortSelector = ({selector, setSortAction}) => {
         return SORT_DATA.map(d => ({label: t(d.label), value: d.orderBy, attributes: d.attributes}));
     }, [t]);
     const currentLabel = t(SORT_DATA.find(d => d.orderBy === sort?.orderBy)?.label);
+    const sortDirectionData = useMemo(() => {
+        const labels = getOrderLabels(sort?.orderBy);
+
+        return [
+            {
+                label: t(labels.asc),
+                value: 'ASC',
+                attributes: {'data-sel-role': 'sel-media-sort-order-asc'}
+            },
+            {
+                label: t(labels.desc),
+                value: 'DESC',
+                attributes: {'data-sel-role': 'sel-media-sort-order-desc'}
+            }
+        ];
+    }, [sort?.orderBy, t]);
 
     return mode === JContentConstants.mode.GRID ? (
         <CustomDropdown size="default"
@@ -91,22 +132,7 @@ export const SortSelector = ({selector, setSortAction}) => {
                 data-sel-role="sel-media-sort-order-dropdown"
                 variant="outlined"
                 value={sort?.order}
-                data={[
-                {
-                    label: t('jcontent:label.contentManager.sortSelector.asc'),
-                    value: 'ASC',
-                    attributes: {
-                        'data-sel-role': 'sel-media-sort-order-asc'
-                    }
-                },
-                {
-                    label: t('jcontent:label.contentManager.sortSelector.desc'),
-                    value: 'DESC',
-                    attributes: {
-                        'data-sel-role': 'sel-media-sort-order-desc'
-                    }
-                }
-            ]}
+                data={sortDirectionData}
                 onChange={(e, item) => {
                 dispatch(setSortAction({order: item.value, orderBy: sort.orderBy}));
             }}

@@ -571,7 +571,11 @@
         "orderingBy": "Trier par",
         "direction": "Direction",
         "desc": "Décroissant (Z-A)",
-        "asc": "Croissant (A-Z)"
+        "asc": "Croissant (A-Z)",
+        "numDesc": "Grand > Petit",
+        "numAsc": "Petit > Grand",
+        "dateDesc": "Récent > Anciens",
+        "dateAsc": "Anciens > Récents"
       }
     },
     "categoryManager": {

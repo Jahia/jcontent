@@ -241,6 +241,18 @@ export const EditFrame = () => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
+                // The style injection mechanism is different between Vite and Webpack federated builds,
+                // if Moonstone comes from a Vite build, its styles are inserted as <link> elements
+                iframe.current.ownerDocument.querySelectorAll('head link[rel="stylesheet"]').forEach(link => {
+                    fetch(link.href).then(response => response.text()).then(cssText => {
+                        const styleElement = currentDocument.createElement('style');
+                        // Because Moonstone contains a hard reset (* { margin: 0 }), we remove it here
+                        // to avoid breaking user styles in the iframe. Running `prefixCssSelectors` is too
+                        // expensive for large CSS files, it has a complexity issue not worth solving
+                        styleElement.textContent = cssText.replace(/html,.+,textarea\{font-family:inherit\}/, '')
+                        currentDocument.querySelector('head').appendChild(styleElement);
+                    });
+                });
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
                 iframe.current.contentWindow.location.href = url;
                 setPreviousUrlParams(currentUrlParams);

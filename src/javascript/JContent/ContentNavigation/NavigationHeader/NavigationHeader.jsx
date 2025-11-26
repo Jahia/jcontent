@@ -1,17 +1,15 @@
 import JContentLogo from './JContentLogo';
 import React from 'react';
 import SwitchersLayout from './SwitchersLayout';
-import styles from './NavigationHeader.scss';
 import PropTypes from 'prop-types';
+import {SecondaryNavHeader} from '@jahia/moonstone';
 
 export const NavigationHeader = ({isDisplaySwitchers, logo, isDisplaySiteSwitcher, isDisplayLanguageSwitcher, languageSelector, setLanguageAction}) => {
     return (
-        <div className={styles.header}>
-            <div className={styles.logo}>
-                {logo}
-            </div>
+        <>
+            <SecondaryNavHeader>{logo}</SecondaryNavHeader>
             {isDisplaySwitchers && <SwitchersLayout isDisplaySiteSwitcher={isDisplaySiteSwitcher} isDisplayLanguageSwitcher={isDisplayLanguageSwitcher} languageSelector={languageSelector} setLanguageAction={setLanguageAction}/>}
-        </div>
+        </>
     );
 };
 

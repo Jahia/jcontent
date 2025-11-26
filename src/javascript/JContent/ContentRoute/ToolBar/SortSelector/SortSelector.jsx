@@ -4,7 +4,6 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {cmSetSort} from '~/JContent/redux/sort.redux';
 import {ArrowDown, ArrowUp, Dropdown, CustomDropdown, Separator, MenuItem} from '@jahia/moonstone';
-import classes from './SortSelector.scss';
 import JContentConstants from '~/JContent/JContent.constants';
 
 const SORT_DATA = [
@@ -105,10 +104,9 @@ export const SortSelector = ({selector, setSortAction}) => {
                         data-sel-role="sel-media-sort-dropdown"
                         label={currentLabel}
                         icon={DROPDOWN_ICON[sort?.order]}
-                        variant="outlined"
+                        variant="ghost"
         >
             <MenuItem
-            className={classes.label}
             label={t('jcontent:label.contentManager.sortSelector.orderingBy')}
             variant="title"
         />
@@ -117,19 +115,20 @@ export const SortSelector = ({selector, setSortAction}) => {
                 data={sortData}
                 value={sort?.orderBy}
                 variant="outlined"
+                size="small"
                 onChange={(e, item) => {
                 dispatch(setSortAction({order: sort.order, orderBy: item.value}));
             }}
         />
-            <Separator/>
+            <Separator spacing="medium"/>
             <MenuItem
-            className={classes.label}
             label={t('jcontent:label.contentManager.sortSelector.direction')}
             variant="title"
         />
             <Dropdown
                 data-sel-role="sel-media-sort-order-dropdown"
                 variant="outlined"
+                size="small"
                 value={sort?.order}
                 data={sortDirectionData}
                 onChange={(e, item) => {
@@ -156,4 +155,3 @@ SortSelector.defaultProps = {
 };
 
 export default SortSelector;
-

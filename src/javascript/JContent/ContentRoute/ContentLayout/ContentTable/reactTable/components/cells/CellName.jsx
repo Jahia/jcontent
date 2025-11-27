@@ -24,7 +24,7 @@ export const CellName = ({value, cell, column, row}) => {
                        width={column.width}
                        {...cell.getCellProps()}
                        row={row}
-                       iconStart={<NodeIcon node={node} className={classes.icon}/>}
+                       iconStart={<NodeIcon node={node} className={node.thumbnailUrl ? clsx(classes.icon, classes.thumbnailIcon) : classes.icon}/>}
                        cell={cell}
                        data-cm-role={`table-content-list-cell-${column.id}`}
         >

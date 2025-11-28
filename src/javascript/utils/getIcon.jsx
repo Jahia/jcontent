@@ -184,6 +184,10 @@ export function getIconFromNode(node, props = {}) {
         return <Area {...props}/>;
     }
 
+    if (node.thumbnailUrl) {
+        return <div {...props} style={{'--bg-image': `url(${node.thumbnailUrl})`}}/>;
+    }
+
     switch (node.primaryNodeType.name) {
         case 'jnt:folder':
             return <Folder {...props}/>;

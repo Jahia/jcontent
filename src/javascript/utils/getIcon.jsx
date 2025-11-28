@@ -185,7 +185,7 @@ export function getIconFromNode(node, props = {}) {
     }
 
     if (node.thumbnailUrl) {
-        return <div {...props} style={{ '--bg-image': `url(${node.thumbnailUrl})` }} />;
+        return <div {...props} style={{'--bg-image': `url(${node.thumbnailUrl})`}}/>;
     }
 
     switch (node.primaryNodeType.name) {

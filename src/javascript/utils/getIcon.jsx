@@ -184,7 +184,7 @@ export function getIconFromNode(node, props = {}) {
         return <Area {...props}/>;
     }
 
-    if (node.thumbnailUrl) {
+    if (props.useThumbnail && node.thumbnailUrl) {
         return <div {...props} style={{'--bg-image': `url(${node.thumbnailUrl})`}}/>;
     }
 

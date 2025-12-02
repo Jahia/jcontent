@@ -1,4 +1,5 @@
 export * from './CellName';
+export * from './CellNameBigIcon';
 export * from './CellLastModified';
 export * from './CellVisibleActions';
 export * from './CellSelection';

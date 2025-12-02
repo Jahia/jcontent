@@ -60,7 +60,7 @@ describe('Menu actions preview tests', () => {
             jcontent
                 .getTable()
                 .getRowByLabel('street')
-                .get().find('[data-cm-role="table-content-list-cell-name"]').click();
+                .get().find('[data-cm-role="table-content-list-cell-nameBigIcon"]').click();
             cy.get('[data-sel-role=preview-type-image]');
             cy.get('[data-cm-role=preview-name]').contains('street-market-fruits-grocery.jpg');
         });

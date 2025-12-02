@@ -7,7 +7,7 @@ import {
     CellStatus,
     CellType,
     CellVisibleActions,
-    CellFileSize
+    CellFileSize, CellNameBigIcon
 } from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 import {CellUsages} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable/components/cells/CellUsages';
@@ -33,6 +33,16 @@ export const name = {
     sortable: true,
     property: 'displayName',
     Cell: CellName,
+    Header: Header,
+    width: '300px'
+};
+export const nameBigIcon = {
+    id: 'nameBigIcon',
+    accessor: 'displayName',
+    label: 'jcontent:label.contentManager.listColumns.name',
+    sortable: true,
+    property: 'displayName',
+    Cell: CellNameBigIcon,
     Header: Header,
     width: '300px'
 };
@@ -109,5 +119,5 @@ export const usages = {
 };
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
-export const mediaColumnData = [publicationStatus, selection, name, status, usages, fileSize, mediaType, createdBy, lastModified, visibleActions];
+export const mediaColumnData = [publicationStatus, selection, nameBigIcon, status, usages, fileSize, mediaType, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

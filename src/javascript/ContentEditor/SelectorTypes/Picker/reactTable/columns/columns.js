@@ -32,6 +32,16 @@ export const allColumnData = [
         width: '300px'
     },
     {
+        id: 'nameBigIcon',
+        accessor: 'displayName',
+        label: 'jcontent:label.contentManager.listColumns.name',
+        sortable: true,
+        property: 'displayName',
+        Cell: reactTable.CellNameBigIcon,
+        Header: reactTable.Header,
+        width: '300px'
+    },
+    {
         id: 'type',
         accessor: 'primaryNodeType.displayName',
         label: 'jcontent:label.contentManager.listColumns.type',

@@ -6,7 +6,7 @@ import {NodeIcon} from '~/utils';
 import classes from './Cells.scss';
 import clsx from 'clsx';
 
-export const CellName = ({value, cell, column, row}) => {
+export const CellNameBigIcon = ({value, cell, column, row}) => {
     const node = row.original;
     const deleted = isMarkedForDeletion(node);
 
@@ -24,7 +24,7 @@ export const CellName = ({value, cell, column, row}) => {
                        width={column.width}
                        {...cell.getCellProps()}
                        row={row}
-                       iconStart={<NodeIcon node={node} className={classes.icon}/>}
+                       iconStart={<NodeIcon useThumbnail node={node} className={node.thumbnailUrl ? clsx(classes.iconBig, classes.thumbnailIcon) : classes.iconBig}/>}
                        cell={cell}
                        data-cm-role={`table-content-list-cell-${column.id}`}
         >
@@ -33,7 +33,7 @@ export const CellName = ({value, cell, column, row}) => {
     );
 };
 
-CellName.propTypes = {
+CellNameBigIcon.propTypes = {
     value: PropTypes.string,
     cell: PropTypes.object,
     column: PropTypes.object,

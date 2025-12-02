@@ -164,7 +164,7 @@ export const registerMediaPickers = registry => {
                 viewSelector: ({pickerConfig}) => <FileModeSelector {...viewModeSelectorProps(pickerConfig)}/>,
                 contextualMenu: 'contentPickerMenu',
                 uploadFilter: (file, mode, pickerConfig) => pickerConfig.key !== 'image' || file.type.startsWith('image/'),
-                columns: ['publicationStatus', 'name', 'usages', 'fileSize', 'lastModified']
+                columns: ['publicationStatus', 'nameBigIcon', 'usages', 'fileSize', 'lastModified']
             },
             treeConfig: {
                 ...mediaItem.treeConfig,

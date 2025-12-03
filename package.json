@@ -104,7 +104,8 @@
     "xlsx": "^0.17.0",
     "mammoth": "^1.4.13",
     "node-fetch": "^2.6.1",
-    "react-file-viewer/**/ajv": "^6.12.6"
+    "react-file-viewer/**/ajv": "^6.12.6",
+    "form-data": "^4.0.4"
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.3",

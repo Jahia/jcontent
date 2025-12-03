@@ -6,14 +6,13 @@ import {useTranslation} from 'react-i18next';
 export const CellUsages = ({cell, column, row}) => {
     const {t} = useTranslation('jcontent');
     const node = row.original;
-
     return (
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}
                        width={column.width}
                        data-cm-role={`table-content-list-cell-${column.id}`}
         >
-            <Chip label={t('label.contentManager.listColumns.usagesCount', {count: node.usagesCount})} color="warning" icon={<ContentReference/>}/>
+            {node.usagesCount > 0 ? <Chip label={t('label.contentManager.listColumns.usagesCount', {count: node.usagesCount})} color="warning" icon={<ContentReference/>}/> : null}
         </TableBodyCell>
     );
 };

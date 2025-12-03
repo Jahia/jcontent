@@ -33,7 +33,9 @@ const useContentStatuses = ({node, language}) => {
     return statuses;
 };
 
-const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, statusProps, ...props}) => {
+const statusesWithLabels = new Set(['usagesCount', 'noTranslation']);
+
+const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, statusProps, ...props}) => {
     const {t} = useTranslation('jcontent');
     const statuses = useContentStatuses({node, language});
     const labelParams = {
@@ -47,7 +49,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
             type={type}
             isDisabled={isDisabled}
             tooltip={getTooltip(node, type, t, uilang)}
-            hasLabel={hasLabel}
+            hasLabel={statusesWithLabels.has(type)}
             labelParams={labelParams?.[type]}
             {...props}
             // Specific override object from a given status type
@@ -130,13 +132,11 @@ ContentStatuses.propTypes = {
     isDisabled: PropTypes.bool,
     renderedStatuses: PropTypes.array,
     className: PropTypes.string,
-    hasLabel: PropTypes.bool,
     statusProps: PropTypes.object
 };
 
 ContentStatuses.defaultProps = {
     isDisabled: false,
-    hasLabel: true,
     renderedStatuses: ['modified', 'markedForDeletion', 'workInProgress', 'locked', 'published', 'warning']
 };
 

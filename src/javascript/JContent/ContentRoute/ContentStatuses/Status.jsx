@@ -79,6 +79,7 @@ const Status = ({type, tooltip, isDisabled, hasLabel, labelParams, ...props}) =>
     const {t} = useTranslation('jcontent');
     const label = t(`label.contentManager.contentStatus.${type}`, labelParams);
     const hasDefinedLabel = label !== `label.contentManager.contentStatus.${type}`;
+    console.log(`Rendering Status: type=${type}, label=${label}, hasLabel=${hasLabel} hasDefinedLabel=${hasDefinedLabel}`);
     return (
         <Chip
             label={(hasLabel && hasDefinedLabel) ? label : null}

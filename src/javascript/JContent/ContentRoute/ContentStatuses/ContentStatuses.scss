@@ -5,6 +5,8 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+    flex-wrap: wrap;
+    row-gap: 4px;
 
     & > *:not(:first-child) {
         margin-left: var(--spacing-nano);

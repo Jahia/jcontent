@@ -24,7 +24,13 @@ module.exports = (env, argv) => {
             alias: {
                 '~': path.resolve(__dirname, './src/javascript'),
             },
-            fallback: { "url": false }
+            fallback: {
+                "url": false,
+                // Issue with upgrading to @jahia/moonstone 2.12.0, @floating-ui/react dependency
+                // https://github.com/carbon-design-system/carbon/issues/18714#issuecomment-2691357012
+                // Resolving with fallback but proper fix would be to update dependency to React 18
+                "react/jsx-runtime": "react/jsx-runtime.js"
+            }
         },
         module: {
             rules: [

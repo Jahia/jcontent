@@ -14,6 +14,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
+import {useVirtualizer} from '@tanstack/react-virtual';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -39,7 +40,7 @@ export const accordionPropType = PropTypes.shape({
     }).isRequired
 });
 
-const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
+const ItemComponent = ({children, node, item, treeEntries, virtualizer, virtualRow, ...props}) => {
     const ref = useRef(null);
     const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({
         dropTarget: node,
@@ -73,8 +74,15 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
         }
     }, [depth]);
 
+    useEffect(() => {
+        if (ref.current) {
+            virtualizer.measureElement(ref.current);
+        }
+    }, [ref, virtualizer]);
+
     return (
         <li ref={ref}
+            data-index={virtualRow.index}
             {...props}
             className={clsx([
                     {
@@ -94,8 +102,12 @@ ItemComponent.propTypes = {
     item: accordionPropType,
     children: PropTypes.node,
     node: PropTypes.object,
-    treeEntries: PropTypes.array
+    treeEntries: PropTypes.array,
+    virtualizer: PropTypes.object,
+    virtualRow: PropTypes.object
 };
+
+const TREE_ITEM_SIZE = 32;
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
@@ -103,6 +115,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     const rootPath = item.getRootPath(siteKey);
     const ulRef = useRef(null);
     const ulScrollRef = useRef(0);
+    const dataRef = useRef(null);
+    const mainRef = useRef(null);
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
         openPaths.push(rootPath);
@@ -136,7 +150,23 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         sortBy: item.treeConfig.sortBy
     };
 
-    const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
+    const {treeEntries, refetch, loading} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
+
+    if (dataRef.current === null || treeEntries.length > 0) {
+        dataRef.current = treeEntries;
+    }
+
+    const rowVirtualizer = useVirtualizer({
+        count: dataRef?.current?.length,
+        estimateSize: () => TREE_ITEM_SIZE,
+        getScrollElement: () => mainRef.current,
+        measureElement:
+            typeof window !== 'undefined' &&
+            navigator.userAgent.indexOf('Firefox') === -1 ?
+                element => element?.getBoundingClientRect().height :
+                undefined,
+        overscan: 10
+    });
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child
@@ -165,33 +195,57 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
     let contextualMenu = useRef();
 
+    const rows = rowVirtualizer.getVirtualItems();
+
+    const data = convertPathsToTree({
+        treeEntries: rows ? rows.map(row => ({...dataRef.current[row.index], virtualRow: row})) : [],
+        selected: path,
+        isReversed,
+        contentMenu: contextualMenuAction,
+        itemProps: {item},
+        viewMode: undefined,
+        virtualizer: rowVirtualizer,
+        loading,
+        openPaths
+    });
+
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
-            <TreeView ref={ulRefSet}
-                      isReversed={isReversed}
-                      itemComponent={ItemComponent}
-                      data={convertPathsToTree({treeEntries, selected: path, isReversed, contentMenu: contextualMenuAction, itemProps: {item}})}
-                      openedItems={openPaths}
-                      selectedItems={[path]}
-                      onContextMenuItem={(object, event) => {
-                          event.stopPropagation();
-                          if (contextualMenuAction) {
-                              contextualMenu.current(event, {path: object.id});
-                          }
-                      }}
-                      onClickItem={object => {
-                          if (object.treeItemProps.node.isTreeSelectable) {
-                              dispatch(setPathAction(object.id, {sub: false}));
-                          }
-                      }}
-                      onOpenItem={object => {
-                          // Record scroll position of tree container
-                          ulScrollRef.current = ulRef.current?.parentElement.scrollTop;
-                          dispatch(openPathAction(object.id));
-                      }}
-                      onCloseItem={object => dispatch(closePathAction(object.id))}
-            />
+            <div ref={mainRef}
+                 data-cm-role="navtree-holder"
+                 style={{height: '100%', overflow: 'auto'}}
+            >
+                <TreeView ref={ulRefSet}
+                          isPadVirtualizedRow
+                          isReversed={isReversed}
+                          itemComponent={ItemComponent}
+                          style={{
+                              height: `${rowVirtualizer.getTotalSize()}px`, // Tells scrollbar how big the table is
+                              position: 'relative' // Needed for absolute positioning of rows
+                          }}
+                          data={data}
+                          openedItems={openPaths}
+                          selectedItems={[path.endsWith('/') ? path.slice(0, -1) : path]}
+                          onContextMenuItem={(object, event) => {
+                              event.stopPropagation();
+                              if (contextualMenuAction) {
+                                  contextualMenu.current(event, {path: object.id});
+                              }
+                          }}
+                          onClickItem={object => {
+                              if (object.treeItemProps.node.isTreeSelectable) {
+                                  dispatch(setPathAction(object.id, {sub: false}));
+                              }
+                          }}
+                          onOpenItem={object => {
+                              // Record scroll position of tree container
+                              ulScrollRef.current = ulRef.current?.parentElement.scrollTop;
+                              dispatch(openPathAction(object.id));
+                          }}
+                          onCloseItem={object => dispatch(closePathAction(object.id))}
+                />
+            </div>
         </React.Fragment>
     );
 };

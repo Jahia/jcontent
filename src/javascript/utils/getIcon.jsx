@@ -185,7 +185,7 @@ export function getIconFromNode(node, props = {}) {
     }
 
     if (props.useThumbnail && node.thumbnailUrl) {
-        return <div {...props} style={{'--bg-image': `url(${node.thumbnailUrl})`}}/>;
+        return <div {...props} style={{'--bg-image': `url(${getThumbnailUrl(node)})`}}/>;
     }
 
     switch (node.primaryNodeType.name) {
@@ -233,4 +233,13 @@ export const getWebpUrl = node => {
     }
 
     return null;
+};
+
+export const getThumbnailUrl = node => {
+    const url = node.thumbnailUrl;
+    if (typeof url === 'string' && url.length > 0) {
+        return url + (url.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + node.lastModified?.value;
+    }
+
+    return '';
 };

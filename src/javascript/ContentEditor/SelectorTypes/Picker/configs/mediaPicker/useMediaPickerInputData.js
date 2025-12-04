@@ -4,15 +4,7 @@ import {MediaPickerFilledQuery} from './MediaPicker.gql-queries';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {getMimeType} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 import {getIconFromMimeType, getWebpUrl} from '~/utils';
-
-const getThumbnailUrl = node => {
-    const url = node.thumbnailUrl;
-    if (typeof url === 'string' && url.length > 0) {
-        return url + (url.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + node.lastModified?.value;
-    }
-
-    return '';
-};
+import {getThumbnailUrl} from '../../../../../utils';
 
 export const useMediaPickerInputData = uuids => {
     const {lang} = useContentEditorContext();

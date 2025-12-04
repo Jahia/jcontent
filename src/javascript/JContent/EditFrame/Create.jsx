@@ -121,7 +121,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     // Used mostly when rendering insertion points as we only want to style it specifically if it's not empty,
     // otherwise we use the regular buttons; Also used to create space for empty areas and lists.
     const isEmpty = (element.getAttribute('type') === 'placeholder' && !nodePath) ?
-        node?.subNodes.pageInfo.totalCount === 0 : nodes && !nodes[element.dataset.jahiaPath];
+        node?.subNodes.pageInfo.totalCount === 0 : Boolean(nodes) && !nodes[element.dataset.jahiaPath];
 
     // Set a minimum height to be able to drop content if node is empty
     useEffect(() => {

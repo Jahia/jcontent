@@ -147,12 +147,6 @@ export const FileCard = ({
                             label={truncateMiddle(mimetype, 25)}
                             title={mimetype.length > 25 ? mimetype : null}
                             color="accent"/> : null}
-                    <ContentStatuses hasLabel={false}
-                                     className={styles.statuses}
-                                     node={node}
-                                     uilang={uilang}
-                                     language={lang}
-                                     renderedStatuses={['locked', 'workInProgress']}/>
                     {node.width && node.height &&
                         <Typography variant="caption" component="p">
                             {`${node.width.value} x ${node.height.value}`}
@@ -170,7 +164,7 @@ export const FileCard = ({
                         </Typography>
                     )}
                 </div>
-                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'modified', 'markedForDeletion', 'usagesCount']}/>
+                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'locked', 'workInProgress', 'modified', 'markedForDeletion', 'usagesCount']}/>
             </div>
         </div>
     );

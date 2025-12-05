@@ -115,7 +115,7 @@ export const usages = {
     property: 'usagesCount',
     Cell: CellUsages,
     Header: Header,
-    width: '120px'
+    width: '145px'
 };
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];

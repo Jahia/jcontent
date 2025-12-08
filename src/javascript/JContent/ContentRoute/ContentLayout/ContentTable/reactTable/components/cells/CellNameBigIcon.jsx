@@ -5,10 +5,17 @@ import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {NodeIcon} from '~/utils';
 import classes from './Cells.scss';
 import clsx from 'clsx';
+import {getThumbnailUrl, getWebpUrl} from '../../../../../../../utils';
 
 export const CellNameBigIcon = ({value, cell, column, row}) => {
     const node = row.original;
     const deleted = isMarkedForDeletion(node);
+
+    let url = getThumbnailUrl(node);
+
+    if (!url) {
+        url = getWebpUrl(node);
+    }
 
     return (
         <TableBodyCell key={row.id + column.id}
@@ -24,7 +31,7 @@ export const CellNameBigIcon = ({value, cell, column, row}) => {
                        width={column.width}
                        {...cell.getCellProps()}
                        row={row}
-                       iconStart={<NodeIcon useThumbnail node={node} className={node.thumbnailUrl ? clsx(classes.iconBig, classes.thumbnailIcon) : classes.iconBig}/>}
+                       iconStart={<NodeIcon thumbnailUrl={url} node={node} className={url ? clsx(classes.iconBig, classes.thumbnailIcon) : classes.iconBig}/>}
                        cell={cell}
                        data-cm-role={`table-content-list-cell-${column.id}`}
         >

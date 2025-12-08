@@ -6,6 +6,16 @@ import {PreviewFetcher} from './Preview.fetcher';
 import {useContentPreview} from '@jahia/data-helper';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
+jest.mock('react-pdf', () => ({
+    pdfjs: {
+        GlobalWorkerOptions: {
+            workerSrc: ''
+        }
+    },
+    Document: ({children}) => <div>{children}</div>,
+    Page: () => <div>Page</div>
+}));
+
 jest.mock('@jahia/data-helper', () => {
     return {
         useContentPreview: jest.fn(() => ({

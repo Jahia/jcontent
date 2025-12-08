@@ -12,6 +12,7 @@ jest.mock('react-pdf', () => ({
             workerSrc: ''
         }
     },
+    // eslint-disable-next-line react/prop-types
     Document: ({children}) => <div>{children}</div>,
     Page: () => <div>Page</div>
 }));

@@ -129,9 +129,14 @@ module.exports = (env, argv) => {
                 cleanOnceBeforeBuildPatterns: [`${path.resolve(__dirname, 'src/main/resources/javascript/apps/')}/**/*`],
                 verbose: false
             }),
-            new CopyWebpackPlugin({patterns: [{from: './package.json', to: ''}]}),
+            new CopyWebpackPlugin({patterns: [
+                {from: './package.json', to: ''},
+                    {
+                        from: 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs',
+                        to: 'pdf.worker.min.mjs'
+                    }]}),
             new CaseSensitivePathsPlugin(),
-            new CycloneDxWebpackPlugin(cycloneDxWebpackPluginOptions)
+            new CycloneDxWebpackPlugin(cycloneDxWebpackPluginOptions),
         ],
         mode: 'development'
     };

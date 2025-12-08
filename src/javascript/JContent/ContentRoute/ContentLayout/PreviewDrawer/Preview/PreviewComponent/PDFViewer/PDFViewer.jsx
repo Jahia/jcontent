@@ -11,13 +11,15 @@ import {
     ZoomIn,
     ZoomOut
 } from '@jahia/moonstone';
-import classNames from 'clsx';
 import clsx from 'clsx';
 import styles from './PDFViewer.scss';
 
-const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
+import {pdfjs, Document, Page} from 'react-pdf';
 
-const Pdf = React.lazy(() => import(/* webpackChunkName: "reactPdfJs" */ 'react-pdf-js'));
+// Set local worker
+pdfjs.GlobalWorkerOptions.workerSrc = `${window.contextJsParameters.contextPath}/modules/jcontent/javascript/apps/pdf.worker.min.mjs`;
+
+const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 
 export const PDFViewer = ({file, isFullScreen}) => {
     const [page, setPage] = useState(1);
@@ -27,12 +29,16 @@ export const PDFViewer = ({file, isFullScreen}) => {
 
     const scaleTimeout = useRef();
 
-    const onDocumentComplete = pages => {
-        setPage(1);
-        setPages(pages);
+    // Called when PDF is fully loaded
+    const onDocumentLoadSuccess = ({numPages}) => {
+        setPages(numPages);
     };
 
-    const handleNavigation = (event, value) => {
+    const onDocumentLoadError = error => {
+        console.error('PDF load error:', error);
+    };
+
+    const handleNavigation = (_, value) => {
         switch (value) {
             case 'first':
                 setPage(1);
@@ -41,17 +47,17 @@ export const PDFViewer = ({file, isFullScreen}) => {
                 setPage(pages);
                 break;
             case 'next':
-                setPage(page + 1);
+                setPage(prev => Math.min(prev + 1, pages));
                 break;
             case 'previous':
-                setPage(page - 1);
+                setPage(prev => Math.max(prev - 1, 1));
                 break;
             default:
                 break;
         }
     };
 
-    const handleZoom = (event, value) => {
+    const handleZoom = (_, value) => {
         clearTimeout(scaleTimeout.current);
         scaleTimeout.current = setTimeout(() => {
             setShowScale(false);
@@ -59,88 +65,99 @@ export const PDFViewer = ({file, isFullScreen}) => {
 
         setShowScale(true);
 
-        switch (value) {
-            case 'in':
-                setScaleSize(scaleSize + 1);
-                break;
-            case 'out':
-                setScaleSize(scaleSize - 1);
-                break;
-            default:
-                break;
+        if (value === 'in') {
+            setScaleSize(prev => Math.min(prev + 1, scaleSizes.length - 1));
+        } else if (value === 'out') {
+            setScaleSize(prev => Math.max(prev - 1, 0));
         }
     };
 
+    console.log(file, page);
     return (
-        <React.Fragment>
-            <Tooltip title={Math.floor(scaleSizes[scaleSize] * 100) + ' %'}
-                     placement="top-end"
-                     open={showScale}
-                     classes={{popper: styles.scale}}
+        <>
+            <Tooltip
+                title={Math.floor(scaleSizes[scaleSize] * 100) + ' %'}
+                placement="top-end"
+                open={showScale}
+                classes={{popper: styles.scale}}
             >
-                <div className={classNames(styles.pdfContainer, isFullScreen && styles.fullScreen)}>
-                    <Pdf key={file}
-                         file={file}
-                         scale={scaleSizes[scaleSize]}
-                         page={page}
-                         onDocumentComplete={onDocumentComplete}
-                    />
+                <div className={clsx(styles.pdfContainer, isFullScreen && styles.fullScreen)}>
+                    <Document
+                        file={{
+                            url: file
+                        }}
+                        loading="Loading PDF…"
+                        error="Failed to load PDF"
+                        onLoadSuccess={onDocumentLoadSuccess}
+                        onLoadError={onDocumentLoadError}
+                    >
+                        {pages && (
+                            <Page
+                                key={page}
+                                renderAnnotationLayer
+                                renderTextLayer
+                                pageNumber={page}
+                                scale={scaleSizes[scaleSize]}
+                            />
+                        )}
+                    </Document>
                 </div>
             </Tooltip>
 
+            {/* Controls */}
             <div className={clsx('flexRow_between', styles.controlsContainer)}>
                 <div className={clsx('flexRow', 'alignCenter')}/>
+
+                {/* Page Navigation */}
                 <div className={clsx('flexRow', 'alignCenter')}>
-                    <Button isDisabled={page === 1}
-                            variant="ghost"
-                            icon={<ChevronFirstPage/>}
-                            onClick={event => {
-                                handleNavigation(event, 'first');
-                            }}
+                    <Button
+                        isDisabled={page === 1}
+                        variant="ghost"
+                        icon={<ChevronFirstPage/>}
+                        onClick={e => handleNavigation(e, 'first')}
                     />
-                    <Button isDisabled={page === 1}
-                            variant="ghost"
-                            icon={<ChevronLeft/>}
-                            onClick={event => {
-                                handleNavigation(event, 'previous');
-                            }}
+                    <Button
+                        isDisabled={page === 1}
+                        variant="ghost"
+                        icon={<ChevronLeft/>}
+                        onClick={e => handleNavigation(e, 'previous')}
                     />
+
                     <Typography variant="caption">
-                        {page}/{pages}
+                        {page}/{pages ?? '--'}
                     </Typography>
-                    <Button isDisabled={page === pages}
-                            variant="ghost"
-                            icon={<ChevronRight/>}
-                            onClick={event => {
-                                handleNavigation(event, 'next');
-                            }}
+
+                    <Button
+                        isDisabled={!pages || page === pages}
+                        variant="ghost"
+                        icon={<ChevronRight/>}
+                        onClick={e => handleNavigation(e, 'next')}
                     />
-                    <Button isDisabled={page === pages}
-                            variant="ghost"
-                            icon={<ChevronLastPage/>}
-                            onClick={event => {
-                                handleNavigation(event, 'last');
-                            }}
+                    <Button
+                        isDisabled={!pages || page === pages}
+                        variant="ghost"
+                        icon={<ChevronLastPage/>}
+                        onClick={e => handleNavigation(e, 'last')}
                     />
                 </div>
+
+                {/* Zoom */}
                 <div className={clsx('flexRow', 'alignCenter')}>
-                    <Button isDisabled={scaleSize === 0}
-                            variant="ghost"
-                            icon={<ZoomOut/>}
-                            onClick={event => {
-                                handleZoom(event, 'out');
-                            }}
+                    <Button
+                        isDisabled={scaleSize === 0}
+                        variant="ghost"
+                        icon={<ZoomOut/>}
+                        onClick={e => handleZoom(e, 'out')}
                     />
-                    <Button isDisabled={scaleSize === scaleSizes.length - 1}
-                            variant="ghost"
-                            icon={<ZoomIn/>}
-                            onClick={event => {
-                                handleZoom(event, 'in');
-                            }}
+                    <Button
+                        isDisabled={scaleSize === scaleSizes.length - 1}
+                        variant="ghost"
+                        icon={<ZoomIn/>}
+                        onClick={e => handleZoom(e, 'in')}
                     />
                 </div>
             </div>
-        </React.Fragment>
+        </>
     );
 };
 

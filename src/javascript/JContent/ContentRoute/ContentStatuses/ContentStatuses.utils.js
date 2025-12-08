@@ -81,7 +81,13 @@ const tooltips = {
         }
 
         return tooltip;
-    }
+    },
+    usagesCount: node => ({
+        key: 'label.contentManager.contentStatus.usagesCount',
+        args: {
+            count: node?.usagesCount || 0
+        }
+    })
 };
 
 function getTooltip(node, status, t, lang = 'en') {

@@ -2,9 +2,10 @@
     display: inline-flex;
     flex-grow: 1;
     flex-shrink: 0;
-    flex-direction: row;
+    flex-flow: row wrap;
     justify-content: flex-end;
     align-items: center;
+    row-gap: 4px;
 
     & > *:not(:first-child) {
         margin-left: var(--spacing-nano);

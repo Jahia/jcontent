@@ -114,6 +114,6 @@ export const allColumnData = [
         property: 'usagesCount',
         Cell: CellUsages,
         Header: Header,
-        width: '120px'
+        width: '145px'
     }
 ];

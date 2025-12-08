@@ -184,8 +184,8 @@ export function getIconFromNode(node, props = {}) {
         return <Area {...props}/>;
     }
 
-    if (props.useThumbnail && node.thumbnailUrl) {
-        return <div {...props} style={{'--bg-image': `url(${getThumbnailUrl(node)})`}}/>;
+    if (props.thumbnailUrl) {
+        return <div {...props} style={{'--bg-image': `url(${props.thumbnailUrl})`}}/>;
     }
 
     switch (node.primaryNodeType.name) {
@@ -223,7 +223,7 @@ export function getIconFromNode(node, props = {}) {
 
 export const getWebpUrl = node => {
     if (node.content !== undefined || node.resourceChildren !== undefined) {
-        const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType.value : node.content.mimeType.value;
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType.value : node.content?.mimeType.value;
 
         // Special case for webp format as our image service can't handle it and no thumbnail is generated
         if (mimetype === 'image/webp') {
@@ -238,8 +238,8 @@ export const getWebpUrl = node => {
 export const getThumbnailUrl = node => {
     const url = node.thumbnailUrl;
     if (typeof url === 'string' && url.length > 0) {
-        return url + (url.indexOf('?') > 0 ? '&' : '?') + 'lastModified=' + node.lastModified?.value;
+        return url;
     }
 
-    return '';
+    return null;
 };

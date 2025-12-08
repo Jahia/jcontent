@@ -11,5 +11,8 @@ module.exports = {
         'dnd-core': 'dnd-core-cjs'
     },
     modulePathIgnorePatterns: ['<rootDir>/tests'],
-    testEnvironment: 'jsdom'
+    testEnvironment: 'jsdom',
+    transformIgnorePatterns: [
+        "node_modules/(?!(react-pdf|pdfjs-dist)/)"
+    ]
 };

@@ -87,15 +87,14 @@ export const PDFViewer = ({file, isFullScreen}) => {
                             key={file}
                             file={file}
                             loading={<LoaderOverlay/>}
-                            error="Could not load PDF"
                             onLoadSuccess={onDocumentLoadSuccess}
                             onLoadError={onDocumentLoadError}
                         >
                             {pages && (
                                 <Page
                                     key={page}
-                                    renderAnnotationLayer
-                                    renderTextLayer
+                                    renderAnnotationLayer={false}
+                                    renderTextLayer={false}
                                     pageNumber={page}
                                     scale={scaleSizes[scaleSize]}
                                 />

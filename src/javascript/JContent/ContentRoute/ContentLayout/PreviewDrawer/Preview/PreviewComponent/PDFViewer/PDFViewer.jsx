@@ -86,16 +86,14 @@ export const PDFViewer = ({file, isFullScreen}) => {
                         file={{
                             url: file
                         }}
-                        loading="Loading PDF…"
-                        error="Failed to load PDF"
                         onLoadSuccess={onDocumentLoadSuccess}
                         onLoadError={onDocumentLoadError}
                     >
                         {pages && (
                             <Page
                                 key={page}
-                                renderAnnotationLayer
-                                renderTextLayer
+                                renderAnnotationLayer={false}
+                                renderTextLayer={false}
                                 pageNumber={page}
                                 scale={scaleSizes[scaleSize]}
                             />

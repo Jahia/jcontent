@@ -72,7 +72,6 @@ export const PDFViewer = ({file, isFullScreen}) => {
         }
     };
 
-    console.log(file, page);
     return (
         <>
             <Tooltip

@@ -47,6 +47,16 @@ jest.mock('./Preview.utils', () => {
     };
 });
 
+beforeAll(() => {
+    window.contextJsParameters = {
+        contextPath: '/test'
+    };
+});
+
+afterAll(() => {
+    delete window.contextJsParameters;
+});
+
 describe('Preview fetcher', () => {
     let contentEditorContext;
     beforeEach(() => {

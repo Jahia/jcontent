@@ -2,9 +2,19 @@ import React, {useEffect} from 'react';
 
 import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
-import {Preview} from './Preview';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
+
+jest.mock('react-pdf', () => ({
+    pdfjs: {
+        GlobalWorkerOptions: {
+            workerSrc: ''
+        }
+    },
+    // eslint-disable-next-line react/prop-types
+    Document: ({children}) => <div>{children}</div>,
+    Page: () => <div>Page</div>
+}));
 
 jest.mock('formik');
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
@@ -19,6 +29,8 @@ jest.mock('react', () => {
 });
 
 jest.useFakeTimers();
+
+import {Preview} from './Preview';
 
 describe('Preview Container', () => {
     let defaultProps;

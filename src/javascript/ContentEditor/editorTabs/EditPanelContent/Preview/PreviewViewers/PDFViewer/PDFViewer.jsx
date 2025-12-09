@@ -18,7 +18,7 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {pdfjs, Document, Page} from 'react-pdf';
 
 // Set local worker
-pdfjs.GlobalWorkerOptions.workerSrc = `${window.contextJsParameters.contextPath}/modules/jcontent/javascript/apps/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `${window.contextJsParameters?.contextPath}/modules/jcontent/javascript/apps/pdf.worker.min.mjs`;
 
 const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 

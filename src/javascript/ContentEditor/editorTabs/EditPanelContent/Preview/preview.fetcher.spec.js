@@ -6,6 +6,17 @@ import {PreviewFetcher} from './Preview.fetcher';
 import {useContentPreview} from '@jahia/data-helper';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
+jest.mock('react-pdf', () => ({
+    pdfjs: {
+        GlobalWorkerOptions: {
+            workerSrc: ''
+        }
+    },
+    // eslint-disable-next-line react/prop-types
+    Document: ({children}) => <div>{children}</div>,
+    Page: () => <div>Page</div>
+}));
+
 jest.mock('@jahia/data-helper', () => {
     return {
         useContentPreview: jest.fn(() => ({
@@ -34,6 +45,16 @@ jest.mock('./Preview.utils', () => {
         removeSiblings: jest.fn(),
         forceDisplay: jest.fn()
     };
+});
+
+beforeAll(() => {
+    window.contextJsParameters = {
+        contextPath: '/test'
+    };
+});
+
+afterAll(() => {
+    delete window.contextJsParameters;
 });
 
 describe('Preview fetcher', () => {

@@ -2,6 +2,17 @@ import {EditPanelContent} from './EditPanelContent';
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
+jest.mock('react-pdf', () => ({
+    pdfjs: {
+        GlobalWorkerOptions: {
+            workerSrc: ''
+        }
+    },
+    // eslint-disable-next-line react/prop-types
+    Document: ({children}) => <div>{children}</div>,
+    Page: () => <div>Page</div>
+}));
+
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => {
     return {
         useContentEditorContext: () => ({

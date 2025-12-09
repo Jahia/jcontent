@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import styles from './PreviewViewers.scss';
 
 import {DocumentViewer} from './DocumentViewer';
-import {PDFViewer} from './PDFViewer';
 import {ImageViewer} from './ImageViewer';
 import {IframeViewer} from './IframeViewer';
 import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
+import PDFViewer from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/PreviewComponent/PDFViewer';
 
 export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
     // If node type is "jnt:file" use specific viewer

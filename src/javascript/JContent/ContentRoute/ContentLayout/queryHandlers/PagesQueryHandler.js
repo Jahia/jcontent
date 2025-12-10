@@ -33,14 +33,14 @@ export const PagesQueryHandler = {
 
         if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             if (tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {
-                queryVariables.typeFilter = ['jnt:content'];
+                queryVariables.typeFilter = ['jnt:content', 'jmix:queryContent'];
             } else if (tableView.viewType === JContentConstants.tableView.viewType.PAGES) {
                 queryVariables.typeFilter = ['jnt:page'];
             }
         } else if (subContent) {
-            queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder'];
+            queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder', 'jmix:queryContent'];
         } else {
-            queryVariables.typeFilter = JContentConstants.tableView.viewType.PAGES === tableView.viewType ? ['jnt:page'] : ['jmix:editorialContent'];
+            queryVariables.typeFilter = JContentConstants.tableView.viewType.PAGES === tableView.viewType ? ['jnt:page'] : ['jmix:editorialContent', 'jmix:queryContent'];
             queryVariables.recursionTypesFilter = {
                 multi: 'NONE',
                 types: ['jnt:page', 'jnt:contentFolder', 'jnt:folder', 'jnt:usersFolder', 'jnt:groupsFolder']};

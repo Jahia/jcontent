@@ -62,8 +62,7 @@ function getRelativePos(coord1, coord2) {
 const isFromReference = (path, nodes) => {
     if (path.includes('@/')) {
         const split = path.split('@/');
-        console.log(split, nodes[split[0]]);
-        return Boolean(nodes[split[0]]);
+        return nodes[split[0]]?.primaryNodeType === 'jnt:contentReference';
     }
 
     return false;

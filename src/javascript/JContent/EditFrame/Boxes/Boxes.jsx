@@ -58,6 +58,18 @@ function getRelativePos(coord1, coord2) {
     return (offPY >= 0) ? 'bottom' : 'top';
 }
 
+// This determines if the node is included as part of content reference in which case we don't want to have a box for it.
+const isFromReference = (path, nodes) => {
+    if (path.includes('@/')) {
+        // Note that parent path cannot be checked directly as parent is not jnt:contentReference but jnt:list or other (/somepath/content-ref@/list/node)
+        // Note that we also check to make sure that what we find is a discoverable node in the tree
+        const split = path.split('@/');
+        return nodes[split[0]]?.primaryNodeType.name === 'jnt:contentReference';
+    }
+
+    return false;
+};
+
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
@@ -381,7 +393,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 node: nodes?.[element.dataset.jahiaParent &&
                 element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
             }))
-            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden)
+            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && !isFromReference(node.path, nodes))
             .map(({node, element}) => (
                 <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
                     <Create key={element.getAttribute('id')}
@@ -434,7 +446,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
-                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
+                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && !isFromReference(node.path, nodes))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}

@@ -164,7 +164,15 @@ export const FileCard = ({
                         </Typography>
                     )}
                 </div>
-                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'locked', 'workInProgress', 'modified', 'markedForDeletion', 'usagesCount']}/>
+                <ContentStatuses
+                    hasLabel={false}
+                    className={styles.statuses}
+                    node={node}
+                    uilang={uilang}
+                    language={lang}
+                    renderedStatuses={['published', 'locked', 'workInProgress', 'modified', 'markedForDeletion', 'usagesCount']}
+                    statusProps={{usagesCount: {hasLabel: true}}}
+                />
             </div>
         </div>
     );

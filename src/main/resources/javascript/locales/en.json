@@ -604,7 +604,7 @@
         "title": "Edit content",
         "contentEdit": "Edit",
         "contentEditAdvanced": "Advanced editing",
-        "contentEditSource": "Edit reference source",
+        "contentEditSource": "Go to source",
         "validation": {
           "required": "Required",
           "invalidForm": "Invalid form",

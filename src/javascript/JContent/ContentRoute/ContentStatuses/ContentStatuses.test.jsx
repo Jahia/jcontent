@@ -13,7 +13,7 @@ describe('ContentStatuses', () => {
     it('should only render a \'Not Published\' status', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={{}}/>);
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
@@ -25,7 +25,7 @@ describe('ContentStatuses', () => {
         };
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
@@ -38,7 +38,7 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
         const expectedTooltip = 'translated_label.contentManager.publicationStatus.published';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="published" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="published" tooltip={expectedTooltip}/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
@@ -51,8 +51,8 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
         const expectedTooltip = 'translated_label.contentManager.lockedBy';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="locked" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="locked" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
@@ -65,8 +65,8 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
         const expectedTooltip = 'translated_label.contentManager.publicationStatus.markedForDeletion';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="markedForDeletion" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="markedForDeletion" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
@@ -79,8 +79,8 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
         const expectedTooltip = 'translated_label.contentManager.publicationStatus.modified';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="modified" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="published"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="modified" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="published"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
@@ -93,7 +93,7 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
         const expectedTooltip = 'translated_label.contentManager.publicationStatus.unknown';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="warning" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="warning" tooltip={expectedTooltip}/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
@@ -104,8 +104,8 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
         const expectedTooltip = 'translated_label.contentManager.workInProgressAll';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="workInProgress" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="workInProgress" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
@@ -117,8 +117,8 @@ describe('ContentStatuses', () => {
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node} language="fr"/>);
         const expectedTooltip = 'translated_label.contentManager.workInProgress';
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="workInProgress" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="workInProgress" tooltip={expectedTooltip}/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
@@ -129,7 +129,7 @@ describe('ContentStatuses', () => {
         };
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
 
-        expect(wrapper.containsMatchingElement(<Status hasLabel={false} type="workInProgress"/>)).toBeFalsy();
+        expect(wrapper.containsMatchingElement(<Status type="workInProgress"/>)).toBeFalsy();
     });
 
     it('should a \'Usages\' status', () => {

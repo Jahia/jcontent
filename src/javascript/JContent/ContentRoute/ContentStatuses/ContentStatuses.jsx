@@ -8,6 +8,26 @@ import Status from './Status';
 import clsx from 'clsx';
 import {setPublicationStatus} from '~/utils/contentStatus';
 
+/**
+ * Custom hook to compute all available status flags for a content node.
+ *
+ * @param {Object} params - Hook parameters
+ * @param {Object} params.node - The content node to evaluate
+ * @param {string} params.language - The language code to evaluate statuses for
+ * @returns {Object} Object containing boolean flags for each possible status:
+ *   - locked: Whether the node is locked by a user
+ *   - markedForDeletion: Whether the node or its ancestor is marked for deletion
+ *   - modified: Whether the node has unpublished modifications
+ *   - published: Whether the node is published in live
+ *   - notPublished: Whether the node is not published
+ *   - warning: Whether there are publication warnings
+ *   - workInProgress: Whether the node is in work-in-progress status
+ *   - notVisible: Whether the node is not visible in the current language
+ *   - noTranslation: Whether the node lacks translation in the current language
+ *   - permissions: Whether the node has specific permissions set
+ *   - visibilityConditions: Whether the node has visibility/channel conditions
+ *   - usagesCount: Number of times the node is referenced
+ */
 const useContentStatuses = ({node, language}) => {
     const statuses = {
         locked: node.lockOwner,
@@ -33,9 +53,63 @@ const useContentStatuses = ({node, language}) => {
     return statuses;
 };
 
-const statusesWithLabels = new Set(['usagesCount', 'noTranslation']);
-
-const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, statusProps, ...props}) => {
+/**
+ * ContentStatuses Component
+ *
+ * Renders a collection of status indicators for a content node in Jahia's jContent application.
+ * The component displays visual badges/chips representing various states of the content such as
+ * publication status, locks, work-in-progress, translations, and more.
+ * @see {@link useContentStatuses} for different status types this component can render
+ *
+ * @component
+ * @example
+ * // Basic usage with default statuses
+ * <ContentStatuses
+ *   node={contentNode}
+ *   language="en"
+ *   uilang="en"
+ * />
+ *
+ * @example
+ * // Custom rendered statuses with labels disabled
+ * <ContentStatuses
+ *   node={contentNode}
+ *   language="fr"
+ *   uilang="en"
+ *   renderedStatuses={['locked', 'published', 'workInProgress']}
+ *   hasLabel={false}
+ * />
+ *
+ * @example
+ * // With custom styling and status-specific props
+ * <ContentStatuses
+ *   node={contentNode}
+ *   hasLabel={false}
+ *   language="en"
+ *   uilang="en"
+ *   className="custom-statuses"
+ *   statusProps={{
+ *     published: { size: 'big' },
+ *     locked: { onClick: handleLockClick, hasLabel: true }
+ *   }}
+ * />
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.node - The content node object containing all necessary metadata
+ * @param {string} props.language - Content language code (e.g., 'en', 'fr')
+ * @param {string} props.uilang - User interface language code for displaying tooltips
+ * @param {boolean} [props.isDisabled=false] - Whether status badges should be disabled/non-interactive
+ * @param {string} [props.className] - Additional CSS class name to apply to the container
+ * @param {boolean} [props.hasLabel=true] - Whether to display text labels alongside status icons
+ * @param {Object} [props.statusProps] - Object containing props to override status props for specific status types.
+ * @param {Object} props...rest - Additional props for Status components
+ *
+ * @returns {React.JSX.Element|null} A div containing Status components, or null if no statuses are active
+ *
+ * @see {@link useContentStatuses} - Hook used internally to compute statuses
+ * @see {@link Status} - Individual status component
+ */
+const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel, statusProps, ...props}) => {
     const {t} = useTranslation('jcontent');
     const statuses = useContentStatuses({node, language});
     const labelParams = {
@@ -49,7 +123,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
             type={type}
             isDisabled={isDisabled}
             tooltip={getTooltip(node, type, t, uilang)}
-            hasLabel={statusesWithLabels.has(type)}
+            hasLabel={hasLabel}
             labelParams={labelParams?.[type]}
             {...props}
             // Specific override object from a given status type
@@ -132,11 +206,13 @@ ContentStatuses.propTypes = {
     isDisabled: PropTypes.bool,
     renderedStatuses: PropTypes.array,
     className: PropTypes.string,
+    hasLabel: PropTypes.bool,
     statusProps: PropTypes.object
 };
 
 ContentStatuses.defaultProps = {
     isDisabled: false,
+    hasLabel: true,
     renderedStatuses: ['modified', 'markedForDeletion', 'workInProgress', 'locked', 'published', 'warning']
 };
 

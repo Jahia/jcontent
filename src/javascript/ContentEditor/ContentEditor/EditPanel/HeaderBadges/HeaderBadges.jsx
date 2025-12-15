@@ -7,6 +7,7 @@ import {ReadOnlyBadge} from './ReadOnlyBadge';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './HeaderBadges.scss';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
+import UsagesCountBadge from './UsagesCountBadge';
 
 export const HeaderBadges = () => {
     const {mode} = useContentEditorContext();
@@ -17,6 +18,7 @@ export const HeaderBadges = () => {
             {mode === Constants.routes.baseEditRoute && <LockInfoChip/>}
             <WipInfoChip/>
             {mode === Constants.routes.baseEditRoute && <UnsavedChip/>}
+            {mode === Constants.routes.baseEditRoute && <UsagesCountBadge/>}
         </div>
     );
 };

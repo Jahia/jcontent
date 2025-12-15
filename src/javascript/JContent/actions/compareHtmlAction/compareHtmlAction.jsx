@@ -2,15 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {createEncodedHashString} from '../../CompareDialog/util';
 import {useNodeChecks} from '@jahia/data-helper';
+import {useSelector} from 'react-redux';
 
 export const CompareHtmlActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+    const language = useSelector(state => state.language)
     const res = useNodeChecks(
-        {path},
+        {path, language},
         {
             showOnNodeTypes: ['jnt:page', 'jmix:mainResource'],
             getAggregatedPublicationInfo: {subNodes: true}
         }
     );
+
+    if (res.error) {
+        console.error(`Error while fetching checks for node ${path}:`, res.error);
+        return null;
+    }
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;

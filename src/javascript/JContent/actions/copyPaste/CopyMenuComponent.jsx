@@ -4,15 +4,22 @@ import {MenuActionComponent} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '~/JContent/actions/actions.constants';
 import {hasMixin, JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {useSelector} from 'react-redux';
 
-export const CopyMenuComponent = ({path, render: Render, loading: Loading, ...others}) => {
-    const res = useNodeChecks({path}, {
+export const CopyMenuComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
+    const language = useSelector(state => state.language);
+    const res = useNodeChecks({path, paths, language}, {
         getPrimaryNodeType: true,
         getDisplayName: true,
         requiredPermission: ['jcr:read'],
         requiredSitePermission: [ACTION_PERMISSIONS.copyPageAction],
         ...others
     });
+
+    if (res.error) {
+        console.error(`Error while fetching checks for node ${path || paths}:`, res.error);
+        return null;
+    }
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
@@ -32,7 +39,8 @@ export const CopyMenuComponent = ({path, render: Render, loading: Loading, ...ot
 };
 
 CopyMenuComponent.propTypes = {
-    path: PropTypes.string.isRequired,
+    path: PropTypes.string,
+    paths: PropTypes.arrayOf(PropTypes.string),
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

@@ -113,6 +113,7 @@ const NodeDataFragment = {
                         value
                     }
                 }
+                usagesCount: referenceCount(typesFilter: {types: ["jnt:workflowTask"], multi: NONE})
             }
         }
         ${PredefinedFragments.nodeCacheRequiredFields.gql}`

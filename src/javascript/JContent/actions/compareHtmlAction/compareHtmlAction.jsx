@@ -5,7 +5,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {useSelector} from 'react-redux';
 
 export const CompareHtmlActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
-    const language = useSelector(state => state.language)
+    const language = useSelector(state => state.language);
     const res = useNodeChecks(
         {path, language},
         {

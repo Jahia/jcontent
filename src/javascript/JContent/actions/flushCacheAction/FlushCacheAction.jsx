@@ -5,6 +5,7 @@ import {useApolloClient} from '@apollo/client';
 import {FlushPageCacheMutation, FlushSiteCacheMutation} from './FlushCacheAction.gql-mutations';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
 
 const homePageProp = 'j:isHomePage';
 
@@ -12,14 +13,20 @@ export const FlushCacheActionComponent = ({path, render: Render, loading: Loadin
     const {t} = useTranslation('jcontent');
     const client = useApolloClient();
     const notificationContext = useNotifications();
+    const language = useSelector(state => state.language);
     const res = useNodeChecks(
-        {path},
+        {path, language},
         {
             getIsNodeTypes: showOnNodeTypes,
             requiredPermission: ['adminCache'],
             getProperties: [homePageProp]
         }
     );
+
+    if (res.error) {
+        console.error(`Error while fetching checks for node ${path}:`, res.error);
+        return null;
+    }
 
     const isSiteFlush = showOnNodeTypes.includes('jnt:virtualsite');
     const isHomePage = res.node && Boolean(res.node.properties.find(p => p.name === homePageProp)?.value);

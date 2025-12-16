@@ -227,8 +227,6 @@ export const Box = React.memo(({
         const draggableTypes = ['existingNode', 'list'];
         if (draggableTypes.includes(type) && !isActionsHidden) {
             drag(n);
-        } else {
-            console.debug('Will not drag!', JSON.stringify({type, isActionsHidden}));
         }
     };
 

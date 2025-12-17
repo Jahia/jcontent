@@ -16,9 +16,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
     const {reorderedItems, handleReorder, reset} = useReorderList(fieldValue);
 
     const multipleFieldOnChange = (index, newData) => {
-        let updatedValues = [...values[field.name]];
-        updatedValues[index] = newData;
-        onChange(updatedValues);
+        onChange({index, value: newData});
     };
 
     const onFieldRemove = index => {

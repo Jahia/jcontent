@@ -93,7 +93,7 @@ describe('Multiple component', () => {
         // Change field2
         field2.simulate('change', 'Updated2');
         expect(defaultProps.onChange.mock.calls.length).toBe(1);
-        expect(defaultProps.onChange).toHaveBeenCalledWith(['Dummy1', 'Updated2', 'Dummy3']);
+        expect(defaultProps.onChange).toHaveBeenCalledWith({index: 1, value: 'Updated2'});
     });
 
     it('should display remove button when field is not readOnly', () => {

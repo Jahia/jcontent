@@ -20,7 +20,6 @@ describe('Usages badge in content editor', () => {
             ],
             parentPathOrId: `/sites/${siteKey}/contents`
         });
-        cy.apollo({mutationFile: 'contentEditor/usagesBadge/createTestNodes.graphql'});
     });
 
     after(() => {

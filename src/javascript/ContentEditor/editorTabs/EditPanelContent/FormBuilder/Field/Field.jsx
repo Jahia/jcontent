@@ -191,18 +191,47 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
         onChangeValue.current = _currentValue;
     }, [field, registeredOnChanges, selectorType]);
 
-    // We do not usually want to trigger touch field on change so we do bulk validation for performance.
-    // use forceTouch if needed to force validation.
+    /**
+     * Handles field value changes in the form.
+     *
+     * @param {string|{index, value}} _currentValue - The new value for the field. Can be:
+     *   - An object with `index` and `value` properties for updating a specific item in a multi-value field
+     *   - Any other value type for single-value fields or replacing the entire multi-value array
+     * @param {boolean} [forceTouch=false] - If true, marks the field as touched immediately to trigger validation.
+     *   By default, fields are not touched on change for performance (bulk validation is used instead).
+     *
+     * @description
+     * The function performs the following steps:
+     * 1. If an index is provided, updates only that specific item in the array
+     * 2. Otherwise, replaces the entire field value
+     * 3. Optionally marks the field as touched to trigger validation
+     * 4. Notifies all registered onChange handlers with the new value
+     */
     const onChange = useCallback((_currentValue, forceTouch) => {
-        // Update formik
-        setFieldValue(field.name, _currentValue);
+        const {index, value} = _currentValue || {};
+
+        let newValues;
+        if (typeof index === 'number' && index >= 0 && value) {
+            setFieldValue(field.name, prevValues => {
+                const currentValues = [...prevValues];
+                currentValues[index] = value;
+                newValues = currentValues;
+                return currentValues;
+            });
+        } else {
+            // Update formik
+            setFieldValue(field.name, _currentValue);
+        }
+
+        // We do not usually want to trigger touch field on change so we do bulk validation for performance.
+        // use forceTouch if needed to force validation.
         if (forceTouch) {
             // https://github.com/jaredpalmer/formik/issues/2059
             setTimeout(() => setFieldTouched(field.name, true));
         }
 
         // Trigger on changes
-        registeredOnChange(_currentValue);
+        registeredOnChange(newValues || _currentValue);
     }, [field.name, registeredOnChange, setFieldValue, setFieldTouched]);
 
     const onBlur = useCallback(() => {
@@ -244,6 +273,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
             data-sel-content-editor-field-type={seleniumFieldType}
             data-sel-content-editor-field-picker-type={pickerType}
             data-sel-content-editor-field-readonly={field.readOnly}
+            data-sel-content-editor-field-isMultiple={isMultipleField}
             data-sel-i18n={field.i18n}
         >
             {renderField(inputContext, field, isMultipleField, idInput, hasMandatoryError, t, wipInfo, editorContext, selectorType, onChange, onBlur, shouldDisplayErrors, errorName, errorArgs)}

@@ -5,29 +5,25 @@ import {Field} from './field';
 export class RichTextField extends Field {
     /**
      * Clears the content of the rich text field.
-     * @returns {Cypress.Chainable<JQuery>} The chainable Cypress object.
      */
-    clear() {
-        return this.get().iframe('.cke_wysiwyg_frame').clear();
+    clear(index?: number): Cypress.Chainable<JQuery> {
+        return this.get().iframe(`${this.getFieldSelector(index)} .cke_wysiwyg_frame`).clear();
     }
 
-    type(text: string) {
-        this.get().iframe('.cke_wysiwyg_frame').type(text);
+    type(text: string, index?: number) {
+        this.get().iframe(`${this.getFieldSelector(index)} .cke_wysiwyg_frame`).type(text);
     }
 
-    setData(value: string) {
-        cy.window().its('CKEDITOR').its('instances').then(instances => {
-            instances[Object.keys(instances)[0]].setData(value);
-        });
+    setData(value: string, index?: number) {
+        return this.getEditor(index).then(editor => editor.setData(value));
     }
 
-    getData(): Cypress.Chainable<string> {
-        return cy.window().its('CKEDITOR').its('instances').then(instances => instances[Object.keys(instances)[0]].getData());
+    getData(index?: number): Cypress.Chainable<string> {
+        return this.getEditor(index).then(editor => editor.getData());
     }
 
-    getElement(): Cypress.Chainable<JQuery> {
-        return cy.window().its('CKEDITOR').its('instances').then(instances => {
-            const instanceOfCK = instances[Object.keys(instances)[0]];
+    getElement(index?: number): Cypress.Chainable<JQuery> {
+        return this.getEditor(index).then(instanceOfCK => {
             instanceOfCK.focus();
             console.log('instanceOfCK', instanceOfCK.editable().findOne('img'));
             return instanceOfCK.editable().findOne('img').$;
@@ -46,6 +42,21 @@ export class RichTextField extends Field {
 
     getOpenedImageModal() {
         return new LinkModal(cy.get('.cke_dialog_body'));
+    }
+
+    getFieldSelector(index?: number) {
+        return (typeof index === 'number') ? `[data-sel-content-editor-multiple-generic-field="${this.fieldName}[${index}]"]` : '';
+    }
+
+    getField(index: number) {
+        return this.get().get(this.getFieldSelector(index));
+    }
+
+    getEditor(index?: number) {
+        return this.get().find(`${this.getFieldSelector(index)} div[id^="cke_editor"]`).invoke('attr', 'id').then(id => {
+            const editorId = id.replace('cke_', '');
+            return cy.window().its('CKEDITOR').its('instances').its(editorId);
+        });
     }
 }
 

@@ -72,6 +72,10 @@ describe('richText', () => {
 
         cy.log('Verify that the change in rich text 2 does not revert change in rich text 1');
         richText.getData(0).should('have.string', 'This is my text 1 data');
+
+        cy.log('Verify can set blank text');
+        richText.setData('', 0);
+        richText.getData(1).should('have.string', 'This is my text 2 data');
     });
 });
 

@@ -211,7 +211,7 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
         const {index, value} = _currentValue || {};
 
         let newValues;
-        if (typeof index === 'number' && index >= 0 && value) {
+        if (typeof index === 'number' && index >= 0 && value !== undefined) {
             setFieldValue(field.name, prevValues => {
                 const currentValues = [...prevValues];
                 currentValues[index] = value;

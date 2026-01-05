@@ -96,7 +96,7 @@ describe('Work in Progress tests', () => {
         jcontent = JContent.visit(siteKey3, 'en', 'content-folders/contents');
         jcontent.editComponentByRowName('wip text 2');
         const contentEditor = new ContentEditor();
-        // Deactivate Work in progress
+        // Deactivate Work in progress in English
         contentEditor.deactivateWorkInProgressMode('en');
         // Check the WIP badge is not displayed in English
         cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');

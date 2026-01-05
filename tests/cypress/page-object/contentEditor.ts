@@ -167,7 +167,7 @@ export class ContentEditor extends BasePage {
         } else {
             getComponentByRole(Button, 'goToWorkInProgress').click();
             language.split(',').forEach(value => {
-                cy.get('input[type="checkbox"]').check(value).click();
+                cy.get(`input[type="checkbox"][value="${value}"]`).click();
             });
             cy.get('.moonstone-button').filter(':contains("Done")').click();
             cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');

@@ -1,5 +1,5 @@
-import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
-import {addNode, deleteSite, deleteUser, enableModule} from "@jahia/cypress";
+import {ContentEditor, JContent} from '../../page-object';
+import {deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Work in Progress tests', () => {
     let jcontent: JContent;
@@ -88,7 +88,7 @@ describe('Work in Progress tests', () => {
         // Deactivate Work in progress
         contentEditor.deactivateWorkInProgressMode();
         // Check that WIP badge is not displayed anymore
-        cy.get('[data-sel-role="wip-info-chip"]', { timeout: 1000 }).should('not.exist');
+        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');
         contentEditor.cancelAndDiscard();
     });
 
@@ -99,7 +99,7 @@ describe('Work in Progress tests', () => {
         // Deactivate Work in progress
         contentEditor.deactivateWorkInProgressMode('en');
         // Check the WIP badge is not displayed in English
-        cy.get('[data-sel-role="wip-info-chip"]', { timeout: 1000 }).should('not.exist');
+        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');
         // Switch to French
         contentEditor.getLanguageSwitcher().select('French');
         // Check that WIP badge is displayed
@@ -123,7 +123,7 @@ describe('Work in Progress tests', () => {
             .should('not.exist');
         // Switch to French and verify wip badge is not displayed anywhere
         contentEditor.getLanguageSwitcher().select('French');
-        cy.get('[data-sel-role="wip-info-chip"]', { timeout: 1000 }).should('not.exist');
+        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');
         cy.get('[data-sel-content-editor-field="qant:allFields_smallText"]')
             .find('[data-sel-role="wip-info-chip-field"]')
             .should('not.exist');
@@ -174,7 +174,7 @@ describe('Work in Progress tests', () => {
     });
 
     it('Set WIP on a content and publish the page', function () {
-        jcontent = JContent.visit(siteKey1, 'en', `pages/home/wip-page`)
+        jcontent = JContent.visit(siteKey1, 'en', 'pages/home/wip-page')
             .switchToListMode();
         jcontent.editComponentByRowName('WIP content on page');
 

@@ -158,19 +158,19 @@ export class ContentEditor extends BasePage {
     deactivateWorkInProgressMode(language?: string) {
         if (language === undefined) {
             getComponentByRole(Button, 'goToWorkInProgress').click();
-            cy.get('[data-sel-role="wip-info-chip"]', { timeout: 1000 }).should('not.exist');
+            cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');
         } else if (language === 'ALL') {
             getComponentByRole(Button, 'goToWorkInProgress').click();
             cy.get('[data-sel-role="WIP"]').click();
             cy.get('.moonstone-button').filter(':contains("Done")').click();
-            cy.get('[data-sel-role="wip-info-chip"]', { timeout: 1000 }).should('not.exist');
+            cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');
         } else {
             getComponentByRole(Button, 'goToWorkInProgress').click();
             language.split(',').forEach(value => {
                 cy.get('input[type="checkbox"]').check(value).click();
             });
             cy.get('.moonstone-button').filter(':contains("Done")').click();
-            cy.get('[data-sel-role="wip-info-chip"]', { timeout: 1000 }).should('not.exist');
+            cy.get('[data-sel-role="wip-info-chip"]', {timeout: 1000}).should('not.exist');
         }
     }
 

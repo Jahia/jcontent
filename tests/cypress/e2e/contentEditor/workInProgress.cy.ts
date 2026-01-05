@@ -190,8 +190,9 @@ describe('Work in Progress tests', () => {
         cy.get('.moonstone-header_mainActions [data-sel-role="publish"]').click();
         jcontent.clickPublishNow();
         // Wait for the publication then verify the status
-        cy.wait(3000);
-        cy.get('.moonstone-header_information').contains('Published').should('be.visible');
+        cy.get('.moonstone-header_information', {timeout: 5000})
+            .contains('Published')
+            .should('be.visible');
 
         // Verify simple-text is not published
         jcontent.getTable().getRowByName('WIP content on page')

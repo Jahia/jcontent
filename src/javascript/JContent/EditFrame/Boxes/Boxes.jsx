@@ -410,6 +410,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 </div>
             ));
     }, [
+        path,
         clickedElement,
         placeholders,
         nodes,

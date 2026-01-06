@@ -14,6 +14,7 @@ describe('Publication status badge test', () => {
     const siteKey = 'publicationStatusSite';
     const editor = {username: 'editor', password: 'password'};
     const textName = 'test-text';
+    const folderName = 'test-folder';
 
     function createHomeSubpage(titleName: string) {
         return addNode({
@@ -49,6 +50,12 @@ describe('Publication status badge test', () => {
             properties: [{name: 'text', value: 'Test 1', language: 'en'}]
         });
 
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: folderName,
+            primaryNodeType: 'jnt:contentFolder'
+        });
+
         createHomeSubpage('publishedPage')
             .then(() => createHomeSubpage('unpublishedPage'))
             .then(() => createHomeSubpage('notPublishedPage'))
@@ -63,6 +70,16 @@ describe('Publication status badge test', () => {
     after(() => {
         deleteSite(siteKey);
         cy.logout();
+    });
+
+    it('should show correct publication status for content folders', () => {
+        cy.login();
+        const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${folderName}`);
+        jcontent.assertStatusType('notPublished');
+        jcontent.publishAll();
+
+        cy.log('Check content folder publication status');
+        JContent.visit(siteKey, 'en', `content-folders/contents/${folderName}`).assertStatusType('published');
     });
 
     it('should show the last publisher, not the last editor', () => {

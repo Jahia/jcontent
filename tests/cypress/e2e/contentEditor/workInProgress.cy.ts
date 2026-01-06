@@ -38,7 +38,6 @@ describe('Work in Progress tests', () => {
         contentEditor.create();
         // Check the WIP icon is displayed in jcontent
         cy.contains('[data-cm-role="table-content-list-row"]', 'Cypress Work In Progress Test')
-            .scrollIntoView()
             .find('.moonstone-chip')
             .should('have.attr', 'title')
             .and('contain', 'Work in progress');

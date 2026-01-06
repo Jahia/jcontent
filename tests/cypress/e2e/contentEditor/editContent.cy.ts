@@ -35,7 +35,7 @@ describe('Create content tests', () => {
     });
 
     it('can edit source ref', () => {
-        jcontent.getTable().getRowByLabel('Content reference').contextMenu().select('Edit reference source');
+        jcontent.getTable().getRowByLabel('Content reference').contextMenu().select('Go to source');
         const contentEditor = new ContentEditor();
         contentEditor.getField(RichTextField, 'jnt:bigText_text');
         contentEditor.cancel();

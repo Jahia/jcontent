@@ -61,6 +61,7 @@ function getRelativePos(coord1, coord2) {
 // This determines if the node is included as part of content reference in which case we don't want to have a box for it.
 const isFromReference = (path, nodes) => {
     if (path.includes('@/')) {
+        console.log('From ref', path)
         // Note that parent path cannot be checked directly as parent is not jnt:contentReference but jnt:list or other (/somepath/content-ref@/list/node)
         // Note that we also check to make sure that what we find is a discoverable node in the tree
         const split = path.split('@/');
@@ -69,6 +70,17 @@ const isFromReference = (path, nodes) => {
 
     return false;
 };
+
+const isExternalContent = (parentPath, nodes) => {
+    const parent = nodes[parentPath];
+
+    // Could not find parent in the page which means this content is being imported via query or reference
+    if (!parent) {
+        return true;
+    }
+
+    return false;
+}
 
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
@@ -436,6 +448,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         onSaved
     ]);
 
+    console.log('Nodes', nodes);
     return (
         <div>
             <BoxesContextMenu
@@ -446,6 +459,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
+                .map(e => {console.log(e?.node?.path, e?.node?.parent?.path); return e;})
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && !isFromReference(node.path, nodes))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}

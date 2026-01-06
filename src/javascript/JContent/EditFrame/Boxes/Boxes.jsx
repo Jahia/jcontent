@@ -393,7 +393,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 node: nodes?.[element.dataset.jahiaParent &&
                 element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
             }))
-            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && !isFromReference(node.path, nodes))
+            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
             .map(({node, element}) => (
                 <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
                     <Create key={element.getAttribute('id')}
@@ -410,6 +410,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 </div>
             ));
     }, [
+        path,
         clickedElement,
         placeholders,
         nodes,
@@ -446,7 +447,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             />
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
-                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && !isFromReference(node.path, nodes))
+                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}

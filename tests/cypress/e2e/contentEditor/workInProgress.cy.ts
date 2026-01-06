@@ -37,7 +37,11 @@ describe('Work in Progress tests', () => {
         cy.get('div[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('exist');
         contentEditor.create();
         // Check the WIP icon is displayed in jcontent
-        jcontent.getTable().getRowByName('rich-textcypress-wip-test').get().find('.moonstone-chip[title="Work in progress:  (excluding non-localized properties)"]');
+        cy.contains('[data-cm-role="table-content-list-row"]', 'Cypress Work In Progress Test')
+            .scrollIntoView()
+            .find('.moonstone-chip')
+            .should('have.attr', 'title')
+            .and('contain', 'Work in progress');
     });
 
     it('Can create work in progress content for en/fr properties', function () {

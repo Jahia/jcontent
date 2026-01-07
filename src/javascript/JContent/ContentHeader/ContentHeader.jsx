@@ -89,9 +89,10 @@ const ContentHeader = () => {
     const viewSelector = registry.get('accordionItem', mode)?.tableConfig?.viewSelector;
     const sortSelector = registry.get('accordionItem', mode)?.tableConfig?.sortSelector;
 
-    const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {
+    const {loading, node} = useNodeInfo({path, language, displayLanguage}, {
         getPrimaryNodeType: true,
         getDisplayName: true,
+        getAggregatedPublicationInfo: {subNodes: true},
         applyFragment: contentStatusFragment
     });
 

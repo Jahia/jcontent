@@ -23,7 +23,7 @@ import {useTable} from 'react-table';
 import {useVirtualizer} from '@tanstack/react-virtual';
 import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import {ContentListHeader} from './ContentListHeader/ContentListHeader';
-import {mainColumnData, mediaColumnData, reducedColumnData} from './reactTable/columns';
+import {mainColumnData, mediaColumnData, reducedColumnData, searchColumnData} from './reactTable/columns';
 import {ContentTableWrapper} from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
@@ -41,6 +41,10 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const columns = useMemo(() => {
         if (propColumns) {
             return propColumns;
+        }
+
+        if (isInSearchMode(mode)) {
+            return searchColumnData;
         }
 
         return mode === JContentConstants.mode.MEDIA ? mediaColumnData : mainColumnData;

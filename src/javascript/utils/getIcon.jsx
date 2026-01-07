@@ -188,26 +188,30 @@ export function getIconFromNode(node, props = {}) {
         return <div {...props} style={{'--bg-image': `url(${props.thumbnailUrl})`}}/>;
     }
 
-    switch (node.primaryNodeType.name) {
-        case 'jnt:folder':
+    const nodeType = node.primaryNodeType.name;
+    const isCMISFile = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:document') !== undefined;
+    const isCMISFolder = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:folder') !== undefined;
+
+    switch (true) {
+        case nodeType === 'jnt:folder' || isCMISFolder:
             return <Folder {...props}/>;
-        case 'jnt:page':
+        case nodeType === 'jnt:page':
             return <Page {...props}/>;
-        case 'jnt:virtualsite':
+        case nodeType === 'jnt:virtualsite':
             return <SiteWeb {...props}/>;
-        case 'jnt:user':
+        case nodeType === 'jnt:user':
             return <Person {...props}/>;
-        case 'jnt:group':
+        case nodeType === 'jnt:group':
             return <Group {...props}/>;
-        case 'jnt:category':
+        case nodeType === 'jnt:category':
             return <Tag {...props}/>;
-        case 'jnt:externalLink':
+        case nodeType === 'jnt:externalLink':
             return <Link {...props}/>;
-        case 'jnt:nodeLink':
+        case nodeType === 'jnt:nodeLink':
             return <Link {...props}/>;
-        case 'jnt:navMenuText':
+        case nodeType === 'jnt:navMenuText':
             return <Section {...props}/>;
-        case 'jnt:file':
+        case nodeType === 'jnt:file' || isCMISFile:
             if (node.content !== undefined || node.resourceChildren !== undefined) {
                 const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType?.value : node.content.mimeType?.value;
                 return getIconFromMimeType(mimetype ?? 'application/octet-stream', props);

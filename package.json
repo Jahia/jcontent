@@ -111,6 +111,7 @@
     "uuid": "^11.1.0"
   },
   "resolutions": {
+    "ajv@npm:^5.0.0": "^6",
     "glob-parent": "^5.1.2",
     "mammoth": "^1.4.13",
     "node-fetch": "^2.6.1",

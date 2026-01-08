@@ -8,6 +8,7 @@
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
     "build:production-analyze": "yarn build:production --analyze",
+    "build:types": "(tsc || true) && tsc-alias",
     "watch": "yarn webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node",
@@ -21,8 +22,7 @@
     "lint": "yarn lint:scss && yarn lint:js",
     "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix && cd tests && yarn lint:fix && cd ..",
     "sync-pom": "sync-pom-version --use-yarn",
-    "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json",
-    "prepublishOnly": "(tsc || true) && tsc-alias"
+    "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json"
   },
   "description": "jContent for Jahia",
   "types": "./types/shared/index.d.ts",

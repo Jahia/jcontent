@@ -70,7 +70,7 @@ export const UsagesTable = ({path, language}) => {
     }
 
     let externalUsagesWarning = null;
-    const visibleUsages = usages.reduce((prev, current) => prev + current.locales.length, 0);
+    const visibleUsages = data?.jcr?.nodeByPath?.usages?.pageInfo?.totalCount || 0;
 
     if (Number.isInteger(usagesCount) && Number.isInteger(visibleUsages) && usagesCount !== visibleUsages) {
         externalUsagesWarning = (

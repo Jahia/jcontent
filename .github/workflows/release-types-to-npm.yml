@@ -1,4 +1,4 @@
-name: Release
+name: Release Types to npm
 
 on:
   push:

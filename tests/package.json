@@ -1,6 +1,5 @@
 {
   "name": "@jahia/jcontent-cypress",
-  "private": false,
   "version": "3.5.0-SNAPSHOT",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",

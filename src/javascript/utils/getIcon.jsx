@@ -175,6 +175,15 @@ export function getIconFromPath(path, props = {}) {
     );
 }
 
+function getFileIcon(node, props = {}) {
+    if (node.content !== undefined || node.resourceChildren !== undefined) {
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType?.value : node.content.mimeType?.value;
+        return getIconFromMimeType(mimetype ?? 'application/octet-stream', props);
+    }
+
+    return getIconFromPath(node.path, props);
+}
+
 export function getIconFromNode(node, props = {}) {
     if (typeof node === 'undefined' || typeof node.primaryNodeType === 'undefined') {
         return <File {...props}/>;
@@ -186,6 +195,17 @@ export function getIconFromNode(node, props = {}) {
 
     if (props.thumbnailUrl) {
         return <div {...props} style={{'--bg-image': `url(${props.thumbnailUrl})`}}/>;
+    }
+
+    const isCMISFile = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:document') !== undefined;
+    const isCMISFolder = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:folder') !== undefined;
+
+    if (isCMISFile) {
+        return getFileIcon(node, props);
+    }
+
+    if (isCMISFolder) {
+        return <Folder {...props}/>;
     }
 
     switch (node.primaryNodeType.name) {
@@ -208,12 +228,7 @@ export function getIconFromNode(node, props = {}) {
         case 'jnt:navMenuText':
             return <Section {...props}/>;
         case 'jnt:file':
-            if (node.content !== undefined || node.resourceChildren !== undefined) {
-                const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType.value : node.content.mimeType.value;
-                return getIconFromMimeType(mimetype, props);
-            }
-
-            return getIconFromPath(node.path, props);
+            return getFileIcon(node, props);
         default:
             return (
                 <img src={addIconSuffix(node.primaryNodeType.icon)} {...props}/>
@@ -223,7 +238,7 @@ export function getIconFromNode(node, props = {}) {
 
 export const getWebpUrl = node => {
     if (node.content !== undefined || node.resourceChildren !== undefined) {
-        const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType.value : node.content?.mimeType.value;
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType?.value : node.content?.mimeType?.value;
 
         // Special case for webp format as our image service can't handle it and no thumbnail is generated
         if (mimetype === 'image/webp') {

@@ -1,6 +1,7 @@
 {
   "name": "@jahia/jcontent",
   "version": "3.5.0-SNAPSHOT",
+  "type": "commonjs",
   "scripts": {
     "build": "yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
@@ -20,13 +21,20 @@
     "lint": "yarn lint:scss && yarn lint:js",
     "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix && cd tests && yarn lint:fix && cd ..",
     "sync-pom": "sync-pom-version --use-yarn",
-    "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json"
+    "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json",
+    "prepublishOnly": "(tsc || true) && tsc-alias"
   },
   "description": "jContent for Jahia",
-  "main": "index.js",
-  "repository": "git@github.com:Jahia/jcontent.git",
+  "types": "./types/shared/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jahia/jcontent.git"
+  },
   "author": "Jahia Core Team <core@jahia.com>",
   "license": "MIT",
+  "files": [
+    "types"
+  ],
   "dx-extends": {
     "@jahia/jahia-ui-root": "^0.0.1"
   },
@@ -138,7 +146,7 @@
     "@storybook/addons": "6.0.21",
     "@storybook/react": "^6.0.21",
     "@types/jest": "^24.0.11",
-    "@types/react": "^16",
+    "@types/react": "^18",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
@@ -167,6 +175,8 @@
     "style-loader": "^1.2.1",
     "stylelint": "^13.7.1",
     "sync-pom-version-to-package": "^1.6.1",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.1",
     "webpack": "^5.99.4",
     "webpack-bundle-analyzer": "^4.10.2",

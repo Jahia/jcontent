@@ -175,6 +175,15 @@ export function getIconFromPath(path, props = {}) {
     );
 }
 
+function getFileIcon(node, props = {}) {
+    if (node.content !== undefined || node.resourceChildren !== undefined) {
+        const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType?.value : node.content.mimeType?.value;
+        return getIconFromMimeType(mimetype ?? 'application/octet-stream', props);
+    }
+
+    return getIconFromPath(node.path, props);
+}
+
 export function getIconFromNode(node, props = {}) {
     if (typeof node === 'undefined' || typeof node.primaryNodeType === 'undefined') {
         return <File {...props}/>;
@@ -188,36 +197,38 @@ export function getIconFromNode(node, props = {}) {
         return <div {...props} style={{'--bg-image': `url(${props.thumbnailUrl})`}}/>;
     }
 
-    const nodeType = node.primaryNodeType.name;
     const isCMISFile = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:document') !== undefined;
     const isCMISFolder = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:folder') !== undefined;
 
-    switch (true) {
-        case nodeType === 'jnt:folder' || isCMISFolder:
-            return <Folder {...props}/>;
-        case nodeType === 'jnt:page':
-            return <Page {...props}/>;
-        case nodeType === 'jnt:virtualsite':
-            return <SiteWeb {...props}/>;
-        case nodeType === 'jnt:user':
-            return <Person {...props}/>;
-        case nodeType === 'jnt:group':
-            return <Group {...props}/>;
-        case nodeType === 'jnt:category':
-            return <Tag {...props}/>;
-        case nodeType === 'jnt:externalLink':
-            return <Link {...props}/>;
-        case nodeType === 'jnt:nodeLink':
-            return <Link {...props}/>;
-        case nodeType === 'jnt:navMenuText':
-            return <Section {...props}/>;
-        case nodeType === 'jnt:file' || isCMISFile:
-            if (node.content !== undefined || node.resourceChildren !== undefined) {
-                const mimetype = node.content === undefined ? node.resourceChildren.nodes.slice(-1)[0]?.mimeType?.value : node.content.mimeType?.value;
-                return getIconFromMimeType(mimetype ?? 'application/octet-stream', props);
-            }
+    if (isCMISFile) {
+        return getFileIcon(node, props);
+    }
 
-            return getIconFromPath(node.path, props);
+    if (isCMISFolder) {
+        return <Folder {...props}/>;
+    }
+
+    switch (node.primaryNodeType.name) {
+        case 'jnt:folder':
+            return <Folder {...props}/>;
+        case 'jnt:page':
+            return <Page {...props}/>;
+        case 'jnt:virtualsite':
+            return <SiteWeb {...props}/>;
+        case 'jnt:user':
+            return <Person {...props}/>;
+        case 'jnt:group':
+            return <Group {...props}/>;
+        case 'jnt:category':
+            return <Tag {...props}/>;
+        case 'jnt:externalLink':
+            return <Link {...props}/>;
+        case 'jnt:nodeLink':
+            return <Link {...props}/>;
+        case 'jnt:navMenuText':
+            return <Section {...props}/>;
+        case 'jnt:file':
+            return getFileIcon(node, props);
         default:
             return (
                 <img src={addIconSuffix(node.primaryNodeType.icon)} {...props}/>

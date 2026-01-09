@@ -23,6 +23,7 @@ import {
     Tag,
     SiteWeb
 } from '@jahia/moonstone';
+import {isCMISFile, isCMISFolder} from '~/JContent/JContent.utils';
 
 const imgExtensions = ['avif', 'png', 'jpeg', 'jpg', 'gif', 'svg', 'img', 'webp'];
 const videoExtensions = ['avi', 'mp4', 'mkv', 'mpg', 'wmv', 'mpeg', 'mov', 'webm', 'video'];
@@ -197,14 +198,11 @@ export function getIconFromNode(node, props = {}) {
         return <div {...props} style={{'--bg-image': `url(${props.thumbnailUrl})`}}/>;
     }
 
-    const isCMISFile = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:document') !== undefined;
-    const isCMISFolder = node?.mixinTypes?.find(m => m.name && m.name === 'cmismix:folder') !== undefined;
-
-    if (isCMISFile) {
+    if (isCMISFile(node)) {
         return getFileIcon(node, props);
     }
 
-    if (isCMISFolder) {
+    if (isCMISFolder(node)) {
         return <Folder {...props}/>;
     }
 

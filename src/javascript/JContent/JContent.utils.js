@@ -110,8 +110,10 @@ export const getNewCounter = nodes => {
     return max + 1;
 };
 
-export const allowDoubleClickNavigation = (nodeType, subNodes, fcn) => {
-    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
+export const allowDoubleClickNavigation = (nodeType, subNodes, fcn, node = null) => {
+    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 ||
+        (subNodes && subNodes > 0) ||
+        (node && isCMISFolder(node))) {
         return fcn;
     }
 
@@ -363,4 +365,22 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
     }
 
     return `${location.protocol}//${host}:${location.port}${url}`;
+};
+
+/**
+ * Check if a node is a CMIS folder based on its mixin types
+ * @param {Object} node - The node object with mixinTypes array
+ * @returns {boolean} - True if the node has the cmismix:folder mixin
+ */
+export const isCMISFolder = node => {
+    return hasMixin(node, 'cmismix:folder');
+};
+
+/**
+ * Check if a node is a CMIS file/document based on its mixin types
+ * @param {Object} node - The node object with mixinTypes array
+ * @returns {boolean} - True if the node has the cmismix:document mixin
+ */
+export const isCMISFile = node => {
+    return hasMixin(node, 'cmismix:document');
 };

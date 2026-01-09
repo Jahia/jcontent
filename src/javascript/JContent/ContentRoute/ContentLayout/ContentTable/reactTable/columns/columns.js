@@ -119,5 +119,6 @@ export const usages = {
 };
 
 export const mainColumnData = [publicationStatus, selection, name, status, type, createdBy, lastModified, visibleActions];
+export const searchColumnData = [publicationStatus, selection, nameBigIcon, status, type, createdBy, lastModified, visibleActions];
 export const mediaColumnData = [publicationStatus, selection, nameBigIcon, status, usages, fileSize, mediaType, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];

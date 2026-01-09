@@ -13,7 +13,8 @@
           "metadata": "Metadaten",
           "quickEdit": "Schnellbearbeitung"
         },
-        "show": "Vorschau öffnen"
+        "show": "Vorschau öffnen",
+        "browserNotSupported": "Die Vorschau wird von diesem Browser nicht unterstützt. Bitte aktualisieren Sie Ihren Browser auf eine neuere Version oder laden Sie die Datei herunter, um sie anzuzeigen."
       },
       "rename": "Umbenennen",
       "workInProgress": "In Arbeit: {{wipLang}} (ausgenommen gemeinsame Eigenschaften)",

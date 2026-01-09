@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import styles from './PDFViewer.scss';
 
 import {pdfjs, Document, Page} from 'react-pdf';
+import {useTranslation} from 'react-i18next';
 
 // Set local worker
 pdfjs.GlobalWorkerOptions.workerSrc = `${window.contextJsParameters?.contextPath}/modules/jcontent/javascript/apps/pdf.worker.min.mjs`;
@@ -22,12 +23,25 @@ pdfjs.GlobalWorkerOptions.workerSrc = `${window.contextJsParameters?.contextPath
 const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 
 export const PDFViewer = ({file, isFullScreen}) => {
+    const {t} = useTranslation('jcontent');
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(null);
     const [scaleSize, setScaleSize] = useState(6);
     const [showScale, setShowScale] = useState(false);
 
     const scaleTimeout = useRef();
+
+    // Check if the browser supports Promise.withResolvers (required by pdfjs-dist)
+    const isSupported = typeof Promise.withResolvers === 'function';
+    if (!isSupported) {
+        return (
+            <div className={clsx(styles.pdfContainer, isFullScreen && styles.fullScreen)}>
+                <Typography variant="body" style={{padding: '20px', textAlign: 'center'}}>
+                    {t('jcontent:label.contentManager.preview.browserNotSupported')}
+                </Typography>
+            </div>
+        );
+    }
 
     // Called when PDF is fully loaded
     const onDocumentLoadSuccess = ({numPages}) => {

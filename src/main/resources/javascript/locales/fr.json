@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Edition rapide"
         },
-        "show": "Afficher l'aperçu"
+        "show": "Afficher l'aperçu",
+        "browserNotSupported": "La prévisualisation n'est pas prise en charge par ce navigateur. Veuillez mettre à jour votre navigateur ou télécharger le fichier pour le consulter."
       },
       "rename": "Renommer",
       "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",

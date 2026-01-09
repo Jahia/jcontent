@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Quick Edit"
         },
-        "show": "Show Preview"
+        "show": "Show Preview",
+        "browserNotSupported": "Preview is not supported in this browser. Please update your browser to a more recent version or download the file to view it."
       },
       "rename": "Rename",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",

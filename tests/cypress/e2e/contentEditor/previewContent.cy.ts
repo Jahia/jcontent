@@ -33,6 +33,17 @@ describe('Preview tests', () => {
         disableModule('jcontent-test-module', siteKey);
     });
 
+    it('shows PDF preview on content editor', () => {
+        cy.login();
+        const jcontent = JContent.visit('digitall', 'en', 'media/files/images/pdf');
+        jcontent
+            .getGrid()
+            .getCardByName('Digitall Financial Report.pdf')
+            .contextMenu()
+            .selectByRole('editAdvanced');
+        cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
+    });
+
     it('It shows correctly preview of edited page even if not the one currently rendered in PageComposer', () => {
         cy.loginAndStoreSession();
         pageComposer = PageComposer.visit(siteKey, 'en', 'home.html');

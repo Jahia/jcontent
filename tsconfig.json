@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "checkJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "lib": ["dom"],
+    "module": "preserve",
+    "outDir": "./types",
+    "rootDir": "./src/javascript",
+    "skipLibCheck": true,
+    "target": "esnext",
+    "paths": {
+      "~/*": ["./src/javascript/*"]
+    }
+  },
+  "include": ["src/javascript/**/*"]
+}

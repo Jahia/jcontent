@@ -22,3 +22,6 @@ coverage/
 .DS_Store
 .yalc
 yalc.lock
+
+# Don't commit build artifacts
+/types

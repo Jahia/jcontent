@@ -69,7 +69,7 @@ export const getFileExtension = node => {
 };
 
 export const getMimeType = node => {
-    const mimetype = node.content?.mimeType.value;
+    const mimetype = node.content?.mimeType?.value;
     if (!mimetype || mimetype === 'null') {
         // Try to get mimetype using file extension
         return node.path.replace(/^.*[/\\]/, '').includes('.') ? mime.getType(node.path) : '';

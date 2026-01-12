@@ -1,0 +1,27 @@
+name: Release Types to npm
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: null
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v3
+      - name: Build and publish
+        run: |
+          yarn install && yarn build:types
+          tag=$(yarn node -p 'process.env.npm_package_version.endsWith("SNAPSHOT")?"snapshot":"latest"')
+          if [ "$tag" = "snapshot" ]; then
+            # Append timestamp to snapshot versions to ensure uniqueness
+            yarn node -e 'f=process.env.npm_package_json;fs.writeFileSync(f,fs.readFileSync(f,"utf8").replace(/("version": ".+)"/,`$1.${+new Date}"`))'
+          fi
+          yarn npm publish --access public --tolerate-republish --provenance --tag $tag

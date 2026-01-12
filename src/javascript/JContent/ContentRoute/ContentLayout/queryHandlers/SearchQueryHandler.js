@@ -1,5 +1,6 @@
 import {SearchQuery} from './SearchQueryHandler.gql-queries';
 import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler';
+import {imageFields} from './FilesQueryHandler.gql-queries';
 
 export const SearchQueryHandler = {
     ...BaseQueryHandler,
@@ -27,5 +28,7 @@ export const SearchQueryHandler = {
         doSearch: Boolean(searchTerms)
     }),
 
-    getResults: (data, {searchTerms}) => searchTerms ? (data && data.jcr && data.jcr.nodesByCriteria) : {nodes: [], pageInfo: {totalCount: 0}}
+    getResults: (data, {searchTerms}) => searchTerms ? (data && data.jcr && data.jcr.nodesByCriteria) : {nodes: [], pageInfo: {totalCount: 0}},
+
+    getFragments: () => [imageFields]
 };

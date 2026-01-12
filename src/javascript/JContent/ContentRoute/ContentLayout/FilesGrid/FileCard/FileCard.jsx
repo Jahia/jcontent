@@ -100,7 +100,7 @@ export const FileCard = ({
     // let columnNumber = (index % 2) + 1;
     const encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
     const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
-    const dblClick = onDoubleClick ? onDoubleClick : allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode));
+    const dblClick = onDoubleClick ? onDoubleClick : allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode), node);
 
     return (
         <div

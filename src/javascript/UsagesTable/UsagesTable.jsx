@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import styles from './UsagesTable.scss';
-import {Table, TableBody, TablePagination, TableRow, Typography, Warning} from '@jahia/moonstone';
+import {Table, TableBody, TableRow, Typography, Warning} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
 import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
@@ -18,15 +18,11 @@ const columns = defaultCols.map(c => (typeof c === 'string') ? allColumnData.fin
 
 export const UsagesTable = ({path, language}) => {
     const {t} = useTranslation('jcontent');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
     const [sort, setSort] = useState({order: 'ASC', orderBy: 'displayName'});
     const {data, loading} = useQuery(UsagesQuery, {
         variables: {
             path,
             language,
-            pageSize: pageSize,
-            currentPage: currentPage * pageSize,
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
                 fieldName: sort.orderBy === '' ? null : 'node.' + sort.orderBy,
@@ -130,24 +126,6 @@ export const UsagesTable = ({path, language}) => {
                         </TableBody>
                     </Table>
                 </div>
-                <TablePagination
-                    className={styles.pagination}
-                    totalNumberOfRows={visibleUsages}
-                    currentPage={currentPage + 1}
-                    rowsPerPage={pageSize}
-                    label={{
-                        rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                        of: t('jcontent:label.pagination.of')
-                    }}
-                    rowsPerPageOptions={[10, 20, 50]}
-                    onPageChange={page => {
-                        setCurrentPage(page - 1);
-                    }}
-                    onRowsPerPageChange={size => {
-                        setCurrentPage(Math.floor(currentPage * pageSize / size));
-                        setPageSize(size);
-                    }}
-                />
             </div>
         </Paper>
     );

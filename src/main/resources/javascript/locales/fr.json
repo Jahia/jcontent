@@ -598,7 +598,7 @@
         "title": "Éditer le contenu",
         "contentEdit": "Editer",
         "contentEditAdvanced": "Edition avancée",
-        "contentEditSource": "Référence source",
+        "contentEditSource": "Aller à la source",
         "validation": {
           "required": "Requis",
           "invalidForm": "Formulaire non valide",

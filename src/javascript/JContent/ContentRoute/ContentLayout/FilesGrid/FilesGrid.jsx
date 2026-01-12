@@ -11,7 +11,7 @@ import {cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/redux/preview
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import classNames from 'clsx';
 import clsx from 'clsx';
-import {clickHandler, extractPaths} from '~/JContent/JContent.utils';
+import {clickHandler, extractPaths, isCMISFolder} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
@@ -82,9 +82,11 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         }
     };
 
-    const allowDoubleClickNavigation = nodeType => {
+    const allowDoubleClickNavigation = node => {
         return Constants.mode.SEARCH !== mode &&
-            ((tableConfig.canAlwaysDoubleClickOnType && tableConfig.canAlwaysDoubleClickOnType(nodeType)) || (['jnt:folder', 'jnt:contentFolder'].includes(nodeType)));
+            ((tableConfig.canAlwaysDoubleClickOnType && tableConfig.canAlwaysDoubleClickOnType(node.primaryNodeType.name)) ||
+             (['jnt:folder', 'jnt:contentFolder'].includes(node.primaryNodeType.name)) ||
+             isCMISFolder(node));
     };
 
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
@@ -176,7 +178,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   contextualMenuAction="contentItemActionsMenu"
                                   tableConfig={tableConfig}
                                   onClick={e => {
-                                      if (allowDoubleClickNavigation(node.primaryNodeType.name)) {
+                                      if (allowDoubleClickNavigation(node)) {
                                           clickHandler.handleEvent(e, () => onClick(node, index, e));
                                       } else {
                                           onClick(node, index, e);

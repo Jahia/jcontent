@@ -1,6 +1,6 @@
 {
   "name": "@jahia/jcontent",
-  "version": "3.5.0-SNAPSHOT",
+  "version": "3.6.0-SNAPSHOT",
   "type": "commonjs",
   "scripts": {
     "build": "yarn webpack",

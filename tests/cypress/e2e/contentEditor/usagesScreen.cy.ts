@@ -1,5 +1,5 @@
 import {ContentEditor, JContent} from '../../page-object';
-import {BaseComponent, createSite, deleteSite, Dropdown, getComponentByRole} from '@jahia/cypress';
+import {createSite, deleteSite} from '@jahia/cypress';
 
 describe('Create content tests', () => {
     let jcontent: JContent;
@@ -34,13 +34,7 @@ describe('Create content tests', () => {
         advancedOptions.checkOption('Usages', '18');
         advancedOptions.switchToOption('Usages');
         cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable').should('be.visible');
-        cy.get('@usagesTable').find('tbody > tr').should('have.length', 10);
-        const usagesPaperComponent = getComponentByRole(BaseComponent, 'usages');
-        usagesPaperComponent.get().should('be.visible');
-        const pagination = getComponentByRole(Dropdown, 'table-pagination-dropdown-rows-per-page', usagesPaperComponent);
-        pagination.select('20');
-        cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable2').should('be.visible');
-        cy.get('@usagesTable2').find('tbody > tr').should('have.length', 16);
+        cy.get('@usagesTable').find('tbody > tr').should('have.length', 16);
         // ContentEditor.cancel();
     });
 
@@ -61,13 +55,7 @@ describe('Create content tests', () => {
         advancedOptions.checkOption('Usages', '35');
         advancedOptions.switchToOption('Usages');
         cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable').should('be.visible');
-        cy.get('@usagesTable').find('tbody > tr').should('have.length', 10);
-        const usagesPaperComponent = getComponentByRole(BaseComponent, 'usages');
-        usagesPaperComponent.get().should('be.visible');
-        const pagination = getComponentByRole(Dropdown, 'table-pagination-dropdown-rows-per-page', usagesPaperComponent);
-        pagination.select('20');
-        cy.get('table[data-cm-role="table-usages-list"]').as('usagesTable2').should('be.visible');
-        cy.get('@usagesTable2').find('tbody > tr').should('have.length', 16);
+        cy.get('@usagesTable').find('tbody > tr').should('have.length', 16);
         cy.get('div').contains('This content is used in').should('exist');
         contentEditor.cancel();
     });

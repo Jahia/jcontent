@@ -30,6 +30,17 @@ describe('Menu actions preview tests', () => {
     describe('test preview in media tab', {testIsolation: false}, () => {
         let jcontent;
 
+        it('shows preview on PDF', () => {
+            jcontent = JContent.visit('digitall', 'en', 'media/files/images/pdf');
+            jcontent
+                .getGrid()
+                .getCardByName('Digitall Financial Report.pdf')
+                .contextMenu()
+                .select('Preview');
+            cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').contains('Digitall Financial Report');
+        });
+
         it('shows preview on files', () => {
             jcontent = JContent.visit('digitall', 'en', 'media/files/images/banners');
             jcontent

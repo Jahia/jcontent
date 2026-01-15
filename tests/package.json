@@ -21,6 +21,11 @@
     "dist"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jahia/jcontent",
+    "directory": "tests"
+  },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
     "@jahia/cypress": "^5.2.0",

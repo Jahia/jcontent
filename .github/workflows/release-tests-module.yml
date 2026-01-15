@@ -3,10 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       is_dry_run:
-        description: '(SHOULD ONLY BE RUN ON NON-MASTER branch) Indicate if the workflow triggered is a dry-run of the release'
+        description: '(SHOULD ONLY BE RUN ON NON-MASTER branch) Does a full publish with "test" tag'
         type: boolean
         required: false
         default: false
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write
 
 jobs:
   npm_publish:
@@ -28,8 +32,6 @@ jobs:
           git config --global user.name "Jahia CI"
       - name: Build and publish jContent test module
         shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
         run: |
           cd tests
           npm get
@@ -50,7 +52,7 @@ jobs:
               echo "Dry run should be executed in non-master branch"
             else
               echo "Executing npm publish in dry-run mode"
-              npm publish --access public --dry-run
+              npm publish --access public --tag test
             fi
           else 
             echo "Publishing jContent tests in npm..."

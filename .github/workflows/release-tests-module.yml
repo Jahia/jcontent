@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       is_dry_run:
-        description: '(SHOULD ONLY BE RUN ON NON-MASTER branch) Does a full publish with "test" tag'
+        description: 'DRY RUN: (SHOULD ONLY BE RUN ON NON-MASTER branch) Indicate if the workflow triggered is a dry-run of the release'
         type: boolean
         required: false
         default: false
@@ -52,7 +52,7 @@ jobs:
               echo "Dry run should be executed in non-master branch"
             else
               echo "Executing npm publish in dry-run mode"
-              npm publish --access public --tag test
+              npm publish --access public --dry-run
             fi
           else 
             echo "Publishing jContent tests in npm..."

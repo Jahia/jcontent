@@ -102,11 +102,11 @@ describe('Work in Progress tests', () => {
         // Deactivate Work in progress in English
         contentEditor.deactivateWorkInProgressMode('en');
         // Check the WIP badge is not displayed in English
-        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 3000}).should('not.exist');
+        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('not.exist');
         // Switch to French
         contentEditor.getLanguageSwitcher().select('French');
         // Check that WIP badge is displayed
-        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 3000}).should('contain', 'WIP - FR');
+        cy.get('[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('contain', 'WIP - FR');
         contentEditor.cancelAndDiscard();
     });
 

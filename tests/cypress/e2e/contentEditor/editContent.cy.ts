@@ -14,7 +14,7 @@ describe('Create content tests', () => {
             parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'AllFieldsSimple',
             primaryNodeType: 'qant:allFields',
-            properties: [{name: "sharedSmallText", value: "Initial text", language: "en"}, {name: "sharedTextarea", value: "Initial text in area", language: "en"}]
+            properties: [{name: 'sharedSmallText', value: 'Initial text', language: 'en'}, {name: 'sharedTextarea', value: 'Initial text in area', language: 'en'}]
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -34,7 +34,7 @@ describe('Create content tests', () => {
     });
 
     const fieldsWithoutBadge = [
-        "qant:allFields_smallText", "qant:allFields_textarea" , "qant:allFields_sharedSmallText", "qant:allFields_sharedTextarea"
+        'qant:allFields_smallText', 'qant:allFields_textarea' , 'qant:allFields_sharedSmallText', 'qant:allFields_sharedTextarea'
     ];
 
     it('can edit content', () => {
@@ -76,7 +76,7 @@ describe('Create content tests', () => {
         contentEditor.switchToAdvancedMode();
 
         // Check "shared by all languages" badge is NOT displayed on non internationalized fields
-        fieldsWithoutBadge.forEach((field) => {
+        fieldsWithoutBadge.forEach(field => {
             cy.get(`[data-sel-content-editor-field="${field}"]`)
                 .find('.moonstone-chip')
                 .should('not.exist');

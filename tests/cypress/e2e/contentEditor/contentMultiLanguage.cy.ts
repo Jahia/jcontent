@@ -41,7 +41,7 @@ describe('Create multi language content and verify that it is different in all l
             parentPathOrId: `/sites/${sitekey}/contents`,
             name: 'AllFieldsMulti',
             primaryNodeType: 'qant:allFields',
-            properties: [{name: "sharedSmallText", value: "Initial text", language: "en"}, {name: "sharedTextarea", value: "Initial text in area", language: "en"}]
+            properties: [{name: 'sharedSmallText', value: 'Initial text', language: 'en'}, {name: 'sharedTextarea', value: 'Initial text in area', language: 'en'}]
         });
         addNode({
             parentPathOrId: `/sites/${sitekey}/contents`,
@@ -71,18 +71,18 @@ describe('Create multi language content and verify that it is different in all l
         });
     });
 
-    beforeEach( () => {
+    beforeEach(() => {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(sitekey, 'en', 'content-folders/contents');
-    })
+    });
 
     afterEach(function () {
         cy.logout();
     });
 
-    after( () => {
+    after(() => {
         cy.executeGroovy('contentEditor/deleteSite.groovy', {SITEKEY: sitekey});
-    })
+    });
 
     const fillNews = (contentEditor, data: Subject) => {
         // Fill title and description
@@ -97,11 +97,11 @@ describe('Create multi language content and verify that it is different in all l
     };
 
     const fieldsWithBadge = [
-        "qant:allFields_sharedSmallText", "qant:allFields_sharedTextarea"
+        'qant:allFields_sharedSmallText', 'qant:allFields_sharedTextarea'
     ];
 
     const fieldsWithoutBadge = [
-        "qant:allFields_smallText", "qant:allFields_textarea"
+        'qant:allFields_smallText', 'qant:allFields_textarea'
     ];
 
     it('Can create content in 3 languages', {retries: 0}, function () {
@@ -154,14 +154,14 @@ describe('Create multi language content and verify that it is different in all l
         contentEditor.switchToAdvancedMode();
 
         // Check "shared by all languages" badge is displayed on internationalized fields
-        fieldsWithBadge.forEach((field) => {
+        fieldsWithBadge.forEach(field => {
             cy.get(`[data-sel-content-editor-field="${field}"]`)
                 .find('.moonstone-chip span')
                 .should('contain', 'Shared by all languages');
         });
 
         // Check "shared by all languages" badge is NOT displayed on non internationalized fields
-        fieldsWithoutBadge.forEach((field) => {
+        fieldsWithoutBadge.forEach(field => {
             cy.get(`[data-sel-content-editor-field="${field}"]`)
                 .find('.moonstone-chip')
                 .should('not.exist');

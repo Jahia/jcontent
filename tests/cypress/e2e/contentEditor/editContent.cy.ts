@@ -34,7 +34,7 @@ describe('Create content tests', () => {
     });
 
     const fieldsWithoutBadge = [
-        'qant:allFields_smallText', 'qant:allFields_textarea' , 'qant:allFields_sharedSmallText', 'qant:allFields_sharedTextarea'
+        'qant:allFields_smallText', 'qant:allFields_textarea', 'qant:allFields_sharedSmallText', 'qant:allFields_sharedTextarea'
     ];
 
     it('can edit content', () => {

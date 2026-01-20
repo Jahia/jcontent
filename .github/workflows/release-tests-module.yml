@@ -73,15 +73,15 @@ jobs:
           git push --follow-tags 
 
           if "${{ inputs.is_dry_run }}"; then
-            if "${{ github.ref }}" == 'refs/heads/master'; then
+            if [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
               echo "Dry run should be executed in non-master branch"
             else
               echo "Executing npm publish in dry-run mode"
-              npm publish --access public --dry-run
+              npm publish --access public --tag latest --dry-run
             fi
           else 
             echo "Publishing jContent tests in npm..."
-            npm publish --access public
+            npm publish --access public --tag latest
           fi
         env:
           GPG_KEY_PASSPHRASE: ${{ secrets.GPG_KEY_PASSPHRASE }}

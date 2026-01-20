@@ -32,6 +32,16 @@ jobs:
         with:
           node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
+      - name: Prepare GPG
+        shell: bash
+        run: |
+          echo $GPG_KEY | base64 --decode | gpg --batch --allow-secret-key-import --import
+          rm -rf /tmp/gpg.sh
+          echo '#!/bin/bash' >> /tmp/gpg.sh
+          echo 'gpg --batch --pinentry-mode=loopback --passphrase $GPG_KEY_PASSPHRASE $@' >> /tmp/gpg.sh
+          chmod +x /tmp/gpg.sh
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
       - name: Setting up github configuration
         shell: bash
         run: |
@@ -39,6 +49,11 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.email "jahia-ci@jahia.com"
           git config --global user.name "Jahia CI"
+          git config --global commit.gpgsign true
+          git config --global user.signingkey $GPG_KEY_ID
+          git config --global gpg.program /tmp/gpg.sh
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
       - name: Build and publish jContent test module
         shell: bash
         run: |
@@ -54,6 +69,7 @@ jobs:
 
           echo; echo "Incrementing version for release.."
           yarn version --prerelease --preid=tests
+          git verify-commit $( git rev-parse HEAD )
           git push --follow-tags 
 
           if "${{ inputs.is_dry_run }}"; then
@@ -67,3 +83,5 @@ jobs:
             echo "Publishing jContent tests in npm..."
             npm publish --access public
           fi
+        env:
+          GPG_KEY_PASSPHRASE: ${{ secrets.GPG_KEY_PASSPHRASE }}

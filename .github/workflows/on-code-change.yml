@@ -150,3 +150,25 @@ jobs:
           reporter: java-junit
           fail-on-error: 'false'
           output-to: 'checks'
+
+  js-checks:
+    name: Check Javascript dependencies and licenses
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jahia/jahia-modules-action/dependencies-check-javascript@v2
+        with:
+          github_token: ${{ secrets.GH_API_TOKEN }}
+          show_checklist: 'true'
+
+  java-checks:
+    name: Check Java dependencies and licenses
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jahia/jahia-modules-action/dependencies-check-java@v2
+        with:
+          github_token: ${{ secrets.GH_API_TOKEN }}
+          show_checklist: 'true'

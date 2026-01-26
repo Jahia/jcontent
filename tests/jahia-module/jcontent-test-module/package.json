@@ -103,6 +103,6 @@
     "webpack-cli": "^4.2.0"
   },
   "resolutions": {
-    "@apollo/client": "~3.8.7"
+    "@apollo/client": "^3"
   }
 }

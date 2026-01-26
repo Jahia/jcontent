@@ -48,5 +48,9 @@
   },
   "dependencies": {
     "cypress-real-events": "^1.14.0"
+  },
+  "resolutions": {
+    "@apollo/client": "^3",
+    "cross-fetch": "~3.1"
   }
 }

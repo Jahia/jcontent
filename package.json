@@ -111,7 +111,7 @@
     "uuid": "^11.1.0"
   },
   "resolutions": {
-    "@apollo/client@npm:latest": "^3",
+    "@apollo/client": "~3.8.7",
     "ajv@npm:^5.0.0": "^6",
     "glob-parent": "^5.1.2",
     "mammoth": "^1.4.13",

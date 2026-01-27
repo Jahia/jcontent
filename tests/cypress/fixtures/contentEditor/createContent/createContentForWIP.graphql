@@ -1,0 +1,72 @@
+mutation createWipContent {
+  jcr {
+    wipText1: addNode(
+      parentPathOrId: "/sites/wipSite1lang/contents"
+      primaryNodeType: "jnt:text"
+      name: "wip text 1"
+      properties: [{name: "j:workInProgressLanguages", values: ["en"]}, {name: "j:workInProgressStatus", value: "LANGUAGES"}]
+    ) {
+      uuid
+    }
+    copyPasteWip: addNode(
+      parentPathOrId: "/sites/wipSite1lang/contents"
+      primaryNodeType: "jnt:text"
+      name: "Copy paste WIP test"
+      properties: [{name: "j:workInProgressLanguages", values: ["en"]}, {name: "j:workInProgressStatus", value: "LANGUAGES"}]
+    ) {
+      uuid
+    }
+    wipFolder: addNode(
+      parentPathOrId: "/sites/wipSite1lang/contents"
+      name: "wipFolder"
+      primaryNodeType: "jnt:contentFolder"
+    ) {
+      uuid
+    }
+    wipPage: addNode(
+      parentPathOrId: "/sites/wipSite1lang/home"
+      name: "wip-page"
+      primaryNodeType: "jnt:page"
+      properties: [{name: "jcr:title", value: "wip-page", language: "en"}, {name: "j:templateName", value: "simple"}]
+    ) {
+      uuid
+    }
+    wipContentOnPage: addNode(
+      parentPathOrId: "/sites/wipSite1lang/home/wip-page"
+      name: "WIP content on page"
+      primaryNodeType: "jnt:text"
+    ) {
+      uuid
+    }
+    wipText2: addNode(
+      parentPathOrId: "/sites/wipSite3lang/contents"
+      primaryNodeType: "jnt:text"
+      name: "wip text 2"
+      properties: [{name: "j:workInProgressLanguages", values: ["en", "fr"]}, {name: "j:workInProgressStatus", value: "LANGUAGES"}]
+    ) {
+      uuid
+    }
+    wipSimpleText: addNode(
+      parentPathOrId: "/sites/wipSite3lang/contents"
+      primaryNodeType: "jnt:text"
+      name: "wip simple text"
+    ) {
+      uuid
+    }
+    wipTextForPublishButton: addNode(
+      parentPathOrId: "/sites/wipSite3lang/contents"
+      primaryNodeType: "jnt:text"
+      name: "wip text for publish button"
+    ) {
+      uuid
+    }
+    allFieldsTest: addNode(
+      parentPathOrId: "/sites/wipSite3lang/contents"
+      primaryNodeType: "qant:allFields"
+      name: "all-fields-test"
+      properties: [{name: "smallText", value: "My text", language: "en"}, {name: "sharedSmallText", value: "My shared text", language: "en"}]
+    ) {
+      uuid
+    }
+  }
+}

@@ -3,10 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       is_dry_run:
-        description: '(SHOULD ONLY BE RUN ON NON-MASTER branch) Indicate if the workflow triggered is a dry-run of the release'
+        description: 'DRY RUN: (SHOULD ONLY BE RUN ON NON-MASTER branch) Indicate if the workflow triggered is a dry-run of the release'
         type: boolean
         required: false
         default: false
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write
 
 jobs:
   npm_publish:
@@ -14,11 +18,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Providing the SSH PRIVATE of a user part of an admin group
+      # is necessary to bypass PR checks
       - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.GH_SSH_PRIVATE_KEY_JAHIACI }}
+      # Setting up the SSH agent to be able to commit back to the repository
+      # https://github.com/webfactory/ssh-agent
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GH_SSH_PRIVATE_KEY_JAHIACI }}
       - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
+      - name: Prepare GPG
+        shell: bash
+        run: |
+          echo $GPG_KEY | base64 --decode | gpg --batch --allow-secret-key-import --import
+          rm -rf /tmp/gpg.sh
+          echo '#!/bin/bash' >> /tmp/gpg.sh
+          echo 'gpg --batch --pinentry-mode=loopback --passphrase $GPG_KEY_PASSPHRASE $@' >> /tmp/gpg.sh
+          chmod +x /tmp/gpg.sh
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
       - name: Setting up github configuration
         shell: bash
         run: |
@@ -26,10 +49,13 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.email "jahia-ci@jahia.com"
           git config --global user.name "Jahia CI"
+          git config --global commit.gpgsign true
+          git config --global user.signingkey $GPG_KEY_ID
+          git config --global gpg.program /tmp/gpg.sh
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
       - name: Build and publish jContent test module
         shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
         run: |
           cd tests
           npm get
@@ -43,16 +69,19 @@ jobs:
 
           echo; echo "Incrementing version for release.."
           yarn version --prerelease --preid=tests
+          git verify-commit $( git rev-parse HEAD )
           git push --follow-tags 
 
           if "${{ inputs.is_dry_run }}"; then
-            if "${{ github.ref }}" == 'refs/heads/master'; then
+            if [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
               echo "Dry run should be executed in non-master branch"
             else
               echo "Executing npm publish in dry-run mode"
-              npm publish --access public --dry-run
+              npm publish --access public --tag latest --dry-run
             fi
           else 
             echo "Publishing jContent tests in npm..."
-            npm publish --access public
+            npm publish --access public --tag latest
           fi
+        env:
+          GPG_KEY_PASSPHRASE: ${{ secrets.GPG_KEY_PASSPHRASE }}

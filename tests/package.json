@@ -1,6 +1,6 @@
 {
   "name": "@jahia/jcontent-cypress",
-  "version": "3.6.0-SNAPSHOT",
+  "version": "3.6.0-tests.2",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
@@ -20,6 +20,11 @@
     "dist"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jahia/jcontent.git",
+    "directory": "tests"
+  },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
     "@jahia/cypress": "^5.2.0",

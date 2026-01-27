@@ -1,6 +1,7 @@
 {
   "name": "@jahia/jcontent",
   "version": "3.6.0-SNAPSHOT",
+  "type": "commonjs",
   "scripts": {
     "build": "yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
@@ -110,11 +111,12 @@
     "uuid": "^11.1.0"
   },
   "resolutions": {
+    "@apollo/client": "^3",
+    "ajv@npm:^5.0.0": "^6",
     "glob-parent": "^5.1.2",
     "mammoth": "^1.4.13",
     "node-fetch": "^2.6.1",
     "prismjs": "^1.26.0",
-    "react-file-viewer/**/ajv": "^6.12.6",
     "three": "^0.125.0",
     "trim": "^1.0.0",
     "trim-newlines": "^3.0.1",
@@ -181,5 +183,5 @@
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@4.12.0"
 }

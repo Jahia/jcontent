@@ -7,6 +7,7 @@
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
     "build:production-analyze": "yarn build:production --analyze",
+    "build:types": "(tsc || true) && tsc-alias",
     "watch": "yarn webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node",
@@ -23,10 +24,16 @@
     "sync-pom-tests": "sync-pom-version --use-yarn --package-file=tests/package.json"
   },
   "description": "jContent for Jahia",
-  "main": "index.js",
-  "repository": "git@github.com:Jahia/jcontent.git",
+  "types": "./types/shared/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jahia/jcontent.git"
+  },
   "author": "Jahia Core Team <core@jahia.com>",
   "license": "MIT",
+  "files": [
+    "types"
+  ],
   "dx-extends": {
     "@jahia/jahia-ui-root": "^0.0.1"
   },
@@ -138,7 +145,7 @@
     "@storybook/addons": "6.0.21",
     "@storybook/react": "^6.0.21",
     "@types/jest": "^24.0.11",
-    "@types/react": "^16",
+    "@types/react": "^18",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
@@ -167,6 +174,8 @@
     "style-loader": "^1.2.1",
     "stylelint": "^13.7.1",
     "sync-pom-version-to-package": "^1.6.1",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.1",
     "webpack": "^5.99.4",
     "webpack-bundle-analyzer": "^4.10.2",

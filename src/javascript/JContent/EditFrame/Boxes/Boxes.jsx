@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from '../Box';
 import {Create} from '../Create';
@@ -8,7 +8,7 @@ import {BoxesQuery} from './Boxes.gql-queries';
 import {hasMixin, isDescendant, isDescendantOrSelf, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {findAvailableBoxConfig, pathExistsInTree} from '../../JContent.utils';
+import {findAvailableBoxConfig} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -19,6 +19,9 @@ import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 import styles from './Boxes.scss';
+
+import {useVisibleModulePaths} from './useVisibleModulePaths';
+import {useRafState} from './useRafState';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -38,11 +41,8 @@ const getModuleElement = (currentDocument, target) => {
 
 const disallowSelection = element => {
     const tags = ['A', 'BUTTON'];
-
     return tags.includes(element.tagName) || element.closest('a') !== null || element.ownerDocument.getSelection().type === 'Range';
 };
-
-let timeout;
 
 function getRelativePos(coord1, coord2) {
     if (!coord1 || !coord2) {
@@ -61,8 +61,6 @@ function getRelativePos(coord1, coord2) {
 // This determines if the node is included as part of content reference in which case we don't want to have a box for it.
 const isFromReference = (path, nodes) => {
     if (path.includes('@/')) {
-        // Note that parent path cannot be checked directly as parent is not jnt:contentReference but jnt:list or other (/somepath/content-ref@/list/node)
-        // Note that we also check to make sure that what we find is a discoverable node in the tree
         const split = path.split('@/');
         return nodes[split[0]]?.primaryNodeType.name === 'jnt:contentReference';
     }
@@ -81,11 +79,23 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const site = useSelector(state => state.site);
     const uilang = useSelector(state => state.uilang);
 
-    // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
-    // It helps determine box visibility and header visibility.
-    const [currentElement, setCurrentElement] = useState();
+    const selectionSet = useMemo(() => new Set(selection), [selection]);
+
+    // Hovered module path (store path only, not DOM element)
+    const [hoveredPath, setHoveredPath] = useRafState(null);
+
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
+
+    // Fast lookup: path -> element
+    const modulesByPath = useMemo(() => {
+        const map = new Map();
+        for (const el of modules) {
+            map.set(el.dataset.jahiaPath, el);
+        }
+
+        return map;
+    }, [modules]);
 
     // When document is updated after save, clicked element in memory no longer matches what's in the DOM
     useEffect(() => {
@@ -94,71 +104,47 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     }, [currentDocument, clickedElement, setClickedElement]);
 
-    const onMouseOver = useCallback(event => {
-        event.stopPropagation();
-        const target = event.currentTarget;
-        window.clearTimeout(timeout);
-        timeout = window.setTimeout(() => {
-            const moduleElement = getModuleElement(currentDocument, target);
-            setCurrentElement(() => ({element: moduleElement, path: moduleElement.getAttribute('path')}));
-        }, 0);
-    }, [setCurrentElement, currentDocument]);
-
-    const onMouseOut = useCallback(event => {
-        event.stopPropagation();
-        if (event.relatedTarget && event.currentTarget.id === currentElement?.id &&
-            !isDescendantOrSelf(
-                getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),
-                getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')
-            ) &&
-            !event.target.closest('#menuHolder')
-        ) {
-            window.clearTimeout(timeout);
-            setCurrentElement(null);
-        }
-    }, [setCurrentElement, currentDocument, currentElement]);
-
     const onSelect = useCallback((event, _path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
         _path = _path || element.getAttribute('path');
-        const isSelected = selection.includes(_path);
+        const isSelected = selectionSet.has(_path);
 
-        // Do not handle selection if the target element can be interacted with
         if (disallowSelection(event.target)) {
             return;
         }
 
         event.preventDefault();
         event.stopPropagation();
+
         if (isSelected) {
             dispatch(cmRemoveSelection(_path));
         } else if (!selection.some(selectionElement => isDescendant(_path, selectionElement))) {
-            // Ok so no parent is already selected we can add ourselves
             const actions = [];
             actions.push(cmAddSelection(_path));
-            // Now we need to remove children if there was any selected as we do not allow multiple selection of parent/children
-            selection.filter(selectionElement => isDescendant(selectionElement, _path)).forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
+            selection
+                .filter(selectionElement => isDescendant(selectionElement, _path))
+                .forEach(selectedChild => actions.push(cmRemoveSelection(selectedChild)));
             dispatch(batchActions(actions));
         }
-    }, [selection, currentDocument, dispatch]);
+    }, [selection, selectionSet, currentDocument, dispatch]);
 
     const onClick = useCallback(event => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
+
         if (event.detail === 1) {
-            // Do not handle selection if the target element can be interacted with
             if (disallowSelection(event.target) && !isMultipleSelectionMode) {
                 return undefined;
             }
 
             event.preventDefault();
             event.stopPropagation();
+
             const target = event.currentTarget;
             const moduleElement = getModuleElement(currentDocument, target);
-            const path = moduleElement.getAttribute('path');
+            const clickedPath = moduleElement.getAttribute('path');
 
             if (isMultipleSelectionMode) {
-                // Previously clicked element is added to selection if not ancestor and "unclicked"
-                if (clickedElement && !isDescendant(path, clickedElement.path)) {
+                if (clickedElement && !isDescendant(clickedPath, clickedElement.path)) {
                     const e = {
                         currentTarget: clickedElement.element,
                         target: clickedElement.element,
@@ -169,17 +155,16 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 }
 
                 setClickedElement(undefined);
-
                 onSelect(event);
             } else {
                 if (selection.length > 0) {
                     dispatch(cmClearSelection());
                 }
 
-                if (clickedElement && clickedElement.path === path) {
+                if (clickedElement && clickedElement.path === clickedPath) {
                     setClickedElement(undefined);
                 } else {
-                    setClickedElement(() => ({element: moduleElement, path: path}));
+                    setClickedElement(() => ({element: moduleElement, path: clickedPath}));
                 }
             }
         } else if (event.detail === 2) {
@@ -190,32 +175,141 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         return false;
     }, [onSelect, currentDocument, clickedElement, setClickedElement, dispatch, selection]);
 
+    const onDoubleClick = useCallback(event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const element = getModuleElement(currentDocument, event.currentTarget);
+        const _path = element.getAttribute('path');
+        window.CE_API.edit({
+            uuid: nodesRef.current?.[_path]?.uuid,
+            site: site,
+            lang: language,
+            uilang,
+            isFullscreen: false,
+            configName: 'gwtedit'
+        });
+    }, [site, language, uilang, currentDocument]);
+
+    // Keep latest nodes in a ref so delegated handlers can access without re-binding listeners
+    const nodesRef = useRef(null);
+
+    // Delegated event handling: attach ONCE per document
+    useEffect(() => {
+        const body = currentDocument?.body;
+        if (!body) {
+            return;
+        }
+
+        const resolveModule = event => {
+            const moduleElement = getModuleElement(currentDocument, event.target);
+            if (!moduleElement) {
+                return null;
+            }
+
+            if (moduleElement.getAttribute('jahiatype') !== 'module') {
+                // Some events may come from other types; normalize to module if possible
+                const closestModule = moduleElement.closest?.('[jahiatype=module]');
+                return closestModule || moduleElement;
+            }
+
+            return moduleElement;
+        };
+
+        const onMouseOverCapture = event => {
+            const moduleElement = resolveModule(event);
+            if (!moduleElement) {
+                return;
+            }
+
+            const p = moduleElement.getAttribute('path');
+            setHoveredPath(p);
+        };
+
+        const onMouseOutCapture = event => {
+            // If leaving the document or moving to a totally different module, clear hover
+            const from = resolveModule(event);
+            const to = event.relatedTarget ? getModuleElement(currentDocument, event.relatedTarget) : null;
+
+            const fromPath = from?.getAttribute?.('path');
+            const toPath = to?.getAttribute?.('path');
+
+            if (fromPath && (!toPath || !isDescendantOrSelf(toPath, fromPath)) && !event.target.closest('#menuHolder')) {
+                setHoveredPath(null);
+            }
+        };
+
+        const onClickCapture = event => {
+            const moduleElement = resolveModule(event);
+            if (!moduleElement) {
+                return;
+            }
+
+            // emulate old behavior: currentTarget should be the module element
+            const proxyEvent = Object.create(event, {
+                currentTarget: {value: moduleElement}
+            });
+
+            onClick(proxyEvent);
+        };
+
+        const onDblClickCapture = event => {
+            const moduleElement = resolveModule(event);
+            if (!moduleElement) {
+                return;
+            }
+
+            const proxyEvent = Object.create(event, {
+                currentTarget: {value: moduleElement}
+            });
+
+            onDoubleClick(proxyEvent);
+        };
+
+        body.addEventListener('mouseover', onMouseOverCapture, true);
+        body.addEventListener('mouseout', onMouseOutCapture, true);
+        body.addEventListener('click', onClickCapture, true);
+        body.addEventListener('dblclick', onDblClickCapture, true);
+
+        return () => {
+            body.removeEventListener('mouseover', onMouseOverCapture, true);
+            body.removeEventListener('mouseout', onMouseOutCapture, true);
+            body.removeEventListener('click', onClickCapture, true);
+            body.removeEventListener('dblclick', onDblClickCapture, true);
+        };
+    }, [currentDocument, onClick, onDoubleClick, setHoveredPath]);
+
     useClearSelection({currentDocument, setClickedElement});
+
+    // DOM discovery effect: do NOT depend on selection
     useEffect(() => {
         const _placeholders = [];
-        currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
-            element.style['pointer-events'] = 'all';
-            let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+        const moduleElements = [...currentDocument.querySelectorAll('[jahiatype=module]')];
 
+        // Pointer events setup (kept to preserve behavior; ideally moved to CSS)
+        for (const element of moduleElements) {
+            element.style['pointer-events'] = 'all';
+
+            let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
             if (!parent) {
                 parent = element.parentElement?.closest?.('[jahiatype=module]');
-
                 if (parent) {
                     element.dataset.jahiaParent = parent.id;
                 }
             }
 
             if (element.getAttribute('path') === '*' || element.getAttribute('type') === 'placeholder') {
-                _placeholders.push(element);
-
                 if (!parent) {
+                    // keep existing warning
+                    // eslint-disable-next-line no-console
                     console.warn('Couldn\'t find parent element with jahiatype=module for element ', element);
-                    _placeholders.pop();
+                } else {
+                    _placeholders.push(element);
                 }
             }
-        });
+        }
 
-        currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+        // prev/next positions (still O(N); could be moved to drag-start later)
+        for (const element of moduleElements) {
             const parentId = element.id;
             const children = [...currentDocument.querySelectorAll(`[data-jahia-parent=${parentId}]`)];
             const coords = children.map(m => m.getBoundingClientRect());
@@ -223,16 +317,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 children[i].dataset.prevPos = getRelativePos(coords[i], coords[i - 1]) || 'top';
                 children[i].dataset.nextPos = getRelativePos(coords[i], coords[i + 1]) || 'bottom';
             }
-        });
+        }
 
         currentDocument.querySelectorAll('[jahiatype=mainmodule]').forEach(element => {
             element.style['pointer-events'] = 'none';
         });
-
         currentDocument.querySelectorAll('a').forEach(element => {
             element.style['pointer-events'] = 'all';
         });
-
         currentDocument.querySelectorAll('button').forEach(element => {
             element.style['pointer-events'] = 'all';
         });
@@ -240,7 +332,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         setPlaceholders(_placeholders);
 
         const _modules = [];
-
         currentDocument.querySelectorAll('[jahiatype]').forEach(element => {
             const type = element.getAttribute('jahiatype');
             const modulePath = element.getAttribute('path');
@@ -257,49 +348,67 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             }
         });
 
-        // Removes invisible selections
-        if (selection.length > 0) {
-            const toRemove = selection.filter(_path => !pathExistsInTree(_path, _modules, node => node.dataset.jahiaPath));
-            if (toRemove.length > 0) {
-                if (TableViewModeChangeTracker.modeChanged) {
-                    notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
-                }
+        TableViewModeChangeTracker.resetChanged();
+        setModules(_modules);
+    }, [currentDocument, path, notify, t]);
 
-                dispatch(cmRemoveSelection(toRemove));
+    // Remove invisible selections: now uses O(1) membership instead of pathExistsInTree
+    useEffect(() => {
+        if (selection.length === 0) {
+            return;
+        }
+
+        const modulePathSet = new Set(modules.map(m => m.dataset.jahiaPath));
+        const toRemove = selection.filter(p => !modulePathSet.has(p));
+
+        if (toRemove.length > 0) {
+            if (TableViewModeChangeTracker.modeChanged) {
+                notify(t('jcontent:label.contentManager.selection.removed', {count: toRemove.length}), ['closeButton', 'closeAfter5s']);
             }
+
+            dispatch(cmRemoveSelection(toRemove));
         }
 
         TableViewModeChangeTracker.resetChanged();
+    }, [selection, modules, dispatch, notify, t]);
 
-        setModules(_modules);
-    }, [path, currentDocument, currentFrameRef, onMouseOut, onMouseOver, dispatch, t, notify, selection]);
+    // Query paths memoized
+    const paths = useMemo(() => {
+        const placeholderParentPaths = placeholders
+            .map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent))
+            .filter(Boolean)
+            .map(parentEl => parentEl.dataset.jahiaPath);
 
-    const paths = [...new Set([
-        path,
-        ...modules.map(m => m.dataset.jahiaPath),
-        ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
-    ])];
+        return [...new Set([path, ...modules.map(m => m.dataset.jahiaPath), ...placeholderParentPaths])];
+    }, [path, modules, placeholders]);
 
-    // Count for content status selector needs to be reset when document is refreshed
     useEffect(() => {
         dispatch(resetContentStatusPaths());
     }, [dispatch, currentDocument]);
 
-    const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
+    const {data, refetch} = useQuery(BoxesQuery, {
+        variables: {paths, language, displayLanguage: uilang},
+        fetchPolicy: 'network-only',
+        errorPolicy: 'all'
+    });
 
     useEffect(() => {
-        setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
+        setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch});
         return () => {
             unsetRefetcher(refetchTypes.PAGE_BUILDER_BOXES);
         };
-    });
+    }, [refetch]);
 
     const nodes = useMemo(() => data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({
         ...acc,
         [n.path]: n
     }), {}), [data?.jcr]);
 
-    const getBreadcrumbsForPath = node => {
+    useEffect(() => {
+        nodesRef.current = nodes;
+    }, [nodes]);
+
+    const getBreadcrumbsForPath = useCallback(node => {
         const breadcrumbs = [];
         if (!node) {
             return breadcrumbs;
@@ -316,24 +425,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
 
         return breadcrumbs;
-    };
+    }, [nodes, path]);
 
-    const onDoubleClick = useCallback(event => {
-        event.preventDefault();
-        event.stopPropagation();
-        const element = getModuleElement(currentDocument, event.currentTarget);
-        const _path = element.getAttribute('path');
-        window.CE_API.edit({
-            uuid: nodes[_path].uuid,
-            site: site,
-            lang: language,
-            uilang,
-            isFullscreen: false,
-            configName: 'gwtedit'
-        });
-    }, [nodes, site, language, uilang, currentDocument]);
-
-    const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({
         name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
         path: m.dataset.jahiaPath,
@@ -344,7 +437,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         currentDndInfo.current.draggedOverlayPosition = position;
     };
 
-    const calculateDropTarget = (destPath, nodePath, insertPosition, dropAllowed) => {
+    const calculateDropTarget = useCallback((destPath, nodePath, insertPosition, dropAllowed) => {
         if (!destPath) {
             currentDndInfo.current.dropTarget = null;
             return;
@@ -353,73 +446,80 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         currentDndInfo.current.dropAllowed = dropAllowed;
 
         const current = nodes[destPath];
-        const targetModule = modules.find(m => m.dataset.jahiaPath === current?.path);
+        const targetModule = modulesByPath.get(current?.path);
 
         if (targetModule) {
             const rect = getBoundingBox(targetModule, true);
             currentDndInfo.current.dropTarget = {
                 node: current,
-                position: {
-                    ...rect
-                }
+                position: {...rect}
             };
         }
 
         if (nodePath) {
             const currentDnd = nodes[nodePath];
-            const dndTargetModule = modules.find(m => m.dataset.jahiaPath === currentDnd?.path);
+            const dndTargetModule = modulesByPath.get(currentDnd?.path);
 
             if (dndTargetModule && insertPosition) {
                 const rect = getBoundingBox(dndTargetModule, true);
                 currentDndInfo.current.relative = {
                     node: currentDnd,
-                    position: {
-                        ...rect
-                    },
+                    position: {...rect},
                     insertPosition
                 };
             } else {
                 currentDndInfo.current.relative = null;
             }
         }
-    };
+    }, [currentDndInfo, nodes, modulesByPath]);
 
-    const el = currentElement?.element;
+    const currentPath = hoveredPath || path;
+
+    // Virtualization: visible modules from IntersectionObserver
+    const visiblePathSet = useVisibleModulePaths({currentDocument, modules});
+
+    const renderPathSet = useMemo(() => {
+        const set = new Set();
+        for (const p of visiblePathSet) set.add(p);
+        for (const p of selection) set.add(p);
+        if (clickedElement?.path) set.add(clickedElement.path);
+        if (hoveredPath) set.add(hoveredPath);
+        return set;
+    }, [visiblePathSet, selection, clickedElement, hoveredPath]);
 
     const memoizedPlaceholders = useMemo(() => {
         return placeholders
             .map(element => ({
                 element,
-                node: nodes?.[element.dataset.jahiaParent &&
-                element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
+                node: nodes?.[
+                    element.dataset.jahiaParent &&
+                    element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')
+                ]
             }))
-            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
+            .filter(({node}) =>
+                node &&
+                !isMarkedForDeletion(node) &&
+                !findAvailableBoxConfig(node)?.isBoxActionsHidden &&
+                isDescendant(node.path, path) &&
+                !isFromReference(node.path, nodes)
+            )
             .map(({node, element}) => (
                 <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
-                    <Create key={element.getAttribute('id')}
-                            node={node}
-                            nodes={nodes}
-                            element={element}
-                            addIntervalCallback={addIntervalCallback}
-                            clickedElement={clickedElement}
-                            onMouseOver={onMouseOver}
-                            onMouseOut={onMouseOut}
-                            onClick={onClick}
-                            onSaved={onSaved}
+                    <Create
+                        key={element.getAttribute('id')}
+                        node={node}
+                        nodes={nodes}
+                        element={element}
+                        addIntervalCallback={addIntervalCallback}
+                        clickedElement={clickedElement}
+                        onMouseOver={() => {}}
+                        onMouseOut={() => {}}
+                        onClick={onClick}
+                        onSaved={onSaved}
                     />
                 </div>
             ));
-    }, [
-        path,
-        clickedElement,
-        placeholders,
-        nodes,
-        addIntervalCallback,
-        onMouseOver,
-        onMouseOut,
-        onClick,
-        onSaved
-    ]);
+    }, [path, clickedElement, placeholders, nodes, addIntervalCallback, onClick, onSaved]);
 
     const MemoizedInsertionPoints = useMemo(() => (
         <InsertionPoints
@@ -429,13 +529,9 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             nodes={nodes}
             onSaved={onSaved}
         />
-    ), [
-        currentDocument,
-        addIntervalCallback,
-        clickedElement,
-        nodes,
-        onSaved
-    ]);
+    ), [currentDocument, addIntervalCallback, clickedElement, nodes, onSaved]);
+
+    const isSomethingSelected = selection.length > 0;
 
     return (
         <div>
@@ -446,44 +542,58 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 selection={selection}
             />
 
-            {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
-                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
-                .map(({node, element}) => (
-                    <Box key={element.getAttribute('id')}
-                         nodes={nodes}
-                         node={node}
-                         isClicked={clickedElement && node.path === clickedElement.path}
-                         isHovered={element === el}
-                         isSelected={selection.includes(node.path)}
-                         isSomethingSelected={selection.length > 0}
-                         isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
-                         isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
-                         isActionsHidden={selection.length > 0}
-                         currentFrameRef={currentFrameRef}
-                         element={element}
-                         breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 &&
-                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
-                             getBreadcrumbsForPath(node) : []}
-                         entries={entries}
-                         language={language}
-                         displayLanguage={uilang}
-                         color="default"
-                         addIntervalCallback={addIntervalCallback}
-                         setDraggedOverlayPosition={setDraggedOverlayPosition}
-                         calculateDropTarget={calculateDropTarget}
-                         setClickedElement={setClickedElement}
-                         onMouseOver={onMouseOver}
-                         onMouseOut={onMouseOut}
-                         onSelect={onSelect}
-                         onClick={onClick}
-                         onDoubleClick={onDoubleClick}
-                         onSaved={onSaved}
-                    />
-                ))}
+            {modules
+                .map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
+                .filter(({node}) =>
+                    node &&
+                    renderPathSet.has(node.path) &&
+                    (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) &&
+                    isDescendant(node.path, path) &&
+                    !isFromReference(node.path, nodes)
+                )
+                .map(({node, element}) => {
+                    const isClicked = Boolean(clickedElement && node.path === clickedElement.path);
+                    const isSelected = selectionSet.has(node.path);
+                    const isHovered = node.path === hoveredPath;
+
+                    const headerCondition =
+                        isClicked ||
+                        isSelected ||
+                        (isSomethingSelected && !selection.some(sel => isDescendant(node.path, sel)) && isHovered);
+
+                    return (
+                        <Box
+                            key={element.getAttribute('id')}
+                            nodes={nodes}
+                            node={node}
+                            isClicked={isClicked}
+                            isHovered={isHovered}
+                            isSelected={isSelected}
+                            isSomethingSelected={isSomethingSelected}
+                            isHeaderDisplayed={headerCondition}
+                            isHeaderHighlighted={isDescendant(hoveredPath, node.path)}
+                            isActionsHidden={isSomethingSelected}
+                            currentFrameRef={currentFrameRef}
+                            element={element}
+                            breadcrumbs={headerCondition ? getBreadcrumbsForPath(node) : []}
+                            entries={entries}
+                            language={language}
+                            displayLanguage={uilang}
+                            color="default"
+                            addIntervalCallback={addIntervalCallback}
+                            setDraggedOverlayPosition={setDraggedOverlayPosition}
+                            calculateDropTarget={calculateDropTarget}
+                            setClickedElement={setClickedElement}
+                            // Delegated listeners now; Box should not attach DOM listeners
+                            onMouseOver={() => {}}
+                            onMouseOut={() => {}}
+                            onSelect={onSelect}
+                            onClick={onClick}
+                            onDoubleClick={onDoubleClick}
+                            onSaved={onSaved}
+                        />
+                    );
+                })}
 
             {memoizedPlaceholders}
             {MemoizedInsertionPoints}

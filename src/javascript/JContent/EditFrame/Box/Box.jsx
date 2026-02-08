@@ -42,17 +42,12 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
     const isList = type === 'list';
     const isAbsolute = type === 'absoluteArea';
 
-    // Handle area, list and absoluteArea cases based on type
     if (isArea || isList || isAbsolute) {
         config.isBarAlwaysDisplayed = true;
         config.isSticky = false;
         config.isActionsHidden = isAbsolute || isArea;
         config.isStatusHidden = isAbsolute || isArea;
-        config.area = {
-            isAbsolute,
-            isArea,
-            isList
-        };
+        config.area = {isAbsolute, isArea, isList};
     }
 
     return config;
@@ -102,29 +97,9 @@ export const Box = React.memo(({
     const {t} = useTranslation('jcontent');
     const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
 
-    useEffect(() => {
-        // Disable mouse events to prevent showing boxes when dragging
-        if (!isAnythingDragging) {
-            element.addEventListener('mouseenter', onMouseOver);
-            element.addEventListener('mouseleave', onMouseOut);
-            element.addEventListener('click', onClick);
-            element.addEventListener('dblclick', onDoubleClick);
-        }
-
-        return () => {
-            element.removeEventListener('mouseenter', onMouseOver);
-            element.removeEventListener('mouseleave', onMouseOut);
-            element.removeEventListener('click', onClick);
-            element.removeEventListener('dblclick', onDoubleClick);
-        };
-    }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
-
-    element.dataset.hovered = isHovered && !isAnythingDragging;
-
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
         parent = element.parentElement.closest('[jahiatype=module]');
-
         if (parent) {
             element.dataset.jahiaParent = parent.id;
         }
@@ -158,7 +133,6 @@ export const Box = React.memo(({
 
     useEffect(() => {
         element.classList.add(editStyles.enablePointerEvents);
-
         return () => {
             element.classList.remove(editStyles.enablePointerEvents);
         };
@@ -230,7 +204,6 @@ export const Box = React.memo(({
         }
     };
 
-    // Display current header through portal to be able to always position it on top of existing selection(s)
     const headerStyles = clsx(
         styles.boxHeader,
         isSticky && styles.sticky,
@@ -243,22 +216,23 @@ export const Box = React.memo(({
     );
 
     const Header = (
-        <header ref={dragWithChecks}
-                className={headerStyles}
-                jahiatype="header" // eslint-disable-line react/no-unknown-property
-                data-hovered={isHovered && !isAnythingDragging}
-                data-clicked={isClicked}
-                data-highlighted={isHeaderHighlighted}
-                data-jahia-id={element.getAttribute('id')}
-                style={{
-                    '--backgroundColorBase': backgroundColorBase,
-                    '--backgroundColorHovered': backgroundColorHovered,
-                    '--backgroundColorSelected': backgroundColorSelected
-                }}
-                onMouseOver={onMouseOver}
-                onMouseOut={onMouseOut}
-                onClick={onClick}
-                onDoubleClick={onDoubleClick}
+        <header
+            ref={dragWithChecks}
+            className={headerStyles}
+            jahiatype="header" // eslint-disable-line react/no-unknown-property
+            data-hovered={isHovered && !isAnythingDragging}
+            data-clicked={isClicked}
+            data-highlighted={isHeaderHighlighted}
+            data-jahia-id={element.getAttribute('id')}
+            style={{
+                '--backgroundColorBase': backgroundColorBase,
+                '--backgroundColorHovered': backgroundColorHovered,
+                '--backgroundColorSelected': backgroundColorSelected
+            }}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            onClick={onClick}
+            onDoubleClick={onDoubleClick}
         >
             {node && !dragging &&
                 <Bar
@@ -281,27 +255,28 @@ export const Box = React.memo(({
         !element.hasChildNodes();
 
     return (
-        <div ref={rootDiv}
-             className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
-             data-sel-role="page-builder-box"
-             data-jahia-path={node.path}
-             data-box-hovered={isHovered}
-             data-box-selected={isSelected}
-             data-box-clicked={isClicked}
-             data-jahia-id={element.getAttribute('id')}
-             style={currentOffset}
+        <div
+            ref={rootDiv}
+            className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
+            data-sel-role="page-builder-box"
+            data-jahia-path={node.path}
+            data-box-hovered={isHovered}
+            data-box-selected={isSelected}
+            data-box-clicked={isClicked}
+            data-jahia-id={element.getAttribute('id')}
+            style={currentOffset}
         >
-            <div className={clsx(
-                styles.box,
-                isHeaderDisplayed ? boxStyle : styles.withNoHeader,
-                (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
-                (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '',
-                (isStatusHighlighted) && styles.boxHighlighted,
-                displayStatuses.has('notVisible') && styles.boxNotVisible,
-                (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
-                 style={{
-                     '--borderColor': borderColor
-                 }}
+            <div
+                className={clsx(
+                    styles.box,
+                    isHeaderDisplayed ? boxStyle : styles.withNoHeader,
+                    (isHovered && !isAnythingDragging) ? styles.boxHovered : '',
+                    (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '',
+                    (isStatusHighlighted) && styles.boxHighlighted,
+                    displayStatuses.has('notVisible') && styles.boxNotVisible,
+                    (hasNoTranslationOverlay) && styles.noDisplayOverlay
+                )}
+                style={{'--borderColor': borderColor}}
             >
                 {isHeaderDisplayed && Header}
                 {BoxStatus}
@@ -312,14 +287,13 @@ export const Box = React.memo(({
                     </div>}
 
                 {!isAnythingDragging && !isSomethingSelected && (isHovered || isClicked) && breadcrumbs.length > 0 &&
-                    <footer className={clsx(styles.boxFooter)}
-                            data-hovered={isHovered && !isAnythingDragging}
-                            data-jahia-id={element.getAttribute('id')}
-                            jahiatype="footer" // eslint-disable-line react/no-unknown-property
-                            style={{
-                                '--backgroundColorSelected': backgroundColorSelected
-                            }}
-                            onClick={onClick}
+                    <footer
+                        className={clsx(styles.boxFooter)}
+                        data-hovered={isHovered && !isAnythingDragging}
+                        data-jahia-id={element.getAttribute('id')}
+                        jahiatype="footer" // eslint-disable-line react/no-unknown-property
+                        style={{'--backgroundColorSelected': backgroundColorSelected}}
+                        onClick={onClick}
                     >
                         <Breadcrumbs currentNode={node} nodes={breadcrumbs} setClickedElement={setClickedElement} onSelect={onSelect}/>
                     </footer>}
@@ -330,52 +304,28 @@ export const Box = React.memo(({
 
 Box.propTypes = {
     element: PropTypes.any,
-
     breadcrumbs: PropTypes.array,
-
     nodes: PropTypes.array,
-
     node: PropTypes.any,
-
     entries: PropTypes.array,
-
     language: PropTypes.string,
-
     displayLanguage: PropTypes.string,
-
     addIntervalCallback: PropTypes.func,
-
     onSaved: PropTypes.func,
-
     onMouseOver: PropTypes.func,
-
     onMouseOut: PropTypes.func,
-
     setClickedElement: PropTypes.func,
-
     onSelect: PropTypes.func,
-
     onClick: PropTypes.func,
-
     currentFrameRef: PropTypes.any,
-
     isHeaderDisplayed: PropTypes.bool,
-
     isHeaderHighlighted: PropTypes.bool,
-
     isHovered: PropTypes.bool,
-
     isClicked: PropTypes.bool,
-
     isSelected: PropTypes.bool,
-
     isSomethingSelected: PropTypes.bool,
-
     isActionsHidden: PropTypes.bool,
-
     onDoubleClick: PropTypes.func,
-
     calculateDropTarget: PropTypes.func,
-
     setDraggedOverlayPosition: PropTypes.func
 };

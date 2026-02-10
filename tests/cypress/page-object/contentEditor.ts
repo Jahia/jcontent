@@ -78,7 +78,14 @@ export class ContentEditor extends BasePage {
     create() {
         getComponentByRole(Button, 'createButton').click();
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
-        cy.get('[role="alertdialog"]').should('be.visible').should('contain', 'Content successfully created');
+        cy.get('[role="alertdialog"]').should('be.visible')
+            .should($el => {
+                expect($el.text()).to.satisfy((text: string) =>
+                    text.includes('Content successfully created') ||
+                    text.includes('Contenu enregistré avec succès') ||
+                    text.includes('Inhalt wurde erfolgreich gespeichert')
+                );
+            });
         if (!this.createAnother) {
             cy.get(ContentEditor.defaultSelector).should('not.exist');
         }
@@ -230,11 +237,11 @@ export class ContentEditor extends BasePage {
     }
 
     assertValidationErrorsNotExist() {
-        cy.get('[data-sel-role="validation-errors"]').should('not.exist');
+        return cy.get('[data-sel-role="validation-errors"]').should('not.exist');
     }
 
     assertValidationErrorsExists() {
-        cy.get('[data-sel-role="validation-errors"]').should('exist');
+        return cy.get('[data-sel-role="validation-errors"]').should('exist');
     }
 
     getRichTextField(fieldName: string): RichTextField {

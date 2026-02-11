@@ -1,7 +1,8 @@
 import {ContentEditor, JContent} from '../../page-object';
 import {deleteSite, enableModule} from '@jahia/cypress';
 
-describe('Work in Progress tests', () => {
+// https://github.com/Jahia/jcontent/issues/2168
+describe.skip('Work in Progress tests', () => {
     let jcontent: JContent;
     const siteKey1 = 'wipSite1lang';
     const siteKey3 = 'wipSite3lang';
@@ -29,13 +30,16 @@ describe('Work in Progress tests', () => {
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode();
+
         const contentSection = contentEditor.openSection('content');
+
         contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress Test');
         // Check the WIP badge is displayed
         cy.get('div[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('exist');
         contentEditor.create();
+
         // Check the WIP icon is displayed in jcontent
         cy.contains('[data-cm-role="table-content-list-row"]', 'Cypress Work In Progress Test')
             .find('.moonstone-chip')

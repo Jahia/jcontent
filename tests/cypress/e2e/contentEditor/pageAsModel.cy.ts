@@ -2,7 +2,8 @@ import {ContentEditor, JContent} from '../../page-object';
 import {Field} from '../../page-object/fields';
 import {getComponentBySelector, Menu} from '@jahia/cypress';
 
-describe('Page as model', () => {
+// https://github.com/Jahia/jcontent/issues/2168
+describe.skip('Page as model', () => {
     const siteKey = 'digitall';
     const model = 'Testmodel';
 

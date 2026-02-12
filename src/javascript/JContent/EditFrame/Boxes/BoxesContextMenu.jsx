@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 
@@ -9,11 +9,16 @@ import PropTypes from 'prop-types';
  * @param {Object} props Component props
  * @param {Object} props.currentFrameRef Reference to the current frame
  * @param {Object} props.currentDocument Current document object
- * @param {string} props.currentPath Current content path
+ * @param {string} props.currentHoveredRef Current content path
  * @param {string[]} props.selection Array of selected paths
  */
-const BoxesContextMenu = ({currentFrameRef, currentDocument, currentPath, selection}) => {
+const BoxesContextMenu = ({currentFrameRef, currentDocument, currentHoveredRef, selection}) => {
     const contextualMenu = useRef();
+    const [currentPath, setCurrentPath] = useState(currentHoveredRef.current);
+
+    useEffect(() => {
+        setCurrentPath(currentHoveredRef.current);
+    }, [currentHoveredRef.current]);
 
     useEffect(() => {
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {

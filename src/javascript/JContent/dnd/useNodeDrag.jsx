@@ -3,29 +3,38 @@ import styles from '~/JContent/ContentTree/ContentTree.scss';
 import {useEffect} from 'react';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 import {shallowEqual, useSelector} from 'react-redux';
-import {useNodeChecks} from '@jahia/data-helper';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
 import {JahiaAreasUtil} from '../JContent.utils';
-import {PATH_CATEGORIES_ITSELF} from '../actions/actions.constants';
 
-export function useNodeDrag({dragSource}) {
-    const {selection, language, displayLanguage} = useSelector(state => ({
-        selection: state.jcontent.selection,
-        language: state.language,
-        displayLanguage: state.uilang
+const prepareRes = ({selection, path, nodeDragData}) => {
+    if (!nodeDragData || !nodeDragData.nodes) {
+        return {checksResult: false, node: null, nodes: null};
+    }
+
+    if (selection && selection.length > 0) {
+        return selection.reduce((acc, cur) => {
+            const nodeResult = nodeDragData?.nodes?.[cur];
+            acc.checksResult = acc.checksResult && nodeResult?.checksResult;
+            acc.nodes.push(nodeResult);
+            return acc;
+        }, {checkResults: true, nodes: []});
+    }
+
+    return [path].reduce((acc, cur) => {
+        const nodeResult = nodeDragData?.nodes?.[cur];
+        acc.checksResult = acc.checksResult && nodeResult?.checksResult;
+        acc.node = nodeResult;
+        return acc;
+    }, {checksResult: true, node: null});
+};
+
+export function useNodeDrag({dragSource, nodeDragData}) {
+    const {selection} = useSelector(state => ({
+        selection: state.jcontent.selection
     }), shallowEqual);
     const isAnythingDragging = useDragLayer(monitor => monitor.isDragging());
 
-    const res = useNodeChecks(
-        {...(selection.length > 0 ? {paths: selection} : {path: dragSource?.path}), language, displayLanguage},
-        {
-            getPrimaryNodeType: true,
-            requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockUiMove'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
-            getLockInfo: true
-        }
-    );
+    const res = prepareRes({selection, path: dragSource.path, nodeDragData});
+    //console.log('useNodeDrag', res);
 
     const isDraggable = Boolean(res.checksResult) && !JahiaAreasUtil.isJahiaArea(dragSource?.path);
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({

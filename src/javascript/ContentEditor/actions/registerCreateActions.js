@@ -2,6 +2,7 @@ import React from 'react';
 import {AddCircle, Save} from '@jahia/moonstone';
 
 import {createContentActionWrapper} from './jcontent/createContent/createContentWrapper';
+import {createContentActionWrapperPB} from './jcontent/createContent/createContentWrapperPB';
 import {createAction} from './contenteditor/create/createAction';
 import {batchActions} from 'redux-batched-actions';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
@@ -9,6 +10,16 @@ import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContent', createContentActionWrapper, {
+        defaultIcon: <AddCircle/>,
+        buttonLabel:
+            'jcontent:label.contentEditor.CMMActions.createNewContent.menu',
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
+        hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
+        requiredPermission: ['jcr:addChildNodes'],
+        hasBypassChildrenLimit: false
+    });
+
+    registry.addOrReplace('action', 'createContentPB', createContentActionWrapperPB, {
         defaultIcon: <AddCircle/>,
         buttonLabel:
             'jcontent:label.contentEditor.CMMActions.createNewContent.menu',

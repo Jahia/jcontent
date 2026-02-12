@@ -1,8 +1,9 @@
 import React from 'react';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
+import {BatchedRenderer} from '~/JContent/EditFrame/BatchedRenderer';
 
-const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
+const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved, nodeDropData}) => {
     if (!clickedElement) {
         return null;
     }
@@ -28,34 +29,36 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;
 
     return (
-        [
-            ...childrenElem.map(({element, parentNode}) => (
-                <Create key={`insertion-point-${element.getAttribute('id')}`}
-                        isInsertionPoint
-                        isVertical={isVertical}
-                        node={parentNode}
-                        nodes={nodes}
-                        element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
-                        onSaved={onSaved}
-                />
-            )),
-            ...originalInsertionButtons.map(({element, parentNode}) => (
-                // Insertion point for original placeholder, this is necessary since default placeholders are muted once something is clicked
-                <Create key={`insertion-point-${element.getAttribute('id')}`}
-                        isInsertionPoint
-                        node={parentNode}
-                        nodes={nodes}
-                        element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
-                        onSaved={onSaved}
-                />
-            ))
-        ]
+        <>
+        <BatchedRenderer elements={childrenElem.map(({element, parentNode}) => (
+            <Create key={`insertion-point-${element.getAttribute('id')}`}
+                    isInsertionPoint
+                    isVertical={isVertical}
+                    nodeDropData={nodeDropData}
+                    node={parentNode}
+                    nodes={nodes}
+                    element={element}
+                    addIntervalCallback={addIntervalCallback}
+                    onMouseOver={() => {}}
+                    onMouseOut={() => {}}
+                    onSaved={onSaved}
+            />
+        ))}/>
+        <BatchedRenderer elements={originalInsertionButtons.map(({element, parentNode}) => (
+            // Insertion point for original placeholder, this is necessary since default placeholders are muted once something is clicked
+            <Create key={`insertion-point-${element.getAttribute('id')}`}
+                    isInsertionPoint
+                    node={parentNode}
+                    nodes={nodes}
+                    element={element}
+                    nodeDropData={nodeDropData}
+                    addIntervalCallback={addIntervalCallback}
+                    onMouseOver={() => {}}
+                    onMouseOut={() => {}}
+                    onSaved={onSaved}
+            />
+        ))}/>
+        </>
     );
 };
 

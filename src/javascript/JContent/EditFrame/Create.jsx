@@ -40,7 +40,7 @@ function reposition(element, currentOffset, setCurrentOffset) {
     }
 }
 
-const useElemAttributes = ({element, parent}) => {
+export const useElemAttributes = ({element, parent}) => {
     // Need to check here if insertionPoint is an original create button or not,
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
@@ -102,16 +102,16 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical}) => {
+export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, actionData}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
     const {nodeName, nodePath, nodeTypes} = useElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
-        createContent: false,
-        paste: false,
-        pasteAsReference: false
+        createContent: true,
+        paste: true,
+        pasteAsReference: true
     });
     const [onCreateVisibilityChanged, onPasteVisibilityChanged, onPasteReferenceVisibilityChanged] =
         useMemo(() => ['createContent', 'paste', 'pasteReference'].map(key => {
@@ -136,7 +136,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         }
     }, [node, parent, element, isEmpty, actionVisibility]);
 
-    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved});
+    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved, nodeDropData});
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
     }));
@@ -195,17 +195,18 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const createAction = useMemo(() => (
         <DisplayAction
             isIncludeSubTypes
-            actionKey="createContent"
+            actionKey="createContentPB"
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}
             nodeTypes={nodeTypes}
+            actionData={actionData}
             loading={() => false}
             render={btnRenderer}
             onVisibilityChanged={onCreateVisibilityChanged}
             onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
         />
-    ), [parentPath, nodePath, isDisabled, nodeTypes, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
+    ), [parentPath, nodePath, isDisabled, nodeTypes, actionData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
 
     return !anyDragging && (
         <div ref={drop}
@@ -225,20 +226,20 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              onClick={onClick}
         >
             {copyPasteNodes.length === 0 && createAction}
-            <DisplayAction actionKey="paste"
-                           isDisabled={isDisabled}
-                           path={parentPath}
-                           loading={() => false}
-                           render={btnRenderer}
-                           onVisibilityChanged={onPasteVisibilityChanged}
-                           onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
-            <DisplayAction actionKey="pasteReference"
-                           isDisabled={isDisabled}
-                           path={parentPath}
-                           loading={() => false}
-                           render={btnRenderer}
-                           onVisibilityChanged={onPasteReferenceVisibilityChanged}
-                           onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
+            {/* <DisplayAction actionKey="paste" */}
+            {/*                isDisabled={isDisabled} */}
+            {/*                path={parentPath} */}
+            {/*                loading={() => false} */}
+            {/*                render={btnRenderer} */}
+            {/*                onVisibilityChanged={onPasteVisibilityChanged} */}
+            {/*                onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/> */}
+            {/* <DisplayAction actionKey="pasteReference" */}
+            {/*                isDisabled={isDisabled} */}
+            {/*                path={parentPath} */}
+            {/*                loading={() => false} */}
+            {/*                render={btnRenderer} */}
+            {/*                onVisibilityChanged={onPasteReferenceVisibilityChanged} */}
+            {/*                onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/> */}
         </div>
     );
 });
@@ -254,5 +255,6 @@ Create.propTypes = {
     onSaved: PropTypes.func,
     onClick: PropTypes.func,
     isInsertionPoint: PropTypes.bool,
-    isVertical: PropTypes.bool
+    isVertical: PropTypes.bool,
+    nodeDropData: PropTypes.object
 };

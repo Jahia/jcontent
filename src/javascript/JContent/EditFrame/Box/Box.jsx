@@ -9,7 +9,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';
-import {findAvailableBoxConfig, hasMixin} from '../../JContent.utils';
+import {findAvailableBoxConfig, hasMixin, isDescendant} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
@@ -87,20 +87,27 @@ export const Box = React.memo(({
     currentFrameRef,
     isHeaderDisplayed,
     isHeaderHighlighted,
-    isHovered,
     isClicked,
     isSelected,
     isSomethingSelected,
     isActionsHidden,
     onDoubleClick,
     setDraggedOverlayPosition,
-    calculateDropTarget
+    calculateDropTarget,
+    registerHoverManager,
+    nodeDragData,
+    nodeDropData
 }) => {
+    const [isHovered, setIsHovered] = useState(false);
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
-    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node});
+    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node, nodeDragData});
     const {t} = useTranslation('jcontent');
     const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
+
+    useEffect(() => {
+        return registerHoverManager(node.path, setIsHovered);
+    }, [registerHoverManager, node.path]);
 
     useEffect(() => {
         // Disable mouse events to prevent showing boxes when dragging
@@ -139,7 +146,8 @@ export const Box = React.memo(({
         onSaved: () => {
             onSaved();
         },
-        pos: {before: element.dataset.prevPos, after: element.dataset.nextPos}
+        pos: {before: element.dataset.prevPos, after: element.dataset.nextPos},
+        nodeDropData
     });
 
     drop(ref);
@@ -280,6 +288,7 @@ export const Box = React.memo(({
         !isMarkedForDeletionRoot &&
         !element.hasChildNodes();
 
+    //console.log('Render box');
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}
@@ -363,8 +372,6 @@ Box.propTypes = {
 
     isHeaderHighlighted: PropTypes.bool,
 
-    isHovered: PropTypes.bool,
-
     isClicked: PropTypes.bool,
 
     isSelected: PropTypes.bool,
@@ -377,5 +384,11 @@ Box.propTypes = {
 
     calculateDropTarget: PropTypes.func,
 
-    setDraggedOverlayPosition: PropTypes.func
+    setDraggedOverlayPosition: PropTypes.func,
+
+    registerHoverManager: PropTypes.func,
+
+    nodeDragData: PropTypes.object,
+
+    nodeDropData: PropTypes.object
 };

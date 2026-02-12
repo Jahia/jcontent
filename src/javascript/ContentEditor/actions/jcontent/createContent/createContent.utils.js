@@ -1,7 +1,7 @@
 import {
     getNodeByPath,
     getTreeOfContentWithRequirements,
-    getTreeOfContentWithRequirementsFromUuid
+    getTreeOfContentWithRequirementsFromUuid, getTreeOfContentWithRequirementsMultiple
 } from './createContent.gql-queries';
 import {useQuery} from '@apollo/client';
 import {Tag, toIconComponent} from '@jahia/moonstone';
@@ -79,7 +79,11 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
             return <Tag/>;
         }
 
-        return nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
+        if (nodeType.iconURL) {
+            return !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
+        }
+
+        return toIconComponent(`${nodeType.icon}.png`);
     }
 
     if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
@@ -93,9 +97,9 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
                 nodeTypes: [nodeType.name],
                 nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
-                buttonLabelParams: {typeName: nodeType.label},
+                buttonLabelParams: {typeName: nodeType.label || nodeType.displayName},
                 tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipForType',
-                tooltipParams: {typeName: nodeType.label, parent: parentName}
+                tooltipParams: {typeName: nodeType.label || nodeType.displayName, parent: parentName}
             }));
     }
 }

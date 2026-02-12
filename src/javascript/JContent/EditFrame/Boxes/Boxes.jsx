@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from '../Box';
-import {Create} from '../Create';
+import {Create, useElemAttributes} from '../Create';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
 import {BoxesQuery} from './Boxes.gql-queries';
@@ -19,6 +19,11 @@ import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 import styles from './Boxes.scss';
+import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
+import {useNodeChecks} from '@jahia/data-helper';
+import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
+import {BatchedRenderer} from '~/JContent/EditFrame/BatchedRenderer';
+import {useCreatableNodetypesTreeMultiple} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -70,6 +75,47 @@ const isFromReference = (path, nodes) => {
     return false;
 };
 
+const useCreateData = ({createButtons, language, uilang}) => {
+    const paths = [];
+    const inputs = [];
+
+    createButtons.forEach(b => {
+        paths.push(b.node.path);
+        inputs.push({
+            childNodeName: b.attributes.nodePath,
+            excludedNodeTypes: ['jmix:studioOnly', 'jmix:hiddenType'],
+            includeSubTypes: true,
+            nodeTypes: b.attributes.nodeTypes,
+            path: b.node.path,
+            uiLocale: uilang,
+            useContribute: false
+        });
+    });
+
+    // TODO get these params from the action in registry???
+    const res = useNodeChecks({
+        paths,
+        language
+    }, {
+        mapResults: true, // This creates a map of {path, result}
+        // From node checks
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
+        hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
+        requiredPermission: ['jcr:addChildNodes'],
+        hasBypassChildrenLimit: false,
+        getChildNodeTypes: true,
+        getLockInfo: true,
+        // From node info
+        getPrimaryNodeType: true,
+        getSubNodesCount: ['nt:base'],
+        getIsNodeTypes: ['jmix:listSizeLimit'],
+        getProperties: ['limit']
+    });
+
+    console.log('useCreateButtons', createButtons.length, res);
+    return {nodes: res?.nodes, contentTrees: undefined};
+};
+
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
@@ -83,9 +129,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
     // It helps determine box visibility and header visibility.
-    const [currentElement, setCurrentElement] = useState();
+    // const [currentElement, setCurrentElement] = useState();
+    const {registerHoverManager, setHovered, clearHovered, currentHoveredRef} = useHoverManager();
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
+    const [createButtons, setCreateButtons] = useState([]);
+    const buttonData = useCreateData({createButtons, language, uilang});
 
     // When document is updated after save, clicked element in memory no longer matches what's in the DOM
     useEffect(() => {
@@ -100,23 +149,27 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
             const moduleElement = getModuleElement(currentDocument, target);
-            setCurrentElement(() => ({element: moduleElement, path: moduleElement.getAttribute('path')}));
+            const path = moduleElement.getAttribute('path');
+            setHovered(path); // Only updates the specific box
         }, 0);
-    }, [setCurrentElement, currentDocument]);
+    }, [currentDocument, setHovered]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && event.currentTarget.id === currentElement?.id &&
+        const target = event.currentTarget;
+        const path = target.getAttribute('path');
+
+        if (event.relatedTarget &&
             !isDescendantOrSelf(
                 getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),
-                getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')
+                path
             ) &&
             !event.target.closest('#menuHolder')
         ) {
             window.clearTimeout(timeout);
-            setCurrentElement(null);
+            clearHovered();
         }
-    }, [setCurrentElement, currentDocument, currentElement]);
+    }, [currentDocument, clearHovered]);
 
     const onSelect = useCallback((event, _path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
@@ -191,6 +244,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     }, [onSelect, currentDocument, clickedElement, setClickedElement, dispatch, selection]);
 
     useClearSelection({currentDocument, setClickedElement});
+
     useEffect(() => {
         const _placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
@@ -287,6 +341,35 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
+    const nodeDragData = useNodeChecks(
+        {paths: paths, language: language, displayLanguage: uilang},
+        {
+            mapResults: true,
+            getPrimaryNodeType: true,
+            requiredPermission: ['jcr:removeNode'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockUiMove'],
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
+            getLockInfo: true
+        }
+    );
+
+    const nodeDropData = useNodeChecks(
+        {paths: paths, language: language},
+        {
+            mapResults: true,
+            requiredPermission: 'jcr:addChildNodes',
+            getChildNodeTypes: true,
+            getContributeTypesRestrictions: true,
+            getLockInfo: true,
+            getSubNodesCount: ['nt:base'],
+            getProperties: ['limit'],
+            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay']
+        }
+    );
+
+    console.log('Drag data', nodeDragData);
+    console.log('Drop data', nodeDropData);
+
     useEffect(() => {
         setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
         return () => {
@@ -298,6 +381,23 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ...acc,
         [n.path]: n
     }), {}), [data?.jcr]);
+
+    useEffect(() => {
+        if (nodes) {
+            // Placeholders for create buttons
+            const buttonPlaceHolders = placeholders
+                .map(element => ({
+                    element,
+                    node: nodes?.[element.dataset.jahiaParent &&
+                    element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    attributes: useElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
+                }))
+                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes));
+
+            setCreateButtons(buttonPlaceHolders);
+        }
+    }, [nodes, path, placeholders]);
 
     const getBreadcrumbsForPath = node => {
         const breadcrumbs = [];
@@ -333,7 +433,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         });
     }, [nodes, site, language, uilang, currentDocument]);
 
-    const currentPath = currentElement?.path || path;
+    //const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({
         name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
         path: m.dataset.jahiaPath,
@@ -384,22 +484,18 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     };
 
-    const el = currentElement?.element;
+    //const el = currentElement?.element;
 
     const memoizedPlaceholders = useMemo(() => {
-        return placeholders
-            .map(element => ({
-                element,
-                node: nodes?.[element.dataset.jahiaParent &&
-                element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
-            }))
-            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
+        return createButtons
             .map(({node, element}) => (
                 <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
                     <Create key={element.getAttribute('id')}
                             node={node}
                             nodes={nodes}
                             element={element}
+                            nodeDropData={nodeDropData}
+                            actionData={buttonData}
                             addIntervalCallback={addIntervalCallback}
                             clickedElement={clickedElement}
                             onMouseOver={onMouseOver}
@@ -418,12 +514,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         onMouseOver,
         onMouseOut,
         onClick,
-        onSaved
+        onSaved,
+        nodeDropData
     ]);
 
     const MemoizedInsertionPoints = useMemo(() => (
         <InsertionPoints
             currentDocument={currentDocument}
+            nodeDropData={nodeDropData}
             addIntervalCallback={addIntervalCallback}
             clickedElement={clickedElement}
             nodes={nodes}
@@ -434,15 +532,17 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         addIntervalCallback,
         clickedElement,
         nodes,
-        onSaved
+        onSaved,
+        nodeDropData
     ]);
 
+    console.log('Boxes...')
     return (
         <div>
             <BoxesContextMenu
                 currentFrameRef={currentFrameRef}
                 currentDocument={currentDocument}
-                currentPath={currentPath}
+                currentHoveredRef={currentHoveredRef} //Todo this does not work well
                 selection={selection}
             />
 
@@ -453,13 +553,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          nodes={nodes}
                          node={node}
                          isClicked={clickedElement && node.path === clickedElement.path}
-                         isHovered={element === el}
+                         registerHoverManager={registerHoverManager}
                          isSelected={selection.includes(node.path)}
                          isSomethingSelected={selection.length > 0}
                          isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
-                         isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
                          isActionsHidden={selection.length > 0}
                          currentFrameRef={currentFrameRef}
                          element={element}
@@ -475,6 +574,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
+                         nodeDragData={nodeDragData}
+                         nodeDropData={nodeDropData}
                          setClickedElement={setClickedElement}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
@@ -486,7 +587,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 ))}
 
             {memoizedPlaceholders}
-            {MemoizedInsertionPoints}
+            {/* {MemoizedInsertionPoints} */}
         </div>
     );
 };

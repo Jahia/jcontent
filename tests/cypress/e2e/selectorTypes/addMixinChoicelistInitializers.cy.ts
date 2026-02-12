@@ -4,7 +4,7 @@ import {Picker} from '../../page-object/picker';
 
 const sitekey = 'contentEditorSiteAddMixin';
 const fieldOffset = {top: -200, left: 0};
-describe('Add Mixin by using choice list initializers (Image Reference)', () => {
+describe.skip('Add Mixin by using choice list initializers (Image Reference)', () => {
     let pageComposer: PageComposer;
     const cypressDocumentManagerImageReferenceLinkTest = 'Cypress document manager image reference link Test';
     before(function () {

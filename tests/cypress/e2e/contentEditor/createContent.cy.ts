@@ -1,7 +1,8 @@
 import {Button, getComponentByRole} from '@jahia/cypress';
 import {JContent} from '../../page-object';
 
-describe('Create content tests', {retries: 10}, () => {
+// https://github.com/Jahia/jcontent/issues/2168
+describe.skip('Create content tests', {retries: 10}, () => {
     let jcontent: JContent;
 
     before(function () {

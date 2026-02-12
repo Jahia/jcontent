@@ -17,12 +17,13 @@ export const baseConfig = {
     viewportHeight: 768,
     watchForFileChanges: false,
     experimentalMemoryManagement: true,
-    numTestsKeptInMemory: 5,
+    numTestsKeptInMemory: 0,
     e2e: {
         specPattern: ['**/**.cy.ts'],
         // We've imported your old cypress plugins here.
         // You may want to clean this up later by importing these.
         setupNodeEvents(on, config) {
+            // Register tasks before other plugins to ensure they're available
             on('task', {
                 readFileMaybe(filename) {
                     if (fs.existsSync(filename)) {
@@ -32,18 +33,21 @@ export const baseConfig = {
                     return null;
                 }
             });
+
+            // Clean up videos for passing tests
             on('after:spec', (spec, results) => {
-                if (results && results.video) {
-                    // Do we have failures for any retry attempts?
+                if (results?.video) {
                     const failures = results.tests.some(test =>
                         test.attempts.some(attempt => attempt.state === 'failed')
                     );
                     if (!failures) {
-                        // Delete the video if the spec passed and no tests retried
-                        fs.unlinkSync(results.video);
+                        // Delete video asynchronously to avoid blocking
+                        fs.promises.unlink(results.video).catch(() => {});
                     }
                 }
             });
+
+            // Load external plugins
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             return require('./cypress/plugins/index.js')(on, config);
         },

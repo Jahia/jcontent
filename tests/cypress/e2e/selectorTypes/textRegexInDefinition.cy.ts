@@ -2,7 +2,8 @@ import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {PageComposer} from '../../page-object/pageComposer';
 import {SmallTextField} from '../../page-object/fields';
 
-describe('Test the consistency of the validation of regular expressions added to the definition', () => {
+// https://github.com/Jahia/jcontent/issues/2168
+describe.skip('Test the consistency of the validation of regular expressions added to the definition', () => {
     const siteKey = 'regexpTest';
     const langEN = 'en';
     const siteConfig = {

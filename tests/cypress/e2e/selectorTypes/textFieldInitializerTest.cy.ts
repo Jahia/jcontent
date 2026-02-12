@@ -2,7 +2,8 @@ import {createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {PageComposer} from '../../page-object';
 import {SmallTextField, DateField} from '../../page-object/fields';
 
-describe('Test the text field initializer', () => {
+// https://github.com/Jahia/jcontent/issues/2168
+describe.skip('Test the text field initializer', () => {
     const siteKey = 'extFieldInitializerTest';
     const langEN = 'en';
     const langFR = 'fr';

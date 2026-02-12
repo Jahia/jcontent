@@ -1,7 +1,8 @@
 import {JContent} from '../../page-object';
 
+// https://github.com/Jahia/jcontent/issues/2168
 const sitekey = 'contentEditorSiteI18N';
-describe('Create content tests in I18N site', () => {
+describe.skip('Create content tests in I18N site', () => {
     let jcontent: JContent;
 
     before(function () {

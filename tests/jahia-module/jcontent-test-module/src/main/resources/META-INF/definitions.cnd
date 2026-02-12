@@ -190,4 +190,6 @@
 [cent:numbers] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent
 - long (long)
 - double (double)
+- double2 (double)
+- double3 (double)
 - longReq (long) mandatory

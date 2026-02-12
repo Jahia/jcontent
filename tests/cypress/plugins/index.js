@@ -22,7 +22,7 @@ module.exports = (on, config) => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('cypress-terminal-report/src/installLogsPrinter')(on, {
         printLogsToConsole: 'onFail',
-        printLogsToFile: 'always',
+        printLogsToFile: 'onFail',
         outputRoot: config.projectRoot + '/results/',
         // Used to trim the base path of specs and reduce nesting in the generated output directory.
         specRoot: 'cypress/e2e',

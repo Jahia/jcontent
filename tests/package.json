@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.3.0",
-    "@jahia/cypress": "^6.5.0",
+    "@jahia/cypress": "^7.0.0",
     "@jahia/jahia-reporter": "^1.5.0",
     "@types/node": "^22.14.0",
     "@typescript-eslint/eslint-plugin": "^8.29.1",

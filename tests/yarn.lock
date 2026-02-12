@@ -176,9 +176,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/cypress@npm:^6.5.0":
-  version: 6.5.0
-  resolution: "@jahia/cypress@npm:6.5.0"
+"@jahia/cypress@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@jahia/cypress@npm:7.0.0"
   dependencies:
     "@apollo/client": "npm:^3.4.9"
     cypress-real-events: "npm:^1.11.0"
@@ -189,7 +189,7 @@ __metadata:
     ci.startup: ./ci.startup.sh
     env.debug: ./env.debug.sh
     env.run: ./env.run.sh
-  checksum: 10c0/99ac2f122d99b2cf9ff38f2bd876b562e7f074e6cbb18220104fd6e2afdedca8542c5c3c744fba2ae68a14ce9bc6337fedee395bdd19c14886ce97bc75f1f434
+  checksum: 10c0/9569ebc04139b9d6e160a763367db1e096951c0442e531837a2582b82c7f7a45d21bbf940241b94eec81f8e2b6cf1a23cce57ab0133cfc9ca7604d0efbb5870f
   languageName: node
   linkType: hard
 
@@ -235,7 +235,7 @@ __metadata:
   resolution: "@jahia/jcontent-cypress@workspace:."
   dependencies:
     "@4tw/cypress-drag-drop": "npm:^2.3.0"
-    "@jahia/cypress": "npm:^6.5.0"
+    "@jahia/cypress": "npm:^7.0.0"
     "@jahia/jahia-reporter": "npm:^1.5.0"
     "@types/node": "npm:^22.14.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.29.1"

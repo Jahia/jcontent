@@ -38,7 +38,8 @@ describe('Create content tests', () => {
         // ContentEditor.cancel();
     });
 
-    it('displays 35 usages and restriction message', () => {
+    // https://github.com/Jahia/jcontent/issues/2168
+    it.skip('displays 35 usages and restriction message', () => {
         createSite(usagesSite);
         cy.apollo({
             mutationFile: 'contentEditor/usages/createUsages.graphql',

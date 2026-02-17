@@ -36,7 +36,7 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
                 name={id}
                 size="big"
                 customInput={Input}
-                value={value || ''}
+                value={controlledValue || ''}
                 decimalSeparator={decimalSeparator}
                 decimalScale={fieldType === 'LONG' ? 0 : undefined}
                 disabled={field.readOnly}

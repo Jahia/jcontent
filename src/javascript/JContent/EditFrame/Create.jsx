@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import clsx from 'clsx';
-import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
 import {shallowEqual, useSelector} from 'react-redux';
@@ -13,6 +12,7 @@ import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 import {useApolloClient} from '@apollo/client';
 import {SavePropertiesMutation} from '~/ContentEditor/ContentEditor/updateNode/updateNode.gql-mutation';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import {useNodeDropPB} from '~/JContent/dnd/useNodeDropPB';
 
 const ButtonRenderer = getButtonRenderer({
     showTooltip: false,
@@ -102,12 +102,12 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, actionData}) => {
+export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
-    const {nodeName, nodePath, nodeTypes} = useElemAttributes({element, parent, isInsertionPoint});
+    const {nodeName, nodePath} = useElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: true,
         paste: true,
@@ -136,7 +136,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         }
     }, [node, parent, element, isEmpty, actionVisibility]);
 
-    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved, nodeDropData});
+    const [{isCanDrop}, drop] = useNodeDropPB({dropTarget: parent && node, onSaved, nodeDropData});
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
     }));
@@ -194,19 +194,17 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
 
     const createAction = useMemo(() => (
         <DisplayAction
-            isIncludeSubTypes
             actionKey="createContentPB"
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}
-            nodeTypes={nodeTypes}
-            actionData={actionData}
+            nodeData={nodeData}
             loading={() => false}
             render={btnRenderer}
             onVisibilityChanged={onCreateVisibilityChanged}
             onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
         />
-    ), [parentPath, nodePath, isDisabled, nodeTypes, actionData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
+    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
 
     return !anyDragging && (
         <div ref={drop}
@@ -226,20 +224,20 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              onClick={onClick}
         >
             {copyPasteNodes.length === 0 && createAction}
-            {/* <DisplayAction actionKey="paste" */}
-            {/*                isDisabled={isDisabled} */}
-            {/*                path={parentPath} */}
-            {/*                loading={() => false} */}
-            {/*                render={btnRenderer} */}
-            {/*                onVisibilityChanged={onPasteVisibilityChanged} */}
-            {/*                onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/> */}
-            {/* <DisplayAction actionKey="pasteReference" */}
-            {/*                isDisabled={isDisabled} */}
-            {/*                path={parentPath} */}
-            {/*                loading={() => false} */}
-            {/*                render={btnRenderer} */}
-            {/*                onVisibilityChanged={onPasteReferenceVisibilityChanged} */}
-            {/*                onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/> */}
+            <DisplayAction actionKey="paste"
+                           isDisabled={isDisabled}
+                           path={parentPath}
+                           loading={() => false}
+                           render={btnRenderer}
+                           onVisibilityChanged={onPasteVisibilityChanged}
+                           onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
+            <DisplayAction actionKey="pasteReference"
+                           isDisabled={isDisabled}
+                           path={parentPath}
+                           loading={() => false}
+                           render={btnRenderer}
+                           onVisibilityChanged={onPasteReferenceVisibilityChanged}
+                           onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
         </div>
     );
 });
@@ -256,5 +254,6 @@ Create.propTypes = {
     onClick: PropTypes.func,
     isInsertionPoint: PropTypes.bool,
     isVertical: PropTypes.bool,
-    nodeDropData: PropTypes.object
+    nodeDropData: PropTypes.object,
+    nodeData: PropTypes.object
 };

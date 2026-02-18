@@ -3,13 +3,12 @@ import {useDrop} from 'react-dnd';
 import gql from 'graphql-tag';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
-import {PredefinedFragments, useNodeChecks} from '@jahia/data-helper';
+import {PredefinedFragments} from '@jahia/data-helper';
 import {useRef, useState} from 'react';
 import {ellipsizeText, getName, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useNodeTypeCheck} from '~/JContent';
 import {useConnector} from './useConnector';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
-import {useSelector} from 'react-redux';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -44,7 +43,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries}) {
+export function useNodeDropPB({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData}) {
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -57,19 +56,11 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
     const refreshTree = useRefreshTreeAfterMove();
-    const language = useSelector(state => state.language);
-    const res = useNodeChecks(
-        {path: destParent?.path, language: language},
-        {
-            requiredPermission: 'jcr:addChildNodes',
-            getChildNodeTypes: true,
-            getContributeTypesRestrictions: true,
-            getLockInfo: true,
-            getSubNodesCount: ['nt:base'],
-            getProperties: ['limit'],
-            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay']
-        }
-    );
+    const destNode = nodeDropData?.nodes ? nodeDropData.nodes[destParent?.path] : null;
+    const res = {
+        checksResult: destNode?.checksResult,
+        node: destNode
+    };
 
     const nodeTypeCheck = useNodeTypeCheck();
 

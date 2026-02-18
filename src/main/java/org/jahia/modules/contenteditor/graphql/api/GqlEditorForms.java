@@ -31,6 +31,8 @@ import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.EditorFormService;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfo;
+import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfoResult;
+import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfosParams;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeTreeEntry;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorForm;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorFormValueConstraint;
@@ -160,6 +162,26 @@ public class GqlEditorForms {
             ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
             nts.add(new GqlNodeTypeInfo(nt, LanguageCodeConverters.getLocaleFromCode(uiLocale)));
 
+        }
+
+        return nts;
+    }
+
+    @GraphQLField
+    @GraphQLName("nodeTypeInfos")
+    @GraphQLDescription("Retrieve info for given node types")
+    public List<GqlNodeTypeInfoResult> nodeTypeInfos(@GraphQLNonNull @GraphQLName("types") List<GqlNodeTypeInfosParams> types, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
+        List<GqlNodeTypeInfoResult> nts = new ArrayList<>();
+
+        for (GqlNodeTypeInfosParams params : types) {
+            List<GqlNodeTypeInfo> n = new ArrayList<>();
+            if (params.getNodeTypes() != null) {
+                for (String nodeType : params.getNodeTypes()) {
+                    ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
+                    n.add(new GqlNodeTypeInfo(nt, LanguageCodeConverters.getLocaleFromCode(uiLocale)));
+                }
+            }
+            nts.add(new GqlNodeTypeInfoResult(params.getPath(), n));
         }
 
         return nts;

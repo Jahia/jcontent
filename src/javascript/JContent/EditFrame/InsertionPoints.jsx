@@ -1,19 +1,27 @@
 import React from 'react';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
-import {BatchedRenderer} from '~/JContent/EditFrame/BatchedRenderer';
+import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
 
-const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved, nodeDropData}) => {
-    if (!clickedElement) {
-        return null;
+const getNodeTypes = e => {
+    if (e.dataset.jahiaParent) {
+        const nt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
+        if (nt) {
+            return nt.split(' ');
+        }
     }
 
+    return [];
+};
+
+const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
     const clickedPath = clickedElement.element.getAttribute('path');
 
     const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)]
         .map(e => ({
             element: e,
-            parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
+            node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
+            attributes: {nodeTypes: getNodeTypes(e)}
         }));
 
     // Get all children of the clicked element that are create content buttons [type="existingNode"] and add insertion points for each
@@ -22,43 +30,47 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         .filter(e => e.getAttribute('path').startsWith(clickedPath))
         .map(e => ({
             element: e,
-            parentNode: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')]
+            node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
+            attributes: {nodeTypes: getNodeTypes(e)}
         }));
 
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;
 
+    const originalData = useButtonsData({createButtons: originalInsertionButtons, language: 'en', uilang: 'en'});
+    const childData = useButtonsData({createButtons: childrenElem, language: 'en', uilang: 'en'});
+
     return (
-        <>
-        <BatchedRenderer elements={childrenElem.map(({element, parentNode}) => (
-            <Create key={`insertion-point-${element.getAttribute('id')}`}
-                    isInsertionPoint
-                    isVertical={isVertical}
-                    nodeDropData={nodeDropData}
-                    node={parentNode}
-                    nodes={nodes}
-                    element={element}
-                    addIntervalCallback={addIntervalCallback}
-                    onMouseOver={() => {}}
-                    onMouseOut={() => {}}
-                    onSaved={onSaved}
-            />
-        ))}/>
-        <BatchedRenderer elements={originalInsertionButtons.map(({element, parentNode}) => (
-            // Insertion point for original placeholder, this is necessary since default placeholders are muted once something is clicked
-            <Create key={`insertion-point-${element.getAttribute('id')}`}
-                    isInsertionPoint
-                    node={parentNode}
-                    nodes={nodes}
-                    element={element}
-                    nodeDropData={nodeDropData}
-                    addIntervalCallback={addIntervalCallback}
-                    onMouseOver={() => {}}
-                    onMouseOut={() => {}}
-                    onSaved={onSaved}
-            />
-        ))}/>
-        </>
+        [
+            ...childrenElem.map(({element, node}) => (
+                <Create key={`insertion-point-${element.getAttribute('id')}`}
+                        isInsertionPoint
+                        isVertical={isVertical}
+                        node={node}
+                        nodes={nodes}
+                        nodeData={childData?.nodes?.[node.path]}
+                        element={element}
+                        addIntervalCallback={addIntervalCallback}
+                        onMouseOver={() => {}}
+                        onMouseOut={() => {}}
+                        onSaved={onSaved}
+                />
+            )),
+            ...originalInsertionButtons.map(({element, node}) => (
+                // Insertion point for original placeholder, this is necessary since default placeholders are muted once something is clicked
+                <Create key={`insertion-point-${element.getAttribute('id')}`}
+                        isInsertionPoint
+                        node={node}
+                        nodes={nodes}
+                        nodeData={originalData?.nodes?.[node.path]}
+                        element={element}
+                        addIntervalCallback={addIntervalCallback}
+                        onMouseOver={() => {}}
+                        onMouseOut={() => {}}
+                        onSaved={onSaved}
+                />
+            ))
+        ]
     );
 };
 

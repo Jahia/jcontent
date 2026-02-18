@@ -1,7 +1,7 @@
 import {
     getNodeByPath,
     getTreeOfContentWithRequirements,
-    getTreeOfContentWithRequirementsFromUuid, getTreeOfContentWithRequirementsMultiple
+    getTreeOfContentWithRequirementsFromUuid
 } from './createContent.gql-queries';
 import {useQuery} from '@apollo/client';
 import {Tag, toIconComponent} from '@jahia/moonstone';
@@ -79,11 +79,7 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
             return <Tag/>;
         }
 
-        if (nodeType.iconURL) {
-            return !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
-        }
-
-        return toIconComponent(`${nodeType.icon}.png`);
+        return nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
     }
 
     if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
@@ -97,11 +93,46 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
                 nodeTypes: [nodeType.name],
                 nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
-                buttonLabelParams: {typeName: nodeType.label || nodeType.displayName},
+                buttonLabelParams: {typeName: nodeType.label},
                 tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipForType',
+                tooltipParams: {typeName: nodeType.label, parent: parentName}
+            }));
+    }
+
+    return undefined;
+}
+
+export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit, parentName) {
+    const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
+
+    function getNodeTypeIcon(nodeType) {
+        if (nodeType.name === 'jnt:category') {
+            return <Tag/>;
+        }
+
+        if (nodeType.iconURL) {
+            return !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
+        }
+
+        return toIconComponent(`${nodeType.icon}.png`);
+    }
+
+    if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
+        return nodeTypes
+            .filter(f => f.name !== 'jnt:resource')
+            .map(nodeType => ({
+                key: nodeType.name,
+                actionKey: nodeType.name,
+                nodeTypes: [nodeType.name],
+                nodeTypeIcon: getNodeTypeIcon(nodeType),
+                buttonLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.menu' : 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
+                buttonLabelParams: {typeName: nodeType.label || nodeType.displayName},
+                tooltipLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric' : 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipForType',
                 tooltipParams: {typeName: nodeType.label || nodeType.displayName, parent: parentName}
             }));
     }
+
+    return undefined;
 }
 
 export function childrenLimitReachedOrExceeded(node, templateLimit) {

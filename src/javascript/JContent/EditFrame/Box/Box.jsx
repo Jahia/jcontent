@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './Box.scss';
 import {useBoxStatus} from './useBoxStatus';
-import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+import {useNodeDragPB} from '~/JContent/dnd/useNodeDragPB';
 import editStyles from '../EditFrame.scss';
-import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useNodeDropPB} from '~/JContent/dnd/useNodeDropPB';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';
-import {findAvailableBoxConfig, hasMixin, isDescendant} from '../../JContent.utils';
+import {findAvailableBoxConfig, hasMixin} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
@@ -101,7 +101,7 @@ export const Box = React.memo(({
     const [isHovered, setIsHovered] = useState(false);
     const ref = useRef(element);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
-    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node, nodeDragData});
+    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDragPB({dragSource: node, nodeDragData});
     const {t} = useTranslation('jcontent');
     const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
 
@@ -139,7 +139,7 @@ export const Box = React.memo(({
 
     const rootDiv = useRef();
 
-    const [{isCanDrop, insertPosition, destParent, isOver}, drop] = useNodeDrop({
+    const [{isCanDrop, insertPosition, destParent, isOver}, drop] = useNodeDropPB({
         dropTarget: node,
         orderable: Boolean(parent),
         entries,
@@ -288,7 +288,6 @@ export const Box = React.memo(({
         !isMarkedForDeletionRoot &&
         !element.hasChildNodes();
 
-    //console.log('Render box');
     return (
         <div ref={rootDiv}
              className={clsx(styles.root, isBarAlwaysDisplayed ? styles.alwaysDisplayedZIndex : styles.defaultZIndex)}

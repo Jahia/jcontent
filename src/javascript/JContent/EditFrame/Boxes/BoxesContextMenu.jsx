@@ -18,7 +18,7 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, currentHoveredRef, 
 
     useEffect(() => {
         setCurrentPath(currentHoveredRef.current);
-    }, [currentHoveredRef.current]);
+    }, [currentHoveredRef]);
 
     useEffect(() => {
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
@@ -85,7 +85,8 @@ BoxesContextMenu.propTypes = {
     currentDocument: PropTypes.any,
     currentFrameRef: PropTypes.any,
     currentPath: PropTypes.string,
-    selection: PropTypes.arrayOf(PropTypes.string)
+    selection: PropTypes.arrayOf(PropTypes.string),
+    currentHoveredRef: PropTypes.object
 };
 
 export default BoxesContextMenu;

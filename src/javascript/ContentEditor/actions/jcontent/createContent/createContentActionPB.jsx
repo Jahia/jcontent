@@ -1,79 +1,30 @@
 import React, {useEffect, useMemo} from 'react';
 import {
     childrenLimitReachedOrExceeded,
-    flattenNodeTypes,
-    transformNodeTypesToActions,
-    useCreatableNodetypesTree
+    transformNodeTypesToActionsPB
 } from './createContent.utils';
 import {shallowEqual, useSelector} from 'react-redux';
-import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {JahiaAreasUtil} from '~/JContent/JContent.utils';
 
 export const CreateContentPB = ({
-    contextNodePath,
     path,
-    showOnNodeTypes,
-    nodeTypes,
     name,
-    isIncludeSubTypes,
     isFullscreen,
-    hasBypassChildrenLimit,
     onCreate,
     onClosed,
     isDisabled,
     onVisibilityChanged,
-    actionData,
+    nodeData,
     render: Render,
     loading: Loading,
     labelProps,
     ...otherProps}) => {
     const api = useContentEditorApiContext();
-    const {t} = useTranslation('jcontent');
     const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}), shallowEqual);
+    const resNode = nodeData;
 
-    // const res = useNodeChecks(
-    //     {path: contextNodePath || path, language: language},
-    //     {...otherProps, getLockInfo: true}
-    // );
-
-    const resNode = actionData?.nodes[path];
-
-    // showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
-    //     hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
-    //     requiredPermission: ['jcr:addChildNodes'],
-    //     hasBypassChildrenLimit: false
-
-    // const nodeInfo = useNodeInfo(
-    //     {path: path, language},
-    //     {
-    //         getPrimaryNodeType: true,
-    //         getSubNodesCount: ['nt:base'],
-    //         getIsNodeTypes: ['jmix:listSizeLimit'],
-    //         getProperties: ['limit']
-    //     }
-    // );
-
-    // if (resNode) {
-    //     console.log('NNN', nodeTypes, resNode)
-    // }
-    const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
-    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
-    // const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
-    //     nodeTypes: areaNodeTypes,
-    //     childNodeName: name,
-    //     includeSubTypes: isIncludeSubTypes || false,
-    //     path: contextNodePath || path,
-    //     uilang,
-    //     excludedNodeTypes,
-    //     showOnNodeTypes
-    // });
-
-    const nodeTypesTree = ['jmix:droppableContent'];// actionData?.contentTrees[path]?.entries;
-
-    // console.log(nodeTypesTree);
     const {loading, isVisible, actions, missingNodes} = useMemo(() => {
         const defaultProps = {
             loading: Loading && !resNode,
@@ -90,7 +41,9 @@ export const CreateContentPB = ({
             return {...defaultProps, loading: false};
         }
 
-        const actions = transformNodeTypesToActions(resNode.allowedChildNodeTypes, hasBypassChildrenLimit, resNode?.name);
+        // Note: acceptedNodeTypes is based on the DOM if we were able to find it, allowedChildNodeTypes is the info from JCR
+        const nodeTypes = resNode.acceptedNodeTypes.length > 0 ? resNode.acceptedNodeTypes : resNode.allowedChildNodeTypes;
+        const actions = transformNodeTypesToActionsPB(nodeTypes, false, resNode?.name);
 
         return {
             loading: false,
@@ -98,7 +51,7 @@ export const CreateContentPB = ({
             actions,
             missingNodes: false
         };
-    }, [path, Loading, hasBypassChildrenLimit, resNode]);
+    }, [path, Loading, resNode]);
 
     useEffect(() => {
         onVisibilityChanged?.(isVisible);
@@ -108,33 +61,14 @@ export const CreateContentPB = ({
         return <Loading {...otherProps}/>;
     }
 
-    // if (error) {
-    //     const message = t(
-    //         'jcontent:label.contentEditor.error.queryingContent',
-    //         {details: error.message ? error.message : ''}
-    //     );
-    //     if (!error.message.includes('javax.jcr.PathNotFoundException')) {
-    //         console.error(message);
-    //     }
-    //
-    //     return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
-    // }
-
     if (missingNodes) {
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
 
-    const onClick = ({nodeTypes, ...rest}) => {
-        console.log(nodeTypes, rest);
-        //uuid, path, site, lang, _, nodeTypes, excludedNodeTypes, includeSubTypes, name, isFullscreen, createCallback, onClosedCallback
+    const onClick = ({nodeTypes}) => {
         api.create({uuid: resNode.uuid, lang: language, nodeTypes, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
     };
 
-    const additionalProps = labelProps ? {
-        ...labelProps
-    } : {};
-
-    console.log('Actions:', actions);
     return (actions || [{
         key: 'allTypes',
         nodeTypeIcon: otherProps.defaultIcon,
@@ -146,44 +80,36 @@ export const CreateContentPB = ({
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}
             tooltipLabel={result.tooltipLabel}
             tooltipParams={result.tooltipParams}
+            nodeTypes={['jmix:droppableContent']}
             {...otherProps}
-            //flattenedNodeTypes={flattenedNodeTypes}
-            //nodeTypesTree={nodeTypesTree}
             path={path}
             uilang={uilang}
             isVisible={resNode.checksResult}
             isAllTypes={result.key === 'allTypes'}
             {...result}
-            {...additionalProps}
             onClick={onClick}
         />
     ));
 };
 
 CreateContentPB.defaultProps = {
-    contextNodePath: undefined,
     loading: undefined
 };
 
 CreateContentPB.propTypes = {
-    contextNodePath: PropTypes.string,
     path: PropTypes.string.isRequired,
-    showOnNodeTypes: PropTypes.array,
-    nodeTypes: PropTypes.array,
     name: PropTypes.string,
-    isIncludeSubTypes: PropTypes.bool,
     isFullscreen: PropTypes.bool,
-    hasBypassChildrenLimit: PropTypes.bool,
-    templateLimit: PropTypes.number,
     onCreate: PropTypes.func,
     onClosed: PropTypes.func,
     isDisabled: PropTypes.bool,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func,
     onVisibilityChanged: PropTypes.func,
-    labelProps: PropTypes.object
+    labelProps: PropTypes.object,
+    nodeData: PropTypes.object
 };
 
-export const createContentAction = {
+export const createContentActionPB = {
     component: CreateContentPB
 };

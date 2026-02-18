@@ -20,10 +20,8 @@ import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 import styles from './Boxes.scss';
 import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
-import {useNodeChecks} from '@jahia/data-helper';
-import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
-import {BatchedRenderer} from '~/JContent/EditFrame/BatchedRenderer';
-import {useCreatableNodetypesTreeMultiple} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
+import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
+import {useDndData} from '~/JContent/EditFrame/Boxes/dataHooks/useDndData';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -75,47 +73,6 @@ const isFromReference = (path, nodes) => {
     return false;
 };
 
-const useCreateData = ({createButtons, language, uilang}) => {
-    const paths = [];
-    const inputs = [];
-
-    createButtons.forEach(b => {
-        paths.push(b.node.path);
-        inputs.push({
-            childNodeName: b.attributes.nodePath,
-            excludedNodeTypes: ['jmix:studioOnly', 'jmix:hiddenType'],
-            includeSubTypes: true,
-            nodeTypes: b.attributes.nodeTypes,
-            path: b.node.path,
-            uiLocale: uilang,
-            useContribute: false
-        });
-    });
-
-    // TODO get these params from the action in registry???
-    const res = useNodeChecks({
-        paths,
-        language
-    }, {
-        mapResults: true, // This creates a map of {path, result}
-        // From node checks
-        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
-        hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
-        requiredPermission: ['jcr:addChildNodes'],
-        hasBypassChildrenLimit: false,
-        getChildNodeTypes: true,
-        getLockInfo: true,
-        // From node info
-        getPrimaryNodeType: true,
-        getSubNodesCount: ['nt:base'],
-        getIsNodeTypes: ['jmix:listSizeLimit'],
-        getProperties: ['limit']
-    });
-
-    console.log('useCreateButtons', createButtons.length, res);
-    return {nodes: res?.nodes, contentTrees: undefined};
-};
-
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
@@ -134,7 +91,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
     const [createButtons, setCreateButtons] = useState([]);
-    const buttonData = useCreateData({createButtons, language, uilang});
+    const actionData = useButtonsData({createButtons, language, uilang});
 
     // When document is updated after save, clicked element in memory no longer matches what's in the DOM
     useEffect(() => {
@@ -341,34 +298,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
-    const nodeDragData = useNodeChecks(
-        {paths: paths, language: language, displayLanguage: uilang},
-        {
-            mapResults: true,
-            getPrimaryNodeType: true,
-            requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockUiMove'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
-            getLockInfo: true
-        }
-    );
-
-    const nodeDropData = useNodeChecks(
-        {paths: paths, language: language},
-        {
-            mapResults: true,
-            requiredPermission: 'jcr:addChildNodes',
-            getChildNodeTypes: true,
-            getContributeTypesRestrictions: true,
-            getLockInfo: true,
-            getSubNodesCount: ['nt:base'],
-            getProperties: ['limit'],
-            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay']
-        }
-    );
-
-    console.log('Drag data', nodeDragData);
-    console.log('Drop data', nodeDropData);
+    const {nodeDragData, nodeDropData} = useDndData({paths, language, uilang});
 
     useEffect(() => {
         setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
@@ -433,7 +363,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         });
     }, [nodes, site, language, uilang, currentDocument]);
 
-    //const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({
         name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
         path: m.dataset.jahiaPath,
@@ -484,8 +413,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     };
 
-    //const el = currentElement?.element;
-
     const memoizedPlaceholders = useMemo(() => {
         return createButtons
             .map(({node, element}) => (
@@ -495,7 +422,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                             nodes={nodes}
                             element={element}
                             nodeDropData={nodeDropData}
-                            actionData={buttonData}
+                            nodeData={actionData?.nodes?.[node.path]}
                             addIntervalCallback={addIntervalCallback}
                             clickedElement={clickedElement}
                             onMouseOver={onMouseOver}
@@ -505,21 +432,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     />
                 </div>
             ));
-    }, [
-        path,
-        clickedElement,
-        placeholders,
-        nodes,
-        addIntervalCallback,
-        onMouseOver,
-        onMouseOut,
-        onClick,
-        onSaved,
-        nodeDropData
-    ]);
+    }, [createButtons, clickedElement, nodes, nodeDropData, actionData?.nodes, addIntervalCallback, onMouseOver, onMouseOut, onClick, onSaved]);
 
     const MemoizedInsertionPoints = useMemo(() => (
-        <InsertionPoints
+        clickedElement && <InsertionPoints
             currentDocument={currentDocument}
             nodeDropData={nodeDropData}
             addIntervalCallback={addIntervalCallback}
@@ -536,13 +452,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         nodeDropData
     ]);
 
-    console.log('Boxes...')
     return (
         <div>
             <BoxesContextMenu
                 currentFrameRef={currentFrameRef}
                 currentDocument={currentDocument}
-                currentHoveredRef={currentHoveredRef} //Todo this does not work well
+                currentHoveredRef={currentHoveredRef}
                 selection={selection}
             />
 
@@ -558,14 +473,14 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          isSomethingSelected={selection.length > 0}
                          isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
-                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
+                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && node.path === currentHoveredRef.current)}
                          isActionsHidden={selection.length > 0}
                          currentFrameRef={currentFrameRef}
                          element={element}
                          breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
                              selection.includes(node.path) ||
                              (selection.length > 0 &&
-                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
+                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && node.path === currentHoveredRef.current)) ?
                              getBreadcrumbsForPath(node) : []}
                          entries={entries}
                          language={language}
@@ -587,7 +502,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                 ))}
 
             {memoizedPlaceholders}
-            {/* {MemoizedInsertionPoints} */}
+            {MemoizedInsertionPoints}
         </div>
     );
 };

@@ -9,7 +9,7 @@ export const useHoverManager = () => {
         return () => hoveredBoxRefs.current.delete(path);
     }, []);
 
-    const setHovered = useCallback((path) => {
+    const setHovered = useCallback(path => {
         if (currentHoveredRef.current === path) {
             return; // Already hovered, no-op
         }

@@ -38,6 +38,11 @@ export const CreateContent = ({
         {...otherProps, getLockInfo: true}
     );
 
+    // ShowOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
+    //     hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
+    //     requiredPermission: ['jcr:addChildNodes'],
+    //     hasBypassChildrenLimit: false
+
     const nodeInfo = useNodeInfo(
         {path: path, language},
         {

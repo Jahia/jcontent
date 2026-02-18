@@ -81,4 +81,26 @@ describe('Menu actions preview tests', () => {
             cy.get('[data-cm-role=preview-name]').should('not.exist');
         });
     });
+
+    describe('Test preview in pages tab', {testIsolation: false}, () => {
+        it('Can close preview when using pagination', () => {
+            const jcontent = JContent.visit('digitall', 'en', 'pages/home');
+            jcontent.switchToListMode();
+
+            // Open pagination ans select 10 items per page
+            cy.get('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
+            cy.get('menu.moonstone-menu[role="list"]').should('be.visible');
+            cy.contains('[role="option"]', '10').click();
+
+            // Open preview
+            jcontent.getTable().getRowByName('how-to-use-this-demo').contextMenu().select('Preview');
+            cy.get('[data-cm-role=preview-name]').contains('How to Use This Demo');
+
+            // Switch to next page then check preview
+            cy.get('[data-sel-role="table-pagination-button-next-page"]').click();
+            cy.get('[data-cm-role="preview-drawer"]')
+                .contains('Select a content item to preview it')
+                .should('be.visible');
+        });
+    });
 });

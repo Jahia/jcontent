@@ -22,6 +22,7 @@ import styles from './Boxes.scss';
 import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
 import {useDndData} from '~/JContent/EditFrame/Boxes/dataHooks/useDndData';
+import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -92,6 +93,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const [modules, setModules] = useState([]);
     const [createButtons, setCreateButtons] = useState([]);
     const actionData = useButtonsData({createButtons, language, uilang});
+    const pasteData = usePasteData({createButtons, language});
 
     // When document is updated after save, clicked element in memory no longer matches what's in the DOM
     useEffect(() => {
@@ -422,6 +424,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                             nodes={nodes}
                             element={element}
                             nodeDropData={nodeDropData}
+                            pasteData={pasteData}
                             nodeData={actionData?.nodes?.[node.path]}
                             addIntervalCallback={addIntervalCallback}
                             clickedElement={clickedElement}
@@ -432,7 +435,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     />
                 </div>
             ));
-    }, [createButtons, clickedElement, nodes, nodeDropData, actionData?.nodes, addIntervalCallback, onMouseOver, onMouseOut, onClick, onSaved]);
+    }, [createButtons, clickedElement, nodes, nodeDropData, actionData?.nodes, addIntervalCallback, onMouseOver, onMouseOut, onClick, onSaved, pasteData]);
 
     const MemoizedInsertionPoints = useMemo(() => (
         clickedElement && <InsertionPoints

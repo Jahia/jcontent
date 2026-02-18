@@ -102,7 +102,7 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData}) => {
+export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
@@ -224,16 +224,19 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              onClick={onClick}
         >
             {copyPasteNodes.length === 0 && createAction}
-            <DisplayAction actionKey="paste"
+            <DisplayAction actionKey="pastePB"
                            isDisabled={isDisabled}
                            path={parentPath}
                            loading={() => false}
+                           actionData={pasteData?.resPaste?.nodes?.[parentPath]}
                            render={btnRenderer}
                            onVisibilityChanged={onPasteVisibilityChanged}
                            onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
-            <DisplayAction actionKey="pasteReference"
+            <DisplayAction actionKey="pasteReferencePB"
                            isDisabled={isDisabled}
                            path={parentPath}
+                           actionData={pasteData?.resPasteRef?.nodes?.[parentPath]}
+                           referenceTypes={['jnt:contentReference']}
                            loading={() => false}
                            render={btnRenderer}
                            onVisibilityChanged={onPasteReferenceVisibilityChanged}
@@ -255,5 +258,6 @@ Create.propTypes = {
     isInsertionPoint: PropTypes.bool,
     isVertical: PropTypes.bool,
     nodeDropData: PropTypes.object,
-    nodeData: PropTypes.object
+    nodeData: PropTypes.object,
+    pasteData: PropTypes.object
 };

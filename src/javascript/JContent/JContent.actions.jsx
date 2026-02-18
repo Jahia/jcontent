@@ -82,6 +82,7 @@ import {OpenInPageBuilderActionComponent} from '~/JContent/actions/openInPageBui
 import {CopyMenuComponent} from '~/JContent/actions/copyPaste/CopyMenuComponent';
 import {OpenInRepositoryExplorerActionComponent} from '~/JContent/actions/openInRepositoryExplorerAction';
 import {CustomizedPreviewActionComponent} from '~/JContent/actions/customizedPreviewAction/customizedPreviewAction';
+import {PasteActionComponentPB} from '~/JContent/actions/copyPaste/pasteActionPB';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -306,6 +307,18 @@ export const jContentActions = registry => {
         referenceTypes: ['jnt:contentReference'],
         component: PasteActionComponent
     });
+
+    registry.add('action', 'pastePB', {
+        buttonIcon: <Paste/>,
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.paste',
+        component: PasteActionComponentPB
+    });
+    registry.add('action', 'pasteReferencePB', {
+        buttonIcon: <PasteAsReference/>,
+        buttonLabel: 'jcontent:label.contentManager.copyPaste.pasteReference',
+        component: PasteActionComponentPB
+    });
+
     registry.add('action', 'delete', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',

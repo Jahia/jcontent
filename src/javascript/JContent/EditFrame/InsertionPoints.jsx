@@ -2,6 +2,8 @@ import React from 'react';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
+import {useSelector} from 'react-redux';
+import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 
 const getNodeTypes = e => {
     if (e.dataset.jahiaParent) {
@@ -15,6 +17,7 @@ const getNodeTypes = e => {
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
+    const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}));
     const clickedPath = clickedElement.element.getAttribute('path');
 
     const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)]
@@ -37,8 +40,9 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;
 
-    const originalData = useButtonsData({createButtons: originalInsertionButtons, language: 'en', uilang: 'en'});
-    const childData = useButtonsData({createButtons: childrenElem, language: 'en', uilang: 'en'});
+    const originalData = useButtonsData({createButtons: originalInsertionButtons, language, uilang});
+    const childData = useButtonsData({createButtons: childrenElem, language, uilang});
+    const pasteData = usePasteData({createButtons: [...originalInsertionButtons, ...childrenElem], language})
 
     return (
         [
@@ -49,6 +53,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                         node={node}
                         nodes={nodes}
                         nodeData={childData?.nodes?.[node.path]}
+                        pasteData={pasteData}
                         element={element}
                         addIntervalCallback={addIntervalCallback}
                         onMouseOver={() => {}}
@@ -63,6 +68,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                         node={node}
                         nodes={nodes}
                         nodeData={originalData?.nodes?.[node.path]}
+                        pasteData={pasteData}
                         element={element}
                         addIntervalCallback={addIntervalCallback}
                         onMouseOver={() => {}}

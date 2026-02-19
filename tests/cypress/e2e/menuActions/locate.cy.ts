@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {addNode, createSite, deleteSite} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, uploadFile} from '@jahia/cypress';
 
 describe('Locate action', () => {
     let jcontent: JContent;
@@ -8,10 +8,12 @@ describe('Locate action', () => {
     before('Add all needed data', () => {
         cy.login();
         createSite(siteKey);
-        jcontent = JContent.visit(siteKey, 'en', 'media/files');
-        jcontent.getMedia()
-            .open()
-            .uploadFileViaDragAndDrop('myfile.pdf', 'assets/uploadMedia');
+        uploadFile(
+            '/assets/uploadMedia/myfile.pdf',
+            `/sites/${siteKey}/files`,
+            'myfile.pdf',
+            'application/pdf'
+        );
         addNode({
             parentPathOrId: `/sites/${siteKey}/home`,
             name: 'page-ex',
@@ -44,10 +46,9 @@ describe('Locate action', () => {
             .verifyResults(['myfile.pdf (Document1)']);
 
         // Open contextual menu and select locate
-        const menu = jcontent.getTable().getRowByName('myfile.pdf')
-            .contextMenu();
-        menu.shouldHaveItem('Locate');
-        menu.select('Locate');
+        jcontent.getTable().getRowByName('myfile.pdf')
+            .contextMenu()
+            .selectByRole('locate');
 
         // Verfiy we are redirected to media > thumbnails view
         jcontent.shouldBeInMode('Thumbnails');
@@ -60,9 +61,8 @@ describe('Locate action', () => {
 
         // Open contextual menu and select locate
         jcontent.getTable().getRowByName('rich-text-ex')
-            .contextMenu();
-        menu.shouldHaveItem('Locate');
-        menu.select('Locate');
+            .contextMenu()
+            .selectByRole('locate');
 
         // Verfiy we are redirected to pages > page-ex
         cy.get('h1').contains('page-ex');

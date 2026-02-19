@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from '../Box';
 import {Create, useElemAttributes} from '../Create';
@@ -23,6 +23,7 @@ import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
 import {useDndData} from '~/JContent/EditFrame/Boxes/dataHooks/useDndData';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
+import {HoverProvider} from '~/JContent/EditFrame/Boxes/HoverContext';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -89,6 +90,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     // It helps determine box visibility and header visibility.
     // const [currentElement, setCurrentElement] = useState();
     const {registerHoverManager, setHovered, clearHovered, currentHoveredRef} = useHoverManager();
+    const hoverProviderRef = useRef(null);
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
     const [createButtons, setCreateButtons] = useState([]);
@@ -110,6 +112,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             const moduleElement = getModuleElement(currentDocument, target);
             const path = moduleElement.getAttribute('path');
             setHovered(path); // Only updates the specific box
+            hoverProviderRef.current?.setHoveredPath(path);
         }, 0);
     }, [currentDocument, setHovered]);
 
@@ -457,12 +460,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     return (
         <div>
-            <BoxesContextMenu
-                currentFrameRef={currentFrameRef}
-                currentDocument={currentDocument}
-                currentHoveredRef={currentHoveredRef}
-                selection={selection}
-            />
+            <HoverProvider ref={hoverProviderRef}>
+                <BoxesContextMenu
+                    currentFrameRef={currentFrameRef}
+                    currentDocument={currentDocument}
+                    selection={selection}
+                />
+            </HoverProvider>
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && isDescendant(node.path, path) && !isFromReference(node.path, nodes))

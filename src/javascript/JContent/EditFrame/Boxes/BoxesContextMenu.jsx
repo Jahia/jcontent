@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
+import {useHoverContext} from '~/JContent/EditFrame/Boxes/HoverContext';
 
 /**
  * @deprecated since version 3.4.0 https://github.com/Jahia/jcontent/pull/1879
@@ -12,13 +13,9 @@ import PropTypes from 'prop-types';
  * @param {string} props.currentHoveredRef Current content path
  * @param {string[]} props.selection Array of selected paths
  */
-const BoxesContextMenu = ({currentFrameRef, currentDocument, currentHoveredRef, selection}) => {
+const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
     const contextualMenu = useRef();
-    const [currentPath, setCurrentPath] = useState(currentHoveredRef.current);
-
-    useEffect(() => {
-        setCurrentPath(currentHoveredRef.current);
-    }, [currentHoveredRef]);
+    const {hoveredPath: currentPath} = useHoverContext();
 
     useEffect(() => {
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
@@ -85,8 +82,7 @@ BoxesContextMenu.propTypes = {
     currentDocument: PropTypes.any,
     currentFrameRef: PropTypes.any,
     currentPath: PropTypes.string,
-    selection: PropTypes.arrayOf(PropTypes.string),
-    currentHoveredRef: PropTypes.object
+    selection: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default BoxesContextMenu;

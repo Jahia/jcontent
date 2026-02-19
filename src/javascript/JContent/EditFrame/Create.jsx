@@ -109,9 +109,9 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
     const {nodeName, nodePath} = useElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
-        createContent: true,
-        paste: true,
-        pasteAsReference: true
+        createContent: false,
+        paste: false,
+        pasteAsReference: false
     });
     const [onCreateVisibilityChanged, onPasteVisibilityChanged, onPasteReferenceVisibilityChanged] =
         useMemo(() => ['createContent', 'paste', 'pasteReference'].map(key => {

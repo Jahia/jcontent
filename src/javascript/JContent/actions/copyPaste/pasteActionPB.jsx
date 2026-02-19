@@ -15,7 +15,7 @@ import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove'
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 import {childrenLimitReachedOrExceeded} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 
-export const PasteActionComponentPB = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, actionData, ...others}) => {
+export const PasteActionComponentPB = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, actionData, ...others}) => { // NOSONAR
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');

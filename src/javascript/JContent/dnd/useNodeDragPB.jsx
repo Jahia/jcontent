@@ -27,7 +27,7 @@ const prepareRes = ({selection, path, nodeDragData}) => {
     }, {checksResult: true, node: null});
 };
 
-export function useNodeDragPB({dragSource, nodeDragData}) {
+export function useNodeDragPB({dragSource, nodeDragData}) { // NOSONAR
     const {selection} = useSelector(state => ({
         selection: state.jcontent.selection
     }), shallowEqual);

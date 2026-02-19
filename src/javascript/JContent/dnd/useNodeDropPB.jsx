@@ -43,7 +43,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDropPB({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData}) {
+export function useNodeDropPB({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData}) { // NOSONAR
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');

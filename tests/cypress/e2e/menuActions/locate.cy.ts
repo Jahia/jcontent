@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object';
-import {addNode, createSite, deleteSite} from "@jahia/cypress";
+import {addNode, createSite, deleteSite} from '@jahia/cypress';
 
 describe('Locate action', () => {
     let jcontent: JContent;
@@ -11,7 +11,7 @@ describe('Locate action', () => {
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
         jcontent.getMedia()
             .open()
-            .uploadFileViaDragAndDrop("myfile.pdf", 'assets/uploadMedia');
+            .uploadFileViaDragAndDrop('myfile.pdf', 'assets/uploadMedia');
         addNode({
             parentPathOrId: `/sites/${siteKey}/home`,
             name: 'page-ex',
@@ -36,7 +36,6 @@ describe('Locate action', () => {
         deleteSite(siteKey);
         cy.logout();
     });
-
 
     it('Tests locate action', () => {
         jcontent = JContent.visit(siteKey, 'en', 'pages/home');

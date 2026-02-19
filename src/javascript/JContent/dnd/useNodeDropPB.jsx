@@ -120,7 +120,7 @@ export function useNodeDropPB({dropTarget, orderable, entries, onSaved, pos, ref
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
             const limit = res.node?.properties.find(p => p.name === 'limit');
-            const hasRoom = limit ? nodes.length <= parseInt(limit.value, 10) - res.node?.['subNodesCount_nt:base'] : true;
+            const hasRoom = limit ? nodes.length <= Number.parseInt(limit.value, 10) - res.node?.['subNodesCount_nt:base'] : true;
 
             const basicConditions = dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom;
             const notSelf = nodes.find(source => (dropTarget && isDescendantOrSelf(dropTarget.path, source.path)) || (destParent && isDescendantOrSelf(destParent.path, source.path))) === undefined;

@@ -6,7 +6,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {JahiaAreasUtil} from '../JContent.utils';
 
 const prepareRes = ({selection, path, nodeDragData}) => {
-    if (!nodeDragData || !nodeDragData.nodes) {
+    if (!nodeDragData?.nodes) {
         return {checksResult: false, node: null, nodes: null};
     }
 
@@ -34,7 +34,6 @@ export function useNodeDragPB({dragSource, nodeDragData}) { // NOSONAR
     const isAnythingDragging = useDragLayer(monitor => monitor.isDragging());
 
     const res = prepareRes({selection, path: dragSource.path, nodeDragData});
-    // Console.log('useNodeDrag', res);
 
     const isDraggable = Boolean(res.checksResult) && !JahiaAreasUtil.isJahiaArea(dragSource?.path);
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({

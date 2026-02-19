@@ -170,7 +170,7 @@ public class GqlEditorForms {
     @GraphQLField
     @GraphQLName("nodeTypeInfos")
     @GraphQLDescription("Retrieve info for given node types")
-    public List<GqlNodeTypeInfoResult> nodeTypeInfos(@GraphQLNonNull @GraphQLName("types") List<GqlNodeTypeInfosParams> types, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
+    public List<GqlNodeTypeInfoResult> nodeTypeInfos(@GraphQLNonNull @GraphQLDescription("Node types to get information about") @GraphQLName("types") List<GqlNodeTypeInfosParams> types, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
         List<GqlNodeTypeInfoResult> nts = new ArrayList<>();
 
         for (GqlNodeTypeInfosParams params : types) {

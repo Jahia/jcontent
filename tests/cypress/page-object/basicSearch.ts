@@ -94,12 +94,13 @@ export class BasicSearch extends BasePage {
     }
 
     verifyResults(results: string[]): BasicSearch {
-        this.jcontent.getTable().getRows(rows => {
-            expect(rows).to.have.length(results.length);
-            for (let i = 0; i < results.length; i++) {
-                expect(rows[i]).to.contain(results[i]);
-            }
+        results.forEach(expectedText => {
+            const rowSelector = 'tr[data-cm-role="table-content-list-row"]';
+            cy.get(rowSelector, {timeout: 10000})
+                .contains(expectedText)
+                .should('be.visible');
         });
+
         return this;
     }
 

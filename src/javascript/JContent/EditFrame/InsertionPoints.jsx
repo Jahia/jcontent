@@ -42,7 +42,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
 
     const originalData = useButtonsData({createButtons: originalInsertionButtons, language, uilang});
     const childData = useButtonsData({createButtons: childrenElem, language, uilang});
-    const pasteData = usePasteData({createButtons: [...originalInsertionButtons, ...childrenElem], language})
+    const pasteData = usePasteData({createButtons: [...originalInsertionButtons, ...childrenElem], language});
 
     return (
         [

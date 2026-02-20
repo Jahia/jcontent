@@ -49,7 +49,8 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
             buttonProps,
             tooltipProps,
             tooltipLabel,
-            tooltipParams
+            tooltipParams,
+            dataSelRole
         } = props;
 
         const {label, tooltipLabel: tooltip} = useLabel({
@@ -69,7 +70,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
         }
 
         const button = (
-            <Button data-sel-role={actionKey}
+            <Button data-sel-role={dataSelRole || actionKey}
                     label={label}
                     icon={buttonIcon}
                     iconEnd={buttonIconEnd}
@@ -104,6 +105,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
         buttonIcon: PropTypes.node,
         buttonIconEnd: PropTypes.node,
         actionKey: PropTypes.string,
+        dataSelRole: PropTypes.string,
         // eslint-disable-next-line react/boolean-prop-naming
         enabled: PropTypes.bool,
         isDisabled: PropTypes.bool,

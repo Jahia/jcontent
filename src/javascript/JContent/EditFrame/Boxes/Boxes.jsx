@@ -130,6 +130,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         ) {
             window.clearTimeout(timeout);
             clearHovered();
+            hoverProviderRef.current?.setHoveredPath(null);
         }
     }, [currentDocument, clearHovered]);
 

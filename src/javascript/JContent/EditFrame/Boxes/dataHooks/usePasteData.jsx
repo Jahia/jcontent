@@ -28,5 +28,15 @@ export const usePasteData = ({createButtons, language}) => {
         }
     );
 
-    return {resPaste, resPasteRef};
+    if (resPaste?.loading || resPasteRef?.loading) {
+        return {loading: true};
+    }
+
+    if (resPaste?.error || resPasteRef?.error) {
+        const error = resPaste?.error || resPasteRef?.error;
+        console.error('Failed to load paste data.', error);
+        return {loading: false, error};
+    }
+
+    return {resPaste, resPasteRef, loading: false};
 };

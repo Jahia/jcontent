@@ -28,5 +28,15 @@ export const useDndData = ({paths, language, uilang}) => {
         }
     );
 
-    return {nodeDragData, nodeDropData};
+    if (nodeDropData?.loading || nodeDragData?.loading) {
+        return {loading: true};
+    }
+
+    if (nodeDropData?.error || nodeDragData?.error) {
+        const error = nodeDropData?.error || nodeDragData?.error;
+        console.error('Failed to load dnd data.', error);
+        return {loading: false, error};
+    }
+
+    return {nodeDragData, nodeDropData, loading: false};
 };

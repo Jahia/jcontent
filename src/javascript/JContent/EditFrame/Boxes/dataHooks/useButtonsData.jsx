@@ -36,15 +36,27 @@ export const useButtonsData = ({createButtons, language, uilang}) => {
         getProperties: ['limit']
     });
 
-    if (loading || res.loading || !res?.nodes || !data?.forms?.nodeTypeInfos) {
-        return {nodes: null};
+    if (loading || res.loading) {
+        return {nodes: null, loading: true};
+    }
+
+    if (data?.error || res?.error) {
+        const error = data?.error || res?.error;
+        console.error('Failed to get data for create buttons.', error);
+        return {nodes: null, error};
+    }
+
+    if (!res?.nodes || !data?.forms?.nodeTypeInfos) {
+        console.warn('Could not find data for create buttons.');
+        return {nodes: null, loading: false};
     }
 
     const output = {nodes: res.nodes};
 
     data.forms.nodeTypeInfos.forEach(nodeTypeInfo => {
-        if (output.nodes[nodeTypeInfo.path]) {
-            output.nodes[nodeTypeInfo.path].acceptedNodeTypes = nodeTypeInfo.nodeTypeInfos;
+        const node = output.nodes[nodeTypeInfo.path];
+        if (node) {
+            node.acceptedNodeTypes = nodeTypeInfo.nodeTypeInfos;
         }
     });
 

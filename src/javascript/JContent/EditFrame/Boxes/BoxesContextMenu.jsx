@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {useHoverContext} from '~/JContent/EditFrame/Boxes/HoverContext';

@@ -12,7 +12,7 @@ export class PageBuilderModuleCreateButton extends BaseComponent {
     }
 
     getInsertionButtonByIndex(index: number): Button {
-        return new Button(this.get().find('button[data-sel-role="createContent"]').eq(index));
+        return new Button(this.get().find('button[data-sel-role="createContentPB"]').eq(index));
     }
 
     assertHasNoButton(): void {

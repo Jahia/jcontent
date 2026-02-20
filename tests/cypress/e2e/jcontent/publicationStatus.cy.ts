@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
 import {
     addNode,
     createSite,
@@ -12,6 +12,7 @@ import {
 
 describe('Publication status badge test', () => {
     const siteKey = 'publicationStatusSite';
+    const siteKey2 = 'publicationStatusSiteEnFr';
     const editor = {username: 'editor', password: 'password'};
     const textName = 'test-text';
     const folderName = 'test-folder';
@@ -40,6 +41,7 @@ describe('Publication status badge test', () => {
 
     before(() => {
         createSite(siteKey, {templateSet: 'jcontent-test-template', serverName: 'localhost', locale: 'en'});
+        cy.executeGroovy('contentEditor/contentMultiLanguage/contentMultiLanguageSite.groovy', {SITEKEY: siteKey2});
         createUser(editor.username, editor.password);
         grantRoles(`/sites/${siteKey}`, ['editor'], editor.username, 'USER');
 
@@ -56,6 +58,23 @@ describe('Publication status badge test', () => {
             primaryNodeType: 'jnt:contentFolder'
         });
 
+        addNode({
+            parentPathOrId: `/sites/${siteKey2}/contents`,
+            name: "multilangText",
+            primaryNodeType: 'jnt:text',
+            properties: [
+                {name: 'text', value: 'Test EN', language: 'en'},
+                {name: 'text', value: 'Test FR', language: 'fr'},
+                {name: 'text', value: 'Test DE', language: 'de'}
+            ]
+        })
+            .then(() => {
+                return publishAndWaitJobEnding(
+                    `/sites/${siteKey2}/contents/multilangText`,
+                    ['en', 'fr', 'de']
+                );
+            });
+
         createHomeSubpage('publishedPage')
             .then(() => createHomeSubpage('unpublishedPage'))
             .then(() => createHomeSubpage('notPublishedPage'))
@@ -69,6 +88,7 @@ describe('Publication status badge test', () => {
 
     after(() => {
         deleteSite(siteKey);
+        deleteSite(siteKey2);
         cy.logout();
     });
 
@@ -122,5 +142,38 @@ describe('Publication status badge test', () => {
         checkPublicationStatus(jcontent, 'publishedPage', 'published');
         checkPublicationStatus(jcontent, 'unpublishedPage', 'notPublished');
         checkPublicationStatus(jcontent, 'notPublishedPage', 'notPublished');
+    });
+
+    it('checks publication status in different languages', () => {
+        cy.login();
+        const jcontent = JContent.visit(siteKey2, 'en', 'content-folders/contents');
+
+        // Verify status is published
+        jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Published by root');
+
+        // Edit text in EN
+        jcontent.editComponentByRowName('multilangText');
+        const ce = new ContentEditor();
+        ce.getSmallTextField('jnt:text_text').addNewValue('Edit test EN');
+        ce.save();
+
+        // Verify status is now modified
+        jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Modified by root');
+
+        // Edit text in FR
+        jcontent.getLanguageSwitcher().select('fr');
+        jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Published by root');
+        jcontent.editComponentByRowName('multilangText');
+        ce.getSmallTextField('jnt:text_text').addNewValue('Edit test FR');
+        ce.save();
+
+        // Verify status is now modified in FR and EN
+        jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Modified by root');
+        jcontent.getLanguageSwitcher().select('en');
+        jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Modified by root');
+
+        // Verify status is still published in DE
+        jcontent.getLanguageSwitcher().select('de');
+        jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Published by root');
     });
 });

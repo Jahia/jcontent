@@ -122,7 +122,7 @@ describe('Create content tests', () => {
             module.getHeader(false).get().click();
 
             // Look for insertion buttons and click on the one
-            module.getCreateButtons().getInsertionButtonByIndex(1).click();
+            module.getCreateButtons().getInsertionButtonByIndex(1, 'jmix:droppableContent').click();
 
             // Create content using the create content wizard
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();

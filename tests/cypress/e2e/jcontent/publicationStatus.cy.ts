@@ -60,7 +60,7 @@ describe('Publication status badge test', () => {
 
         addNode({
             parentPathOrId: `/sites/${siteKey2}/contents`,
-            name: "multilangText",
+            name: 'multilangText',
             primaryNodeType: 'jnt:text',
             properties: [
                 {name: 'text', value: 'Test EN', language: 'en'},

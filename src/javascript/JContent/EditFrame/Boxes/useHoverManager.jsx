@@ -1,8 +1,9 @@
-import {useCallback, useRef} from 'react';
+import {useCallback, useRef, useState} from 'react';
 
 export const useHoverManager = () => {
     const currentHoveredRef = useRef(null);
     const hoveredBoxRefs = useRef(new Map());
+    const [currentHoveredPath, setCurrentHoveredPath] = useState(null);
 
     const registerHoverManager = useCallback((path, updateFn) => {
         hoveredBoxRefs.current.set(path, updateFn);
@@ -22,6 +23,7 @@ export const useHoverManager = () => {
 
         // Set new hover
         currentHoveredRef.current = path;
+        setCurrentHoveredPath(path);
         if (path) {
             const newUpdate = hoveredBoxRefs.current.get(path);
             newUpdate?.(true);
@@ -32,5 +34,5 @@ export const useHoverManager = () => {
         setHovered(null);
     }, [setHovered]);
 
-    return {registerHoverManager, setHovered, clearHovered, currentHoveredRef};
+    return {registerHoverManager, setHovered, clearHovered, currentHoveredRef, currentHoveredPath};
 };

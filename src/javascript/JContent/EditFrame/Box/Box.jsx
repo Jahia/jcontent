@@ -142,6 +142,10 @@ export const Box = React.memo(({
     }, [registerHoverManager, node.path]);
 
     useEffect(() => {
+        console.log('Box hovered', node.path);
+    }, [isHovered]);
+
+    useEffect(() => {
         // Disable mouse events to prevent showing boxes when dragging
         if (!isAnythingDragging) {
             element.addEventListener('mouseenter', onMouseOver);

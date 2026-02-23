@@ -1,21 +1,17 @@
 import React, {useEffect, useRef} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
-import {useHoverContext} from '~/JContent/EditFrame/Boxes/HoverContext';
 
 /**
- * @deprecated since version 3.4.0 https://github.com/Jahia/jcontent/pull/1879
- * This component will be removed in version 4.0.0.
  * @component
  * @param {Object} props Component props
  * @param {Object} props.currentFrameRef Reference to the current frame
  * @param {Object} props.currentDocument Current document object
- * @param {string} props.currentHoveredRef Current content path
+ * @param {string} props.currentHoveredPath Current content path
  * @param {string[]} props.selection Array of selected paths
  */
-const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
+const BoxesContextMenu = ({currentFrameRef, currentDocument, selection, currentHoveredPath}) => {
     const contextualMenu = useRef();
-    const {hoveredPath: currentPath} = useHoverContext();
 
     useEffect(() => {
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
@@ -56,6 +52,8 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
         });
     }, [currentDocument, currentFrameRef]);
 
+    const currentPath = currentHoveredPath;
+    console.log('currentPath: ', currentPath);
     let pathObject = {};
     if (selection.length > 0) {
         if (selection.includes(currentPath)) {
@@ -67,6 +65,7 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
     } else {
         pathObject = {path: currentPath, actionKey: 'contentItemContextActionsMenu'};
     }
+
 
     return (
         <ContextualMenu
@@ -81,7 +80,7 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
 BoxesContextMenu.propTypes = {
     currentDocument: PropTypes.any,
     currentFrameRef: PropTypes.any,
-    currentPath: PropTypes.string,
+    currentHoveredPath: PropTypes.string,
     selection: PropTypes.arrayOf(PropTypes.string)
 };
 

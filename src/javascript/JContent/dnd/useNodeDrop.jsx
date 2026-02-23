@@ -45,18 +45,8 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
 }
 
 export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries}) {
-    const [moveMutation] = useMutation(moveNode, {refetchQueries});
-    const notificationContext = useNotifications();
-    const {t} = useTranslation('jcontent');
-    const [insertPosition, setInsertPosition] = useState();
-    const [destParentState, setDestParent] = useState();
-    const [names, setNames] = useState([]);
-    const [, setIsCanDrop] = useState(false);
-
-    const {getCurrent, setCurrent} = useConnector();
+    const [destParentState] = useState();
     const destParent = destParentState || dropTarget;
-    const baseRect = useRef();
-    const refreshTree = useRefreshTreeAfterMove();
     const language = useSelector(state => state.language);
     const res = useNodeChecks(
         {path: destParent?.path, language: language},
@@ -70,6 +60,37 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay']
         }
     );
+
+    const nodeDropData = {
+        nodes: {
+            [destParent?.path]: res.node ? {
+                ...res.node,
+                checksResult: res.checksResult
+            } : null
+        }
+    };
+
+    return useNodeDropData({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData});
+}
+
+export function useNodeDropData({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData}) {
+    const [moveMutation] = useMutation(moveNode, {refetchQueries});
+    const notificationContext = useNotifications();
+    const {t} = useTranslation('jcontent');
+    const [insertPosition, setInsertPosition] = useState();
+    const [destParentState, setDestParent] = useState();
+    const [names, setNames] = useState([]);
+    const [, setIsCanDrop] = useState(false);
+
+    const {getCurrent, setCurrent} = useConnector();
+    const destParent = destParentState || dropTarget;
+    const baseRect = useRef();
+    const refreshTree = useRefreshTreeAfterMove();
+    const destNode = nodeDropData?.nodes ? nodeDropData.nodes[destParent?.path] : null;
+    const res = {
+        checksResult: destNode?.checksResult,
+        node: destNode
+    };
 
     const nodeTypeCheck = useNodeTypeCheck();
 
@@ -129,7 +150,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
 
             const limit = res.node?.properties.find(p => p.name === 'limit');
-            const hasRoom = limit ? nodes.length <= parseInt(limit.value, 10) - res.node?.['subNodesCount_nt:base'] : true;
+            const hasRoom = limit ? nodes.length <= Number.parseInt(limit.value, 10) - res.node?.['subNodesCount_nt:base'] : true;
 
             const basicConditions = dropTarget && monitor.isOver({shallow: true}) && res.node && !res.node?.lockOwner && hasRoom;
             const notSelf = nodes.find(source => (dropTarget && isDescendantOrSelf(dropTarget.path, source.path)) || (destParent && isDescendantOrSelf(destParent.path, source.path))) === undefined;

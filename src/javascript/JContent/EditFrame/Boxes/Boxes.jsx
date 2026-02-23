@@ -89,7 +89,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
     // It helps determine box visibility and header visibility.
     // const [currentElement, setCurrentElement] = useState();
-    const {registerHoverManager, setHovered, clearHovered, currentHoveredRef} = useHoverManager();
+    const {registerHoverManager, setHovered, clearHovered} = useHoverManager();
     const hoverProviderRef = useRef(null);
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
@@ -335,25 +335,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     }, [nodes, path, placeholders]);
 
-    const getBreadcrumbsForPath = node => {
-        const breadcrumbs = [];
-        if (!node) {
-            return breadcrumbs;
-        }
-
-        const pathFragments = node.path.split('/');
-        pathFragments.pop();
-
-        let lookUpPath = pathFragments.join('/');
-        while (lookUpPath !== path && nodes[lookUpPath]) {
-            breadcrumbs.unshift(nodes[lookUpPath]);
-            pathFragments.pop();
-            lookUpPath = pathFragments.join('/');
-        }
-
-        return breadcrumbs;
-    };
-
     const onDoubleClick = useCallback(event => {
         event.preventDefault();
         event.stopPropagation();
@@ -475,21 +456,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}
                          node={node}
-                         isClicked={clickedElement && node.path === clickedElement.path}
                          registerHoverManager={registerHoverManager}
-                         isSelected={selection.includes(node.path)}
-                         isSomethingSelected={selection.length > 0}
-                         isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && node.path === currentHoveredRef.current)}
-                         isActionsHidden={selection.length > 0}
+                         clickedElement={clickedElement}
                          currentFrameRef={currentFrameRef}
                          element={element}
-                         breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 &&
-                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && node.path === currentHoveredRef.current)) ?
-                             getBreadcrumbsForPath(node) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={uilang}

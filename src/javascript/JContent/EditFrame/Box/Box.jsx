@@ -109,11 +109,10 @@ export const Box = React.memo(({
     onDoubleClick,
     setDraggedOverlayPosition,
     calculateDropTarget,
-    registerHoverManager,
     nodeDragData,
-    nodeDropData
+    nodeDropData,
+    isHovered
 }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const ref = useRef(element);
     const {selection, path} = useSelector(state => ({selection: state.jcontent.selection, path: state.jcontent.path}), shallowEqual);
     let isHeaderDisplayed = useMemo(() => (clickedElement && node.path === clickedElement.path) || selection.includes(node.path) ||
@@ -136,10 +135,6 @@ export const Box = React.memo(({
         const isActionsHidden = isSomethingSelected;
         return {isSelected, isSomethingSelected, isActionsHidden};
     }, [node.path, selection]);
-
-    useEffect(() => {
-        return registerHoverManager(node.path, setIsHovered);
-    }, [registerHoverManager, node.path]);
 
     useEffect(() => {
         console.log('Box hovered', node.path);

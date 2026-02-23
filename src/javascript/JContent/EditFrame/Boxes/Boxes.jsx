@@ -88,7 +88,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
     // It helps determine box visibility and header visibility.
     // const [currentElement, setCurrentElement] = useState();
-    const {registerHoverManager, setHovered, clearHovered, currentHoveredPath} = useHoverManager();
+    const {setHovered, clearHovered, currentHoveredPath} = useHoverManager();
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
     const [createButtons, setCreateButtons] = useState([]);
@@ -451,7 +451,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}
                          node={node}
-                         registerHoverManager={registerHoverManager}
+                         isHovered={currentHoveredPath === node.path}
                          clickedElement={clickedElement}
                          currentFrameRef={currentFrameRef}
                          element={element}

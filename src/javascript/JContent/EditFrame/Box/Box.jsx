@@ -116,14 +116,8 @@ export const Box = React.memo(({
     const [isHovered, setIsHovered] = useState(false);
     const ref = useRef(element);
     const {selection, path} = useSelector(state => ({selection: state.jcontent.selection, path: state.jcontent.path}), shallowEqual);
-    let isHeaderDisplayed = useMemo(() => (clickedElement && node.path === clickedElement.path) || selection.includes(node.path) ||
-        (isHovered && selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement))), [clickedElement, isHovered, node.path, selection]);
-    const breadcrumbs = useMemo(() => {
-        return ((clickedElement && node.path === clickedElement.path) || selection.includes(node.path) ||
-            (isHovered && selection.length > 0 &&
-                !selection.some(selectionElement => isDescendant(node.path, selectionElement)))) ?
-            getBreadcrumbsForPath({node, nodes, path}) : [];
-    }, [clickedElement, isHovered, node, nodes, path, selection]);
+    let isHeaderDisplayed = useMemo(() => (clickedElement && node.path === clickedElement.path) || selection.includes(node.path) || (isHovered && selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement))), [clickedElement, isHovered, node.path, selection]);
+    const breadcrumbs = useMemo(() => (isHeaderDisplayed ? getBreadcrumbsForPath({node, nodes, path}) : []), [isHeaderDisplayed, node, nodes, path]);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
     const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node, nodeDragData, isUseDragData: true});
     const {t} = useTranslation('jcontent');

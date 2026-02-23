@@ -181,8 +181,8 @@ describe('Page builder', () => {
             const restrictedArea = pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/restricted-area`, false);
             let buttons = restrictedArea.getCreateButtons();
             buttons.get().scrollIntoView();
-            buttons.getButtonByRole('pastePB').should('be.visible').and('have.attr', 'disabled');
-            buttons.getButtonByRole('pasteReferencePB').should('be.visible').and('have.attr', 'disabled');
+            buttons.getButtonByRole('paste').should('be.visible').and('have.attr', 'disabled');
+            buttons.getButtonByRole('pasteReference').should('be.visible').and('have.attr', 'disabled');
 
             cy.log('enable button when allowed');
             pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/any-area/allowedText`, false)
@@ -193,8 +193,8 @@ describe('Page builder', () => {
             const restrictedArea = pageBuilder.getModule(`/sites/${siteKey}/home/${pageName}/restricted-area`, false);
             let buttons = restrictedArea.getCreateButtons();
             buttons.get().scrollIntoView();
-            buttons.getButtonByRole('pastePB').should('be.visible').and('not.have.attr', 'disabled');
-            buttons.getButtonByRole('pasteReferencePB').should('be.visible').and('not.have.attr', 'disabled');
+            buttons.getButtonByRole('paste').should('be.visible').and('not.have.attr', 'disabled');
+            buttons.getButtonByRole('pasteReference').should('be.visible').and('not.have.attr', 'disabled');
         });
 
         it('should restrict create content with page builder create buttons and context menu', () => {

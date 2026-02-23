@@ -124,11 +124,10 @@ export const Box = React.memo(({
     const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
 
     const isClicked = clickedElement && node.path === clickedElement.path;
-    const {isSelected, isSomethingSelected, isActionsHidden} = useMemo(() => {
+    const {isSelected, isSomethingSelected} = useMemo(() => {
         const isSelected = selection.includes(node.path);
         const isSomethingSelected = selection.length > 0;
-        const isActionsHidden = isSomethingSelected;
-        return {isSelected, isSomethingSelected, isActionsHidden};
+        return {isSelected, isSomethingSelected};
     }, [node.path, selection]);
 
     useEffect(() => {
@@ -260,7 +259,7 @@ export const Box = React.memo(({
 
     const dragWithChecks = n => {
         const draggableTypes = ['existingNode', 'list'];
-        if (draggableTypes.includes(type) && !isActionsHidden) {
+        if (draggableTypes.includes(type) && !isSomethingSelected) {
             drag(n);
         }
     };
@@ -297,7 +296,7 @@ export const Box = React.memo(({
         >
             {node && !dragging &&
                 <Bar
-                    isActionsHidden={(isActionsHidden || isActionsHiddenOverride) && !isClicked}
+                    isActionsHidden={(isSomethingSelected || isActionsHiddenOverride) && !isClicked}
                     isStatusHidden={(isStatusHidden && !isClicked)}
                     node={node}
                     language={language}

@@ -169,7 +169,7 @@ public class GqlEditorForms {
 
     @GraphQLField
     @GraphQLName("nodeTypeInfos")
-    @GraphQLDescription("Retrieve info for given node types")
+    @GraphQLDescription("Retrieve info for given node types. This method allows for processing of multiple node types at once which can be supplied as a map for a give locale.")
     public List<GqlNodeTypeInfoResult> nodeTypeInfos(@GraphQLNonNull @GraphQLDescription("Node types to get information about") @GraphQLName("types") List<GqlNodeTypeInfosParams> types, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
         Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
 

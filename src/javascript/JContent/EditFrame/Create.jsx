@@ -12,7 +12,7 @@ import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 import {useApolloClient} from '@apollo/client';
 import {SavePropertiesMutation} from '~/ContentEditor/ContentEditor/updateNode/updateNode.gql-mutation';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
-import {useNodeDropPB} from '~/JContent/dnd/useNodeDropPB';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 
 const ButtonRenderer = getButtonRenderer({
     showTooltip: false,
@@ -136,7 +136,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         }
     }, [node, parent, element, isEmpty, actionVisibility]);
 
-    const [{isCanDrop}, drop] = useNodeDropPB({dropTarget: parent && node, onSaved, nodeDropData});
+    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved, nodeDropData, isUseDropData: true});
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
     }));
@@ -224,7 +224,8 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              onClick={onClick}
         >
             {copyPasteNodes.length === 0 && createAction}
-            <DisplayAction actionKey="pastePB"
+            <DisplayAction isUseActionData
+                           actionKey="paste"
                            isDisabled={isDisabled}
                            path={parentPath}
                            loading={() => false}
@@ -232,7 +233,8 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
                            render={btnRenderer}
                            onVisibilityChanged={onPasteVisibilityChanged}
                            onAction={onAction(data => reorderNodes(data?.map(d => d?.data?.jcr?.pasteNode?.node?.name), nodeName))}/>
-            <DisplayAction actionKey="pasteReferencePB"
+            <DisplayAction isUseActionData
+                           actionKey="pasteReference"
                            isDisabled={isDisabled}
                            path={parentPath}
                            actionData={pasteData?.resPasteRef?.nodes?.[parentPath]}

@@ -171,14 +171,28 @@ public class GqlEditorForms {
     @GraphQLName("nodeTypeInfos")
     @GraphQLDescription("Retrieve info for given node types")
     public List<GqlNodeTypeInfoResult> nodeTypeInfos(@GraphQLNonNull @GraphQLDescription("Node types to get information about") @GraphQLName("types") List<GqlNodeTypeInfosParams> types, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
-        List<GqlNodeTypeInfoResult> nts = new ArrayList<>();
+        Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
 
+        // Cache all unique node types
+        Map<String, GqlNodeTypeInfo> nodeTypeInfoCache = new HashMap<>();
+        for (GqlNodeTypeInfosParams params : types) {
+            if (params.getNodeTypes() != null) {
+                for (String nodeType : params.getNodeTypes()) {
+                    if (!nodeTypeInfoCache.containsKey(nodeType)) {
+                        ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
+                        nodeTypeInfoCache.put(nodeType, new GqlNodeTypeInfo(nt, locale));
+                    }
+                }
+            }
+        }
+
+        // Build results using cached node type info
+        List<GqlNodeTypeInfoResult> nts = new ArrayList<>();
         for (GqlNodeTypeInfosParams params : types) {
             List<GqlNodeTypeInfo> n = new ArrayList<>();
             if (params.getNodeTypes() != null) {
                 for (String nodeType : params.getNodeTypes()) {
-                    ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
-                    n.add(new GqlNodeTypeInfo(nt, LanguageCodeConverters.getLocaleFromCode(uiLocale)));
+                    n.add(nodeTypeInfoCache.get(nodeType));
                 }
             }
             nts.add(new GqlNodeTypeInfoResult(params.getPath(), n));

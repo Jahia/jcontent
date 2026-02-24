@@ -96,7 +96,6 @@
     "react-file-viewer": "^1.2.1",
     "react-i18next": "^11.7.2",
     "react-image-crop": "^6.0.18",
-    "react-intersection-observer": "^10.0.2",
     "react-number-format": "^4.9.4",
     "react-pdf": "10.2.0",
     "react-redux": "^9.2.0",

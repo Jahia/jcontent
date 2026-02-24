@@ -2712,7 +2712,6 @@ __metadata:
     react-file-viewer: "npm:^1.2.1"
     react-i18next: "npm:^11.7.2"
     react-image-crop: "npm:^6.0.18"
-    react-intersection-observer: "npm:^10.0.2"
     react-number-format: "npm:^4.9.4"
     react-pdf: "npm:10.2.0"
     react-redux: "npm:^9.2.0"
@@ -18071,19 +18070,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.4 || ^17.0.0
   checksum: 10c0/64282953f1e9318501ae9ff64dc955845fce0b543577fcc5b6a5cf786d9a1872edadc5df5821d830a8510ecf629e9a220b323e5cd45b091508939f71ea332239
-  languageName: node
-  linkType: hard
-
-"react-intersection-observer@npm:^10.0.2":
-  version: 10.0.3
-  resolution: "react-intersection-observer@npm:10.0.3"
-  peerDependencies:
-    react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-  checksum: 10c0/64439d19793c49bf9d1701fc74cd854f4ddc646411500a4d1efa058ac0100efdde5d4dd24ce736a48eeba9de3585c164c916be2b91e9c9b2b5db7b756c8cec9d
   languageName: node
   linkType: hard
 

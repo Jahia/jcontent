@@ -82,7 +82,9 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
                             renderOnClick();
                         }
 
-                        onClick(props, e);
+                        if (typeof onClick === 'function') {
+                            onClick(props, e);
+                        }
                     }}
                     {...defaultButtonProps}
                     {...buttonProps}

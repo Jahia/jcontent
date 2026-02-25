@@ -1,20 +1,17 @@
 import {useQuery} from '@apollo/client';
 import {useNodeChecks} from '@jahia/data-helper';
-import {NodeTypeInfos} from '~/JContent/EditFrame/Boxes/dataHooks/dataHooks.gql-queries';
+import {getNodeTypeInfo} from '~/ContentEditor/actions/jcontent/createContent/createContent.gql-queries';
 
 export const useButtonsData = ({createButtons, language, uilang}) => {
     const paths = [];
-    const nodeTypeInfos = [];
+    const nodeTypes = new Set();
 
     createButtons.forEach(b => {
         paths.push(b.node.path);
-        nodeTypeInfos.push({
-            path: b.node.path,
-            nodeTypes: b.attributes.nodeTypes
-        });
+        b.attributes.nodeTypes.forEach(nt => nodeTypes.add(nt));
     });
 
-    const {loading, data} = useQuery(NodeTypeInfos, {variables: {uilang, types: nodeTypeInfos}, skip: nodeTypeInfos.length === 0});
+    const {loading, data} = useQuery(getNodeTypeInfo, {variables: {nodeTypes: Array.from(nodeTypes), uiLocale: uilang}, skip: nodeTypes.length === 0});
 
     // This data will be used to drive createContentPB actions
     const res = useNodeChecks({
@@ -46,17 +43,21 @@ export const useButtonsData = ({createButtons, language, uilang}) => {
         return {nodes: null, error};
     }
 
-    if (!res?.nodes || !data?.forms?.nodeTypeInfos) {
+    if (!res?.nodes || !data?.forms?.nodeTypeInfo) {
         console.warn('Could not find data for create buttons.');
         return {nodes: null, loading: false};
     }
 
     const output = {nodes: res.nodes};
 
-    data.forms.nodeTypeInfos.forEach(nodeTypeInfo => {
-        const node = output.nodes[nodeTypeInfo.path];
+    // Build the nodetype lookup
+    const nodeTypeInfoMap = new Map(data.forms.nodeTypeInfo.map(nt => [nt.name, nt]));
+
+    createButtons.forEach(b => {
+        const node = output.nodes[b.node.path];
         if (node) {
-            node.acceptedNodeTypes = nodeTypeInfo.nodeTypeInfos;
+            // Map list of node type names to the full info objects
+            node.acceptedNodeTypes = b.attributes.nodeTypes.map(nt => nodeTypeInfoMap.get(nt));
         }
     });
 

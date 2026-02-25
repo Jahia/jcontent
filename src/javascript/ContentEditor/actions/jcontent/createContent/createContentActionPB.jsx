@@ -62,7 +62,7 @@ export const CreateContentPB = ({
     }
 
     if (missingNodes) {
-        return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
+        return <Render {...otherProps} isVisible={false}/>;
     }
 
     const onClick = ({nodeTypes}) => {
@@ -90,10 +90,6 @@ export const CreateContentPB = ({
             onClick={onClick}
         />
     ));
-};
-
-CreateContentPB.defaultProps = {
-    loading: undefined
 };
 
 CreateContentPB.propTypes = {

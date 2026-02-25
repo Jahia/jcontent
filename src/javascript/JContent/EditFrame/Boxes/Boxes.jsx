@@ -86,9 +86,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const site = useSelector(state => state.site);
     const uilang = useSelector(state => state.uilang);
 
-    // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
-    // It helps determine box visibility and header visibility.
-    // const [currentElement, setCurrentElement] = useState();
     const {registerHoverManager, setHovered, clearHovered} = useHoverManager();
     const hoverProviderRef = useRef(null);
     const [placeholders, setPlaceholders] = useState([]);

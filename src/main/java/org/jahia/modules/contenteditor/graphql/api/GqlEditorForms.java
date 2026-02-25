@@ -168,40 +168,6 @@ public class GqlEditorForms {
     }
 
     @GraphQLField
-    @GraphQLName("nodeTypeInfos")
-    @GraphQLDescription("Retrieve info for given node types. This method allows for processing of multiple node types at once which can be supplied as a map for a give locale.")
-    public List<GqlNodeTypeInfoResult> nodeTypeInfos(@GraphQLNonNull @GraphQLDescription("Node types to get information about") @GraphQLName("types") List<GqlNodeTypeInfosParams> types, @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale) throws RepositoryException {
-        Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
-
-        // Cache all unique node types
-        Map<String, GqlNodeTypeInfo> nodeTypeInfoCache = new HashMap<>();
-        for (GqlNodeTypeInfosParams params : types) {
-            if (params.getNodeTypes() != null) {
-                for (String nodeType : params.getNodeTypes()) {
-                    if (!nodeTypeInfoCache.containsKey(nodeType)) {
-                        ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
-                        nodeTypeInfoCache.put(nodeType, new GqlNodeTypeInfo(nt, locale));
-                    }
-                }
-            }
-        }
-
-        // Build results using cached node type info
-        List<GqlNodeTypeInfoResult> nts = new ArrayList<>();
-        for (GqlNodeTypeInfosParams params : types) {
-            List<GqlNodeTypeInfo> n = new ArrayList<>();
-            if (params.getNodeTypes() != null) {
-                for (String nodeType : params.getNodeTypes()) {
-                    n.add(nodeTypeInfoCache.get(nodeType));
-                }
-            }
-            nts.add(new GqlNodeTypeInfoResult(params.getPath(), n));
-        }
-
-        return nts;
-    }
-
-    @GraphQLField
     @GraphQLName("ckeditorConfigPath")
     @GraphQLDescription("Retrieve the custom configuration path for CKEditor")
     public String ckeditorConfigPath(@GraphQLName("nodePath") @GraphQLDescription("node path") String nodePath) throws RepositoryException {

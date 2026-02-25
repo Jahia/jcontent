@@ -25,7 +25,7 @@ describe('JContent preview tests', () => {
             parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'previewText',
             primaryNodeType: 'jnt:text',
-            properties: [{name: 'text', value: 'preview me', language: 'en'},]
+            properties: [{name: 'text', value: 'preview me', language: 'en'}]
         });
     });
 
@@ -57,7 +57,6 @@ describe('JContent preview tests', () => {
     });
 
     it('should show cm view if available and no default', () => {
-
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.switchToListMode();
         jcontent.getTable().getRowByName('test-no-default').contextMenu().select('Preview');
@@ -147,6 +146,5 @@ describe('JContent preview tests', () => {
             .should('exist')
             .and('be.disabled');
         cy.get('[data-cm-role=preview-drawer-close]').click();
-
     });
 });

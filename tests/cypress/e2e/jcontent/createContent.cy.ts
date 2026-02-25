@@ -59,6 +59,7 @@ describe('Create content tests', () => {
                 // Use waitUntil to repeatedly check for the content in the iframe
                 // This helps to handle cases where the content might take time to appear
                 cy.waitUntil(() =>
+                    // eslint-disable-next-line max-nested-callbacks
                     cy.iframe(contentIFrameElt).then($body => {
                         const text = $body.text();
                         return exists ? text.includes(value) : !text.includes(value);

@@ -108,6 +108,13 @@ export class JContent extends BasePage {
         return new ContentEditor();
     }
 
+    openPreview(name: string) {
+        return this.getTable()
+            .getRowByName(name)
+            .contextMenu()
+            .selectByRole('preview');
+    }
+
     getBrowseControlMenu(): Menu {
         getComponentByRole(Button, 'browseControlBarMenu').click();
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');

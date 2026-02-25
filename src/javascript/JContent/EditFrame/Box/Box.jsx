@@ -70,19 +70,17 @@ const adaptContentPositionAndSize = element => {
 };
 
 const getBreadcrumbsForPath = ({node, nodes, path}) => {
+	if (!node) return [];
+
     const breadcrumbs = [];
-    if (!node) {
-        return breadcrumbs;
-    }
+    const pathFragments = node.path.split('/').slice(0, -1); // Exclude node name
 
-    const pathFragments = node.path.split('/');
-    pathFragments.pop();
-
-    let lookUpPath = pathFragments.join('/');
-    while (lookUpPath !== path && nodes[lookUpPath]) {
+    while (pathFragments.length > 0) {
+        const lookUpPath = pathFragments.join('/');
+        // If we reached `path`, we're good
+        if (lookUpPath === path || !nodes[lookUpPath]) break;
         breadcrumbs.unshift(nodes[lookUpPath]);
         pathFragments.pop();
-        lookUpPath = pathFragments.join('/');
     }
 
     return breadcrumbs;

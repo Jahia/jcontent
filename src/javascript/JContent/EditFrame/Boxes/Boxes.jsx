@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from '../Box';
-import {Create} from '../Create';
+import {Create, getElemAttributes} from '../Create';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
 import {BoxesQuery} from './Boxes.gql-queries';
@@ -19,6 +19,11 @@ import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
 import styles from './Boxes.scss';
+import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
+import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
+import {useDndData} from '~/JContent/EditFrame/Boxes/dataHooks/useDndData';
+import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
+import {HoverProvider} from '~/JContent/EditFrame/Boxes/HoverContext';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -81,11 +86,13 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const site = useSelector(state => state.site);
     const uilang = useSelector(state => state.uilang);
 
-    // This is currently moused over element, it changes as mouse is moved even in multiple selection situation.
-    // It helps determine box visibility and header visibility.
-    const [currentElement, setCurrentElement] = useState();
+    const {registerHoverManager, setHovered, clearHovered} = useHoverManager();
+    const hoverProviderRef = useRef(null);
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
+    const [createButtons, setCreateButtons] = useState([]);
+    const actionData = useButtonsData({createButtons, language, uilang});
+    const pasteData = usePasteData({createButtons, language});
 
     // When document is updated after save, clicked element in memory no longer matches what's in the DOM
     useEffect(() => {
@@ -100,23 +107,29 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
             const moduleElement = getModuleElement(currentDocument, target);
-            setCurrentElement(() => ({element: moduleElement, path: moduleElement.getAttribute('path')}));
+            const path = moduleElement.getAttribute('path');
+            setHovered(path); // Only updates the specific box
+            hoverProviderRef.current?.setHoveredPath(path);
         }, 0);
-    }, [setCurrentElement, currentDocument]);
+    }, [currentDocument, setHovered]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && event.currentTarget.id === currentElement?.id &&
+        const target = event.currentTarget;
+        const path = target.getAttribute('path');
+
+        if (event.relatedTarget &&
             !isDescendantOrSelf(
                 getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'),
-                getModuleElement(currentDocument, event.currentTarget)?.getAttribute?.('path')
+                path
             ) &&
             !event.target.closest('#menuHolder')
         ) {
             window.clearTimeout(timeout);
-            setCurrentElement(null);
+            clearHovered();
+            hoverProviderRef.current?.setHoveredPath(null);
         }
-    }, [setCurrentElement, currentDocument, currentElement]);
+    }, [currentDocument, clearHovered]);
 
     const onSelect = useCallback((event, _path) => {
         const element = getModuleElement(currentDocument, event.currentTarget);
@@ -191,6 +204,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     }, [onSelect, currentDocument, clickedElement, setClickedElement, dispatch, selection]);
 
     useClearSelection({currentDocument, setClickedElement});
+
     useEffect(() => {
         const _placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
@@ -287,6 +301,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
 
     const {data, refetch} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage: uilang}, fetchPolicy: 'network-only', errorPolicy: 'all'});
 
+    const {nodeDragData, nodeDropData} = useDndData({paths, language, uilang});
+
     useEffect(() => {
         setRefetcher(refetchTypes.PAGE_BUILDER_BOXES, {refetch: refetch});
         return () => {
@@ -299,24 +315,21 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         [n.path]: n
     }), {}), [data?.jcr]);
 
-    const getBreadcrumbsForPath = node => {
-        const breadcrumbs = [];
-        if (!node) {
-            return breadcrumbs;
+    useEffect(() => {
+        if (nodes) {
+            // Placeholders for create buttons
+            const buttonPlaceHolders = placeholders
+                .map(element => ({
+                    element,
+                    node: nodes?.[element.dataset.jahiaParent &&
+                    element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
+                    attributes: getElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
+                }))
+                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes));
+
+            setCreateButtons(buttonPlaceHolders);
         }
-
-        const pathFragments = node.path.split('/');
-        pathFragments.pop();
-
-        let lookUpPath = pathFragments.join('/');
-        while (lookUpPath !== path && nodes[lookUpPath]) {
-            breadcrumbs.unshift(nodes[lookUpPath]);
-            pathFragments.pop();
-            lookUpPath = pathFragments.join('/');
-        }
-
-        return breadcrumbs;
-    };
+    }, [nodes, path, placeholders]);
 
     const onDoubleClick = useCallback(event => {
         event.preventDefault();
@@ -333,7 +346,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         });
     }, [nodes, site, language, uilang, currentDocument]);
 
-    const currentPath = currentElement?.path || path;
     const entries = useMemo(() => modules.map(m => ({
         name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
         path: m.dataset.jahiaPath,
@@ -384,22 +396,17 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         }
     };
 
-    const el = currentElement?.element;
-
     const memoizedPlaceholders = useMemo(() => {
-        return placeholders
-            .map(element => ({
-                element,
-                node: nodes?.[element.dataset.jahiaParent &&
-                element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]
-            }))
-            .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
+        return createButtons
             .map(({node, element}) => (
                 <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
                     <Create key={element.getAttribute('id')}
                             node={node}
                             nodes={nodes}
                             element={element}
+                            nodeDropData={nodeDropData}
+                            pasteData={pasteData}
+                            nodeData={actionData?.nodes?.[node.path]}
                             addIntervalCallback={addIntervalCallback}
                             clickedElement={clickedElement}
                             onMouseOver={onMouseOver}
@@ -409,21 +416,12 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     />
                 </div>
             ));
-    }, [
-        path,
-        clickedElement,
-        placeholders,
-        nodes,
-        addIntervalCallback,
-        onMouseOver,
-        onMouseOut,
-        onClick,
-        onSaved
-    ]);
+    }, [createButtons, clickedElement, nodes, nodeDropData, actionData?.nodes, addIntervalCallback, onMouseOver, onMouseOut, onClick, onSaved, pasteData]);
 
     const MemoizedInsertionPoints = useMemo(() => (
-        <InsertionPoints
+        clickedElement && <InsertionPoints
             currentDocument={currentDocument}
+            nodeDropData={nodeDropData}
             addIntervalCallback={addIntervalCallback}
             clickedElement={clickedElement}
             nodes={nodes}
@@ -434,17 +432,19 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
         addIntervalCallback,
         clickedElement,
         nodes,
-        onSaved
+        onSaved,
+        nodeDropData
     ]);
 
     return (
         <div>
-            <BoxesContextMenu
-                currentFrameRef={currentFrameRef}
-                currentDocument={currentDocument}
-                currentPath={currentPath}
-                selection={selection}
-            />
+            <HoverProvider ref={hoverProviderRef}>
+                <BoxesContextMenu
+                    currentFrameRef={currentFrameRef}
+                    currentDocument={currentDocument}
+                    selection={selection}
+                />
+            </HoverProvider>
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
@@ -452,22 +452,10 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}
                          node={node}
-                         isClicked={clickedElement && node.path === clickedElement.path}
-                         isHovered={element === el}
-                         isSelected={selection.includes(node.path)}
-                         isSomethingSelected={selection.length > 0}
-                         isHeaderDisplayed={(clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)}
-                         isHeaderHighlighted={isDescendant(currentElement?.path, node.path)}
-                         isActionsHidden={selection.length > 0}
+                         registerHoverManager={registerHoverManager}
+                         clickedElement={clickedElement}
                          currentFrameRef={currentFrameRef}
                          element={element}
-                         breadcrumbs={((clickedElement && node.path === clickedElement.path) ||
-                             selection.includes(node.path) ||
-                             (selection.length > 0 &&
-                                 !selection.some(selectionElement => isDescendant(node.path, selectionElement)) && element === el)) ?
-                             getBreadcrumbsForPath(node) : []}
                          entries={entries}
                          language={language}
                          displayLanguage={uilang}
@@ -475,6 +463,8 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                          addIntervalCallback={addIntervalCallback}
                          setDraggedOverlayPosition={setDraggedOverlayPosition}
                          calculateDropTarget={calculateDropTarget}
+                         nodeDragData={nodeDragData}
+                         nodeDropData={nodeDropData}
                          setClickedElement={setClickedElement}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}

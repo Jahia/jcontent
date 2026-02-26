@@ -16,13 +16,13 @@ public class GqlNodeTypeInfo {
 
     private final String label;
     private final String name;
-    private final String iconUrl;
+    private final String iconURL;
 
     public GqlNodeTypeInfo(ExtendedNodeType nodeType, Locale locale) {
         this.name = nodeType.getName();
         this.label = nodeType.getLabel(locale);
         try {
-            this.iconUrl = JCRContentUtils.getIconWithContext(nodeType) + ".png";
+            this.iconURL = JCRContentUtils.getIconWithContext(nodeType) + ".png";
         } catch (RepositoryException e) {
             throw new DataFetchingException("Failed to create icon url", e);
         }
@@ -42,7 +42,7 @@ public class GqlNodeTypeInfo {
 
     @GraphQLField
     @GraphQLDescription("Returns icon url of the node type")
-    public String getIconUrl() {
-        return iconUrl;
+    public String getIconURL() {
+        return iconURL;
     }
 }

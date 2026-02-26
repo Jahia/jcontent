@@ -6,6 +6,7 @@ import {createAction} from './contenteditor/create/createAction';
 import {batchActions} from 'redux-batched-actions';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {createContentActionPB} from '~/ContentEditor/actions/jcontent/createContent/createContentActionPB';
 
 export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContent', createContentActionWrapper, {
@@ -16,6 +17,13 @@ export const registerCreateActions = registry => {
         hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
         requiredPermission: ['jcr:addChildNodes'],
         hasBypassChildrenLimit: false
+    });
+
+    // Page builder specific action which avoids over querying
+    registry.addOrReplace('action', 'createContentPB', createContentActionPB, {
+        defaultIcon: <AddCircle/>,
+        buttonLabel:
+            'jcontent:label.contentEditor.CMMActions.createNewContent.menu'
     });
 
     if (booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {

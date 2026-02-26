@@ -98,6 +98,45 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
                 tooltipParams: {typeName: nodeType.label, parent: parentName}
             }));
     }
+
+    return undefined;
+}
+
+export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit, parentName) {
+    const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
+
+    function getNodeTypeIcon(nodeType) {
+        if (nodeType.name === 'jnt:category') {
+            return <Tag/>;
+        }
+
+        if (nodeType.iconURL) {
+            return !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
+        }
+
+        // This uses a different data from useNodeInfo which retrieves plain icon url
+        return toIconComponent(`${nodeType.icon}.png`);
+    }
+
+    let actions;
+
+    if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
+        actions = nodeTypes
+            .filter(f => f.name !== 'jnt:resource')
+            .map(nodeType => ({
+                key: nodeType.name,
+                actionKey: 'createContentPB',
+                dataSelRole: nodeType.name,
+                nodeTypes: [nodeType.name],
+                nodeTypeIcon: getNodeTypeIcon(nodeType),
+                buttonLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.menu' : 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
+                buttonLabelParams: {typeName: nodeType.label || nodeType.displayName},
+                tooltipLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric' : 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipForType',
+                tooltipParams: {typeName: nodeType.label || nodeType.displayName, parent: parentName}
+            }));
+    }
+
+    return actions;
 }
 
 export function childrenLimitReachedOrExceeded(node, templateLimit) {

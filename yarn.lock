@@ -2560,9 +2560,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/data-helper@npm:^1.1.17":
-  version: 1.1.17
-  resolution: "@jahia/data-helper@npm:1.1.17"
+"@jahia/data-helper@npm:^1.1.19":
+  version: 1.1.19
+  resolution: "@jahia/data-helper@npm:1.1.19"
   dependencies:
     "@apollo/client": "npm:^3.7.14"
     fast-deep-equal: "npm:^3.1.1"
@@ -2570,7 +2570,7 @@ __metadata:
     graphql-tag: "npm:^2.11.0"
     react: "npm:^16.12.0"
     rfdc: "npm:^1.3.0"
-  checksum: 10c0/9a8f7e3d33dc2caa39b6f3e65a1a17bbfc0b7f276321e0f8f6d9003ac3688631439c7a758e50ab4b4cc3189f4edcfc3bcbe2911ce05b8101102d25b6583e52d7
+  checksum: 10c0/a35ea55ce88ce535f49b2d877cbd42b3044856d3e53c2c95ae90d88588ad82b5873928efec1e17a37e5e6798bd7617035d709b67e989760301550208024fc427
   languageName: node
   linkType: hard
 
@@ -2639,7 +2639,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.13.12"
     "@babel/preset-react": "npm:^7.12.13"
     "@cyclonedx/webpack-plugin": "npm:^4.0.1"
-    "@jahia/data-helper": "npm:^1.1.17"
+    "@jahia/data-helper": "npm:^1.1.19"
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"

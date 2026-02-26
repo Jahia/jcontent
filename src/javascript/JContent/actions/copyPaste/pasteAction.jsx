@@ -17,7 +17,7 @@ import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove'
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 import {childrenLimitReachedOrExceeded} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 
-export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, ...others}) => {
+export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, onAction, onVisibilityChanged, isUseActionData, actionData, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -49,10 +49,15 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
         nodeChecksProps.hideOnNodeTypes = [...(nodeChecksProps.hidePasteOnPage || []), 'jnt:page'];
     }
 
-    const res = useNodeChecks(
+    let res = useNodeChecks(
         {path, language},
-        nodeChecksProps
+        {...nodeChecksProps, skip: isUseActionData}
     );
+
+    // This is an alternative way of using the action via pre-fetched data
+    if (isUseActionData && actionData) {
+        res = {checksResult: actionData.checksResult, node: actionData};
+    }
 
     const nodeTypeCheck = useNodeTypeCheck();
 
@@ -60,7 +65,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
         const defaultProps = {
             isVisible: false, isEnabled: false, loading: false, type: null, possibleReferenceTypes: [], nodeTypesToSkip: [], nodes: []
         };
-        if (res.loading) {
+        if (!res || res.loading) {
             return defaultProps;
         }
 
@@ -160,5 +165,7 @@ PasteActionComponent.propTypes = {
     notificationContext: {notify: PropTypes.func},
     onAction: PropTypes.func,
     onVisibilityChanged: PropTypes.func,
-    nodeTypes: [PropTypes.string]
+    nodeTypes: [PropTypes.string],
+    isUdeActionData: PropTypes.bool,
+    actionData: PropTypes.object
 };

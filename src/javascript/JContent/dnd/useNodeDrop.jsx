@@ -44,7 +44,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries}) {
+export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData, isUseDropData}) {
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -58,7 +58,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
     const baseRect = useRef();
     const refreshTree = useRefreshTreeAfterMove();
     const language = useSelector(state => state.language);
-    const res = useNodeChecks(
+    let res = useNodeChecks(
         {path: destParent?.path, language: language},
         {
             requiredPermission: 'jcr:addChildNodes',
@@ -67,9 +67,18 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
             getLockInfo: true,
             getSubNodesCount: ['nt:base'],
             getProperties: ['limit'],
-            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay']
+            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentList', 'jnt:folder', 'jnt:contentFolder', 'jnt:area', 'jnt:mainResourceDisplay'],
+            skip: isUseDropData
         }
     );
+
+    if (isUseDropData && nodeDropData) {
+        const destNode = nodeDropData?.nodes ? nodeDropData.nodes[destParent?.path] : null;
+        res = {
+            checksResult: destNode?.checksResult,
+            node: destNode
+        };
+    }
 
     const nodeTypeCheck = useNodeTypeCheck();
 
@@ -170,7 +179,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                 if (onSaved) {
                     onSaved();
                 } else {
-                    const moveResults = data.jcr.mutateNodes.map(n => n.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});
+                    const moveResults = Object.fromEntries(data.jcr.mutateNodes.map(n => [n.node.uuid, n.node]));
                     refreshTree(destParent.path, nodes, moveResults);
                 }
 

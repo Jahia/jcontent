@@ -69,7 +69,7 @@ export const CreateContentWrapper = ({
             loading={loading}
             nodeTypes={[nodeType.name]}
             labelProps={{
-                buttonIcon: toIconComponent(nodeType.iconUrl),
+                buttonIcon: toIconComponent(nodeType.iconURL),
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: nodeType.label}
             }}

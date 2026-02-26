@@ -59,6 +59,7 @@ describe('Create content tests', () => {
                 // Use waitUntil to repeatedly check for the content in the iframe
                 // This helps to handle cases where the content might take time to appear
                 cy.waitUntil(() =>
+                    // eslint-disable-next-line max-nested-callbacks
                     cy.iframe(contentIFrameElt).then($body => {
                         const text = $body.text();
                         return exists ? text.includes(value) : !text.includes(value);
@@ -122,7 +123,7 @@ describe('Create content tests', () => {
             module.getHeader(false).get().click();
 
             // Look for insertion buttons and click on the one
-            module.getCreateButtons().getInsertionButtonByIndex(1).click();
+            module.getCreateButtons().getInsertionButtonByIndex(1, 'jmix:droppableContent').click();
 
             // Create content using the create content wizard
             const contentEditor = jcontent.getCreateContent().getContentTypeSelector().searchForContentType('jnt:bigText').selectContentType('jnt:bigText').create();

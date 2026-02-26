@@ -80,7 +80,7 @@ export const getNodeTypeInfo = gql`
             nodeTypeInfo(nodeTypes: $nodeTypes, uiLocale: $uiLocale) {
                 name
                 label
-                iconUrl
+                iconURL
             }
         }
     }

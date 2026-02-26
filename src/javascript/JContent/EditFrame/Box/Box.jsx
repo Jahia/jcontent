@@ -4,13 +4,14 @@ import clsx from 'clsx';
 import styles from './Box.scss';
 import {useBoxStatus} from './useBoxStatus';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
-import editStyles from '../EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import editStyles from '../EditFrame.scss';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';
-import {findAvailableBoxConfig, hasMixin} from '../../JContent.utils';
+import {findAvailableBoxConfig, hasMixin, isDescendant} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
+import {shallowEqual, useSelector} from 'react-redux';
 
 const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
     const box = getBoundingBox(element, isHeaderDisplayed);
@@ -68,12 +69,33 @@ const adaptContentPositionAndSize = element => {
     element.classList.add(editStyles.smallerBox);
 };
 
+const getBreadcrumbsForPath = ({node, nodes, path}) => {
+    if (!node) {
+        return [];
+    }
+
+    const breadcrumbs = [];
+    const pathFragments = node.path.split('/').slice(0, -1); // Exclude node name
+
+    while (pathFragments.length > 0) {
+        const lookUpPath = pathFragments.join('/');
+        // If we reached `path`, we're good
+        if (lookUpPath === path || !nodes[lookUpPath]) {
+            break;
+        }
+
+        breadcrumbs.unshift(nodes[lookUpPath]);
+        pathFragments.pop();
+    }
+
+    return breadcrumbs;
+};
+
 // eslint-disable-next-line complexity
 export const Box = React.memo(({
     nodes,
     node,
     element,
-    breadcrumbs,
     entries,
     language,
     displayLanguage,
@@ -82,25 +104,38 @@ export const Box = React.memo(({
     onMouseOut,
     onClick,
     onSelect,
+    clickedElement,
     setClickedElement,
     onSaved,
     currentFrameRef,
-    isHeaderDisplayed,
     isHeaderHighlighted,
-    isHovered,
-    isClicked,
-    isSelected,
-    isSomethingSelected,
-    isActionsHidden,
     onDoubleClick,
     setDraggedOverlayPosition,
-    calculateDropTarget
+    calculateDropTarget,
+    registerHoverManager,
+    nodeDragData,
+    nodeDropData
 }) => {
+    const [isHovered, setIsHovered] = useState(false);
     const ref = useRef(element);
+    const {selection, path} = useSelector(state => ({selection: state.jcontent.selection, path: state.jcontent.path}), shallowEqual);
+    let isHeaderDisplayed = useMemo(() => (clickedElement && node.path === clickedElement.path) || selection.includes(node.path) || (isHovered && selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement))), [clickedElement, isHovered, node.path, selection]);
+    const breadcrumbs = useMemo(() => (isHeaderDisplayed ? getBreadcrumbsForPath({node, nodes, path}) : []), [isHeaderDisplayed, node, nodes, path]);
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
-    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node});
+    const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node, nodeDragData, isUseDragData: true});
     const {t} = useTranslation('jcontent');
     const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
+
+    const isClicked = clickedElement && node.path === clickedElement.path;
+    const {isSelected, isSomethingSelected} = useMemo(() => {
+        const isSelected = selection.includes(node.path);
+        const isSomethingSelected = selection.length > 0;
+        return {isSelected, isSomethingSelected};
+    }, [node.path, selection]);
+
+    useEffect(() => {
+        return registerHoverManager(node.path, setIsHovered);
+    }, [registerHoverManager, node.path]);
 
     useEffect(() => {
         // Disable mouse events to prevent showing boxes when dragging
@@ -139,7 +174,9 @@ export const Box = React.memo(({
         onSaved: () => {
             onSaved();
         },
-        pos: {before: element.dataset.prevPos, after: element.dataset.nextPos}
+        pos: {before: element.dataset.prevPos, after: element.dataset.nextPos},
+        nodeDropData,
+        isUseDropData: true
     });
 
     drop(ref);
@@ -225,7 +262,7 @@ export const Box = React.memo(({
 
     const dragWithChecks = n => {
         const draggableTypes = ['existingNode', 'list'];
-        if (draggableTypes.includes(type) && !isActionsHidden) {
+        if (draggableTypes.includes(type) && !isSomethingSelected) {
             drag(n);
         }
     };
@@ -262,7 +299,7 @@ export const Box = React.memo(({
         >
             {node && !dragging &&
                 <Bar
-                    isActionsHidden={(isActionsHidden || isActionsHiddenOverride) && !isClicked}
+                    isActionsHidden={(isSomethingSelected || isActionsHiddenOverride) && !isClicked}
                     isStatusHidden={(isStatusHidden && !isClicked)}
                     node={node}
                     language={language}
@@ -331,8 +368,6 @@ export const Box = React.memo(({
 Box.propTypes = {
     element: PropTypes.any,
 
-    breadcrumbs: PropTypes.array,
-
     nodes: PropTypes.array,
 
     node: PropTypes.any,
@@ -359,23 +394,19 @@ Box.propTypes = {
 
     currentFrameRef: PropTypes.any,
 
-    isHeaderDisplayed: PropTypes.bool,
-
     isHeaderHighlighted: PropTypes.bool,
-
-    isHovered: PropTypes.bool,
-
-    isClicked: PropTypes.bool,
-
-    isSelected: PropTypes.bool,
-
-    isSomethingSelected: PropTypes.bool,
-
-    isActionsHidden: PropTypes.bool,
 
     onDoubleClick: PropTypes.func,
 
     calculateDropTarget: PropTypes.func,
 
-    setDraggedOverlayPosition: PropTypes.func
+    setDraggedOverlayPosition: PropTypes.func,
+
+    registerHoverManager: PropTypes.func,
+
+    nodeDragData: PropTypes.object,
+
+    nodeDropData: PropTypes.object,
+
+    clickedElement: PropTypes.any
 };

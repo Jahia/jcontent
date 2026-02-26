@@ -31,8 +31,6 @@ import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.EditorFormService;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfo;
-import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfoResult;
-import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfosParams;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeTreeEntry;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorForm;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorFormValueConstraint;

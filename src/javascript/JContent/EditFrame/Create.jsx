@@ -40,7 +40,7 @@ function reposition(element, currentOffset, setCurrentOffset) {
     }
 }
 
-export const useElemAttributes = ({element, parent}) => {
+export const getElemAttributes = ({element, parent}) => {
     // Need to check here if insertionPoint is an original create button or not,
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
@@ -107,7 +107,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
-    const {nodeName, nodePath} = useElemAttributes({element, parent, isInsertionPoint});
+    const {nodeName, nodePath} = getElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: false,
         paste: false,

@@ -114,11 +114,14 @@ export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit,
             return !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
         }
 
+        // This uses a different data from useNodeInfo which retrieves plain icon url
         return toIconComponent(`${nodeType.icon}.png`);
     }
 
+    let actions;
+
     if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
-        return nodeTypes
+        actions = nodeTypes
             .filter(f => f.name !== 'jnt:resource')
             .map(nodeType => ({
                 key: nodeType.name,
@@ -133,7 +136,7 @@ export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit,
             }));
     }
 
-    return undefined;
+    return actions;
 }
 
 export function childrenLimitReachedOrExceeded(node, templateLimit) {

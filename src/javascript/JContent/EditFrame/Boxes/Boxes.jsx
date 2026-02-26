@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from '../Box';
-import {Create, useElemAttributes} from '../Create';
+import {Create, getElemAttributes} from '../Create';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/client';
 import {BoxesQuery} from './Boxes.gql-queries';
@@ -323,8 +323,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     element,
                     node: nodes?.[element.dataset.jahiaParent &&
                     element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
-                    // eslint-disable-next-line react-hooks/rules-of-hooks
-                    attributes: useElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
+                    attributes: getElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
                 }))
                 .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes));
 

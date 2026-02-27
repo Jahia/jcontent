@@ -1,6 +1,6 @@
 ---
 # Allowed version bumps: patch, minor, major
-jcontent: minor
+"@jahia/jcontent": minor
 ---
 
 Optimize page builder (#2183)

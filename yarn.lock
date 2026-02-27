@@ -1879,6 +1879,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chachalog/types@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@chachalog/types@npm:0.5.0"
+  checksum: 10c0/c300659372d84d98c12409c40c762f8bbf62baf30582a8bad2a6b9e9e63c4d1ef40ace2f37c4f3c372c7c4ea1986220ae388fa72a5341dc3a7b401e57150fe8c
+  languageName: node
+  linkType: hard
+
 "@cnakazawa/watch@npm:^1.0.3":
   version: 1.0.4
   resolution: "@cnakazawa/watch@npm:1.0.4"
@@ -2638,6 +2645,7 @@ __metadata:
     "@babel/polyfill": "npm:^7.11.5"
     "@babel/preset-env": "npm:^7.13.12"
     "@babel/preset-react": "npm:^7.12.13"
+    "@chachalog/types": "npm:^0.5.0"
     "@cyclonedx/webpack-plugin": "npm:^4.0.1"
     "@jahia/data-helper": "npm:^1.1.19"
     "@jahia/design-system-kit": "npm:^1.2.1"

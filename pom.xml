@@ -47,6 +47,7 @@
     <properties>
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
+        <yarn.install.arguments>--frozen-lockfile --ignore-scripts</yarn.install.arguments>
         <jahia-module-signature>MCwCFD0wmxdXrSQ4dAqX11aJrsaeqv3KAhR9ty7EuCC9Qw7mYoBE4bI6hXgjAw==</jahia-module-signature>
         <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
         <jahia-depends>jahia-ui-root=1.10.0,app-shell=2.7,graphql-dxm-provider=3.5.0</jahia-depends>
@@ -293,6 +294,9 @@
                         <goals>
                             <goal>yarn</goal>
                         </goals>
+                        <configuration>
+                            <arguments>install ${yarn.install.arguments}</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>yarn post-install</id>

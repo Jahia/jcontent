@@ -111,4 +111,19 @@ describe('Content navigation', () => {
             .should('contain', 'An error occurred during the rendering of the content')
             .and('contain', 'Toggle the full error');
     });
+
+    it('can enter pages and folders with double click', () => {
+        const jc = JContent.visit('mySite1', 'en', 'pages/home');
+        jc.switchToListMode();
+
+        const row = jc.getTable().getRowByName('search-results');
+        row.get().dblclick();
+        cy.get('h1').contains('Search Results');
+
+        // Switch to media folders
+        jc.getMedia().open();
+        const cardRow = jc.getGrid().getCardByName('bootstrap');
+        cardRow.get().dblclick();
+        cy.get('h1').contains('bootstrap');
+    });
 });

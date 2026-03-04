@@ -57,7 +57,7 @@ export const useButtonsData = ({createButtons, language, uilang}) => {
         const node = output.nodes[b.node.path];
         if (node) {
             // Map list of node type names to the full info objects
-            node.acceptedNodeTypes = b.attributes?.nodeTypes?.map(nt => nodeTypeInfoMap.get(nt)) || [];
+            node.acceptedNodeTypes = b.attributes?.nodeTypes?.map(nt => nodeTypeInfoMap.get(nt)).filter(nt => nt !== undefined) || [];
         }
     });
 

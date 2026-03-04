@@ -23,7 +23,8 @@ export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContentPB', createContentActionPB, {
         defaultIcon: <AddCircle/>,
         buttonLabel:
-            'jcontent:label.contentEditor.CMMActions.createNewContent.menu'
+            'jcontent:label.contentEditor.CMMActions.createNewContent.menu',
+        dataSelRole: 'createContent'
     });
 
     if (booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {

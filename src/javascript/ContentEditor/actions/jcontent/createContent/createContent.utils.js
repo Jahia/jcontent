@@ -126,7 +126,7 @@ export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit,
             .map(nodeType => ({
                 key: nodeType.name,
                 actionKey: 'createContentPB',
-                dataSelRole: nodeType.name,
+                dataSelRole: nodeType.name === 'jmix:droppableContent' ? 'createContent' : nodeType.name,
                 nodeTypes: [nodeType.name],
                 nodeTypeIcon: getNodeTypeIcon(nodeType),
                 buttonLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.menu' : 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',

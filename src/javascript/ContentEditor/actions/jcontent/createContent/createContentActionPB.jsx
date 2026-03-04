@@ -76,6 +76,7 @@ export const CreateContentPB = ({
         tooltipParams: {parent: resNode.name}}]).map(result => (
             <Render
             key={result.key}
+            dataSelRole="createContent"
             enabled={!isDisabled && !resNode?.lockOwner}
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}
             tooltipLabel={result.tooltipLabel}

@@ -158,7 +158,9 @@ public class GqlEditorForms {
 
         for (String nodeType : nodeTypes) {
             ExtendedNodeType nt = NodeTypeRegistry.getInstance().getNodeType(nodeType);
-            nts.add(new GqlNodeTypeInfo(nt, LanguageCodeConverters.getLocaleFromCode(uiLocale)));
+            if (!nt.isNodeType("jmix:studioOnly") && !nt.isNodeType("jmix:hiddenType")) {
+                nts.add(new GqlNodeTypeInfo(nt, LanguageCodeConverters.getLocaleFromCode(uiLocale)));
+            }
 
         }
 

@@ -1,6 +1,14 @@
 import {JContent} from '../../page-object/jcontent';
 import {Field, SmallTextField} from '../../page-object/fields';
-import {Button, Dropdown, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
+import {
+    addNode,
+    Button,
+    createUser,
+    Dropdown,
+    getComponentByRole,
+    getComponentBySelector,
+    grantRoles
+} from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../page-object';
 
@@ -27,6 +35,12 @@ describe('Content editor form', () => {
                     }
                 }
             }`
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'myRichText',
+            primaryNodeType: 'jnt:bigText',
+            properties: [{name: 'text', value: 'not for editor', language: 'en'}]
         });
     });
 
@@ -180,7 +194,7 @@ describe('Content editor form', () => {
         field2.get().find('input').should('have.attr', 'readonly', 'readonly');
     });
 
-    it('Should not see see field for reviewer', () => {
+    it('Should not see description field for reviewer', () => {
         const contentEditor = jcontent.createContent('jnt:news');
         contentEditor.getField(SmallTextField, 'jnt:news_desc');
 
@@ -209,9 +223,22 @@ describe('Content editor form', () => {
         cy.runProvisioningScript({
             script: {fileContent: '- stopBundle: "jcontent-test-module"', type: 'application/yaml'}
         });
-        jcontent.getTable().getRowByLabel('default-value-test').contextMenu().select('Edit');
+        jcontent.getTable().getRowByName('default-value-test').contextMenu().select('Edit');
         contentEditor = new ContentEditor();
         field = contentEditor.getField(SmallTextField, 'cent:defaultValueTest_defaultDate', false);
         field.get().find('label').should('contain', 'defaultDate');
+    });
+
+    it('should not display advanced options tab for editor', () => {
+        cy.logout();
+        cy.login('mathias', 'password');
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        const ceEditor = jcontent.editComponentByRowName('myRichText');
+
+        ceEditor.switchToAdvancedMode();
+        cy.get('.moonstone-header')
+            .find('[data-sel-role="tab-advanced-options"]')
+            .should('not.exist');
+        ceEditor.cancel();
     });
 });

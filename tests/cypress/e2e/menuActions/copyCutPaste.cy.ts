@@ -104,7 +104,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             jcontent.getGrid().getCardByName('myfile.pdf').should('be.visible');
             // Go back to files to verify the file is gone
             jcontent.getAccordionItem('media').getTreeItem('files').click();
-            cy.get(`[data-cm-role="grid-content-list-card"][data-sel-role-card="myfile.pdf"]`)
+            cy.get('[data-cm-role="grid-content-list-card"][data-sel-role-card="myfile.pdf"]')
                 .should('not.exist');
         });
 
@@ -136,7 +136,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             jcontent.getTable().getRowByName('ContentFolderA').should('be.visible');
             // Go back to contents to verify the folder is gone
             jcontent.getAccordionItem('content-folders').getTreeItem('contents').click();
-            cy.get(`[data-cm-role="table-content-list-row"][data-node-name="myfile.pdf"]`)
+            cy.get('[data-cm-role="table-content-list-row"][data-node-name="myfile.pdf"]')
                 .should('not.exist');
         });
 
@@ -263,7 +263,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
     // Template 'contentType' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
     // We have the same test in pageBuilder/restrictions as well for page builder
     describe('Template content type restriction', () => {
-        const siteKey = 'restrictedStructuredSite';
+        const sitekey = 'restrictedStructuredSite';
         const pageName = 'myPage';
 
         function getRoleItem(menu: Menu, role: string) {
@@ -272,23 +272,23 @@ describe('Copy Cut and Paste tests with jcontent', () => {
         }
 
         before(() => {
-            createSite(siteKey, {
+            createSite(sitekey, {
                 serverName: 'localhost',
                 locale: 'en',
                 templateSet: 'jcontent-test-template'
             });
-            cy.apollo({mutation: addRestrictedPage(siteKey, pageName)});
+            cy.apollo({mutation: addRestrictedPage(sitekey, pageName)});
             cy.loginAndStoreSession();
         });
 
         after(() => {
             cy.logout();
-            deleteSite(siteKey);
+            deleteSite(sitekey);
         });
 
         it('should check restrictions when displaying paste button', () => {
             const jcontent = JContent
-                .visit(siteKey, 'en', `pages/home/${pageName}`)
+                .visit(sitekey, 'en', `pages/home/${pageName}`)
                 .switchToPageBuilder()
                 .switchToStructuredView();
 

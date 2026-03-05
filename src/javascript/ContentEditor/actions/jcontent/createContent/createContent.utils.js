@@ -71,16 +71,16 @@ export function flattenNodeTypes(nodeTypes) {
     return resolvedTypes || [];
 }
 
+function getNodeTypeIcon(nodeType) {
+    if (nodeType.name === 'jnt:category') {
+        return <Tag/>;
+    }
+
+    return nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
+}
+
 export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, parentName) {
     const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
-
-    function getNodeTypeIcon(nodeType) {
-        if (nodeType.name === 'jnt:category') {
-            return <Tag/>;
-        }
-
-        return nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
-    }
 
     if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
         return nodeTypes
@@ -102,21 +102,8 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
     return undefined;
 }
 
-export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit, parentName) {
+export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit, parentName, defaultIcon) {
     const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
-
-    function getNodeTypeIcon(nodeType) {
-        if (nodeType.name === 'jnt:category') {
-            return <Tag/>;
-        }
-
-        if (nodeType.iconURL) {
-            return !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
-        }
-
-        // This uses a different data from useNodeInfo which retrieves plain icon url
-        return toIconComponent(`${nodeType.icon}.png`);
-    }
 
     let actions;
 
@@ -128,7 +115,7 @@ export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit,
                 actionKey: 'createContentPB',
                 dataSelRole: nodeType.name === 'jmix:droppableContent' ? 'createContent' : nodeType.name,
                 nodeTypes: [nodeType.name],
-                nodeTypeIcon: getNodeTypeIcon(nodeType),
+                nodeTypeIcon: nodeType.name === 'jmix:droppableContent' ? defaultIcon : getNodeTypeIcon(nodeType),
                 buttonLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.menu' : 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: nodeType.label || nodeType.displayName},
                 tooltipLabel: nodeType.name === 'jmix:droppableContent' ? 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric' : 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipForType',

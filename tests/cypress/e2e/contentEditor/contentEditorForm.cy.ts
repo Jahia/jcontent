@@ -3,11 +3,9 @@ import {Field, SmallTextField} from '../../page-object/fields';
 import {
     addNode,
     Button,
-    createUser,
     Dropdown,
     getComponentByRole,
-    getComponentBySelector,
-    grantRoles
+    getComponentBySelector
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../page-object';

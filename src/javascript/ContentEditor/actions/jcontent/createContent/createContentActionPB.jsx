@@ -43,7 +43,7 @@ export const CreateContentPB = ({
 
         // Note: acceptedNodeTypes is based on the DOM if we were able to find it, allowedChildNodeTypes is the info from JCR
         const nodeTypes = resNode.acceptedNodeTypes.length > 0 ? resNode.acceptedNodeTypes : resNode.allowedChildNodeTypes;
-        const actions = transformNodeTypesToActionsPB(nodeTypes, false, resNode?.name);
+        const actions = transformNodeTypesToActionsPB(nodeTypes, false, resNode?.name, otherProps.defaultIcon);
 
         return {
             loading: false,
@@ -51,7 +51,7 @@ export const CreateContentPB = ({
             actions,
             missingNodes: false
         };
-    }, [path, Loading, resNode]);
+    }, [Loading, resNode, path, otherProps.defaultIcon]);
 
     useEffect(() => {
         onVisibilityChanged?.(isVisible);

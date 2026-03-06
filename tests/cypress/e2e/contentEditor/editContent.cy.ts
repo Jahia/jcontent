@@ -83,4 +83,21 @@ describe('Create content tests', () => {
         });
         contentEditor.cancel();
     });
+
+    it('test close button inside CE', () => {
+        jcontent.editComponentByRowName('My simple text');
+        const contentEditor = new ContentEditor();
+        contentEditor.switchToAdvancedMode();
+        contentEditor.cancel();
+
+        jcontent.editComponentByRowName('My simple text');
+        contentEditor.switchToAdvancedMode();
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('My update');
+        contentEditor.cancelAndDiscard();
+
+        jcontent.editComponentByRowName('My simple text');
+        contentEditor.switchToAdvancedMode();
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('My second update');
+        contentEditor.save();
+    });
 });

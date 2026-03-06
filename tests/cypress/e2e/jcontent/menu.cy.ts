@@ -4,14 +4,17 @@ import {ContentEditor} from '../../page-object/contentEditor';
 import {Field} from '../../page-object/fields';
 
 describe('Menu tests', () => {
-    beforeEach(function () {
+    before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
-        cy.loginAndStoreSession(); // Edit in chief
     });
 
-    afterEach(function () {
+    beforeEach(function () {
+        cy.loginAndStoreSession();
+    });
+
+    after(function () {
         cy.logout();
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
     });
@@ -53,5 +56,74 @@ describe('Menu tests', () => {
         getComponentBySelector(Menu, '[role="list"]').select('3 Column');
         contentEditor.create();
         navAccordion.click('pages').getContent().find('[role="tree"]').find('[data-sel-role="new-root-level-page"]').should('be.visible').click();
+    });
+
+    it('Checks actions inside contextual menu of a folder', function () {
+        const jcontent = JContent.visit('jcontentSite', 'en', 'media/files');
+        jcontent.switchToListMode();
+
+        const contextMenu = jcontent
+            .getTable()
+            .getRowByName('bootstrap')
+            .contextMenu();
+
+        const items = [
+            'Rename',
+            'New folder',
+            'Copy',
+            'Upload file(s)',
+            'Lock',
+            'Download as zip'
+        ];
+
+        items.forEach(item => {
+            contextMenu.shouldHaveItem(item);
+        });
+    });
+
+    it('Checks actions inside contextual menu of a file', function () {
+        const jcontent = JContent.visit('jcontentSite', 'en', 'media/files/bootstrap/css');
+        jcontent.switchToListMode();
+
+        const contextMenu = jcontent
+            .getTable()
+            .getRowByName('bootstrap.css')
+            .contextMenu();
+
+        const item = [
+            'Edit',
+            'Rename',
+            'Download',
+            'Replace with',
+            'Preview',
+            'Cut'
+        ];
+
+        item.forEach(item => {
+            contextMenu.shouldHaveItem(item);
+        });
+    });
+
+    it('Checks actions inside contextual menu of a page', function () {
+        const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
+        jcontent.switchToListMode();
+        jcontent.switchToSubpages();
+
+        const contextMenu = jcontent
+            .getTable()
+            .getRowByName('search-results')
+            .contextMenu();
+
+        const items = [
+            'Edit',
+            'Export',
+            'Import content',
+            'Cut',
+            'Show in Repository Explorer'
+        ];
+
+        items.forEach(item => {
+            contextMenu.shouldHaveItem(item);
+        });
     });
 });

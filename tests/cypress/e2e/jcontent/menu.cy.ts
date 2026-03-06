@@ -90,7 +90,7 @@ describe('Menu tests', () => {
             .getRowByName('bootstrap.css')
             .contextMenu();
 
-        const item = [
+        const items = [
             'Edit',
             'Rename',
             'Download',
@@ -99,7 +99,7 @@ describe('Menu tests', () => {
             'Cut'
         ];
 
-        item.forEach(item => {
+        items.forEach(item => {
             contextMenu.shouldHaveItem(item);
         });
     });

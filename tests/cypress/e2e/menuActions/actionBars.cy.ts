@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object/jcontent';
-import {addNode} from "@jahia/cypress";
+import {addNode} from '@jahia/cypress';
 
 describe('test jcontent actionbar', () => {
     let jcontent: JContent;

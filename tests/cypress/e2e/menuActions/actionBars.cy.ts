@@ -1,4 +1,5 @@
 import {JContent} from '../../page-object/jcontent';
+import {addNode} from "@jahia/cypress";
 
 describe('test jcontent actionbar', () => {
     let jcontent: JContent;
@@ -6,6 +7,11 @@ describe('test jcontent actionbar', () => {
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'my-content-folder',
+            primaryNodeType: 'jnt:contentFolder'
+        });
     });
 
     beforeEach(() => {
@@ -49,7 +55,7 @@ describe('test jcontent actionbar', () => {
     });
 
     it('Checks actions inside 3 dots menu of a content folder in jcontent header', function () {
-        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/portal-components');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/my-content-folder');
         const contextMenu = jcontent.getBrowseControlMenu();
         const items = [
             'Export',

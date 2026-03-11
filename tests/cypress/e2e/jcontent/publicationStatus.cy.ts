@@ -40,7 +40,7 @@ describe('Publication status badge test', () => {
     }
 
     before(() => {
-        createSite(siteKey, {templateSet: 'jcontent-test-template', serverName: 'localhost', locale: 'en'});
+        createSite(siteKey, {templateSet: 'dx-base-demo-templates', serverName: 'localhost', locale: 'en'});
         cy.executeGroovy('contentEditor/contentMultiLanguage/contentMultiLanguageSite.groovy', {SITEKEY: siteKey2});
         createUser(editor.username, editor.password);
         grantRoles(`/sites/${siteKey}`, ['editor'], editor.username, 'USER');

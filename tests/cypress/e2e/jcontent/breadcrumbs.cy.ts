@@ -21,12 +21,12 @@ describe('Breadcrumb navigation test', () => {
             name: 'childpageA',
             primaryNodeType: 'jnt:page',
             properties: [
-                { name: 'jcr:title', value: 'childpageA', language: 'en' },
-                { name: 'j:templateName', type: 'STRING', value: 'simple' }
+                {name: 'jcr:title', value: 'childpageA', language: 'en'},
+                {name: 'j:templateName', type: 'STRING', value: 'simple'}
             ]
         });
         // Create several nested folders
-        const folders = ['A','B','C','D'];
+        const folders = ['A', 'B', 'C', 'D'];
         let parentPath = `/sites/${siteKey}/contents`;
 
         folders.forEach(name => {

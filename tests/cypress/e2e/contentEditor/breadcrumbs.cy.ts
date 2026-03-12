@@ -1,6 +1,6 @@
 import {ContentEditor, JContent} from '../../page-object';
 import {addNode, createSite, deleteSite} from '@jahia/cypress';
-import {Breadcrumb} from "../../page-object/breadcrumb";
+import {Breadcrumb} from '../../page-object/breadcrumb';
 
 describe('Create content tests', () => {
     let jcontent: JContent;

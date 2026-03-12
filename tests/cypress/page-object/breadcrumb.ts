@@ -7,6 +7,10 @@ export class Breadcrumb extends BaseComponent {
         return new Breadcrumb(cy.get(this.defaultSelector).contains(content));
     }
 
+    static findByContentinCE(content: string) : Breadcrumb {
+        return new Breadcrumb(cy.get('div[class*="ContentEditor-EditPanel-EditPanel"]').contains(this.defaultSelector, content));
+    }
+
     static getBreadcrumbMenu() : Dropdown {
         return getComponentBySelector(Dropdown, 'div[data-sel-role="breadcrumb-item"]');
     }

@@ -35,7 +35,7 @@ describe('Create content tests', () => {
         cy.loginAndStoreSession();
     });
 
-    it('Checks breadcrumbs inside CE in media', () => {
+    it('Checks breadcrumbs inside CE on a content list', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/breadcrumbFolder/mylist');
         jcontent.switchToListMode();
         jcontent.editComponentByRowName('atext');

@@ -40,7 +40,7 @@ describe('Publication status badge test', () => {
     }
 
     before(() => {
-        createSite(siteKey, {templateSet: 'jcontent-test-template', serverName: 'localhost', locale: 'en'});
+        createSite(siteKey, {templateSet: 'dx-base-demo-templates', serverName: 'localhost', locale: 'en'});
         cy.executeGroovy('contentEditor/contentMultiLanguage/contentMultiLanguageSite.groovy', {SITEKEY: siteKey2});
         createUser(editor.username, editor.password);
         grantRoles(`/sites/${siteKey}`, ['editor'], editor.username, 'USER');
@@ -50,6 +50,13 @@ describe('Publication status badge test', () => {
             name: textName,
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', value: 'Test 1', language: 'en'}]
+        });
+
+        addNode({
+            parentPathOrId: `/sites/${siteKey2}/contents`,
+            name: 'test publication',
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'test publication', language: 'en'}]
         });
 
         addNode({
@@ -121,7 +128,7 @@ describe('Publication status badge test', () => {
         cy.login(editor.username, editor.password);
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         // Publication status visible when hovering over publication cell in table
-        jcontent.getTable().getRowByLabel('Test 2')
+        jcontent.getTable().getRowByName('test-text')
             .should('contain.text', 'Published by root')
             .and('not.contain.text', `Published by ${editor.username}`);
     });
@@ -175,5 +182,40 @@ describe('Publication status badge test', () => {
         // Verify status is still published in DE
         jcontent.getLanguageSwitcher().select('de');
         jcontent.getTable().getRowByName('multilangText').should('contain.text', 'Published by root');
+    });
+
+    it('checks action "publish all under" home', () => {
+        cy.login();
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        jcontent.switchToListMode();
+
+        cy.get('[data-sel-role="publishMenu"]').click();
+        jcontent.publishAll();
+
+        const row = jcontent.getTable().getRowByName('search-results');
+        row.get().dblclick();
+        cy.get('h1').contains('Search Results');
+
+        jcontent.getTable().getRowByName('simple-search-form').should('contain.text', 'Published by root');
+    });
+
+    it('checks action "publish all under" a folder - multilanguages', () => {
+        cy.login();
+        const jcontent = JContent.visit(siteKey2, 'en', 'content-folders/contents');
+
+        jcontent.getTable().getRowByName('test publication').should('contain.text', 'This content has never been published');
+
+        cy.get('[data-sel-role="publishMenu"]').click();
+        cy.get('[data-sel-role="jcontent-publishMenu"]')
+            .find('[data-sel-role="publishAllInAllLanguages"]')
+            .click();
+        cy.contains('#publishNowButton button', 'Publish all now').click();
+        cy.get('div[id="notistack-snackbar"]', {timeout: 5000})
+            .contains('Publication completed', {timeout: 5000})
+            .should('be.visible');
+
+        jcontent.getTable().getRowByName('test publication').should('contain.text', 'Published by root');
+        jcontent.getLanguageSwitcher().select('fr');
+        jcontent.getTable().getRowByName('test publication').should('contain.text', 'Published by root');
     });
 });

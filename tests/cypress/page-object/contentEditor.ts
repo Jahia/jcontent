@@ -303,7 +303,7 @@ export class ContentEditor extends BasePage {
     }
 
     getBreadcrumb(content: string): Breadcrumb {
-        return Breadcrumb.findByContent(content);
+        return Breadcrumb.findByContent(content, ContentEditor.defaultSelector);
     }
 
     switchToAdvancedOptions(): AdvancedOptions {

@@ -7,7 +7,8 @@ export class Breadcrumb extends BaseComponent {
         if (parentSelector) {
             return new Breadcrumb(cy.get(parentSelector).find(this.defaultSelector).contains(content));
         }
-            return new Breadcrumb(cy.get(this.defaultSelector).contains(content));
+
+        return new Breadcrumb(cy.get(this.defaultSelector).contains(content));
     }
 
     static getBreadcrumbMenu() : Dropdown {

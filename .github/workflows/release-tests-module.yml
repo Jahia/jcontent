@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       is_dry_run:
-        description: 'DRY RUN: (SHOULD ONLY BE RUN ON NON-MASTER branch) Indicate if the workflow triggered is a dry-run of the release'
+        description: 'DRY RUN: (SHOULD ONLY BE RUN ON NON-MAIN branch) Indicate if the workflow triggered is a dry-run of the release'
         type: boolean
         required: false
         default: false
@@ -73,8 +73,8 @@ jobs:
           git push --follow-tags 
 
           if "${{ inputs.is_dry_run }}"; then
-            if [[ "${{ github.ref }}" == 'refs/heads/master' ]]; then
-              echo "Dry run should be executed in non-master branch"
+            if [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then
+              echo "Dry run should be executed in non-main branch"
             else
               echo "Executing npm publish in dry-run mode"
               npm publish --access public --tag latest --dry-run

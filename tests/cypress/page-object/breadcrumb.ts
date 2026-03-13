@@ -3,12 +3,11 @@ import {BaseComponent, Dropdown, getComponentBySelector} from '@jahia/cypress';
 export class Breadcrumb extends BaseComponent {
     static defaultSelector = 'button[data-sel-role="breadcrumb-item"]';
 
-    static findByContent(content: string) : Breadcrumb {
+    static findByContent(content: string, parentSelector?: string) : Breadcrumb {
+        if (parentSelector) {
+            return new Breadcrumb(cy.get(parentSelector).find(this.defaultSelector).contains(content));
+        }
         return new Breadcrumb(cy.get(this.defaultSelector).contains(content));
-    }
-
-    static findByContentinCE(content: string) : Breadcrumb {
-        return new Breadcrumb(cy.get('div[class*="ContentEditor-EditPanel-EditPanel"]').contains(this.defaultSelector, content));
     }
 
     static getBreadcrumbMenu() : Dropdown {

@@ -1,6 +1,5 @@
 import {ContentEditor, JContent} from '../../page-object';
 import {addNode, createSite, deleteSite} from '@jahia/cypress';
-import {Breadcrumb} from '../../page-object/breadcrumb';
 
 describe('Create content tests', () => {
     let jcontent: JContent;
@@ -42,8 +41,8 @@ describe('Create content tests', () => {
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
 
-        Breadcrumb.findByContentinCE('mylist').should('exist');
-        Breadcrumb.findByContentinCE('breadcrumbFolder').should('exist').click();
+        contentEditor.getBreadcrumb('mylist').should('be.visible');
+        contentEditor.getBreadcrumb('breadcrumbFolder').should('be.visible').click();
         cy.get('h1').contains('breadcrumbFolder');
     });
 
@@ -54,8 +53,8 @@ describe('Create content tests', () => {
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
 
-        Breadcrumb.findByContentinCE('Search Results').should('exist');
-        Breadcrumb.findByContentinCE('landing').should('exist').click();
+        contentEditor.getBreadcrumb('Search Results').should('be.visible');
+        contentEditor.getBreadcrumb('landing').should('be.visible').click();
         cy.get('h1').contains('landing');
     });
 });

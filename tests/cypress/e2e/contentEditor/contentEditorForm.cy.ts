@@ -34,11 +34,20 @@ describe('Content editor form', () => {
                 }
             }`
         });
+        cy.apollo({
+            mutation: gql`mutation GrantRoles { 
+                jcr {
+                    grantRoles: mutateNode(pathOrId: "/sites/contentEditorSite") {
+                        grantRoles(roleNames: "editor-in-chief", principalType: USER, principalName: "anne")
+                    }
+                }
+            }`
+        });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
-            name: 'myRichText',
-            primaryNodeType: 'jnt:bigText',
-            properties: [{name: 'text', value: 'not for editor', language: 'en'}]
+            name: 'myText',
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', language: 'en', value: 'my text'}]
         });
     });
 
@@ -238,5 +247,36 @@ describe('Content editor form', () => {
             .find('[data-sel-role="tab-advanced-options"]')
             .should('not.exist');
         ceEditor.cancel();
+    });
+
+    it('checks technical information', () => {
+        cy.logout();
+        // login as editor in chief
+        cy.login('anne', 'password');
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        const ceEditor = jcontent.editComponentByRowName('myText');
+        ceEditor.switchToAdvancedMode();
+        ceEditor.switchToAdvancedOptions();
+
+        cy.get('[data-sel-labelled-info="Creation date"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Last modification date"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Last Publication Date"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Creator"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Last contributor"]').should('be.visible').should('contain', 'root');
+        cy.get('[data-sel-labelled-info="Last Publisher"]').should('be.visible');
+
+        cy.get('[data-sel-labelled-info="Main content type"]').should('contain', 'Simple text');
+        cy.get('[data-sel-labelled-info="Full content type"]').should('contain', 'jnt:text');
+        cy.get('[data-sel-labelled-info="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
+        cy.get('[data-sel-labelled-info="UUID"]').should('be.visible');
+
+        // switch to edit tab and modify the simple text
+        cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
+        ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');
+        ceEditor.save();
+        ceEditor.switchToAdvancedOptions();
+
+        // verify last contributor has changed
+        cy.get('[data-sel-labelled-info="Last contributor"]').should('contain', 'anne');
     });
 });

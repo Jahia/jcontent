@@ -251,7 +251,7 @@ describe('Content editor form', () => {
 
     it('Should display technical information in advanced options', () => {
         cy.logout();
-        // login as editor in chief
+        // Login as editor in chief
         cy.login('anne', 'password');
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
@@ -270,13 +270,13 @@ describe('Content editor form', () => {
         cy.get('[data-sel-labelled-info="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
         cy.get('[data-sel-labelled-info="UUID"]').should('be.visible');
 
-        // switch to edit tab and modify the text
+        // Switch to edit tab and modify the text
         cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
         ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');
         ceEditor.save();
         ceEditor.switchToAdvancedOptions();
 
-        // verify last contributor has changed
+        // Verify last contributor has changed
         cy.get('[data-sel-labelled-info="Last contributor"]').should('contain', 'anne');
     });
 });

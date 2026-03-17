@@ -221,7 +221,7 @@ describe('Content editor form', () => {
         cy.get('[data-sel-content-editor-field]').should('have.length.greaterThan', 7).filter('[data-sel-content-editor-field$="_jcr:title"]').should('have.length', 1);
     });
 
-    it('should display default resource key when module is disabled', () => {
+    it('Should display default resource key when module is disabled', () => {
         let contentEditor = jcontent.createContent('cent:defaultValueTest');
         let field = contentEditor.getField(SmallTextField, 'cent:defaultValueTest_defaultDate', false);
         field.get().find('label').should('contain', 'Default date label');
@@ -236,11 +236,11 @@ describe('Content editor form', () => {
         field.get().find('label').should('contain', 'defaultDate');
     });
 
-    it('should not display advanced options tab for editor', () => {
+    it('Should not display advanced options tab for editor', () => {
         cy.logout();
         cy.login('mathias', 'password');
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        const ceEditor = jcontent.editComponentByRowName('myRichText');
+        const ceEditor = jcontent.editComponentByRowName('myText');
 
         ceEditor.switchToAdvancedMode();
         cy.get('.moonstone-header')
@@ -249,7 +249,7 @@ describe('Content editor form', () => {
         ceEditor.cancel();
     });
 
-    it('checks technical information', () => {
+    it('Should display technical information in advanced options', () => {
         cy.logout();
         // login as editor in chief
         cy.login('anne', 'password');
@@ -270,7 +270,7 @@ describe('Content editor form', () => {
         cy.get('[data-sel-labelled-info="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
         cy.get('[data-sel-labelled-info="UUID"]').should('be.visible');
 
-        // switch to edit tab and modify the simple text
+        // switch to edit tab and modify the text
         cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
         ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');
         ceEditor.save();

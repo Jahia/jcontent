@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 'lts/*'
       - uses: actions/checkout@v4
-      - uses: jahia/jahia-modules-action/integration-tests@tesrunWithProfile
+      - uses: jahia/jahia-modules-action/integration-tests@testrunWithProfile
         with:
           module_id: jcontent
           incident_service: jcontent-${{ matrix.config_file }}

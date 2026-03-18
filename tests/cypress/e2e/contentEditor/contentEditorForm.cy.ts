@@ -5,7 +5,7 @@ import {
     Button,
     Dropdown,
     getComponentByRole,
-    getComponentBySelector
+    getComponentBySelector, grantRoles
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../page-object';
@@ -34,11 +34,12 @@ describe('Content editor form', () => {
                 }
             }`
         });
+        grantRoles(`/sites/${siteKey}`, ['editor-in-chief'], 'anne', 'USER');
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
-            name: 'myRichText',
-            primaryNodeType: 'jnt:bigText',
-            properties: [{name: 'text', value: 'not for editor', language: 'en'}]
+            name: 'myText',
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', language: 'en', value: 'my text'}]
         });
     });
 
@@ -72,7 +73,7 @@ describe('Content editor form', () => {
         });
     }
 
-    it('Should display custom title label and error message', function () {
+    it('should display custom title label and error message', function () {
         const contentEditor = jcontent.createContent('cent:testOverride');
         const field = contentEditor.getField(SmallTextField, 'cent:testOverride_jcr:title', false);
 
@@ -89,13 +90,13 @@ describe('Content editor form', () => {
         cy.contains('My constraint message 1234');
     });
 
-    it('Should display overridden title label for boolean buttons', function () {
+    it('should display overridden title label for boolean buttons', function () {
         const contentEditor = jcontent.createContent('cent:mesiHeaderBanner');
         const field = contentEditor.getField(Field, 'cemix:mesiBannerStory_buttonTransverse', false);
         field.get().find('label').should('contain', 'Contribuer le bouton transverse Header ?');
     });
 
-    it('Should display overridden property in correct section', function () {
+    it('should display overridden property in correct section', function () {
         jcontent.createContent('cent:myComponent');
         cy.get('article').contains('myComponent').parents('article').find('div[data-sel-content-editor-field]').should('have.length', 2);
         cy.get('article').contains('categorizedContent').parents('article').find('div[data-sel-content-editor-field]').should('have.length', 2).as('categorizedContentFields');
@@ -103,7 +104,7 @@ describe('Content editor form', () => {
         cy.get('@categorizedContentFields').last().should('contain.text', 'subcategory');
     });
 
-    it('Should update dependent property "j:subNodesView" in content retrieval when changing "j:type"', () => {
+    it('should update dependent property "j:subNodesView" in content retrieval when changing "j:type"', () => {
         const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         contentEditor.openSection('layout');
         getComponentBySelector(Dropdown, '[data-sel-content-editor-field="jmix:renderableList_j:subNodesView"]').get().click();
@@ -119,7 +120,7 @@ describe('Content editor form', () => {
         contentEditor.cancelAndDiscard();
     });
 
-    it('Should use site default template value', () => {
+    it('should use site default template value', () => {
         const contentTypeName = 'cent:testDefaultTemplate';
         const templateName = 'events';
         const fieldName = 'cent:testDefaultTemplate_j:templateName';
@@ -136,7 +137,7 @@ describe('Content editor form', () => {
         contentEditor.create(); // No errors on create
     });
 
-    it('Should display hidden property with overridden hide flag', () => {
+    it('should display hidden property with overridden hide flag', () => {
         const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         const field = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_j:invalidLanguagesHiddenTest', true);
         field.addNewValue('fr', true);
@@ -147,39 +148,39 @@ describe('Content editor form', () => {
         fieldEdit.checkValues(['fr', 'de']);
     });
 
-    it('Should display overridden title label and description label from json overrides define by labelKey and descriptionKey', () => {
+    it('should display overridden title label and description label from json overrides define by labelKey and descriptionKey', () => {
         const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         const field = contentEditor.getField(SmallTextField, 'cent:contentRetrievalCETest_jcr:title', false);
         field.get().find('label').should('contain', 'Title JSON override');
         field.get().scrollIntoView().contains('Information').should('be.visible');
     });
 
-    it('Should display overridden system name and description labels from json overrides', () => {
+    it('should display overridden system name and description labels from json overrides', () => {
         const contentEditor = jcontent.createContent('cent:contentRetrievalCETest');
         const field = contentEditor.getField(SmallTextField, 'nt:base_ce:systemName', false);
         field.get().find('label').should('contain', 'Customized system name');
         field.get().scrollIntoView().contains('Customized description').should('be.visible');
     });
 
-    it('Should enable automatically cemix:testAutoActivatedMixin on jnt:bigText for create', () => {
+    it('should enable automatically cemix:testAutoActivatedMixin on jnt:bigText for create', () => {
         const contentEditor = jcontent.createContent('jnt:bigText');
         contentEditor.getField(SmallTextField, 'cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField');
         contentEditor.getField(SmallTextField, 'cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField');
     });
 
-    it('Should enable automatically cemix:testAutoAlwaysActivatedMixin on jnt:bigText for edit', () => {
+    it('should enable automatically cemix:testAutoAlwaysActivatedMixin on jnt:bigText for edit', () => {
         const contentEditor = jcontent.editComponentByText('isAlwaysActivated override test');
         cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
         contentEditor.getField(SmallTextField, 'cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField');
     });
 
-    it('Should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText for create', () => {
+    it('should not enable automatically cemix:testAutoActivatedMixin on jnt:simpleText for create', () => {
         jcontent.createContent('jnt:text');
         cy.get('[data-sel-content-editor-field="cemix:testAutoActivatedMixin_j:testAutoActivatedMixinField"]').should('not.exist');
         cy.get('[data-sel-content-editor-field="cemix:testAutoAlwaysActivatedMixin_j:testAutoAlwaysActivatedMixinField"]').should('not.exist');
     });
 
-    it('Should not see readonly text field for reviewer', () => {
+    it('should not see readonly text field for reviewer', () => {
         const contentEditor = jcontent.createContent('jnt:text');
         const field = contentEditor.getField(SmallTextField, 'jnt:text_text');
         field.get().find('input').should('not.have.attr', 'readonly', 'readonly');
@@ -192,7 +193,7 @@ describe('Content editor form', () => {
         field2.get().find('input').should('have.attr', 'readonly', 'readonly');
     });
 
-    it('Should not see description field for reviewer', () => {
+    it('should not see description field for reviewer', () => {
         const contentEditor = jcontent.createContent('jnt:news');
         contentEditor.getField(SmallTextField, 'jnt:news_desc');
 
@@ -203,7 +204,7 @@ describe('Content editor form', () => {
         cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');
     });
 
-    it('Should render only one title field', () => {
+    it('should render only one title field', () => {
         const contentTypeName = 'cent:epSifeRestaurant';
 
         cy.log('verify there is only one title field');
@@ -231,12 +232,43 @@ describe('Content editor form', () => {
         cy.logout();
         cy.login('mathias', 'password');
         jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        const ceEditor = jcontent.editComponentByRowName('myRichText');
+        const ceEditor = jcontent.editComponentByRowName('myText');
 
         ceEditor.switchToAdvancedMode();
         cy.get('.moonstone-header')
             .find('[data-sel-role="tab-advanced-options"]')
             .should('not.exist');
         ceEditor.cancel();
+    });
+
+    it('should display technical information in advanced options', () => {
+        cy.logout();
+        // Login as editor in chief
+        cy.login('anne', 'password');
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        const ceEditor = jcontent.editComponentByRowName('myText');
+        ceEditor.switchToAdvancedMode();
+        ceEditor.switchToAdvancedOptions();
+
+        cy.get('[data-sel-labelled-info="Creation date"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Last modification date"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Last Publication Date"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Creator"]').should('be.visible');
+        cy.get('[data-sel-labelled-info="Last contributor"]').should('be.visible').should('contain', 'root');
+        cy.get('[data-sel-labelled-info="Last Publisher"]').should('be.visible');
+
+        cy.get('[data-sel-labelled-info="Main content type"]').should('contain', 'Simple text');
+        cy.get('[data-sel-labelled-info="Full content type"]').should('contain', 'jnt:text');
+        cy.get('[data-sel-labelled-info="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
+        cy.get('[data-sel-labelled-info="UUID"]').should('be.visible');
+
+        // Switch to edit tab and modify the text
+        cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
+        ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');
+        ceEditor.save();
+        ceEditor.switchToAdvancedOptions();
+
+        // Verify last contributor has changed
+        cy.get('[data-sel-labelled-info="Last contributor"]').should('contain', 'anne');
     });
 });

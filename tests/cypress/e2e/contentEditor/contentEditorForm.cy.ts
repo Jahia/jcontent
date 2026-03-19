@@ -291,7 +291,7 @@ describe('Content editor form', () => {
             .find('input[type="checkbox"]')
             .should('have.attr', 'aria-checked', 'true');
 
-        // uncheck
+        // Uncheck
         cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
             .find('input[type="checkbox"]')
             .uncheck({force: true});

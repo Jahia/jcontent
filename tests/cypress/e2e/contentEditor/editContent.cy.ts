@@ -21,6 +21,11 @@ describe('Create content tests', () => {
             name: 'My simple text',
             primaryNodeType: 'jnt:text'
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'On change text',
+            primaryNodeType: 'jnt:text'
+        });
     });
 
     after(() => {
@@ -113,5 +118,18 @@ describe('Create content tests', () => {
         contentEditor.cancel();
 
         cy.url().should('contain', '?param=test');
+    });
+
+    it('should display the on-change div', () => {
+        const contentEditor = jcontent.editComponentByRowName('On change text');
+        contentEditor.switchToAdvancedMode();
+
+        cy.get('#sel-content-editor-field-on-change').should('not.exist');
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('update');
+        contentEditor.save();
+
+        cy.get('#sel-content-editor-field-on-change')
+            .should('have.attr', 'data-previous-value', 'updat')
+            .should('have.attr', 'data-current-value', 'update');
     });
 });

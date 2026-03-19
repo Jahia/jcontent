@@ -3,7 +3,7 @@ import {Field, SmallTextField} from '../../page-object/fields';
 import {
     addNode,
     Button,
-    Dropdown,
+    Dropdown, enableModule,
     getComponentByRole,
     getComponentBySelector, grantRoles
 } from '@jahia/cypress';
@@ -16,6 +16,7 @@ describe('Content editor form', () => {
 
     before(function () {
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: siteKey});
+        enableModule('qa-module', siteKey);
         cy.apollo({
             mutation: gql`mutation GrantRoles {
                 jcr {
@@ -40,6 +41,11 @@ describe('Content editor form', () => {
             name: 'myText',
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', language: 'en', value: 'my text'}]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'allFieldsSimple',
+            primaryNodeType: 'qant:allFields'
         });
     });
 
@@ -270,5 +276,29 @@ describe('Content editor form', () => {
 
         // Verify last contributor has changed
         cy.get('[data-sel-labelled-info="Last contributor"]').should('contain', 'anne');
+    });
+
+    it('should be able to check and uncheck boolean', () => {
+        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
+        contentEditor.switchToAdvancedMode();
+
+        cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
+            .find('input[type="checkbox"]')
+            .check({force: true});
+        contentEditor.save();
+        cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
+            .find('input[type="checkbox"]')
+            .should('have.attr', 'aria-checked', 'true');
+
+        // uncheck
+        cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
+            .find('input[type="checkbox"]')
+            .uncheck({force: true});
+        contentEditor.save();
+        cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
+            .find('input[type="checkbox"]')
+            .should('have.attr', 'aria-checked', 'false');
+        contentEditor.cancel();
     });
 });

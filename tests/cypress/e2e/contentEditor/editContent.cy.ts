@@ -38,7 +38,7 @@ describe('Create content tests', () => {
     ];
 
     it('can edit content', () => {
-        jcontent.getTable().getRowByLabel('Rich text').contextMenu().select('Edit');
+        jcontent.getTable().getRowByName('test-content1').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         cy.get('.moonstone-chip').contains('Rich text');
         contentEditor.getField(RichTextField, 'jnt:bigText_text');
@@ -46,13 +46,13 @@ describe('Create content tests', () => {
     });
 
     it('can edit source ref', () => {
-        jcontent.getTable().getRowByLabel('Content reference').contextMenu().select('Go to source');
+        jcontent.getTable().getRowByName('reference').contextMenu().select('Go to source');
         const contentEditor = new ContentEditor();
         contentEditor.getField(RichTextField, 'jnt:bigText_text');
         contentEditor.cancel();
     });
 
-    it('Updates unsaved badge', () => {
+    it('updates unsaved badge', () => {
         jcontent.editComponentByRowName('My simple text');
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
@@ -70,7 +70,7 @@ describe('Create content tests', () => {
         cy.get('div[data-sel-role="unsaved-info-chip"]', {timeout: 5000}).should('not.exist');
     });
 
-    it('Checks "shared by all languages" badge', () => {
+    it('checks "shared by all languages" badge', () => {
         jcontent.editComponentByRowName('AllFieldsSimple');
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
@@ -99,5 +99,19 @@ describe('Create content tests', () => {
         contentEditor.switchToAdvancedMode();
         contentEditor.getSmallTextField('jnt:text_text').addNewValue('My second update');
         contentEditor.save();
+    });
+
+    it('can edit a content with parameter in the URL', () => {
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents?param=test');
+
+        cy.url().should('contain', '?param=test');
+        jcontent.editComponentByRowName('My simple text');
+        const contentEditor = new ContentEditor();
+        contentEditor.switchToAdvancedMode();
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('My third update');
+        contentEditor.save();
+        contentEditor.cancel();
+
+        cy.url().should('contain', '?param=test');
     });
 });

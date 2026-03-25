@@ -2,8 +2,8 @@ $barHeight: 32px;
 $barMargin: 2px;
 $indexSelected: 25000;
 $indexHovered: 18000;
-$bgColorDragging: var(--color-success);
-$colorDragging: var(--color-white);
+$bgColorDragging: var(--moon-color-success);
+$colorDragging: var(--moon-color-white);
 
 .root {
     position: absolute;
@@ -36,7 +36,7 @@ $colorDragging: var(--color-white);
 .boxSelected {
     z-index: $indexSelected;
 
-    outline: 2px solid var(--borderColor);
+    outline: 2px solid var(--moon-borderColor);
     box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
 }
 
@@ -44,24 +44,24 @@ $colorDragging: var(--color-white);
 .boxHovered:not(.boxSelected) {
     z-index: $indexHovered;
 
-    outline: 2px dashed var(--borderColor);
+    outline: 2px dashed var(--moon-borderColor);
 }
 
 .boxHighlighted {
-    outline: 2px solid var(--color-warning);
+    outline: 2px solid var(--moon-color-warning);
 
     &.boxSelected {
-        outline-color: var(--borderColor);
+        outline-color: var(--moon-borderColor);
     }
 
     &.boxNotVisible,
     &.boxNotVisible.boxHovered {
-        outline-color: var(--color-gray);
-        background: var(--color-gray_light60);
+        outline-color: var(--moon-color-gray);
+        background: var(--moon-color-gray_light60);
     }
 
     &.boxHovered {
-        outline-color: var(--color-warning);
+        outline-color: var(--moon-color-warning);
 
         box-shadow: 0 3px 20px 9px rgba(19, 28, 33, 0.1);
     }
@@ -69,14 +69,14 @@ $colorDragging: var(--color-white);
     .displayStatus {
         position: absolute;
         top: 0;
-        right: var(--spacing-small);
+        right: var(--moon-spacing-small);
 
         transform: translateY(-50%);
     }
 }
 
 .noDisplayOverlay {
-    background: var(--color-gray_light_plain20);
+    background: var(--moon-color-gray_light_plain20);
 
     .overlayLabel {
         display: flex;
@@ -124,23 +124,23 @@ $colorDragging: var(--color-white);
     width: 100%;
     height: $barHeight;
 
-    background-color: var(--backgroundColorSelected);
+    background-color: var(--moon-backgroundColorSelected);
 
     pointer-events: all;
 }
 
 .boxHeader {
-    gap: var(--spacing-small);
+    gap: var(--moon-spacing-small);
 
     width: 100%;
 
     height: $barHeight;
 
-    padding: 0 var(--spacing-small);
+    padding: 0 var(--moon-spacing-small);
 
     border-radius: 4px;
 
-    background-color: var(--backgroundColorBase);
+    background-color: var(--moon-backgroundColorBase);
 
     transition: background 0.4s ease-in-out;
 
@@ -150,7 +150,7 @@ $colorDragging: var(--color-white);
 
     &.isHighlighted,
     &:hover {
-        background-color: var(--backgroundColorHovered);
+        background-color: var(--moon-backgroundColorHovered);
     }
 
     &.isClicked {
@@ -161,7 +161,7 @@ $colorDragging: var(--color-white);
 
         border-radius: 0;
 
-        background-color: var(--backgroundColorSelected);
+        background-color: var(--moon-backgroundColorSelected);
     }
 
     button {
@@ -184,7 +184,7 @@ $colorDragging: var(--color-white);
     flex: 0 0 auto;
     width: 1rem;
     height: 1rem;
-    margin-right: var(--spacing-nano);
+    margin-right: var(--moon-spacing-nano);
 
     vertical-align: top;
 }
@@ -220,7 +220,7 @@ $colorDragging: var(--color-white);
     display: flex;
     width: calc(100% + 4px);
     height: calc($barHeight + 4px);
-    padding: 0 var(--spacing-small);
+    padding: 0 var(--moon-spacing-small);
 
     color: $colorDragging;
 
@@ -228,5 +228,5 @@ $colorDragging: var(--color-white);
 }
 
 .draggedOverlay {
-    background-color: var(--color-dark20);
+    background-color: var(--moon-color-dark20);
 }

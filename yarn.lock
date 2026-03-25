@@ -2751,11 +2751,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@npm:^2.17.3":
-  version: 2.17.3
-  resolution: "@jahia/moonstone@npm:2.17.3"
+"@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@1b8dcad":
+  version: 2.17.5
+  resolution: "@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@1b8dcad"
   dependencies:
     "@floating-ui/react": "npm:^0.27.16"
+    "@tanstack/react-table": "npm:^8.21.3"
     clsx: "npm:^2.1.1"
     re-resizable: "npm:^6.11.2"
     to-px: "npm:^1.1.0"
@@ -2763,7 +2764,7 @@ __metadata:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/85721927199b7cee03be18c5f3ab277d9cbdc933d0054ba1bb0ba58f216045b1ee7b378402b26346e6067906c8266e7385e63dab33a96b223361d04b1974adcb
+  checksum: 10c0/66bd6d947136b42cf72cec6a97eae3fb93c5ab92088a81f261d1c126e45ec29cd315be253b5c1e6c109039396c4ad1c4ef144cc716a7ddd74705eb8150d6fade
   languageName: node
   linkType: hard
 
@@ -5014,6 +5015,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-table@npm:^8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/react-table@npm:8.21.3"
+  dependencies:
+    "@tanstack/table-core": "npm:8.21.3"
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 10c0/85d1d0fcb690ecc011f68a5a61c96f82142e31a0270dcf9cbc699a6f36715b1653fe6ff1518302a6d08b7093351fc4cabefd055a7db3cd8ac01e068956b0f944
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-virtual@npm:^3.11.2":
   version: 3.11.2
   resolution: "@tanstack/react-virtual@npm:3.11.2"
@@ -5023,6 +5036,13 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/de446ce517d0855b3d58e79b6a75a37be40b4529baf0a5c3ffa2662dea80aba03409e06545aea27aa9e3a36fc2a2e3005ecbfce16a4659991d66930ea3bd62d4
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/table-core@npm:8.21.3"
+  checksum: 10c0/40e3560e6d55e07cc047024aa7f83bd47a9323d21920d4adabba8071fd2d21230c48460b26cedf392588f8265b9edc133abb1b0d6d0adf4dae0970032900a8c9
   languageName: node
   linkType: hard
 

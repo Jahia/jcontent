@@ -235,6 +235,7 @@ export const EditFrame = () => {
             const locale = mainModule?.getAttribute('locale');
             if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
                 // Clone all styles with doubled classname prefix
+                console.time('Cloning styles');
                 const head = currentDocument.querySelector('head');
                 iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {
                     const clone = s.cloneNode(true);
@@ -242,6 +243,7 @@ export const EditFrame = () => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
+                console.timeEnd('Cloning styles');
 
                 // Insert a <link rel="stylesheet"> for moonstone styles
                 const link = iframe.current.contentDocument.createElement('link');

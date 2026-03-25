@@ -19,6 +19,7 @@ import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
+import scopedMoonstone from '@jahia/moonstone/scoped.css?url';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -241,6 +242,12 @@ export const EditFrame = () => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
+
+                // Insert a <link rel="stylesheet"> for moonstone styles
+                const link = iframe.current.contentDocument.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = scopedMoonstone;
+                currentDocument.querySelector('head').appendChild(link);
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
                 iframe.current.contentWindow.location.href = url;
                 setPreviousUrlParams(currentUrlParams);

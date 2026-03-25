@@ -7,9 +7,9 @@
 
     box-sizing: border-box;
 
-    border: 2px solid var(--color-danger);
+    border: 2px solid var(--moon-color-danger);
 
-    background: var(--color-danger60);
+    background: var(--moon-color-danger60);
 
     pointer-events: none;
 }
@@ -17,7 +17,7 @@
 .badge {
     position: absolute;
     top: 0;
-    right: var(--spacing-small);
+    right: var(--moon-spacing-small);
 
     transform: translateY(-50%);
 }

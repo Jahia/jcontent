@@ -31,7 +31,10 @@ module.exports = (env, argv) => {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
             alias: {
-                '~': path.resolve(__dirname, './src/javascript')
+                '~': path.resolve(__dirname, './src/javascript'),
+                // Wepback does not support ?url on package identifiers,
+                // so we alias the identifier to its resolved path
+                '@jahia/moonstone/scoped.css': path.resolve(__dirname, 'node_modules/@jahia/moonstone/dist/scoped.css')
             },
             fallback: {
                 "url": false,
@@ -43,7 +46,19 @@ module.exports = (env, argv) => {
         },
         module: {
             rules: [
-                ...moonstone,
+                {
+                    resourceQuery: /url/, // *.?url
+                    type: "asset/resource",
+                    generator: {
+                        filename: "assets/[name].[contenthash][ext]",
+                    },
+                },
+                // Prevent moonstone shared config to conflict with the asset/resource rule
+                ...moonstone.map(rule =>
+                    rule.test && rule.test.toString() === '/\\.css$/'
+                        ? {...rule, resourceQuery: {not: [/url/]}}
+                        : rule
+                ),
                 {
                     test: /\.m?js$/,
                     type: 'javascript/auto'

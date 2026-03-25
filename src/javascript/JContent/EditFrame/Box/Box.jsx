@@ -25,13 +25,13 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
-    const defaultBorderColor = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
+    const defaultBorderColor = isSomethingSelected ? 'var(--moon-color-accent_dark)' : 'var(--moon-color-accent_light)';
     const config = {
         Bar,
         borderColor: pageBuilderBoxConfig?.borderColor || defaultBorderColor,
-        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors?.base || 'var(--color-gray_light_plain40)',
-        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors?.hover || 'var(--color-gray_light)',
-        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors?.selected || 'var(--color-accent_plain20)',
+        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors?.base || 'var(--moon-color-gray_light_plain40)',
+        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors?.hover || 'var(--moon-color-gray_light)',
+        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors?.selected || 'var(--moon-color-accent_plain20)',
         isActionsHidden: pageBuilderBoxConfig?.isActionsHidden,
         isStatusHidden: pageBuilderBoxConfig?.isStatusHidden,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
@@ -288,9 +288,9 @@ export const Box = React.memo(({
                 data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
                 style={{
-                    '--backgroundColorBase': backgroundColorBase,
-                    '--backgroundColorHovered': backgroundColorHovered,
-                    '--backgroundColorSelected': backgroundColorSelected
+                    '--moon-backgroundColorBase': backgroundColorBase,
+                    '--moon-backgroundColorHovered': backgroundColorHovered,
+                    '--moon-backgroundColorSelected': backgroundColorSelected
                 }}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
@@ -337,7 +337,7 @@ export const Box = React.memo(({
                 displayStatuses.has('notVisible') && styles.boxNotVisible,
                 (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
                  style={{
-                     '--borderColor': borderColor
+                     '--moon-borderColor': borderColor
                  }}
             >
                 {isHeaderDisplayed && Header}
@@ -354,7 +354,7 @@ export const Box = React.memo(({
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             style={{
-                                '--backgroundColorSelected': backgroundColorSelected
+                                '--moon-backgroundColorSelected': backgroundColorSelected
                             }}
                             onClick={onClick}
                     >

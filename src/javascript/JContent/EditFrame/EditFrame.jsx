@@ -19,7 +19,7 @@ import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
 import scopedMoonstone from '@jahia/moonstone/scoped.css?url';
-import scopedEditFrame from 'editframe-styles/scoped.css?url'
+import scopedEditFrame from 'editframe-styles/scoped.css?url';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813

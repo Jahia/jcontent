@@ -92,6 +92,7 @@ module.exports = (env, argv) => {
                 {
                     test: /\.css$/,
                     include: [path.join(__dirname,'node_modules/react-image-crop'), path.join(__dirname, 'packages/editframe-styles/dist')],
+                    resourceQuery: {not: [/url/]},
                     sideEffects: true,
                     use: ['style-loader', 'css-loader']
                 },

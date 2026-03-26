@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    // TODO: design a modern (TS6 ready) and safe tsconfig
+    "moduleResolution": "bundler",
+    "module": "preserve",
+    "noEmit": true
+  }
+}

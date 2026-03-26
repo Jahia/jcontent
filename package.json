@@ -2,8 +2,11 @@
   "name": "@jahia/jcontent",
   "version": "3.7.0-SNAPSHOT",
   "type": "commonjs",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "yarn webpack",
+    "build": "yarn workspaces foreach --recursive --topological-dev run build && yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
@@ -158,6 +161,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^4.3.0",
+    "editframe-styles": "workspace:*",
     "eslint": "^7.9.0",
     "eslint-plugin-jest": "^24.0.1",
     "eslint-plugin-json": "^2.1.1",

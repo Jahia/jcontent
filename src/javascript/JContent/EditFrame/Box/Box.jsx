@@ -1,11 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import styles from './Box.scss';
+import {boxStyles as styles, editFrameStyles as editStyles} from 'editframe-styles';
 import {useBoxStatus} from './useBoxStatus';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
-import editStyles from '../EditFrame.scss';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';

@@ -18,7 +18,7 @@ import InsertionPoints from '../InsertionPoints';
 import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
-import styles from './Boxes.scss';
+import {boxesStyles as styles} from 'editframe-styles';
 import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
 import {useDndData} from '~/JContent/EditFrame/Boxes/dataHooks/useDndData';

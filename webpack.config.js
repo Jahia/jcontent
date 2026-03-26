@@ -34,7 +34,8 @@ module.exports = (env, argv) => {
                 '~': path.resolve(__dirname, './src/javascript'),
                 // Wepback does not support ?url on package identifiers,
                 // so we alias the identifier to its resolved path
-                '@jahia/moonstone/scoped.css': path.resolve(__dirname, 'node_modules/@jahia/moonstone/dist/scoped.css')
+                '@jahia/moonstone/scoped.css': path.resolve(__dirname, 'node_modules/@jahia/moonstone/dist/scoped.css'),
+                'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css')
             },
             fallback: {
                 "url": false,
@@ -90,7 +91,7 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.css$/,
-                    include: [path.join(__dirname,'node_modules/react-image-crop')],
+                    include: [path.join(__dirname,'node_modules/react-image-crop'), path.join(__dirname, 'packages/editframe-styles/dist')],
                     sideEffects: true,
                     use: ['style-loader', 'css-loader']
                 },

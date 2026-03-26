@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
-import styles from './EditFrame.scss';
+import {editFrameStyles as styles} from 'editframe-styles';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {
     registerContentModificationEventHandler,
@@ -9,7 +9,6 @@ import {
 } from '~/JContent/eventHandlerRegistry';
 import {extractPaths, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
-import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
 import {Portal} from './Portal';
 import {Infos} from './Infos';
@@ -20,6 +19,7 @@ import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
 import scopedMoonstone from '@jahia/moonstone/scoped.css?url';
+import scopedEditFrame from 'editframe-styles/scoped.css?url'
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -234,22 +234,13 @@ export const EditFrame = () => {
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
             if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
-                // Clone all styles with doubled classname prefix
-                console.time('Cloning styles');
-                const head = currentDocument.querySelector('head');
-                iframe.current.ownerDocument.querySelectorAll('style[styleloader],style[data-jss]').forEach(s => {
-                    const clone = s.cloneNode(true);
-                    clone.textContent = prefixCssSelectors(clone.textContent, '.' + styles.root);
-                    currentDocument.adoptNode(clone);
-                    head.appendChild(clone);
-                });
-                console.timeEnd('Cloning styles');
-
-                // Insert a <link rel="stylesheet"> for moonstone styles
-                const link = iframe.current.contentDocument.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = scopedMoonstone;
-                currentDocument.querySelector('head').appendChild(link);
+                // Insert scoped stylesheets in the editframe
+                for (const href of [scopedMoonstone, scopedEditFrame]) {
+                    const link = currentDocument.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = href;
+                    currentDocument.querySelector('head').appendChild(link);
+                }
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
                 iframe.current.contentWindow.location.href = url;
                 setPreviousUrlParams(currentUrlParams);

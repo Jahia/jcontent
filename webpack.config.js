@@ -32,7 +32,7 @@ module.exports = (env, argv) => {
             extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
             alias: {
                 '~': path.resolve(__dirname, './src/javascript'),
-                // Wepback does not support ?url on package identifiers,
+                // Webpack does not support ?url on package identifiers,
                 // so we alias the identifier to its resolved path
                 '@jahia/moonstone/scoped.css': path.resolve(__dirname, 'node_modules/@jahia/moonstone/dist/scoped.css'),
                 'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css')

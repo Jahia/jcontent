@@ -70,7 +70,7 @@ export const LabelBar = ({node, area, dragProps}) => {
                       color="accent"
                       label={area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List'}
                       icon={getAreaIcon(node, area)}/>
-                <Typography isNowrap component="span" weight="bold" variant="caption">{title}{boundComponentTitleAddOn}</Typography>
+                <Typography isNowrap weight="bold" variant="caption">{title}{boundComponentTitleAddOn}</Typography>
             </>
         );
     }

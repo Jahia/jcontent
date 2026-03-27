@@ -1,4 +1,3 @@
-export * as boxesStyles from "./Boxes.module.scss";
 export * as boxStyles from "./Box.module.scss";
 export * as createStyles from "./Create.module.scss";
 export * as deletedStyles from "./Deleted.module.scss";

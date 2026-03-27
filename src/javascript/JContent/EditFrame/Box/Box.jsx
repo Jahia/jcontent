@@ -270,8 +270,7 @@ export const Box = React.memo(({
     const headerStyles = clsx(
         styles.boxHeader,
         isSticky && styles.sticky,
-        'flexRow_nowrap',
-        'alignCenter',
+        styles.flexrow,
         dragging && styles.dragging,
         editStyles.enablePointerEvents,
         isClicked && styles.isClicked,

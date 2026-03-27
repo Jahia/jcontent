@@ -281,7 +281,7 @@ export const EditFrame = () => {
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
-                    <div id="jahia-portal-root" className={styles.root}>
+                    <div id="jahia-portal-root">
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}

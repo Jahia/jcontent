@@ -15,7 +15,7 @@
     "watch": "yarn webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node",
-    "test": "jest --env=jsdom --coverage ./src/javascript",
+    "test": "yarn build && jest --env=jsdom --coverage ./src/javascript",
     "test:clear": "jest --clearCache",
     "tdd": "jest --env=jsdom --watch ./src/javascript",
     "lint:js": "eslint --ext js,jsx src",

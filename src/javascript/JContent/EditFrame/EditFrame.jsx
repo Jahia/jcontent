@@ -236,7 +236,10 @@ export const EditFrame = () => {
             if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
                 // Insert scoped stylesheets in the editframe
                 for (const href of [scopedMoonstone, scopedEditFrame]) {
-                    if (currentDocument.querySelector(`link[rel="stylesheet"][href="${href}"]`)) continue;
+                    if (currentDocument.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
+                        continue;
+                    }
+
                     const link = currentDocument.createElement('link');
                     link.rel = 'stylesheet';
                     link.href = href;

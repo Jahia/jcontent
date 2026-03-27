@@ -286,9 +286,9 @@ export const Box = React.memo(({
                 data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
                 style={{
-                    '--moon-backgroundColorBase': backgroundColorBase,
-                    '--moon-backgroundColorHovered': backgroundColorHovered,
-                    '--moon-backgroundColorSelected': backgroundColorSelected
+                    '--jcontent-backgroundColorBase': backgroundColorBase,
+                    '--jcontent-backgroundColorHovered': backgroundColorHovered,
+                    '--jcontent-backgroundColorSelected': backgroundColorSelected
                 }}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
@@ -335,7 +335,7 @@ export const Box = React.memo(({
                 displayStatuses.has('notVisible') && styles.boxNotVisible,
                 (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
                  style={{
-                     '--moon-borderColor': borderColor
+                     '--jcontent-borderColor': borderColor
                  }}
             >
                 {isHeaderDisplayed && Header}
@@ -352,7 +352,7 @@ export const Box = React.memo(({
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             style={{
-                                '--moon-backgroundColorSelected': backgroundColorSelected
+                                '--jcontent-backgroundColorSelected': backgroundColorSelected
                             }}
                             onClick={onClick}
                     >

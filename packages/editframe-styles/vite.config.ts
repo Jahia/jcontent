@@ -8,7 +8,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: "src/index.ts",
-      formats: ["es"],
+      formats: ["es", "cjs"], // "cjs" only needed for jest :(
     },
     rolldownOptions: {
       external: ["./editframe-styles.css"]

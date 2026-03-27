@@ -63,18 +63,18 @@ describe('ChoiceList initializers tests', () => {
         const contentEditor = jcontent.editComponentByRowName('dependentChoicelist');
         contentEditor.switchToAdvancedMode();
 
-        contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_countryDep').selectValue( 'france');
+        contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_countryDep').selectValue('france');
         contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_regionDep').selectValue('ile-de-france');
         contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_cityDep').selectValue('paris');
 
         // Modify region
         contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_regionDep').selectValue('bretagne');
-        contentEditor.getField(ChoiceListField,'qant:dependentChoicelist_cityDep').should('have.value', '');
+        contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_cityDep').should('have.value', '');
         contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_cityDep').selectValue('lancieux');
 
         // Modify country
         contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_countryDep').selectValue('england');
-        contentEditor.getField(ChoiceListField,'qant:dependentChoicelist_regionDep').should('have.value', '');
+        contentEditor.getField(ChoiceListField, 'qant:dependentChoicelist_regionDep').should('have.value', '');
         cy.get('#select-qant\\:dependentChoicelist_cityDep').should('have.attr', 'data-sel-content-editor-select-readonly', 'true');
     });
 
@@ -83,13 +83,13 @@ describe('ChoiceList initializers tests', () => {
         const contentEditor = jcontent.editComponentByRowName('dependentChoicelistMultiple');
         contentEditor.switchToAdvancedMode();
 
-        contentEditor.getChoiceListField('qant:dependentChoicelistMultiple_countryDep', true).selectValues( ['france', 'england']);
+        contentEditor.getChoiceListField('qant:dependentChoicelistMultiple_countryDep', true).selectValues(['france', 'england']);
         contentEditor.getChoiceListField('qant:dependentChoicelistMultiple_regionDep', true).selectValues(['alsace', 'hampshire']);
         contentEditor.getChoiceListField('qant:dependentChoicelistMultiple_cityDep', true).selectValues(['strasbourg', 'southampton']);
 
         // Reset region
         contentEditor.getChoiceListField('qant:dependentChoicelistMultiple_regionDep', true).selectValues(['alsace', 'hampshire']);
-        contentEditor.getField(ChoiceListField,'qant:dependentChoicelistMultiple_cityDep').should('have.value', '');
+        contentEditor.getField(ChoiceListField, 'qant:dependentChoicelistMultiple_cityDep').should('have.value', '');
         cy.get('#qant\\:dependentChoicelistMultiple_cityDep').should('have.attr', 'data-sel-content-editor-select-readonly', 'true');
 
         contentEditor.getChoiceListField('qant:dependentChoicelistMultiple_regionDep', true).selectValues(['ile-de-france', 'dorset']);
@@ -109,13 +109,13 @@ describe('ChoiceList initializers tests', () => {
         cy.get('#select-qant\\:choicelist_j\\:linkType [role="listbox"]')
             .should('have.attr', 'aria-label', 'none');
 
-        contentEditor.getField(ChoiceListField, 'qant:choicelist_j:linkType').selectValue( 'internal');
+        contentEditor.getField(ChoiceListField, 'qant:choicelist_j:linkType').selectValue('internal');
         cy.get('[data-sel-content-editor-field="jmix:internalLink_j:linknode"]').should('exist');
-        contentEditor.getField(ChoiceListField, 'qant:choicelist_j:linkType').selectValue( 'external');
+        contentEditor.getField(ChoiceListField, 'qant:choicelist_j:linkType').selectValue('external');
 
         cy.get('input[name="jmix:externalLink_j:url"]').type('www.jahia.com');
 
-        contentEditor.getField(ChoiceListField, 'qant:choicelist_j:linkType').selectValue( 'none');
+        contentEditor.getField(ChoiceListField, 'qant:choicelist_j:linkType').selectValue('none');
         cy.get('input[name="jmix:externalLink_j:url"]').should('not.exist');
     });
 
@@ -127,7 +127,7 @@ describe('ChoiceList initializers tests', () => {
         cy.get('[id="qant:choicelist_j:linkTypeMultiple"]')
             .should('contain', 'none');
 
-        contentEditor.getChoiceListField('qant:choicelist_j:linkTypeMultiple', true).selectValues( ['internal', 'external']);
+        contentEditor.getChoiceListField('qant:choicelist_j:linkTypeMultiple', true).selectValues(['internal', 'external']);
         cy.get('[data-sel-content-editor-field="jmix:internalLink_j:linknode"]')
             .should('exist')
             .and('be.visible');
@@ -139,10 +139,10 @@ describe('ChoiceList initializers tests', () => {
     it('should display dynamic mixins', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.createContent('qant:dynamicMixins');
-        contentEditor.getField(ChoiceListField, 'qant:dynamicMixins_selectMixin').selectValue( 'mixin1');
+        contentEditor.getField(ChoiceListField, 'qant:dynamicMixins_selectMixin').selectValue('mixin1');
         cy.get('input[name="qamix:mixin1_mixin1Field"]').should('exist').and('be.visible');
 
-        contentEditor.getField(ChoiceListField, 'qant:dynamicMixins_selectMixin').selectValue( 'mixin3');
+        contentEditor.getField(ChoiceListField, 'qant:dynamicMixins_selectMixin').selectValue('mixin3');
         cy.get('input[name="qamix:mixin3_mixin3Field"]').should('exist').and('be.visible');
         cy.get('#qamix\\:mixin3_mixin3Liste [role="listbox"]')
             .should('exist')
@@ -151,7 +151,7 @@ describe('ChoiceList initializers tests', () => {
 
         jcontent.editComponentByRowName('dynamicmixins');
         contentEditor.switchToAdvancedMode();
-        contentEditor.getField(ChoiceListField, 'qant:dynamicMixins_selectMixin').selectValue( 'mixin2');
+        contentEditor.getField(ChoiceListField, 'qant:dynamicMixins_selectMixin').selectValue('mixin2');
         cy.get('input[name="qamix:mixin3_mixin3Field"]').should('not.exist');
         cy.get('#qamix\\:mixin3_mixin3Liste').should('not.exist');
 
@@ -178,7 +178,7 @@ describe('ChoiceList initializers tests', () => {
         cy.get('.moonstone-menuItem[data-value="img2"] img')
             .should('have.attr', 'src')
             .and('include', 'img2.png');
-        contentEditor.getField(ChoiceListField, 'qant:choicelist_imageList').selectValue( 'img2');
+        contentEditor.getField(ChoiceListField, 'qant:choicelist_imageList').selectValue('img2');
         contentEditor.getChoiceListField('qant:choicelist_imageList').assertSelected('Image 2');
     });
 });

@@ -50,7 +50,7 @@ describe('Test mixins', () => {
         contentEditor.switchToAdvancedMode();
 
         contentEditor.toggleOption('jmix:theme', 'Theme');
-        contentEditor.getField(ChoiceListField, 'jmix:theme_j:themeName').selectValue( 'green');
+        contentEditor.getField(ChoiceListField, 'jmix:theme_j:themeName').selectValue('green');
 
         contentEditor.toggleOption('qamix:mixin4', 'Mixin 4');
         cy.get('input[name="qamix:mixin4_mixin4Password"]').type('Mixin123');
@@ -60,7 +60,7 @@ describe('Test mixins', () => {
 
         contentEditor.openSection('options');
         contentEditor.toggleOption('jmix:canBeUseAsTemplateModel', 'Page Model name');
-        cy.get('input[name="jmix:canBeUseAsTemplateModel_j:pageTemplateTitle"]').type("Home template");
+        cy.get('input[name="jmix:canBeUseAsTemplateModel_j:pageTemplateTitle"]').type('Home template');
 
         // Remove some mixins
         contentEditor.toggleOption('jdmix:alternateTitle', 'Alternate title');

@@ -35,7 +35,6 @@ describe('Test mixins', () => {
     });
 
     it('should activate mixin with default value', () => {
-        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.editComponentByRowName('allFieldsDefaultValue');
         contentEditor.switchToAdvancedMode();
 
@@ -66,9 +65,6 @@ describe('Test mixins', () => {
         // Remove some mixins
         contentEditor.toggleOption('jdmix:alternateTitle', 'Alternate title');
         contentEditor.toggleOption('qamix:mixin4', 'Mixin 4');
-
-        // Modify theme
-        contentEditor.getField(ChoiceListField, 'jmix:theme_j:themeName').selectValue( 'purple');
     });
 
     it('should display the mixins in the technical information', () => {

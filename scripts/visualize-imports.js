@@ -23,13 +23,15 @@ const OUT_HTML   = path.resolve(__dirname, '..', process.argv[2] || 'graphs/impo
 
 // ── 1. Collect all source files ───────────────────────────────────────────────
 
+const TEST_FILE_RE = /\.(spec|test)\.[jt]sx?$|^(setupTests|setupTextEncoder|testDefaultProps)\.[jt]sx?$/;
+
 function walk(dir, results = []) {
     for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
         const full = path.join(dir, entry.name);
         if (entry.isDirectory()) {
             if (entry.name === '__mocks__' || entry.name === 'node_modules') continue;
             walk(full, results);
-        } else if (EXTENSIONS.includes(path.extname(entry.name))) {
+        } else if (EXTENSIONS.includes(path.extname(entry.name)) && !TEST_FILE_RE.test(entry.name)) {
             results.push(full);
         }
     }
@@ -150,21 +152,20 @@ const dirTree = buildDirTree([...allFiles].sort());
 
 const dotLines = [
     'digraph imports {',
-    '  rankdir=LR;',
     '  node [shape=box, fontsize=9, style="rounded,filled", fillcolor=white, margin="0.1,0.05"];',
     '  edge [color="#555555", arrowsize=0.6];',
-    '  graph [fontsize=11, compound=true, pad=0.5, nodesep=0.15, ranksep=0.5];',
+    '  graph [fontsize=11, compound=true, pad=0.3, nodesep=0.1, ranksep=0.4];',
     '',
     '  subgraph cluster_root {',
-    '    label="src/javascript";',
-    '    style="rounded,filled";',
-    '    fillcolor="#f5f5f5";',
-    '    fontname="Helvetica-Bold"; fontsize=14; penwidth=2;',
+    '    style=invis;',  // invisible boundary — keeps stray nodes from drifting
+    '',
 ];
 
+// Root-level files sit inside the invisible outer cluster
 for (const f of dirTree.__files) {
     dotLines.push(`    ${nodeId(f)} [label="${path.basename(f)}", tooltip="${rel(f)}"];`);
 }
+// Each top-level directory becomes a named cluster inside the outer wrapper
 for (const [key, child] of Object.entries(dirTree)) {
     if (key !== '__files') dotLines.push(...emitSubgraph(child, key, 4, key, 0));
 }
@@ -186,14 +187,15 @@ try {
         '-Tsvg',
         '-Goverlap=prism',
         '-Gsplines=curved',
-        `-GK=0.8`,
-        '-Gmaxiter=1000',
-        '-Gpad=0.8',
+        '-GK=0.6',
+        '-Gmaxiter=1500',
+        '-Gpad=0.4',
         tmpDot,
     ], {maxBuffer: 64 * 1024 * 1024});
 } catch (e) {
     fs.unlinkSync(tmpDot);
     console.error('fdp failed:', e.message);
+    if (e.stderr) console.error('stderr:', e.stderr.toString());
     console.error('Make sure graphviz is installed: brew install graphviz');
     process.exit(1);
 }

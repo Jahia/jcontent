@@ -112,6 +112,8 @@ $colorDragging: var(--moon-color-white);
 }
 
 .boxFooter {
+    all: revert-layer; // Isolate from client page styles
+
     position: absolute;
     bottom: 0;
 
@@ -232,6 +234,7 @@ $colorDragging: var(--moon-color-white);
 }
 
 .flexrow {
+    // Scoped equivalent "flexRow_nowrap alignCenter"
     display: flex;
     flex-flow: row nowrap;
     align-items: center;

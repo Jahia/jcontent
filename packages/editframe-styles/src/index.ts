@@ -1,4 +1,5 @@
 export * as boxStyles from "./Box.module.scss";
+export * as contentStatusesStyles from "./ContentStatuses.module.scss";
 export * as createStyles from "./Create.module.scss";
 export * as deletedStyles from "./Deleted.module.scss";
 export * as editFrameStyles from "./EditFrame.module.scss";

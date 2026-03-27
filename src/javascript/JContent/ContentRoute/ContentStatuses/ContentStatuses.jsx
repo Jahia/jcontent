@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {isMarkedForDeletion, isWorkInProgress} from '~/JContent/JContent.utils';
 import {getTooltip} from './ContentStatuses.utils';
-import styles from './ContentStatuses.scss';
+import {contentStatusesStyles as styles} from 'editframe-styles';
 import Status from './Status';
 import clsx from 'clsx';
 import {setPublicationStatus} from '~/utils/contentStatus';
@@ -149,7 +149,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
     }
 
     return (
-        <div className={className ? clsx(className, styles.contentStatuses) : styles.contentStatuses}>
+        <div className={clsx(className, styles.contentStatuses)}>
             {statusesToRender}
         </div>
     );

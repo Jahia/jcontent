@@ -18,7 +18,6 @@ import InsertionPoints from '../InsertionPoints';
 import BoxesContextMenu from './BoxesContextMenu';
 import useClearSelection from './useClearSelection';
 import {resetContentStatusPaths} from '~/JContent/redux/contentStatus.redux';
-import {boxesStyles as styles} from 'editframe-styles';
 import {useHoverManager} from '~/JContent/EditFrame/Boxes/useHoverManager';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
 import {useDndData} from '~/JContent/EditFrame/Boxes/dataHooks/useDndData';
@@ -399,7 +398,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const memoizedPlaceholders = useMemo(() => {
         return createButtons
             .map(({node, element}) => (
-                <div key={`createButtons-${node.path}`} className={clickedElement ? styles.displayNone : ''}>
+                <div key={`createButtons-${node.path}`} style={{display: clickedElement ? 'none' : undefined}}>
                     <Create key={element.getAttribute('id')}
                             node={node}
                             nodes={nodes}

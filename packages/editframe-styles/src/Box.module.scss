@@ -230,3 +230,10 @@ $colorDragging: var(--moon-color-white);
 .draggedOverlay {
     background-color: var(--moon-color-dark20);
 }
+
+.flexrow {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    min-height: 0;
+}

@@ -1,12 +1,3 @@
-.root {
-    // Referenced in EditFrame.jsx to scope at runtime
-
-    // Ensure .root is not removed during the build
-    :global(.keepme) {
-        display: block;
-    }
-}
-
 :global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents {
     pointer-events: none;
 }

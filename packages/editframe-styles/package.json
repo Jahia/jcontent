@@ -5,7 +5,8 @@
   "exports": {
     ".": {
       "types": "./src/index.ts",
-      "import": "./dist/editframe-styles.js"
+      "import": "./dist/editframe-styles.js",
+      "require": "./dist/editframe-styles.cjs"
     },
     "./scoped.css": "./dist/editframe-styles.css"
   },

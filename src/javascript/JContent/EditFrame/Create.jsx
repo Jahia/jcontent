@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import styles from './Create.scss';
 import PropTypes from 'prop-types';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import clsx from 'clsx';
-import editStyles from './EditFrame.scss';
+import {editFrameStyles as editStyles, createStyles as styles} from 'editframe-styles';
 import {useDragLayer} from 'react-dnd';
 import {shallowEqual, useSelector} from 'react-redux';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';

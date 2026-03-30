@@ -35,11 +35,11 @@
 
         margin: auto;
 
-        background: var(--color-gray20);
+        background: var(--moon-color-gray20);
     }
 
     &.isEmpty {
-        background: var(--color-gray_light_plain20);
+        background: var(--moon-color-gray_light_plain20);
     }
 
     & button {
@@ -59,9 +59,9 @@
     }
 
     &.insertionPoint.insertionPoint.insertionPoint.isNotEmpty button {
-        width: var(--spacing-big);
+        width: var(--moon-spacing-big);
 
-        border-radius: var(--spacing-nano);
+        border-radius: var(--moon-spacing-nano);
     }
 }
 

@@ -1,0 +1,41 @@
+.disablePointerEvents.disablePointerEvents.disablePointerEvents {
+    pointer-events: none;
+}
+
+.disablePointerEvents.disablePointerEvents.disablePointerEvents * {
+    pointer-events: none;
+}
+
+.disablePointerEvents.disablePointerEvents.disablePointerEvents *.enablePointerEvents {
+    pointer-events: all;
+}
+
+.dragging {
+    opacity: 0.2;
+}
+
+.marginTop.marginTop.marginTop.marginTop {
+    margin-top: 46px;
+}
+
+.parentPadding {
+    padding-top: 36px;
+}
+
+.smallerBox {
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.frame {
+    position: relative;
+
+    flex: 1;
+    margin: 0;
+}
+
+// Cannot be made a scoped class https://github.com/Jahia/jahia/blob/9e4df123798aa6895bf2e0fd776a41743c848871/taglib/src/main/java/org/jahia/taglibs/template/include/ModuleTag.java#L464
+// Copied from https://github.com/Jahia/jahia/blob/9e4df123798aa6895bf2e0fd776a41743c848871/gwt/src/main/resources/org/jahia/ajax/gwt/public/css/edit.css#L694
+:global(.jahia-template-gxt) {
+    margin-bottom: 10px;
+}

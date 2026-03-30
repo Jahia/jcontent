@@ -73,7 +73,7 @@ export class Media extends BasePage {
         cy.get('div[data-sel-role="sel-media-sort-order-dropdown"]')
             .find(`li[data-sel-role="sel-media-sort-order-${direction}"]`)
             .click();
-        cy.get('div[class="moonstone-menu_overlay"]').click();
+        cy.get('div.moonstone-menu_overlay').click();
         return this;
     }
 
@@ -84,7 +84,7 @@ export class Media extends BasePage {
         cy.get('div[data-sel-role="sel-media-sort-property-dropdown"]')
             .find(`li[data-sel-role="sel-media-sort-property-${property}"]`)
             .click();
-        cy.get('div[class="moonstone-menu_overlay"]').click();
+        cy.get('div.moonstone-menu_overlay').click();
         return this;
     }
 }

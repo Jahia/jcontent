@@ -31,7 +31,11 @@ module.exports = (env, argv) => {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
             alias: {
-                '~': path.resolve(__dirname, './src/javascript')
+                '~': path.resolve(__dirname, './src/javascript'),
+                // Webpack does not support ?url on package identifiers,
+                // so we alias the identifier to its resolved path
+                '@jahia/moonstone/scoped.css': path.resolve(__dirname, 'node_modules/@jahia/moonstone/dist/scoped.css'),
+                'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css')
             },
             fallback: {
                 "url": false,
@@ -43,7 +47,19 @@ module.exports = (env, argv) => {
         },
         module: {
             rules: [
-                ...moonstone,
+                {
+                    resourceQuery: /url/, // *.?url
+                    type: "asset/resource",
+                    generator: {
+                        filename: "assets/[name].[contenthash][ext]",
+                    },
+                },
+                // Prevent moonstone shared config to conflict with the asset/resource rule
+                ...moonstone.map(rule =>
+                    rule.test && rule.test.toString() === '/\\.css$/'
+                        ? {...rule, resourceQuery: {not: [/url/]}}
+                        : rule
+                ),
                 {
                     test: /\.m?js$/,
                     type: 'javascript/auto'
@@ -75,7 +91,8 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.css$/,
-                    include: [path.join(__dirname,'node_modules/react-image-crop')],
+                    include: [path.join(__dirname,'node_modules/react-image-crop'), path.join(__dirname, 'packages/editframe-styles/dist')],
+                    resourceQuery: {not: [/url/]},
                     sideEffects: true,
                     use: ['style-loader', 'css-loader']
                 },

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDragLayer} from 'react-dnd';
 import PropTypes from 'prop-types';
-import styles from './Box/Box.scss';
+import {boxStyles as styles} from 'editframe-styles';
 import clsx from 'clsx';
 import {DropArea} from './DropArea';
 import {Insert} from './Insert';

@@ -1,9 +1,7 @@
 export {reset} from "./reset.module.css"; // First export to ensure it is applied before any other styles
 export * as boxStyles from "./Box.module.scss";
-export * as contentStatusesStyles from "./ContentStatuses.module.scss";
 export * as createStyles from "./Create.module.scss";
 export * as deletedStyles from "./Deleted.module.scss";
 export * as editFrameStyles from "./EditFrame.module.scss";
-export * as linkInterceptorStyles from "./LinkInterceptor.module.scss";
 
-import "./editframe-styles.css"; // Ensure styles are also included in the webpack bundle
+import "@jahia/moonstone/scoped.css"; // Import Moonstone after all other styles to ensure precendence

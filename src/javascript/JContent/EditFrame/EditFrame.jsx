@@ -18,8 +18,7 @@ import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
-import scopedMoonstone from '@jahia/moonstone/scoped.css?url';
-import scopedEditFrame from 'editframe-styles/scoped.css?url';
+import scopedStyles from 'editframe-styles/scoped.css?url';
 
 function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
@@ -234,17 +233,15 @@ export const EditFrame = () => {
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
             if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
-                // Insert scoped stylesheets in the editframe
-                for (const href of [scopedEditFrame, scopedMoonstone]) {
-                    if (currentDocument.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
-                        continue;
-                    }
-
-                    const link = currentDocument.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = href;
-                    currentDocument.querySelector('head').appendChild(link);
+                // Insert scoped stylesheets in the editframe if not already present
+                if (currentDocument.querySelector(`link[rel="stylesheet"][href="${scopedStyles}"]`)) {
+                    return;
                 }
+
+                const link = currentDocument.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = scopedStyles;
+                currentDocument.querySelector('head').appendChild(link);
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
                 iframe.current.contentWindow.location.href = url;
                 setPreviousUrlParams(currentUrlParams);
@@ -263,7 +260,7 @@ export const EditFrame = () => {
     return (
         <>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams} setLoading={setLoading}/>
-            <div className={styles.frame}>
+            <div style={{position: 'relative', flex: 1, margin: 0}}>
                 {(!currentDocument || loading) && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}
                         width="100%"

@@ -4,7 +4,7 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {Button, Typography} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {linkInterceptorStyles as styles} from 'editframe-styles';
+import styles from './LinkInterceptor.scss';
 
 const absoluteRegex = /^(?:[a-zA-Z+]+:)?\/\//;
 const jahiaRegex = /\/cms\/editframe\/default\/([a-zA-Z0-9_-]+)\/(sites\/([^/]+))?\/(.*)/;
@@ -95,4 +95,3 @@ export const LinkInterceptor = ({document}) => {
 LinkInterceptor.propTypes = {
     document: PropTypes.object.isRequired
 };
-

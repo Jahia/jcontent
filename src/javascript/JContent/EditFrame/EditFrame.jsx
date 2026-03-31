@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
-import {reset, editFrameStyles as styles} from 'editframe-styles';
+import {editFrameStyles as styles} from 'editframe-styles';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {
     registerContentModificationEventHandler,
@@ -282,7 +282,7 @@ export const EditFrame = () => {
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
-                    <div id="jahia-portal-root" className={reset}>
+                    <div id="jahia-portal-root" className={styles.root}>
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}

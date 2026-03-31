@@ -1,3 +1,4 @@
+export {reset} from "./reset.module.css"; // First export to ensure it is applied before any other styles
 export * as boxStyles from "./Box.module.scss";
 export * as contentStatusesStyles from "./ContentStatuses.module.scss";
 export * as createStyles from "./Create.module.scss";

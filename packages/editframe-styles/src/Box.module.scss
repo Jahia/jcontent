@@ -112,8 +112,6 @@ $colorDragging: var(--moon-color-white);
 }
 
 .boxFooter {
-    all: revert-layer; // Isolate from client page styles
-
     position: absolute;
     bottom: 0;
 

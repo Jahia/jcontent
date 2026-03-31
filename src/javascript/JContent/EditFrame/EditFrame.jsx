@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
-import {editFrameStyles as styles} from 'editframe-styles';
+import {reset, editFrameStyles as styles} from 'editframe-styles';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {
     registerContentModificationEventHandler,
@@ -235,7 +235,7 @@ export const EditFrame = () => {
             const locale = mainModule?.getAttribute('locale');
             if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
                 // Insert scoped stylesheets in the editframe
-                for (const href of [scopedMoonstone, scopedEditFrame]) {
+                for (const href of [scopedEditFrame, scopedMoonstone]) {
                     if (currentDocument.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
                         continue;
                     }
@@ -285,7 +285,7 @@ export const EditFrame = () => {
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
-                    <div id="jahia-portal-root">
+                    <div id="jahia-portal-root" className={reset}>
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
                                currentDndInfo={currentDndInfo}

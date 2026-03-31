@@ -2787,9 +2787,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@99375b8.tgz":
+"@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@e70d3cf":
   version: 2.17.5
-  resolution: "@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@99375b8.tgz"
+  resolution: "@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@e70d3cf"
   dependencies:
     "@floating-ui/react": "npm:^0.27.16"
     "@tanstack/react-table": "npm:^8.21.3"
@@ -2800,7 +2800,7 @@ __metadata:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/a06f7cd612747c95630e28625dd04f9bc9f9c6d6c579daa8c492060346100518851c06513d099723e8e36ee481e7850561deee1f607407520a216a4c54933f8a
+  checksum: 10c0/5db6ed8ec78cf435a286b08ffd66bf7d6f4f1a24eeb1f21daee7998ff9e111ff360de693c5e44b57fbc98347081e3f88a05494804654acec976f6d257b317549
   languageName: node
   linkType: hard
 

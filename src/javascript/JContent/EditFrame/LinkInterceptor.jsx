@@ -95,3 +95,4 @@ export const LinkInterceptor = ({document}) => {
 LinkInterceptor.propTypes = {
     document: PropTypes.object.isRequired
 };
+

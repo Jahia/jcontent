@@ -51,7 +51,7 @@ export const RenameTagDialog = ({siteKey, siteName, tag, isOpen, isLoading, onCl
     const suggestions = useTagSuggestions({siteKey, isOpen, value});
 
     return (
-        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} onClose={onClose}>
+        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-rename-dialog'}} onClose={onClose}>
             <DialogTitle className={styles.dialogTitle}>{t('jcontent:label.contentManager.tagManager.rename.title', {tag: tag?.name})}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.dialogText}>
@@ -71,6 +71,7 @@ export const RenameTagDialog = ({siteKey, siteName, tag, isOpen, isLoading, onCl
                     autoFocus
                     size="big"
                     className={styles.renameInput}
+                    data-cm-role="tag-manager-rename-input"
                     value={value}
                     placeholder={t('jcontent:label.contentManager.tagManager.rename.placeholder')}
                     variant={{interactive: <Search/>}}
@@ -92,12 +93,14 @@ export const RenameTagDialog = ({siteKey, siteName, tag, isOpen, isLoading, onCl
             <DialogActions className={styles.dialogActions}>
                 <Button
                     size="big"
+                    data-cm-role="tag-manager-cancel-rename"
                     label={t('jcontent:label.cancel')}
                     onClick={onClose}
                 />
                 <Button
                     color="accent"
                     size="big"
+                    data-cm-role="tag-manager-confirm-rename"
                     disabled={isLoading || normalizedValue.length === 0 || normalizedValue === tag?.name}
                     label={t('jcontent:label.contentManager.tagManager.rename.confirm')}
                     onClick={() => onConfirm(normalizedValue)}
@@ -130,7 +133,7 @@ export const DeleteTagDialog = ({siteName, tag, isOpen, isLoading, onClose, onCo
     const {t} = useTranslation('jcontent');
 
     return (
-        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} onClose={onClose}>
+        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-delete-dialog'}} onClose={onClose}>
             <DialogTitle className={styles.dialogTitle}>{t('jcontent:label.contentManager.tagManager.delete.title', {tag: tag?.name})}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.dialogText}>
@@ -149,12 +152,14 @@ export const DeleteTagDialog = ({siteName, tag, isOpen, isLoading, onClose, onCo
             <DialogActions className={styles.dialogActions}>
                 <Button
                     size="big"
+                    data-cm-role="tag-manager-cancel-delete"
                     label={t('jcontent:label.cancel')}
                     onClick={onClose}
                 />
                 <Button
                     color="danger"
                     size="big"
+                    data-cm-role="tag-manager-confirm-delete"
                     disabled={isLoading}
                     label={t('jcontent:label.contentManager.tagManager.delete.confirm')}
                     onClick={onConfirm}
@@ -186,7 +191,7 @@ export const DeleteNodeTagDialog = ({tag, node, isOpen, isLoading, onClose, onCo
     const {t} = useTranslation('jcontent');
 
     return (
-        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} onClose={onClose}>
+        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-delete-node-dialog'}} onClose={onClose}>
             <DialogTitle className={styles.dialogTitle}>{t('jcontent:label.contentManager.tagManager.deleteNodeTag.title', {tag})}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.dialogText}>
@@ -205,12 +210,14 @@ export const DeleteNodeTagDialog = ({tag, node, isOpen, isLoading, onClose, onCo
             <DialogActions className={styles.dialogActions}>
                 <Button
                     size="big"
+                    data-cm-role="tag-manager-cancel-delete-node"
                     label={t('jcontent:label.cancel')}
                     onClick={onClose}
                 />
                 <Button
                     color="danger"
                     size="big"
+                    data-cm-role="tag-manager-confirm-delete-node"
                     disabled={isLoading}
                     label={t('jcontent:label.contentManager.tagManager.deleteNodeTag.confirm')}
                     onClick={onConfirm}
@@ -251,7 +258,7 @@ export const EditNodeTagDialog = ({siteKey, tag, node, isOpen, isLoading, onClos
     const suggestions = useTagSuggestions({siteKey, isOpen, value});
 
     return (
-        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} onClose={onClose}>
+        <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-edit-node-dialog'}} onClose={onClose}>
             <DialogTitle className={styles.dialogTitle}>{t('jcontent:label.contentManager.tagManager.editNodeTag.title', {tag, contentName: node?.displayName || node?.path})}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.dialogText}>
@@ -261,6 +268,7 @@ export const EditNodeTagDialog = ({siteKey, tag, node, isOpen, isLoading, onClos
                     autoFocus
                     size="big"
                     className={styles.renameInput}
+                    data-cm-role="tag-manager-edit-node-input"
                     value={value}
                     placeholder={t('jcontent:label.contentManager.tagManager.editNodeTag.placeholder')}
                     variant={{interactive: <Search/>}}
@@ -282,12 +290,14 @@ export const EditNodeTagDialog = ({siteKey, tag, node, isOpen, isLoading, onClos
             <DialogActions className={styles.dialogActions}>
                 <Button
                     size="big"
+                    data-cm-role="tag-manager-cancel-edit-node"
                     label={t('jcontent:label.cancel')}
                     onClick={onClose}
                 />
                 <Button
                     color="accent"
                     size="big"
+                    data-cm-role="tag-manager-confirm-edit-node"
                     disabled={isLoading || normalizedValue.length === 0 || normalizedValue === tag}
                     label={t('jcontent:label.contentManager.tagManager.editNodeTag.confirm')}
                     onClick={() => onConfirm(normalizedValue)}

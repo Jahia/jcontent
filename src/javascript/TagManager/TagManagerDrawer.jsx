@@ -70,8 +70,8 @@ export const TagManagerDrawer = ({
     return (
         <>
             {isOpen && (
-                <div className={styles.drawerLayer} onClick={onClose}>
-                    <aside className={styles.drawerPaper} onClick={event => event.stopPropagation()}>
+                <div className={styles.drawerLayer} data-cm-role="tag-manager-drawer-layer" onClick={onClose}>
+                    <aside className={styles.drawerPaper} data-cm-role="tag-manager-drawer" onClick={event => event.stopPropagation()}>
                         <div className={styles.drawerRoot}>
                             <div className={styles.drawerHeader}>
                                 <div className={styles.drawerHeaderInfo}>
@@ -97,7 +97,7 @@ export const TagManagerDrawer = ({
                                 <>
                                     <div className={styles.drawerList}>
                                         {nodes.map(node => (
-                                            <div key={node.uuid} className={styles.drawerItem}>
+                                            <div key={node.uuid} className={styles.drawerItem} data-cm-role="tag-manager-drawer-item" data-node-path={node.path}>
                                                 <div className={styles.drawerItemInfo}>
                                                     <div className={styles.drawerItemMain}>
                                                         <NodeIcon node={node}/>
@@ -117,6 +117,7 @@ export const TagManagerDrawer = ({
                                                         <Button
                                                             variant="ghost"
                                                             size="small"
+                                                            data-cm-role="tag-manager-edit-node-tag"
                                                             icon={<Edit/>}
                                                             onClick={() => onEditTagOnNode(node)}
                                                         />
@@ -126,6 +127,7 @@ export const TagManagerDrawer = ({
                                                             variant="ghost"
                                                             color="danger"
                                                             size="small"
+                                                            data-cm-role="tag-manager-delete-node-tag"
                                                             disabled={deletingNodeId === node.uuid}
                                                             icon={<DeletePermanently/>}
                                                             onClick={() => setDeleteTarget(node)}

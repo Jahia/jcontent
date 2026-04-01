@@ -234,7 +234,7 @@ export const TagManager = () => {
     };
 
     return (
-        <div className={styles.root}>
+        <div className={styles.root} data-cm-role="tag-manager-root">
             <div className={styles.pageHeader}>
                 <div className={styles.pageHeaderInner}>
                     <Header title={t('jcontent:label.contentManager.tagManager.header', {siteName: siteNode?.displayName || siteKey})}/>
@@ -242,13 +242,14 @@ export const TagManager = () => {
             </div>
 
             <div className={styles.content}>
-                <div className={styles.contentWrapper}>
-                    <div className={styles.paper}>
+                <div className={styles.contentWrapper} data-cm-role="tag-manager-content-wrapper">
+                    <div className={styles.paper} data-cm-role="tag-manager-content">
                         <div className={styles.controls}>
                             <SearchInput
                                 size="default"
                                 value={searchTerm}
                                 className={styles.searchInput}
+                                data-cm-role="tag-manager-search"
                                 placeholder={t('jcontent:label.contentManager.tagManager.search.placeholder')}
                                 variant="outlined"
                                 onClear={() => setSearchTerm('')}

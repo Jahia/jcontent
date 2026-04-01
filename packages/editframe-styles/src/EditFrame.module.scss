@@ -10,7 +10,7 @@
 
     box-sizing: border-box;
 
-    font: normal 16px "Nunito Sans Variable", system-ui, sans-serif;
+    font: normal 16px var(--moon-font-family);
     color: var(--moon-color-dark);
 
     ::before,

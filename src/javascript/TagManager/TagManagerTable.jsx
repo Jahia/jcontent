@@ -84,6 +84,7 @@ export const TagManagerTable = ({
                             <Button
                                 variant="ghost"
                                 size="small"
+                                data-cm-role="tag-manager-view"
                                 icon={<Visibility/>}
                                 onClick={() => onView(row.original)}
                             />
@@ -92,6 +93,7 @@ export const TagManagerTable = ({
                             <Button
                                 variant="ghost"
                                 size="small"
+                                data-cm-role="tag-manager-rename"
                                 icon={<Edit/>}
                                 onClick={() => onRename(row.original)}
                             />
@@ -101,6 +103,7 @@ export const TagManagerTable = ({
                                 variant="ghost"
                                 color="danger"
                                 size="small"
+                                data-cm-role="tag-manager-delete"
                                 icon={<DeletePermanently/>}
                                 onClick={() => onDelete(row.original)}
                             />
@@ -137,6 +140,8 @@ export const TagManagerTable = ({
                                 <TableRow
                                     key={row.id}
                                     {...row.getRowProps()}
+                                    data-cm-role="tag-manager-row"
+                                    data-tag-name={row.original.name}
                                     className={isSelected ? styles.selectedRow : undefined}
                                 >
                                     {row.cells.map(cell => (

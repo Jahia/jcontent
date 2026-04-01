@@ -232,6 +232,71 @@
           }
         }
       },
+      "tagManager": {
+        "header": "Manage Tags - {{siteName}}",
+        "title": "Tag manager",
+        "search": {
+          "placeholder": "Search tags",
+          "results": "{{count}} tags"
+        },
+        "table": {
+          "name": "Tag name",
+          "usages": "Usages",
+          "actions": {
+            "label": "Actions",
+            "view": "View tagged content",
+            "edit": "Rename tag",
+            "remove": "Remove tag",
+            "editContent": "Edit content",
+            "editTagOnContent": "Edit tag on content",
+            "removeFromContent": "Remove tag from content"
+          }
+        },
+        "workspace": {
+          "default": "Default workspace tags",
+          "sync": "Changes are applied to edit and live"
+        },
+        "drawer": {
+          "title": "Content using \"{{tag}}\"",
+          "subtitle": "{{count}} content items"
+        },
+        "rename": {
+          "title": "Rename \"{{tag}}\"",
+          "description": "You’re about to rename {{count}} occurrences of this tag on your website: {{siteName}}. This change will also affect <0>your live site</0> and <1>cannot be undone</1>.",
+          "placeholder": "Enter the new tag name",
+          "confirm": "Rename tag",
+          "suggestions": "Suggested tags"
+        },
+        "editNodeTag": {
+          "title": "Edit \"{{tag}}\" on {{contentName}}",
+          "description": "Replace the selected tag for this content. Other tags remain unchanged.",
+          "placeholder": "Enter the new tag name",
+          "confirm": "Save",
+          "suggestions": "Suggested tags"
+        },
+        "delete": {
+          "title": "Remove \"{{tag}}\"",
+          "description": "You’re about to delete {{count}} occurrences of this tag on {{siteName}}. This change <0>cannot be undone</0>.",
+          "confirm": "Remove tag"
+        },
+        "deleteNodeTag": {
+          "title": "Remove \"{{tag}}\" from content",
+          "description": "You’re about to remove \"{{tag}}\" from {{contentName}}. This change <0>cannot be undone</0>.",
+          "confirm": "Remove tag"
+        },
+        "notifications": {
+          "renameSuccess": "{{count}} updates applied for \"{{tag}}\"",
+          "deleteSuccess": "{{count}} removals applied for \"{{tag}}\"",
+          "removeFromContentSuccess": "{{count}} removals applied for \"{{tag}}\"",
+          "updateOnContentSuccess": "\"{{tag}}\" updated to \"{{newTag}}\" on {{contentName}}"
+        },
+        "empty": {
+          "title": "No tags to display",
+          "description": "No tags are currently available in the default workspace.",
+          "search": "No tag matches the current search.",
+          "drawer": "No content is currently using this tag."
+        }
+      },
       "contextMenu": {
         "lockActions": {
           "unlock": "Unlock",

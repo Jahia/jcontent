@@ -14,6 +14,7 @@ import {LockManager} from './LockManager';
 import {useTranslation} from 'react-i18next';
 import {useApolloClient} from '@apollo/client';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import '../contentEditor.scss';
 
 export const Edit = () => {
     const notificationContext = useNotifications();

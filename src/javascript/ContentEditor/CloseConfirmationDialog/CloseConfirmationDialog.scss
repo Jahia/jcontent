@@ -6,5 +6,5 @@ div.dialogContent {
 }
 
 .dialogRoot.dialogRoot {
-    z-index: 2000;
+    z-index: var(--ce-dialog-z-index);
 }

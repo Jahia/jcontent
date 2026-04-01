@@ -9,6 +9,7 @@ import {validate} from '~/ContentEditor/validation';
 import {createNode} from './createNode';
 import {useApolloClient} from '@apollo/client';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import '../contentEditor.scss';
 
 export const Create = () => {
     const notificationContext = useNotifications();

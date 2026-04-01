@@ -19,6 +19,7 @@ export const CloseConfirmationDialog = React.memo(({isOpen, onCloseDialog, actio
 
     return (
         <Dialog
+            classes={{root: styles.dialogRoot}}
             maxWidth="md"
             aria-labelledby="alert-dialog-slide-title"
             open={isOpen}

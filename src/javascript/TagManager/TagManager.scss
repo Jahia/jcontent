@@ -1,0 +1,331 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.pageHeader {
+    position: sticky;
+    top: 0;
+    z-index: 1301;
+    height: 60px;
+    background: var(--color-light);
+    box-shadow: inset 0 -1px 0 var(--color-gray_light60);
+}
+
+.pageHeaderInner {
+    width: 100%;
+    height: 60px;
+}
+
+.content {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 16px;
+}
+
+.contentWrapper {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 16px;
+    gap: 16px;
+    border-radius: 4px;
+    background: var(--color-white);
+    box-shadow: 0 4px 8px 0 rgba(19, 28, 33, 0.2);
+    overflow: hidden;
+}
+
+.paper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.searchInput {
+    width: 240px;
+}
+
+.searchInput :global(.moonstone-baseInput) {
+    box-sizing: border-box;
+    min-height: 24px;
+    gap: 4px;
+    padding: var(--spacing-pico) var(--spacing-small);
+    border-width: 1px;
+    border-radius: var(--radius);
+}
+
+.searchInput :global(input) {
+    padding: 0;
+}
+
+.resultsCount {
+    color: var(--color-gray);
+}
+
+.loaderContainer,
+.emptyState,
+.drawerLoader,
+.drawerEmpty {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 32px;
+    text-align: center;
+}
+
+.tableSection {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.tableWrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+.pagination {
+    align-self: flex-end;
+    margin-top: 16px;
+}
+
+.rowActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.selectedRow {
+    background-color: #00A0E3;
+}
+
+.selectedRow :global(.moonstone-typography),
+.selectedRow :global(.moonstone-button:not(:hover):not(:focus-visible)) {
+    color: var(--color-white);
+}
+
+.dialogRoot {
+    width: min(600px, calc(100vw - 32px));
+    min-height: 279px;
+    border-radius: var(--radius);
+}
+
+.dialogTitle {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 78px;
+    padding: 27px 32px;
+}
+
+.renameInput {
+    margin-top: 8px;
+}
+
+.dialogText {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+.dialogActions {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 64px;
+    gap: 16px;
+    padding: var(--spacing-medium) 32px;
+    border-top: 1px solid var(--color-gray_light60);
+}
+
+.dialogActions > * + * {
+    margin-left: 0;
+}
+
+.dialogHelp {
+    display: block;
+    margin-top: 12px;
+    color: var(--color-gray);
+}
+
+.dangerText {
+    color: var(--color-danger);
+}
+
+.suggestionsBlock {
+    margin-top: 16px;
+}
+
+.suggestionsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.drawerLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 1190;
+}
+
+.drawerPaper {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: min(617px, calc(100% - 32px));
+    max-width: 617px;
+    max-height: 792px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 4px;
+    background: var(--color-white);
+    box-shadow: 0 0 11px 0 var(--color-gray_dark40);
+    z-index: 1200;
+}
+
+.drawerRoot {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 100%;
+    gap: 10px;
+    padding: 0 24px;
+}
+
+.drawerHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.drawerHeaderInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.drawerList {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 12px;
+    overflow: auto;
+}
+
+.drawerItem {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border: 1px solid var(--color-gray_light60);
+    border-radius: 8px;
+}
+
+.drawerItemInfo {
+    display: contents;
+}
+
+.drawerItemMain {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.drawerItemType {
+    min-width: 0;
+}
+
+.drawerItemType :global(.moonstone-typography) {
+    word-break: break-word;
+}
+
+.drawerItemText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.drawerItemText :global(.moonstone-typography) {
+    word-break: break-word;
+}
+
+.drawerItemActions {
+    display: flex;
+    gap: 4px;
+}
+
+@media (max-width: 1024px) {
+    .content {
+        padding: 16px;
+    }
+
+    .contentWrapper {
+        height: auto;
+        min-height: calc(100vh - 92px);
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .resultsCount {
+        align-self: flex-start;
+    }
+
+    .drawerPaper {
+        top: 16px;
+        right: 16px;
+        bottom: 16px;
+        width: 100%;
+        max-width: 100%;
+        max-height: none;
+        border-radius: 4px;
+    }
+
+    .drawerBackdrop {
+        top: 60px !important;
+        height: calc(100% - 60px) !important;
+    }
+
+    .drawerItem {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .drawerItemActions {
+        justify-content: flex-end;
+    }
+}

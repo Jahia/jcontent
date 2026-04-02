@@ -173,7 +173,7 @@ describe('Test the save publish buttons flow', () => {
 
         contentEditor.checkButtonStatus('submitSave', false);
         // Commented because the request publication button stays active even though there is nothing to publish
-        //contentEditor.checkButtonStatus('startWorkflowMainButton', false);
+        // contentEditor.checkButtonStatus('startWorkflowMainButton', false);
 
         contentEditor.getSmallTextField('jnt:text_text').addNewValue('hi');
         contentEditor.checkButtonStatus('submitSave', true);

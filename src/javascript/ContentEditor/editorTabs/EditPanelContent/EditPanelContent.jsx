@@ -1,24 +1,23 @@
 import React from 'react';
 import {FullWidthContent, TwoColumnsContent} from '@jahia/design-system-kit';
 import {FormBuilder} from './FormBuilder';
-import {Preview} from './Preview';
+import {SidePanel} from './SidePanel';
 import {PublicationInfoProgress} from './PublicationInfoProgress';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './EditPanelContent.scss';
 
 export const EditPanelContent = () => {
     const {mode, isFullscreen} = useContentEditorConfigContext();
-    const {hasPreview} = useContentEditorContext();
 
     return (
         <>
             {mode === Constants.routes.baseEditRoute && <PublicationInfoProgress/>}
-            {hasPreview && isFullscreen ?
+            {isFullscreen ?
                 (
                     <TwoColumnsContent
                         classes={{root: styles.twoColumnsRoot, left: styles.col, right: styles.col}}
-                        rightCol={<Preview/>}
+                        rightCol={<SidePanel/>}
                         data-sel-mode={mode}
                     >
                         <FormBuilder mode={mode}/>

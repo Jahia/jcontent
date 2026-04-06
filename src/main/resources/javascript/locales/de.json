@@ -800,6 +800,31 @@
         },
         "updateOnSave": "Vorschau wird mit dem Speichern aktualisiert"
       },
+      "sidePanel": {
+        "details": "Details",
+        "preview": "Vorschau",
+        "generalInfo": "Allgemeine Informationen",
+        "name": "Name",
+        "path": "Pfad",
+        "type": "Inhaltstyp",
+        "uuid": "UUID",
+        "localization": "Lokalisierung",
+        "language": "Sprache",
+        "site": "Site",
+        "availableLanguages": "Verfügbare Sprachen",
+        "creation": "Erstellung",
+        "createdBy": "Erstellt Von",
+        "createdAt": "Erstellt Am",
+        "modification": "Änderung",
+        "modifiedBy": "Geändert Von",
+        "modifiedAt": "Geändert Am",
+        "lock": "Sperrinformationen",
+        "lockedBy": "Gesperrt Von",
+        "lockType": "Sperrtyp",
+        "technical": "Technische Informationen",
+        "additional": "Zusätzliche Details",
+        "copiedToClipboard": "In die Zwischenablage kopiert"
+      },
       "CMMActions": {
         "createNewContent": {
           "menu": "Neuer Content",

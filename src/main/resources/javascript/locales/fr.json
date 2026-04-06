@@ -801,6 +801,31 @@
         },
         "updateOnSave": "L'aperçu sera mis à jour lors de l'enregistrement"
       },
+      "sidePanel": {
+        "details": "Détails",
+        "preview": "Aperçu",
+        "generalInfo": "Informations Générales",
+        "name": "Nom",
+        "path": "Chemin",
+        "type": "Type de Contenu",
+        "uuid": "UUID",
+        "localization": "Localisation",
+        "language": "Langue",
+        "site": "Site",
+        "availableLanguages": "Langues Disponibles",
+        "creation": "Création",
+        "createdBy": "Créé Par",
+        "createdAt": "Créé Le",
+        "modification": "Modification",
+        "modifiedBy": "Modifié Par",
+        "modifiedAt": "Modifié Le",
+        "lock": "Informations de Verrouillage",
+        "lockedBy": "Verrouillé Par",
+        "lockType": "Type de Verrouillage",
+        "technical": "Informations Techniques",
+        "additional": "Détails Supplémentaires",
+        "copiedToClipboard": "Copié dans le presse-papiers"
+      },
       "CMMActions": {
         "createNewContent": {
           "menu": "Nouveau contenu",

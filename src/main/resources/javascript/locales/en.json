@@ -810,6 +810,31 @@
         },
         "updateOnSave": "Preview will update on save"
       },
+      "sidePanel": {
+        "details": "Details",
+        "preview": "Preview",
+        "generalInfo": "General Information",
+        "name": "Name",
+        "path": "Path",
+        "type": "Content Type",
+        "uuid": "UUID",
+        "localization": "Localization",
+        "language": "Language",
+        "site": "Site",
+        "availableLanguages": "Available Languages",
+        "creation": "Creation",
+        "createdBy": "Created By",
+        "createdAt": "Created At",
+        "modification": "Modification",
+        "modifiedBy": "Modified By",
+        "modifiedAt": "Modified At",
+        "lock": "Lock Information",
+        "lockedBy": "Locked By",
+        "lockType": "Lock Type",
+        "technical": "Technical Information",
+        "additional": "Additional Details",
+        "copiedToClipboard": "Copied to clipboard"
+      },
       "CMMActions": {
         "createNewContent": {
           "menu": "New content",

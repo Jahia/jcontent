@@ -48,10 +48,17 @@ import java.util.stream.Collectors;
 class LegacyContentHistoryAdapter implements ContentHistoryProvider {
 
     @Override
-    public List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, int offset, int limit) {
+    public List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, String action, int offset, int limit) {
         @SuppressWarnings("deprecation")
         List<HistoryEntry> allEntries = ContentHistoryService.getInstance()
                 .getNodeHistory(node, withLanguageNodes);
+
+        // Apply action filter if provided
+        if (action != null && !action.trim().isEmpty()) {
+            allEntries = allEntries.stream()
+                    .filter(entry -> action.equals(entry.getAction()))
+                    .collect(Collectors.toList());
+        }
 
         if (limit == -1) {
             return allEntries;
@@ -64,10 +71,17 @@ class LegacyContentHistoryAdapter implements ContentHistoryProvider {
     }
 
     @Override
-    public int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes) {
+    public int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes, String action) {
         @SuppressWarnings("deprecation")
         List<HistoryEntry> allEntries = ContentHistoryService.getInstance()
                 .getNodeHistory(node, withLanguageNodes);
+        
+        // Apply action filter if provided
+        if (action != null && !action.trim().isEmpty()) {
+            return (int) allEntries.stream()
+                    .filter(entry -> action.equals(entry.getAction()))
+                    .count();
+        }
         
         return allEntries.size();
     }

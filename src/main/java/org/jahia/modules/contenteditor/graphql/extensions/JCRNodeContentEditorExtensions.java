@@ -27,6 +27,7 @@ import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
+import org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRContentUtils;
@@ -70,7 +71,11 @@ public class JCRNodeContentEditorExtensions {
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);
         }
-
     }
 
+    @GraphQLField
+    @GraphQLDescription("Returns content history for the node")
+    public GqlContentHistory getHistory() {
+        return new GqlContentHistory(node);
+    }
 }

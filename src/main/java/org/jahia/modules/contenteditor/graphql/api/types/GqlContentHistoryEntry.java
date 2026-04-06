@@ -26,10 +26,19 @@ package org.jahia.modules.contenteditor.graphql.api.types;
 import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.JCRSessionFactory;
+import org.jahia.services.content.nodetypes.ExtendedNodeType;
+import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
 import org.jahia.services.history.HistoryEntry;
+import org.jahia.utils.LanguageCodeConverters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -38,9 +47,13 @@ import java.util.TimeZone;
 @GraphQLDescription("Represents a content change event entry")
 public class GqlContentHistoryEntry {
 
-    private final HistoryEntry historyEntry;
+    private static final Logger logger = LoggerFactory.getLogger(GqlContentHistoryEntry.class);
 
-    public GqlContentHistoryEntry(HistoryEntry historyEntry) {
+    private final HistoryEntry historyEntry;
+    private final JCRNodeWrapper node;
+
+    public GqlContentHistoryEntry(HistoryEntry historyEntry, JCRNodeWrapper node) {
+        this.node = node;
         this.historyEntry = historyEntry;
     }
 
@@ -108,5 +121,50 @@ public class GqlContentHistoryEntry {
     @GraphQLDescription("The language code if the entry is for a language-specific node")
     public String getLanguage() {
         return historyEntry.getLocale() != null ? historyEntry.getLocale().toString() : null;
+    }
+
+    @GraphQLField
+    @GraphQLDescription("The localized display name of the property if the action was on a specific property")
+    public String getPropertyNameDisplay(@GraphQLName("language") @GraphQLDescription("Language code for the display name") String language) {
+        String propertyName = historyEntry.getPropertyName();
+        if (propertyName == null || propertyName.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+
+            if (node == null) {
+                return propertyName;
+            }
+
+            // Get the node type
+            ExtendedNodeType nodeType = node.getPrimaryNodeType();
+
+            // Get the property definition
+            ExtendedPropertyDefinition propertyDef = nodeType.getPropertyDefinitionsAsMap().get(propertyName);
+
+            if (propertyDef == null) {
+                // Try to find in mixins
+                for (ExtendedNodeType mixin : node.getMixinNodeTypes()) {
+                    propertyDef = mixin.getPropertyDefinitionsAsMap().get(propertyName);
+                    if (propertyDef != null) {
+                        nodeType = mixin;
+                        break;
+                    }
+                }
+            }
+
+            if (propertyDef != null) {
+                Locale locale = language != null ? LanguageCodeConverters.languageCodeToLocale(language) : Locale.ENGLISH;
+                return propertyDef.getLabel(locale, nodeType);
+            }
+
+            return propertyName;
+        } catch (RepositoryException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not resolve property display name for property '{}' on node '{}'", propertyName, historyEntry.getUuid(), e);
+            }
+            return propertyName;
+        }
     }
 }

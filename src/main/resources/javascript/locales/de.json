@@ -828,11 +828,25 @@
         "date": "Datum",
         "property": "Eigenschaft",
         "language": "Sprache",
+        "languageShort": "Spr.",
         "modifiedBy": "Geändert Von",
         "filterByAction": "Nach Aktion filtern",
         "allActions": "Alle Aktionen",
         "noEntries": "Keine Verlaufseinträge gefunden",
-        "errorLoading": "Fehler beim Laden des Verlaufs"
+        "errorLoading": "Fehler beim Laden des Verlaufs",
+        "actions": {
+          "created": "Erstellt",
+          "updated": "Aktualisiert",
+          "deleted": "Gelöscht",
+          "moved": "Verschoben",
+          "added": "Hinzugefügt",
+          "changed": "Geändert",
+          "removed": "Entfernt",
+          "published": "Veröffentlicht",
+          "unpublished": "Unveröffentlicht",
+          "accessed": "Zugegriffen",
+          "viewed": "Angesehen"
+        }
       },
       "CMMActions": {
         "createNewContent": {

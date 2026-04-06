@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from 'react';
 import {useQuery, gql} from '@apollo/client';
+import {useSelector} from 'react-redux';
 import {
     Table,
     TableBody,
@@ -9,7 +10,16 @@ import {
     TableBodyCell,
     TablePagination,
     Dropdown,
-    Typography
+    Typography,
+    Chip,
+    Tooltip,
+    AddCircle,
+    Edit,
+    Delete,
+    HandleMove,
+    Publish,
+    Visibility,
+    File
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
@@ -17,7 +27,7 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './ContentHistory.scss';
 
 const GET_CONTENT_HISTORY = gql`
-    query getNodeHistory($path: String!, $withLanguageNodes: Boolean!, $action: String, $offset: Int!, $limit: Int!) {
+    query getNodeHistory($path: String!, $withLanguageNodes: Boolean!, $action: String, $offset: Int!, $limit: Int!, $uiLanguage: String!) {
         jcr {
             nodeByPath(path: $path) {
                 uuid
@@ -30,6 +40,7 @@ const GET_CONTENT_HISTORY = gql`
                         uuid
                         action
                         propertyName
+                        propertyNameDisplay(language: $uiLanguage)
                         userKey
                         message
                         language
@@ -55,9 +66,49 @@ const GET_ALL_ACTIONS = gql`
     }
 `;
 
+const getActionChip = (action, t) => {
+    const actionConfig = {
+        // Node actions
+        created: {icon: AddCircle, label: t('jcontent:label.contentEditor.history.actions.created'), color: 'accent'},
+        updated: {icon: Edit, label: t('jcontent:label.contentEditor.history.actions.updated'), color: 'default'},
+        deleted: {icon: Delete, label: t('jcontent:label.contentEditor.history.actions.deleted'), color: 'danger'},
+        moved: {icon: HandleMove, label: t('jcontent:label.contentEditor.history.actions.moved'), color: 'default'},
+
+        // Property actions
+        added: {icon: AddCircle, label: t('jcontent:label.contentEditor.history.actions.added'), color: 'accent'},
+        changed: {icon: Edit, label: t('jcontent:label.contentEditor.history.actions.changed'), color: 'default'},
+        removed: {icon: Delete, label: t('jcontent:label.contentEditor.history.actions.removed'), color: 'danger'},
+
+        // Publication actions
+        published: {icon: Publish, label: t('jcontent:label.contentEditor.history.actions.published'), color: 'success'},
+        unpublished: {icon: Publish, label: t('jcontent:label.contentEditor.history.actions.unpublished'), color: 'warning'},
+
+        // View/Access actions
+        accessed: {icon: File, label: t('jcontent:label.contentEditor.history.actions.accessed'), color: 'default'},
+        viewed: {icon: Visibility, label: t('jcontent:label.contentEditor.history.actions.viewed'), color: 'default'}
+    };
+
+    const config = actionConfig[action];
+    if (!config) {
+        return null;
+    }
+
+    const IconComponent = config.icon;
+    return (
+        <Tooltip label={config.label}>
+            <Chip
+                icon={<IconComponent/>}
+                color={config.color}
+                size="small"
+            />
+        </Tooltip>
+    );
+};
+
 export const ContentHistory = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData} = useContentEditorContext();
+    const uiLanguage = useSelector(state => state.uilang);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [actionFilter, setActionFilter] = useState(null);
@@ -76,14 +127,15 @@ export const ContentHistory = () => {
             withLanguageNodes: true,
             action: actionFilter,
             offset: (page - 1) * pageSize,
-            limit: pageSize
+            limit: pageSize,
+            uiLanguage: uiLanguage
         },
         fetchPolicy: 'cache-and-network'
     });
 
     const formatDate = useCallback(dateString => {
         if (!dateString) {
-            return '';
+            return '-';
         }
 
         return new Date(dateString).toLocaleString();
@@ -101,10 +153,14 @@ export const ContentHistory = () => {
 
         return [
             {value: null, label: t('jcontent:label.contentEditor.history.allActions')},
-            ...Array.from(actions).sort().map(action => ({
-                value: action,
-                label: action
-            }))
+            ...Array.from(actions).sort().map(action => {
+                const chip = getActionChip(action, t);
+                return {
+                    value: action,
+                    label: action,
+                    iconStart: chip
+                };
+            })
         ];
     }, [actionsData, t]);
 
@@ -126,13 +182,13 @@ export const ContentHistory = () => {
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.filters}>
+        <div>
+            <div>
                 <Dropdown
-                    label={t('jcontent:label.contentEditor.history.filterByAction')}
                     value={actionFilter}
                     data={getActionOptions()}
                     size="small"
+                    variant="outlined"
                     onChange={(e, option) => {
                         setActionFilter(option.value);
                         setPage(1);
@@ -140,7 +196,7 @@ export const ContentHistory = () => {
                 />
             </div>
 
-            <div className={styles.tableContainer}>
+            <div>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -151,7 +207,7 @@ export const ContentHistory = () => {
                                 {t('jcontent:label.contentEditor.history.property')}
                             </TableHeadCell>
                             <TableHeadCell>
-                                {t('jcontent:label.contentEditor.history.language')}
+                                {t('jcontent:label.contentEditor.history.languageShort')}
                             </TableHeadCell>
                             <TableHeadCell>
                                 {t('jcontent:label.contentEditor.history.modifiedBy')}
@@ -161,7 +217,7 @@ export const ContentHistory = () => {
                     <TableBody>
                         {entries.length === 0 ? (
                             <TableRow>
-                                <TableBodyCell colSpan={4} className={styles.emptyCell}>
+                                <TableBodyCell colSpan={4}>
                                     <Typography variant="body">
                                         {t('jcontent:label.contentEditor.history.noEntries')}
                                     </Typography>
@@ -175,15 +231,20 @@ export const ContentHistory = () => {
                                             {formatDate(entry.date)}
                                         </Typography>
                                     </TableBodyCell>
-                                    <TableBodyCell>
-                                        <Typography variant="body">
-                                            {entry.propertyName || '-'}
+                                <TableBodyCell>
+                                        <Typography variant="body" isNowrap>
+                                            {getActionChip(entry.action, t)}
+                                            {entry.propertyNameDisplay || entry.propertyName || '-'}
                                         </Typography>
                                     </TableBodyCell>
                                     <TableBodyCell>
-                                        <Typography variant="body">
-                                            {entry.language || '-'}
-                                        </Typography>
+                                        {entry.language ? (
+                                            <span>
+                                                {entry.language.toUpperCase()}
+                                            </span>
+                                        ) : (
+                                            <Typography variant="body">-</Typography>
+                                        )}
                                     </TableBodyCell>
                                     <TableBodyCell>
                                         <Typography variant="body">

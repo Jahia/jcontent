@@ -1,0 +1,10 @@
+query getNodeHistoryCount($path: String!, $withLanguageNodes: Boolean!) {
+    jcr {
+        nodeByPath(path: $path) {
+            uuid
+            history {
+                count(withLanguageNodes: $withLanguageNodes)
+            }
+        }
+    }
+}

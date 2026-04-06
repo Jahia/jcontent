@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {useQuery, gql} from '@apollo/client';
 import {
     Table,
@@ -17,13 +17,13 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './ContentHistory.scss';
 
 const GET_CONTENT_HISTORY = gql`
-    query getNodeHistory($path: String!, $withLanguageNodes: Boolean!, $offset: Int!, $limit: Int!) {
+    query getNodeHistory($path: String!, $withLanguageNodes: Boolean!, $action: String, $offset: Int!, $limit: Int!) {
         jcr {
             nodeByPath(path: $path) {
                 uuid
                 history {
-                    count(withLanguageNodes: $withLanguageNodes)
-                    entries(withLanguageNodes: $withLanguageNodes, offset: $offset, limit: $limit) {
+                    count(withLanguageNodes: $withLanguageNodes, action: $action)
+                    entries(withLanguageNodes: $withLanguageNodes, action: $action, offset: $offset, limit: $limit) {
                         id
                         date
                         path
@@ -40,26 +40,46 @@ const GET_CONTENT_HISTORY = gql`
     }
 `;
 
+const GET_ALL_ACTIONS = gql`
+    query getAllActions($path: String!, $withLanguageNodes: Boolean!) {
+        jcr {
+            nodeByPath(path: $path) {
+                uuid
+                history {
+                    entries(withLanguageNodes: $withLanguageNodes, offset: 0, limit: 1000) {
+                        action
+                    }
+                }
+            }
+        }
+    }
+`;
+
 export const ContentHistory = () => {
     const {t} = useTranslation('jcontent');
-    const {nodeData, lang} = useContentEditorContext();
+    const {nodeData} = useContentEditorContext();
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [actionFilter, setActionFilter] = useState('all');
+    const [actionFilter, setActionFilter] = useState(null);
 
-    const {data, loading, error, refetch} = useQuery(GET_CONTENT_HISTORY, {
+    const {data: actionsData} = useQuery(GET_ALL_ACTIONS, {
+        variables: {
+            path: nodeData.path,
+            withLanguageNodes: true
+        },
+        fetchPolicy: 'cache-first'
+    });
+
+    const {data, loading, error} = useQuery(GET_CONTENT_HISTORY, {
         variables: {
             path: nodeData.path,
             withLanguageNodes: true,
-            offset: page * pageSize,
+            action: actionFilter,
+            offset: (page - 1) * pageSize,
             limit: pageSize
         },
         fetchPolicy: 'cache-and-network'
     });
-
-    useEffect(() => {
-        refetch();
-    }, [page, pageSize, refetch]);
 
     const formatDate = useCallback(dateString => {
         if (!dateString) {
@@ -71,8 +91,8 @@ export const ContentHistory = () => {
 
     const getActionOptions = useCallback(() => {
         const actions = new Set();
-        if (data?.jcr?.nodeByPath?.history?.entries) {
-            data.jcr.nodeByPath.history.entries.forEach(entry => {
+        if (actionsData?.jcr?.nodeByPath?.history?.entries) {
+            actionsData.jcr.nodeByPath.history.entries.forEach(entry => {
                 if (entry.action) {
                     actions.add(entry.action);
                 }
@@ -80,28 +100,15 @@ export const ContentHistory = () => {
         }
 
         return [
-            {value: 'all', label: t('jcontent:label.contentEditor.history.allActions')},
+            {value: null, label: t('jcontent:label.contentEditor.history.allActions')},
             ...Array.from(actions).sort().map(action => ({
                 value: action,
                 label: action
             }))
         ];
-    }, [data, t]);
+    }, [actionsData, t]);
 
-    const filteredEntries = React.useMemo(() => {
-        if (!data?.jcr?.nodeByPath?.history?.entries) {
-            return [];
-        }
-
-        if (actionFilter === 'all') {
-            return data.jcr.nodeByPath.history.entries;
-        }
-
-        return data.jcr.nodeByPath.history.entries.filter(
-            entry => entry.action === actionFilter
-        );
-    }, [data, actionFilter]);
-
+    const entries = data?.jcr?.nodeByPath?.history?.entries || [];
     const totalCount = data?.jcr?.nodeByPath?.history?.count || 0;
 
     if (loading && !data) {
@@ -128,7 +135,7 @@ export const ContentHistory = () => {
                     size="small"
                     onChange={(e, option) => {
                         setActionFilter(option.value);
-                        setPage(0);
+                        setPage(1);
                     }}
                 />
             </div>
@@ -152,7 +159,7 @@ export const ContentHistory = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredEntries.length === 0 ? (
+                        {entries.length === 0 ? (
                             <TableRow>
                                 <TableBodyCell colSpan={4} className={styles.emptyCell}>
                                     <Typography variant="body">
@@ -161,7 +168,7 @@ export const ContentHistory = () => {
                                 </TableBodyCell>
                             </TableRow>
                         ) : (
-                            filteredEntries.map(entry => (
+                            entries.map(entry => (
                                 <TableRow key={entry.id}>
                                     <TableBodyCell>
                                         <Typography variant="body">
@@ -201,7 +208,7 @@ export const ContentHistory = () => {
                             of: t('jcontent:label.pagination.of')
                         }}
                         onPageChange={(page, newPage) => setPage(page)}
-                        onRowsPerPageChange={(rowsPerPage) => {
+                        onRowsPerPageChange={rowsPerPage => {
                             setPageSize(rowsPerPage);
                             setPage(1);
                         }}

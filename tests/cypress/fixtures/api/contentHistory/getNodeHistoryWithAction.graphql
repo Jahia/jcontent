@@ -1,0 +1,19 @@
+query getNodeHistoryWithAction($path: String!, $withLanguageNodes: Boolean!, $action: String!, $offset: Int!, $limit: Int!) {
+    jcr {
+        nodeByPath(path: $path) {
+            uuid
+            history {
+                entries(withLanguageNodes: $withLanguageNodes, action: $action, offset: $offset, limit: $limit) {
+                    id
+                    date
+                    path
+                    uuid
+                    action
+                    propertyName
+                    userKey
+                    message
+                }
+            }
+        }
+    }
+}

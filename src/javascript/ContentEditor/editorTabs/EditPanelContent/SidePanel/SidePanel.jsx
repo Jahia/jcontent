@@ -3,6 +3,7 @@ import {Paper, Tab, TabItem} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {Preview} from '../Preview';
 import {ContentDetails} from './ContentDetails';
+import {ContentHistory} from './ContentHistory';
 import styles from './SidePanel.scss';
 
 export const SidePanel = () => {
@@ -19,6 +20,11 @@ export const SidePanel = () => {
                         onClick={() => setActiveTab('details')}
                     />
                     <TabItem
+                        label={t('jcontent:label.contentEditor.sidePanel.history')}
+                        isSelected={activeTab === 'history'}
+                        onClick={() => setActiveTab('history')}
+                    />
+                    <TabItem
                         label={t('jcontent:label.contentEditor.sidePanel.preview')}
                         isSelected={activeTab === 'preview'}
                         onClick={() => setActiveTab('preview')}
@@ -27,6 +33,7 @@ export const SidePanel = () => {
             </div>
             <div className={styles.content}>
                 {activeTab === 'details' && <ContentDetails/>}
+                {activeTab === 'history' && <ContentHistory/>}
                 {activeTab === 'preview' && <Preview/>}
             </div>
         </Paper>

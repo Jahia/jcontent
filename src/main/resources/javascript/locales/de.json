@@ -801,6 +801,7 @@
       "sidePanel": {
         "details": "Details",
         "preview": "Vorschau",
+        "history": "Verlauf",
         "generalInfo": "Allgemeine Informationen",
         "name": "Name",
         "path": "Pfad",
@@ -822,6 +823,16 @@
         "technical": "Technische Informationen",
         "additional": "Zusätzliche Details",
         "copiedToClipboard": "In die Zwischenablage kopiert"
+      },
+      "history": {
+        "date": "Datum",
+        "property": "Eigenschaft",
+        "language": "Sprache",
+        "modifiedBy": "Geändert Von",
+        "filterByAction": "Nach Aktion filtern",
+        "allActions": "Alle Aktionen",
+        "noEntries": "Keine Verlaufseinträge gefunden",
+        "errorLoading": "Fehler beim Laden des Verlaufs"
       },
       "CMMActions": {
         "createNewContent": {

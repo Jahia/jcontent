@@ -813,6 +813,7 @@
       "sidePanel": {
         "details": "Details",
         "preview": "Preview",
+        "history": "History",
         "generalInfo": "General Information",
         "name": "Name",
         "path": "Path",
@@ -834,6 +835,16 @@
         "technical": "Technical Information",
         "additional": "Additional Details",
         "copiedToClipboard": "Copied to clipboard"
+      },
+      "history": {
+        "date": "Date",
+        "property": "Property",
+        "language": "Language",
+        "modifiedBy": "Modified By",
+        "filterByAction": "Filter by action",
+        "allActions": "All actions",
+        "noEntries": "No history entries found",
+        "errorLoading": "Error loading history"
       },
       "CMMActions": {
         "createNewContent": {

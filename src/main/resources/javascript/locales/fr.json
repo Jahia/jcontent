@@ -804,6 +804,7 @@
       "sidePanel": {
         "details": "Détails",
         "preview": "Aperçu",
+        "history": "Historique",
         "generalInfo": "Informations Générales",
         "name": "Nom",
         "path": "Chemin",
@@ -825,6 +826,16 @@
         "technical": "Informations Techniques",
         "additional": "Détails Supplémentaires",
         "copiedToClipboard": "Copié dans le presse-papiers"
+      },
+      "history": {
+        "date": "Date",
+        "property": "Propriété",
+        "language": "Langue",
+        "modifiedBy": "Modifié Par",
+        "filterByAction": "Filtrer par action",
+        "allActions": "Toutes les actions",
+        "noEntries": "Aucune entrée d'historique trouvée",
+        "errorLoading": "Erreur lors du chargement de l'historique"
       },
       "CMMActions": {
         "createNewContent": {

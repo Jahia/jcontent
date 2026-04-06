@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--spacing-medium);
+}
+
+.filters {
+    margin-bottom: var(--spacing-medium);
+}
+
+.tableContainer {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+.pagination {
+    margin-top: var(--spacing-medium);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--spacing-small);
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-large);
+}
+
+.emptyCell {
+    text-align: center;
+    padding: var(--spacing-large) !important;
+}

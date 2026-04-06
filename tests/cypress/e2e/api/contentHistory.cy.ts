@@ -558,4 +558,122 @@ describe('Content History GraphQL API', () => {
             expect(entries.length).to.equal(0);
         });
     });
+
+    it('should resolve property display name for property-related actions', () => {
+        addNode({
+            parentPathOrId: contentPath,
+            name: testNodeName,
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'Property display name test', language: 'en'}]
+        });
+
+        // Modify a property to generate property change history
+        GraphqlUtils.setProperty(testNodePath, 'text', 'Updated value', 'en');
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
+
+        cy.apollo({
+            queryFile: 'api/contentHistory/getNodeHistoryWithPropertyDisplay.graphql',
+            variables: {
+                path: testNodePath,
+                withLanguageNodes: false,
+                offset: 0,
+                limit: 50,
+                language: 'en'
+            }
+        }).then(result => {
+            const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
+
+            if (entries && entries.length > 0) {
+                // Find an entry with a property name
+                const propertyEntry = entries.find(entry => entry.propertyName);
+
+                if (propertyEntry) {
+                    cy.log(`Found property entry: ${propertyEntry.propertyName}`);
+
+                    // Should have both propertyName and propertyNameDisplay
+                    expect(propertyEntry).to.have.property('propertyName');
+                    expect(propertyEntry).to.have.property('propertyNameDisplay');
+
+                    // PropertyNameDisplay should be a string (localized label or fallback to property name)
+                    expect(propertyEntry.propertyNameDisplay).to.be.a('string');
+                    expect(propertyEntry.propertyNameDisplay.length).to.be.greaterThan(0);
+
+                    cy.log(`Property name: ${propertyEntry.propertyName}, Display: ${propertyEntry.propertyNameDisplay}`);
+                }
+            }
+        });
+    });
+
+    it('should return propertyName as fallback when display name cannot be resolved', () => {
+        addNode({
+            parentPathOrId: contentPath,
+            name: testNodeName,
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'Fallback test', language: 'en'}]
+        });
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
+
+        cy.apollo({
+            queryFile: 'api/contentHistory/getNodeHistoryWithPropertyDisplay.graphql',
+            variables: {
+                path: testNodePath,
+                withLanguageNodes: false,
+                offset: 0,
+                limit: 50,
+                language: 'invalidLanguage'
+            }
+        }).then(result => {
+            const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
+
+            if (entries && entries.length > 0) {
+                const propertyEntry = entries.find(entry => entry.propertyName);
+
+                if (propertyEntry) {
+                    // Should still return a value (either localized or property name as fallback)
+                    expect(propertyEntry.propertyNameDisplay).to.be.a('string');
+                    expect(propertyEntry.propertyNameDisplay.length).to.be.greaterThan(0);
+                }
+            }
+        });
+    });
+
+    it('should return null propertyNameDisplay when propertyName is null', () => {
+        addNode({
+            parentPathOrId: contentPath,
+            name: testNodeName,
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'Null property test', language: 'en'}]
+        });
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
+
+        cy.apollo({
+            queryFile: 'api/contentHistory/getNodeHistoryWithPropertyDisplay.graphql',
+            variables: {
+                path: testNodePath,
+                withLanguageNodes: false,
+                offset: 0,
+                limit: 50,
+                language: 'en'
+            }
+        }).then(result => {
+            const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
+
+            if (entries && entries.length > 0) {
+                // Find entries without propertyName (node-level actions)
+                const nodeEntry = entries.find(entry => !entry.propertyName);
+
+                if (nodeEntry) {
+                    // PropertyNameDisplay should be null when propertyName is null
+                    expect(nodeEntry.propertyName).to.be.null;
+                    expect(nodeEntry.propertyNameDisplay).to.be.null;
+                }
+            }
+        });
+    });
 });

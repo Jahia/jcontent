@@ -41,18 +41,20 @@ interface ContentHistoryProvider {
      * 
      * @param node the JCR node
      * @param withLanguageNodes whether to include language-specific nodes
+     * @param action filter by specific action (null for all actions)
      * @param offset number of entries to skip
      * @param limit maximum number of entries to return (-1 for all)
      * @return list of history entries
      */
-    List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, int offset, int limit);
+    List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, String action, int offset, int limit);
 
     /**
      * Get total count of history entries for a node.
      * 
      * @param node the JCR node
      * @param withLanguageNodes whether to include language-specific nodes
+     * @param action filter by specific action (null for all actions)
      * @return count of history entries
      */
-    int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes);
+    int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes, String action);
 }

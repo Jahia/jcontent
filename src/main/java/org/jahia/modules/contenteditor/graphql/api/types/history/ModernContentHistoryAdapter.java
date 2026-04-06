@@ -30,19 +30,20 @@ import org.jahia.services.history.HistoryEntry;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Modern implementation using Jahia 8.2.4.0+ optimized ContentHistoryService methods.
  * Uses reflection to maintain backward compatibility at compile time.
- * 
+ *
  * TODO: When upgrading to Jahia 8.2.4.0+:
  *  1. Delete this class
  *  2. Delete {@link LegacyContentHistoryAdapter}
  *  3. Delete {@link ContentHistoryAdapter}
  *  4. Delete {@link ContentHistoryProvider}
- *  5. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory} 
+ *  5. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory}
  *     to call ContentHistoryService methods directly
- * 
+ *
  * @deprecated This class will be removed when Jahia 8.2.4.0 becomes the minimum required version.
  */
 @Deprecated(since = "jContent 3.x", forRemoval = true)
@@ -72,8 +73,37 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, int offset, int limit) {
+    public List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, String action, int offset, int limit) {
         try {
+            List<HistoryEntry> entries;
+
+            // If action filter is provided, get all entries and filter manually
+            // TODO: replace with a service implementation
+            if (action != null && !action.trim().isEmpty()) {
+                entries = (List<HistoryEntry>) paginatedMethod.invoke(
+                        ContentHistoryService.getInstance(),
+                        node,
+                        withLanguageNodes,
+                        0,
+                        -1
+                );
+
+                entries = entries.stream()
+                        .filter(entry -> action.equals(entry.getAction()))
+                        .collect(Collectors.toList());
+
+                // Apply pagination after filtering
+                if (limit != -1) {
+                    entries = entries.stream()
+                            .skip(offset)
+                            .limit(limit)
+                            .collect(Collectors.toList());
+                }
+
+                return entries;
+            }
+
+            // No action filter, use pagination directly
             return (List<HistoryEntry>) paginatedMethod.invoke(
                     ContentHistoryService.getInstance(),
                     node,
@@ -87,8 +117,26 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
     }
 
     @Override
-    public int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes) {
+    public int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes, String action) {
         try {
+            // If action filter is provided, get all entries and filter
+            // TODO: replace with a service implementation
+            if (action != null && !action.trim().isEmpty()) {
+                @SuppressWarnings("unchecked")
+                List<HistoryEntry> allEntries = (List<HistoryEntry>) paginatedMethod.invoke(
+                        ContentHistoryService.getInstance(),
+                        node,
+                        withLanguageNodes,
+                        0,
+                        -1
+                );
+
+                return (int) allEntries.stream()
+                        .filter(entry -> action.equals(entry.getAction()))
+                        .count();
+            }
+
+            // No action filter, use count method directly
             return (Integer) countMethod.invoke(
                     ContentHistoryService.getInstance(),
                     node,

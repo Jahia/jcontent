@@ -50,6 +50,7 @@ public class GqlContentHistory {
     @GraphQLDescription("Get paginated content history entries for the node")
     public List<GqlContentHistoryEntry> getEntries(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the result (default: false)") Boolean withLanguageNodes,
+            @GraphQLName("action") @GraphQLDescription("Filter entries by action (e.g., 'published', 'created', 'updated', 'deleted')") String action,
             @GraphQLName("offset") @GraphQLDescription("Number of entries to skip (default: 0)") Integer offset,
             @GraphQLName("limit") @GraphQLDescription("Maximum number of entries to return (default: 50)") Integer limit) {
         
@@ -57,7 +58,7 @@ public class GqlContentHistory {
         int offsetValue = offset != null ? offset : 0;
         int limitValue = limit != null ? limit : 50;
 
-        return ContentHistoryAdapter.getHistory(node, withLang, offsetValue, limitValue)
+        return ContentHistoryAdapter.getHistory(node, withLang, action, offsetValue, limitValue)
                 .stream()
                 .map(GqlContentHistoryEntry::new)
                 .collect(Collectors.toList());
@@ -66,9 +67,10 @@ public class GqlContentHistory {
     @GraphQLField
     @GraphQLDescription("Get total count of history entries for the node")
     public int getCount(
-            @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the count (default: false)") Boolean withLanguageNodes) {
+            @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the count (default: false)") Boolean withLanguageNodes,
+            @GraphQLName("action") @GraphQLDescription("Filter count by action (e.g., 'published', 'created', 'updated', 'deleted')") String action) {
         
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
-        return ContentHistoryAdapter.getHistoryCount(node, withLang);
+        return ContentHistoryAdapter.getHistoryCount(node, withLang, action);
     }
 }

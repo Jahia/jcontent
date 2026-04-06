@@ -59,12 +59,13 @@ public final class ContentHistoryAdapter {
      * 
      * @param node the JCR node
      * @param withLanguageNodes whether to include language-specific nodes
+     * @param action filter by specific action (null for all actions)
      * @param offset number of entries to skip
      * @param limit maximum number of entries to return
      * @return list of history entries
      */
-    public static List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, int offset, int limit) {
-        return getProvider().getHistory(node, withLanguageNodes, offset, limit);
+    public static List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, String action, int offset, int limit) {
+        return getProvider().getHistory(node, withLanguageNodes, action, offset, limit);
     }
 
     /**
@@ -72,10 +73,11 @@ public final class ContentHistoryAdapter {
      * 
      * @param node the JCR node
      * @param withLanguageNodes whether to include language-specific nodes
+     * @param action filter by specific action (null for all actions)
      * @return count of history entries
      */
-    public static int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes) {
-        return getProvider().getHistoryCount(node, withLanguageNodes);
+    public static int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes, String action) {
+        return getProvider().getHistoryCount(node, withLanguageNodes, action);
     }
 
     private static ContentHistoryProvider getProvider() {

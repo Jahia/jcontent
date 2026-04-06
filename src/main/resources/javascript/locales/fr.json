@@ -831,11 +831,25 @@
         "date": "Date",
         "property": "Propriété",
         "language": "Langue",
+        "languageShort": "Lg.",
         "modifiedBy": "Modifié Par",
         "filterByAction": "Filtrer par action",
         "allActions": "Toutes les actions",
         "noEntries": "Aucune entrée d'historique trouvée",
-        "errorLoading": "Erreur lors du chargement de l'historique"
+        "errorLoading": "Erreur lors du chargement de l'historique",
+        "actions": {
+          "created": "Créé",
+          "updated": "Mis à jour",
+          "deleted": "Supprimé",
+          "moved": "Déplacé",
+          "added": "Ajouté",
+          "changed": "Modifié",
+          "removed": "Retiré",
+          "published": "Publié",
+          "unpublished": "Dépublié",
+          "accessed": "Accédé",
+          "viewed": "Consulté"
+        }
       },
       "CMMActions": {
         "createNewContent": {

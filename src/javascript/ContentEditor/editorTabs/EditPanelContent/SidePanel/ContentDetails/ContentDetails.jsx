@@ -26,15 +26,12 @@ const DetailRow = ({label, value, children}) => {
             <Typography variant="caption" className={styles.label}>
                 {label}
             </Typography>
-            <div className={styles.valueContainer}>
-                <div className={styles.value}>
-                    {children || <Typography variant="body">{value}</Typography>}
-                </div>
+            <div className={styles.value}>
+                {children || <Typography variant="body" component="span">{value}</Typography>}
                 {value && (
                     <Button
                         icon={<Copy/>}
                         variant="ghost"
-                        size="small"
                         onClick={handleCopy}
                         className={styles.copyButton}
                     />

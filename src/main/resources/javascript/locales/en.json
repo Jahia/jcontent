@@ -840,11 +840,25 @@
         "date": "Date",
         "property": "Property",
         "language": "Language",
+        "languageShort": "Lang.",
         "modifiedBy": "Modified By",
         "filterByAction": "Filter by action",
         "allActions": "All actions",
         "noEntries": "No history entries found",
-        "errorLoading": "Error loading history"
+        "errorLoading": "Error loading history",
+        "actions": {
+          "created": "Created",
+          "updated": "Updated",
+          "deleted": "Deleted",
+          "moved": "Moved",
+          "added": "Added",
+          "changed": "Changed",
+          "removed": "Removed",
+          "published": "Published",
+          "unpublished": "Unpublished",
+          "accessed": "Accessed",
+          "viewed": "Viewed"
+        }
       },
       "CMMActions": {
         "createNewContent": {

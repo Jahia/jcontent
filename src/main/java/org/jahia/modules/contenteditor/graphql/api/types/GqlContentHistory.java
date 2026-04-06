@@ -53,14 +53,14 @@ public class GqlContentHistory {
             @GraphQLName("action") @GraphQLDescription("Filter entries by action (e.g., 'published', 'created', 'updated', 'deleted')") String action,
             @GraphQLName("offset") @GraphQLDescription("Number of entries to skip (default: 0)") Integer offset,
             @GraphQLName("limit") @GraphQLDescription("Maximum number of entries to return (default: 50)") Integer limit) {
-        
+
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         int offsetValue = offset != null ? offset : 0;
         int limitValue = limit != null ? limit : 50;
 
         return ContentHistoryAdapter.getHistory(node, withLang, action, offsetValue, limitValue)
                 .stream()
-                .map(GqlContentHistoryEntry::new)
+                .map(entry -> new GqlContentHistoryEntry(entry, node))
                 .collect(Collectors.toList());
     }
 
@@ -69,7 +69,7 @@ public class GqlContentHistory {
     public int getCount(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the count (default: false)") Boolean withLanguageNodes,
             @GraphQLName("action") @GraphQLDescription("Filter count by action (e.g., 'published', 'created', 'updated', 'deleted')") String action) {
-        
+
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         return ContentHistoryAdapter.getHistoryCount(node, withLang, action);
     }

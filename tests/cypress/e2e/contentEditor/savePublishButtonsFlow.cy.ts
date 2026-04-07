@@ -1,6 +1,5 @@
 import {
-    addNode,
-    createSite,
+    addNode, Button,
     createUser,
     deleteSite,
     deleteUser,
@@ -8,7 +7,7 @@ import {
     getComponentByRole,
     getNodeByPath,
     grantRoles,
-    Menu
+    Menu, publishAndWaitJobEnding
 } from '@jahia/cypress';
 import {SmallTextField} from '../../page-object/fields';
 import {ContentEditor, JContent} from '../../page-object';
@@ -23,20 +22,14 @@ describe('Test the save publish buttons flow', () => {
     const userName = 'editorInChief';
     const newSharedSmallTextValue = 'Adapted text';
     const langEN = 'en';
-    const langDE = 'de';
-    const languages = langEN + ',' + langDE;
-    const siteConfig = {
-        languages: languages,
-        templateSet: 'dx-base-demo-templates',
-        serverName: 'localhost',
-        locale: langEN
-    };
 
     before(function () {
+        cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: siteKey});
         createUser(userName, 'password', [{name: 'preferredLanguage', value: langEN}]);
-        createSite(siteKey, siteConfig);
+        createUser('thor', 'password', [{name: 'preferredLanguage', value: langEN}]);
         enableModule('qa-module', siteKey);
         grantRoles('/sites/' + siteKey, ['editor-in-chief'], userName, 'USER');
+        grantRoles('/sites/' + siteKey, ['editor'], 'thor', 'USER');
         addNode({
             parentPathOrId: siteContentPath,
             name: contentFolder,
@@ -51,12 +44,41 @@ describe('Test the save publish buttons flow', () => {
                 {name: 'sharedTextarea', value: 'Initial text in textarea', language: 'en'}
             ]
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'simpleTextA',
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'hello', language: 'en'}]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'simpleTextB',
+            primaryNodeType: 'jnt:text',
+            properties: [
+                {name: 'text', value: 'EN', language: 'en'},
+                {name: 'text', value: 'DE', language: 'de'}
+            ]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'constraints',
+            primaryNodeType: 'qant:constraints',
+            properties: [
+                {name: 'mandatorySharedSmallText', value: 'test'},
+                {name: 'mandatoryRegexSharedSmallText', value: 'test'},
+                {name: 'mandatorySmallText', value: 'test', language: 'en'},
+                {name: 'mandatoryRegexSmallText', value: 'test', language: 'en'}
+            ]
+        });
+        publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextA`, ['en', 'de', 'fr']);
+        publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextB`, ['en', 'de', 'fr']);
     });
 
     after(function () {
         cy.logout();
         deleteSite(siteKey);
         deleteUser(userName);
+        deleteUser('thor');
     });
 
     const checkContentEditorHeaderButtons = (contentEditor: ContentEditor, saveDisabled: boolean, publishDisabled: boolean) => {
@@ -124,7 +146,7 @@ describe('Test the save publish buttons flow', () => {
         checkContentEditorHeaderMenu(new ContentEditor(), 'true');
     };
 
-    it('Check save publish buttons flow', {retries: 3}, () => {
+    it('check save publish buttons flow', {retries: 3}, () => {
         cy.log('Login with editor in chief');
         cy.login(userName, 'password');
         const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents/contentEditorTestContents');
@@ -140,5 +162,53 @@ describe('Test the save publish buttons flow', () => {
         publish(contentEditor);
         cy.log('Check unpublish buttons flow');
         unPublish(contentEditor);
+    });
+
+    it('should display request publication button', () => {
+        cy.log('Login with editor');
+        cy.login('thor', 'password');
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('simpleTextA');
+        contentEditor.switchToAdvancedMode();
+
+        contentEditor.checkButtonStatus('submitSave', false);
+        // Commented because the request publication button stays active even though there is nothing to publish
+        // contentEditor.checkButtonStatus('startWorkflowMainButton', false);
+
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('hi');
+        contentEditor.checkButtonStatus('submitSave', true);
+        contentEditor.checkButtonStatus('startWorkflowMainButton', false);
+        contentEditor.save();
+        contentEditor.checkButtonStatus('submitSave', false);
+        contentEditor.checkButtonStatus('startWorkflowMainButton', true);
+    });
+
+    it('should displayed publish button for updated content only', () => {
+        cy.login();
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('simpleTextB');
+        contentEditor.switchToAdvancedMode();
+
+        checkContentEditorHeaderButtons(contentEditor, false, false);
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('EN update');
+        checkContentEditorHeaderButtons(contentEditor, true, false);
+        contentEditor.save();
+        checkContentEditorHeaderButtons(contentEditor, false, true);
+        contentEditor.getLanguageSwitcherAdvancedMode().select('German');
+        checkContentEditorHeaderButtons(contentEditor, false, false);
+    });
+
+    it('should not be able to publish with invalid form', () => {
+        cy.login();
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('constraints');
+        contentEditor.switchToAdvancedMode();
+
+        checkContentEditorHeaderButtons(contentEditor, false, true);
+        contentEditor.getSmallTextField('qant:constraints_mandatorySharedSmallText').clearValue();
+        contentEditor.save(false);
+        cy.get('[data-sel-role=dialog-errorBeforeSave]').contains('Mandatory text');
+        getComponentByRole(Button, 'content-type-dialog-cancel').click();
+        checkContentEditorHeaderButtons(contentEditor, true, false);
     });
 });

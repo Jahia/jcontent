@@ -773,7 +773,8 @@
         },
         "tab": {
           "edit": "Edit",
-          "advanced": "Advanced options"
+          "advanced": "Advanced options",
+          "visibility": "Visibility Rules"
         }
       },
       "header":  {

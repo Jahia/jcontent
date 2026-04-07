@@ -28,16 +28,13 @@
     "sync-pom-tests": "sync-pom-version --package-file=tests/package.json"
   },
   "description": "jContent for Jahia",
-  "types": "./types/shared/index.d.ts",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jahia/jcontent.git"
   },
   "author": "Jahia Core Team <core@jahia.com>",
   "license": "MIT",
-  "files": [
-    "types"
-  ],
   "dx-extends": {
     "@jahia/jahia-ui-root": "^0.0.1"
   },
@@ -81,7 +78,7 @@
     "history": "^5.3.0",
     "i18next": "^20.6.1",
     "image-extensions": "^1.1.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mime": "^3.0.0",
     "notistack": "^3.0.1",
     "pdfjs-dist": "5.4.296",
@@ -162,7 +159,7 @@
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^4.3.0",
     "editframe-styles": "workspace:*",
-    "eslint": "^7.9.0",
+    "eslint": "^10.0.3",
     "eslint-plugin-jest": "^24.0.1",
     "eslint-plugin-json": "^2.1.1",
     "eslint-plugin-react": "^7.31.8",
@@ -185,7 +182,7 @@
     "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3",
     "vitest": "^3.2.1",
-    "webpack": "^5.99.4",
+    "webpack": "^5.105.4",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1"
   },

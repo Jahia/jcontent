@@ -13,6 +13,24 @@
     padding: var(--spacing-medium);
 }
 
+.rowEnd {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--spacing-medium);
+    justify-content: flex-end;
+    align-items: baseline;
+    padding: var(--spacing-medium);
+}
+
+.column {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: var(--spacing-medium);
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: var(--spacing-medium);
+}
+
 .rowSwitch {
     display: flex;
     flex-flow: row nowrap;

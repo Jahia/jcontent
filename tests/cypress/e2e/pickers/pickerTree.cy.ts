@@ -112,8 +112,7 @@ describe('Picker tests - Trees', () => {
             .getPickerField(contentTypes.contentfolderpicker.fieldNodeType, contentTypes.contentfolderpicker.multiple);
         let picker = pickerField.open();
 
-        picker.getTable().getRowByIndex(2).get().find('span').first().should('contain', 'content-folder1').click();
-
+        picker.getTable().getRows().get().contains('content-folder1').click();
         picker.select();
         pickerField.assertValue('content-folder1');
         picker = pickerField.open();

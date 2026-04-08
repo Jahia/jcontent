@@ -318,7 +318,7 @@ describe('Content editor form', () => {
             .should('have.attr', 'aria-checked', 'true');
         cy.frameLoaded('iframe.cke_wysiwyg_frame');
         cy.iframe('iframe.cke_wysiwyg_frame').should('contain', 'value 1');
-        cy.get('input[id="qant:AllFieldsDefault_sharedDate"]').should('have.value', '04/06/2019 00:00');
+        cy.get('input[id="qant:AllFieldsDefault_sharedDate"]').should('have.value', '06/04/2019 00:00');
         cy.get('input[name="qant:AllFieldsDefault_sharedDecimal"]').should('have.value', '1234567890.123457');
         cy.get('input[name="jmix:defaultPropMixin_mixinPropWithDefaultValue"]').should('have.value', 'value 1');
     });
@@ -348,8 +348,8 @@ describe('Content editor form', () => {
             .should('contain', 'value 1');
         cy.iframe('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBigtext[1]"] iframe.cke_wysiwyg_frame')
             .should('contain', 'value 2');
-        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[0]"]').should('have.value', '04/06/2019 00:00');
-        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[1]"]').should('have.value', '04/06/2029 00:00');
+        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[0]"]').should('have.value', '06/04/2019 00:00');
+        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[1]"]').should('have.value', '06/04/2029 00:00');
         cy.get('input[name="qant:allFieldsMultipleDefault_sharedDecimal[0]"]').should('have.value', '1234567890.123457');
         cy.get('input[name="qant:allFieldsMultipleDefault_sharedDecimal[1]"]').should('have.value', '1134567890.113457');
     });

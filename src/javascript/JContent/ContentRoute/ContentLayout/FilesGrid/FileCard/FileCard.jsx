@@ -72,6 +72,7 @@ function getIsHighlighted(node, previewSelection, isPreviewOpened, selection) {
     return (node.path === previewSelection && isPreviewOpened) || (selection.indexOf(node.path) > -1) || (selection.indexOf(node.uuid) > -1);
 }
 
+// eslint-disable-next-line complexity
 export const FileCard = ({
     node,
     lang,

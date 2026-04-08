@@ -1,12 +1,13 @@
 .container {
+    flex: 1;
     padding: var(--spacing-medium);
     overflow-y: auto;
-    flex: 1;
 }
 
 .section {
     margin-bottom: var(--spacing-large);
     padding-bottom: var(--spacing-medium);
+
     border-bottom: 1px solid var(--color-border);
 
     &:last-child {
@@ -16,33 +17,37 @@
 
 .sectionTitle {
     margin-bottom: var(--spacing-medium);
+
     font-weight: 600;
 }
 
 .detailRow {
     display: flex;
     flex-direction: column;
-    margin-bottom: var(--spacing-small);
     gap: var(--spacing-nano);
+    margin-bottom: var(--spacing-small);
 }
 
 .label {
-    color: var(--color-gray);
     font-weight: 500;
+    color: var(--color-gray);
 }
 
 .value {
     display: inline-flex;
-    align-items: center;
     gap: var(--spacing-small);
+    align-items: center;
+
     word-break: break-word;
 }
 
 .copyButton {
     flex-shrink: 0;
-    opacity: 0.7;
+
     vertical-align: middle;
-    
+
+    opacity: 0.7;
+
     &:hover {
         opacity: 1;
     }

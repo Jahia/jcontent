@@ -1,40 +1,51 @@
 import React, {useState} from 'react';
 import {Paper, Tab, TabItem} from '@jahia/moonstone';
-import {useTranslation} from 'react-i18next';
-import {Preview} from '../Preview';
-import {ContentDetails} from './ContentDetails';
-import {ContentHistory} from './ContentHistory';
+import {registry} from '@jahia/ui-extender';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './SidePanel.scss';
+import {useTranslation} from 'react-i18next';
 
 export const SidePanel = () => {
-    const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = useState('details');
+    const ceCtx = useContentEditorContext();
+    const {t} = useTranslation('jcontent');
+
+    const tabs = registry.find({target: 'sidePanelTabsActions'});
+    const ActiveTabComponent = tabs.find(tab => tab.value === activeTab)?.displayableComponent;
 
     return (
         <Paper className={styles.container}>
             <div className={styles.tabs}>
                 <Tab>
-                    <TabItem
-                        label={t('jcontent:label.contentEditor.sidePanel.details')}
-                        isSelected={activeTab === 'details'}
-                        onClick={() => setActiveTab('details')}
-                    />
-                    <TabItem
-                        label={t('jcontent:label.contentEditor.sidePanel.history')}
-                        isSelected={activeTab === 'history'}
-                        onClick={() => setActiveTab('history')}
-                    />
-                    <TabItem
-                        label={t('jcontent:label.contentEditor.sidePanel.preview')}
-                        isSelected={activeTab === 'preview'}
-                        onClick={() => setActiveTab('preview')}
-                    />
+                    {tabs.map(tab => {
+                        const {displayableComponent, ...tabProps} = tab;
+                        const TabComponent = tab.component;
+
+                        if (!tab.isDisplayable || !tab.isDisplayable(ceCtx)) {
+                            return null;
+                        }
+
+                        return (
+                            <TabComponent
+                                key={tab.value}
+                                {...tabProps}
+                                activeTab={activeTab}
+                                setActiveTab={setActiveTab}
+                                render={({onClick}) => (
+                                    <TabItem
+                                        label={t(tab.buttonLabel)}
+                                        isSelected={activeTab === tab.value}
+                                        data-sel-role={tab.dataSelRole}
+                                        onClick={onClick}
+                                    />
+                                )}
+                            />
+                        );
+                    })}
                 </Tab>
             </div>
             <div className={styles.content}>
-                {activeTab === 'details' && <ContentDetails/>}
-                {activeTab === 'history' && <ContentHistory/>}
-                {activeTab === 'preview' && <Preview/>}
+                {ActiveTabComponent && <ActiveTabComponent/>}
             </div>
         </Paper>
     );

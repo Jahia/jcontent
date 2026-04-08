@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import PropTypes from 'prop-types';
 import {Typography, Button, Copy} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
@@ -32,13 +33,19 @@ const DetailRow = ({label, value, children}) => {
                     <Button
                         icon={<Copy/>}
                         variant="ghost"
-                        onClick={handleCopy}
                         className={styles.copyButton}
+                        onClick={handleCopy}
                     />
                 )}
             </div>
         </div>
     );
+};
+
+DetailRow.propTypes = {
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    children: PropTypes.node
 };
 
 export const ContentDetails = () => {
@@ -56,9 +63,9 @@ export const ContentDetails = () => {
                         {t('jcontent:label.contentEditor.sidePanel.technical')}
                     </Typography>
 
-                    {technicalInfo.map((info, index) => (
+                    {technicalInfo.map(info => (
                         <DetailRow
-                            key={index}
+                            key={info.label + info.value}
                             label={info.label}
                             value={info.value}
                         />
@@ -72,9 +79,9 @@ export const ContentDetails = () => {
                         {t('jcontent:label.contentEditor.sidePanel.additional')}
                     </Typography>
 
-                    {details.map((detail, index) => (
+                    {details.map(detail => (
                         <DetailRow
-                            key={index}
+                            key={detail.label + detail.value}
                             label={detail.label}
                             value={detail.value}
                         />

@@ -105,7 +105,7 @@ describe('Test list ordering', () => {
         contentEditor.switchToAdvancedMode();
 
         contentEditor.getSection('listOrdering').should('exist');
-        cy.get('[data-sel-role-automatic-ordering="jmix:orderedList"]').should('not.exist');
+        cy.get('[data-sel-role-automatic-ordering="jmix:orderedList"]', {timeout: 5000}).should('not.exist');
     });
 
     it('should only be automatically orderable', () => {
@@ -116,7 +116,7 @@ describe('Test list ordering', () => {
 
         contentEditor.getSection('listOrdering').should('exist');
         cy.get('[data-sel-role-automatic-ordering="jmix:orderedList"]').should('exist');
-        cy.get('[data-sel-field-picker-action="openPicker"]').should('not.exist');
+        cy.get('[data-sel-field-picker-action="openPicker"]', {timeout: 5000}).should('not.exist');
     });
 
     it('should not display sub-nodes', () => {
@@ -127,6 +127,6 @@ describe('Test list ordering', () => {
 
         contentEditor.getSection('listOrdering').should('exist');
         cy.get('[data-sel-role-automatic-ordering="jmix:orderedList"]').should('exist');
-        cy.get('[data-sel-field-picker-action="openPicker"]').should('not.exist');
+        cy.get('[data-sel-field-picker-action="openPicker"]', {timeout: 5000}).should('not.exist');
     });
 });

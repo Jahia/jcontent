@@ -105,4 +105,17 @@ describe('Picker tests - Trees', () => {
         mediaAccordion.getTreeItem('images').should('have.attr', 'aria-expanded', 'false');
         mediaAccordion.shouldNotHaveTreeItem('backgrounds');
     });
+
+    it('should be able to select a content folder', () => {
+        const pickerField = jcontent
+            .createContent(contentTypes.contentfolderpicker.typeName)
+            .getPickerField(contentTypes.contentfolderpicker.fieldNodeType, contentTypes.contentfolderpicker.multiple);
+        let picker = pickerField.open();
+
+        picker.getTable().getRows().get().contains('content-folder1').click();
+        picker.select();
+        pickerField.assertValue('content-folder1');
+        picker = pickerField.open();
+        picker.getTableRow('content-folder1').should('have.class', 'moonstone-TableRow-highlighted');
+    });
 });

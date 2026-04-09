@@ -3,8 +3,8 @@ import {
     addNode,
     enableModule
 } from '@jahia/cypress';
-import {TagField} from "../../page-object/fields/tagField";
-import gql from "graphql-tag";
+import {TagField} from '../../page-object/fields/tagField';
+import gql from 'graphql-tag';
 
 describe('Tags tests in content editor', () => {
     let jcontent: JContent;
@@ -154,18 +154,21 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.get().find('input[type="text"]').type('j', {delay: 500, force: true});
-        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView().within(() => {
+        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
+        cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('jahia').should('be.visible');
             cy.contains('j@hia').should('be.visible');
         });
         tagField.get().find('input[type="text"]').clear();
         tagField.get().find('input[type="text"]').type('#', {delay: 500, force: true});
-        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView().within(() => {
+        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
+        cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('#123').should('be.visible');
         });
         tagField.get().find('input[type="text"]').clear();
         tagField.get().find('input[type="text"]').type('1', {delay: 500, force: true});
-        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView().within(() => {
+        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
+        cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('123').should('be.visible');
         });
         contentEditor.cancelAndDiscard();

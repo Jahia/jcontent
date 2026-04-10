@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import styles from './DateTime.scss';
 import {getButtonRenderer} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
@@ -87,7 +87,7 @@ const render = (props, t) => {
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
         variant: 'outlined',
-        size: 'default',
+        size: 'big',
         color: 'accent'
     }
 });
@@ -118,7 +118,7 @@ const NewRule = ({type, node}) => {
     }
     const contentSection = data.forms.createForm?.sections.find(s => s.name === 'content');
     return (
-        <div className={stylesFieldset.fields}>
+        <div className={styles.row}>
             {contentSection.fieldSets[0].fields.map(field =>
                 <FieldContainer key={field.name} field={field} inputContext={{displayActions: false}}/>)}
         </div>
@@ -148,67 +148,80 @@ const AddNewRule = ({node, onCancel}) => {
     });
     const formikContext = useFormikContext();
     const [selectedType, setSelectedType] = useState(null);
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        if (!loadingTypes && nodeTypesTree) {
+            const data = nodeTypesTree.flatMap(type => ({
+                value: type.name,
+                label: type.label
+            })).sort((a, b) => a.label.localeCompare(b.label));
+            setData(data);
+            setSelectedType(data.length > 0 ? data[0].value : null);
+        }
+    }, [nodeTypesTree, loadingTypes]);
 
     if (loadingTypes) {
         return <Typography>{t('jcontent:label.contentEditor.visibilityTab.conditions.loading')}</Typography>;
     }
     console.debug('Node types tree for node', node, 'is', nodeTypesTree);
+
     return (
-        <div className={styles.column}>
-            <Typography variant="subheading">
-                {t('jcontent:label.contentEditor.visibilityTab.conditions.type')}
-            </Typography>
-            <Dropdown
-                className={styles.language}
-                value={selectedType}
-                size="medium"
-                data-sel-role="condition-type"
-                data={nodeTypesTree.flatMap(element => {
-                    return [{
-                        value: element.name,
-                        label: element.label
-                    }];
-                })}
-                onChange={(e, item) => setSelectedType(item.value)}
-            />
-            {selectedType !== null &&
-                <>
-                    <NewRule type={selectedType} node={node}/>
-                    <div className={styles.rowEnd}>
-                        <Button
-                            size="big"
-                            label={t('jcontent:label.close')}
-                            onClick={() => {
-                                setSelectedType(null);
-                                onCancel();
-                            }}/>
-                        <Button size="big" label="Add" onClick={() => {
-                            // All the new rules value have been saved in formik values we need to group them and move them under a value named RULES::new,
-                            // each of these new rules should contain all the properties of formik.values apart RULES::new,WIP::Info,jmix:i18n_j:invalidLanguages and jmix:conditionalVisibility
-                            const newRule = Object.keys(formikContext.values).reduce((acc, key) => {
-                                if (key !== Constants.wip.fieldName && key !== 'jmix:i18n_j:invalidLanguages' && key !== jmixConditionalVisibility && !key.startsWith('RULES::')) {
-                                    acc[key] = formikContext.values[key];
-                                    formikContext.setFieldValue(key, undefined);
+        <Paper elevation={4}>
+            <div className={styles.column}>
+                <Typography variant="body" weight="bold">
+                    {t('jcontent:label.contentEditor.visibilityTab.conditions.type')}
+                </Typography>
+                <Typography variant="caption">
+                    {t('jcontent:label.contentEditor.visibilityTab.conditions.typeDescription')}
+                </Typography>
+                <Dropdown
+                    value={selectedType}
+                    variant="outlined"
+                    size="medium"
+                    data-sel-role="condition-type"
+                    data={data}
+                    onChange={(e, item) => setSelectedType(item.value)}
+                />
+                {selectedType !== null &&
+                    <>
+                        <NewRule type={selectedType} node={node}/>
+                        <div className={styles.rowEnd}>
+                            <Button
+                                size="big"
+                                label={t('jcontent:label.contentEditor.close')}
+                                onClick={() => {
+                                    setSelectedType(null);
+                                    onCancel();
+                                }}/>
+                            <Button size="big" label="Add" onClick={() => {
+                                // All the new rules value have been saved in formik values we need to group them and move them under a value named RULES::new,
+                                // each of these new rules should contain all the properties of formik.values apart RULES::new,WIP::Info,jmix:i18n_j:invalidLanguages and jmix:conditionalVisibility
+                                const newRule = Object.keys(formikContext.values).reduce((acc, key) => {
+                                    if (key !== Constants.wip.fieldName && key !== 'jmix:i18n_j:invalidLanguages' && key !== jmixConditionalVisibility && !key.startsWith('RULES::')) {
+                                        acc[key] = formikContext.values[key];
+                                        formikContext.setFieldValue(key, undefined);
+                                    }
+                                    return acc;
+                                }, {});
+                                if (Object.keys(newRule).length === 0) {
+                                    setSelectedType(null);
+                                    onCancel();
+                                    return;
                                 }
-                                return acc;
-                            }, {});
-                            if (Object.keys(newRule).length === 0) {
-                                setSelectedType(null);
-                                onCancel();
-                                return;
-                            }
-                            newRule.type = selectedType;
-                            const newRules = formikContext.values['RULES::new'] || [];
-                            newRules.push(newRule);
-                            formikContext.setFieldValue('RULES::new', newRules).then(() => {
-                                setSelectedType(null);
-                                onCancel();
-                            });
-                        }}/>
-                    </div>
-                </>
-            }
-        </div>
+                                newRule.type = selectedType;
+                                const newRules = formikContext.values['RULES::new'] || [];
+                                newRules.push(newRule);
+                                formikContext.setFieldValue('RULES::new', newRules).then(() => {
+                                    setSelectedType(null);
+                                    onCancel();
+                                });
+                            }}/>
+                        </div>
+                    </>
+                }
+            </div>
+        </Paper>
     )
 }
 
@@ -265,13 +278,13 @@ const RulesList = ({rules, onEdit}) => {
     const updatedRules = formikContext.values['RULES::updated'];
     const deletedRules = formikContext.values['RULES::deleted'];
     // rules.node contains all the rules on the current node, let's render it using paper and table from material ui and moonstone
-    return (<div>
-        <div>
+    return (<div className={styles.column}>
+        <div className="flexRow">
             <Typography variant="subheading" weight="bold">
                 Existing condition
             </Typography>
         </div>
-        <Paper elevation={2}>
+        <Paper elevation={8} style={{minWidth:"100%"}}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -339,9 +352,10 @@ RulesList.propTypes = {
     onEdit: PropTypes.func
 };
 
-function SaveEditedRuleButton(onCancel) {
+const SaveEditedRuleButton = (onCancel) => {
     const formikContext = useFormikContext();
-    return <Button size="big" label="Add" onClick={() => {
+    const {t} = useTranslation('jcontent');
+    return <Button size="big" label={t('jcontent:label.ok')} onClick={() => {
         formikContext.submitForm();
     }}/>;
 }
@@ -388,18 +402,20 @@ const EditRule = ({rule, onSave, onCancel}) => {
 
     return (
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            <>
-                <NewRule type={rule.primaryNodeType.name} node={rule}/>
-                <div className={styles.rowEnd}>
-                    <Button
-                        size="big"
-                        label={t('jcontent:label.close')}
-                        onClick={() => {
-                            onCancel();
-                        }}/>
-                    <SaveEditedRuleButton onCancel={onCancel}/>
+            <Paper elevation={4}>
+                <div className={styles.column}>
+                    <NewRule type={rule.primaryNodeType.name} node={rule}/>
+                    <div className={styles.rowEnd}>
+                        <Button
+                            size="big"
+                            label={t('jcontent:label.cancel')}
+                            onClick={() => {
+                                onCancel();
+                            }}/>
+                        <SaveEditedRuleButton onCancel={onCancel}/>
+                    </div>
                 </div>
-            </>
+            </Paper>
         </Formik>);
 }
 
@@ -408,13 +424,14 @@ EditRule.propTypes = {
     onCancel: PropTypes.any,
     onSave: PropTypes.any
 };
-export const DateTime = ({rules, refresh, node, sections}) => {
+export const DateTime = ({rules, refresh, node, isMatchingAllConditions, sections}) => {
     const {t} = useTranslation('jcontent');
     const section = sections.filter(s => s.name === 'visibility');
     const fieldSets = filterRegularFieldSets(section[0].fieldSets);
     const rulesCount = rules.pageInfo.totalCount;
     const [isAddingNewRule, setIsAddingNewRule] = useState(false);
     const [editingRule, setEditingRule] = useState(null);
+    const [isMatchingAllConditionsUpdate, setIsMatchingAllConditionsUpdate] = useState(isMatchingAllConditions)
     const formikContext = useFormikContext();
 
     if (fieldSets.length === 0) {
@@ -439,6 +456,13 @@ export const DateTime = ({rules, refresh, node, sections}) => {
         refresh();
     }
 
+    const handleSetIsMachingAllConditionUpdate = (value) => {
+        setIsMatchingAllConditionsUpdate(value);
+        if (value !== isMatchingAllConditions) {
+            formikContext.setFieldValue('RULES::isMatchingAllConditions', value);
+        }
+    };
+
     let typo;
     switch (rulesCount) {
         case 0:
@@ -457,7 +481,7 @@ export const DateTime = ({rules, refresh, node, sections}) => {
         displayName: t('jcontent:label.contentEditor.visibilityTab.conditions.title')
     }
 
-    if (rulesCount === 0) {
+    if (rulesCount === 0 && !isAddingNewRule && formikContext.values['RULES::new'] === undefined) {
         // There is no rules, show the button to create a new rule
         return (
             <article>
@@ -467,7 +491,7 @@ export const DateTime = ({rules, refresh, node, sections}) => {
                             <Typography component="label"
                                         htmlFor="jmix:i18n"
                                         className={stylesFieldset.fieldSetTitle}
-                                        variant="subheading"
+                                        variant="heading"
                                         weight="bold"
                             >
                                 {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
@@ -475,14 +499,16 @@ export const DateTime = ({rules, refresh, node, sections}) => {
                         </div>
                     </div>
                 </div>
-                <div className={stylesFieldset.fields}>
-                    <Typography>{typo}</Typography>
-                    <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
-                        formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
-                            handleChange();
-                        });
-                    }}/>
-                </div>
+                <Paper elevation={4}>
+                    <div className={styles.nocondition}>
+                        <Typography>{typo}</Typography>
+                        <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
+                            formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
+                                handleChange();
+                            });
+                        }}/>
+                    </div>
+                </Paper>
             </article>);
     } else if (isAddingNewRule) {
         return (
@@ -493,7 +519,7 @@ export const DateTime = ({rules, refresh, node, sections}) => {
                             <Typography component="label"
                                         htmlFor="jmix:i18n"
                                         className={stylesFieldset.fieldSetTitle}
-                                        variant="subheading"
+                                        variant="heading"
                                         weight="bold"
                             >
                                 {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
@@ -513,7 +539,7 @@ export const DateTime = ({rules, refresh, node, sections}) => {
                             <Typography component="label"
                                         htmlFor="jmix:i18n"
                                         className={stylesFieldset.fieldSetTitle}
-                                        variant="subheading"
+                                        variant="heading"
                                         weight="bold"
                             >
                                 {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
@@ -525,31 +551,46 @@ export const DateTime = ({rules, refresh, node, sections}) => {
             </article>
         );
     } else {
+        const data = [true, false].map(v => ({
+            value: v,
+            label: v ? t('jcontent:label.contentEditor.visibilityTab.conditions.allrules') : t('jcontent:label.contentEditor.visibilityTab.conditions.anyrule')
+        }));
         return (
             <article>
                 <div className={stylesFieldset.fieldSetTitleContainer}>
-                    <div className="flexRow_nowrap">
+                    <div className="flexRow_between">
                         <div className="flexCol">
                             <Typography component="label"
                                         htmlFor="jmix:i18n"
                                         className={stylesFieldset.fieldSetTitle}
-                                        variant="subheading"
+                                        variant="heading"
                                         weight="bold"
                             >
                                 {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
                             </Typography>
                         </div>
+                        <div className="flexCol">
+                            <Dropdown
+                                className={styles.language}
+                                value={isMatchingAllConditionsUpdate}
+                                size="medium"
+                                data-sel-role="condition-matching"
+                                data={data}
+                                onChange={(e, item) => handleSetIsMachingAllConditionUpdate(item.value)}
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className={stylesFieldset.fields}>
-                    <Typography>{typo}</Typography>
-                    <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
-                        formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
-                            handleChange();
-                        });
-                    }}/>
-                </div>
-                <RulesList rules={rules} onEdit={setEditingRule}/>
+                <Paper elevation={4}>
+                    <RulesList rules={rules} onEdit={setEditingRule}/>
+                    <div className={styles.rowEnd}>
+                        <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
+                            formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
+                                handleChange();
+                            });
+                        }}/>
+                    </div>
+                </Paper>
             </article>
         );
     }
@@ -559,5 +600,6 @@ DateTime.propTypes = {
     rules: PropTypes.object.isRequired,
     refresh: PropTypes.func.isRequired,
     node: PropTypes.object.isRequired,
+    isMatchingAllConditions: PropTypes.bool.isRequired,
     sections: PropTypes.array
 };

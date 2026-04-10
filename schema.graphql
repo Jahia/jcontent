@@ -1364,6 +1364,7 @@ type GqlEditorFormMutations {
     ): Boolean
     "Save the visibility condition for the given node"
     saveVisibilityCondition(
+        isMatchingAllConditions: Boolean = false,
         "A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ..."
         locale: String!,
         newConditions: [InputVisibilityConditionInput],
@@ -3540,6 +3541,8 @@ type MfaMutation {
 type MfaQuery {
     "Get list of available MFA factors"
     availableFactors: [String]
+    "Check if password reset is needed for the current MFA session"
+    checkResetPasswordNeeded(site: String, username: String): Boolean
     "Get current MFA session status"
     duoURL: String
     "Check if MFA is enabled"

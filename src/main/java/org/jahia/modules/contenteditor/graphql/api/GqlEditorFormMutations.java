@@ -23,10 +23,7 @@
  */
 package org.jahia.modules.contenteditor.graphql.api;
 
-import graphql.annotations.annotationTypes.GraphQLDescription;
-import graphql.annotations.annotationTypes.GraphQLField;
-import graphql.annotations.annotationTypes.GraphQLName;
-import graphql.annotations.annotationTypes.GraphQLNonNull;
+import graphql.annotations.annotationTypes.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jahia.api.Constants;
@@ -116,28 +113,31 @@ public class GqlEditorFormMutations {
     public boolean saveVisibilityCondition(
         @GraphQLName("uuid") @GraphQLNonNull @GraphQLDescription("UUID of the parent nodes ofr teh visibility condition") String uuid,
         @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
-        @GraphQLName("newConditions") Collection<VisibilityConditionInput> newConditions, @GraphQLName("updatedConditions") Collection<VisibilityConditionInput> updatedConditions,
-        @GraphQLName("removedConditions") Collection<String> removedConditions
+        @GraphQLName("newConditions") Collection<VisibilityConditionInput> newConditions,
+        @GraphQLName("updatedConditions") Collection<VisibilityConditionInput> updatedConditions,
+        @GraphQLName("removedConditions") Collection<String> removedConditions,
+        @GraphQLName("isMatchingAllConditions") @GraphQLDefaultValue(GqlUtils.SupplierFalse.class) Boolean isMatchingAllConditionsUpdate
     ) {
         try {
             JCRSessionWrapper session = jcrSessionFactory.getCurrentUserSession(Constants.EDIT_WORKSPACE, LanguageCodeConverters.languageCodeToLocale(locale));
             JCRNodeWrapper jcrNode = session.getNodeByUUID(uuid);
             // Ensure node is jmix:conditionalVisibility
-            if(!jcrNode.isNodeType("jmix:conditionalVisibility")) {
+            if (!jcrNode.isNodeType("jmix:conditionalVisibility")) {
                 jcrNode.addMixin("jmix:conditionalVisibility");
             }
             // get the children named j:conditionalVisibility if not available add it
-            if(!jcrNode.hasNode("j:conditionalVisibility")) {
+            if (!jcrNode.hasNode("j:conditionalVisibility")) {
                 jcrNode.addNode("j:conditionalVisibility", "jnt:conditionalVisibility");
             }
             JCRNodeWrapper conditions = jcrNode.getNode("j:conditionalVisibility");
+            conditions.setProperty("j:forceMatchAllConditions", isMatchingAllConditionsUpdate);
             // deal with the new conditions
             newConditions.forEach(condition -> {
                 try {
-                    JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(),":")), condition.getPrimaryType());
+                    JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":")), condition.getPrimaryType());
                     condition.getProperties().forEach(property -> {
                         try {
-                            if(property.getValue() != null) {
+                            if (property.getValue() != null) {
                                 addedNode.setProperty(property.getName(), property.getValue());
                             } else if (!CollectionUtils.isEmpty(property.getValues())) {
                                 addedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));

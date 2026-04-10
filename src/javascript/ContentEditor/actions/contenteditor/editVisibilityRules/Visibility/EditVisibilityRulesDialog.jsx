@@ -36,7 +36,8 @@ export const EditVisibilityRulesDialog = ({
     const {lang, nodeData, initialValues, title, i18nContext} = contentEditorContext;
     const {data, loading, refetch} = useQuery(VisibilityQuery, {
         variables: {
-            path: nodeData.path
+            path: nodeData.path,
+            language: lang,
         }, fetchPolicy: 'network-only'
     });
     const client = useApolloClient();
@@ -103,7 +104,8 @@ export const EditVisibilityRulesDialog = ({
                 lang,
                 newConditions: gqlNewRules,
                 updatedConditions: gqlUpdatedRules,
-                removedConditions: deletedRules
+                removedConditions: deletedRules,
+                isMatchingAllConditions: values[`RULES::isMatchingAllConditions`] ? values[`RULES::isMatchingAllConditions`] : false
             }
         });
 
@@ -141,13 +143,15 @@ export const EditVisibilityRulesDialog = ({
 
 
     // Keep only the initial values we need for the new formik context (languages and date/time rules) to avoid confusion with the formik context of the content editor form. (jmix:i18n_j:invalidLanguages)
-    const invalidLanguages = data.jcr.nodeByPath.invalidLanguages?.values;
+    const nodeByPath = data.jcr.nodeByPath;
+    const invalidLanguages = nodeByPath.invalidLanguages?.values;
     const formikFilteredInitialValues = {
         "jmix:i18n_j:invalidLanguages": invalidLanguages
     }
     formikFilteredInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
 
 
+    const isMatchingAllConditions = nodeByPath.conditionalVisibility.nodes.length > 0 ? nodeByPath.conditionalVisibility.nodes[0].isMatchingAllConditions.booleanValue : false;
     return (
         <ContentEditorConfigContextProvider config={contentEditorConfigContext}>
             <ContentEditorContextProvider useFormDefinition={useEditFormDefinition} context={contentEditorContext}>
@@ -180,8 +184,8 @@ export const EditVisibilityRulesDialog = ({
 
                             <div className={classes.container} data-cm-role="visibilityScreen">
                                 <Languages invalidLanguages={invalidLanguages} sections={sections}/>
-                                <DateTime rules={data.jcr.nodeByPath.rules} refresh={refetch}
-                                          node={nodeData} sections={sections}/>
+                                <DateTime rules={nodeByPath.rules} refresh={refetch}
+                                          node={nodeData} sections={sections} isMatchingAllConditions={isMatchingAllConditions}/>
                             </div>
 
                         </DialogContent>
@@ -189,7 +193,7 @@ export const EditVisibilityRulesDialog = ({
                             <SaveButton actionCallback={onCloseDialog} onCloseDialog={onCloseDialog}/>
                             <Button
                                 size="big"
-                                label={t('jcontent:label.close')}
+                                label={t('jcontent:label.contentEditor.close')}
                                 onClick={onCloseDialog}/>
                         </DialogActions>
                     </Dialog>

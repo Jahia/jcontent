@@ -19,6 +19,7 @@
     gap: var(--spacing-medium);
     justify-content: flex-end;
     align-items: baseline;
+    min-width: 100%;
     padding: var(--spacing-medium);
 }
 
@@ -28,6 +29,7 @@
     gap: var(--spacing-medium);
     justify-content: flex-start;
     align-items: flex-start;
+    min-width: 100%;
     padding: var(--spacing-medium);
 }
 
@@ -37,4 +39,14 @@
     gap: var(--spacing-small);
     justify-content: flex-start;
     align-items: center;
+}
+
+.nocondition {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 100%;
+    margin-bottom: var(--spacing-large);
+    margin-left: var(--spacing-large);
 }

@@ -29,9 +29,10 @@ const sortTags = (tags, sort) => {
     });
 };
 
-const getWorkspaceSummary = result => result?.workspaceResults?.reduce((acc, workspaceResult) => {
-    return acc + workspaceResult.processedCount;
-}, 0) || 0;
+const getImpactedItemsCount = result => {
+    const counts = result?.workspaceResults?.map(workspaceResult => workspaceResult.processedCount) || [];
+    return counts.length > 0 ? Math.max(...counts) : 0;
+};
 
 export const TagManager = () => {
     const {t} = useTranslation('jcontent');
@@ -133,7 +134,7 @@ export const TagManager = () => {
 
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.renameSuccess', {
-                    count: getWorkspaceSummary(result),
+                    count: getImpactedItemsCount(result),
                     tag: renameTarget.name,
                     newTag: newName
                 }),
@@ -165,7 +166,7 @@ export const TagManager = () => {
 
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.deleteSuccess', {
-                    count: getWorkspaceSummary(result),
+                    count: getImpactedItemsCount(result),
                     tag: deleteTarget.name
                 }),
                 ['closeButton', 'closeAfter5s']
@@ -190,7 +191,7 @@ export const TagManager = () => {
             await refreshAfterMutation();
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.removeFromContentSuccess', {
-                    count: getWorkspaceSummary(result),
+                    count: getImpactedItemsCount(result),
                     tag: selectedTag
                 }),
                 ['closeButton', 'closeAfter5s']
@@ -220,7 +221,7 @@ export const TagManager = () => {
             await refreshAfterMutation();
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.updateOnContentSuccess', {
-                    count: getWorkspaceSummary(result),
+                    count: getImpactedItemsCount(result),
                     tag: selectedTag,
                     newTag,
                     contentName: editNodeTarget.displayName || editNodeTarget.path

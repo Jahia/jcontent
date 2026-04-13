@@ -4,7 +4,7 @@ import {TagManager} from './TagManager';
 
 export const register = registry => {
     registry.add('adminRoute', 'tagsmanager', {
-        targets: ['jcontent:50'],
+        targets: ['jcontent'],
         label: 'jcontent:label.contentManager.navigation.manage.tags.title',
         icon: <Tag/>,
         isSelectable: true,

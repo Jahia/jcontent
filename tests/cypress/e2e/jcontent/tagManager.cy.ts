@@ -1,17 +1,26 @@
 import {createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {JContent} from '../../page-object';
+import {TagManager} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
 
 describe('Tag Manager', () => {
     const siteKey = 'tagManagerTest';
     const contentRootPath = `/sites/${siteKey}/contents/tagmanager-e2e`;
+    const alphaPath = `${contentRootPath}/alpha`;
+    const betaPath = `${contentRootPath}/beta`;
     const specialTag = 'ù^$ùç_"(_çt"à\'çr(';
     const commonTag = 'tm-e2e-common';
     const alphaTag = 'tm-e2e-alpha';
+    const specialRenamedTag = 'tm-e2e-special-renamed';
+    const localRenamedTag = 'tm-e2e-alpha-local';
+    const bulkRenamedTag = 'tm-e2e-renamed';
 
-    const visitTagManager = () => {
-        JContent.visit(siteKey, 'en', 'apps/tagsmanager');
-        cy.get('[data-cm-role="tag-manager-root"]').should('be.visible');
+    const visitTagManager = () => TagManager.visit(siteKey, 'en');
+
+    const createTaggedNode = (name: string, title: string, tags: Array<string>) => {
+        GraphqlUtils.addNode(contentRootPath, 'jnt:contentList', name);
+        GraphqlUtils.setProperty(`${contentRootPath}/${name}`, 'jcr:title', title, 'en');
+        GraphqlUtils.addMixins(`${contentRootPath}/${name}`, ['jmix:tagged']);
+        GraphqlUtils.setProperties(`${contentRootPath}/${name}`, 'j:tagList', tags, 'en');
     };
 
     before(() => {
@@ -23,21 +32,9 @@ describe('Tag Manager', () => {
         enableModule('tags', siteKey);
 
         GraphqlUtils.addNode(`/sites/${siteKey}/contents`, 'jnt:contentList', 'tagmanager-e2e');
-        GraphqlUtils.addNode(contentRootPath, 'jnt:contentList', 'alpha');
-        GraphqlUtils.addNode(contentRootPath, 'jnt:contentList', 'beta');
-        GraphqlUtils.addNode(contentRootPath, 'jnt:contentList', 'gamma');
-
-        GraphqlUtils.setProperty(`${contentRootPath}/alpha`, 'jcr:title', 'Tag Alpha', 'en');
-        GraphqlUtils.setProperty(`${contentRootPath}/beta`, 'jcr:title', 'Tag Beta', 'en');
-        GraphqlUtils.setProperty(`${contentRootPath}/gamma`, 'jcr:title', 'Tag Gamma', 'en');
-
-        GraphqlUtils.addMixins(`${contentRootPath}/alpha`, ['jmix:tagged']);
-        GraphqlUtils.addMixins(`${contentRootPath}/beta`, ['jmix:tagged']);
-        GraphqlUtils.addMixins(`${contentRootPath}/gamma`, ['jmix:tagged']);
-
-        GraphqlUtils.setProperties(`${contentRootPath}/alpha`, 'j:tagList', [alphaTag, commonTag], 'en');
-        GraphqlUtils.setProperties(`${contentRootPath}/beta`, 'j:tagList', [commonTag], 'en');
-        GraphqlUtils.setProperties(`${contentRootPath}/gamma`, 'j:tagList', [specialTag], 'en');
+        createTaggedNode('alpha', 'Tag Alpha', [alphaTag, commonTag]);
+        createTaggedNode('beta', 'Tag Beta', [commonTag]);
+        createTaggedNode('gamma', 'Tag Gamma', [specialTag]);
     });
 
     after(() => {
@@ -51,97 +48,65 @@ describe('Tag Manager', () => {
     });
 
     it('supports view usages, rename and delete for special-character tags', () => {
-        const jc = JContent.visit(siteKey, 'en', 'pages/home');
-        jc.getAccordionItem('apps').click();
-        jc.getAccordionItem('apps').getTreeItem('tagsmanager').get().should('be.visible');
-        jc.getAccordionItem('apps').getTreeItem('tagsmanager').click();
+        const tagManager = TagManager.openFromAdditionalApps(siteKey, 'en');
 
-        cy.get('[data-cm-role="tag-manager-root"]').should('be.visible');
         cy.get('.moonstone-header').should('contain', 'Tag manager');
 
-        cy.get('[data-cm-role="tag-manager-search"]').find('input').clear().type('ù^$ùç_');
-        cy.contains('[data-cm-role="tag-manager-row"]', specialTag)
-            .should('be.visible')
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-view"]').click();
-            });
+        tagManager.search('ù^$ùç_').openUsages(specialTag);
 
-        cy.get('[data-cm-role="tag-manager-drawer"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-drawer"]').should('contain', 'Tag Gamma');
+        tagManager.getDrawer().should('be.visible').and('contain', 'Tag Gamma');
 
-        cy.get('[data-cm-role="tag-manager-drawer-layer"]').click(10, 10);
-        cy.get('[data-cm-role="tag-manager-drawer"]').should('not.exist');
+        tagManager.closeDrawerByClickAway();
+        tagManager.getDrawer().should('not.exist');
 
-        cy.contains('[data-cm-role="tag-manager-row"]', specialTag)
-            .should('be.visible')
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-rename"]').click();
-            });
-
-        cy.get('[data-cm-role="tag-manager-rename-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-rename-input"]').find('input').clear().type('tm-e2e-special-renamed');
-        cy.get('button[data-cm-role="tag-manager-confirm-rename"]').click();
-
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-special-renamed').should('be.visible');
+        tagManager.openRename(specialTag).fillRenameDialog(specialRenamedTag).confirmRename();
+        tagManager.getRow(specialRenamedTag).should('be.visible');
         cy.contains('[data-cm-role="tag-manager-row"]', specialTag).should('not.exist');
 
-        cy.get('[data-cm-role="tag-manager-search"]').find('input').clear().type('tm-e2e-special-renamed');
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-special-renamed')
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-delete"]').click();
-            });
-
-        cy.get('[data-cm-role="tag-manager-delete-dialog"]').should('be.visible');
-        cy.get('button[data-cm-role="tag-manager-confirm-delete"]').click();
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-special-renamed').should('not.exist');
+        tagManager.search(specialRenamedTag).openDelete(specialRenamedTag).confirmDelete();
+        cy.contains('[data-cm-role="tag-manager-row"]', specialRenamedTag).should('not.exist');
     });
 
     it('renames a tag on a single content item from the side panel', () => {
-        visitTagManager();
+        const tagManager = visitTagManager();
 
-        cy.get('[data-cm-role="tag-manager-search"]').find('input').clear().type(alphaTag);
-        cy.contains('[data-cm-role="tag-manager-row"]', alphaTag)
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-view"]').click();
-            });
+        tagManager.search(alphaTag).openUsages(alphaTag).openEditNodeTag(alphaPath)
+            .fillEditNodeDialog(localRenamedTag)
+            .confirmEditNode();
 
-        cy.get(`[data-cm-role="tag-manager-drawer-item"][data-node-path="${contentRootPath}/alpha"]`)
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-edit-node-tag"]').click();
-            });
-
-        cy.get('[data-cm-role="tag-manager-edit-node-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-edit-node-input"]').find('input').clear().type('tm-e2e-alpha-local');
-        cy.get('button[data-cm-role="tag-manager-confirm-edit-node"]').click();
-
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-alpha-local').should('be.visible');
+        tagManager.getRow(localRenamedTag).should('be.visible');
         cy.contains('[data-cm-role="tag-manager-row"]', alphaTag).should('not.exist');
-        cy.get('[data-cm-role="tag-manager-drawer"]').should('not.exist');
+        tagManager.getDrawer().should('not.exist');
     });
 
     it('renames and deletes a site tag from the table', () => {
-        visitTagManager();
+        const tagManager = visitTagManager();
 
-        cy.get('[data-cm-role="tag-manager-search"]').find('input').clear().type(commonTag);
-        cy.contains('[data-cm-role="tag-manager-row"]', commonTag)
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-rename"]').click();
-            });
+        tagManager.search(commonTag).openRename(commonTag).fillRenameDialog(bulkRenamedTag).confirmRename();
 
-        cy.get('[data-cm-role="tag-manager-rename-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-rename-input"]').find('input').clear().type('tm-e2e-renamed');
-        cy.get('button[data-cm-role="tag-manager-confirm-rename"]').click();
-
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-renamed').should('be.visible');
+        tagManager.getRow(bulkRenamedTag).should('be.visible');
         cy.contains('[data-cm-role="tag-manager-row"]', commonTag).should('not.exist');
 
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-renamed')
-            .within(() => {
-                cy.get('button[data-cm-role="tag-manager-delete"]').click();
-            });
+        tagManager.openDelete(bulkRenamedTag).confirmDelete();
+        cy.contains('[data-cm-role="tag-manager-row"]', bulkRenamedTag).should('not.exist');
+    });
 
-        cy.get('[data-cm-role="tag-manager-delete-dialog"]').should('be.visible');
-        cy.get('button[data-cm-role="tag-manager-confirm-delete"]').click();
-        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-e2e-renamed').should('not.exist');
+    it('removes a tag from one content item with confirmation from the side panel', () => {
+        const tagManager = visitTagManager();
+
+        tagManager.search(commonTag).openUsages(commonTag).openDeleteNodeTag(betaPath).confirmDeleteNode();
+
+        tagManager.getDrawerItem(alphaPath).should('exist');
+        tagManager.getDrawerItem(betaPath).should('not.exist');
+        tagManager.getRow(commonTag).should('contain', '1');
+    });
+
+    it('opens the side panel below the header and closes it on click-away', () => {
+        const tagManager = visitTagManager();
+
+        tagManager.search(commonTag).openUsages(commonTag);
+        tagManager.getDrawer().should('be.visible');
+        cy.get('[data-cm-role="tag-manager-drawer-layer"]').click('topLeft');
+        tagManager.getDrawer().should('not.exist');
     });
 });

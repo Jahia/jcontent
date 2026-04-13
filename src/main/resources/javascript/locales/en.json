@@ -30,6 +30,7 @@
         "notPublished": "This content has never been published",
         "unPublished": "This content has been unpublished",
         "modified": "Modified by {{userName}} on {{timestamp}}",
+        "new": "Created by {{userName}} on {{timestamp}}",
         "published": "Published by {{userName}} on {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Content cannot be published in the current language because of a missing mandatory property",
@@ -1017,7 +1018,14 @@
             "date": "The content will be visible starting from the specified date and time, or until the specified date and time, or in between those two dates. Depending on the configuration of the rule.",
             "dayOfWeek": "The content will be visible on the selected days of the week.",
             "time": "The content will be visible starting from the specified time, or until the specified time, depending on the configuration of the rule."
-          }
+          },
+          "dayOfWeekCondition": "The content will be visible on the selected days of the week: {{days}}",
+          "startEndDateCondition": "The content will be visible starting from {{startDate}}, until {{endDate}}",
+          "startDateCondition": "The content will be visible starting from {{startDate}}",
+          "endDateCondition": "The content will be visible until {{endDate}}",
+          "startEndTimeCondition": "The content will be visible starting from {{startTime}}, until {{endTime}}",
+          "startTimeCondition": "The content will be visible starting from {{startTime}}",
+          "endTimeCondition": "The content will be visible until {{endTime}}"
         },
         "channels": {
         }

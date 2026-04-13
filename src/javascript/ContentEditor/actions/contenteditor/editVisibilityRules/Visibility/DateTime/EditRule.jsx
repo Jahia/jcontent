@@ -1,0 +1,113 @@
+import React, {useCallback} from 'react';
+import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
+import {Button} from '@jahia/moonstone';
+import {Paper} from '@material-ui/core';
+import {Formik, useFormikContext} from 'formik';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {NewRule} from './NewRule';
+import {SaveEditedRuleButton} from './SaveEditedRuleButton';
+import {jmixConditionalVisibility} from './utils';
+import styles from './DateTime.scss';
+import dayjs from "dayjs";
+
+export const EditRule = ({rule, onSave, onCancel}) => {
+    const {uilang} = useContentEditorConfigContext();
+    const {t} = useTranslation('jcontent');
+    const formikContext = useFormikContext();
+    console.debug('Editing rule', rule);
+
+    // Determine if this is a new rule (from RULES::new) or an existing rule
+    const isNewRule = !rule.properties;
+
+    // Build initial values based on rule structure
+    let initialValues;
+    if (isNewRule) {
+        // For new rules, extract all properties except metadata fields
+        initialValues = Object.keys(rule).reduce((acc, key) => {
+            if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
+                acc[key] = rule[key];
+            }
+            return acc;
+        }, {});
+    } else {
+        // For existing rules, use the properties array
+        initialValues = rule.properties.filter(prop => prop.name !== 'jcr:primaryType' && prop.name !== 'jcr:uuid').reduce((acc, prop) => {
+            acc[prop.name] = prop.values !== null ? prop.values : prop.value;
+            // Check if we have an update rule with the same uuid if yes use this value instead
+            const updatedRules = formikContext.values['RULES::updated'] || [];
+            const updatedRule = updatedRules.find(r => r.uuid === rule.uuid);
+            if (updatedRule) {
+                acc[prop.name] = updatedRule[prop.name] !== undefined ? updatedRule[prop.name] : acc[prop.name];
+            }
+            return acc;
+        }, {});
+    }
+
+    const handleSubmit = useCallback((values, actions) => {
+        console.debug('Submitting form with values', values, 'and initialValues', initialValues, ' for rule', rule);
+        const updatedRule = Object.keys(values).reduce((acc, key) => {
+            if (key !== Constants.wip.fieldName && key !== 'jmix:i18n_j:invalidLanguages' && key !== jmixConditionalVisibility && !key.startsWith('RULES::')) {
+                acc[key] = values[key];
+            }
+            return acc;
+        }, {});
+
+        // Get the rule type from the appropriate source
+        updatedRule.type = isNewRule ? rule.type : rule.primaryNodeType.name;
+        updatedRule.uuid = rule.uuid;
+        updatedRule.timestamp = dayjs().toISOString();
+        updatedRule.username = self.contextJsParameters.user.fullname;
+
+        if (isNewRule) {
+            // For new rules, update RULES::new instead of RULES::updated
+            const newRules = formikContext.values['RULES::new'] || [];
+            const existingRuleIndex = newRules.findIndex(r => r.uuid === rule.uuid);
+            if (existingRuleIndex !== -1) {
+                newRules[existingRuleIndex] = updatedRule;
+            }
+            formikContext.setFieldValue('RULES::new', newRules).then(() => {
+                onCancel();
+            });
+        } else {
+            // For existing rules, update RULES::updated
+            const updatedRulesArray = formikContext.values['RULES::updated'] || [];
+            const existingRuleIndex = updatedRulesArray.findIndex(r => r.uuid === rule.uuid);
+            if (existingRuleIndex !== -1) {
+                updatedRulesArray[existingRuleIndex] = updatedRule;
+            } else {
+                updatedRulesArray.push(updatedRule);
+            }
+            formikContext.setFieldValue('RULES::updated', updatedRulesArray).then(() => {
+                onCancel();
+            });
+        }
+    });
+
+    return (
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Paper elevation={4}>
+                <div className={styles.column}>
+                    <NewRule type={isNewRule ? rule.type : rule.primaryNodeType.name} node={rule}/>
+                    <div className={styles.rowEnd}>
+                        <Button
+                            size="big"
+                            label={t('jcontent:label.cancel')}
+                            onClick={() => {
+                                onCancel();
+                            }}/>
+                        <SaveEditedRuleButton onCancel={onCancel}/>
+                    </div>
+                </div>
+            </Paper>
+        </Formik>
+    );
+};
+
+EditRule.propTypes = {
+    rule: PropTypes.any,
+    onCancel: PropTypes.any,
+    onSave: PropTypes.any
+};
+

@@ -58,7 +58,7 @@ export const EditVisibilityRulesDialog = ({
                 properties: []
             };
             Object.keys(rule).forEach(key => {
-                if (key !== 'type') {
+                if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
                     const item = {
                         name: key,
                     };
@@ -81,7 +81,7 @@ export const EditVisibilityRulesDialog = ({
                 properties: []
             };
             Object.keys(rule).forEach(key => {
-                if (key !== 'type' && key !== 'uuid') {
+                if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
                     const item = {
                         name: key,
                     };

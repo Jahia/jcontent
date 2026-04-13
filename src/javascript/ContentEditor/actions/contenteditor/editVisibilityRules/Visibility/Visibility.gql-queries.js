@@ -7,6 +7,7 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
             ...NodeCacheRequiredFields
             conditionalVisibility : children(names: ["j:conditionalVisibility"]) {
                 nodes {
+                    ...NodeCacheRequiredFields
                     isMatchingAllConditions: property(language: $language, name: "j:forceMatchAllConditions") {
                         booleanValue
                     }

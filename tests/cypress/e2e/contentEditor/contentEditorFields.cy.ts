@@ -65,7 +65,8 @@ describe('Content editor fields tests', () => {
             .click();
         cy.get('input[name="qant:allFieldsMultiple_smallText[0]"]').should('have.value', 'testb=b');
 
-        cy.get('input[name="qant:allFieldsMultiple_smallText[0]"]').clear().type('testb=c', {force: true});
+        cy.get('input[name="qant:allFieldsMultiple_smallText[0]"]').clear({force: true});
+        cy.get('input[name="qant:allFieldsMultiple_smallText[0]"]').type('testb=c', {force: true});
         contentEditor.save();
         cy.get('input[name="qant:allFieldsMultiple_smallText[0]"]').should('have.value', 'testb=c');
     });
@@ -169,7 +170,7 @@ describe('Content editor fields tests', () => {
             .find('[data-sel-action="addField"]')
             .click();
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_boolean[1]"]')
-            .find('input[type="checkbox"]')
+            .find('input[type="checkbox"]');
         contentEditor.save();
 
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_boolean[0]"]')
@@ -187,7 +188,6 @@ describe('Content editor fields tests', () => {
             .find('input[type="checkbox"]')
             .should('have.attr', 'aria-checked', 'false');
     });
-
 
     it('should add and remove multiple values on date field', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsMultiple');
@@ -216,7 +216,6 @@ describe('Content editor fields tests', () => {
         cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '10/11/2025 20:30');
         contentEditor.cancelAndDiscard();
     });
-
 
     it('should add values to number fields', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
@@ -288,7 +287,7 @@ describe('Content editor fields tests', () => {
             'qant:protectedFields_protectedBoolean',
             'qant:protectedFields_protectedDate',
             'qant:protectedFields_protectedChoicelist',
-            'qant:protectedFields_protectedDynamicChoicelist',
+            'qant:protectedFields_protectedDynamicChoicelist'
         ];
 
         protectedFields.forEach(fieldName => {

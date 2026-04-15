@@ -198,22 +198,22 @@ describe('Content editor fields tests', () => {
             .click();
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[0]"]')
             .find('input[type="text"]')
-            .type('25/12/2024 10:30');
+            .type('02/09/2024 10:30');
 
         cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_date"]')
             .find('[data-sel-action="addField"]')
             .click();
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[1]"]')
             .find('input[type="text"]')
-            .type('10/11/2025 20:30');
+            .type('05/06/2025 20:30');
 
-        cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '25/12/2024 10:30');
-        cy.get('input[id="qant:allFieldsMultiple_date[1]"]').should('have.value', '10/11/2025 20:30');
+        cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '02/09/2024 10:30');
+        cy.get('input[id="qant:allFieldsMultiple_date[1]"]').should('have.value', '05/06/2025 20:30');
 
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[0]"]')
             .find('[data-sel-action="removeField_0"]')
             .click();
-        cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '10/11/2025 20:30');
+        cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '05/06/2025 20:30');
         contentEditor.cancelAndDiscard();
     });
 

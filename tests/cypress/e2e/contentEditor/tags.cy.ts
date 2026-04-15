@@ -63,7 +63,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.addNewValue('simpletag');
 
-        tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 20000});
+        tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'simpletag');
         contentEditor.cancelAndDiscard();
     });
@@ -78,7 +78,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.get().find('input[type="text"]').type('tag1, tag2{enter}', {delay: 500, force: true});
 
-        tagField.get().find('[role="button"] span').should('have.length', 2);
+        tagField.get().find('[role="button"] span').should('have.length', 2, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'tag1');
         tagField.get().find('[role="button"] span').eq(1).should('have.text', 'tag2');
         contentEditor.cancelAndDiscard();
@@ -94,7 +94,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.get().find('input[type="text"]').type('onetag, threeTag, twotag, threetag, ONETAG, twotags{enter}', {delay: 500, force: true});
 
-        tagField.get().find('[role="button"] span').should('have.length', 4);
+        tagField.get().find('[role="button"] span').should('have.length', 4, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'onetag');
         tagField.get().find('[role="button"] span').eq(1).should('have.text', 'threetag');
         tagField.get().find('[role="button"] span').eq(2).should('have.text', 'twotag');
@@ -112,7 +112,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.get().find('input[type="text"]').type('hello,  {enter}', {delay: 500, force: true});
 
-        tagField.get().find('[role="button"] span').should('have.length', 1);
+        tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'hello');
         contentEditor.cancelAndDiscard();
     });
@@ -127,7 +127,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.addNewValue('$ù!é(.=;:/*');
 
-        tagField.get().find('[role="button"] span').should('have.length', 1);
+        tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', '$ù!é(.=;:/*');
         contentEditor.cancelAndDiscard();
     });
@@ -139,7 +139,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'qant\\:allFieldsMultiple_dynamicChoicelist');
         tagField.addNewValue('squad-qa');
         tagField.addNewValue('team-qa');
-        tagField.get().find('[role="button"] span').should('have.length', 2);
+        tagField.get().find('[role="button"] span').should('have.length', 2, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'squad-qa');
         tagField.get().find('[role="button"] span').eq(1).should('have.text', 'team-qa');
         contentEditor.cancelAndDiscard();

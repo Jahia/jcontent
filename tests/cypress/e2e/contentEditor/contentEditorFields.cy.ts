@@ -238,22 +238,16 @@ describe('Content editor fields tests', () => {
         cy.get('input[name="qant:allFields_double"]').should('have.value', '20192.75');
         cy.get('input[name="qant:allFields_decimal"]').should('have.value', '20192019201920192019201920192019.75757575757575757575751');
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_long"]')
-            .find('input')
-            .clear()
-            .type('123456789.abcd123456789', {force: true});
+        cy.get('[data-sel-content-editor-field="qant:allFields_long"]').find('input').clear({force: true});
+        cy.get('[data-sel-content-editor-field="qant:allFields_long"]').find('input').type('123456789.abcd123456789', {force: true});
         cy.get('input[name="qant:allFields_long"]').should('have.value', '123456789123456789');
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_double"]')
-            .find('input')
-            .clear()
-            .type('20192.75.abcd', {force: true});
+        cy.get('[data-sel-content-editor-field="qant:allFields_double"]').find('input').clear({force: true});
+        cy.get('[data-sel-content-editor-field="qant:allFields_double"]').find('input').type('20192.75.abcd', {force: true});
         cy.get('input[name="qant:allFields_double"]').should('have.value', '20192.75');
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_decimal"]')
-            .find('input')
-            .clear()
-            .type('20192019201920192019201920192019.75757575757575757575751.abcd', {force: true});
+        cy.get('[data-sel-content-editor-field="qant:allFields_decimal"]').find('input').clear({force: true});
+        cy.get('[data-sel-content-editor-field="qant:allFields_decimal"]').find('input').type('20192019201920192019201920192019.75757575757575757575751.abcd', {force: true});
         cy.get('input[name="qant:allFields_decimal"]').should('have.value', '20192019201920192019201920192019.75757575757575757575751');
     });
 

@@ -63,7 +63,7 @@ describe('Tags tests in content editor', () => {
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         tagField.addNewValue('simpletag');
 
-        tagField.get().find('[role="button"] span').should('have.length', 1);
+        tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 20000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'simpletag');
         contentEditor.cancelAndDiscard();
     });

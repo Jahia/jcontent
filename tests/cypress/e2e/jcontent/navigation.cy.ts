@@ -168,6 +168,10 @@ describe('Content navigation', () => {
         contentEditor.create();
 
         // The link will end like this: ...pressEntry.pressdetail.html so successful navigation confirms that the template part is handled correctly
+        cy.waitUntil(() =>
+            pb.iframe().get().find('a').contains('pressEntry').then($el => $el.length > 0),
+        {interval: 500, ...timeout}
+        );
         pb.iframe().get().find('a', timeout).contains('pressEntry', timeout).click();
         cy.get('h1', timeout).should('contain', 'pressEntry');
     });

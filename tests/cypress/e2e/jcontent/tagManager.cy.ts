@@ -1,6 +1,5 @@
-import {createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, deleteNode, enableModule} from '@jahia/cypress';
 import {TagManager} from '../../page-object';
-import {GraphqlUtils} from '../../utils/graphqlUtils';
 
 describe('Tag Manager', () => {
     const siteKey = 'tagManagerTest';
@@ -16,41 +15,68 @@ describe('Tag Manager', () => {
 
     const visitTagManager = () => TagManager.visit(siteKey, 'en');
 
-    const createTaggedNode = (name: string, title: string, tags: Array<string>) => {
-        GraphqlUtils.addNode(contentRootPath, 'jnt:contentList', name);
-        GraphqlUtils.setProperty(`${contentRootPath}/${name}`, 'jcr:title', title, 'en');
-        GraphqlUtils.addMixins(`${contentRootPath}/${name}`, ['jmix:tagged']);
-        GraphqlUtils.setProperties(`${contentRootPath}/${name}`, 'j:tagList', tags, 'en');
+    const createTestContent = () => {
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'tagmanager-e2e',
+            primaryNodeType: 'jnt:contentList',
+            children: [
+                {
+                    name: 'alpha',
+                    primaryNodeType: 'jnt:contentList',
+                    mixins: ['jmix:tagged'],
+                    properties: [
+                        {name: 'jcr:title', value: 'Tag Alpha', language: 'en'},
+                        {name: 'j:tagList', values: [alphaTag, commonTag]}
+                    ]
+                },
+                {
+                    name: 'beta',
+                    primaryNodeType: 'jnt:contentList',
+                    mixins: ['jmix:tagged'],
+                    properties: [
+                        {name: 'jcr:title', value: 'Tag Beta', language: 'en'},
+                        {name: 'j:tagList', values: [commonTag]}
+                    ]
+                },
+                {
+                    name: 'gamma',
+                    primaryNodeType: 'jnt:contentList',
+                    mixins: ['jmix:tagged'],
+                    properties: [
+                        {name: 'jcr:title', value: 'Tag Gamma', language: 'en'},
+                        {name: 'j:tagList', values: [specialTag]}
+                    ]
+                }
+            ]
+        });
     };
 
-    before(() => {
+    before(function () {
+        deleteSite(siteKey);
         createSite(siteKey, {
             templateSet: 'dx-base-demo-templates',
             serverName: 'localhost',
             locale: 'en'
         });
         enableModule('tags', siteKey);
-
-        GraphqlUtils.addNode(`/sites/${siteKey}/contents`, 'jnt:contentList', 'tagmanager-e2e');
-        createTaggedNode('alpha', 'Tag Alpha', [alphaTag, commonTag]);
-        createTaggedNode('beta', 'Tag Beta', [commonTag]);
-        createTaggedNode('gamma', 'Tag Gamma', [specialTag]);
     });
 
-    after(() => {
-        GraphqlUtils.deleteNode(contentRootPath);
-        deleteSite(siteKey);
+    after(function () {
         cy.logout();
+        deleteSite(siteKey);
     });
 
-    beforeEach(() => {
+    beforeEach(function () {
+        deleteNode(contentRootPath);
+        createTestContent();
         cy.loginAndStoreSession();
     });
 
     it('supports view usages, rename and delete for special-character tags', () => {
         const tagManager = TagManager.openFromAdditionalApps(siteKey, 'en');
 
-        cy.get('.moonstone-header').should('contain', 'Tag manager');
+        cy.get('.moonstone-header').should('contain', 'Manage Tags');
 
         tagManager.search('ù^$ùç_').openUsages(specialTag);
 
@@ -60,6 +86,7 @@ describe('Tag Manager', () => {
         tagManager.getDrawer().should('not.exist');
 
         tagManager.openRename(specialTag).fillRenameDialog(specialRenamedTag).confirmRename();
+        tagManager.clearSearch();
         tagManager.getRow(specialRenamedTag).should('be.visible');
         cy.contains('[data-cm-role="tag-manager-row"]', specialTag).should('not.exist');
 
@@ -74,8 +101,11 @@ describe('Tag Manager', () => {
             .fillEditNodeDialog(localRenamedTag)
             .confirmEditNode();
 
+        tagManager.clearSearch();
         tagManager.getRow(localRenamedTag).should('be.visible');
-        cy.contains('[data-cm-role="tag-manager-row"]', alphaTag).should('not.exist');
+        cy.get('[data-cm-role="tag-manager-row"]')
+            .filter((_, el) => el.getAttribute('data-tag-name') === alphaTag)
+            .should('not.exist');
         tagManager.getDrawer().should('not.exist');
     });
 
@@ -83,6 +113,7 @@ describe('Tag Manager', () => {
         const tagManager = visitTagManager();
 
         tagManager.search(commonTag).openRename(commonTag).fillRenameDialog(bulkRenamedTag).confirmRename();
+        tagManager.clearSearch();
 
         tagManager.getRow(bulkRenamedTag).should('be.visible');
         cy.contains('[data-cm-role="tag-manager-row"]', commonTag).should('not.exist');

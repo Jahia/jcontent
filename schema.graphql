@@ -165,6 +165,8 @@ interface JCRNode {
         "The name of the permission"
         permissionName: String!
     ): Boolean
+    "Return if a node of type jnt:condition is matching for the current node."
+    isConditionMatching: Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
     "true if node is under a mounted node"
@@ -174,6 +176,8 @@ interface JCRNode {
         "Node type name"
         type: InputNodeTypesInput!
     ): Boolean!
+    "Returns true if the node is visible according to the visibility conditions defined for its type."
+    isVisible: Boolean
     jExperience(
         "Unomi profile id"
         profileId: String,
@@ -332,6 +336,8 @@ interface JCRNode {
         "Languages"
         languages: [String]
     ): [VanityUrl]
+    "Returns the details of the visibility conditions evaluation for the node."
+    visibilityDetails: [VisibilityConditionEvaluationResult]
     "Read work in progress information for a given node"
     wipInfo: wipInfo
     "Get the workspace of the query"
@@ -882,6 +888,8 @@ type GenericJCRNode implements JCRNode {
         "The name of the permission"
         permissionName: String!
     ): Boolean
+    "Return if a node of type jnt:condition is matching for the current node."
+    isConditionMatching: Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
     "true if node is under a mounted node"
@@ -891,6 +899,8 @@ type GenericJCRNode implements JCRNode {
         "Node type name"
         type: InputNodeTypesInput!
     ): Boolean!
+    "Returns true if the node is visible according to the visibility conditions defined for its type."
+    isVisible: Boolean
     jExperience(
         "Unomi profile id"
         profileId: String,
@@ -1049,6 +1059,8 @@ type GenericJCRNode implements JCRNode {
         "Languages"
         languages: [String]
     ): [VanityUrl]
+    "Returns the details of the visibility conditions evaluation for the node."
+    visibilityDetails: [VisibilityConditionEvaluationResult]
     "Read work in progress information for a given node"
     wipInfo: wipInfo
     "Get the workspace of the query"
@@ -3086,6 +3098,8 @@ type JCRSite implements JCRNode {
     installedModules: [String]
     "Retrieves a collection of module IDs, which are installed on the site, the node belongs to, as well as dependencies of those modules"
     installedModulesWithAllDependencies: [String]
+    "Return if a node of type jnt:condition is matching for the current node."
+    isConditionMatching: Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
     "true if node is under a mounted node"
@@ -3095,6 +3109,8 @@ type JCRSite implements JCRNode {
         "Node type name"
         type: InputNodeTypesInput!
     ): Boolean!
+    "Returns true if the node is visible according to the visibility conditions defined for its type."
+    isVisible: Boolean
     jExperience(
         "Unomi profile id"
         profileId: String,
@@ -3259,6 +3275,8 @@ type JCRSite implements JCRNode {
         "Languages"
         languages: [String]
     ): [VanityUrl]
+    "Returns the details of the visibility conditions evaluation for the node."
+    visibilityDetails: [VisibilityConditionEvaluationResult]
     "Read work in progress information for a given node"
     wipInfo: wipInfo
     "Get the workspace of the query"
@@ -4292,6 +4310,8 @@ type VanityUrl implements JCRNode {
         "The name of the permission"
         permissionName: String!
     ): Boolean
+    "Return if a node of type jnt:condition is matching for the current node."
+    isConditionMatching: Boolean
     "Check if the node as a renderable template associated with it (not a view a template)."
     isDisplayableNode: Boolean
     "true if node is under a mounted node"
@@ -4301,6 +4321,8 @@ type VanityUrl implements JCRNode {
         "Node type name"
         type: InputNodeTypesInput!
     ): Boolean!
+    "Returns true if the node is visible according to the visibility conditions defined for its type."
+    isVisible: Boolean
     jExperience(
         "Unomi profile id"
         profileId: String,
@@ -4463,6 +4485,8 @@ type VanityUrl implements JCRNode {
         "Languages"
         languages: [String]
     ): [VanityUrl]
+    "Returns the details of the visibility conditions evaluation for the node."
+    visibilityDetails: [VisibilityConditionEvaluationResult]
     "Read work in progress information for a given node"
     wipInfo: wipInfo
     "Get the workspace of the query"
@@ -4492,6 +4516,11 @@ type VanityUrlMappingMutation {
     ): Boolean
     "Get the identifier of the node currently being mutated"
     uuid: String
+}
+
+type VisibilityConditionEvaluationResult {
+    conditionNode: JCRNode
+    matches: Boolean
 }
 
 "Workflow process"

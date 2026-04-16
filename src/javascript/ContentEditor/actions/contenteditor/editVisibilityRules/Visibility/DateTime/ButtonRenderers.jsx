@@ -32,3 +32,10 @@ export const ButtonRenderer = getButtonRenderer({
     }
 });
 
+export const DangerButtonRenderer = getButtonRenderer({
+    defaultButtonProps: {
+        variant: 'outlined',
+        size: 'big',
+        color: 'danger'
+    }
+});

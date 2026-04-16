@@ -152,6 +152,8 @@ export const EditVisibilityRulesDialog = ({
 
 
     const isMatchingAllConditions = nodeByPath.conditionalVisibility.nodes.length > 0 ? nodeByPath.conditionalVisibility.nodes[0].isMatchingAllConditions.booleanValue : false;
+    const isVisible = nodeByPath.isVisible;
+    const isVisibleInLive = nodeByPath.liveVisibility !== null && nodeByPath.liveVisibility.isVisible;
     return (
         <ContentEditorConfigContextProvider config={contentEditorConfigContext}>
             <ContentEditorContextProvider useFormDefinition={useEditFormDefinition} context={contentEditorContext}>
@@ -185,7 +187,7 @@ export const EditVisibilityRulesDialog = ({
                             <div className={classes.container} data-cm-role="visibilityScreen">
                                 <Languages invalidLanguages={invalidLanguages} sections={sections}/>
                                 <DateTime rules={nodeByPath.rules} refresh={refetch}
-                                          node={nodeData} sections={sections} isMatchingAllConditions={isMatchingAllConditions}/>
+                                          node={nodeData} sections={sections} isMatchingAllConditions={isMatchingAllConditions} isVisible={isVisible} isVisibleInLive={isVisibleInLive}/>
                             </div>
 
                         </DialogContent>

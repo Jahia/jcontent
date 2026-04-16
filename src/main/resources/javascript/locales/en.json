@@ -1025,7 +1025,12 @@
           "endDateCondition": "The content will be visible until {{endDate}}",
           "startEndTimeCondition": "The content will be visible starting from {{startTime}}, until {{endTime}}",
           "startTimeCondition": "The content will be visible starting from {{startTime}}",
-          "endTimeCondition": "The content will be visible until {{endTime}}"
+          "endTimeCondition": "The content will be visible until {{endTime}}",
+          "preview": "Visible in preview",
+          "live": "Visible in live",
+          "preview_live": "Matching in preview / live",
+          "visible": "Visible",
+          "hidden": "Hidden"
         },
         "channels": {
         }

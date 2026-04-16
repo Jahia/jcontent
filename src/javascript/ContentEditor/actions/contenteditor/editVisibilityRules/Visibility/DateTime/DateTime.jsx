@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Add, Dropdown, Typography} from '@jahia/moonstone';
+import {Add, Chip, Dropdown, Typography, Visibility} from '@jahia/moonstone';
 import {Paper} from '@material-ui/core';
 import {useFormikContext} from 'formik';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
@@ -12,7 +12,7 @@ import {ButtonRenderer} from './ButtonRenderers';
 import {filterRegularFieldSets, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
 
-export const DateTime = ({rules, refresh, node, isMatchingAllConditions, sections}) => {
+export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
     const {t} = useTranslation('jcontent');
     const section = sections.filter(s => s.name === 'visibility');
     const fieldSets = filterRegularFieldSets(section[0].fieldSets);
@@ -167,6 +167,20 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, section
             </div>
             <Paper elevation={4}>
                 <DatatableRules rules={rules} onEdit={setEditingRule}/>
+                <div className={styles.row}>
+                    <Typography
+                        variant="subheading">{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}</Typography>
+                    {isVisible && <Chip icon={<Visibility/>} color={"success"}
+                                        label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
+                    {!isVisible && <Chip icon={<Visibility/>} color={"warning"}
+                                         label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
+                    <Typography
+                        variant="subheading">{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}</Typography>
+                    {isVisibleInLive && <Chip icon={<Visibility/>} color={"success"}
+                                              label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
+                    {!isVisibleInLive && <Chip icon={<Visibility/>} color={"warning"}
+                                               label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
+                </div>
                 <div className={styles.rowEnd}>
                     <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
                         formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
@@ -184,6 +198,8 @@ DateTime.propTypes = {
     refresh: PropTypes.func.isRequired,
     node: PropTypes.object.isRequired,
     isMatchingAllConditions: PropTypes.bool.isRequired,
+    isVisible: PropTypes.bool.isRequired,
+    isVisibleInLive: PropTypes.bool.isRequired,
     sections: PropTypes.array
 };
 

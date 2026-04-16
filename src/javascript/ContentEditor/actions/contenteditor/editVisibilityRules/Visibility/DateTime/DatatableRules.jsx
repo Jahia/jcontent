@@ -1,7 +1,7 @@
 import React, {forwardRef, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {DataTable, Delete, Edit, TableRow, Typography} from '@jahia/moonstone';
+import {Chip, DataTable, Delete, Edit, TableRow, Typography, Visibility} from '@jahia/moonstone';
 import {useFormikContext} from 'formik';
 import {getConditionLabel, getStatus, getStatusText} from './utils';
 import clsx from 'clsx';
@@ -103,15 +103,34 @@ export const DatatableRules = ({rules, onEdit}) => {
     // Moonstone Datatable takes a dataset and an array of columns, we need a status column (new/edited/published) a codnition label column and an actions column
     const [data, setData] = useState([]);
 
+    // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
-        {
-            key: 'type',
-            label: 'Condition type',
-            isSortable: true,
-            width: "90%",
-            sortFn: (a, b) => a.type.localeCompare(b.type)
-        }
-    ];
+            {
+                key: 'type',
+                label: 'Condition type',
+                isSortable: true,
+                width: "70%",
+                sortFn: (a, b) => a.type.localeCompare(b.type)
+            },
+            {
+                key: 'isMatching',
+                label: t('jcontent:label.contentEditor.visibilityTab.conditions.preview_live'),
+                isSortable: false,
+                width: "20%",
+                render: (value, row) => (
+                    <>
+                        <Chip icon={<Visibility/>}
+                              color={value ? "success" : "warning"}
+                        />
+                        <Typography variant="caption">/</Typography>
+                        <Chip icon={<Visibility/>}
+                              color={row.isMatchingLive ? "success" : "warning"}
+                        />
+                    </>
+                )
+            }
+        ]
+    ;
 
     const getProperties = (rule) => {
         // Find if there's an updated version of this rule
@@ -165,6 +184,8 @@ export const DatatableRules = ({rules, onEdit}) => {
                 type: getConditionLabel(rule.primaryNodeType.name, getProperties(rule), t),
                 username: username,
                 timestamp: timestamp,
+                isMatching: rule.isConditionMatching,
+                isMatchingLive: rule.live !== null && rule.live.isConditionMatching,
                 rule: rule
             }
         }).concat(newRules !== undefined ? newRules.map(rule => {

@@ -5,6 +5,38 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
     jcr {
         nodeByPath(path: $path) {
             ...NodeCacheRequiredFields
+            isVisible
+            liveVisibility: nodeInWorkspace(workspace: LIVE) {
+                isVisible
+                visibilityDetails {
+                    matches
+                    conditionNode {
+                        ...NodeCacheRequiredFields
+                        primaryNodeType {
+                            name
+                        }
+                        properties {
+                            name
+                            values
+                            value
+                        }
+                    }
+                }
+            }
+            visibilityDetails {
+                matches
+                conditionNode {
+                    ...NodeCacheRequiredFields
+                    primaryNodeType {
+                        name
+                    }
+                    properties {
+                        name
+                        values
+                        value
+                    }
+                }
+            }
             conditionalVisibility : children(names: ["j:conditionalVisibility"]) {
                 nodes {
                     ...NodeCacheRequiredFields
@@ -26,6 +58,15 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                         name
                         values
                         value
+                    }
+                    isConditionMatching
+                    live: nodeInWorkspace(workspace: LIVE) {
+                        properties {
+                            name
+                            value
+                            values
+                        }
+                        isConditionMatching
                     }
                     aggregatedPublicationInfo(language: $language) {
                         existsInLive

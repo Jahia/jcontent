@@ -14,6 +14,7 @@ describe('Content navigation', () => {
         });
         enableModule('jcontent-test-module', 'mySite1');
         enableModule('events', 'mySite1');
+        enableModule('press', 'mySite1');
         addNode({parentPathOrId: '/sites/mySite1/contents', primaryNodeType: 'jnt:event', name: 'test-event'});
         addNode({
             name: specialCharsName,
@@ -21,6 +22,15 @@ describe('Content navigation', () => {
             primaryNodeType: 'jnt:page',
             properties: [
                 {name: 'jcr:title', value: 'special chars page', language: 'en'},
+                {name: 'j:templateName', value: '2-column'}
+            ]
+        });
+        addNode({
+            name: 'notemplate.my',
+            parentPathOrId: '/sites/mySite1/home',
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'page with non-template', language: 'en'},
                 {name: 'j:templateName', value: '2-column'}
             ]
         });
@@ -125,5 +135,38 @@ describe('Content navigation', () => {
         const cardRow = jc.getGrid().getCardByName('bootstrap');
         cardRow.get().dblclick();
         cy.get('h1').contains('bootstrap');
+    });
+
+    // Template extraction was originally restricted to PageBuilder in https://github.com/Jahia/jcontent/pull/1739
+    // It was removed since the issue is no longer reproducible. This test was added to catch any regression.
+    it('can navigate to a page with ".something" postfix when ".something" does not match a template', () => {
+        const jc = JContent.visit('mySite1', 'en', 'pages/home/notemplate.my');
+        cy.get('h1', {timeout: 3000}).should('contain', 'page with non-template');
+
+        jc.getAccordionItem('pages').getTreeItem('home').click();
+
+        cy.get('h1', {timeout: 3000}).should('contain', 'Home');
+
+        jc.getAccordionItem('pages').getTreeItem('notemplate.my').click();
+
+        cy.get('h1', {timeout: 3000}).should('contain', 'page with non-template');
+    });
+
+    // This tests this issue: https://github.com/Jahia/jira-archives/issues/15703
+    it('can navigate with a link that contains a template postfix', () => {
+        const jc = JContent.visit('mySite1', 'en', 'pages/home/notemplate.my');
+        const pb = jc.switchToPageBuilder();
+        const module = pb.getModule('/sites/mySite1/home/notemplate.my/landing', false);
+        module.getHeader(false).get().click();
+        module.getCreateButtons().getInsertionButtonByIndex(1).click();
+
+        const contentEditor = jc.getCreateContent().getContentTypeSelector().searchForContentType('jnt:press').selectContentType('jnt:press').create();
+        contentEditor.getSmallTextField('jnt:press_jcr:title').addNewValue('pressEntry');
+        contentEditor.getRichTextField('jnt:press_body').type('random text');
+        contentEditor.create();
+
+        // The link will end like this: ...pressEntry.pressdetail.html so successful navigation confirms that the template part is handled correctly
+        pb.iframe().get().find('a').contains('pressEntry').click();
+        cy.get('h1', {timeout: 3000}).should('contain', 'pressEntry');
     });
 });

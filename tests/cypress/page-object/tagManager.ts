@@ -30,7 +30,7 @@ export class TagManager extends JContent {
     }
 
     getSearchInput() {
-        return cy.get('[data-cm-role="tag-manager-search"]').find('input');
+        return cy.get('[data-cm-role="tag-manager-search"]');
     }
 
     search(term: string): TagManager {
@@ -44,7 +44,9 @@ export class TagManager extends JContent {
     }
 
     getRow(tagName: string) {
-        return cy.contains('[data-cm-role="tag-manager-row"]', tagName).should('be.visible');
+        return cy.get('[data-cm-role="tag-manager-row"]')
+            .filter((_, el) => el.getAttribute('data-tag-name') === tagName)
+            .should('be.visible');
     }
 
     clickRowAction(tagName: string, actionRole: string): TagManager {
@@ -95,7 +97,7 @@ export class TagManager extends JContent {
 
     fillRenameDialog(value: string): TagManager {
         cy.get('[data-cm-role="tag-manager-rename-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-rename-input"]').find('input').clear().type(value);
+        cy.get('[data-cm-role="tag-manager-rename-input"]').clear().type(value);
         return this;
     }
 
@@ -106,7 +108,7 @@ export class TagManager extends JContent {
 
     fillEditNodeDialog(value: string): TagManager {
         cy.get('[data-cm-role="tag-manager-edit-node-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-edit-node-input"]').find('input').clear().type(value);
+        cy.get('[data-cm-role="tag-manager-edit-node-input"]').clear().type(value);
         return this;
     }
 

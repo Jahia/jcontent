@@ -217,7 +217,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         .filter(Field::isVisible)
                         .collect(Collectors.toList()));
 
-                    fieldSet.setVisible(fieldSet.isVisible() && (fieldSet.isHasEnableSwitch() || fieldSet.getFields().stream().anyMatch(Field::isVisible)));
+                    fieldSet.setVisible(fieldSet.isVisible() && (fieldSet.isDynamic() || fieldSet.getFields().stream().anyMatch(Field::isVisible)));
                 }
 
                 // Remove empty fieldSets - only keep empty dynamic field set which do not have matching mixin in another section

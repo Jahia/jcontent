@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor
 ---
 
-Handle template redirection corectly (#2279)
+Fix redirection issue in page builder when system name contains . (#2279)

@@ -188,7 +188,7 @@ export const DatatableRules = ({rules, onEdit}) => {
                 isMatchingLive: rule.live !== null && rule.live.isConditionMatching,
                 rule: rule
             }
-        }).concat(newRules !== undefined ? newRules.map(rule => {
+        }).concat(newRules === undefined ? [] : newRules.map(rule => {
             return {
                 id: rule.uuid,
                 status: "new",
@@ -201,7 +201,7 @@ export const DatatableRules = ({rules, onEdit}) => {
                 timestamp: dayjs(rule.timestamp).format('LLL'),
                 rule: rule
             }
-        }) : []);
+        }));
         setData(allRules);
     }, [newRules, updatedRules, deletedRules, rules]);
 
@@ -267,6 +267,7 @@ export const DatatableRules = ({rules, onEdit}) => {
                     })}
                 </TableRow>
             )}
+            data-sel-role={"visibility-rule-table"}
         />
     );
 };

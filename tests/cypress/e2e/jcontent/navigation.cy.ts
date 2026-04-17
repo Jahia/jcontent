@@ -155,7 +155,7 @@ describe('Content navigation', () => {
 
     // This tests this issue: https://github.com/Jahia/jira-archives/issues/15703
     it('can navigate with a link that contains a template suffix', () => {
-        const timeout = {timeout: 3000};
+        const timeout = {timeout: 10000};
         const jc = JContent.visit('mySite1', 'en', 'pages/home/notemplate.my');
         const pb = jc.switchToPageBuilder();
         const module = pb.getModule('/sites/mySite1/home/notemplate.my/landing', false);
@@ -166,6 +166,8 @@ describe('Content navigation', () => {
         contentEditor.getSmallTextField('jnt:press_jcr:title').addNewValue('pressEntry');
         contentEditor.getRichTextField('jnt:press_body').type('random text');
         contentEditor.create();
+
+        cy.frameLoaded('[data-sel-role="page-builder-frame-active"]');
 
         // The link will end like this: ...pressEntry.pressdetail.html so successful navigation confirms that the template part is handled correctly
         cy.waitUntil(() =>

@@ -167,6 +167,7 @@ describe('Content navigation', () => {
         contentEditor.getRichTextField('jnt:press_body').type('random text');
         contentEditor.create();
 
+        cy.wait(5000);
         cy.frameLoaded('[data-sel-role="page-builder-frame-active"]');
 
         // The link will end like this: ...pressEntry.pressdetail.html so successful navigation confirms that the template part is handled correctly

@@ -156,8 +156,8 @@ describe('Content navigation', () => {
     // This tests this issue: https://github.com/Jahia/jira-archives/issues/15703
     it('can navigate with a link that contains a template suffix', () => {
         const timeout = {timeout: 10000};
-        const jc = JContent.visit('mySite1', 'en', 'pages/home/notemplate.my');
-        const pb = jc.switchToPageBuilder();
+        let jc = JContent.visit('mySite1', 'en', 'pages/home/notemplate.my');
+        let pb = jc.switchToPageBuilder();
         const module = pb.getModule('/sites/mySite1/home/notemplate.my/landing', false);
         module.getHeader(false).get().click();
         module.getCreateButtons().getInsertionButtonByIndex(1).click();
@@ -167,8 +167,11 @@ describe('Content navigation', () => {
         contentEditor.getRichTextField('jnt:press_body').type('random text');
         contentEditor.create();
 
-        cy.wait(5000);
-        cy.frameLoaded('[data-sel-role="page-builder-frame-active"]');
+        // On CI it fails to grab that pressEntry link, even though it exists, because there is a delay, the iframe and
+        // the rest of the structure exists, but I think it gets the wrong instance of the iframe, the one without the link.
+        // Only hardcoded wait worked, to avoid it I navigate to the page again.
+        jc = JContent.visit('mySite1', 'en', 'pages/home/notemplate.my');
+        pb = jc.switchToPageBuilder();
 
         // The link will end like this: ...pressEntry.pressdetail.html so successful navigation confirms that the template part is handled correctly
         cy.waitUntil(() =>

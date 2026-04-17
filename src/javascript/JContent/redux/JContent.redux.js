@@ -26,10 +26,6 @@ const apps = {
             const accordion = registry.get('accordionItem', mode);
             const viewMode = localStorage.getItem('jcontent-previous-tableView-viewMode-' + site + '-' + mode) || accordion?.tableConfig?.defaultViewMode || 'flatList';
             let template = '';
-            if (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER && path.lastIndexOf('.') > 0) {
-                template = path.substring(path.lastIndexOf('.') + 1);
-                path = path.substring(0, path.lastIndexOf('.'));
-            }
 
             if (params.template) {
                 template = params.template;

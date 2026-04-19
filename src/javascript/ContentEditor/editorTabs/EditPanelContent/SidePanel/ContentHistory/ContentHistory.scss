@@ -1,97 +1,91 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: var(--spacing-medium);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-medium);
 }
 
 .filters {
-    margin-bottom: var(--spacing-medium);
+  margin-bottom: var(--spacing-medium);
 }
 
 .dropDown {
-    width: 200px;
+  width: 200px;
 }
 
 .listContainer {
-    flex: 1;
-    overflow-y: auto;
+  flex: 1;
+  overflow-y: auto;
 
-    min-height: 0;
+  min-height: 0;
 }
 
 .historyItem {
-    padding: var(--spacing-medium);
-
-    &:hover {
-        background-color: var(--color-gray-ghost);
-    }
-}
-
-.separator {
-    height: 1px;
-
-    background-color: var(--color-border);
+  &:first-child {
+    border-top: 1px solid var(--color-gray_light);
+  }
+  padding: var(--spacing-medium);
+  border-bottom: 1px solid var(--color-gray_light);
 }
 
 .itemHeader {
-    display: flex;
-    gap: var(--spacing-medium);
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-small);
+  display: flex;
+  gap: var(--spacing-medium);
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-small);
 }
 
 .itemLeft {
-    display: flex;
-    flex: 1;
-    gap: var(--spacing-small);
-    align-items: center;
-    min-width: 0;
+  display: flex;
+  flex: 1;
+  gap: var(--spacing-small);
+  align-items: center;
+  min-width: 0;
 }
 
 .earthIcon {
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    color: var(--color-gray);
+  color: var(--color-gray);
 }
 
 .itemRight {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .metadata {
-    color: var(--color-gray);
+  color: var(--color-gray);
 }
 
 .emptyState {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--spacing-large);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-large);
 }
 
 .error {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--spacing-large);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-large);
 }
 
 .paginationContainer {
-    margin-top: var(--spacing-medium);
-    padding-top: var(--spacing-medium);
+  margin-top: var(--spacing-medium);
+  padding-top: var(--spacing-medium);
 
-    border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
 }
 
 .paginationControls {
-    display: flex;
-    gap: var(--spacing-medium);
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  gap: var(--spacing-medium);
+  justify-content: center;
+  align-items: center;
 }
 
 .paginationInfo {
-    color: var(--color-gray);
+  color: var(--color-gray);
 }

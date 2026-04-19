@@ -171,7 +171,6 @@ export const ContentHistory = () => {
                     </div>
                 ) : (
                     <>
-                        <div className={styles.separator}/>
                         {entries.map(entry => (
                             <React.Fragment key={entry.id}>
                                 <div className={styles.historyItem}>

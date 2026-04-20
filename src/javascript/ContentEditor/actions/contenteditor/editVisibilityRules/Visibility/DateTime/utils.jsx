@@ -4,6 +4,17 @@ import dayjs from "dayjs";
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
 
+export const generateUUID = () => {
+    if (globalThis.crypto.randomUUID) {
+        return globalThis.crypto.randomUUID();
+    }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, c => {
+        const r = globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 0xf;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+};
+
 export const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {
         if (fieldSet?.name !== jmixConditionalVisibility) {

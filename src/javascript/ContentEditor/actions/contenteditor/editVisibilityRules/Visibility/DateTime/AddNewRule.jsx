@@ -8,7 +8,7 @@ import {useCreatableNodetypesTree} from '~/ContentEditor/actions/jcontent/create
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
-import {jmixConditionalVisibility} from './utils';
+import {generateUUID, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
 import dayjs from "dayjs";
 
@@ -91,7 +91,7 @@ export const AddNewRule = ({node, onCancel}) => {
                                     return;
                                 }
                                 newRule.type = selectedType;
-                                newRule.uuid = globalThis.crypto.randomUUID();
+                                newRule.uuid = generateUUID();
                                 newRule.timestamp = dayjs().toISOString();
                                 newRule.username = globalThis.contextJsParameters.user.fullname;
                                 const newRules = formikContext.values['RULES::new'] || [];

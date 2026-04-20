@@ -537,6 +537,134 @@ describe('Visibility Screen Tests', () => {
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist')
         })
 
+        it('Validates chip status transitions: published → modified → published after deletion workflow', () => {
+            const { today, todayPlus2 } = getDayNames()
+            cy.log(`Re-adding today's rule (${today}) to test deletion chip transitions`)
+
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home')
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit')
+            getComponentByRole(Button, 'editVisibilityRules').click()
+
+            // Re-add today's rule (was deleted in the previous test)
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add condition').click()
+            })
+            getComponentByRole(Dropdown, 'condition-type').select('Day of the week')
+            cy.get('[data-sel-content-editor-field="dayOfWeek"]', { timeout: 10000 }).should('be.visible')
+            cy.get('[data-sel-content-editor-field="dayOfWeek"]').find('.moonstone-listSelector_left').contains(today).click()
+            cy.get('[data-sel-content-editor-field="dayOfWeek"]').find('.moonstone-listSelector_right').should('contain', today)
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add').click()
+            })
+            cy.get('[data-sel-role="visibility-rule-table"]', { timeout: 10000 }).should('be.visible')
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Save').click()
+            })
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist')
+
+            // Publish so chips reflect live state
+            publishAndWaitJobEnding(`/sites/${sitekeyNonI18n}/home`, ['en'])
+
+            // Open dialog and find today's rule row - identify it by looking for the success/success visibility chips
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home')
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit')
+            getComponentByRole(Button, 'editVisibilityRules').click()
+            cy.get('[data-sel-role="visibility-rule-table"]', { timeout: 10000 }).should('be.visible')
+
+            // --- STEP 1: Before deletion - today's rule should have success/success visibility chips and success status bar ---
+            cy.log(`Step 1: Verifying today's rule (${today}) has success chips before deletion`)
+            // Find the row where BOTH visibility chips are "success" (that's today's rule since today matches)
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').then($rows => {
+                let todayRowIndex = -1
+                $rows.each((index, row) => {
+                    const chips = Cypress.$(row).find('[class*="moonstone-chip"]')
+                    if (chips.length >= 2) {
+                        const previewChipClass = chips.eq(0).attr('class') || ''
+                        const liveChipClass = chips.eq(1).attr('class') || ''
+                        if (previewChipClass.includes('success') && liveChipClass.includes('success')) {
+                            todayRowIndex = index
+                        }
+                    }
+                })
+                cy.log(`Today's rule found at row index: ${todayRowIndex}`)
+                expect(todayRowIndex).to.be.gte(0)
+
+                // Verify status bar of today's row is "success" (published) - first td has the tableCellStatus class
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr').eq(todayRowIndex).find('td').first()
+                    .invoke('attr', 'class').should('match', /__success/)
+
+                // Verify both visibility chips are success on today's row
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr').eq(todayRowIndex).within(() => {
+                    cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'success')
+                    cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'success')
+                })
+
+                // --- STEP 2: Delete today's rule ---
+                cy.log(`Step 2: Deleting today's rule (${today})`)
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr').eq(todayRowIndex).within(() => {
+                    cy.get('button:has(svg)').filter(':visible').last().click({ force: true })
+                })
+            })
+
+            // Save the deletion
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Save').click()
+            })
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist')
+
+            // --- STEP 3: Reopen - remaining rule (todayPlus2) should have warning status bar (modified) and warning/warning chips ---
+            cy.log(`Step 3: Reopen after deletion - checking ${todayPlus2} rule shows modified (warning status bar)`)
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home')
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit')
+            getComponentByRole(Button, 'editVisibilityRules').click()
+            cy.get('[data-sel-role="visibility-rule-table"]', { timeout: 10000 }).should('be.visible')
+
+            // Only todayPlus2 rule should remain - its status bar should be "warning" (modified: content changed but not published yet)
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', 1)
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').first().find('td').first()
+                .invoke('attr', 'class').should('match', /__warning/)
+
+            // Both visibility chips should be "warning" (today+2 doesn't match today)
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').first().within(() => {
+                cy.log(`Checking ${todayPlus2} preview chip is warning (today+2 rule doesn't match today)`)
+                cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning')
+                cy.log(`Checking ${todayPlus2} live chip is warning (live still has published rule that doesn't match today)`)
+                cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning')
+            })
+
+            // Close dialog
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click()
+            })
+
+            // --- STEP 4: Publish the deletion ---
+            cy.log('Step 4: Publishing the deletion of today\'s rule')
+            publishAndWaitJobEnding(`/sites/${sitekeyNonI18n}/home`, ['en'])
+
+            // --- STEP 5: Reopen after publish - status bar should be back to "success" (published), visibility chips still warning/warning ---
+            cy.log(`Step 5: Reopen after publish - ${todayPlus2} rule should have success status bar, still warning visibility chips`)
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home')
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit')
+            getComponentByRole(Button, 'editVisibilityRules').click()
+            cy.get('[data-sel-role="visibility-rule-table"]', { timeout: 10000 }).should('be.visible')
+
+            // Status bar should be back to "success" (published - content has been published in its new state)
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').first().find('td').first()
+                .invoke('attr', 'class').should('match', /__success/)
+
+            // Both visibility chips remain "warning" (today+2 still doesn't match today, even after publishing)
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').first().within(() => {
+                cy.log(`Checking ${todayPlus2} both chips still warning after publish (day mismatch doesn't change with publish)`)
+                cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning')
+                cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning')
+            })
+
+            // Close dialog
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click()
+            })
+        })
+
         it('Validates the condition matching dropdown (All vs Any)', () => {
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home')
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit')

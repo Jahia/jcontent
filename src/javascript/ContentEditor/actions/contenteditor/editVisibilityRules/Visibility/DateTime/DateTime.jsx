@@ -14,8 +14,8 @@ import styles from './DateTime.scss';
 
 export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
     const {t} = useTranslation('jcontent');
-    const section = sections.filter(s => s.name === 'visibility');
-    const fieldSets = filterRegularFieldSets(section[0].fieldSets);
+    const section = sections.find(s => s.name === 'visibility');
+    const fieldSets = filterRegularFieldSets(section.fieldSets);
     const rulesCount = rules.pageInfo.totalCount;
     const [isAddingNewRule, setIsAddingNewRule] = useState(false);
     const [editingRule, setEditingRule] = useState(null);

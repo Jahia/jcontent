@@ -21,6 +21,14 @@ const TableCell = forwardRef(({
                                   isScrollable = false,
                                   ...props
                               }, ref) => {
+    const getAlignment = () => {
+        if (align === 'left') {
+            return 'justifyStart';
+        } else {
+            return align === 'right' ? 'justifyEnd' : 'justifyCenter';
+        }
+    }
+
     return (
         <Typography
             ref={ref}
@@ -29,7 +37,7 @@ const TableCell = forwardRef(({
             variant="body"
             className={clsx(
                 statusCellStyles.tableCell,
-                align === 'left' ? 'justifyStart' : align === 'right' ? 'justifyEnd' : 'justifyCenter',
+                getAlignment(),
                 'flexRow_nowrap',
                 'alignCenter',
                 {flexFluid: !width},
@@ -45,6 +53,15 @@ const TableCell = forwardRef(({
             {children}
         </Typography>);
 });
+
+TableCell.propTypes = {
+    className: PropTypes.string,
+    children: PropTypes.string,
+    align: PropTypes.string,
+    width: PropTypes.string,
+    style: PropTypes.string,
+    isScrollable: PropTypes.bool
+}
 
 const TableCellStatus = forwardRef(({
                                         color,
@@ -72,7 +89,8 @@ const TableCellStatus = forwardRef(({
 
 TableCellStatus.propTypes = {
     color: PropTypes.any,
-    children: PropTypes.node
+    children: PropTypes.node,
+    className: PropTypes.string
 };
 
 const TableCellActions = forwardRef(({className, actions, ...props}, ref) => {
@@ -82,6 +100,11 @@ const TableCellActions = forwardRef(({className, actions, ...props}, ref) => {
         {actions}
     </TableCell>
 })
+
+TableCellActions.propTypes = {
+    className: PropTypes.string,
+    actions: PropTypes.any
+}
 
 export const DatatableRules = ({rules, onEdit}) => {
     const formikContext = useFormikContext();

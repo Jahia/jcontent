@@ -18,7 +18,7 @@ export const AddNewRule = ({node, onCancel}) => {
     const name = 'rule';
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     const showOnNodeTypes = ['jmix:conditionalVisibility'];
-    const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
+    const {loadingTypes, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
         nodeTypes: "jnt:condition",
         childNodeName: name,
         includeSubTypes: true,
@@ -91,9 +91,9 @@ export const AddNewRule = ({node, onCancel}) => {
                                     return;
                                 }
                                 newRule.type = selectedType;
-                                newRule.uuid = self.crypto.randomUUID();
+                                newRule.uuid = globalThis.crypto.randomUUID();
                                 newRule.timestamp = dayjs().toISOString();
-                                newRule.username = self.contextJsParameters.user.fullname;
+                                newRule.username = globalThis.contextJsParameters.user.fullname;
                                 const newRules = formikContext.values['RULES::new'] || [];
                                 newRules.push(newRule);
                                 formikContext.setFieldValue('RULES::new', newRules).then(() => {

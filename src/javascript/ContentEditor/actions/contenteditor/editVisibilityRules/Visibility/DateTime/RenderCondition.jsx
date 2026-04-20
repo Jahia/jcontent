@@ -4,10 +4,15 @@ import {Typography} from '@jahia/moonstone';
 import styles from './DateTime.scss';
 
 export const RenderCondition = ({rule, updateRules, isNew}) => {
-    function getTypography(prop) {
+    const getTypography = (prop) => {
         // Check if there is an updated rule with rule.uuid in updateRules if yes get the value of the property from this rule instead of the one from the original rule
         const updatedRule = updateRules ? updateRules.find(r => r.uuid === rule.uuid) : null;
-        const value = updatedRule && updatedRule[prop.name] !== undefined ? updatedRule[prop.name] : (prop.values !== null ? prop.values : prop.value);
+
+        const getPropValue = () => {
+            return prop.values === null ? prop.value : prop.values;
+        }
+
+        const value = updatedRule?.[prop.name] === undefined ? getPropValue() : updatedRule[prop.name];
         if (Array.isArray(value)) {
             return value.join(', ');
         }

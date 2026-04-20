@@ -6,7 +6,7 @@ export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
 
 export const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {
-        if (!fieldSet || fieldSet.name !== jmixConditionalVisibility) {
+        if (fieldSet?.name !== jmixConditionalVisibility) {
             return false;
         }
 
@@ -70,16 +70,21 @@ export const getStatus = (status) => {
 };
 
 export const getConditionLabel = (name, properties, t) => {
+    const getLabel = (startDate) => {
+        return (startDate === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endDateCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startDateCondition';
+    }
+
     switch (name) {
         case 'jnt:dayOfWeekCondition':
             return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: properties.find(p => p.name === 'dayOfWeek')?.values});
-        case 'jnt:startEndDateCondition':
+        case 'jnt:startEndDateCondition': {
             const startDate = properties.find(p => p.name === 'start')?.value;
             const endDate = properties.find(p => p.name === 'end')?.value;
-            return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : (startDate !== undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.startDateCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.endDateCondition'), {
-                startDate: startDate !== undefined ? dayjs(startDate).format('LLL') : '',
-                endDate: endDate !== undefined ? dayjs(endDate).format('LLL') : ''
+            return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getLabel(startDate)), {
+                startDate: startDate === undefined ? '' : dayjs(startDate).format('LLL'),
+                endDate: endDate === undefined ? '' : dayjs(endDate).format('LLL')
             });
+        }
         case 'jnt:timeOfDayCondition':
             return t('jcontent:label.contentEditor.visibilityTab.conditions.timeOfDayCondition');
         default:

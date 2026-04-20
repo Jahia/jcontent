@@ -33,7 +33,7 @@ export const EditVisibilityRulesDialog = ({
                                           }) => {
     const {t} = useTranslation('jcontent');
     const {editCallback} = contentEditorConfigContext;
-    const {lang, nodeData, initialValues, title, i18nContext} = contentEditorContext;
+    const {lang, nodeData, initialValues, i18nContext} = contentEditorContext;
     const {data, loading, refetch} = useQuery(VisibilityQuery, {
         variables: {
             path: nodeData.path,

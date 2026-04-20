@@ -4,7 +4,6 @@ import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
 import {Paper} from '@material-ui/core';
 import {Formik, useFormikContext} from 'formik';
-import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
 import {SaveEditedRuleButton} from './SaveEditedRuleButton';
@@ -13,7 +12,6 @@ import styles from './DateTime.scss';
 import dayjs from "dayjs";
 
 export const EditRule = ({rule, onSave, onCancel}) => {
-    const {uilang} = useContentEditorConfigContext();
     const {t} = useTranslation('jcontent');
     const formikContext = useFormikContext();
     console.debug('Editing rule', rule);
@@ -34,12 +32,12 @@ export const EditRule = ({rule, onSave, onCancel}) => {
     } else {
         // For existing rules, use the properties array
         initialValues = rule.properties.filter(prop => prop.name !== 'jcr:primaryType' && prop.name !== 'jcr:uuid').reduce((acc, prop) => {
-            acc[prop.name] = prop.values !== null ? prop.values : prop.value;
+            acc[prop.name] = prop.values === null ? prop.value : prop.values;
             // Check if we have an update rule with the same uuid if yes use this value instead
             const updatedRules = formikContext.values['RULES::updated'] || [];
             const updatedRule = updatedRules.find(r => r.uuid === rule.uuid);
             if (updatedRule) {
-                acc[prop.name] = updatedRule[prop.name] !== undefined ? updatedRule[prop.name] : acc[prop.name];
+                acc[prop.name] = updatedRule[prop.name] === undefined ? acc[prop.name] : updatedRule[prop.name];
             }
             return acc;
         }, {});
@@ -58,7 +56,7 @@ export const EditRule = ({rule, onSave, onCancel}) => {
         updatedRule.type = isNewRule ? rule.type : rule.primaryNodeType.name;
         updatedRule.uuid = rule.uuid;
         updatedRule.timestamp = dayjs().toISOString();
-        updatedRule.username = self.contextJsParameters.user.fullname;
+        updatedRule.username = globalThis.contextJsParameters.user.fullname;
 
         if (isNewRule) {
             // For new rules, update RULES::new instead of RULES::updated
@@ -74,10 +72,10 @@ export const EditRule = ({rule, onSave, onCancel}) => {
             // For existing rules, update RULES::updated
             const updatedRulesArray = formikContext.values['RULES::updated'] || [];
             const existingRuleIndex = updatedRulesArray.findIndex(r => r.uuid === rule.uuid);
-            if (existingRuleIndex !== -1) {
-                updatedRulesArray[existingRuleIndex] = updatedRule;
-            } else {
+            if (existingRuleIndex === -1) {
                 updatedRulesArray.push(updatedRule);
+            } else {
+                updatedRulesArray[existingRuleIndex] = updatedRule;
             }
             formikContext.setFieldValue('RULES::updated', updatedRulesArray).then(() => {
                 onCancel();

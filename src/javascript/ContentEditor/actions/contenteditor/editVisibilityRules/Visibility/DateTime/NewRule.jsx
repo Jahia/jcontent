@@ -25,7 +25,7 @@ export const NewRule = ({type, node}) => {
         childrenFilterTypes: Constants.childrenFilterTypes
     };
 
-    const {loading, error, data, refetch} = useQuery(CreateFormQuery, {
+    const {loading, data} = useQuery(CreateFormQuery, {
         variables: formQueryParams,
         fetchPolicy: 'network-only',
         errorPolicy: 'all'

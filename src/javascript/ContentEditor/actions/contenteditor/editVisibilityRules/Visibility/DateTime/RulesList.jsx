@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Typography, Table, TableHead, TableBody, TableRow, TableHeadCell, Delete, Edit} from '@jahia/moonstone';
+import {Delete, Edit, Table, TableBody, TableHead, TableHeadCell, TableRow, Typography} from '@jahia/moonstone';
 import {Paper, TableCell} from '@material-ui/core';
 import {useFormikContext} from 'formik';
 import {RenderCondition} from './RenderCondition';
-import {EditButton, DeleteButton} from './ButtonRenderers';
+import {DeleteButton, EditButton} from './ButtonRenderers';
 import styles from './DateTime.scss';
 
 export const RulesList = ({rules, onEdit}) => {
@@ -35,7 +35,7 @@ export const RulesList = ({rules, onEdit}) => {
                         return (deletedRules === undefined || !deletedRules.includes(rule.uuid))
                     }).map((rule, index) => {
                         return (
-                            <TableRow key={index}>
+                            <TableRow key={rule.uuid}>
                                 <TableCell>{rule.aggregatedPublicationInfo.existsInLive ? "Live" : "Edit"}</TableCell>
                                 <TableCell>{rule.primaryNodeType.name}</TableCell>
                                 <TableCell><RenderCondition rule={rule} updateRules={updatedRules}/></TableCell>
@@ -59,7 +59,7 @@ export const RulesList = ({rules, onEdit}) => {
                     })}
                     {newRules !== undefined && newRules.map((rule, index) => {
                         return (
-                            <TableRow key={index}>
+                            <TableRow key={rule.uuid}>
                                 <TableCell>New</TableCell>
                                 <TableCell>{rule.type}</TableCell>
                                 <TableCell><RenderCondition rule={rule} isNew={true}/></TableCell>

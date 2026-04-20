@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {useSiteInfo} from '@jahia/data-helper';
 import {shallowEqual, useSelector} from 'react-redux';
@@ -9,7 +9,7 @@ import {Typography} from "@jahia/moonstone";
 
 const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {
-        if (!fieldSet || fieldSet.name !== 'jmix:i18n') {
+        if (fieldSet?.name !== 'jmix:i18n') {
             return false;
         }
 
@@ -50,8 +50,8 @@ export const Languages = ({invalidLanguages, sections}) => {
         displayLanguage: displayLanguage,
         uiLanguage: uiLanguage
     });
-    const section = sections.filter(s => s.name === 'visibility');
-    const fieldSets = filterRegularFieldSets(section[0].fieldSets);
+    const section = sections.find(s => s.name === 'visibility');
+    const fieldSets = filterRegularFieldSets(section.fieldSets);
 
     if (error || loading || siteInfo.languages.length <= 1) {
         return null;

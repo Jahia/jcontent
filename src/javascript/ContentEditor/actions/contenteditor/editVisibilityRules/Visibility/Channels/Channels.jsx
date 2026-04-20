@@ -6,7 +6,7 @@ import styles from './Channels.scss';
 
 const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {
-        if (!fieldSet || fieldSet.name !== 'jmix:channelSelection') {
+        if (fieldSet?.name !== 'jmix:channelSelection') {
             return false;
         }
 
@@ -26,10 +26,6 @@ export const Channels = () => {
     const {sections} = useContentEditorSectionContext();
 
     const section = sections.find(s => s.name === 'visibility');
-    if (!section) {
-        return null;
-    }
-
     const fieldSets = filterRegularFieldSets(section.fieldSets);
 
     if (fieldSets.length === 0) {

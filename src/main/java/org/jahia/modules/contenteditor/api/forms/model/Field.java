@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jahia.modules.contenteditor.api.forms.Ranked;
+import org.jahia.modules.contenteditor.api.forms.Sanitizer;
 import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedItemDefinition;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
-import org.jahia.services.content.nodetypes.NodeTypeRegistry;
-import org.owasp.html.Sanitizers;
 
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -257,8 +255,8 @@ public class Field implements Ranked {
         String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
         String key = definition.getResourceBundleKey(nodeType);
         label = StringUtils.isEmpty(label) ? StringEscapeUtils.unescapeHtml(resolveResourceKey(prefix + key, uiLocale, site)) : label;
-        description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
-        errorMessage = StringUtils.isEmpty(errorMessage)? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + ".constraint.error.message", uiLocale, site)) : errorMessage;
+        description = StringUtils.isEmpty(description) ? Sanitizer.DESCRIPTION_FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
+        errorMessage = StringUtils.isEmpty(errorMessage)? Sanitizer.COMMON_FORMATTING.sanitize(resolveResourceKey(prefix + key + ".constraint.error.message", uiLocale, site)) : errorMessage;
     }
 
     public void mergeWith(Field otherField) {

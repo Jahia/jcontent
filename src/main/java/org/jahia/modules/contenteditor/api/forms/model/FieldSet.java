@@ -5,12 +5,12 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jahia.modules.contenteditor.api.forms.DefinitionRegistryItem;
 import org.jahia.modules.contenteditor.api.forms.Ranked;
+import org.jahia.modules.contenteditor.api.forms.Sanitizer;
 import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.osgi.framework.Bundle;
-import org.owasp.html.Sanitizers;
 
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.net.URL;
@@ -259,10 +259,10 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
             String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
             String key =  JCRContentUtils.replaceColon(nodeType.getName());
             label = StringUtils.isEmpty(label) ? StringEscapeUtils.unescapeHtml(resolveResourceKey(prefix + key, uiLocale, site)) : label;
-            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
+            description = StringUtils.isEmpty(description) ? Sanitizer.DESCRIPTION_FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
 
             label = StringUtils.isEmpty(label) ? StringUtils.substringAfter(nodeType.getName(), ":") : label;
-            description = StringUtils.isEmpty(description) ? Sanitizers.FORMATTING.sanitize(resolveResourceKey(prefix + key + "_description", uiLocale, site)) : description;
+            description = StringUtils.isEmpty(description) ? Sanitizer.DESCRIPTION_FORMATTING.sanitize(resolveResourceKey(prefix + key + "_description", uiLocale, site)) : description;
         }
     }
 

@@ -11,7 +11,7 @@ public class Sanitizer {
 
     public static final PolicyFactory DESCRIPTION_FORMATTING = new HtmlPolicyBuilder()
         .allowCommonInlineFormattingElements()
-        .allowStandardUrlProtocols()
+        .allowUrlProtocols("http", "https")
         .allowElements("a")
         .allowAttributes("href").onElements("a")
         .toFactory();

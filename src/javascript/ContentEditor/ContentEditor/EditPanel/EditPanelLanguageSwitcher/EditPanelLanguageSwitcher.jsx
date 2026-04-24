@@ -52,7 +52,7 @@ export const EditPanelLanguageSwitcher = () => {
                 data-cm-role="language-switcher"
                 data={langOptions}
                 value={currentLanguage}
-                label={langLabel}
+                placeholder={langLabel}
                 size="small"
                 data-selected-value={currentLanguage}
                 onChange={(e, language) => {

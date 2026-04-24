@@ -67,7 +67,7 @@ const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
             className={clsx(styles.languageSwitcher, {[styles.fullWidth]: isFullDropdown})}
             data-cm-role="language-switcher"
             icon={isFullDropdown ? undefined : LabelPill}
-            label={isFullDropdown ? undefined : ' '}
+            placeholder={isFullDropdown ? undefined : ' '}
             value={lang}
             data={data}
             onChange={(e, item) => {

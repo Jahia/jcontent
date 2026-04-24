@@ -14,7 +14,7 @@
               "labelKey": "label.contentEditor.visibilityTab.condition.ruleType.dayOfWeek",
               "descriptionKey": "label.contentEditor.visibilityTab.condition.ruleDescription.dayOfWeek",
               "hide": false,
-              "selectorType": "MultipleLeftRightSelector"
+              "selectorType": "DayOfWeekSelect"
             }
           ]
         }

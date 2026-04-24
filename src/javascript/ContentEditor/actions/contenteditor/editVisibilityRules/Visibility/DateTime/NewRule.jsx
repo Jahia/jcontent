@@ -38,7 +38,7 @@ export const NewRule = ({type, node}) => {
     return (
         <div className={styles.row}>
             {contentSection.fieldSets[0].fields.map(field =>
-                <FieldContainer key={field.name} field={field} inputContext={{displayActions: false}}/>)}
+                <FieldContainer key={field.name} field={field} inputContext={{displayActions: false}} />)}
         </div>
     );
 };

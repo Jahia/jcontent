@@ -93,7 +93,7 @@ jobs:
           - cypress.config-pageBuilder.ts
           - cypress.config-pickers.ts
           - cypress.config-categoryManager.ts
-    timeout-minutes: 120
+    timeout-minutes: 140
     steps:
       - uses: jahia/jahia-modules-action/helper@v2
       - uses: KengoTODA/actions-setup-docker-compose@main

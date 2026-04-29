@@ -830,6 +830,7 @@
       "history": {
         "date": "Date",
         "property": "Propriété",
+        "node": "Nœud",
         "language": "Langue",
         "languageShort": "Lg.",
         "modifiedBy": "Modifié Par",

@@ -6,11 +6,6 @@ import {
     Typography,
     Chip,
     Pill,
-    Button,
-    ChevronLeft,
-    ChevronRight,
-    ChevronFirstPage,
-    ChevronLastPage,
     AddCircle,
     Edit,
     Delete,
@@ -18,7 +13,8 @@ import {
     Publish,
     Visibility,
     File,
-    Language
+    Language,
+    Pagination
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
@@ -64,9 +60,17 @@ const ACTION_CONFIG = {
     viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default'}
 };
 
-const getActionLabel = (action, t) => {
-    const config = ACTION_CONFIG[action];
-    return config ? t(config.labelKey) : action || '-';
+const getTargetInfo = entry => {
+    const isProperty = Boolean(entry.propertyName);
+    const name = isProperty ?
+        (entry.propertyNameDisplay || entry.propertyName) :
+        (entry.path ? entry.path.split('/').filter(Boolean).pop() || entry.path : '-');
+    return {
+        typeLabelKey: isProperty ?
+            'jcontent:label.contentEditor.history.property' :
+            'jcontent:label.contentEditor.history.node',
+        name
+    };
 };
 
 const getActionChip = (action, t) => {
@@ -171,87 +175,60 @@ export const ContentHistory = () => {
                     </div>
                 ) : (
                     <>
-                        {entries.map(entry => (
-                            <React.Fragment key={entry.id}>
-                                <div className={styles.historyItem}>
-                                    <div className={styles.itemHeader}>
-                                        <div className={styles.itemLeft}>
-                                            {entry.language ? (
-                                                <Pill label={entry.language.toUpperCase()} color="accent"/>
-                                            ) : (
-                                                <Pill label={<Language/>} color="default"/>
-                                            )}
-                                            <Typography variant="body" weight="bold">
-                                                {entry.propertyNameDisplay || entry.propertyName || getActionLabel(entry.action, t)}
+                        {entries.map(entry => {
+                            const {typeLabelKey, name} = getTargetInfo(entry);
+                            return (
+                                <React.Fragment key={entry.id}>
+                                    <div className={styles.historyItem}>
+                                        <div className={styles.itemHeader}>
+                                            <div className={styles.itemLeft}>
+                                                {entry.language ? (
+                                                    <Pill label={entry.language.toUpperCase()} color="accent"/>
+                                                ) : (
+                                                    <Pill label={<Language/>} color="default"/>
+                                                )}
+                                                <Typography variant="caption" className={styles.typeLabel}>
+                                                    {t(typeLabelKey)}
+                                                </Typography>
+                                                <Typography variant="body" weight="bold" className={styles.targetName}>
+                                                    {name}
+                                                </Typography>
+                                            </div>
+                                            <div className={styles.itemRight}>
+                                                {getActionChip(entry.action, t)}
+                                            </div>
+                                        </div>
+                                        <div className={styles.itemFooter}>
+                                            <Typography variant="caption" className={styles.metadata}>
+                                                {formatDate(entry.date)} by {entry.userKey || '-'}
                                             </Typography>
                                         </div>
-                                        <div className={styles.itemRight}>
-                                            {getActionChip(entry.action, t)}
-                                        </div>
                                     </div>
-                                    <div className={styles.itemFooter}>
-                                        <Typography variant="caption" className={styles.metadata}>
-                                            {formatDate(entry.date)} by {entry.userKey || '-'}
-                                        </Typography>
-                                    </div>
-                                </div>
-                                <div className={styles.separator}/>
-                            </React.Fragment>
-                        ))}
+                                    <div className={styles.separator}/>
+                                </React.Fragment>
+                            );
+                        })}
                     </>
                 )}
             </div>
 
-            {totalCount > pageSize && (
+            {totalCount > 0 && (
                 <div className={styles.paginationContainer}>
-                    <div className={styles.paginationControls}>
-                        <Button
-                            icon={<ChevronFirstPage/>}
-                            variant="ghost"
-                            size="small"
-                            disabled={page === 0}
-                            onClick={() => setPage(0)}
-                        />
-                        <Button
-                            icon={<ChevronLeft/>}
-                            variant="ghost"
-                            size="small"
-                            disabled={page === 0}
-                            onClick={() => setPage(page - 1)}
-                        />
-                        <Typography variant="caption" className={styles.paginationInfo}>
-                            {(page * pageSize) + 1}-{Math.min(((page + 1) * pageSize), totalCount)} {t('jcontent:label.pagination.of')} {totalCount}
-                        </Typography>
-                        <Button
-                            icon={<ChevronRight/>}
-                            variant="ghost"
-                            size="small"
-                            disabled={(page + 1) * pageSize >= totalCount}
-                            onClick={() => setPage(page + 1)}
-                        />
-                        <Button
-                            icon={<ChevronLastPage/>}
-                            variant="ghost"
-                            size="small"
-                            disabled={(page + 1) * pageSize >= totalCount}
-                            onClick={() => setPage(Math.ceil(totalCount / pageSize) - 1)}
-                        />
-                        <Dropdown
-                            value={pageSize}
-                            data={[
-                                {value: 10, label: '10'},
-                                {value: 25, label: '25'},
-                                {value: 50, label: '50'},
-                                {value: 100, label: '100'}
-                            ]}
-                            size="small"
-                            variant="outlined"
-                            onChange={(e, option) => {
-                                setPageSize(option.value);
-                                setPage(0);
-                            }}
-                        />
-                    </div>
+                    <Pagination
+                        totalOfItems={totalCount}
+                        currentPage={page + 1}
+                        itemsPerPage={pageSize}
+                        itemsPerPageOptions={[10, 25, 50, 100]}
+                        onPageChange={newPage => setPage(newPage - 1)}
+                        onItemsPerPageChange={newPageSize => {
+                            setPageSize(newPageSize);
+                            setPage(0);
+                        }}
+                        i18n={{
+                            itemsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                            of: t('jcontent:label.pagination.of')
+                        }}
+                    />
                 </div>
             )}
         </div>

@@ -829,6 +829,7 @@
       "history": {
         "date": "Datum",
         "property": "Eigenschaft",
+        "node": "Knoten",
         "language": "Sprache",
         "languageShort": "Spr.",
         "modifiedBy": "Geändert Von",

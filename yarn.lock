@@ -2651,7 +2651,7 @@ __metadata:
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
-    "@jahia/moonstone": "npm:^2.17.5"
+    "@jahia/moonstone": "npm:^2.18.1"
     "@jahia/react-material": "npm:^3.0.5"
     "@jahia/stylelint-config": "npm:^0.0.3"
     "@jahia/test-framework": "npm:^1.3.1"
@@ -2752,11 +2752,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@npm:^2.17.5":
-  version: 2.17.5
-  resolution: "@jahia/moonstone@npm:2.17.5"
+"@jahia/moonstone@npm:^2.18.1":
+  version: 2.18.1
+  resolution: "@jahia/moonstone@npm:2.18.1"
   dependencies:
     "@floating-ui/react": "npm:^0.27.16"
+    "@tanstack/react-table": "npm:^8.21.3"
     clsx: "npm:^2.1.1"
     re-resizable: "npm:^6.11.2"
     to-px: "npm:^1.1.0"
@@ -2764,7 +2765,7 @@ __metadata:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/0d78986b5ae5009f9107cfef3763791e78d1f65ac509bcf4abbdd71bd62ba1b4780016b349bb7c12fd987cd8a2903bbdc09ef06ccd535afcfaf648e01872a943
+  checksum: 10c0/d406586e47c14d1ebd89b4a807029ccb1dc6950a22d933ecce97f2801430b7718c47c754f18610f89f45d0bf0322a72050fd6fb2bd5d93a47829effa618712ee
   languageName: node
   linkType: hard
 
@@ -5012,6 +5013,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-table@npm:^8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/react-table@npm:8.21.3"
+  dependencies:
+    "@tanstack/table-core": "npm:8.21.3"
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 10c0/85d1d0fcb690ecc011f68a5a61c96f82142e31a0270dcf9cbc699a6f36715b1653fe6ff1518302a6d08b7093351fc4cabefd055a7db3cd8ac01e068956b0f944
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-virtual@npm:^3.11.2":
   version: 3.11.2
   resolution: "@tanstack/react-virtual@npm:3.11.2"
@@ -5021,6 +5034,13 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/de446ce517d0855b3d58e79b6a75a37be40b4529baf0a5c3ffa2662dea80aba03409e06545aea27aa9e3a36fc2a2e3005ecbfce16a4659991d66930ea3bd62d4
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/table-core@npm:8.21.3"
+  checksum: 10c0/40e3560e6d55e07cc047024aa7f83bd47a9323d21920d4adabba8071fd2d21230c48460b26cedf392588f8265b9edc133abb1b0d6d0adf4dae0970032900a8c9
   languageName: node
   linkType: hard
 

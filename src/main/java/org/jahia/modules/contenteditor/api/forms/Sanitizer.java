@@ -13,7 +13,7 @@ public class Sanitizer {
         .allowCommonInlineFormattingElements()
         .allowUrlProtocols("http", "https")
         .allowElements("a")
-        .allowAttributes("href").onElements("a")
+        .allowAttributes("href", "target").onElements("a")
         .toFactory();
 
     public static final PolicyFactory COMMON_FORMATTING = Sanitizers.FORMATTING;

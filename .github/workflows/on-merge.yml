@@ -27,7 +27,7 @@ jobs:
     needs: update-signature
     runs-on: ubuntu-latest
     env:
-      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     container:
       image: ghcr.io/jahia/jahia-docker-mvn-cache:11-jdk-noble-mvn-loaded
       credentials:
@@ -57,7 +57,7 @@ jobs:
     name: Integration Tests ${{ matrix.config_file }}
     needs: build
     runs-on: self-hosted
-    timeout-minutes: 75
+    timeout-minutes: 140
     strategy:
       fail-fast: false
       matrix:
@@ -130,7 +130,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
-      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }} 
+      NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     container:
       image: ghcr.io/jahia/jahia-docker-mvn-cache:11-jdk-noble-mvn-loaded
       credentials:

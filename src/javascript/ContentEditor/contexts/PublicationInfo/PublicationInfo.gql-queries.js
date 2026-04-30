@@ -13,11 +13,23 @@ export const PublicationInfoQuery = gql`
                 lastModifiedBy:property(name:"jcr:lastModifiedBy", language: $language){
                     value
                 }
+                lastModifiedByUser(language: $language) {
+                    username
+                    firstname
+                    lastname
+                    email
+                }
                 lastModified:property(name:"jcr:lastModified", language: $language){
                     value
                 }
                 lastPublishedBy:property(name:"j:lastPublishedBy", language: $language){
                     value
+                }
+                lastPublishedByUser(language: $language) {
+                    username
+                    firstname
+                    lastname
+                    email
                 }
                 lastPublished:property(name:"j:lastPublished", language: $language){
                     value

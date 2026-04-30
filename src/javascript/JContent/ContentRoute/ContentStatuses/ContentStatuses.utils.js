@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import {getDefaultLocale} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
+import {getDisplayName} from '~/utils/userDisplay';
 
 function formatDate(date, locale = 'en', format = 'LLL') {
     return dayjs(date).locale(locale).format(format);
@@ -12,13 +13,13 @@ const tooltips = {
         return {
             key: 'label.contentManager.lockedBy',
             args: {
-                userName: node?.lockOwner?.value || '?'
+                userName: getDisplayName(node?.lockOwnerUser) || node?.lockOwner?.value || '?'
             }
         };
     },
     markedForDeletion: (node, locale) => {
         const ancestor = node.ancestors && (node.ancestors.length !== 0) && node.ancestors[0];
-        const deletedBy = node?.deletedBy?.value || ancestor?.deletedBy?.value;
+        const deletedBy = getDisplayName(node?.deletedByUser) || node?.deletedBy?.value || ancestor?.deletedBy?.value;
         const date = node?.deleted?.value || ancestor?.deleted?.value;
         return {
             key: 'label.contentManager.publicationStatus.markedForDeletion',
@@ -32,7 +33,7 @@ const tooltips = {
         return {
             key: 'label.contentManager.publicationStatus.modified',
             args: {
-                userName: node?.lastModifiedBy?.value || '?',
+                userName: getDisplayName(node?.lastModifiedByUser) || node?.lastModifiedBy?.value || '?',
                 timestamp: formatDate(node?.lastModified?.value, locale)
             }
         };
@@ -46,7 +47,7 @@ const tooltips = {
         return {
             key: 'label.contentManager.publicationStatus.published',
             args: {
-                userName: node?.lastPublishedBy?.value || '?',
+                userName: getDisplayName(node?.lastPublishedByUser) || node?.lastPublishedBy?.value || '?',
                 timestamp: formatDate(node?.lastPublished?.value, locale)
             }
         };

@@ -1,5 +1,6 @@
 import {
     Cell,
+    CellCreatedBy,
     CellLastModified,
     CellName,
     CellPublicationStatus,
@@ -71,7 +72,7 @@ export const createdBy = {
     sortable: true,
     property: 'createdBy.value',
     Header: Header,
-    Cell: Cell,
+    Cell: CellCreatedBy,
     width: '150px'
 
 };

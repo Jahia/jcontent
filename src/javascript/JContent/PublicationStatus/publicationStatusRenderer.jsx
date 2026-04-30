@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
 import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {CloudCheck, Delete, File, NoCloud, Warning} from '@jahia/moonstone';
+import {getDisplayName} from '~/utils/userDisplay';
 
 function getFormattedDate(date, locale) {
     return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');
@@ -50,7 +51,7 @@ class PublicationStatusNotPublished {
 
 class PublicationStatusPublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        const userName = node?.lastPublishedBy?.value || '';
+        const userName = getDisplayName(node?.lastPublishedByUser) || node?.lastPublishedBy?.value || '';
         const lastPublished = node?.lastPublished?.value || '';
 
         return (
@@ -76,7 +77,7 @@ class PublicationStatusPublished {
 
 class PublicationStatusModified {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        const userName = node?.lastModifiedBy?.value || '';
+        const userName = getDisplayName(node?.lastModifiedByUser) || node?.lastModifiedBy?.value || '';
         const lastModified = node?.lastModified?.value || '';
 
         return (
@@ -105,7 +106,7 @@ class PublicationStatusMarkedForDeletion {
         let parentDeletionUser = (node.ancestors && node.ancestors[0]?.deletionUser?.value) || '';
         let parentDeletionDate = (node.ancestors && node.ancestors[0]?.deletionDate?.value) || '';
 
-        let userName = node?.deletedBy?.value || parentDeletionUser;
+        let userName = getDisplayName(node?.deletedByUser) || node?.deletedBy?.value || parentDeletionUser;
         let deletedTs = node?.deleted?.value || parentDeletionDate;
 
         return (

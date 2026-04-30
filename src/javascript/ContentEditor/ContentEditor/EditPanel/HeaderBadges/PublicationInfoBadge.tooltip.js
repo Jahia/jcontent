@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import {Constants} from '../../../ContentEditor.constants';
+import {getDisplayName} from '~/utils/userDisplay';
 
 function formatDate(date, locale, format = 'LLL') {
     return dayjs(date).locale(locale).format(format);
@@ -10,7 +11,7 @@ const tooltips = {
         return {
             key: 'label.contentEditor.publicationStatusTooltip.modified',
             args: {
-                userName: publicationInfoContext.lastModifiedBy || '?',
+                userName: getDisplayName(publicationInfoContext.lastModifiedByUser) || publicationInfoContext.lastModifiedBy || '?',
                 timestamp: formatDate(publicationInfoContext.lastModified, uilang)
             }
         };
@@ -19,7 +20,7 @@ const tooltips = {
         return {
             key: 'label.contentEditor.publicationStatusTooltip.published',
             args: {
-                userName: publicationInfoContext.lastPublishedBy || '?',
+                userName: getDisplayName(publicationInfoContext.lastPublishedByUser) || publicationInfoContext.lastPublishedBy || '?',
                 timestamp: formatDate(publicationInfoContext.lastPublished, uilang)
             }
         };

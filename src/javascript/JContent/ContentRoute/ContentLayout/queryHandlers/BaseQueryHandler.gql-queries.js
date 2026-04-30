@@ -23,6 +23,12 @@ export const QueryHandlersFragments = {
                 createdBy: property(name: "jcr:createdBy") {
                     value
                 }
+                createdByUser {
+                    username
+                    firstname
+                    lastname
+                    email
+                }
                 created: property(name: "jcr:created") {
                     value
                 }
@@ -46,20 +52,44 @@ export const QueryHandlersFragments = {
                 lockOwner: property(name: "jcr:lockOwner") {
                     value
                 }
+                lockOwnerUser {
+                    username
+                    firstname
+                    lastname
+                    email
+                }
                 lastPublished: property(name: "j:lastPublished", language: $language) {
                     value
                 }
                 lastPublishedBy: property(name: "j:lastPublishedBy", language: $language) {
                     value
                 }
+                lastPublishedByUser(language: $language) {
+                    username
+                    firstname
+                    lastname
+                    email
+                }
                 lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {
                     value
+                }
+                lastModifiedByUser(language: $language) {
+                    username
+                    firstname
+                    lastname
+                    email
                 }
                 lastModified: property(name: "jcr:lastModified", language: $language) {
                     value
                 }
                 deletedBy: property(name: "j:deletionUser", language: $language) {
                     value
+                }
+                deletedByUser(language: $language) {
+                    username
+                    firstname
+                    lastname
+                    email
                 }
                 deleted: property(name: "j:deletionDate", language: $language) {
                     value

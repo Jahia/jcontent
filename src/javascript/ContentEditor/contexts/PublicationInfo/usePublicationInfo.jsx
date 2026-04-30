@@ -34,8 +34,10 @@ export const usePublicationInfo = (queryParams, t) => {
         existsInLive: data.jcr.nodeById.aggregatedPublicationInfo.existsInLive,
         lastModified: data.jcr.nodeById.lastModified?.value,
         lastModifiedBy: data.jcr.nodeById.lastModifiedBy?.value,
+        lastModifiedByUser: data.jcr.nodeById.lastModifiedByUser,
         lastPublished: data.jcr.nodeById.lastPublished?.value,
         lastPublishedBy: data.jcr.nodeById.lastPublishedBy?.value,
+        lastPublishedByUser: data.jcr.nodeById.lastPublishedByUser,
         publicationInfoPolling: false
     };
 };

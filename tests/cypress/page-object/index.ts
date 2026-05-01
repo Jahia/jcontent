@@ -5,6 +5,7 @@ export * from './contentEditor';
 export * from './pageComposer';
 export * from './accordionItem';
 export * from './categoryManager';
+export * from './sidePanel';
 export {AdvancedOptions} from './advancedOptions';
 export {
     PageBuilderModule,

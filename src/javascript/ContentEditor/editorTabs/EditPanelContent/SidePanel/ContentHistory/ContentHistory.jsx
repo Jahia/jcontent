@@ -137,23 +137,69 @@ export const ContentHistory = () => {
     const entries = data?.jcr?.nodeByPath?.history?.entries || [];
     const totalCount = data?.jcr?.nodeByPath?.history?.count || 0;
 
-    if (loading && !data) {
-        return <LoaderOverlay/>;
-    }
+    const renderListContent = () => {
+        if (loading && !data) {
+            return <LoaderOverlay/>;
+        }
 
-    if (error) {
-        return (
-            <div className={styles.error}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.history.errorLoading')}
-                </Typography>
-            </div>
-        );
-    }
+        if (error) {
+            return (
+                <div className={styles.error}>
+                    <Typography variant="body">
+                        {t('jcontent:label.contentEditor.history.errorLoading')}
+                    </Typography>
+                </div>
+            );
+        }
+
+        if (entries.length === 0) {
+            return (
+                <div className={styles.emptyState}>
+                    <Typography variant="body">
+                        {t('jcontent:label.contentEditor.history.noEntries')}
+                    </Typography>
+                </div>
+            );
+        }
+
+        return entries.map(entry => {
+            const {typeLabelKey, name} = getTargetInfo(entry);
+            return (
+                <React.Fragment key={entry.id}>
+                    <div className={styles.historyItem} data-sel-role="history-item">
+                        <div className={styles.itemHeader}>
+                            <div className={styles.itemLeft}>
+                                {entry.language ? (
+                                    <Pill label={entry.language.toUpperCase()} color="accent"/>
+                                ) : (
+                                    <Pill label={<Language/>} color="default"/>
+                                )}
+                                <Typography variant="caption" className={styles.typeLabel}>
+                                    {t(typeLabelKey)}
+                                </Typography>
+                                <Typography variant="body" weight="bold" className={styles.targetName}>
+                                    {name}
+                                </Typography>
+                            </div>
+                            <div className={styles.itemRight}>
+                                {getActionChip(entry.action, t)}
+                            </div>
+                        </div>
+                        <div className={styles.itemFooter}>
+                            <Typography variant="caption" className={styles.metadata}>
+                                {formatDate(entry.date)} by {entry.userKey || '-'}
+                            </Typography>
+                        </div>
+                    </div>
+                    <div className={styles.separator}/>
+                </React.Fragment>
+            );
+        });
+    };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.filters}>
+        <div className={styles.container} data-sel-role="history-container">
+            <div className={styles.filters} data-sel-role="history-action-filter">
                 <Dropdown
                     value={actionFilter}
                     data={getActionOptions()}
@@ -167,49 +213,7 @@ export const ContentHistory = () => {
             </div>
 
             <div className={styles.listContainer}>
-                {entries.length === 0 ? (
-                    <div className={styles.emptyState}>
-                        <Typography variant="body">
-                            {t('jcontent:label.contentEditor.history.noEntries')}
-                        </Typography>
-                    </div>
-                ) : (
-                    <>
-                        {entries.map(entry => {
-                            const {typeLabelKey, name} = getTargetInfo(entry);
-                            return (
-                                <React.Fragment key={entry.id}>
-                                    <div className={styles.historyItem}>
-                                        <div className={styles.itemHeader}>
-                                            <div className={styles.itemLeft}>
-                                                {entry.language ? (
-                                                    <Pill label={entry.language.toUpperCase()} color="accent"/>
-                                                ) : (
-                                                    <Pill label={<Language/>} color="default"/>
-                                                )}
-                                                <Typography variant="caption" className={styles.typeLabel}>
-                                                    {t(typeLabelKey)}
-                                                </Typography>
-                                                <Typography variant="body" weight="bold" className={styles.targetName}>
-                                                    {name}
-                                                </Typography>
-                                            </div>
-                                            <div className={styles.itemRight}>
-                                                {getActionChip(entry.action, t)}
-                                            </div>
-                                        </div>
-                                        <div className={styles.itemFooter}>
-                                            <Typography variant="caption" className={styles.metadata}>
-                                                {formatDate(entry.date)} by {entry.userKey || '-'}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                    <div className={styles.separator}/>
-                                </React.Fragment>
-                            );
-                        })}
-                    </>
-                )}
+                {renderListContent()}
             </div>
 
             {totalCount > 0 && (
@@ -219,14 +223,14 @@ export const ContentHistory = () => {
                         currentPage={page + 1}
                         itemsPerPage={pageSize}
                         itemsPerPageOptions={[10, 25, 50, 100]}
+                        i18n={{
+                            itemsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                            of: t('jcontent:label.pagination.of')
+                        }}
                         onPageChange={newPage => setPage(newPage - 1)}
                         onItemsPerPageChange={newPageSize => {
                             setPageSize(newPageSize);
                             setPage(0);
-                        }}
-                        i18n={{
-                            itemsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                            of: t('jcontent:label.pagination.of')
                         }}
                     />
                 </div>

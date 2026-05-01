@@ -203,7 +203,15 @@ export class ContentEditor extends BasePage {
         this.advancedMode = true;
     }
 
+    switchToSidePanelPreviewTab() {
+        cy.get('[data-sel-role="tab-preview"]').click();
+    }
+
     validateContentIsVisibleInPreview(content: string) {
+        if (this.advancedMode) {
+            this.switchToSidePanelPreviewTab();
+        }
+
         const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
 
         cy.get(iframeSelector, {timeout: 90000}).should($iframe => {
@@ -226,6 +234,10 @@ export class ContentEditor extends BasePage {
     }
 
     validateContentIsNotVisibleInPreview(content: string) {
+        if (this.advancedMode) {
+            this.switchToSidePanelPreviewTab();
+        }
+
         const iframeSelector = 'iframe[data-sel-role="edit-preview-frame"]';
 
         cy.get(iframeSelector, {timeout: 90000}).should($iframe => {

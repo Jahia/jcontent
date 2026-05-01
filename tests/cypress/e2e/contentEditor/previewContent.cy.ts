@@ -41,6 +41,7 @@ describe('Preview tests', () => {
             .getCardByName('Digitall Financial Report.pdf')
             .contextMenu()
             .selectByRole('editAdvanced');
+        cy.get('[data-sel-role="tab-preview"]').click();
         cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
     });
 
@@ -98,6 +99,7 @@ describe('Preview tests', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/simpleText');
         const contentEditor = jcontent.editContent();
         contentEditor.switchToAdvancedMode();
+        contentEditor.switchToSidePanelPreviewTab();
 
         cy.log('Check preview badge is not displayed');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');

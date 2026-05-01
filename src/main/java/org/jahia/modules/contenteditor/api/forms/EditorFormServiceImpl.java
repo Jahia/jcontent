@@ -217,14 +217,21 @@ public class EditorFormServiceImpl implements EditorFormService {
                         .filter(Field::isVisible)
                         .collect(Collectors.toList()));
 
-                    fieldSet.setVisible(fieldSet.isVisible() && (fieldSet.isDynamic() || fieldSet.getFields().stream().anyMatch(Field::isVisible)));
+                    fieldSet.setVisible(fieldSet.isVisible() && (fieldSet.isHasEnableSwitch() || fieldSet.getFields().stream().anyMatch(Field::isVisible)));
                 }
 
-                // Remove empty fieldSets - only keep empty dynamic field set which do not have matching mixin in another section
-                // (if the dynamic mixin is present in multiple sections, keep only the non-empty ones)
+                /*
+                 * Keep fieldSets that passes one of the following criteria:
+                 *  - Always present
+                 *  - Dynamic and unique to this section
+                 *    - Dynamic single-occurrence fieldsets are always kept — this includes jmix:templateMixin fieldsets
+                 *      with no visible fields that are needed for addMixin tracking even though visible=false
+                 *  - Visible and non-empty.
+                 */
                 section.setFieldSets(section.getFieldSets().stream()
-                    .filter(fs -> fs.isAlwaysPresent() != null && fs.isAlwaysPresent() || fs.isVisible())
-                    .filter(fs -> (fs.isDynamic() && fieldSetsMap.get(fs.getName()).size() == 1) || !fs.getFields().isEmpty() || (fs.isAlwaysPresent() != null && fs.isAlwaysPresent()))
+                    .filter(fs -> (fs.isAlwaysPresent() != null && fs.isAlwaysPresent())
+                        || (fs.isDynamic() && fieldSetsMap.get(fs.getName()).size() == 1)
+                        || (fs.isVisible() && !fs.getFields().isEmpty()))
                     .collect(Collectors.toList()));
 
                 section.setVisible(section.isVisible() && section.getFieldSets().stream().anyMatch(FieldSet::isVisible));

@@ -1,0 +1,31 @@
+{
+  "nodeType": "cent:emptyTemplateMixinTest",
+  "priority": 1.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "cent:emptyTemplateMixinTest",
+          "fields": [
+            {
+              "name": "type",
+              "valueConstraints": [
+                {
+                  "displayValue": "Mixin 1",
+                  "value": {"type": "String", "value": "mixin1"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:emptyTemplateMixin1"}]
+                },
+                {
+                  "displayValue": "Mixin 2",
+                  "value": {"type": "String", "value": "mixin2"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:emptyTemplateMixin2"}]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

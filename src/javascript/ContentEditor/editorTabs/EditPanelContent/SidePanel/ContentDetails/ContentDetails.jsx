@@ -23,7 +23,7 @@ const DetailRow = ({label, value, children}) => {
     }
 
     return (
-        <div className={styles.detailRow}>
+        <div className={styles.detailRow} data-sel-role="detail-row" data-sel-label={label}>
             <Typography variant="caption" className={styles.label}>
                 {label}
             </Typography>
@@ -58,7 +58,7 @@ export const ContentDetails = () => {
     return (
         <div className={styles.container}>
             {technicalInfo && technicalInfo.length > 0 && (
-                <div className={styles.section}>
+                <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
                     <Typography variant="subheading" className={styles.sectionTitle}>
                         {t('jcontent:label.contentEditor.sidePanel.technical')}
                     </Typography>
@@ -74,7 +74,7 @@ export const ContentDetails = () => {
             )}
 
             {details && details.length > 0 && (
-                <div className={styles.section}>
+                <div className={styles.section} data-sel-role="details-section" data-sel-content="additional">
                     <Typography variant="subheading" className={styles.sectionTitle}>
                         {t('jcontent:label.contentEditor.sidePanel.additional')}
                     </Typography>

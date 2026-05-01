@@ -92,6 +92,7 @@ describe('json override tests', {testIsolation: false}, () => {
         const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         const contentEditor = jcontent.editComponentByText('json overrides');
         contentEditor.switchToAdvancedMode();
+        contentEditor.switchToSidePanelPreviewTab();
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
     });
 

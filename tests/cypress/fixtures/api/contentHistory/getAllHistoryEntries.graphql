@@ -1,0 +1,27 @@
+query getAllHistoryEntries($path: String!, $withLanguageNodes: Boolean!, $action: String, $offset: Int!, $limit: Int!, $uiLanguage: String!) {
+    jcr {
+        nodeByPath(path: $path) {
+            uuid
+            history {
+                allCount(withLanguageNodes: $withLanguageNodes, action: $action)
+                allEntries(withLanguageNodes: $withLanguageNodes, action: $action, offset: $offset, limit: $limit) {
+                    id
+                    date
+                    timestamp
+                    path
+                    uuid
+                    action
+                    propertyName
+                    propertyNameDisplay(language: $uiLanguage)
+                    userKey
+                    message
+                    language
+                    aclGrantType
+                    aclPrincipalType
+                    aclPrincipalName
+                    aclRoles
+                }
+            }
+        }
+    }
+}

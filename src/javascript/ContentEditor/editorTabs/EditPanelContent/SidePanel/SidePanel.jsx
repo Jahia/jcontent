@@ -14,8 +14,8 @@ export const SidePanel = () => {
     const ActiveTabComponent = tabs.find(tab => tab.value === activeTab)?.displayableComponent;
 
     return (
-        <Paper className={styles.root}>
-            <div className={styles.tabs}>
+        <Paper className={styles.root} data-sel-role="side-panel">
+            <div className={styles.tabs} data-sel-role="side-panel-tabs">
                 <Tab>
                     {tabs.map(tab => {
                         const {displayableComponent, ...tabProps} = tab;
@@ -44,7 +44,7 @@ export const SidePanel = () => {
                     })}
                 </Tab>
             </div>
-            <div className={styles.content}>
+            <div className={styles.content} data-sel-role="side-panel-content">
                 {ActiveTabComponent && <ActiveTabComponent/>}
             </div>
         </Paper>

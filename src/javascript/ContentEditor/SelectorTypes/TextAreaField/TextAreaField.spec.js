@@ -57,10 +57,10 @@ describe('TextArea component', () => {
         expect(cmp.props().rows).toBe(10);
     });
 
-    it('should leave rows undefined when no selectorOption is set', () => {
+    it('should fall back to default rows when no selectorOption is set', () => {
         const cmp = shallow(<TextAreaField {...props}/>);
 
-        expect(cmp.props().rows).toBeUndefined();
+        expect(cmp.props().rows).toBe(5);
     });
 
     it('should apply monospace className when selectorOption is true', () => {

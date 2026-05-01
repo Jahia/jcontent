@@ -8,7 +8,7 @@ const findOption = (field, name) => field.selectorOptions?.find(option => option
 
 export const TextAreaField = ({id, value, field, onChange, onBlur}) => {
     const rowsOption = findOption(field, 'rows');
-    const rows = rowsOption ? parseInt(rowsOption.value, 10) : undefined;
+    const rows = rowsOption ? Number.parseInt(rowsOption.value, 10) : undefined;
     const monospace = findOption(field, 'monospace')?.value === 'true';
 
     return (

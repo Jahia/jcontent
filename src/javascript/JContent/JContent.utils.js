@@ -39,8 +39,20 @@ export const isDescendant = (path, ancestorPath) => {
     return Boolean(path) && path.startsWith(ancestorPath + '/');
 };
 
-export const canEditInPageBuilder = (path, ancestorPath, type) => {
-    return isDescendant(path, ancestorPath) || type === 'absoluteArea';
+export const canEditInPageBuilder = (path, ancestorPath, type, nodes) => {
+    return (isDescendant(path, ancestorPath) || type === 'absoluteArea') && !isFromReference(path, nodes);
+};
+
+// This determines if the node is included as part of content reference in which case we don't want to have a box for it.
+const isFromReference = (path, nodes) => {
+    if (path.includes('@/')) {
+        // Note that parent path cannot be checked directly as parent is not jnt:contentReference but jnt:list or other (/somepath/content-ref@/list/node)
+        // Note that we also check to make sure that what we find is a discoverable node in the tree
+        const split = path.split('@/');
+        return nodes[split[0]]?.primaryNodeType.name === 'jnt:contentReference';
+    }
+
+    return false;
 };
 
 export const isDescendantOrSelf = (path, ancestorOrSelfPath) => {

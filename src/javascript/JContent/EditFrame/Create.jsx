@@ -50,16 +50,18 @@ export const getElemAttributes = ({element, parent}) => {
     const nodeName = element.getAttribute('path').split('/').pop();
 
     let nodeTypes;
+    let parentAreaType;
     if (parent.getAttribute('nodetypes') &&
         (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
+        parentAreaType = parent.getAttribute('type');
     }
 
     if (element.getAttribute('nodetypes')) {
         nodeTypes = element.getAttribute('nodetypes').split(' ');
     }
 
-    return {nodeName, nodePath, nodeTypes};
+    return {nodeName, nodePath, nodeTypes, parentAreaType};
 };
 
 const useReorderNodes = ({parentPath}) => {

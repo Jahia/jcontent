@@ -14,6 +14,8 @@
     - 'mvn:org.jahia.modules/jahia-ui-root'
     - 'mvn:org.jahia.test/jcontent-test-module'
     - 'mvn:org.jahia.test/jcontent-test-template'
+    - 'mvn:org.jahia.modules/javascript-modules-engine'
+    - 'mvn:org.jahia.test/jcontent-test-js-template'
   autoStart: true
   uninstallPreviousVersion: true
 - include: 'provisioning.yml'

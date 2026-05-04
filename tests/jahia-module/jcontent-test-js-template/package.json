@@ -1,0 +1,41 @@
+{
+	"name": "jcontent-test-js-template",
+	"version": "1.0.0-SNAPSHOT",
+	"license": "MIT",
+	"type": "module",
+	"files": [
+		"dist",
+		"settings",
+		"static"
+	],
+	"scripts": {
+		"build": "tsc --noEmit && vite build && yarn pack --out dist/package.tgz",
+		"clean": "rm -rf dist/",
+		"deploy": "jahia-deploy",
+		"dev": "vite build --watch",
+		"watch": "yarn dev",
+		"watch:callback": "yarn pack --out dist/package.tgz && yarn deploy"
+	},
+	"dependencies": {
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4"
+	},
+	"devDependencies": {
+		"@jahia/javascript-modules-library": "1.2.0",
+		"@jahia/vite-plugin": "1.2.0",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"typescript": "^5.9.3",
+		"vite": "^8.0.0"
+	},
+	"engines": {
+		"node": ">=20.19.0"
+	},
+	"jahia": {
+		"required-version": "8.2.1.0",
+		"module-type": "templatesSet",
+		"module-dependencies": "default,javascript-modules-engine=[1.1,2)",
+		"static-resources": "/dist/assets,/dist/client",
+		"server": "dist/server/index.js"
+	}
+}

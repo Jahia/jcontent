@@ -8,7 +8,7 @@ import {BoxesQuery} from './Boxes.gql-queries';
 import {hasMixin, isDescendant, isDescendantOrSelf, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {findAvailableBoxConfig, isAbsoluteArea, pathExistsInTree} from '../../JContent.utils';
+import {canEditInPageBuilder, findAvailableBoxConfig, pathExistsInTree} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -325,7 +325,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
                     attributes: getElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
                 }))
-                .filter(({node, attributes}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && (isDescendant(node.path, path) || attributes.parentAreaType === 'absoluteArea') && !isFromReference(node.path, nodes));
+                .filter(({node, attributes}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && canEditInPageBuilder(node.path, path, attributes.parentAreaType) && !isFromReference(node.path, nodes));
 
             setCreateButtons(buttonPlaceHolders);
         }
@@ -447,7 +447,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             </HoverProvider>
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
-                .filter(({node, element}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && (isDescendant(node.path, path) || element.getAttribute('type') === 'absoluteArea') && !isFromReference(node.path, nodes))
+                .filter(({node, element}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && canEditInPageBuilder(node.path, path, element.getAttribute('type')) && !isFromReference(node.path, nodes))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}

@@ -39,6 +39,10 @@ export const isDescendant = (path, ancestorPath) => {
     return Boolean(path) && path.startsWith(ancestorPath + '/');
 };
 
+export const canEditInPageBuilder = (path, ancestorPath, type) => {
+    return isDescendant(path, ancestorPath) || type === 'absoluteArea';
+};
+
 export const isDescendantOrSelf = (path, ancestorOrSelfPath) => {
     return (path === ancestorOrSelfPath || isDescendant(path, ancestorOrSelfPath));
 };

@@ -10,7 +10,6 @@
   <groupId>org.jahia.modules.javascript</groupId>
   <artifactId>jcontent-test-js-template</artifactId>
   <name>jContent Test JS Template</name>
-  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>Minimal JavaScript modules template set for testing</description>
 

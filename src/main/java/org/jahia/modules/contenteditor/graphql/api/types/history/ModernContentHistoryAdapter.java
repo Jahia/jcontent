@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Modern implementation using Jahia 8.2.4.0+ optimized ContentHistoryService methods.
@@ -78,7 +79,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             List<HistoryEntry> entries;
 
             // If action filter is provided, get all entries and filter manually
-            // TODO: replace with a service implementation
+            // TODO: replace with a service implementation when jahia parent version > 8.1.2.0
             if (action != null && !action.trim().isEmpty()) {
                 entries = (List<HistoryEntry>) paginatedMethod.invoke(
                         ContentHistoryService.getInstance(),
@@ -93,11 +94,15 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
                         .collect(Collectors.toList());
 
                 // Apply pagination after filtering
-                if (limit != -1) {
-                    entries = entries.stream()
-                            .skip(offset)
-                            .limit(limit)
-                            .collect(Collectors.toList());
+                if (offset > 0 && limit != -1) {
+                    Stream<HistoryEntry> paginatedEntries = entries.stream();
+                    if (offset > 0) {
+                        paginatedEntries = paginatedEntries.skip(offset);
+                    }
+                    if (limit > 0) {
+                        paginatedEntries = paginatedEntries.limit(limit);
+                    }
+                    entries = paginatedEntries.collect(Collectors.toList());
                 }
 
                 return entries;

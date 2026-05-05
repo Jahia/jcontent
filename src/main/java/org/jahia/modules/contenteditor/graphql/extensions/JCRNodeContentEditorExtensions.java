@@ -76,6 +76,7 @@ public class JCRNodeContentEditorExtensions {
     @GraphQLField
     @GraphQLDescription("Returns content history for the node")
     public GqlContentHistory getHistory() {
+        // Todo: Add permission check for view history on a node
         return new GqlContentHistory(node);
     }
 }

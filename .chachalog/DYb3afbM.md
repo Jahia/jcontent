@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor
 ---
 
-Provide content history graphql API node extension (#2269)
+Added a GraphQL API for content history (#2269)

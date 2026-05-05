@@ -29,19 +29,20 @@ import org.jahia.services.history.HistoryEntry;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Legacy implementation for Jahia 8.2.1.0-8.2.3.x using deprecated ContentHistoryService methods.
  * Implements pagination using Java streams.
- * 
+ *
  * TODO: When upgrading to Jahia 8.2.4.0+:
  *  1. Delete this class
  *  2. Delete {@link ModernContentHistoryAdapter}
  *  3. Delete {@link ContentHistoryAdapter}
  *  4. Delete {@link ContentHistoryProvider}
- *  5. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory} 
+ *  5. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory}
  *     to call ContentHistoryService methods directly
- * 
+ *
  * @deprecated This class will be removed when Jahia 8.2.4.0 becomes the minimum required version.
  */
 @Deprecated(since = "jContent 3.x", forRemoval = true)
@@ -60,14 +61,18 @@ class LegacyContentHistoryAdapter implements ContentHistoryProvider {
                     .collect(Collectors.toList());
         }
 
-        if (limit == -1) {
-            return allEntries;
+        if (limit != -1 || offset > 0) {
+            Stream<HistoryEntry> stream = allEntries.stream();
+            if (offset > 0) {
+                stream = stream.skip(offset);
+            }
+            if (limit > 0) {
+                stream = stream.limit(limit);
+            }
+            allEntries = stream.collect(Collectors.toList());
         }
 
-        return allEntries.stream()
-                .skip(offset)
-                .limit(limit)
-                .collect(Collectors.toList());
+        return allEntries;
     }
 
     @Override
@@ -75,14 +80,14 @@ class LegacyContentHistoryAdapter implements ContentHistoryProvider {
         @SuppressWarnings("deprecation")
         List<HistoryEntry> allEntries = ContentHistoryService.getInstance()
                 .getNodeHistory(node, withLanguageNodes);
-        
+
         // Apply action filter if provided
         if (action != null && !action.trim().isEmpty()) {
             return (int) allEntries.stream()
                     .filter(entry -> action.equals(entry.getAction()))
                     .count();
         }
-        
+
         return allEntries.size();
     }
 }

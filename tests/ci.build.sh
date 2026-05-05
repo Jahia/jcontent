@@ -24,6 +24,7 @@ if [ -d ./jahia-module ]; then
   if [ -e "pom.xml" ]; then
     mvn clean install
     echo "Looking up snapshot tgz"
+    ls -la ./jcontent-test-js-template/target
     find . -type f -name "*-SNAPSHOT.tgz"
     find . -type f -name "*-SNAPSHOT.tgz" -exec cp {} ../artifacts/ \;
   fi

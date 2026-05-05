@@ -5,6 +5,18 @@ describe('Area rendering test', () => {
     const siteKey = 'areaRenderingTestSite';
 
     before(() => {
+        const fileName = 'modules/jcontent-test-js-template-3.7.0-SNAPSHOT.tgz';
+        // Need to wait explicitly for the bundle listener to process event
+        // eslint-disable-next-line
+        cy.runProvisioningScript({script: { fileContent: '- installAndStartModule: "' + fileName + '"', type: 'application/yaml' },
+            files: [{fileName: fileName, type: 'application/java-archive'}]}
+        )
+            .then(res => {
+                expect(res.length).to.equal(1);
+                expect(res[0].start[0].message).to.equal('Operation successful');
+            })
+            .wait(5000);
+
         createSite(siteKey, {
             templateSet: 'jcontent-test-js-template',
             serverName: 'localhost',

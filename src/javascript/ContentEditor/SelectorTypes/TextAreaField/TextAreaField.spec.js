@@ -49,4 +49,30 @@ describe('TextArea component', () => {
         expect(props.onChange.mock.calls.length).toBe(1);
         expect(props.onChange).toHaveBeenCalledWith('text');
     });
+
+    it('should pass rows from selectorOptions', () => {
+        props.field.selectorOptions = [{name: 'rows', value: '10'}];
+        const cmp = shallow(<TextAreaField {...props}/>);
+
+        expect(cmp.props().rows).toBe(10);
+    });
+
+    it('should fall back to default rows when no selectorOption is set', () => {
+        const cmp = shallow(<TextAreaField {...props}/>);
+
+        expect(cmp.props().rows).toBe(5);
+    });
+
+    it('should apply monospace className when selectorOption is true', () => {
+        props.field.selectorOptions = [{name: 'monospace', value: 'true'}];
+        const cmp = shallow(<TextAreaField {...props}/>);
+
+        expect(cmp.props().className).toBeTruthy();
+    });
+
+    it('should not apply monospace className when selectorOption is missing', () => {
+        const cmp = shallow(<TextAreaField {...props}/>);
+
+        expect(cmp.props().className).toBeUndefined();
+    });
 });

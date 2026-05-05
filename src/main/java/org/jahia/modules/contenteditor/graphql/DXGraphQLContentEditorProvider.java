@@ -28,8 +28,8 @@ import org.jahia.modules.contenteditor.graphql.extensions.JCRNodeContentEditorEx
 import org.jahia.modules.contenteditor.graphql.extensions.MutationExtensions;
 import org.jahia.modules.contenteditor.graphql.extensions.QueryExtensions;
 import org.jahia.modules.graphql.provider.dxm.DXGraphQLExtensionsProvider;
+import org.jahia.modules.visibility.graphql.extensions.JCRNodeVisibilityConditionExtensions;
 import org.osgi.service.component.annotations.Component;
-import visibility.graphql.extensions.JCRNodeVisibilityConditionExtensions;
 
 import java.util.Arrays;
 import java.util.Collection;

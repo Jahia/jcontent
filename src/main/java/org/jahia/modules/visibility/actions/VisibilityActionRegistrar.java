@@ -1,4 +1,4 @@
-package visibility.actions;
+package org.jahia.modules.visibility.actions;
 
 import org.jahia.services.cache.CacheProvider;
 import org.jahia.services.cache.ehcache.EhCacheProvider;

@@ -1,4 +1,4 @@
-package visibility.conditions;
+package org.jahia.modules.visibility.conditions;
 
 import org.jahia.bin.Jahia;
 import org.jahia.registries.ServicesRegistry;

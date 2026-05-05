@@ -1,4 +1,4 @@
-package visibility.conditions;
+package org.jahia.modules.visibility.conditions;
 
 import org.jahia.registries.ServicesRegistry;
 import org.jahia.services.content.JCRNodeWrapper;

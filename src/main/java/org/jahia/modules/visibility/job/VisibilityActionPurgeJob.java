@@ -1,4 +1,4 @@
-package visibility.job;
+package org.jahia.modules.visibility.job;
 
 import org.jahia.exceptions.JahiaRuntimeException;
 import org.jahia.services.content.rules.OrphanedActionPurgeJob;

@@ -1,4 +1,4 @@
-package visibility.graphql.type;
+package org.jahia.modules.visibility.graphql.type;
 
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;

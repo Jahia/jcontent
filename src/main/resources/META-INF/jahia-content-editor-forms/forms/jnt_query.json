@@ -1,0 +1,24 @@
+{
+  "nodeType": "jnt:query",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "jnt:query",
+          "fields": [
+            {
+              "name": "query",
+              "selectorType": "TextArea",
+              "selectorOptionsMap": {
+                "rows": "6",
+                "monospace": "true"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

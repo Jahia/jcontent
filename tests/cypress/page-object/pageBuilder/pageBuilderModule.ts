@@ -27,6 +27,7 @@ export class PageBuilderModule extends BaseComponent {
     getForDeletionStatus() {
         cy.get(`@component${this.parentFrame.id}`)
             .find(`[data-sel-role="infos-deleted"][data-jahia-path="${this.path}"]`)
+            .should('exist')
             .scrollIntoView();
         return cy.get(`@component${this.parentFrame.id}`)
             .find(`[data-sel-role="infos-deleted"][data-jahia-path="${this.path}"]`)

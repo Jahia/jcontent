@@ -349,15 +349,45 @@ public class EditorFormServiceImpl implements EditorFormService {
     private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRSiteNode site) throws NoSuchNodeTypeException {
         ArrayList<ExtendedNodeType> res = new ArrayList<>();
 
+        // Only filter by installed modules when we're in a site context (path starts with /sites/)
+        // For system-level calls, all modules are considered available
         Set<String> installedModules = site != null && site.getPath().startsWith("/sites/") ? site.getInstalledModulesWithAllDependencies() : null;
 
+        // Retrieve the global map of mixin extensions: maps each base type to the set of mixins that extend it
         Map<ExtendedNodeType, Set<ExtendedNodeType>> m = NodeTypeRegistry.getInstance().getMixinExtensions();
 
-        for (ExtendedNodeType nodeType : m.keySet()) {
-            if (type.isNodeType(nodeType.getName())) {
-                for (ExtendedNodeType extension : m.get(nodeType)) {
-                    if (installedModules == null || extension.getTemplatePackage() == null || extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system") || installedModules.contains(extension.getTemplatePackage().getId())) {
-                        res.add(extension);
+        // Use a queue to iteratively process each discovered extension,
+        // allowing us to find extensions-of-extensions (transitive closure)
+        Queue<ExtendedNodeType> toProcess = new LinkedList<>();
+        toProcess.add(type);
+
+        // Track already visited types to avoid infinite loops in case of circular or diamond type hierarchies
+        Set<String> visited = new HashSet<>();
+        visited.add(type.getName());
+
+        while (!toProcess.isEmpty()) {
+            ExtendedNodeType current = toProcess.poll();
+
+            // Iterate over all registered base types that have mixin extensions
+            for (ExtendedNodeType nodeType : m.keySet()) {
+                // Check if the current type matches (is a subtype of) the base type key,
+                // meaning the extensions of this key are applicable to our current type
+                if (current.isNodeType(nodeType.getName())) {
+                    for (ExtendedNodeType extension : m.get(nodeType)) {
+                        // Only include extensions that belong to modules installed on the current site.
+                        // System module types are always included regardless of site installation.
+                        // Skip already visited extensions to prevent duplicates and infinite loops.
+                        if ((installedModules == null || extension.getTemplatePackage() == null
+                            || extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system")
+                            || installedModules.contains(extension.getTemplatePackage().getId()))
+                            && !visited.contains(extension.getName())) {
+                            res.add(extension);
+                            visited.add(extension.getName());
+                            // Enqueue this extension so its own extensions are also discovered in subsequent iterations
+                            // (e.g., if mymix:internalLink extends mymix:commonLink which extends mynt:nodetypeVanilla,
+                            // mymix:internalLink will be found when processing mymix:commonLink)
+                            toProcess.add(extension);
+                        }
                     }
                 }
             }

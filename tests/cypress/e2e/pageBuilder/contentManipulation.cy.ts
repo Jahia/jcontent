@@ -62,7 +62,14 @@ describe('Page builder - content manipulation', () => {
         getComponent(DeleteDialog).markForDeletion();
 
         cy.log('Verify the content list is marked for deletion');
-        jcontent.getModule(contentListPath, false).getForDeletionStatus().should('exist');
+        cy.waitUntil(
+            () => jcontent.getModule(contentListPath, false).getForDeletionStatus().should('exist'),
+            {
+                timeout: 30000,
+                interval: 500,
+                errorMsg: 'Timed out waiting for content list to be marked for deletion'
+            }
+        );
 
         cy.log('Click the marked-for-deletion content list to select it (blue border)');
         const markedModule = jcontent.getModule(contentListPath, false);

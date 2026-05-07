@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content xmlns:j="http://www.jahia.org/jahia/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
+    <modules jcr:primaryType="jnt:modules">
+        <jcontent-test-js-template>
+            <home j:isHomePage="true"
+                  j:templateName="default"
+                  jcr:primaryType="jnt:page">
+                <j:translation_en jcr:language="en"
+                                  jcr:primaryType="jnt:translation"
+                                  jcr:mixinTypes="mix:title"
+                                  jcr:title="Home"/>
+            </home>
+        </jcontent-test-js-template>
+    </modules>
+</content>
+

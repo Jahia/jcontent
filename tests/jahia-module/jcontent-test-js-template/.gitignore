@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+target/
+
+# Yarn
+.pnp.cjs
+.pnp.loader.mjs
+.yarn/*
+!.yarn/sdks
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+

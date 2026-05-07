@@ -313,11 +313,11 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
                     attributes: getElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
                 }))
-                .filter(({node, attributes}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && canEditInPageBuilder(node.path, nodes, site));
+                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && canEditInPageBuilder(node.path, nodes, site));
 
             setCreateButtons(buttonPlaceHolders);
         }
-    }, [nodes, path, placeholders]);
+    }, [nodes, path, placeholders, site]);
 
     const onDoubleClick = useCallback(event => {
         event.preventDefault();

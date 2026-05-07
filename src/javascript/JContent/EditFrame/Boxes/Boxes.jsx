@@ -313,7 +313,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
                     attributes: getElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
                 }))
-                .filter(({node, attributes}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && canEditInPageBuilder(node.path, path, attributes.parentAreaType, nodes));
+                .filter(({node, attributes}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && canEditInPageBuilder(node.path, nodes, site));
 
             setCreateButtons(buttonPlaceHolders);
         }
@@ -435,7 +435,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             </HoverProvider>
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
-                .filter(({node, element}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && canEditInPageBuilder(node.path, path, element.getAttribute('type'), nodes))
+                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && canEditInPageBuilder(node.path, nodes, site))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}

@@ -39,8 +39,9 @@ export const isDescendant = (path, ancestorPath) => {
     return Boolean(path) && path.startsWith(ancestorPath + '/');
 };
 
-export const canEditInPageBuilder = (path, ancestorPath, type, nodes) => {
-    return (isDescendant(path, ancestorPath) || type === 'absoluteArea') && !isFromReference(path, nodes);
+export const canEditInPageBuilder = (path, nodes, site) => {
+    // Check that the node is from the same site and not e reference
+    return isDescendant(path, `/sites/${site}`) && !isFromReference(path, nodes);
 };
 
 // This determines if the node is included as part of content reference in which case we don't want to have a box for it.

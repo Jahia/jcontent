@@ -8,7 +8,7 @@ import {BoxesQuery} from './Boxes.gql-queries';
 import {hasMixin, isDescendant, isDescendantOrSelf, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {cmAddSelection, cmClearSelection, cmRemoveSelection} from '../../redux/selection.redux';
 import {batchActions} from 'redux-batched-actions';
-import {findAvailableBoxConfig, pathExistsInTree} from '../../JContent.utils';
+import {canEditInPageBuilder, findAvailableBoxConfig, pathExistsInTree} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -62,18 +62,6 @@ function getRelativePos(coord1, coord2) {
 
     return (offPY >= 0) ? 'bottom' : 'top';
 }
-
-// This determines if the node is included as part of content reference in which case we don't want to have a box for it.
-const isFromReference = (path, nodes) => {
-    if (path.includes('@/')) {
-        // Note that parent path cannot be checked directly as parent is not jnt:contentReference but jnt:list or other (/somepath/content-ref@/list/node)
-        // Note that we also check to make sure that what we find is a discoverable node in the tree
-        const split = path.split('@/');
-        return nodes[split[0]]?.primaryNodeType.name === 'jnt:contentReference';
-    }
-
-    return false;
-};
 
 export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addIntervalCallback, onSaved, clickedElement, setClickedElement}) => {
     const {t} = useTranslation('jcontent');
@@ -325,11 +313,11 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')],
                     attributes: getElemAttributes({element, parent: element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent)})
                 }))
-                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && isDescendant(node.path, path) && !isFromReference(node.path, nodes));
+                .filter(({node}) => node && !isMarkedForDeletion(node) && !findAvailableBoxConfig(node)?.isBoxActionsHidden && canEditInPageBuilder(node.path, nodes, site));
 
             setCreateButtons(buttonPlaceHolders);
         }
-    }, [nodes, path, placeholders]);
+    }, [nodes, path, placeholders, site]);
 
     const onDoubleClick = useCallback(event => {
         event.preventDefault();
@@ -447,7 +435,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
             </HoverProvider>
 
             {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
-                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && isDescendant(node.path, path) && !isFromReference(node.path, nodes))
+                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')) && canEditInPageBuilder(node.path, nodes, site))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
                          nodes={nodes}

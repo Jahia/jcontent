@@ -8,7 +8,6 @@ import React from 'react';
 import {ContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import contentListIcon from '~/icons/contentList.png';
 
 const AreaShape = PropTypes.shape({
     isAbsolute: PropTypes.bool,
@@ -49,10 +48,6 @@ const getAreaIcon = (node, area) => {
         const url = node.primaryNodeType.icon;
         const iconUrl = `${contextPath}${url}${url.endsWith('.png') ? '' : '.png'}`;
         return toIconComponent(iconUrl);
-    }
-
-    if (area.isList) {
-        return <img src={contentListIcon} alt={node.primaryNodeType?.name}/>;
     }
 
     return <Area/>;

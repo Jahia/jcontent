@@ -110,18 +110,7 @@ module.exports = (env, argv) => {
                     test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                     type: 'asset/resource',
                     dependency: { not: ['url'] }
-                },
-                {
-                    test: /\.(png|jpe?g|gif|svg)$/i,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: '[path][name].[ext]',
-                            },
-                        },
-                    ],
-                },
+                }
             ]
         },
         plugins: [

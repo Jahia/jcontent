@@ -26,7 +26,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
             attributes: {nodeTypes: getNodeTypes(e)}
         }))
-        .filter(({node}) => node !== null);
+        .filter(({node}) => node !== null && node !== undefined);
 
     // Get all children of the clicked element that are create content buttons [type="existingNode"] and add insertion points for each
     const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)]
@@ -37,7 +37,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
             attributes: {nodeTypes: getNodeTypes(e)}
         }))
-        .filter(({node}) => node !== null);
+        .filter(({node}) => node !== null && node !== undefined);
 
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;

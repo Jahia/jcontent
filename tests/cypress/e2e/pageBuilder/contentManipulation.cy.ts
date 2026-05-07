@@ -62,7 +62,7 @@ describe('Page builder - content manipulation', () => {
         getComponent(DeleteDialog).markForDeletion();
 
         cy.log('Verify the content list is marked for deletion');
-        jcontent.getModule(contentListPath, false).getForDeletionStatus().should('exist');
+        jcontent.getModule(contentListPath).getForDeletionStatus().should('be.visible');
 
         cy.log('Click the marked-for-deletion content list to select it (blue border)');
         const markedModule = jcontent.getModule(contentListPath, false);

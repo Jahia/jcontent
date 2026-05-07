@@ -61,6 +61,8 @@ describe('Page builder - content manipulation', () => {
             .select('Delete');
         getComponent(DeleteDialog).markForDeletion();
 
+        // Refresh jcontent
+        jcontent = JContent.visit(siteKey, 'en', 'pages/home').switchToPageBuilder();
         cy.log('Verify the content list is marked for deletion');
         jcontent.getModule(contentListPath).getForDeletionStatus().should('be.visible');
 

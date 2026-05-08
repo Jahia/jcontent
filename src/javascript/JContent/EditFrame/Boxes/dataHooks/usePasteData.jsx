@@ -13,7 +13,7 @@ export const usePasteData = ({createButtons, language}) => {
         getProperties: ['limit']
     };
 
-    const paths = createButtons.map(b => b.node.path);
+    const paths = createButtons.filter(b => b?.node).map(b => b.node.path);
 
     const resPaste = useNodeChecks(
         {paths, language},

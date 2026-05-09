@@ -26,11 +26,13 @@ package org.jahia.modules.contenteditor.graphql.api.types;
 import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+import org.jahia.modules.graphql.provider.dxm.user.GqlUser;
 import org.jahia.services.content.JCRNodeWrapper;
-import org.jahia.services.content.JCRSessionFactory;
+import org.jahia.services.content.decorator.JCRUserNode;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
 import org.jahia.services.history.HistoryEntry;
+import org.jahia.services.usermanager.JahiaUserManagerService;
 import org.jahia.utils.LanguageCodeConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +110,26 @@ public class GqlContentHistoryEntry {
     @GraphQLDescription("The user key who performed the action")
     public String getUserKey() {
         return historyEntry.getUserKey();
+    }
+
+    @GraphQLField
+    @GraphQLDescription("The user who performed the action, resolved from the user key")
+    public GqlUser getUser() {
+        String userKey = historyEntry.getUserKey();
+        if (userKey == null || userKey.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            JCRUserNode userNode = JahiaUserManagerService.getInstance().lookupUser(userKey);
+            if (userNode != null) {
+                return new GqlUser(userNode.getJahiaUser());
+            }
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not resolve user node for key '{}'", userKey, e);
+            }
+        }
+        return null;
     }
 
     @GraphQLField

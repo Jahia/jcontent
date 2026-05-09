@@ -14,7 +14,8 @@ import {
     Visibility,
     File,
     Language,
-    Pagination
+    Pagination,
+    Workflow
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
@@ -37,6 +38,12 @@ const GET_CONTENT_HISTORY = gql`
                         propertyName
                         propertyNameDisplay(language: $uiLanguage)
                         userKey
+                        user {
+                            username
+                            firstname
+                            lastname
+                            displayName
+                        }
                         message
                         language
                     }
@@ -47,17 +54,28 @@ const GET_CONTENT_HISTORY = gql`
 `;
 
 const ACTION_CONFIG = {
-    created: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.created', color: 'accent'},
-    updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning'},
-    deleted: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.deleted', color: 'danger'},
-    moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default'},
-    added: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.added', color: 'accent'},
-    changed: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.changed', color: 'warning'},
-    removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger'},
-    published: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success'},
-    unpublished: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default'},
-    accessed: {icon: File, labelKey: 'jcontent:label.contentEditor.history.actions.accessed', color: 'default'},
-    viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default'}
+    // --- Confirmed actions observed in production ---
+    added: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.added', color: 'accent', used: true},
+    changed: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.changed', color: 'warning', used: true},
+    created: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.created', color: 'accent', used: true},
+    deleted: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.deleted', color: 'danger', used: true},
+    moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default', used: true},
+    published: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true},
+    removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger', used: true},
+    unpublished: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true},
+    // --- Not yet observed; kept for rendering if they appear in the history stream ---
+    // Updated: triggered by some legacy or external integrations writing directly to JCR
+    updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false},
+    // Viewed/accessed: requires the metrics/access-tracking module to be enabled
+    viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default', used: false},
+    accessed: {icon: File, labelKey: 'jcontent:label.contentEditor.history.actions.accessed', color: 'default', used: false},
+    // Previewed: triggered when a contributor previews a draft in the rendering engine
+    previewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.previewed', color: 'default', used: false},
+    // Workflow_started/finished: require the Jahia workflow module and a workflow definition on the content type
+    /* eslint-disable camelcase */
+    workflow_started: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_started', color: 'default', used: false},
+    workflow_finished: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_finished', color: 'success', used: false}
+    /* eslint-enable camelcase */
 };
 
 const getTargetInfo = entry => {
@@ -89,12 +107,22 @@ const getActionChip = (action, t) => {
     );
 };
 
+const getUserDisplayName = entry => {
+    const {user, userKey} = entry;
+    if (user) {
+        const fullName = [user.firstname, user.lastname].filter(Boolean).join(' ');
+        return fullName || user.displayName || user.username || userKey || '-';
+    }
+
+    return userKey || '-';
+};
+
 export const ContentHistory = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData} = useContentEditorContext();
     const uiLanguage = useSelector(state => state.uilang);
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [actionFilter, setActionFilter] = useState(null);
 
     const {data, loading, error} = useQuery(GET_CONTENT_HISTORY, {
@@ -118,19 +146,12 @@ export const ContentHistory = () => {
     }, []);
 
     const getActionOptions = useCallback(() => {
+        const trackedOptions = Object.entries(ACTION_CONFIG)
+            .filter(([, config]) => config.used)
+            .map(([value]) => ({value, label: getActionChip(value, t)}));
         return [
             {value: null, label: t('jcontent:label.contentEditor.history.allActions')},
-            {value: 'created', label: getActionChip('created', t)},
-            {value: 'updated', label: getActionChip('updated', t)},
-            {value: 'deleted', label: getActionChip('deleted', t)},
-            {value: 'moved', label: getActionChip('moved', t)},
-            {value: 'added', label: getActionChip('added', t)},
-            {value: 'changed', label: getActionChip('changed', t)},
-            {value: 'removed', label: getActionChip('removed', t)},
-            {value: 'published', label: getActionChip('published', t)},
-            {value: 'unpublished', label: getActionChip('unpublished', t)},
-            {value: 'accessed', label: getActionChip('accessed', t)},
-            {value: 'viewed', label: getActionChip('viewed', t)}
+            ...trackedOptions
         ];
     }, [t]);
 
@@ -187,7 +208,7 @@ export const ContentHistory = () => {
                         </div>
                         <div className={styles.itemFooter}>
                             <Typography variant="caption" className={styles.metadata}>
-                                {formatDate(entry.date)} by {entry.userKey || '-'}
+                                {formatDate(entry.date)} by {getUserDisplayName(entry)}
                             </Typography>
                         </div>
                     </div>
@@ -222,7 +243,7 @@ export const ContentHistory = () => {
                         totalOfItems={totalCount}
                         currentPage={page + 1}
                         itemsPerPage={pageSize}
-                        itemsPerPageOptions={[10, 25, 50, 100]}
+                        itemsPerPageOptions={[20, 50, 100]}
                         i18n={{
                             itemsPerPage: t('jcontent:label.pagination.rowsPerPage'),
                             of: t('jcontent:label.pagination.of')

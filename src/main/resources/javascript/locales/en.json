@@ -93,7 +93,7 @@
         "replaceWith": "Replace with",
         "edit": "Edit",
         "drop": "Drop your file(s) and folder(s) here",
-        "invalidChars": "Invalid characters:  \/:*?\"<>'|%"
+        "invalidChars": "Invalid characters:  /:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Drag and drop a file to import",
@@ -107,7 +107,7 @@
       "error": {
         "contentUnavailable": "The requested content is unavailable",
         "queryingContent": "Error querying content: {{details}}",
-        "missingFolder" : "Folder not found"
+        "missingFolder": "Folder not found"
       },
       "title": {
         "media": "Media",
@@ -402,13 +402,13 @@
         "title": "New folder",
         "text": "Enter a folder name",
         "exists": "A folder with this name already exists",
-        "invalidChars": "Invalid characters:  \/:*?\"<>'|%"
+        "invalidChars": "Invalid characters:  /:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Rename",
         "text": "Enter a new name",
         "exists": "A file with this name already exists",
-        "invalidChars": "Invalid characters:  \/:*?\"<>'|%"
+        "invalidChars": "Invalid characters:  /:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Download file",
@@ -504,7 +504,7 @@
           "some": "Some of these items are currently referenced by other items. Deleting them will create broken references.",
           "tooMany": "The system could not verify if the items to be deleted are currently referenced by other items (too many items to verify). You can manually verify the usages of all items in the table below."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Cannot be deleted",
             "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
@@ -519,7 +519,7 @@
         "details": "DETAILS",
         "error": "Could not perform the requested operation on selected content. Closing dialog and refreshing data."
       },
-      "links":{
+      "links": {
         "external": {
           "title": "External link",
           "content": "You are leaving Jahia. Do you want to open the external URL in a new tab ?",
@@ -692,7 +692,7 @@
             "clickHere": "click here.",
             "dialogTitle": "Work in progress (WIP)",
             "dialogSubTitle": "Mark your content as work in progress to prevent the publication of your content. To find out more about Work in progress ",
-            "label" : {
+            "label": {
               "mark": "Mark as Work in progress",
               "unmark": "Unmark as Work in progress"
             },
@@ -776,7 +776,7 @@
           "advanced": "Advanced options"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Switch language",
           "addTranslation": {
@@ -851,12 +851,15 @@
           "deleted": "Deleted",
           "moved": "Moved",
           "added": "Added",
-          "changed": "Changed",
+          "changed": "Modified",
           "removed": "Removed",
           "published": "Published",
           "unpublished": "Unpublished",
           "accessed": "Accessed",
-          "viewed": "Viewed"
+          "viewed": "Viewed",
+          "previewed": "Previewed",
+          "workflow_started": "Workflow started",
+          "workflow_finished": "Workflow finished"
         }
       },
       "CMMActions": {
@@ -872,7 +875,7 @@
           "filterLabel": "Search for types of content"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -948,13 +951,13 @@
         "itemsSelected_plural": "{{count}} items selected"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Categories",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Non-selectable items are not listed in this view",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "All users",
             "globalUsers": "Global users",
@@ -1039,22 +1042,20 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Languages",
+        "languages": {
+          "title": "Languages",
           "description": "Content will display in selected languages",
-          "label" : "Content visibility by language",
-          "leftList" : "The content will be visible in:",
-          "rightList" : "The content will not be visible in:"
+          "label": "Content visibility by language",
+          "leftList": "The content will be visible in:",
+          "rightList": "The content will not be visible in:"
         },
-        "conditions" : {
-          "title" : "Date and time",
-          "rules" : "{{rulesNumber}} rules set",
-          "rule" : "1 rule is set",
-          "norules" : "No rules set"
+        "conditions": {
+          "title": "Date and time",
+          "rules": "{{rulesNumber}} rules set",
+          "rule": "1 rule is set",
+          "norules": "No rules set"
         },
-        "channels": {
-
-        }
+        "channels": {}
       }
     },
     "cache": {

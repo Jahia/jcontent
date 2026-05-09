@@ -79,6 +79,7 @@
             org.jahia.modules.graphql.provider.dxm.nodetype;version="3.2",
             org.jahia.modules.graphql.provider.dxm.osgi.annotations;version="3.2",
             org.jahia.modules.graphql.provider.dxm.predicate;version="3.2",
+            org.jahia.modules.graphql.provider.dxm.user;version="3.2",
             org.jahia.osgi,
             org.jahia.registries,
             org.jahia.services,

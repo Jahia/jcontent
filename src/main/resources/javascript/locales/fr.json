@@ -91,7 +91,7 @@
         "replaceWith": "Remplacer par",
         "edit": "Editer",
         "drop": "Déposez vos fichiers et dossiers ici",
-        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Glisser-déposer un fichier à importer",
@@ -104,7 +104,7 @@
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
-        "missingFolder" : "Dossier non trouvé"
+        "missingFolder": "Dossier non trouvé"
       },
       "title": {
         "media": "Média",
@@ -397,13 +397,13 @@
         "title": "Nouveau dossier",
         "text": "Saisissez un nom de dossier",
         "exists": "Un dossier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Renommer",
         "text": "Saisissez un nouveau nom",
         "exists": "Un fichier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Télécharger le fichier",
@@ -499,7 +499,7 @@
           "some": "Certains de ces éléments sont actuellement utilisés par d’autres contenus. Leur suppression engendrera des références cassées.",
           "tooMany": "Le système n'a pas pu vérifier si les éléments à supprimer sont actuellement utilisés par d’autres contenus (trop d'éléments à vérifier). Vous pouvez vérifier les utilisations manuellement dans le tableau ci-dessous."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Impossible de supprimer",
             "content": "L’élément <strong>{{name}}</strong> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
@@ -580,7 +580,7 @@
     },
     "categoryManager": {
       "noSubCategory": "Pas de sous-catégorie",
-      "name":"Gestionnaire de Catégories",
+      "name": "Gestionnaire de Catégories",
       "pageTitle": "Catégories"
     },
     "contentEditor": {
@@ -687,7 +687,7 @@
             "clickHere": "Cliquez ici.",
             "dialogTitle": "Travail en cours (WIP)",
             "dialogSubTitle": "Vous pouvez marquer le contenu comme \"travail en cours\" pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
-            "label" : {
+            "label": {
               "mark": "Marquer comme \"travail en cours\"",
               "unmark": "Ne pas marquer comme \"travail en cours\""
             },
@@ -767,7 +767,7 @@
           "advanced": "Options avancées"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Changer de langue",
           "addTranslation": {
@@ -847,7 +847,10 @@
           "published": "Publié",
           "unpublished": "Dépublié",
           "accessed": "Accédé",
-          "viewed": "Consulté"
+          "viewed": "Consulté",
+          "previewed": "Prévisualisé",
+          "workflow_started": "Workflow démarré",
+          "workflow_finished": "Workflow terminé"
         }
       },
       "CMMActions": {
@@ -863,7 +866,7 @@
           "filterLabel": "Rechercher un type de contenu"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Contenu"
@@ -939,13 +942,13 @@
         "itemsSelected_plural": "{{count}} éléments sélectionnés"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Catégories",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Les éléments non-sélectionnables ne sont pas affichés dans cette vue",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Chercher dans",
             "allUsers": "Tous les utilisateurs",
             "globalUsers": "Utilisateurs globaux",
@@ -1023,18 +1026,18 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Langues",
+        "languages": {
+          "title": "Langues",
           "description": "Le contenu sera visible dans les langues sélectionnées",
-          "label" : "Visibilité du contenu par langue",
-          "leftList" : "Le contenu sera visible en:",
-          "rightList" : "Le contenu ne sera pas visible en:"
+          "label": "Visibilité du contenu par langue",
+          "leftList": "Le contenu sera visible en:",
+          "rightList": "Le contenu ne sera pas visible en:"
         },
-        "conditions" : {
-          "title" : "Jour et heure",
-          "rules" : "{{rulesNumber}} conditions définies",
-          "rule" : "1 condition définie",
-          "norules" : "Pas de condition définie"
+        "conditions": {
+          "title": "Jour et heure",
+          "rules": "{{rulesNumber}} conditions définies",
+          "rule": "1 condition définie",
+          "norules": "Pas de condition définie"
         }
       }
     },

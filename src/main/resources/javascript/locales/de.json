@@ -90,7 +90,7 @@
         "dialogRename": "Umbenennen",
         "replaceWith": "Ersetzen mit",
         "drop": "Drop Datei und Ordner hier ab",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",
@@ -397,13 +397,13 @@
         "title": "Neuer Ordner",
         "text": "Geben Sie einen Ordner-Namen ein",
         "exists": "Ein Ordner mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Umbenennen",
         "text": "Geben Sie einen Namen ein",
         "exists": "Eine Datei mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Datei herunterladen",
@@ -498,7 +498,7 @@
           "some": "Einige dieser Elemente werden aktuell durch andere Elemente referenziert. Die Löschung dieser Elemente erzeugt zerstörte Referenzen.",
           "tooMany": "Das System konnte nicht verifizieren, ob die zu löschenden Elemente aktuell durch andere Elemente referenziert werden (Anzahl zur Verifizierung ist zu groß). Sie können die Verwendung der aufgelisteten Elemente manuell verifizieren."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Löschung nicht möglich",
             "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde.",
@@ -686,7 +686,7 @@
             "clickHere": "klicken Sie hier.",
             "dialogTitle": "In Arbeit (WIP)",
             "dialogSubTitle": "Markieren Sie Ihren Content als Work in Progress wenn Sie die Veröffentlichung des Contents verhindern wollen. Um mehr über das Work in Progress Feature zu erfahren, ",
-            "label" : {
+            "label": {
               "mark": "Als \"In Arbeit\" markieren",
               "unmark": "Nicht als \"In Arbeit\" markieren"
             },
@@ -766,7 +766,7 @@
           "advanced": "Erweiterte Optionen"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Sprache wechseln",
           "addTranslation": {
@@ -846,7 +846,10 @@
           "published": "Veröffentlicht",
           "unpublished": "Unveröffentlicht",
           "accessed": "Zugegriffen",
-          "viewed": "Angesehen"
+          "viewed": "Angesehen",
+          "previewed": "Vorschau",
+          "workflow_started": "Workflow gestartet",
+          "workflow_finished": "Workflow abgeschlossen"
         }
       },
       "CMMActions": {
@@ -862,7 +865,7 @@
           "filterLabel": "Nach Content-Typen suchen"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -938,13 +941,13 @@
         "itemsSelected_plural": "{{count}} elemente ausgewählt"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Kategorien",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Nicht auswählbare Elemente werden in dieser Ansicht nicht gelistet",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "Alle Nutzer",
             "globalUsers": "Globale Benutzer",
@@ -1022,18 +1025,18 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Anzeigesprachen",
+        "languages": {
+          "title": "Anzeigesprachen",
           "description": "Content ist in den gewählten Sprachen sichtbar",
-          "label" : "Content in spezifischer Sprache verstecken",
-          "leftList" : "Der Content wird sichtbar sein in:",
-          "rightList" : "Der Content wird nicht sichtbar sein in:"
+          "label": "Content in spezifischer Sprache verstecken",
+          "leftList": "Der Content wird sichtbar sein in:",
+          "rightList": "Der Content wird nicht sichtbar sein in:"
         },
-        "conditions" : {
-          "title" : "Datum und Uhrzeit",
-          "rules" : "{{rulesNumber}} Bedingungen definiert",
-          "rule" : "Eine Bedingung definiert",
-          "norules" : "Keine Bedingung definiert"
+        "conditions": {
+          "title": "Datum und Uhrzeit",
+          "rules": "{{rulesNumber}} Bedingungen definiert",
+          "rule": "Eine Bedingung definiert",
+          "norules": "Keine Bedingung definiert"
         }
       }
     },

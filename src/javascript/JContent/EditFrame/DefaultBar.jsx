@@ -50,10 +50,6 @@ const getAreaIcon = (node, area) => {
         return toIconComponent(iconUrl);
     }
 
-    if (area.isList) {
-        return toIconComponent(`${contextPath}/modules/assets/icons/jnt_contentList.png`);
-    }
-
     return <Area/>;
 };
 

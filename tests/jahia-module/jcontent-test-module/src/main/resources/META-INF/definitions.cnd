@@ -204,3 +204,52 @@
 
 [cemix:emptyTemplateMixin2] > jmix:templateMixin mixin
  extends = cent:emptyTemplateMixinTest
+
+[cent:childObject1] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - obj1 (string)
+
+[cent:childObject2] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - obj2 (string)
+
+[cent:childObject3] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - obj3 (string)
+
+[cent:childObject4] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - obj4 (string)
+
+ [cent:childObject5] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - obj5 (string)
+
+ [cent:childObject6] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - obj6 (string)
+
+[cent:twoChildObjects] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + childObject1 (cent:childObject1)
+ + childObject2 (cent:childObject2)
+
+ [cent:twoChildObjectsOneMultiple] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - someProperty (string)
+  + childObject1 (cent:childObject1)
+  + childObject2 (cent:childObject2)
+  + * (cent:childObject3)
+
+ [cent:sixChildObjectsSingle] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - someProperty (string)
+  + childObject1 (cent:childObject1)
+  + childObject2 (cent:childObject2)
+  + childObject3 (cent:childObject3)
+  + childObject4 (cent:childObject4)
+  + childObject5 (cent:childObject5)
+  + childObject6 (cent:childObject6)
+
+ [cent:sixChildObjectsMultiple] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - someProperty (string)
+  + * (cent:childObject1)
+  + * (cent:childObject2)
+  + * (cent:childObject3)
+  + * (cent:childObject4)
+  + * (cent:childObject5)
+  + * (cent:childObject6)
+
+

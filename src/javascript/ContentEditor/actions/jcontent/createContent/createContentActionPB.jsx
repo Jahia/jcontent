@@ -81,11 +81,7 @@ export const CreateContentPB = ({
         api.create({uuid: resNode.uuid, lang: language, nodeTypes, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
     };
 
-    return (actions || [{
-        key: 'allTypes',
-        nodeTypeIcon: otherProps.defaultIcon,
-        tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric',
-        tooltipParams: {parent: resNode.name}}]).map(result => (
+    return actions.map(result => (
             <Render
             key={result.key}
             dataSelRole="createContent"
@@ -93,7 +89,6 @@ export const CreateContentPB = ({
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}
             tooltipLabel={result.tooltipLabel}
             tooltipParams={result.tooltipParams}
-            nodeTypes={['jmix:droppableContent']}
             {...otherProps}
             path={path}
             uilang={uilang}

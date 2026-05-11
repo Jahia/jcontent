@@ -50,8 +50,7 @@ export const getElemAttributes = ({element, parent}) => {
 
     let nodeTypes;
     let parentAreaType;
-    if (parent.getAttribute('nodetypes') &&
-        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
+    if (parent.getAttribute('nodetypes') && (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea' || isContainer)) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
         parentAreaType = parent.getAttribute('type');
     }

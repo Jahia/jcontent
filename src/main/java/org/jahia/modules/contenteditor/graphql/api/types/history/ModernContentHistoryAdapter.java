@@ -37,7 +37,7 @@ import java.util.stream.Stream;
  * Modern implementation using Jahia 8.2.4.0+ optimized ContentHistoryService methods.
  * Uses reflection to maintain backward compatibility at compile time.
  *
- * TODO: When upgrading to Jahia 8.2.4.0+:
+ * TODO: When upgrading to Jahia 8.2.2.0+:
  *  1. Delete this class
  *  2. Delete {@link LegacyContentHistoryAdapter}
  *  3. Delete {@link ContentHistoryAdapter}
@@ -94,7 +94,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
                         .collect(Collectors.toList());
 
                 // Apply pagination after filtering
-                if (offset > 0 && limit != -1) {
+                if (offset > 0 || limit != -1) {
                     Stream<HistoryEntry> paginatedEntries = entries.stream();
                     if (offset > 0) {
                         paginatedEntries = paginatedEntries.skip(offset);

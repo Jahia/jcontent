@@ -108,7 +108,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
-    const {nodeName, nodePath} = getElemAttributes({element, parent, isInsertionPoint});
+    const {nodeName, nodePath, nodeTypes} = getElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: false,
         paste: false,
@@ -196,6 +196,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const createAction = useMemo(() => (
         <DisplayAction
             actionKey="createContentPB"
+            nodeTypes={nodeTypes}
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}

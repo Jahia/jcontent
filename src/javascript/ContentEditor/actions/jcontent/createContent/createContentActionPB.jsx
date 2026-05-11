@@ -17,6 +17,7 @@ export const CreateContentPB = ({
     isDisabled,
     onVisibilityChanged,
     nodeData,
+    nodeTypes,
     render: Render,
     loading: Loading,
     labelProps,
@@ -42,8 +43,19 @@ export const CreateContentPB = ({
         }
 
         // Note: acceptedNodeTypes is based on the DOM if we were able to find it, allowedChildNodeTypes is the info from JCR
-        const nodeTypes = resNode.acceptedNodeTypes.length > 0 ? resNode.acceptedNodeTypes : resNode.allowedChildNodeTypes;
-        const actions = transformNodeTypesToActionsPB(nodeTypes, false, resNode?.name, otherProps.defaultIcon);
+        let resolvedNodeTypesForAction = [];
+        // nodeTypes come from placeholder's nodetypes attribute, as each action is created for such placeholder we want to match what that button can create
+        if (resNode.acceptedNodeTypes.size > 0) {
+            if (nodeTypes?.length > 0) {
+                resolvedNodeTypesForAction = nodeTypes
+                    .map(nt => resNode.acceptedNodeTypes.get(nt))
+                    .filter(nt => nt !== undefined);
+            } else {
+                resolvedNodeTypesForAction = [...resNode.acceptedNodeTypes.values()];
+            }
+        }
+        const resolvedNodeTypes = resolvedNodeTypesForAction.length > 0 ? resolvedNodeTypesForAction : resNode.allowedChildNodeTypes;
+        const actions = transformNodeTypesToActionsPB(resolvedNodeTypes, false, resNode?.name, otherProps.defaultIcon);
 
         return {
             loading: false,

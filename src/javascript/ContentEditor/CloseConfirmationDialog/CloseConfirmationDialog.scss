@@ -4,3 +4,7 @@ div.dialogContent {
 
     border-bottom: 1px solid var(--color-gray_light40);
 }
+
+.dialogRoot.dialogRoot {
+    z-index: var(--ce-dialog-z-index);
+}

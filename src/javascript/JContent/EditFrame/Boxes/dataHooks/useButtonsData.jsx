@@ -7,8 +7,10 @@ export const useButtonsData = ({createButtons, language, uilang}) => {
     const nodeTypes = new Set();
 
     createButtons.forEach(b => {
-        paths.push(b.node.path);
-        b.attributes?.nodeTypes?.forEach(nt => nodeTypes.add(nt));
+        if (b?.node) {
+            paths.push(b.node.path);
+            b.attributes?.nodeTypes?.forEach(nt => nodeTypes.add(nt));
+        }
     });
 
     const {loading, data} = useQuery(getNodeTypeInfo, {variables: {nodeTypes: Array.from(nodeTypes), uiLocale: uilang}, skip: nodeTypes.length === 0});
@@ -54,7 +56,7 @@ export const useButtonsData = ({createButtons, language, uilang}) => {
     const nodeTypeInfoMap = new Map(data.forms.nodeTypeInfo.map(nt => [nt.name, nt]));
 
     createButtons.forEach(b => {
-        const node = output.nodes[b.node.path];
+        const node = output.nodes[b?.node?.path];
         if (node) {
             // Map list of node type names to the full info objects
             node.acceptedNodeTypes = b.attributes?.nodeTypes?.map(nt => nodeTypeInfoMap.get(nt)).filter(nt => nt !== undefined) || [];

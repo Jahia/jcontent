@@ -1,5 +1,5 @@
 import {JContent} from '../../page-object/jcontent';
-import {Field, SmallTextField} from '../../page-object/fields';
+import {ChoiceListField, Field, SmallTextField} from '../../page-object/fields';
 import {
     addNode,
     Button,
@@ -300,5 +300,57 @@ describe('Content editor form', () => {
             .find('input[type="checkbox"]')
             .should('have.attr', 'aria-checked', 'false');
         contentEditor.cancel();
+    });
+
+    it('check default values', () => {
+        const contentEditor = jcontent.createContent('qant:AllFieldsDefault');
+        contentEditor.create();
+        jcontent.editComponentByRowName('all-fields-default-values');
+        contentEditor.switchToAdvancedMode();
+
+        cy.get('input[name="qant:AllFieldsDefault_sharedSmallText"]').should('have.value', 'value 1');
+        cy.get('textarea[name="qant:AllFieldsDefault_sharedTextarea"]').should('have.value', 'value 1');
+        contentEditor.getField(ChoiceListField, 'qant:AllFieldsDefault_sharedChoicelist').assertSelected('choice1');
+        cy.get('input[name="qant:AllFieldsDefault_sharedLong"]').should('have.value', '1');
+        cy.get('input[name="qant:AllFieldsDefault_sharedDouble"]').should('have.value', '1.1');
+        cy.get('[data-sel-content-editor-field="qant:AllFieldsDefault_sharedBoolean"]')
+            .find('input[type="checkbox"]')
+            .should('have.attr', 'aria-checked', 'true');
+        cy.frameLoaded('iframe.cke_wysiwyg_frame');
+        cy.iframe('iframe.cke_wysiwyg_frame').should('contain', 'value 1');
+        cy.get('input[id="qant:AllFieldsDefault_sharedDate"]').should('have.value', '06/04/2019 00:00');
+        cy.get('input[name="qant:AllFieldsDefault_sharedDecimal"]').should('have.value', '1234567890.123457');
+        cy.get('input[name="jmix:defaultPropMixin_mixinPropWithDefaultValue"]').should('have.value', 'value 1');
+    });
+
+    it('check default values - multiple', () => {
+        const contentEditor = jcontent.createContent('qant:allFieldsMultipleDefault');
+        contentEditor.create();
+        jcontent.editComponentByRowName('all-multiple-fields-default-values');
+        contentEditor.switchToAdvancedMode();
+
+        contentEditor.getField(ChoiceListField, 'qant:allFieldsMultipleDefault_sharedChoicelist').assertSelected('choice1');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedSmallText[0]"]').should('have.value', 'test1=1');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedSmallText[1]"]').should('have.value', 'test2=2');
+        cy.get('textarea[name="qant:allFieldsMultipleDefault_sharedTextarea[0]"]').should('have.value', 'value1');
+        cy.get('textarea[name="qant:allFieldsMultipleDefault_sharedTextarea[1]"]').should('have.value', 'value2');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedLong[0]"]').should('have.value', '1');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedLong[1]"]').should('have.value', '2');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedDouble[0]"]').should('have.value', '1.1');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedDouble[1]"]').should('have.value', '2.2');
+        cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBoolean[0]"]')
+            .find('input[type="checkbox"]')
+            .should('have.attr', 'aria-checked', 'true');
+        cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBoolean[1]"]')
+            .find('input[type="checkbox"]')
+            .should('have.attr', 'aria-checked', 'false');
+        cy.iframe('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBigtext[0]"] iframe.cke_wysiwyg_frame')
+            .should('contain', 'value 1');
+        cy.iframe('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBigtext[1]"] iframe.cke_wysiwyg_frame')
+            .should('contain', 'value 2');
+        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[0]"]').should('have.value', '06/04/2019 00:00');
+        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[1]"]').should('have.value', '06/04/2029 00:00');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedDecimal[0]"]').should('have.value', '1234567890.123457');
+        cy.get('input[name="qant:allFieldsMultipleDefault_sharedDecimal[1]"]').should('have.value', '1134567890.113457');
     });
 });

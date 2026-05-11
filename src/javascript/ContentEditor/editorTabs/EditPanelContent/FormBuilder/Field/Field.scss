@@ -39,7 +39,7 @@
 .inputDescription.inputDescription {
     margin-bottom: var(--spacing-small);
 
-    color: var(--color-dark60);
+    opacity: 0.8;
 
     // Add html formatting back for field descriptions which was disabled from moonstone css reset
     i {

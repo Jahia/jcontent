@@ -2,6 +2,10 @@
     height: calc(100% - 96px);
 }
 
+.dialogRoot.dialogRoot {
+    z-index: var(--ce-dialog-z-index);
+}
+
 .paperWithSelector.paperWithSelector {
     height: calc(100% - 144px);
     margin-top: 96px;

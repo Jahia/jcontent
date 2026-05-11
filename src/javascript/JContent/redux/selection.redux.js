@@ -40,7 +40,7 @@ export const selectionRedux = registry => {
         [cmSetSort]: state => state.length === 0 ? state : ([]),
         [cmSetPage]: state => state.length === 0 ? state : ([]),
         [cmSetPageSize]: state => state.length === 0 ? state : ([]),
-        '@@router/LOCATION_CHANGE': (state, action) => window.location.pathname === contextJsParameters.contextPath + '/jahia' + action.payload.location.pathname || state.length === 0 ? state : ([])
+        '@@router/LOCATION_CHANGE': (state, action) => window.location.pathname === window.contextJsParameters.contextPath + '/jahia' + action.payload.location.pathname || state.length === 0 ? state : ([])
     }, []);
 
     registry.add('redux-reducer', 'selection', {targets: ['jcontent'], reducer: selectionReducer});

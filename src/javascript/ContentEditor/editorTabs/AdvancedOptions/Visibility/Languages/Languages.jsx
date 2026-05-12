@@ -55,8 +55,7 @@ export const Languages = ({invalidLanguages}) => {
         uiLanguage: uiLanguage
     });
     const [activatedSection, setActivatedSection] = useState(invalidLanguages !== undefined && invalidLanguages.length > 0);
-    const section = sections.filter(s => s.name === 'visibility');
-    const fieldSets = filterRegularFieldSets(section[0].fieldSets);
+    const section = sections.find(s => s.name === 'visibility');
     const handleChange = () => {
         setActivatedSection(!activatedSection);
     };
@@ -64,6 +63,12 @@ export const Languages = ({invalidLanguages}) => {
     if (error || loading) {
         return null;
     }
+
+    if (!section) {
+        return null;
+    }
+
+    const fieldSets = filterRegularFieldSets(section.fieldSets);
 
     if (fieldSets.length === 0) {
         return null;

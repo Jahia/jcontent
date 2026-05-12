@@ -25,8 +25,12 @@ const filterRegularFieldSets = fieldSets => {
 export const Channels = () => {
     const {sections} = useContentEditorSectionContext();
 
-    const section = sections.filter(s => s.name === 'visibility');
-    const fieldSets = filterRegularFieldSets(section[0].fieldSets);
+    const section = sections.find(s => s.name === 'visibility');
+    if (!section) {
+        return null;
+    }
+
+    const fieldSets = filterRegularFieldSets(section.fieldSets);
 
     if (fieldSets.length === 0) {
         return null;

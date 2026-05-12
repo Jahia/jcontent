@@ -83,7 +83,7 @@
       "name": "visibility",
       "labelKey": "label.engineTab.visibility",
       "rank": 8.0,
-      "requiredPermission": "viewSeoTab"
+      "requiredPermission": "viewVisibilityTab"
     },
     {
       "name": "permissions",

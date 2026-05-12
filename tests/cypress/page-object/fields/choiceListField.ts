@@ -110,7 +110,7 @@ export class ChoiceListField extends Field {
         dropdown.then($el => {
             // Only click if menu is not visible
             if ($el.find('.moonstone-menu').length === 0) {
-                dropdown.click();
+                dropdown.click('right');
             }
         });
         // Wait for the menu to be visible
@@ -124,7 +124,7 @@ export class ChoiceListField extends Field {
         dropdown.then($el => {
             // Only click if menu is visible
             if ($el.find('.moonstone-menu').length > 0) {
-                dropdown.click();
+                dropdown.click('right');
             }
         });
         // Wait for the menu to be hidden

@@ -1,11 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import styles from './Box.scss';
+import {boxStyles as styles, editFrameStyles as editStyles} from 'editframe-styles';
 import {useBoxStatus} from './useBoxStatus';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
-import editStyles from '../EditFrame.scss';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
 import {getBoundingBox} from '~/JContent/EditFrame/EditFrame.utils';
 import {Breadcrumbs} from '../Breadcrumbs';
@@ -25,13 +24,13 @@ const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
 
     const Bar = (pageBuilderBoxConfig && pageBuilderBoxConfig.Bar) || DefaultBar;
 
-    const defaultBorderColor = isSomethingSelected ? 'var(--color-accent_dark)' : 'var(--color-accent_light)';
+    const defaultBorderColor = isSomethingSelected ? 'var(--moon-color-accent_dark)' : 'var(--moon-color-accent_light)';
     const config = {
         Bar,
         borderColor: pageBuilderBoxConfig?.borderColor || defaultBorderColor,
-        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors?.base || 'var(--color-gray_light_plain40)',
-        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors?.hover || 'var(--color-gray_light)',
-        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors?.selected || 'var(--color-accent_plain20)',
+        backgroundColorBase: pageBuilderBoxConfig?.backgroundColors?.base || 'var(--moon-color-gray_light_plain40)',
+        backgroundColorHovered: pageBuilderBoxConfig?.backgroundColors?.hover || 'var(--moon-color-gray_light)',
+        backgroundColorSelected: pageBuilderBoxConfig?.backgroundColors?.selected || 'var(--moon-color-accent_plain20)',
         isActionsHidden: pageBuilderBoxConfig?.isActionsHidden,
         isStatusHidden: pageBuilderBoxConfig?.isStatusHidden,
         isBarAlwaysDisplayed: pageBuilderBoxConfig?.isBarAlwaysDisplayed,
@@ -271,8 +270,7 @@ export const Box = React.memo(({
     const headerStyles = clsx(
         styles.boxHeader,
         isSticky && styles.sticky,
-        'flexRow_nowrap',
-        'alignCenter',
+        styles.flexrow,
         dragging && styles.dragging,
         editStyles.enablePointerEvents,
         isClicked && styles.isClicked,
@@ -288,9 +286,9 @@ export const Box = React.memo(({
                 data-highlighted={isHeaderHighlighted}
                 data-jahia-id={element.getAttribute('id')}
                 style={{
-                    '--backgroundColorBase': backgroundColorBase,
-                    '--backgroundColorHovered': backgroundColorHovered,
-                    '--backgroundColorSelected': backgroundColorSelected
+                    '--jcontent-backgroundColorBase': backgroundColorBase,
+                    '--jcontent-backgroundColorHovered': backgroundColorHovered,
+                    '--jcontent-backgroundColorSelected': backgroundColorSelected
                 }}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
@@ -337,7 +335,7 @@ export const Box = React.memo(({
                 displayStatuses.has('notVisible') && styles.boxNotVisible,
                 (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
                  style={{
-                     '--borderColor': borderColor
+                     '--jcontent-borderColor': borderColor
                  }}
             >
                 {isHeaderDisplayed && Header}
@@ -354,7 +352,7 @@ export const Box = React.memo(({
                             data-jahia-id={element.getAttribute('id')}
                             jahiatype="footer" // eslint-disable-line react/no-unknown-property
                             style={{
-                                '--backgroundColorSelected': backgroundColorSelected
+                                '--jcontent-backgroundColorSelected': backgroundColorSelected
                             }}
                             onClick={onClick}
                     >

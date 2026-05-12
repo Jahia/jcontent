@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './Box/Box.scss';
+import {boxStyles as styles} from 'editframe-styles';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DefaultBar} from '~/JContent/EditFrame/DefaultBar';
@@ -13,7 +13,7 @@ export const DropArea = ({dropTarget, isDropAllowed}) => {
         <div className={clsx(styles.root, styles.dropArea)}
              style={dropTarget.position}
         >
-            <div className={clsx(styles.dropAreaHeader, 'flexRow_nowrap', 'alignCenter')}>
+            <div className={clsx(styles.dropAreaHeader, styles.flexrow)}>
                 <DefaultBar isActionsHidden isStatusHidden node={dropTarget.node} dragProps={{isDropAllowed: true}}/>
             </div>
         </div>

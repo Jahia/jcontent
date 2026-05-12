@@ -18,6 +18,17 @@
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 sixChildObjectsMultiple
+<c:set value="${jcr:getChildrenOfType(currentNode, 'cent:childObject1')}" var="childrenOne"/>
+
+<c:if test="${not empty childrenOne}">
+    <div>
+        <c:forEach items="${childrenOne}" var="ch1" varStatus="status">
+            <div>
+                <template:module path="${ch1.path}" editable="true" />
+            </div>
+        </c:forEach>
+    </div>
+</c:if>
 
 <c:if test="${renderContext.editMode}">
 <template:module path="*"/>

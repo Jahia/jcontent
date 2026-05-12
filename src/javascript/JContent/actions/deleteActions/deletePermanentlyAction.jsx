@@ -18,7 +18,9 @@ const checkAction = node => {
         node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
         (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
     const isAutoPublish = node['jmix:autoPublish'];
-    return Boolean(isCategory || isMarkForDeletionAllowed || isAutoPublish);
+    // jmix:nolive nodes can never be published to live, so permanent deletion is always the right action
+    const isNoLive = node.aggregatedPublicationInfo.publicationStatus === 'NO_LIVE';
+    return Boolean(isCategory || isMarkForDeletionAllowed || isAutoPublish || isNoLive);
 };
 
 export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {

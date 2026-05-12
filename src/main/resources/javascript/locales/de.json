@@ -26,6 +26,7 @@
           "publishedNoLang": "Veröffentlichung abgeschlossen"
         },
         "notPublished": "Dieser Content wurde nie veröffentlicht",
+        "noLive": "Dieser Inhalt wird nicht in der Live-Umgebung veröffentlicht",
         "unPublished": "Veröffentlichung für das Content wurde rückgängig gemacht",
         "modified": "Geändert von {{userName}} am {{timestamp}}",
         "published": "Veröffentlicht von {{userName}} am {{timestamp}}",

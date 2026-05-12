@@ -28,6 +28,7 @@
           "unpublishedNoLang": "Unpublication completed"
         },
         "notPublished": "This content has never been published",
+        "noLive": "This content is not published to live",
         "unPublished": "This content has been unpublished",
         "modified": "Modified by {{userName}} on {{timestamp}}",
         "published": "Published by {{userName}} on {{timestamp}}",

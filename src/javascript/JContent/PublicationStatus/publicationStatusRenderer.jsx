@@ -48,6 +48,24 @@ class PublicationStatusNotPublished {
     }
 }
 
+class PublicationStatusNoLive {
+    geti18nDetailsMessage(node, t) {
+        return t('jcontent:label.contentManager.publicationStatus.noLive');
+    }
+
+    getContentClass(classes) {
+        return classes.notPublished;
+    }
+
+    getBodyClass(classes) {
+        return classes.notPublishedBody;
+    }
+
+    getIcon(props) {
+        return <NoCloud {...props}/>;
+    }
+}
+
 class PublicationStatusPublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
         const userName = node?.lastPublishedBy?.value || '';
@@ -222,6 +240,7 @@ class PublicationStatusUnknown {
 export const publicationStatusByName = {
     UNPUBLISHED: new PublicationStatusUnpublished(),
     NOT_PUBLISHED: new PublicationStatusNotPublished(),
+    NO_LIVE: new PublicationStatusNoLive(),
     PUBLISHED: new PublicationStatusPublished(),
     MODIFIED: new PublicationStatusModified(),
     MARKED_FOR_DELETION: new PublicationStatusMarkedForDeletion(),

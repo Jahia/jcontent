@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
-import styles from './Box.scss';
+import {boxStyles as styles} from 'editframe-styles';
 import {useContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses';
 import {useDispatch, useSelector} from 'react-redux';

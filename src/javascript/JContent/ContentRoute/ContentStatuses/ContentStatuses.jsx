@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {isMarkedForDeletion, isWorkInProgress} from '~/JContent/JContent.utils';
 import {getTooltip} from './ContentStatuses.utils';
-import styles from './ContentStatuses.scss';
 import Status from './Status';
-import clsx from 'clsx';
 import {setPublicationStatus} from '~/utils/contentStatus';
 
 /**
@@ -149,7 +147,19 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
     }
 
     return (
-        <div className={className ? clsx(className, styles.contentStatuses) : styles.contentStatuses}>
+        <div
+            className={className}
+            style={{
+                // Using inline styles as this component is also injected in the EditFrame
+                display: 'inline-flex',
+                flexGrow: 1,
+                flexShrink: 0,
+                flexFlow: 'row wrap',
+                gap: 'var(--moon-spacing-nano)',
+                justifyContent: 'flex-end',
+                alignItems: 'center'
+            }}
+        >
             {statusesToRender}
         </div>
     );

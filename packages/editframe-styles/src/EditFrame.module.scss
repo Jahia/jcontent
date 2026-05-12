@@ -1,0 +1,60 @@
+/**
+ * Isolate JContent UI elements from client page styles. This reset only
+ * needs to be applied to the root element (#jahia-portal-root).
+ *
+ * Moonstone has its own reset that must be applied after this one in order
+ * to work properly.
+ */
+.root {
+    all: revert-layer;
+
+    box-sizing: border-box;
+
+    font: normal 16px var(--moon-font-family);
+    color: var(--moon-color-dark);
+
+    ::before,
+    ::after,
+    *,
+    *::before,
+    *::after {
+        all: revert-layer;
+
+        box-sizing: inherit;
+    }
+}
+
+.disablePointerEvents.disablePointerEvents.disablePointerEvents {
+    pointer-events: none;
+}
+
+.disablePointerEvents.disablePointerEvents.disablePointerEvents * {
+    pointer-events: none;
+}
+
+.disablePointerEvents.disablePointerEvents.disablePointerEvents *.enablePointerEvents {
+    pointer-events: all;
+}
+
+.dragging {
+    opacity: 0.2;
+}
+
+.marginTop.marginTop.marginTop.marginTop {
+    margin-top: 46px;
+}
+
+.parentPadding {
+    padding-top: 36px;
+}
+
+.smallerBox {
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+// Cannot be made a scoped class https://github.com/Jahia/jahia/blob/9e4df123798aa6895bf2e0fd776a41743c848871/taglib/src/main/java/org/jahia/taglibs/template/include/ModuleTag.java#L464
+// Copied from https://github.com/Jahia/jahia/blob/9e4df123798aa6895bf2e0fd776a41743c848871/gwt/src/main/resources/org/jahia/ajax/gwt/public/css/edit.css#L694
+:global(.jahia-template-gxt) {
+    margin-bottom: 10px;
+}

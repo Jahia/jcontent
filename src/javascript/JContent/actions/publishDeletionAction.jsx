@@ -10,6 +10,7 @@ const checkActionOnNodes = res => {
 
 const checkAction = node => node.operationsSupport.publication &&
     isMarkedForDeletion(node) &&
+    node.aggregatedPublicationInfo.publicationStatus !== 'NO_LIVE' &&
     (node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' ||
         (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
             (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));

@@ -72,14 +72,14 @@ function getButtonLabelParams(paths, language, res, t) {
 
 const constraintsByType = {
     publish: {
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder', 'jmix:autoPublish']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder', 'jmix:autoPublish', 'jmix:nolive']
     },
     publishAll: {
         showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page', 'jnt:navMenuText'],
-        hideOnNodeTypes: ['jmix:autoPublish']
+        hideOnNodeTypes: ['jmix:autoPublish', 'jmix:nolive']
     },
     unpublish: {
-        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:autoPublish']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:autoPublish', 'jmix:nolive']
     }
 };
 

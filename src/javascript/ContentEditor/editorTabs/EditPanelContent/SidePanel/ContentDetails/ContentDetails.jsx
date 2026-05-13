@@ -12,7 +12,7 @@ const DetailRow = ({label, value, children}) => {
 
     const handleCopy = useCallback(() => {
         if (value) {
-            navigator.clipboard.writeText(value).then(() => {
+            navigator.clipboard?.writeText(value).then(() => {
                 notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
             });
         }
@@ -54,25 +54,13 @@ export const ContentDetails = () => {
         technicalInfo,
         details
     } = useContentEditorContext();
+    // Check if dev mode is required and if we're in dev mode
+
+    const isDevMode = window.contextJsParameters?.config?.operatingMode === 'development'
+
 
     return (
         <div className={styles.container}>
-            {technicalInfo && technicalInfo.length > 0 && (
-                <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
-                    <Typography variant="subheading" className={styles.sectionTitle}>
-                        {t('jcontent:label.contentEditor.sidePanel.technical')}
-                    </Typography>
-
-                    {technicalInfo.map(info => (
-                        <DetailRow
-                            key={info.label + info.value}
-                            label={info.label}
-                            value={info.value}
-                        />
-                    ))}
-                </div>
-            )}
-
             {details && details.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="additional">
                     <Typography variant="subheading" className={styles.sectionTitle}>
@@ -84,6 +72,22 @@ export const ContentDetails = () => {
                             key={detail.label + detail.value}
                             label={detail.label}
                             value={detail.value}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {isDevMode && technicalInfo && technicalInfo.length > 0 && (
+                <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
+                    <Typography variant="subheading" className={styles.sectionTitle}>
+                        {t('jcontent:label.contentEditor.sidePanel.technical')}
+                    </Typography>
+
+                    {technicalInfo.map(info => (
+                        <DetailRow
+                            key={info.label + info.value}
+                            label={info.label}
+                            value={info.value}
                         />
                     ))}
                 </div>

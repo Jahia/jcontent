@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useNodeChecks} from '@jahia/data-helper';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
-export const SidePanelTab = ({setActiveTab, isDisplayable, value, isDevModeOnly, render: Render, loading: Loading, ...otherProps}) => {
+export const SidePanelTab = ({setActiveTab, isDisplayable, value, render: Render, loading: Loading, ...otherProps}) => {
     const {path} = useContentEditorContext();
     const ceCtx = useContentEditorContext();
 
@@ -11,13 +11,6 @@ export const SidePanelTab = ({setActiveTab, isDisplayable, value, isDevModeOnly,
         {path: path},
         {...otherProps}
     );
-
-    // Check if dev mode is required and if we're in dev mode
-    const isDevMode = window.contextJsParameters?.config?.dxVersion?.includes('SNAPSHOT') || false;
-
-    if (isDevModeOnly && !isDevMode) {
-        return null;
-    }
 
     if (res.loading) {
         /* eslint-disable react/jsx-no-useless-fragment */
@@ -43,7 +36,6 @@ SidePanelTab.propTypes = {
     value: PropTypes.string.isRequired,
     setActiveTab: PropTypes.func.isRequired,
     isDisplayable: PropTypes.func.isRequired,
-    isDevModeOnly: PropTypes.bool,
     loading: PropTypes.func
 };
 

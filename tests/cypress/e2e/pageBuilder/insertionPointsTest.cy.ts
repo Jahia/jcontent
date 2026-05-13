@@ -24,6 +24,49 @@ const clickButtonByRole = (pageBuilder, role: string) => {
     pageBuilder.iframe().get().find(`button[data-sel-role="${role}"]`).should('be.visible').click();
 };
 
+/**
+ *  [cent:twoChildObjectsOneMultiple] > jnt:content, jmix:basicContent, jmix:editorialContent
+ *   - someProperty (string)
+ *   + childObject1 (cent:childObject1)
+ *   + childObject2 (cent:childObject2)
+ *   + * (cent:childObject3)
+ *
+ *  [cent:sixChildObjectsSingle] > jnt:content, jmix:basicContent, jmix:editorialContent
+ *   - someProperty (string)
+ *   + childObject1 (cent:childObject1)
+ *   + childObject2 (cent:childObject2)
+ *   + childObject3 (cent:childObject3)
+ *   + childObject4 (cent:childObject4)
+ *   + childObject5 (cent:childObject5)
+ *   + childObject6 (cent:childObject6)
+ *
+ *  [cent:sixChildObjectsMultiple] > jnt:content, jmix:basicContent, jmix:editorialContent
+ *   - someProperty (string)
+ *   + * (cent:childObject1)
+ *   + * (cent:childObject2)
+ *   + * (cent:childObject3)
+ *   + * (cent:childObject4)
+ *   + * (cent:childObject5)
+ *   + * (cent:childObject6)
+ *
+ *   Note on functionality:
+ *
+ *   Given the definitions above and a child limit of > 6 it is expected that:
+ *
+ *   [cent:twoChildObjectsOneMultiple] will show 3 buttons: childObject1, childObject2, childObject3
+ *   where only childObject3 can be used multiple times the other two disapper once used.
+ *
+ *   [cent:sixChildObjectsSingle] will show 6 buttons respectivaly named and all single use.
+ *
+ *   [cent:sixChildObjectsMultiple] will show 6 multiple use buttons.
+ *
+ *   When the module which contains the definition is clicked and a child element exist (created using one of the buttons) then
+ *   additional buttons (all + * types) will be added on top of that module IN ADDITION to all currently available buttons.
+ *
+ *   When the limit is < 6 then all single use buttons are expected to be shown and all buttons that fall into multiple category will be
+ *   replaced by one "New content" button which will show content type selector LIMITED to available types, in this case six types.
+ *
+ */
 describe('Page builder - insertion points', () => {
     const siteKey = 'insertionPointsSite';
     const homePath = `/sites/${siteKey}/home`;

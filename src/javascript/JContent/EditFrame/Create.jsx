@@ -170,7 +170,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const insertionStyle = {};
     if (isInsertionPoint && !isEmpty) {
         insertionStyle.height = 0;
-        insertionStyle.zIndex = 1000000;
+        insertionStyle.zIndex = 25001;
 
         if (isVertical) {
             const btnWidth = 42;

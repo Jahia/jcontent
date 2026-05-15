@@ -1,4 +1,4 @@
-import {ContentEditor, JContent} from '../../page-object';
+import {JContent} from '../../page-object';
 import {
     BaseComponent,
     Button,
@@ -68,7 +68,6 @@ describe('Visibility Screen Tests', () => {
     it('Display visibility screen in non i18n site with only Date Time section and no rules', () => {
         jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-        const contentEditor = new ContentEditor();
 
         // Open the visibility dialog
         getComponentByRole(Button, 'editVisibilityRules').click();

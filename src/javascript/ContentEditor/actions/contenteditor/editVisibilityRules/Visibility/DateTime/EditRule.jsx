@@ -9,9 +9,9 @@ import {NewRule} from './NewRule';
 import {SaveEditedRuleButton} from './SaveEditedRuleButton';
 import {jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
-export const EditRule = ({rule, onSave, onCancel}) => {
+export const EditRule = ({rule, onCancel}) => {
     const {t} = useTranslation('jcontent');
     const formikContext = useFormikContext();
     console.debug('Editing rule', rule);
@@ -27,6 +27,7 @@ export const EditRule = ({rule, onSave, onCancel}) => {
             if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
                 acc[key] = rule[key];
             }
+
             return acc;
         }, {});
     } else {
@@ -39,16 +40,18 @@ export const EditRule = ({rule, onSave, onCancel}) => {
             if (updatedRule) {
                 acc[prop.name] = updatedRule[prop.name] === undefined ? acc[prop.name] : updatedRule[prop.name];
             }
+
             return acc;
         }, {});
     }
 
-    const handleSubmit = useCallback((values, actions) => {
+    const handleSubmit = useCallback(values => {
         console.debug('Submitting form with values', values, 'and initialValues', initialValues, ' for rule', rule);
         const updatedRule = Object.keys(values).reduce((acc, key) => {
             if (key !== Constants.wip.fieldName && key !== 'jmix:i18n_j:invalidLanguages' && key !== jmixConditionalVisibility && !key.startsWith('RULES::')) {
                 acc[key] = values[key];
             }
+
             return acc;
         }, {});
 
@@ -56,7 +59,7 @@ export const EditRule = ({rule, onSave, onCancel}) => {
         updatedRule.type = isNewRule ? rule.type : rule.primaryNodeType.name;
         updatedRule.uuid = rule.uuid;
         updatedRule.timestamp = dayjs().toISOString();
-        updatedRule.username = globalThis.contextJsParameters.user.fullname;
+        updatedRule.username = window.contextJsParameters.user.fullname;
 
         if (isNewRule) {
             // For new rules, update RULES::new instead of RULES::updated
@@ -65,6 +68,7 @@ export const EditRule = ({rule, onSave, onCancel}) => {
             if (existingRuleIndex !== -1) {
                 newRules[existingRuleIndex] = updatedRule;
             }
+
             formikContext.setFieldValue('RULES::new', newRules).then(() => {
                 onCancel();
             });
@@ -77,11 +81,12 @@ export const EditRule = ({rule, onSave, onCancel}) => {
             } else {
                 updatedRulesArray[existingRuleIndex] = updatedRule;
             }
+
             formikContext.setFieldValue('RULES::updated', updatedRulesArray).then(() => {
                 onCancel();
             });
         }
-    });
+    }, [formikContext, initialValues, isNewRule, onCancel, rule]);
 
     return (
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -105,7 +110,6 @@ export const EditRule = ({rule, onSave, onCancel}) => {
 
 EditRule.propTypes = {
     rule: PropTypes.any,
-    onCancel: PropTypes.any,
-    onSave: PropTypes.any
+    onCancel: PropTypes.any
 };
 

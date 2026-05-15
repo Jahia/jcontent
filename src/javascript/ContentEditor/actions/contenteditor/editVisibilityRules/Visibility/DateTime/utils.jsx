@@ -1,17 +1,17 @@
 import React from 'react';
 import {CloudCheck, Delete, Edit, NoCloud} from '@jahia/moonstone';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
 
 export const generateUUID = () => {
-    if (globalThis.crypto.randomUUID) {
-        return globalThis.crypto.randomUUID();
+    if (window.crypto.randomUUID) {
+        return window.crypto.randomUUID();
     }
 
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, c => {
-        const r = globalThis.crypto.getRandomValues(new Uint8Array(1))[0] & 0xf;
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        const r = window.crypto.getRandomValues(new Uint8Array(1))[0] & 0xf;
+        return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16);
     });
 };
 
@@ -33,7 +33,7 @@ export const filterRegularFieldSets = fieldSets => {
     return fieldSets.filter(fs => showFieldSet(fs));
 };
 
-export const getStatus = (status) => {
+export const getStatus = status => {
     if (status === 'published') {
         return {
             color: 'success',
@@ -81,13 +81,13 @@ export const getStatus = (status) => {
 };
 
 export const getConditionLabel = (name, properties, t) => {
-    const getDateLabel = (startDate) => {
+    const getDateLabel = startDate => {
         return (startDate === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endDateCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startDateCondition';
-    }
+    };
 
-    const getTimeLabel = (startHour) => {
+    const getTimeLabel = startHour => {
         return (startHour === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endTimeCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startTimeCondition';
-    }
+    };
 
     switch (name) {
         case 'jnt:dayOfWeekCondition':
@@ -100,6 +100,7 @@ export const getConditionLabel = (name, properties, t) => {
                 endDate: endDate === undefined ? '' : dayjs(endDate).format('LLL')
             });
         }
+
         case 'jnt:timeOfDayCondition': {
             const startHour = properties.find(p => p.name === 'startHour')?.value;
             const startMinute = properties.find(p => p.name === 'startMinute')?.value;
@@ -110,19 +111,20 @@ export const getConditionLabel = (name, properties, t) => {
                 endTime: endHour === undefined ? '' : dayjs(`${endHour}:${endMinute}`, 'HH:mm').format('LT')
             });
         }
+
         default:
             return t('jcontent:label.contentEditor.visibilityTab.conditions.' + name.substring(name.lastIndexOf(':') + 1));
     }
 };
 
 export const getStatusText = (rowData, t) => {
-    const {username, timestamp, status} = rowData
+    const {username, timestamp, status} = rowData;
     switch (status) {
         case 'published':
             return t('jcontent:label.contentManager.publicationStatus.published', {userName: username, timestamp});
         case 'modified':
             return t('jcontent:label.contentManager.publicationStatus.modified', {userName: username, timestamp});
-        case 'new':
+        default:
             return t('jcontent:label.contentManager.publicationStatus.new', {userName: username, timestamp});
     }
-}
+};

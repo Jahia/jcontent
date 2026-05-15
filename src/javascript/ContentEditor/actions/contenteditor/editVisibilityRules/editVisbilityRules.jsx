@@ -11,7 +11,6 @@ import {
     EditVisibilityRulesDialog
 } from './Visibility/EditVisibilityRulesDialog';
 
-
 export const EditVisibilityRulesActionComponent = ({render: Render, ...otherProps}) => {
     const {render, destroy} = useContext(ComponentRendererContext);
     const contentEditorConfigContext = useContentEditorConfigContext();

@@ -34,11 +34,12 @@ export const NewRule = ({type, node}) => {
     if (loading) {
         return <Typography>{t('jcontent:label.contentEditor.visibilityTab.conditions.loading')}</Typography>;
     }
+
     const contentSection = data.forms.createForm?.sections.find(s => s.name === 'content');
     return (
         <div className={styles.row}>
             {contentSection.fieldSets[0].fields.map(field =>
-                <FieldContainer key={field.name} field={field} inputContext={{displayActions: false}} />)}
+                <FieldContainer key={field.name} field={field} inputContext={{displayActions: false}}/>)}
         </div>
     );
 };

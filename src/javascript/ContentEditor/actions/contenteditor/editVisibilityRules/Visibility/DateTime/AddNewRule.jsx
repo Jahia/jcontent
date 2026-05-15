@@ -10,7 +10,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
 import {generateUUID, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 export const AddNewRule = ({node, onCancel}) => {
     const {uilang} = useContentEditorConfigContext();
@@ -19,7 +19,7 @@ export const AddNewRule = ({node, onCancel}) => {
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     const showOnNodeTypes = ['jmix:conditionalVisibility'];
     const {loadingTypes, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
-        nodeTypes: "jnt:condition",
+        nodeTypes: 'jnt:condition',
         childNodeName: name,
         includeSubTypes: true,
         path: node.path,
@@ -45,6 +45,7 @@ export const AddNewRule = ({node, onCancel}) => {
     if (loadingTypes) {
         return <Typography>{t('jcontent:label.contentEditor.visibilityTab.conditions.loading')}</Typography>;
     }
+
     console.debug('Node types tree for node', node, 'is', nodeTypesTree);
 
     return (
@@ -75,7 +76,9 @@ export const AddNewRule = ({node, onCancel}) => {
                                     setSelectedType(null);
                                     onCancel();
                                 }}/>
-                            <Button size="big" label="Add" onClick={() => {
+                            <Button size="big"
+                                    label="Add"
+                                    onClick={() => {
                                 // All the new rules value have been saved in formik values we need to group them and move them under a value named RULES::new,
                                 // each of these new rules should contain all the properties of formik.values apart RULES::new,WIP::Info,jmix:i18n_j:invalidLanguages and jmix:conditionalVisibility
                                 const newRule = Object.keys(formikContext.values).reduce((acc, key) => {
@@ -83,6 +86,7 @@ export const AddNewRule = ({node, onCancel}) => {
                                         acc[key] = formikContext.values[key];
                                         formikContext.setFieldValue(key, undefined);
                                     }
+
                                     return acc;
                                 }, {});
                                 if (Object.keys(newRule).length === 0) {
@@ -90,10 +94,11 @@ export const AddNewRule = ({node, onCancel}) => {
                                     onCancel();
                                     return;
                                 }
+
                                 newRule.type = selectedType;
                                 newRule.uuid = generateUUID();
                                 newRule.timestamp = dayjs().toISOString();
-                                newRule.username = globalThis.contextJsParameters.user.fullname;
+                                newRule.username = window.contextJsParameters.user.fullname;
                                 const newRules = formikContext.values['RULES::new'] || [];
                                 newRules.push(newRule);
                                 formikContext.setFieldValue('RULES::new', newRules).then(() => {
@@ -102,8 +107,7 @@ export const AddNewRule = ({node, onCancel}) => {
                                 });
                             }}/>
                         </div>
-                    </>
-                }
+                    </>}
             </div>
         </Paper>
     );

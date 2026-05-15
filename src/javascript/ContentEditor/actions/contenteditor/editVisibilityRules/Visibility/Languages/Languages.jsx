@@ -5,7 +5,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
-import {Typography} from "@jahia/moonstone";
+import {Typography} from '@jahia/moonstone';
 
 const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {
@@ -38,7 +38,7 @@ LanguageSection.propTypes = {
     fields: PropTypes.array
 };
 
-export const Languages = ({invalidLanguages, sections}) => {
+export const Languages = ({sections}) => {
     const {t} = useTranslation('jcontent');
     const {siteKey, displayLanguage, uiLanguage} = useSelector(state => ({
         siteKey: state.site,
@@ -68,7 +68,7 @@ export const Languages = ({invalidLanguages, sections}) => {
     const prepareFieldset = {
         ...fieldSets[0],
         displayName: t('jcontent:label.contentEditor.visibilityTab.languages.title')
-    }
+    };
 
     return (
         <article>
@@ -92,6 +92,5 @@ export const Languages = ({invalidLanguages, sections}) => {
 };
 
 Languages.propTypes = {
-    invalidLanguages: PropTypes.array,
     sections: PropTypes.array
 };

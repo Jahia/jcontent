@@ -81,14 +81,17 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
                 <Paper elevation={4}>
                     <div className={styles.nocondition}>
                         <Typography>{typo}</Typography>
-                        <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
+                        <ButtonRenderer buttonLabel="Add condition"
+                                        buttonIcon={<Add/>}
+                                        onClick={() => {
                             formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
                                 handleChange();
                             });
                         }}/>
                     </div>
                 </Paper>
-            </article>);
+            </article>
+        );
     }
 
     if (isAddingNewRule) {
@@ -169,20 +172,30 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
                 <DatatableRules rules={rules} onEdit={setEditingRule}/>
                 <div className={styles.row}>
                     <Typography
-                        variant="subheading">{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}</Typography>
-                    {isVisible && <Chip icon={<Visibility/>} color={"success"}
+                        variant="subheading"
+                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}
+                    </Typography>
+                    {isVisible && <Chip icon={<Visibility/>}
+                                        color="success"
                                         label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
-                    {!isVisible && <Chip icon={<Visibility/>} color={"warning"}
+                    {!isVisible && <Chip icon={<Visibility/>}
+                                         color="warning"
                                          label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
                     <Typography
-                        variant="subheading">{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}</Typography>
-                    {isVisibleInLive && <Chip icon={<Visibility/>} color={"success"}
+                        variant="subheading"
+                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}
+                    </Typography>
+                    {isVisibleInLive && <Chip icon={<Visibility/>}
+                                              color="success"
                                               label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
-                    {!isVisibleInLive && <Chip icon={<Visibility/>} color={"warning"}
+                    {!isVisibleInLive && <Chip icon={<Visibility/>}
+                                               color="warning"
                                                label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
                 </div>
                 <div className={styles.rowEnd}>
-                    <ButtonRenderer buttonLabel="Add condition" buttonIcon={<Add/>} onClick={() => {
+                    <ButtonRenderer buttonLabel="Add condition"
+                                    buttonIcon={<Add/>}
+                                    onClick={() => {
                         formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
                             handleChange();
                         });

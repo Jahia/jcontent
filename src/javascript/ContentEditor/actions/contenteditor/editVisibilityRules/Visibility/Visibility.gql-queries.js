@@ -121,7 +121,6 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
 ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-
 export const UpdateVisibilityRulesMutation = gql`mutation updateVisibilityRules($uuid: String!, $lang: String!,
             $newConditions: [InputVisibilityConditionInput], $updatedConditions: [InputVisibilityConditionInput], 
             $removedConditions: [String], $isMatchingAllConditions: Boolean!) {

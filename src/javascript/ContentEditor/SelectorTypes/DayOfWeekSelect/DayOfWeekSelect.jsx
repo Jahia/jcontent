@@ -27,7 +27,7 @@ export const DayOfWeekSelect = ({field, id, value, inputContext, onChange, onBlu
 
     const options = useMemo(() => {
         const locale = locales[uilang] || locales.en;
-        // dayjs locale weekdays array starts on Sunday
+        // Dayjs locale weekdays array starts on Sunday
         return DAY_VALUES.map((dayValue, index) => ({
             label: locale.weekdays[index],
             value: dayValue.toLowerCase(),
@@ -54,9 +54,9 @@ export const DayOfWeekSelect = ({field, id, value, inputContext, onChange, onBlu
                 onChange={(_, selectedItem) => {
                     const prev = currentValues;
                     onChange(
-                        prev.includes(selectedItem.value)
-                            ? prev.filter(v => v !== selectedItem.value)
-                            : [...prev, selectedItem.value]
+                        prev.includes(selectedItem.value) ?
+                            prev.filter(v => v !== selectedItem.value) :
+                            [...prev, selectedItem.value]
                     );
                 }}
                 onBlur={onBlur}

@@ -81,8 +81,12 @@ export const getStatus = (status) => {
 };
 
 export const getConditionLabel = (name, properties, t) => {
-    const getLabel = (startDate) => {
+    const getDateLabel = (startDate) => {
         return (startDate === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endDateCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startDateCondition';
+    }
+
+    const getTimeLabel = (startHour) => {
+        return (startHour === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endTimeCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startTimeCondition';
     }
 
     switch (name) {
@@ -91,13 +95,21 @@ export const getConditionLabel = (name, properties, t) => {
         case 'jnt:startEndDateCondition': {
             const startDate = properties.find(p => p.name === 'start')?.value;
             const endDate = properties.find(p => p.name === 'end')?.value;
-            return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getLabel(startDate)), {
+            return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getDateLabel(startDate)), {
                 startDate: startDate === undefined ? '' : dayjs(startDate).format('LLL'),
                 endDate: endDate === undefined ? '' : dayjs(endDate).format('LLL')
             });
         }
-        case 'jnt:timeOfDayCondition':
-            return t('jcontent:label.contentEditor.visibilityTab.conditions.timeOfDayCondition');
+        case 'jnt:timeOfDayCondition': {
+            const startHour = properties.find(p => p.name === 'startHour')?.value;
+            const startMinute = properties.find(p => p.name === 'startMinute')?.value;
+            const endHour = properties.find(p => p.name === 'endHour')?.value;
+            const endMinute = properties.find(p => p.name === 'endMinute')?.value;
+            return t((startHour !== undefined && endHour !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndTimeCondition' : getTimeLabel(startHour)), {
+                startTime: startHour === undefined ? '' : dayjs(`${startHour}:${startMinute}`, 'HH:mm').format('LT'),
+                endTime: endHour === undefined ? '' : dayjs(`${endHour}:${endMinute}`, 'HH:mm').format('LT')
+            });
+        }
         default:
             return t('jcontent:label.contentEditor.visibilityTab.conditions.' + name.substring(name.lastIndexOf(':') + 1));
     }

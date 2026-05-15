@@ -9,8 +9,6 @@ This folder has been refactored to split the original monolithic `DateTime.jsx` 
 - **AddNewRule.jsx** - Component for adding a new visibility rule
 - **EditRule.jsx** - Component for editing an existing rule
 - **NewRule.jsx** - Component that renders the form fields for a rule
-- **RenderCondition.jsx** - Component that renders condition details in a readable format
-- **RulesList.jsx** - Component that displays rules in a table format
 - **DatatableRules.jsx** - Component that displays rules using Moonstone DataTable
 - **SaveEditedRuleButton.jsx** - Button component for saving edited rules
 

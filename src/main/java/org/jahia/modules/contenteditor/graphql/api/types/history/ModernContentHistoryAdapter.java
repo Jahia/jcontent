@@ -78,8 +78,8 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
         try {
             List<HistoryEntry> entries;
 
-            // If action filter is provided, get all entries and filter manually
-            // TODO: replace with a service implementation when jahia parent version > 8.1.2.0
+            // If action filter is provided, get all entries and filter manually as the current API does not provide such capability
+            // TODO: replace with a service implementation when jahia parent version >= 8.2.4.0
             if (action != null && !action.trim().isEmpty()) {
                 entries = (List<HistoryEntry>) paginatedMethod.invoke(
                         ContentHistoryService.getInstance(),

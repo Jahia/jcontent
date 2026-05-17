@@ -10,10 +10,15 @@ import {
     Edit,
     Delete,
     HandleMove,
-    Publish,
+    CloudUpload,
+    NoCloud,
     Visibility,
+    VisibilityCondition,
     File,
     Language,
+    Link,
+    Lock,
+    ContentReference,
     Pagination,
     Workflow
 } from '@jahia/moonstone';
@@ -46,6 +51,20 @@ const GET_CONTENT_HISTORY = gql`
                         }
                         message
                         language
+                        childNodeType
+                        subNodeName
+                        nodeDisplayName
+                        acePrincipal {
+                            verb
+                            principalType
+                            principalName
+                            user {
+                                username
+                                firstname
+                                lastname
+                                displayName
+                            }
+                        }
                     }
                 }
             }
@@ -60,9 +79,9 @@ const ACTION_CONFIG = {
     created: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.created', color: 'accent', used: true},
     deleted: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.deleted', color: 'danger', used: true},
     moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default', used: true},
-    published: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true},
+    published: {icon: CloudUpload, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true},
     removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger', used: true},
-    unpublished: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true},
+    unpublished: {icon: NoCloud, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true},
     // --- Not yet observed; kept for rendering if they appear in the history stream ---
     // Updated: triggered by some legacy or external integrations writing directly to JCR
     updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false},
@@ -78,17 +97,161 @@ const ACTION_CONFIG = {
     /* eslint-enable camelcase */
 };
 
-const getTargetInfo = entry => {
-    const isProperty = Boolean(entry.propertyName);
-    const name = isProperty ?
-        (entry.propertyNameDisplay || entry.propertyName) :
-        (entry.path ? entry.path.split('/').filter(Boolean).pop() || entry.path : '-');
-    return {
-        typeLabelKey: isProperty ?
+/**
+ * Configuration for each HistoryEntry.ChildNodeType value.
+ * icon: Moonstone icon component for the sub-node badge (null = no badge for MAIN)
+ * color: Pill colour
+ * labelKey: i18n key for the type label
+ */
+const CHILD_NODE_TYPE_CONFIG = {
+    MAIN: {icon: ContentReference, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.main'},
+    PROPERTY: {icon: Language, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.property'},
+    TRANSLATION: {icon: Language, color: 'accent', labelKey: 'jcontent:label.contentEditor.history.childNodeType.translation'},
+    ACL: {icon: Lock, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.acl'},
+    VISIBILITY: {icon: VisibilityCondition, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.visibility'},
+    VISIBILITY_PROPERTY: {icon: VisibilityCondition, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.visibility'},
+    VANITY_URL: {icon: Link, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.vanityUrl'},
+    VANITY_URL_PROPERTY: {icon: Link, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.vanityUrl'},
+    OTHER: {icon: File, color: 'default', labelKey: 'jcontent:label.contentEditor.history.childNodeType.other'}
+};
+
+/**
+ * Returns the left-side Pill badge for a history entry.
+ * When childNodeType is available (path-based API), uses a semantic icon.
+ * ACL badges are coloured: green (success) for GRANT, red (danger) for DENY.
+ * Falls back to the language-based pill for legacy entries (childNodeType is null).
+ */
+const getSubNodeBadge = entry => {
+    const {childNodeType, language, acePrincipal} = entry;
+
+    if (!childNodeType) {
+        // Legacy fallback: language pill or globe icon
+        return language ?
+            <Pill label={language.toUpperCase()} color="accent"/> :
+            <Pill label={<Language/>} color="default"/>;
+    }
+
+    if (childNodeType === 'TRANSLATION' && language) {
+        return <Pill label={language.toUpperCase()} color="accent"/>;
+    }
+
+    if (childNodeType === 'ACL' && acePrincipal) {
+        const color = acePrincipal.verb === 'DENY' ? 'danger' : 'success';
+        return <Pill label={<Lock/>} color={color}/>;
+    }
+
+    const config = CHILD_NODE_TYPE_CONFIG[childNodeType];
+    const IconComponent = config?.icon ?? File;
+    return <Pill label={<IconComponent/>} color={config?.color ?? 'default'}/>;
+};
+
+/**
+ * Returns the translated type label for a history entry.
+ * For VANITY_URL_PROPERTY and VISIBILITY_PROPERTY, the parent sub-node name is interpolated
+ * into the label so the editor can see exactly which vanity/condition was affected.
+ */
+const getTypeLabel = (entry, t) => {
+    const {childNodeType, propertyName, acePrincipal, subNodeName, path} = entry;
+
+    if (!childNodeType) {
+        return t(propertyName ?
             'jcontent:label.contentEditor.history.property' :
-            'jcontent:label.contentEditor.history.node',
-        name
-    };
+            'jcontent:label.contentEditor.history.node');
+    }
+
+    if (childNodeType === 'ACL' && acePrincipal) {
+        if (propertyName) {
+            return t('jcontent:label.contentEditor.history.acl.rolesFor');
+        }
+
+        return t(acePrincipal.verb === 'DENY' ?
+            'jcontent:label.contentEditor.history.acl.deniedTo' :
+            'jcontent:label.contentEditor.history.acl.grantedTo');
+    }
+
+    if (childNodeType === 'PROPERTY' ||
+            (propertyName && (childNodeType === 'MAIN' || childNodeType === 'TRANSLATION'))) {
+        return t('jcontent:label.contentEditor.history.property');
+    }
+
+    if (childNodeType === 'VANITY_URL_PROPERTY' || childNodeType === 'VISIBILITY_PROPERTY') {
+        const nodeName = subNodeName || lastPathSegment(path);
+        const key = childNodeType === 'VANITY_URL_PROPERTY' ?
+            'jcontent:label.contentEditor.history.childNodeType.vanityUrlProperty' :
+            'jcontent:label.contentEditor.history.childNodeType.visibilityProperty';
+        return t(key, {nodeName});
+    }
+
+    const labelKey = CHILD_NODE_TYPE_CONFIG[childNodeType]?.labelKey ?? 'jcontent:label.contentEditor.history.node';
+    return t(labelKey);
+};
+
+const getVanityNodeName = (subNodeName, path, propertyName) => {
+    if (subNodeName) {
+        return subNodeName;
+    }
+
+    // Fallback: parse from path for older Jahia versions
+    const parts = path ? path.split('/').filter(Boolean) : [];
+    const lastPart = parts[parts.length - 1];
+    return lastPart === propertyName && parts.length >= 2 ?
+        parts[parts.length - 2] :
+        lastPart;
+};
+
+const lastPathSegment = path => path ? path.split('/').filter(Boolean).pop() || path : '-';
+
+const getAcePrincipalName = (acePrincipal, t) => {
+    const {principalType, principalName, user} = acePrincipal;
+    return user?.displayName || user?.username ||
+        (principalType === 'GROUP' ?
+            t('jcontent:label.contentEditor.history.ace.group', {name: principalName}) :
+            principalName);
+};
+
+/**
+ * Returns the human-readable target name for a history entry.
+ * Priority order:
+ *  1. ACE principal display name (for ACL sub-nodes)
+ *  2. VANITY_URL_PROPERTY / VISIBILITY_PROPERTY — sub-node name from service
+ *  3. PROPERTY / legacy MAIN+propertyName / TRANSLATION+propertyName — property display name
+ *  4. Legacy VANITY_URL+propertyName — vanity node name
+ *  5. Language code for bare TRANSLATION entries
+ *  6. Node display name for MAIN, last path segment otherwise
+ */
+const getTargetName = (entry, t) => {
+    const {childNodeType, propertyName, propertyNameDisplay, path, language, acePrincipal, nodeDisplayName, subNodeName} = entry;
+
+    if (acePrincipal) {
+        return getAcePrincipalName(acePrincipal, t);
+    }
+
+    if (childNodeType === 'VANITY_URL_PROPERTY' || childNodeType === 'VISIBILITY_PROPERTY') {
+        return subNodeName || lastPathSegment(path);
+    }
+
+    if (childNodeType === 'PROPERTY' ||
+            (propertyName && (childNodeType === 'MAIN' || childNodeType === 'TRANSLATION'))) {
+        return propertyNameDisplay || propertyName;
+    }
+
+    if (childNodeType === 'VANITY_URL' && propertyName) {
+        return getVanityNodeName(subNodeName, path, propertyName) || null;
+    }
+
+    if (propertyName) {
+        return propertyNameDisplay || propertyName;
+    }
+
+    if (childNodeType === 'TRANSLATION' && language) {
+        return language.toUpperCase();
+    }
+
+    if (!childNodeType || childNodeType === 'MAIN') {
+        return nodeDisplayName || lastPathSegment(path);
+    }
+
+    return lastPathSegment(path);
 };
 
 const getActionChip = (action, t) => {
@@ -184,23 +347,23 @@ export const ContentHistory = () => {
         }
 
         return entries.map(entry => {
-            const {typeLabelKey, name} = getTargetInfo(entry);
+            const badge = getSubNodeBadge(entry);
+            const typeLabel = getTypeLabel(entry, t);
+            const targetName = getTargetName(entry, t);
             return (
                 <React.Fragment key={entry.id}>
                     <div className={styles.historyItem} data-sel-role="history-item">
                         <div className={styles.itemHeader}>
                             <div className={styles.itemLeft}>
-                                {entry.language ? (
-                                    <Pill label={entry.language.toUpperCase()} color="accent"/>
-                                ) : (
-                                    <Pill label={<Language/>} color="default"/>
-                                )}
+                                {badge}
                                 <Typography variant="caption" className={styles.typeLabel}>
-                                    {t(typeLabelKey)}
+                                    {typeLabel}
                                 </Typography>
-                                <Typography variant="body" weight="bold" className={styles.targetName}>
-                                    {name}
-                                </Typography>
+                                {targetName && (
+                                    <Typography variant="body" weight="bold" className={styles.targetName}>
+                                        {targetName}
+                                    </Typography>
+                                )}
                             </div>
                             <div className={styles.itemRight}>
                                 {getActionChip(entry.action, t)}

@@ -832,12 +832,18 @@
         "lockType": "Lock Type",
         "technical": "Technical Information",
         "additional": "Additional Details",
+        "links": "Links",
+        "linksLive": "Live",
+        "linksDefault": "Staging",
+        "linksVanity": "Vanity URL",
+        "linksDefaultVanity": "Default vanity",
+        "linksCopied": "Link copied",
         "copiedToClipboard": "Copied to clipboard"
       },
       "history": {
         "date": "Date",
         "property": "Property",
-        "node": "Node",
+        "node": "Content",
         "language": "Language",
         "languageShort": "Lang.",
         "modifiedBy": "Modified By",
@@ -860,6 +866,25 @@
           "previewed": "Previewed",
           "workflow_started": "Workflow started",
           "workflow_finished": "Workflow finished"
+        },
+        "childNodeType": {
+          "main": "Content",
+          "property": "Property",
+          "translation": "Translation",
+          "acl": "Access Control",
+          "visibility": "Visibility",
+          "vanityUrl": "Vanity URL",
+          "vanityUrlProperty": "Vanity URL {{nodeName}}",
+          "visibilityProperty": "Visibility {{nodeName}}",
+          "other": "Other"
+        },
+        "ace": {
+          "group": "{{name}} (group)"
+        },
+        "acl": {
+          "grantedTo": "Access granted to",
+          "deniedTo": "Access denied to",
+          "rolesFor": "Roles for"
         }
       },
       "CMMActions": {

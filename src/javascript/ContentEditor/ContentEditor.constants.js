@@ -58,6 +58,9 @@ export const Constants = {
     },
     permissions: {
         canSeeAdvancedOptionsTab: 'canSeeAdvancedOptionsTab',
+        canSeePreviewTab: 'canSeePreviewTab',
+        canSeeDetailsTab: 'canSeeDetailsTab',
+        canSeeHistoryTab: 'canSeeHistoryTab',
         setContentLimitsOnAreas: 'setContentLimitsOnAreas'
     },
     childrenFilterTypes: ['jnt:content', 'jmix:manuallyOrderable', 'jnt:page', 'jmix:navMenuItem'],

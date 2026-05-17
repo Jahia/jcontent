@@ -29,19 +29,27 @@ import org.jahia.services.history.HistoryEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
  * Adapter to handle version-specific ContentHistoryService method calls.
- * 
- * This class encapsulates version detection logic and delegates to the appropriate implementation:
- * - Jahia 8.2.4.0+: Uses {@link ModernContentHistoryAdapter} (optimized methods)
- * - Jahia 8.2.1.0-8.2.3.x: Uses {@link LegacyContentHistoryAdapter} (deprecated methods with stream pagination)
- * 
+ *
+ * <p>Provider selection order (first match wins):
+ * <ol>
+ *   <li>{@link PathBasedContentHistoryAdapter} – preferred; uses
+ *       {@code ContentHistoryService.getNodeHistoryByPath(String, Collection, int, int)} which
+ *       covers sub-node history in a single DB query without requiring a JCR session.</li>
+ *   <li>{@link ModernContentHistoryAdapter} – UUID-based; uses
+ *       {@code ContentHistoryService.getNodeHistoryByUuid(String, Collection, int, int)} which
+ *       resolves historical paths across node moves and sets {@code childNodeType}/{@code subNodeName}.</li>
+ *   <li>{@link LegacyContentHistoryAdapter} – Jahia 8.2.1.0–8.2.3.x; uses deprecated node-based
+ *       methods with in-memory stream pagination.</li>
+ * </ol>
+ *
  * @since jContent 3.x
- * @deprecated This adapter will be removed when Jahia 8.2.4.0 becomes the minimum required version.
- *             Direct calls to ContentHistoryService optimized methods will be used instead.
+ * @deprecated This adapter will be removed when the path-based API becomes part of the minimum
+ *             required Jahia version. Direct calls to ContentHistoryService methods will be used
+ *             instead.
  */
 @Deprecated(since = "jContent 3.x", forRemoval = true)
 public final class ContentHistoryAdapter {
@@ -49,6 +57,23 @@ public final class ContentHistoryAdapter {
     private static final Logger logger = LoggerFactory.getLogger(ContentHistoryAdapter.class);
     private static volatile ContentHistoryProvider provider;
     private static volatile boolean initialized = false;
+
+    /**
+     * Maximum number of entries that may be requested in a single page.
+     * Mirrors {@code ContentHistoryService.MAX_HISTORY_PAGE_SIZE} when available;
+     * falls back to {@link Integer#MAX_VALUE} on older Jahia versions that have no cap.
+     */
+    public static final int MAX_PAGE_SIZE;
+
+    static {
+        int cap = Integer.MAX_VALUE;
+        try {
+            cap = ContentHistoryService.class.getField("MAX_HISTORY_PAGE_SIZE").getInt(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // Older Jahia version — no cap enforced by the service
+        }
+        MAX_PAGE_SIZE = cap;
+    }
 
     private ContentHistoryAdapter() {
         // Utility class
@@ -93,32 +118,15 @@ public final class ContentHistoryAdapter {
     }
 
     private static ContentHistoryProvider detectProvider() {
-        if (hasModernMethods()) {
-            logger.info("Detected Jahia 8.2.4.0+ - Using optimized ContentHistoryService methods");
+        if (PathBasedContentHistoryAdapter.isAvailable()) {
+            logger.info("Detected path-based ContentHistoryService API - Using PathBasedContentHistoryAdapter");
+            return new PathBasedContentHistoryAdapter();
+        } else if (ModernContentHistoryAdapter.isAvailable()) {
+            logger.info("Detected UUID-based ContentHistoryService API - Using ModernContentHistoryAdapter");
             return new ModernContentHistoryAdapter();
         } else {
-            logger.info("Detected Jahia 8.2.1.0-8.2.3.x - Using legacy ContentHistoryService methods with stream pagination");
+            logger.info("Detected legacy ContentHistoryService API - Using LegacyContentHistoryAdapter");
             return new LegacyContentHistoryAdapter();
-        }
-    }
-
-    private static boolean hasModernMethods() {
-        try {
-            Method paginatedMethod = ContentHistoryService.class.getMethod(
-                    "getNodeHistory",
-                    JCRNodeWrapper.class,
-                    boolean.class,
-                    int.class,
-                    int.class
-            );
-            Method countMethod = ContentHistoryService.class.getMethod(
-                    "getNodeHistoryCount",
-                    JCRNodeWrapper.class,
-                    boolean.class
-            );
-            return paginatedMethod != null && countMethod != null;
-        } catch (NoSuchMethodException e) {
-            return false;
         }
     }
 }

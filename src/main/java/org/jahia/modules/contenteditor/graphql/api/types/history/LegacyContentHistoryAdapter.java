@@ -27,6 +27,7 @@ import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.history.ContentHistoryService;
 import org.jahia.services.history.HistoryEntry;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,12 +36,13 @@ import java.util.stream.Stream;
  * Legacy implementation for Jahia 8.2.1.0-8.2.3.x using deprecated ContentHistoryService methods.
  * Implements pagination using Java streams.
  *
- * TODO: When upgrading to Jahia 8.2.4.0+:
+ * TODO: When the path-based API becomes part of the minimum required Jahia version:
  *  1. Delete this class
  *  2. Delete {@link ModernContentHistoryAdapter}
- *  3. Delete {@link ContentHistoryAdapter}
- *  4. Delete {@link ContentHistoryProvider}
- *  5. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory}
+ *  3. Delete {@link PathBasedContentHistoryAdapter}
+ *  4. Delete {@link ContentHistoryAdapter}
+ *  5. Delete {@link ContentHistoryProvider}
+ *  6. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory}
  *     to call ContentHistoryService methods directly
  *
  * @deprecated This class will be removed when Jahia 8.2.4.0 becomes the minimum required version.
@@ -60,6 +62,9 @@ class LegacyContentHistoryAdapter implements ContentHistoryProvider {
                     .filter(entry -> action.equals(entry.getAction()))
                     .collect(Collectors.toList());
         }
+
+        // Sort newest-first (service returns ascending order)
+        allEntries.sort(Comparator.comparingLong(HistoryEntry::getDate).reversed());
 
         if (limit != -1 || offset > 0) {
             Stream<HistoryEntry> stream = allEntries.stream();

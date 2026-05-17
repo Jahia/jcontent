@@ -4,7 +4,7 @@
        xmlns:j="http://www.jahia.org/jahia/1.0"
        xmlns:jnt="http://www.jahia.org/jahia/nt/1.0">
     <editor jcr:primaryType="jnt:role">
-        <editor-in-chief j:permissionNames="canSeeAdvancedOptionsTab setContentLimitsOnAreas"
+        <editor-in-chief j:permissionNames="canSeeAdvancedOptionsTab setContentLimitsOnAreas canSeeHistoryTab canSeeDetailsTab canSeePreviewTab"
                          j:privilegedAccess="true"
                          jcr:primaryType="jnt:role">
         </editor-in-chief>
@@ -21,7 +21,7 @@
     </server-administrator>
 
     <site-administrator j:hidden="false"
-                        j:permissionNames="canSeeAdvancedOptionsTab setContentLimitsOnAreas"
+                        j:permissionNames="canSeeAdvancedOptionsTab setContentLimitsOnAreas canSeeHistoryTab canSeeDetailsTab canSeePreviewTab"
                         j:privilegedAccess="true"
                         j:roleGroup="site-role"
                         jcr:primaryType="jnt:role">

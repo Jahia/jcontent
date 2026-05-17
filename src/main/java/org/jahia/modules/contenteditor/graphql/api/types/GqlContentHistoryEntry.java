@@ -26,8 +26,11 @@ package org.jahia.modules.contenteditor.graphql.api.types;
 import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+import org.apache.commons.lang.StringUtils;
+import org.jahia.modules.contenteditor.api.forms.EditorFormServiceImpl;
 import org.jahia.modules.graphql.provider.dxm.user.GqlUser;
 import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.decorator.JCRUserNode;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
@@ -38,10 +41,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * GraphQL representation of a content history entry
@@ -50,6 +56,41 @@ import java.util.TimeZone;
 public class GqlContentHistoryEntry {
 
     private static final Logger logger = LoggerFactory.getLogger(GqlContentHistoryEntry.class);
+
+    /**
+     * Cached reflection accessor for {@code HistoryEntry.getChildNodeType()}.
+     * {@code null} means the method is not present in this Jahia version.
+     */
+    private static final Method GET_CHILD_NODE_TYPE;
+
+    /**
+     * Cached reflection accessor for {@code HistoryEntry.getSubNodeName()}.
+     * {@code null} means the method is not present in this Jahia version.
+     */
+    private static final Method GET_SUB_NODE_NAME;
+
+    /**
+     * Matches ACE node names: {@code {GRANT|DENY}_u_{name}} or {@code {GRANT|DENY}_g_{name}}.
+     * Group 1 = verb (GRANT/DENY), group 2 = type (u/g), group 3 = principal name.
+     */
+    private static final Pattern ACE_NAME_PATTERN = Pattern.compile("^(GRANT|DENY)_(u|g)_(.+)$");
+
+    static {
+        Method cnt = null;
+        Method snn = null;
+        try {
+            cnt = HistoryEntry.class.getMethod("getChildNodeType");
+        } catch (NoSuchMethodException e) {
+            // Older Jahia version — childNodeType is not available
+        }
+        try {
+            snn = HistoryEntry.class.getMethod("getSubNodeName");
+        } catch (NoSuchMethodException e) {
+            // Older Jahia version — subNodeName is not available
+        }
+        GET_CHILD_NODE_TYPE = cnt;
+        GET_SUB_NODE_NAME = snn;
+    }
 
     private final HistoryEntry historyEntry;
     private final JCRNodeWrapper node;
@@ -146,6 +187,123 @@ public class GqlContentHistoryEntry {
     }
 
     @GraphQLField
+    @GraphQLDescription("The displayable name of the content node (uses jcr:title if set, otherwise the node name)")
+    public String getNodeDisplayName() {
+        if (node == null) {
+            return null;
+        }
+        try {
+            return node.getDisplayableName();
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not retrieve display name for node '{}'", historyEntry.getUuid(), e);
+            }
+            return null;
+        }
+    }
+
+    @GraphQLField
+    @GraphQLDescription("The category of the sub-node this entry belongs to. "
+            + "Set only when the history was retrieved via the path-based API. "
+            + "Possible values: MAIN, TRANSLATION, ACL, VISIBILITY, VANITY_URL, OTHER. "
+            + "MAIN: the content node itself; "
+            + "TRANSLATION: an i18n sub-node (jnt:translation) — see 'language' for the locale; "
+            + "ACL: the j:acl container or one of its ACE children; "
+            + "VISIBILITY: the j:conditionalVisibility node or a condition child; "
+            + "VANITY_URL: the vanityUrlMapping container or an individual vanity URL child; "
+            + "OTHER: any other direct child not matching a recognised category.")
+    public String getChildNodeType() {
+        if (GET_CHILD_NODE_TYPE == null) {
+            return null;
+        }
+        try {
+            Object type = GET_CHILD_NODE_TYPE.invoke(historyEntry);
+            return type != null ? ((Enum<?>) type).name() : null;
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not retrieve childNodeType from HistoryEntry", e);
+            }
+            return null;
+        }
+    }
+
+    @GraphQLField
+    @GraphQLDescription("The name of the immediate ACL, vanity URL, or visibility sub-node for this entry. "
+            + "Set for ACL, VANITY_URL, and VISIBILITY childNodeType values. "
+            + "For ACL: the ACE node name (e.g. GRANT_u_anne). "
+            + "For VANITY_URL: the vanity URL mapping node name. "
+            + "For VISIBILITY: the condition node name. "
+            + "Null for MAIN, TRANSLATION, OTHER, or older Jahia versions.")
+    public String getSubNodeName() {
+        if (GET_SUB_NODE_NAME == null) {
+            return null;
+        }
+        try {
+            return (String) GET_SUB_NODE_NAME.invoke(historyEntry);
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not retrieve subNodeName from HistoryEntry", e);
+            }
+            return null;
+        }
+    }
+
+    @GraphQLField
+    @GraphQLDescription("The ACL principal (user or group) for ACE-level history entries. "
+            + "Uses subNodeName when available (path-based API), otherwise parses from path. "
+            + "Returns null for j:acl container entries, non-ACL entries, or unparseable node names.")
+    public GqlAcePrincipal getAcePrincipal() {
+        // Use subNodeName when available — the service already extracted the ACE node name
+        String aceName = getSubNodeName();
+
+        if (aceName == null) {
+            // Fall back to path parsing for older Jahia versions
+            String path = historyEntry.getPath();
+            if (path == null) {
+                return null;
+            }
+            // Jahia stores property-level ACE history with the property name appended to the path:
+            //   ACE node event:     …/j:acl/GRANT_u_anne
+            //   ACE property event: …/j:acl/GRANT_u_anne/j:roles
+            // Try the last segment first; if it does not match, try the second-to-last.
+            int lastSlash = path.lastIndexOf('/');
+            aceName = lastSlash >= 0 ? path.substring(lastSlash + 1) : path;
+            if (!ACE_NAME_PATTERN.matcher(aceName).matches() && lastSlash > 0) {
+                int secondLastSlash = path.lastIndexOf('/', lastSlash - 1);
+                aceName = secondLastSlash >= 0
+                        ? path.substring(secondLastSlash + 1, lastSlash)
+                        : path.substring(0, lastSlash);
+            }
+        }
+
+        Matcher matcher = ACE_NAME_PATTERN.matcher(aceName);
+        if (!matcher.matches()) {
+            return null;
+        }
+
+        String verb = matcher.group(1);
+        boolean isUser = "u".equals(matcher.group(2));
+        String principalType = isUser ? "USER" : "GROUP";
+        String principalName = matcher.group(3);
+
+        GqlUser user = null;
+        if (isUser) {
+            try {
+                JCRUserNode userNode = JahiaUserManagerService.getInstance().lookupUser(principalName);
+                if (userNode != null) {
+                    user = new GqlUser(userNode.getJahiaUser());
+                }
+            } catch (Exception e) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Could not resolve ACE principal user '{}'", principalName, e);
+                }
+            }
+        }
+
+        return new GqlAcePrincipal(verb, principalType, principalName, user);
+    }
+
+    @GraphQLField
     @GraphQLDescription("The localized display name of the property if the action was on a specific property")
     public String getPropertyNameDisplay(@GraphQLName("language") @GraphQLDescription("Language code for the display name") String language) {
         String propertyName = historyEntry.getPropertyName();
@@ -178,7 +336,12 @@ public class GqlContentHistoryEntry {
 
             if (propertyDef != null) {
                 Locale locale = language != null ? LanguageCodeConverters.languageCodeToLocale(language) : Locale.ENGLISH;
-                return propertyDef.getLabel(locale, nodeType);
+                // Mirror Field.initializeLabelFromItemDefinition: use declaring node type with resolveResourceKey
+                // so that inherited mixin properties (e.g. jmix:tagged / j:tagList) resolve their label
+                // from the site's full template-package chain rather than only the core types bundle.
+                JCRSiteNode site = node.getResolveSite();
+                String label = resolveLabelViaResourceKey(propertyDef, locale, site, nodeType);
+                return StringUtils.isEmpty(label) ? propertyDef.getLabel(locale, nodeType) : label;
             }
 
             return propertyName;
@@ -188,5 +351,29 @@ public class GqlContentHistoryEntry {
             }
             return propertyName;
         }
+    }
+
+    /**
+     * Resolves a property definition label via the site's template-package resource bundle chain,
+     * exactly as {@link org.jahia.modules.contenteditor.api.forms.model.Field#initializeLabelFromItemDefinition} does.
+     * First tries the primary/context node type, then the declaring node type.
+     */
+    private static String resolveLabelViaResourceKey(ExtendedPropertyDefinition propertyDef,
+            Locale locale, JCRSiteNode site, ExtendedNodeType contextNodeType) {
+        // Try context node type first (allows per-node-type label overrides)
+        String label = lookupLabelForType(propertyDef, locale, site, contextNodeType);
+        if (StringUtils.isEmpty(label)) {
+            // Fall back to declaring node type (e.g. jmix:tagged for j:tagList)
+            label = lookupLabelForType(propertyDef, locale, site, propertyDef.getDeclaringNodeType());
+        }
+        return label;
+    }
+
+    private static String lookupLabelForType(ExtendedPropertyDefinition propertyDef,
+            Locale locale, JCRSiteNode site, ExtendedNodeType nodeType) {
+        String prefix = nodeType.getTemplatePackage() != null
+                ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
+        String key = propertyDef.getResourceBundleKey(nodeType);
+        return EditorFormServiceImpl.resolveResourceKey(prefix + key, locale, site);
     }
 }

@@ -822,12 +822,18 @@
         "lockType": "Sperrtyp",
         "technical": "Technische Informationen",
         "additional": "Zusätzliche Details",
+        "links": "Links",
+        "linksLive": "Live",
+        "linksDefault": "Staging",
+        "linksVanity": "Vanity URL",
+        "linksDefaultVanity": "Haupt-URL",
+        "linksCopied": "Link kopiert",
         "copiedToClipboard": "In die Zwischenablage kopiert"
       },
       "history": {
         "date": "Datum",
         "property": "Eigenschaft",
-        "node": "Knoten",
+        "node": "Inhalt",
         "language": "Sprache",
         "languageShort": "Spr.",
         "modifiedBy": "Geändert Von",
@@ -850,6 +856,25 @@
           "previewed": "Vorschau",
           "workflow_started": "Workflow gestartet",
           "workflow_finished": "Workflow abgeschlossen"
+        },
+        "childNodeType": {
+          "main": "Inhalt",
+          "property": "Eigenschaft",
+          "translation": "Übersetzung",
+          "acl": "Zugriffskontrolle",
+          "visibility": "Sichtbarkeit",
+          "vanityUrl": "Vanity-URL",
+          "vanityUrlProperty": "Vanity-URL {{nodeName}}",
+          "visibilityProperty": "Sichtbarkeit {{nodeName}}",
+          "other": "Sonstiges"
+        },
+        "ace": {
+          "group": "{{name}} (Gruppe)"
+        },
+        "acl": {
+          "grantedTo": "Zugriff gewährt für",
+          "deniedTo": "Zugriff verweigert für",
+          "rolesFor": "Rollen für"
         }
       },
       "CMMActions": {

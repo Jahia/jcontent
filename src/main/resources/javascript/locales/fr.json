@@ -823,12 +823,18 @@
         "lockType": "Type de Verrouillage",
         "technical": "Informations Techniques",
         "additional": "Détails Supplémentaires",
+        "links": "Liens",
+        "linksLive": "En ligne",
+        "linksDefault": "Mise en scène",
+        "linksVanity": "URL personnalisée",
+        "linksDefaultVanity": "URL principale",
+        "linksCopied": "Lien copié",
         "copiedToClipboard": "Copié dans le presse-papiers"
       },
       "history": {
         "date": "Date",
         "property": "Propriété",
-        "node": "Nœud",
+        "node": "Contenu",
         "language": "Langue",
         "languageShort": "Lg.",
         "modifiedBy": "Modifié Par",
@@ -851,6 +857,25 @@
           "previewed": "Prévisualisé",
           "workflow_started": "Workflow démarré",
           "workflow_finished": "Workflow terminé"
+        },
+        "childNodeType": {
+          "main": "Contenu",
+          "property": "Propriété",
+          "translation": "Traduction",
+          "acl": "Contrôle d'accès",
+          "visibility": "Visibilité",
+          "vanityUrl": "URL Vanity",
+          "vanityUrlProperty": "URL Vanity {{nodeName}}",
+          "visibilityProperty": "Visibilité {{nodeName}}",
+          "other": "Autre"
+        },
+        "ace": {
+          "group": "{{name}} (groupe)"
+        },
+        "acl": {
+          "grantedTo": "Accès accordé à",
+          "deniedTo": "Accès refusé à",
+          "rolesFor": "Rôles pour"
         }
       },
       "CMMActions": {

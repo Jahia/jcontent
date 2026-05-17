@@ -1,6 +1,7 @@
 import React from 'react';
 import {sidePanelTabAction} from './sidePanelTabAction';
 import {InfoCircle, History, Visibility} from '@jahia/moonstone';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {ContentDetails} from './ContentDetails';
 import {ContentHistory} from './ContentHistory';
 import {Preview} from '../Preview';
@@ -14,7 +15,8 @@ export const registerSidePanelTabs = actionsRegistry => {
         value: 'details',
         dataSelRole: 'tab-details',
         displayableComponent: ContentDetails,
-        isDisplayable: () => true
+        isDisplayable: () => true,
+        requiredPermission: [Constants.permissions.canSeeDetailsTab]
     });
 
     actionsRegistry.add('action', 'ceSidePanelHistoryTab', sidePanelTabAction, {
@@ -24,7 +26,8 @@ export const registerSidePanelTabs = actionsRegistry => {
         value: 'history',
         dataSelRole: 'tab-history',
         displayableComponent: ContentHistory,
-        isDisplayable: () => true
+        isDisplayable: () => true,
+        requiredPermission: [Constants.permissions.canSeeHistoryTab, 'viewHistoryTab']
     });
 
     actionsRegistry.add('action', 'ceSidePanelPreviewTab', sidePanelTabAction, {
@@ -34,6 +37,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         value: 'preview',
         dataSelRole: 'tab-preview',
         displayableComponent: Preview,
-        isDisplayable: () => true
+        isDisplayable: () => true,
+        requiredPermission: [Constants.permissions.canSeePreviewTab]
     });
 };

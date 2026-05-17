@@ -29,126 +29,88 @@ import org.jahia.services.history.HistoryEntry;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * Modern implementation using Jahia 8.2.4.0+ optimized ContentHistoryService methods.
+ * UUID-based implementation using Jahia 8.2.4.0+ ContentHistoryService methods.
+ * Uses {@code getNodeHistoryByUuid} which resolves all historical paths a node has ever had
+ * (handles moves), sets {@code childNodeType} and {@code subNodeName}, supports native action
+ * filtering, native DESC sort, and native pagination.
  * Uses reflection to maintain backward compatibility at compile time.
  *
- * TODO: When upgrading to Jahia 8.2.2.0+:
- *  1. Delete this class
- *  2. Delete {@link LegacyContentHistoryAdapter}
- *  3. Delete {@link ContentHistoryAdapter}
- *  4. Delete {@link ContentHistoryProvider}
- *  5. Update {@link org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory}
- *     to call ContentHistoryService methods directly
+ * TODO: When the UUID-based API becomes part of the minimum required Jahia version, collapse
+ *  this class and its siblings into a direct service call in GqlContentHistory.
  *
- * @deprecated This class will be removed when Jahia 8.2.4.0 becomes the minimum required version.
+ * @deprecated This class will be removed when the UUID-based API becomes the minimum required version.
  */
 @Deprecated(since = "jContent 3.x", forRemoval = true)
 class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
-    private static final Method paginatedMethod;
-    private static final Method countMethod;
+    private static final Method getByUuid;
+    private static final Method getByUuidFiltered;
+    private static final Method countByUuid;
+    private static final Method countByUuidFiltered;
 
     static {
+        Method byUuid = null;
+        Method byUuidFiltered = null;
+        Method count = null;
+        Method countFiltered = null;
         try {
-            paginatedMethod = ContentHistoryService.class.getMethod(
-                    "getNodeHistory",
-                    JCRNodeWrapper.class,
-                    boolean.class,
-                    int.class,
-                    int.class
-            );
-            countMethod = ContentHistoryService.class.getMethod(
-                    "getNodeHistoryCount",
-                    JCRNodeWrapper.class,
-                    boolean.class
-            );
+            byUuid = ContentHistoryService.class.getMethod(
+                    "getNodeHistoryByUuid", String.class, int.class, int.class);
+            byUuidFiltered = ContentHistoryService.class.getMethod(
+                    "getNodeHistoryByUuid", String.class, Collection.class, int.class, int.class);
+            count = ContentHistoryService.class.getMethod(
+                    "getNodeHistoryByUuidCount", String.class);
+            countFiltered = ContentHistoryService.class.getMethod(
+                    "getNodeHistoryByUuidCount", String.class, Collection.class);
         } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Modern methods not available - should use LegacyContentHistoryAdapter", e);
+            // Older Jahia version — will not be instantiated
         }
+        getByUuid = byUuid;
+        getByUuidFiltered = byUuidFiltered;
+        countByUuid = count;
+        countByUuidFiltered = countFiltered;
+    }
+
+    static boolean isAvailable() {
+        return getByUuid != null && countByUuid != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, String action, int offset, int limit) {
         try {
-            List<HistoryEntry> entries;
-
-            // If action filter is provided, get all entries and filter manually
-            // TODO: replace with a service implementation when jahia parent version > 8.1.2.0
-            if (action != null && !action.trim().isEmpty()) {
-                entries = (List<HistoryEntry>) paginatedMethod.invoke(
+            String uuid = node.getIdentifier();
+            boolean hasFilter = action != null && !action.trim().isEmpty();
+            if (hasFilter) {
+                return (List<HistoryEntry>) getByUuidFiltered.invoke(
                         ContentHistoryService.getInstance(),
-                        node,
-                        withLanguageNodes,
-                        0,
-                        -1
-                );
-
-                entries = entries.stream()
-                        .filter(entry -> action.equals(entry.getAction()))
-                        .collect(Collectors.toList());
-
-                // Apply pagination after filtering
-                if (offset > 0 || limit != -1) {
-                    Stream<HistoryEntry> paginatedEntries = entries.stream();
-                    if (offset > 0) {
-                        paginatedEntries = paginatedEntries.skip(offset);
-                    }
-                    if (limit > 0) {
-                        paginatedEntries = paginatedEntries.limit(limit);
-                    }
-                    entries = paginatedEntries.collect(Collectors.toList());
-                }
-
-                return entries;
+                        uuid, Collections.singletonList(action), offset, limit);
             }
-
-            // No action filter, use pagination directly
-            return (List<HistoryEntry>) paginatedMethod.invoke(
-                    ContentHistoryService.getInstance(),
-                    node,
-                    withLanguageNodes,
-                    offset,
-                    limit
-            );
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to call getNodeHistory via reflection", e);
+            return (List<HistoryEntry>) getByUuid.invoke(
+                    ContentHistoryService.getInstance(), uuid, offset, limit);
+        } catch (IllegalAccessException | InvocationTargetException | javax.jcr.RepositoryException e) {
+            throw new RuntimeException("Failed to call getNodeHistoryByUuid via reflection", e);
         }
     }
 
     @Override
     public int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes, String action) {
         try {
-            // If action filter is provided, get all entries and filter
-            // TODO: replace with a service implementation
-            if (action != null && !action.trim().isEmpty()) {
-                @SuppressWarnings("unchecked")
-                List<HistoryEntry> allEntries = (List<HistoryEntry>) paginatedMethod.invoke(
+            String uuid = node.getIdentifier();
+            boolean hasFilter = action != null && !action.trim().isEmpty();
+            if (hasFilter) {
+                return (Integer) countByUuidFiltered.invoke(
                         ContentHistoryService.getInstance(),
-                        node,
-                        withLanguageNodes,
-                        0,
-                        -1
-                );
-
-                return (int) allEntries.stream()
-                        .filter(entry -> action.equals(entry.getAction()))
-                        .count();
+                        uuid, Collections.singletonList(action));
             }
-
-            // No action filter, use count method directly
-            return (Integer) countMethod.invoke(
-                    ContentHistoryService.getInstance(),
-                    node,
-                    withLanguageNodes
-            );
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to call getNodeHistoryCount via reflection", e);
+            return (Integer) countByUuid.invoke(ContentHistoryService.getInstance(), uuid);
+        } catch (IllegalAccessException | InvocationTargetException | javax.jcr.RepositoryException e) {
+            throw new RuntimeException("Failed to call getNodeHistoryByUuidCount via reflection", e);
         }
     }
 }

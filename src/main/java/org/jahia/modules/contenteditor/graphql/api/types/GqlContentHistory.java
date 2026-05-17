@@ -30,8 +30,6 @@ import org.jahia.modules.contenteditor.graphql.api.types.history.ContentHistoryA
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRNodeWrapper;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +52,7 @@ public class GqlContentHistory {
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the result (default: false)") Boolean withLanguageNodes,
             @GraphQLName("action") @GraphQLDescription("Filter entries by action (e.g., 'published', 'created', 'updated', 'deleted')") String action,
             @GraphQLName("offset") @GraphQLDescription("Number of entries to skip (default: 0)") Integer offset,
-            @GraphQLName("limit") @GraphQLDescription("Maximum number of entries to return (default: 20)") Integer limit) {
+            @GraphQLName("limit") @GraphQLDescription("Maximum number of entries to return (default: 20, capped at ContentHistoryService.MAX_HISTORY_PAGE_SIZE when available)") Integer limit) {
 
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         int offsetValue = offset != null ? offset : 0;
@@ -64,7 +62,9 @@ public class GqlContentHistory {
             throw new IllegalArgumentException("Offset or Limit cannot be negative");
         }
 
-        return ContentHistoryAdapter.getHistory(node, withLang, action, offsetValue, limitValue)
+        int effectiveLimit = Math.min(limitValue, ContentHistoryAdapter.MAX_PAGE_SIZE);
+
+        return ContentHistoryAdapter.getHistory(node, withLang, action, offsetValue, effectiveLimit)
                 .stream()
                 .map(entry -> new GqlContentHistoryEntry(entry, node))
                 .collect(Collectors.toList());

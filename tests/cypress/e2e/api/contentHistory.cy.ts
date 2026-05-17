@@ -94,6 +94,9 @@ describe('Content History GraphQL API', () => {
             properties: [{name: 'text', value: 'Created by test user', language: 'en'}]
         });
         cy.apolloClient(); // Switch back to admin
+        // Wait for all logs being processed
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
     });
 
     after(() => {
@@ -268,16 +271,9 @@ describe('Content History GraphQL API', () => {
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: 100}
         }).then(allResult => {
             const allEntries = allResult?.data?.jcr?.nodeByPath?.history?.entries;
-            if (!allEntries?.length) {
-                return;
-            }
-
             const actions = [...new Set(allEntries.map((e: {action: string}) => e.action).filter(Boolean))];
             cy.log(`Available actions: ${actions.join(', ')}`);
             const testAction = actions[0];
-            if (!testAction) {
-                return;
-            }
 
             cy.apollo({
                 queryFile: 'api/contentHistory/getNodeHistoryWithAction.graphql',
@@ -299,9 +295,6 @@ describe('Content History GraphQL API', () => {
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: 100}
         }).then(allResult => {
             const allEntries = allResult?.data?.jcr?.nodeByPath?.history?.entries;
-            if (!allEntries?.length) {
-                return;
-            }
 
             const actions = [...new Set(allEntries.map((e: {action: string}) => e.action).filter(Boolean))];
             const testAction = actions[0];

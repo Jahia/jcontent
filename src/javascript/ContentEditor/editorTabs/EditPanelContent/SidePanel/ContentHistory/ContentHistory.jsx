@@ -10,7 +10,8 @@ import {
     Edit,
     Delete,
     HandleMove,
-    Publish,
+    CloudUpload,
+    NoCloud,
     Visibility,
     File,
     Language,
@@ -20,6 +21,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
+import dayjs from '~/ContentEditor/date.config';
 import styles from './ContentHistory.scss';
 
 const GET_CONTENT_HISTORY = gql`
@@ -60,9 +62,9 @@ const ACTION_CONFIG = {
     created: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.created', color: 'accent', used: true},
     deleted: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.deleted', color: 'danger', used: true},
     moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default', used: true},
-    published: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true},
+    published: {icon: CloudUpload, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true},
     removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger', used: true},
-    unpublished: {icon: Publish, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true},
+    unpublished: {icon: NoCloud, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true},
     // --- Not yet observed; kept for rendering if they appear in the history stream ---
     // Updated: triggered by some legacy or external integrations writing directly to JCR
     updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false},
@@ -142,8 +144,8 @@ export const ContentHistory = () => {
             return '-';
         }
 
-        return new Date(dateString).toLocaleString();
-    }, []);
+        return dayjs(dateString).locale(uiLanguage).format('LLL');
+    }, [uiLanguage]);
 
     const getActionOptions = useCallback(() => {
         const trackedOptions = Object.entries(ACTION_CONFIG)
@@ -208,7 +210,7 @@ export const ContentHistory = () => {
                         </div>
                         <div className={styles.itemFooter}>
                             <Typography variant="caption" className={styles.metadata}>
-                                {formatDate(entry.date)} by {getUserDisplayName(entry)}
+                                {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
                             </Typography>
                         </div>
                     </div>

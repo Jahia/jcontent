@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useNodeChecks} from '@jahia/data-helper';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
-export const SidePanelTab = ({setActiveTab, isDisplayable, value, render: Render, loading: Loading, ...otherProps}) => {
+export const SidePanelTab = ({setActiveTab, onVisible, isDisplayable, value, render: Render, loading: Loading, ...otherProps}) => {
     const {path} = useContentEditorContext();
     const ceCtx = useContentEditorContext();
 
@@ -12,6 +12,14 @@ export const SidePanelTab = ({setActiveTab, isDisplayable, value, render: Render
         {...otherProps}
     );
 
+    const isVisible = !res.loading && res.checksResult && isDisplayable({...otherProps, ...ceCtx});
+
+    useEffect(() => {
+        if (isVisible && onVisible) {
+            onVisible(value);
+        }
+    }, [isVisible, onVisible, value]);
+
     if (res.loading) {
         /* eslint-disable react/jsx-no-useless-fragment */
         return (Loading && <Loading {...otherProps}/>) || <></>;
@@ -19,7 +27,7 @@ export const SidePanelTab = ({setActiveTab, isDisplayable, value, render: Render
 
     return (
         <>
-            {isDisplayable({...otherProps, ...ceCtx}) && res.checksResult &&
+            {isVisible &&
             <Render
                 {...otherProps}
                 onClick={() => {
@@ -35,6 +43,7 @@ SidePanelTab.propTypes = {
     activeTab: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     setActiveTab: PropTypes.func.isRequired,
+    onVisible: PropTypes.func,
     isDisplayable: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

@@ -862,7 +862,8 @@
           "previewed": "Previewed",
           "workflow_started": "Workflow started",
           "workflow_finished": "Workflow finished"
-        }
+        },
+        "dateBy": "{{date}} by {{user}}"
       },
       "CMMActions": {
         "createNewContent": {

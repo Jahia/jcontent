@@ -1,7 +1,0 @@
-mutation grantRoles($nodePath: String!, $principalType: String!, $principalName: String!, $roleNames: [String]!) {
-    jcr {
-        mutateNode(pathOrId: $nodePath) {
-            grantRoles(principalType: $principalType, principalName: $principalName, roleNames: $roleNames)
-        }
-    }
-}

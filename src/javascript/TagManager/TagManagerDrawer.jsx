@@ -20,11 +20,11 @@ import styles from './TagManager.scss';
 
 export const TagManagerDrawer = ({
     siteKey,
-    tag,
-    isOpen,
+    tag = null,
+    isOpen = false,
     page,
     pageSize,
-    deletingNodeId,
+    deletingNodeId = null,
     onClose,
     onPageChange,
     onPageSizeChange,
@@ -187,8 +187,3 @@ TagManagerDrawer.propTypes = {
     onDeleteTagOnNode: PropTypes.func.isRequired
 };
 
-TagManagerDrawer.defaultProps = {
-    tag: null,
-    isOpen: false,
-    deletingNodeId: null
-};

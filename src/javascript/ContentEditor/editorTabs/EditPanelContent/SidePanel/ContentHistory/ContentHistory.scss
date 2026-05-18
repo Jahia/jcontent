@@ -49,9 +49,8 @@
 .typeLabel {
     flex-shrink: 0;
 
-    font-size: 0.7rem;
     color: var(--color-gray);
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .targetName {
@@ -61,6 +60,12 @@
 
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.technicalName {
+    flex-shrink: 0;
+
+    color: var(--color-gray);
 }
 
 .itemRight {

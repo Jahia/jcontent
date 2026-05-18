@@ -26,9 +26,16 @@ package org.jahia.modules.contenteditor.graphql.api.types;
 import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+import graphql.annotations.annotationTypes.GraphQLNonNull;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jahia.modules.graphql.provider.dxm.node.NodeHelper;
 import org.jahia.modules.graphql.provider.dxm.user.GqlUser;
+import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.decorator.JCRUserNode;
+import org.jahia.services.content.nodetypes.ExtendedItemDefinition;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
 import org.jahia.services.history.HistoryEntry;
@@ -37,11 +44,14 @@ import org.jahia.utils.LanguageCodeConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static org.jahia.modules.contenteditor.api.forms.EditorFormServiceImpl.resolveResourceKey;
 
 /**
  * GraphQL representation of a content history entry
@@ -145,48 +155,91 @@ public class GqlContentHistoryEntry {
         return historyEntry.getLocale() != null ? historyEntry.getLocale().toString() : null;
     }
 
+    // Note: nodeName and nodeNameDisplay are intentional shortcuts on the entry rather than
+    // delegating to the parent GqlJcrNode fields. With the extended history service
+    // (PathBasedContentHistoryAdapter), entries can originate from different child nodes
+    // (ACLs, vanities, translation sub-nodes, child content nodes), so a single displayName
+    // on the parent GqlJcrNode would only ever reflect the root context node. Each entry must
+    // resolve its own node name independently.
+    // Known limitation: this.node is currently always the root context node (passed uniformly
+    // from GqlContentHistory.getEntries). A future improvement should resolve the node from
+    // historyEntry.getPath()/getUuid() so that child-node entries display their own name.
+
+    @GraphQLField
+    @GraphQLDescription("The technical name of the node")
+    public String getNodeName() {
+        return node != null ? node.getName() : null;
+    }
+
+    @GraphQLField
+    @GraphQLDescription("The localized display name of the node")
+    public String getNodeNameDisplay(@GraphQLName("language") @GraphQLNonNull @GraphQLDescription("Language code for the display name") String language) {
+        try {
+            JCRNodeWrapper node = NodeHelper.getNodeInLanguage(this.node, language);
+            return node.getDisplayableName();
+        } catch (ItemNotFoundException e) {
+            return null;
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @GraphQLField
     @GraphQLDescription("The localized display name of the property if the action was on a specific property")
-    public String getPropertyNameDisplay(@GraphQLName("language") @GraphQLDescription("Language code for the display name") String language) {
+    public String getPropertyNameDisplay(@GraphQLName("language") @GraphQLNonNull @GraphQLDescription("Language code for the display name") String language) {
         String propertyName = historyEntry.getPropertyName();
         if (propertyName == null || propertyName.trim().isEmpty()) {
             return null;
         }
-
+        if (node == null) {
+            return propertyName;
+        }
         try {
+            Locale uiLocale = LanguageCodeConverters.languageCodeToLocale(language);
+            JCRSiteNode site = node.getResolveSite();
+            ExtendedNodeType primaryNodeType = node.getPrimaryNodeType();
 
-            if (node == null) {
-                return propertyName;
-            }
-
-            // Get the node type
-            ExtendedNodeType nodeType = node.getPrimaryNodeType();
-
-            // Get the property definition
-            ExtendedPropertyDefinition propertyDef = nodeType.getPropertyDefinitionsAsMap().get(propertyName);
-
+            // Find property definition on primary type, then mixins
+            ExtendedPropertyDefinition propertyDef = primaryNodeType.getPropertyDefinitionsAsMap().get(propertyName);
             if (propertyDef == null) {
-                // Try to find in mixins
                 for (ExtendedNodeType mixin : node.getMixinNodeTypes()) {
                     propertyDef = mixin.getPropertyDefinitionsAsMap().get(propertyName);
                     if (propertyDef != null) {
-                        nodeType = mixin;
                         break;
                     }
                 }
             }
-
-            if (propertyDef != null) {
-                Locale locale = language != null ? LanguageCodeConverters.languageCodeToLocale(language) : Locale.ENGLISH;
-                return propertyDef.getLabel(locale, nodeType);
+            if (propertyDef == null) {
+                return propertyName;
             }
 
-            return propertyName;
+            // Mirrors Field.initializeLabel / initializeLabelFromItemDefinition resolution order:
+            String label = null;
+            // 1. Allow labels from primary node type
+            label = resolveLabelFromDefinition(propertyDef, uiLocale, site, primaryNodeType, label);
+            // 2. Looks for labels in declaring node type
+            label = resolveLabelFromDefinition(propertyDef, uiLocale, site, propertyDef.getDeclaringNodeType(), label);
+            // 3. Then in original overridden property
+            ExtendedItemDefinition overriddenDef = propertyDef.getOverridenDefinition();
+            label = resolveLabelFromDefinition(overriddenDef, uiLocale, site, overriddenDef.getDeclaringNodeType(), label);
+            // 4. Fallback on untranslated system name
+            return StringUtils.isEmpty(label) ? JCRContentUtils.replaceColon(propertyDef.getName()) : label;
+
         } catch (RepositoryException e) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Could not resolve property display name for property '{}' on node '{}'", propertyName, historyEntry.getUuid(), e);
+                logger.debug("Could not resolve property display name for '{}' on node '{}'", propertyName, historyEntry.getUuid(), e);
             }
             return propertyName;
         }
+    }
+
+    private String resolveLabelFromDefinition(ExtendedItemDefinition definition, Locale uiLocale, JCRSiteNode site, ExtendedNodeType nodeType, String currentLabel) {
+        if (definition == null || nodeType == null || !StringUtils.isEmpty(currentLabel)) {
+            return currentLabel;
+        }
+        String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
+        String key = definition.getResourceBundleKey(nodeType);
+        String resolved = StringEscapeUtils.unescapeHtml(resolveResourceKey(prefix + key, uiLocale, site));
+        return StringUtils.isEmpty(resolved) ? currentLabel : resolved;
     }
 }

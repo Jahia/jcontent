@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from 'react';
-import {useQuery, gql} from '@apollo/client';
+import {useQuery} from '@apollo/client';
+import {GetContentHistoryQuery} from './ContentHistory.gql-queries';
 import {useSelector} from 'react-redux';
 import {
     Dropdown,
@@ -24,72 +25,46 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import dayjs from '~/ContentEditor/date.config';
 import styles from './ContentHistory.scss';
 
-const GET_CONTENT_HISTORY = gql`
-    query getNodeHistory($path: String!, $withLanguageNodes: Boolean!, $action: String, $offset: Int!, $limit: Int!, $uiLanguage: String!) {
-        jcr {
-            nodeByPath(path: $path) {
-                uuid
-                history {
-                    count(withLanguageNodes: $withLanguageNodes, action: $action)
-                    entries(withLanguageNodes: $withLanguageNodes, action: $action, offset: $offset, limit: $limit) {
-                        id
-                        date
-                        path
-                        uuid
-                        action
-                        propertyName
-                        propertyNameDisplay(language: $uiLanguage)
-                        userKey
-                        user {
-                            username
-                            firstname
-                            lastname
-                            displayName
-                        }
-                        message
-                        language
-                    }
-                }
-            }
-        }
-    }
-`;
 
 const ACTION_CONFIG = {
     // --- Confirmed actions observed in production ---
-    added: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.added', color: 'accent', used: true},
-    changed: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.changed', color: 'warning', used: true},
-    created: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.created', color: 'accent', used: true},
-    deleted: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.deleted', color: 'danger', used: true},
-    moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default', used: true},
-    published: {icon: CloudUpload, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true},
-    removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger', used: true},
-    unpublished: {icon: NoCloud, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true},
+    added: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.added', color: 'accent', used: true, group: 'property'},
+    changed: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.changed', color: 'warning', used: true, group: 'property'},
+    created: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.created', color: 'accent', used: true, group: 'node'},
+    deleted: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.deleted', color: 'danger', used: true, group: 'node'},
+    moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default', used: true, group: 'node'},
+    published: {icon: CloudUpload, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true, group: 'node'},
+    removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger', used: true, group: 'property'},
+    unpublished: {icon: NoCloud, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true, group: 'node'},
     // --- Not yet observed; kept for rendering if they appear in the history stream ---
     // Updated: triggered by some legacy or external integrations writing directly to JCR
-    updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false},
+    updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false, group: 'node'},
     // Viewed/accessed: requires the metrics/access-tracking module to be enabled
-    viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default', used: false},
-    accessed: {icon: File, labelKey: 'jcontent:label.contentEditor.history.actions.accessed', color: 'default', used: false},
+    viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default', used: false, group: 'node'},
+    accessed: {icon: File, labelKey: 'jcontent:label.contentEditor.history.actions.accessed', color: 'default', used: false, group: 'node'},
     // Previewed: triggered when a contributor previews a draft in the rendering engine
-    previewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.previewed', color: 'default', used: false},
+    previewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.previewed', color: 'default', used: false, group: 'node'},
     // Workflow_started/finished: require the Jahia workflow module and a workflow definition on the content type
     /* eslint-disable camelcase */
-    workflow_started: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_started', color: 'default', used: false},
-    workflow_finished: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_finished', color: 'success', used: false}
+    workflow_started: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_started', color: 'default', used: false, group: 'node'},
+    workflow_finished: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_finished', color: 'success', used: false, group: 'node'}
     /* eslint-enable camelcase */
 };
 
 const getTargetInfo = entry => {
     const isProperty = Boolean(entry.propertyName);
-    const name = isProperty ?
+    const displayName = isProperty ?
         (entry.propertyNameDisplay || entry.propertyName) :
-        (entry.path ? entry.path.split('/').filter(Boolean).pop() || entry.path : '-');
+        (entry.nodeNameDisplay || entry.nodeName || entry.path?.split('/').filter(Boolean).pop() || '-');
+    const technicalName = isProperty ?
+        entry.propertyName :
+        (entry.nodeName || entry.path?.split('/').filter(Boolean).pop() || '-');
     return {
         typeLabelKey: isProperty ?
             'jcontent:label.contentEditor.history.property' :
             'jcontent:label.contentEditor.history.node',
-        name
+        displayName,
+        technicalName
     };
 };
 
@@ -127,7 +102,7 @@ export const ContentHistory = () => {
     const [pageSize, setPageSize] = useState(20);
     const [actionFilter, setActionFilter] = useState(null);
 
-    const {data, loading, error} = useQuery(GET_CONTENT_HISTORY, {
+    const {data, loading, error} = useQuery(GetContentHistoryQuery, {
         variables: {
             path: nodeData.path,
             withLanguageNodes: true,
@@ -144,16 +119,28 @@ export const ContentHistory = () => {
             return '-';
         }
 
-        return dayjs(dateString).locale(uiLanguage).format('LLL');
+        return dayjs(dateString).locale(uiLanguage).format('L HH:mm');
     }, [uiLanguage]);
 
     const getActionOptions = useCallback(() => {
-        const trackedOptions = Object.entries(ACTION_CONFIG)
-            .filter(([, config]) => config.used)
-            .map(([value]) => ({value, label: getActionChip(value, t)}));
+        const toOption = ([value, config]) => ({
+            value,
+            label: t(config.labelKey),
+            iconStart: React.createElement(config.icon)
+        });
+
+        const nodeOptions = Object.entries(ACTION_CONFIG)
+            .filter(([, config]) => config.used && config.group === 'node')
+            .map(toOption);
+
+        const propertyOptions = Object.entries(ACTION_CONFIG)
+            .filter(([, config]) => config.used && config.group === 'property')
+            .map(toOption);
+
         return [
-            {value: null, label: t('jcontent:label.contentEditor.history.allActions')},
-            ...trackedOptions
+            {groupLabel: '', options: [{value: null, label: t('jcontent:label.contentEditor.history.allActions')}]},
+            {groupLabel: t('jcontent:label.contentEditor.history.node'), options: nodeOptions},
+            {groupLabel: t('jcontent:label.contentEditor.history.property'), options: propertyOptions}
         ];
     }, [t]);
 
@@ -186,7 +173,7 @@ export const ContentHistory = () => {
         }
 
         return entries.map(entry => {
-            const {typeLabelKey, name} = getTargetInfo(entry);
+            const {typeLabelKey, displayName, technicalName} = getTargetInfo(entry);
             return (
                 <React.Fragment key={entry.id}>
                     <div className={styles.historyItem} data-sel-role="history-item">
@@ -197,11 +184,16 @@ export const ContentHistory = () => {
                                 ) : (
                                     <Pill label={<Language/>} color="default"/>
                                 )}
-                                <Typography variant="caption" className={styles.typeLabel}>
-                                    {t(typeLabelKey)}
-                                </Typography>
                                 <Typography variant="body" weight="bold" className={styles.targetName}>
-                                    {name}
+                                    {displayName}
+                                </Typography>
+                                {technicalName !== displayName && (
+                                    <Typography variant="body" className={styles.technicalName}>
+                                        ({technicalName})
+                                    </Typography>
+                                )}
+                                <Typography variant="caption" weight="bold" className={styles.typeLabel}>
+                                    {t(typeLabelKey)}
                                 </Typography>
                             </div>
                             <div className={styles.itemRight}>

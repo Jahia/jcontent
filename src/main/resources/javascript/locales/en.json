@@ -839,7 +839,7 @@
       "history": {
         "date": "Date",
         "property": "Property",
-        "node": "Node",
+        "node": "Content",
         "language": "Language",
         "languageShort": "Lang.",
         "modifiedBy": "Modified By",

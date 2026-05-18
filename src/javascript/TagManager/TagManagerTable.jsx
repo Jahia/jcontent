@@ -24,7 +24,7 @@ import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/
 import {RENAME_TAG, DELETE_TAG} from './TagManager.gql-queries';
 import {RenameTagDialog} from './RenameTagDialog';
 import {DeleteTagDialog} from './DeleteTagDialog';
-import {getImpactedItemsCount} from './TagManager.utils';
+import {getFailedCount, getImpactedItemsCount} from './TagManager.utils';
 import styles from './TagManager.scss';
 
 /* eslint-disable react/prop-types */
@@ -94,6 +94,16 @@ export const TagManagerTable = ({
                 }),
                 ['closeButton', 'closeAfter5s']
             );
+            if (getFailedCount(result) > 0) {
+                notify(
+                    t('jcontent:label.contentManager.tagManager.notifications.partialFailure', {
+                        count: getFailedCount(result),
+                        tag: renameTarget.name
+                    }),
+                    ['closeButton', 'noAutomaticClose']
+                );
+            }
+
             setRenameTarget(null);
         } catch (e) {
             notify(e.message, ['closeButton', 'noAutomaticClose']);
@@ -122,6 +132,16 @@ export const TagManagerTable = ({
                 }),
                 ['closeButton', 'closeAfter5s']
             );
+            if (getFailedCount(result) > 0) {
+                notify(
+                    t('jcontent:label.contentManager.tagManager.notifications.partialFailure', {
+                        count: getFailedCount(result),
+                        tag: deleteTarget.name
+                    }),
+                    ['closeButton', 'noAutomaticClose']
+                );
+            }
+
             setDeleteTarget(null);
         } catch (e) {
             notify(e.message, ['closeButton', 'noAutomaticClose']);

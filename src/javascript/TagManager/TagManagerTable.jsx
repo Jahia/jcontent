@@ -84,8 +84,8 @@ export const TagManagerTable = ({
                 }
             });
             const result = mutationData?.admin?.jahia?.tagManager?.renameTag;
-            await onMutationComplete();
             onTagRenamed(renameTarget.name, newName);
+            await onMutationComplete();
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.renameSuccess', {
                     count: getImpactedItemsCount(result),

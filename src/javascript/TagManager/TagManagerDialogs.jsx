@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 import {Button, Close, Input, Search, Typography} from '@jahia/moonstone';
@@ -42,10 +42,6 @@ TagSuggestions.propTypes = {
 export const RenameTagDialog = ({siteKey, siteName, tag = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
     const [value, setValue] = useState(tag?.name || '');
-
-    useEffect(() => {
-        setValue(tag?.name || '');
-    }, [tag]);
 
     const normalizedValue = value.trim();
     const suggestions = useTagSuggestions({siteKey, isOpen, value});
@@ -230,10 +226,6 @@ DeleteNodeTagDialog.propTypes = {
 export const EditNodeTagDialog = ({siteKey, tag = null, node = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
     const [value, setValue] = useState(tag || '');
-
-    useEffect(() => {
-        setValue(tag || '');
-    }, [tag]);
 
     const normalizedValue = value.trim();
     const suggestions = useTagSuggestions({siteKey, isOpen, value});

@@ -9,7 +9,7 @@ const TagManagerRoute = () => {
 };
 
 export const register = registry => {
-    registry.add('adminRoute', 'tagsmanager', {
+    registry.add('adminRoute', 'jctagsmanager', {
         targets: ['jcontent'],
         label: 'jcontent:label.contentManager.navigation.manage.tags.title',
         icon: <Tag/>,

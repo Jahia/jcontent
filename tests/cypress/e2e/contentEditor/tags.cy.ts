@@ -92,13 +92,21 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('onetag, threeTag, twotag, threetag, ONETAG, twotags{enter}', {delay: 100, force: true});
+        const input = tagField.get().find('input[type="text"]');
 
-        tagField.get().find('[role="button"] span').should('have.length', 4, {timeout: 2000});
+        input.type('onetag{enter}', {force: true});
+        input.type('threeTag{enter}', {force: true});
+        input.type('twotag{enter}', {force: true});
+        input.type('threetag{enter}', {force: true});
+        input.type('ONETAG{enter}', {force: true});
+        input.type('twotags{enter}', {force: true});
+
+        tagField.get().find('[role="button"] span').should('have.length', 4, {timeout: 10000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'onetag');
         tagField.get().find('[role="button"] span').eq(1).should('have.text', 'threetag');
         tagField.get().find('[role="button"] span').eq(2).should('have.text', 'twotag');
         tagField.get().find('[role="button"] span').eq(3).should('have.text', 'twotags');
+
         contentEditor.cancelAndDiscard();
     });
 

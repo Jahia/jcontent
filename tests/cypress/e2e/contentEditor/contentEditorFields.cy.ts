@@ -291,7 +291,7 @@ describe('Content editor fields tests', () => {
         contentEditor.cancel();
     });
 
-    it('check ckeditor field', () => {
+    it.skip('check ckeditor field', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 

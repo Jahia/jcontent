@@ -86,16 +86,6 @@ export const TagManager = () => {
     }, [page, pageSize, sortedTags]);
 
     useEffect(() => {
-        setSearchTerm('');
-        setPage(0);
-        setSelectedTag(null);
-        setRenameTarget(null);
-        setDeleteTarget(null);
-        setEditNodeTarget(null);
-        setDrawerPage(0);
-    }, [siteKey]);
-
-    useEffect(() => {
         setPage(0);
     }, [pageSize, searchTerm, sort]);
 

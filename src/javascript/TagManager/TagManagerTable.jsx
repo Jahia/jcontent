@@ -22,7 +22,8 @@ import {
 import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {RENAME_TAG, DELETE_TAG} from './TagManager.gql-queries';
-import {RenameTagDialog, DeleteTagDialog} from './TagManagerDialogs';
+import {RenameTagDialog} from './RenameTagDialog';
+import {DeleteTagDialog} from './DeleteTagDialog';
 import {getImpactedItemsCount} from './TagManager.utils';
 import styles from './TagManager.scss';
 

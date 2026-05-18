@@ -3,7 +3,7 @@ import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {useNotifications} from '@jahia/react-material';
-import {Header, Loader, SearchInput, Typography} from '@jahia/moonstone';
+import {Header, LayoutContent, Loader, SearchInput, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {GET_MANAGED_TAGS, DELETE_TAG, DELETE_TAG_ON_NODE, RENAME_TAG, RENAME_TAG_ON_NODE} from './TagManager.gql-queries';
 import {TagManagerTable} from './TagManagerTable';
@@ -225,85 +225,84 @@ export const TagManager = () => {
     };
 
     return (
-        <div className={styles.root} data-cm-role="tag-manager-root">
-            <div className={styles.pageHeader}>
-                <div className={styles.pageHeaderInner}>
-                    <Header title={t('jcontent:label.contentManager.tagManager.header', {siteName: siteNode?.displayName || siteKey})}/>
-                </div>
-            </div>
+        <>
+            <LayoutContent
+                data-cm-role="tag-manager-root"
+                hasPadding
+                header={<Header title={t('jcontent:label.contentManager.tagManager.header', {siteName: siteNode?.displayName || siteKey})}/>}
+                content={
+                    <div className={styles.contentWrapper} data-cm-role="tag-manager-content-wrapper">
+                        <div className={styles.paper} data-cm-role="tag-manager-content">
+                            <div className={styles.controls}>
+                                <SearchInput
+                                    size="default"
+                                    value={searchTerm}
+                                    className={styles.searchInput}
+                                    data-cm-role="tag-manager-search"
+                                    placeholder={t('jcontent:label.contentManager.tagManager.search.placeholder')}
+                                    variant="outlined"
+                                    onClear={() => setSearchTerm('')}
+                                    onChange={event => setSearchTerm(event.target.value)}
+                                />
+                                <Typography variant="caption" className={styles.resultsCount}>
+                                    {t('jcontent:label.contentManager.tagManager.search.results', {count: filteredTags.length})}
+                                </Typography>
+                            </div>
 
-            <div className={styles.content}>
-                <div className={styles.contentWrapper} data-cm-role="tag-manager-content-wrapper">
-                    <div className={styles.paper} data-cm-role="tag-manager-content">
-                        <div className={styles.controls}>
-                            <SearchInput
-                                size="default"
-                                value={searchTerm}
-                                className={styles.searchInput}
-                                data-cm-role="tag-manager-search"
-                                placeholder={t('jcontent:label.contentManager.tagManager.search.placeholder')}
-                                variant="outlined"
-                                onClear={() => setSearchTerm('')}
-                                onChange={event => setSearchTerm(event.target.value)}
-                            />
-                            <Typography variant="caption" className={styles.resultsCount}>
-                                {t('jcontent:label.contentManager.tagManager.search.results', {count: filteredTags.length})}
-                            </Typography>
+                            {loading ? (
+                                <div className={styles.loaderContainer}>
+                                    <Loader size="big"/>
+                                </div>
+                            ) : error ? (
+                                <div className={styles.emptyState}>
+                                    <Typography variant="heading">{t('jcontent:label.contentManager.error.contentUnavailable')}</Typography>
+                                    <Typography>{t('jcontent:label.contentManager.error.queryingContent', {details: error.message})}</Typography>
+                                </div>
+                            ) : filteredTags.length === 0 ? (
+                                <div className={styles.emptyState}>
+                                    <Typography variant="heading">{t('jcontent:label.contentManager.tagManager.empty.title')}</Typography>
+                                    <Typography>{normalizedSearch ? t('jcontent:label.contentManager.tagManager.empty.search') : t('jcontent:label.contentManager.tagManager.empty.description')}</Typography>
+                                </div>
+                            ) : (
+                                <TagManagerTable
+                                    tags={paginatedTags}
+                                    selectedTag={selectedTag}
+                                    totalCount={filteredTags.length}
+                                    page={page}
+                                    pageSize={pageSize}
+                                    sort={sort}
+                                    onSort={setSort}
+                                    onPageChange={setPage}
+                                    onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                                    onView={tag => {
+                                        setSelectedTag(tag.name);
+                                        setDrawerPage(0);
+                                    }}
+                                    onRename={setRenameTarget}
+                                    onDelete={setDeleteTarget}
+                                />
+                            )}
                         </div>
 
-                        {loading ? (
-                            <div className={styles.loaderContainer}>
-                                <Loader size="big"/>
-                            </div>
-                        ) : error ? (
-                            <div className={styles.emptyState}>
-                                <Typography variant="heading">{t('jcontent:label.contentManager.error.contentUnavailable')}</Typography>
-                                <Typography>{t('jcontent:label.contentManager.error.queryingContent', {details: error.message})}</Typography>
-                            </div>
-                        ) : filteredTags.length === 0 ? (
-                            <div className={styles.emptyState}>
-                                <Typography variant="heading">{t('jcontent:label.contentManager.tagManager.empty.title')}</Typography>
-                                <Typography>{normalizedSearch ? t('jcontent:label.contentManager.tagManager.empty.search') : t('jcontent:label.contentManager.tagManager.empty.description')}</Typography>
-                            </div>
-                        ) : (
-                            <TagManagerTable
-                                tags={paginatedTags}
-                                selectedTag={selectedTag}
-                                totalCount={filteredTags.length}
-                                page={page}
-                                pageSize={pageSize}
-                                sort={sort}
-                                onSort={setSort}
-                                onPageChange={setPage}
-                                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-                                onView={tag => {
-                                    setSelectedTag(tag.name);
-                                    setDrawerPage(0);
-                                }}
-                                onRename={setRenameTarget}
-                                onDelete={setDeleteTarget}
-                            />
-                        )}
+                        <TagManagerDrawer
+                            siteKey={siteKey}
+                            tag={selectedTag}
+                            isOpen={Boolean(selectedTag)}
+                            page={drawerPage}
+                            pageSize={drawerPageSize}
+                            deletingNodeId={deletingNodeId}
+                            onClose={() => setSelectedTag(null)}
+                            onPageChange={setDrawerPage}
+                            onPageSizeChange={newPageSize => {
+                                setDrawerPageSize(newPageSize);
+                                setDrawerPage(0);
+                            }}
+                            onEditTagOnNode={setEditNodeTarget}
+                            onDeleteTagOnNode={handleDeleteTagOnNode}
+                        />
                     </div>
-
-                    <TagManagerDrawer
-                        siteKey={siteKey}
-                        tag={selectedTag}
-                        isOpen={Boolean(selectedTag)}
-                        page={drawerPage}
-                        pageSize={drawerPageSize}
-                        deletingNodeId={deletingNodeId}
-                        onClose={() => setSelectedTag(null)}
-                        onPageChange={setDrawerPage}
-                        onPageSizeChange={newPageSize => {
-                            setDrawerPageSize(newPageSize);
-                            setDrawerPage(0);
-                        }}
-                        onEditTagOnNode={setEditNodeTarget}
-                        onDeleteTagOnNode={handleDeleteTagOnNode}
-                    />
-                </div>
-            </div>
+                }
+            />
 
             <RenameTagDialog
                 siteKey={siteKey}
@@ -333,7 +332,7 @@ export const TagManager = () => {
                 onClose={() => setEditNodeTarget(null)}
                 onConfirm={handleEditTagOnNode}
             />
-        </div>
+        </>
     );
 };
 

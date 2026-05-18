@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {useApolloClient, useQuery} from '@apollo/client';
+import React, {useMemo, useState} from 'react';
+import {useQuery} from '@apollo/client';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {Header, LayoutContent} from '@jahia/moonstone';
@@ -8,12 +8,10 @@ import {GET_MANAGED_TAGS} from './TagManager.gql-queries';
 import {TagManagerTable} from './TagManagerTable';
 import {TagManagerDrawer} from './TagManagerDrawer';
 import {useTagFilter} from './useTagFilter';
-import {refetchTypes, triggerRefetch} from '~/JContent/JContent.refetches';
 import styles from './TagManager.scss';
 
 export const TagManager = () => {
     const {t} = useTranslation('jcontent');
-    const client = useApolloClient();
     const {siteKey, uilang} = useSelector(state => ({
         siteKey: state.site,
         uilang: state.uilang
@@ -33,13 +31,6 @@ export const TagManager = () => {
     const tags = useMemo(() => data?.admin?.jahia?.tagManager?.tags?.nodes || [], [data]);
 
     const {searchTerm, setSearchTerm, normalizedSearch, sort, setSort, filteredTags, sortedTags} = useTagFilter(tags);
-
-    const refreshAfterMutation = useCallback(async () => {
-        await refetch();
-        await client.reFetchObservableQueries();
-        triggerRefetch(refetchTypes.CONTENT_DATA);
-        triggerRefetch(refetchTypes.CONTENT_TREE);
-    }, [client, refetch]);
 
     const siteName = siteNode?.displayName || siteKey;
 
@@ -74,7 +65,7 @@ export const TagManager = () => {
                                 setSelectedTag(null);
                             }
                         }}
-                        onMutationComplete={refreshAfterMutation}
+                        onMutationComplete={refetch}
                     />
 
                     <TagManagerDrawer
@@ -82,7 +73,7 @@ export const TagManager = () => {
                         tag={selectedTag}
                         isOpen={Boolean(selectedTag)}
                         onClose={() => setSelectedTag(null)}
-                        onMutationComplete={refreshAfterMutation}
+                        onMutationComplete={refetch}
                     />
                 </div>
             }

@@ -120,7 +120,7 @@
 }
 
 .selectedRow {
-    background-color: #00A0E3;
+    background-color: var(--color-accent);
 }
 
 .selectedRow :global(.moonstone-typography),

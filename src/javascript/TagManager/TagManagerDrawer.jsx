@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {shallowEqual, useSelector} from 'react-redux';
+import {useNotifications} from '@jahia/react-material';
 import {
     Button,
     Close,
@@ -13,8 +14,9 @@ import {
     Typography
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {GET_TAGGED_CONTENT} from './TagManager.gql-queries';
-import {DeleteNodeTagDialog} from './TagManagerDialogs';
+import {GET_TAGGED_CONTENT, DELETE_TAG_ON_NODE, RENAME_TAG_ON_NODE} from './TagManager.gql-queries';
+import {DeleteNodeTagDialog, EditNodeTagDialog} from './TagManagerDialogs';
+import {getImpactedItemsCount} from './TagManager.utils';
 import {NodeIcon} from '~/utils/NodeIcon';
 import styles from './TagManager.scss';
 
@@ -22,20 +24,24 @@ export const TagManagerDrawer = ({
     siteKey,
     tag = null,
     isOpen = false,
-    page,
-    pageSize,
-    deletingNodeId = null,
     onClose,
-    onPageChange,
-    onPageSizeChange,
-    onEditTagOnNode,
-    onDeleteTagOnNode
+    onMutationComplete
 }) => {
     const {t} = useTranslation('jcontent');
+    const {notify} = useNotifications();
     const {language} = useSelector(state => ({
         language: state.language
     }), shallowEqual);
+
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [deletingNodeId, setDeletingNodeId] = useState(null);
     const [deleteTarget, setDeleteTarget] = useState(null);
+    const [editNodeTarget, setEditNodeTarget] = useState(null);
+
+    const [deleteTagOnNode] = useMutation(DELETE_TAG_ON_NODE);
+    const [renameTagOnNode, updateNodeState] = useMutation(RENAME_TAG_ON_NODE);
+
     const {data, loading, error} = useQuery(GET_TAGGED_CONTENT, {
         variables: {
             siteKey,
@@ -53,19 +59,80 @@ export const TagManagerDrawer = ({
     const totalCount = connection?.pageInfo?.totalCount || 0;
 
     useEffect(() => {
+        setPage(0);
+    }, [tag]);
+
+    useEffect(() => {
         if (isOpen && !loading && totalCount === 0) {
             onClose();
         }
     }, [isOpen, loading, onClose, totalCount]);
 
-    const handleConfirmDelete = async () => {
+    const handleDeleteTagOnNode = useCallback(async nodeId => {
+        setDeletingNodeId(nodeId);
+        try {
+            const {data: mutationData} = await deleteTagOnNode({
+                variables: {
+                    siteKey,
+                    tag,
+                    nodeId
+                }
+            });
+            const result = mutationData?.admin?.jahia?.tagManager?.deleteTagOnNode;
+            await onMutationComplete();
+            notify(
+                t('jcontent:label.contentManager.tagManager.notifications.removeFromContentSuccess', {
+                    count: getImpactedItemsCount(result),
+                    tag
+                }),
+                ['closeButton', 'closeAfter5s']
+            );
+        } catch (e) {
+            notify(e.message, ['closeButton', 'noAutomaticClose']);
+        } finally {
+            setDeletingNodeId(null);
+        }
+    }, [deleteTagOnNode, siteKey, tag, onMutationComplete, notify, t]);
+
+    const handleConfirmDelete = useCallback(async () => {
         if (!deleteTarget) {
             return;
         }
 
-        await onDeleteTagOnNode(deleteTarget.uuid);
+        await handleDeleteTagOnNode(deleteTarget.uuid);
         setDeleteTarget(null);
-    };
+    }, [deleteTarget, handleDeleteTagOnNode]);
+
+    const handleEditTagOnNode = useCallback(async newTag => {
+        if (!editNodeTarget || !tag) {
+            return;
+        }
+
+        try {
+            const {data: mutationData} = await renameTagOnNode({
+                variables: {
+                    siteKey,
+                    tag,
+                    newName: newTag,
+                    nodeId: editNodeTarget.uuid
+                }
+            });
+            const result = mutationData?.admin?.jahia?.tagManager?.renameTagOnNode;
+            await onMutationComplete();
+            notify(
+                t('jcontent:label.contentManager.tagManager.notifications.updateOnContentSuccess', {
+                    count: getImpactedItemsCount(result),
+                    tag,
+                    newTag,
+                    contentName: editNodeTarget.displayName || editNodeTarget.path
+                }),
+                ['closeButton', 'closeAfter5s']
+            );
+            setEditNodeTarget(null);
+        } catch (e) {
+            notify(e.message, ['closeButton', 'noAutomaticClose']);
+        }
+    }, [editNodeTarget, tag, renameTagOnNode, siteKey, onMutationComplete, notify, t]);
 
     return (
         <>
@@ -119,7 +186,7 @@ export const TagManagerDrawer = ({
                                                             size="small"
                                                             data-cm-role="tag-manager-edit-node-tag"
                                                             icon={<Edit/>}
-                                                            onClick={() => onEditTagOnNode(node)}
+                                                            onClick={() => setEditNodeTarget(node)}
                                                         />
                                                     </Tooltip>
                                                     <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.removeFromContent')}>
@@ -152,8 +219,11 @@ export const TagManagerDrawer = ({
                                             of: t('jcontent:label.pagination.of')
                                         }}
                                         rowsPerPageOptions={[10, 25, 50]}
-                                        onPageChange={nextPage => onPageChange(nextPage - 1)}
-                                        onRowsPerPageChange={onPageSizeChange}
+                                        onPageChange={nextPage => setPage(nextPage - 1)}
+                                        onRowsPerPageChange={newPageSize => {
+                                            setPageSize(newPageSize);
+                                            setPage(0);
+                                        }}
                                     />
                                 </>
                             )}
@@ -169,6 +239,15 @@ export const TagManagerDrawer = ({
                 onClose={() => setDeleteTarget(null)}
                 onConfirm={handleConfirmDelete}
             />
+            <EditNodeTagDialog
+                siteKey={siteKey}
+                tag={tag}
+                node={editNodeTarget}
+                isOpen={Boolean(editNodeTarget)}
+                isLoading={updateNodeState.loading}
+                onClose={() => setEditNodeTarget(null)}
+                onConfirm={handleEditTagOnNode}
+            />
         </>
     );
 };
@@ -177,13 +256,6 @@ TagManagerDrawer.propTypes = {
     siteKey: PropTypes.string.isRequired,
     tag: PropTypes.string,
     isOpen: PropTypes.bool,
-    page: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    deletingNodeId: PropTypes.string,
     onClose: PropTypes.func.isRequired,
-    onPageChange: PropTypes.func.isRequired,
-    onPageSizeChange: PropTypes.func.isRequired,
-    onEditTagOnNode: PropTypes.func.isRequired,
-    onDeleteTagOnNode: PropTypes.func.isRequired
+    onMutationComplete: PropTypes.func.isRequired
 };
-

@@ -76,7 +76,7 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('tag1, tag2{enter}', {delay: 500, force: true});
+        tagField.get().find('input[type="text"]').type('tag1, tag2{enter}', {delay: 100, force: true});
 
         tagField.get().find('[role="button"] span').should('have.length', 2, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'tag1');
@@ -92,7 +92,7 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('onetag, threeTag, twotag, threetag, ONETAG, twotags{enter}', {delay: 500, force: true});
+        tagField.get().find('input[type="text"]').type('onetag, threeTag, twotag, threetag, ONETAG, twotags{enter}', {delay: 100, force: true});
 
         tagField.get().find('[role="button"] span').should('have.length', 4, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'onetag');
@@ -110,7 +110,7 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('hello,  {enter}', {delay: 500, force: true});
+        tagField.get().find('input[type="text"]').type('hello,  {enter}', {delay: 100, force: true});
 
         tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 2000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'hello');
@@ -153,20 +153,20 @@ describe('Tags tests in content editor', () => {
 
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
         contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('j', {delay: 500, force: true});
+        tagField.get().find('input[type="text"]').type('j', {delay: 100, force: true});
         cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
         cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('jahia').should('be.visible');
             cy.contains('j@hia').should('be.visible');
         });
         tagField.get().find('input[type="text"]').clear();
-        tagField.get().find('input[type="text"]').type('#', {delay: 500, force: true});
+        tagField.get().find('input[type="text"]').type('#', {delay: 100, force: true});
         cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
         cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('#123').should('be.visible');
         });
         tagField.get().find('input[type="text"]').clear();
-        tagField.get().find('input[type="text"]').type('1', {delay: 500, force: true});
+        tagField.get().find('input[type="text"]').type('1', {delay: 100, force: true});
         cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
         cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('123').should('be.visible');

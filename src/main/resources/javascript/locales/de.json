@@ -284,7 +284,8 @@
           "renameSuccess": "{{count}} Aktualisierungen für {{tag}} angewendet",
           "deleteSuccess": "{{count}} Entfernungen für {{tag}} angewendet",
           "removeFromContentSuccess": "{{count}} Entfernungen für {{tag}} angewendet",
-          "updateOnContentSuccess": "{{tag}} wurde in {{contentName}} zu {{newTag}} geändert"
+          "updateOnContentSuccess": "{{tag}} wurde in {{contentName}} zu {{newTag}} geändert",
+          "partialFailure": "{{count}} Element(e) konnten für \"{{tag}}\" nicht verarbeitet werden"
         },
         "empty": {
           "title": "Keine Tags vorhanden",

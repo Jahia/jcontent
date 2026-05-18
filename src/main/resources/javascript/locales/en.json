@@ -288,7 +288,8 @@
           "renameSuccess": "{{count}} updates applied for \"{{tag}}\"",
           "deleteSuccess": "{{count}} removals applied for \"{{tag}}\"",
           "removeFromContentSuccess": "{{count}} removals applied for \"{{tag}}\"",
-          "updateOnContentSuccess": "\"{{tag}}\" updated to \"{{newTag}}\" on {{contentName}}"
+          "updateOnContentSuccess": "\"{{tag}}\" updated to \"{{newTag}}\" on {{contentName}}",
+          "partialFailure": "{{count}} item(s) could not be processed for \"{{tag}}\""
         },
         "empty": {
           "title": "No tags to display",

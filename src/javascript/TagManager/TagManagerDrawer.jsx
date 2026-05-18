@@ -17,7 +17,7 @@ import {useTranslation} from 'react-i18next';
 import {GET_TAGGED_CONTENT, DELETE_TAG_ON_NODE, RENAME_TAG_ON_NODE} from './TagManager.gql-queries';
 import {DeleteNodeTagDialog} from './DeleteNodeTagDialog';
 import {EditNodeTagDialog} from './EditNodeTagDialog';
-import {getImpactedItemsCount} from './TagManager.utils';
+import {getFailedCount, getImpactedItemsCount} from './TagManager.utils';
 import {NodeIcon} from '~/utils/NodeIcon';
 import styles from './TagManager.scss';
 
@@ -88,6 +88,15 @@ export const TagManagerDrawer = ({
                 }),
                 ['closeButton', 'closeAfter5s']
             );
+            if (getFailedCount(result) > 0) {
+                notify(
+                    t('jcontent:label.contentManager.tagManager.notifications.partialFailure', {
+                        count: getFailedCount(result),
+                        tag
+                    }),
+                    ['closeButton', 'noAutomaticClose']
+                );
+            }
         } catch (e) {
             notify(e.message, ['closeButton', 'noAutomaticClose']);
         } finally {
@@ -129,6 +138,16 @@ export const TagManagerDrawer = ({
                 }),
                 ['closeButton', 'closeAfter5s']
             );
+            if (getFailedCount(result) > 0) {
+                notify(
+                    t('jcontent:label.contentManager.tagManager.notifications.partialFailure', {
+                        count: getFailedCount(result),
+                        tag
+                    }),
+                    ['closeButton', 'noAutomaticClose']
+                );
+            }
+
             setEditNodeTarget(null);
         } catch (e) {
             notify(e.message, ['closeButton', 'noAutomaticClose']);

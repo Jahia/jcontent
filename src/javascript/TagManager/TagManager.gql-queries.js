@@ -61,6 +61,8 @@ export const RENAME_TAG_ON_NODE = gql`
                         workspaceResults {
                             workspace
                             processedCount
+                            failedCount
+                            failedPaths
                         }
                     }
                 }
@@ -79,6 +81,8 @@ export const RENAME_TAG = gql`
                         workspaceResults {
                             workspace
                             processedCount
+                            failedCount
+                            failedPaths
                         }
                     }
                 }
@@ -97,6 +101,8 @@ export const DELETE_TAG = gql`
                         workspaceResults {
                             workspace
                             processedCount
+                            failedCount
+                            failedPaths
                         }
                     }
                 }
@@ -116,6 +122,8 @@ export const DELETE_TAG_ON_NODE = gql`
                         workspaceResults {
                             workspace
                             processedCount
+                            failedCount
+                            failedPaths
                         }
                     }
                 }

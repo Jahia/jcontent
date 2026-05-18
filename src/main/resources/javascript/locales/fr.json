@@ -284,7 +284,8 @@
           "renameSuccess": "{{count}} mises à jour appliquées pour \"{{tag}}\"",
           "deleteSuccess": "{{count}} suppressions appliquées pour \"{{tag}}\"",
           "removeFromContentSuccess": "{{count}} suppressions appliquées pour \"{{tag}}\"",
-          "updateOnContentSuccess": "\"{{tag}}\" a été remplacé par \"{{newTag}}\" sur {{contentName}}"
+          "updateOnContentSuccess": "\"{{tag}}\" a été remplacé par \"{{newTag}}\" sur {{contentName}}",
+          "partialFailure": "{{count}} élément(s) n'ont pas pu être traités pour \"{{tag}}\""
         },
         "empty": {
           "title": "Aucun tag à afficher",

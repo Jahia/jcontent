@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Button, Close, Input, Search} from '@jahia/moonstone';
+import {Button} from '@jahia/moonstone';
 import {Trans, useTranslation} from 'react-i18next';
-import {useTagSuggestions} from './useTagSuggestions';
-import {TagSuggestions} from './TagSuggestions';
+import {TagNameInput} from './TagNameInput';
 import styles from './TagManager.scss';
 
 export const RenameTagDialog = ({siteKey, siteName, tag = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
     const [value, setValue] = useState(tag?.name || '');
-
     const normalizedValue = value.trim();
-    const suggestions = useTagSuggestions({siteKey, isOpen, value});
 
     return (
         <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-rename-dialog'}} onClose={onClose}>
@@ -31,27 +28,14 @@ export const RenameTagDialog = ({siteKey, siteName, tag = null, isOpen = false, 
                         ]}
                     />
                 </DialogContentText>
-                <Input
-                    autoFocus
-                    size="big"
-                    className={styles.renameInput}
-                    data-cm-role="tag-manager-rename-input"
-                    value={value}
+                <TagNameInput
+                    siteKey={siteKey}
+                    isOpen={isOpen}
+                    initialValue={tag?.name || ''}
                     placeholder={t('jcontent:label.contentManager.tagManager.rename.placeholder')}
-                    variant={{interactive: <Search/>}}
-                    postfixComponents={value ? (
-                        <Button
-                            icon={<Close/>}
-                            variant="ghost"
-                            onClick={() => setValue('')}
-                        />
-                    ) : null}
-                    onChange={event => setValue(event.target.value)}
-                />
-                <TagSuggestions
-                    label={t('jcontent:label.contentManager.tagManager.rename.suggestions')}
-                    suggestions={suggestions}
-                    onSelect={setValue}
+                    suggestionsLabel={t('jcontent:label.contentManager.tagManager.rename.suggestions')}
+                    dataCmRole="tag-manager-rename-input"
+                    onChange={setValue}
                 />
             </DialogContent>
             <DialogActions className={styles.dialogActions}>

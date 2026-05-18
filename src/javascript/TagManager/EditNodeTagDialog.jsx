@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Button, Close, Input, Search} from '@jahia/moonstone';
+import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useTagSuggestions} from './useTagSuggestions';
-import {TagSuggestions} from './TagSuggestions';
+import {TagNameInput} from './TagNameInput';
 import styles from './TagManager.scss';
 
 export const EditNodeTagDialog = ({siteKey, tag = null, node = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
     const [value, setValue] = useState(tag || '');
-
     const normalizedValue = value.trim();
-    const suggestions = useTagSuggestions({siteKey, isOpen, value});
 
     return (
         <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-edit-node-dialog'}} onClose={onClose}>
@@ -21,27 +18,14 @@ export const EditNodeTagDialog = ({siteKey, tag = null, node = null, isOpen = fa
                 <DialogContentText className={styles.dialogText}>
                     {t('jcontent:label.contentManager.tagManager.editNodeTag.description')}
                 </DialogContentText>
-                <Input
-                    autoFocus
-                    size="big"
-                    className={styles.renameInput}
-                    data-cm-role="tag-manager-edit-node-input"
-                    value={value}
+                <TagNameInput
+                    siteKey={siteKey}
+                    isOpen={isOpen}
+                    initialValue={tag || ''}
                     placeholder={t('jcontent:label.contentManager.tagManager.editNodeTag.placeholder')}
-                    variant={{interactive: <Search/>}}
-                    postfixComponents={value ? (
-                        <Button
-                            icon={<Close/>}
-                            variant="ghost"
-                            onClick={() => setValue('')}
-                        />
-                    ) : null}
-                    onChange={event => setValue(event.target.value)}
-                />
-                <TagSuggestions
-                    label={t('jcontent:label.contentManager.tagManager.editNodeTag.suggestions')}
-                    suggestions={suggestions}
-                    onSelect={setValue}
+                    suggestionsLabel={t('jcontent:label.contentManager.tagManager.editNodeTag.suggestions')}
+                    dataCmRole="tag-manager-edit-node-input"
+                    onChange={setValue}
                 />
             </DialogContent>
             <DialogActions className={styles.dialogActions}>

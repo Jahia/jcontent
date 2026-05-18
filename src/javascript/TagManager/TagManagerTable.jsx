@@ -297,6 +297,7 @@ export const TagManagerTable = ({
             </div>
 
             <RenameTagDialog
+                key={renameTarget?.name}
                 siteKey={siteKey}
                 siteName={siteName}
                 tag={renameTarget}

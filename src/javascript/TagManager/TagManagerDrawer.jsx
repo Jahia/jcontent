@@ -240,6 +240,7 @@ export const TagManagerDrawer = ({
                 onConfirm={handleConfirmDelete}
             />
             <EditNodeTagDialog
+                key={editNodeTarget?.uuid}
                 siteKey={siteKey}
                 tag={tag}
                 node={editNodeTarget}

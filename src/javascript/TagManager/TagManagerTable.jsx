@@ -22,7 +22,7 @@ import styles from './TagManager.scss';
 /* eslint-disable react/prop-types */
 export const TagManagerTable = ({
     tags,
-    selectedTag,
+    selectedTag = null,
     totalCount,
     page,
     pageSize,
@@ -193,6 +193,3 @@ TagManagerTable.propTypes = {
     onDelete: PropTypes.func.isRequired
 };
 
-TagManagerTable.defaultProps = {
-    selectedTag: null
-};

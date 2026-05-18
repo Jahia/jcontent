@@ -39,7 +39,7 @@ TagSuggestions.propTypes = {
     onSelect: PropTypes.func.isRequired
 };
 
-export const RenameTagDialog = ({siteKey, siteName, tag, isOpen, isLoading, onClose, onConfirm}) => {
+export const RenameTagDialog = ({siteKey, siteName, tag = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
     const [value, setValue] = useState(tag?.name || '');
 
@@ -123,13 +123,7 @@ RenameTagDialog.propTypes = {
     onConfirm: PropTypes.func.isRequired
 };
 
-RenameTagDialog.defaultProps = {
-    tag: null,
-    isOpen: false,
-    isLoading: false
-};
-
-export const DeleteTagDialog = ({siteName, tag, isOpen, isLoading, onClose, onConfirm}) => {
+export const DeleteTagDialog = ({siteName, tag = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
 
     return (
@@ -181,13 +175,7 @@ DeleteTagDialog.propTypes = {
     onConfirm: PropTypes.func.isRequired
 };
 
-DeleteTagDialog.defaultProps = {
-    tag: null,
-    isOpen: false,
-    isLoading: false
-};
-
-export const DeleteNodeTagDialog = ({tag, node, isOpen, isLoading, onClose, onConfirm}) => {
+export const DeleteNodeTagDialog = ({tag = null, node = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
 
     return (
@@ -239,14 +227,7 @@ DeleteNodeTagDialog.propTypes = {
     onConfirm: PropTypes.func.isRequired
 };
 
-DeleteNodeTagDialog.defaultProps = {
-    tag: null,
-    node: null,
-    isOpen: false,
-    isLoading: false
-};
-
-export const EditNodeTagDialog = ({siteKey, tag, node, isOpen, isLoading, onClose, onConfirm}) => {
+export const EditNodeTagDialog = ({siteKey, tag = null, node = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
     const {t} = useTranslation('jcontent');
     const [value, setValue] = useState(tag || '');
 
@@ -320,9 +301,3 @@ EditNodeTagDialog.propTypes = {
     onConfirm: PropTypes.func.isRequired
 };
 
-EditNodeTagDialog.defaultProps = {
-    tag: null,
-    node: null,
-    isOpen: false,
-    isLoading: false
-};

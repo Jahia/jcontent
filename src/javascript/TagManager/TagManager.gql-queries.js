@@ -5,7 +5,7 @@ export const GET_MANAGED_TAGS = gql`
         admin {
             jahia {
                 tagManager(siteKey: $siteKey) {
-                    tags(sortBy: NAME, sortOrder: ASC) {
+                    tags {
                         nodes {
                             name
                             occurrences

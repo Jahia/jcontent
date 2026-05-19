@@ -146,7 +146,7 @@ describe('Page builder - insertion points', () => {
     after(() => {
         // Reset limit back to default
         setButtonLimit('5');
-        deleteSite(siteKey);
+        //deleteSite(siteKey);
     });
 
     beforeEach(() => {
@@ -179,6 +179,7 @@ describe('Page builder - insertion points', () => {
             .visit(siteKey, 'en', 'pages/home/page-six-multiple')
             .switchToPageBuilder();
 
+        cy.wait(3000)
         for (let i = 1; i <= 6; i++) {
             assertButtonByRole(pageBuilder, `cent:childObject${i}`);
         }

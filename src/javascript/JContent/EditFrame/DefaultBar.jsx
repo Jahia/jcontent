@@ -58,11 +58,11 @@ export const LabelBar = ({node, area, dragProps}) => {
     const title = truncate(node.displayName, 24);
     const boundComponentTitleAddOn = node?.boundComponent?.refNode?.displayName ? ` - ${t('jcontent:label.contentManager.pageBuilder.box.linkedTo')} ${node?.boundComponent?.refNode?.displayName}` : '';
 
-    if (area) {A
+    if (area) {
         let label = area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List';
 
         if (area.isArea || area.isArea && node.primaryNodeType?.name !== 'jnt:contentList') {
-            label += ` - ${node.primaryNodeType?.displayName}`
+            label = `${node.primaryNodeType?.displayName}`
         }
 
         return (

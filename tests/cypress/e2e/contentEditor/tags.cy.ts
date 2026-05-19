@@ -61,10 +61,16 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.addNewValue('simpletag');
+        const input = tagField.get().find('input[type="text"]');
+
+        input.should('be.visible').and('not.be.disabled');
+        input.click({force: true});
+        input.clear({force: true});
+        input.type('simpletag{enter}', {delay: 100, force: true});
 
         tagField.get().find('[role="button"] span').should('have.length', 1, {timeout: 10000});
         tagField.get().find('[role="button"] span').eq(0).should('have.text', 'simpletag');
+
         contentEditor.cancelAndDiscard();
     });
 

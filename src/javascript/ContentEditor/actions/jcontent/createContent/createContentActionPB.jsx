@@ -64,7 +64,7 @@ export const CreateContentPB = ({
             actions,
             missingNodes: false
         };
-    }, [Loading, resNode, path, otherProps.defaultIcon]);
+    }, [Loading, resNode, path, otherProps.defaultIcon, nodeTypes]);
 
     useEffect(() => {
         onVisibilityChanged?.(isVisible);
@@ -112,7 +112,8 @@ CreateContentPB.propTypes = {
     loading: PropTypes.func,
     onVisibilityChanged: PropTypes.func,
     labelProps: PropTypes.object,
-    nodeData: PropTypes.object
+    nodeData: PropTypes.object,
+    nodeTypes: PropTypes.object
 };
 
 export const createContentActionPB = {

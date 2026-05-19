@@ -62,7 +62,7 @@ export const LabelBar = ({node, area, dragProps}) => {
         let label = area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List';
 
         if (area.isArea && node.primaryNodeType?.name !== 'jnt:contentList') {
-            label = `${node.primaryNodeType?.displayName}`
+            label = `${node.primaryNodeType?.displayName}`;
         }
 
         return (

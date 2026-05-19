@@ -179,30 +179,21 @@ describe('Page builder - insertion points', () => {
             .visit(siteKey, 'en', 'pages/home/page-six-multiple')
             .switchToPageBuilder();
 
-        cy.wait(3000)
-        cy.log('Works up to here')
         for (let i = 1; i <= 6; i++) {
             assertButtonByRole(pageBuilder, `cent:childObject${i}`);
         }
-
-        cy.log('Works up to here 1')
 
         clickButtonByRole(pageBuilder, 'cent:childObject1');
         const contentEditor = new ContentEditor();
         contentEditor.create();
 
-        cy.log('Works up to here 2')
-
-        const updatedModule = pageBuilder.getModule(modulePath, false);
+        const updatedModule = pageBuilder.getModule(modulePath);
         updatedModule.get().scrollIntoView();
         updatedModule.get().click('bottomLeft', {force: true});
 
-        cy.log('Works up to here 3')
         for (let i = 1; i <= 6; i++) {
             assertButtonByRole(pageBuilder, `cent:childObject${i}`);
         }
-
-        cy.log('Works up to here 4')
     });
 
     it('sixChildObjectsSingle still shows six buttons while sixChildObjectsMultiple collapses to one when limit is 5', () => {

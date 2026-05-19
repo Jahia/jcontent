@@ -44,7 +44,7 @@ export const CreateContentPB = ({
 
         // Note: acceptedNodeTypes is based on the DOM if we were able to find it, allowedChildNodeTypes is the info from JCR
         let resolvedNodeTypesForAction = [];
-        // nodeTypes come from placeholder's nodetypes attribute, as each action is created for such placeholder we want to match what that button can create
+        // NodeTypes come from placeholder's nodetypes attribute, as each action is created for such placeholder we want to match what that button can create
         if (resNode.acceptedNodeTypes.size > 0) {
             if (nodeTypes?.length > 0) {
                 resolvedNodeTypesForAction = nodeTypes
@@ -54,6 +54,7 @@ export const CreateContentPB = ({
                 resolvedNodeTypesForAction = [...resNode.acceptedNodeTypes.values()];
             }
         }
+
         const resolvedNodeTypes = resolvedNodeTypesForAction.length > 0 ? resolvedNodeTypesForAction : resNode.allowedChildNodeTypes;
         const actions = transformNodeTypesToActionsPB(resolvedNodeTypes, false, resNode?.name, otherProps.defaultIcon);
 
@@ -82,7 +83,7 @@ export const CreateContentPB = ({
     };
 
     return actions.map(result => (
-            <Render
+        <Render
             key={result.key}
             dataSelRole="createContent"
             enabled={!isDisabled && !resNode?.lockOwner}

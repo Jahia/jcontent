@@ -170,7 +170,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const insertionStyle = {};
     if (isInsertionPoint && !isEmpty) {
         insertionStyle.height = 0;
-        insertionStyle.zIndex = 25001;
+        insertionStyle.zIndex = 1000000;
 
         if (isVertical) {
             const btnWidth = 42;
@@ -205,7 +205,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             onVisibilityChanged={onCreateVisibilityChanged}
             onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
         />
-    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
+    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes]);
 
     return !anyDragging && (
         <div ref={drop}

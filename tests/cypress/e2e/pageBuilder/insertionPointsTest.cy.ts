@@ -175,7 +175,7 @@ describe('Page builder - insertion points', () => {
 
     it('shows correct create buttons for sixChildObjectsMultiple and verifies insertion points after create', () => {
         const modulePath = `${homePath}/page-six-multiple/area-main/test-six-multiple`;
-        const pageBuilder = JContent
+        let pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-six-multiple')
             .switchToPageBuilder();
 
@@ -186,6 +186,11 @@ describe('Page builder - insertion points', () => {
         clickButtonByRole(pageBuilder, 'cent:childObject1');
         const contentEditor = new ContentEditor();
         contentEditor.create();
+
+        // Renavigate to refresh module state
+        pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-six-multiple')
+            .switchToPageBuilder();
 
         const updatedModule = pageBuilder.getModule(modulePath);
         updatedModule.get().scrollIntoView();

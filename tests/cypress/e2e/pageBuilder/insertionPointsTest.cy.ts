@@ -146,7 +146,7 @@ describe('Page builder - insertion points', () => {
     after(() => {
         // Reset limit back to default
         setButtonLimit('5');
-        //deleteSite(siteKey);
+        deleteSite(siteKey);
     });
 
     beforeEach(() => {

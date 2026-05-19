@@ -98,7 +98,6 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-        const input = tagField.get().find('input[type="text"]');
         tagField.get().find('input[type="text"]').type('onetag, threeTag, twotag, threetag, ONETAG, twotags{enter}', {delay: 100, force: true});
 
         tagField.get().find('[role="button"]').should('have.length', 4, {timeout: 10000});

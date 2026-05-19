@@ -1,6 +1,14 @@
-export function getChildrenOrder(formValues, nodeData) {
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
+
+export function getChildrenOrder(formValues, nodeData, sections) {
     const doNotModifyReturn = {shouldModifyChildren: false, childrenOrder: []};
     if (!formValues['Children::Order'] || formValues['Children::Order'].length === 1) {
+        return doNotModifyReturn;
+    }
+
+    const orderingFieldSet = sections && sections.reduce((found, section) =>
+        found || section.fieldSets.find(fs => fs.name === Constants.ordering.automaticOrdering.mixin), null);
+    if (orderingFieldSet && orderingFieldSet.readOnly) {
         return doNotModifyReturn;
     }
 

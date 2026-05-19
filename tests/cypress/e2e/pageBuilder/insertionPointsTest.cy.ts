@@ -192,7 +192,7 @@ describe('Page builder - insertion points', () => {
             .visit(siteKey, 'en', 'pages/home/page-six-multiple')
             .switchToPageBuilder();
 
-        const updatedModule = pageBuilder.getModule(modulePath);
+        const updatedModule = pageBuilder.getModule(modulePath, false);
         updatedModule.get().scrollIntoView();
         updatedModule.get().click('bottomLeft', {force: true});
 

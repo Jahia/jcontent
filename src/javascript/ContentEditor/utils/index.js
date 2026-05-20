@@ -9,4 +9,5 @@ export * from './getNodeTypeIcon';
 export * from './systemName.utils';
 export * from './useKeydownListener';
 export * from './useSwitchLanguage';
+export * from './useOpenInEditor';
 export * from './useReorderList';

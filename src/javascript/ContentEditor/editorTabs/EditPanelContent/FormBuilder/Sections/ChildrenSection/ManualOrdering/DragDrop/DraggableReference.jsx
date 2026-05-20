@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {Tooltip, File, Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
-import {useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
+import {useOpenInEditor, useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
 import {getIconFromNode, getWebpUrl} from '~/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import clsx from 'clsx';
@@ -21,6 +21,7 @@ export const DraggableReference = ({
 }) => {
     const {t} = useTranslation('jcontent');
     const isDraggable = fieldLength > 1;
+    const openInEditor = useOpenInEditor();
 
     const ref = useRef(null);
     const [{handlerId}, drop] = useReorderDrop(
@@ -52,6 +53,12 @@ export const DraggableReference = ({
                 emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                 emptyIcon={<File/>}
                 isReadOnly={child.readOnly}
+                fieldData={{
+                    displayName: child.displayName,
+                    name: child.name,
+                    type: child.primaryNodeType.displayName,
+                    thumbnail: child.thumbnailUrl || getWebpUrl(child) || getIconFromNode(child)
+                }}
                 cardAction={fieldLength > 1 &&
                     <div className={styles.referenceCardActions}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
@@ -99,12 +106,7 @@ export const DraggableReference = ({
                             </Tooltip>
                         </div>
                     </div>}
-                fieldData={{
-                    displayName: child.displayName,
-                    name: child.name,
-                    type: child.primaryNodeType.displayName,
-                    thumbnail: child.thumbnailUrl || getWebpUrl(child) || getIconFromNode(child)
-                }}
+                onClick={() => openInEditor(child.uuid)}
             />
         </div>
     );

@@ -1,15 +1,11 @@
-import {Dropdown} from '@jahia/cypress';
-import {getComponent} from '@jahia/cypress';
-import {Menu} from '@jahia/cypress';
+import {Dropdown, getComponent, Menu} from '@jahia/cypress';
 
 export class LanguageSwitcher extends Dropdown {
     static defaultSelector = '[data-cm-role="language-switcher"]';
 
     // @deprecated use `selectLangByValue` instead
     selectLang(displayLang: string) {
-        this.select(displayLang).get()
-            .find(`span[title="${displayLang}"]`)
-            .should('be.visible');
+        this.select(displayLang).get().find(`div[aria-label="${displayLang}"]`).should('be.visible');
     }
 
     selectLangByValue(value: string): this {

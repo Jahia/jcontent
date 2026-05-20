@@ -277,20 +277,4 @@ describe('Content editor fields tests', () => {
         });
         contentEditor.cancel();
     });
-
-    it.skip('check ckeditor field', () => {
-        const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
-        contentEditor.switchToAdvancedMode();
-
-        cy.get('[data-sel-content-editor-field="qant:allFields_sharedBigtext"]')
-            .find('.cke_button__bold')
-            .should('exist')
-            .and('have.attr', 'title', 'Bold (Ctrl+B)');
-
-        cy.get('[data-sel-content-editor-field="qant:allFields_offersMinTsAndCsFinanceStandard"]')
-            .find('.cke_button__language')
-            .should('exist')
-            .and('have.attr', 'title', 'Set language');
-        contentEditor.cancel();
-    });
 });

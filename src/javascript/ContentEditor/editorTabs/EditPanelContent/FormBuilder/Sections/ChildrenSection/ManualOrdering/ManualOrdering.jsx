@@ -61,7 +61,7 @@ ManualOrderingField.propTypes = {
 
 export const ManualOrdering = () => {
     const {sections} = useContentEditorSectionContext();
-    const orderingFieldSet = sections && sections.reduce((found, section) =>
+    const orderingFieldSet = sections?.reduce((found, section) =>
         found || section.fieldSets.find(fs => fs.name === Constants.ordering.automaticOrdering.mixin), null);
     const readOnly = orderingFieldSet?.readOnly === true;
 

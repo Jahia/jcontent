@@ -6,9 +6,9 @@ export function getChildrenOrder(formValues, nodeData, sections) {
         return doNotModifyReturn;
     }
 
-    const orderingFieldSet = sections && sections.reduce((found, section) =>
+    const orderingFieldSet = sections?.reduce((found, section) =>
         found || section.fieldSets.find(fs => fs.name === Constants.ordering.automaticOrdering.mixin), null);
-    if (orderingFieldSet && orderingFieldSet.readOnly) {
+    if (orderingFieldSet?.readOnly) {
         return doNotModifyReturn;
     }
 

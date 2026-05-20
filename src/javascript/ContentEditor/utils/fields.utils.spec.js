@@ -342,6 +342,17 @@ describe('EditPanel utils', () => {
             },
             formValues: {
                 [sections[0].fieldSets[2].name + '_readOnly']: 'new value'
+            },
+            // ReadOnly fields are skipped on edit (nodeData present) but saved on create (no nodeData)
+            newExpectedPropsToSave: [{
+                language: 'fr',
+                name: 'readOnly',
+                option: undefined,
+                type: 'type',
+                value: 'new value'
+            }],
+            newExpectedPropsFieldMapping: {
+                readOnly: sections[0].fieldSets[2].name + '_readOnly'
             }
         },
         {
@@ -684,7 +695,7 @@ describe('EditPanel utils', () => {
     const lang = 'fr';
 
     describe('getDataToMutate', () => {
-        testCases.forEach(({name, nodeData, formValues, ExpectedPropsToSave, ExpectedPropsToDelete, skipCreate, expectedPropsFieldMapping}) => {
+        testCases.forEach(({name, nodeData, formValues, ExpectedPropsToSave, ExpectedPropsToDelete, skipCreate, expectedPropsFieldMapping, newExpectedPropsToSave, newExpectedPropsFieldMapping}) => {
             it(`Existing ${name}`, () => {
                 const {propsToSave, propsToDelete, propFieldNameMapping} = getDataToMutate({nodeData, formValues, sections, lang, i18nContext: {}});
                 expect(propsToSave).toEqual(ExpectedPropsToSave || []);
@@ -694,14 +705,14 @@ describe('EditPanel utils', () => {
             if (!skipCreate) {
                 it(`New ${name}`, () => {
                     const {propsToSave, propsToDelete, propFieldNameMapping} = getDataToMutate({formValues, sections, lang, i18nContext: {}});
-                    expect(propsToSave).toEqual(ExpectedPropsToSave || []);
+                    expect(propsToSave).toEqual(newExpectedPropsToSave || ExpectedPropsToSave || []);
                     expect(propsToDelete).toEqual(ExpectedPropsToDelete || []);
-                    expect(propFieldNameMapping).toEqual(expectedPropsFieldMapping || {});
+                    expect(propFieldNameMapping).toEqual(newExpectedPropsFieldMapping || expectedPropsFieldMapping || {});
                 });
             }
         });
 
-        it('should not save a property belonging to a readOnly fieldset', () => {
+        it('should not save a property belonging to a readOnly fieldset on edit', () => {
             const readOnlyField = {
                 nodeType: 'readOnlyFs',
                 name: 'readOnlyFs_prop',
@@ -722,8 +733,9 @@ describe('EditPanel utils', () => {
                     ]
                 }
             ];
+            const nodeDataForEdit = {properties: [{name: 'prop', value: 'old value'}]};
             const formValues = {[readOnlyField.name]: 'new value'};
-            const {propsToSave, propsToDelete} = getDataToMutate({formValues, sections: sectionsWithReadOnlyFieldSet, lang, i18nContext: {}});
+            const {propsToSave, propsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: sectionsWithReadOnlyFieldSet, lang, i18nContext: {}});
             expect(propsToSave).toEqual([]);
             expect(propsToDelete).toEqual([]);
         });

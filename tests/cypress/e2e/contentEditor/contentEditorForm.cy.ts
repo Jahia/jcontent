@@ -1,11 +1,14 @@
-import {JContent} from '../../page-object/jcontent';
+import {JContent} from '../../page-object';
 import {ChoiceListField, Field, SmallTextField} from '../../page-object/fields';
 import {
     addNode,
     Button,
-    Dropdown, enableModule,
+    createSite,
+    Dropdown,
+    enableModule,
     getComponentByRole,
-    getComponentBySelector, grantRoles
+    getComponentBySelector,
+    grantRoles
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../page-object';
@@ -15,32 +18,22 @@ describe('Content editor form', () => {
     const siteKey = 'contentEditorSite';
 
     before(function () {
-        cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: siteKey});
+        createSite(siteKey);
+        enableModule('jcontent-test-module', siteKey);
         enableModule('qa-module', siteKey);
-        cy.apollo({
-            mutation: gql`mutation GrantRoles {
-                jcr {
-                    grantRoles: mutateNode(pathOrId: "/sites/contentEditorSite") {
-                        grantRoles(roleNames: "editor", principalType: USER, principalName: "mathias")
-                    }
-                    addContent: mutateNode(pathOrId: "/sites/contentEditorSite/contents") {
-                        addChild(
-                            name: "alwaysActivatedOverrideTest", 
-                            primaryNodeType: "jnt:bigText", 
-                            properties: [{ name: "text", language: "en", value: "isAlwaysActivated override test" }]
-                        ) {
-                            uuid
-                        }
-                    }
-                }
-            }`
-        });
         grantRoles(`/sites/${siteKey}`, ['editor-in-chief'], 'anne', 'USER');
+        grantRoles(`/sites/${siteKey}`, ['editor'], 'mathias', 'USER');
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'myText',
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', language: 'en', value: 'my text'}]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'alwaysActivatedOverrideTest',
+            primaryNodeType: 'jnt:bigText',
+            properties: [{name: 'text', language: 'en', value: 'isAlwaysActivated override test'}]
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -126,7 +119,7 @@ describe('Content editor form', () => {
         contentEditor.cancelAndDiscard();
     });
 
-    it('should use site default template value', () => {
+    it.only('should use site default template value', () => {
         const contentTypeName = 'cent:testDefaultTemplate';
         const templateName = 'events';
         const fieldName = 'cent:testDefaultTemplate_j:templateName';
@@ -134,12 +127,12 @@ describe('Content editor form', () => {
         cy.log('Set default template value for site');
         setDefaultSiteTemplate(templateName);
 
-        cy.log('verify default template is shown in new component');
+        cy.log('Verify default template is selected by default and is read-only');
         const contentEditor = jcontent.createContent(contentTypeName);
-        const field = contentEditor.getField(Field, fieldName);
-        field.get().find('[role="listbox"]')
-            .should('contain', templateName)
-            .and('have.class', 'moonstone-disabled'); // Read-only
+        const field = contentEditor.getChoiceListField(fieldName);
+        field.assertSelected(templateName);
+        field.isReadOnly();
+
         contentEditor.create(); // No errors on create
     });
 

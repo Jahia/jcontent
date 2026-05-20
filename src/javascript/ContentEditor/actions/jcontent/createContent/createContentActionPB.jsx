@@ -113,7 +113,7 @@ CreateContentPB.propTypes = {
     onVisibilityChanged: PropTypes.func,
     labelProps: PropTypes.object,
     nodeData: PropTypes.object,
-    nodeTypes: PropTypes.object
+    nodeTypes: PropTypes.arrayOf(PropTypes.string)
 };
 
 export const createContentActionPB = {

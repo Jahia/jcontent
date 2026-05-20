@@ -214,7 +214,6 @@ describe('Content editor fields tests', () => {
             .find('[data-sel-action="removeField_0"]')
             .click();
         cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '05/06/2025 20:30');
-        contentEditor.cancelAndDiscard();
     });
 
     it.skip('should add values to number fields', () => {

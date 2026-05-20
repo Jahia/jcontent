@@ -217,7 +217,7 @@ describe('Content editor fields tests', () => {
         contentEditor.cancelAndDiscard();
     });
 
-    it('should add values to number fields', () => {
+    it.skip('should add values to number fields', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 

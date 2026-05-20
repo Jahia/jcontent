@@ -65,7 +65,6 @@ describe('Tags tests in content editor', () => {
 
         tagField.get().find('[role="button"]').should('have.length', 1);
         tagField.get().find('[role="button"]').eq(0).should('have.text', 'simpletag');
-        contentEditor.cancelAndDiscard();
     });
 
     it('should add multiple tags', () => {
@@ -81,8 +80,6 @@ describe('Tags tests in content editor', () => {
         tagField.get().find('[role="button"]').should('have.length', 2, {timeout: 10000});
         tagField.get().find('[role="button"]').eq(0).should('have.text', 'tag1');
         tagField.get().find('[role="button"]').eq(1).should('have.text', 'tag2');
-
-        contentEditor.cancelAndDiscard();
     });
 
     it('should not add duplicate tags', () => {
@@ -98,8 +95,6 @@ describe('Tags tests in content editor', () => {
         tagField.get().find('[role="button"]').should('have.length', 2, {timeout: 10000});
         tagField.get().find('[role="button"]').eq(0).should('have.text', 'onetag');
         tagField.get().find('[role="button"]').eq(1).should('have.text', 'threetag');
-
-        contentEditor.cancelAndDiscard();
     });
 
     it('should not add empty tag', () => {
@@ -114,8 +109,6 @@ describe('Tags tests in content editor', () => {
 
         tagField.get().find('[role="button"]').should('have.length', 1, {timeout: 10000});
         tagField.get().find('[role="button"]').eq(0).should('have.text', 'hello');
-
-        contentEditor.cancelAndDiscard();
     });
 
     it('should add a tag with special characters', () => {
@@ -130,8 +123,6 @@ describe('Tags tests in content editor', () => {
 
         tagField.get().find('[role="button"]').should('have.length', 1, {timeout: 10000});
         tagField.get().find('[role="button"]').eq(0).should('have.text', '$ù!é(.=;:/*');
-
-        contentEditor.cancelAndDiscard();
     });
 
     it('should add tags in dynamicChoicelist field', () => {
@@ -145,8 +136,6 @@ describe('Tags tests in content editor', () => {
         tagField.get().find('[role="button"]').should('have.length', 2, {timeout: 10000});
         tagField.get().find('[role="button"]').eq(0).should('have.text', 'squad-qa');
         tagField.get().find('[role="button"]').eq(1).should('have.text', 'team-qa');
-
-        contentEditor.cancelAndDiscard();
     });
 
     it.skip('should have auto-completion', () => {
@@ -175,6 +164,5 @@ describe('Tags tests in content editor', () => {
         cy.get('[class*="css-26l3qy-menu"]').within(() => {
             cy.contains('123').should('be.visible');
         });
-        contentEditor.cancelAndDiscard();
     });
 });

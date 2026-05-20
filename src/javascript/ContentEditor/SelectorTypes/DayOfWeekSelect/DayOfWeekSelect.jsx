@@ -43,7 +43,7 @@ export const DayOfWeekSelect = ({field, id, value, inputContext, onChange, onBlu
             <Dropdown
                 hasSearch
                 className="flexFluid"
-                id={id}
+                id={'dayofweek-' + id}
                 variant="outlined"
                 size="medium"
                 icon={toIconComponent(inputContext?.selectorType?.properties?.find(p => p.name === 'iconStart')?.value)}

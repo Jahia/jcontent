@@ -124,7 +124,7 @@ export class ContentEditor extends BasePage {
 
     cancelAndDiscard() {
         getComponentByRole(Button, 'backButton').click();
-        getComponentByRole(Button, 'close-dialog-discard').click();
+        getComponentByRole(Button, 'close-dialog-discard').get().should('be.visible').click();
     }
 
     addAnotherContent() {

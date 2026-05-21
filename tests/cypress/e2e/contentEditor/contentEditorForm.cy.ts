@@ -52,7 +52,7 @@ describe('Content editor form', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });
 
     function setDefaultSiteTemplate(templateName) {
@@ -119,7 +119,7 @@ describe('Content editor form', () => {
         contentEditor.cancelAndDiscard();
     });
 
-    it.only('should use site default template value', () => {
+    it('should use site default template value', () => {
         const contentTypeName = 'cent:testDefaultTemplate';
         const templateName = 'events';
         const fieldName = 'cent:testDefaultTemplate_j:templateName';
@@ -186,7 +186,7 @@ describe('Content editor form', () => {
 
         cy.logout();
         cy.login('mathias', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor2 = jcontent.createContent('jnt:text');
         const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
         field2.get().find('input').should('have.attr', 'readonly', 'readonly');
@@ -198,7 +198,7 @@ describe('Content editor form', () => {
 
         cy.logout();
         cy.login('mathias', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         jcontent.createContent('jnt:news');
         cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');
     });
@@ -230,7 +230,7 @@ describe('Content editor form', () => {
     it('should not display advanced options tab for editor', () => {
         cy.logout();
         cy.login('mathias', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
 
         ceEditor.switchToAdvancedMode();
@@ -244,7 +244,7 @@ describe('Content editor form', () => {
         cy.logout();
         // Login as editor in chief
         cy.login('anne', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
         ceEditor.switchToAdvancedMode();
         ceEditor.switchToAdvancedOptions();
@@ -272,7 +272,7 @@ describe('Content editor form', () => {
     });
 
     it('should be able to check and uncheck boolean', () => {
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 

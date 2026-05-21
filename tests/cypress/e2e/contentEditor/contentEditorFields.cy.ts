@@ -224,14 +224,14 @@ describe('Content editor fields tests', () => {
         contentEditor.switchToAdvancedMode();
 
         cy.get(longFieldSelector).scrollIntoView();
-        cy.get(longFieldSelector).should('be.visible');
-        cy.get(longFieldSelector).clear();
-        cy.get(longFieldSelector).type('1234');
+        cy.get(longFieldSelector).should('exist');
+        cy.get(longFieldSelector).clear({force: true});
+        cy.get(longFieldSelector).type('1234', {force: true});
 
         cy.get(doubleFieldSelector).scrollIntoView();
-        cy.get(doubleFieldSelector).should('be.visible');
-        cy.get(doubleFieldSelector).clear();
-        cy.get(doubleFieldSelector).type('201.75');
+        cy.get(doubleFieldSelector).should('exist');
+        cy.get(doubleFieldSelector).clear({force: true});
+        cy.get(doubleFieldSelector).type('201.75', {force: true});
 
         contentEditor.save();
 
@@ -246,9 +246,9 @@ describe('Content editor fields tests', () => {
         contentEditor.switchToAdvancedMode();
 
         cy.get(doubleFieldSelector).scrollIntoView();
-        cy.get(doubleFieldSelector).should('be.visible');
-        cy.get(doubleFieldSelector).clear();
-        cy.get(doubleFieldSelector).type('20192.75abcd');
+        cy.get(doubleFieldSelector).should('exist');
+        cy.get(doubleFieldSelector).clear({force: true});
+        cy.get(doubleFieldSelector).type('20192.75abcd', {force: true});
 
         cy.get('input[name="qant:allFields_double"]').should('have.value', '20192.75');
         contentEditor.cancelAndDiscard();

@@ -43,6 +43,7 @@ jobs:
           tests_profile: ${{ matrix.config_file }}
           should_use_build_artifacts: false
           should_skip_artifacts: true
+          docker_compose_file: 'docker-compose-cluster.yml'
           should_skip_notifications: false
           should_skip_testrail: false
           github_token: ${{ secrets.GH_ISSUES_PRS_CHORES }}

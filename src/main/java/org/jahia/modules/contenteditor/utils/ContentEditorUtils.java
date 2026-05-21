@@ -51,6 +51,8 @@ import java.util.stream.Stream;
  */
 public class ContentEditorUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(ContentEditorUtils.class);
+
     private ContentEditorUtils() {
         // prevent new instance of this class
     }
@@ -146,17 +148,21 @@ public class ContentEditorUtils {
 
     private static void getAllowedTypes(Set<String> allowedTypes, List<String> filterNodeType, ExtendedNodeType subType, boolean includeSubTypes) {
         if (filterNodeType != null) {
-            filterNodeType.forEach(ThrowingConsumer.unchecked(filterType -> {
-                if (NodeTypeRegistry.getInstance().getNodeType(filterType).isMixin() || includeSubTypes) {
-                    if (subType.isNodeType(filterType)) {
-                        allowedTypes.add(subType.getName());
+            filterNodeType.forEach(filterType -> {
+                try {
+                    if (NodeTypeRegistry.getInstance().getNodeType(filterType).isMixin() || includeSubTypes) {
+                        if (subType.isNodeType(filterType)) {
+                            allowedTypes.add(subType.getName());
+                        }
+                    } else {
+                        if (subType.getName().equals(filterType)) {
+                            allowedTypes.add(subType.getName());
+                        }
                     }
-                } else {
-                    if (subType.getName().equals(filterType)) {
-                        allowedTypes.add(subType.getName());
-                    }
+                } catch (RepositoryException e) {
+                    logger.warn("Unknown node type '{}', skipping", filterType);
                 }
-            }));
+            });
         } else {
             allowedTypes.add(subType.getName());
         }

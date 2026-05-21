@@ -223,10 +223,12 @@ describe('Content editor fields tests', () => {
 
         contentEditor.switchToAdvancedMode();
 
+        cy.get(longFieldSelector).scrollIntoView();
         cy.get(longFieldSelector).should('be.visible');
         cy.get(longFieldSelector).clear();
         cy.get(longFieldSelector).type('1234');
 
+        cy.get(doubleFieldSelector).scrollIntoView();
         cy.get(doubleFieldSelector).should('be.visible');
         cy.get(doubleFieldSelector).clear();
         cy.get(doubleFieldSelector).type('201.75');
@@ -243,6 +245,7 @@ describe('Content editor fields tests', () => {
 
         contentEditor.switchToAdvancedMode();
 
+        cy.get(doubleFieldSelector).scrollIntoView();
         cy.get(doubleFieldSelector).should('be.visible');
         cy.get(doubleFieldSelector).clear();
         cy.get(doubleFieldSelector).type('20192.75abcd');

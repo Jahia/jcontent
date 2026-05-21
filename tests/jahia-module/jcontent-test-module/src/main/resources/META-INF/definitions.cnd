@@ -193,3 +193,14 @@
 - double2 (double)
 - double3 (double)
 - longReq (long) mandatory
+
+// Regression test types for jahia-private#4940:
+// jmix:templateMixin with NO visible properties must still be applied via addMixin choicelist
+[cent:emptyTemplateMixinTest] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - type (string, choicelist) < 'mixin1', 'mixin2'
+
+[cemix:emptyTemplateMixin1] > jmix:templateMixin mixin
+ extends = cent:emptyTemplateMixinTest
+
+[cemix:emptyTemplateMixin2] > jmix:templateMixin mixin
+ extends = cent:emptyTemplateMixinTest

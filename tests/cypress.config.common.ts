@@ -34,16 +34,21 @@ export const baseConfig = {
                 }
             });
 
-            // Clean up videos for passing tests
-            on('after:spec', (spec, results) => {
-                if (results?.video) {
-                    const failures = results.tests.some(test =>
-                        test.attempts.some(attempt => attempt.state === 'failed')
-                    );
-                    if (!failures) {
-                        // Delete video asynchronously to avoid blocking
-                        fs.promises.unlink(results.video).catch(() => {});
-                    }
+            // Clean up videos for passing tests after compression has finished
+            on('after:run', results => {
+                if (results && 'runs' in results) {
+                    const deletions = results.runs.flatMap(run => {
+                        if (run.video && run.stats.failures === 0) {
+                            const compressedPath = run.video.replace(/\.mp4$/, '-compressed.mp4');
+                            return [
+                                fs.promises.unlink(run.video).catch(() => {}),
+                                fs.promises.unlink(compressedPath).catch(() => {})
+                            ];
+                        }
+
+                        return [];
+                    });
+                    return Promise.all(deletions);
                 }
             });
 

@@ -159,27 +159,39 @@ describe('Tags tests in content editor', () => {
         tagField.get().should('be.visible');
 
         tagField.type('j');
+
         cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
             .contains('jahia')
-            .scrollIntoView()
+            .scrollIntoView();
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('jahia')
             .should('be.visible');
+
         cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
             .contains('j@hia')
-            .scrollIntoView()
+            .scrollIntoView();
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('j@hia')
             .should('be.visible');
 
         tagField.clear();
         tagField.type('#');
+
         cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
             .contains('#123')
-            .scrollIntoView()
+            .scrollIntoView();
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('#123')
             .should('be.visible');
 
         tagField.clear();
         tagField.type('1');
+
         cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
             .contains('123')
-            .scrollIntoView()
+            .scrollIntoView();
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('123')
             .should('be.visible');
 
         contentEditor.cancelAndDiscard();

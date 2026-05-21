@@ -12,7 +12,7 @@ jobs:
     name: Update module signature
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: jahia/jahia-modules-action/update-signature@v2
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
@@ -22,7 +22,7 @@ jobs:
     name: Static Analysis (linting, vulns)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: Jahia/jahia-modules-action/static-analysis@v2
         with:
           auditci_level: critical
@@ -32,8 +32,8 @@ jobs:
     name: Javascript unit tests (yarn test)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
       - name: Run yarn test
@@ -54,7 +54,7 @@ jobs:
         username: ${{ secrets.GH_PACKAGES_USERNAME }}
         password: ${{ secrets.GH_PACKAGES_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: jahia/jahia-modules-action/build@v2
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
@@ -67,7 +67,7 @@ jobs:
     env:
       NEXUS_INTERNAL_URL: ${{ secrets.NEXUS_INTERNAL_URL }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: jahia/jahia-modules-action/sonar-analysis@v2
         with:
           primary_release_branch: main

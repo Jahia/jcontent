@@ -138,31 +138,23 @@ describe('Tags tests in content editor', () => {
         tagField.get().find('[role="button"]').eq(1).should('have.text', 'team-qa');
     });
 
-    it.skip('should have auto-completion', () => {
+    it('should have auto-completion', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsMultiple');
         contentEditor.switchToAdvancedMode();
         contentEditor.openSection('Classification and Metadata');
-        contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-        contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-        tagField.get().find('input[type="text"]').type('j', {delay: 100, force: true});
-        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
-        cy.get('[class*="css-26l3qy-menu"]').within(() => {
-            cy.contains('jahia').should('be.visible');
-            cy.contains('j@hia').should('be.visible');
-        });
-        tagField.get().find('input[type="text"]').clear();
-        tagField.get().find('input[type="text"]').type('#', {delay: 100, force: true});
-        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
-        cy.get('[class*="css-26l3qy-menu"]').within(() => {
-            cy.contains('#123').should('be.visible');
-        });
-        tagField.get().find('input[type="text"]').clear();
-        tagField.get().find('input[type="text"]').type('1', {delay: 100, force: true});
-        cy.get('[class*="css-26l3qy-menu"]').scrollIntoView();
-        cy.get('[class*="css-26l3qy-menu"]').within(() => {
-            cy.contains('123').should('be.visible');
-        });
+        tagField.get().should('be.visible');
+
+        tagField.get().find('input[type="text"]').should('be.visible').type('j', {delay: 100, force: true});
+
+        cy.contains('jahia', {timeout: 10000}).should('be.visible');
+        cy.contains('j@hia', {timeout: 10000}).should('be.visible');
+
+        tagField.get().find('input[type="text"]').clear().type('#', {delay: 100, force: true});
+        cy.contains('#123', {timeout: 10000}).should('be.visible');
+
+        tagField.get().find('input[type="text"]').clear().type('1', {delay: 100, force: true});
+        cy.contains('123', {timeout: 10000}).should('be.visible');
     });
 });

@@ -46,7 +46,8 @@ export const CreateContentPB = ({
         let resolvedNodeTypesForAction = [];
         // NodeTypes come from placeholder's nodetypes attribute, as each action is created for such placeholder we want to match what that button can create
         if (resNode.acceptedNodeTypes.size > 0) {
-            if (nodeTypes?.length > 0) {
+            // If nodetypes is defined, it will be used as the source of truth for calculating available note types
+            if (nodeTypes) {
                 resolvedNodeTypesForAction = nodeTypes
                     .map(nt => resNode.acceptedNodeTypes.get(nt))
                     .filter(nt => nt !== undefined);

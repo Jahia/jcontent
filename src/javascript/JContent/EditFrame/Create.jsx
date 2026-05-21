@@ -39,18 +39,41 @@ function reposition(element, currentOffset, setCurrentOffset) {
     }
 }
 
+/**
+ * There are several types of placeholders and several ways in which node types can be resolved.
+ *
+ * Definition of multiple children of types a and b
+ * <div id="moduleABC" jahiatype="module" nodetypes="a b">
+ *      <div type="placeholder" path="*"/>
+ * </div>
+ *
+ * Definition of a single named child a and multiple children of type b
+ * <div id="moduleABC" jahiatype="module" nodetypes="b">
+ *     <div type="placeholder" path="childName" nodetypes="a"/>
+ *     <div type="placeholder" path="*"/>
+ * </div>
+ *
+ * If named child is added the placehoder will be replaced by <div type="existingNode" />. This is true for all named children.
+ *
+ * Definition of multiple named children of type a and b (it could also be just one child). Note that the parent no longer has nodetypes.
+ * <div id="moduleABC" jahiatype="module">
+ *     <div type="placeholder" path="childName" nodetypes="a"/>
+ *     <div type="placeholder" path="childName" nodetypes="b"/>
+ * </div>
+ */
 export const getElemAttributes = ({element, parent}) => {
     // Need to check here if insertionPoint is an original create button or not,
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
-    const isContainer = element.getAttribute('path') === '*';
+    const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
 
-    const nodePath = (isInsertionPoint || isContainer) ? null : element.getAttribute('path');
+    const nodePath = (isInsertionPoint || isMultipleChildPlaceholder) ? null : element.getAttribute('path');
     const nodeName = element.getAttribute('path').split('/').pop();
 
-    let nodeTypes;
+    // Nodetypes should not be undefined here because if nothing is found nothing should be used
+    let nodeTypes = [];
     let parentAreaType;
-    if (parent.getAttribute('nodetypes') && (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea' || isContainer)) {
+    if (parent.getAttribute('nodetypes')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
         parentAreaType = parent.getAttribute('type');
     }

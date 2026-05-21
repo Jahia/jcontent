@@ -1,6 +1,6 @@
-import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, enableModule, getComponent, getComponentBySelector, Menu} from '@jahia/cypress';
 import gql from 'graphql-tag';
-import {ContentEditor, JContent} from '../../page-object';
+import {ContentEditor, ContentTypeSelector, JContent} from '../../page-object';
 
 const setButtonLimit = (value: string) => {
     return cy.apollo({
@@ -65,6 +65,27 @@ const clickButtonByRole = (pageBuilder, role: string) => {
  *
  *   When the limit is < 6 then all single use buttons are expected to be shown and all buttons that fall into multiple category will be
  *   replaced by one "New content" button which will show content type selector LIMITED to available types, in this case six types.
+ *
+ *   Below are some possible renderings that can happen depending on the definition.
+ *
+ *   Definition of multiple children of types a and b
+ *   <div id="moduleABC" jahiatype="module" nodetypes="a b">
+ *        <div type="placeholder" path="*"/>
+ *   </div>
+ *
+ *   Definition of a single named child a and multiple children of type b
+ *   <div id="moduleABC" jahiatype="module" nodetypes="b">
+ *       <div type="placeholder" path="childName" nodetypes="a"/>
+ *       <div type="placeholder" path="*"/>
+ *   </div>
+ *
+ *   If named child is added the placehoder will be replaced by <div type="existingNode" />. This is true for all named children.
+ *
+ *   Definition of multiple named children of type a and b (it could also be just one child). Note that the parent no longer has nodetypes.
+ *   <div id="moduleABC" jahiatype="module">
+ *       <div type="placeholder" path="childName" nodetypes="a"/>
+ *       <div type="placeholder" path="childName" nodetypes="b"/>
+ *   </div>
  *
  */
 describe('Page builder - insertion points', () => {
@@ -138,6 +159,26 @@ describe('Page builder - insertion points', () => {
                 children: [{
                     name: 'test-six-multiple',
                     primaryNodeType: 'cent:sixChildObjectsMultiple'
+                }]
+            }]
+        });
+
+        // Page with cent:oneChildMultipleList
+        addNode({
+            name: 'page-one-child-list',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'One Child Multiple List', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-one-child-list',
+                    primaryNodeType: 'cent:oneChildMultipleList'
                 }]
             }]
         });
@@ -232,6 +273,37 @@ describe('Page builder - insertion points', () => {
         cy.get(contentTypeDialog)
             .find('[data-sel-role="content-type-tree-item"]')
             .should('have.length', 6);
+    });
+
+    it('shows correct buttons for oneChildMultipleList and verifies context menu', () => {
+        const modulePath = `${homePath}/page-one-child-list/area-main/test-one-child-list`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-one-child-list')
+            .switchToPageBuilder();
+
+        // Should show both "New childObject1" (typed button) and "New content" (generic)
+        assertButtonByRole(pageBuilder, 'cent:childObject1');
+        assertButtonByRole(pageBuilder, 'createContent');
+
+        // Click on the module to select it and show header
+        const module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        assertButtonByRole(pageBuilder, 'cent:childObject1');
+        assertButtonByRole(pageBuilder, 'createContent');
+
+        // Open the three-dot menu from the header
+        const header = module.getBox().getHeader();
+        header.getButton('contentItemActionsMenu').click();
+
+        // Verify "New content" exists in the context menu and click it
+        const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.selectByRole('createContent');
+
+        const selector = getComponent(ContentTypeSelector);
+        const ce = selector.searchForContentType('cent:childObject1').selectContentType('cent:childObject1').create();
+        ce.cancel();
     });
 });
 

@@ -356,7 +356,7 @@ describe('Page builder - insertion points', () => {
 
     it('shows correct working buttons for twoChildObjectsOneMultiple with childObject2 populated', () => {
         const modulePath = `${homePath}/page-two-one-multiple-populated/area-main/test-two-one-multiple-populated`;
-        const pageBuilder = JContent
+        let pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-two-one-multiple-populated')
             .switchToPageBuilder();
 
@@ -378,6 +378,10 @@ describe('Page builder - insertion points', () => {
         let contentEditor = new ContentEditor();
         contentEditor.create();
 
+        pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-two-one-multiple-populated')
+            .switchToPageBuilder();
+
         module = pageBuilder.getModule(modulePath, false);
         module.get().scrollIntoView();
         module.get().click('bottomLeft', {force: true});
@@ -393,7 +397,7 @@ describe('Page builder - insertion points', () => {
 
     it('shows correct buttons for sixChildObjectsSingle with childObject5 populated', () => {
         const modulePath = `${homePath}/page-six-single-populated/area-main/test-six-single-populated`;
-        const pageBuilder = JContent
+        let pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-six-single-populated')
             .switchToPageBuilder();
 
@@ -408,6 +412,10 @@ describe('Page builder - insertion points', () => {
         clickButtonByRole(pageBuilder, 'cent:childObject1');
         let contentEditor = new ContentEditor();
         contentEditor.create();
+
+        pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-six-single-populated')
+            .switchToPageBuilder();
 
         module = pageBuilder.getModule(modulePath, false);
         module.get().scrollIntoView();

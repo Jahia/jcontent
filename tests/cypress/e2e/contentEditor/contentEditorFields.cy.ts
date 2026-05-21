@@ -216,25 +216,36 @@ describe('Content editor fields tests', () => {
         cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '05/06/2025 20:30');
     });
 
-    it.skip('should add values to number fields', () => {
+    it('should save valid values in number fields', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_long"]')
-            .find('input')
+        cy.get('[data-sel-content-editor-field="qant:allFields_long"] input')
+            .should('be.visible')
+            .clear()
             .type('1234');
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_double"]')
-            .find('input')
+        cy.get('[data-sel-content-editor-field="qant:allFields_double"] input')
+            .should('be.visible')
+            .clear()
             .type('201.75');
         contentEditor.save();
 
         cy.get('input[name="qant:allFields_long"]').should('have.value', '1234');
         cy.get('input[name="qant:allFields_double"]').should('have.value', '201.75');
+    });
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_double"]').find('input').clear({force: true});
-        cy.get('[data-sel-content-editor-field="qant:allFields_double"]').find('input').type('20192.75.abcd', {force: true});
+    it('should reject invalid characters in double field', () => {
+        const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
+        contentEditor.switchToAdvancedMode();
+
+        cy.get('[data-sel-content-editor-field="qant:allFields_double"] input')
+            .should('be.visible')
+            .clear()
+            .type('20192.75abcd');
+
         cy.get('input[name="qant:allFields_double"]').should('have.value', '20192.75');
+        contentEditor.cancelAndDiscard();
     });
 
     it('should add values to text area', () => {

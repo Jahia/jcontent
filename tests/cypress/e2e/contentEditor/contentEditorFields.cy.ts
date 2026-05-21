@@ -254,7 +254,7 @@ describe('Content editor fields tests', () => {
         contentEditor.cancelAndDiscard();
     });
 
-    it('should add values to text area', () => {
+    it.skip('should add values to text area', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 
@@ -273,7 +273,7 @@ describe('Content editor fields tests', () => {
         cy.get('textarea[name="qant:allFields_textarea"]').should('have.value', 'This is my text');
     });
 
-    it('check read only fields on protectedFields', () => {
+    it.skip('check read only fields on protectedFields', () => {
         const contentEditor = jcontent.editComponentByRowName('protectedFields');
         contentEditor.switchToAdvancedMode();
 

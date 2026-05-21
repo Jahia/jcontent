@@ -21,7 +21,7 @@ const assertButtonByRole = (pageBuilder, role: string) => {
 };
 
 const clickButtonByRole = (pageBuilder, role: string) => {
-    pageBuilder.iframe().get().find(`button[data-sel-role="${role}"]`).should('be.visible').click();
+    pageBuilder.iframe().get().find(`button[data-sel-role="${role}"]`).filter(':visible').click();
 };
 
 /**
@@ -182,6 +182,54 @@ describe('Page builder - insertion points', () => {
                 }]
             }]
         });
+
+        // Page with cent:twoChildObjectsOneMultiple with childObject2 already populated
+        addNode({
+            name: 'page-two-one-multiple-populated',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Two Child Objects One Multiple Populated', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-two-one-multiple-populated',
+                    primaryNodeType: 'cent:twoChildObjectsOneMultiple',
+                    children: [{
+                        name: 'childObject2',
+                        primaryNodeType: 'cent:childObject2'
+                    }]
+                }]
+            }]
+        });
+
+        // Page with cent:sixChildObjectsSingle with childObject5 already populated
+        addNode({
+            name: 'page-six-single-populated',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Six Child Objects Single Populated', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-six-single-populated',
+                    primaryNodeType: 'cent:sixChildObjectsSingle',
+                    children: [{
+                        name: 'childObject5',
+                        primaryNodeType: 'cent:childObject5'
+                    }]
+                }]
+            }]
+        });
     });
 
     after(() => {
@@ -297,13 +345,82 @@ describe('Page builder - insertion points', () => {
         const header = module.getBox().getHeader();
         header.getButton('contentItemActionsMenu').click();
 
-        // Verify "New content" exists in the context menu and click it
+        // This verifies that we can create an item of childObject1 type as defined by the definition using context menu
         const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
         menu.selectByRole('createContent');
 
         const selector = getComponent(ContentTypeSelector);
         const ce = selector.searchForContentType('cent:childObject1').selectContentType('cent:childObject1').create();
         ce.cancel();
+    });
+
+    it('shows correct working buttons for twoChildObjectsOneMultiple with childObject2 populated', () => {
+        const modulePath = `${homePath}/page-two-one-multiple-populated/area-main/test-two-one-multiple-populated`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-two-one-multiple-populated')
+            .switchToPageBuilder();
+
+        let module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        // With childObject2 populated, only childObject1 (named) and childObject3 (wildcard) buttons remain,
+        // plus insertion point button — verify exactly 3 create buttons total
+        let createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 3);
+
+        createButtons.getButtonByRole('cent:childObject1').should('exist').should('have.length', 1);
+        createButtons.getButtonByRole('cent:childObject3').should('exist').should('have.length', 2);
+
+        // Verify childObject1 can be created
+        assertButtonByRole(pageBuilder, 'cent:childObject1');
+        clickButtonByRole(pageBuilder, 'cent:childObject1');
+        let contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 3);
+        createButtons.getButtonByRole('cent:childObject3').should('exist').should('have.length', 3);
+
+        createButtons.getButtonByRole('cent:childObject3').get().first().click();
+        contentEditor = new ContentEditor();
+        contentEditor.create();
+    });
+
+    it('shows correct buttons for sixChildObjectsSingle with childObject5 populated', () => {
+        const modulePath = `${homePath}/page-six-single-populated/area-main/test-six-single-populated`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-six-single-populated')
+            .switchToPageBuilder();
+
+        let module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        let createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 5);
+        createButtons.get().find('button[data-sel-role="cent:childObject5"]').should('not.exist');
+
+        clickButtonByRole(pageBuilder, 'cent:childObject1');
+        let contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 4);
+        createButtons.get().find('button[data-sel-role="cent:childObject1"]').should('not.exist');
+
+        module.get().click('bottomRight', {force: true});
+        clickButtonByRole(pageBuilder, 'cent:childObject2');
+        contentEditor = new ContentEditor();
+        contentEditor.create();
     });
 });
 

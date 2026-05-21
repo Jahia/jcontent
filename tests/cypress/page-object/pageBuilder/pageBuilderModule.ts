@@ -65,6 +65,14 @@ export class PageBuilderModule extends BaseComponent {
         }));
     }
 
+    getAllCreateButtons() {
+        return new PageBuilderModuleCreateButton(
+            this.getBox().getHeader().get().invoke('attr', 'data-jahia-id').then(id => {
+                return this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-parent="${id}"]`).filter(':visible');
+            })
+        );
+    }
+
     assertHasNoCreateButtons() {
         this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
             return cy.get('iframe[data-sel-role="page-builder-frame-active"]').find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`).should('not.exist');

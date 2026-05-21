@@ -218,17 +218,19 @@ describe('Content editor fields tests', () => {
 
     it('should save valid values in number fields', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
+        const longFieldSelector = '[data-sel-content-editor-field="qant:allFields_long"] input';
+        const doubleFieldSelector = '[data-sel-content-editor-field="qant:allFields_double"] input';
+
         contentEditor.switchToAdvancedMode();
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_long"] input')
-            .should('be.visible')
-            .clear()
-            .type('1234');
+        cy.get(longFieldSelector).should('be.visible');
+        cy.get(longFieldSelector).clear();
+        cy.get(longFieldSelector).type('1234');
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_double"] input')
-            .should('be.visible')
-            .clear()
-            .type('201.75');
+        cy.get(doubleFieldSelector).should('be.visible');
+        cy.get(doubleFieldSelector).clear();
+        cy.get(doubleFieldSelector).type('201.75');
+
         contentEditor.save();
 
         cy.get('input[name="qant:allFields_long"]').should('have.value', '1234');
@@ -237,12 +239,13 @@ describe('Content editor fields tests', () => {
 
     it('should reject invalid characters in double field', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
+        const doubleFieldSelector = '[data-sel-content-editor-field="qant:allFields_double"] input';
+
         contentEditor.switchToAdvancedMode();
 
-        cy.get('[data-sel-content-editor-field="qant:allFields_double"] input')
-            .should('be.visible')
-            .clear()
-            .type('20192.75abcd');
+        cy.get(doubleFieldSelector).should('be.visible');
+        cy.get(doubleFieldSelector).clear();
+        cy.get(doubleFieldSelector).type('20192.75abcd');
 
         cy.get('input[name="qant:allFields_double"]').should('have.value', '20192.75');
         contentEditor.cancelAndDiscard();

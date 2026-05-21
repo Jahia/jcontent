@@ -60,11 +60,12 @@ describe('Tags tests in content editor', () => {
         contentEditor.openSection('Classification and Metadata');
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
-        const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
         tagField.addNewValue('simpletag');
 
-        tagField.get().find('[role="button"]').should('have.length', 1);
-        tagField.get().find('[role="button"]').eq(0).should('have.text', 'simpletag');
+        tagField.getTags().should('have.length', 1);
+        tagField.assertTagText('simpletag', 0);
+        contentEditor.cancelAndDiscard();
     });
 
     it('should add multiple tags', () => {
@@ -74,12 +75,14 @@ describe('Tags tests in content editor', () => {
         contentEditor.openSection('Classification and Metadata');
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
-        const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('tag1, tag2{enter}', {delay: 100, force: true});
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
+        tagField.type('tag1, tag2{enter}');
 
-        tagField.get().find('[role="button"]').should('have.length', 2, {timeout: 10000});
-        tagField.get().find('[role="button"]').eq(0).should('have.text', 'tag1');
-        tagField.get().find('[role="button"]').eq(1).should('have.text', 'tag2');
+        tagField.getTags().should('have.length', 2, {timeout: 10000});
+        tagField.assertTagText('tag1', 0);
+        tagField.assertTagText('tag2', 1);
+
+        contentEditor.cancelAndDiscard();
     });
 
     it('should not add duplicate tags', () => {
@@ -89,12 +92,14 @@ describe('Tags tests in content editor', () => {
         contentEditor.openSection('Classification and Metadata');
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
-        const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('onetag, threeTag, threetag, ONETAG{enter}', {delay: 100, force: true});
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
+        tagField.type('onetag, threeTag, threetag, ONETAG{enter}');
 
-        tagField.get().find('[role="button"]').should('have.length', 2, {timeout: 10000});
-        tagField.get().find('[role="button"]').eq(0).should('have.text', 'onetag');
-        tagField.get().find('[role="button"]').eq(1).should('have.text', 'threetag');
+        tagField.getTags().should('have.length', 2, {timeout: 10000});
+        tagField.assertTagText('onetag', 0);
+        tagField.assertTagText('threetag', 1);
+
+        contentEditor.cancelAndDiscard();
     });
 
     it('should not add empty tag', () => {
@@ -104,11 +109,13 @@ describe('Tags tests in content editor', () => {
         contentEditor.openSection('Classification and Metadata');
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
-        const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
-        tagField.get().find('input[type="text"]').type('hello,  {enter}', {delay: 100, force: true});
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
+        tagField.type('hello,  {enter}');
 
-        tagField.get().find('[role="button"]').should('have.length', 1, {timeout: 10000});
-        tagField.get().find('[role="button"]').eq(0).should('have.text', 'hello');
+        tagField.getTags().should('have.length', 1, {timeout: 10000});
+        tagField.assertTagText('hello', 0);
+
+        contentEditor.cancelAndDiscard();
     });
 
     it('should add a tag with special characters', () => {
@@ -118,43 +125,63 @@ describe('Tags tests in content editor', () => {
         contentEditor.openSection('Classification and Metadata');
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
-        const tagField = contentEditor.getField(TagField, 'jmix\\:tagged_j\\:tagList');
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
         tagField.addNewValue('$ù!é(.=;:/*');
 
-        tagField.get().find('[role="button"]').should('have.length', 1, {timeout: 10000});
-        tagField.get().find('[role="button"]').eq(0).should('have.text', '$ù!é(.=;:/*');
+        tagField.getTags().should('have.length', 1, {timeout: 10000});
+        tagField.assertTagText('$ù!é(.=;:/*', 0);
+
+        contentEditor.cancelAndDiscard();
     });
 
     it('should add tags in dynamicChoicelist field', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsMultiple');
         contentEditor.switchToAdvancedMode();
 
-        const tagField = contentEditor.getField(TagField, 'qant\\:allFieldsMultiple_dynamicChoicelist');
+        const tagField = contentEditor.getField(TagField, 'qant:allFieldsMultiple_dynamicChoicelist');
         tagField.addNewValue('squad-qa');
         tagField.addNewValue('team-qa');
 
-        tagField.get().find('[role="button"]').should('have.length', 2, {timeout: 10000});
-        tagField.get().find('[role="button"]').eq(0).should('have.text', 'squad-qa');
-        tagField.get().find('[role="button"]').eq(1).should('have.text', 'team-qa');
+        tagField.getTags().should('have.length', 2, {timeout: 10000});
+        tagField.assertTagText('squad-qa', 0);
+        tagField.assertTagText('team-qa', 1);
+
+        contentEditor.cancelAndDiscard();
     });
 
     it('should have auto-completion', () => {
-        const contentEditor = jcontent.editComponentByRowName('allFieldsMultiple');
+        const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
         contentEditor.openSection('Classification and Metadata');
+        contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
         tagField.get().should('be.visible');
 
-        tagField.get().find('input[type="text"]').should('be.visible').type('j', {delay: 100, force: true});
+        tagField.type('j');
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('jahia')
+            .scrollIntoView()
+            .should('be.visible');
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('j@hia')
+            .scrollIntoView()
+            .should('be.visible');
 
-        cy.contains('jahia', {timeout: 10000}).should('be.visible');
-        cy.contains('j@hia', {timeout: 10000}).should('be.visible');
+        tagField.clear();
+        tagField.type('#');
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('#123')
+            .scrollIntoView()
+            .should('be.visible');
 
-        tagField.get().find('input[type="text"]').clear().type('#', {delay: 100, force: true});
-        cy.contains('#123', {timeout: 10000}).should('be.visible');
+        tagField.clear();
+        tagField.type('1');
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains('123')
+            .scrollIntoView()
+            .should('be.visible');
 
-        tagField.get().find('input[type="text"]').clear().type('1', {delay: 100, force: true});
-        cy.contains('123', {timeout: 10000}).should('be.visible');
+        contentEditor.cancelAndDiscard();
     });
 });

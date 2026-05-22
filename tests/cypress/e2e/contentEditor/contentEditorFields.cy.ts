@@ -254,7 +254,7 @@ describe('Content editor fields tests', () => {
         contentEditor.cancelAndDiscard();
     });
 
-    it.skip('should add values to text area', () => {
+    it('should add values to text area', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 
@@ -265,6 +265,7 @@ describe('Content editor fields tests', () => {
         cy.get('textarea[name="qant:allFields_textarea"]').should('have.value', 'This is my text');
 
         contentEditor.getLanguageSwitcherAdvancedMode().selectLangByValue('fr');
+        cy.get('textarea[name="qant:allFields_textarea"]').should('have.value', '');
         cy.get('[data-sel-content-editor-field="qant:allFields_textarea"]')
             .find('textarea')
             .type('Voici mon texte');
@@ -273,7 +274,7 @@ describe('Content editor fields tests', () => {
         cy.get('textarea[name="qant:allFields_textarea"]').should('have.value', 'This is my text');
     });
 
-    it.skip('check read only fields on protectedFields', () => {
+    it('check read only fields on protectedFields', () => {
         const contentEditor = jcontent.editComponentByRowName('protectedFields');
         contentEditor.switchToAdvancedMode();
 
@@ -289,6 +290,8 @@ describe('Content editor fields tests', () => {
 
         protectedFields.forEach(fieldName => {
             cy.get(`[data-sel-content-editor-field="${fieldName}"]`)
+                .scrollIntoView()
+                .should('exist')
                 .should('have.attr', 'data-sel-content-editor-field-readonly', 'true');
         });
         contentEditor.cancel();

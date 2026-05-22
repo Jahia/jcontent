@@ -26,7 +26,7 @@ jobs:
         username: ${{ secrets.GH_PACKAGES_USERNAME }}
         password: ${{ secrets.GH_PACKAGES_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ matrix.supported_branches }}
       - uses: jahia/jahia-modules-action/build@v2

@@ -56,16 +56,16 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
     static {
         try {
             paginatedMethod = ContentHistoryService.class.getMethod(
-                    "getNodeHistory",
-                    JCRNodeWrapper.class,
-                    boolean.class,
-                    int.class,
-                    int.class
+                "getNodeHistory",
+                JCRNodeWrapper.class,
+                boolean.class,
+                int.class,
+                int.class
             );
             countMethod = ContentHistoryService.class.getMethod(
-                    "getNodeHistoryCount",
-                    JCRNodeWrapper.class,
-                    boolean.class
+                "getNodeHistoryCount",
+                JCRNodeWrapper.class,
+                boolean.class
             );
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException("Modern methods not available - should use LegacyContentHistoryAdapter", e);
@@ -82,16 +82,16 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             // TODO: replace with a service implementation when jahia parent version >= 8.2.4.0
             if (action != null && !action.trim().isEmpty()) {
                 entries = (List<HistoryEntry>) paginatedMethod.invoke(
-                        ContentHistoryService.getInstance(),
-                        node,
-                        withLanguageNodes,
-                        0,
-                        -1
+                    ContentHistoryService.getInstance(),
+                    node,
+                    withLanguageNodes,
+                    0,
+                    -1
                 );
 
                 entries = entries.stream()
-                        .filter(entry -> action.equals(entry.getAction()))
-                        .collect(Collectors.toList());
+                    .filter(entry -> action.equals(entry.getAction()))
+                    .collect(Collectors.toList());
 
                 // Apply pagination after filtering
                 if (offset > 0 || limit != -1) {
@@ -110,11 +110,11 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
             // No action filter, use pagination directly
             return (List<HistoryEntry>) paginatedMethod.invoke(
-                    ContentHistoryService.getInstance(),
-                    node,
-                    withLanguageNodes,
-                    offset,
-                    limit
+                ContentHistoryService.getInstance(),
+                node,
+                withLanguageNodes,
+                offset,
+                limit
             );
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to call getNodeHistory via reflection", e);
@@ -129,23 +129,23 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             if (action != null && !action.trim().isEmpty()) {
                 @SuppressWarnings("unchecked")
                 List<HistoryEntry> allEntries = (List<HistoryEntry>) paginatedMethod.invoke(
-                        ContentHistoryService.getInstance(),
-                        node,
-                        withLanguageNodes,
-                        0,
-                        -1
+                    ContentHistoryService.getInstance(),
+                    node,
+                    withLanguageNodes,
+                    0,
+                    -1
                 );
 
                 return (int) allEntries.stream()
-                        .filter(entry -> action.equals(entry.getAction()))
-                        .count();
+                    .filter(entry -> action.equals(entry.getAction()))
+                    .count();
             }
 
             // No action filter, use count method directly
             return (Integer) countMethod.invoke(
-                    ContentHistoryService.getInstance(),
-                    node,
-                    withLanguageNodes
+                ContentHistoryService.getInstance(),
+                node,
+                withLanguageNodes
             );
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to call getNodeHistoryCount via reflection", e);

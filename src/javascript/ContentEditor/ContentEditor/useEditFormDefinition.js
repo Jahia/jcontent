@@ -112,7 +112,8 @@ const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
                     label: field.displayName,
                     value: jcrDefinition &&
                         jcrDefinition.value &&
-                        dayjs(jcrDefinition.value).locale(lang).format('L HH:mm')
+                        dayjs(jcrDefinition.value).locale(lang).format('L HH:mm'),
+                    copyable: false
                 };
             }
 

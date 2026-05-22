@@ -27,6 +27,7 @@ import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.history.ContentHistoryService;
 import org.jahia.services.history.HistoryEntry;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -61,18 +62,18 @@ class LegacyContentHistoryAdapter implements ContentHistoryProvider {
                     .collect(Collectors.toList());
         }
 
-        if (limit != -1 || offset > 0) {
-            Stream<HistoryEntry> stream = allEntries.stream();
-            if (offset > 0) {
-                stream = stream.skip(offset);
-            }
-            if (limit > 0) {
-                stream = stream.limit(limit);
-            }
-            allEntries = stream.collect(Collectors.toList());
+        Stream<HistoryEntry> stream = allEntries.stream()
+                .sorted(Comparator.comparingLong((HistoryEntry e) -> e.getDate() != null ? e.getDate() : 0L).reversed());
+
+        if (offset > 0) {
+            stream = stream.skip(offset);
         }
 
-        return allEntries;
+        if (limit > 0) {
+            stream = stream.limit(limit);
+        }
+
+        return stream.collect(Collectors.toList());
     }
 
     @Override

@@ -32,8 +32,7 @@ describe('Hide Preview testsuite', () => {
         getNodeByPath(`/sites/${siteKey}`).then(res => {
             cy.visit(`/jahia/administration/digitall/settings/properties#(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:${siteKey},uilang:en,uuid:'${res.data.jcr.nodeByPath.uuid}')))`);
         });
-        cy.get('[data-sel-role="tab-preview"]').click();
-        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
+        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
     });
 
     it('Preview shouldn\'t exist for a content folder', () => {
@@ -41,8 +40,7 @@ describe('Hide Preview testsuite', () => {
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('ContentFolder');
         ce.switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').click();
-        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
+        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
     });
 
     it('Preview should be visible for a content', () => {
@@ -58,8 +56,7 @@ describe('Hide Preview testsuite', () => {
         const cm = CategoryManager.visitCategoryManager('en');
         const ce = cm.editItem('Annual Filings');
         ce.switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').click();
-        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
+        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
     });
 
     afterEach('logout', () => {

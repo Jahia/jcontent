@@ -36,6 +36,6 @@ export const registerSidePanelTabs = actionsRegistry => {
         value: 'preview',
         dataSelRole: 'tab-preview',
         displayableComponent: Preview,
-        isDisplayable: () => true,
+        isDisplayable: ({hasPreview}) => Boolean(hasPreview),
     });
 };

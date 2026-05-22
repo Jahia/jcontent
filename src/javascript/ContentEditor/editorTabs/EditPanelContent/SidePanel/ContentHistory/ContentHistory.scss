@@ -21,7 +21,11 @@
 }
 
 .historyItem {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-small);
     padding: var(--spacing-small);
+    align-items: center;
 
     border-bottom: 1px solid var(--color-gray_light);
 
@@ -30,20 +34,28 @@
     }
 }
 
-.itemHeader {
-    display: flex;
-    gap: var(--spacing-medium);
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-small);
+.itemAction {
+    flex-shrink: 0;
 }
 
-.itemLeft {
+.itemContent {
     display: flex;
     flex: 1;
-    gap: var(--spacing-small);
-    align-items: center;
+    flex-direction: column;
+    gap: var(--spacing-nano);
     min-width: 0;
+}
+
+.itemNames {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-nano);
+    align-items: baseline;
+    min-width: 0;
+}
+
+.itemLanguage {
+    flex-shrink: 0;
 }
 
 .typeLabel {
@@ -68,14 +80,6 @@
     color: var(--color-gray);
 }
 
-.itemRight {
-    flex-shrink: 0;
-}
-
-.itemFooter {
-    margin-top: var(--spacing-nano);
-}
-
 .metadata {
     color: var(--color-gray);
 }
@@ -95,6 +99,8 @@
 }
 
 .paginationContainer {
+    display: flex;
+    justify-content: center;
     margin-top: var(--spacing-medium);
     padding-top: var(--spacing-medium);
 

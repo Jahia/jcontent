@@ -177,13 +177,11 @@ export const ContentHistory = () => {
             return (
                 <React.Fragment key={entry.id}>
                     <div className={styles.historyItem} data-sel-role="history-item">
-                        <div className={styles.itemHeader}>
-                            <div className={styles.itemLeft}>
-                                {entry.language ? (
-                                    <Pill label={entry.language.toUpperCase()} color="accent"/>
-                                ) : (
-                                    <Pill label={<Language/>} color="default"/>
-                                )}
+                        <div className={styles.itemAction}>
+                            {getActionChip(entry.action, t)}
+                        </div>
+                        <div className={styles.itemContent}>
+                            <div className={styles.itemNames}>
                                 <Typography variant="body" weight="bold" className={styles.targetName}>
                                     {displayName}
                                 </Typography>
@@ -196,14 +194,16 @@ export const ContentHistory = () => {
                                     {t(typeLabelKey)}
                                 </Typography>
                             </div>
-                            <div className={styles.itemRight}>
-                                {getActionChip(entry.action, t)}
-                            </div>
-                        </div>
-                        <div className={styles.itemFooter}>
                             <Typography variant="caption" className={styles.metadata}>
                                 {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
                             </Typography>
+                        </div>
+                        <div className={styles.itemLanguage}>
+                            {entry.language ? (
+                                <Pill label={entry.language.toUpperCase()} color="default"/>
+                            ) : (
+                                <Pill label={<Language/>} color="default"/>
+                            )}
                         </div>
                     </div>
                     <div className={styles.separator}/>

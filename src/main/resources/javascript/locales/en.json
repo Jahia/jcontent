@@ -834,7 +834,13 @@
         "lockType": "Lock Type",
         "technical": "Technical Information",
         "additional": "Additional Details",
-        "copiedToClipboard": "Copied to clipboard"
+        "copiedToClipboard": "Copied to clipboard",
+        "links": "Links",
+        "linksLive": "Live",
+        "linksDefault": "Staging",
+        "linksVanity": "Vanity URL",
+        "linksDefaultVanity": "Default vanity",
+        "linksCopied": "Link copied"
       },
       "history": {
         "date": "Date",

@@ -825,7 +825,13 @@
         "lockType": "Type de Verrouillage",
         "technical": "Informations Techniques",
         "additional": "Détails Supplémentaires",
-        "copiedToClipboard": "Copié dans le presse-papiers"
+        "copiedToClipboard": "Copié dans le presse-papiers",
+        "links": "Liens",
+        "linksLive": "En ligne",
+        "linksDefault": "Mise en scène",
+        "linksVanity": "URL personnalisée",
+        "linksDefaultVanity": "URL principale",
+        "linksCopied": "Lien copié"
       },
       "history": {
         "date": "Date",

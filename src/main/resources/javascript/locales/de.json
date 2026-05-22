@@ -824,7 +824,13 @@
         "lockType": "Sperrtyp",
         "technical": "Technische Informationen",
         "additional": "Zusätzliche Details",
-        "copiedToClipboard": "In die Zwischenablage kopiert"
+        "copiedToClipboard": "In die Zwischenablage kopiert",
+        "links": "Links",
+        "linksLive": "Live",
+        "linksDefault": "Staging",
+        "linksVanity": "Vanity URL",
+        "linksDefaultVanity": "Haupt-URL",
+        "linksCopied": "Link kopiert"
       },
       "history": {
         "date": "Datum",

@@ -289,9 +289,8 @@ describe('Content editor fields tests', () => {
         ];
 
         protectedFields.forEach(fieldName => {
+            cy.get(`[data-sel-content-editor-field="${fieldName}"]`).scrollIntoView();
             cy.get(`[data-sel-content-editor-field="${fieldName}"]`)
-                .scrollIntoView()
-                .should('exist')
                 .should('have.attr', 'data-sel-content-editor-field-readonly', 'true');
         });
         contentEditor.cancel();

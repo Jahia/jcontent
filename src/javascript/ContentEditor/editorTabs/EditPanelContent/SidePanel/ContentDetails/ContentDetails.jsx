@@ -5,6 +5,7 @@ import {Typography, Button, Copy} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
 import styles from './ContentDetails.scss';
 
 const GET_CONTENT_LINKS = gql`
@@ -122,8 +123,13 @@ LinkRow.propTypes = {
 
 const ContentLinks = () => {
     const {t} = useTranslation('jcontent');
-    const {nodeData, siteInfo} = useContentEditorContext();
-    const linksPath = nodeData.displayableNode?.path || nodeData.path;
+    const {nodeData, siteInfo, hasPreview} = useContentEditorContext();
+
+    if (!hasPreview) {
+        return null;
+    }
+
+    const linksPath = getPreviewPath(nodeData);
     const isFullPage = Boolean(nodeData.displayableNode && !nodeData.displayableNode.isFolder);
     const contextPath = window.contextJsParameters?.contextPath || '';
     const baseUrl = `${window.location.protocol}//${window.location.host}`;

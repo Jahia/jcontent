@@ -1,11 +1,14 @@
-import {JContent} from '../../page-object/jcontent';
+import {JContent} from '../../page-object';
 import {ChoiceListField, Field, SmallTextField} from '../../page-object/fields';
 import {
     addNode,
     Button,
-    Dropdown, enableModule,
+    createSite,
+    Dropdown,
+    enableModule,
     getComponentByRole,
-    getComponentBySelector, grantRoles
+    getComponentBySelector,
+    grantRoles
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../page-object';
@@ -15,32 +18,22 @@ describe('Content editor form', () => {
     const siteKey = 'contentEditorSite';
 
     before(function () {
-        cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: siteKey});
+        createSite(siteKey);
+        enableModule('jcontent-test-module', siteKey);
         enableModule('qa-module', siteKey);
-        cy.apollo({
-            mutation: gql`mutation GrantRoles {
-                jcr {
-                    grantRoles: mutateNode(pathOrId: "/sites/contentEditorSite") {
-                        grantRoles(roleNames: "editor", principalType: USER, principalName: "mathias")
-                    }
-                    addContent: mutateNode(pathOrId: "/sites/contentEditorSite/contents") {
-                        addChild(
-                            name: "alwaysActivatedOverrideTest", 
-                            primaryNodeType: "jnt:bigText", 
-                            properties: [{ name: "text", language: "en", value: "isAlwaysActivated override test" }]
-                        ) {
-                            uuid
-                        }
-                    }
-                }
-            }`
-        });
         grantRoles(`/sites/${siteKey}`, ['editor-in-chief'], 'anne', 'USER');
+        grantRoles(`/sites/${siteKey}`, ['editor'], 'mathias', 'USER');
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'myText',
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', language: 'en', value: 'my text'}]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'alwaysActivatedOverrideTest',
+            primaryNodeType: 'jnt:bigText',
+            properties: [{name: 'text', language: 'en', value: 'isAlwaysActivated override test'}]
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -59,7 +52,7 @@ describe('Content editor form', () => {
 
     beforeEach(() => {
         cy.loginAndStoreSession();
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });
 
     function setDefaultSiteTemplate(templateName) {
@@ -134,12 +127,12 @@ describe('Content editor form', () => {
         cy.log('Set default template value for site');
         setDefaultSiteTemplate(templateName);
 
-        cy.log('verify default template is shown in new component');
+        cy.log('Verify default template is selected by default and is read-only');
         const contentEditor = jcontent.createContent(contentTypeName);
-        const field = contentEditor.getField(Field, fieldName);
-        field.get().find('[role="listbox"]')
-            .should('contain', templateName)
-            .and('have.class', 'moonstone-disabled'); // Read-only
+        const field = contentEditor.getChoiceListField(fieldName);
+        field.assertSelected(templateName);
+        field.isReadOnly();
+
         contentEditor.create(); // No errors on create
     });
 
@@ -193,7 +186,7 @@ describe('Content editor form', () => {
 
         cy.logout();
         cy.login('mathias', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor2 = jcontent.createContent('jnt:text');
         const field2 = contentEditor2.getField(SmallTextField, 'jnt:text_text');
         field2.get().find('input').should('have.attr', 'readonly', 'readonly');
@@ -205,7 +198,7 @@ describe('Content editor form', () => {
 
         cy.logout();
         cy.login('mathias', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         jcontent.createContent('jnt:news');
         cy.get('[data-sel-content-editor-field="jnt:news_desc"]').should('not.exist');
     });
@@ -237,7 +230,7 @@ describe('Content editor form', () => {
     it('should not display advanced options tab for editor', () => {
         cy.logout();
         cy.login('mathias', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
 
         ceEditor.switchToAdvancedMode();
@@ -251,7 +244,7 @@ describe('Content editor form', () => {
         cy.logout();
         // Login as editor in chief
         cy.login('anne', 'password');
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
         ceEditor.switchToAdvancedMode();
         ceEditor.switchToAdvancedOptions();
@@ -279,7 +272,7 @@ describe('Content editor form', () => {
     });
 
     it('should be able to check and uncheck boolean', () => {
-        jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.editComponentByRowName('allFieldsSimple');
         contentEditor.switchToAdvancedMode();
 

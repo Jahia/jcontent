@@ -3,8 +3,10 @@ import React, {Fragment} from 'react';
 import {DraggableReference} from './DragDrop';
 import {onDirectionalReorder, useReorderList} from '~/ContentEditor/utils';
 import PropTypes from 'prop-types';
+import {useContentEditorSectionContext} from '~/ContentEditor/contexts';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
-export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouched}}) => {
+export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouched}, isReadOnly}) => {
     const {handleReorder, reorderedItems, reset} = useReorderList(field.value ?? []);
 
     if (field.value === undefined) {
@@ -35,6 +37,7 @@ export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouche
                             index={index}
                             id={id}
                             fieldLength={field.value.length}
+                            isReadOnly={isReadOnly}
                             onReorder={handleReorder}
                             onValueMove={onValueMove}
                             onReorderDropped={handleFinalReorder}
@@ -52,13 +55,19 @@ ManualOrderingField.propTypes = {
     form: PropTypes.shape({
         setFieldValue: PropTypes.func.isRequired,
         setFieldTouched: PropTypes.func.isRequired
-    }).isRequired
+    }).isRequired,
+    isReadOnly: PropTypes.bool
 };
 
 export const ManualOrdering = () => {
+    const {sections} = useContentEditorSectionContext();
+    const orderingFieldSet = sections?.reduce((found, section) =>
+        found || section.fieldSets.find(fs => fs.name === Constants.ordering.automaticOrdering.mixin), null);
+    const isReadOnly = orderingFieldSet?.readOnly === true;
+
     return (
-        <FastField name="Children::Order">
-            {props => <ManualOrderingField {...props}/>}
+        <FastField name={Constants.ordering.childrenKey}>
+            {props => <ManualOrderingField {...props} isReadOnly={isReadOnly}/>}
         </FastField>
     );
 };

@@ -17,10 +17,11 @@ export const DraggableReference = ({
     onReorderAborted,
     onValueMove,
     fieldName,
-    fieldLength
+    fieldLength,
+    isReadOnly
 }) => {
     const {t} = useTranslation('jcontent');
-    const isDraggable = fieldLength > 1;
+    const isDraggable = fieldLength > 1 && !isReadOnly;
 
     const ref = useRef(null);
     const [{handlerId}, drop] = useReorderDrop(
@@ -52,7 +53,7 @@ export const DraggableReference = ({
                 emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                 emptyIcon={<File/>}
                 isReadOnly={child.readOnly}
-                cardAction={fieldLength > 1 &&
+                cardAction={fieldLength > 1 && !isReadOnly &&
                     <div className={styles.referenceCardActions}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}>
@@ -118,6 +119,7 @@ DraggableReference.propTypes = {
     onReorder: PropTypes.func.isRequired,
     onValueMove: PropTypes.func.isRequired,
     fieldLength: PropTypes.number,
+    isReadOnly: PropTypes.bool,
     onReorderDropped: PropTypes.func.isRequired,
     onReorderAborted: PropTypes.func.isRequired
 };

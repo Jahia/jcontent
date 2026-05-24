@@ -28,6 +28,7 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import org.jahia.modules.contenteditor.graphql.api.types.history.ContentHistoryAdapter;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
+import org.jahia.modules.graphql.provider.dxm.security.GraphQLRequiresPermission;
 import org.jahia.services.content.JCRNodeWrapper;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class GqlContentHistory {
     }
 
     @GraphQLField
+    @GraphQLRequiresPermission("viewHistoryTab")
     @GraphQLDescription("Get paginated content history entries for the node")
     public List<GqlContentHistoryEntry> getEntries(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the result (default: false)") Boolean withLanguageNodes,
@@ -71,6 +73,7 @@ public class GqlContentHistory {
     }
 
     @GraphQLField
+    @GraphQLRequiresPermission("viewHistoryTab")
     @GraphQLDescription("Get total count of history entries for the node")
     public int getCount(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the count (default: false)") Boolean withLanguageNodes,

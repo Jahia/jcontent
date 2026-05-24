@@ -52,6 +52,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
     private static final Method paginatedMethod;
     private static final Method countMethod;
+    private static final int MAX_ENTRIES  = 100;
 
     static {
         try {
@@ -100,7 +101,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
                         paginatedEntries = paginatedEntries.skip(offset);
                     }
                     if (limit > 0) {
-                        paginatedEntries = paginatedEntries.limit(limit);
+                        paginatedEntries = paginatedEntries.limit(Math.min(limit, MAX_ENTRIES));
                     }
                     entries = paginatedEntries.collect(Collectors.toList());
                 }

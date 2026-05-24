@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 import {useQuery} from '@apollo/client';
 import {GetContentHistoryQuery} from './ContentHistory.gql-queries';
 import {useSelector} from 'react-redux';
@@ -24,7 +24,6 @@ import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import dayjs from '~/ContentEditor/date.config';
 import styles from './ContentHistory.scss';
-
 
 const ACTION_CONFIG = {
     // --- Confirmed actions observed in production ---
@@ -122,7 +121,7 @@ export const ContentHistory = () => {
         return dayjs(dateString).locale(uiLanguage).format('L HH:mm');
     }, [uiLanguage]);
 
-    const getActionOptions = useCallback(() => {
+    const getActionOptions = useMemo(() => {
         const toOption = ([value, config]) => ({
             value,
             label: t(config.labelKey),
@@ -175,39 +174,36 @@ export const ContentHistory = () => {
         return entries.map(entry => {
             const {typeLabelKey, displayName, technicalName} = getTargetInfo(entry);
             return (
-                <React.Fragment key={entry.id}>
-                    <div className={styles.historyItem} data-sel-role="history-item">
-                        <div className={styles.itemAction}>
-                            {getActionChip(entry.action, t)}
-                        </div>
-                        <div className={styles.itemContent}>
-                            <div className={styles.itemNames}>
-                                <Typography variant="body" weight="bold" className={styles.targetName}>
-                                    {displayName}
+                <div key={entry.id} className={styles.historyItem} data-sel-role="history-item">
+                    <div className={styles.itemAction}>
+                        {getActionChip(entry.action, t)}
+                    </div>
+                    <div className={styles.itemContent}>
+                        <div className={styles.itemNames}>
+                            <Typography variant="body" weight="bold" className={styles.targetName}>
+                                {displayName}
+                            </Typography>
+                            {technicalName !== displayName && (
+                                <Typography variant="body" className={styles.technicalName}>
+                                    ({technicalName})
                                 </Typography>
-                                {technicalName !== displayName && (
-                                    <Typography variant="body" className={styles.technicalName}>
-                                        ({technicalName})
-                                    </Typography>
-                                )}
-                                <Typography variant="caption" weight="bold" className={styles.typeLabel}>
-                                    {t(typeLabelKey)}
-                                </Typography>
-                            </div>
-                            <Typography variant="caption" className={styles.metadata}>
-                                {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
+                            )}
+                            <Typography variant="caption" weight="bold" className={styles.typeLabel}>
+                                {t(typeLabelKey)}
                             </Typography>
                         </div>
-                        <div className={styles.itemLanguage}>
-                            {entry.language ? (
-                                <Pill label={entry.language.toUpperCase()} color="default"/>
-                            ) : (
-                                <Pill label={<Language/>} color="default"/>
-                            )}
-                        </div>
+                        <Typography variant="caption" className={styles.metadata}>
+                            {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
+                        </Typography>
                     </div>
-                    <div className={styles.separator}/>
-                </React.Fragment>
+                    <div className={styles.itemLanguage}>
+                        {entry.language ? (
+                            <Pill label={entry.language.toUpperCase()} color="default"/>
+                        ) : (
+                            <Pill label={<Language/>} color="default"/>
+                        )}
+                    </div>
+                </div>
             );
         });
     };
@@ -217,7 +213,7 @@ export const ContentHistory = () => {
             <div className={styles.filters} data-sel-role="history-action-filter">
                 <Dropdown
                     value={actionFilter}
-                    data={getActionOptions()}
+                    data={getActionOptions}
                     className={styles.dropDown}
                     variant="outlined"
                     onChange={(e, option) => {

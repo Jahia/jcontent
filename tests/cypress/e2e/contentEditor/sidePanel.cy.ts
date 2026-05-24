@@ -190,8 +190,8 @@ describe('Content editor side panel', () => {
             const ce = jcontent.editComponentByRowName('test-folder');
             ce.switchToAdvancedMode();
 
-            new SidePanel().switchToPreviewTab();
-
+            // Preview tab is gated by hasPreview; folders have no preview so the tab is not rendered
+            cy.get('[data-sel-role="tab-preview"]').should('not.exist');
             cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
         });
     });

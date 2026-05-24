@@ -234,11 +234,9 @@ describe('Content History GraphQL API', () => {
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: 2}
         }).then(result => {
             const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
-            expect(entries).to.be.an('array');
-            if (entries?.length > 0) {
-                expect(entries.length).to.be.at.most(2);
-                ['id', 'date', 'path', 'uuid', 'action', 'userKey'].forEach(f => expect(entries[0]).to.have.property(f));
-            }
+            expect(entries).to.be.an('array').and.have.length.greaterThan(0);
+            expect(entries.length).to.be.at.most(2);
+            ['id', 'date', 'path', 'uuid', 'action', 'userKey'].forEach(f => expect(entries[0]).to.have.property(f));
         });
     });
 
@@ -248,20 +246,16 @@ describe('Content History GraphQL API', () => {
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: 10}
         }).then(result => {
             const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
-            expect(entries).to.be.an('array');
-            if (entries?.length > 1) {
-                const firstId = entries[0].id;
-                cy.apollo({
-                    queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
-                    variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 1, limit: 10}
-                }).then(offsetResult => {
-                    const offsetEntries = offsetResult?.data?.jcr?.nodeByPath?.history?.entries;
-                    expect(offsetEntries).to.be.an('array');
-                    if (offsetEntries?.length > 0) {
-                        expect(offsetEntries[0].id).to.not.equal(firstId);
-                    }
-                });
-            }
+            expect(entries).to.be.an('array').and.have.length.greaterThan(1);
+            const firstId = entries[0].id;
+            cy.apollo({
+                queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
+                variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 1, limit: 10}
+            }).then(offsetResult => {
+                const offsetEntries = offsetResult?.data?.jcr?.nodeByPath?.history?.entries;
+                expect(offsetEntries).to.be.an('array').and.have.length.greaterThan(0);
+                expect(offsetEntries[0].id).to.not.equal(firstId);
+            });
         });
     });
 
@@ -437,19 +431,22 @@ describe('Content History GraphQL API', () => {
     it('should return a GraphQL error when offset is negative', () => {
         cy.apollo({
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
-            variables: {path: nodePaths.updates, withLanguageNodes: false, offset: -1, limit: 10}
+            variables: {path: nodePaths.updates, withLanguageNodes: false, offset: -1, limit: 10},
+            errorPolicy: 'all'
         }).then(result => {
-            // Apollo catches errors and returns the Error instance rather than throwing
-            expect(result).to.be.instanceOf(Error);
+            expect(result?.errors).to.be.an('array').and.not.be.empty;
+            expect(result.errors[0].message).to.include('negative');
         });
     });
 
     it('should return a GraphQL error when limit is negative', () => {
         cy.apollo({
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
-            variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: -1}
+            variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: -1},
+            errorPolicy: 'all'
         }).then(result => {
-            expect(result).to.be.instanceOf(Error);
+            expect(result?.errors).to.be.an('array').and.not.be.empty;
+            expect(result.errors[0].message).to.include('negative');
         });
     });
 

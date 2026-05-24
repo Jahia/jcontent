@@ -122,16 +122,19 @@ LinkRow.propTypes = {
     copyValue: PropTypes.string
 };
 
+// URL-encode each segment of a JCR path while keeping the slashes intact
+const encodePathSegments = path => (path || '')
+    .split('/')
+    .map(segment => encodeURIComponent(segment))
+    .join('/');
+
 const ContentLinks = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, siteInfo, hasPreview} = useContentEditorContext();
 
-    if (!hasPreview) {
-        return null;
-    }
-
-    const linksPath = getPreviewPath(nodeData);
-    const isFullPage = Boolean(nodeData.displayableNode && !nodeData.displayableNode.isFolder);
+    const linksPath = nodeData ? getPreviewPath(nodeData) : null;
+    const encodedLinksPath = encodePathSegments(linksPath);
+    const isFullPage = Boolean(nodeData?.displayableNode && !nodeData.displayableNode.isFolder);
     const contextPath = window.contextJsParameters?.contextPath || '';
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
@@ -142,7 +145,7 @@ const ContentLinks = () => {
 
     const {data} = useQuery(GET_CONTENT_LINKS, {
         variables: {path: linksPath, languages},
-        skip: !linksPath || languages.length === 0
+        skip: !hasPreview || !linksPath || languages.length === 0
     });
 
     const linksByLanguage = useMemo(() => {
@@ -153,19 +156,20 @@ const ContentLinks = () => {
 
         return (siteInfo?.languages || []).map(({language, displayName}) => {
             const links = [];
+            const encodedLanguage = encodeURIComponent(language);
 
             if (isFullPage) {
                 links.push({
                     label: liveLabel,
                     displayValue: `/cms/render/live/${language}${linksPath}.html`,
-                    copyValue: `${baseUrl}${contextPath}/cms/render/live/${language}${linksPath}.html`
+                    copyValue: `${baseUrl}${contextPath}/cms/render/live/${encodedLanguage}${encodedLinksPath}.html`
                 });
             }
 
             links.push({
                 label: stagingLabel,
                 displayValue: `/cms/render/default/${language}${linksPath}.html`,
-                copyValue: `${baseUrl}${contextPath}/cms/render/default/${language}${linksPath}.html`
+                copyValue: `${baseUrl}${contextPath}/cms/render/default/${encodedLanguage}${encodedLinksPath}.html`
             });
 
             ['live', 'edit'].forEach(workspace => {
@@ -177,14 +181,18 @@ const ContentLinks = () => {
                         links.push({
                             label: `${vanityLabel} (${wsLabel}${suffix})`,
                             displayValue: v.url,
-                            copyValue: `${baseUrl}${v.url}`
+                            copyValue: `${baseUrl}${encodePathSegments(v.url)}`
                         });
                     });
             });
 
             return {language, displayName, links};
         });
-    }, [baseUrl, contextPath, data, isFullPage, linksPath, siteInfo, t]);
+    }, [baseUrl, contextPath, data, isFullPage, linksPath, encodedLinksPath, siteInfo, t]);
+
+    if (!hasPreview) {
+        return null;
+    }
 
     const hasLinks = linksByLanguage.some(g => g.links.length > 0);
     const isMultiLanguage = languages.length > 1;

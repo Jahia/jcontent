@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import {Paper, Tab, TabItem} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
@@ -11,7 +11,19 @@ export const SidePanel = () => {
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'sidePanelTabsActions'});
-    const ActiveTabComponent = tabs.find(tab => tab.value === activeTab)?.displayableComponent;
+    const visibleTabs = useMemo(
+        () => tabs.filter(tab => tab.isDisplayable && tab.isDisplayable(ceCtx)),
+        [tabs, ceCtx]
+    );
+    const ActiveTabComponent = visibleTabs.find(tab => tab.value === activeTab)?.displayableComponent;
+
+    // If the currently-selected tab is no longer visible (e.g. the underlying
+    // node lost preview capability), drop the selection so onVisible can pick a new default.
+    useEffect(() => {
+        if (activeTab !== null && !visibleTabs.some(tab => tab.value === activeTab)) {
+            setActiveTab(null);
+        }
+    }, [visibleTabs, activeTab]);
 
     // Called by each SidePanelTab once it confirms it's visible.
     // Only the first call sets the default — preserving priority order (tabs are sorted by target weight).

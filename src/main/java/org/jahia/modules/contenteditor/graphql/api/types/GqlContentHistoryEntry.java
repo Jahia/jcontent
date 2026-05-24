@@ -160,10 +160,9 @@ public class GqlContentHistoryEntry {
     // (PathBasedContentHistoryAdapter), entries can originate from different child nodes
     // (ACLs, vanities, translation sub-nodes, child content nodes), so a single displayName
     // on the parent GqlJcrNode would only ever reflect the root context node. Each entry must
-    // resolve its own node name independently.
-    // Known limitation: this.node is currently always the root context node (passed uniformly
-    // from GqlContentHistory.getEntries). A future improvement should resolve the node from
-    // historyEntry.getPath()/getUuid() so that child-node entries display their own name.
+    // resolve its own node name independently — `this.node` is resolved per-entry from the
+    // entry's UUID by GqlContentHistory.resolveEntryNode (falling back to the root context node
+    // when the UUID cannot be resolved, e.g. for deleted nodes).
 
     @GraphQLField
     @GraphQLDescription("The technical name of the node")
@@ -221,7 +220,9 @@ public class GqlContentHistoryEntry {
             label = resolveLabelFromDefinition(propertyDef, uiLocale, site, propertyDef.getDeclaringNodeType(), label);
             // 3. Then in original overridden property
             ExtendedItemDefinition overriddenDef = propertyDef.getOverridenDefinition();
-            label = resolveLabelFromDefinition(overriddenDef, uiLocale, site, overriddenDef.getDeclaringNodeType(), label);
+            if (overriddenDef != null) {
+                label = resolveLabelFromDefinition(overriddenDef, uiLocale, site, overriddenDef.getDeclaringNodeType(), label);
+            }
             // 4. Fallback on untranslated system name
             return StringUtils.isEmpty(label) ? JCRContentUtils.replaceColon(propertyDef.getName()) : label;
 

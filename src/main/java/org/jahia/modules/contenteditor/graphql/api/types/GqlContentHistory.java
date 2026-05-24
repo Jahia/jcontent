@@ -30,7 +30,11 @@ import org.jahia.modules.contenteditor.graphql.api.types.history.ContentHistoryA
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.modules.graphql.provider.dxm.security.GraphQLRequiresPermission;
 import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.JCRSessionWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +44,8 @@ import java.util.stream.Collectors;
  */
 @GraphQLDescription("Content history information for a node")
 public class GqlContentHistory {
+
+    private static final Logger logger = LoggerFactory.getLogger(GqlContentHistory.class);
 
     private final JCRNodeWrapper node;
     private static final int MAX_ENTRIES  = 100;
@@ -65,9 +71,16 @@ public class GqlContentHistory {
             throw new IllegalArgumentException("Offset or Limit cannot be negative");
         }
 
+        JCRSessionWrapper session;
+        try {
+            session = node.getSession();
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+
         return ContentHistoryAdapter.getHistory(node, withLang, action, offsetValue, limitValue)
                 .stream()
-                .map(entry -> new GqlContentHistoryEntry(entry, node))
+                .map(entry -> new GqlContentHistoryEntry(entry, resolveEntryNode(session, entry.getUuid())))
                 .collect(Collectors.toList());
     }
 
@@ -80,5 +93,23 @@ public class GqlContentHistory {
 
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         return ContentHistoryAdapter.getHistoryCount(node, withLang, action);
+    }
+
+    // Resolve the actual node targeted by an entry. With PathBasedContentHistoryAdapter,
+    // entries may originate from child nodes (ACLs, vanities, j:translation_*, child content);
+    // looking the node up by UUID guarantees nodeName/property-definition resolution operates
+    // on the right node instead of the root context. Falls back to the root node on any failure.
+    private JCRNodeWrapper resolveEntryNode(JCRSessionWrapper session, String uuid) {
+        if (uuid == null || uuid.isEmpty()) {
+            return node;
+        }
+        try {
+            return session.getNodeByIdentifier(uuid);
+        } catch (RepositoryException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Could not resolve entry node by uuid '{}', falling back to root context node '{}'", uuid, node.getPath(), e);
+            }
+            return node;
+        }
     }
 }

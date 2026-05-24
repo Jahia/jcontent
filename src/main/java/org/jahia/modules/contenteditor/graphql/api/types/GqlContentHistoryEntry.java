@@ -199,18 +199,7 @@ public class GqlContentHistoryEntry {
             ExtendedNodeType primaryNodeType = node.getPrimaryNodeType();
 
             // Find property definition on primary type, then mixins
-            ExtendedPropertyDefinition propertyDef = primaryNodeType.getPropertyDefinitionsAsMap().get(propertyName);
-            if (propertyDef == null) {
-                for (ExtendedNodeType mixin : node.getMixinNodeTypes()) {
-                    propertyDef = mixin.getPropertyDefinitionsAsMap().get(propertyName);
-                    if (propertyDef != null) {
-                        break;
-                    }
-                }
-            }
-            if (propertyDef == null) {
-                return propertyName;
-            }
+            ExtendedPropertyDefinition propertyDef = node.getApplicablePropertyDefinition(propertyName);
 
             // Mirrors Field.initializeLabel / initializeLabelFromItemDefinition resolution order:
             String label = null;

@@ -15,12 +15,12 @@ export const SidePanel = () => {
         () => tabs.filter(tab => tab.isDisplayable && tab.isDisplayable(ceCtx)),
         [tabs, ceCtx]
     );
-    const ActiveTabComponent = visibleTabs.find(tab => tab.value === activeTab)?.displayableComponent;
+    const ActiveTabComponent = visibleTabs.find(tab => tab.key === activeTab)?.displayableComponent;
 
     // If the currently-selected tab is no longer visible (e.g. the underlying
     // node lost preview capability), drop the selection so onVisible can pick a new default.
     useEffect(() => {
-        if (activeTab !== null && !visibleTabs.some(tab => tab.value === activeTab)) {
+        if (activeTab !== null && !visibleTabs.some(tab => tab.key === activeTab)) {
             setActiveTab(null);
         }
     }, [visibleTabs, activeTab]);
@@ -45,15 +45,16 @@ export const SidePanel = () => {
 
                         return (
                             <TabComponent
-                                key={tab.value}
+                                key={tab.key}
                                 {...tabProps}
+                                value={tab.key}
                                 activeTab={activeTab}
                                 setActiveTab={setActiveTab}
                                 render={({onClick}) => (
                                     <TabItem
                                         label={t(tab.buttonLabel)}
-                                        isSelected={activeTab === tab.value}
-                                        data-sel-role={tab.dataSelRole}
+                                        isSelected={activeTab === tab.key}
+                                        data-sel-role={tab.dataSelRole || tab.key}
                                         onClick={onClick}
                                     />
                                 )}

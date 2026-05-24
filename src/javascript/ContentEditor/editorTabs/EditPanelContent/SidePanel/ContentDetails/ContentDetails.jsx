@@ -35,7 +35,7 @@ const GET_CONTENT_LINKS = gql`
     }
 `;
 
-const DetailRow = ({label, value, copyable = true, children}) => {
+const DetailRow = ({label, value, isCopyable = true, children}) => {
     const {t} = useTranslation('jcontent');
     const notificationContext = useNotifications();
 
@@ -59,7 +59,7 @@ const DetailRow = ({label, value, copyable = true, children}) => {
             </Typography>
             <div className={styles.value}>
                 {children || <Typography variant="body" component="span">{value}</Typography>}
-                {value && copyable && (
+                {value && isCopyable && (
                     <Button
                         icon={<Copy/>}
                         variant="ghost"
@@ -75,7 +75,7 @@ const DetailRow = ({label, value, copyable = true, children}) => {
 DetailRow.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.string,
-    copyable: PropTypes.bool,
+    isCopyable: PropTypes.bool,
     children: PropTypes.node
 };
 
@@ -247,7 +247,7 @@ export const ContentDetails = () => {
                                 key={detail.label + detail.value}
                                 label={detail.label}
                                 value={detail.value}
-                                copyable={detail.copyable}
+                                isCopyable={detail.copyable}
                             />
                         ))}
                     </div>

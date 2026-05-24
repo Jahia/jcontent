@@ -1,18 +1,21 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useNodeChecks} from '@jahia/data-helper';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
 export const SidePanelTab = ({setActiveTab, onVisible, isDisplayable, value, render: Render, loading: Loading, ...otherProps}) => {
-    const {path} = useContentEditorContext();
     const ceCtx = useContentEditorContext();
 
     const res = useNodeChecks(
-        {path: path},
+        {path: ceCtx.path},
         {...otherProps}
     );
 
     const isVisible = !res.loading && res.checksResult && isDisplayable({...otherProps, ...ceCtx});
+
+    const handleClick = useCallback(() => {
+        setActiveTab(value);
+    }, [setActiveTab, value]);
 
     useEffect(() => {
         if (isVisible && onVisible) {
@@ -21,8 +24,7 @@ export const SidePanelTab = ({setActiveTab, onVisible, isDisplayable, value, ren
     }, [isVisible, onVisible, value]);
 
     if (res.loading) {
-        /* eslint-disable react/jsx-no-useless-fragment */
-        return (Loading && <Loading {...otherProps}/>) || <></>;
+        return (Loading && <Loading {...otherProps}/>) || false;
     }
 
     return (
@@ -30,9 +32,7 @@ export const SidePanelTab = ({setActiveTab, onVisible, isDisplayable, value, ren
             {isVisible &&
             <Render
                 {...otherProps}
-                onClick={() => {
-                    setActiveTab(value);
-                }}
+                onClick={handleClick}
             />}
         </>
     );

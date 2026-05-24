@@ -26,7 +26,7 @@ describe('TabBar', () => {
             render: () => ''
         };
         useNodeChecks.mockImplementation(() => {
-            return {checksResult: checksResult, loading: loading};
+            return {checksResult: checksResult, isLoading: loading};
         });
     });
 

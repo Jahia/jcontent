@@ -4,26 +4,19 @@ import {GetContentHistoryQuery} from './ContentHistory.gql-queries';
 import {useSelector} from 'react-redux';
 import {
     Dropdown,
-    Typography,
-    Chip,
-    Pill,
     AddCircle,
     Edit,
     Delete,
     HandleMove,
     CloudUpload,
     NoCloud,
-    Visibility,
-    File,
-    Language,
-    Pagination,
-    Workflow
+    Pagination, Chip
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import dayjs from '~/ContentEditor/date.config';
 import styles from './ContentHistory.scss';
+import {HistoryList} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/ContentHistory/HistoryList';
 
 const ACTION_CONFIG = {
     // --- Confirmed actions observed in production ---
@@ -34,63 +27,18 @@ const ACTION_CONFIG = {
     moved: {icon: HandleMove, labelKey: 'jcontent:label.contentEditor.history.actions.moved', color: 'default', used: true, group: 'node'},
     published: {icon: CloudUpload, labelKey: 'jcontent:label.contentEditor.history.actions.published', color: 'success', used: true, group: 'node'},
     removed: {icon: Delete, labelKey: 'jcontent:label.contentEditor.history.actions.removed', color: 'danger', used: true, group: 'property'},
-    unpublished: {icon: NoCloud, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true, group: 'node'},
+    unpublished: {icon: NoCloud, labelKey: 'jcontent:label.contentEditor.history.actions.unpublished', color: 'default', used: true, group: 'node'}
     // --- Not yet observed; kept for rendering if they appear in the history stream ---
     // Updated: triggered by some legacy or external integrations writing directly to JCR
-    updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false, group: 'node'},
+    // updated: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.updated', color: 'warning', used: false, group: 'node'},
     // Viewed/accessed: requires the metrics/access-tracking module to be enabled
-    viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default', used: false, group: 'node'},
-    accessed: {icon: File, labelKey: 'jcontent:label.contentEditor.history.actions.accessed', color: 'default', used: false, group: 'node'},
+    // viewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.viewed', color: 'default', used: false, group: 'node'},
+    // accessed: {icon: File, labelKey: 'jcontent:label.contentEditor.history.actions.accessed', color: 'default', used: false, group: 'node'},
     // Previewed: triggered when a contributor previews a draft in the rendering engine
-    previewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.previewed', color: 'default', used: false, group: 'node'},
+    // previewed: {icon: Visibility, labelKey: 'jcontent:label.contentEditor.history.actions.previewed', color: 'default', used: false, group: 'node'},
     // Workflow_started/finished: require the Jahia workflow module and a workflow definition on the content type
-    /* eslint-disable camelcase */
-    workflow_started: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_started', color: 'default', used: false, group: 'node'},
-    workflow_finished: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_finished', color: 'success', used: false, group: 'node'}
-    /* eslint-enable camelcase */
-};
-
-const getTargetInfo = entry => {
-    const isProperty = Boolean(entry.propertyName);
-    const displayName = isProperty ?
-        (entry.propertyNameDisplay || entry.propertyName) :
-        (entry.nodeNameDisplay || entry.nodeName || entry.path?.split('/').filter(Boolean).pop() || '-');
-    const technicalName = isProperty ?
-        entry.propertyName :
-        (entry.nodeName || entry.path?.split('/').filter(Boolean).pop() || '-');
-    return {
-        typeLabelKey: isProperty ?
-            'jcontent:label.contentEditor.history.property' :
-            'jcontent:label.contentEditor.history.node',
-        displayName,
-        technicalName
-    };
-};
-
-const getActionChip = (action, t) => {
-    const config = ACTION_CONFIG[action];
-    if (!config) {
-        return null;
-    }
-
-    const IconComponent = config.icon;
-    return (
-        <Chip
-            label={t(config.labelKey)}
-            icon={<IconComponent/>}
-            color={config.color}
-        />
-    );
-};
-
-const getUserDisplayName = entry => {
-    const {user, userKey} = entry;
-    if (user) {
-        const fullName = [user.firstname, user.lastname].filter(Boolean).join(' ');
-        return fullName || user.displayName || user.username || userKey || '-';
-    }
-
-    return userKey || '-';
+    // workflow_started: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_started', color: 'default', used: false, group: 'node'},
+    // workflow_finished: {icon: Workflow, labelKey: 'jcontent:label.contentEditor.history.actions.workflow_finished', color: 'success', used: false, group: 'node'}
 };
 
 export const ContentHistory = () => {
@@ -112,6 +60,22 @@ export const ContentHistory = () => {
         },
         fetchPolicy: 'cache-and-network'
     });
+
+    const getActionChip = (action, t) => {
+        const config = ACTION_CONFIG[action];
+        if (!config) {
+            return null;
+        }
+
+        const IconComponent = config.icon;
+        return (
+            <Chip
+                label={t(config.labelKey)}
+                icon={<IconComponent/>}
+                color={config.color}
+            />
+        );
+    };
 
     const formatDate = useCallback(dateString => {
         if (!dateString) {
@@ -146,68 +110,6 @@ export const ContentHistory = () => {
     const entries = data?.jcr?.nodeByPath?.history?.entries || [];
     const totalCount = data?.jcr?.nodeByPath?.history?.count || 0;
 
-    const renderListContent = () => {
-        if (loading && !data) {
-            return <LoaderOverlay/>;
-        }
-
-        if (error) {
-            return (
-                <div className={styles.error}>
-                    <Typography variant="body">
-                        {t('jcontent:label.contentEditor.history.errorLoading')}
-                    </Typography>
-                </div>
-            );
-        }
-
-        if (entries.length === 0) {
-            return (
-                <div className={styles.emptyState}>
-                    <Typography variant="body">
-                        {t('jcontent:label.contentEditor.history.noEntries')}
-                    </Typography>
-                </div>
-            );
-        }
-
-        return entries.map(entry => {
-            const {typeLabelKey, displayName, technicalName} = getTargetInfo(entry);
-            return (
-                <div key={entry.id} className={styles.historyItem} data-sel-role="history-item">
-                    <div className={styles.itemAction}>
-                        {getActionChip(entry.action, t)}
-                    </div>
-                    <div className={styles.itemContent}>
-                        <div className={styles.itemNames}>
-                            <Typography variant="body" weight="bold" className={styles.targetName}>
-                                {displayName}
-                            </Typography>
-                            {technicalName !== displayName && (
-                                <Typography variant="body" className={styles.technicalName}>
-                                    ({technicalName})
-                                </Typography>
-                            )}
-                            <Typography variant="caption" weight="bold" className={styles.typeLabel}>
-                                {t(typeLabelKey)}
-                            </Typography>
-                        </div>
-                        <Typography variant="caption" className={styles.metadata}>
-                            {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
-                        </Typography>
-                    </div>
-                    <div className={styles.itemLanguage}>
-                        {entry.language ? (
-                            <Pill label={entry.language.toUpperCase()} color="default"/>
-                        ) : (
-                            <Pill label={<Language/>} color="default"/>
-                        )}
-                    </div>
-                </div>
-            );
-        });
-    };
-
     return (
         <div className={styles.container} data-sel-role="history-container">
             <div className={styles.filters} data-sel-role="history-action-filter">
@@ -224,7 +126,17 @@ export const ContentHistory = () => {
             </div>
 
             <div className={styles.listContainer}>
-                {renderListContent()}
+                <div className={styles.listContainer}>
+                    <HistoryList
+                        isLoading={loading}
+                        error={error}
+                        entries={entries}
+                        data={data}
+                        getActionChip={getActionChip}
+                        formatDate={formatDate}
+                        t={t}
+                    />
+                </div>
             </div>
 
             {totalCount > 0 && (

@@ -21,6 +21,14 @@
     font-weight: 600;
 }
 
+.detailRow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-nano);
+    min-width: 0;
+    margin-bottom: var(--spacing-small);
+}
+
 .detailsGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -29,14 +37,6 @@
     .detailRow {
         margin-bottom: 0;
     }
-}
-
-.detailRow {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-nano);
-    min-width: 0;
-    margin-bottom: var(--spacing-small);
 }
 
 .label {
@@ -58,8 +58,8 @@
     min-width: 0;
     overflow: hidden;
 
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .languageLabel {

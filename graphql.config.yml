@@ -2,9 +2,10 @@ schema: schema.graphql
 extensions:
   endpoints:
     Default GraphQL Endpoint:
-      url: https://luxe.jahia.localhost/modules/graphql
+      url: http://localhost:8080/modules/graphql
+
       headers:
         user-agent: JS GraphQL
         Authorization: Basic cm9vdDpyb290MTIzNA==
-        Origin: https://luxe.jahia.localhost
+        Origin: http://localhost:8080
       introspect: true

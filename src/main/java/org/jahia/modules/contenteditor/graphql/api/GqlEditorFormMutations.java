@@ -132,60 +132,69 @@ public class GqlEditorFormMutations {
             JCRNodeWrapper conditions = jcrNode.getNode("j:conditionalVisibility");
             conditions.setProperty("j:forceMatchAllConditions", isMatchingAllConditionsUpdate);
             // deal with the new conditions
-            newConditions.forEach(condition -> {
-                try {
-                    JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":")), condition.getPrimaryType());
-                    condition.getProperties().forEach(property -> {
-                        try {
-                            if (property.getValue() != null) {
-                                addedNode.setProperty(property.getName(), property.getValue());
-                            } else if (!CollectionUtils.isEmpty(property.getValues())) {
-                                addedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
-                            }
-                        } catch (RepositoryException e) {
-                            throw new DataFetchingException(e);
-                        }
-                    });
-                } catch (RepositoryException e) {
-                    throw new DataFetchingException(e);
-                }
-            });
-            // deal with the updated condition
-            updatedConditions.forEach(condition -> {
-                try {
-                    JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
-                    if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+            if(CollectionUtils.isNotEmpty(newConditions)) {
+                newConditions.forEach(condition -> {
+                    try {
+                        JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":")), condition.getPrimaryType());
                         condition.getProperties().forEach(property -> {
                             try {
                                 if (property.getValue() != null) {
-                                    updatedNode.setProperty(property.getName(), property.getValue());
+                                    addedNode.setProperty(property.getName(), property.getValue());
                                 } else if (!CollectionUtils.isEmpty(property.getValues())) {
-                                    updatedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
+                                    addedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
                                 }
                             } catch (RepositoryException e) {
                                 throw new DataFetchingException(e);
                             }
                         });
+                    } catch (RepositoryException e) {
+                        throw new DataFetchingException(e);
                     }
-                } catch (RepositoryException e) {
-                    throw new DataFetchingException(e);
-                }
-            });
+                });
+            }
+            // deal with the updated condition
+            if(CollectionUtils.isNotEmpty(updatedConditions)) {
+                updatedConditions.forEach(condition -> {
+                    try {
+                        JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
+                        if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                            condition.getProperties().forEach(property -> {
+                                try {
+                                    if (property.getValue() != null) {
+                                        updatedNode.setProperty(property.getName(), property.getValue());
+                                    } else if (!CollectionUtils.isEmpty(property.getValues())) {
+                                        updatedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
+                                    }
+                                } catch (RepositoryException e) {
+                                    throw new DataFetchingException(e);
+                                }
+                            });
+                        }
+                    } catch (RepositoryException e) {
+                        throw new DataFetchingException(e);
+                    }
+                });
+            }
             // deal with the removed conditions
-            removedConditions.forEach(condition -> {
-                try {
-                    JCRNodeWrapper removedNode = session.getNodeByUUID(condition);
-                    if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
-                        removedNode.remove();
+            if(CollectionUtils.isNotEmpty(removedConditions)) {
+                removedConditions.forEach(condition -> {
+                    try {
+                        JCRNodeWrapper removedNode = session.getNodeByUUID(condition);
+                        if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                            removedNode.remove();
+                        }
+                    } catch (RepositoryException e) {
+                        throw new DataFetchingException(e);
                     }
-                } catch (RepositoryException e) {
-                    throw new DataFetchingException(e);
-                }
-            });
-            session.save();
+                });
+            }
+            if(session.hasPendingChanges()) {
+                session.save();
+                return true;
+            }
+            return false;
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);
         }
-        return false;
     }
 }

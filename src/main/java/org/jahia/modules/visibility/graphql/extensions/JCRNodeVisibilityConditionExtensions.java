@@ -49,15 +49,17 @@ public class JCRNodeVisibilityConditionExtensions {
 
     private GqlJcrNode node;
 
+    private VisibilityService visibilityService;
+
     public JCRNodeVisibilityConditionExtensions(GqlJcrNode node) {
         this.node = node;
+        this.visibilityService = BundleUtils.getOsgiService(VisibilityService.class, null);
     }
 
     @GraphQLField
     @GraphQLName("isVisible")
     @GraphQLDescription("Returns true if the node is visible according to the visibility conditions defined for its type.")
     public boolean isVisible() throws DataFetchingException {
-        VisibilityService visibilityService = BundleUtils.getOsgiService(VisibilityService.class, null);
         if (visibilityService != null) {
             return visibilityService.matchesConditions(node.getNode());
         }
@@ -68,7 +70,6 @@ public class JCRNodeVisibilityConditionExtensions {
     @GraphQLName("visibilityDetails")
     @GraphQLDescription("Returns the details of the visibility conditions evaluation for the node.")
     public List<VisibilityConditionEvaluationResult> getVisibilityDetails() throws DataFetchingException {
-        VisibilityService visibilityService = BundleUtils.getOsgiService(VisibilityService.class, null);
         if (visibilityService != null) {
             Map<JCRNodeWrapper, Boolean> conditionMatchesDetails = visibilityService.getConditionMatchesDetails(node.getNode());
             return conditionMatchesDetails.entrySet().stream().map(entry -> new VisibilityConditionEvaluationResult(new GqlJcrNodeImpl(entry.getKey()), entry.getValue())).collect(Collectors.toList());
@@ -80,7 +81,6 @@ public class JCRNodeVisibilityConditionExtensions {
     @GraphQLName("isConditionMatching")
     @GraphQLDescription("Return if a node of type jnt:condition is matching for the current node.")
     public boolean isConditionMatching() throws DataFetchingException {
-        VisibilityService visibilityService = BundleUtils.getOsgiService(VisibilityService.class, null);
         try {
             if (visibilityService != null && node.getNode().isNodeType("jnt:condition")) {
                 try {

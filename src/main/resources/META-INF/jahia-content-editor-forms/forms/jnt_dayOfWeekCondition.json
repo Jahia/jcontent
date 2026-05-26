@@ -11,8 +11,6 @@
             {
               "rank": 0.0,
               "name": "dayOfWeek",
-              "labelKey": "label.contentEditor.visibilityTab.condition.ruleType.dayOfWeek",
-              "descriptionKey": "label.contentEditor.visibilityTab.condition.ruleDescription.dayOfWeek",
               "hide": false,
               "selectorType": "DayOfWeekSelect"
             }

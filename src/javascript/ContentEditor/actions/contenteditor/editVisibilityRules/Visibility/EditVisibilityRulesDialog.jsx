@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Languages} from './Languages/Languages';
-import {DateTime} from './DateTime/DateTime';
+import {DateTime} from './DateTime';
 import classes from './Visibility.scss';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
@@ -21,6 +21,7 @@ import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useNotifications} from '@jahia/react-material';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {isArray} from 'lodash';
+import {truncate} from '~/utils';
 
 export const EditVisibilityRulesDialog = ({
     sections,
@@ -138,7 +139,7 @@ export const EditVisibilityRulesDialog = ({
         });
     }, [sections, initialValues, nodeData, saveRules, lang, client, t, notificationContext, i18nContext, editCallback, contentEditorConfigContext, refetch]);
 
-    if (loading) {
+    if (loading || !data?.jcr?.nodeByPath) {
         return <LoaderOverlay/>;
     }
 
@@ -172,7 +173,7 @@ export const EditVisibilityRulesDialog = ({
                                             weight="bold"
                                             className={classes.dialogTitle}
                                 >
-                                    {nodeData.displayName}
+                                    {truncate(nodeData.displayName, 40)}
                                 </Typography>
                             </DialogTitle>
                             {nodeData.hasWritePermission ?

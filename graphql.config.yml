@@ -3,7 +3,6 @@ extensions:
   endpoints:
     Default GraphQL Endpoint:
       url: http://localhost:8080/modules/graphql
-
       headers:
         user-agent: JS GraphQL
         Authorization: Basic cm9vdDpyb290MTIzNA==

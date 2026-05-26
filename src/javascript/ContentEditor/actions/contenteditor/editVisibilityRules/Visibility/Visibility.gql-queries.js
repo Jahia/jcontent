@@ -7,6 +7,7 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
             ...NodeCacheRequiredFields
             isVisible
             liveVisibility: nodeInWorkspace(workspace: LIVE) {
+                ...NodeCacheRequiredFields
                 isVisible
                 visibilityDetails {
                     matches
@@ -61,6 +62,7 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                     }
                     isConditionMatching
                     live: nodeInWorkspace(workspace: LIVE) {
+                        ...NodeCacheRequiredFields
                         properties {
                             name
                             value

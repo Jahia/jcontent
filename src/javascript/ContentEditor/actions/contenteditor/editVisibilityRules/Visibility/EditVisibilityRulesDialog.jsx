@@ -43,7 +43,7 @@ export const EditVisibilityRulesDialog = ({
     const notificationContext = useNotifications();
     const [saveRules] = useMutation(UpdateVisibilityRulesMutation);
 
-    const handleSubmit = useCallback((values, actions) => {
+    const handleSubmit = useCallback(async (values, actions) => {
         const visibilitySectionOnly = sections.filter(s => s.name === 'visibility');
         visibilitySectionOnly[0].fieldSets.find(fs => fs.name === 'jmix:conditionalVisibility').dynamic = true;
         console.debug('Submitting form with values', values, 'and initialValues', initialValues, ' and visibility section', visibilitySectionOnly, 'for node', nodeData);
@@ -99,7 +99,7 @@ export const EditVisibilityRulesDialog = ({
         // Deleted rules are under RULES::deleted
         const deletedRules = values['RULES::deleted'] ? values['RULES::deleted'] : [];
 
-        saveRules({
+        await saveRules({
             variables: {
                 uuid: nodeData.uuid,
                 lang,

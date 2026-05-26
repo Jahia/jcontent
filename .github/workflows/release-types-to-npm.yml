@@ -3,7 +3,7 @@ name: Release Types to npm
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch: null
 
 permissions:

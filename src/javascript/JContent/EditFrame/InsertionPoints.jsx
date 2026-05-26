@@ -6,14 +6,21 @@ import {useSelector} from 'react-redux';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 
 const getNodeTypes = e => {
+    const types = new Set();
+
+    const ownNt = e.getAttribute('nodetypes');
+    if (ownNt) {
+        ownNt.split(' ').forEach(t => types.add(t));
+    }
+
     if (e.dataset.jahiaParent) {
-        const nt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
-        if (nt) {
-            return nt.split(' ');
+        const parentNt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
+        if (parentNt) {
+            parentNt.split(' ').forEach(t => types.add(t));
         }
     }
 
-    return [];
+    return [...types];
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {

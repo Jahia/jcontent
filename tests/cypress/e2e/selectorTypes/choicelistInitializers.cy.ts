@@ -40,6 +40,11 @@ describe('ChoiceList initializers tests', () => {
             name: 'choicelistMultiple',
             primaryNodeType: 'qant:choicelist'
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'emptyTemplateMixinTest',
+            primaryNodeType: 'cent:emptyTemplateMixinTest'
+        });
     });
 
     beforeEach(() => {
@@ -180,5 +185,42 @@ describe('ChoiceList initializers tests', () => {
             .and('include', 'img2.png');
         contentEditor.getField(ChoiceListField, 'qant:choicelist_imageList').selectValue('img2');
         contentEditor.getChoiceListField('qant:choicelist_imageList').assertSelected('Image 2');
+    });
+
+    // Regression test for jahia-private#4940:
+    // addMixin choicelist must apply jmix:templateMixin even when the mixin has no visible properties.
+    // Before the fix, such fieldsets were stripped from the GraphQL response, causing the mixin to
+    // never appear in getMixinsToMutate() and silently failing on save.
+    it('should apply jmix:templateMixin with no visible fields via addMixin choicelist (regression #4940)', () => {
+        const nodePath = `/sites/${siteKey}/contents/emptyTemplateMixinTest`;
+
+        // Select mixin1 and save — the mixin has no visible fields so the fieldset has visible=false
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('emptyTemplateMixinTest');
+        contentEditor.getField(ChoiceListField, 'cent:emptyTemplateMixinTest_type').selectValue('mixin1');
+        contentEditor.save();
+
+        cy.apollo({
+            queryFile: 'jcontent/getMixinTypes.graphql',
+            variables: {path: nodePath}
+        }).should(resp => {
+            const mixinNames = resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name);
+            expect(mixinNames).to.include('cemix:emptyTemplateMixin1');
+        });
+
+        // Switch to mixin2 — mixin1 should be removed and mixin2 added
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor2 = jcontent.editComponentByRowName('emptyTemplateMixinTest');
+        contentEditor2.getField(ChoiceListField, 'cent:emptyTemplateMixinTest_type').selectValue('mixin2');
+        contentEditor2.save();
+
+        cy.apollo({
+            queryFile: 'jcontent/getMixinTypes.graphql',
+            variables: {path: nodePath}
+        }).should(resp => {
+            const mixinNames = resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name);
+            expect(mixinNames).to.include('cemix:emptyTemplateMixin2');
+            expect(mixinNames).to.not.include('cemix:emptyTemplateMixin1');
+        });
     });
 });

@@ -31,4 +31,23 @@ describe('getChildrenOrder', () => {
             childrenOrder: ['dc', 'ac']
         });
     });
+
+    it('should not modify children order when jmix:orderedList fieldset is readOnly', () => {
+        const formValue = {
+            'Children::Order': [{name: 'dc'}, {name: 'ac'}]
+        };
+        const nodeData = {
+            children: {
+                nodes: [{name: 'ac'}, {name: 'dc'}]
+            }
+        };
+        const sections = [
+            {
+                fieldSets: [
+                    {name: 'jmix:orderedList', readOnly: true}
+                ]
+            }
+        ];
+        expect(getChildrenOrder(formValue, nodeData, sections)).toEqual({shouldModifyChildren: false, childrenOrder: []});
+    });
 });

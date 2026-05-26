@@ -32,7 +32,7 @@ export const jContentAppRoot = registry => {
 
     registry.add('app', 'jcontent-customized-preview', {
         // After component-renderer [root:16] app
-        // https://github.com/Jahia/jahia-ui-root/blob/master/src/javascript/JahiaUiRoot.app.register.js#L22
+        // https://github.com/Jahia/jahia-ui-root/blob/main/src/javascript/JahiaUiRoot.app.register.js#L22
         targets: ['root:17'],
         render: next => (
             <>

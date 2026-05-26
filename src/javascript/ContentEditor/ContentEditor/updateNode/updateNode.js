@@ -23,8 +23,7 @@ export const updateNode = ({
     }
 }) => {
     const dataToMutate = getDataToMutate({nodeData, formValues: values, i18nContext, sections, lang: language});
-    console.debug('Data to mutate for node', nodeData, 'with values', values, 'and sections', sections, 'is', dataToMutate);
-    const {childrenOrder, shouldModifyChildren} = getChildrenOrder(values, nodeData);
+    const {childrenOrder, shouldModifyChildren} = getChildrenOrder(values, nodeData, sections);
     const wipInfo = values[Constants.wip.fieldName];
     let variables = adaptUpdateRequest(nodeData, {
         uuid: nodeData.uuid,

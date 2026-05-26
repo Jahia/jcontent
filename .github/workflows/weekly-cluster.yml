@@ -27,10 +27,10 @@ jobs:
       - uses: KengoTODA/actions-setup-docker-compose@main
         with:
           version: '1.29.2'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: jahia/jahia-modules-action/integration-tests@v2
         with:
           module_id: jcontent
@@ -43,6 +43,7 @@ jobs:
           tests_profile: ${{ matrix.config_file }}
           should_use_build_artifacts: false
           should_skip_artifacts: true
+          docker_compose_file: 'docker-compose-cluster.yml'
           should_skip_notifications: false
           should_skip_testrail: false
           github_token: ${{ secrets.GH_ISSUES_PRS_CHORES }}

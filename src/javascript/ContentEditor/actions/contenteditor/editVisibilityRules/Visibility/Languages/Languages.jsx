@@ -51,6 +51,10 @@ export const Languages = ({sections}) => {
         uiLanguage: uiLanguage
     });
     const section = sections.find(s => s.name === 'visibility');
+    if (!section) {
+        return null;
+    }
+
     const fieldSets = filterRegularFieldSets(section.fieldSets);
 
     if (error || loading || siteInfo.languages.length <= 1) {

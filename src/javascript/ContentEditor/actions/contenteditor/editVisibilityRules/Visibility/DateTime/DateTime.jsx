@@ -14,13 +14,17 @@ import styles from './DateTime.scss';
 
 export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
     const {t} = useTranslation('jcontent');
-    const section = sections.find(s => s.name === 'visibility');
-    const fieldSets = filterRegularFieldSets(section.fieldSets);
-    const rulesCount = rules.pageInfo.totalCount;
     const [isAddingNewRule, setIsAddingNewRule] = useState(false);
     const [editingRule, setEditingRule] = useState(null);
     const [isMatchingAllConditionsUpdate, setIsMatchingAllConditionsUpdate] = useState(isMatchingAllConditions);
     const formikContext = useFormikContext();
+    const section = sections.find(s => s.name === 'visibility');
+    if (!section) {
+        return null;
+    }
+
+    const fieldSets = filterRegularFieldSets(section.fieldSets);
+    const rulesCount = rules.pageInfo.totalCount;
 
     if (fieldSets.length === 0) {
         return null;

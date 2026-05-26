@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useState} from 'react';
+import React, {forwardRef, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Chip, DataTable, Delete, Edit, TableRow, Typography, Visibility} from '@jahia/moonstone';
@@ -130,9 +130,6 @@ export const DatatableRules = ({rules, onEdit}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    // Moonstone Datatable takes a dataset and an array of columns, we need a status column (new/edited/published) a codnition label column and an actions column
-    const [data, setData] = useState([]);
-
     // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
         {
@@ -161,7 +158,7 @@ export const DatatableRules = ({rules, onEdit}) => {
         }
     ];
 
-    useEffect(() => {
+    const data = useMemo(() => {
         const getProperties = rule => {
             // Find if there's an updated version of this rule
             const updatedRule = updatedRules?.find(r => r.uuid === rule.uuid);
@@ -181,7 +178,7 @@ export const DatatableRules = ({rules, onEdit}) => {
             return rule.properties;
         };
 
-        const allRules = rules.nodes.filter(rule => {
+        return rules.nodes.filter(rule => {
             return (deletedRules === undefined || !deletedRules.includes(rule.uuid));
         }).map(rule => {
             const updatedRule = updatedRules?.find(r => r.uuid === rule.uuid);
@@ -232,7 +229,6 @@ export const DatatableRules = ({rules, onEdit}) => {
                 rule: rule
             };
         }));
-        setData(allRules);
     }, [newRules, updatedRules, deletedRules, rules, t]);
 
     return (
@@ -271,17 +267,17 @@ export const DatatableRules = ({rules, onEdit}) => {
                                         <DeleteButton buttonIcon={<Delete/>}
                                                       onClick={() => {
                                             if (row.original.status === 'new') {
-                                                const newRules = formikContext.values['RULES::new'] || [];
-                                                const updatedNewRules = newRules.filter(r => r.uuid !== row.original.rule.uuid);
+                                                const updatedNewRules = (formikContext.values['RULES::new'] || []).filter(r => r.uuid !== row.original.rule.uuid);
                                                 formikContext.setFieldValue('RULES::new', updatedNewRules);
                                             } else {
-                                                const deletedRules = formikContext.values['RULES::deleted'] || [];
-                                                deletedRules.push(row.original.rule.uuid);
+                                                const nextDeletedRules = [
+                                                    ...(formikContext.values['RULES::deleted'] || []),
+                                                    row.original.rule.uuid
+                                                ];
                                                 // If the rule is already in updated rules we need to remove it from there
-                                                const updatedRules = formikContext.values['RULES::updated'] || [];
-                                                const newUpdatedRules = updatedRules.filter(r => r.uuid !== row.original.rule.uuid);
-                                                formikContext.setFieldValue('RULES::updated', newUpdatedRules).then(() => {
-                                                    formikContext.setFieldValue('RULES::deleted', deletedRules);
+                                                const nextUpdatedRules = (formikContext.values['RULES::updated'] || []).filter(r => r.uuid !== row.original.rule.uuid);
+                                                formikContext.setFieldValue('RULES::updated', nextUpdatedRules).then(() => {
+                                                    formikContext.setFieldValue('RULES::deleted', nextDeletedRules);
                                                 });
                                             }
                                         }}/>
@@ -308,4 +304,3 @@ DatatableRules.propTypes = {
     rules: PropTypes.object,
     onEdit: PropTypes.func
 };
-

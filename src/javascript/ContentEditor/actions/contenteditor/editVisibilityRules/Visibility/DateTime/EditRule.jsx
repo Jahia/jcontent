@@ -63,26 +63,24 @@ export const EditRule = ({rule, onCancel}) => {
 
         if (isNewRule) {
             // For new rules, update RULES::new instead of RULES::updated
-            const newRules = formikContext.values['RULES::new'] || [];
-            const existingRuleIndex = newRules.findIndex(r => r.uuid === rule.uuid);
-            if (existingRuleIndex !== -1) {
-                newRules[existingRuleIndex] = updatedRule;
-            }
+            const prevNewRules = formikContext.values['RULES::new'] || [];
+            const existingRuleIndex = prevNewRules.findIndex(r => r.uuid === rule.uuid);
+            const nextNewRules = existingRuleIndex === -1 ?
+                prevNewRules :
+                prevNewRules.map((r, i) => i === existingRuleIndex ? updatedRule : r);
 
-            formikContext.setFieldValue('RULES::new', newRules).then(() => {
+            formikContext.setFieldValue('RULES::new', nextNewRules).then(() => {
                 onCancel();
             });
         } else {
             // For existing rules, update RULES::updated
-            const updatedRulesArray = formikContext.values['RULES::updated'] || [];
-            const existingRuleIndex = updatedRulesArray.findIndex(r => r.uuid === rule.uuid);
-            if (existingRuleIndex === -1) {
-                updatedRulesArray.push(updatedRule);
-            } else {
-                updatedRulesArray[existingRuleIndex] = updatedRule;
-            }
+            const prevUpdatedRules = formikContext.values['RULES::updated'] || [];
+            const existingRuleIndex = prevUpdatedRules.findIndex(r => r.uuid === rule.uuid);
+            const nextUpdatedRules = existingRuleIndex === -1 ?
+                [...prevUpdatedRules, updatedRule] :
+                prevUpdatedRules.map((r, i) => i === existingRuleIndex ? updatedRule : r);
 
-            formikContext.setFieldValue('RULES::updated', updatedRulesArray).then(() => {
+            formikContext.setFieldValue('RULES::updated', nextUpdatedRules).then(() => {
                 onCancel();
             });
         }

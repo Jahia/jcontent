@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Button, Dropdown, Typography} from '@jahia/moonstone';
@@ -29,18 +29,24 @@ export const AddNewRule = ({node, onCancel}) => {
     });
     const formikContext = useFormikContext();
     const [selectedType, setSelectedType] = useState(null);
-    const [data, setData] = useState([]);
 
-    useEffect(() => {
-        if (!loadingTypes && nodeTypesTree) {
-            const data = nodeTypesTree.flatMap(type => ({
-                value: type.name,
-                label: type.label
-            })).sort((a, b) => a.label.localeCompare(b.label));
-            setData(data);
-            setSelectedType(data.length > 0 ? data[0].value : null);
+    const data = useMemo(() => {
+        if (loadingTypes || !nodeTypesTree) {
+            return [];
         }
+
+        return nodeTypesTree.flatMap(type => ({
+            value: type.name,
+            label: type.label
+        })).sort((a, b) => a.label.localeCompare(b.label));
     }, [nodeTypesTree, loadingTypes]);
+
+    // Side effect: initialise selectedType whenever the derived data changes
+    useEffect(() => {
+        if (data.length > 0) {
+            setSelectedType(data[0].value);
+        }
+    }, [data]);
 
     if (loadingTypes) {
         return <Typography>{t('jcontent:label.contentEditor.visibilityTab.conditions.loading')}</Typography>;
@@ -99,9 +105,10 @@ export const AddNewRule = ({node, onCancel}) => {
                                 newRule.uuid = generateUUID();
                                 newRule.timestamp = dayjs().toISOString();
                                 newRule.username = window.contextJsParameters.user.fullname;
-                                const newRules = formikContext.values['RULES::new'] || [];
-                                newRules.push(newRule);
-                                formikContext.setFieldValue('RULES::new', newRules).then(() => {
+                                formikContext.setFieldValue('RULES::new', [
+                                    ...(formikContext.values['RULES::new'] || []),
+                                    newRule
+                                ]).then(() => {
                                     setSelectedType(null);
                                     onCancel();
                                 });

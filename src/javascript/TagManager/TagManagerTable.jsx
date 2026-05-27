@@ -20,7 +20,7 @@ import {
     Visibility
 } from '@jahia/moonstone';
 import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';
-import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+import {Header, useSort} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {RENAME_TAG, DELETE_TAG} from './TagManager.gql-queries';
 import {RenameTagDialog} from './RenameTagDialog';
 import {DeleteTagDialog} from './DeleteTagDialog';
@@ -150,7 +150,7 @@ export const TagManagerTable = ({
 
     const columns = useMemo(() => ([
         {
-            Header: reactTable.Header,
+            Header,
             accessor: 'name',
             property: 'name',
             label: 'jcontent:label.contentManager.tagManager.table.name',
@@ -165,7 +165,7 @@ export const TagManagerTable = ({
             )
         },
         {
-            Header: reactTable.Header,
+            Header,
             accessor: 'occurrences',
             property: 'occurrences',
             label: 'jcontent:label.contentManager.tagManager.table.usages',
@@ -237,7 +237,7 @@ export const TagManagerTable = ({
         data: paginatedTags,
         sort,
         onSort: (column, order) => onSort({order, orderBy: column.property})
-    }, reactTable.useSort);
+    }, useSort);
 
     return (
         <>

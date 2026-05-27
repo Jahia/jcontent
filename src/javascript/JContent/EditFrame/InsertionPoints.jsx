@@ -9,7 +9,8 @@ const getNodeTypes = e => {
     const types = new Set();
 
     const ownNt = e.getAttribute('nodetypes');
-    if (ownNt) {
+    // Get own types only for placeholders (actual buttons) and avoid getting them from existingNodetypes (rendered modules)
+    if (ownNt && e.getAttribute('type') === 'placeholder') {
         ownNt.split(' ').forEach(t => types.add(t));
     }
 
@@ -35,7 +36,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         }))
         .filter(({node}) => node !== null && node !== undefined);
 
-    // Get all children of the clicked element that are create content buttons [type="existingNode"] and add insertion points for each
+    // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
     const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)]
         // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
         .filter(e => e.getAttribute('path').startsWith(clickedPath))

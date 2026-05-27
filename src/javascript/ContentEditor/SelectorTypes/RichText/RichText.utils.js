@@ -3,6 +3,16 @@ const contextPath = (window.contextJsParameters && window.contextJsParameters.co
 const contentPrefix = `${contextPath}/cms/{mode}/{lang}`;
 const filePrefix = `${contextPath}/files/{workspace}`;
 
+/**
+ * URL-encode each segment of a Jahia node path (preserving '/' separators) so that
+ * special characters such as '+' and spaces in folder/file names survive server-side
+ * link resolution. Inverse of the decodeURIComponent done in getPickerValue.
+ *
+ * @param {string} path the raw node path returned by the picker, e.g. /sites/x/files/test + test/f.pdf
+ * @returns {string} the path with each segment URL-encoded
+ */
+export const encodePath = path => path.split('/').map(encodeURIComponent).join('/');
+
 // Find "URL" input in CKEditor dialog.
 function getCKEditorUrlInputId(dialog) {
     if (!dialog) {
@@ -32,9 +42,9 @@ export function fillCKEditorPicker(setUrl, dialog, contentPicker, pickerResult) 
     if (pickerResult.url) {
         setUrl(pickerResult.url);
     } else {
-        // Wrap path to build Jahia url.
-        const pathWithEncodedFileName = pickerResult.path.replace(/\/([^/]+\.[^/?#]+)(\?|#|$)/, (_, fileName, suffix) => `/${encodeURIComponent(fileName)}${suffix}`);
-        setUrl(`${contentPicker ? contentPrefix : filePrefix}${pathWithEncodedFileName}${contentPicker ? '.html' : ''}`, {});
+        // Wrap path to build Jahia url. Encode every path segment (not just the file name) so that
+        // special characters such as '+' and spaces in folder names survive server-side resolution.
+        setUrl(`${contentPicker ? contentPrefix : filePrefix}${encodePath(pickerResult.path)}${contentPicker ? '.html' : ''}`, {});
     }
 }
 

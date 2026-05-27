@@ -27,15 +27,11 @@ const Renderer = ({activeOption, setActiveOption, buttonLabel, onClick, tabs}) =
     const {nodeData} = useContentEditorContext();
 
     const isHidden = useMemo(() => {
-        if (tab === 'channels') {
+        if (tab === 'channels' || tab === 'visibility') {
             return true;
         }
 
-        if (tab === 'usages' && nodeData.isSite) {
-            return true;
-        }
-
-        return false;
+        return tab === 'usages' && nodeData.isSite;
     }, [tab, nodeData.isSite]);
 
     const {data} = useQuery(UsagesCountQuery, isHidden ? skipToken : {

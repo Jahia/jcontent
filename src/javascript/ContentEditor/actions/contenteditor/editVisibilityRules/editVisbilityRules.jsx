@@ -38,6 +38,7 @@ export const EditVisibilityRulesActionComponent = ({path, render: Render, ...oth
 };
 
 EditVisibilityRulesActionComponent.propTypes = {
+    path: PropTypes.string.isRequired,
     render: PropTypes.func.isRequired
 };
 

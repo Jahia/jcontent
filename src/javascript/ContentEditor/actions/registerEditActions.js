@@ -135,7 +135,9 @@ export const registerEditActions = registry => {
 
     registry.add('action', 'editVisibilityRules', editVisibilityRulesAction, {
         buttonIcon: <Visibility/>,
-        buttonLabel: 'jcontent:label.contentEditor.edit.tab.visibility'
+        buttonLabel: 'jcontent:label.contentEditor.edit.tab.visibility',
+        dataSelRole: 'sbsVisibility',
+        requiredSitePermission: ['viewVisibilityTab']
     });
 
     registry.add('action', 'sbsTranslateEdit', translateEditAction, {

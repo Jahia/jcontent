@@ -7,21 +7,23 @@ import {
     useContentEditorSectionContext
 } from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
-import {
-    EditVisibilityRulesDialog
-} from './Visibility/EditVisibilityRulesDialog';
+import {EditVisibilityRulesDialog} from './Visibility/EditVisibilityRulesDialog';
+import {useNodeChecks} from '@jahia/data-helper';
 
-export const EditVisibilityRulesActionComponent = ({render: Render, ...otherProps}) => {
+export const EditVisibilityRulesActionComponent = ({path, render: Render, ...otherProps}) => {
     const {render, destroy} = useContext(ComponentRendererContext);
     const contentEditorConfigContext = useContentEditorConfigContext();
     const contentEditorContext = useContentEditorContext();
     const formik = useFormikContext();
     const {sections} = useContentEditorSectionContext();
-
-    return (
+    const res = useNodeChecks(
+        {path: path},
+        {...otherProps}
+    );
+    return (res.loading) ? null : (
         <Render {...otherProps}
                 enabled={contentEditorContext.mode !== 'create'}
-                isVisible={contentEditorContext.nodeData.hasWritePermission && !contentEditorContext.nodeData.lockedAndCannotBeEdited}
+                isVisible={res.checksResult && contentEditorContext.nodeData.hasWritePermission && !contentEditorContext.nodeData.lockedAndCannotBeEdited}
                 onClick={() => {
                     render('EditVisibilityRulesDialog', EditVisibilityRulesDialog, {
                         isOpen: true,

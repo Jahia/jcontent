@@ -1,4 +1,5 @@
 # These owners will be the default owners for everything in the repository.
 # Unless a later match takes precedence,
 # they will be requested for review when someone opens a pull request.
-*    @Jahia/team-bug-busters
+*       @Jahia/bug_busters_dev
+/tests/ @Jahia/bug_busters_qa

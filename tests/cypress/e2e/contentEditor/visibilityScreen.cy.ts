@@ -23,6 +23,11 @@ const getDayNames = () => {
     };
 };
 
+function openVisibilityDialog() {
+    // Open the visibility dialog
+    getComponentByRole(Button, 'sbsVisibility').click();
+}
+
 describe('Visibility Screen Tests', () => {
     let jcontent: JContent;
 
@@ -70,7 +75,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Verify the dialog is open
         const visibilityDialog = getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog');
@@ -119,7 +124,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Click Add condition button
         cy.get('[data-cm-role="visibilityScreen"]').within(() => {
@@ -146,7 +151,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Click Add condition button
         cy.get('[data-cm-role="visibilityScreen"]').within(() => {
@@ -172,7 +177,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Click Add condition button
         cy.get('[data-cm-role="visibilityScreen"]').within(() => {
@@ -196,7 +201,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Verify the dialog is open
         const visibilityDialog = getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog');
@@ -226,7 +231,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Verify the content name is displayed in the dialog title
         cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
@@ -246,7 +251,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Verify Save button exists and is not disabled
         cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
@@ -265,7 +270,7 @@ describe('Visibility Screen Tests', () => {
         jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
         // Open the visibility dialog
-        getComponentByRole(Button, 'editVisibilityRules').click();
+        openVisibilityDialog();
 
         // Verify dialog is visible
         cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('be.visible');
@@ -291,7 +296,7 @@ describe('Visibility Screen Tests', () => {
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
             // Open the visibility dialog
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Add first rule - Today
             cy.log(`Adding ${today} rule`);
@@ -378,7 +383,7 @@ describe('Visibility Screen Tests', () => {
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
             // Reopen the visibility dialog
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Verify the datatable shows the saved rules
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
@@ -416,7 +421,7 @@ describe('Visibility Screen Tests', () => {
             // Reopen the visibility dialog
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Verify the datatable shows the rules
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
@@ -475,7 +480,7 @@ describe('Visibility Screen Tests', () => {
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
             // Open the visibility dialog
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Verify the datatable is visible
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
@@ -515,7 +520,7 @@ describe('Visibility Screen Tests', () => {
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
             // Open the visibility dialog
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Get initial count of rules
             cy.get('[data-sel-role="visibility-rule-table"] tbody tr', {timeout: 10000}).then($rows => {
@@ -556,7 +561,7 @@ describe('Visibility Screen Tests', () => {
 
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Re-add today's rule (was deleted in the previous test)
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
@@ -588,7 +593,7 @@ describe('Visibility Screen Tests', () => {
             // Open dialog and find today's rule row - identify it by looking for the success/success visibility chips
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
             // --- STEP 1: Before deletion - today's rule should have success/success visibility chips and success status bar ---
@@ -644,7 +649,7 @@ describe('Visibility Screen Tests', () => {
             cy.log(`Step 3: Reopen after deletion - checking ${todayPlus2} rule shows modified (warning status bar)`);
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
             // Only todayPlus2 rule should remain - its status bar should be "warning" (modified: content changed but not published yet)
@@ -683,7 +688,7 @@ describe('Visibility Screen Tests', () => {
             );
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
             // Status bar should be back to "success" (published - content has been published in its new state)
@@ -715,8 +720,7 @@ describe('Visibility Screen Tests', () => {
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
-            // Open the visibility dialog
-            getComponentByRole(Button, 'editVisibilityRules').click();
+            openVisibilityDialog();
 
             // Check if there are any rules in the datatable
             // Note: Previous tests may have deleted rules, so we need to check first

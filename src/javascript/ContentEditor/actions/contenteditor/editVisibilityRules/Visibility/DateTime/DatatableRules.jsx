@@ -1,4 +1,4 @@
-import React, {forwardRef, useMemo, useState} from 'react';
+import React, {forwardRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Chip, DataTable, Delete, Edit, TableRow, Typography, Visibility} from '@jahia/moonstone';
@@ -121,15 +121,6 @@ export const DatatableRules = ({rules, onEdit}) => {
     const updatedRules = formikContext.values['RULES::updated'];
     const deletedRules = formikContext.values['RULES::deleted'];
 
-    // Sorting
-    const [sortBy, setSortBy] = useState('');
-    const [sortDirection, setSortDirection] = useState('descending');
-    // Selection
-    const [selection, setSelection] = useState([]);
-    // Pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
-
     // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
         {
@@ -234,17 +225,12 @@ export const DatatableRules = ({rules, onEdit}) => {
     return (
         <DataTable
             enableSorting
-            enablePagination
             enableSelection={false}
+            enablePagination={false}
             data={data}
             columns={columns}
             primaryKey="id"
-            sortBy={sortBy}
-            sortDirection={sortDirection}
-            selection={selection}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-            totalItems={data.length}
+            defaultSortDirection="descending"
             renderRow={(row, renderCells) => (
                 <TableRow
                     key={row.id}
@@ -289,13 +275,6 @@ export const DatatableRules = ({rules, onEdit}) => {
                 </TableRow>
             )}
             data-sel-role="visibility-rule-table"
-            onSortChange={(newSortBy, newSortDirection) => {
-                setSortBy(newSortBy);
-                setSortDirection(newSortDirection);
-            }}
-            onChangeSelection={setSelection}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={setItemsPerPage}
         />
     );
 };

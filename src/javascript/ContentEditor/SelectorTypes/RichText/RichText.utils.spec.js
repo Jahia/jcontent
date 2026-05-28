@@ -121,6 +121,15 @@ describe('RichText utils', () => {
             );
         });
 
+        it('should url-encode every path segment, not just the file name', () => {
+            contentPicker = false;
+            fillCKEditorPicker(setUrl, dialog, contentPicker, {path: '/sites/x/files/test + test/test.jpg'});
+            expect(setUrl).toHaveBeenCalledWith(
+                `/files/{workspace}/sites/x/files/${encodeURIComponent('test + test')}/test.jpg`,
+                {}
+            );
+        });
+
         it('should fill advTitle', () => {
             const setValueOfAdvTitle = jest.fn();
             dialog.getContentElement = jest.fn((_, id) => {

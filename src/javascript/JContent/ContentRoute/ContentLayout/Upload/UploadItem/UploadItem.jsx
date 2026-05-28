@@ -21,7 +21,7 @@ import {
     fileuploadTakeFromQueue,
     fileuploadUpdateUpload
 } from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
-import {createMissingFolders, onFilesSelected} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
+import {createMissingFolders, onFilesSelected, sanitizeName} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 import {uploadErrors} from '../Upload.constants';
 import clsx from 'clsx';
 
@@ -87,7 +87,7 @@ export const UploadItem = ({upload, index}) => {
         }
 
         if (type === 'replace') {
-            let newPath = `${normalizedPath}/${getFileName()}`;
+            let newPath = `${normalizedPath}/${sanitizeName(getFileName())}`;
             return registry.get('fileUpload', 'replace').handleUpload({path: newPath, file, client});
         }
 

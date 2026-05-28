@@ -74,6 +74,7 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
 
     const options = useSelector(state => ({
         mode: state.contenteditor.picker.mode,
+        preSearchMode: state.contenteditor.picker.preSearchModeMemo,
         siteKey: state.site,
         path: state.contenteditor.picker.path,
         lang: state.contenteditor.ceLanguage,

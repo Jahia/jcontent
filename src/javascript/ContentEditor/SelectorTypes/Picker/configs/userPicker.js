@@ -5,16 +5,28 @@ import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/quer
 import {FolderUser} from '@jahia/moonstone';
 import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
-import {UserPickerFragment} from './userPicker.gql-queries';
+import {UserPickerFragment, UserPickerSearchQuery} from './userPicker.gql-queries';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
 const PickerUserQueryHandler = transformQueryHandler({
     ...Sql2SearchQueryHandler,
-    getQueryVariables: p => ({
-        ...Sql2SearchQueryHandler.getQueryVariables(p),
-        query: `SELECT * FROM ['jnt:user'] WHERE ISDESCENDANTNODE('/users') OR ISDESCENDANTNODE('/sites/${p.siteKey}/users')`
-    }),
-    getFragments: () => [UserPickerFragment]
+    getQuery: () => UserPickerSearchQuery,
+    getQueryVariables: p => {
+        const {language, displayLanguage, offset, limit, fieldSorter} = Sql2SearchQueryHandler.getQueryVariables(p);
+        return {
+            siteKey: p.siteKey,
+            scopePath: p.searchPath || '/',
+            searchTerm: p.searchTerms || '',
+            language,
+            displayLanguage,
+            offset,
+            limit,
+            fieldSorter
+        };
+    },
+    getResults: data => data?.jcontent?.userSearch,
+    getFragments: () => [UserPickerFragment],
+    handlesSearch: true
 });
 
 const nameColumn = {

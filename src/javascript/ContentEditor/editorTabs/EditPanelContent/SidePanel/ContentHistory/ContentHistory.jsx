@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React, {useState, useMemo} from 'react';
 import {useQuery} from '@apollo/client';
 import {GetContentHistoryQuery} from './ContentHistory.gql-queries';
 import {useSelector} from 'react-redux';
@@ -10,15 +10,14 @@ import {
     HandleMove,
     CloudUpload,
     NoCloud,
-    Pagination, Chip
+    Pagination
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import dayjs from '~/ContentEditor/date.config';
 import styles from './ContentHistory.scss';
 import {HistoryList} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/ContentHistory/HistoryList';
 
-const ACTION_CONFIG = {
+export const ACTION_CONFIG = {
     // --- Confirmed actions observed in production ---
     added: {icon: AddCircle, labelKey: 'jcontent:label.contentEditor.history.actions.added', color: 'accent', used: true, group: 'property'},
     changed: {icon: Edit, labelKey: 'jcontent:label.contentEditor.history.actions.changed', color: 'warning', used: true, group: 'property'},
@@ -60,30 +59,6 @@ export const ContentHistory = () => {
         },
         fetchPolicy: 'cache-and-network'
     });
-
-    const getActionChip = (action, t) => {
-        const config = ACTION_CONFIG[action];
-        if (!config) {
-            return null;
-        }
-
-        const IconComponent = config.icon;
-        return (
-            <Chip
-                label={t(config.labelKey)}
-                icon={<IconComponent/>}
-                color={config.color}
-            />
-        );
-    };
-
-    const formatDate = useCallback(dateString => {
-        if (!dateString) {
-            return '-';
-        }
-
-        return dayjs(dateString).locale(uiLanguage).format('L HH:mm');
-    }, [uiLanguage]);
 
     const getActionOptions = useMemo(() => {
         const toOption = ([value, config]) => ({
@@ -132,8 +107,7 @@ export const ContentHistory = () => {
                         error={error}
                         entries={entries}
                         data={data}
-                        getActionChip={getActionChip}
-                        formatDate={formatDate}
+                        uiLanguage={uiLanguage}
                         t={t}
                     />
                 </div>

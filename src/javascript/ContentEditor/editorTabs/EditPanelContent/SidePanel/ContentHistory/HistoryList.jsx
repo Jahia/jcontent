@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {Language, Pill, Typography} from '@jahia/moonstone';
+import {Chip, Language, Pill, Typography} from '@jahia/moonstone';
 import styles from './ContentHistory.scss';
+import {ACTION_CONFIG} from './ContentHistory';
+import dayjs from 'dayjs';
 
 const getTargetInfo = entry => {
     const isProperty = Boolean(entry.propertyName);
@@ -31,10 +33,34 @@ const getUserDisplayName = entry => {
     return userKey || '-';
 };
 
-const HistoryList = React.memo(({isLoading, error, entries, data, formatDate, getActionChip, t}) => {
+const HistoryList = React.memo(({isLoading, error, entries, data, uiLanguage, t}) => {
+    const formatDate = useCallback(dateString => {
+        if (!dateString) {
+            return '-';
+        }
+
+        return dayjs(dateString).locale(uiLanguage).format('L HH:mm');
+    }, [uiLanguage]);
+
     if (isLoading && !data) {
         return <LoaderOverlay/>;
     }
+
+    const getActionChip = (action, t) => {
+        const config = ACTION_CONFIG[action];
+        if (!config) {
+            return null;
+        }
+
+        const IconComponent = config.icon;
+        return (
+            <Chip
+                label={t(config.labelKey)}
+                icon={<IconComponent/>}
+                color={config.color}
+            />
+        );
+    };
 
     if (error) {
         return (
@@ -100,8 +126,7 @@ HistoryList.propTypes = {
     error: PropTypes.object,
     entries: PropTypes.arrayOf(PropTypes.object).isRequired,
     data: PropTypes.object,
-    formatDate: PropTypes.func.isRequired,
-    getActionChip: PropTypes.func.isRequired,
+    uiLanguage: PropTypes.string,
     t: PropTypes.func.isRequired
 };
 

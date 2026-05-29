@@ -37,7 +37,7 @@ import java.util.stream.Stream;
  * Modern implementation using Jahia 8.2.4.0+ optimized ContentHistoryService methods.
  * Uses reflection to maintain backward compatibility at compile time.
  *
- * TODO: When upgrading to Jahia 8.2.2.0+:
+ * TODO: When upgrading to Jahia 8.2.4.0+:
  *  1. Delete this class
  *  2. Delete {@link LegacyContentHistoryAdapter}
  *  3. Delete {@link ContentHistoryAdapter}
@@ -52,7 +52,6 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
     private static final Method paginatedMethod;
     private static final Method countMethod;
-    private static final int MAX_ENTRIES  = 100;
 
     static {
         try {
@@ -101,7 +100,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
                         paginatedEntries = paginatedEntries.skip(offset);
                     }
                     if (limit > 0) {
-                        paginatedEntries = paginatedEntries.limit(Math.min(limit, MAX_ENTRIES));
+                        paginatedEntries = paginatedEntries.limit(limit);
                     }
                     entries = paginatedEntries.collect(Collectors.toList());
                 }

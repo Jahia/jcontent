@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 public class GqlContentHistory {
 
     private final JCRNodeWrapper node;
+    private static final int MAX_ENTRIES  = 100;
 
     public GqlContentHistory(GqlJcrNode node) {
         this.node = node.getNode();
@@ -51,7 +52,7 @@ public class GqlContentHistory {
 
     @GraphQLField
     @GraphQLRequiresPermission("viewHistoryTab")
-    @GraphQLDescription("Get paginated content history entries for the node")
+    @GraphQLDescription("Get paginated content history entries for the node, the maximum number of returned entries is 100")
     public List<GqlContentHistoryEntry> getEntries(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the result (default: false)") Boolean withLanguageNodes,
             @GraphQLName("action") @GraphQLDescription("Filter entries by action (e.g., 'published', 'created', 'updated', 'deleted')") String action,
@@ -60,7 +61,7 @@ public class GqlContentHistory {
 
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         int offsetValue = offset != null ? offset : 0;
-        int limitValue = limit != null ? limit : 20;
+        int limitValue = limit != null ? Math.min(limit, MAX_ENTRIES) : 20;
 
         if (offsetValue < 0 || limitValue < 0) {
             throw new IllegalArgumentException("Offset or Limit cannot be negative");

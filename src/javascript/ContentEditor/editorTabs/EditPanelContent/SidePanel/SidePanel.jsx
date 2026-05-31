@@ -12,7 +12,7 @@ export const SidePanel = () => {
 
     const tabs = registry.find({target: 'sidePanelTabsActions'});
     const visibleTabs = useMemo(
-        () => tabs.filter(tab => tab.isDisplayable && tab.isDisplayable(ceCtx)),
+        () => tabs.filter(tab => tab?.isDisplayable(ceCtx)),
         [tabs, ceCtx]
     );
     const ActiveTabComponent = visibleTabs.find(tab => tab.key === activeTab)?.displayableComponent;
@@ -39,7 +39,7 @@ export const SidePanel = () => {
                         const {displayableComponent, ...tabProps} = tab;
                         const TabComponent = tab.component;
 
-                        if (!tab.isDisplayable || !tab.isDisplayable(ceCtx)) {
+                        if (!tab?.isDisplayable(ceCtx)) {
                             return null;
                         }
 

@@ -10,10 +10,10 @@ const getTargetInfo = entry => {
     const isProperty = Boolean(entry.propertyName);
     const displayName = isProperty ?
         (entry.propertyNameDisplay || entry.propertyName) :
-        (entry.nodeNameDisplay || entry.nodeName || entry.path?.split('/').filter(Boolean).pop() || '-');
+        (entry.nodeNameDisplay || entry.nodeName || entry.path?.split('/').findLast(Boolean) || '-');
     const technicalName = isProperty ?
         entry.propertyName :
-        (entry.nodeName || entry.path?.split('/').filter(Boolean).pop() || '-');
+        (entry.nodeName || entry.path?.split('/').findLast(Boolean) || '-');
     return {
         typeLabelKey: isProperty ?
             'jcontent:label.contentEditor.history.property' :

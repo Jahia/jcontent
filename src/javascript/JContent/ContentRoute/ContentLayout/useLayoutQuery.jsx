@@ -27,7 +27,7 @@ export function useLayoutQuery(options, fragments, queryVariables, accordionItem
     const queryHandler = options.queryHandler;
     // Dedupe by reference: when an accordion handles search in place, its fragments arrive both from the
     // query handler and from the caller's additional fragments (same singleton objects).
-    const allFragments = [...new Set([...((queryHandler.getFragments && queryHandler.getFragments()) || []), ...(fragments || [])])];
+    const allFragments = [...new Set([...((queryHandler?.getFragments?.()) || []), ...(fragments || [])])];
 
     queryVariables = {...queryHandler.getQueryVariables(options), ...queryVariables};
 

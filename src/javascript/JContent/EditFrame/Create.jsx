@@ -202,11 +202,11 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             insertionStyle.left = currentOffset.left - (btnWidth / 2);
             insertionStyle.flexDirection = 'column';
         } else {
-            const marginTop = parseFloat(element.ownerDocument.defaultView.getComputedStyle(element).marginTop) || 0;
+            const marginTop = Number.parseFloat(element.ownerDocument.defaultView.getComputedStyle(element).marginTop) || 0;
             let parentPaddingTop = 0;
 
             if (element.parentElement.firstElementChild === element) {
-                parentPaddingTop = parseFloat(element.ownerDocument.defaultView.getComputedStyle(element.parentElement).paddingTop) || 0;
+                parentPaddingTop = Number.parseFloat(element.ownerDocument.defaultView.getComputedStyle(element.parentElement).paddingTop) || 0;
             }
 
             insertionStyle.top = currentOffset.top - 16 - marginTop - parentPaddingTop;

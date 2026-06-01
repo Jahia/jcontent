@@ -37,9 +37,9 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
         .filter(({node}) => node !== null && node !== undefined);
 
     // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
-    const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)]
+    const childrenElem = [...currentDocument.querySelectorAll(`[data-jahia-parent=${clickedElement.element.id}]`)]
         // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
-        .filter(e => e.getAttribute('path').startsWith(clickedPath))
+        .filter(e => e.getAttribute('path')?.startsWith(clickedPath))
         .map(e => ({
             element: e,
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],

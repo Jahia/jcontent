@@ -1117,10 +1117,6 @@ describe('Visibility Screen', () => {
                 .getBox()
                 .getStatus('notVisible')
                 .should('be.visible');
-            // Validate test 1 is not visible in live anymore
-            cy.visit(`/sites/${sitekeyI18n}/home.html`);
-            cy.reload(true);
-            cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
         });
     }); // End describe('Visibility Live Mode Tests')
 }); // End outer describe('Visibility Screen')

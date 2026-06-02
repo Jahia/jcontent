@@ -1214,6 +1214,18 @@ type GqlClusterNode {
     nodeId: String
 }
 
+"Channel information"
+type GqlChannel {
+    "Channel label (not localized)"
+    displayName: String
+    "Return true if channel is visible, otherwise false"
+    isVisible: Boolean
+    "Channel name/identifier"
+    name: String
+    "Return variants for this channel, if available"
+    variants: [GqlVariant]
+}
+
 "Condition for override item"
 type GqlCondition {
     "Item will apply only on this nodetype"
@@ -1605,6 +1617,8 @@ type GqlJContent {
         "Original html"
         originalHtml: String
     ): String
+    "Main access to richtext ckeditor5 queries"
+    richtext: RichTextQuery
 }
 
 "jContent API"
@@ -1967,6 +1981,24 @@ type GqlValidationResult {
     safe: Boolean
     "The sanitized HTML produced by the policy"
     sanitizedHtml: String
+}
+
+"Variant information for a given channel"
+type GqlVariant {
+    "Variant display name/label (not localized)"
+    displayName: String
+    "Variant dimension (width x height) if available"
+    imageSize: GqlVariantDimension
+    "Variant name/identifier"
+    name: String
+}
+
+"Represents dimensions (width, height) of a variant"
+type GqlVariantDimension {
+    "Variant height"
+    height: String
+    "Variant width"
+    width: String
 }
 
 "Variant information for a given channel"
@@ -3664,6 +3696,16 @@ type NodeTypeTreeEntry {
     parent: NodeTypeTreeEntry
 }
 
+"Represents a single resolved OSGi package wire: a runtime binding between a requirer bundle (one that declares an Import-Package or DynamicImport-Package) and the provider bundle that satisfies it (one that declares a matching Export-Package). Only wires from active Jahia module bundles are returned."
+type PackageWire {
+    "The fully-qualified Java package name that is wired, e.g. 'org.springframework.core.io'."
+    packageName: String
+    "The bundle that exports the package — i.e. the one whose Export-Package manifest header satisfies this wire."
+    providerBundle: ProviderBundle
+    "The Jahia module bundle that imports the package — i.e. the one whose Import-Package or DynamicImport-Package manifest header created this wire."
+    requirerBundle: RequirerBundle
+}
+
 "Information about pagination in a connection."
 type PageInfo {
     "When paginating forwards, the cursor to continue."
@@ -3845,6 +3887,28 @@ type PrincipalEdge {
     node: Principal
 }
 
+"The OSGi bundle that exports a package, satisfying another bundle's Import-Package or DynamicImport-Package declaration. Exposes the bundle's id, symbolic name, and display name."
+type ProviderBundle {
+    "Display name of the bundle."
+    bundleDisplayName: String @deprecated(reason: "Use displayName instead")
+    "ID of the bundle."
+    bundleId: Long @deprecated(reason: "Use id instead")
+    "Name of the bundle."
+    bundleName: String @deprecated(reason: "Use name instead")
+    "Symbolic name of the bundle."
+    bundleSymbolicName: String @deprecated(reason: "Use symbolicName instead")
+    "Display name of the bundle."
+    displayName: String
+    "ID of the bundle."
+    id: Long
+    "Name of the bundle."
+    name: String
+    "Symbolic name of the bundle."
+    symbolicName: String
+    "Version of the bundle."
+    version: String
+}
+
 "Root query type"
 type Query {
     "Admin Queries"
@@ -3902,6 +3966,62 @@ type RenderedNode {
         "Assets type"
         type: String!
     ): [StaticAsset]
+}
+
+"An active Jahia module bundle that imports a package via an Import-Package or DynamicImport-Package declaration, creating a wire to the provider bundle that exports it. Exposes the bundle's id, symbolic name, and display name."
+type RequirerBundle {
+    "Display name of the bundle."
+    bundleDisplayName: String @deprecated(reason: "Use displayName instead")
+    "ID of the bundle."
+    bundleId: Long @deprecated(reason: "Use id instead")
+    "Name of the bundle."
+    bundleName: String @deprecated(reason: "Use name instead")
+    "Symbolic name of the bundle."
+    bundleSymbolicName: String @deprecated(reason: "Use symbolicName instead")
+    "Display name of the bundle."
+    displayName: String
+    "ID of the bundle."
+    id: Long
+    "Name of the bundle."
+    name: String
+    "Symbolic name of the bundle."
+    symbolicName: String
+    "Version of the bundle."
+    version: String
+}
+
+"Result containing config name and excluded toolbar items"
+type RichTextConfigResult {
+    "Name of the applicable CKEditor configuration"
+    configName: String
+    "List of toolbar items to exclude"
+    excludeToolbarItems: [String]
+    "Style templates resolved from the site's templates-set, or null when none are configured or the configuration is invalid"
+    styleTemplates: RichTextStyleTemplates
+}
+
+"Provides functionality necessary for operation of richtext ckeditor5"
+type RichTextQuery {
+    "Returns appropriate configuration for richtext ckeditor5"
+    config(path: String!): RichTextConfigResult
+}
+
+"Single style template definition for the CKEditor 5 style dropdown"
+type RichTextStyleDefinition {
+    "CSS classes applied when the style is selected"
+    classes: [String]!
+    "HTML element the style applies to (e.g. p, h1, div)"
+    element: String!
+    "Display name shown in the style dropdown"
+    name: String!
+}
+
+"Style templates resolved from the site's templates-set module"
+type RichTextStyleTemplates {
+    "Style template definitions; empty if none are declared"
+    definitions: [RichTextStyleDefinition]
+    "Absolute URL of the stylesheet that supports the templates, or null if none is declared"
+    stylesheet: String
 }
 
 "Simple numeric aggregation on properties values"

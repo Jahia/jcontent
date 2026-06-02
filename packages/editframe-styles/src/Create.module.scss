@@ -14,6 +14,7 @@
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 
     // Hide container if there is no children
     &:empty {

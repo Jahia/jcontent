@@ -87,7 +87,7 @@ public class GqlJContent {
         DataFetchingEnvironment environment) {
         String[] providerKeys = toProviderKeys(providers);
         Set<? extends JCRNodeWrapper> users = PrincipalViewHelper.getSearchResult(searchIn(searchTerm),
-            resolveSiteKey(scopePath, siteKey), searchTerm, null, storedOn(providerKeys), providerKeys, includeGlobal(scopePath));
+            resolveSiteKey(scopePath, siteKey), wrapWildcards(searchTerm), null, storedOn(providerKeys), providerKeys, includeGlobal(scopePath));
         return toPaginatedNodes(users, fieldSorter, environment);
     }
 
@@ -104,7 +104,7 @@ public class GqlJContent {
         DataFetchingEnvironment environment) {
         String[] providerKeys = toProviderKeys(providers);
         Set<? extends JCRNodeWrapper> groups = PrincipalViewHelper.getGroupSearchResult(searchIn(searchTerm),
-            resolveSiteKey(scopePath, siteKey), searchTerm, null, storedOn(providerKeys), providerKeys, includeGlobal(scopePath));
+            resolveSiteKey(scopePath, siteKey), wrapWildcards(searchTerm), null, storedOn(providerKeys), providerKeys, includeGlobal(scopePath));
         return toPaginatedNodes(groups, fieldSorter, environment);
     }
 
@@ -115,6 +115,25 @@ public class GqlJContent {
     private static String searchIn(String searchTerm) {
         // null tells PrincipalViewHelper to list everything; "allProps" performs a full search on the term
         return (searchTerm == null || searchTerm.trim().isEmpty()) ? null : "allProps";
+    }
+
+    private static String wrapWildcards(String searchTerm) {
+        // PrincipalViewHelper appends a single trailing '*', which yields prefix matching only.
+        // Wrap with leading + trailing '*' so the underlying SQL2 LIKE behaves like the legacy
+        // contains-style search the picker used before this endpoint existed.
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return searchTerm;
+        }
+        String trimmed = searchTerm.trim();
+        StringBuilder sb = new StringBuilder(trimmed.length() + 2);
+        if (!trimmed.startsWith("*")) {
+            sb.append('*');
+        }
+        sb.append(trimmed);
+        if (!trimmed.endsWith("*")) {
+            sb.append('*');
+        }
+        return sb.toString();
     }
 
     private static String storedOn(String[] providerKeys) {

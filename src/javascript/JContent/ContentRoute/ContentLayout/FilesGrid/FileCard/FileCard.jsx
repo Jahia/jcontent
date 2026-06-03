@@ -132,6 +132,7 @@ export const FileCard = ({
                     currentPath={node.path}
                     path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
                     paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
+                    node={node}
                 />
             )}
 

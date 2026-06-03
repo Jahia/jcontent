@@ -249,7 +249,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           onContextMenuItem={(object, event) => {
                               event.stopPropagation();
                               if (contextualMenuAction) {
-                                  contextualMenu.current(event, {path: object.id});
+                                  contextualMenu.current(event, {path: object.id, node: object.treeItemProps?.node});
                               }
                           }}
                           onClickItem={object => {

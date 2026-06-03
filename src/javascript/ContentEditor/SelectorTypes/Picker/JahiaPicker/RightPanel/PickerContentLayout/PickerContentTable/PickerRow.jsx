@@ -74,6 +74,7 @@ export const PickerRow = ({
                 setOpenRef={contextualMenu}
                 actionKey={previousModeTableConfig.contextualMenu}
                 path={node.path}
+                node={node}
             />}
             {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
         </TableRow>

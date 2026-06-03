@@ -7,8 +7,8 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onE
         {...anchor}
         data-sel-role={'jcontent-' + menuKey}
         style={{zIndex: isSubMenu ? 9001 : 9000}}
-        hasOverlay={isOpen && !isLoading && !isSubMenu}
-        isDisplayed={isOpen && !isLoading}
+        hasOverlay={isOpen && !isSubMenu}
+        isDisplayed={isOpen}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClose={onClose}

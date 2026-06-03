@@ -78,7 +78,7 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
                 variant="outlined"
                 size="medium"
                 data={dropdownData}
-                label={label}
+                placeholder={label}
                 value={value}
                 icon={iconName && toIconComponent(iconName)}
                 hasSearch={dropdownData && dropdownData.length >= 5}

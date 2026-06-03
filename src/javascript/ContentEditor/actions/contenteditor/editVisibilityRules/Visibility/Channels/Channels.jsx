@@ -6,7 +6,7 @@ import styles from './Channels.scss';
 
 const filterRegularFieldSets = fieldSets => {
     const showFieldSet = fieldSet => {
-        if (!fieldSet || fieldSet.name !== 'jmix:channelSelection') {
+        if (fieldSet?.name !== 'jmix:channelSelection') {
             return false;
         }
 

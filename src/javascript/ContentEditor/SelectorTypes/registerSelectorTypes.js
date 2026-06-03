@@ -14,6 +14,7 @@ import {registerMultipleLeftRightSelector} from './MultipleLeftRightSelector';
 import {registerRadioChoiceList} from './RadioChoiceList';
 import {registerCheckboxChoiceList} from './CheckboxChoiceList';
 import {registerChoiceTree} from './ChoiceTree';
+import {registerDayOfWeekSelect} from './DayOfWeekSelect/registerDayOfWeekSelect';
 
 export const registerSelectorTypes = ceRegistry => {
     registerSelectorTypesOnChange(ceRegistry);
@@ -33,5 +34,6 @@ export const registerSelectorTypes = ceRegistry => {
     registerSystemName(ceRegistry);
     registerMultipleLeftRightSelector(ceRegistry);
     registerChoiceTree(ceRegistry);
+    registerDayOfWeekSelect(ceRegistry);
 };
 

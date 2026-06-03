@@ -2,12 +2,24 @@ import React from 'react';
 import {saveAction} from './contenteditor/save/saveAction';
 import {publishAction} from './contenteditor/publish/publishAction';
 import {startWorkflowAction} from './contenteditor/startWorkflow/startWorkflowAction';
-import {AdvancedEdit, ArrowRight, CloudUpload, Copy, Edit, MoreVert, Save, Translate, WorkInProgress} from '@jahia/moonstone';
+import {
+    AdvancedEdit,
+    ArrowRight,
+    CloudUpload,
+    Copy,
+    Edit,
+    MoreVert,
+    Save,
+    Translate,
+    Visibility,
+    WorkInProgress
+} from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
-import {translateFieldAction, translateAction, translateEditAction} from './contenteditor/translate';
+import {translateAction, translateEditAction, translateFieldAction} from './contenteditor/translate';
+import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 
 export const registerEditActions = registry => {
     // Edit action button in JContent; need separate actions for content and pages
@@ -119,6 +131,13 @@ export const registerEditActions = registry => {
     registry.add('action', 'copyLanguageAction', copyLanguageAction, {
         buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.copyLanguage.name'
+    });
+
+    registry.add('action', 'editVisibilityRules', editVisibilityRulesAction, {
+        buttonIcon: <Visibility/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.tab.visibility',
+        dataSelRole: 'sbsVisibility',
+        requiredSitePermission: ['viewVisibilityTab']
     });
 
     registry.add('action', 'sbsTranslateEdit', translateEditAction, {

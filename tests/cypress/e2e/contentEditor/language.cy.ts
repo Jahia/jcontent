@@ -1,6 +1,5 @@
-import {JContent} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
 import gql from 'graphql-tag';
-import {ContentEditor} from '../../page-object';
 
 describe('Language switcher tests', () => {
     const siteKey = 'digitall';
@@ -11,8 +10,8 @@ describe('Language switcher tests', () => {
                 mutateNode(pathOrId: "/sites/digitall/contents") {
                     addChild(name: "lang-switcher-test", primaryNodeType: "jnt:contentFolder") {
                         addChild(
-                            name: "lang-switcher-text", 
-                            primaryNodeType: "jnt:text", 
+                            name: "lang-switcher-text"
+                            primaryNodeType: "jnt:text"
                             properties: [{ name: "text", language: "fr", value: "bonjour" }]
                         ) {
                             uuid
@@ -36,7 +35,8 @@ describe('Language switcher tests', () => {
     });
 
     function langInGroup(elems, lang, dropdownGroup) {
-        const groupText = elems.find(`:contains("${lang}")`)
+        const groupText = elems
+            .find(`:contains("${lang}")`)
             .parents('[data-option-type="group"]')
             .find('.moonstone-title')
             .text();
@@ -45,11 +45,11 @@ describe('Language switcher tests', () => {
 
     it('Create content - should have all language options in "Create translation" group', () => {
         const ce = jcontent.createContent('jnt:text');
-        cy.get('#contenteditor-dialog-title')
-            .should('be.visible')
-            .and('contain', 'Create Simple text');
+        cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Simple text');
 
-        ce.getLanguageSwitcher().get().click()
+        ce.getLanguageSwitcher()
+            .get()
+            .click()
             .get('li.moonstone-menuItem[role="option"]')
             .should(elems => {
                 expect(elems).to.have.length(3);
@@ -61,12 +61,10 @@ describe('Language switcher tests', () => {
 
     it('Create content - should have edited language in "View language" group after edit', () => {
         const ce = jcontent.createContent('jnt:text');
-        cy.get('#contenteditor-dialog-title')
-            .should('be.visible')
-            .and('contain', 'Create Simple text');
+        cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Simple text');
 
         // Verify English is selected by default
-        ce.getLanguageSwitcher().get().find('span[title="English"]').should('be.visible');
+        ce.getLanguageSwitcher().get().find('div[aria-label="English"]').should('be.visible');
 
         // Type text
         ce.getSmallTextField('jnt:text_text').addNewValue('cypress-test');
@@ -76,7 +74,9 @@ describe('Language switcher tests', () => {
 
         // Verify language switcher
         const langSwitcher = ce.getLanguageSwitcher();
-        langSwitcher.get().click()
+        langSwitcher
+            .get()
+            .click()
             .get('li.moonstone-menuItem[role="option"]')
             .should(elems => {
                 expect(elems).to.have.length(3);
@@ -88,12 +88,15 @@ describe('Language switcher tests', () => {
 
     it('Edit content - Should have edited language in "View language" group', () => {
         cy.apollo({mutation: createText});
-        const ce = JContent.visit(siteKey, 'en', 'content-folders/contents/lang-switcher-test')
-            .editComponentByText('lang-switcher-text');
+        const ce = JContent.visit(siteKey, 'en', 'content-folders/contents/lang-switcher-test').editComponentByText(
+            'lang-switcher-text'
+        );
 
         // Verify language switcher
         const langSwitcher = ce.getLanguageSwitcher();
-        langSwitcher.get().click()
+        langSwitcher
+            .get()
+            .click()
             .get('li.moonstone-menuItem[role="option"]')
             .should(elems => {
                 expect(elems).to.have.length(3);
@@ -102,49 +105,60 @@ describe('Language switcher tests', () => {
                 langInGroup(elems, 'French', 'Switch language');
             });
 
-        cy.apollo({mutation: gql`
+        cy.apollo({
+            mutation: gql`
                 mutation deleteContent {
-                    jcr { deleteNode(pathOrId: "/sites/digitall/contents/lang-switcher-test") }
+                    jcr {
+                        deleteNode(pathOrId: "/sites/digitall/contents/lang-switcher-test")
+                    }
                 }
-            `});
+            `
+        });
     });
 
     it('Create content - saves multiple languages', () => {
         const contentName = 'langSwitcherMultipleLang';
         const ce: ContentEditor = jcontent.createContent('jnt:text');
-        cy.get('#contenteditor-dialog-title')
-            .should('be.visible')
-            .and('contain', 'Create Simple text');
+        cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Simple text');
 
         cy.log('Fill text in english');
         const enText = 'Cypress test - English';
-        ce.getLanguageSwitcher().get().find('span[title="English"]')
+        ce.getLanguageSwitcher()
+            .get()
+            .find('div[aria-label="English"]')
             .should('be.visible')
             .log('Language set to English');
         ce.getSmallTextField('jnt:text_text').addNewValue(enText);
 
         cy.log('Fill text in French');
         const frText = 'Cypress test - French';
-        ce.getLanguageSwitcher().select('French').get().find('span[title="French"]')
+        ce.getLanguageSwitcher()
+            .select('French')
+            .get()
+            .find('div[aria-label="French"]')
             .should('be.visible')
             .log('Language set to French');
         ce.getSmallTextField('jnt:text_text').addNewValue(frText);
 
         ce.openSection('options');
-        ce.getSmallTextField('nt:base_ce:systemName', false)
-            .addNewValue(contentName);
+        ce.getSmallTextField('nt:base_ce:systemName', false).addNewValue(contentName);
         ce.create();
 
         cy.log('Verify text has been created in jcr');
         const query = gql`
-            query($path: String!) {
+            query ($path: String!) {
                 jcr {
                     nodeByPath(path: $path) {
-                        en: property(name:"text", language:"en") { value }
-                        fr: property(name:"text", language:"fr") { value }
+                        en: property(name: "text", language: "en") {
+                            value
+                        }
+                        fr: property(name: "text", language: "fr") {
+                            value
+                        }
                     }
                 }
-            }`;
+            }
+        `;
         const path = `/sites/${siteKey}/contents/${contentName}`;
         cy.apollo({query, variables: {path}}).should(result => {
             expect(result?.data?.jcr?.nodeByPath?.en?.value).equals(enText);
@@ -153,9 +167,13 @@ describe('Language switcher tests', () => {
 
         cy.log('Cleanup');
         cy.apollo({
-            mutation: gql`mutation($path: String!) {
-                jcr { deleteNode(pathOrId: $path) }
-            }`,
+            mutation: gql`
+                mutation ($path: String!) {
+                    jcr {
+                        deleteNode(pathOrId: $path)
+                    }
+                }
+            `,
             variables: {path}
         });
     });

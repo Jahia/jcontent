@@ -28,6 +28,7 @@ import org.jahia.modules.contenteditor.graphql.extensions.JCRNodeContentEditorEx
 import org.jahia.modules.contenteditor.graphql.extensions.MutationExtensions;
 import org.jahia.modules.contenteditor.graphql.extensions.QueryExtensions;
 import org.jahia.modules.graphql.provider.dxm.DXGraphQLExtensionsProvider;
+import org.jahia.modules.visibility.graphql.extensions.JCRNodeVisibilityConditionExtensions;
 import org.osgi.service.component.annotations.Component;
 
 import java.util.Arrays;
@@ -40,6 +41,6 @@ import java.util.Collection;
 public class DXGraphQLContentEditorProvider implements DXGraphQLExtensionsProvider {
     @Override
     public Collection<Class<?>> getExtensions() {
-        return Arrays.<Class<?>>asList(QueryExtensions.class, MutationExtensions.class, GqlEditorSubscriptions.class, JCRNodeContentEditorExtensions.class);
+        return Arrays.<Class<?>>asList(QueryExtensions.class, MutationExtensions.class, GqlEditorSubscriptions.class, JCRNodeContentEditorExtensions.class, JCRNodeVisibilityConditionExtensions.class);
     }
 }

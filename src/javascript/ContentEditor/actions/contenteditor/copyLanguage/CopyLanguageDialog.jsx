@@ -108,7 +108,6 @@ export const CopyLanguageDialog = ({
                     <Typography>{sbsOption.label}</Typography> :
                     <Dropdown
                         className={styles.language}
-                        label={currentOption.label}
                         value={currentOption.value}
                         size="medium"
                         data-sel-role="from-language-selector"

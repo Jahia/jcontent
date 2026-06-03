@@ -78,7 +78,7 @@ export const Search = ({accordionItemProps}) => {
         <SearchContextInput
             searchContext={<Dropdown data={searchContextData}
                                      value={currentSearchContext.searchPath}
-                                     label={currentSearchContext.label}
+                                     placeholder={currentSearchContext.label}
                                      icon={currentSearchContext.iconStart}
                                      onChange={handleChangeContext}/>}
             size="big"

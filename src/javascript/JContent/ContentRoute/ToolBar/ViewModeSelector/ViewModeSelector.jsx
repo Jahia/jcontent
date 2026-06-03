@@ -67,7 +67,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
                   size="small"
                   data={tableViewDropdownData(t, viewMode, availableModes, disabled)}
                   data-sel-role="sel-view-mode-dropdown"
-                  label={viewMode && t(`jcontent:label.contentManager.view.${viewMode}`)}
+                  placeholder={viewMode && t(`jcontent:label.contentManager.view.${viewMode}`)}
                   value={viewMode}
                   icon={icons[viewMode]}
                   onChange={(e, item) => handleChange(item.value)}

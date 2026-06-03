@@ -30,6 +30,7 @@
         "notPublished": "This content has never been published",
         "unPublished": "This content has been unpublished",
         "modified": "Modified by {{userName}} on {{timestamp}}",
+        "new": "Created by {{userName}} on {{timestamp}}",
         "published": "Published by {{userName}} on {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Content cannot be published in the current language because of a missing mandatory property",
@@ -107,7 +108,7 @@
       "error": {
         "contentUnavailable": "The requested content is unavailable",
         "queryingContent": "Error querying content: {{details}}",
-        "missingFolder" : "Folder not found"
+        "missingFolder": "Folder not found"
       },
       "title": {
         "media": "Media",
@@ -504,7 +505,7 @@
           "some": "Some of these items are currently referenced by other items. Deleting them will create broken references.",
           "tooMany": "The system could not verify if the items to be deleted are currently referenced by other items (too many items to verify). You can manually verify the usages of all items in the table below."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Cannot be deleted",
             "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
@@ -519,7 +520,7 @@
         "details": "DETAILS",
         "error": "Could not perform the requested operation on selected content. Closing dialog and refreshing data."
       },
-      "links":{
+      "links": {
         "external": {
           "title": "External link",
           "content": "You are leaving Jahia. Do you want to open the external URL in a new tab ?",
@@ -692,7 +693,7 @@
             "clickHere": "click here.",
             "dialogTitle": "Work in progress (WIP)",
             "dialogSubTitle": "Mark your content as work in progress to prevent the publication of your content. To find out more about Work in progress ",
-            "label" : {
+            "label": {
               "mark": "Mark as Work in progress",
               "unmark": "Unmark as Work in progress"
             },
@@ -773,10 +774,11 @@
         },
         "tab": {
           "edit": "Edit",
-          "advanced": "Advanced options"
+          "advanced": "Advanced options",
+          "visibility": "Visibility Rules"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Switch language",
           "addTranslation": {
@@ -821,7 +823,7 @@
           "filterLabel": "Search for types of content"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -897,13 +899,13 @@
         "itemsSelected_plural": "{{count}} items selected"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Categories",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Non-selectable items are not listed in this view",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "All users",
             "globalUsers": "Global users",
@@ -988,21 +990,49 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Languages",
+        "languages": {
+          "title": "Languages",
           "description": "Content will display in selected languages",
-          "label" : "Content visibility by language",
-          "leftList" : "The content will be visible in:",
-          "rightList" : "The content will not be visible in:"
+          "label": "Content visibility by language",
+          "leftList": "The content will be visible in:",
+          "rightList": "The content will not be visible in:"
         },
-        "conditions" : {
-          "title" : "Date and time",
-          "rules" : "{{rulesNumber}} rules set",
-          "rule" : "1 rule is set",
-          "norules" : "No rules set"
+        "conditions": {
+          "title": "Date and time",
+          "type": "Type",
+          "typeDescription": "Define the condition that you want applied.",
+          "rules": "{{rulesNumber}} rules set",
+          "rule": "1 rule is set",
+          "norules": "No condition",
+          "allrules": "All rules must be verified for the content to be visible",
+          "anyrule": "At least one of the rules must be verified for the content to be visible",
+          "add": "Add a condition",
+          "edit": "Edit condition",
+          "delete": "Delete condition",
+          "ruleType": {
+            "date": "Date",
+            "dayOfWeek": "Day of week",
+            "time": "Time"
+          },
+          "ruleDescription": {
+            "date": "The content will be visible starting from the specified date and time, or until the specified date and time, or in between those two dates. Depending on the configuration of the rule.",
+            "dayOfWeek": "The content will be visible on the selected days of the week.",
+            "time": "The content will be visible starting from the specified time, or until the specified time, depending on the configuration of the rule."
+          },
+          "dayOfWeekCondition": "The content will be visible on the selected days of the week: {{days}}",
+          "startEndDateCondition": "The content will be visible starting from {{startDate}}, until {{endDate}}",
+          "startDateCondition": "The content will be visible starting from {{startDate}}",
+          "endDateCondition": "The content will be visible until {{endDate}}",
+          "startEndTimeCondition": "The content will be visible starting from {{startTime}}, until {{endTime}}",
+          "startTimeCondition": "The content will be visible starting from {{startTime}}",
+          "endTimeCondition": "The content will be visible until {{endTime}}",
+          "preview": "Visible in preview",
+          "live": "Visible in live",
+          "preview_live": "Matching in preview / live",
+          "visible": "Visible",
+          "hidden": "Hidden"
         },
         "channels": {
-
         }
       }
     },

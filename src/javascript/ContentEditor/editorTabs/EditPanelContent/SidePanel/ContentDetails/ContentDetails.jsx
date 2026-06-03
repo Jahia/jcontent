@@ -41,10 +41,14 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
 
     const handleCopy = useCallback(() => {
         if (value) {
-            const copyPromise = navigator.clipboard?.writeText(value);
-            copyPromise?.then(() => {
-                notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
-            });
+            try {
+                const copyPromise = navigator.clipboard?.writeText(value);
+                copyPromise?.then(() => {
+                    notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
+                });
+            } catch (error) {
+                console.error('Unable to copy to clipboard', error);
+            }
         }
     }, [value, notificationContext, t]);
 

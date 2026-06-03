@@ -101,16 +101,14 @@ export const ContentHistory = () => {
             </div>
 
             <div className={styles.listContainer}>
-                <div className={styles.listContainer}>
-                    <HistoryList
-                        isLoading={loading}
-                        error={error}
-                        entries={entries}
-                        data={data}
-                        uiLanguage={uiLanguage}
-                        t={t}
-                    />
-                </div>
+                <HistoryList
+                    isLoading={loading}
+                    error={error}
+                    entries={entries}
+                    data={data}
+                    uiLanguage={uiLanguage}
+                    t={t}
+                />
             </div>
 
             {totalCount > 0 && (

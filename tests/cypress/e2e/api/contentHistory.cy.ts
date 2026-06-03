@@ -84,6 +84,7 @@ describe('Content History GraphQL API', () => {
         });
         publishAndWaitJobEnding(nodePaths.published, ['en']);
 
+
         // Node-user: created as testUser to verify userKey tracking in history
 
         cy.apolloClient({username: testUserName, password: testUserPassword});
@@ -434,7 +435,7 @@ describe('Content History GraphQL API', () => {
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: -1, limit: 10}
         }).then(result => {
-            // cy.apollo catches ApolloError and returns it as the result.
+            // Exec cy.apollo catches ApolloError and returns it as the result.
             // The server sanitizes the original exception message, so only check that an error occurred.
             expect(result).to.be.instanceOf(Error);
         });
@@ -445,7 +446,7 @@ describe('Content History GraphQL API', () => {
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: -1}
         }).then(result => {
-            // cy.apollo catches ApolloError and returns it as the result.
+            // Exec cy.apollo catches ApolloError and returns it as the result.
             // The server sanitizes the original exception message, so only check that an error occurred.
             expect(result).to.be.instanceOf(Error);
         });

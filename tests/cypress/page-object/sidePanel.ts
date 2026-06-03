@@ -6,7 +6,7 @@ export class SidePanel extends BasePage {
     switchToTab(tabRole: string): this {
         cy.get(`[data-sel-role="${tabRole}"]`).then($tab => {
             if ($tab.attr('aria-selected') !== 'true') {
-                cy.wrap($tab).click();
+                cy.get(`[data-sel-role="${tabRole}"]`).click();
             }
         });
         return this;

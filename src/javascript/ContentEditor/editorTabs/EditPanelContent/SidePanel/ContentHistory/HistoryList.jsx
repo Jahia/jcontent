@@ -6,9 +6,19 @@ import styles from './ContentHistory.scss';
 import {ACTION_CONFIG} from './ContentHistory';
 import dayjs from 'dayjs';
 
+const MAX_DISPLAY_NAME_LENGTH = 80;
+
+const truncateDisplayName = str => {
+    if (!str || str.length <= MAX_DISPLAY_NAME_LENGTH) {
+        return str;
+    }
+
+    return str.slice(0, MAX_DISPLAY_NAME_LENGTH) + '\u2026';
+};
+
 const getTargetInfo = entry => {
     const isProperty = Boolean(entry.propertyName);
-    const displayName = isProperty ?
+    const fullDisplayName = isProperty ?
         (entry.propertyNameDisplay || entry.propertyName) :
         (entry.nodeNameDisplay || entry.nodeName || entry.path?.split('/').findLast(Boolean) || '-');
     const technicalName = isProperty ?
@@ -18,7 +28,8 @@ const getTargetInfo = entry => {
         typeLabelKey: isProperty ?
             'jcontent:label.contentEditor.history.property' :
             'jcontent:label.contentEditor.history.node',
-        displayName,
+        displayName: truncateDisplayName(fullDisplayName),
+        fullDisplayName,
         technicalName
     };
 };
@@ -33,7 +44,7 @@ const getUserDisplayName = entry => {
     return userKey || '-';
 };
 
-const HistoryList = React.memo(({isLoading, error, entries, data, uiLanguage, t}) => {
+const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLanguage, t}) => {
     const formatDate = useCallback(dateString => {
         if (!dateString) {
             return '-';
@@ -83,7 +94,7 @@ const HistoryList = React.memo(({isLoading, error, entries, data, uiLanguage, t}
     }
 
     return entries.map(entry => {
-        const {typeLabelKey, displayName, technicalName} = getTargetInfo(entry);
+        const {typeLabelKey, displayName, fullDisplayName, technicalName} = getTargetInfo(entry);
         return (
             <div key={entry.id} className={styles.historyItem} data-sel-role="history-item">
                 <div className={styles.itemAction}>
@@ -91,7 +102,7 @@ const HistoryList = React.memo(({isLoading, error, entries, data, uiLanguage, t}
                 </div>
                 <div className={styles.itemContent}>
                     <div className={styles.itemNames}>
-                        <Typography variant="body" weight="bold" className={styles.targetName}>
+                        <Typography variant="body" weight="bold" className={styles.targetName} title={fullDisplayName}>
                             {displayName}
                         </Typography>
                         {technicalName !== displayName && (
@@ -109,7 +120,7 @@ const HistoryList = React.memo(({isLoading, error, entries, data, uiLanguage, t}
                 </div>
                 <div className={styles.itemLanguage}>
                     {entry.language ? (
-                        <Pill label={entry.language.toUpperCase()} color="default"/>
+                        <Pill label={entry.language?.toUpperCase()} color="default"/>
                     ) : (
                         <Pill label={<Language/>} color="default"/>
                     )}
@@ -128,12 +139,6 @@ HistoryList.propTypes = {
     data: PropTypes.object,
     uiLanguage: PropTypes.string,
     t: PropTypes.func.isRequired
-};
-
-HistoryList.defaultProps = {
-    isLoading: false,
-    error: undefined,
-    data: undefined
 };
 
 export {HistoryList};

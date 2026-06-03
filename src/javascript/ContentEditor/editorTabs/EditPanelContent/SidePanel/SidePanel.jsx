@@ -35,13 +35,9 @@ export const SidePanel = () => {
         <Paper className={styles.root} data-sel-role="side-panel">
             <div className={styles.tabs} data-sel-role="side-panel-tabs">
                 <Tab>
-                    {tabs.map(tab => {
+                    {visibleTabs.map(tab => {
                         const {displayableComponent, ...tabProps} = tab;
                         const TabComponent = tab.component;
-
-                        if (!tab?.isDisplayable(ceCtx)) {
-                            return null;
-                        }
 
                         return (
                             <TabComponent

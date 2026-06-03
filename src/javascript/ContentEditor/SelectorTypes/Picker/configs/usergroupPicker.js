@@ -4,15 +4,15 @@ import {Group} from '@jahia/moonstone';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
+import {BaseQueryHandler, Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {UserGroupPickerFragment, UserGroupPickerSearchQuery} from './usergroupPicker.gql-queries';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
 const PickerUserGroupQueryHandler = transformQueryHandler({
-    ...Sql2SearchQueryHandler,
+    ...BaseQueryHandler,
     getQuery: () => UserGroupPickerSearchQuery,
     getQueryVariables: p => {
-        const {language, displayLanguage, offset, limit, fieldSorter} = Sql2SearchQueryHandler.getQueryVariables(p);
+        const {language, displayLanguage, offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
         return {
             siteKey: p.siteKey,
             scopePath: p.searchPath || '/',

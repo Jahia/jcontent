@@ -1,7 +1,7 @@
 import React from 'react';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
+import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {FolderUser} from '@jahia/moonstone';
 import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
@@ -9,10 +9,10 @@ import {UserPickerFragment, UserPickerSearchQuery} from './userPicker.gql-querie
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
 const PickerUserQueryHandler = transformQueryHandler({
-    ...Sql2SearchQueryHandler,
+    ...BaseQueryHandler,
     getQuery: () => UserPickerSearchQuery,
     getQueryVariables: p => {
-        const {language, displayLanguage, offset, limit, fieldSorter} = Sql2SearchQueryHandler.getQueryVariables(p);
+        const {language, displayLanguage, offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
         return {
             siteKey: p.siteKey,
             scopePath: p.searchPath || '/',

@@ -195,7 +195,8 @@ describe('adaptEditFormData', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).details).toEqual([
             {
                 label: 'labelled',
-                value: 'formatted date: 2019-05-07T11:33:31.056 format: L HH:mm'
+                value: 'formatted date: 2019-05-07T11:33:31.056 format: L HH:mm',
+                copyable: false
             }
         ]);
     });

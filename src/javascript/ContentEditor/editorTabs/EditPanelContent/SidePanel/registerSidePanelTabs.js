@@ -10,17 +10,16 @@ export const registerSidePanelTabs = actionsRegistry => {
     actionsRegistry.add('action', 'ceSidePanelDetailsTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.details',
         buttonIcon: <InfoCircle/>,
-        targets: ['sidePanelTabsActions:2'],
+        targets: ['sidePanelTabsActions:1'],
         dataSelRole: 'tab-details',
         displayableComponent: ContentDetails,
-        isDisplayable: () => true,
-        requiredPermission: ['canSeeAdvancedOptionsTab']
+        isDisplayable: () => true
     });
 
     actionsRegistry.add('action', 'ceSidePanelHistoryTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.history',
         buttonIcon: <History/>,
-        targets: ['sidePanelTabsActions:3'],
+        targets: ['sidePanelTabsActions:2'],
         dataSelRole: 'tab-history',
         displayableComponent: ContentHistory,
         isDisplayable: () => true,
@@ -30,7 +29,7 @@ export const registerSidePanelTabs = actionsRegistry => {
     actionsRegistry.add('action', 'ceSidePanelPreviewTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.preview',
         buttonIcon: <Visibility/>,
-        targets: ['sidePanelTabsActions:1'],
+        targets: ['sidePanelTabsActions:3'],
         dataSelRole: 'tab-preview',
         displayableComponent: Preview,
         isDisplayable: ({hasPreview}) => Boolean(hasPreview)

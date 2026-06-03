@@ -128,6 +128,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^10.3.0":
+  version: 10.4.0
+  resolution: "@faker-js/faker@npm:10.4.0"
+  checksum: 10c0/29f15e46f91757d654f6f42ac8313ac4aebb6591e2ebae7fdd8d36d5017490327ea67be37cff06d18303db54abf468524bcc7e4b1de53be4eb884c1f71d571c1
+  languageName: node
+  linkType: hard
+
 "@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.1.1
   resolution: "@graphql-typed-document-node/core@npm:3.1.1"
@@ -176,11 +183,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/cypress@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@jahia/cypress@npm:7.0.0"
+"@jahia/cypress@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@jahia/cypress@npm:8.2.0"
   dependencies:
     "@apollo/client": "npm:^3.4.9"
+    "@faker-js/faker": "npm:^10.3.0"
+    compare-versions: "npm:^6.1.1"
     cypress-real-events: "npm:^1.11.0"
     graphql: "npm:^15.5.0"
     graphql-tag: "npm:^2.11.0"
@@ -189,7 +198,7 @@ __metadata:
     ci.startup: ./ci.startup.sh
     env.debug: ./env.debug.sh
     env.run: ./env.run.sh
-  checksum: 10c0/9569ebc04139b9d6e160a763367db1e096951c0442e531837a2582b82c7f7a45d21bbf940241b94eec81f8e2b6cf1a23cce57ab0133cfc9ca7604d0efbb5870f
+  checksum: 10c0/6200a738aaccd66d286093d795fc43ba18c96f842eeeefa683e47026882fa14c0ecb6c202b81de8b39d19d7cdbbac73980ed966b6c8d50e5734717baf4f24775
   languageName: node
   linkType: hard
 
@@ -235,7 +244,7 @@ __metadata:
   resolution: "@jahia/jcontent-cypress@workspace:."
   dependencies:
     "@4tw/cypress-drag-drop": "npm:^2.3.0"
-    "@jahia/cypress": "npm:^7.0.0"
+    "@jahia/cypress": "npm:^8.2.0"
     "@jahia/jahia-reporter": "npm:^1.5.0"
     "@types/node": "npm:^22.14.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.29.1"
@@ -1319,6 +1328,13 @@ __metadata:
   version: 1.8.2
   resolution: "common-tags@npm:1.8.2"
   checksum: 10c0/23efe47ff0a1a7c91489271b3a1e1d2a171c12ec7f9b35b29b2fce51270124aff0ec890087e2bc2182c1cb746e232ab7561aaafe05f1e7452aea733d2bfe3f63
+  languageName: node
+  linkType: hard
+
+"compare-versions@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "compare-versions@npm:6.1.1"
+  checksum: 10c0/415205c7627f9e4f358f571266422980c9fe2d99086be0c9a48008ef7c771f32b0fbe8e97a441ffedc3910872f917a0675fe0fe3c3b6d331cda6d8690be06338
   languageName: node
   linkType: hard
 

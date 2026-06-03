@@ -90,9 +90,8 @@ describe('json override tests', {testIsolation: false}, () => {
 
     it('can hide preview in advanced mode with json override', () => {
         const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
-        const contentEditor = jcontent.editComponentByText('json overrides');
-        contentEditor.switchToAdvancedMode();
-        contentEditor.switchToSidePanelPreviewTab();
+        jcontent.editComponentByText('json overrides').switchToAdvancedMode();
+        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
     });
 

@@ -4,7 +4,7 @@ import {Group} from '@jahia/moonstone';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-import {BaseQueryHandler, Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
+import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {UserGroupPickerFragment, UserGroupPickerSearchQuery} from './usergroupPicker.gql-queries';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 

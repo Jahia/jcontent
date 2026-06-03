@@ -1,25 +1,72 @@
-import {JContent, JContentPageBuilder} from '../../page-object';
+import {JContent} from '../../page-object';
+import {addNode, createSite, deleteSite} from '@jahia/cypress';
+import {ContentFolder} from '../../page-object/contentFolder';
 
-describe('Content folder', () => {
-    let jcontent: JContentPageBuilder;
+describe('Content folders tests', () => {
+    const siteKey = 'contentFolderTestSite';
 
     before(() => {
-        cy.login();
+        createSite(siteKey);
+        addNode({parentPathOrId: `/sites/${siteKey}/contents`, name: 'folder-to-dblclick', primaryNodeType: 'jnt:contentFolder'});
+        addNode({parentPathOrId: `/sites/${siteKey}/contents`, name: 'folder-to-delete', primaryNodeType: 'jnt:contentFolder'});
+        addNode({parentPathOrId: `/sites/${siteKey}/contents`, name: 'existing-folder', primaryNodeType: 'jnt:contentFolder'});
+        addNode({parentPathOrId: `/sites/${siteKey}/contents`, name: 'parent-folder', primaryNodeType: 'jnt:contentFolder'});
     });
 
     after(() => {
+        deleteSite(siteKey);
         cy.logout();
     });
 
     beforeEach(() => {
-        jcontent = JContent
-            .visit('digitall', 'en', 'pages/home')
-            .switchToPageBuilder();
+        cy.login();
     });
 
-    it('Open content folders correctly', () => {
+    it('open content folders correctly', () => {
+        const jcontent = JContent
+            .visit(siteKey, 'en', 'pages/home')
+            .switchToPageBuilder();
         jcontent.getAccordionItem('content-folders').click();
         cy.get('span').contains('Content Folder').should('exist');
         cy.get('div[data-sel-role="sel-view-mode-dropdown"]').contains('List').should('exist');
+    });
+
+    it('should create a new folder', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        ContentFolder.create(jcontent, siteKey, 'en', 'content-folders/contents', 'new-folder');
+        jcontent.getTable().getRowByName('new-folder').get().should('be.visible');
+    });
+
+    it('should create a folder with special characters in the name', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        ContentFolder.create(jcontent, siteKey, 'en', 'content-folders/contents', 'test-éàöäè¨ç');
+        jcontent.getTable().getRowByName('test-éàöäè¨ç').get().should('be.visible');
+    });
+
+    it('should not create a folder with an already existing name', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.getHeaderActionButton('createContentFolder').click();
+        cy.get('#folder-name').type('existing-folder');
+        cy.get('[data-cm-role="create-folder-as-confirm"]').should('be.disabled');
+        cy.get('#folder-name-helper-text').should('contain', 'A folder with this name already exists');
+    });
+
+    it('should enter the folder with double click', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.getTable().getRowByName('folder-to-dblclick').get().dblclick();
+        cy.get('h1').should('contain', 'folder-to-dblclick');
+    });
+
+    it('should create a sub-folder', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/parent-folder');
+        ContentFolder.create(jcontent, siteKey, 'en', 'content-folders/contents/parent-folder', 'sub-folder');
+        jcontent.getTable().getRowByName('sub-folder').get().should('be.visible');
+    });
+
+    it('should delete a folder', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const folder = new ContentFolder(jcontent, siteKey, 'en', 'content-folders/contents', 'folder-to-delete');
+        folder.markForDeletion()
+            .deletePermanently();
     });
 });

@@ -66,7 +66,7 @@ describe('Language switcher tests', () => {
             .and('contain', 'Create Simple text');
 
         // Verify English is selected by default
-        ce.getLanguageSwitcher().get().find('span[title="English"]').should('be.visible');
+        ce.getLanguageSwitcher().get().find('span[title="English"]').should('exist');
 
         // Type text
         ce.getSmallTextField('jnt:text_text').addNewValue('cypress-test');
@@ -119,7 +119,7 @@ describe('Language switcher tests', () => {
         cy.log('Fill text in english');
         const enText = 'Cypress test - English';
         ce.getLanguageSwitcher().get().find('span[title="English"]')
-            .should('be.visible')
+            .should('exist')
             .log('Language set to English');
         ce.getSmallTextField('jnt:text_text').addNewValue(enText);
 

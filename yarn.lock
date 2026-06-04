@@ -2651,7 +2651,7 @@ __metadata:
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
-    "@jahia/moonstone": "npm:^2.17.3"
+    "@jahia/moonstone": "npm:^2.19.0"
     "@jahia/react-material": "npm:^3.0.5"
     "@jahia/stylelint-config": "npm:^0.0.3"
     "@jahia/test-framework": "npm:^1.3.1"
@@ -2752,7 +2752,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@npm:^2.17.3":
+"@jahia/moonstone@npm:^2.19.0":
   version: 2.19.0
   resolution: "@jahia/moonstone@npm:2.19.0"
   dependencies:

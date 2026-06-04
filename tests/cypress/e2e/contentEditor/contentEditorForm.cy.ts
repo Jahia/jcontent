@@ -1,5 +1,6 @@
 import {JContent} from '../../page-object';
 import {ChoiceListField, Field, SmallTextField} from '../../page-object/fields';
+import {SidePanel} from '../../page-object/sidePanel';
 import {
     addNode,
     Button,
@@ -247,28 +248,29 @@ describe('Content editor form', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
         ceEditor.switchToAdvancedMode();
-        ceEditor.switchToAdvancedOptions();
+        new SidePanel().switchToDetailsTab();
 
-        cy.get('[data-sel-labelled-info="Creation date"]').should('be.visible');
-        cy.get('[data-sel-labelled-info="Last modification date"]').should('be.visible');
-        cy.get('[data-sel-labelled-info="Last Publication Date"]').should('be.visible');
-        cy.get('[data-sel-labelled-info="Creator"]').should('be.visible');
-        cy.get('[data-sel-labelled-info="Last contributor"]').should('be.visible').should('contain', 'root');
-        cy.get('[data-sel-labelled-info="Last Publisher"]').should('be.visible');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Creation date"]').should('be.visible');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Last modification date"]').should('be.visible');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Last Publication Date"]').should('be.visible');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Creator"]').should('be.visible');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Last contributor"]').should('be.visible').should('contain', 'root');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Last Publisher"]').should('be.visible');
 
-        cy.get('[data-sel-labelled-info="Main content type"]').should('contain', 'Simple text');
-        cy.get('[data-sel-labelled-info="Full content type"]').should('contain', 'jnt:text');
-        cy.get('[data-sel-labelled-info="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
-        cy.get('[data-sel-labelled-info="UUID"]').should('be.visible');
+        cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView();
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Main content type"]').should('contain', 'Simple text');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Content type"]').should('contain', 'jnt:text');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="UUID"]').should('be.visible');
 
         // Switch to edit tab and modify the text
         cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
         ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');
         ceEditor.save();
-        ceEditor.switchToAdvancedOptions();
+        new SidePanel().switchToDetailsTab();
 
         // Verify last contributor has changed
-        cy.get('[data-sel-labelled-info="Last contributor"]').should('contain', 'anne');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Last contributor"]').should('contain', 'anne');
     });
 
     it('should be able to check and uncheck boolean', () => {

@@ -43,7 +43,7 @@ describe('Preview tests', () => {
             .selectByRole('editAdvanced');
         cy.get('[data-sel-role="tab-preview"]').then($tab => {
             if ($tab.attr('aria-selected') !== 'true') {
-                cy.wrap($tab).click();
+                cy.get('[data-sel-role="tab-preview"]').click();
             }
         });
         cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
@@ -70,6 +70,9 @@ describe('Preview tests', () => {
         pageComposer.editComponentByText('previewWrapper');
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
+        // Wait for the preview iframe to be present and finish loading before asserting content
+        cy.get('iframe[data-sel-role="edit-preview-frame"]', {timeout: 30000}).should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.have.class', /iframeLoading/);
         contentEditor.validateContentIsVisibleInPreview('previewWrapper Test');
         contentEditor.validateContentIsNotVisibleInPreview('H2');
     });

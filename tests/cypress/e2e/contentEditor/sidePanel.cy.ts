@@ -92,7 +92,8 @@ describe('Content editor side panel', () => {
         });
 
         it('should display technical information section', () => {
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView().should('be.visible');
+            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView();
+            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').should('be.visible');
         });
 
         it('should display detail rows with copy buttons in the technical section', () => {

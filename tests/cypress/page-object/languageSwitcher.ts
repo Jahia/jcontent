@@ -8,8 +8,7 @@ export class LanguageSwitcher extends Dropdown {
     // @deprecated use `selectLangByValue` instead
     selectLang(displayLang: string) {
         this.select(displayLang).get()
-            .find(`span[title="${displayLang}"]`)
-            .should('be.visible');
+            .should('contain.text', displayLang);
     }
 
     selectLangByValue(value: string): this {

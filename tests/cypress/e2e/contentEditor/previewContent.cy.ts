@@ -41,7 +41,11 @@ describe('Preview tests', () => {
             .getCardByName('Digitall Financial Report.pdf')
             .contextMenu()
             .selectByRole('editAdvanced');
-        cy.get('[data-sel-role="tab-preview"]').click();
+        cy.get('[data-sel-role="tab-preview"]').then($tab => {
+            if ($tab.attr('aria-selected') !== 'true') {
+                cy.wrap($tab).click();
+            }
+        });
         cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
     });
 

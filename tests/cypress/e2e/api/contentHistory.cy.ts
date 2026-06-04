@@ -84,7 +84,6 @@ describe('Content History GraphQL API', () => {
         });
         publishAndWaitJobEnding(nodePaths.published, ['en']);
 
-
         // Node-user: created as testUser to verify userKey tracking in history
 
         cy.apolloClient({username: testUserName, password: testUserPassword});

@@ -708,7 +708,9 @@
             "contentType": "Main content type",
             "details": "Details",
             "label": "Technical information",
-            "mixinTypes": "Full content type",
+            "nodeTypeName": "Content type",
+            "inheritedMixins": "Inherited mixins",
+            "appliedMixins": "Applied mixins",
             "path": "Path",
             "uuid": "UUID"
           },

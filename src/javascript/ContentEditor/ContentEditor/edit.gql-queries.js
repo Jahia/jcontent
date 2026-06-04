@@ -72,6 +72,7 @@ const NodeDataFragment = {
                     }
                     supertypes {
                         name
+                        mixin
                     }
                     hasOrderableChildNodes
                 }

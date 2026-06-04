@@ -44,12 +44,12 @@ describe('Content editor side panel', () => {
             cy.get('[data-sel-role="tab-preview"]').should('be.visible');
         });
 
-        it('should default to the details tab', () => {
+        it('should default to the preview tab', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
 
-            cy.get('[data-sel-role="tab-details"]').should('have.attr', 'aria-selected', 'true');
+            cy.get('[data-sel-role="tab-preview"]').should('have.attr', 'aria-selected', 'true');
             cy.get('[data-sel-role="side-panel-content"]').should('be.visible');
         });
 
@@ -92,7 +92,7 @@ describe('Content editor side panel', () => {
         });
 
         it('should display technical information section', () => {
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').should('be.visible');
+            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView().should('be.visible');
         });
 
         it('should display detail rows with copy buttons in the technical section', () => {

@@ -702,7 +702,9 @@
             "contentType": "Haupt Content Typ",
             "details": "Details",
             "label": "Technische Informationen",
-            "mixinTypes": "Content Typ",
+            "nodeTypeName": "Content-Typ",
+            "inheritedMixins": "Geerbte Mixins",
+            "appliedMixins": "Angewandte Mixins",
             "path": "Pfad",
             "uuid": "UUID"
           },

@@ -48,7 +48,11 @@ describe('Hide Preview testsuite', () => {
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('Text');
         ce.switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').click();
+        cy.get('[data-sel-role="tab-preview"]').then($tab => {
+            if ($tab.attr('aria-selected') !== 'true') {
+                cy.wrap($tab).click();
+            }
+        });
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
     });
 

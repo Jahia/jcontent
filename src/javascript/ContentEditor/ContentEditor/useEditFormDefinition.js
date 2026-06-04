@@ -131,10 +131,19 @@ const getTechnicalInfo = (nodeData, t) => {
             value: nodeData.primaryNodeType.displayName
         },
         {
-            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.mixinTypes'), value: [
-                nodeData.primaryNodeType.name,
-                ...nodeData.mixinTypes.map(m => m.name)
-            ].filter(v => v).join('; ')
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.nodeTypeName'),
+            value: nodeData.primaryNodeType.name
+        },
+        {
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins'),
+            value: (nodeData.primaryNodeType.supertypes ?? [])
+                .filter(s => s.mixin)
+                .map(s => s.name)
+                .join('; ') || '-'
+        },
+        {
+            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.appliedMixins'),
+            value: nodeData.mixinTypes.map(m => m.name).join('; ') || '-'
         },
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.path'),

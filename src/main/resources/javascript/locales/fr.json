@@ -703,7 +703,9 @@
             "contentType": "Type de contenu principal",
             "details": "Détails",
             "label": "Informations techniques",
-            "mixinTypes": "Type de contenu complet",
+            "nodeTypeName": "Type de contenu",
+            "inheritedMixins": "Mixins hérités",
+            "appliedMixins": "Mixins appliqués",
             "path": "Chemin",
             "uuid": "UUID"
           },

@@ -13,7 +13,9 @@ import {hasMixin} from '~/JContent/JContent.utils';
  * @param {string[]} [options.showOnNodeTypes] - Action is only shown for these node types/mixins
  * @param {string[]} [options.hideOnNodeTypes] - Action is hidden for these node types/mixins
  * @param {string[]} [options.hideMixins] - Action is hidden when node has any of these mixins
- * @param {string[]} [options.showMixins] - Action is only shown when node has at least one of these mixins
+ * @param {string[]} [options.showMixins] - Action is only shown when node has at least one of these mixins.
+ *   WARNING: Only safe when the mixin is always dynamically applied (addMixin) and never declared as a
+ *   supertype in a node type definition — otherwise inherited mixins won't appear in mixinTypes.
  * @returns {boolean}
  */
 export function isDefinitelyHidden(prefetchedNode, {

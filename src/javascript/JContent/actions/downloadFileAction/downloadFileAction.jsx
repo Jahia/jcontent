@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import React, {useContext} from 'react';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {DownloadFileDialog} from '~/JContent/actions/downloadFileAction/DownloadFileDialog';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
-export const DownloadFileActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const DownloadFileActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: ['jnt:file']});
     const res = useNodeChecks(
         {path},
         {
+            skip,
             showOnNodeTypes: ['jnt:file'],
             requiredSitePermission: ['downloadAction']
         }
@@ -16,6 +19,10 @@ export const DownloadFileActionComponent = ({path, render: Render, loading: Load
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult;
@@ -38,6 +45,8 @@ export const DownloadFileActionComponent = ({path, render: Render, loading: Load
 
 DownloadFileActionComponent.propTypes = {
     path: PropTypes.string,
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

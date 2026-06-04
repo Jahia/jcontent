@@ -6,6 +6,7 @@ import {batchActions} from 'redux-batched-actions';
 import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {ACTION_PERMISSIONS} from './actions.constants';
+import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
 
 const Upload = React.memo(() => (
     <input id="file-upload-input"
@@ -41,15 +42,24 @@ const constraintsByType = {
 };
 
 export const FileUploadActionComponent = props => {
-    const {path, uploadType, render: Render, loading: Loading} = props;
+    const {path, uploadType, node: prefetchedNode, render: Render, loading: Loading} = props;
     const componentRenderer = useContext(ComponentRendererContext);
     const dispatch = useDispatch();
     const dispatchBatch = actions => dispatch(batchActions(actions));
 
+    const constraints = constraintsByType[uploadType || 'upload'];
+    // Skip for upload/fileUpload/replaceWith (jnt:folder, jnt:file are leaf types — safe for exact match)
+    // Do not skip for 'import' (showOnNodeTypes includes jnt:page, jnt:contentFolder which have subtypes)
+    const skip = uploadType !== 'import' && isDefinitelyHidden(prefetchedNode, {
+        showOnNodeTypes: constraints.showOnNodeTypes,
+        hideOnNodeTypes: constraints.hideOnNodeTypes
+    });
+
     const res = useNodeChecks(
         {path},
         {
-            ...constraintsByType[uploadType || 'upload'],
+            skip,
+            ...constraints,
             getLockInfo: true
         }
     );
@@ -62,6 +72,10 @@ export const FileUploadActionComponent = props => {
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const handleClick = () => {
@@ -105,6 +119,8 @@ FileUploadActionComponent.propTypes = {
     path: PropTypes.string,
 
     uploadType: PropTypes.string,
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

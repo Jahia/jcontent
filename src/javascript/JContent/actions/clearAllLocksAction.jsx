@@ -4,11 +4,13 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/client';
 
-export const ClearAllLocksActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const ClearAllLocksActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
+    const skip = prefetchedNode?.operationsSupport?.lock === false;
     const res = useNodeChecks(
         {path},
         {
+            skip,
             getLockInfo: true,
             getOperationSupport: true,
             requiredPermission: ['clearLock']
@@ -17,6 +19,10 @@ export const ClearAllLocksActionComponent = ({path, render: Render, loading: Loa
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult && res.node && res.node.operationsSupport.lock && res.node.lockTypes !== null && res.node.lockTypes.values.indexOf(' deletion :deletion') === -1;
@@ -50,6 +56,8 @@ export const ClearAllLocksActionComponent = ({path, render: Render, loading: Loa
 
 ClearAllLocksActionComponent.propTypes = {
     path: PropTypes.string,
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

@@ -3,9 +3,10 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
+import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
 
 export const PublishManagerActionComponent = props => {
-    const {id, path, paths, publicationNodeTypes, buttonIcon, buttonLabel, render: Render, loading: Loading} = props;
+    const {id, path, paths, node: prefetchedNode, publicationNodeTypes, buttonIcon, buttonLabel, render: Render, loading: Loading} = props;
     const {language, siteKey} = useSelector(state => ({
         language: state.language,
         siteKey: state.site
@@ -13,7 +14,12 @@ export const PublishManagerActionComponent = props => {
 
     const {t} = useTranslation('jcontent');
 
+    const skip = !!paths ||
+        typeof window?.authoringApi?.showPublicationManager !== 'function' ||
+        isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes: ['jnt:category', 'jmix:markedForDeletion']});
+
     const res = useNodeChecks({path, language}, {
+        skip,
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
@@ -23,6 +29,10 @@ export const PublishManagerActionComponent = props => {
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = !paths && res.checksResult && typeof window?.authoringApi?.showPublicationManager === 'function';
@@ -61,5 +71,6 @@ PublishManagerActionComponent.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
     buttonIcon: PropTypes.node,
     isMediumLabel: PropTypes.bool,
+    node: PropTypes.object,
     publicationNodeTypes: PropTypes.arrayOf(PropTypes.string)
 };

@@ -4,11 +4,13 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/client';
 
-export const UnlockActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const UnlockActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
+    const skip = prefetchedNode?.operationsSupport?.lock === false;
     const res = useNodeChecks(
         {path},
         {
+            skip,
             getLockInfo: true,
             getCanLockUnlock: true,
             getOperationSupport: true,
@@ -18,6 +20,10 @@ export const UnlockActionComponent = ({path, render: Render, loading: Loading, .
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult && res.node &&
@@ -55,6 +61,8 @@ export const UnlockActionComponent = ({path, render: Render, loading: Loading, .
 
 UnlockActionComponent.propTypes = {
     path: PropTypes.string,
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

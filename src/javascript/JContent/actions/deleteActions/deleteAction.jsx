@@ -6,18 +6,29 @@ import React, {useContext} from 'react';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
 function checkAction(node) {
     return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node) && !node.lockOwner;
 }
 
-export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
+export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
+
+    const pathHidden = !paths && path && (
+        JahiaAreasUtil.isJahiaArea(path) ||
+        [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF].some(p => new RegExp(p).test(path))
+    );
+    const skip = pathHidden || (!paths && (
+        isDefinitelyHidden(prefetchedNode, {hideMixins: ['jmix:markedForDeletion']}) ||
+        prefetchedNode?.operationsSupport?.markForDeletion === false
+    ));
 
     const res = useNodeChecks(
         {path, paths, language},
         {
+            skip,
             getProperties: ['jcr:mixinTypes'],
             getDisplayName: true,
             getOperationSupport: true,
@@ -37,6 +48,10 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, rend
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path || paths) && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
@@ -64,6 +79,8 @@ DeleteActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    node: PropTypes.object,
 
     buttonProps: PropTypes.object,
 

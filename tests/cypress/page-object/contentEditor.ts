@@ -204,9 +204,11 @@ export class ContentEditor extends BasePage {
     }
 
     switchToSidePanelPreviewTab() {
+        // Use force:true to handle the race where React applies tab selection (pointer-events:none)
+        // between the aria-selected check and the actual click. Clicking an already-selected tab is a no-op.
         cy.get('[data-sel-role="tab-preview"]').then($tab => {
             if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('[data-sel-role="tab-preview"]').click();
+                cy.get('[data-sel-role="tab-preview"]').click({force: true});
             }
         });
     }

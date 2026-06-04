@@ -43,7 +43,7 @@ describe('Preview tests', () => {
             .selectByRole('editAdvanced');
         cy.get('[data-sel-role="tab-preview"]').then($tab => {
             if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('[data-sel-role="tab-preview"]').click();
+                cy.get('[data-sel-role="tab-preview"]').click({force: true});
             }
         });
         cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');

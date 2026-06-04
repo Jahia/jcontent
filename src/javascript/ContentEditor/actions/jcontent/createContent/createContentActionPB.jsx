@@ -17,6 +17,7 @@ export const CreateContentPB = ({
     isDisabled,
     onVisibilityChanged,
     nodeData,
+    nodeTypes,
     render: Render,
     loading: Loading,
     labelProps,
@@ -42,8 +43,21 @@ export const CreateContentPB = ({
         }
 
         // Note: acceptedNodeTypes is based on the DOM if we were able to find it, allowedChildNodeTypes is the info from JCR
-        const nodeTypes = resNode.acceptedNodeTypes.length > 0 ? resNode.acceptedNodeTypes : resNode.allowedChildNodeTypes;
-        const actions = transformNodeTypesToActionsPB(nodeTypes, false, resNode?.name, otherProps.defaultIcon);
+        let resolvedNodeTypesForAction = [];
+        // NodeTypes come from placeholder's nodetypes attribute, as each action is created for such placeholder we want to match what that button can create
+        if (resNode.acceptedNodeTypes.size > 0) {
+            // If nodetypes is defined, it will be used as the source of truth for calculating available note types
+            if (nodeTypes) {
+                resolvedNodeTypesForAction = nodeTypes
+                    .map(nt => resNode.acceptedNodeTypes.get(nt))
+                    .filter(nt => nt !== undefined);
+            } else {
+                resolvedNodeTypesForAction = [...resNode.acceptedNodeTypes.values()];
+            }
+        }
+
+        const resolvedNodeTypes = resolvedNodeTypesForAction.length > 0 ? resolvedNodeTypesForAction : resNode.allowedChildNodeTypes;
+        const actions = transformNodeTypesToActionsPB(resolvedNodeTypes, false, resNode?.name, otherProps.defaultIcon);
 
         return {
             loading: false,
@@ -51,7 +65,7 @@ export const CreateContentPB = ({
             actions,
             missingNodes: false
         };
-    }, [Loading, resNode, path, otherProps.defaultIcon]);
+    }, [Loading, resNode, path, otherProps.defaultIcon, nodeTypes]);
 
     useEffect(() => {
         onVisibilityChanged?.(isVisible);
@@ -69,19 +83,14 @@ export const CreateContentPB = ({
         api.create({uuid: resNode.uuid, lang: language, nodeTypes, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
     };
 
-    return (actions || [{
-        key: 'allTypes',
-        nodeTypeIcon: otherProps.defaultIcon,
-        tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric',
-        tooltipParams: {parent: resNode.name}}]).map(result => (
-            <Render
+    return actions.map(result => (
+        <Render
             key={result.key}
             dataSelRole="createContent"
             enabled={!isDisabled && !resNode?.lockOwner}
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}
             tooltipLabel={result.tooltipLabel}
             tooltipParams={result.tooltipParams}
-            nodeTypes={['jmix:droppableContent']}
             {...otherProps}
             path={path}
             uilang={uilang}
@@ -104,7 +113,8 @@ CreateContentPB.propTypes = {
     loading: PropTypes.func,
     onVisibilityChanged: PropTypes.func,
     labelProps: PropTypes.object,
-    nodeData: PropTypes.object
+    nodeData: PropTypes.object,
+    nodeTypes: PropTypes.arrayOf(PropTypes.string)
 };
 
 export const createContentActionPB = {

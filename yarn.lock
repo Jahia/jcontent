@@ -2651,11 +2651,11 @@ __metadata:
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
-    "@jahia/moonstone": "npm:^2.17.3"
+    "@jahia/moonstone": "npm:^2.19.0"
     "@jahia/react-material": "npm:^3.0.5"
     "@jahia/stylelint-config": "npm:^0.0.3"
     "@jahia/test-framework": "npm:^1.3.1"
-    "@jahia/ui-extender": "npm:^1.1.1"
+    "@jahia/ui-extender": "npm:^1.3.0"
     "@jahia/webpack-config": "npm:^1.1.0"
     "@material-ui/core": "npm:^3.9.3"
     "@material-ui/icons": "npm:^3.0.1"
@@ -2735,6 +2735,7 @@ __metadata:
     rimraf: "npm:^2.6.2"
     rison: "npm:^0.1.1"
     rison-node: "npm:^2.1.1"
+    rxjs: "npm:^6.6.7"
     sass: "npm:^1.51.0"
     sass-loader: "npm:^13.0.0"
     source-map-loader: "npm:^4.0.1"
@@ -2751,11 +2752,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@npm:^2.17.3":
-  version: 2.17.3
-  resolution: "@jahia/moonstone@npm:2.17.3"
+"@jahia/moonstone@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "@jahia/moonstone@npm:2.19.0"
   dependencies:
     "@floating-ui/react": "npm:^0.27.16"
+    "@tanstack/react-table": "npm:^8.21.3"
     clsx: "npm:^2.1.1"
     re-resizable: "npm:^6.11.2"
     to-px: "npm:^1.1.0"
@@ -2763,7 +2765,7 @@ __metadata:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/85721927199b7cee03be18c5f3ab277d9cbdc933d0054ba1bb0ba58f216045b1ee7b378402b26346e6067906c8266e7385e63dab33a96b223361d04b1974adcb
+  checksum: 10c0/c97d35195b295f1a552a5bc6fcd2ed1b41be048b7b2fad91ca41f7972e49ae6926a5ff684c1ef15611a7f571bf2e16df32426f5bef9f6dd756b7bdce142c45f6
   languageName: node
   linkType: hard
 
@@ -2820,15 +2822,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/ui-extender@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@jahia/ui-extender@npm:1.1.1"
-  dependencies:
-    prop-types: "npm:^15.6.1"
-    react: "npm:^16.12.0"
-    react-iframe: "npm:^1.8.0"
-    rxjs: "npm:^6.5.3"
-  checksum: 10c0/754c78e00112c37191d70aa0507bb9f086d61aa8b57f77b6a9183b5d2ae31eb98ace9324d8b970436ca6e1ce8892e602709205eb42d207c0024cb7e4f1cd3630
+"@jahia/ui-extender@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@jahia/ui-extender@npm:1.3.0"
+  peerDependencies:
+    react: ">=16.14.0"
+  checksum: 10c0/168dd83ee05193a09824a347052a8edea8969de0cf6f30a7923c7115fb031a8d052dee3681e6300d8d2e8c27a14fa8276ff19916b34b206224b8db2842eaf0da
   languageName: node
   linkType: hard
 
@@ -5014,6 +5013,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-table@npm:^8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/react-table@npm:8.21.3"
+  dependencies:
+    "@tanstack/table-core": "npm:8.21.3"
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 10c0/85d1d0fcb690ecc011f68a5a61c96f82142e31a0270dcf9cbc699a6f36715b1653fe6ff1518302a6d08b7093351fc4cabefd055a7db3cd8ac01e068956b0f944
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-virtual@npm:^3.11.2":
   version: 3.11.2
   resolution: "@tanstack/react-virtual@npm:3.11.2"
@@ -5023,6 +5034,13 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/de446ce517d0855b3d58e79b6a75a37be40b4529baf0a5c3ffa2662dea80aba03409e06545aea27aa9e3a36fc2a2e3005ecbfce16a4659991d66930ea3bd62d4
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.21.3":
+  version: 8.21.3
+  resolution: "@tanstack/table-core@npm:8.21.3"
+  checksum: 10c0/40e3560e6d55e07cc047024aa7f83bd47a9323d21920d4adabba8071fd2d21230c48460b26cedf392588f8265b9edc133abb1b0d6d0adf4dae0970032900a8c9
   languageName: node
   linkType: hard
 
@@ -18023,17 +18041,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-iframe@npm:^1.8.0":
-  version: 1.8.5
-  resolution: "react-iframe@npm:1.8.5"
-  dependencies:
-    object-assign: "npm:^4.1.1"
-  peerDependencies:
-    react: ">=16.x.x"
-  checksum: 10c0/ae5609bb88d9f36bd130d7a98cfc3067f8400ab57b29a6a72e07a20f882383f1807cb97c45dc8c536046ce2584d953780d4b6611edd66e6eea082555e5c0d62d
-  languageName: node
-  linkType: hard
-
 "react-image-crop@npm:^6.0.18":
   version: 6.0.18
   resolution: "react-image-crop@npm:6.0.18"
@@ -19223,7 +19230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^6.5.3":
+"rxjs@npm:^6.6.7":
   version: 6.6.7
   resolution: "rxjs@npm:6.6.7"
   dependencies:

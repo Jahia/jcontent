@@ -6,14 +6,22 @@ import {useSelector} from 'react-redux';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 
 const getNodeTypes = e => {
+    const types = new Set();
+
+    const ownNt = e.getAttribute('nodetypes');
+    // Get own types only for placeholders (actual buttons) and avoid getting them from existingNodetypes (rendered modules)
+    if (ownNt && e.getAttribute('type') === 'placeholder') {
+        ownNt.split(' ').forEach(t => types.add(t));
+    }
+
     if (e.dataset.jahiaParent) {
-        const nt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
-        if (nt) {
-            return nt.split(' ');
+        const parentNt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
+        if (parentNt) {
+            parentNt.split(' ').forEach(t => types.add(t));
         }
     }
 
-    return [];
+    return [...types];
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
@@ -25,17 +33,19 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
             element: e,
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
             attributes: {nodeTypes: getNodeTypes(e)}
-        }));
+        }))
+        .filter(({node}) => node !== null && node !== undefined);
 
-    // Get all children of the clicked element that are create content buttons [type="existingNode"] and add insertion points for each
-    const childrenElem = [...currentDocument.querySelectorAll(`[type="existingNode"][data-jahia-parent=${clickedElement.element.id}]`)]
+    // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
+    const childrenElem = [...currentDocument.querySelectorAll(`[data-jahia-parent=${clickedElement.element.id}]`)]
         // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
-        .filter(e => e.getAttribute('path').startsWith(clickedPath))
+        .filter(e => e.getAttribute('path')?.startsWith(clickedPath))
         .map(e => ({
             element: e,
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
             attributes: {nodeTypes: getNodeTypes(e)}
-        }));
+        }))
+        .filter(({node}) => node !== null && node !== undefined);
 
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;

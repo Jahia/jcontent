@@ -1,0 +1,14 @@
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: system-ui, -apple-system, sans-serif;
+}
+
+footer {
+	padding: 40px 0;
+	background-color: #f5f5f5;
+}
+

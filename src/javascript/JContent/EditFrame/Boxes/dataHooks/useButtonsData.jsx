@@ -3,19 +3,21 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {getNodeTypeInfo} from '~/ContentEditor/actions/jcontent/createContent/createContent.gql-queries';
 
 export const useButtonsData = ({createButtons, language, uilang}) => {
-    const paths = [];
+    const paths = new Set();
     const nodeTypes = new Set();
 
     createButtons.forEach(b => {
-        paths.push(b.node.path);
-        b.attributes?.nodeTypes?.forEach(nt => nodeTypes.add(nt));
+        if (b?.node) {
+            paths.add(b.node.path);
+            b.attributes?.nodeTypes?.forEach(nt => nodeTypes.add(nt));
+        }
     });
 
     const {loading, data} = useQuery(getNodeTypeInfo, {variables: {nodeTypes: Array.from(nodeTypes), uiLocale: uilang}, skip: nodeTypes.length === 0});
 
     // This data will be used to drive createContentPB actions
     const res = useNodeChecks({
-        paths,
+        paths: Array.from(paths),
         language
     }, {
         mapResults: true, // This creates a map of {path: node result}
@@ -54,10 +56,19 @@ export const useButtonsData = ({createButtons, language, uilang}) => {
     const nodeTypeInfoMap = new Map(data.forms.nodeTypeInfo.map(nt => [nt.name, nt]));
 
     createButtons.forEach(b => {
-        const node = output.nodes[b.node.path];
+        const node = output.nodes[b?.node?.path];
         if (node) {
-            // Map list of node type names to the full info objects
-            node.acceptedNodeTypes = b.attributes?.nodeTypes?.map(nt => nodeTypeInfoMap.get(nt)).filter(nt => nt !== undefined) || [];
+            // There can be multiple placeholders or a single one with multiple or single nodetype defined.
+            // Each node keeps a set of acceptable node types, display configuration will be resolved at Create button/action level with the help of nodetypes attribute.
+            const resolved = b.attributes?.nodeTypes
+                ?.map(nt => nodeTypeInfoMap.get(nt))
+                .filter(nt => nt !== undefined) || [];
+
+            if (!node.acceptedNodeTypes) {
+                node.acceptedNodeTypes = new Map();
+            }
+
+            resolved.forEach(nt => node.acceptedNodeTypes.set(nt.name, nt));
         }
     });
 

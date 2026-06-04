@@ -123,7 +123,12 @@ export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit,
             }));
     }
 
-    return actions;
+    return actions || [{
+        key: 'allTypes',
+        nodeTypeIcon: defaultIcon,
+        nodeTypes: nodeTypes.length > 0 ? nodeTypes.map(n => n.name) : ['jmix:droppableContent'],
+        tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric',
+        tooltipParams: {parent: parentName}}];
 }
 
 export function childrenLimitReachedOrExceeded(node, templateLimit) {

@@ -40,26 +40,50 @@ function reposition(element, currentOffset, setCurrentOffset) {
     }
 }
 
+/**
+ * There are several types of placeholders and several ways in which node types can be resolved.
+ *
+ * Definition of multiple children of types a and b
+ * <div id="moduleABC" jahiatype="module" nodetypes="a b">
+ *      <div type="placeholder" path="*"/>
+ * </div>
+ *
+ * Definition of a single named child a and multiple children of type b
+ * <div id="moduleABC" jahiatype="module" nodetypes="b">
+ *     <div type="placeholder" path="childName" nodetypes="a"/>
+ *     <div type="placeholder" path="*"/>
+ * </div>
+ *
+ * If named child is added the placehoder will be replaced by <div type="existingNode" />. This is true for all named children.
+ *
+ * Definition of multiple named children of type a and b (it could also be just one child). Note that the parent no longer has nodetypes.
+ * <div id="moduleABC" jahiatype="module">
+ *     <div type="placeholder" path="childName" nodetypes="a"/>
+ *     <div type="placeholder" path="childName" nodetypes="b"/>
+ * </div>
+ */
 export const getElemAttributes = ({element, parent}) => {
     // Need to check here if insertionPoint is an original create button or not,
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
-    const isContainer = element.getAttribute('path') === '*';
+    const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
 
-    const nodePath = (isInsertionPoint || isContainer) ? null : element.getAttribute('path');
+    const nodePath = (isInsertionPoint || isMultipleChildPlaceholder) ? null : element.getAttribute('path');
     const nodeName = element.getAttribute('path').split('/').pop();
 
-    let nodeTypes;
-    if (parent.getAttribute('nodetypes') &&
-        (parent.getAttribute('type') === 'area' || parent.getAttribute('type') === 'absoluteArea')) {
+    // Nodetypes should not be undefined here because if nothing is found nothing should be used
+    let nodeTypes = [];
+    let parentAreaType;
+    if (parent.getAttribute('nodetypes')) {
         nodeTypes = parent.getAttribute('nodetypes').split(' ');
+        parentAreaType = parent.getAttribute('type');
     }
 
     if (element.getAttribute('nodetypes')) {
         nodeTypes = element.getAttribute('nodetypes').split(' ');
     }
 
-    return {nodeName, nodePath, nodeTypes};
+    return {nodeName, nodePath, nodeTypes, parentAreaType};
 };
 
 const useReorderNodes = ({parentPath}) => {
@@ -107,7 +131,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
-    const {nodeName, nodePath} = getElemAttributes({element, parent, isInsertionPoint});
+    const {nodeName, nodePath, nodeTypes} = getElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: false,
         paste: false,
@@ -179,7 +203,14 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             insertionStyle.left = currentOffset.left - (btnWidth / 2);
             insertionStyle.flexDirection = 'column';
         } else {
-            insertionStyle.top = currentOffset.top - 16;
+            const marginTop = Number.parseFloat(element.ownerDocument.defaultView.getComputedStyle(element).marginTop) || 0;
+            let parentPaddingTop = 0;
+
+            if (element.parentElement.firstElementChild === element) {
+                parentPaddingTop = Number.parseFloat(element.ownerDocument.defaultView.getComputedStyle(element.parentElement).paddingTop) || 0;
+            }
+
+            insertionStyle.top = currentOffset.top - 16 - marginTop - parentPaddingTop;
         }
     }
 
@@ -195,6 +226,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const createAction = useMemo(() => (
         <DisplayAction
             actionKey="createContentPB"
+            nodeTypes={nodeTypes}
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}
@@ -204,7 +236,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             onVisibilityChanged={onCreateVisibilityChanged}
             onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
         />
-    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName]);
+    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes]);
 
     return !anyDragging && (
         <div ref={drop}

@@ -763,7 +763,8 @@
         },
         "tab": {
           "edit": "Bearbeiten",
-          "advanced": "Erweiterte Optionen"
+          "advanced": "Erweiterte Optionen",
+          "visibility": "Sichtbarkeit"
         }
       },
       "header":  {
@@ -980,9 +981,38 @@
         },
         "conditions" : {
           "title" : "Datum und Uhrzeit",
+          "type": "Typ",
+          "typeDescription": "Definieren Sie die Bedingung, die angewendet werden soll.",
           "rules" : "{{rulesNumber}} Bedingungen definiert",
           "rule" : "Eine Bedingung definiert",
-          "norules" : "Keine Bedingung definiert"
+          "norules" : "Keine Bedingung definiert",
+          "allrules": "Alle Bedingungen müssen erfüllt sein, damit der Inhalt sichtbar ist",
+          "anyrule": "Mindestens eine der Bedingungen muss erfüllt sein, damit der Inhalt sichtbar ist",
+          "add": "Bedingung hinzufügen",
+          "edit": "Bedingung bearbeiten",
+          "delete": "Bedingung löschen",
+          "ruleType": {
+            "date": "Datum",
+            "dayOfWeek": "Wochentag",
+            "time": "Uhrzeit"
+          },
+          "ruleDescription": {
+            "date": "Der Inhalt wird ab dem angegebenen Datum und der angegebenen Uhrzeit, bis zum angegebenen Datum und der angegebenen Uhrzeit oder zwischen diesen beiden Zeitpunkten sichtbar sein – abhängig von der Konfiguration der Bedingung.",
+            "dayOfWeek": "Der Inhalt wird an den ausgewählten Wochentagen sichtbar sein.",
+            "time": "Der Inhalt wird ab der angegebenen Uhrzeit oder bis zur angegebenen Uhrzeit sichtbar sein, abhängig von der Konfiguration der Bedingung."
+          },
+          "dayOfWeekCondition": "Der Inhalt wird an den folgenden Wochentagen sichtbar sein: {{days}}",
+          "startEndDateCondition": "Der Inhalt wird ab {{startDate}} bis {{endDate}} sichtbar sein",
+          "startDateCondition": "Der Inhalt wird ab {{startDate}} sichtbar sein",
+          "endDateCondition": "Der Inhalt wird bis {{endDate}} sichtbar sein",
+          "startEndTimeCondition": "Der Inhalt wird ab {{startTime}} bis {{endTime}} sichtbar sein",
+          "startTimeCondition": "Der Inhalt wird ab {{startTime}} sichtbar sein",
+          "endTimeCondition": "Der Inhalt wird bis {{endTime}} sichtbar sein",
+          "preview": "In der Vorschau sichtbar",
+          "live": "Live sichtbar",
+          "preview_live": "Übereinstimmung in Vorschau / Live",
+          "visible": "Sichtbar",
+          "hidden": "Ausgeblendet"
         }
       }
     },

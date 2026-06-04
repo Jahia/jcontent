@@ -206,7 +206,7 @@ export class ContentEditor extends BasePage {
     switchToSidePanelPreviewTab() {
         cy.get('[data-sel-role="tab-preview"]').then($tab => {
             if ($tab.attr('aria-selected') !== 'true') {
-                cy.wrap($tab).click();
+                cy.get('[data-sel-role="tab-preview"]').click();
             }
         });
     }

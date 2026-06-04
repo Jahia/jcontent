@@ -27,7 +27,7 @@ const constraintsByType = {
         requiredSitePermission: [ACTION_PERMISSIONS.replaceWithAction]
     },
     import: {
-        showOnNodeTypes: ['jnt:contentFolder', 'jnt:category', 'jnt:page', 'jnt:area', 'jmix:list', 'jnt:navMenuText'],
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:category', 'jnt:page', 'jnt:area', 'jmix:list', 'jnt:navMenuText', 'jmix:droppableContent'],
         hideOnNodeTypes: ['jnt:folder'],
         requiredPermission: 'jcr:addChildNodes',
         requiredSitePermission: [ACTION_PERMISSIONS.importAction]

@@ -28,6 +28,7 @@
         "notPublished": "Dieser Content wurde nie veröffentlicht",
         "unPublished": "Veröffentlichung für das Content wurde rückgängig gemacht",
         "modified": "Geändert von {{userName}} am {{timestamp}}",
+        "new": "Erstellt von {{userName}} am {{timestamp}}",
         "published": "Veröffentlicht von {{userName}} am {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Der Inhalt kann nicht in der aktuellen Sprache veröffentlicht werden, da verpflichtende Eigenschaften fehlen.",

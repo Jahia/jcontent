@@ -28,6 +28,7 @@
         "notPublished": "Ce contenu n'a jamais été publié",
         "unPublished": "Ce contenu a été dépublié",
         "modified": "Modifié par {{userName}} le {{timestamp}}",
+        "new": "Créé par {{userName}} le {{timestamp}}",
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",

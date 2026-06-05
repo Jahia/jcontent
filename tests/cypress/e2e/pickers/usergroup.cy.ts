@@ -20,7 +20,9 @@ describe('Picker tests - Usergroup', () => {
         const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_usergrouppicker').open();
         picker.search('admin');
-        picker.verifyResultsLength(3);
+        picker.verifyResultsLength(2);
+        picker.getTableRow('administrators').should('be.visible');
+        picker.getTableRow('site-administrators').should('be.visible');
     });
     it('Usergroup Picker - Select administrators', () => {
         const contentEditor = jcontent.createContent('qant:pickers');

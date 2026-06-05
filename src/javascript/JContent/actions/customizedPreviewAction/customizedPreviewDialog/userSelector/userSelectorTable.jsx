@@ -57,7 +57,7 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
     const {tableConfig} = registry.get(Constants.ACCORDION_ITEM_NAME, 'picker-user') || {};
 
     const userQueryOptions = useUserQueryOptions({tableConfig, currentPage, pageSize});
-    const {mode, searchTerms, sort, setSort} = userQueryOptions;
+    const {searchTerms, sort, setSort} = userQueryOptions;
     const fragments = (tableConfig?.queryHandler?.getFragments) ? (tableConfig?.queryHandler?.getFragments() || []) : [];
     const {result, error, loading} = useLayoutQuery(userQueryOptions, fragments.filter(Boolean));
 
@@ -84,7 +84,7 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
             <>
                 <UserSearch tableConfig={tableConfig} {...userQueryOptions}/>
                 <div className={clsx(styles.userTable, 'flexFluid flexCol_center alignCenter')}>
-                    {(mode === Constants.mode.SEARCH) ?
+                    {searchTerms ?
                         <EmptyTable text={searchTerms}/> :
                         <ContentNotFound columnSpan={allColumnData.length} t={t}/>}
                 </div>

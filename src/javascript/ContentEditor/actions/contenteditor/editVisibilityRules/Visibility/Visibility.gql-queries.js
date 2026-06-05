@@ -22,6 +22,7 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                             value
                         }
                     }
+                    conditionDescription(uiLocale: $language)
                 }
             }
             visibilityDetails {
@@ -37,6 +38,7 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                         value
                     }
                 }
+                conditionDescription(uiLocale: $language)
             }
             conditionalVisibility : children(names: ["j:conditionalVisibility"]) {
                 nodes {

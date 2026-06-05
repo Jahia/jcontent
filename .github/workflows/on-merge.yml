@@ -1,6 +1,6 @@
 # This workflow is triggered every time a change is pushed to any branches
 # Github actions command reference: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
-name: On merge to main
+name: On merge to 3_6_x
 
 # The workflow could also be triggered on PRs
 on:

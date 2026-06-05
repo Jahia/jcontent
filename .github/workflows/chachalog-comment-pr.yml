@@ -7,7 +7,7 @@ on:
     branches:
       - main
       - master
-      - 3_6_x
+      - [0-9]_[0-9]_x
 
 jobs:
   comment-pr:

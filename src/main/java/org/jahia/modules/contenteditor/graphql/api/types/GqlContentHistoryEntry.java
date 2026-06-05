@@ -201,6 +201,10 @@ public class GqlContentHistoryEntry {
             // Find property definition on primary type, then mixins
             ExtendedPropertyDefinition propertyDef = node.getApplicablePropertyDefinition(propertyName);
 
+            // Property def is null in case of a property added by a mixin not present on the node anymore
+            if (propertyDef == null) {
+                return propertyName;
+            }
             // Mirrors Field.initializeLabel / initializeLabelFromItemDefinition resolution order:
             String label = null;
             // 1. Allow labels from primary node type

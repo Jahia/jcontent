@@ -28,6 +28,7 @@
         "notPublished": "Ce contenu n'a jamais été publié",
         "unPublished": "Ce contenu a été dépublié",
         "modified": "Modifié par {{userName}} le {{timestamp}}",
+        "new": "Créé par {{userName}} le {{timestamp}}",
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
@@ -764,7 +765,8 @@
         },
         "tab": {
           "edit": "Éditer",
-          "advanced": "Options avancées"
+          "advanced": "Options avancées",
+          "visibility": "Visibilité"
         }
       },
       "header":  {
@@ -981,9 +983,40 @@
         },
         "conditions" : {
           "title" : "Jour et heure",
+          "type": "Type",
+          "typeDescription": "Définir la condition à appliquer.",
           "rules" : "{{rulesNumber}} conditions définies",
           "rule" : "1 condition définie",
-          "norules" : "Pas de condition définie"
+          "norules" : "Pas de condition définie",
+          "allrules": "Toutes les conditions doivent être vérifiées pour que le contenu soit visible",
+          "anyrule": "Au moins une des conditions doit être vérifiée pour que le contenu soit visible",
+          "add": "Ajouter une condition",
+          "edit": "Modifier la condition",
+          "delete": "Supprimer la condition",
+          "ruleType": {
+            "date": "Date",
+            "dayOfWeek": "Jour de la semaine",
+            "time": "Heure"
+          },
+          "ruleDescription": {
+            "date": "Le contenu sera visible à partir de la date et de l'heure spécifiées, jusqu'à la date et l'heure spécifiées, ou entre ces deux dates, selon la configuration de la condition.",
+            "dayOfWeek": "Le contenu sera visible les jours de la semaine sélectionnés.",
+            "time": "Le contenu sera visible à partir de l'heure spécifiée ou jusqu'à l'heure spécifiée, selon la configuration de la condition."
+          },
+          "dayOfWeekCondition": "Le contenu sera visible les jours de la semaine suivants : {{days}}",
+          "startEndDateCondition": "Le contenu sera visible à partir du {{startDate}} et jusqu'au {{endDate}}",
+          "startDateCondition": "Le contenu sera visible à partir du {{startDate}}",
+          "endDateCondition": "Le contenu sera visible jusqu'au {{endDate}}",
+          "startEndTimeCondition": "Le contenu sera visible à partir de {{startTime}} et jusqu'à {{endTime}}",
+          "startTimeCondition": "Le contenu sera visible à partir de {{startTime}}",
+          "endTimeCondition": "Le contenu sera visible jusqu'à {{endTime}}",
+          "preview": "Visible en aperçu",
+          "live": "Visible en live",
+          "preview_live": "Correspondance aperçu / live",
+          "visible": "Visible",
+          "hidden": "Masqué"
+        },
+        "channels": {
         }
       }
     },

@@ -36,11 +36,12 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
+      - name: Install JS dependencies without running package build scripts
+        shell: bash
+        run: yarn install --immutable --mode=skip-build
       - name: Run yarn test
         shell: bash
-        run: |
-          yarn
-          yarn test
+        run: yarn test
 
   build:
     name: Build Module

@@ -7,6 +7,7 @@ import org.jahia.services.visibility.BaseVisibilityConditionRule;
 import org.jahia.services.visibility.VisibilityConditionRule;
 import org.jahia.utils.i18n.Messages;
 import org.osgi.framework.Constants;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class TimeOfDayVisibilityCondition extends BaseVisibilityConditionRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeOfDayVisibilityCondition.class);
 
     public String getGWTDisplayTemplate(Locale locale) {
-        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("Jahia Visibility"), "label.timeOfDayCondition.xtemplate", locale);
+        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackageById(FrameworkUtil.getBundle(this.getClass()).getSymbolicName()), "label.timeOfDayCondition.xtemplate", locale);
     }
 
     protected Integer getValue(JCRNodeWrapper node, String propertyName, Integer defaultValue) throws RepositoryException {

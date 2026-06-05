@@ -5,7 +5,7 @@ import {ChevronDown, ChevronRight, MenuItem, Separator} from '@jahia/moonstone';
 import {MenuItemSkeleton} from './MenuItemSkeleton';
 import {MenuLoadingContext} from './MenuLoadingContext';
 
-export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, buttonIconEnd, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle}) => {
+export const MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, buttonIconEnd, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle}) => {
     const {t} = useTranslation('jcontent');
     const [hover, setHover] = useState(false);
     const isMenuLoading = useContext(MenuLoadingContext);

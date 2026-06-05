@@ -19,7 +19,8 @@ const Create = ({isCreateAnother, render: Render, loading: Loading, ...otherProp
         lang,
         refetchFormData,
         initialValues,
-        i18nContext
+        i18nContext,
+        disableCreateAnother
     } = useContentEditorContext();
     const [clicked, setClicked] = useState(false);
     const {sections} = useContentEditorSectionContext();
@@ -51,7 +52,7 @@ const Create = ({isCreateAnother, render: Render, loading: Loading, ...otherProp
             .submitForm()
             .then(data => {
                 if (data) {
-                    if (isCreateAnother) {
+                    if (isCreateAnother && !disableCreateAnother) {
                         // Fetch only to generate a new valid system name
                         refetchFormData().then(() => {
                             resetI18nContext();

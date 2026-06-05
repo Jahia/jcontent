@@ -10,6 +10,8 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
+import {useMaxItemsReached} from '~/ContentEditor/ContentEditor/useMaxItemsReached';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -56,7 +58,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         value: createAnotherState[0], set: createAnotherState[1]
     };
 
-    const {lang, mode, name} = contentEditorConfigContext;
+    const {lang, mode, name, count} = contentEditorConfigContext;
 
     // Get user navigator locale preference
     const browserLang = navigator.language;
@@ -96,6 +98,15 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         !error &&
         !siteInfoResult.error ? {nodeData, siteInfo: siteInfoResult.data.jcr.result} : undefined
     );
+
+    // In create mode, enforce the parent's item-count limit (j:numberOfItems / jmix:listSizeLimit)
+    // while "create another" is used
+    const disableCreateAnother = useMaxItemsReached({
+        path: nodeData?.path,
+        language: lang,
+        count,
+        enabled: mode === Constants.routes.baseCreateRoute
+    });
 
     if (error) {
         // Check for ItemNotFound exception
@@ -160,7 +171,8 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         i18nContext,
         setI18nContext,
         resetI18nContext,
-        createAnother
+        createAnother,
+        disableCreateAnother
     };
 
     return (

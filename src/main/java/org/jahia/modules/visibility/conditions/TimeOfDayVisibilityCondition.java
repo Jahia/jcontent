@@ -32,7 +32,7 @@ public class TimeOfDayVisibilityCondition extends BaseVisibilityConditionRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeOfDayVisibilityCondition.class);
 
     public String getGWTDisplayTemplate(Locale locale) {
-        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("Jahia Visibility"), "label.timeOfDayCondition.xtemplate", locale);
+        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("jContent"), "label.timeOfDayCondition.xtemplate", locale);
     }
 
     protected Integer getValue(JCRNodeWrapper node, String propertyName, Integer defaultValue) throws RepositoryException {

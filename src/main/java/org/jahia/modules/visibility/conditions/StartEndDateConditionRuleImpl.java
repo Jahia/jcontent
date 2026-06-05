@@ -34,7 +34,7 @@ public class StartEndDateConditionRuleImpl extends BaseVisibilityConditionRule {
      * @return Return the associated display template that will be used by gwt.
      */
     public String getGWTDisplayTemplate(Locale locale) {
-        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("Jahia Visibility"), "label.startEndDateCondition.xtemplate", locale);
+        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("jContent"), "label.startEndDateCondition.xtemplate", locale);
     }
 
     public boolean matches(JCRNodeWrapper nodeWrapper) {

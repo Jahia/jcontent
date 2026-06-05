@@ -30,7 +30,7 @@ public class DayOfWeekVisibilityCondition extends BaseVisibilityConditionRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(DayOfWeekVisibilityCondition.class);
 
     public String getGWTDisplayTemplate(Locale locale) {
-        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("Jahia Visibility"), "label.dayOfWeekCondition.xtemplate", locale);
+        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("jContent"), "label.dayOfWeekCondition.xtemplate", locale);
     }
 
     public boolean matches(JCRNodeWrapper node) {

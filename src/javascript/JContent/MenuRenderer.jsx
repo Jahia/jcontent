@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu} from '@jahia/moonstone';
+import {MenuLoadingContext} from './MenuLoadingContext';
 
 export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, menuKey, ...otherProps}) => (
     <Menu
@@ -15,7 +16,9 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onE
         onExited={onExited}
         {...otherProps}
     >
-        {children}
+        <MenuLoadingContext.Provider value={isLoading}>
+            {children}
+        </MenuLoadingContext.Provider>
     </Menu>
 );
 

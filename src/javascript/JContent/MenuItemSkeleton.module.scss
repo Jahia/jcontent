@@ -2,7 +2,8 @@
     display: flex;
     align-items: center;
     padding: var(--moon-spacing-nano) var(--moon-spacing-medium);
-    height: 36px;
+    height: var(--moon-spacing-large);
+    min-width: 200px;
     box-sizing: border-box;
 }
 

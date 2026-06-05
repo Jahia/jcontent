@@ -1,18 +1,20 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {ChevronDown, ChevronRight, MenuItem, Separator} from '@jahia/moonstone';
 import {MenuItemSkeleton} from './MenuItemSkeleton';
+import {MenuLoadingContext} from './MenuLoadingContext';
 
-export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, buttonIconEnd, actionKey, enabled, isLoading, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle}) => {
+export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, buttonIconEnd, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps, isTitle}) => {
     const {t} = useTranslation('jcontent');
     const [hover, setHover] = useState(false);
+    const isMenuLoading = useContext(MenuLoadingContext);
 
     if (isSeparator) {
         return <Separator invisible="firstOrLastChild"/>;
     }
 
-    if (isLoading) {
+    if (isMenuLoading) {
         return <MenuItemSkeleton/>;
     }
 
@@ -76,7 +78,6 @@ MenuItemRenderer.propTypes = {
     buttonIconEnd: PropTypes.object,
     // eslint-disable-next-line react/boolean-prop-naming
     enabled: PropTypes.bool,
-    isLoading: PropTypes.bool,
     isSeparator: PropTypes.bool,
     isTitle: PropTypes.bool,
 

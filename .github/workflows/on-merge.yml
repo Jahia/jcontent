@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - 'main'
+      - '3_6_x'
     tags-ignore:
       - '**'
 

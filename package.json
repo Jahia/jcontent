@@ -126,7 +126,8 @@
     "trim-newlines": "^3.0.1",
     "strip-ansi": "^6.0.1",
     "xlsx": "^0.17.0",
-    "string-width": "^4.2.3"
+    "string-width": "^4.2.3",
+    "@jahia/ui-extender": "portal:../javascript-components/packages/ui-extender"
   },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",

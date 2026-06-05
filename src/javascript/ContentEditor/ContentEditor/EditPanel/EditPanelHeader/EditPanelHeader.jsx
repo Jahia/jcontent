@@ -2,7 +2,7 @@ import React from 'react';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
-import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
+import {ButtonGroup, Header, Separator} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -14,22 +14,6 @@ import {ContentPath} from './ContentPath';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 import clsx from 'clsx';
 import {ContentTypeChip} from '../ContentTypeChip';
-
-const TabItemRenderer = renderProps => {
-    const {t} = useTranslation('jcontent');
-    return (
-        <TabItem
-            data-sel-role={renderProps.dataSelRole}
-            icon={renderProps.buttonIcon}
-            label={t(renderProps.buttonLabel)}
-            isSelected={renderProps.value === renderProps.activeTab}
-            onClick={e => {
-                e.stopPropagation();
-                renderProps.onClick(renderProps, e);
-            }}
-        />
-    );
-};
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -90,25 +74,21 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
                                 <Separator variant="vertical" size="medium"/>
                             </>}
 
-                        {activeTab && (
-                            <>
-                                <Tab>
-                                    <DisplayActions
-                                        setActiveTab={setActiveTab}
-                                        activeTab={activeTab}
-                                        target="editHeaderTabsActions"
-                                        nodeData={nodeData}
-                                        render={TabItemRenderer}
-                                    />
-                                </Tab>
-                                <Separator variant="vertical" size="medium"/>
-                            </>
-                        )}
-
                         <HeaderButtonActions targetActionKey={targetActionKey}/>
                         <HeaderThreeDotsActions targetActionKey={targetActionKey}/>
                     </div>
                 )}
+                toolbarRight={
+                    <select onChange={e => setActiveTab(e.target.value)}>
+                        <DisplayActions
+                            setActiveTab={setActiveTab}
+                            activeTab={activeTab}
+                            target="editHeaderTabsActions"
+                            nodeData={nodeData}
+                            render={renderProps => <option key={renderProps.value} value={renderProps.value}>{t(renderProps.buttonLabel)}</option>}
+                        />
+                    </select>
+                }
                 status={<HeaderBadges/>}
         />
     );

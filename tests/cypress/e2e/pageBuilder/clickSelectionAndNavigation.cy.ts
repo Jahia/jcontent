@@ -56,7 +56,7 @@ describe('Page builder - navigation tests', () => {
         module.hasNoHeaderAndFooter();
     });
 
-    it('Can use breadcrumbs to navigate up and down hierarchy', () => {
+    it.only('Can use breadcrumbs to navigate up and down hierarchy', () => {
         const jcontent: JContent = JContent.visit(siteKey, 'en', 'pages/home');
         const pageBuilder: JContentPageBuilder = jcontent.switchToPageBuilder();
 

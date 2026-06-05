@@ -1,23 +1,26 @@
 .menuItemSkeleton {
     display: flex;
     align-items: center;
-    padding: var(--moon-spacing-nano) var(--moon-spacing-medium);
-    height: var(--moon-spacing-large);
-    min-width: 200px;
     box-sizing: border-box;
+    min-width: 200px;
+    height: var(--moon-spacing-large);
+    padding: var(--moon-spacing-nano) var(--moon-spacing-medium);
 }
 
 .bar {
-    border-radius: 4px;
-    height: 12px;
     width: 100%;
-    background: linear-gradient(
-        90deg,
-        var(--moon-color-gray_light40) 25%,
-        var(--moon-color-gray_light60) 50%,
-        var(--moon-color-gray_light40) 75%
-    );
+    height: 12px;
+
+    border-radius: 4px;
+    background:
+        linear-gradient(
+            90deg,
+            var(--moon-color-gray_light40) 25%,
+            var(--moon-color-gray_light60) 50%,
+            var(--moon-color-gray_light40) 75%
+        );
     background-size: 200% 100%;
+
     animation: shimmer 1.4s infinite;
 }
 

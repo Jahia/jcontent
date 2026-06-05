@@ -14,7 +14,7 @@ export const PublishManagerActionComponent = props => {
 
     const {t} = useTranslation('jcontent');
 
-    const skip = !!paths ||
+    const skip = Boolean(paths) ||
         typeof window?.authoringApi?.showPublicationManager !== 'function' ||
         isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes: ['jnt:category', 'jmix:markedForDeletion']});
 

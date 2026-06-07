@@ -1,0 +1,17 @@
+query getNodeHistoryPaginated($path: String!, $withLanguageNodes: Boolean!, $offset: Int!, $limit: Int!) {
+    jcr {
+        nodeByPath(path: $path) {
+            uuid
+            history {
+                entries(withLanguageNodes: $withLanguageNodes, offset: $offset, limit: $limit) {
+                    id
+                    date
+                    path
+                    uuid
+                    action
+                    userKey
+                }
+            }
+        }
+    }
+}

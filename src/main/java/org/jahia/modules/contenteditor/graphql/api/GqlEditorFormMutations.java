@@ -113,10 +113,10 @@ public class GqlEditorFormMutations {
     public boolean saveVisibilityCondition(
         @GraphQLName("uuid") @GraphQLNonNull @GraphQLDescription("UUID of the parent nodes ofr teh visibility condition") String uuid,
         @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
-        @GraphQLName("newConditions") Collection<VisibilityConditionInput> newConditions,
-        @GraphQLName("updatedConditions") Collection<VisibilityConditionInput> updatedConditions,
-        @GraphQLName("removedConditions") Collection<String> removedConditions,
-        @GraphQLName("isMatchingAllConditions") @GraphQLDefaultValue(GqlUtils.SupplierFalse.class) Boolean isMatchingAllConditionsUpdate
+        @GraphQLName("newConditions") @GraphQLDescription("New visibility conditions to create") Collection<VisibilityConditionInput> newConditions,
+        @GraphQLName("updatedConditions") @GraphQLDescription("Existing visibility conditions to update") Collection<VisibilityConditionInput> updatedConditions,
+        @GraphQLName("removedConditions") @GraphQLDescription("UUIDs of visibility conditions to remove") Collection<String> removedConditions,
+        @GraphQLName("isMatchingAllConditions") @GraphQLDefaultValue(GqlUtils.SupplierFalse.class) @GraphQLDescription("When true, all conditions must match for the node to be visible; when false, any single match is sufficient") Boolean isMatchingAllConditionsUpdate
     ) {
         try {
             JCRSessionWrapper session = jcrSessionFactory.getCurrentUserSession(Constants.EDIT_WORKSPACE, LanguageCodeConverters.languageCodeToLocale(locale));

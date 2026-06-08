@@ -43,6 +43,13 @@ The repo extends `@jahia/eslint-config` (`.eslintrc.json`). Key rules to always 
 - Place queries/mutations in `*.gql-queries.js` files using `gql` from `graphql-tag`.
 - Refetch logic uses `setRefetcher` / `unsetRefetcher` from `~/JContent/JContent.refetches`.
 
+## Java GraphQL API
+
+- **Every** `@GraphQLField`, `@GraphQLName`-annotated class, and `@GraphQLName`-annotated parameter **must** have a `@GraphQLDescription` annotation with a meaningful, non-empty description.
+- This is enforced by a CI schema-description test that walks all types under `Query`, `Mutation`, and `Subscription` and fails if any node is missing a description.
+- When creating or modifying a GraphQL type/field/input/parameter in `src/main/java/`, always add `@GraphQLDescription("...")` alongside `@GraphQLField` or `@GraphQLName`.
+- Import `graphql.annotations.annotationTypes.GraphQLDescription` (or use the wildcard import `graphql.annotations.annotationTypes.*` if the file already does).
+
 ## Cypress tests (tests/)
 
 - Specs live under `tests/cypress/e2e/<area>/*.cy.ts` and are TypeScript.

@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
 /**
  * The root class for the GraphQL form API
  */
+@GraphQLDescription("Main entry point for the Content Editor form API — provides queries for form definitions, field constraints, content type trees, and node type information")
 public class GqlEditorForms {
 
     private static Logger logger = LoggerFactory.getLogger(GqlEditorForms.class);

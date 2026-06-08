@@ -96,7 +96,7 @@ describe('Content History GraphQL API', () => {
         cy.apolloClient(); // Switch back to admin
         // Wait for all logs being processed
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1000);
+        cy.wait(3000);
     });
 
     after(() => {

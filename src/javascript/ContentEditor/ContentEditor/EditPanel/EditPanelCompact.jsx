@@ -70,8 +70,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 <div className={styles.saveActions}>
                     <DisplayActions
                         buttonProps={accentColorButtonProps}
-                        isCreateAnother={createAnother?.value}
-                        disableCreateAnother={createAnother?.disabled}
+                        isCreateAnother={createAnother?.value && !createAnother?.disabled}
                         target="content-editor/header/main-save-actions"
                         render={ButtonRenderer}
                     />

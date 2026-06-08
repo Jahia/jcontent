@@ -1,5 +1,6 @@
 import {JContent} from '../../page-object';
 import {
+    addNode,
     BaseComponent,
     Button,
     createSite,
@@ -1119,4 +1120,176 @@ describe('Visibility Screen', () => {
                 .should('be.visible');
         });
     }); // End describe('Visibility Live Mode Tests')
-}); // End outer describe('Visibility Screen')
+
+    // ---------------------------------------------------------------------------
+    // Visibility Conditions on Copied and Referenced Content
+    // ---------------------------------------------------------------------------
+    describe.only('Visibility Conditions on Copied Content', () => {
+        const richTextHidden = 'visibility-copy-hidden';
+        const richTextHiddenText = 'Hidden Visibility Content';
+        const richTextVisible = 'visibility-copy-visible';
+        const richTextVisibleText = 'Visible Visibility Content';
+        const testPageName = 'testPageVisibility';
+
+        before(() => {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const todayIndex = new Date().getDay();
+            const notTodayIndex = (todayIndex + 2) % 7;
+            const notTodayDay = days[notTodayIndex];
+            const todayDay = days[todayIndex];
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/contents`,
+                name: richTextHidden,
+                primaryNodeType: 'jnt:bigText',
+                properties: [
+                    {name: 'text', value: richTextHiddenText, language: 'en'}
+                ]
+            });
+            cy.apollo({
+                mutationFile: 'contentEditor/visibility/createVisibilityCondition.graphql',
+                variables: {
+                    contentPath: `/sites/${sitekeyNonI18n}/contents/${richTextHidden}`,
+                    dayOfWeek: [notTodayDay]
+                }
+            });
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/contents`,
+                name: richTextVisible,
+                primaryNodeType: 'jnt:bigText',
+                properties: [
+                    {name: 'text', value: richTextVisibleText, language: 'en'}
+                ]
+            });
+            cy.apollo({
+                mutationFile: 'contentEditor/visibility/createVisibilityCondition.graphql',
+                variables: {
+                    contentPath: `/sites/${sitekeyNonI18n}/contents/${richTextVisible}`,
+                    dayOfWeek: [todayDay]
+                }
+            });
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/home`,
+                name: testPageName,
+                primaryNodeType: 'jnt:page',
+                properties: [
+                    {name: 'jcr:title', value: 'testPageVisibility', language: 'en'},
+                    {name: 'j:templateName', type: 'STRING', value: 'simple'}
+                ]
+            });
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/home/${testPageName}`,
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList'
+            });
+            publishAndWait(`/sites/${sitekeyNonI18n}/home`);
+        });
+
+        after(() => {
+            deleteSite(sitekeyNonI18n);
+        });
+
+        afterEach(() => {
+            cy.logout();
+        });
+
+        it('copy richtext with not-visible condition and check in live', () => {
+            cy.loginAndStoreSession();
+
+            // Copy the non visible richtext
+            const jcontent = JContent.visit(sitekeyNonI18n, 'en', 'content-folders/contents');
+            jcontent.switchToListMode()
+                .getTable()
+                .getRowByName(richTextHidden)
+                .contextMenu()
+                .selectByRole('copy');
+            cy.get('#message-id').should('contain', 'clipboard');
+
+            // Navigate to testPageVisibility via accordion to keep clipboard
+            jcontent.getAccordionItem('pages').click();
+            jcontent.getAccordionItem('pages').getTreeItem('home').expand();
+            jcontent.getAccordionItem('pages').getTreeItem(testPageName).click();
+            const jcontentPB = jcontent.switchToPageBuilder();
+            const pasteBtn = jcontentPB
+                .getModule(`/sites/${sitekeyNonI18n}/home/${testPageName}/area-main`)
+                .getCreateButtons()
+                .getButton('Paste');
+            pasteBtn.should('be.visible');
+            pasteBtn.click();
+            cy.get('#message-id').should('contain', 'pasted');
+
+            publishAndWait(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+
+            // Verify the richtext is NOT visible in live
+            cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
+            cy.get('body').should('not.contain', richTextHiddenText);
+        });
+
+        it('copy richtext with visible condition and check in live', () => {
+            cy.loginAndStoreSession();
+
+            // Copy the visible richtext
+            const jcontent = JContent.visit(sitekeyNonI18n, 'en', 'content-folders/contents');
+            jcontent.switchToListMode()
+                .getTable()
+                .getRowByName(richTextVisible)
+                .contextMenu()
+                .selectByRole('copy');
+            cy.get('#message-id').should('contain', 'clipboard');
+
+            // Navigate to testPageVisibility via accordion to keep clipboard
+            jcontent.getAccordionItem('pages').click();
+            jcontent.getAccordionItem('pages').getTreeItem('home').expand();
+            jcontent.getAccordionItem('pages').getTreeItem(testPageName).click();
+            const jcontentPB = jcontent.switchToPageBuilder();
+            const pasteBtn = jcontentPB
+                .getModule(`/sites/${sitekeyNonI18n}/home/${testPageName}/area-main`)
+                .getCreateButtons()
+                .getButton('Paste');
+            pasteBtn.should('be.visible');
+            pasteBtn.click();
+            cy.get('#message-id').should('contain', 'pasted');
+
+            publishAndWait(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+
+            // Verify the richtext is visible in live
+            cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
+            cy.get('body').should('contain', richTextVisibleText);
+        });
+
+        it('referenced content with visible condition is shown in live', () => {
+            cy.loginAndStoreSession();
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/home/${testPageName}/area-main`,
+                name: 'ref-visible',
+                primaryNodeType: 'jnt:contentReference',
+                properties: [
+                    {name: 'j:node', type: 'REFERENCE', value: `/sites/${sitekeyNonI18n}/contents/${richTextVisible}`}
+                ]
+            });
+
+            publishAndWait(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+
+            // Verify the referenced content is visible in live
+            cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
+            cy.get('body').should('contain', richTextVisibleText);
+        });
+
+        it('referenced content with not-visible condition is hidden in live', () => {
+            cy.loginAndStoreSession();
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/home/${testPageName}/area-main`,
+                name: 'ref-hidden',
+                primaryNodeType: 'jnt:contentReference',
+                properties: [
+                    {name: 'j:node', type: 'REFERENCE', value: `/sites/${sitekeyNonI18n}/contents/${richTextHidden}`}
+                ]
+            });
+
+            publishAndWait(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+
+            // Verify the referenced content is NOT visible in live
+            cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
+            cy.get('body').should('not.contain', richTextHiddenText);
+        });
+    });
+});

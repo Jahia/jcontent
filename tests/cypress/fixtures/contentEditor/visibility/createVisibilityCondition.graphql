@@ -1,0 +1,28 @@
+mutation createVisibilityCondition($contentPath: String!, $dayOfWeek: [String]!) {
+    jcr {
+        mutateNode(pathOrId: $contentPath) {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "j:conditionalVisibility"
+                        primaryNodeType: "jnt:conditionalVisibility"
+                        children: [
+                            {
+                                name: "dayOfWeekCondition"
+                                primaryNodeType: "jnt:dayOfWeekCondition"
+                                properties: [
+                                    {
+                                        name: "dayOfWeek"
+                                        values: $dayOfWeek
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+    }
+}

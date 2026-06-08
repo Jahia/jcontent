@@ -30,7 +30,8 @@ const constraintsByType = {
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:category', 'jnt:page', 'jnt:area', 'jmix:list', 'jnt:navMenuText', 'jmix:droppableContent'],
         hideOnNodeTypes: ['jnt:folder'],
         requiredPermission: 'jcr:addChildNodes',
-        requiredSitePermission: [ACTION_PERMISSIONS.importAction]
+        requiredSitePermission: [ACTION_PERMISSIONS.importAction],
+        getChildNodeTypes: true
     },
     fileUpload: {
         showOnNodeTypes: ['jnt:folder'],
@@ -84,7 +85,11 @@ export const FileUploadActionComponent = props => {
         elementById.click();
     };
 
-    const isVisible = res.checksResult;
+    // Import targets a container: in addition to the permission/type checks, the node must actually
+    // accept child content. This excludes droppable *leaf* content (jmix:droppableContent without
+    // allowed child node types), mirroring the container check used by the paste action.
+    const acceptsChildren = res.node?.allowedChildNodeTypes?.length > 0;
+    const isVisible = res.checksResult && (uploadType !== 'import' || acceptsChildren);
 
     return (
         <Render

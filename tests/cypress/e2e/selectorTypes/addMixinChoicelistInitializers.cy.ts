@@ -132,10 +132,9 @@ describe('Add Mixin by using choice list initializers (Vanilla Node Type with tr
         // extending it, which itself extends mymix:commonLink — transitive resolution is required
         const contentEditor = jcontent.createContent('cent:nodetypeVanilla');
 
+        contentEditor.getTitle().should('be.visible').and('contain', 'Create');
         contentEditor.toggleOption('cemix:mixinExtendWithLink');
         const linkTypeField = contentEditor.getChoiceListField('cemix:mixinExtendWithLink_linkType');
-
-        contentEditor.getTitle().should('be.visible').and('contain', 'Create');
 
         // The mymix:commonLink fields (linkLabel, linkType) should be visible
         // because mymix:mixinExtendWithLink extends mymix:commonLink and itself extends mynt:nodetypeVanilla

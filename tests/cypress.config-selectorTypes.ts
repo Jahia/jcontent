@@ -1,6 +1,6 @@
 import {defineConfig} from 'cypress';
 import {baseConfig} from './cypress.config.common';
 
-baseConfig.e2e.specPattern = ['cypress/e2e/selectorTypes/**/addMixinChoicelistInitializers.cy.ts'];
+baseConfig.e2e.specPattern = ['cypress/e2e/selectorTypes/**/*.cy.ts'];
 
 export default defineConfig(baseConfig);

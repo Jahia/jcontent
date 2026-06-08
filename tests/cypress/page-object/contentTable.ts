@@ -1,4 +1,5 @@
 import {BaseComponent, Table, TableRow} from '@jahia/cypress';
+import {JContentMenu} from './jcontentMenu';
 import Chainable = Cypress.Chainable;
 
 export class ContentTable extends Table {
@@ -52,6 +53,11 @@ export class ContentTable extends Table {
 }
 
 export class ContentTableRow extends TableRow {
+    contextMenu(): JContentMenu {
+        this.get().rightclick();
+        return new JContentMenu(cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)'));
+    }
+
     isSelected(isSelected = true) {
         this.element.find('td[data-cm-role="table-content-list-cell-selection"] input')
             .should('have.attr', 'aria-checked', Boolean(isSelected).toString());

@@ -56,7 +56,7 @@ describe('Page builder - navigation tests', () => {
         module.hasNoHeaderAndFooter();
     });
 
-    it.only('Can use breadcrumbs to navigate up and down hierarchy', () => {
+    it('Can use breadcrumbs to navigate up and down hierarchy', () => {
         const jcontent: JContent = JContent.visit(siteKey, 'en', 'pages/home');
         const pageBuilder: JContentPageBuilder = jcontent.switchToPageBuilder();
 
@@ -71,7 +71,7 @@ describe('Page builder - navigation tests', () => {
         cy.log('Click on the breadcrumb to navigate up');
         breadcrumbs.select('landing');
         module = pageBuilder.getModule(`/sites/${siteKey}/home/landing`);
-        module.getBox().getHeader().assertHeaderText('landing');
+        module.getBox().getHeader().scrollToTop().assertHeaderText('landing');
     });
 
     it('Click on links should open modal', () => {

@@ -1,6 +1,6 @@
 {
   "name": "@jahia/jcontent",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "type": "commonjs",
   "scripts": {
     "build": "yarn workspaces foreach --recursive --topological-dev run build && yarn webpack",

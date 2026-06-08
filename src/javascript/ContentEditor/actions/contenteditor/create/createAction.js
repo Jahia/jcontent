@@ -7,7 +7,7 @@ import {useFormikContext} from 'formik';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useKeydownListener} from '~/ContentEditor/utils';
 
-const Create = ({isCreateAnother, render: Render, loading: Loading, ...otherProps}) => {
+const Create = ({isCreateAnother, disableCreateAnother, render: Render, loading: Loading, ...otherProps}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const formik = useFormikContext();
     const {updateEditorConfig, count, onSavedCallback} = useContentEditorConfigContext();
@@ -19,8 +19,7 @@ const Create = ({isCreateAnother, render: Render, loading: Loading, ...otherProp
         lang,
         refetchFormData,
         initialValues,
-        i18nContext,
-        disableCreateAnother
+        i18nContext
     } = useContentEditorContext();
     const [clicked, setClicked] = useState(false);
     const {sections} = useContentEditorSectionContext();
@@ -90,7 +89,9 @@ const Create = ({isCreateAnother, render: Render, loading: Loading, ...otherProp
 Create.propTypes = {
     render: PropTypes.func.isRequired,
     loading: PropTypes.func,
-    isCreateAnother: PropTypes.bool
+    isCreateAnother: PropTypes.bool,
+    // eslint-disable-next-line react/boolean-prop-naming
+    disableCreateAnother: PropTypes.bool
 };
 
 export const createAction = {

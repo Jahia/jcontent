@@ -9,7 +9,6 @@ import {Checkbox, Typography} from '@jahia/moonstone';
 import {getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 import {AdvancedModeButton} from './AdvancedModeButton';
 import {ContentTypeChip} from './ContentTypeChip';
@@ -28,7 +27,6 @@ const accentColorButtonProps = {
 
 export const EditPanelCompact = ({title, createAnother}) => {
     const {t} = useTranslation('jcontent');
-    const {disableCreateAnother} = useContentEditorContext();
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
     const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
@@ -56,7 +54,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 <EditPanelContent/>
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
-                {createAnother && !disableCreateAnother && (
+                {createAnother && !createAnother.disabled && (
                     <>
                         <Checkbox className={styles.checkbox} id="createAnother" checked={createAnother.value} onChange={() => createAnother.set(!createAnother.value)}/>
                         <Typography isUpperCase component="label" htmlFor="createAnother" variant="button" className={styles.checkbox}>
@@ -73,6 +71,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                     <DisplayActions
                         buttonProps={accentColorButtonProps}
                         isCreateAnother={createAnother?.value}
+                        disableCreateAnother={createAnother?.disabled}
                         target="content-editor/header/main-save-actions"
                         render={ButtonRenderer}
                     />

@@ -10,8 +10,6 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
-import {useMaxItemsReached} from '~/ContentEditor/ContentEditor/useMaxItemsReached';
-import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -58,7 +56,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         value: createAnotherValue, set: setCreateAnother
     }), [createAnotherValue]);
 
-    const {lang, mode, name, count} = contentEditorConfigContext;
+    const {lang, mode, name} = contentEditorConfigContext;
 
     // Get user navigator locale preference
     const browserLang = navigator.language;
@@ -98,15 +96,6 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         !error &&
         !siteInfoResult.error ? {nodeData, siteInfo: siteInfoResult.data.jcr.result} : undefined
     );
-
-    // In create mode, enforce the parent's item-count limit (j:numberOfItems / jmix:listSizeLimit)
-    // while "create another" is used
-    const disableCreateAnother = useMaxItemsReached({
-        path: nodeData?.path,
-        language: lang,
-        count,
-        enabled: mode === Constants.routes.baseCreateRoute
-    });
 
     // Build editor context. Memoized so consumers don't re-render on every provider render.
     // Computed unconditionally (before the early returns below) to respect the rules of hooks;
@@ -159,8 +148,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
             i18nContext,
             setI18nContext,
             resetI18nContext,
-            createAnother,
-            disableCreateAnother
+            createAnother
         };
     }, [
         error,
@@ -192,8 +180,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         i18nContext,
         setI18nContext,
         resetI18nContext,
-        createAnother,
-        disableCreateAnother
+        createAnother
     ]);
 
     if (error) {

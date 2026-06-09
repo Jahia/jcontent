@@ -1,16 +1,15 @@
 import {Edit, Setting} from '@jahia/moonstone';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {
-    FormBuilder,
     useContentEditorConfigContext,
     useContentEditorContext
 } from '~/shared';
 import {SourceContentPanel} from '../actions/contenteditor/translate/TranslatePanel/SourceContentPanel';
-import {TwoPanelsContent} from '../actions/contenteditor/translate/TranslatePanel/TwoPanelsContent';
 import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
 import {tabBarAction} from './tabBarAction';
+import {Preview} from './EditPanelContent/Preview';
 
 const TranslatePanel = () => {
     const baseConfig = useContentEditorConfigContext();
@@ -22,15 +21,15 @@ const TranslatePanel = () => {
     const sourceLang =
         languages.find(l => l.language !== lang) || languages[0];
 
-    useEffect(() => {
-        baseConfig.setSideBySideContext({lang: sourceLang.language, ...baseConfig.sideBySideContext});
-    }, [baseConfig.sideBySideContext]);
+    // useEffect(() => {
+    //     baseConfig.setSideBySideContext({
+    //         lang: sourceLang.language,
+    //         ...baseConfig.sideBySideContext
+    //     });
+    // }, [baseConfig.sideBySideContext]);
 
     return (
-        <TwoPanelsContent
-                    leftCol={<FormBuilder mode={baseConfig.mode}/>}
-                    rightCol={<SourceContentPanel/>}
-                />
+        <SourceContentPanel/>
     );
 };
 
@@ -43,6 +42,7 @@ export const registerTabBarActions = actionsRegistry => {
         value: Constants.editPanel.editTab,
         dataSelRole: 'tab-edit',
         displayableComponent: EditPanelContent,
+        side: {component: Preview, singleSyncedScrollbar: false},
         isDisplayable: () => true
     });
 
@@ -63,7 +63,8 @@ export const registerTabBarActions = actionsRegistry => {
         targets: ['editHeaderTabsActions:3'],
         value: 'translate',
         dataSelRole: 'tab-advanced-options',
-        displayableComponent: TranslatePanel,
+        displayableComponent: EditPanelContent,
+        side: {component: TranslatePanel, singleSyncedScrollbar: true},
         isDisplayable: () => true
     });
 };

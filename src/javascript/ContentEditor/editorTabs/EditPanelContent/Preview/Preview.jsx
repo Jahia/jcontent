@@ -24,7 +24,7 @@ export const Preview = () => {
     }, []);
 
     return (
-        <Paper className={styles.content}>
+        <Paper className={styles.content} style={{padding: 0}}>
             <div className={styles.container}>
                 <UpdateOnSaveBadge/>
                 {contentNotFound &&

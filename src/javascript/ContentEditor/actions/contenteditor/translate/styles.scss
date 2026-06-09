@@ -1,17 +1,15 @@
 .twoColumnsRoot {
-    display: flex;
-    flex: 1 1 0;
-    flex-direction: row;
-    min-height: 0;
-    padding-top: var(--spacing-medium);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
     background-color: var(--color-light);
+    overflow: hidden;
 
     .col {
         display: flex;
-        flex: 1 1 0;
         flex-direction: column;
-        padding-right: var(--spacing-medium);
+        min-width: 0;
+        overflow: auto;
     }
 
     /* This hides scrollbars across modern browsers */
@@ -34,13 +32,13 @@
 .translate {
     display: flex;
     align-items: center;
-    margin-left: auto;
-    padding-left: var(--spacing-small);
+    margin-right: auto;
+    padding-right: var(--spacing-small);
 
-    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
 
     &:has(> button:not(:disabled)):hover {
-        border-left-color: var(--color-accent);
+        border-right-color: var(--color-accent);
     }
 }
 

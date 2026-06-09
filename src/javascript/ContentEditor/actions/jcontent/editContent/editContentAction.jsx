@@ -33,6 +33,7 @@ export const EditContent = ({
                     lang: language,
                     isFullscreen,
                     editCallback,
+                    sideBySideContext: {lang: language},
                     ...otherProps.editConfig
                 })}
         />

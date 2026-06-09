@@ -2,14 +2,18 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {useResizeWatcher} from '../useResizeWatcher';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {ContentEditorSectionContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts';
+import {
+    ContentEditorSectionContextProvider,
+    useContentEditorConfigContext,
+    useContentEditorContext
+} from '~/ContentEditor/contexts';
 import {Formik} from 'formik';
-import styles from '../styles.scss';
-import {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
 import PropTypes from 'prop-types';
+import {getCapitalized, useSwitchLanguage} from '~/shared';
+import {MenuItem} from '@jahia/moonstone';
 
 /**
  * Displays read-only content from a source language on translation panel UI.
@@ -20,11 +24,11 @@ export const SourceContentFormBuilder = () => {
     const {lang, uuid, contentType} = useContentEditorConfigContext();
     useResizeWatcher({columnSelector: 'left-column'});
 
-    const {
-        data,
-        loading,
-        error
-    } = useTranslationReadOnlyFormDefinition({lang, uuid, contentType});
+    const {data, loading, error} = useTranslationReadOnlyFormDefinition({
+        lang,
+        uuid,
+        contentType
+    });
 
     if (loading) {
         return <LoaderOverlay/>;
@@ -49,19 +53,63 @@ export const SourceContentFormBuilder = () => {
 const SourceContentFormBuilderInner = ({data}) => {
     const {t} = useTranslation('jcontent');
     useResizeWatcher({columnSelector: 'left-column', data});
+    const switchLanguage = useSwitchLanguage();
+    const {lang: currentLanguage} = useContentEditorConfigContext();
+
+    const {i18nContext, nodeData, siteInfo} = useContentEditorContext();
+    const translatedLangs = nodeData?.translationLanguages || [];
+    const sourceLanguages = [];
+    const missingTranslationLanguages = [];
+
+    for (const item of siteInfo.languages) {
+        const isTranslated =
+            translatedLangs.includes(item.language) ||
+            // Check if a translation during create is empty or not
+            (i18nContext[item.language]?.values &&
+                Object.values(i18nContext[item.language]?.values).some(
+                    Boolean
+                ));
+        if (isTranslated) {
+            sourceLanguages.push(item);
+        } else {
+            missingTranslationLanguages.push(item);
+        }
+    }
 
     return (
-        <Formik initialValues={{...data?.initialValues}}
-                onSubmit={() => {
-                }}
-        >
-            <>
-                <div className={styles.languageDropDown}>
-                    <span>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</span>
-                    <EditPanelLanguageSwitcher/>
-                </div>
+        <Formik initialValues={{...data?.initialValues}} onSubmit={() => {}}>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr auto'}}>
                 <FormBuilder mode="edit"/>
-            </>
+                <div>
+                    <ul style={{position: 'sticky', top: 0}}>
+                        <li>
+                            <strong>
+                                {t(
+                                    'label.contentEditor.edit.action.translate.sourceLanguage'
+                                )}
+                            </strong>
+                        </li>
+                        {sourceLanguages.map(l => (
+                            <MenuItem
+                                key={l.language}
+                                label={getCapitalized(l.uiLanguageDisplayName)}
+                                isSelected={l.language === currentLanguage}
+                                onClick={() => switchLanguage(l.language)}
+                            />
+                        ))}
+                        <li>
+                            <strong>Missing translation</strong>
+                        </li>
+                        {missingTranslationLanguages.map(l => (
+                            <MenuItem
+                                key={l.language}
+                                isDisabled
+                                label={getCapitalized(l.uiLanguageDisplayName)}
+                            />
+                        ))}
+                    </ul>
+                </div>
+            </div>
         </Formik>
     );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
-import {ArrowRight} from '@jahia/moonstone';
+import {ArrowLeft} from '@jahia/moonstone';
 import styles from './styles.scss';
 
 export const TranslateFieldActionComponent = ({field, value, render: Render}) => {
@@ -37,7 +37,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
     return (
         <div className={styles.translate}>
             <Render
-              buttonIcon={<ArrowRight/>}
+              buttonIcon={<ArrowLeft/>}
               enabled={Boolean(value) && hasWritePermission && !lockedAndCannotBeEdited}
               dataSelRole="translate-field"
               buttonProps={{

@@ -14,8 +14,7 @@ export const EditPanelFullscreen = ({title}) => {
 
     // Without edit tab, no content editor
     const tabs = registry.find({target: 'editHeaderTabsActions'});
-    const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
-    const OtherTabComponent = tabs.find(tab => tab.value === activeTab && tab.value !== Constants.editPanel.editTab)?.displayableComponent;
+    const tab = tabs.find(tab => tab.value === activeTab);
 
     return (
         <LayoutContent
@@ -27,26 +26,7 @@ export const EditPanelFullscreen = ({title}) => {
                                  activeTabState={[activeTab, setActiveTab]}
                 />
             )}
-            content={(
-                <>
-                    <div className={clsx(
-                        activeTab === Constants.editPanel.editTab ? 'flexFluid' : styles.hideTab,
-                        'flexCol'
-                    )}
-                    >
-                        <EditPanelContent/>
-                    </div>
-                    {OtherTabComponent && (
-                        <div className={clsx(
-                            Constants.editPanel.editTab === activeTab ? styles.hideTab : 'flexFluid',
-                            'flexCol'
-                        )}
-                        >
-                            <OtherTabComponent/>
-                        </div>
-                    )}
-                </>
-            )}
+            content={tab?.displayableComponent && <tab.displayableComponent tab={tab} />}
         />
     );
 };
@@ -54,4 +34,3 @@ export const EditPanelFullscreen = ({title}) => {
 EditPanelFullscreen.propTypes = {
     title: PropTypes.string.isRequired
 };
-

@@ -79,7 +79,7 @@ export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, act
                     </div>
                 )}
                 toolbarRight={
-                    <select onChange={e => setActiveTab(e.target.value)}>
+                    <select value={activeTab} onChange={e => setActiveTab(e.target.value)}>
                         <DisplayActions
                             setActiveTab={setActiveTab}
                             activeTab={activeTab}

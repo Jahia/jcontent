@@ -7,9 +7,12 @@ import {registry} from '@jahia/ui-extender';
 import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader';
+import { useContentEditorConfigContext } from '~/shared';
 
 export const EditPanelFullscreen = ({title}) => {
-    const [activeTab, setActiveTab] = useState(Constants.editPanel.editTab);
+    const {advancedOpenTab} = useContentEditorConfigContext();
+    console.log('advancedOpenTab', advancedOpenTab);
+    const [activeTab, setActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
 
     // Without edit tab, no content editor

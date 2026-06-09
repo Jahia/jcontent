@@ -18,7 +18,7 @@ import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
-import {translateAction, translateFieldAction} from './contenteditor/translate';
+import {translateFieldAction} from './contenteditor/translate';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 
 export const registerEditActions = registry => {
@@ -140,12 +140,15 @@ export const registerEditActions = registry => {
         requiredSitePermission: ['viewVisibilityTab']
     });
 
-    registry.add('action', 'sbsTranslate', translateAction, {
+    registry.add('action', 'sbsTranslate', editContentAction, {
         buttonIcon: <Translate/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         dataSelRole: 'sbsTranslate',
         showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
-        requiredSitePermission: ['translateAction']
+        requiredSitePermission: ['translateAction'],
+        getDisplayName: true,
+        isFullscreen: true,
+        editConfig: {advancedOpenTab: 'translate'}
     });
 
     registry.add('action', 'translateField', translateFieldAction, {

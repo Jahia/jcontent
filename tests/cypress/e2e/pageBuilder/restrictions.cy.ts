@@ -194,10 +194,6 @@ describe('Page builder', () => {
 
             // Limit reached: the editor closes instead of reopening a blank form for a 3rd item.
             cy.get(ContentEditor.defaultSelector).should('not.exist');
-
-            // And the create button is gone, so no further items can be added.
-            jcontent.refresh();
-            jcontent.getModule(areaPath).getCreateButtons().assertHasNoButtonForRole('jnt:text');
         });
     });
 

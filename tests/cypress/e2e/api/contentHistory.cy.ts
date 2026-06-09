@@ -96,7 +96,7 @@ describe('Content History GraphQL API', () => {
         cy.apolloClient(); // Switch back to admin
         // Wait for all logs being processed
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1000);
+        cy.wait(3000);
     });
 
     after(() => {
@@ -234,34 +234,29 @@ describe('Content History GraphQL API', () => {
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: 2}
         }).then(result => {
             const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
-            expect(entries).to.be.an('array');
-            if (entries?.length > 0) {
-                expect(entries.length).to.be.at.most(2);
-                ['id', 'date', 'path', 'uuid', 'action', 'userKey'].forEach(f => expect(entries[0]).to.have.property(f));
-            }
+            expect(entries).to.be.an('array').and.have.length.greaterThan(0);
+            expect(entries.length).to.be.at.most(2);
+            ['id', 'date', 'path', 'uuid', 'action', 'userKey'].forEach(f => expect(entries[0]).to.have.property(f));
         });
     });
 
     it('should skip entries when an offset is provided', () => {
+        // Use withLanguageNodes: true so i18n property entries are visible and we have >1 entry
         cy.apollo({
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
-            variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: 10}
+            variables: {path: nodePaths.updates, withLanguageNodes: true, offset: 0, limit: 10}
         }).then(result => {
             const entries = result?.data?.jcr?.nodeByPath?.history?.entries;
-            expect(entries).to.be.an('array');
-            if (entries?.length > 1) {
-                const firstId = entries[0].id;
-                cy.apollo({
-                    queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
-                    variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 1, limit: 10}
-                }).then(offsetResult => {
-                    const offsetEntries = offsetResult?.data?.jcr?.nodeByPath?.history?.entries;
-                    expect(offsetEntries).to.be.an('array');
-                    if (offsetEntries?.length > 0) {
-                        expect(offsetEntries[0].id).to.not.equal(firstId);
-                    }
-                });
-            }
+            expect(entries).to.be.an('array').and.have.length.greaterThan(1);
+            const firstId = entries[0].id;
+            cy.apollo({
+                queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
+                variables: {path: nodePaths.updates, withLanguageNodes: true, offset: 1, limit: 10}
+            }).then(offsetResult => {
+                const offsetEntries = offsetResult?.data?.jcr?.nodeByPath?.history?.entries;
+                expect(offsetEntries).to.be.an('array').and.have.length.greaterThan(0);
+                expect(offsetEntries[0].id).to.not.equal(firstId);
+            });
         });
     });
 
@@ -439,7 +434,8 @@ describe('Content History GraphQL API', () => {
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: -1, limit: 10}
         }).then(result => {
-            // Apollo catches errors and returns the Error instance rather than throwing
+            // Exec cy.apollo catches ApolloError and returns it as the result.
+            // The server sanitizes the original exception message, so only check that an error occurred.
             expect(result).to.be.instanceOf(Error);
         });
     });
@@ -449,6 +445,8 @@ describe('Content History GraphQL API', () => {
             queryFile: 'api/contentHistory/getNodeHistoryPaginated.graphql',
             variables: {path: nodePaths.updates, withLanguageNodes: false, offset: 0, limit: -1}
         }).then(result => {
+            // Exec cy.apollo catches ApolloError and returns it as the result.
+            // The server sanitizes the original exception message, so only check that an error occurred.
             expect(result).to.be.instanceOf(Error);
         });
     });

@@ -41,6 +41,11 @@ describe('Preview tests', () => {
             .getCardByName('Digitall Financial Report.pdf')
             .contextMenu()
             .selectByRole('editAdvanced');
+        cy.get('[data-sel-role="tab-preview"]').then($tab => {
+            if ($tab.attr('aria-selected') !== 'true') {
+                cy.get('[data-sel-role="tab-preview"]').click({force: true});
+            }
+        });
         cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
     });
 
@@ -65,6 +70,9 @@ describe('Preview tests', () => {
         pageComposer.editComponentByText('previewWrapper');
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
+        // Wait for the preview iframe to be present and finish loading before asserting content
+        cy.get('iframe[data-sel-role="edit-preview-frame"]', {timeout: 30000}).should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.have.class', /iframeLoading/);
         contentEditor.validateContentIsVisibleInPreview('previewWrapper Test');
         contentEditor.validateContentIsNotVisibleInPreview('H2');
     });
@@ -98,6 +106,7 @@ describe('Preview tests', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/simpleText');
         const contentEditor = jcontent.editContent();
         contentEditor.switchToAdvancedMode();
+        contentEditor.switchToSidePanelPreviewTab();
 
         cy.log('Check preview badge is not displayed');
         cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');

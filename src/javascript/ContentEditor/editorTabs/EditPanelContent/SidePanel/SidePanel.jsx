@@ -32,8 +32,8 @@ export const SidePanel = () => {
     }, []);
 
     return (
-        <Paper className={styles.root} data-sel-role="side-panel">
-            <div className={styles.tabs} data-sel-role="side-panel-tabs">
+        <Paper className={styles.root} data-sel-role="side-panel" style={{padding: 0}}>
+            <div data-sel-role="side-panel-tabs">
                 <Tab>
                     {visibleTabs.map(tab => {
                         const {displayableComponent, ...tabProps} = tab;

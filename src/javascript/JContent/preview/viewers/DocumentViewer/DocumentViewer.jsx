@@ -43,5 +43,3 @@ DocumentViewer.propTypes = {
 DocumentViewer.defaultProps = {
     isFullScreen: false
 };
-
-export default DocumentViewer;

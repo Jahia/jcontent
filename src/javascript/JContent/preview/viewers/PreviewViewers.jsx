@@ -6,18 +6,17 @@ import styles from './PreviewViewers.scss';
 import {DocumentViewer} from './DocumentViewer';
 import {ImageViewer} from './ImageViewer';
 import {IframeViewer} from './IframeViewer';
+import {PDFViewer} from './PDFViewer';
 import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
-import PDFViewer from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/PreviewComponent/PDFViewer';
 
-export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
-    // If node type is "jnt:file" use specific viewer
-    const isFile = data && data.nodeByPath && data.nodeByPath.lastModified && data.nodeByPath.isFile;
+export const PreviewViewers = ({data, previewContext, nodeData, isFullScreen, onContentNotFound}) => {
+    const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath?.isFile;
     if (isFile) {
         const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
         if (isPDF(data.nodeByPath)) {
             return (
                 <div className={styles.previewContainer} data-sel-role="preview-type-pdf">
-                    <PDFViewer file={file} isFullScreen={false}/>
+                    <PDFViewer file={file} isFullScreen={isFullScreen}/>
                 </div>
             );
         }
@@ -27,7 +26,7 @@ export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
                 <div className={clsx(styles.previewContainer, styles.mediaContainer)}
                      data-sel-role="preview-type-image"
                 >
-                    <ImageViewer file={file} isFullScreen={false}/>
+                    <ImageViewer file={file} isFullScreen={isFullScreen}/>
                 </div>
             );
         }
@@ -38,7 +37,7 @@ export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
             <div className={clsx(styles.previewContainer, isMedia && styles.mediaContainer)}
                  data-sel-role="preview-type-document"
             >
-                <DocumentViewer file={file} type={type} isFullScreen={false}/>
+                <DocumentViewer file={file} isFullScreen={isFullScreen} type={type}/>
             </div>
         );
     }
@@ -49,17 +48,25 @@ export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
         >
             <IframeViewer
                 data={data}
+                nodeData={nodeData}
                 previewContext={previewContext}
                 onContentNotFound={onContentNotFound}
-                />
+            />
         </div>
     );
 };
 
-PreviewViewer.propTypes = {
+PreviewViewers.defaultProps = {
+    nodeData: null,
+    isFullScreen: false
+};
+
+PreviewViewers.propTypes = {
     data: PropTypes.object.isRequired,
     previewContext: PropTypes.shape({
         workspace: PropTypes.string.isRequired
     }).isRequired,
+    nodeData: PropTypes.object,
+    isFullScreen: PropTypes.bool,
     onContentNotFound: PropTypes.func.isRequired
 };

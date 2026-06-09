@@ -2,26 +2,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import styles from './IframeViewer.scss';
-import {forceDisplay, removeSiblings} from '../../Preview.utils';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {zoom} from '~/JContent/preview/Preview.utils';
 import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-
-export function zoom(iframeDocument, onContentNotFound, editorContext) {
-    const isPage = editorContext.nodeData.isPage;
-    const isContentTemplate = editorContext.nodeData.displayableNode && editorContext.nodeData.displayableNode.path === editorContext.nodeData.path;
-
-    if (iframeDocument.documentElement && iframeDocument.documentElement.innerHTML && !iframeDocument.documentElement.innerHTML.includes('ce_preview_skip_zoom')) {
-        const contentPreview = iframeDocument.getElementById('ce_preview_content');
-        if (contentPreview) {
-            removeSiblings(contentPreview);
-            forceDisplay(contentPreview);
-            // Ce_preview-content id doesn't exist on page
-        } else if (!isPage && !isContentTemplate) {
-            onContentNotFound();
-        }
-    }
-}
 
 function loadAsset(asset, iframeHeadEl) {
     return new Promise(resolve => {
@@ -42,31 +25,35 @@ function loadAssets(assets, iframeDocument) {
 
     let iframeHeadEl = iframeDocument.getElementsByTagName('head')[0];
     if (!iframeHeadEl) {
-        iframeDocument.getElementsByTagName('html')[0].insertBefore(iframeDocument.createElement('head'), iframeDocument.body);
+        iframeDocument.getElementsByTagName('html')[0].insertBefore(
+            iframeDocument.createElement('head'),
+            iframeDocument.body
+        );
         iframeHeadEl = iframeDocument.getElementsByTagName('head')[0];
     }
 
     return Promise.all(assets.map(asset => loadAsset(asset, iframeHeadEl)));
 }
 
-export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
+export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData}) => {
     const [loading, setLoading] = useState(true);
-    const editorContext = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const iframeRef = useRef(null);
     const onLoadTimeoutRef = useRef(null);
-    let displayValue = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
+
+    let displayValue = data?.nodeByPath?.renderedContent?.output ?? '';
     if (displayValue === '') {
         displayValue = t('label.contentManager.contentPreview.noViewAvailable');
     }
 
     useEffect(() => {
         setLoading(true);
-        // Add a timer to always remove the loader and click on links after 5 seconds
+        // Fallback: always remove the loader and disable click events after 5 seconds
+        // in case onLoad does not fire (e.g. cross-origin restrictions)
         onLoadTimeoutRef.current = setTimeout(() => {
-            console.debug('iframe onLoad did not trigger, remove loader and disable click events');
+            console.debug('iframe onLoad did not trigger, removing loader and disabling click events');
             const element = iframeRef.current;
-            const iframeWindow = element.contentWindow || element;
+            const iframeWindow = element?.contentWindow || element;
             iframeWindow?.document?.body?.setAttribute('style', 'pointer-events: none');
             setLoading(false);
         }, 5000);
@@ -75,19 +62,18 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
 
     const onLoad = () => {
         try {
-            console.debug('Preview loaded, add assets and remove loader');
+            console.debug('Preview loaded, adding assets and removing loader');
             const element = iframeRef.current;
-            const iframeWindow = element.contentWindow || element;
-            iframeWindow.document.body.setAttribute('style', 'pointer-events: none');
+            const iframeWindow = element?.contentWindow || element;
+            iframeWindow?.document?.body?.setAttribute('style', 'pointer-events: none');
 
             if (previewContext.contextConfiguration !== 'page') {
-                const assets = data && data.nodeByPath && data.nodeByPath.renderedContent ?
-                    data.nodeByPath.renderedContent.staticAssets : [];
+                const assets = data?.nodeByPath?.renderedContent?.staticAssets ?? [];
                 loadAssets(assets, iframeWindow.document);
             }
 
-            if (previewContext.requestAttributes) {
-                zoom(iframeWindow.document, onContentNotFound, editorContext);
+            if (previewContext.requestAttributes && nodeData) {
+                zoom(iframeWindow.document, onContentNotFound, nodeData);
             }
         } catch (e) {
             console.error('Error while processing preview', e);
@@ -112,6 +98,10 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
     );
 };
 
+IframeViewer.defaultProps = {
+    nodeData: null
+};
+
 IframeViewer.propTypes = {
     previewContext: PropTypes.shape({
         workspace: PropTypes.string.isRequired,
@@ -119,5 +109,12 @@ IframeViewer.propTypes = {
         contextConfiguration: PropTypes.string
     }).isRequired,
     onContentNotFound: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired
+    data: PropTypes.object.isRequired,
+    nodeData: PropTypes.shape({
+        isPage: PropTypes.bool,
+        path: PropTypes.string,
+        displayableNode: PropTypes.shape({
+            path: PropTypes.string
+        })
+    })
 };

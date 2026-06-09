@@ -1,10 +1,6 @@
 import {JContent} from '../../page-object';
 import {createSite, deleteSite} from '@jahia/cypress';
 
-function clickAppsTreeItem(role: string): void {
-    cy.get(`li[data-sel-role="${role}"]`).click();
-}
-
 describe('Test additional accordion', () => {
     const siteKey = 'additionalTestSite';
 
@@ -21,17 +17,14 @@ describe('Test additional accordion', () => {
         cy.logout();
     });
 
-    it('should display Link checker and SEO in additional panel and navigate to Link Checker', () => {
-        JContent.visit(siteKey, 'en', 'apps');
+    it('should display Link checker and SEO and navigate to Link Checker', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'apps');
 
-        cy.get('header[aria-controls="apps"]')
-            .closest('section')
-            .should('contain', 'Link checker');
-        cy.get('header[aria-controls="apps"]')
-            .closest('section')
-            .should('contain', 'SEO');
+        const additionalAccordion = jcontent.getAccordionItem('apps');
+        additionalAccordion.getSection().should('contain', 'Link checker');
+        additionalAccordion.getSection().should('contain', 'SEO');
 
-        clickAppsTreeItem('linkchecker');
+        additionalAccordion.getTreeItem('linkchecker').click();
 
         cy.frameLoaded('iframe[src*="editframe"]');
         cy.iframe('iframe[src*="editframe"]')
@@ -43,7 +36,6 @@ describe('Test additional accordion', () => {
     it('should not display additional panel on System Site', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'apps');
         jcontent.getSiteSwitcher().select('System Site');
-        cy.get('header[aria-controls="apps"]', {timeout: 5000})
-            .should('not.exist');
+        jcontent.getAccordionItem('apps').shouldNotExist();
     });
 });

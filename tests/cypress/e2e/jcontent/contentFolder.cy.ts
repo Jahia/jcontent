@@ -1,6 +1,5 @@
 import {JContent} from '../../page-object';
 import {addNode, createSite, deleteSite} from '@jahia/cypress';
-import {ContentFolder} from '../../page-object/contentFolder';
 
 describe('Content folders tests', () => {
     const siteKey = 'contentFolderTestSite';
@@ -33,14 +32,12 @@ describe('Content folders tests', () => {
 
     it('should create a new folder', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        ContentFolder.create(jcontent, siteKey, 'en', 'content-folders/contents', 'new-folder');
-        jcontent.getTable().getRowByName('new-folder').get().should('be.visible');
+        jcontent.createFolder('new-folder').get().should('be.visible');
     });
 
     it('should create a folder with special characters in the name', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        ContentFolder.create(jcontent, siteKey, 'en', 'content-folders/contents', 'test-éàöäè¨ç');
-        jcontent.getTable().getRowByName('test-éàöäè¨ç').get().should('be.visible');
+        jcontent.createFolder('test-éàöäè¨ç').get().should('be.visible');
     });
 
     it('should not create a folder with an already existing name', () => {
@@ -59,14 +56,13 @@ describe('Content folders tests', () => {
 
     it('should create a sub-folder', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/parent-folder');
-        ContentFolder.create(jcontent, siteKey, 'en', 'content-folders/contents/parent-folder', 'sub-folder');
-        jcontent.getTable().getRowByName('sub-folder').get().should('be.visible');
+        jcontent.createFolder('sub-folder').get().should('be.visible');
     });
 
     it('should delete a folder', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const folder = new ContentFolder(jcontent, siteKey, 'en', 'content-folders/contents', 'folder-to-delete');
-        folder.markForDeletion()
+        jcontent.getTable().getRowByName('folder-to-delete')
+            .markForDeletion()
             .deletePermanently();
     });
 });

@@ -58,7 +58,7 @@ export const registerTabBarActions = actionsRegistry => {
     });
 
     actionsRegistry.add('action', 'ceTranslateTab', tabBarAction, {
-        buttonLabel: 'jcontent:label.contentEditor.edit.tab.translate',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         buttonIcon: <Setting/>,
         targets: ['editHeaderTabsActions:3'],
         value: 'translate',

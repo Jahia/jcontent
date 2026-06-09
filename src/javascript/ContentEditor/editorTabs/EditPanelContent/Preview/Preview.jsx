@@ -1,55 +1,81 @@
-import {Badge, Paper} from '@jahia/design-system-kit';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import styles from './Preview.scss';
+import {Badge} from '@jahia/design-system-kit';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {PreviewFetcher} from './Preview.fetcher';
+import {usePublicationInfoContext} from '~/ContentEditor/contexts/PublicationInfo';
+import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches';
+import {Preview as SharedPreview} from '~/JContent/preview/Preview';
 import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
-import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
+import {getPreviewContext} from './Preview.utils';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const Preview = () => {
     const {t} = useTranslation('jcontent');
     const editorContext = useContentEditorContext();
-    const [contentNotFound, setContentNotFound] = useState(false);
-    const handleContentNotFound = useCallback(() => setContentNotFound(true), []);
-    const [shouldDisplayPreview, setShouldDisplayIframe] = useState(false);
+    const {publicationStatus} = usePublicationInfoContext();
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setShouldDisplayIframe(true);
-        }, 1500);
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, []);
+    const previewContext = getPreviewContext(editorContext);
+
+    const isLiveDisabled = [
+        JContentConstants.availablePublicationStatuses.NOT_PUBLISHED,
+        JContentConstants.availablePublicationStatuses.UNPUBLISHED,
+        JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE
+    ].includes(publicationStatus);
+
+    const onRefetchReady = useCallback(refetch => {
+        setPreviewRefetcher({
+            queryParams: {language: editorContext.lang, path: previewContext.path},
+            refetch
+        });
+    }, [editorContext.lang, previewContext.path]);
+
+    const onRefetchInvalidated = useCallback(() => {
+        invalidateRefetch({language: editorContext.lang, path: previewContext.path});
+    }, [editorContext.lang, previewContext.path]);
+
+    const header = (
+        <>
+            <UpdateOnSaveBadge/>
+            {editorContext.nodeData.isFolder && (
+                <div>
+                    <Badge
+                        badgeContent={t('jcontent:label.contentEditor.preview.noPreview')}
+                        color="warning"
+                        variant="normal"
+                    />
+                </div>
+            )}
+        </>
+    );
+
+    if (editorContext.nodeData.isFolder) {
+        return (
+            <SharedPreview
+                showWorkspaceToggle
+                header={header}
+                isFullScreen={isFullScreen}
+                isLiveDisabled={isLiveDisabled}
+                nodeData={editorContext.nodeData}
+                previewContext={previewContext}
+                onFullScreenToggle={() => setIsFullScreen(prev => !prev)}
+                onRefetchInvalidated={onRefetchInvalidated}
+                onRefetchReady={onRefetchReady}
+            />
+        );
+    }
 
     return (
-        <Paper className={styles.content}>
-            <div className={styles.container}>
-                <UpdateOnSaveBadge/>
-                {contentNotFound &&
-                    <div>
-                        <Badge
-                            badgeContent={t('jcontent:label.contentEditor.preview.contentNotFound')}
-                            variant="normal"
-                            color="warning"
-                        />
-                    </div>}
-                {editorContext.nodeData.isFolder &&
-                    <div>
-                        <Badge
-                            badgeContent={t('jcontent:label.contentEditor.preview.noPreview')}
-                            variant="normal"
-                            color="warning"
-                        />
-                    </div>}
-            </div>
-            {!editorContext.nodeData.isFolder &&
-                <>
-                    {shouldDisplayPreview ?
-                        <PreviewFetcher onContentNotFound={handleContentNotFound}/> :
-                        <LoaderOverlay/>}
-                </>}
-        </Paper>
+        <SharedPreview
+            showWorkspaceToggle
+            header={header}
+            isFullScreen={isFullScreen}
+            isLiveDisabled={isLiveDisabled}
+            nodeData={editorContext.nodeData}
+            previewContext={previewContext}
+            onFullScreenToggle={() => setIsFullScreen(prev => !prev)}
+            onRefetchInvalidated={onRefetchInvalidated}
+            onRefetchReady={onRefetchReady}
+        />
     );
 };

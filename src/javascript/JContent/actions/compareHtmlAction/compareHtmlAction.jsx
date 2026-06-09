@@ -7,12 +7,13 @@ import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
 export const CompareHtmlActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const language = useSelector(state => state.language);
-    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: ['jnt:page', 'jmix:mainResource']});
+    const showOnNodeTypes = ['jnt:page', 'jmix:mainResource'];
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
     const res = useNodeChecks(
         {path, language},
         {
             skip,
-            showOnNodeTypes: ['jnt:page', 'jmix:mainResource'],
+            showOnNodeTypes,
             getAggregatedPublicationInfo: {subNodes: true}
         }
     );

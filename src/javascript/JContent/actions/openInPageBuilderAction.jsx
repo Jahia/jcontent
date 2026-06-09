@@ -15,11 +15,12 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
     const isSearch = (mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH);
     const isPageBuilderMode = (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER);
 
-    const skip = !isPageBuilderMode && isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: ['jmix:mainResource']});
+    const showOnNodeTypes = ['jmix:mainResource'];
+    const skip = !isPageBuilderMode && isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
 
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
         skip,
-        showOnNodeTypes: ['jmix:mainResource']
+        showOnNodeTypes
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;

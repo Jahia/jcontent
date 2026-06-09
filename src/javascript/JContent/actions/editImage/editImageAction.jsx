@@ -8,12 +8,13 @@ import ImageEditorDialog from '~/JContent/actions/editImage/ImageEditorDialog';
 
 export const EditImageActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: ['jmix:image']});
+    const showOnNodeTypes = ['jmix:image'];
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
     const res = useNodeChecks(
         {path},
         {
             skip,
-            showOnNodeTypes: ['jmix:image'],
+            showOnNodeTypes,
             requiredPermission: ['jcr:write'],
             requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction]
         }

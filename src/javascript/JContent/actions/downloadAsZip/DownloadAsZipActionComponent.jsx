@@ -12,9 +12,10 @@ export const DownloadAsZipActionComponent = ({path, paths, node: prefetchedNode,
         displayLanguage: state.uilang
     }), shallowEqual);
 
+    const showOnNodeTypes = ['jnt:file', 'jnt:folder'];
     const skip = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') < 0 ||
         (!paths && isDefinitelyHidden(prefetchedNode, {
-            showOnNodeTypes: ['jnt:file', 'jnt:folder'],
+            showOnNodeTypes,
             hideMixins: ['jmix:markedForDeletionRoot']
         }));
 
@@ -26,7 +27,7 @@ export const DownloadAsZipActionComponent = ({path, paths, node: prefetchedNode,
             getDisplayName: true,
             getParent: true,
             getProperties: ['jcr:mixinTypes'],
-            showOnNodeTypes: ['jnt:file', 'jnt:folder']
+            showOnNodeTypes
         }
     );
 

@@ -7,12 +7,13 @@ import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
 export const DownloadFileActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: ['jnt:file']});
+    const showOnNodeTypes = ['jnt:file'];
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
     const res = useNodeChecks(
         {path},
         {
             skip,
-            showOnNodeTypes: ['jnt:file'],
+            showOnNodeTypes,
             requiredSitePermission: ['downloadAction']
         }
     );

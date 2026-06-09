@@ -6,7 +6,8 @@ import {useApolloClient} from '@apollo/client';
 import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
 export const LockActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
-    const skip = isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes: ['jnt:navMenuText', 'jnt:category']}) ||
+    const hideOnNodeTypes = ['jnt:navMenuText', 'jnt:category'];
+    const skip = isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes}) ||
         prefetchedNode?.operationsSupport?.lock === false;
     const res = useNodeChecks(
         {path},
@@ -16,7 +17,7 @@ export const LockActionComponent = ({path, node: prefetchedNode, render: Render,
             getCanLockUnlock: true,
             getOperationSupport: true,
             requiredPermission: 'jcr:lockManagement',
-            hideOnNodeTypes: ['jnt:navMenuText', 'jnt:category'],
+            hideOnNodeTypes,
             getPermissions: ['lockPageAction']
         }
     );

@@ -25,10 +25,11 @@ const checkAction = node => {
 export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedNode, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
+    const hideOnNodeTypes = ['jnt:virtualsite'];
 
     const isCategory = prefetchedNode?.primaryNodeType?.name === 'jnt:category';
     const skip = !paths && Boolean(prefetchedNode) && (
-        isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes: ['jnt:virtualsite']}) ||
+        isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes}) ||
         (!isCategory && !isMarkedForDeletion(prefetchedNode) && !hasMixin(prefetchedNode, 'jmix:autoPublish'))
     );
 
@@ -43,7 +44,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedN
             getAggregatedPublicationInfo: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite'],
+            hideOnNodeTypes,
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
         },
         {

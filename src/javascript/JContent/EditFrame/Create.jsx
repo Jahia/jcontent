@@ -125,7 +125,7 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData}) => {
+export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData, nt}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
@@ -225,7 +225,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const createAction = useMemo(() => (
         <DisplayAction
             actionKey="createContentPB"
-            nodeTypes={nodeTypes}
+            nodeTypes={nt ? nt : nodeTypes}
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}

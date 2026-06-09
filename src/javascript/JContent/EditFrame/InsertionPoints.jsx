@@ -15,10 +15,30 @@ const getNodeTypes = e => {
     }
 
     if (e.dataset.jahiaParent) {
-        const parentNt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
+        const parent = e.ownerDocument.getElementById(e.dataset.jahiaParent);
+        const parentNt = parent?.getAttribute('nodetypes');
         if (parentNt) {
             parentNt.split(' ').forEach(t => types.add(t));
         }
+
+        // This means that there's a defined placeholder and we want to use its nodetypes information for the insertion point.
+        // This prevents an issue where the parent can have a different nodetypes value which happens because getConstraints is not taking into account
+        // contribute types.
+        if (parent) {
+            const wildcardPlaceholders = parent.querySelectorAll(
+                `[type="placeholder"][path="*"][data-jahia-parent="${e.dataset.jahiaParent}"]`
+            );
+            if (wildcardPlaceholders.length > 0) {
+                types.clear();
+                wildcardPlaceholders.forEach(wp => {
+                    const wildcardNt = wp.getAttribute('nodetypes');
+                    if (wildcardNt) {
+                        wildcardNt.split(' ').forEach(t => types.add(t));
+                    }
+                });
+            }
+        }
+
     }
 
     return [...types];
@@ -54,14 +74,17 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
     const childData = useButtonsData({createButtons: childrenElem, language, uilang});
     const pasteData = usePasteData({createButtons: [...originalInsertionButtons, ...childrenElem], language});
 
+    console.log('A', childData)
+    console.log('B', originalData)
     return (
         [
-            ...childrenElem.map(({element, node}) => (
+            ...childrenElem.map(({element, node, attributes}) => (
                 <Create key={`insertion-point-${element.getAttribute('id')}`}
                         isInsertionPoint
                         isVertical={isVertical}
                         node={node}
                         nodes={nodes}
+                        nt={attributes.nodeTypes}
                         nodeData={childData?.nodes?.[node.path]}
                         pasteData={pasteData}
                         element={element}

@@ -23,5 +23,3 @@ ImageViewer.propTypes = {
     isFullScreen: PropTypes.bool,
     className: PropTypes.string
 };
-
-export default ImageViewer;

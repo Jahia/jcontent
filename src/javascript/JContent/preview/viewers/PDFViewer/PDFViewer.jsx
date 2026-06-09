@@ -162,5 +162,3 @@ PDFViewer.propTypes = {
     file: PropTypes.string.isRequired,
     isFullScreen: PropTypes.bool.isRequired
 };
-
-export default PDFViewer;

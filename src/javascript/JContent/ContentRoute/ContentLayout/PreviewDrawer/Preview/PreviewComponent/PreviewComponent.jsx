@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {getFileExtension, isBrowserImage, isPDF} from '../../../ContentLayout.utils';
 import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
-import DocumentViewer from './DocumentViewer';
-import PDFViewer from './PDFViewer';
-import ImageViewer from './ImageViewer';
+import {DocumentViewer} from '~/JContent/preview/viewers/DocumentViewer';
+import {PDFViewer} from '~/JContent/preview/viewers/PDFViewer';
+import {ImageViewer} from '~/JContent/preview/viewers/ImageViewer';
 import {useTranslation} from 'react-i18next';
 import styles from './PreviewComponent.scss';
 

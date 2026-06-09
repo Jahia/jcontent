@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Paper} from '@material-ui/core';
 import {Badge} from '@jahia/design-system-kit';
-import {Button, ButtonGroup, IconButton, Maximize, Minimize} from '@jahia/moonstone';
+import {Button, ButtonGroup, Maximize, Minimize} from '@jahia/moonstone';
 import styles from './Preview.scss';
 import {PreviewFetcher} from './PreviewFetcher';
 
@@ -57,7 +57,7 @@ export const Preview = ({
                 <div className={styles.header}>
                     <div>{header}</div>
                     {onFullScreenToggle && (
-                        <IconButton
+                        <Button
                             data-sel-role="preview-fullscreen-toggle"
                             icon={isFullScreen ? <Minimize/> : <Maximize/>}
                             size="small"

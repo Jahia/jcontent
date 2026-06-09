@@ -5,6 +5,7 @@ import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.visibility.BaseVisibilityConditionRule;
 import org.jahia.services.visibility.VisibilityConditionRule;
 import org.jahia.utils.i18n.Messages;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class StartEndDateConditionRuleImpl extends BaseVisibilityConditionRule {
      * @return Return the associated display template that will be used by gwt.
      */
     public String getGWTDisplayTemplate(Locale locale) {
-        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackage("Jahia Visibility"), "label.startEndDateCondition.xtemplate", locale);
+        return Messages.get(ServicesRegistry.getInstance().getJahiaTemplateManagerService().getTemplatePackageById(FrameworkUtil.getBundle(this.getClass()).getSymbolicName()), "label.startEndDateCondition.xtemplate", locale);
     }
 
     public boolean matches(JCRNodeWrapper nodeWrapper) {

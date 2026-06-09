@@ -28,6 +28,7 @@
         "notPublished": "Dieser Content wurde nie veröffentlicht",
         "unPublished": "Veröffentlichung für das Content wurde rückgängig gemacht",
         "modified": "Geändert von {{userName}} am {{timestamp}}",
+        "new": "Erstellt von {{userName}} am {{timestamp}}",
         "published": "Veröffentlicht von {{userName}} am {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Der Inhalt kann nicht in der aktuellen Sprache veröffentlicht werden, da verpflichtende Eigenschaften fehlen.",
@@ -90,7 +91,7 @@
         "dialogRename": "Umbenennen",
         "replaceWith": "Ersetzen mit",
         "drop": "Drop Datei und Ordner hier ab",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",
@@ -397,13 +398,13 @@
         "title": "Neuer Ordner",
         "text": "Geben Sie einen Ordner-Namen ein",
         "exists": "Ein Ordner mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Umbenennen",
         "text": "Geben Sie einen Namen ein",
         "exists": "Eine Datei mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Datei herunterladen",
@@ -498,7 +499,7 @@
           "some": "Einige dieser Elemente werden aktuell durch andere Elemente referenziert. Die Löschung dieser Elemente erzeugt zerstörte Referenzen.",
           "tooMany": "Das System konnte nicht verifizieren, ob die zu löschenden Elemente aktuell durch andere Elemente referenziert werden (Anzahl zur Verifizierung ist zu groß). Sie können die Verwendung der aufgelisteten Elemente manuell verifizieren."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Löschung nicht möglich",
             "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde.",
@@ -686,7 +687,7 @@
             "clickHere": "klicken Sie hier.",
             "dialogTitle": "In Arbeit (WIP)",
             "dialogSubTitle": "Markieren Sie Ihren Content als Work in Progress wenn Sie die Veröffentlichung des Contents verhindern wollen. Um mehr über das Work in Progress Feature zu erfahren, ",
-            "label" : {
+            "label": {
               "mark": "Als \"In Arbeit\" markieren",
               "unmark": "Nicht als \"In Arbeit\" markieren"
             },
@@ -701,7 +702,9 @@
             "contentType": "Haupt Content Typ",
             "details": "Details",
             "label": "Technische Informationen",
-            "mixinTypes": "Content Typ",
+            "nodeTypeName": "Content-Typ",
+            "inheritedMixins": "Geerbte Mixins",
+            "appliedMixins": "Angewandte Mixins",
             "path": "Pfad",
             "uuid": "UUID"
           },
@@ -763,10 +766,11 @@
         },
         "tab": {
           "edit": "Bearbeiten",
-          "advanced": "Erweiterte Optionen"
+          "advanced": "Erweiterte Optionen",
+          "visibility": "Sichtbarkeit"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Sprache wechseln",
           "addTranslation": {
@@ -798,6 +802,67 @@
         },
         "updateOnSave": "Vorschau wird mit dem Speichern aktualisiert"
       },
+      "sidePanel": {
+        "details": "Details",
+        "preview": "Vorschau",
+        "history": "Verlauf",
+        "generalInfo": "Allgemeine Informationen",
+        "name": "Name",
+        "path": "Pfad",
+        "type": "Inhaltstyp",
+        "uuid": "UUID",
+        "localization": "Lokalisierung",
+        "language": "Sprache",
+        "site": "Site",
+        "availableLanguages": "Verfügbare Sprachen",
+        "creation": "Erstellung",
+        "createdBy": "Erstellt Von",
+        "createdAt": "Erstellt Am",
+        "modification": "Änderung",
+        "modifiedBy": "Geändert Von",
+        "modifiedAt": "Geändert Am",
+        "lock": "Sperrinformationen",
+        "lockedBy": "Gesperrt Von",
+        "lockType": "Sperrtyp",
+        "technical": "Technische Informationen",
+        "additional": "Zusätzliche Details",
+        "copiedToClipboard": "In die Zwischenablage kopiert",
+        "links": "Links",
+        "linksLive": "Live",
+        "linksDefault": "Staging",
+        "linksVanity": "Vanity URL",
+        "linksDefaultVanity": "Haupt-URL",
+        "linksCopied": "Link kopiert"
+      },
+      "history": {
+        "date": "Datum",
+        "property": "Eigenschaft",
+        "node": "Inhalt",
+        "language": "Sprache",
+        "languageShort": "Spr.",
+        "modifiedBy": "Geändert Von",
+        "filterByAction": "Nach Aktion filtern",
+        "allActions": "Alle Aktionen",
+        "noEntries": "Keine Verlaufseinträge gefunden",
+        "errorLoading": "Fehler beim Laden des Verlaufs",
+        "actions": {
+          "created": "Erstellt",
+          "updated": "Aktualisiert",
+          "deleted": "Gelöscht",
+          "moved": "Verschoben",
+          "added": "Hinzugefügt",
+          "changed": "Geändert",
+          "removed": "Entfernt",
+          "published": "Veröffentlicht",
+          "unpublished": "Unveröffentlicht",
+          "accessed": "Zugegriffen",
+          "viewed": "Angesehen",
+          "previewed": "Vorschau",
+          "workflow_started": "Workflow gestartet",
+          "workflow_finished": "Workflow abgeschlossen"
+        },
+        "dateBy": "{{date}} von {{user}}"
+      },
       "CMMActions": {
         "createNewContent": {
           "menu": "Neuer Content",
@@ -811,7 +876,7 @@
           "filterLabel": "Nach Content-Typen suchen"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -887,13 +952,13 @@
         "itemsSelected_plural": "{{count}} elemente ausgewählt"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Kategorien",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Nicht auswählbare Elemente werden in dieser Ansicht nicht gelistet",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "Alle Nutzer",
             "globalUsers": "Globale Benutzer",
@@ -971,18 +1036,47 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Anzeigesprachen",
+        "languages": {
+          "title": "Anzeigesprachen",
           "description": "Content ist in den gewählten Sprachen sichtbar",
-          "label" : "Content in spezifischer Sprache verstecken",
-          "leftList" : "Der Content wird sichtbar sein in:",
-          "rightList" : "Der Content wird nicht sichtbar sein in:"
+          "label": "Content in spezifischer Sprache verstecken",
+          "leftList": "Der Content wird sichtbar sein in:",
+          "rightList": "Der Content wird nicht sichtbar sein in:"
         },
         "conditions" : {
           "title" : "Datum und Uhrzeit",
+          "type": "Typ",
+          "typeDescription": "Definieren Sie die Bedingung, die angewendet werden soll.",
           "rules" : "{{rulesNumber}} Bedingungen definiert",
           "rule" : "Eine Bedingung definiert",
-          "norules" : "Keine Bedingung definiert"
+          "norules" : "Keine Bedingung definiert",
+          "allrules": "Alle Bedingungen müssen erfüllt sein, damit der Inhalt sichtbar ist",
+          "anyrule": "Mindestens eine der Bedingungen muss erfüllt sein, damit der Inhalt sichtbar ist",
+          "add": "Bedingung hinzufügen",
+          "edit": "Bedingung bearbeiten",
+          "delete": "Bedingung löschen",
+          "ruleType": {
+            "date": "Datum",
+            "dayOfWeek": "Wochentag",
+            "time": "Uhrzeit"
+          },
+          "ruleDescription": {
+            "date": "Der Inhalt wird ab dem angegebenen Datum und der angegebenen Uhrzeit, bis zum angegebenen Datum und der angegebenen Uhrzeit oder zwischen diesen beiden Zeitpunkten sichtbar sein – abhängig von der Konfiguration der Bedingung.",
+            "dayOfWeek": "Der Inhalt wird an den ausgewählten Wochentagen sichtbar sein.",
+            "time": "Der Inhalt wird ab der angegebenen Uhrzeit oder bis zur angegebenen Uhrzeit sichtbar sein, abhängig von der Konfiguration der Bedingung."
+          },
+          "dayOfWeekCondition": "Der Inhalt wird an den folgenden Wochentagen sichtbar sein: {{days}}",
+          "startEndDateCondition": "Der Inhalt wird ab {{startDate}} bis {{endDate}} sichtbar sein",
+          "startDateCondition": "Der Inhalt wird ab {{startDate}} sichtbar sein",
+          "endDateCondition": "Der Inhalt wird bis {{endDate}} sichtbar sein",
+          "startEndTimeCondition": "Der Inhalt wird ab {{startTime}} bis {{endTime}} sichtbar sein",
+          "startTimeCondition": "Der Inhalt wird ab {{startTime}} sichtbar sein",
+          "endTimeCondition": "Der Inhalt wird bis {{endTime}} sichtbar sein",
+          "preview": "In der Vorschau sichtbar",
+          "live": "Live sichtbar",
+          "preview_live": "Übereinstimmung in Vorschau / Live",
+          "visible": "Sichtbar",
+          "hidden": "Ausgeblendet"
         }
       }
     },

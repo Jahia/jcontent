@@ -239,6 +239,7 @@ public class Field implements Ranked {
         errorMessage = errorMessage == null && errorMessageKey != null ? resolveResourceKey(errorMessageKey, uiLocale, site) : errorMessage;
 
         if (extendedPropertyDefinition != null) {
+            // Each call to initializeLabelFromItemDefinition will try to set the global label / description / errorMessage
             // Allow labels from primary node type
             initializeLabelFromItemDefinition(extendedPropertyDefinition, uiLocale, site, primaryNodeType);
             // Looks for labels in override property

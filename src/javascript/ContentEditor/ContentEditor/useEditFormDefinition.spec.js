@@ -76,6 +76,10 @@ describe('adaptEditFormData', () => {
                         hasOrderableChildNodes: false,
                         properties: [
                             {name: 'field1', primaryNodeType: true}
+                        ],
+                        supertypes: [
+                            {name: 'jmix:baseContent', mixin: true},
+                            {name: 'nt:base', mixin: false}
                         ]
                     },
                     properties: [
@@ -195,7 +199,8 @@ describe('adaptEditFormData', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).details).toEqual([
             {
                 label: 'labelled',
-                value: 'formatted date: 2019-05-07T11:33:31.056 format: L HH:mm'
+                value: 'formatted date: 2019-05-07T11:33:31.056 format: L HH:mm',
+                copyable: false
             }
         ]);
     });
@@ -207,8 +212,16 @@ describe('adaptEditFormData', () => {
                 value: 'ContentType'
             },
             {
-                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.mixinTypes',
-                value: 'jcr:contentType; Mixin1; Mixin2'
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.nodeTypeName',
+                value: 'jcr:contentType'
+            },
+            {
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins',
+                value: 'jmix:baseContent'
+            },
+            {
+                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.appliedMixins',
+                value: 'Mixin1; Mixin2'
             },
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.path',

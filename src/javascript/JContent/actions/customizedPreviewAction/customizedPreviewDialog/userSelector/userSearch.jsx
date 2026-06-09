@@ -7,25 +7,25 @@ import PropTypes from 'prop-types';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import styles from '../selectors.scss';
 
-export const UserSearch = ({siteKey, setPickerMode, searchPath, setSearchPath, searchTerms, setSearchTerms}) => {
+export const UserSearch = ({siteKey, searchPath, setSearchPath, searchTerms, setSearchTerms}) => {
     const {t} = useTranslation('jcontent');
 
     const accordionConfig = registry.get(Constants.ACCORDION_ITEM_NAME, 'picker-user') || {};
     const searchContextData = accordionConfig.getSearchContextData({t, currentSite: siteKey});
     const currentSearchContext = searchContextData.find(value => value.searchPath === searchPath) || searchContextData[0];
 
+    // Keep the 'picker-user' mode so the optimized user search endpoint handles the term in place,
+    // rather than falling back to the generic full-text 'picker-search' handler.
     const handleChangeTerms = e => {
         const val = e.target.value;
         if (val === '') {
             handleClearTerms();
         } else {
-            setPickerMode(Constants.mode.SEARCH);
             setSearchTerms(val);
         }
     };
 
     const handleClearTerms = () => {
-        setPickerMode('picker-user');
         setSearchTerms('');
     };
 
@@ -52,7 +52,6 @@ export const UserSearch = ({siteKey, setPickerMode, searchPath, setSearchPath, s
 
 UserSearch.propTypes = {
     siteKey: PropTypes.string,
-    setPickerMode: PropTypes.func,
     searchPath: PropTypes.string,
     setSearchPath: PropTypes.func,
     searchTerms: PropTypes.string,

@@ -10,7 +10,14 @@ export class TagField extends Field {
     }
 
     addNewValue(text: string): void {
-        this.type(`${text}{enter}`);
+        this.type(text);
+        // Wait for React-Select's creatable option to render before pressing Enter — under fields
+        // that load their options remotely (e.g. dynamicChoicelist) the {enter} otherwise fires
+        // before anything is focused and no chip gets added.
+        cy.get('[id^="react-select-"][id*="-option-"]', {timeout: 10000})
+            .contains(text)
+            .should('be.visible');
+        this.type('{enter}');
         this.getTags().contains(text).should('be.visible');
     }
 

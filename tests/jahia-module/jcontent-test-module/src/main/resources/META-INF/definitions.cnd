@@ -112,6 +112,9 @@
 [cent:html5PluginTestComponent] > jnt:content, mix:title, jmix:editorialContent, jmix:droppableContent, jmix:siteComponent
  - text (string, richtext[ckeditor.customConfig='$context/modules/jcontent-test-module/javascript/config.js'])
 
+[cent:droppableContainer] > jnt:content, jmix:editorialContent, jmix:droppableContent, mix:title
+ + * (jnt:content)
+
 [cemix:withCustomBar] mixin
 
 // Adding definitions and JSON overrides for the new content types based on https://jira.jahia.org/browse/QA-15148

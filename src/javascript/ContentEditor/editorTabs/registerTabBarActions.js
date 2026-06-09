@@ -9,7 +9,7 @@ import {SourceContentPanel} from '../actions/contenteditor/translate/TranslatePa
 import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
 import {tabBarAction} from './tabBarAction';
-import {Preview} from './EditPanelContent/Preview';
+import {SidePanel} from './EditPanelContent/SidePanel';
 
 const TranslatePanel = () => {
     const baseConfig = useContentEditorConfigContext();
@@ -21,7 +21,7 @@ const TranslatePanel = () => {
     const sourceLang =
         languages.find(l => l.language !== lang) || languages[0];
 
-    // useEffect(() => {
+    // UseEffect(() => {
     //     baseConfig.setSideBySideContext({
     //         lang: sourceLang.language,
     //         ...baseConfig.sideBySideContext
@@ -42,7 +42,7 @@ export const registerTabBarActions = actionsRegistry => {
         value: Constants.editPanel.editTab,
         dataSelRole: 'tab-edit',
         displayableComponent: EditPanelContent,
-        side: {component: Preview, singleSyncedScrollbar: false},
+        side: {component: SidePanel, singleSyncedScrollbar: false},
         isDisplayable: () => true
     });
 

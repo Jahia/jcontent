@@ -51,9 +51,9 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     const {i18nContext, setI18nContext, resetI18nContext} = useInitI18nContext(overrides);
 
     // Persist 'create another' chekbox state during language switch
-    const [createAnotherValue, setCreateAnother] = useState(false);
+    const [createAnotherValue, setCreateAnotherValue] = useState(false);
     const createAnother = useMemo(() => ({
-        value: createAnotherValue, set: setCreateAnother
+        value: createAnotherValue, set: setCreateAnotherValue
     }), [createAnotherValue]);
 
     const {lang, mode, name} = contentEditorConfigContext;

@@ -16,10 +16,10 @@ const getNodeTypes = e => {
 
     if (e.dataset.jahiaParent) {
         const parent = e.ownerDocument.getElementById(e.dataset.jahiaParent);
-        const parentNt = parent?.getAttribute('nodetypes');
-        if (parentNt) {
-            parentNt.split(' ').forEach(t => types.add(t));
-        }
+        // const parentNt = parent?.getAttribute('nodetypes');
+        // if (parentNt) {
+        //     parentNt.split(' ').forEach(t => types.add(t));
+        // }
 
         // This means that there's a defined placeholder and we want to use its nodetypes information for the insertion point.
         // This prevents an issue where the parent can have a different nodetypes value which happens because getConstraints is not taking into account

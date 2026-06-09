@@ -65,9 +65,15 @@ export const getElemAttributes = ({element, parent}) => {
     // Need to check here if insertionPoint is an original create button or not,
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
-    const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
 
-    const nodePath = (isInsertionPoint || isMultipleChildPlaceholder) ? null : element.getAttribute('path');
+    // This means this button is inserted as an extra with no underlying placeholder in place. So it makes no sense
+    // to make any conclusions about nodetypes or path. This information is passed in as a prop instead.
+    if (isInsertionPoint) {
+        return {};
+    }
+
+    const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
+    const nodePath = (isMultipleChildPlaceholder) ? null : element.getAttribute('path');
     const nodeName = element.getAttribute('path').split('/').pop();
 
     // Nodetypes should not be undefined here because if nothing is found nothing should be used

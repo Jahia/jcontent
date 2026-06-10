@@ -96,7 +96,8 @@ export class TagManager extends JContent {
 
     fillRenameDialog(value: string): TagManager {
         cy.get('[data-cm-role="tag-manager-rename-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-rename-input"]').clear().type(value);
+        cy.get('[data-cm-role="tag-manager-rename-input"]').clear();
+        cy.get('[data-cm-role="tag-manager-rename-input"]').type(value);
         return this;
     }
 
@@ -107,7 +108,8 @@ export class TagManager extends JContent {
 
     fillEditNodeDialog(value: string): TagManager {
         cy.get('[data-cm-role="tag-manager-edit-node-dialog"]').should('be.visible');
-        cy.get('[data-cm-role="tag-manager-edit-node-input"]').clear().type(value);
+        cy.get('[data-cm-role="tag-manager-edit-node-input"]').clear();
+        cy.get('[data-cm-role="tag-manager-edit-node-input"]').type(value);
         return this;
     }
 

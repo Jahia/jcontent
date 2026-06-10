@@ -1,1 +1,1 @@
-export {Preview} from './Preview';
+export {CEPreview} from './CEPreview';

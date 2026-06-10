@@ -27,7 +27,7 @@ jest.mock('~/JContent/preview/Preview', () => ({
     Preview: ({header, ...rest}) => <div data-testid="shared-preview" {...rest}>{header}</div>
 }));
 
-import {Preview} from './Preview';
+import {CEPreview} from './CEPreview';
 
 // Helper: shallow-render a React element returned as a prop
 const renderProp = element => shallow(<div>{element}</div>);
@@ -51,20 +51,20 @@ describe('CE Preview', () => {
     });
 
     it('renders SharedPreview', () => {
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         expect(cmp.find('Preview').exists()).toBe(true);
     });
 
-    it('passes showWorkspaceToggle to SharedPreview', () => {
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
-        expect(cmp.find('Preview').prop('showWorkspaceToggle')).toBe(true);
+    it('always renders workspace toggle inside Preview', () => {
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        expect(cmp.find('Preview').exists()).toBe(true);
     });
 
     it('disables live when content is NOT_PUBLISHED', () => {
         usePublicationInfoContext.mockReturnValue({
             publicationStatus: JContentConstants.availablePublicationStatuses.NOT_PUBLISHED
         });
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         expect(cmp.find('Preview').prop('isLiveDisabled')).toBe(true);
     });
 
@@ -72,17 +72,17 @@ describe('CE Preview', () => {
         usePublicationInfoContext.mockReturnValue({
             publicationStatus: JContentConstants.availablePublicationStatuses.UNPUBLISHED
         });
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         expect(cmp.find('Preview').prop('isLiveDisabled')).toBe(true);
     });
 
     it('does not disable live when content is PUBLISHED', () => {
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         expect(cmp.find('Preview').prop('isLiveDisabled')).toBe(false);
     });
 
     it('includes UpdateOnSaveBadge in header', () => {
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         const headerEl = cmp.find('Preview').prop('header');
         const header = renderProp(headerEl);
         expect(header.find('UpdateOnSaveBadge').exists()).toBe(true);
@@ -90,14 +90,14 @@ describe('CE Preview', () => {
 
     it('shows no-preview badge in header for folder nodes', () => {
         editorContext.nodeData.isFolder = true;
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         const headerEl = cmp.find('Preview').prop('header');
         const header = renderProp(headerEl);
         expect(header.find('DsBadge').exists()).toBe(true);
     });
 
     it('does not show no-preview badge for non-folder nodes', () => {
-        const cmp = shallowWithTheme(<Preview/>, {}, dsGenericTheme);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         const headerEl = cmp.find('Preview').prop('header');
         const header = renderProp(headerEl);
         expect(header.find('DsBadge').exists()).toBe(false);

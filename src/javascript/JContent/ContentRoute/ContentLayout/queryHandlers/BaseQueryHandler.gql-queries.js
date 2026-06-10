@@ -1,6 +1,18 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
+const NodePreviewFieldsFragment = gql`
+    fragment NodePreviewFields on JCRNode {
+        isFile: isNodeType(type: {types: ["jnt:file"]})
+        displayableNode {
+            ...NodeCacheRequiredFields
+            path
+            isFolder: isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
+
 export const QueryHandlersFragments = {
     childNodesCount: {
         gql: gql`
@@ -87,6 +99,7 @@ export const QueryHandlersFragments = {
                     }
                 }
                 notSelectableForPreview: isNodeType(type: {types:["jnt:page", "jnt:folder", "jnt:contentFolder"]})
+                ...NodePreviewFields
                 site {
                     ...NodeCacheRequiredFields
                 }
@@ -98,6 +111,7 @@ export const QueryHandlersFragments = {
                 ...NodeCacheRequiredFields
             }
             ${PredefinedFragments.nodeCacheRequiredFields.gql}
+            ${NodePreviewFieldsFragment}
         `,
         variables: {
             displayLanguage: 'String!',

@@ -3,7 +3,7 @@ import {sidePanelTabAction} from './sidePanelTabAction';
 import {InfoCircle, History, Visibility} from '@jahia/moonstone';
 import {ContentDetails} from './ContentDetails';
 import {ContentHistory} from './ContentHistory';
-import {Preview} from '../Preview';
+import {CEPreview} from '../Preview';
 
 export const registerSidePanelTabs = actionsRegistry => {
     // Side panel tab actions
@@ -31,7 +31,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         buttonIcon: <Visibility/>,
         targets: ['sidePanelTabsActions:1'],
         dataSelRole: 'tab-preview',
-        displayableComponent: Preview,
+        displayableComponent: CEPreview,
         isDisplayable: ({hasPreview}) => Boolean(hasPreview)
     });
 };

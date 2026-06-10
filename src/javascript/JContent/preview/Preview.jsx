@@ -17,8 +17,8 @@ import {PreviewFetcher} from './PreviewFetcher';
  *   previewContext       — base context (workspace value overridden internally when toggled)
  *   nodeData             — { isPage, path, displayableNode } for IframeViewer zoom
  *   isFullScreen         — controlled externally (Decision #6)
- *   showWorkspaceToggle  — show Edit/Live toggle buttons (Decision #2)
  *   isLiveDisabled       — disable Live button (e.g. content not published) (Decision #3)
+ *   isEditDisabled       — disable Edit button (e.g. content marked for deletion)
  *   onRefetchReady       — (refetch) => void — wire to caller's refetch bus (Decision #4)
  *   onRefetchInvalidated — () => void (Decision #4)
  *   header               — optional React node rendered above the preview (badges, info, etc.)
@@ -27,8 +27,8 @@ export const Preview = ({
     previewContext,
     nodeData,
     isFullScreen,
-    showWorkspaceToggle,
     isLiveDisabled,
+    isEditDisabled,
     onFullScreenToggle,
     onRefetchReady,
     onRefetchInvalidated,
@@ -38,6 +38,24 @@ export const Preview = ({
     const [workspace, setWorkspace] = useState(previewContext.workspace ?? 'edit');
     const [contentNotFound, setContentNotFound] = useState(false);
     const [shouldDisplay, setShouldDisplay] = useState(false);
+
+    // Sync internal workspace when caller drives it externally (e.g. PreviewDrawer Redux toggle)
+    useEffect(() => {
+        if (previewContext.workspace !== undefined) {
+            setWorkspace(previewContext.workspace);
+        }
+    }, [previewContext.workspace]);
+
+    // Fall back workspace when the current one becomes disabled
+    useEffect(() => {
+        if (isEditDisabled && workspace === 'edit') {
+            setWorkspace('live');
+        }
+
+        if (isLiveDisabled && workspace === 'live') {
+            setWorkspace('edit');
+        }
+    }, [isEditDisabled, isLiveDisabled, workspace]);
 
     // Use startTransition so host UI (form fields, etc.) renders first (Decision #8)
     useEffect(() => {
@@ -67,24 +85,22 @@ export const Preview = ({
                     )}
                 </div>
             )}
-            {showWorkspaceToggle && (
-                <div className={styles.workspaceToggle}>
-                    <ButtonGroup>
-                        <Button
-                            isDisabled={workspace === 'edit'}
-                            data-sel-role="edit-preview-button"
-                            label={t('jcontent:label.contentManager.contentPreview.staging')}
-                            onClick={() => setWorkspace('edit')}
-                        />
-                        <Button
-                            isDisabled={workspace === 'live' || isLiveDisabled}
-                            data-sel-role="live-preview-button"
-                            label={t('jcontent:label.contentManager.contentPreview.live')}
-                            onClick={() => setWorkspace('live')}
-                        />
-                    </ButtonGroup>
-                </div>
-            )}
+            <div className={styles.workspaceToggle}>
+                <ButtonGroup>
+                    <Button
+                        isDisabled={workspace === 'edit' || isEditDisabled}
+                        data-sel-role="edit-preview-button"
+                        label={t('jcontent:label.contentManager.contentPreview.staging')}
+                        onClick={() => setWorkspace('edit')}
+                    />
+                    <Button
+                        isDisabled={workspace === 'live' || isLiveDisabled}
+                        data-sel-role="live-preview-button"
+                        label={t('jcontent:label.contentManager.contentPreview.live')}
+                        onClick={() => setWorkspace('live')}
+                    />
+                </ButtonGroup>
+            </div>
             {contentNotFound && (
                 <div>
                     <Badge
@@ -111,8 +127,8 @@ export const Preview = ({
 Preview.defaultProps = {
     nodeData: null,
     isFullScreen: false,
-    showWorkspaceToggle: false,
     isLiveDisabled: false,
+    isEditDisabled: false,
     onFullScreenToggle: null,
     onRefetchReady: null,
     onRefetchInvalidated: null,
@@ -125,8 +141,8 @@ Preview.propTypes = {
     }).isRequired,
     nodeData: PropTypes.object,
     isFullScreen: PropTypes.bool,
-    showWorkspaceToggle: PropTypes.bool,
     isLiveDisabled: PropTypes.bool,
+    isEditDisabled: PropTypes.bool,
     onFullScreenToggle: PropTypes.func,
     onRefetchReady: PropTypes.func,
     onRefetchInvalidated: PropTypes.func,

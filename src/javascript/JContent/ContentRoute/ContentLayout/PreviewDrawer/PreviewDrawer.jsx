@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Card, CardContent, Tooltip} from '@material-ui/core';
 import Preview from './Preview';
-import {Button, ButtonGroup, Close, Maximize, Minimize, Typography} from '@jahia/moonstone';
+import {Button, Close, Maximize, Minimize, Typography} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
-import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/redux/preview.redux';
+import {cmSetPreviewState} from '~/JContent/redux/preview.redux';
 import PreviewSize from './PreviewSize';
 import clsx from 'clsx';
 import styles from './PreviewDrawer.scss';
@@ -18,9 +18,6 @@ const PreviewDrawer = ({previewSelection}) => {
         selection: state.jcontent.selection
     }), shallowEqual);
     const dispatch = useDispatch();
-    const setPreviewMode = mode => {
-        dispatch(cmSetPreviewMode(mode));
-    };
 
     const closePreview = () => {
         dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE));
@@ -36,18 +33,8 @@ const PreviewDrawer = ({previewSelection}) => {
 
     const notPublished = previewSelection && (previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE');
     const deleted = previewSelection && previewSelection.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION';
-    const disabledToggle = !previewSelection;
-    const disabledEdit = !previewSelection || deleted;
-    const disabledLive = !previewSelection || notPublished;
 
     const {t} = useTranslation('jcontent');
-
-    let effectiveMode = previewMode;
-    if (disabledLive && previewMode !== 'edit') {
-        effectiveMode = 'edit';
-    } else if (disabledEdit && previewMode !== 'live') {
-        effectiveMode = 'live';
-    }
 
     return (
         <React.Fragment>
@@ -60,18 +47,6 @@ const PreviewDrawer = ({previewSelection}) => {
                     {t('jcontent:label.contentManager.contentPreview.preview')}
                 </Typography>
                 <div className="flexFluid"/>
-                <ButtonGroup>
-                    <Button disabled={effectiveMode === 'edit' || disabledEdit || disabledToggle}
-                            data-cm-role="edit-preview-button"
-                            label={t('jcontent:label.contentManager.contentPreview.staging')}
-                            onClick={() => setPreviewMode('edit')}
-                    />
-                    <Button disabled={effectiveMode === 'live' || disabledLive || disabledToggle}
-                            data-cm-role="live-preview-button"
-                            label={t('jcontent:label.contentManager.contentPreview.live')}
-                            onClick={() => setPreviewMode('live')}
-                    />
-                </ButtonGroup>
                 {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
                     <Tooltip title={t('jcontent:label.contentManager.contentPreview.collapse')}>
                         <Button variant="ghost"
@@ -84,7 +59,14 @@ const PreviewDrawer = ({previewSelection}) => {
                                 onClick={openFullScreen}/>
                     </Tooltip>}
             </div>
-            <Preview previewSelection={previewSelection} selection={selection} previewMode={effectiveMode} previewState={previewState}/>
+            <Preview
+                isEditDisabled={deleted}
+                isLiveDisabled={!previewSelection || notPublished}
+                previewMode={previewMode}
+                previewSelection={previewSelection}
+                previewState={previewState}
+                selection={selection}
+            />
             {previewSelection &&
             <Card>
                 <CardContent data-cm-role="preview-name" className={styles.leftGutter}>
@@ -92,7 +74,7 @@ const PreviewDrawer = ({previewSelection}) => {
                         {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                     </Typography>
                     <Typography isNowrap variant="body">
-                        <PreviewSize node={previewSelection} previewMode={effectiveMode}/>
+                        <PreviewSize node={previewSelection} previewMode={previewMode}/>
                     </Typography>
                 </CardContent>
             </Card>}

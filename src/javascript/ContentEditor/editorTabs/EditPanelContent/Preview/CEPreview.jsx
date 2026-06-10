@@ -4,12 +4,12 @@ import {Badge} from '@jahia/design-system-kit';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {usePublicationInfoContext} from '~/ContentEditor/contexts/PublicationInfo';
 import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches';
-import {Preview as SharedPreview} from '~/JContent/preview/Preview';
+import {Preview} from '~/JContent/preview/Preview';
 import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
 import {getPreviewContext} from './Preview.utils';
 import JContentConstants from '~/JContent/JContent.constants';
 
-export const Preview = () => {
+export const CEPreview = () => {
     const {t} = useTranslation('jcontent');
     const editorContext = useContentEditorContext();
     const {publicationStatus} = usePublicationInfoContext();
@@ -51,8 +51,7 @@ export const Preview = () => {
 
     if (editorContext.nodeData.isFolder) {
         return (
-            <SharedPreview
-                showWorkspaceToggle
+            <Preview
                 header={header}
                 isFullScreen={isFullScreen}
                 isLiveDisabled={isLiveDisabled}
@@ -66,8 +65,7 @@ export const Preview = () => {
     }
 
     return (
-        <SharedPreview
-            showWorkspaceToggle
+        <Preview
             header={header}
             isFullScreen={isFullScreen}
             isLiveDisabled={isLiveDisabled}

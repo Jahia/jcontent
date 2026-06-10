@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './EditPanel.scss';
-import clsx from 'clsx';
 import {registry} from '@jahia/ui-extender';
 import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
@@ -11,7 +10,6 @@ import {useContentEditorConfigContext} from '~/shared';
 
 export const EditPanelFullscreen = ({title}) => {
     const {advancedOpenTab} = useContentEditorConfigContext();
-    console.log('advancedOpenTab', advancedOpenTab);
     const [activeTab, setActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
 

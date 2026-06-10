@@ -12,15 +12,12 @@ export const useTranslateFormDefinition = () => {
 
 /**
  * Adapt sections for translation mode:
- * - Display only content and SEO sections
  * - Expand all sections by default
  * - Set non-i18n fields as read-only
  * - If readOnly is true, set all fields and fieldsets as read-only
  */
 export const adaptTranslateSections = (data, readOnly = false) => {
     if (data) {
-        // Display only content and SEO sections in the translation panel
-        data.sections = data.sections.filter(s => ['content', 'seo'].includes(s.name));
         data.sections?.forEach(section => {
             // Expand all sections by default in translation mode
             section.expanded = true;

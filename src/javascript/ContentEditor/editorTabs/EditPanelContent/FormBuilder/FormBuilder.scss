@@ -1,6 +1,5 @@
 .form {
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-gutter: stable;
+
+    min-width: 0;
 }

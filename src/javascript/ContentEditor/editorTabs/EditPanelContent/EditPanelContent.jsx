@@ -19,7 +19,7 @@ export const EditPanelContent = ({tab}) => {
                 <TwoPanelsContent
                     leftCol={<FormBuilder mode={mode}/>}
                     rightCol={tab?.side?.component && <tab.side.component/>}
-                    singleSyncedScrollbar={tab?.side?.singleSyncedScrollbar}
+                    hasSingleSyncedScrollbar={tab?.side?.hasSingleSyncedScrollbar}
                 />
             ) : (
                 <FullWidthContent

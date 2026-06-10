@@ -80,7 +80,7 @@ const SourceContentFormBuilderInner = ({data}) => {
         <Formik initialValues={{...data?.initialValues}} onSubmit={() => {}}>
             <div style={{display: 'grid', gridTemplateColumns: '1fr auto'}}>
                 <FormBuilder mode="edit"/>
-                <div>
+                <div style={{minWidth: 0}}>
                     <ul style={{position: 'sticky', top: 0}}>
                         <li>
                             <strong>

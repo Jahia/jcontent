@@ -1,4 +1,4 @@
-import {Edit, Setting} from '@jahia/moonstone';
+import {Edit, Setting, Translate} from '@jahia/moonstone';
 import React from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {SourceContentPanel} from '../actions/contenteditor/translate/TranslatePanel/SourceContentPanel';
@@ -33,7 +33,7 @@ export const registerTabBarActions = actionsRegistry => {
 
     actionsRegistry.add('action', 'ceTranslateTab', tabBarAction, {
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
-        buttonIcon: <Setting/>,
+        buttonIcon: <Translate/>,
         targets: ['editHeaderTabsActions:3'],
         value: 'translate',
         dataSelRole: 'tab-advanced-options',

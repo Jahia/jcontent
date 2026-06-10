@@ -7,8 +7,8 @@ import {EditPanelContent} from './EditPanelContent';
 import {tabBarAction} from './tabBarAction';
 import {SidePanel} from './EditPanelContent/SidePanel/SidePanel';
 
+/** Registers the different options available in the advanced (fullscreen) Content Editor */
 export const registerTabBarActions = actionsRegistry => {
-    // Tab bar actions
     actionsRegistry.add('action', 'ceEditTab', tabBarAction, {
         buttonLabel: 'jcontent:label.contentEditor.edit.tab.edit',
         buttonIcon: <Edit/>,
@@ -16,29 +16,28 @@ export const registerTabBarActions = actionsRegistry => {
         value: Constants.editPanel.editTab,
         dataSelRole: 'tab-edit',
         displayableComponent: EditPanelContent,
-        side: {component: SidePanel, singleSyncedScrollbar: false},
-        isDisplayable: () => true
-    });
-
-    actionsRegistry.add('action', 'ceAdvancedTab', tabBarAction, {
-        buttonLabel: 'jcontent:label.contentEditor.edit.tab.advanced',
-        buttonIcon: <Setting/>,
-        targets: ['editHeaderTabsActions:2'],
-        value: 'advanced',
-        dataSelRole: 'tab-advanced-options',
-        displayableComponent: AdvancedOptions,
-        isDisplayable: props => props.mode === Constants.routes.baseEditRoute,
-        requiredPermission: [Constants.permissions.canSeeAdvancedOptionsTab]
+        side: {component: SidePanel}
     });
 
     actionsRegistry.add('action', 'ceTranslateTab', tabBarAction, {
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         buttonIcon: <Translate/>,
-        targets: ['editHeaderTabsActions:3'],
-        value: 'translate',
-        dataSelRole: 'tab-advanced-options',
+        targets: ['editHeaderTabsActions:2'],
+        value: Constants.editPanel.translateTab,
+        dataSelRole: 'tab-translate',
         displayableComponent: EditPanelContent,
         side: {component: SourceContentPanel, singleSyncedScrollbar: true},
-        isDisplayable: () => true
+        requiredSitePermission: ['translateAction']
+    });
+
+    actionsRegistry.add('action', 'ceAdvancedTab', tabBarAction, {
+        buttonLabel: 'jcontent:label.contentEditor.edit.tab.advanced',
+        buttonIcon: <Setting/>,
+        targets: ['editHeaderTabsActions:3'],
+        value: 'advanced',
+        dataSelRole: 'tab-advanced-options',
+        displayableComponent: AdvancedOptions,
+        isDisplayable: props => props.mode === Constants.routes.baseEditRoute,
+        requiredPermission: [Constants.permissions.canSeeAdvancedOptionsTab]
     });
 };

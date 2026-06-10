@@ -7,10 +7,7 @@ export const TabBar = ({setActiveTab, isDisplayable, value, render: Render, load
     const {path} = useContentEditorContext();
     const ceCtx = useContentEditorContext();
 
-    const res = useNodeChecks(
-        {path: path},
-        {...otherProps}
-    );
+    const res = useNodeChecks({path}, otherProps);
 
     if (res.loading) {
         /* eslint-disable react/jsx-no-useless-fragment */

@@ -20,6 +20,7 @@ import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageActio
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
+import {Constants} from '../ContentEditor.constants';
 
 export const registerEditActions = registry => {
     // Edit action button in JContent; need separate actions for content and pages
@@ -148,7 +149,7 @@ export const registerEditActions = registry => {
         requiredSitePermission: ['translateAction'],
         getDisplayName: true,
         isFullscreen: true,
-        editConfig: {advancedOpenTab: 'translate'}
+        editConfig: {advancedOpenTab: Constants.editPanel.translateTab}
     });
 
     registry.add('action', 'translateField', translateFieldAction, {

@@ -131,7 +131,7 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData, nt}) => {
+export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData, suppliedNodeTypes}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
@@ -231,7 +231,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const createAction = useMemo(() => (
         <DisplayAction
             actionKey="createContentPB"
-            nodeTypes={nt ? nt : nodeTypes}
+            nodeTypes={suppliedNodeTypes ? suppliedNodeTypes : nodeTypes}
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}
@@ -241,7 +241,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             onVisibilityChanged={onCreateVisibilityChanged}
             onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
         />
-    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes]);
+    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes, suppliedNodeTypes]);
 
     return !anyDragging && (
         <div ref={drop}
@@ -298,5 +298,6 @@ Create.propTypes = {
     isVertical: PropTypes.bool,
     nodeDropData: PropTypes.object,
     nodeData: PropTypes.object,
-    pasteData: PropTypes.object
+    pasteData: PropTypes.object,
+    suppliedNodeTypes: PropTypes.arrayOf(PropTypes.string)
 };

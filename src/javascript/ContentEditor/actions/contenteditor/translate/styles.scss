@@ -30,27 +30,26 @@
 }
 
 .translate {
+    // Place the translate button just left of the field
+    position: absolute;
+    top: 0;
+    right: 100%;
+    bottom: 0;
+
     display: flex;
     align-items: center;
-    margin-right: auto;
+    margin-right: calc(var(--spacing-large) - 2px); // Substract border width for better effect
     padding-right: var(--spacing-small);
 
-    border-right: 4px solid transparent;
+    border-right: 2px solid transparent;
 
     &:has(> button:not(:disabled)):hover {
         border-right-color: var(--color-accent);
     }
 }
 
-// Used to align when translate buttons are missing
-.spacing {
-    width: 36px;
-}
+.layoutContent header {
+    z-index: 1;
 
-.layoutContent {
-    header {
-        z-index: 1;
-
-        box-shadow: 0 2px 12px var(--color-gray60);
-    }
+    box-shadow: 0 2px 12px var(--color-gray60);
 }

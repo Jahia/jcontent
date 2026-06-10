@@ -10,7 +10,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
 
     const {enabled, translateLang, hasWritePermission, lockedAndCannotBeEdited} = sideBySideContext || {};
     if (!enabled || !field.i18n || !translateLang) {
-        return <div className={styles.spacing}/>;
+        return;
     }
 
     const handleOnClick = () => {

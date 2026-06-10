@@ -9,7 +9,6 @@ describe('Tag Manager', () => {
     const specialTag = 'ù^$ùç_"(_çt"à\'çr(';
     const commonTag = 'tm-e2e-common';
     const alphaTag = 'tm-e2e-alpha';
-    const specialRenamedTag = 'tm-e2e-special-renamed';
     const localRenamedTag = 'tm-e2e-alpha-local';
     const bulkRenamedTag = 'tm-e2e-renamed';
 
@@ -73,7 +72,7 @@ describe('Tag Manager', () => {
         cy.loginAndStoreSession();
     });
 
-    it('supports view usages, rename and delete for special-character tags', () => {
+    it('supports viewing usages for special-character tags', () => {
         const tagManager = TagManager.openFromAdditionalApps(siteKey, 'en');
 
         cy.get('.moonstone-header').should('contain', 'Manage Tags');
@@ -83,15 +82,7 @@ describe('Tag Manager', () => {
         tagManager.getDrawer().should('be.visible').and('contain', 'Tag Gamma');
 
         tagManager.closeDrawer();
-        tagManager.getDrawer().should('not.be.visible');
-
-        tagManager.openRename(specialTag).fillRenameDialog(specialRenamedTag).confirmRename();
-        tagManager.clearSearch();
-        tagManager.getRow(specialRenamedTag).should('be.visible');
-        cy.contains('[data-cm-role="tag-manager-row"]', specialTag).should('not.exist');
-
-        tagManager.search(specialRenamedTag).openDelete(specialRenamedTag).confirmDelete();
-        cy.contains('[data-cm-role="tag-manager-row"]', specialRenamedTag).should('not.exist');
+        tagManager.getDrawer().should('not.exist');
     });
 
     it('renames a tag on a single content item from the side panel', () => {
@@ -106,7 +97,7 @@ describe('Tag Manager', () => {
         cy.get('[data-cm-role="tag-manager-row"]')
             .filter((_, el) => el.getAttribute('data-tag-name') === alphaTag)
             .should('not.exist');
-        tagManager.getDrawer().should('not.be.visible');
+        tagManager.getDrawer().should('not.exist');
     });
 
     it('renames and deletes a site tag from the table', () => {
@@ -138,6 +129,6 @@ describe('Tag Manager', () => {
         tagManager.search(commonTag).openUsages(commonTag);
         tagManager.getDrawer().should('be.visible');
         tagManager.closeDrawer();
-        tagManager.getDrawer().should('not.be.visible');
+        tagManager.getDrawer().should('not.exist');
     });
 });

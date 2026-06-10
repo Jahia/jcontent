@@ -1,0 +1,108 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--spacing-medium);
+}
+
+.filters {
+    margin-bottom: var(--spacing-medium);
+}
+
+.dropDown {
+    width: 200px;
+}
+
+.listContainer {
+    flex: 1;
+    overflow-y: auto;
+
+    min-height: 0;
+}
+
+.historyItem {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-small);
+    align-items: center;
+    padding: var(--spacing-small);
+
+    border-bottom: 1px solid var(--color-gray_light);
+
+    &:first-child {
+        border-top: 1px solid var(--color-gray_light);
+    }
+}
+
+.itemAction {
+    flex-shrink: 0;
+}
+
+.itemContent {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-nano);
+    min-width: 0;
+}
+
+.itemNames {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-nano);
+    align-items: baseline;
+    min-width: 0;
+}
+
+.itemLanguage {
+    flex-shrink: 0;
+}
+
+.typeLabel {
+    flex-shrink: 0;
+
+    color: var(--color-gray);
+    text-transform: capitalize;
+}
+
+.targetName {
+    overflow: hidden;
+
+    min-width: 0;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.technicalName {
+    flex-shrink: 0;
+
+    color: var(--color-gray);
+}
+
+.metadata {
+    color: var(--color-gray);
+}
+
+.emptyState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-large);
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-large);
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-medium);
+    padding-top: var(--spacing-medium);
+
+    border-top: 1px solid var(--color-border);
+}

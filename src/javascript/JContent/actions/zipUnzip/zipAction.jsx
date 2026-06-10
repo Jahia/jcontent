@@ -13,15 +13,22 @@ import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS, PATH_FILES_ITSELF} from '../actions.constants';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {compareVersions} from 'compare-versions';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
-export const ZipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
+export const ZipActionComponent = withNotifications()(({path, paths, node: prefetchedNode, render: Render, loading: Loading, notificationContext, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const client = useApolloClient();
     const dispatch = useDispatch();
 
+    const pathHidden = !paths && path && new RegExp(PATH_FILES_ITSELF).test(path);
+    const skip = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') >= 0 ||
+        pathHidden ||
+        isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: ['jnt:file', 'jnt:folder']});
+
     const res = useNodeChecks(
         {path, paths},
         {
+            skip,
             getParent: true,
             requiredPermission: ['jcr:addChildNodes'],
             requiredSitePermission: [ACTION_PERMISSIONS.zipAction],
@@ -32,6 +39,10 @@ export const ZipActionComponent = withNotifications()(({path, paths, render: Ren
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     let isVisible = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') < 0 && res.checksResult;
@@ -91,6 +102,8 @@ ZipActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

@@ -1,7 +1,8 @@
 import React, {useContext} from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '../../JContent.utils';
+import {hasMixin, isMarkedForDeletion} from '../../JContent.utils';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 import {useSelector} from 'react-redux';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
 import Delete from './Delete';
@@ -21,13 +22,21 @@ const checkAction = node => {
     return Boolean(isCategory || isMarkForDeletionAllowed || isAutoPublish);
 };
 
-export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
+export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedNode, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
+    const hideOnNodeTypes = ['jnt:virtualsite'];
+
+    const isCategory = prefetchedNode?.primaryNodeType?.name === 'jnt:category';
+    const skip = !paths && Boolean(prefetchedNode) && (
+        isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes}) ||
+        (!isCategory && !isMarkedForDeletion(prefetchedNode) && !hasMixin(prefetchedNode, 'jmix:autoPublish'))
+    );
 
     const res = useNodeChecks(
         {path, paths, language},
         {
+            skip,
             getDisplayName: true,
             getPrimaryNodeType: true,
             getIsNodeTypes: ['jmix:autoPublish'],
@@ -35,7 +44,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
             getAggregatedPublicationInfo: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite'],
+            hideOnNodeTypes,
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
         },
         {
@@ -49,6 +58,10 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, onDe
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     let isVisible = res.checksResult && (res.node ? checkAction(res.node) : checkActionOnNodes(res));
@@ -77,6 +90,8 @@ DeletePermanentlyActionComponent.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
 
     buttonProps: PropTypes.object,
+
+    node: PropTypes.object,
 
     onDeleted: PropTypes.func,
 

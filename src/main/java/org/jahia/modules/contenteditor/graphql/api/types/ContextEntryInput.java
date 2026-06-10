@@ -23,17 +23,21 @@
  */
 package org.jahia.modules.contenteditor.graphql.api.types;
 
+import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 
 import java.util.List;
 
 @GraphQLName("ContextEntryInput")
+@GraphQLDescription("Input type representing a key-value context entry used to pass additional information for field constraint resolution")
 public class ContextEntryInput {
     @GraphQLField
+    @GraphQLDescription("The context entry key")
     private String key;
 
     @GraphQLField
+    @GraphQLDescription("The context entry values")
     private List<String> value;
 
     public ContextEntryInput(@GraphQLName("key") String key, @GraphQLName("value") List<String> value) {

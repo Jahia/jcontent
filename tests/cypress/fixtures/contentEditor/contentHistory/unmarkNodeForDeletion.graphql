@@ -1,0 +1,5 @@
+mutation Undelete($path: String!) {
+    jcr {
+        unmarkNodeForDeletion(pathOrId: $path)
+    }
+}

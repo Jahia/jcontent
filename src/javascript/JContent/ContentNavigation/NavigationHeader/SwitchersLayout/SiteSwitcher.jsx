@@ -88,7 +88,7 @@ const SiteSwitcher = ({selector, onSelectAction, isSiteEnabled}) => {
                         <Dropdown
                             isDisabled={!sites?.length}
                             data-cm-role="site-switcher"
-                            label={currentSite.displayName}
+                            placeholder={currentSite.displayName}
                             value={siteKey}
                             className={styles.siteSwitcher}
                             data={sites.map(s => ({label: s.displayName, value: s.path, name: s.name, site: s.site}))}

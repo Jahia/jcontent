@@ -2,7 +2,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from '@apollo/client';
 import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
-import {getName, hasMixin} from '~/JContent/JContent.utils';
+import {getName, hasMixin, JahiaAreasUtil} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
 import {copypaste} from './copyPaste.redux';
 import PropTypes from 'prop-types';
@@ -10,13 +10,14 @@ import React from 'react';
 import {ACTION_PERMISSIONS} from '../actions.constants';
 import {withNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
-import {JahiaAreasUtil} from '../../JContent.utils';
 import {getClickedElementHook} from '~/JContent/EditFrame';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
 export const CopyCutActionComponent = withNotifications()(({
     path,
     paths,
     copyCutType,
+    node: prefetchedNode,
     render: Render,
     loading: Loading,
     notificationContext,
@@ -34,9 +35,19 @@ export const CopyCutActionComponent = withNotifications()(({
 
     const subPagesCondition = (others.hideIfHasNoSubPages) ? {getSubNodesCount: ['jnt:page', 'jmix:navMenuItem']} : {};
 
+    const pathHidden = !paths && path && (
+        JahiaAreasUtil.isJahiaArea(path) ||
+        others.hideForPaths?.some(p => new RegExp(p).test(path))
+    );
+    const skip = pathHidden || (!paths && isDefinitelyHidden(prefetchedNode, {
+        hideOnNodeTypes: others.hideOnNodeTypes,
+        hideMixins: ['jmix:markedForDeletionRoot']
+    }));
+
     const res = useNodeChecks(
         {path, paths, language, displayLanguage},
         {
+            skip,
             getPrimaryNodeType: true,
             getDisplayName: true,
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
@@ -49,6 +60,10 @@ export const CopyCutActionComponent = withNotifications()(({
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path || paths) &&
@@ -83,6 +98,8 @@ CopyCutActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    node: PropTypes.object,
 
     copyCutType: PropTypes.oneOf([copyPasteConstants.COPY, copyPasteConstants.COPY_PAGE, copyPasteConstants.CUT]),
 

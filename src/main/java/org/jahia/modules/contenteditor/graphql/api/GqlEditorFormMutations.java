@@ -23,22 +23,27 @@
  */
 package org.jahia.modules.contenteditor.graphql.api;
 
-import graphql.annotations.annotationTypes.GraphQLDescription;
-import graphql.annotations.annotationTypes.GraphQLField;
-import graphql.annotations.annotationTypes.GraphQLName;
-import graphql.annotations.annotationTypes.GraphQLNonNull;
+import graphql.annotations.annotationTypes.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jahia.api.Constants;
 import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.EditorFormService;
 import org.jahia.modules.contenteditor.api.forms.PublicationService;
 import org.jahia.modules.contenteditor.api.lock.StaticEditorLockService;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.osgi.annotations.GraphQLOsgiService;
+import org.jahia.services.content.JCRContentUtils;
+import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.JCRSessionFactory;
+import org.jahia.services.content.JCRSessionWrapper;
 import org.jahia.utils.LanguageCodeConverters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jcr.RepositoryException;
+import java.util.Collection;
 
 /**
  * The root class for the GraphQL form mutations API
@@ -48,6 +53,8 @@ public class GqlEditorFormMutations {
 
     private EditorFormService editorFormService;
     private PublicationService publicationService;
+
+    private JCRSessionFactory jcrSessionFactory;
 
     @Inject
     @GraphQLOsgiService
@@ -59,6 +66,12 @@ public class GqlEditorFormMutations {
     @GraphQLOsgiService
     public void setPublicationService(PublicationService publicationService) {
         this.publicationService = publicationService;
+    }
+
+    @Inject
+    @GraphQLOsgiService
+    public void setJcrSessionFactory(JCRSessionFactory jcrSessionFactory) {
+        this.jcrSessionFactory = jcrSessionFactory;
     }
 
     /**
@@ -91,6 +104,96 @@ public class GqlEditorFormMutations {
         try {
             return publicationService.publish(LanguageCodeConverters.getLocaleFromCode(locale), uuidOrPath);
         } catch (EditorFormException e) {
+            throw new DataFetchingException(e);
+        }
+    }
+
+    @GraphQLField
+    @GraphQLDescription("Save the visibility condition for the given node")
+    public boolean saveVisibilityCondition(
+        @GraphQLName("uuid") @GraphQLNonNull @GraphQLDescription("UUID of the parent nodes ofr teh visibility condition") String uuid,
+        @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
+        @GraphQLName("newConditions") @GraphQLDescription("New visibility conditions to create") Collection<VisibilityConditionInput> newConditions,
+        @GraphQLName("updatedConditions") @GraphQLDescription("Existing visibility conditions to update") Collection<VisibilityConditionInput> updatedConditions,
+        @GraphQLName("removedConditions") @GraphQLDescription("UUIDs of visibility conditions to remove") Collection<String> removedConditions,
+        @GraphQLName("isMatchingAllConditions") @GraphQLDefaultValue(GqlUtils.SupplierFalse.class) @GraphQLDescription("When true, all conditions must match for the node to be visible; when false, any single match is sufficient") Boolean isMatchingAllConditionsUpdate
+    ) {
+        try {
+            JCRSessionWrapper session = jcrSessionFactory.getCurrentUserSession(Constants.EDIT_WORKSPACE, LanguageCodeConverters.languageCodeToLocale(locale));
+            JCRNodeWrapper jcrNode = session.getNodeByUUID(uuid);
+            // Ensure node is jmix:conditionalVisibility
+            if (!jcrNode.isNodeType("jmix:conditionalVisibility")) {
+                jcrNode.addMixin("jmix:conditionalVisibility");
+            }
+            // get the children named j:conditionalVisibility if not available add it
+            if (!jcrNode.hasNode("j:conditionalVisibility")) {
+                jcrNode.addNode("j:conditionalVisibility", "jnt:conditionalVisibility");
+            }
+            JCRNodeWrapper conditions = jcrNode.getNode("j:conditionalVisibility");
+            conditions.setProperty("j:forceMatchAllConditions", isMatchingAllConditionsUpdate);
+            // deal with the new conditions
+            if(CollectionUtils.isNotEmpty(newConditions)) {
+                newConditions.forEach(condition -> {
+                    try {
+                        JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":")), condition.getPrimaryType());
+                        condition.getProperties().forEach(property -> {
+                            try {
+                                if (property.getValue() != null) {
+                                    addedNode.setProperty(property.getName(), property.getValue());
+                                } else if (!CollectionUtils.isEmpty(property.getValues())) {
+                                    addedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
+                                }
+                            } catch (RepositoryException e) {
+                                throw new DataFetchingException(e);
+                            }
+                        });
+                    } catch (RepositoryException e) {
+                        throw new DataFetchingException(e);
+                    }
+                });
+            }
+            // deal with the updated condition
+            if(CollectionUtils.isNotEmpty(updatedConditions)) {
+                updatedConditions.forEach(condition -> {
+                    try {
+                        JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
+                        if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                            condition.getProperties().forEach(property -> {
+                                try {
+                                    if (property.getValue() != null) {
+                                        updatedNode.setProperty(property.getName(), property.getValue());
+                                    } else if (!CollectionUtils.isEmpty(property.getValues())) {
+                                        updatedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
+                                    }
+                                } catch (RepositoryException e) {
+                                    throw new DataFetchingException(e);
+                                }
+                            });
+                        }
+                    } catch (RepositoryException e) {
+                        throw new DataFetchingException(e);
+                    }
+                });
+            }
+            // deal with the removed conditions
+            if(CollectionUtils.isNotEmpty(removedConditions)) {
+                removedConditions.forEach(condition -> {
+                    try {
+                        JCRNodeWrapper removedNode = session.getNodeByUUID(condition);
+                        if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                            removedNode.remove();
+                        }
+                    } catch (RepositoryException e) {
+                        throw new DataFetchingException(e);
+                    }
+                });
+            }
+            if(session.hasPendingChanges()) {
+                session.save();
+                return true;
+            }
+            return false;
+        } catch (RepositoryException e) {
             throw new DataFetchingException(e);
         }
     }

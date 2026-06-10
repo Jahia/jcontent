@@ -88,6 +88,7 @@ export const Row = ({
                 currentPath={node.path}
                 path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
                 paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
+                node={node}
             />
             {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
         </TableRow>

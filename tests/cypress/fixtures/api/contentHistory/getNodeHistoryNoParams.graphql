@@ -1,0 +1,15 @@
+query getNodeHistoryNoParams($path: String!, $withLanguageNodes: Boolean!) {
+    jcr {
+        nodeByPath(path: $path) {
+            uuid
+            history {
+                entries(withLanguageNodes: $withLanguageNodes) {
+                    id
+                    date
+                    action
+                    userKey
+                }
+            }
+        }
+    }
+}

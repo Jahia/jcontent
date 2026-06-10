@@ -70,41 +70,40 @@ describe('JContent preview tests', () => {
     it('should show correct preview version in live and edit', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
 
-        // Open preview
+        cy.log('Open preview');
         jcontent.openPreview('previewText');
         cy.get('[data-sel-role=preview-type-content]').should('be.visible');
         cy.get('[data-cm-role=preview-name]').contains('preview me');
 
-        // Verify live button is disabled
+        cy.log('Verify live button is disabled');
         cy.get('button[data-cm-role="live-preview-button"]')
             .should('exist')
             .and('be.disabled');
         cy.get('[data-cm-role=preview-drawer-close]').click();
 
-        // Publish
+        cy.log('Publish');
         jcontent.getTable()
             .getRowByName('previewText')
             .contextMenu()
-            .submenu('Publish', 'jcontent-publishMenu')
-            .should('be.visible')
+            .submenu('Publish', 'jcontent-publishMenu').get()
             .within(() => {
                 cy.contains('span', 'Publish preview me - English').click();
             });
         jcontent.clickPublishNow();
 
-        // Reopen preview
+        cy.log('Reopen preview');
         jcontent.openPreview('previewText');
         cy.get('button[data-cm-role="live-preview-button"]').should('be.visible').click();
         cy.get('[data-cm-role=preview-name]').contains('preview me');
         cy.get('[data-cm-role=preview-drawer-close]').click();
 
-        // Edit
+        cy.log('Edit');
         jcontent.editComponentByRowName('previewText');
         const ce = new ContentEditor();
         ce.getSmallTextField('jnt:text_text').addNewValue('preview me edited');
         ce.save();
 
-        // Reopen preview
+        cy.log('Reopen preview after edit');
         jcontent.openPreview('previewText');
         cy.get('[data-sel-role=preview-type-content]').should('be.visible');
         cy.get('[data-cm-role=preview-name]').contains('preview me edited');
@@ -112,12 +111,11 @@ describe('JContent preview tests', () => {
         cy.get('[data-cm-role=preview-name]').contains('preview me');
         cy.get('[data-cm-role=preview-drawer-close]').click();
 
-        // Publish
+        cy.log('Publish after edit');
         jcontent.getTable()
             .getRowByName('previewText')
             .contextMenu()
-            .submenu('Publish', 'jcontent-publishMenu')
-            .should('be.visible')
+            .submenu('Publish', 'jcontent-publishMenu').get()
             .within(() => {
                 cy.contains('span', 'Publish preview me edited - English').click();
             });
@@ -128,12 +126,11 @@ describe('JContent preview tests', () => {
         cy.get('[data-cm-role=preview-name]').contains('preview me edited');
         cy.get('[data-cm-role=preview-drawer-close]').click();
 
-        // Unpublish
+        cy.log('Unpublish');
         jcontent.getTable()
             .getRowByName('previewText')
             .contextMenu()
-            .submenu('Publish', 'jcontent-publishMenu')
-            .should('be.visible')
+            .submenu('Publish', 'jcontent-publishMenu').get()
             .within(() => {
                 cy.contains('span', 'Unpublish preview me edited - English').click();
             });

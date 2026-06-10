@@ -30,9 +30,9 @@ export class ChoiceListField extends Field {
         }
 
         this.openDropdown();
-        const menu = getComponent(Menu, this);
         values.forEach(value => {
-            menu.selectByValue(value);
+            cy.get(`.moonstone-menu:not(.moonstone-hidden) .moonstone-menuItem[data-value="${value}"]`).scrollIntoView();
+            cy.get(`.moonstone-menu:not(.moonstone-hidden) .moonstone-menuItem[data-value="${value}"]`).click();
         });
         this.closeDropdown();
     }
@@ -48,8 +48,8 @@ export class ChoiceListField extends Field {
         }
 
         this.openDropdown();
-        const menu = getComponent(Menu, this);
-        menu.selectByValue(value);
+        cy.get(`.moonstone-menu:not(.moonstone-hidden) .moonstone-menuItem[data-value="${value}"]`).scrollIntoView();
+        cy.get(`.moonstone-menu:not(.moonstone-hidden) .moonstone-menuItem[data-value="${value}"]`).click();
         // For single-value choice lists, selecting the value closes the dropdown, no need to call this.closeDropdown()
     }
 

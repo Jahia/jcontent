@@ -3,14 +3,18 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 import ImageEditorDialog from '~/JContent/actions/editImage/ImageEditorDialog';
 
-export const EditImageActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const EditImageActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
+    const showOnNodeTypes = ['jmix:image'];
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
     const res = useNodeChecks(
         {path},
         {
-            showOnNodeTypes: ['jmix:image'],
+            skip,
+            showOnNodeTypes,
             requiredPermission: ['jcr:write'],
             requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction]
         }
@@ -18,6 +22,10 @@ export const EditImageActionComponent = ({path, render: Render, loading: Loading
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const onExit = () => {
@@ -37,6 +45,7 @@ export const EditImageActionComponent = ({path, render: Render, loading: Loading
 
 EditImageActionComponent.propTypes = {
     path: PropTypes.string,
+    node: PropTypes.object,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

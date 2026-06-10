@@ -28,6 +28,7 @@
         "notPublished": "Ce contenu n'a jamais été publié",
         "unPublished": "Ce contenu a été dépublié",
         "modified": "Modifié par {{userName}} le {{timestamp}}",
+        "new": "Créé par {{userName}} le {{timestamp}}",
         "published": "Publié par {{userName}} le {{timestamp}}",
         "mandatoryLanguageUnpublishable": {
           "description": "Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
@@ -91,7 +92,7 @@
         "replaceWith": "Remplacer par",
         "edit": "Editer",
         "drop": "Déposez vos fichiers et dossiers ici",
-        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Glisser-déposer un fichier à importer",
@@ -104,7 +105,7 @@
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
-        "missingFolder" : "Dossier non trouvé"
+        "missingFolder": "Dossier non trouvé"
       },
       "title": {
         "media": "Média",
@@ -397,13 +398,13 @@
         "title": "Nouveau dossier",
         "text": "Saisissez un nom de dossier",
         "exists": "Un dossier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Renommer",
         "text": "Saisissez un nouveau nom",
         "exists": "Un fichier de ce nom existe déjà",
-        "invalidChars": "Caractères invalides: \/:*?\"<>'|%"
+        "invalidChars": "Caractères invalides: /:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Télécharger le fichier",
@@ -499,7 +500,7 @@
           "some": "Certains de ces éléments sont actuellement utilisés par d’autres contenus. Leur suppression engendrera des références cassées.",
           "tooMany": "Le système n'a pas pu vérifier si les éléments à supprimer sont actuellement utilisés par d’autres contenus (trop d'éléments à vérifier). Vous pouvez vérifier les utilisations manuellement dans le tableau ci-dessous."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Impossible de supprimer",
             "content": "L’élément <strong>{{name}}</strong> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
@@ -580,7 +581,7 @@
     },
     "categoryManager": {
       "noSubCategory": "Pas de sous-catégorie",
-      "name":"Gestionnaire de Catégories",
+      "name": "Gestionnaire de Catégories",
       "pageTitle": "Catégories"
     },
     "contentEditor": {
@@ -687,7 +688,7 @@
             "clickHere": "Cliquez ici.",
             "dialogTitle": "Travail en cours (WIP)",
             "dialogSubTitle": "Vous pouvez marquer le contenu comme \"travail en cours\" pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
-            "label" : {
+            "label": {
               "mark": "Marquer comme \"travail en cours\"",
               "unmark": "Ne pas marquer comme \"travail en cours\""
             },
@@ -702,7 +703,9 @@
             "contentType": "Type de contenu principal",
             "details": "Détails",
             "label": "Informations techniques",
-            "mixinTypes": "Type de contenu complet",
+            "nodeTypeName": "Type de contenu",
+            "inheritedMixins": "Mixins hérités",
+            "appliedMixins": "Mixins appliqués",
             "path": "Chemin",
             "uuid": "UUID"
           },
@@ -764,10 +767,11 @@
         },
         "tab": {
           "edit": "Éditer",
-          "advanced": "Options avancées"
+          "advanced": "Options avancées",
+          "visibility": "Visibilité"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Changer de langue",
           "addTranslation": {
@@ -799,6 +803,67 @@
         },
         "updateOnSave": "L'aperçu sera mis à jour lors de l'enregistrement"
       },
+      "sidePanel": {
+        "details": "Détails",
+        "preview": "Aperçu",
+        "history": "Historique",
+        "generalInfo": "Informations Générales",
+        "name": "Nom",
+        "path": "Chemin",
+        "type": "Type de Contenu",
+        "uuid": "UUID",
+        "localization": "Localisation",
+        "language": "Langue",
+        "site": "Site",
+        "availableLanguages": "Langues Disponibles",
+        "creation": "Création",
+        "createdBy": "Créé Par",
+        "createdAt": "Créé Le",
+        "modification": "Modification",
+        "modifiedBy": "Modifié Par",
+        "modifiedAt": "Modifié Le",
+        "lock": "Informations de Verrouillage",
+        "lockedBy": "Verrouillé Par",
+        "lockType": "Type de Verrouillage",
+        "technical": "Informations Techniques",
+        "additional": "Détails Supplémentaires",
+        "copiedToClipboard": "Copié dans le presse-papiers",
+        "links": "Liens",
+        "linksLive": "En ligne",
+        "linksDefault": "Préproduction",
+        "linksVanity": "URL personnalisée",
+        "linksDefaultVanity": "URL principale",
+        "linksCopied": "Lien copié"
+      },
+      "history": {
+        "date": "Date",
+        "property": "Propriété",
+        "node": "Contenu",
+        "language": "Langue",
+        "languageShort": "Lg.",
+        "modifiedBy": "Modifié Par",
+        "filterByAction": "Filtrer par action",
+        "allActions": "Toutes les actions",
+        "noEntries": "Aucune entrée d'historique trouvée",
+        "errorLoading": "Erreur lors du chargement de l'historique",
+        "actions": {
+          "created": "Créé",
+          "updated": "Mis à jour",
+          "deleted": "Supprimé",
+          "moved": "Déplacé",
+          "added": "Ajouté",
+          "changed": "Modifié",
+          "removed": "Retiré",
+          "published": "Publié",
+          "unpublished": "Dépublié",
+          "accessed": "Accédé",
+          "viewed": "Consulté",
+          "previewed": "Prévisualisé",
+          "workflow_started": "Workflow démarré",
+          "workflow_finished": "Workflow terminé"
+        },
+        "dateBy": "{{date}} par {{user}}"
+      },
       "CMMActions": {
         "createNewContent": {
           "menu": "Nouveau contenu",
@@ -812,7 +877,7 @@
           "filterLabel": "Rechercher un type de contenu"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Contenu"
@@ -888,13 +953,13 @@
         "itemsSelected_plural": "{{count}} éléments sélectionnés"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Catégories",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Les éléments non-sélectionnables ne sont pas affichés dans cette vue",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Chercher dans",
             "allUsers": "Tous les utilisateurs",
             "globalUsers": "Utilisateurs globaux",
@@ -972,18 +1037,49 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Langues",
+        "languages": {
+          "title": "Langues",
           "description": "Le contenu sera visible dans les langues sélectionnées",
-          "label" : "Visibilité du contenu par langue",
-          "leftList" : "Le contenu sera visible en:",
-          "rightList" : "Le contenu ne sera pas visible en:"
+          "label": "Visibilité du contenu par langue",
+          "leftList": "Le contenu sera visible en:",
+          "rightList": "Le contenu ne sera pas visible en:"
         },
         "conditions" : {
           "title" : "Jour et heure",
+          "type": "Type",
+          "typeDescription": "Définir la condition à appliquer.",
           "rules" : "{{rulesNumber}} conditions définies",
           "rule" : "1 condition définie",
-          "norules" : "Pas de condition définie"
+          "norules" : "Pas de condition définie",
+          "allrules": "Toutes les conditions doivent être vérifiées pour que le contenu soit visible",
+          "anyrule": "Au moins une des conditions doit être vérifiée pour que le contenu soit visible",
+          "add": "Ajouter une condition",
+          "edit": "Modifier la condition",
+          "delete": "Supprimer la condition",
+          "ruleType": {
+            "date": "Date",
+            "dayOfWeek": "Jour de la semaine",
+            "time": "Heure"
+          },
+          "ruleDescription": {
+            "date": "Le contenu sera visible à partir de la date et de l'heure spécifiées, jusqu'à la date et l'heure spécifiées, ou entre ces deux dates, selon la configuration de la condition.",
+            "dayOfWeek": "Le contenu sera visible les jours de la semaine sélectionnés.",
+            "time": "Le contenu sera visible à partir de l'heure spécifiée ou jusqu'à l'heure spécifiée, selon la configuration de la condition."
+          },
+          "dayOfWeekCondition": "Le contenu sera visible les jours de la semaine suivants : {{days}}",
+          "startEndDateCondition": "Le contenu sera visible à partir du {{startDate}} et jusqu'au {{endDate}}",
+          "startDateCondition": "Le contenu sera visible à partir du {{startDate}}",
+          "endDateCondition": "Le contenu sera visible jusqu'au {{endDate}}",
+          "startEndTimeCondition": "Le contenu sera visible à partir de {{startTime}} et jusqu'à {{endTime}}",
+          "startTimeCondition": "Le contenu sera visible à partir de {{startTime}}",
+          "endTimeCondition": "Le contenu sera visible jusqu'à {{endTime}}",
+          "preview": "Visible en aperçu",
+          "live": "Visible en live",
+          "preview_live": "Correspondance aperçu / live",
+          "visible": "Visible",
+          "hidden": "Masqué"
+        },
+        "channels": {
         }
       }
     },

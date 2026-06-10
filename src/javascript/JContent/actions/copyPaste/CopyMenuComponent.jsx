@@ -5,10 +5,18 @@ import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '~/JContent/actions/actions.constants';
 import {hasMixin, JahiaAreasUtil} from '~/JContent/JContent.utils';
 import {useSelector} from 'react-redux';
+import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
 
-export const CopyMenuComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
+export const CopyMenuComponent = ({path, paths, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const language = useSelector(state => state.language);
+
+    const skip = !paths && (
+        JahiaAreasUtil.isJahiaArea(path) ||
+        isDefinitelyHidden(prefetchedNode, {hideMixins: ['jmix:markedForDeletionRoot']})
+    );
+
     const res = useNodeChecks({path, paths, language}, {
+        skip,
         getPrimaryNodeType: true,
         getDisplayName: true,
         requiredPermission: ['jcr:read'],
@@ -23,6 +31,10 @@ export const CopyMenuComponent = ({path, paths, render: Render, loading: Loading
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return <Render {...others} isVisible={false}/>;
     }
 
     const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) &&
@@ -41,6 +53,7 @@ export const CopyMenuComponent = ({path, paths, render: Render, loading: Loading
 CopyMenuComponent.propTypes = {
     path: PropTypes.string,
     paths: PropTypes.arrayOf(PropTypes.string),
+    node: PropTypes.object,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

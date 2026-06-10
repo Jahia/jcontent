@@ -11,13 +11,16 @@ function checkAction(node) {
     return node.operationsSupport.markForDeletion && isMarkedForDeletion(node);
 }
 
-export const UndeleteActionComponent = ({path, paths, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
+export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
+
+    const skip = !paths && Boolean(prefetchedNode) && !isMarkedForDeletion(prefetchedNode);
 
     const res = useNodeChecks(
         {path, paths, language},
         {
+            skip,
             getProperties: ['jcr:mixinTypes'],
             getDisplayName: true,
             getOperationSupport: true,
@@ -36,6 +39,10 @@ export const UndeleteActionComponent = ({path, paths, buttonProps, onDeleted, re
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes?.reduce((acc, node) => acc && checkAction(node), true));
@@ -65,6 +72,8 @@ UndeleteActionComponent.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
 
     buttonProps: PropTypes.object,
+
+    node: PropTypes.object,
 
     onDeleted: PropTypes.func,
 

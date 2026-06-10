@@ -3,18 +3,31 @@ import {registry} from '@jahia/ui-extender';
 import {replaceFragmentsInDocument, useTreeEntries} from '@jahia/data-helper';
 import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {getAccordionItem} from '~/JContent/JContent.utils';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 
 export function useLayoutQuery(options, fragments, queryVariables, accordionItemProps) {
     const defaultOptions = {
         fetchPolicy: 'network-only'
     };
 
-    const tableConfig = getAccordionItem(registry.get('accordionItem', options.mode), accordionItemProps).tableConfig;
+    // Accordions whose query handler declares `handlesSearch` perform search in place (with their own
+    // optimized endpoint) instead of delegating to the generic full-text `picker-search` handler.
+    let effectiveMode = options.mode;
+    if (options.mode === Constants.mode.SEARCH && options.preSearchMode) {
+        const preSearchAccordion = getAccordionItem(registry.get('accordionItem', options.preSearchMode), accordionItemProps);
+        if (preSearchAccordion?.tableConfig?.queryHandler?.handlesSearch) {
+            effectiveMode = options.preSearchMode;
+        }
+    }
+
+    const tableConfig = getAccordionItem(registry.get('accordionItem', effectiveMode), accordionItemProps).tableConfig;
 
     options = {...defaultOptions, ...tableConfig, ...options};
 
     const queryHandler = options.queryHandler;
-    const allFragments = [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])];
+    // Dedupe by reference: when an accordion handles search in place, its fragments arrive both from the
+    // query handler and from the caller's additional fragments (same singleton objects).
+    const allFragments = [...new Set([...((queryHandler?.getFragments?.()) || []), ...(fragments || [])])];
 
     queryVariables = {...queryHandler.getQueryVariables(options), ...queryVariables};
 

@@ -4,25 +4,39 @@ import {hasMixin} from '~/JContent/JContent.utils';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {compareVersions} from 'compare-versions';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
-export const DownloadAsZipActionComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
+export const DownloadAsZipActionComponent = ({path, paths, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const {language, displayLanguage} = useSelector(state => ({
         language: state.language,
         displayLanguage: state.uilang
     }), shallowEqual);
+
+    const showOnNodeTypes = ['jnt:file', 'jnt:folder'];
+    const skip = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') < 0 ||
+        (!paths && isDefinitelyHidden(prefetchedNode, {
+            showOnNodeTypes,
+            hideMixins: ['jmix:markedForDeletionRoot']
+        }));
+
     const res = useNodeChecks(
         {path, paths, language, displayLanguage},
         {
+            skip,
             getPrimaryNodeType: true,
             getDisplayName: true,
             getParent: true,
             getProperties: ['jcr:mixinTypes'],
-            showOnNodeTypes: ['jnt:file', 'jnt:folder']
+            showOnNodeTypes
         }
     );
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     // This action is only available for Jahia 8.1.3.0 or higher.
@@ -50,6 +64,8 @@ DownloadAsZipActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

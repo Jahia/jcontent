@@ -45,7 +45,7 @@ export const PickerSelector = ({
             <Dropdown
                 className={clsx(styles.picker_header_selector)}
                 data={dropdownData}
-                label={label}
+                placeholder={label}
                 value={externalPickerConfig?.key}
                 icon={iconName && toIconComponent(iconName)}
                 data-sel-role="picker-selector"

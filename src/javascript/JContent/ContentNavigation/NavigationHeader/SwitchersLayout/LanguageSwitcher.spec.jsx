@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow, mount} from '@jahia/test-framework';
+import {mount, shallow} from '@jahia/test-framework';
 import {useDispatch, useSelector} from 'react-redux';
 import LanguageSwitcher from './LanguageSwitcher';
 import {useSiteInfo} from '@jahia/data-helper';
@@ -50,7 +50,7 @@ describe('Language switcher test', () => {
         const cmp = mount(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeTruthy();
         expect(cmp.contains('en')).toBeTruthy();
-        expect(cmp.contains('English')).toBeFalsy();
+        expect(cmp.contains('English')).toBeTruthy();
     });
 
     it('should show full language text', () => {

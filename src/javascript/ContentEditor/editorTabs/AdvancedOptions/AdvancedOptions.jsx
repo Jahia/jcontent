@@ -5,7 +5,6 @@ import styles from './AdvancedOptions.scss';
 import {TechnicalInformation} from './TechnicalInformation/TechnicalInformation';
 import {VanityUrls} from './VanityUrls';
 import {Usages} from './Usages';
-import {Visibility} from './Visibility/Visibility';
 
 export const AdvancedOptions = () => {
     const [activeOption, setActiveOption] = useState('technicalInformation');
@@ -13,8 +12,7 @@ export const AdvancedOptions = () => {
     const SelectedTabComponents = {
         technicalInformation: TechnicalInformation,
         seo: VanityUrls,
-        usages: Usages,
-        visibility: Visibility
+        usages: Usages
     };
     const SelectedTabComponent = SelectedTabComponents[activeOption];
     return (

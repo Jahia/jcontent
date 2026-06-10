@@ -128,6 +128,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^10.3.0":
+  version: 10.4.0
+  resolution: "@faker-js/faker@npm:10.4.0"
+  checksum: 10c0/29f15e46f91757d654f6f42ac8313ac4aebb6591e2ebae7fdd8d36d5017490327ea67be37cff06d18303db54abf468524bcc7e4b1de53be4eb884c1f71d571c1
+  languageName: node
+  linkType: hard
+
 "@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.1.1
   resolution: "@graphql-typed-document-node/core@npm:3.1.1"
@@ -176,11 +183,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/cypress@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@jahia/cypress@npm:7.0.0"
+"@jahia/cypress@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@jahia/cypress@npm:8.2.0"
   dependencies:
     "@apollo/client": "npm:^3.4.9"
+    "@faker-js/faker": "npm:^10.3.0"
+    compare-versions: "npm:^6.1.1"
     cypress-real-events: "npm:^1.11.0"
     graphql: "npm:^15.5.0"
     graphql-tag: "npm:^2.11.0"
@@ -189,7 +198,7 @@ __metadata:
     ci.startup: ./ci.startup.sh
     env.debug: ./env.debug.sh
     env.run: ./env.run.sh
-  checksum: 10c0/9569ebc04139b9d6e160a763367db1e096951c0442e531837a2582b82c7f7a45d21bbf940241b94eec81f8e2b6cf1a23cce57ab0133cfc9ca7604d0efbb5870f
+  checksum: 10c0/6200a738aaccd66d286093d795fc43ba18c96f842eeeefa683e47026882fa14c0ecb6c202b81de8b39d19d7cdbbac73980ed966b6c8d50e5734717baf4f24775
   languageName: node
   linkType: hard
 
@@ -235,12 +244,12 @@ __metadata:
   resolution: "@jahia/jcontent-cypress@workspace:."
   dependencies:
     "@4tw/cypress-drag-drop": "npm:^2.3.0"
-    "@jahia/cypress": "npm:^7.0.0"
+    "@jahia/cypress": "npm:^8.2.0"
     "@jahia/jahia-reporter": "npm:^1.5.0"
     "@types/node": "npm:^22.14.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.29.1"
     "@typescript-eslint/parser": "npm:^8.29.1"
-    cypress: "npm:^15.10.0"
+    cypress: "npm:15.14.0"
     cypress-iframe: "npm:^1.0.1"
     cypress-multi-reporters: "npm:^2.0.5"
     cypress-real-events: "npm:^1.14.0"
@@ -1322,6 +1331,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"compare-versions@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "compare-versions@npm:6.1.1"
+  checksum: 10c0/415205c7627f9e4f358f571266422980c9fe2d99086be0c9a48008ef7c771f32b0fbe8e97a441ffedc3910872f917a0675fe0fe3c3b6d331cda6d8690be06338
+  languageName: node
+  linkType: hard
+
 "concat-map@npm:0.0.1":
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
@@ -1447,9 +1463,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^15.10.0":
-  version: 15.10.0
-  resolution: "cypress@npm:15.10.0"
+"cypress@npm:15.14.0":
+  version: 15.14.0
+  resolution: "cypress@npm:15.14.0"
   dependencies:
     "@cypress/request": "npm:^3.0.10"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -1488,14 +1504,15 @@ __metadata:
     proxy-from-env: "npm:1.0.0"
     request-progress: "npm:^3.0.0"
     supports-color: "npm:^8.1.1"
-    systeminformation: "npm:^5.27.14"
+    systeminformation: "npm:^5.31.1"
     tmp: "npm:~0.2.4"
     tree-kill: "npm:1.2.2"
+    tslib: "npm:1.14.1"
     untildify: "npm:^4.0.0"
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: 10c0/0041a6baad4ce3a70c1bb5d872636eb1dd4d49a199a322162b79f11e7cef41dc1e53c7002ee55d7d2c59a5587f36aa015989803e912074f54fe13a94fe7c574d
+  checksum: 10c0/117301c5553a2da07bcafdc7c9faaf7821610f8bbac5c449ddd14f6ce05029d8d3028e8c598d356f4b2f6c54deb8dcf4034a78a939b8b30f9039800c402cbaff
   languageName: node
   linkType: hard
 
@@ -4258,12 +4275,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:^5.27.14":
-  version: 5.30.7
-  resolution: "systeminformation@npm:5.30.7"
+"systeminformation@npm:^5.31.1":
+  version: 5.31.5
+  resolution: "systeminformation@npm:5.31.5"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10c0/62588fabe62ec258d56055e609a075fe1eb1da2f090adc8c53e025ad8947d6eb9d3d2889646973fafba9528e06958decbb1def2b989af0363a952c5aff65fbae
+  checksum: 10c0/d536dfb01529fd99e6c7c0f4239e309b0f5102b4816d9b14287b81033dd86b882fe238fee5a212d09ff8f368cc5eee618cc96bd196ce705af22f5acae9a5e773
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
@@ -4441,7 +4458,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1":
+"tslib@npm:1.14.1, tslib@npm:^1":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: 10c0/69ae09c49eea644bc5ebe1bca4fa4cc2c82b7b3e02f43b84bd891504edf66dbc6b2ec0eef31a957042de2269139e4acff911e6d186a258fb14069cd7f6febce2

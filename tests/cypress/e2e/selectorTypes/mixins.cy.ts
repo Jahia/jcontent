@@ -1,5 +1,6 @@
 import {JContent} from '../../page-object/jcontent';
 import {ChoiceListField} from '../../page-object/fields';
+import {SidePanel} from '../../page-object/sidePanel';
 import {
     addNode,
     enableModule
@@ -77,7 +78,10 @@ describe('Test mixins', () => {
         contentEditor.save();
 
         // Verify mixins are displayed in technical information
-        contentEditor.switchToAdvancedOptions();
-        cy.get('[data-sel-labelled-info="Full content type"]').should('contain', 'jnt:text; jmix:geotagged; jmix:topStory');
+        new SidePanel().switchToDetailsTab();
+        cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView();
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Content type"]').should('contain', 'jnt:text');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Applied mixins"]').should('contain', 'jmix:geotagged');
+        cy.get('[data-sel-role="detail-row"][data-sel-label="Applied mixins"]').should('contain', 'jmix:topStory');
     });
 });

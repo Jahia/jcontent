@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
 /**
  * The root class for the GraphQL form API
  */
+@GraphQLDescription("Main entry point for the Content Editor form API — provides queries for form definitions, field constraints, content type trees, and node type information")
 public class GqlEditorForms {
 
     private static Logger logger = LoggerFactory.getLogger(GqlEditorForms.class);
@@ -146,8 +147,17 @@ public class GqlEditorForms {
         final String nodeIdentifier = parentNode.getIdentifier();
         Locale locale = LanguageCodeConverters.getLocaleFromCode(uiLocale);
         List<String> allowedNodeTypes = new ArrayList<>(ContentEditorUtils.getAllowedNodeTypesAsChildNode(parentNode, childNodeName, useContribute, includeSubTypes, nodeTypes));
-        Set<NodeTypeTreeEntry> entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
-        return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
+        Set<NodeTypeTreeEntry> entries;
+        if (nodeTypes != null && nodeTypes.size() == 1 && nodeTypes.contains("jnt:condition")) {
+            entries = new HashSet<>();
+            allowedNodeTypes = NodeTypeRegistry.getInstance().getNodeType("jnt:condition").getSubtypesAsList().stream().map(ExtendedNodeType::getName).collect(Collectors.toList());
+            for (String allowedNodeType : allowedNodeTypes) {
+                entries.add(new NodeTypeTreeEntry(NodeTypeRegistry.getInstance().getNodeType(allowedNodeType), locale));
+            }
+        } else {
+            entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
+        }
+        return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).sorted(Comparator.comparing(GqlNodeTypeTreeEntry::getName)).collect(Collectors.toList());
     }
 
     @GraphQLField

@@ -13,7 +13,7 @@ import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError'
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
 import PropTypes from 'prop-types';
 import {getCapitalized, useSwitchLanguage} from '~/shared';
-import {MenuItem} from '@jahia/moonstone';
+import {MenuItem, Typography} from '@jahia/moonstone';
 
 /**
  * Displays read-only content from a source language on translation panel UI.
@@ -43,6 +43,25 @@ export const SourceContentFormBuilder = () => {
             <SourceContentFormBuilderInner data={data}/>
         </ContentEditorSectionContextProvider>
     );
+};
+
+const MenuLabel = ({children}) => (
+    <li>
+        <Typography
+            isUpperCase
+            variant="caption"
+            style={{
+                padding:
+                    'var(--moon-spacing-small) var(--moon-spacing-nano) var(--moon-spacing-nano)'
+            }}
+        >
+            {children}
+        </Typography>
+    </li>
+);
+
+MenuLabel.propTypes = {
+    children: PropTypes.node
 };
 
 /**
@@ -81,14 +100,19 @@ const SourceContentFormBuilderInner = ({data}) => {
             <div style={{display: 'grid', gridTemplateColumns: '1fr auto'}}>
                 <FormBuilder mode="edit"/>
                 <div style={{minWidth: 0}}>
-                    <ul style={{position: 'sticky', top: 0}}>
-                        <li>
-                            <strong>
-                                {t(
-                                    'label.contentEditor.edit.action.translate.sourceLanguage'
-                                )}
-                            </strong>
-                        </li>
+                    <ul
+                        style={{
+                            position: 'sticky',
+                            top: 0,
+                            maxWidth: '140px',
+                            overflow: 'auto'
+                        }}
+                    >
+                        <MenuLabel>
+                            {t(
+                                'label.contentEditor.edit.action.translate.sourceLanguage'
+                            )}
+                        </MenuLabel>
                         {sourceLanguages.map(l => (
                             <MenuItem
                                 key={l.language}
@@ -97,9 +121,11 @@ const SourceContentFormBuilderInner = ({data}) => {
                                 onClick={() => switchLanguage(l.language)}
                             />
                         ))}
-                        <li>
-                            <strong>Missing translation</strong>
-                        </li>
+                        <MenuLabel>
+                            {t(
+                                'label.contentEditor.edit.action.translate.untranslated'
+                            )}
+                        </MenuLabel>
                         {missingTranslationLanguages.map(l => (
                             <MenuItem
                                 key={l.language}

@@ -633,7 +633,8 @@
           "translate": {
             "name": "Traduire",
             "sourceLanguage": "Langue source",
-            "translateToLanguage": "Traduire vers"
+            "translateToLanguage": "Traduire vers",
+            "untranslated": "Non traduit"
           },
           "goBack": {
             "edit": {

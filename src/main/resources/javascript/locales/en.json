@@ -639,7 +639,8 @@
           "translate": {
             "name": "Translate",
             "sourceLanguage": "Source language",
-            "translateToLanguage": "Translate to"
+            "translateToLanguage": "Translate to",
+            "untranslated": "Untranslated"
           },
           "goBack": {
             "edit": {

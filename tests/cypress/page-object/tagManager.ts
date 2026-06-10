@@ -2,6 +2,7 @@ import {BaseComponent, Button, getComponentBySelector} from '@jahia/cypress';
 import {JContent} from './jcontent';
 
 const ROOT_SELECTOR = '[data-cm-role="tag-manager-root"]';
+const TAG_MANAGER_APP_KEY = 'jctagsmanager';
 
 export class TagManager extends JContent {
     constructor(base?: JContent) {
@@ -12,7 +13,7 @@ export class TagManager extends JContent {
     }
 
     static visit(site: string, language = 'en'): TagManager {
-        JContent.visit(site, language, 'apps/tagsmanager');
+        JContent.visit(site, language, `apps/${TAG_MANAGER_APP_KEY}`);
         cy.get(ROOT_SELECTOR).should('be.visible');
         return new TagManager(new JContent());
     }
@@ -20,7 +21,7 @@ export class TagManager extends JContent {
     static openFromAdditionalApps(site: string, language = 'en'): TagManager {
         const jcontent = JContent.visit(site, language, 'pages/home');
         jcontent.getAccordionItem('apps').click();
-        jcontent.getAccordionItem('apps').getTreeItem('tagsmanager').get().should('be.visible').click();
+        jcontent.getAccordionItem('apps').getTreeItem(TAG_MANAGER_APP_KEY).get().should('be.visible').click();
         cy.get(ROOT_SELECTOR).should('be.visible');
         return new TagManager(jcontent);
     }

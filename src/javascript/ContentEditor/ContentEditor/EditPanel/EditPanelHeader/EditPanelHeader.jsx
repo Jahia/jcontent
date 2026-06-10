@@ -1,11 +1,11 @@
-import React, {useMemo} from 'react';
-import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
+import React from 'react';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {
     ButtonRendererShortLabel,
     getButtonRenderer
 } from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
-import {ButtonGroup, Dropdown, Header, Separator} from '@jahia/moonstone';
+import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -17,6 +17,22 @@ import {ContentPath} from './ContentPath';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 import clsx from 'clsx';
 import {ContentTypeChip} from '../ContentTypeChip';
+
+const TabItemRenderer = renderProps => {
+    const {t} = useTranslation('jcontent');
+    return (
+        <TabItem
+            data-sel-role={renderProps.dataSelRole}
+            icon={renderProps.buttonIcon}
+            label={t(renderProps.buttonLabel)}
+            isSelected={renderProps.value === renderProps.activeTab}
+            onClick={e => {
+                e.stopPropagation();
+                renderProps.onClick(renderProps, e);
+            }}
+        />
+    );
+};
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -34,20 +50,9 @@ export const EditPanelHeader = ({
     activeTabState,
     targetActionKey = 'content-editor/header/3dots'
 }) => {
-    const ctx = useContentEditorContext();
-    const {nodeData} = ctx;
-
+    const {nodeData} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
-
-    const tabs = useMemo(
-        () =>
-            registry
-                .find({type: 'action', target: 'editHeaderTabsActions'})
-                // If `isDisplayable` is not defined, we default to displayed
-                .filter(tab => tab && (tab.isDisplayable?.(ctx) ?? true)),
-        [ctx]
-    );
 
     return (
         <Header
@@ -108,20 +113,17 @@ export const EditPanelHeader = ({
                 </div>
             }
             toolbarRight={
-                // <select value={activeTab} onChange={e => setActiveTab(e.target.value)}>
-                //     <DisplayActions
-                //         setActiveTab={setActiveTab}
-                //         activeTab={activeTab}
-                //         target="editHeaderTabsActions"
-                //         nodeData={nodeData}
-                //         render={renderProps => <option key={renderProps.value} value={renderProps.value}>{t(renderProps.buttonLabel)}</option>}
-                //     />
-                // </select>
-                <Dropdown
-                    data={[{label: 'Hello', value: 'hello'}]}
-                    value={activeTab}
-                    onChange={(_, item) => setActiveTab(item.value)}
-                />
+                activeTab && (
+                    <Tab>
+                        <DisplayActions
+                            setActiveTab={setActiveTab}
+                            activeTab={activeTab}
+                            target="editHeaderTabsActions"
+                            nodeData={nodeData}
+                            render={TabItemRenderer}
+                        />
+                    </Tab>
+                )
             }
             status={<HeaderBadges/>}
         />

@@ -16,7 +16,8 @@ export const registerTabBarActions = actionsRegistry => {
         value: Constants.editPanel.editTab,
         dataSelRole: 'tab-edit',
         displayableComponent: EditPanelContent,
-        side: {component: SidePanel}
+        side: {component: SidePanel},
+        isDisplayable: () => true
     });
 
     actionsRegistry.add('action', 'ceTranslateTab', tabBarAction, {
@@ -27,6 +28,7 @@ export const registerTabBarActions = actionsRegistry => {
         dataSelRole: 'tab-translate',
         displayableComponent: EditPanelContent,
         side: {component: SourceContentPanel, singleSyncedScrollbar: true},
+        isDisplayable: () => true,
         requiredSitePermission: ['translateAction']
     });
 

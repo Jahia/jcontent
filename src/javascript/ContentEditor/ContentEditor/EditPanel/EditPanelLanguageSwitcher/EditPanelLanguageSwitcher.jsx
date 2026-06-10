@@ -1,7 +1,6 @@
 import React from 'react';
 import {Dropdown, Edit, Language} from '@jahia/moonstone';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
-import styles from './EditPanelLanguageSwitcher.scss';
 import {getCapitalized, useSwitchLanguage} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
 
@@ -47,7 +46,6 @@ export const EditPanelLanguageSwitcher = () => {
     // Hide language switcher if site is not multi-language
     return (!siteInfo?.languages || siteInfo.languages.length <= 1) ? null : (
         <Dropdown
-                className={styles.dropdown}
                 icon={<Language/>}
                 data-cm-role="language-switcher"
                 data={langOptions}
@@ -63,4 +61,3 @@ export const EditPanelLanguageSwitcher = () => {
             />
     );
 };
-

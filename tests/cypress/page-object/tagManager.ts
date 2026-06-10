@@ -45,9 +45,7 @@ export class TagManager extends JContent {
     }
 
     getRow(tagName: string) {
-        return cy.get('[data-cm-role="tag-manager-row"]')
-            .filter((_, el) => el.getAttribute('data-tag-name') === tagName)
-            .should('be.visible');
+        return cy.contains('[data-cm-role="tag-manager-row"]', tagName).should('be.visible');
     }
 
     clickRowAction(tagName: string, actionRole: string): TagManager {

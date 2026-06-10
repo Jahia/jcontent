@@ -34,7 +34,7 @@ export const TagManagerTable = ({
     tags,
     selectedTag = null,
     totalCount,
-    loading,
+    isLoading,
     error,
     searchTerm,
     normalizedSearch,
@@ -258,7 +258,7 @@ export const TagManagerTable = ({
                     </Typography>
                 </div>
 
-                {loading ? (
+                {isLoading ? (
                     <div className={styles.loaderContainer}>
                         <Loader size="big"/>
                     </div>
@@ -349,7 +349,7 @@ TagManagerTable.propTypes = {
     })).isRequired,
     selectedTag: PropTypes.string,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool,
+    isLoading: PropTypes.bool,
     error: PropTypes.object,
     searchTerm: PropTypes.string.isRequired,
     normalizedSearch: PropTypes.string.isRequired,

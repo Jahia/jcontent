@@ -36,8 +36,8 @@ export const TagManager = () => {
 
     return (
         <LayoutContent
-            data-cm-role="tag-manager-root"
             hasPadding
+            data-cm-role="tag-manager-root"
             header={<Header title={t('jcontent:label.contentManager.tagManager.header', {siteName})}/>}
             content={
                 <div className={styles.contentWrapper} data-cm-role="tag-manager-content-wrapper">
@@ -47,7 +47,7 @@ export const TagManager = () => {
                         tags={sortedTags}
                         totalCount={filteredTags.length}
                         selectedTag={selectedTag}
-                        loading={loading}
+                        isLoading={loading}
                         error={error}
                         searchTerm={searchTerm}
                         normalizedSearch={normalizedSearch}

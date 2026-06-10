@@ -14,10 +14,13 @@ const checkAction = node => node.operationsSupport.publication &&
         (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
             (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));
 
-export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
+export const PublishDeletionActionComponent = ({path, paths, node: prefetchedNode, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
     const language = useSelector(state => state.language);
 
+    const skip = !paths && Boolean(prefetchedNode) && !isMarkedForDeletion(prefetchedNode);
+
     const res = useNodeChecks({path, paths, language}, {
+        skip,
         getProperties: ['jcr:mixinTypes'],
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
@@ -29,6 +32,10 @@ export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPub
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
@@ -53,6 +60,8 @@ PublishDeletionActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    node: PropTypes.object,
 
     buttonProps: PropTypes.object,
 

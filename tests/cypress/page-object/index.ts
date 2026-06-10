@@ -6,6 +6,7 @@ export * from './pageComposer';
 export * from './accordionItem';
 export * from './categoryManager';
 export * from './sidePanel';
+export * from './jcontentMenu';
 export {AdvancedOptions} from './advancedOptions';
 export {
     PageBuilderModule,

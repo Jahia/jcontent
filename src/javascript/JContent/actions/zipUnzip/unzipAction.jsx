@@ -10,15 +10,29 @@ import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {ACTION_PERMISSIONS, PATH_FILES_ITSELF} from '../actions.constants';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
-export const UnzipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
+const ZIP_MIME_TYPES = new Set(['application/zip', 'application/x-zip-compressed']);
+
+export const UnzipActionComponent = withNotifications()(({path, paths, node: prefetchedNode, render: Render, loading: Loading, notificationContext, ...others}) => {
     const language = useSelector(state => state.language);
     const componentRenderer = useContext(ComponentRendererContext);
     const client = useApolloClient();
 
+    // Pre-gate: if prefetched row data already tells us this action is hidden, skip the network fetch
+    const prefetchMimeType = prefetchedNode?.content?.mimeType?.value;
+    const skip = !paths && (
+        isDefinitelyHidden(prefetchedNode, {
+            showOnNodeTypes: ['jnt:file'],
+            hideMixins: ['jmix:markedForDeletion']
+        }) ||
+        (prefetchMimeType !== undefined && !ZIP_MIME_TYPES.has(prefetchMimeType))
+    );
+
     const res = useNodeChecks(
         {path, paths, language},
         {
+            skip,
             getParent: true,
             getMimeType: true,
             getProperties: ['jcr:mixinTypes'],
@@ -33,7 +47,11 @@ export const UnzipActionComponent = withNotifications()(({path, paths, render: R
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let isVisible = res.checksResult && res.node && (res.node.mimeType === 'application/zip' || res.node.mimeType === 'application/x-zip-compressed') && !isMarkedForDeletion(res.node);
+    if (skip) {
+        return false;
+    }
+
+    let isVisible = res.checksResult && res.node && ZIP_MIME_TYPES.has(res.node.mimeType) && !isMarkedForDeletion(res.node);
 
     return (
         <Render
@@ -61,6 +79,8 @@ UnzipActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

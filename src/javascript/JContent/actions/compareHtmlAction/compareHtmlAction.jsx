@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 import {createEncodedHashString} from '../../CompareDialog/util';
 import {useNodeChecks} from '@jahia/data-helper';
 import {useSelector} from 'react-redux';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
-export const CompareHtmlActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const CompareHtmlActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const language = useSelector(state => state.language);
+    const showOnNodeTypes = ['jnt:page', 'jmix:mainResource'];
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
     const res = useNodeChecks(
         {path, language},
         {
-            showOnNodeTypes: ['jnt:page', 'jmix:mainResource'],
+            skip,
+            showOnNodeTypes,
             getAggregatedPublicationInfo: {subNodes: true}
         }
     );
@@ -21,6 +25,10 @@ export const CompareHtmlActionComponent = ({path, render: Render, loading: Loadi
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isVisible = res.checksResult && (res?.node?.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED' ||
@@ -39,6 +47,7 @@ export const CompareHtmlActionComponent = ({path, render: Render, loading: Loadi
 
 CompareHtmlActionComponent.propTypes = {
     path: PropTypes.string,
+    node: PropTypes.object,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

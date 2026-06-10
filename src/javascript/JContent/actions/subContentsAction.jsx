@@ -8,15 +8,20 @@ import {useApolloClient} from '@apollo/client';
 import {useDispatch, useSelector} from 'react-redux';
 import {expandTree} from '~/JContent/JContent.utils';
 import {isInSearchMode} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
+import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
 
-export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const SubContentsActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const mode = useSelector(state => state.jcontent.mode);
     const viewMode = useSelector(state => state.jcontent.tableView.viewMode);
 
     const subNodesType = ['jnt:file', 'jnt:folder', 'jnt:content', 'jnt:contentFolder'];
+
+    const skip = isInSearchMode(mode) || isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes: ['jnt:virtualsite', 'jnt:category']});
+
     const res = useNodeChecks({path}, {
+        skip,
         getSubNodesCount: subNodesType,
         getPrimaryNodeType: true,
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:category']
@@ -24,6 +29,10 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const isContainerType = ['jnt:page', 'jnt:folder', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name);
@@ -49,6 +58,8 @@ export const SubContentsActionComponent = ({path, render: Render, loading: Loadi
 
 SubContentsActionComponent.propTypes = {
     path: PropTypes.string,
+
+    node: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

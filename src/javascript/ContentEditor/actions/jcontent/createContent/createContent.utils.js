@@ -8,8 +8,9 @@ import {Tag, toIconComponent} from '@jahia/moonstone';
 import React from 'react';
 
 export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubTypes, path, uuid, uilang, excludedNodeTypes, showOnNodeTypes}) => {
-    const {data, error, loadingTypes} = useQuery(uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements, {
+    const {data, error, loading} = useQuery(uuid ? getTreeOfContentWithRequirementsFromUuid : getTreeOfContentWithRequirements, {
         fetchPolicy: 'cache-and-network',
+        notifyOnNetworkStatusChange: true,
         variables: {
             nodeTypes: (nodeTypes && nodeTypes.length) > 0 ? nodeTypes : undefined,
             childNodeName,
@@ -25,7 +26,7 @@ export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubT
 
     return {
         error,
-        loadingTypes,
+        loadingTypes: loading && !data,
         nodetypes: nodeTypeNotDisplayed ? [] : data.forms.contentTypesAsTree
     };
 };

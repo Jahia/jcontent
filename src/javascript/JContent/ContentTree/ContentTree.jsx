@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {displayName, lockInfo, useNodeInfo, useTreeEntries} from '@jahia/data-helper';
+import {displayName, lockInfo, operationSupport, useNodeInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
@@ -138,7 +138,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }, []);
 
     const useTreeEntriesOptionsJson = {
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, PickerItemsFragment.parentNode, displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, operationSupport, PickerItemsFragment.parentNode, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
@@ -249,7 +249,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                           onContextMenuItem={(object, event) => {
                               event.stopPropagation();
                               if (contextualMenuAction) {
-                                  contextualMenu.current(event, {path: object.id});
+                                  contextualMenu.current(event, {path: object.id, node: object.treeItemProps?.node});
                               }
                           }}
                           onClickItem={object => {

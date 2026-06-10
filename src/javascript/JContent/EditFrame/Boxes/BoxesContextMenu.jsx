@@ -13,7 +13,7 @@ import {useHoverContext} from '~/JContent/EditFrame/Boxes/HoverContext';
  * @param {string} props.currentHoveredRef Current content path
  * @param {string[]} props.selection Array of selected paths
  */
-const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
+const BoxesContextMenu = ({currentFrameRef, currentDocument, selection, nodes}) => {
     const contextualMenu = useRef();
     const {hoveredPath: currentPath} = useHoverContext();
 
@@ -73,6 +73,7 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, selection}) => {
             setOpenRef={contextualMenu}
             currentPath={currentPath}
             documentElement={currentDocument.documentElement}
+            node={nodes?.[currentPath]}
             {...pathObject}
         />
     );
@@ -82,6 +83,7 @@ BoxesContextMenu.propTypes = {
     currentDocument: PropTypes.any,
     currentFrameRef: PropTypes.any,
     currentPath: PropTypes.string,
+    nodes: PropTypes.object,
     selection: PropTypes.arrayOf(PropTypes.string)
 };
 

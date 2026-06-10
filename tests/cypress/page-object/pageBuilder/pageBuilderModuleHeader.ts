@@ -18,6 +18,13 @@ export class PageBuilderModuleHeader extends BaseComponent {
         this.get().find('p').contains(text);
     }
 
+    scrollToTop(): this {
+        cy.get('iframe[data-sel-role="page-builder-frame-active"]').then($iframe => {
+            $iframe[0].contentWindow.scrollTo(0, 0);
+        });
+        return this;
+    }
+
     select() {
         this.should('be.visible');
         this.get().click({metaKey: true, force: true});

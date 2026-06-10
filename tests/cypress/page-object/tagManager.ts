@@ -76,8 +76,8 @@ export class TagManager extends JContent {
         return cy.get(`[data-cm-role="tag-manager-drawer-item"][data-node-path="${nodePath}"]`);
     }
 
-    closeDrawerByClickAway(): TagManager {
-        cy.get('[data-cm-role="tag-manager-drawer-layer"]').click('topLeft');
+    closeDrawer(): TagManager {
+        cy.get('button[data-cm-role="tag-manager-close-drawer"]').click();
         return this;
     }
 

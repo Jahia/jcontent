@@ -160,12 +160,6 @@
     margin-top: 8px;
 }
 
-.drawerLayer {
-    position: absolute;
-    inset: 0;
-    z-index: 1190;
-}
-
 .drawerPaper {
     position: absolute;
     top: 16px;
@@ -174,12 +168,8 @@
     width: min(617px, calc(100% - 32px));
     max-width: 617px;
     max-height: 792px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-radius: 4px;
-    background: var(--color-white);
-    box-shadow: 0 0 11px 0 var(--color-gray_dark40);
     z-index: 1200;
+    overflow: hidden;
 }
 
 .drawerRoot {
@@ -188,7 +178,7 @@
     flex-direction: column;
     height: 100%;
     gap: 10px;
-    padding: 0 24px;
+    padding: 8px 24px;
 }
 
 .drawerHeader {
@@ -281,11 +271,6 @@
         max-width: 100%;
         max-height: none;
         border-radius: 4px;
-    }
-
-    .drawerBackdrop {
-        top: 60px !important;
-        height: calc(100% - 60px) !important;
     }
 
     .drawerItem {

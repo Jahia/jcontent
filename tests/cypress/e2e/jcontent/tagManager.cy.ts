@@ -82,8 +82,8 @@ describe('Tag Manager', () => {
 
         tagManager.getDrawer().should('be.visible').and('contain', 'Tag Gamma');
 
-        tagManager.closeDrawerByClickAway();
-        tagManager.getDrawer().should('not.exist');
+        tagManager.closeDrawer();
+        tagManager.getDrawer().should('not.be.visible');
 
         tagManager.openRename(specialTag).fillRenameDialog(specialRenamedTag).confirmRename();
         tagManager.clearSearch();
@@ -106,7 +106,7 @@ describe('Tag Manager', () => {
         cy.get('[data-cm-role="tag-manager-row"]')
             .filter((_, el) => el.getAttribute('data-tag-name') === alphaTag)
             .should('not.exist');
-        tagManager.getDrawer().should('not.exist');
+        tagManager.getDrawer().should('not.be.visible');
     });
 
     it('renames and deletes a site tag from the table', () => {
@@ -132,12 +132,12 @@ describe('Tag Manager', () => {
         tagManager.getRow(commonTag).should('contain', '1');
     });
 
-    it('opens the side panel below the header and closes it on click-away', () => {
+    it('opens the side panel below the header and closes it from the drawer action', () => {
         const tagManager = visitTagManager();
 
         tagManager.search(commonTag).openUsages(commonTag);
         tagManager.getDrawer().should('be.visible');
-        cy.get('[data-cm-role="tag-manager-drawer-layer"]').click('topLeft');
-        tagManager.getDrawer().should('not.exist');
+        tagManager.closeDrawer();
+        tagManager.getDrawer().should('not.be.visible');
     });
 });

@@ -59,13 +59,14 @@ const publishAndWait = (path: string, languages: string[] = ['en']) => {
 };
 
 // Helper to get day names for testing
-const getDayNames = () => {
+const getDayNames = (isLowerCase = false) => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const today = new Date().getDay();
     const todayPlus2 = (today + 2) % 7;
+    const format = (name: string) => isLowerCase ? name.toLowerCase() : name;
     return {
-        today: days[today],
-        todayPlus2: days[todayPlus2]
+        today: format(days[today]),
+        todayPlus2: format(days[todayPlus2])
     };
 };
 
@@ -1124,7 +1125,7 @@ describe('Visibility Screen', () => {
     // ---------------------------------------------------------------------------
     // Visibility Conditions on Copied and Referenced Content
     // ---------------------------------------------------------------------------
-    describe.only('Visibility Conditions on Copied Content', () => {
+    describe('Visibility Conditions on Copied Content', () => {
         const richTextHidden = 'visibility-copy-hidden';
         const richTextHiddenText = 'Hidden Visibility Content';
         const richTextVisible = 'visibility-copy-visible';
@@ -1132,11 +1133,7 @@ describe('Visibility Screen', () => {
         const testPageName = 'testPageVisibility';
 
         before(() => {
-            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-            const todayIndex = new Date().getDay();
-            const notTodayIndex = (todayIndex + 2) % 7;
-            const notTodayDay = days[notTodayIndex];
-            const todayDay = days[todayIndex];
+            const {today: todayDay, todayPlus2: notTodayDay} = getDayNames(true);
             addNode({
                 parentPathOrId: `/sites/${sitekeyNonI18n}/contents`,
                 name: richTextHidden,
@@ -1291,5 +1288,5 @@ describe('Visibility Screen', () => {
             cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
             cy.get('body').should('not.contain', richTextHiddenText);
         });
-    });
+    }); // End describe('Visibility Conditions on Copied Content')
 });

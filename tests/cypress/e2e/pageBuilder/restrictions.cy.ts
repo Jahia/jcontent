@@ -180,7 +180,7 @@ describe('Page builder', () => {
             const contentEditor = new ContentEditor();
 
             // First item, with "Create another" checked: editor stays open.
-            contentEditor.openSection('content').get().find('input[name="jnt:text_text"]').type('limit item 1');
+            contentEditor.openSection('content').expand().get().find('input[name="jnt:text_text"]').type('limit item 1');
             contentEditor.addAnotherContent();
             contentEditor.create();
 
@@ -189,7 +189,7 @@ describe('Page builder', () => {
             cy.get('#createAnother').should('not.exist');
 
             // Create the second (last allowed) item.
-            contentEditor.openSection('content').get().find('input[name="jnt:text_text"]').type('limit item 2');
+            contentEditor.openSection('content').expand().get().find('input[name="jnt:text_text"]').type('limit item 2');
             contentEditor.create();
 
             // Limit reached: the editor closes instead of reopening a blank form for a 3rd item.

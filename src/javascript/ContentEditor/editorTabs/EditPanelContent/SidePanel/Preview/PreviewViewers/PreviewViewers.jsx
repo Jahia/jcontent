@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './PreviewViewers.scss';
 
-import {DocumentViewer} from './DocumentViewer';
-import {ImageViewer} from './ImageViewer';
-import {IframeViewer} from './IframeViewer';
+import {DocumentViewer} from './DocumentViewer/DocumentViewer';
+import {ImageViewer} from './ImageViewer/ImageViewer';
+import {IframeViewer} from './IframeViewer/IframeViewer';
 import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 import PDFViewer from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/PreviewComponent/PDFViewer';
 

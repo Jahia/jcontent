@@ -4,8 +4,8 @@ import {useTranslation} from 'react-i18next';
 import styles from './Preview.scss';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {PreviewFetcher} from './Preview.fetcher';
-import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
+import {UpdateOnSaveBadge} from './UpdateOnSaveBadge';
 
 export const Preview = () => {
     const {t} = useTranslation('jcontent');

@@ -3,7 +3,7 @@ import {sidePanelTabAction} from './sidePanelTabAction';
 import {InfoCircle, History, Visibility} from '@jahia/moonstone';
 import {ContentDetails} from './ContentDetails';
 import {ContentHistory} from './ContentHistory';
-import {Preview} from '../Preview/Preview';
+import {Preview} from './Preview/Preview';
 
 export const registerSidePanelTabs = actionsRegistry => {
     // Side panel tab actions

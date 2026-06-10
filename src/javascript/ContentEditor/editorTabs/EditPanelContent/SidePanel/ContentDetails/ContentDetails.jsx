@@ -5,8 +5,8 @@ import {Typography, Button, Copy} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
 import styles from './ContentDetails.scss';
+import {getPreviewPath} from '../Preview/Preview.utils';
 
 const GET_CONTENT_LINKS = gql`
     query getContentLinks($path: String!, $languages: [String]!) {

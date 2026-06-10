@@ -265,7 +265,7 @@ describe('Page builder - insertion points', () => {
         cy.loginAndStoreSession();
     });
 
-    it.skip('shows correct create buttons for twoChildObjectsOneMultiple', () => {
+    it('shows correct create buttons for twoChildObjectsOneMultiple', () => {
         const pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-two-one-multiple')
             .switchToPageBuilder();
@@ -275,7 +275,7 @@ describe('Page builder - insertion points', () => {
         assertButtonByRole(pageBuilder, 'cent:childObject3');
     });
 
-    it.skip('shows correct create buttons for sixChildObjectsSingle', () => {
+    it('shows correct create buttons for sixChildObjectsSingle', () => {
         const pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-six-single')
             .switchToPageBuilder();
@@ -285,7 +285,7 @@ describe('Page builder - insertion points', () => {
         }
     });
 
-    it.skip('shows correct create buttons for sixChildObjectsMultiple and verifies insertion points after create', () => {
+    it('shows correct create buttons for sixChildObjectsMultiple and verifies insertion points after create', () => {
         const modulePath = `${homePath}/page-six-multiple/area-main/test-six-multiple`;
         let pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-six-multiple')
@@ -313,7 +313,7 @@ describe('Page builder - insertion points', () => {
         }
     });
 
-    it.skip('sixChildObjectsSingle still shows six buttons while sixChildObjectsMultiple collapses to one when limit is 5', () => {
+    it('sixChildObjectsSingle still shows six buttons while sixChildObjectsMultiple collapses to one when limit is 5', () => {
         setButtonLimit('5');
 
         const singlePageBuilder = JContent
@@ -346,7 +346,7 @@ describe('Page builder - insertion points', () => {
             .should('have.length', 6);
     });
 
-    it.skip('shows correct buttons for oneChildMultipleList and verifies context menu', () => {
+    it('shows correct buttons for oneChildMultipleList and verifies context menu', () => {
         const modulePath = `${homePath}/page-one-child-list/area-main/test-one-child-list`;
         const pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-one-child-list')
@@ -377,7 +377,7 @@ describe('Page builder - insertion points', () => {
         ce.cancel();
     });
 
-    it.skip('shows correct working buttons for twoChildObjectsOneMultiple with childObject2 populated', () => {
+    it('shows correct working buttons for twoChildObjectsOneMultiple with childObject2 populated', () => {
         const modulePath = `${homePath}/page-two-one-multiple-populated/area-main/test-two-one-multiple-populated`;
         let pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-two-one-multiple-populated')
@@ -418,7 +418,7 @@ describe('Page builder - insertion points', () => {
         contentEditor.create();
     });
 
-    it.skip('shows correct buttons for sixChildObjectsSingle with childObject5 populated', () => {
+    it('shows correct buttons for sixChildObjectsSingle with childObject5 populated', () => {
         const modulePath = `${homePath}/page-six-single-populated/area-main/test-six-single-populated`;
         let pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-six-single-populated')

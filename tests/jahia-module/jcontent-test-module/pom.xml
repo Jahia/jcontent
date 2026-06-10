@@ -102,6 +102,9 @@
                         <goals>
                             <goal>yarn</goal>
                         </goals>
+                        <configuration>
+                            <arguments>install --immutable</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>yarn post-install</id>

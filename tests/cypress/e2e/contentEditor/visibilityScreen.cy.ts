@@ -42,7 +42,7 @@ const publishAndWait = (path: string, languages: string[] = ['en']) => {
                     if (!jobs) {
                         // Null/undefined jobs means the scheduler returned no data
                         // (empty queue or server quirk) — treat as "no active jobs"
-                        return true;
+                        return false;
                     }
 
                     const publicationJobs = jobs.filter(job => job.group === 'PublicationJob');
@@ -478,7 +478,7 @@ describe('Visibility Screen', () => {
                 });
             });
 
-            it.skip('Publishes the rules and validates different visibility status for today vs today+2', () => {
+            it('Publishes the rules and validates different visibility status for today vs today+2', () => {
                 const {today, todayPlus2} = getDayNames();
                 cy.log(
                     `Verifying visibility for ${today} (today - should be visible) and ${todayPlus2} (today+2 - should be hidden)`
@@ -629,7 +629,7 @@ describe('Visibility Screen', () => {
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
             });
 
-            it.skip('Validates chip status transitions: published → modified → published after deletion workflow', () => {
+            it('Validates chip status transitions: published → modified → published after deletion workflow', () => {
                 const {today, todayPlus2} = getDayNames();
                 cy.log(`Re-adding today's rule (${today}) to test deletion chip transitions`);
 

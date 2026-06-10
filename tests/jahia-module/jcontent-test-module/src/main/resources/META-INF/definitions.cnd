@@ -24,6 +24,12 @@
  - moduleI18nRBAutocreatedString (string) = resourceBundle('kiss') autocreated internationalized
  - moduleClassInitString (string) = useClass(org.jahia.modules.textfieldinitializer.InitTextValue)
 
+// Regression test type for jcontent#2374: a property with NO default value, validated by a
+// custom OSGi validator. Because it has no default value it is absent from the create form's
+// initial values, which used to prevent its constraint violation from being mapped to the field.
+[cent:noDefaultValidator] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title
+ - noDefaultString (string)
+
 [cent:testTextField] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:autoPublish
 
 [cent:defaultValueTest] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery

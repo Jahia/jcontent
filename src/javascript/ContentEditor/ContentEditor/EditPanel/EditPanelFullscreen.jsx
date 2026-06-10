@@ -6,8 +6,8 @@ import clsx from 'clsx';
 import {registry} from '@jahia/ui-extender';
 import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {EditPanelHeader} from './EditPanelHeader';
-import { useContentEditorConfigContext } from '~/shared';
+import {EditPanelHeader} from './EditPanelHeader/EditPanelHeader';
+import {useContentEditorConfigContext} from '~/shared';
 
 export const EditPanelFullscreen = ({title}) => {
     const {advancedOpenTab} = useContentEditorConfigContext();
@@ -29,7 +29,7 @@ export const EditPanelFullscreen = ({title}) => {
                                  activeTabState={[activeTab, setActiveTab]}
                 />
             )}
-            content={tab?.displayableComponent && <tab.displayableComponent tab={tab} />}
+            content={tab?.displayableComponent && <tab.displayableComponent tab={tab}/>}
         />
     );
 };

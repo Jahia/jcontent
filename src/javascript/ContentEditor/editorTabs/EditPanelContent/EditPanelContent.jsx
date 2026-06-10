@@ -1,6 +1,6 @@
 import React from 'react';
 import {FullWidthContent} from '@jahia/design-system-kit';
-import {FormBuilder} from './FormBuilder';
+import {FormBuilder} from './FormBuilder/FormBuilder';
 import {
     useContentEditorConfigContext
 } from '~/ContentEditor/contexts';

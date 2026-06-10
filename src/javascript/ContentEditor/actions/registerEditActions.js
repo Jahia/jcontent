@@ -18,8 +18,8 @@ import {editContentAction} from './jcontent/editContent/editContentAction';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
-import {translateFieldAction} from './contenteditor/translate';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
+import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
 
 export const registerEditActions = registry => {
     // Edit action button in JContent; need separate actions for content and pages

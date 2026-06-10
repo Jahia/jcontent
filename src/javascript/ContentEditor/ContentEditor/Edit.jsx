@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 import {useNotifications} from '@jahia/react-material';
 import {Formik} from 'formik';
-import {EditPanel} from './EditPanel';
+import {EditPanel} from './EditPanel/EditPanel';
 import {
     PublicationInfoContextProvider,
     useContentEditorConfigContext,
@@ -79,4 +79,3 @@ export const Edit = () => {
         </>
     );
 };
-

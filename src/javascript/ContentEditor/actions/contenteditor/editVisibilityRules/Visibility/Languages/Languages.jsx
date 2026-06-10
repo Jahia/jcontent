@@ -2,7 +2,7 @@ import React from 'react';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {useSiteInfo} from '@jahia/data-helper';
 import {shallowEqual, useSelector} from 'react-redux';
-import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field';
+import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {Typography} from '@jahia/moonstone';

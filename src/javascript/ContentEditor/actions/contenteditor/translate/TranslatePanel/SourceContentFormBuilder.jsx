@@ -8,7 +8,7 @@ import {
     useContentEditorContext
 } from '~/ContentEditor/contexts';
 import {Formik} from 'formik';
-import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
+import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuilder';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
 import PropTypes from 'prop-types';

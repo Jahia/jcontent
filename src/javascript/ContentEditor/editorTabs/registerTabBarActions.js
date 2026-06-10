@@ -1,37 +1,11 @@
 import {Edit, Setting} from '@jahia/moonstone';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {
-    useContentEditorConfigContext,
-    useContentEditorContext
-} from '~/shared';
 import {SourceContentPanel} from '../actions/contenteditor/translate/TranslatePanel/SourceContentPanel';
 import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
 import {tabBarAction} from './tabBarAction';
-import {SidePanel} from './EditPanelContent/SidePanel';
-
-const TranslatePanel = () => {
-    const baseConfig = useContentEditorConfigContext();
-    const baseContext = useContentEditorContext();
-    console.log('baseConfig', baseConfig, 'baseContext', baseContext);
-
-    const {lang, siteInfo} = baseContext;
-    const languages = siteInfo.languages?.filter(l => l.activeInEdit) || [];
-    const sourceLang =
-        languages.find(l => l.language !== lang) || languages[0];
-
-    // UseEffect(() => {
-    //     baseConfig.setSideBySideContext({
-    //         lang: sourceLang.language,
-    //         ...baseConfig.sideBySideContext
-    //     });
-    // }, [baseConfig.sideBySideContext]);
-
-    return (
-        <SourceContentPanel/>
-    );
-};
+import {SidePanel} from './EditPanelContent/SidePanel/SidePanel';
 
 export const registerTabBarActions = actionsRegistry => {
     // Tab bar actions
@@ -64,7 +38,7 @@ export const registerTabBarActions = actionsRegistry => {
         value: 'translate',
         dataSelRole: 'tab-advanced-options',
         displayableComponent: EditPanelContent,
-        side: {component: TranslatePanel, singleSyncedScrollbar: true},
+        side: {component: SourceContentPanel, singleSyncedScrollbar: true},
         isDisplayable: () => true
     });
 };

@@ -3,4 +3,4 @@
 "@jahia/jcontent": patch
 ---
 
-PublishAndWait by returning false if jobs are undefined. Upgrade cypress and jahia/cypress (#2397)
+fix visibilityScreen test by returning false on PublishAndWait if jobs are undefined; Upgrade cypress and jahia/cypress (#2397)

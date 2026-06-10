@@ -12,7 +12,8 @@ import {ButtonRenderer} from './ButtonRenderers';
 import {filterRegularFieldSets, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
 
-function getHeader(t) {
+const Header = () => {
+    const {t} = useTranslation('jcontent');
     return (
         <div className={stylesFieldset.fieldSetTitleContainer}>
             <div className="flexRow_nowrap">
@@ -29,7 +30,7 @@ function getHeader(t) {
             </div>
         </div>
     );
-}
+};
 
 export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
     const {t} = useTranslation('jcontent');
@@ -87,7 +88,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
         // There is no rules, show the button to create a new rule
         return (
             <article>
-                {getHeader(t)}
+                <Header/>
                 <Paper elevation={4}>
                     <div className={styles.nocondition}>
                         <div className="flexRow_nowrap margin-medium">
@@ -116,7 +117,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
     if (isAddingNewRule) {
         return (
             <article>
-                {getHeader(t)}
+                <Header/>
                 <AddNewRule node={node} onCancel={handleChange}/>
             </article>
         );
@@ -125,7 +126,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
     if (editingRule !== null) {
         return (
             <article>
-                {getHeader(t)}
+                <Header/>
                 <EditRule rule={editingRule} onCancel={handleChangeEditingRule} onSave={handleSavingEditedRule}/>
             </article>
         );

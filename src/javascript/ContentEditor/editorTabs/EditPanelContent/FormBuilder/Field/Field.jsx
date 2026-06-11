@@ -157,9 +157,12 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
     const isMultipleField = field.multiple && !selectorType.supportMultiple;
     const seleniumFieldType = isMultipleField ? `GenericMultipleField${selectorType.key}` : (field.multiple ? `Multiple${selectorType.key}` : selectorType.key);
     const shouldDisplayErrors = errors[field.name];
-    const splitError = shouldDisplayErrors && errors[field.name].split('_');
-    const errorName = splitError && splitError.length > 0 && splitError[0];
-    const errorArgs = splitError && splitError.length > 1 ? splitError.splice(1) : [];
+    // The error value is "<errorName>_<message>" (e.g. "constraintViolation_<server message>").
+    // Split on the first underscore only, so messages containing underscores are not truncated.
+    const errorString = shouldDisplayErrors ? errors[field.name] : '';
+    const separatorIndex = errorString.indexOf('_');
+    const errorName = shouldDisplayErrors && (separatorIndex === -1 ? errorString : errorString.substring(0, separatorIndex));
+    const errorArgs = separatorIndex > -1 ? [errorString.substring(separatorIndex + 1)] : [];
     const hasMandatoryError = shouldDisplayErrors && errors[field.name] === 'required';
     const wipInfo = values[Constants.wip.fieldName];
     const pickerType = selectorType.pickerConfig?.key;

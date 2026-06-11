@@ -27,4 +27,8 @@ export class Field extends BaseComponent {
     getTranslateFieldAction(): Cypress.Chainable {
         return this.get().scrollIntoView().parent().find('[data-sel-role="translate-field"]');
     }
+
+    getErrorMessage(): Cypress.Chainable {
+        return this.get().scrollIntoView().find('[data-sel-error]');
+    }
 }

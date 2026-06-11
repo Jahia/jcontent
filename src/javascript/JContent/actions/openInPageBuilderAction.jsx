@@ -7,22 +7,26 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {batchActions} from 'redux-batched-actions';
 import {expandTree} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
-
-export const OpenInPageBuilderActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
+export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {mode, viewMode} = useSelector(state => ({mode: state.jcontent.mode, viewMode: state.jcontent.tableView.viewMode}), shallowEqual);
     const isSearch = (mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH);
     const isPageBuilderMode = (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER);
 
+    const showOnNodeTypes = ['jmix:mainResource'];
+    const skip = !isPageBuilderMode && isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
+
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
-        showOnNodeTypes: ['jmix:mainResource']
+        skip,
+        showOnNodeTypes
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;
     }
 
-    if (!res.node) {
+    if (skip || !res.node) {
         return (<Render {...others} isVisible={false}/>);
     }
 
@@ -52,6 +56,7 @@ export const OpenInPageBuilderActionComponent = ({path, render: Render, loading:
 
 OpenInPageBuilderActionComponent.propTypes = {
     path: PropTypes.string.isRequired,
+    node: PropTypes.object,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

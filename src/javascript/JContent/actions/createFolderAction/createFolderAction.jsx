@@ -4,6 +4,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';
+import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
 const constraintsByType = {
     contentFolder: {
@@ -23,18 +24,25 @@ const nodeType = {
     folder: 'jnt:folder'
 };
 
-export const CreateFolderActionComponent = ({path, createFolderType, render: Render, loading: Loading, ...others}) => {
+export const CreateFolderActionComponent = ({path, node: prefetchedNode, createFolderType, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
+    const constraints = constraintsByType[createFolderType || 'contentFolder'];
+    const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes: constraints.showOnNodeTypes});
     const res = useNodeChecks(
         {path},
         {
-            ...constraintsByType[createFolderType || 'contentFolder'],
+            skip,
+            ...constraints,
             getLockInfo: true
         }
     );
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     const onExit = () => {
@@ -55,6 +63,7 @@ export const CreateFolderActionComponent = ({path, createFolderType, render: Ren
 
 CreateFolderActionComponent.propTypes = {
     path: PropTypes.string,
+    node: PropTypes.object,
     createFolderType: PropTypes.string.isRequired,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func

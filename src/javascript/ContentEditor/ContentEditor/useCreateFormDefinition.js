@@ -31,7 +31,15 @@ const getInitialValues = (sections, nodeData) => {
  * @param contentEditorConfigContext the editor config context
  */
 export const adaptCreateFormData = (data, lang, t, contentEditorConfigContext) => {
-    const nodeData = data.jcr.result;
+    const result = data.jcr.result;
+    // Normalize the parent's item-count info into the decoded shape used by
+    // childrenLimitReachedOrExceeded (the 'limit' property stays raw under limitProperty to avoid
+    // clashing with the edit-mode nodeData.properties shape, which carries property definitions).
+    const nodeData = {
+        ...result,
+        'subNodesCount_nt:base': result.childrenCount?.pageInfo?.totalCount || 0,
+        'jmix:listSizeLimit': result.isListSizeLimit
+    };
     const sections = adaptSections(data.forms.createForm.sections);
 
     const formData = {

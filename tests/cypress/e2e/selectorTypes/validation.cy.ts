@@ -57,5 +57,19 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
         ce.getField(SmallTextField, 'cent:textFieldInitializer_defaultI18nString', false).addNewValue('12345');
         ce.save();
     });
+
+    // Regression test for jcontent#2374: a custom validator constraint on a property with no
+    // default value (so the field is absent from the create form's initial values) must still
+    // surface its message on the field, including a custom validator message.
+    it('should display the custom validator message on a field with no default value', () => {
+        const ce = jcontent.createContent('cent:noDefaultValidator');
+        ce.getField(SmallTextField, 'nt:base_ce:systemName', false).addNewValue('test-validator-nodefault');
+        ce.createUnchecked();
+        ce.getField(SmallTextField, 'cent:noDefaultValidator_noDefaultString', false)
+            .getErrorMessage()
+            .should('contain', 'noDefaultString must not be empty');
+        ce.getField(SmallTextField, 'cent:noDefaultValidator_noDefaultString', false).addNewValue('a value');
+        ce.create();
+    });
 });
 

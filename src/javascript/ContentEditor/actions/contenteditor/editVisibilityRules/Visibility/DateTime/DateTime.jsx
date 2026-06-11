@@ -12,6 +12,26 @@ import {ButtonRenderer} from './ButtonRenderers';
 import {filterRegularFieldSets, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
 
+const Header = () => {
+    const {t} = useTranslation('jcontent');
+    return (
+        <div className={stylesFieldset.fieldSetTitleContainer}>
+            <div className="flexRow_nowrap">
+                <div className="flexCol">
+                    <Typography component="label"
+                                htmlFor="jmix:i18n"
+                                className={stylesFieldset.fieldSetTitle}
+                                variant="subheading"
+                                weight="bold"
+                    >
+                        {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
+                    </Typography>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
     const {t} = useTranslation('jcontent');
     const [isAddingNewRule, setIsAddingNewRule] = useState(false);
@@ -68,30 +88,26 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
         // There is no rules, show the button to create a new rule
         return (
             <article>
-                <div className={stylesFieldset.fieldSetTitleContainer}>
-                    <div className="flexRow_nowrap">
-                        <div className="flexCol">
+                <Header/>
+                <Paper elevation={4}>
+                    <div className={styles.nocondition}>
+                        <div className="flexRow_nowrap margin-medium">
                             <Typography component="label"
                                         htmlFor="jmix:i18n"
                                         className={stylesFieldset.fieldSetTitle}
-                                        variant="heading"
-                                        weight="bold"
+                                        variant="body"
+                                        weight="semiBold"
                             >
-                                {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
+                                {typo}
                             </Typography>
                         </div>
-                    </div>
-                </div>
-                <Paper elevation={4}>
-                    <div className={styles.nocondition}>
-                        <Typography>{typo}</Typography>
                         <ButtonRenderer buttonLabel="Add condition"
                                         buttonIcon={<Add/>}
                                         onClick={() => {
-                            formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
-                                handleChange();
-                            });
-                        }}/>
+                                            formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
+                                                handleChange();
+                                            });
+                                        }}/>
                     </div>
                 </Paper>
             </article>
@@ -101,20 +117,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
     if (isAddingNewRule) {
         return (
             <article>
-                <div className={stylesFieldset.fieldSetTitleContainer}>
-                    <div className="flexRow_nowrap">
-                        <div className="flexCol">
-                            <Typography component="label"
-                                        htmlFor="jmix:i18n"
-                                        className={stylesFieldset.fieldSetTitle}
-                                        variant="heading"
-                                        weight="bold"
-                            >
-                                {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
-                            </Typography>
-                        </div>
-                    </div>
-                </div>
+                <Header/>
                 <AddNewRule node={node} onCancel={handleChange}/>
             </article>
         );
@@ -123,20 +126,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
     if (editingRule !== null) {
         return (
             <article>
-                <div className={stylesFieldset.fieldSetTitleContainer}>
-                    <div className="flexRow_nowrap">
-                        <div className="flexCol">
-                            <Typography component="label"
-                                        htmlFor="jmix:i18n"
-                                        className={stylesFieldset.fieldSetTitle}
-                                        variant="heading"
-                                        weight="bold"
-                            >
-                                {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
-                            </Typography>
-                        </div>
-                    </div>
-                </div>
+                <Header/>
                 <EditRule rule={editingRule} onCancel={handleChangeEditingRule} onSave={handleSavingEditedRule}/>
             </article>
         );
@@ -154,7 +144,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
                         <Typography component="label"
                                     htmlFor="jmix:i18n"
                                     className={stylesFieldset.fieldSetTitle}
-                                    variant="heading"
+                                    variant="subheading"
                                     weight="bold"
                         >
                             {t('jcontent:label.contentEditor.visibilityTab.conditions.title')}
@@ -200,10 +190,10 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
                     <ButtonRenderer buttonLabel="Add condition"
                                     buttonIcon={<Add/>}
                                     onClick={() => {
-                        formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
-                            handleChange();
-                        });
-                    }}/>
+                                        formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
+                                            handleChange();
+                                        });
+                                    }}/>
                 </div>
             </Paper>
         </article>

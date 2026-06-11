@@ -1,21 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu} from '@jahia/moonstone';
+import {MenuLoadingContext} from './MenuLoadingContext';
 
 export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, menuKey, ...otherProps}) => (
     <Menu
         {...anchor}
         data-sel-role={'jcontent-' + menuKey}
         style={{zIndex: isSubMenu ? 9001 : 9000}}
-        hasOverlay={isOpen && !isLoading && !isSubMenu}
-        isDisplayed={isOpen && !isLoading}
+        hasOverlay={isOpen && !isSubMenu}
+        isDisplayed={isOpen}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClose={onClose}
         onExited={onExited}
         {...otherProps}
     >
-        {children}
+        <MenuLoadingContext.Provider value={isLoading}>
+            {children}
+        </MenuLoadingContext.Provider>
     </Menu>
 );
 

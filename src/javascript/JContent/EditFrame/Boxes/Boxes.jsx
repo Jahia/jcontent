@@ -436,6 +436,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     currentFrameRef={currentFrameRef}
                     currentDocument={currentDocument}
                     selection={selection}
+                    nodes={nodes}
                 />
             </HoverProvider>
 

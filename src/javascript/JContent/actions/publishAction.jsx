@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {CloudCheck} from '@jahia/moonstone';
+import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
 
 function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;
@@ -116,13 +117,19 @@ function getLabels({res, languageToUse, paths, t, props, publishType, isPublishi
 }
 
 export const PublishActionComponent = props => {
-    const {id, path, paths, language, publishType, isPublishingAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
+    const {id, path, paths, node: prefetchedNode, language, publishType, isPublishingAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation('jcontent');
+
+    const skip = !paths && (
+        isDefinitelyHidden(prefetchedNode, constraintsByType[publishType]) ||
+        prefetchedNode?.operationsSupport?.publication === false
+    );
 
     // Publication info needs to be refreshed in case subNodes have changed
     const queryOptions = {fetchPolicy: 'no-cache'};
     const res = useNodeChecks({path, paths, language: languageToUse}, {
+        skip,
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
@@ -142,6 +149,10 @@ export const PublishActionComponent = props => {
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
+    }
+
+    if (skip) {
+        return false;
     }
 
     let actionChecks = res.node ? checkAction(res, res.node, publishType, isPublishingAllLanguages) : checkActionOnNodes(res, publishType, isPublishingAllLanguages);
@@ -180,6 +191,7 @@ PublishActionComponent.propTypes = {
     path: PropTypes.string,
     paths: PropTypes.arrayOf(PropTypes.string),
     language: PropTypes.string,
+    node: PropTypes.object,
     // eslint-disable-next-line react/boolean-prop-naming
     enabled: PropTypes.bool,
     isVisible: PropTypes.bool,

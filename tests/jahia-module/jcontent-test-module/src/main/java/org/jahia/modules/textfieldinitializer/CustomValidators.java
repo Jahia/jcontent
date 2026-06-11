@@ -12,6 +12,7 @@ public class CustomValidators extends JCRNodeValidatorDefinition {
     public Map<String, Class> getValidators() {
         Map<String, Class> nodeTypeValidatorMap = new java.util.HashMap<>();
         nodeTypeValidatorMap.put("cent:textFieldInitializer", TestNodeValidator.class);
+        nodeTypeValidatorMap.put("cent:noDefaultValidator", NoDefaultValidator.class);
         nodeTypeValidatorMap.put("jnt:file", UploadErrorValidator.class);
         return nodeTypeValidatorMap;
     }

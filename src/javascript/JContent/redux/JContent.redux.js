@@ -9,7 +9,6 @@ import {combineReducers} from 'redux';
 import JContentConstants from '~/JContent/JContent.constants';
 
 export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
-export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
 const ROUTER_REDUX_ACTION = '@@router/LOCATION_CHANGE';
 

@@ -3,13 +3,10 @@ import {shallow} from 'enzyme';
 import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {usePublicationInfoContext} from '~/ContentEditor/contexts/PublicationInfo';
-import JContentConstants from '~/JContent/JContent.constants';
 
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
-jest.mock('~/ContentEditor/contexts/PublicationInfo/PublicationInfo.context');
 jest.mock('~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches', () => ({
     setPreviewRefetcher: jest.fn(),
     invalidateRefetch: jest.fn()
@@ -45,40 +42,11 @@ describe('CE Preview', () => {
             }
         };
         useContentEditorContext.mockReturnValue(editorContext);
-        usePublicationInfoContext.mockReturnValue({
-            publicationStatus: JContentConstants.availablePublicationStatuses.PUBLISHED
-        });
     });
 
     it('renders SharedPreview', () => {
         const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         expect(cmp.find('Preview').exists()).toBe(true);
-    });
-
-    it('always renders workspace toggle inside Preview', () => {
-        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
-        expect(cmp.find('Preview').exists()).toBe(true);
-    });
-
-    it('disables live when content is NOT_PUBLISHED', () => {
-        usePublicationInfoContext.mockReturnValue({
-            publicationStatus: JContentConstants.availablePublicationStatuses.NOT_PUBLISHED
-        });
-        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
-        expect(cmp.find('Preview').prop('isLiveDisabled')).toBe(true);
-    });
-
-    it('disables live when content is UNPUBLISHED', () => {
-        usePublicationInfoContext.mockReturnValue({
-            publicationStatus: JContentConstants.availablePublicationStatuses.UNPUBLISHED
-        });
-        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
-        expect(cmp.find('Preview').prop('isLiveDisabled')).toBe(true);
-    });
-
-    it('does not disable live when content is PUBLISHED', () => {
-        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
-        expect(cmp.find('Preview').prop('isLiveDisabled')).toBe(false);
     });
 
     it('includes UpdateOnSaveBadge in header', () => {

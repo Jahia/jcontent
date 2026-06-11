@@ -12,8 +12,7 @@ import clsx from 'clsx';
 import styles from './PreviewDrawer.scss';
 
 const PreviewDrawer = ({previewSelection}) => {
-    const {previewMode, previewState, selection} = useSelector(state => ({
-        previewMode: state.jcontent.previewMode,
+    const {previewState, selection} = useSelector(state => ({
         previewState: state.jcontent.previewState,
         selection: state.jcontent.selection
     }), shallowEqual);
@@ -30,9 +29,6 @@ const PreviewDrawer = ({previewSelection}) => {
     const closeFullScreen = () => {
         dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
     };
-
-    const notPublished = previewSelection && (previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE');
-    const deleted = previewSelection && previewSelection.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION';
 
     const {t} = useTranslation('jcontent');
 
@@ -60,9 +56,6 @@ const PreviewDrawer = ({previewSelection}) => {
                     </Tooltip>}
             </div>
             <Preview
-                isEditDisabled={deleted}
-                isLiveDisabled={!previewSelection || notPublished}
-                previewMode={previewMode}
                 previewSelection={previewSelection}
                 previewState={previewState}
                 selection={selection}
@@ -74,7 +67,7 @@ const PreviewDrawer = ({previewSelection}) => {
                         {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                     </Typography>
                     <Typography isNowrap variant="body">
-                        <PreviewSize node={previewSelection} previewMode={previewMode}/>
+                        <PreviewSize node={previewSelection}/>
                     </Typography>
                 </CardContent>
             </Card>}

@@ -1,9 +1,14 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {act} from 'react-dom/test-utils';
+import {mount, shallow} from 'enzyme';
 import {Preview} from './Preview';
 
+let capturedFetcherProps = {};
 jest.mock('./PreviewFetcher', () => ({
-    PreviewFetcher: () => <div data-testid="fetcher"/>
+    PreviewFetcher: props => {
+        capturedFetcherProps = props;
+        return <div data-testid="fetcher"/>;
+    }
 }));
 
 const baseContext = {
@@ -17,35 +22,31 @@ const baseContext = {
 const renderPreview = (props = {}) => shallow(
     <Preview
         previewContext={baseContext}
-        onContentNotFound={jest.fn()}
         {...props}
     />
 );
 
 describe('Preview', () => {
-    it('renders Edit and Live buttons', () => {
+    it('renders without workspace toggle buttons', () => {
         const cmp = renderPreview();
-        expect(cmp.find('[data-sel-role="edit-preview-button"]').exists()).toBe(true);
-        expect(cmp.find('[data-sel-role="live-preview-button"]').exists()).toBe(true);
+        expect(cmp.find('[data-sel-role="edit-preview-button"]').exists()).toBe(false);
+        expect(cmp.find('[data-sel-role="live-preview-button"]').exists()).toBe(false);
     });
 
-    it('disables Edit button when isEditDisabled', () => {
-        const cmp = renderPreview({isEditDisabled: true});
-        expect(cmp.find('[data-sel-role="edit-preview-button"]').prop('isDisabled')).toBe(true);
+    it('renders fullscreen toggle button when onFullScreenToggle is provided', () => {
+        const cmp = renderPreview({onFullScreenToggle: jest.fn()});
+        expect(cmp.find('[data-sel-role="preview-fullscreen-toggle"]').exists()).toBe(true);
     });
 
-    it('disables Live button when isLiveDisabled', () => {
-        const cmp = renderPreview({isLiveDisabled: true});
-        expect(cmp.find('[data-sel-role="live-preview-button"]').prop('isDisabled')).toBe(true);
-    });
-
-    it('Edit button is disabled when workspace is already edit', () => {
+    it('does not render fullscreen toggle button when onFullScreenToggle is not provided', () => {
         const cmp = renderPreview();
-        expect(cmp.find('[data-sel-role="edit-preview-button"]').prop('isDisabled')).toBe(true);
+        expect(cmp.find('[data-sel-role="preview-fullscreen-toggle"]').exists()).toBe(false);
     });
 
-    it('Live button is disabled when workspace is already live', () => {
-        const cmp = renderPreview({previewContext: {...baseContext, workspace: 'live'}});
-        expect(cmp.find('[data-sel-role="live-preview-button"]').prop('isDisabled')).toBe(true);
+    it('always passes edit workspace unchanged to PreviewFetcher', () => {
+        act(() => {
+            mount(<Preview previewContext={baseContext}/>);
+        });
+        expect(capturedFetcherProps.previewContext.workspace).toBe('edit');
     });
 });

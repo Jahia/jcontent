@@ -13,11 +13,8 @@ import {useSelector} from 'react-redux';
 export const JContentPreview = props => {
     const {
         previewSelection,
-        previewMode,
         previewState,
-        selection,
-        isLiveDisabled = false,
-        isEditDisabled = false
+        selection
     } = props;
 
     const language = useSelector(state => state.language);
@@ -30,13 +27,11 @@ export const JContentPreview = props => {
         return <NoPreviewComponent {...props}/>;
     }
 
-    const previewContext = buildPreviewContextFromNode(previewSelection, language, previewMode);
+    const previewContext = buildPreviewContextFromNode(previewSelection, language, 'edit');
 
     return (
         <Preview
-            isEditDisabled={isEditDisabled}
             isFullScreen={previewState === CM_DRAWER_STATES.FULL_SCREEN}
-            isLiveDisabled={isLiveDisabled}
             nodeData={previewSelection}
             previewContext={previewContext}
             onRefetchInvalidated={() => unsetRefetcher(refetchTypes.PREVIEW_COMPONENT)}
@@ -46,12 +41,9 @@ export const JContentPreview = props => {
 };
 
 JContentPreview.propTypes = {
-    previewMode: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.object,
-    selection: PropTypes.array.isRequired,
-    isLiveDisabled: PropTypes.bool,
-    isEditDisabled: PropTypes.bool
+    selection: PropTypes.array.isRequired
 };
 
 export default compose(

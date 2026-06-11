@@ -28,7 +28,7 @@ const deriveContextConfiguration = displayableNode => {
  * @param {object} editorContext - from useContentEditorContext()
  * @param {string} workspace     - 'edit' | 'live' (defaults to 'edit')
  */
-export const buildPreviewContextFromEditorContext = (editorContext, workspace = 'edit') => {
+export const buildPreviewContextFromEditorContext = editorContext => {
     let path = editorContext.currentPage.path;
     const requestAttributes = [{
         name: 'ce_preview',
@@ -70,7 +70,7 @@ export const buildPreviewContextFromEditorContext = (editorContext, workspace = 
 
     return {
         path,
-        workspace,
+        workspace: 'edit',
         view: editorContext.currentPage.template,
         contextConfiguration: editorContext.currentPage.config,
         templateType: 'html',

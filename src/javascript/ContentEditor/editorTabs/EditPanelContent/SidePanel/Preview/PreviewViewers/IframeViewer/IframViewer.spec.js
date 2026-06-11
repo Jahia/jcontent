@@ -1,5 +1,5 @@
 import React from 'react';
-import {IframeViewer, zoom} from './index';
+import {IframeViewer, zoom} from './IframeViewer';
 import {shallow} from '@jahia/test-framework';
 
 const mockRemoveSiblings = jest.fn(() => {});

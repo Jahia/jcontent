@@ -2870,13 +2870,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/ui-extender@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@jahia/ui-extender@npm:2.0.0"
+"@jahia/ui-extender@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@jahia/ui-extender@npm:1.3.0"
   peerDependencies:
-    react: ">=18"
-    react-dom: ">=18"
-  checksum: 10c0/981358afca4d9b8056d429caa5de8217b0547a0495f6626c762705931a177fde89844ec07fdeea23e97a3db8c955a8aec9822f2338b6d3c44612d3c43794ecbf
+    react: ">=16.14.0"
+  checksum: 10c0/168dd83ee05193a09824a347052a8edea8969de0cf6f30a7923c7115fb031a8d052dee3681e6300d8d2e8c27a14fa8276ff19916b34b206224b8db2842eaf0da
   languageName: node
   linkType: hard
 

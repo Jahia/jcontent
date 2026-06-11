@@ -56,20 +56,17 @@ describe('System name sync test', () => {
 
         // Check systemname is incremented
         jcontent.editComponentByText('Test 3');
-        contentEditor.openSection('options');
         checkSystemName(contentEditor, 'simple-text-2');
         contentEditor.cancel();
 
         // Create simple text Test 4
         jcontent.createContent('jnt:text');
         contentEditor.getSmallTextField('jnt:text_text').addNewValue('Test 4');
-        contentEditor.openSection('options');
         contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('simple-text-1');
         contentEditor.create();
 
         // Check systemname is incremented
         jcontent.editComponentByText('Test 4');
-        contentEditor.openSection('options');
         checkSystemName(contentEditor, 'simple-text-3');
         contentEditor.cancel();
     });
@@ -118,7 +115,6 @@ describe('System name sync test', () => {
         // Try to rename a simple text with a system name that is already used
         const contentEditor = jcontent.editComponentByText('my-text-a');
         contentEditor.switchToAdvancedMode();
-        contentEditor.openSection('options');
         contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('my-text-b');
         getComponentByRole(Button, 'submitSave').click();
         // Check an error message is displayed

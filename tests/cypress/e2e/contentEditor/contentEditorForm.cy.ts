@@ -241,7 +241,7 @@ describe('Content editor form', () => {
         ceEditor.cancel();
     });
 
-    it.only('should display technical information in advanced options', () => {
+    it('should display technical information in advanced options', () => {
         cy.logout();
         // Login as editor in chief
         cy.login('anne', 'password');

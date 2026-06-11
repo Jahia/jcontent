@@ -2870,14 +2870,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/ui-extender@portal:../javascript-components/packages/ui-extender::locator=%40jahia%2Fjcontent%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@jahia/ui-extender@portal:../javascript-components/packages/ui-extender::locator=%40jahia%2Fjcontent%40workspace%3A."
+"@jahia/ui-extender@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@jahia/ui-extender@npm:2.0.0"
   peerDependencies:
     react: ">=18"
     react-dom: ">=18"
+  checksum: 10c0/981358afca4d9b8056d429caa5de8217b0547a0495f6626c762705931a177fde89844ec07fdeea23e97a3db8c955a8aec9822f2338b6d3c44612d3c43794ecbf
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@jahia/webpack-config@npm:^1.1.0":
   version: 1.1.0

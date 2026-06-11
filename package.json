@@ -127,7 +127,7 @@
     "strip-ansi": "^6.0.1",
     "xlsx": "^0.17.0",
     "string-width": "^4.2.3",
-    "@jahia/ui-extender": "portal:../javascript-components/packages/ui-extender"
+    "@jahia/ui-extender": "^2.0.0"
   },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",

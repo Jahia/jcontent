@@ -21,11 +21,11 @@ import {PreviewViewers} from './viewers';
  */
 export const PreviewFetcher = React.memo(({
     previewContext,
-    nodeData,
-    isFullScreen,
+    nodeData = null,
+    isFullScreen = false,
     onContentNotFound,
-    onRefetchReady,
-    onRefetchInvalidated
+    onRefetchReady = null,
+    onRefetchInvalidated = null
 }) => {
     const {t} = useTranslation('jcontent');
     const {data, loading, error, refetch} = useContentPreview({
@@ -62,13 +62,6 @@ export const PreviewFetcher = React.memo(({
 });
 
 PreviewFetcher.displayName = 'PreviewFetcher';
-
-PreviewFetcher.defaultProps = {
-    nodeData: null,
-    isFullScreen: false,
-    onRefetchReady: null,
-    onRefetchInvalidated: null
-};
 
 PreviewFetcher.propTypes = {
     previewContext: PropTypes.shape({

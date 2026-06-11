@@ -35,7 +35,7 @@ function loadAssets(assets, iframeDocument) {
     return Promise.all(assets.map(asset => loadAsset(asset, iframeHeadEl)));
 }
 
-export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData}) => {
+export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData = null}) => {
     const [loading, setLoading] = useState(true);
     const {t} = useTranslation('jcontent');
     const iframeRef = useRef(null);
@@ -96,10 +96,6 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData}
             />
         </Paper>
     );
-};
-
-IframeViewer.defaultProps = {
-    nodeData: null
 };
 
 IframeViewer.propTypes = {

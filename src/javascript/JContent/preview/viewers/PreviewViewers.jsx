@@ -9,7 +9,7 @@ import {IframeViewer} from './IframeViewer';
 import {PDFViewer} from './PDFViewer';
 import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 
-export const PreviewViewers = ({data, previewContext, nodeData, isFullScreen, onContentNotFound}) => {
+export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScreen = false, onContentNotFound}) => {
     const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath?.isFile;
     if (isFile) {
         const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
@@ -54,11 +54,6 @@ export const PreviewViewers = ({data, previewContext, nodeData, isFullScreen, on
             />
         </div>
     );
-};
-
-PreviewViewers.defaultProps = {
-    nodeData: null,
-    isFullScreen: false
 };
 
 PreviewViewers.propTypes = {

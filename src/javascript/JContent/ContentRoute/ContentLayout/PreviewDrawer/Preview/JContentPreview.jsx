@@ -16,8 +16,8 @@ export const JContentPreview = props => {
         previewMode,
         previewState,
         selection,
-        isLiveDisabled,
-        isEditDisabled
+        isLiveDisabled = false,
+        isEditDisabled = false
     } = props;
 
     const language = useSelector(state => state.language);
@@ -43,11 +43,6 @@ export const JContentPreview = props => {
             onRefetchReady={refetch => setRefetcher(refetchTypes.PREVIEW_COMPONENT, {refetch})}
         />
     );
-};
-
-JContentPreview.defaultProps = {
-    isLiveDisabled: false,
-    isEditDisabled: false
 };
 
 JContentPreview.propTypes = {

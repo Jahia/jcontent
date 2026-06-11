@@ -25,14 +25,14 @@ import {PreviewFetcher} from './PreviewFetcher';
  */
 export const Preview = ({
     previewContext,
-    nodeData,
-    isFullScreen,
-    isLiveDisabled,
-    isEditDisabled,
-    onFullScreenToggle,
-    onRefetchReady,
-    onRefetchInvalidated,
-    header
+    nodeData = null,
+    isFullScreen = false,
+    isLiveDisabled = false,
+    isEditDisabled = false,
+    onFullScreenToggle = null,
+    onRefetchReady = null,
+    onRefetchInvalidated = null,
+    header = null
 }) => {
     const {t} = useTranslation('jcontent');
     const [workspace, setWorkspace] = useState(previewContext.workspace ?? 'edit');
@@ -122,17 +122,6 @@ export const Preview = ({
             )}
         </Paper>
     );
-};
-
-Preview.defaultProps = {
-    nodeData: null,
-    isFullScreen: false,
-    isLiveDisabled: false,
-    isEditDisabled: false,
-    onFullScreenToggle: null,
-    onRefetchReady: null,
-    onRefetchInvalidated: null,
-    header: null
 };
 
 Preview.propTypes = {

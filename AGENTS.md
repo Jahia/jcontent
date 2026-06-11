@@ -27,6 +27,7 @@ The repo extends `@jahia/eslint-config` (`.eslintrc.json`). Key rules to always 
 
 - Functional components with hooks only — no class components.
 - Place `PropTypes` declarations at the bottom of each component file.
+- **Never use `defaultProps`** for new components. Specify default values directly in the destructured parameter list: `function Foo({ bar = 'baz', count = 0 }) { … }`. `defaultProps` is deprecated in React 18 and will be removed in a future major.
 - Use `useSelector` / `useDispatch` from `react-redux` for store access. Use `shallowEqual` when selecting objects/arrays.
 - File naming: `ComponentName.jsx` for components, `ComponentName.scss` for co-located styles, `ComponentName.gql-queries.js` for GraphQL.
 - Use the `~/` import alias for imports under `src/javascript/`.

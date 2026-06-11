@@ -6,7 +6,7 @@ import styles from './DocumentViewer.scss';
 
 const FileViewer = React.lazy(() => import('react-file-viewer'));
 
-export const DocumentViewer = ({isFullScreen, file, type}) => {
+export const DocumentViewer = ({isFullScreen = false, file, type}) => {
     const renderViewer = () => {
         switch (type) {
             // List of files compatible with react-file-viewer
@@ -38,8 +38,4 @@ DocumentViewer.propTypes = {
     file: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     isFullScreen: PropTypes.bool
-};
-
-DocumentViewer.defaultProps = {
-    isFullScreen: false
 };

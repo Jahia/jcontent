@@ -359,6 +359,12 @@ public class EditorFormServiceImpl implements EditorFormService {
             }
         }
 
+        // If mixin A extends mixin B and both are in the list, remove B.
+        // A already carries B's properties via the supertype chain, so keeping both
+        // causes non-deterministic field assignment during fieldset merge.
+        res.removeIf(mixin -> res.stream()
+            .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
+
         return res;
     }
 

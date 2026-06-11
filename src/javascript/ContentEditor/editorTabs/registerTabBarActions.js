@@ -1,11 +1,11 @@
 import {Edit, Setting, Translate} from '@jahia/moonstone';
 import React from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {SourceContentPanel} from '../actions/contenteditor/translate/TranslatePanel/SourceContentPanel';
 import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
 import {tabBarAction} from './tabBarAction';
 import {SidePanel} from './EditPanelContent/SidePanel/SidePanel';
+import {SourceContentPanel} from './TranslatePanel/SourceContentPanel';
 
 /** Registers the different options available in the advanced (fullscreen) Content Editor */
 export const registerTabBarActions = actionsRegistry => {

@@ -1,5 +1,5 @@
 import {useResizeWatcher} from '../useResizeWatcher';
-import styles from '../styles.scss';
+import styles from './TwoPanelsContent.scss';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, {useEffect, useRef} from 'react';

@@ -5,10 +5,10 @@ import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {PublicationInfoProgress} from './PublicationInfoProgress';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './EditPanelContent.scss';
-import {TwoPanelsContent} from '~/ContentEditor/actions/contenteditor/translate/TranslatePanel/TwoPanelsContent';
+import {TwoPanelsContent} from '~/ContentEditor/editorTabs/EditPanelContent/TwoPanelsContent';
 import {EditPanelLanguageSwitcher} from '~/shared';
 import {useTranslation} from 'react-i18next';
-import translateStyles from '../../actions/contenteditor/translate/styles.scss';
+import translateStyles from '../TranslatePanel/styles.scss';
 
 export const EditPanelContent = ({twoPanelsContentProps, languageSwitchTopOfLeftCol = false}) => {
     const {t} = useTranslation('jcontent');

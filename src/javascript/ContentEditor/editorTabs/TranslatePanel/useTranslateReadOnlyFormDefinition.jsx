@@ -12,7 +12,7 @@ import {getInitialValues} from '~/ContentEditor/ContentEditor/useEditFormDefinit
  * - Set non-i18n fields as read-only
  * - If readOnly is true, set all fields and fieldsets as read-only
  */
-const adaptTranslateSections = (data, readOnly = false) => {
+export const adaptTranslateSections = (data, readOnly = false) => {
     if (data) {
         data.sections?.forEach(section => {
             // Expand all sections by default in translation mode

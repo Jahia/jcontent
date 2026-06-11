@@ -65,9 +65,15 @@ export const getElemAttributes = ({element, parent}) => {
     // Need to check here if insertionPoint is an original create button or not,
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
-    const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
 
-    const nodePath = (isInsertionPoint || isMultipleChildPlaceholder) ? null : element.getAttribute('path');
+    // This means this button is inserted as an extra with no underlying placeholder in place. So it makes no sense
+    // to make any conclusions about nodetypes or path. This information is passed in as a prop instead.
+    if (isInsertionPoint) {
+        return {};
+    }
+
+    const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
+    const nodePath = (isMultipleChildPlaceholder) ? null : element.getAttribute('path');
     const nodeName = element.getAttribute('path').split('/').pop();
 
     // Nodetypes should not be undefined here because if nothing is found nothing should be used
@@ -125,7 +131,7 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData}) => {
+export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData, suppliedNodeTypes}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
@@ -225,7 +231,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const createAction = useMemo(() => (
         <DisplayAction
             actionKey="createContentPB"
-            nodeTypes={nodeTypes}
+            nodeTypes={suppliedNodeTypes ? suppliedNodeTypes : nodeTypes}
             path={parentPath}
             name={nodePath}
             isDisabled={isDisabled}
@@ -235,7 +241,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             onVisibilityChanged={onCreateVisibilityChanged}
             onCreate={onAction(({name}) => reorderNodes([name], nodeName))}
         />
-    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes]);
+    ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes, suppliedNodeTypes]);
 
     return !anyDragging && (
         <div ref={drop}
@@ -292,5 +298,6 @@ Create.propTypes = {
     isVertical: PropTypes.bool,
     nodeDropData: PropTypes.object,
     nodeData: PropTypes.object,
-    pasteData: PropTypes.object
+    pasteData: PropTypes.object,
+    suppliedNodeTypes: PropTypes.arrayOf(PropTypes.string)
 };

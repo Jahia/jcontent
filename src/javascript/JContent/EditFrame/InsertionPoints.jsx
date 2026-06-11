@@ -5,23 +5,70 @@ import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsDat
 import {useSelector} from 'react-redux';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 
+/**
+ * This function helps resolve required nodetypes for insertion points.
+ *
+ * Why is this necessary?
+ *
+ * Normally create buttons are resolved using existing placeholders (dedicated html with nodetype info, path etc.). You can see this in
+ * Create.jsx. With insertion points things get a little more complicated as we want to inject whatever the module accepts at the top of evert child
+ * (everything with data-jahia-parent on it) in addition to existing placeholders. Because the elements we find are no longer uniform (not just placeholders) we cannot rely on
+ * the mechanism in Create.jsx (getElemAttributes) to resolve nodetype info.
+ *
+ * This mechanism looks at several cases:
+ *
+ * 1. Found child is a placeholder (this means existing create button placeholder). If this placeholder has nodetype info then we need to use this info to get data about nodetypes.
+ * 2. Cases when we cannot resolve parent module id or fail to get the module return no node type information.
+ *
+ * Before I go further, it's helpful to note that there is an issue in Jahia with how it resolves contribute types, which can lead to a situation
+ * when the module and its placeholders will have mismatching info. So if it's a list which normally accepts jmix:droppableContent and contribute types
+ * are configured to accept a, b and c then the module will have jmix:droppableContent in nodetypes while the placeholder for path="*" (accepting multiple children) will have a, b and c.
+ * The correct way of generating html in this case would be to have a, b and c in both cases, but ConstraintsHelper.getConstraints() does not take into account
+ * contribute types (it is not something we can easily modify due to potential side effects as it is used in many places).
+ *
+ * 3. Node type info is available on the parent module and can potentially be used to compute constraints (there can be an exception, see 4).
+ * 4. There is a placeholder child with path="*" AND nodetype info defined then we use this nodetype info (see comment above).
+ * 5. There is also potential for the case when there is placehoder with nodetype info and one without, in which case we want to get data for nodetypes from both locations.
+ */
 const getNodeTypes = e => {
-    const types = new Set();
-
+    // The element is placeholder with nodetypes defined, it gives us all the info we need.
     const ownNt = e.getAttribute('nodetypes');
-    // Get own types only for placeholders (actual buttons) and avoid getting them from existingNodetypes (rendered modules)
     if (ownNt && e.getAttribute('type') === 'placeholder') {
-        ownNt.split(' ').forEach(t => types.add(t));
+        return ownNt.split(' ');
     }
 
-    if (e.dataset.jahiaParent) {
-        const parentNt = e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('nodetypes');
-        if (parentNt) {
-            parentNt.split(' ').forEach(t => types.add(t));
-        }
+    const parentId = e.dataset.jahiaParent;
+    if (!parentId) {
+        return [];
     }
 
-    return [...types];
+    const parent = e.ownerDocument.getElementById(parentId);
+    if (!parent) {
+        return [];
+    }
+
+    // If the element is not a placeholder with nodetypes on it, we need to extract nodetype info from existing placeholders on the parent module or the parent module.
+    // There can be different cases. The idea is to determine if placeholders provide all the info we need (they do if they all have nodetypes attribute) or if we need to use a
+    // combination of placeholder-parent or just parent.
+    const parentNt = parent.getAttribute('nodetypes');
+    const parentTypes = parentNt ? parentNt.split(' ') : [];
+
+    // Check for wildcard placeholders (path="*") — their nodetypes take priority
+    const wildcardPlaceholders = [...parent.querySelectorAll(
+        `[type="placeholder"][path="*"][data-jahia-parent="${parentId}"]`
+    )];
+
+    if (wildcardPlaceholders.length === 0) {
+        return parentTypes;
+    }
+
+    // If any wildcard placeholder has no nodetypes, include parent types as well
+    const hasUntypedWildcard = wildcardPlaceholders.some(wp => !wp.getAttribute('nodetypes'));
+    const wildcardTypes = wildcardPlaceholders
+        .flatMap(wp => wp.getAttribute('nodetypes')?.split(' ') ?? []);
+
+    const merged = hasUntypedWildcard ? [...parentTypes, ...wildcardTypes] : wildcardTypes;
+    return [...new Set(merged)];
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
@@ -39,7 +86,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
     // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
     const childrenElem = [...currentDocument.querySelectorAll(`[data-jahia-parent=${clickedElement.element.id}]`)]
         // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
-        .filter(e => e.getAttribute('path')?.startsWith(clickedPath))
+        .filter(e => e.getAttribute('path')?.startsWith(clickedPath) && e.getAttribute('type') !== 'placeholder')
         .map(e => ({
             element: e,
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
@@ -56,12 +103,13 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
 
     return (
         [
-            ...childrenElem.map(({element, node}) => (
+            ...childrenElem.map(({element, node, attributes}) => (
                 <Create key={`insertion-point-${element.getAttribute('id')}`}
                         isInsertionPoint
                         isVertical={isVertical}
                         node={node}
                         nodes={nodes}
+                        suppliedNodeTypes={attributes.nodeTypes}
                         nodeData={childData?.nodes?.[node.path]}
                         pasteData={pasteData}
                         element={element}

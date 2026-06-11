@@ -25,11 +25,11 @@ export const SourceContentFormBuilder = () => {
     const {lang, uuid, contentType} = useContentEditorConfigContext();
     useResizeWatcher({columnSelector: 'left-column'});
 
-    const {data, loading, error} = useTranslationReadOnlyFormDefinition({
-        lang,
-        uuid,
-        contentType
-    });
+     const {
+        data,
+        loading,
+        error
+    } = useTranslationReadOnlyFormDefinition({lang, uuid, contentType});
 
     if (loading) {
         return <LoaderOverlay/>;
@@ -44,25 +44,6 @@ export const SourceContentFormBuilder = () => {
             <SourceContentFormBuilderInner data={data}/>
         </ContentEditorSectionContextProvider>
     );
-};
-
-const MenuLabel = ({children}) => (
-    <li>
-        <Typography
-            isUpperCase
-            variant="caption"
-            style={{
-                padding:
-                    'var(--moon-spacing-small) var(--moon-spacing-nano) var(--moon-spacing-nano)'
-            }}
-        >
-            {children}
-        </Typography>
-    </li>
-);
-
-MenuLabel.propTypes = {
-    children: PropTypes.node
 };
 
 /**

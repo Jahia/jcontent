@@ -3,13 +3,12 @@ import React from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
-import {tabBarAction} from './tabBarAction';
 import {SidePanel} from './EditPanelContent/SidePanel/SidePanel';
 import {SourceContentPanel} from './TranslatePanel/SourceContentPanel';
 
 /** Registers the different options available in the advanced (fullscreen) Content Editor */
-export const registerTabBarActions = actionsRegistry => {
-    actionsRegistry.add('action', 'ceEditTab', tabBarAction, {
+export const registerDropdownOptions = actionsRegistry => {
+    actionsRegistry.add('action', 'ceEditTab', {
         buttonLabel: 'jcontent:label.contentEditor.edit.tab.edit',
         buttonIcon: <Edit/>,
         targets: ['editHeaderTabsActions:1'],
@@ -23,7 +22,7 @@ export const registerTabBarActions = actionsRegistry => {
         isDisplayable: () => true
     });
 
-    actionsRegistry.add('action', 'ceTranslateTab', tabBarAction, {
+    actionsRegistry.add('action', 'ceTranslateTab', {
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         buttonIcon: <Translate/>,
         targets: ['editHeaderTabsActions:2'],
@@ -39,11 +38,10 @@ export const registerTabBarActions = actionsRegistry => {
             />
         ),
         editPanelHeaderProps: {hideLanguageSwitcher: true},
-        isDisplayable: () => true,
-        requiredSitePermission: ['translateAction']
+        isDisplayable: () => true
     });
 
-    actionsRegistry.add('action', 'ceAdvancedTab', tabBarAction, {
+    actionsRegistry.add('action', 'ceAdvancedTab', {
         buttonLabel: 'jcontent:label.contentEditor.edit.tab.advanced',
         buttonIcon: <Setting/>,
         targets: ['editHeaderTabsActions:3'],
@@ -52,6 +50,6 @@ export const registerTabBarActions = actionsRegistry => {
         displayableComponent: <AdvancedOptions/>,
         editPanelHeaderProps: {hideLanguageSwitcher: true},
         isDisplayable: props => props.mode === Constants.routes.baseEditRoute,
-        requiredPermission: [Constants.permissions.canSeeAdvancedOptionsTab]
+        requiresAdvancedPermission: true
     });
 };

@@ -1,8 +1,8 @@
 import React from 'react';
-import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
+import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
-import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
+import {ButtonGroup, Dropdown, Header, Separator} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -12,24 +12,9 @@ import {HeaderBadges} from '../HeaderBadges';
 import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
-import clsx from 'clsx';
 import {ContentTypeChip} from '../ContentTypeChip';
-
-const TabItemRenderer = renderProps => {
-    const {t} = useTranslation('jcontent');
-    return (
-        <TabItem
-            data-sel-role={renderProps.dataSelRole}
-            icon={renderProps.buttonIcon}
-            label={t(renderProps.buttonLabel)}
-            isSelected={renderProps.value === renderProps.activeTab}
-            onClick={e => {
-                e.stopPropagation();
-                renderProps.onClick(renderProps, e);
-            }}
-        />
-    );
-};
+import {useNodeChecks} from '@jahia/data-helper';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -47,16 +32,23 @@ export const EditPanelHeader = ({
     activeTabState,
     targetActionKey = 'content-editor/header/3dots'
 }) => {
-    const {nodeData} = useContentEditorContext();
+    const ctx = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
+
+    // Some tabs may have `requiresAdvancedPermission: true`, we do a single perm check here
+    const res = useNodeChecks({path: ctx.path}, {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]});
+
+    const tabs = registry
+        .find({target: 'editHeaderTabsActions'})
+        .filter(tab => tab.isDisplayable(ctx) && (!tab.requiresAdvancedPermission || res.checksResult));
 
     return (
         <Header
             title={truncate(title, 60)}
             breadcrumb={
-                nodeData?.path?.startsWith('/sites') && (
-                    <ContentPath path={nodeData.path}/>
+                ctx.nodeData?.path?.startsWith('/sites') && (
+                    <ContentPath path={ctx.nodeData.path}/>
                 )
             }
             contentType={<ContentTypeChip/>}
@@ -105,15 +97,22 @@ export const EditPanelHeader = ({
             }
             toolbarRight={
                 activeTab && (
-                    <Tab>
-                        <DisplayActions
-                            setActiveTab={setActiveTab}
-                            activeTab={activeTab}
-                            target="editHeaderTabsActions"
-                            nodeData={nodeData}
-                            render={TabItemRenderer}
-                        />
-                    </Tab>
+                    <Dropdown
+                        size="small"
+                        value={activeTab}
+                        style={{minWidth: '145px'}} // Roughly the size of "Advanced Options"
+                        data-sel-role="sel-view-mode-dropdown"
+                        data={tabs.map(tab => ({
+                            value: tab.value,
+                            label: t(tab.buttonLabel),
+                            iconStart: tab.buttonIcon,
+                            attributes: {'data-sel-role': tab.dataSelRole}
+                        }))}
+                        icon={tabs.find(tab => tab.value === activeTab)?.buttonIcon}
+                        onChange={(_, item) => {
+                            setActiveTab(item.value);
+                        }}
+                    />
                 )
             }
             status={<HeaderBadges/>}

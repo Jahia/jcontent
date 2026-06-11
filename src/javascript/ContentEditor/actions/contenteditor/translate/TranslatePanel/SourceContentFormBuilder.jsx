@@ -73,59 +73,40 @@ const SourceContentFormBuilderInner = ({data}) => {
     const {t} = useTranslation('jcontent');
     useResizeWatcher({columnSelector: 'left-column', data});
     const switchLanguage = useSwitchLanguage();
-    const {lang: currentLanguage} = useContentEditorConfigContext();
+    const {lang} = useContentEditorConfigContext();
 
     const {i18nContext, nodeData, siteInfo} = useContentEditorContext();
-    const translatedLangs = nodeData?.translationLanguages || [];
     const sourceLanguages = [];
     const missingTranslationLanguages = [];
 
-    for (const item of siteInfo.languages) {
+    for (const siteLang of siteInfo.languages) {
         const isTranslated =
-            translatedLangs.includes(item.language) ||
+            nodeData?.translationLanguages?.includes(siteLang.language) ||
             // Check if a translation during create is empty or not
-            (i18nContext[item.language]?.values &&
-                Object.values(i18nContext[item.language]?.values).some(
-                    Boolean
-                ));
+            Object.values(i18nContext[siteLang.language]?.values || {}).some(Boolean);
         if (isTranslated) {
-            sourceLanguages.push(item);
+            sourceLanguages.push(siteLang);
         } else {
-            missingTranslationLanguages.push(item);
+            missingTranslationLanguages.push(siteLang);
         }
     }
 
     return (
-        <Formik initialValues={{...data?.initialValues}} onSubmit={() => {}}>
+        <Formik initialValues={data?.initialValues} onSubmit={() => {}}>
             <div style={{display: 'grid', gridTemplateColumns: '1fr auto'}}>
                 <FormBuilder mode="edit"/>
                 <div style={{minWidth: 0}}>
-                    <ul
-                        style={{
-                            position: 'sticky',
-                            top: 0,
-                            maxWidth: '140px',
-                            overflow: 'auto'
-                        }}
-                    >
-                        <MenuLabel>
-                            {t(
-                                'label.contentEditor.edit.action.translate.sourceLanguage'
-                            )}
-                        </MenuLabel>
+                    <ul style={{position: 'sticky', top: 0, maxWidth: '140px', overflow: 'auto'}}>
+                        <MenuLabel>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</MenuLabel>
                         {sourceLanguages.map(l => (
                             <MenuItem
                                 key={l.language}
                                 label={getCapitalized(l.uiLanguageDisplayName)}
-                                isSelected={l.language === currentLanguage}
+                                isSelected={l.language === lang}
                                 onClick={() => switchLanguage(l.language)}
                             />
                         ))}
-                        <MenuLabel>
-                            {t(
-                                'label.contentEditor.edit.action.translate.untranslated'
-                            )}
-                        </MenuLabel>
+                        <MenuLabel>{t('label.contentEditor.edit.action.translate.untranslated')}</MenuLabel>
                         {missingTranslationLanguages.map(l => (
                             <MenuItem
                                 key={l.language}

@@ -1,9 +1,6 @@
 import React from 'react';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {
-    ButtonRendererShortLabel,
-    getButtonRenderer
-} from '~/ContentEditor/utils';
+import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
 import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
@@ -64,13 +61,7 @@ export const EditPanelHeader = ({
             }
             contentType={<ContentTypeChip/>}
             mainActions={
-                <div
-                    className={clsx(
-                        styles.headerMainActions,
-                        'flexRow_center',
-                        'alignCenter'
-                    )}
-                >
+                <div className={styles.headerMainActions}>
                     <DisplayAction
                         actionKey="backButton"
                         render={BackButtonRenderer}

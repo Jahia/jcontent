@@ -7,6 +7,7 @@ import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader/EditPanelHeader';
 import {useContentEditorConfigContext} from '~/shared';
+import { CeModalError } from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const EditPanelFullscreen = ({title}) => {
     const {advancedOpenTab} = useContentEditorConfigContext();
@@ -18,7 +19,7 @@ export const EditPanelFullscreen = ({title}) => {
     const tab = tabs.find(tab => tab.value === activeTab);
 
     if (!tab) {
-        throw new Error(`No tab found for the current active tab value (${activeTab}), check the registry for the "editHeaderTabsActions" target (valid values are: ${tabs.map(t => t.value).join(', ')})`);
+        throw new CeModalError(`No tab found for the current active tab value (${activeTab}), check the registry for the "editHeaderTabsActions" target (valid values are: ${tabs.map(t => t.value).join(', ')})`);
     }
 
     return (

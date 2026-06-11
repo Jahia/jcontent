@@ -15,7 +15,7 @@ export const SidePanel = () => {
         () => tabs.filter(tab => tab?.isDisplayable(ceCtx)),
         [tabs, ceCtx]
     );
-    const ActiveTabComponent = visibleTabs.find(tab => tab.key === activeTab)?.displayableComponent;
+    const displayableComponent = visibleTabs.find(tab => tab.key === activeTab)?.displayableComponent;
 
     // If the currently-selected tab is no longer visible (e.g. the underlying
     // node lost preview capability), drop the selection so onVisible can pick a new default.
@@ -61,7 +61,7 @@ export const SidePanel = () => {
                 </Tab>
             </div>
             <div className={styles.content} data-sel-role="side-panel-content">
-                {ActiveTabComponent && <ActiveTabComponent/>}
+                {displayableComponent}
             </div>
         </Paper>
     );

@@ -10,7 +10,10 @@ import {EditPanelLanguageSwitcher} from '~/shared';
 import {useTranslation} from 'react-i18next';
 import translateStyles from '../TranslatePanel/styles.scss';
 
-export const EditPanelContent = ({twoPanelsContentProps, languageSwitchTopOfLeftCol = false}) => {
+export const EditPanelContent = ({
+    twoPanelsContentProps,
+    languageSwitchTopOfLeftCol = false
+}) => {
     const {t} = useTranslation('jcontent');
     const {mode, isFullscreen} = useContentEditorConfigContext();
 
@@ -24,14 +27,13 @@ export const EditPanelContent = ({twoPanelsContentProps, languageSwitchTopOfLeft
                     {...twoPanelsContentProps}
                     leftCol={
                         <>
-                            {languageSwitchTopOfLeftCol && <div className={translateStyles.languageDropDown}>
-                                <span>
-                                    {t(
-                                        'label.contentEditor.edit.action.translate.translateToLanguage'
-                                    )}
-                                </span>
-                                <EditPanelLanguageSwitcher/>
-                            </div>}
+                            {languageSwitchTopOfLeftCol && (
+                                <div className={translateStyles.languageDropDown}>
+                                    <span>{t('label.contentEditor.edit.action.translate.translateToLanguage')}
+                                    </span>
+                                    <EditPanelLanguageSwitcher/>
+                                </div>
+                            )}
                             <FormBuilder mode={mode}/>
                         </>
                     }

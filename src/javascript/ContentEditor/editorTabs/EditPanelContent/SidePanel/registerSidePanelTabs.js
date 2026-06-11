@@ -12,7 +12,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         buttonIcon: <InfoCircle/>,
         targets: ['sidePanelTabsActions:2'],
         dataSelRole: 'tab-details',
-        displayableComponent: ContentDetails,
+        displayableComponent: <ContentDetails/>,
         isDisplayable: () => true
     });
 
@@ -21,7 +21,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         buttonIcon: <History/>,
         targets: ['sidePanelTabsActions:3'],
         dataSelRole: 'tab-history',
-        displayableComponent: ContentHistory,
+        displayableComponent: <ContentHistory/>,
         isDisplayable: () => true,
         requiredPermission: ['viewHistoryTab']
     });
@@ -31,7 +31,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         buttonIcon: <Visibility/>,
         targets: ['sidePanelTabsActions:1'],
         dataSelRole: 'tab-preview',
-        displayableComponent: Preview,
+        displayableComponent: <Preview/>,
         isDisplayable: ({hasPreview}) => Boolean(hasPreview)
     });
 };

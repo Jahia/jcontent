@@ -1,62 +1,62 @@
 {
-  "name": "@jahia/jcontent-cypress",
-  "version": "3.7.0-SNAPSHOT",
-  "scripts": {
-    "instrument": "nyc instrument --compact=false cypress instrumented",
-    "e2e:ci": "cypress run --browser chrome",
-    "e2e:ci:performance": "cypress run --browser chrome -C cypress.config-performance.ts --spec ${0}",
-    "e2e:debug": "cypress open",
-    "e2e:debug:snapshots": "cypress open --config-file cypress.config.debug.ts",
-    "e2e:debug:performance": "cypress open -C cypress.config-performance.ts",
-    "lint": "eslint . -c .eslintrc.json --ext .ts",
-    "report:merge": "mochawesome-merge results/reports/mochawesome*.json > results/reports/report.json && rm results/reports/mochawesome*.json",
-    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",
-    "build": "tsc -p ./lib-tsconfig.json",
-    "lint:js": "eslint --ext js,ts cypress",
-    "lint:js:fix": "yarn lint:js --fix cypress",
-    "lint:fix": "yarn lint:js:fix --resolve-plugins-relative-to ."
-  },
-  "main": "index.js",
-  "files": [
-    "dist"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jahia/jcontent.git",
-    "directory": "tests"
-  },
-  "devDependencies": {
-    "@4tw/cypress-drag-drop": "^2.3.0",
-    "@jahia/cypress": "^8.2.0",
-    "@jahia/jahia-reporter": "^1.5.0",
-    "@types/node": "^22.14.0",
-    "@typescript-eslint/eslint-plugin": "^8.29.1",
-    "@typescript-eslint/parser": "^8.29.1",
-    "cypress": "15.14.0",
-    "cypress-iframe": "^1.0.1",
-    "cypress-multi-reporters": "^2.0.5",
-    "cypress-terminal-report": "^5.0.2",
-    "cypress-wait-until": "^1.7.2",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-chai-friendly": "^1.0.1",
-    "eslint-plugin-cypress": "^4.2.0",
-    "eslint-plugin-prettier": "^5.2.6",
-    "graphql": "^15.5.0",
-    "graphql-tag": "^2.12.6",
-    "mocha-junit-reporter": "^2.2.1",
-    "mochawesome": "^7.1.3",
-    "mochawesome-merge": "^5.0.0",
-    "mochawesome-report-generator": "^6.2.0",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "cypress-real-events": "^1.14.0"
-  },
-  "resolutions": {
-    "@apollo/client": "^3",
-    "cross-fetch": "~3.1"
-  }
+    "name": "@jahia/jcontent-cypress",
+    "version": "3.7.0-SNAPSHOT",
+    "scripts": {
+        "instrument": "nyc instrument --compact=false cypress instrumented",
+        "e2e:ci": "cypress run --browser chrome",
+        "e2e:ci:performance": "cypress run --browser chrome -C cypress.config-performance.ts --spec ${0}",
+        "e2e:debug": "cypress open",
+        "e2e:debug:snapshots": "cypress open --config-file cypress.config.debug.ts",
+        "e2e:debug:performance": "cypress open -C cypress.config-performance.ts",
+        "lint": "eslint . -c .eslintrc.json --ext .ts",
+        "report:merge": "mochawesome-merge results/reports/mochawesome*.json > results/reports/report.json && rm results/reports/mochawesome*.json",
+        "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",
+        "build": "tsc -p ./lib-tsconfig.json",
+        "lint:js": "eslint --ext js,ts cypress",
+        "lint:js:fix": "yarn lint:js --fix cypress",
+        "lint:fix": "yarn lint:js:fix --resolve-plugins-relative-to ."
+    },
+    "main": "index.js",
+    "files": [
+        "dist"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Jahia/jcontent.git",
+        "directory": "tests"
+    },
+    "devDependencies": {
+        "@4tw/cypress-drag-drop": "^2.3.0",
+        "@jahia/cypress": "^8.2.1",
+        "@jahia/jahia-reporter": "^1.5.0",
+        "@types/node": "^22.14.0",
+        "@typescript-eslint/eslint-plugin": "^8.29.1",
+        "@typescript-eslint/parser": "^8.29.1",
+        "cypress": "15.17.0",
+        "cypress-iframe": "^1.0.1",
+        "cypress-multi-reporters": "^2.0.5",
+        "cypress-terminal-report": "^5.0.2",
+        "cypress-wait-until": "^1.7.2",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^10.1.1",
+        "eslint-plugin-chai-friendly": "^1.0.1",
+        "eslint-plugin-cypress": "^4.2.0",
+        "eslint-plugin-prettier": "^5.2.6",
+        "graphql": "^15.5.0",
+        "graphql-tag": "^2.12.6",
+        "mocha-junit-reporter": "^2.2.1",
+        "mochawesome": "^7.1.3",
+        "mochawesome-merge": "^5.0.0",
+        "mochawesome-report-generator": "^6.2.0",
+        "prettier": "^3.5.3",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "cypress-real-events": "^1.14.0"
+    },
+    "resolutions": {
+        "@apollo/client": "^3",
+        "cross-fetch": "~3.1"
+    }
 }

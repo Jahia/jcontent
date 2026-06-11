@@ -17,7 +17,7 @@ import {BasicSearch} from './basicSearch';
 import {CreateContent} from './createContent';
 import {ContentEditor} from './contentEditor';
 import {Media} from './media';
-import {ContentTable} from './contentTable';
+import {ContentTable, ContentTableRow} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
 import {CompareDialog} from './compareDialog';
@@ -148,6 +148,13 @@ export class JContent extends BasePage {
 
     getTable(): ContentTable {
         return getComponent(ContentTable, null, el => expect(el).to.be.visible);
+    }
+
+    createFolder(folderName: string): ContentTableRow {
+        this.getHeaderActionButton('createContentFolder').click();
+        cy.get('#folder-name').type(folderName);
+        cy.get('[data-cm-role="create-folder-as-confirm"]').click();
+        return this.getTable().getRowByName(folderName);
     }
 
     getGrid(): ContentGrid {

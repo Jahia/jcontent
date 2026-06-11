@@ -1,4 +1,5 @@
-import {BaseComponent, Table, TableRow} from '@jahia/cypress';
+import {BaseComponent, getComponent, Table, TableRow} from '@jahia/cypress';
+import {DeleteDialog, DeletePermanentlyDialog} from './deleteDialog';
 import {JContentMenu} from './jcontentMenu';
 import Chainable = Cypress.Chainable;
 
@@ -61,6 +62,18 @@ export class ContentTableRow extends TableRow {
     isSelected(isSelected = true) {
         this.element.find('td[data-cm-role="table-content-list-cell-selection"] input')
             .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+        return this;
+    }
+
+    markForDeletion(): ContentTableRow {
+        this.contextMenu().selectByRole('delete');
+        getComponent(DeleteDialog).markForDeletion();
+        return this;
+    }
+
+    deletePermanently(): ContentTableRow {
+        this.contextMenu().selectByRole('deletePermanently');
+        getComponent(DeletePermanentlyDialog).delete();
         return this;
     }
 }

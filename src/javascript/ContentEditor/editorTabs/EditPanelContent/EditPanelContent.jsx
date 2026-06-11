@@ -9,10 +9,11 @@ import {TwoPanelsContent} from '~/ContentEditor/editorTabs/EditPanelContent/TwoP
 import {EditPanelLanguageSwitcher} from '~/shared';
 import {useTranslation} from 'react-i18next';
 import translateStyles from '../TranslatePanel/styles.scss';
+import PropTypes from 'prop-types';
 
 export const EditPanelContent = ({
     twoPanelsContentProps,
-    languageSwitchTopOfLeftCol = false
+    hasLanguageSwitchTopOfLeftCol = false
 }) => {
     const {t} = useTranslation('jcontent');
     const {mode, isFullscreen} = useContentEditorConfigContext();
@@ -27,7 +28,7 @@ export const EditPanelContent = ({
                     {...twoPanelsContentProps}
                     leftCol={
                         <>
-                            {languageSwitchTopOfLeftCol && (
+                            {hasLanguageSwitchTopOfLeftCol && (
                                 <div className={translateStyles.languageDropDown}>
                                     <span>{t('label.contentEditor.edit.action.translate.translateToLanguage')}
                                     </span>
@@ -48,4 +49,12 @@ export const EditPanelContent = ({
             )}
         </>
     );
+};
+
+EditPanelContent.propTypes = {
+    twoPanelsContentProps: PropTypes.shape({
+        rightCol: PropTypes.node.isRequired,
+        hasSingleSyncedScrollbar: PropTypes.bool
+    }),
+    hasLanguageSwitchTopOfLeftCol: PropTypes.bool
 };

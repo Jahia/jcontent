@@ -7,7 +7,7 @@ import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader/EditPanelHeader';
 import {useContentEditorConfigContext} from '~/shared';
-import { CeModalError } from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const EditPanelFullscreen = ({title}) => {
     const {advancedOpenTab} = useContentEditorConfigContext();

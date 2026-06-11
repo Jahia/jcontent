@@ -30,7 +30,7 @@ export const registerDropdownOptions = actionsRegistry => {
         dataSelRole: 'tab-translate',
         displayableComponent: (
             <EditPanelContent
-                languageSwitchTopOfLeftCol
+                hasLanguageSwitchTopOfLeftCol
                 twoPanelsContentProps={{
                     rightCol: <SourceContentPanel/>,
                     hasSingleSyncedScrollbar: true

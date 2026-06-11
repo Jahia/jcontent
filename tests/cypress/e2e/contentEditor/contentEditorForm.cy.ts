@@ -235,13 +235,14 @@ describe('Content editor form', () => {
         const ceEditor = jcontent.editComponentByRowName('myText');
 
         ceEditor.switchToAdvancedMode();
-        cy.get('.moonstone-header')
-            .find('[data-sel-role="tab-advanced-options"]')
-            .should('not.exist');
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]')
+            .should('be.visible')
+            .invoke('attr', 'data-sel-available-tabs')
+            .should('not.contain', 'tab-advanced-options');
         ceEditor.cancel();
     });
 
-    it.only('should display technical information in advanced options', () => {
+    it('should display technical information in advanced options', () => {
         cy.logout();
         // Login as editor in chief
         cy.login('anne', 'password');
@@ -263,9 +264,10 @@ describe('Content editor form', () => {
         cy.get('[data-sel-role="detail-row"][data-sel-label="UUID"]').should('be.visible');
 
         // Switch to edit tab and modify the text (only click if not already selected)
-        cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').then($tab => {
-            if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').then($dropdown => {
+            if ($dropdown.attr('data-sel-tab') !== 'tab-edit') {
+                cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+                cy.get('[data-sel-role="tab-edit"]').click();
             }
         });
         ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');

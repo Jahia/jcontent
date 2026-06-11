@@ -260,8 +260,13 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
+    selectHeaderTab(role: string) {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get(`[data-sel-role="${role}"]`).click();
+    }
+
     assertHeaderActionSelected(role: string) {
-        this.getHeaderActionButton(role).should('have.class', 'moonstone-tabItem_selected');
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').should('have.attr', 'data-sel-tab', role);
     }
 
     publish() {

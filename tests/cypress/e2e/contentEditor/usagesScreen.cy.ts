@@ -28,7 +28,8 @@ describe('Create content tests', () => {
 
     it('display 18 usages', () => {
         jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
-        jcontent.switchToListMode().getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
+        jcontent.getMedia().switchView('list');
+        jcontent.getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         const advancedOptions = contentEditor.switchToAdvancedOptions();
         advancedOptions.checkOption('Usages', '18');

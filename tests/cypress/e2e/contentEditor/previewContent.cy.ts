@@ -103,8 +103,8 @@ describe('Preview tests', () => {
         });
 
         cy.loginAndStoreSession();
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/simpleText');
-        const contentEditor = jcontent.editContent();
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('simpleText');
         contentEditor.switchToAdvancedMode();
         contentEditor.switchToSidePanelPreviewTab();
 

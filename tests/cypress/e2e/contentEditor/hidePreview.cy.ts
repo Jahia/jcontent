@@ -1,5 +1,5 @@
 import {addNode, createSite, deleteSite, getNodeByPath} from '@jahia/cypress';
-import {CategoryManager, JContent} from '../../page-object';
+import {JContent} from '../../page-object';
 
 describe('Hide Preview testsuite', () => {
     const siteKey = 'hidePreviewSite';
@@ -57,9 +57,10 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview shouldn\'t be shown in Category Manager', () => {
-        const cm = CategoryManager.visitCategoryManager('en');
-        const ce = cm.editItem('Annual Filings');
-        ce.switchToAdvancedMode();
+        getNodeByPath('/sites/systemsite/categories').then(res => {
+            const uuid = res.data.jcr.nodeByPath.uuid;
+            cy.visit(`/jahia/category-manager/en/category#(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:systemsite,uilang:en,uuid:'${uuid}')))`);
+        });
         cy.get('[data-sel-role="tab-preview"]').should('not.exist');
     });
 

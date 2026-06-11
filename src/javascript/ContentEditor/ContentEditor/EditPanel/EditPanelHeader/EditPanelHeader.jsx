@@ -102,6 +102,9 @@ export const EditPanelHeader = ({
                         value={activeTab}
                         style={{minWidth: '145px'}} // Roughly the size of "Advanced Options"
                         data-sel-role="sel-view-mode-dropdown"
+                        data-sel-value={activeTab}
+                        data-sel-tab={tabs.find(tab => tab.value === activeTab)?.dataSelRole}
+                        data-sel-available-tabs={tabs.map(tab => tab.dataSelRole).join(',')}
                         data={tabs.map(tab => ({
                             value: tab.value,
                             label: t(tab.buttonLabel),

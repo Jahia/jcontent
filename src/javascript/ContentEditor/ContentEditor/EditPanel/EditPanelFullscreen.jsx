@@ -27,7 +27,7 @@ export const EditPanelFullscreen = ({title}) => {
                                  activeTabState={[activeTab, setActiveTab]}
                 />
             )}
-            content={tab?.displayableComponent && <tab.displayableComponent tab={tab}/>}
+            content={tab.displayableComponent}
         />
     );
 };

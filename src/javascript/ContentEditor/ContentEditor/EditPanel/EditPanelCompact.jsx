@@ -29,7 +29,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
-    const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
+    const {displayableComponent} = tabs.find(tab => tab.value === Constants.editPanel.editTab);
 
     return (
         <>
@@ -51,7 +51,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 </div>
             </DialogTitle>
             <DialogContent className="flexCol" id="contenteditor-dialog-content" data-sel-role="form-container">
-                <EditPanelContent/>
+                {displayableComponent}
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
                 {createAnother && (

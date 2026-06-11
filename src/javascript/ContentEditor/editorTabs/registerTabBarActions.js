@@ -15,8 +15,7 @@ export const registerTabBarActions = actionsRegistry => {
         targets: ['editHeaderTabsActions:1'],
         value: Constants.editPanel.editTab,
         dataSelRole: 'tab-edit',
-        displayableComponent: EditPanelContent,
-        side: {component: SidePanel},
+        displayableComponent: <EditPanelContent twoPanelsContentProps={{rightCol: <SidePanel/>}} />,
         isDisplayable: () => true
     });
 
@@ -26,8 +25,7 @@ export const registerTabBarActions = actionsRegistry => {
         targets: ['editHeaderTabsActions:2'],
         value: Constants.editPanel.translateTab,
         dataSelRole: 'tab-translate',
-        displayableComponent: EditPanelContent,
-        side: {component: SourceContentPanel, hasSingleSyncedScrollbar: true},
+        displayableComponent: <EditPanelContent twoPanelsContentProps={{rightCol: <SourceContentPanel/>, hasSingleSyncedScrollbar: true}} />,
         isDisplayable: () => true,
         requiredSitePermission: ['translateAction']
     });
@@ -38,7 +36,7 @@ export const registerTabBarActions = actionsRegistry => {
         targets: ['editHeaderTabsActions:3'],
         value: 'advanced',
         dataSelRole: 'tab-advanced-options',
-        displayableComponent: AdvancedOptions,
+        displayableComponent: <AdvancedOptions />,
         isDisplayable: props => props.mode === Constants.routes.baseEditRoute,
         requiredPermission: [Constants.permissions.canSeeAdvancedOptionsTab]
     });

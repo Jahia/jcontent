@@ -9,7 +9,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import styles from './EditPanelContent.scss';
 import {TwoPanelsContent} from '~/ContentEditor/actions/contenteditor/translate/TranslatePanel/TwoPanelsContent';
 
-export const EditPanelContent = ({tab}) => {
+export const EditPanelContent = ({twoPanelsContentProps}) => {
     const {mode, isFullscreen} = useContentEditorConfigContext();
 
     return (
@@ -17,9 +17,8 @@ export const EditPanelContent = ({tab}) => {
             {mode === Constants.routes.baseEditRoute && <PublicationInfoProgress/>}
             {isFullscreen ? (
                 <TwoPanelsContent
+                    {...twoPanelsContentProps}
                     leftCol={<FormBuilder mode={mode}/>}
-                    rightCol={tab?.side?.component && <tab.side.component/>}
-                    hasSingleSyncedScrollbar={tab?.side?.hasSingleSyncedScrollbar}
                 />
             ) : (
                 <FullWidthContent

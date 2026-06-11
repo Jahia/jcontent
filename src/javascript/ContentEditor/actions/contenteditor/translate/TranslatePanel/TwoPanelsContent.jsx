@@ -21,10 +21,7 @@ export const TwoPanelsContent = ({
         const leftCol = leftColRef.current;
         const rightCol = rightColRef.current;
 
-        console.log(leftCol, rightCol);
-
         const syncScroll = (source, target) => {
-            console.log(leftCol.scrollTop, rightCol.scrollTop, isSyncing.current);
             if (isSyncing.current) {
                 return;
             }

@@ -1,6 +1,7 @@
 import {addNode, createSite, deleteSite, enableModule, getComponent, getComponentBySelector, Menu} from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor, ContentTypeSelector, JContent} from '../../page-object';
+import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
 
 const setButtonLimit = (value: string) => {
     return cy.apollo({
@@ -230,6 +231,28 @@ describe('Page builder - insertion points', () => {
                 }]
             }]
         });
+
+        addNode({
+            name: 'page-with-text',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Simple text in an area', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-page-with-text',
+                    primaryNodeType: 'jnt:bigText',
+                    properties: [
+                        {name: 'text', value: 'Hello there', language: 'en'}
+                    ]
+                }]
+            }]
+        });
     });
 
     after(() => {
@@ -429,6 +452,94 @@ describe('Page builder - insertion points', () => {
         clickButtonByRole(pageBuilder, 'cent:childObject2');
         contentEditor = new ContentEditor();
         contentEditor.create();
+    });
+
+    it('shows insertion points for area with contribute types correctly', () => {
+        const modulePath = `${homePath}/page-with-text/area-main`;
+        let pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-with-text')
+            .switchToPageBuilder();
+
+        let module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        let createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 2);
+
+        module.contextMenu().select('Edit');
+
+        let contentEditor = new ContentEditor();
+        contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
+        contentEditor.getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
+            .addNewValue('Simple text');
+        contentEditor.save();
+
+        pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-with-text')
+            .switchToPageBuilder();
+
+        module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        // Test that we have two identical simple text buttons around the child
+        createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 2);
+        createButtons.get().find('button[data-sel-role="jnt:text"]').should('have.length', 2).first().click();
+
+        contentEditor = new ContentEditor();
+        contentEditor.cancel();
+
+        createButtons.get().find('button[data-sel-role="jnt:text"]').should('have.length', 2).last().click();
+
+        contentEditor = new ContentEditor();
+        contentEditor.cancel();
+
+        // Test that empty value switches insertion point to editorialContent
+        module.contextMenu().select('Edit');
+
+        contentEditor = new ContentEditor();
+        contentEditor.getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
+            .removeValue('Simple text');
+        contentEditor.save();
+
+        pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-with-text')
+            .switchToPageBuilder();
+
+        module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 2);
+        createButtons.get().find('button[data-sel-role="jmix:editorialContent"]').should('have.length', 2).first().click();
+        pageBuilder.getCreateContent().getContentTypeSelector().cancel();
+        createButtons.get().find('button[data-sel-role="jmix:editorialContent"]').should('have.length', 2).last().click();
+        pageBuilder.getCreateContent().getContentTypeSelector().cancel();
+
+        // Verify that setting toggle to off brings back create content insertion points
+        module.contextMenu().select('Edit');
+
+        contentEditor = new ContentEditor();
+        contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
+        contentEditor.save();
+
+        pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-with-text')
+            .switchToPageBuilder();
+
+        module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        createButtons = module.getAllCreateButtons();
+        createButtons.should('have.length', 2);
+        createButtons.get().find('button[data-sel-role="createContent"]').should('have.length', 2).first().click();
+        pageBuilder.getCreateContent().getContentTypeSelector().cancel();
+        createButtons.get().find('button[data-sel-role="createContent"]').should('have.length', 2).last().click();
+        pageBuilder.getCreateContent().getContentTypeSelector().cancel();
     });
 });
 

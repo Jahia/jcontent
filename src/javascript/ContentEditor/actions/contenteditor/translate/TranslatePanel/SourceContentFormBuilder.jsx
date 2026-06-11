@@ -12,8 +12,9 @@ import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuild
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
 import PropTypes from 'prop-types';
-import {getCapitalized, useSwitchLanguage} from '~/shared';
-import {MenuItem, Typography} from '@jahia/moonstone';
+import {EditPanelLanguageSwitcher, useSwitchLanguage} from '~/shared';
+import {Typography} from '@jahia/moonstone';
+import styles from '../styles.scss';
 
 /**
  * Displays read-only content from a source language on translation panel UI.
@@ -93,30 +94,17 @@ const SourceContentFormBuilderInner = ({data}) => {
 
     return (
         <Formik initialValues={data?.initialValues} onSubmit={() => {}}>
-            <div style={{display: 'grid', gridTemplateColumns: '1fr auto'}}>
-                <FormBuilder mode="edit"/>
-                <div style={{minWidth: 0}}>
-                    <ul style={{position: 'sticky', top: 0, maxWidth: '140px', overflow: 'auto'}}>
-                        <MenuLabel>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</MenuLabel>
-                        {sourceLanguages.map(l => (
-                            <MenuItem
-                                key={l.language}
-                                label={getCapitalized(l.uiLanguageDisplayName)}
-                                isSelected={l.language === lang}
-                                onClick={() => switchLanguage(l.language)}
-                            />
-                        ))}
-                        <MenuLabel>{t('label.contentEditor.edit.action.translate.untranslated')}</MenuLabel>
-                        {missingTranslationLanguages.map(l => (
-                            <MenuItem
-                                key={l.language}
-                                isDisabled
-                                label={getCapitalized(l.uiLanguageDisplayName)}
-                            />
-                        ))}
-                    </ul>
+            <>
+                <div className={styles.languageDropDown}>
+                    <span>
+                        {t(
+                            'label.contentEditor.edit.action.translate.sourceLanguage'
+                        )}
+                    </span>
+                    <EditPanelLanguageSwitcher/>
                 </div>
-            </div>
+                <FormBuilder mode="edit"/>
+            </>
         </Formik>
     );
 };

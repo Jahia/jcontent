@@ -17,14 +17,20 @@ export const EditPanelFullscreen = ({title}) => {
     const tabs = registry.find({target: 'editHeaderTabsActions'});
     const tab = tabs.find(tab => tab.value === activeTab);
 
+    if (!tab) {
+        throw new Error(`No tab found for the current active tab value (${activeTab}), check the registry for the "editHeaderTabsActions" target (valid values are: ${tabs.map(t => t.value).join(', ')})`);
+    }
+
     return (
         <LayoutContent
             className={styles.main}
             hasPadding={false}
             header={(
-                <EditPanelHeader title={title}
-                                 isShowPublish={mode === Constants.routes.baseEditRoute}
-                                 activeTabState={[activeTab, setActiveTab]}
+                <EditPanelHeader
+                    {...tab.editPanelHeaderProps}
+                    title={title}
+                    isShowPublish={mode === Constants.routes.baseEditRoute}
+                    activeTabState={[activeTab, setActiveTab]}
                 />
             )}
             content={tab.displayableComponent}

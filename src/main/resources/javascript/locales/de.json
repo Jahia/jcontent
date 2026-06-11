@@ -632,8 +632,7 @@
           "translate": {
             "name": "Übersetzen",
             "sourceLanguage": "Ausgangssprache",
-            "translateToLanguage": "Übersetzen nach",
-            "untranslated": "Unübersetzt"
+            "translateToLanguage": "Übersetzen nach"
           },
           "goBack": {
             "edit": {

@@ -148,6 +148,7 @@ export const registerEditActions = registry => {
         showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
         requiredSitePermission: ['translateAction'],
         getDisplayName: true,
+        getSiteLanguages: true,
         isFullscreen: true,
         editConfig: {advancedOpenTab: Constants.editPanel.translateTab}
     });

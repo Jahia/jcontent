@@ -34,9 +34,12 @@ export const EditContent = ({
     const languages = res.node?.site?.languages?.filter(l => l.activeInEdit) || [];
     const sourceLang = languages.find(l => l.language !== language) || languages[0];
 
+    const enabledProp = otherProps.getSiteLanguages === undefined ? {} : {enabled: languages.length > 1};
+
     return (
         <Render
             {...otherProps}
+            {...enabledProp}
             isVisible={res.checksResult}
             onClick={() =>
                 api.edit({

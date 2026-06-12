@@ -264,4 +264,9 @@
   + * (cent:childObject5)
   + * (cent:childObject6)
 
+[cent:twoMultipleWithLimitTwo] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + * (cent:childObject1)
+ + * (cent:childObject2)
+
 

@@ -10,7 +10,7 @@ import {useNodeChecks, useNodeInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
-import {JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 
 export const CreateContent = ({
     contextNodePath,
@@ -48,7 +48,7 @@ export const CreateContent = ({
         }
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
-    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaAreasUtil.getArea(path)?.nodeTypes;
+    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.getArea(path)?.nodeTypes;
     const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
         nodeTypes: areaNodeTypes,
         childNodeName: name,
@@ -71,7 +71,7 @@ export const CreateContent = ({
             return defaultProps;
         }
 
-        const templateLimit = JahiaAreasUtil.getArea(path)?.limit;
+        const templateLimit = JahiaRenderedModulesUtil.getArea(path)?.limit;
         if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
             return {...defaultProps, loading: false};
         }
@@ -112,13 +112,33 @@ export const CreateContent = ({
         return <Render {...otherProps} isVisible={false} onClick={() => {}}/>;
     }
 
-    const onClick = ({nodeTypesTree}) => {
-        api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
+    const onClick = ({nodeTypesTree, createdNodeName}) => {
+        // Presence of createdNodeName indicates that we create a named child for a specific nodetype so we want to avoid making API call to get type info
+        if (createdNodeName) {
+            api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypes: nodeTypesTree, name: createdNodeName, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
+        } else {
+            api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
+        }
     };
 
     const additionalProps = labelProps ? {
         ...labelProps
     } : {};
+
+    // Add named child creation actions if any placeholders were found in rendering
+    if (JahiaRenderedModulesUtil.getModule(path)) {
+        JahiaRenderedModulesUtil.getModule(path).filter(ent => ent.path !== '*' && !ent.path?.startsWith('/')).forEach(ent => {
+            actions.push({
+                key: ent.nodeTypes[0],
+                actionKey: ent.nodeTypes[0],
+                nodeTypesTree: ent.nodeTypes,
+                nodeTypes: ent.nodeTypes,
+                createdNodeName: ent.path,
+                buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
+                buttonLabelParams: {typeName: ent.path}
+            });
+        });
+    }
 
     return (actions || [{
         key: 'allTypes',

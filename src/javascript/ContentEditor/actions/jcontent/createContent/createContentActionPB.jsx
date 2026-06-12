@@ -6,7 +6,7 @@ import {
 import {shallowEqual, useSelector} from 'react-redux';
 import * as PropTypes from 'prop-types';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
-import {JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 
 export const CreateContentPB = ({
     path,
@@ -37,7 +37,7 @@ export const CreateContentPB = ({
             return defaultProps;
         }
 
-        const templateLimit = JahiaAreasUtil.getArea(path)?.limit;
+        const templateLimit = JahiaRenderedModulesUtil.getArea(path)?.limit;
         if (!resNode || childrenLimitReachedOrExceeded(resNode, templateLimit)) {
             return {...defaultProps, loading: false};
         }

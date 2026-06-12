@@ -32,7 +32,7 @@ jest.mock('./createContent.utils', () => {
 });
 jest.mock('~/JContent/JContent.utils', () => {
     return {
-        JahiaAreasUtil: {
+        JahiaRenderedModulesUtil: {
             getArea: () => {}
         }
     };

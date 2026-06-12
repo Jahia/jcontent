@@ -11,10 +11,10 @@ import {useContentEditorConfigContext} from '../../../contexts';
 export const PublicationInfoBadge = () => {
     const {t} = useTranslation('jcontent');
     const publicationInfoContext = usePublicationInfoContext();
-    const {sideBySideContext} = useContentEditorConfigContext();
+    const {advancedOpenTab, sideBySideContext} = useContentEditorConfigContext();
     const {publicationStatus, existsInLive, publicationInfoPolling} = publicationInfoContext;
     const uilang = useSelector(state => state.uilang);
-    const translateMode = Boolean(sideBySideContext.lang);
+    const translateMode = advancedOpenTab === Constants.editPanel.translateTab && Boolean(sideBySideContext.lang);
 
     const statuses = {
         modified: false,

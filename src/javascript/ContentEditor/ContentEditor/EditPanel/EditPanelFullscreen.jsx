@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './EditPanel.scss';
@@ -10,9 +10,13 @@ import {useContentEditorConfigContext} from '~/shared';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const EditPanelFullscreen = ({title}) => {
-    const {advancedOpenTab} = useContentEditorConfigContext();
+    const {advancedOpenTab, updateEditorConfig} = useContentEditorConfigContext();
     const [activeTab, setActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
+    const handleSetActiveTab = useCallback(value => {
+        setActiveTab(value);
+        updateEditorConfig({advancedOpenTab: value});
+    }, [updateEditorConfig]);
 
     // Without edit tab, no content editor
     const tabs = registry.find({target: 'editHeaderTabsActions'});
@@ -31,7 +35,7 @@ export const EditPanelFullscreen = ({title}) => {
                     {...tab.editPanelHeaderProps}
                     title={title}
                     isShowPublish={mode === Constants.routes.baseEditRoute}
-                    activeTabState={[activeTab, setActiveTab]}
+                    activeTabState={[activeTab, handleSetActiveTab]}
                 />
             )}
             content={tab.displayableComponent}

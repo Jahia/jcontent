@@ -2,6 +2,7 @@ import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
 
@@ -33,6 +34,7 @@ export const EditContent = ({
     // For side-by-side, pick a source language that is active and different from the current language, if any
     const languages = res.node?.site?.languages?.filter(l => l.activeInEdit) || [];
     const sourceLang = languages.find(l => l.language !== language) || languages[0];
+    const isTranslateAction = otherProps.editConfig?.advancedOpenTab === Constants.editPanel.translateTab;
 
     const enabledProp = otherProps.getSiteLanguages === undefined ? {} : {enabled: languages.length > 1};
 
@@ -47,7 +49,7 @@ export const EditContent = ({
                     lang: language,
                     isFullscreen,
                     editCallback,
-                    sideBySideContext: {lang: sourceLang?.language},
+                    ...(isTranslateAction ? {sideBySideContext: {lang: sourceLang?.language}} : {}),
                     ...otherProps.editConfig
                 })}
         />

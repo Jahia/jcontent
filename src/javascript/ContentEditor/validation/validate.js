@@ -107,13 +107,26 @@ const rangeFieldValidation = (values, field) => {
             try {
                 const {lowerBoundary, disableLowerBoundary, upperBoundary, disableUpperBoundary} = extractRangeConstraints(constraint.value.string);
 
+                // Open-ended ranges like (0,) have an empty boundary; skip the check for that side
+                const parseBoundary = boundary => {
+                    if (boundary === undefined || boundary === null || String(boundary).trim() === '') {
+                        return undefined;
+                    }
+
+                    const boundaryAsNumber = Number(boundary);
+                    return Number.isNaN(boundaryAsNumber) ? undefined : boundaryAsNumber;
+                };
+
+                const lower = parseBoundary(lowerBoundary);
+                const upper = parseBoundary(upperBoundary);
+
                 return fieldValues
                     .every(fieldValue => {
                         const fieldValueAsNumber = Number(fieldValue);
                         // Lower boundary Check
-                        const lowerBoundaryOk = disableLowerBoundary ? fieldValueAsNumber > Number(lowerBoundary) : fieldValueAsNumber >= Number(lowerBoundary);
+                        const lowerBoundaryOk = lower === undefined || (disableLowerBoundary ? fieldValueAsNumber > lower : fieldValueAsNumber >= lower);
                         // Upper boundary Check
-                        const upperBoundaryOk = disableUpperBoundary ? fieldValueAsNumber < Number(upperBoundary) : fieldValueAsNumber <= Number(upperBoundary);
+                        const upperBoundaryOk = upper === undefined || (disableUpperBoundary ? fieldValueAsNumber < upper : fieldValueAsNumber <= upper);
                         return lowerBoundaryOk && upperBoundaryOk;
                     });
             } catch (e) {

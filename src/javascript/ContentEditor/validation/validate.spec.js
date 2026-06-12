@@ -513,6 +513,64 @@ describe('validate', () => {
                 field4: 'invalidRange'
             });
         });
+
+        it('should skip upper boundary check for open-ended range (0,)', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG',
+                valueConstraints: [
+                    {value: {string: '(0,)'}}
+                ]
+            });
+            const values = {
+                field1: '0',
+                field2: '3',
+                field3: '9999999999',
+                field4: '-1'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field1: 'invalidRange',
+                field4: 'invalidRange'
+            });
+        });
+
+        it('should skip upper boundary check for open-ended range [0,)', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG',
+                valueConstraints: [
+                    {value: {string: '[0,)'}}
+                ]
+            });
+            const values = {
+                field1: '0',
+                field2: '3',
+                field3: '9999999999',
+                field4: '-1'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field4: 'invalidRange'
+            });
+        });
+
+        it('should skip lower boundary check for open-ended range (,10]', () => {
+            const {sections} = buildSections({
+                requiredType: 'LONG',
+                valueConstraints: [
+                    {value: {string: '(,10]'}}
+                ]
+            });
+            const values = {
+                field1: '-9999999999',
+                field2: '10',
+                field3: '5',
+                field4: '11'
+            };
+
+            expect(validate(sections)(values)).toEqual({
+                field4: 'invalidRange'
+            });
+        });
     });
 
     describe('pattern', () => {

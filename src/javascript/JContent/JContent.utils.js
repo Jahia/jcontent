@@ -377,6 +377,26 @@ export const JahiaRenderedModulesUtil = {
     getArea: function (path) {
         return this.jahiaAreas[path];
     },
+    resolveNodeTypes: function (path) {
+        const moduleInfo = this.getModule(path);
+        const placeholderNodeTypes = [];
+        const moduleNodeTypes = [];
+        let containsAnyNodeTypeWildCard = false;
+
+        moduleInfo?.forEach(item => {
+            if (item.path === '*' && item.nodeTypes?.length > 0) {
+                if (item.placeholder) {
+                    placeholderNodeTypes.push(...item.nodeTypes);
+                } else {
+                    moduleNodeTypes.push(...item.nodeTypes);
+                }
+            } else if (item.path === '*' && !item.nodeTypes && item.placeholder) {
+                containsAnyNodeTypeWildCard = true;
+            }
+        })
+
+        return containsAnyNodeTypeWildCard ? [...moduleNodeTypes, ...placeholderNodeTypes] : placeholderNodeTypes;
+    },
     extractModuleInfoFromRenderedPage: function (pagePath, language, template) {
         const renderMode = 'editframe';
         const encodedPath = pagePath.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);

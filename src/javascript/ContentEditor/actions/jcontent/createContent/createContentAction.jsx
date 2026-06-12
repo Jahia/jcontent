@@ -48,7 +48,7 @@ export const CreateContent = ({
         }
     );
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
-    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.getArea(path)?.nodeTypes;
+    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.resolveNodeTypes(path);
     const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
         nodeTypes: areaNodeTypes,
         childNodeName: name,

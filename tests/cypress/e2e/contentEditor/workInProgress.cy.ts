@@ -33,7 +33,7 @@ describe.skip('Work in Progress tests', () => {
 
         const contentSection = contentEditor.openSection('content');
 
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-test');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-wip-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress Test');
         // Check the WIP badge is displayed
@@ -54,7 +54,7 @@ describe.skip('Work in Progress tests', () => {
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode('en,fr');
         const contentSection = contentEditor.openSection('content');
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-en_fr-test');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-wip-en_fr-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').type('Cypress Work In Progress EN/FR Test');
         // Switch to French

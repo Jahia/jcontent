@@ -25,7 +25,7 @@ describe.skip('Create content tests in I18N site', () => {
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode('en,fr');
         const contentSection = contentEditor.openSection('content');
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-en_fr-test');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-wip-en_fr-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').type('Cypress Work In Progress EN/FR Test');
         // Switch to French

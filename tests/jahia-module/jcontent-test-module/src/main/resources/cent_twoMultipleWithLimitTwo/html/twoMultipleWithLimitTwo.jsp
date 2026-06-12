@@ -26,7 +26,7 @@ twoMultipleWithLimitTwo
     <c:forEach var="child" items="${children1}">
         <template:module node="${child}"/>
     </c:forEach>
-    <c:if test="${fn:length(children1) lt 3}">
+    <c:if test="${fn:length(children1) lt 2}">
         <template:module path="*" nodeTypes="cent:childObject1"/>
     </c:if>
 

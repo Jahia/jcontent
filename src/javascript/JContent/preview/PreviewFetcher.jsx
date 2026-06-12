@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {useContentPreview} from '@jahia/data-helper';
 import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {PreviewViewers} from './viewers';
+import {useContentPreview} from './useContentPreview';
 
 /**
  * Shared preview data fetcher.

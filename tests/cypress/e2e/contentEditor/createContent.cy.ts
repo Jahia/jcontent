@@ -24,7 +24,7 @@ describe.skip('Create content tests', {retries: 10}, () => {
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         cy.get('.moonstone-chip').contains('Rich text');
         const contentSection = contentEditor.openSection('content');
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-test');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Test');
         contentEditor.create();
@@ -35,19 +35,13 @@ describe.skip('Create content tests', {retries: 10}, () => {
         const contentEditor = jcontent.createContent('jnt:bigText');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Rich text');
         let contentSection = contentEditor.openSection('content');
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-test-multiple-1');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-test-multiple-1');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Multiple Content Test 1');
         contentEditor.addAnotherContent();
         contentEditor.create();
-        contentEditor.closeSection('content');
-        contentEditor
-            .openSection('options')
-            .get()
-            .find('input[type="text"]')
-            .should('have.value', 'rich-text')
-            .clear()
-            .type('cypress-test-multiple-2');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').checkValue('rich-text');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-test-multiple-2');
         contentSection = contentEditor.openSection('content');
         // CKEditor will stay in source mode so no need to click on source again
         contentSection.expand().get().find('.cke_button__source').click();
@@ -64,7 +58,7 @@ describe.skip('Create content tests', {retries: 10}, () => {
         // Activate Work in progress
         contentEditor.activateWorkInProgressMode();
         const contentSection = contentEditor.openSection('content');
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('cypress-wip-test');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('cypress-wip-test');
         contentSection.expand().get().find('.cke_button__source').click();
         contentSection.get().find('textarea').should('have.value', '').type('Cypress Work In Progress Test');
         contentEditor.create();
@@ -97,16 +91,15 @@ describe.skip('Create content tests', {retries: 10}, () => {
             .should('be.visible')
             .and('contain', 'Create Simple text');
 
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('create-another-1');
-        contentEditor.closeSection('options');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('create-another-1');
         contentEditor.openSection('content').get().find('input[name="jnt:text_text"]')
             .type('Create another - test 1');
         contentEditor.addAnotherContent();
         contentEditor.create();
 
         cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
-        contentEditor.openSection('options').get().find('input[type="text"]').clear().type('create-another-2');
-        contentEditor.openSection('content').get().find('input[type="text"]').type('Create another - test 2');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('create-another-2');
+        contentEditor.openSection('content').get().find('input[name="jnt:text_text"]').type('Create another - test 2');
         contentEditor.removeAnotherContent();
         contentEditor.create();
         jcontent.getTable().getRowByLabel('Create another - test 1');

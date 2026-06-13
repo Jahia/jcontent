@@ -5,30 +5,53 @@ import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches';
 import {Preview} from '~/JContent/preview/Preview';
 import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
-import {getPreviewContext} from './Preview.utils';
+import {useSelector} from 'react-redux';
+import {buildCEPreviewContext} from '~/JContent/preview';
+
+const usePreviewContext = (nodeData, language) => {
+    // Get information from legacy page composer to display the preview.
+    const pageComposerCurrentPage = useSelector(state => state.pagecomposer?.currentPage);
+    const pageComposerActive = useSelector(state => state.pagecomposer?.active);
+
+    // Don't use full page rendering for folders.
+    const isFullPage = nodeData.displayableNode && !nodeData.displayableNode.isFolder;
+    // Set main resource path, currently used by preview:
+    //  - path: path to display
+    //  - template: view or template to use
+    //  - templatetype: extension to use
+    //  - config: page if content can be displayed as full page or module
+    const currentPage = pageComposerActive ? pageComposerCurrentPage :
+        {
+            path: (isFullPage && nodeData.displayableNode.path) || nodeData.path,
+            template: nodeData.displayableNode ? 'default' : 'cm',
+            templateType: '.html'
+        };
+    currentPage.config = isFullPage ? 'page' : 'module';
+    return buildCEPreviewContext(currentPage, nodeData, language);
+};
 
 export const CEPreview = () => {
     const {t} = useTranslation('jcontent');
-    const editorContext = useContentEditorContext();
+    const {nodeData, lang} = useContentEditorContext();
     const [isFullScreen, setIsFullScreen] = useState(false);
 
-    const previewContext = getPreviewContext(editorContext);
+    const previewContext = usePreviewContext(nodeData || {}, lang);
 
     const onRefetchReady = useCallback(refetch => {
         setPreviewRefetcher({
-            queryParams: {language: editorContext.lang, path: previewContext.path},
+            queryParams: {language: lang, path: previewContext.path},
             refetch
         });
-    }, [editorContext.lang, previewContext.path]);
+    }, [lang, previewContext.path]);
 
     const onRefetchInvalidated = useCallback(() => {
-        invalidateRefetch({language: editorContext.lang, path: previewContext.path});
-    }, [editorContext.lang, previewContext.path]);
+        invalidateRefetch({language: lang, path: previewContext.path});
+    }, [lang, previewContext.path]);
 
     const header = (
         <>
             <UpdateOnSaveBadge/>
-            {editorContext.nodeData.isFolder && (
+            {nodeData.isFolder && (
                 <div>
                     <Badge
                         badgeContent={t('jcontent:label.contentEditor.preview.noPreview')}
@@ -44,7 +67,7 @@ export const CEPreview = () => {
         <Preview
             header={header}
             isFullScreen={isFullScreen}
-            nodeData={editorContext.nodeData}
+            nodeData={nodeData}
             previewContext={previewContext}
             onFullScreenToggle={() => setIsFullScreen(prev => !prev)}
             onRefetchInvalidated={onRefetchInvalidated}

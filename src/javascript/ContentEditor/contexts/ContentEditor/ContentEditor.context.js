@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {ApolloCacheFlushOnGWTSave} from './ApolloCacheFlushOnGWTSave';
 import {ContentEditorSectionContextProvider} from '../ContentEditorSection';
 import {useContentEditorConfigContext} from '../ContentEditorConfig';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
@@ -42,12 +42,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     const {t} = useTranslation('jcontent');
     const [errors, setErrors] = useState(null);
     const contentEditorConfigContext = useContentEditorConfigContext();
-    // Get information from legacy page composer to display the preview.
-    const {pageComposerCurrentPage, pageComposerActive, uiLanguage} = useSelector(state => ({
-        pageComposerCurrentPage: state?.pagecomposer?.currentPage,
-        pageComposerActive: state?.pagecomposer?.active,
-        uiLanguage: state?.uilang
-    }), shallowEqual);
+    const uiLanguage = useSelector(state => state?.uilang);
     const {i18nContext, setI18nContext, resetI18nContext} = useInitI18nContext(overrides);
 
     // Persist 'create another' chekbox state during language switch
@@ -105,24 +100,8 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
             return null;
         }
 
-        // Don't use full page rendering for folders.
-        const isFullPage = nodeData.displayableNode && !nodeData.displayableNode.isFolder;
-        // Set main resource path, currently used by preview:
-        //  - path: path to display
-        //  - template: view or template to use
-        //  - templatetype: extension to use
-        //  - config: page if content can be displayed as full page or module
-        const currentPage = pageComposerActive ? pageComposerCurrentPage :
-            {
-                path: (isFullPage && nodeData.displayableNode.path) || nodeData.path,
-                template: nodeData.displayableNode ? 'default' : 'cm',
-                templateType: '.html'
-            };
-        currentPage.config = isFullPage ? 'page' : 'module';
-
         return {
             path: nodeData.path,
-            currentPage,
             lang,
             browserLang,
             site,
@@ -158,8 +137,6 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         loading,
         ranAllHooks,
         nodeData,
-        pageComposerActive,
-        pageComposerCurrentPage,
         lang,
         browserLang,
         site,

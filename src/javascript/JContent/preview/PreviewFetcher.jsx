@@ -13,7 +13,7 @@ import {useContentPreview} from './useContentPreview';
  * register/deregister with their own refetch bus (Decision #4).
  *
  * Props:
- *   previewContext     — built by buildPreviewContextFromEditorContext or buildPreviewContextFromNode
+ *   previewContext     — built by buildCEPreviewContext or buildPreviewContextFromNode
  *   nodeData           — { isPage, path, displayableNode } — passed to IframeViewer for zoom logic
  *   onContentNotFound  — called when zoom anchor (#ce_preview_content) is missing
  *   onRefetchReady     — (refetch) => void  — called on mount; register with your refetch bus

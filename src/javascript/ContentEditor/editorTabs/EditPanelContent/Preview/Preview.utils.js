@@ -1,4 +1,3 @@
-export {buildPreviewContextFromEditorContext as getPreviewContext} from '~/JContent/preview/previewContext.utils';
 
 export const getPreviewPath = nodeData => {
     if (nodeData.displayableNode && !nodeData.displayableNode.isFolder) {

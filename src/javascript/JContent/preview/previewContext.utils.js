@@ -5,7 +5,7 @@
  * and passed to PreviewViewers / IframeViewer.
  *
  * Two factory functions are provided:
- *  - buildPreviewContextFromEditorContext: used by Content Editor
+ *  - buildCEPreviewContext: used by Content Editor
  *  - buildPreviewContextFromNode: used by JContent PreviewDrawer (Phase 6)
  *    NOTE: requires `displayableNode` on the node object — ensure the content
  *    table GQL query includes this field before wiring Phase 6.
@@ -22,39 +22,30 @@ const deriveContextConfiguration = displayableNode => {
 };
 
 /**
- * Builds a previewContext from the Content Editor context.
- * Replaces CE's getPreviewContext() and adds workspace support (Decision #2).
- *
- * @param {object} editorContext - from useContentEditorContext()
- * @param {string} workspace     - 'edit' | 'live' (defaults to 'edit')
+ * Builds a previewContext from the Content Editor context data
  */
-export const buildPreviewContextFromEditorContext = editorContext => {
-    let path = editorContext.currentPage.path;
-    const requestAttributes = [{
-        name: 'ce_preview',
-        value: editorContext.nodeData.uuid
-    }];
-    const requestParameters = [];
-
-    if (path !== editorContext.path) {
-        if (editorContext.nodeData.isPage) {
-            path = editorContext.path;
+export const buildCEPreviewContext = (currentPage, nodeData, language) => {
+    let nodePath = nodeData.path;
+    let path = currentPage.path;
+    if (path !== nodePath) {
+        if (nodeData.isPage) {
+            path = nodePath;
         } else {
             path = decodeURIComponent(path);
         }
     }
 
-    if (path !== editorContext.path && !editorContext.nodeData.isPage) {
+    const requestAttributes = [{name: 'ce_preview', value: nodeData.uuid}];
+    if (path !== nodePath && !nodeData.isPage) {
         requestAttributes.push({
             name: 'ce_preview_wrapper',
-            value: editorContext.path
+            value: nodePath
         });
     }
 
-    // eslint-disable-next-line no-warning-comments
-    // TODO: BACKLOG-15360
-    if (editorContext.currentPage.queryString) {
-        let queryString = editorContext.currentPage.queryString;
+    const requestParameters = [];
+    if (currentPage.queryString) {
+        let queryString = currentPage.queryString;
         if (queryString.startsWith('?')) {
             queryString = queryString.substring(1);
         }
@@ -71,10 +62,10 @@ export const buildPreviewContextFromEditorContext = editorContext => {
     return {
         path,
         workspace: 'edit',
-        view: editorContext.currentPage.template,
-        contextConfiguration: editorContext.currentPage.config,
+        view: currentPage.template,
+        contextConfiguration: currentPage.config,
         templateType: 'html',
-        language: editorContext.lang,
+        language,
         requestAttributes,
         requestParameters
     };

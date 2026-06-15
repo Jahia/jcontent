@@ -202,6 +202,8 @@
 - double2 (double)
 - double3 (double)
 - longReq (long) mandatory
+- longOpenLower (long) < '(0,)'
+- longOpenUpper (long) < '(,10]'
 
 // Regression test types for jahia-private#4940:
 // jmix:templateMixin with NO visible properties must still be applied via addMixin choicelist

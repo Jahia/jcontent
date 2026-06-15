@@ -37,6 +37,28 @@ describe('Numbers validation tests', {testIsolation: false}, () => {
         cy.contains('There is one validation error').should('not.exist');
     });
 
+    it('validates open-ended range constraints', () => {
+        const jcontent = JContent
+            .visit(siteKey, 'en', 'content-folders/contents')
+            .switchToListMode();
+        const ce = jcontent.createContent('cent:numbers');
+        ce.getField(SmallTextField, 'cent:numbers_longReq', false).addNewValue('234');
+
+        cy.log('Out-of-range values are rejected');
+        ce.getField(SmallTextField, 'cent:numbers_longOpenLower', false).addNewValue('0');
+        ce.getField(SmallTextField, 'cent:numbers_longOpenUpper', false).addNewValue('11');
+        ce.createUnchecked();
+        ce.discardErrorDialog();
+        ce.assertValidationErrorsExists().contains('longOpenLower');
+        ce.assertValidationErrorsExists().contains('longOpenUpper');
+
+        cy.log('Values within the open-ended ranges are accepted');
+        ce.getField(SmallTextField, 'cent:numbers_longOpenLower', false).addNewValue('3');
+        ce.getField(SmallTextField, 'cent:numbers_longOpenUpper', false).addNewValue('-100');
+        ce.createUnchecked();
+        cy.contains('validation error').should('not.exist');
+    });
+
     it('gives appropriate feedback for incorrect number types using different lang format (fr)', () => {
         cy.executeGroovy('user/setPreferredLanguage.groovy', {USERNAME: 'root', LANGUAGE: 'fr'});
         const jcontent = JContent

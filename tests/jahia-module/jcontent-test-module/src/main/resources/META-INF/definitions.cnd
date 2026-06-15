@@ -269,4 +269,9 @@
  + * (cent:childObject1)
  + * (cent:childObject2)
 
+[cent:twoMultipleOneNamed] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + * (cent:childObject1)
+ + * (cent:childObject2)
+
 

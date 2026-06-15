@@ -54,6 +54,25 @@ describe('Create content constraints', () => {
                 }]
             }]
         });
+
+        addNode({
+            name: 'page-two-multiple-named',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Two Multiple One Named Page', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-two-multiple-named',
+                    primaryNodeType: 'cent:twoMultipleOneNamed'
+                }]
+            }]
+        });
     });
 
     after(() => {
@@ -64,7 +83,7 @@ describe('Create content constraints', () => {
         cy.loginAndStoreSession();
     });
 
-    it('should hide filled named children and show available ones in context menu', () => {
+    it('resolves create actions correctly when placeholder becomes unavailable in the view due to size restriction', () => {
         // Navigate to structured view — both named children are populated
         let jcontent = JContent
             .visit(siteKey, 'en', 'pages/home')
@@ -104,7 +123,7 @@ describe('Create content constraints', () => {
         contextMenu.shouldHaveItem('New childObject2');
     });
 
-    it('should only show wildcard child type when named children are filled for twoChildObjectsOneMultiple', () => {
+    it('resolves named create actions correctly as placeholders become available/unavailable when children are added/removed', () => {
         // Both named children (childObject1, childObject2) are populated
         let jcontent = JContent
             .visit(siteKey, 'en', 'pages/home/page-one-multiple')
@@ -145,6 +164,37 @@ describe('Create content constraints', () => {
         contextMenu.shouldNotHaveItem('New childObject1');
         contextMenu.shouldNotHaveItem('New childObject2');
         contextMenu.shouldHaveItem('New childObject3');
+    });
+
+    it('resolves create actions correctly with one named and one wildcard placeholder', () => {
+        let jcontent = JContent
+            .visit(siteKey, 'en', 'pages/home/page-two-multiple-named')
+            .switchToStructuredView();
+
+        // Both wildcard children should be available
+        let contextMenu = jcontent.getTable().getRowByLabel('test-two-multiple-named').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+        contextMenu.shouldHaveItem('New childObject2');
+
+        // Create childObject1
+        contextMenu.select('New childObject1');
+        let contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        // Verify both are still available
+        contextMenu = jcontent.getTable().getRowByLabel('test-two-multiple-named').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+        contextMenu.shouldHaveItem('New childObject2');
+
+        // Create childObject2
+        contextMenu.select('New childObject2');
+        contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        // Verify both are still available
+        contextMenu = jcontent.getTable().getRowByLabel('test-two-multiple-named').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+        contextMenu.shouldHaveItem('New childObject2');
     });
 });
 

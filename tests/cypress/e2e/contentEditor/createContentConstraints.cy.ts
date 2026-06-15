@@ -4,8 +4,10 @@ import {ContentEditor, JContent} from '../../page-object';
 describe('Create content constraints', () => {
     const siteKey = 'constraintsSite';
     const homePath = `/sites/${siteKey}/home`;
-    const modulePath = `${homePath}/area-main/test-two-multiple`;
-    const child1Path = `${modulePath}/childObject1-1`;
+    const twoMultiplePath = `${homePath}/area-main/test-two-multiple`;
+    const twoMultipleChild1Path = `${twoMultiplePath}/childObject1-1`;
+    const oneMultiplePath = `${homePath}/page-one-multiple/area-main/test-one-multiple`;
+    const oneMultipleChild1Path = `${oneMultiplePath}/childObject1`;
 
     before(() => {
         createSite(siteKey, {
@@ -27,6 +29,29 @@ describe('Create content constraints', () => {
                     {name: 'childObject1-1', primaryNodeType: 'cent:childObject1'},
                     {name: 'childObject1-2', primaryNodeType: 'cent:childObject1'}
                 ]
+            }]
+        });
+
+        addNode({
+            name: 'page-one-multiple',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'One Multiple Page', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-one-multiple',
+                    primaryNodeType: 'cent:twoChildObjectsOneMultiple',
+                    children: [
+                        {name: 'childObject1', primaryNodeType: 'cent:childObject1'},
+                        {name: 'childObject2', primaryNodeType: 'cent:childObject2'}
+                    ]
+                }]
             }]
         });
     });
@@ -51,7 +76,7 @@ describe('Create content constraints', () => {
         contextMenu.shouldHaveItem('New childObject2');
 
         // Delete childObject1 to free up the slot
-        deleteNode(child1Path);
+        deleteNode(twoMultipleChild1Path);
 
         // Revisit to refresh state
         jcontent = JContent
@@ -69,13 +94,57 @@ describe('Create content constraints', () => {
         contentEditor.create();
 
         // Revisit and verify "New childObject1" is gone again
-        jcontent = JContent
-            .visit(siteKey, 'en', 'pages/home')
-            .switchToStructuredView();
+        // This step may become necessary of tests are flaky due to async data load
+        // jcontent = JContent
+        //     .visit(siteKey, 'en', 'pages/home')
+        //     .switchToStructuredView();
 
         contextMenu = jcontent.getTable().getRowByLabel('test-two-multiple').contextMenu();
         contextMenu.shouldNotHaveItem('New childObject1');
         contextMenu.shouldHaveItem('New childObject2');
+    });
+
+    it('should only show wildcard child type when named children are filled for twoChildObjectsOneMultiple', () => {
+        // Both named children (childObject1, childObject2) are populated
+        let jcontent = JContent
+            .visit(siteKey, 'en', 'pages/home/page-one-multiple')
+            .switchToStructuredView();
+
+        // Only wildcard child (childObject3) should be available
+        let contextMenu = jcontent.getTable().getRowByLabel('test-one-multiple').contextMenu();
+        contextMenu.shouldNotHaveItem('New childObject1');
+        contextMenu.shouldNotHaveItem('New childObject2');
+        contextMenu.shouldHaveItem('New childObject3');
+
+        // Delete childObject1 to free up the named slot
+        deleteNode(oneMultipleChild1Path);
+
+        // Revisit to refresh state
+        jcontent = JContent
+            .visit(siteKey, 'en', 'pages/home/page-one-multiple')
+            .switchToStructuredView();
+
+        // Now childObject1 should appear alongside the always-available childObject3
+        contextMenu = jcontent.getTable().getRowByLabel('test-one-multiple').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+        contextMenu.shouldNotHaveItem('New childObject2');
+        contextMenu.shouldHaveItem('New childObject3');
+
+        // Create childObject1 via the context menu
+        contextMenu.select('New childObject1');
+        const contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        // Revisit and verify childObject1 is gone again, only childObject3 remains
+        // This step may become necessary of tests are flaky due to async data load
+        // jcontent = JContent
+        //     .visit(siteKey, 'en', 'pages/home/page-one-multiple')
+        //     .switchToStructuredView();
+
+        contextMenu = jcontent.getTable().getRowByLabel('test-one-multiple').contextMenu();
+        contextMenu.shouldNotHaveItem('New childObject1');
+        contextMenu.shouldNotHaveItem('New childObject2');
+        contextMenu.shouldHaveItem('New childObject3');
     });
 });
 

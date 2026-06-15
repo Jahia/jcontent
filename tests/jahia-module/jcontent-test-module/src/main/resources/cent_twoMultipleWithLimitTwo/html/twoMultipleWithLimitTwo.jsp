@@ -27,7 +27,11 @@ twoMultipleWithLimitTwo
         <template:module node="${child}"/>
     </c:forEach>
     <c:if test="${fn:length(children1) lt 2}">
-        <template:module path="*" nodeTypes="cent:childObject1"/>
+        <div>
+            <div>
+                <template:module path="*" nodeTypes="cent:childObject1"/>
+            </div>
+        </div>
     </c:if>
 
     Children for cent:childObject2 have no limit

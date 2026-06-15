@@ -125,7 +125,7 @@ export const CreateContent = ({
         ...labelProps
     } : {};
 
-    // Add named child creation actions if any placeholders were found in rendering
+    // Add named child creation actions if named placeholders were found in rendering
     if (JahiaRenderedModulesUtil.getModule(path)) {
         JahiaRenderedModulesUtil.getModule(path).filter(ent => ent.path !== '*' && !ent.path?.startsWith('/')).forEach(ent => {
             actions.push({

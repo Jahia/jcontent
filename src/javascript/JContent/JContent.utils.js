@@ -377,6 +377,7 @@ export const JahiaRenderedModulesUtil = {
     getArea: function (path) {
         return this.jahiaAreas[path];
     },
+    // This simply collects all placeholder nodetypes for a module, it uses module nodetypes if wildcard placeholder without nodetypes is found.
     resolveNodeTypes: function (path) {
         const moduleInfo = this.getModule(path);
         const placeholderNodeTypes = [];
@@ -393,7 +394,7 @@ export const JahiaRenderedModulesUtil = {
             } else if (item.path === '*' && !item.nodeTypes && item.placeholder) {
                 containsAnyNodeTypeWildCard = true;
             }
-        })
+        });
 
         return containsAnyNodeTypeWildCard ? [...moduleNodeTypes, ...placeholderNodeTypes] : placeholderNodeTypes;
     },

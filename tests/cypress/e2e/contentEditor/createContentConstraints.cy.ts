@@ -167,7 +167,7 @@ describe('Create content constraints', () => {
     });
 
     it('resolves create actions correctly with one named and one wildcard placeholder', () => {
-        let jcontent = JContent
+        const jcontent = JContent
             .visit(siteKey, 'en', 'pages/home/page-two-multiple-named')
             .switchToStructuredView();
 

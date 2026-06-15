@@ -113,7 +113,7 @@ export const CreateContent = ({
     }
 
     const onClick = ({nodeTypesTree, createdNodeName}) => {
-        // Presence of createdNodeName indicates that we create a named child for a specific nodetype so we want to avoid making API call to get type info
+        // Presence of createdNodeName indicates that we create a named child for a specific nodetype
         if (createdNodeName) {
             api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypes: nodeTypesTree, name: createdNodeName, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
         } else {
@@ -132,7 +132,6 @@ export const CreateContent = ({
                 key: ent.nodeTypes[0],
                 actionKey: ent.nodeTypes[0],
                 nodeTypesTree: ent.nodeTypes,
-                nodeTypes: ent.nodeTypes,
                 createdNodeName: ent.path,
                 buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
                 buttonLabelParams: {typeName: ent.path}

@@ -12,16 +12,6 @@
  */
 
 /**
- * Derives contextConfiguration from a node's displayableNode.
- * 'page'   — node has a renderable displayable node (not a folder)
- * 'module' — everything else (components, sub-content, folders)
- */
-const deriveContextConfiguration = displayableNode => {
-    const isFullPage = displayableNode && !displayableNode.isFolder;
-    return isFullPage ? 'page' : 'module';
-};
-
-/**
  * Builds a previewContext from the Content Editor context data
  */
 export const buildCEPreviewContext = (currentPage, nodeData, language) => {
@@ -75,23 +65,77 @@ export const buildCEPreviewContext = (currentPage, nodeData, language) => {
  * Builds a previewContext from a JContent node (previewSelection).
  * Uses CE's contextConfiguration logic (Decision #7).
  *
- * @param {object} node      - JCR node object with { path, displayableNode, isPage, ... }
- *                             NOTE: node must include displayableNode (add to content table GQL query)
+ * In 'pages' mode with a jnt:page ancestor, uses in-context rendering:
+ * renders the parent page and zooms to the specific node via ce_preview attributes.
+ *
+ * In all other modes (contents, media, search), uses standalone rendering:
+ * renders the node's displayableNode directly.
+ *
+ * @param {object} node      - JCR node object with { path, uuid, displayableNode, isPage, pageAncestors, ... }
+ *                             NOTE: node must include displayableNode and pageAncestors (from GQL query)
  * @param {string} language  - from Redux state.language
  * @param {string} workspace - 'edit' | 'live'
+ * @param {string} mode      - accordion mode from Redux state.jcontent.mode (e.g. 'pages', 'contents', 'media')
  */
-export const buildPreviewContextFromNode = (node, language, workspace) => {
+export const buildPreviewContextFromNode = (node, language, mode) => {
+    const {displayableNode, pageAncestors} = node;
+    const closestPage = pageAncestors?.at(-1);
+    const isInPagesMode = mode === 'pages';
+    const useInContextRendering = isInPagesMode && Boolean(closestPage);
+    const view = (displayableNode || useInContextRendering) ? 'default' : 'cm';
+
+    const isFullPage = displayableNode && !displayableNode.isFolder;
+    const path = isFullPage ? displayableNode.path : node.path;
+
+    if (useInContextRendering) {
+        // Add this request attribute to activate PreviewWrapperFilter during rendering
+        // which embeds id="ce_preview_content" to the resource node and to be able to zoom to it.
+        const requestAttributes = node.isPage ? undefined : [{name: 'preview_wrapper', value: node.path}];
+
+        return {
+            path: closestPage.path,
+            view,
+            workspace: 'edit',
+            contextConfiguration: 'page',
+            templateType: 'html',
+            language,
+            requestAttributes,
+            // mainResourcePath: closestPage.path
+        };
+
+        // return {
+        //     path,
+        //     view,
+        //     workspace: 'edit',
+        //     contextConfiguration: 'module',
+        //     templateType: 'html',
+        //     language,
+        //     // requestAttributes,
+        //     mainResourcePath: closestPage.path
+        // };
+    }
+
+    return {
+        path,
+        workspace: 'edit',
+        view,
+        contextConfiguration: isFullPage ? 'page' : 'module',
+        templateType: 'html',
+        language
+    };
+};
+
+export const oldbuildPreviewContextFromNode = (node, language) => {
     const {displayableNode} = node;
     const isFullPage = displayableNode && !displayableNode.isFolder;
     const path = isFullPage ? displayableNode.path : node.path;
     const view = displayableNode ? 'default' : 'cm';
-    const contextConfiguration = deriveContextConfiguration(displayableNode);
 
     return {
         path,
-        workspace,
+        workspace: 'edit',
         view,
-        contextConfiguration,
+        contextConfiguration: isFullPage ? 'page' : 'module',
         templateType: 'html',
         language
     };

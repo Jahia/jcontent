@@ -35,16 +35,42 @@ function loadAssets(assets, iframeDocument) {
     return Promise.all(assets.map(asset => loadAsset(asset, iframeHeadEl)));
 }
 
+/**
+ * Extracts unprocessed <jahia:resource type="css"> tags from rendered HTML output.
+ * This occurs when contextConfiguration="module" is used with mainResourcePath —
+ * the aggregation pipeline has no page-level context to collect assets into,
+ * so the JSP tags fall through as literal strings instead of being resolved
+ * to staticAssets[]. We extract them, strip them from the HTML, and inject
+ * them as real <link> elements via loadAssets.
+ *
+ * @param {string} html - raw renderedContent output
+ * @returns {{ cleanHtml: string, assets: Array<{key: string}> }}
+ */
+function extractInlineResourceTags(html) {
+    const assets = [];
+    const tagPattern = /<jahia:resource[^>]+type="css"[^>]+path="([^"]+)"[^>]*\/>/g;
+    const seen = new Set();
+    const cleanHtml = html.replace(tagPattern, (match, encodedPath) => {
+        const key = decodeURIComponent(encodedPath);
+        if (!seen.has(key)) {
+            seen.add(key);
+            assets.push({key});
+        }
+
+        return '';
+    });
+    return {cleanHtml, assets};
+}
+
 export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData = null}) => {
     const [loading, setLoading] = useState(true);
     const {t} = useTranslation('jcontent');
     const iframeRef = useRef(null);
     const onLoadTimeoutRef = useRef(null);
 
-    let displayValue = data?.nodeByPath?.renderedContent?.output ?? '';
-    if (displayValue === '') {
-        displayValue = t('label.contentManager.contentPreview.noViewAvailable');
-    }
+    const rawOutput = data?.nodeByPath?.renderedContent?.output ?? '';
+    const {cleanHtml, assets: inlineAssets} = extractInlineResourceTags(rawOutput);
+    let displayValue = cleanHtml || t('label.contentManager.contentPreview.noViewAvailable');
 
     useEffect(() => {
         setLoading(true);
@@ -68,8 +94,8 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
             iframeWindow?.document?.body?.setAttribute('style', 'pointer-events: none');
 
             if (previewContext.contextConfiguration !== 'page') {
-                const assets = data?.nodeByPath?.renderedContent?.staticAssets ?? [];
-                loadAssets(assets, iframeWindow.document);
+                const staticAssets = data?.nodeByPath?.renderedContent?.staticAssets ?? [];
+                loadAssets([...staticAssets, ...inlineAssets], iframeWindow.document);
             }
 
             if (previewContext.requestAttributes && nodeData) {

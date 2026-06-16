@@ -1,13 +1,20 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
+/**
+ * Fragments needed for preview are included
+ */
 const NodePreviewFieldsFragment = gql`
     fragment NodePreviewFields on JCRNode {
         isFile: isNodeType(type: {types: ["jnt:file"]})
+        isPage: isNodeType(type: {types: ["jnt:page"]})
         displayableNode {
             ...NodeCacheRequiredFields
             path
             isFolder: isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
+        }
+        pageAncestors: ancestors(fieldFilter: {filters: {fieldName: "primaryNodeType.name", evaluation: AMONG, values: ["jnt:page"]}}) {
+            path
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}

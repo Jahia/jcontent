@@ -37,22 +37,22 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = RenderFilter.class, immediate = true)
 public class PreviewWrapperFilter extends AbstractFilter {
 
-    private final String CE_PREVIEW_WRAPPER = "ce_preview_wrapper";
-    private final String CE_PREVIEW_WRAPPER_TAG_START = "<div id=\"ce_preview_content\">";
-    private final String CE_PREVIEW_WRAPPER_TAG_END = "</div>";
+    private final String PREVIEW_WRAPPER = "preview_wrapper";
+    private final String PREVIEW_WRAPPER_TAG_START = "<div id=\"ce_preview_content\">";
+    private final String PREVIEW_WRAPPER_TAG_END = "</div>";
 
     public PreviewWrapperFilter() {
         setPriority(45);
         setApplyOnModes("preview");
         setApplyOnConfigurations("module");
         addCondition((renderContext, resource) -> {
-            String ceAttribute = (String) renderContext.getRequest().getAttribute(CE_PREVIEW_WRAPPER);
+            String ceAttribute = (String) renderContext.getRequest().getAttribute(PREVIEW_WRAPPER);
             return StringUtils.isNotEmpty(ceAttribute) && ceAttribute.equals(resource.getNodePath());
         });
     }
 
     @Override
     public String execute(String previousOut, RenderContext renderContext, Resource resource, RenderChain chain) {
-        return CE_PREVIEW_WRAPPER_TAG_START + previousOut + CE_PREVIEW_WRAPPER_TAG_END;
+        return PREVIEW_WRAPPER_TAG_START + previousOut + PREVIEW_WRAPPER_TAG_END;
     }
 }

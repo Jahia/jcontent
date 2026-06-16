@@ -18,6 +18,7 @@ export const JContentPreview = props => {
     } = props;
 
     const language = useSelector(state => state.language);
+    const mode = useSelector(state => state.jcontent.mode);
 
     if (selection.length > 0) {
         return <MultipleSelection {...props}/>;
@@ -27,7 +28,7 @@ export const JContentPreview = props => {
         return <NoPreviewComponent {...props}/>;
     }
 
-    const previewContext = buildPreviewContextFromNode(previewSelection, language, 'edit');
+    const previewContext = buildPreviewContextFromNode(previewSelection, language, mode);
 
     return (
         <Preview

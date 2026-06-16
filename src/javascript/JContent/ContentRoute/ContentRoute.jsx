@@ -11,7 +11,7 @@ import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
-import {JahiaAreasUtil} from '../JContent.utils';
+import {JahiaRenderedModulesUtil} from '../JContent.utils';
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
@@ -42,36 +42,9 @@ export const ContentRoute = () => {
     // Captured area information is used to block delete/move/copy/cut actions on areas
     useEffect(() => {
         if (path && language && canShowEditFrame) {
-            loadPageAndCaptureJahiaAreas(path, language, template);
+            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, language, template);
         }
     }, [path, language, template, canShowEditFrame]);
-
-    const loadPageAndCaptureJahiaAreas = (path, language, template) => {
-        const renderMode = 'editframe';
-        const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
-        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
-
-        fetch(url, {
-            method: 'get'
-        }).then(resp => {
-            return resp.text();
-        }).then(resp => {
-            const dom = new DOMParser().parseFromString(resp, 'text/html');
-            dom.querySelectorAll('[jahiatype]').forEach((element => {
-                const jahiatype = element.getAttribute('jahiatype');
-                const modulePath = element.getAttribute('path');
-                const elemType = element.getAttribute('type');
-                const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
-                const limit = element.getAttribute('listlimit') ?? undefined;
-
-                if (jahiatype === 'module' && modulePath !== '*' && modulePath !== path && (elemType === 'area' || elemType === 'absoluteArea')) {
-                    JahiaAreasUtil.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
-                }
-            }));
-        }).catch(e => {
-            console.error('Failed to capture areas for page', e);
-        });
-    };
 
     if (isOpenDialog) {
         return null;

@@ -10,7 +10,7 @@ import {createNode} from './createNode';
 import {useApolloClient} from '@apollo/client';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {childrenLimitReachedOrExceeded} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
-import {JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 import '../contentEditor.scss';
 
 export const Create = () => {
@@ -32,7 +32,7 @@ export const Create = () => {
             'jmix:listSizeLimit': nodeData?.['jmix:listSizeLimit'],
             properties: nodeData?.limitProperty ? [{name: 'limit', value: nodeData.limitProperty.value}] : []
         },
-        JahiaAreasUtil.getArea(nodeData?.path)?.limit
+        JahiaRenderedModulesUtil.getArea(nodeData?.path)?.limit
     );
     const createAnotherWithLimit = useMemo(
         () => (createAnother ? {...createAnother, disabled: disableCreateAnother} : createAnother),

@@ -3,7 +3,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {Dialog, IconButton, Slide} from '@material-ui/core';
 import styles from './ContentEditorModal.scss';
 import PropTypes from 'prop-types';
-import {useDispatch} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {ceSwitchLanguage, ceToggleSections} from '~/ContentEditor/registerReducer';
 import {Button, Close} from '@jahia/moonstone';
 import {useNotifications} from '@jahia/react-material';
@@ -18,6 +18,7 @@ import {registry} from '@jahia/ui-extender';
 import {ContentEditorConfigContextProvider, ContentEditorContextProvider} from '~/ContentEditor/contexts';
 import {Edit} from '~/ContentEditor/ContentEditor/Edit';
 import {Create} from '~/ContentEditor/ContentEditor/Create';
+import {JahiaRenderedModulesUtil} from '../../JContent/JContent.utils';
 
 function triggerEvents(nodeUuid, operator) {
     // Refresh contentEditorEventHandlers
@@ -40,6 +41,11 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
     const confirmationDialog = useRef();
     const dispatch = useDispatch();
     const client = useApolloClient();
+    const {path, template, stateLanguage} = useSelector(state => ({
+        stateLanguage: state.language,
+        path: state.jcontent.path,
+        template: state.jcontent.template
+    }), shallowEqual);
 
     useEffect(() => {
         dispatch(ceSwitchLanguage(editorConfig.lang));
@@ -142,6 +148,8 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
                 });
             }
         }
+
+        JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, stateLanguage, template);
     };
 
     mergedConfig.onClosedCallback = () => {

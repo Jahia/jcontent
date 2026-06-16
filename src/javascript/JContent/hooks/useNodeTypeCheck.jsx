@@ -2,7 +2,7 @@ import {useLazyQuery} from '@apollo/client';
 import gql from 'graphql-tag';
 import * as _ from 'lodash';
 import {useCallback} from 'react';
-import {JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 
 export function useNodeTypeCheck() {
     const [loadContentTypes, contentTypesResult] = useLazyQuery(gql`
@@ -24,7 +24,7 @@ export function useNodeTypeCheck() {
     return useCallback((target, sources, referenceTypes) => {
         const primaryNodeTypesToPaste = [...new Set(sources.map(n => n.primaryNodeType.name))];
 
-        const areaNodeTypes = JahiaAreasUtil.getArea(target.path)?.nodeTypes;
+        const areaNodeTypes = JahiaRenderedModulesUtil.getArea(target.path)?.nodeTypes;
         const childNodeTypes = target.allowedChildNodeTypes.map(t => t.name);
 
         // Merge restrictions from content and template definitions

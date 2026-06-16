@@ -5,7 +5,7 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {Button, Loader} from '@jahia/moonstone';
 import styles from './Delete.scss';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {DeleteQueries} from './delete.gql-queries';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {
@@ -17,7 +17,7 @@ import InfoTable from './InfoTable';
 import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {getName} from '~/JContent';
-import {isPathChildOfAnotherPath} from '../../../JContent.utils';
+import {isPathChildOfAnotherPath, JahiaRenderedModulesUtil} from '../../../JContent.utils';
 import {useNotifications} from '@jahia/react-material';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 
@@ -147,7 +147,11 @@ const getMutation = dialogType => {
 const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
-    const language = useSelector(state => state.language);
+    const {pagePath, template, language} = useSelector(state => ({
+        pagePath: state.jcontent.path,
+        language: state.language,
+        template: state.jcontent.template
+    }), shallowEqual);
     const dispatch = useDispatch();
     const queryPaths = path ? [path] : (paths.sort().filter((_path, index, array) => array.find(parentPath => isPathChildOfAnotherPath(_path, parentPath)) === undefined));
     const client = useApolloClient();
@@ -186,6 +190,8 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             }
 
             triggerRefetchAll();
+            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
+
             if (onDeleted) {
                 onDeleted();
             }
@@ -193,6 +199,7 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
             queryPaths.forEach(_path => client.cache.flushNodeEntryByPath(_path));
             triggerRefetchAll();
+            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
             setOpen(false);
         });
     };

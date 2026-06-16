@@ -3,7 +3,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {MenuActionComponent} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '~/JContent/actions/actions.constants';
-import {hasMixin, JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {hasMixin, JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 import {useSelector} from 'react-redux';
 import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
 
@@ -11,7 +11,7 @@ export const CopyMenuComponent = ({path, paths, node: prefetchedNode, render: Re
     const language = useSelector(state => state.language);
 
     const skip = !paths && (
-        JahiaAreasUtil.isJahiaArea(path) ||
+        JahiaRenderedModulesUtil.isJahiaArea(path) ||
         isDefinitelyHidden(prefetchedNode, {hideMixins: ['jmix:markedForDeletionRoot']})
     );
 
@@ -37,7 +37,7 @@ export const CopyMenuComponent = ({path, paths, node: prefetchedNode, render: Re
         return <Render {...others} isVisible={false}/>;
     }
 
-    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path) &&
+    const isVisible = res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(path) &&
         (res.node ?
             !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
             res.nodes?.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)

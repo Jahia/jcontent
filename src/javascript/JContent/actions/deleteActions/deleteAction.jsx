@@ -1,4 +1,4 @@
-import {isMarkedForDeletion, JahiaAreasUtil} from '../../JContent.utils';
+import {isMarkedForDeletion, JahiaRenderedModulesUtil} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
@@ -17,7 +17,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, node
     const language = useSelector(state => state.language);
 
     const pathHidden = !paths && path && (
-        JahiaAreasUtil.isJahiaArea(path) ||
+        JahiaRenderedModulesUtil.isJahiaArea(path) ||
         [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF].some(p => new RegExp(p).test(path))
     );
     const skip = pathHidden || (!paths && (
@@ -54,7 +54,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, node
         return false;
     }
 
-    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path || paths) && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
+    const isVisible = res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(path || paths) && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
         <Render

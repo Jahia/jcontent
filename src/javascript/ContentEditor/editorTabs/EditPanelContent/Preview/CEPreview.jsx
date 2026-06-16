@@ -1,12 +1,12 @@
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Badge} from '@jahia/design-system-kit';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
 import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches';
 import {Preview} from '~/JContent/preview/Preview';
 import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
 import {useSelector} from 'react-redux';
-import {buildCEPreviewContext} from '~/JContent/preview';
+import {buildCEPreviewContext} from '~/JContent/preview/previewContext.utils';
 
 const usePreviewContext = (nodeData, language) => {
     // Get information from legacy page composer to display the preview.
@@ -32,7 +32,7 @@ const usePreviewContext = (nodeData, language) => {
 
 export const CEPreview = () => {
     const {t} = useTranslation('jcontent');
-    const {nodeData, lang} = useContentEditorContext();
+    const {nodeData, lang} = useSidePanelContext();
     const [isFullScreen, setIsFullScreen] = useState(false);
 
     const previewContext = usePreviewContext(nodeData || {}, lang);

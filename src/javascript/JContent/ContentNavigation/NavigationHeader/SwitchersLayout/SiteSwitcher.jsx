@@ -7,9 +7,9 @@ import gql from 'graphql-tag';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
-import {CM_DRAWER_STATES, cmGoto} from '~/JContent/redux/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {Dropdown} from '@jahia/moonstone';
-import {cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/redux/preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
 import styles from './SiteSwitcher.scss';
 import {batchActions} from 'redux-batched-actions';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
@@ -115,7 +115,6 @@ SiteSwitcher.defaultProps = {
     // eslint-disable-next-line max-params
     onSelectAction: (siteNode, language, mode, path, template) => (batchActions([
         cmGoto({site: siteNode.name, language, mode, path, template}),
-        cmSetPreviewState(CM_DRAWER_STATES.HIDE),
         cmSetPreviewSelection(null)
     ])),
     selector: state => ({

@@ -25,11 +25,10 @@ export const ContentLayoutContainer = React.memo(() => {
     const currentResult = useRef();
     const client = useApolloClient();
 
-    const {mode, path, previewSelection, previewState, filesMode, openedPaths, viewType, selection} = useSelector(state => ({
+    const {mode, path, previewSelection, filesMode, openedPaths, viewType, selection} = useSelector(state => ({
         mode: state.jcontent.mode,
         path: state.jcontent.path,
         previewSelection: state.jcontent.previewSelection,
-        previewState: state.jcontent.previewState,
         filesMode: state.jcontent.filesGrid.mode,
         openedPaths: state.jcontent.openPaths,
         viewType: state.jcontent.tableView.viewType,
@@ -221,7 +220,6 @@ export const ContentLayoutContainer = React.memo(() => {
             <ContentLayout mode={mode}
                            path={path}
                            filesMode={filesMode}
-                           previewState={previewState}
                            previewSelection={previewSelection}
                            rows={rows}
                            isLoading={loading}

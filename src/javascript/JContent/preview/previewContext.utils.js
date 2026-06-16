@@ -99,11 +99,11 @@ export const buildPreviewContextFromNode = (node, language, mode) => {
             contextConfiguration: 'page',
             templateType: 'html',
             language,
-            requestAttributes,
-            // mainResourcePath: closestPage.path
+            requestAttributes
+            // MainResourcePath: closestPage.path
         };
 
-        // return {
+        // Return {
         //     path,
         //     view,
         //     workspace: 'edit',

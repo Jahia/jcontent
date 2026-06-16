@@ -6,7 +6,6 @@ import classNames from 'clsx';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import styles from '~/JContent/ContentRoute/ContentLayout/ContentLayout.scss';
 import JContentConstants from '~/JContent/JContent.constants';
-import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
 import {
     name,
     selection,
@@ -14,7 +13,6 @@ import {
 } from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 
 export const CategoriesLayout = ({
-    filesMode,
     rows,
     isContentNotFound,
     totalCount,
@@ -28,7 +26,6 @@ export const CategoriesLayout = ({
         siteKey: 'systemsite',
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
-        previewState: CM_DRAWER_STATES.HIDE,
         selection: state.jcontent.selection,
         tableView: {viewMode: JContentConstants.tableView.viewMode.FLAT},
         searchTerms: state.jcontent.params.searchTerms,
@@ -42,7 +39,7 @@ export const CategoriesLayout = ({
                     onContextMenu={event => contextualMenu.current(event)}
             >
                 <Paper className={styles.contentPaper}>
-                    <ErrorBoundary key={filesMode}>
+                    <ErrorBoundary>
                         <ContentTable totalCount={totalCount}
                                       rows={rows}
                                       isContentNotFound={isContentNotFound}
@@ -59,7 +56,6 @@ export const CategoriesLayout = ({
 };
 
 CategoriesLayout.propTypes = {
-    filesMode: PropTypes.string.isRequired,
     rows: PropTypes.array.isRequired,
     isContentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,

@@ -8,7 +8,7 @@ import {ContentPath} from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
+import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
 import BrowseControlBar from '~/JContent/ContentRoute/ToolBar/BrowseControlBar';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
@@ -77,7 +77,7 @@ const ContentHeader = () => {
         language: state.language,
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
-        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection !== null,
+        previewSelection: state.jcontent.previewSelection !== null,
         site: state.site
     }), shallowEqual);
 

@@ -8,8 +8,6 @@ import {push} from 'connected-react-router';
 import {combineReducers} from 'redux';
 import JContentConstants from '~/JContent/JContent.constants';
 
-export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
-
 const ROUTER_REDUX_ACTION = '@@router/LOCATION_CHANGE';
 
 const defaultState = {app: 'jcontent', site: '', language: '', mode: '', path: '', template: '', params: {}};

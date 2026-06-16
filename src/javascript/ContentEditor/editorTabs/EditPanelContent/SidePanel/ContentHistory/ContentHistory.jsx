@@ -13,7 +13,7 @@ import {
     Pagination
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
 import styles from './ContentHistory.scss';
 import {HistoryList} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/ContentHistory/HistoryList';
 
@@ -42,7 +42,7 @@ export const ACTION_CONFIG = {
 
 export const ContentHistory = () => {
     const {t} = useTranslation('jcontent');
-    const {nodeData} = useContentEditorContext();
+    const {nodeData} = useSidePanelContext();
     const uiLanguage = useSelector(state => state.uilang);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(20);
@@ -50,13 +50,14 @@ export const ContentHistory = () => {
 
     const {data, loading, error} = useQuery(GetContentHistoryQuery, {
         variables: {
-            path: nodeData.path,
+            path: nodeData?.path,
             withLanguageNodes: true,
             action: actionFilter,
             offset: page * pageSize,
             limit: pageSize,
             uiLanguage: uiLanguage
         },
+        skip: !nodeData?.path,
         fetchPolicy: 'cache-and-network'
     });
 

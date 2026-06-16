@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {
-    CM_DRAWER_STATES,
     cmCloseTablePaths,
     cmGoto,
     cmOpenPaths,
@@ -37,7 +36,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
+    const {mode, previewSelection, siteKey, path, pagination, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
     const columns = useMemo(() => {
         if (propColumns) {
             return propColumns;
@@ -132,8 +131,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         }));
     }, [mode, dispatch, siteKey]);
 
-    const columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : mainColumnData;
-    const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+    const columnData = reducedColumnData;
+    const isPreviewOpened = true;
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
@@ -238,7 +237,6 @@ ContentTable.defaultProps = {
         site: state.site,
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
-        previewState: state.jcontent.previewState,
         selection: state.jcontent.selection,
         tableView: state.jcontent.tableView,
         searchTerms: state.jcontent.params.searchTerms,

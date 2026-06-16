@@ -4,9 +4,9 @@ import {InfoCircle, History, Visibility} from '@jahia/moonstone';
 import {ContentDetails} from './ContentDetails';
 import {ContentHistory} from './ContentHistory';
 import {CEPreview} from '../Preview';
+import {JContentPreview} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/JContentPreview';
 
 export const registerSidePanelTabs = actionsRegistry => {
-    // Side panel tab actions
     actionsRegistry.add('action', 'ceSidePanelDetailsTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.details',
         buttonIcon: <InfoCircle/>,
@@ -32,6 +32,15 @@ export const registerSidePanelTabs = actionsRegistry => {
         targets: ['sidePanelTabsActions:1'],
         dataSelRole: 'tab-preview',
         displayableComponent: CEPreview,
-        isDisplayable: ({hasPreview}) => Boolean(hasPreview)
+        isDisplayable: ({hasPreview, isJContent}) => Boolean(hasPreview) && !isJContent
+    });
+
+    actionsRegistry.add('action', 'jcontentSidePanelPreviewTab', sidePanelTabAction, {
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
+        buttonIcon: <Visibility/>,
+        targets: ['sidePanelTabsActions:1'],
+        dataSelRole: 'tab-preview',
+        displayableComponent: JContentPreview,
+        isDisplayable: ({isJContent}) => Boolean(isJContent)
     });
 };

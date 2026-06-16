@@ -1,19 +1,20 @@
 import React, {useState, useCallback, useMemo, useEffect} from 'react';
-import {Paper, Tab, TabItem} from '@jahia/moonstone';
+import PropTypes from 'prop-types';
+import {Drawer, Tab, TabItem} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {useSidePanelContext} from './SidePanelContext';
 import styles from './SidePanel.scss';
 import {useTranslation} from 'react-i18next';
 
-export const SidePanel = () => {
+export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
     const [activeTab, setActiveTab] = useState(null);
-    const ceCtx = useContentEditorContext();
+    const ctx = useSidePanelContext();
     const {t} = useTranslation('jcontent');
 
-    const tabs = registry.find({target: 'sidePanelTabsActions'});
+    const tabs = registry.find({target: registryTarget});
     const visibleTabs = useMemo(
-        () => tabs.filter(tab => tab?.isDisplayable(ceCtx)),
-        [tabs, ceCtx]
+        () => tabs.filter(tab => tab?.isDisplayable(ctx)),
+        [tabs, ctx]
     );
     const ActiveTabComponent = visibleTabs.find(tab => tab.key === activeTab)?.displayableComponent;
 
@@ -32,7 +33,7 @@ export const SidePanel = () => {
     }, []);
 
     return (
-        <Paper className={styles.root} data-sel-role="side-panel">
+        <Drawer isOpen className={styles.root} data-sel-role="side-panel">
             <div className={styles.tabs} data-sel-role="side-panel-tabs">
                 <Tab>
                     {visibleTabs.map(tab => {
@@ -63,6 +64,10 @@ export const SidePanel = () => {
             <div className={styles.content} data-sel-role="side-panel-content">
                 {ActiveTabComponent && <ActiveTabComponent/>}
             </div>
-        </Paper>
+        </Drawer>
     );
+};
+
+SidePanel.propTypes = {
+    registryTarget: PropTypes.string
 };

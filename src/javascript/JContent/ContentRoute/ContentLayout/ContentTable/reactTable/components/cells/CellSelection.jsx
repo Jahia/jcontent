@@ -10,6 +10,7 @@ export const CellSelection = ({row, cell, column}) => {
                        {...cell.getCellProps()}
                        width={column.width}
                        data-cm-role={`table-content-list-cell-${column.id}`}
+                       onClick={e => e.stopPropagation()}
         >
             {selectable && <Checkbox {...row.getToggleRowSelectedProps()}/>}
         </TableBodyCell>

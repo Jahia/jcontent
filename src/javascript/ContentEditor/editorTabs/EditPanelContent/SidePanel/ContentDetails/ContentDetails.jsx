@@ -4,7 +4,7 @@ import {gql, useQuery} from '@apollo/client';
 import {Typography, Button, Copy} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
 import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
 import styles from './ContentDetails.scss';
 
@@ -134,7 +134,7 @@ const encodePathSegments = path => (path || '')
 
 const ContentLinks = () => {
     const {t} = useTranslation('jcontent');
-    const {nodeData, siteInfo, hasPreview} = useContentEditorContext();
+    const {nodeData, siteInfo, hasPreview} = useSidePanelContext();
 
     const linksPath = nodeData ? getPreviewPath(nodeData) : null;
     const encodedLinksPath = encodePathSegments(linksPath);
@@ -234,8 +234,18 @@ const ContentLinks = () => {
 
 export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
-    const {technicalInfo, details} = useContentEditorContext();
+    const {nodeData, technicalInfo, details} = useSidePanelContext();
     const isDevMode = window.contextJsParameters?.config?.operatingMode === 'development';
+
+    if (!nodeData) {
+        return (
+            <div className={styles.empty}>
+                <Typography variant="body">
+                    {t('jcontent:label.contentEditor.sidePanel.noDetailsAvailable')}
+                </Typography>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>

@@ -10,8 +10,7 @@ import styles from './ToolBar.scss';
 import {Button, ButtonGroup, Cancel, ChevronDown, Separator, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
-import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
-import {cmSetPreviewState} from '~/JContent/redux/preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
 
 export const ToolBar = () => {
     const {t} = useTranslation('jcontent');
@@ -20,7 +19,7 @@ export const ToolBar = () => {
     const {mode, selection, previewSelection} = useSelector(state => ({
         mode: state.jcontent.mode,
         selection: state.jcontent.selection,
-        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection
+        previewSelection: state.jcontent.previewSelection
     }), shallowEqual);
 
     const {nodes, loading} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
@@ -34,7 +33,7 @@ export const ToolBar = () => {
     const paths = selection.length > 0 ? selection : (previewSelection ? [previewSelection] : []);
     let context = paths.length === 1 ? {path: paths[0]} : {paths};
 
-    let clear = () => selection.length > 0 ? dispatch(cmClearSelection()) : dispatch(dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE)));
+    let clear = () => selection.length > 0 ? dispatch(cmClearSelection()) : dispatch(cmSetPreviewSelection(null));
     return (
         <div className={`flexRow ${styles.root}`}>
             {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?

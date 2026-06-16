@@ -763,7 +763,8 @@
           "maxLength": "{{selectorOptions.maxLength}} caractères maximum",
           "invalidLink": "Le lien {{0}} est rompu",
           "invalidSelectorType": "Le sélecteur défini pour cette propriété n'est pas compatible avec le type de propriété et ne peut pas être affiché. Veuillez vérifier vos définitions.",
-          "constraintViolation": "{{0}}"
+          "constraintViolation": "{{0}}",
+          "refNotFound": "Un contenu référencé n'est plus disponible. Remplacez l'ancienne référence par une autre ou remettez le champ à zéro."
         },
         "tab": {
           "edit": "Éditer",

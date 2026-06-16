@@ -762,7 +762,8 @@
           "maxLength": "Maximal {{selectorOptions.maxLength}} Zeichen.",
           "invalidLink": "Der Link {{0}} ist defekt",
           "invalidSelectorType": "Der für diese Eigenschaft definierte Selektor ist nicht mit dem Eigenschaftstyp kompatibel und kann nicht angezeigt werden. Bitte überprüfen Sie Ihre Definitionen.",
-          "constraintViolation": "{{0}}"
+          "constraintViolation": "{{0}}",
+          "refNotFound": "Die angegebene Referenz wurde nicht im System gefunden. Stellen Sie sicher, dass der Verweis existiert, oder leeren Sie das Feld."
         },
         "tab": {
           "edit": "Bearbeiten",

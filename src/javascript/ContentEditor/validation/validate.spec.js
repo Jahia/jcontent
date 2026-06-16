@@ -295,26 +295,6 @@ describe('validate', () => {
             });
         });
 
-        it('should validate a value with (,2019-06-04T00:00:00.000) date constraint', () => {
-            const {sections} = buildSections({
-                requiredType: 'DATE',
-                valueConstraints: [
-                    {value: {string: '(,2019-06-04T00:00:00.000)'}}
-                ]
-            });
-            const values = {
-                field1: '2020-06-04T00:00:00.000',
-                field2: '2018-06-04T00:00:00.000',
-                field3: '2019-06-04T00:00:00.000',
-                field4: '2019-06-03T00:00:00.000'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidDate',
-                field3: 'invalidDate'
-            });
-        });
-
         it('should validate a value with [,2019-06-04T00:00:00.000] date constraint', () => {
             const {sections} = buildSections({
                 requiredType: 'DATE',

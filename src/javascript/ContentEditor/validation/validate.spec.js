@@ -4,15 +4,15 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 const EMAIL_PATTERN = '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}';
 const JSON_CONSTRAINT = '{"versions":["2.0.1","2.0.2","2.3.2-RELEASE"],"name":"account-button"}';
 
-const emailConstraint = () => ({valueConstraints: [{value: {string: EMAIL_PATTERN}}]});
-const valueListConstraints = () => ({
+const EMAIL_CONSTRAINT = {valueConstraints: [{value: {string: EMAIL_PATTERN}}]};
+const VALUE_LIST_CONSTRAINTS = {
     valueConstraints: [
         {value: {string: 'value0'}},
         {value: {string: 'value1'}},
         {value: {string: 'value2'}},
         {value: {string: 'value3'}}
     ]
-});
+};
 
 describe('validate', () => {
     const buildSections = (fieldOptions = {}) => {
@@ -443,7 +443,7 @@ describe('validate', () => {
         it('should trigger error when is not valid pattern', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: 'toto',
@@ -464,7 +464,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: ['notCorrect@mail'],
@@ -485,7 +485,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: ['notCorrect@mail'],
@@ -505,7 +505,7 @@ describe('validate', () => {
         it('should validate properly field with constraints', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                ...valueListConstraints()
+                ...VALUE_LIST_CONSTRAINTS
             });
             const values = {
                 field1: 'myValue',
@@ -526,7 +526,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                ...valueListConstraints()
+                ...VALUE_LIST_CONSTRAINTS
             });
             const values = {
                 field1: ['myValue', 'value3'],
@@ -548,7 +548,7 @@ describe('validate', () => {
                 requiredType: 'STRING',
                 multiple: true,
                 mandatory: true,
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: [''],
@@ -568,7 +568,7 @@ describe('validate', () => {
         it('should not trigger error when is valid email', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: 'bonjour@support.fr',
@@ -589,7 +589,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: ['bonjour@support.fr'],
@@ -755,7 +755,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 mandatory: true,
-                ...emailConstraint()
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: '',

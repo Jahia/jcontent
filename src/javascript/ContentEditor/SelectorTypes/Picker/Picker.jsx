@@ -203,13 +203,15 @@ export const Picker = ({
     }, [dispatch, pickerConfig.defaultViewMode]);
 
     useEffect(() => {
+        let timeoutId;
         if (notFound) {
-            // Must clear callstack to allow formik's validate function to run first.
-            setTimeout(() => {
+            timeoutId = setTimeout(() => {
                 setFieldError(field.name, 'refNotFound');
                 setFieldTouched(field.name, true, false);
             }, 0);
         }
+
+        return () => clearTimeout(timeoutId);
     }, [notFound, field.name, setFieldError, setFieldTouched]);
 
     if (error) {

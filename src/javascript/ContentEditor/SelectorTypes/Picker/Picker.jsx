@@ -210,7 +210,7 @@ export const Picker = ({
                 setFieldTouched(field.name, true, false);
             }, 0);
         }
-    }, [notFound]);
+    }, [notFound, field.name, setFieldError, setFieldTouched]);
 
     if (error) {
         const message = t(

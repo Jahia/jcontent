@@ -772,7 +772,8 @@
           "maxLength": "{{selectorOptions.maxLength}} characters maximum",
           "invalidLink": "The link {{0}} is broken",
           "invalidSelectorType": "The selector defined for this property is not compatible with the property type and cannot be displayed. Please review your definitions.",
-          "constraintViolation": "{{0}}"
+          "constraintViolation": "{{0}}",
+          "refNotFound": "The referenced value was not found on the system. Make sure the reference exists or clear the field."
         },
         "tab": {
           "edit": "Edit",

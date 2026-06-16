@@ -1,6 +1,19 @@
 import {validate} from './validate';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
+const EMAIL_PATTERN = '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}';
+const JSON_CONSTRAINT = '{"versions":["2.0.1","2.0.2","2.3.2-RELEASE"],"name":"account-button"}';
+
+const EMAIL_CONSTRAINT = {valueConstraints: [{value: {string: EMAIL_PATTERN}}]};
+const VALUE_LIST_CONSTRAINTS = {
+    valueConstraints: [
+        {value: {string: 'value0'}},
+        {value: {string: 'value1'}},
+        {value: {string: 'value2'}},
+        {value: {string: 'value3'}}
+    ]
+};
+
 describe('validate', () => {
     const buildSections = (fieldOptions = {}) => {
         const buildField = (name, nodeType) => {
@@ -164,7 +177,7 @@ describe('validate', () => {
             expect(validate(sections)(values)).toEqual({});
         });
 
-        it('should trigger error when filled date is not valid date', () => {
+        it('should trigger error when filled color is not valid color', () => {
             const {sections} = buildSections({selectorType: Constants.color.selectorType});
             const values = {
                 field1: 'yolo',
@@ -203,7 +216,7 @@ describe('validate', () => {
             });
         });
 
-        it('should not trigger any error when fields is valid DATE and no ', () => {
+        it('should not trigger any error when fields is valid DATE and no constraints', () => {
             const {sections} = buildSections({requiredType: 'DATE', valueConstraints: []});
             const values = {
                 field1: '2019-06-04T00:00:00.000',
@@ -214,7 +227,7 @@ describe('validate', () => {
             expect(validate(sections)(values)).toEqual({});
         });
 
-        it('should log error and set field as valid when constraint is no valid', () => {
+        it('should log error and set field as valid when constraint is not valid', () => {
             const consoleError = console.error;
             console.error = jest.fn();
 
@@ -236,12 +249,14 @@ describe('validate', () => {
             console.error = consoleError;
         });
 
-        it('should validate a value with (2019-06-04T00:00:00.000,) date constraint', () => {
+        // Lower-bounded date constraints: values after the boundary date
+        it.each([
+            ['(2019-06-04T00:00:00.000,)', {field2: 'invalidDate', field3: 'invalidDate'}],
+            ['[2019-06-04T00:00:00.000,]', {field2: 'invalidDate'}]
+        ])('should validate lower-bounded date constraint %s', (constraint, expected) => {
             const {sections} = buildSections({
                 requiredType: 'DATE',
-                valueConstraints: [
-                    {value: {string: '(2019-06-04T00:00:00.000,)'}}
-                ]
+                valueConstraints: [{value: {string: constraint}}]
             });
             const values = {
                 field1: '2020-06-04T00:00:00.000',
@@ -250,37 +265,17 @@ describe('validate', () => {
                 field4: '2019-06-05T00:00:00.000'
             };
 
-            expect(validate(sections)(values)).toEqual({
-                field2: 'invalidDate',
-                field3: 'invalidDate'
-            });
+            expect(validate(sections)(values)).toEqual(expected);
         });
 
-        it('should validate a value with [2019-06-04T00:00:00.000,] date constraint', () => {
+        // Upper-bounded date constraints: values before the boundary date
+        it.each([
+            ['(,2019-06-04T00:00:00.000)', {field1: 'invalidDate', field3: 'invalidDate'}],
+            ['[,2019-06-04T00:00:00.000]', {field1: 'invalidDate'}]
+        ])('should validate upper-bounded date constraint %s', (constraint, expected) => {
             const {sections} = buildSections({
                 requiredType: 'DATE',
-                valueConstraints: [
-                    {value: {string: '[2019-06-04T00:00:00.000,]'}}
-                ]
-            });
-            const values = {
-                field1: '2020-06-04T00:00:00.000',
-                field2: '2018-06-04T00:00:00.000',
-                field3: '2019-06-04T00:00:00.000',
-                field4: '2019-06-05T00:00:00.000'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field2: 'invalidDate'
-            });
-        });
-
-        it('should validate a value with (,2019-06-04T00:00:00.000) date constraint', () => {
-            const {sections} = buildSections({
-                requiredType: 'DATE',
-                valueConstraints: [
-                    {value: {string: '(,2019-06-04T00:00:00.000)'}}
-                ]
+                valueConstraints: [{value: {string: constraint}}]
             });
             const values = {
                 field1: '2020-06-04T00:00:00.000',
@@ -289,49 +284,7 @@ describe('validate', () => {
                 field4: '2019-06-03T00:00:00.000'
             };
 
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidDate',
-                field3: 'invalidDate'
-            });
-        });
-
-        it('should validate a value with (,2019-06-04T00:00:00.000) date constraint', () => {
-            const {sections} = buildSections({
-                requiredType: 'DATE',
-                valueConstraints: [
-                    {value: {string: '(,2019-06-04T00:00:00.000)'}}
-                ]
-            });
-            const values = {
-                field1: '2020-06-04T00:00:00.000',
-                field2: '2018-06-04T00:00:00.000',
-                field3: '2019-06-04T00:00:00.000',
-                field4: '2019-06-03T00:00:00.000'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidDate',
-                field3: 'invalidDate'
-            });
-        });
-
-        it('should validate a value with [,2019-06-04T00:00:00.000] date constraint', () => {
-            const {sections} = buildSections({
-                requiredType: 'DATE',
-                valueConstraints: [
-                    {value: {string: '[,2019-06-04T00:00:00.000]'}}
-                ]
-            });
-            const values = {
-                field1: '2020-06-04T00:00:00.000',
-                field2: '2018-06-04T00:00:00.000',
-                field3: '2019-06-04T00:00:00.000',
-                field4: '2019-06-03T00:00:00.000'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidDate'
-            });
+            expect(validate(sections)(values)).toEqual(expected);
         });
 
         it('should validate properly multiple constraints', () => {
@@ -409,7 +362,6 @@ describe('validate', () => {
                 field3: [undefined, 20, 55, undefined]
             };
 
-            // No errors when field is not defined
             expect(validate(sections)(values)).toEqual({});
         });
 
@@ -433,93 +385,29 @@ describe('validate', () => {
             });
         });
 
-        it('should trigger errors when field is out of range for LONG', () => {
+        it.each([
+            ['LONG', '[10,100]', {field1: '9', field2: '10', field3: '100', field4: '101'}, {field1: 'invalidRange', field4: 'invalidRange'}],
+            ['LONG (boundaries not included)', '(10,100)', {field1: '9', field2: '10', field3: '50', field4: '100'}, {field1: 'invalidRange', field2: 'invalidRange', field4: 'invalidRange'}],
+            ['DOUBLE', '[1.5,4.6]', {field1: '1.49', field2: '1.5', field3: '4.6', field4: '4.61'}, {field1: 'invalidRange', field4: 'invalidRange'}],
+            ['DECIMAL (boundaries not included)', '(1.5,4.6)', {field1: '1.49', field2: '1.5', field3: '3.999999', field4: '4.6'}, {field1: 'invalidRange', field2: 'invalidRange', field4: 'invalidRange'}]
+        ])('should trigger errors when field is out of range for %s', (label, constraint, values, expected) => {
+            const requiredType = label.startsWith('LONG') ? 'LONG' : 'DOUBLE';
+            const {sections} = buildSections({
+                requiredType,
+                valueConstraints: [{value: {string: constraint}}]
+            });
+
+            expect(validate(sections)(values)).toEqual(expected);
+        });
+
+        // Open-ended range boundary tests share the same values
+        it.each([
+            ['(0,)', {field1: 'invalidRange', field4: 'invalidRange'}],
+            ['[0,)', {field4: 'invalidRange'}]
+        ])('should validate open-ended upper range %s', (constraint, expected) => {
             const {sections} = buildSections({
                 requiredType: 'LONG',
-                valueConstraints: [
-                    {value: {string: '[10,100]'}}
-                ]
-            });
-            const values = {
-                field1: '9',
-                field2: '10',
-                field3: '100',
-                field4: '101'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidRange',
-                field4: 'invalidRange'
-            });
-        });
-
-        it('should trigger errors when field is out of range for LONG (boundaries not include)', () => {
-            const {sections} = buildSections({
-                requiredType: 'LONG',
-                valueConstraints: [
-                    {value: {string: '(10,100)'}}
-                ]
-            });
-            const values = {
-                field1: '9',
-                field2: '10',
-                field3: '50',
-                field4: '100'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidRange',
-                field2: 'invalidRange',
-                field4: 'invalidRange'
-            });
-        });
-        it('should trigger errors when field is out of range for DOUBLE', () => {
-            const {sections} = buildSections({
-                requiredType: 'DOUBLE',
-                valueConstraints: [
-                    {value: {string: '[1.5,4.6]'}}
-                ]
-            });
-            const values = {
-                field1: '1.49',
-                field2: '1.5',
-                field3: '4.6',
-                field4: '4.61'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidRange',
-                field4: 'invalidRange'
-            });
-        });
-
-        it('should trigger errors when field is out of range for DECIMAL (boundaries not include)', () => {
-            const {sections} = buildSections({
-                requiredType: 'DOUBLE',
-                valueConstraints: [
-                    {value: {string: '(1.5,4.6)'}}
-                ]
-            });
-            const values = {
-                field1: '1.49',
-                field2: '1.5',
-                field3: '3.999999',
-                field4: '4.6'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidRange',
-                field2: 'invalidRange',
-                field4: 'invalidRange'
-            });
-        });
-
-        it('should skip upper boundary check for open-ended range (0,)', () => {
-            const {sections} = buildSections({
-                requiredType: 'LONG',
-                valueConstraints: [
-                    {value: {string: '(0,)'}}
-                ]
+                valueConstraints: [{value: {string: constraint}}]
             });
             const values = {
                 field1: '0',
@@ -528,29 +416,7 @@ describe('validate', () => {
                 field4: '-1'
             };
 
-            expect(validate(sections)(values)).toEqual({
-                field1: 'invalidRange',
-                field4: 'invalidRange'
-            });
-        });
-
-        it('should skip upper boundary check for open-ended range [0,)', () => {
-            const {sections} = buildSections({
-                requiredType: 'LONG',
-                valueConstraints: [
-                    {value: {string: '[0,)'}}
-                ]
-            });
-            const values = {
-                field1: '0',
-                field2: '3',
-                field3: '9999999999',
-                field4: '-1'
-            };
-
-            expect(validate(sections)(values)).toEqual({
-                field4: 'invalidRange'
-            });
+            expect(validate(sections)(values)).toEqual(expected);
         });
 
         it('should skip lower boundary check for open-ended range (,10]', () => {
@@ -577,9 +443,7 @@ describe('validate', () => {
         it('should trigger error when is not valid pattern', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: 'toto',
@@ -600,9 +464,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: ['notCorrect@mail'],
@@ -623,9 +485,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: ['notCorrect@mail'],
@@ -645,12 +505,7 @@ describe('validate', () => {
         it('should validate properly field with constraints', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                valueConstraints: [
-                    {value: {string: 'value0'}},
-                    {value: {string: 'value1'}},
-                    {value: {string: 'value2'}},
-                    {value: {string: 'value3'}}
-                ]
+                ...VALUE_LIST_CONSTRAINTS
             });
             const values = {
                 field1: 'myValue',
@@ -671,12 +526,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                valueConstraints: [
-                    {value: {string: 'value0'}},
-                    {value: {string: 'value1'}},
-                    {value: {string: 'value2'}},
-                    {value: {string: 'value3'}}
-                ]
+                ...VALUE_LIST_CONSTRAINTS
             });
             const values = {
                 field1: ['myValue', 'value3'],
@@ -698,9 +548,7 @@ describe('validate', () => {
                 requiredType: 'STRING',
                 multiple: true,
                 mandatory: true,
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: [''],
@@ -720,9 +568,7 @@ describe('validate', () => {
         it('should not trigger error when is valid email', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: 'bonjour@support.fr',
@@ -743,9 +589,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 multiple: true,
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: ['bonjour@support.fr'],
@@ -766,12 +610,10 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 selectorType: Constants.field.selectorType.CHOICELIST,
-                valueConstraints: [
-                    {value: {string: '{"versions":["2.0.1","2.0.2","2.3.2-RELEASE"],"name":"account-button"}'}}
-                ]
+                valueConstraints: [{value: {string: JSON_CONSTRAINT}}]
             });
             const values = {
-                field1: '{"versions":["2.0.1","2.0.2","2.3.2-RELEASE"],"name":"account-button"}'
+                field1: JSON_CONSTRAINT
             };
 
             expect(validate(sections)(values)).toEqual({field1: undefined});
@@ -780,13 +622,10 @@ describe('validate', () => {
         it('should do pattern matching comparison for non-choicelist values', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
-                // 'selectorType' not specified
-                valueConstraints: [
-                    {value: {string: '{"versions":["2.0.1","2.0.2","2.3.2-RELEASE"],"name":"account-button"}'}}
-                ]
+                valueConstraints: [{value: {string: JSON_CONSTRAINT}}]
             });
             const values = {
-                field1: '{"versions":["2.0.1","2.0.2","2.3.2-RELEASE"],"name":"account-button"}'
+                field1: JSON_CONSTRAINT
             };
 
             expect(validate(sections)(values)).toEqual({field1: 'invalidPattern'});
@@ -916,9 +755,7 @@ describe('validate', () => {
             const {sections} = buildSections({
                 requiredType: 'STRING',
                 mandatory: true,
-                valueConstraints: [
-                    {value: {string: '^$|[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}'}}
-                ]
+                ...EMAIL_CONSTRAINT
             });
             const values = {
                 field1: '',

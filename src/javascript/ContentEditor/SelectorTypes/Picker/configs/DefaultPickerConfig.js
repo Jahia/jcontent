@@ -23,7 +23,7 @@ const usePickerInputData = uuids => {
         fetchPolicy: 'network-only'
     });
 
-    if (loading || error || !data || !data.jcr || !uuids) {
+    if (loading || error || !data?.jcr || !uuids) {
         return {error, loading, notFound: false};
     }
 

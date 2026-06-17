@@ -14,15 +14,14 @@ export const UnsetFieldActionComponent = ({field, inputContext, render: Render, 
             {...others}
             enabled={enabled}
             onClick={() => {
-                const newValue = Array.isArray(value) ? [] : null;
                 formik.setFieldValue(
                     field.name,
-                    newValue,
+                    null,
                     true
                 );
                 formik.setFieldTouched(field.name);
                 if (inputContext.actionContext.onChange) {
-                    inputContext.actionContext.onChange(newValue);
+                    inputContext.actionContext.onChange(null);
                 }
 
                 if (inputContext.actionContext.onBlur) {

@@ -63,7 +63,7 @@ const _adaptDecimalValues = (fieldType, value) => {
 };
 
 function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
-    if (value !== undefined && value !== null && value !== '' && !(Array.isArray(value) && value.length === 0)) {
+    if (value !== undefined && value !== null && value !== '') {
         const fieldType = field.requiredType;
 
         let valueToSave;

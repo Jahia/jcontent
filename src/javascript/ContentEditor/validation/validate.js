@@ -146,7 +146,7 @@ const patternFieldValidation = (values, field) => {
     // QA-14633: choicelist values are passed as value constraints, so we only need to do an equals comparison
     // instead of running the selector options through Regex.
     // Custom choice list selectors are expected to have 'choicelist' in the selector name when the name is lowecased.
-    const strictValidation = field.selectorType === Constants.field.selectorType.CHOICELIST || field.selectorType.toLowerCase().includes(Constants.field.selectorType.CHOICELIST.toLowerCase());
+    const strictValidation = field?.selectorType === Constants.field.selectorType.CHOICELIST || field?.selectorType?.toLowerCase().includes(Constants.field.selectorType.CHOICELIST.toLowerCase());
 
     if (field.selectorOptions?.some(option => option.name === 'skipValidation' && option.value === 'true')) {
         return;

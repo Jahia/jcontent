@@ -31,11 +31,23 @@ describe('unsetFieldAction', () => {
     });
 
     describe('onclick', () => {
-        it('should set field value to null', () => {
+        it('should set field value to empty array when value is an array', () => {
             const cmp = shallow(<UnsetFieldActionComponent {...defaultProps} render={button}/>);
             cmp.simulate('click');
 
             // As action expect impure function, testing params
+            expect(formik.setFieldValue).toHaveBeenCalledWith(
+                'fieldName',
+                [],
+                true
+            );
+        });
+
+        it('should set field value to null when value is not an array', () => {
+            formik.values = {fieldName: 'someValue'};
+            const cmp = shallow(<UnsetFieldActionComponent {...defaultProps} render={button}/>);
+            cmp.simulate('click');
+
             expect(formik.setFieldValue).toHaveBeenCalledWith(
                 'fieldName',
                 null,

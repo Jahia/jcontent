@@ -23,8 +23,13 @@ const usePickerInputData = uuids => {
         fetchPolicy: 'network-only'
     });
 
-    if (loading || error || !data || !data.jcr || !uuids || (data.jcr.result.length === 0 && uuids.length > 0)) {
-        return {error, loading, notFound: Boolean(uuids)};
+    if (loading || error || !data || !data.jcr || !uuids) {
+        return {error, loading, notFound: false};
+    }
+
+    // Make sure that notFound is true only if request did not return anything
+    if (data.jcr.result.length === 0 && uuids.length > 0) {
+        return {error, loading, notFound: true};
     }
 
     const fieldData = data.jcr.result.map(contentData => ({

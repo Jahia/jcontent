@@ -77,7 +77,7 @@ const ContentHeader = () => {
         language: state.language,
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
-        previewSelection: state.jcontent.previewSelection !== null,
+        previewSelection: state.jcontent.sidePanelSelection !== null,
         site: state.site
     }), shallowEqual);
 

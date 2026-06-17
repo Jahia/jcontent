@@ -7,7 +7,7 @@ import {TablePagination, Typography} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '~/JContent/redux/pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import classNames from 'clsx';
 import clsx from 'clsx';
@@ -31,7 +31,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         siteKey,
         uilang,
         lang,
-        previewSelection,
+        sidePanelSelection,
         selection
     } = useSelector(state => ({
         mode: state.jcontent.mode,
@@ -42,11 +42,11 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         uilang: state.uilang,
         lang: state.language,
         selection: state.jcontent.selection,
-        previewSelection: state.jcontent.previewSelection
+        sidePanelSelection: state.jcontent.sidePanelSelection
     }), shallowEqual);
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
-    const onPreviewSelect = _previewSelection => dispatch(cmSetPreviewSelection(_previewSelection.path));
+    const onSidePanelSelect = _sidePanelSelection => dispatch(cmSetSidePanelSelection(_sidePanelSelection.path));
     const onSelect = (node, event, index) => {
         const isMultipleSelectionMode = event.metaKey || event.ctrlKey;
         const isRangeSelection = event.shiftKey;
@@ -71,11 +71,11 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     };
 
     const onClick = (node, index, event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey) {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || selection.length > 0) {
             onSelect(node, event, index);
         } else if (!node.notSelectableForPreview) {
             setSelectedItemIndex(index);
-            onPreviewSelect(node);
+            onSidePanelSelect(node);
         }
     };
 
@@ -95,16 +95,16 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const mainPanelRef = useRef(null);
     const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
 
-    const isPreviewOpened = selection.length === 0;
+    const hasNoActiveSelection = selection.length === 0;
 
     const handleKeyboardNavigation = useKeyboardNavigation({
         selectedItemIndex, setSelectedItemIndex,
         listLength: rows.length,
         onSelectionChange: index => {
-            if (isPreviewOpened) {
+            if (hasNoActiveSelection) {
                 const row = rows[index];
                 document.querySelector(`[data-sel-role-card="${row.name}"]`).scrollIntoView(true);
-                return onPreviewSelect(row);
+                return onSidePanelSelect(row);
             }
 
             return undefined;
@@ -167,8 +167,8 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   lang={lang}
                                   siteKey={siteKey}
                                   selection={selection}
-                                  previewSelection={isPreviewOpened ? previewSelection : null}
-                                  isPreviewOpened={isPreviewOpened}
+                                  previewSelection={hasNoActiveSelection ? sidePanelSelection : null}
+                                  hasNoActiveSelection={hasNoActiveSelection}
                                   index={index}
                                   node={node}
                                   setPath={setPath}

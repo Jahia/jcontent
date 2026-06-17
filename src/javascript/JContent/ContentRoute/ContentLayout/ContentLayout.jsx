@@ -12,7 +12,7 @@ import {flattenTree} from './ContentLayout.utils';
 import styles from './ContentLayout.scss';
 import {shallowEqual, useSelector} from 'react-redux';
 
-export const ContentLayout = ({mode, filesMode, previewSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
+export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const contextualMenu = useRef();
     const {isFullScreen, language, jcontentMode, selection} = useSelector(state => ({
         isFullScreen: state.jcontent.previewIsFullScreen,
@@ -21,7 +21,7 @@ export const ContentLayout = ({mode, filesMode, previewSelection, rows, isConten
         selection: state.jcontent.selection
     }), shallowEqual);
 
-    const resolvedPreviewSelection = flattenTree(rows).find(n => n.path === previewSelection);
+    const resolvedSidePanelSelection = flattenTree(rows).find(n => n.path === sidePanelSelection);
 
     return (
         <div className={styles.root}>
@@ -50,7 +50,7 @@ export const ContentLayout = ({mode, filesMode, previewSelection, rows, isConten
             <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
                 <ErrorBoundary>
                     <JContentSidePanelContextProvider
-                        previewSelection={resolvedPreviewSelection}
+                        sidePanelSelection={resolvedSidePanelSelection}
                         selection={selection}
                         language={language}
                         jcontentMode={jcontentMode}
@@ -67,7 +67,7 @@ export const ContentLayout = ({mode, filesMode, previewSelection, rows, isConten
 ContentLayout.propTypes = {
     mode: PropTypes.string.isRequired,
     filesMode: PropTypes.string.isRequired,
-    previewSelection: PropTypes.string,
+    sidePanelSelection: PropTypes.string,
     rows: PropTypes.array.isRequired,
     isContentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,

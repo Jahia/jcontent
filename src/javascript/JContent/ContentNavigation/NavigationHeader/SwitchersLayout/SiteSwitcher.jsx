@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {Dropdown} from '@jahia/moonstone';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 import styles from './SiteSwitcher.scss';
 import {batchActions} from 'redux-batched-actions';
 import {getTargetSiteLanguageForSwitch} from '~/utils/getTargetSiteLanguageForSwitch';
@@ -115,7 +115,7 @@ SiteSwitcher.defaultProps = {
     // eslint-disable-next-line max-params
     onSelectAction: (siteNode, language, mode, path, template) => (batchActions([
         cmGoto({site: siteNode.name, language, mode, path, template}),
-        cmSetPreviewSelection(null)
+        cmSetSidePanelSelection(null)
     ])),
     selector: state => ({
         siteKey: state.site,

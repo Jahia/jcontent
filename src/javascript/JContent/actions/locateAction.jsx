@@ -1,5 +1,5 @@
 import {cmGoto, cmOpenPaths} from '../redux/JContent.redux';
-import {cmSetPreviewSelection} from '../redux/preview.redux';
+import {cmSetSidePanelSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -27,7 +27,7 @@ export const LocateActionComponent = ({path, render: Render, ...others}) => {
                         cmGoto({mode: mode, path: parentPath, site}),
                         ...(viewType ? [setTableViewType(viewType)] : []),
                         cmOpenPaths(ancestorPaths),
-                        cmSetPreviewSelection(path)
+                        cmSetSidePanelSelection(path)
                     ]));
                 });
             }}

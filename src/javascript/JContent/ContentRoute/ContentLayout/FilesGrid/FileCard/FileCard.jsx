@@ -68,8 +68,8 @@ function getElement(node, encodedPath) {
     );
 }
 
-function getIsHighlighted(node, previewSelection, isPreviewOpened, selection) {
-    return (node.path === previewSelection && isPreviewOpened) || (selection.indexOf(node.path) > -1) || (selection.indexOf(node.uuid) > -1);
+function getIsHighlighted(node, previewSelection, hasNoActiveSelection, selection) {
+    return (node.path === previewSelection && hasNoActiveSelection) || (selection.indexOf(node.path) > -1) || (selection.indexOf(node.uuid) > -1);
 }
 
 // eslint-disable-next-line complexity
@@ -79,7 +79,7 @@ export const FileCard = ({
     uilang,
     setPath,
     selection,
-    isPreviewOpened,
+    hasNoActiveSelection,
     previewSelection,
     onClick,
     siteKey,
@@ -93,7 +93,7 @@ export const FileCard = ({
 
     const contextualMenu = useRef();
 
-    const isHighlighted = getIsHighlighted(node, previewSelection, isPreviewOpened, selection);
+    const isHighlighted = getIsHighlighted(node, previewSelection, hasNoActiveSelection, selection);
     const mimetype = getMimeType(node);
 
     // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout
@@ -184,7 +184,7 @@ FileCard.propTypes = {
     mode: PropTypes.string.isRequired,
     node: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-    isPreviewOpened: PropTypes.bool,
+    hasNoActiveSelection: PropTypes.bool,
     previewSelection: PropTypes.string,
     setPath: PropTypes.func.isRequired,
     onDoubleClick: PropTypes.func,

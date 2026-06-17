@@ -9,9 +9,9 @@ import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.re
 import {cmSetPreviewFullScreen} from '~/JContent/redux/preview.redux';
 import {useDispatch} from 'react-redux';
 
-// Inner component — only rendered when previewSelection is set.
+// Inner component — only rendered when sidePanelSelection is set.
 // Calls hooks that require ContentEditorConfigContext.
-const JContentSidePanelData = ({previewSelection, selection, language, jcontentMode, isFullScreen, children}) => {
+const JContentSidePanelData = ({sidePanelSelection, selection, language, jcontentMode, isFullScreen, children}) => {
     const dispatch = useDispatch();
     const {data} = useEditFormDefinition();
     const siteKey = useSelector(state => state.site);
@@ -20,15 +20,15 @@ const JContentSidePanelData = ({previewSelection, selection, language, jcontentM
 
     const ctx = {
         // Navigation / selection
-        path: previewSelection.path,
+        path: sidePanelSelection.path,
         lang: language,
-        previewSelection,
+        previewSelection: sidePanelSelection,
         selection,
         mode: jcontentMode,
         isJContent: true,
 
         // Node data — use rich nodeData from form definition when loaded, fall back to table node
-        nodeData: data?.nodeData ?? previewSelection,
+        nodeData: data?.nodeData ?? sidePanelSelection,
         technicalInfo: data?.technicalInfo,
         details: data?.details,
         hasPreview: data?.hasPreview,
@@ -51,7 +51,7 @@ const JContentSidePanelData = ({previewSelection, selection, language, jcontentM
 };
 
 JContentSidePanelData.propTypes = {
-    previewSelection: PropTypes.object.isRequired,
+    sidePanelSelection: PropTypes.object.isRequired,
     selection: PropTypes.array.isRequired,
     language: PropTypes.string.isRequired,
     jcontentMode: PropTypes.string.isRequired,
@@ -60,10 +60,10 @@ JContentSidePanelData.propTypes = {
 };
 
 // Outer component — handles the no-selection case without calling form-definition hooks.
-export const JContentSidePanelContextProvider = ({previewSelection, selection, language, jcontentMode, isFullScreen, children}) => {
+export const JContentSidePanelContextProvider = ({sidePanelSelection, selection, language, jcontentMode, isFullScreen, children}) => {
     const dispatch = useDispatch();
 
-    if (!previewSelection) {
+    if (!sidePanelSelection) {
         return (
             <SidePanelContextProvider value={{
                 path: null,
@@ -82,16 +82,16 @@ export const JContentSidePanelContextProvider = ({previewSelection, selection, l
     }
 
     const ceConfig = {
-        uuid: previewSelection.uuid,
+        uuid: sidePanelSelection.uuid,
         lang: language,
-        contentType: previewSelection.primaryNodeType?.name,
+        contentType: sidePanelSelection.primaryNodeType?.name,
         mode: 'edit'
     };
 
     return (
         <ContentEditorConfigContextProvider config={ceConfig}>
             <JContentSidePanelData
-                previewSelection={previewSelection}
+                sidePanelSelection={sidePanelSelection}
                 selection={selection}
                 language={language}
                 jcontentMode={jcontentMode}
@@ -104,7 +104,7 @@ export const JContentSidePanelContextProvider = ({previewSelection, selection, l
 };
 
 JContentSidePanelContextProvider.propTypes = {
-    previewSelection: PropTypes.object,
+    sidePanelSelection: PropTypes.object,
     selection: PropTypes.array.isRequired,
     language: PropTypes.string.isRequired,
     jcontentMode: PropTypes.string.isRequired,

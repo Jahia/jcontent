@@ -2,17 +2,17 @@ import {useApolloClient} from '@apollo/client';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
 export const useRefreshTreeAfterMove = () => {
     const client = useApolloClient();
     const dispatch = useDispatch();
 
-    const {treePath, openedPaths, previewSelection} = useSelector(state => ({
+    const {treePath, openedPaths, sidePanelSelection} = useSelector(state => ({
         treePath: state.jcontent.path,
         openedPaths: state.jcontent.openPaths,
-        previewSelection: state.jcontent.previewSelection
+        sidePanelSelection: state.jcontent.sidePanelSelection
     }), shallowEqual);
 
     return (path, nodes, moveResults) => {
@@ -36,8 +36,8 @@ export const useRefreshTreeAfterMove = () => {
                 dispatch(cmGoto({path: moveResults[pastedNode.uuid].path, params: {sub: false}}));
             }
 
-            if (pastedNode.path === previewSelection) {
-                dispatch(cmSetPreviewSelection(null));
+            if (pastedNode.path === sidePanelSelection) {
+                dispatch(cmSetSidePanelSelection(null));
             }
         });
 

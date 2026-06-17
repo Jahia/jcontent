@@ -1,7 +1,7 @@
 import React from 'react';
 import {FullWidthContent, TwoColumnsContent} from '@jahia/design-system-kit';
 import {FormBuilder} from './FormBuilder';
-import {SidePanel, SidePanelContextProvider} from './SidePanel';
+import {SidePanel, SidePanelContextProvider} from '~/JContent/SidePanel';
 import {PublicationInfoProgress} from './PublicationInfoProgress';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';

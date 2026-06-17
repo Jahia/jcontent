@@ -13,9 +13,9 @@ import {
     Pagination
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 import styles from './ContentHistory.scss';
-import {HistoryList} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/ContentHistory/HistoryList';
+import {HistoryList} from '~/JContent/SidePanel/ContentHistory/HistoryList';
 
 export const ACTION_CONFIG = {
     // --- Confirmed actions observed in production ---

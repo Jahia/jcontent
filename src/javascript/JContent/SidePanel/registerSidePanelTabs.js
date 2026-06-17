@@ -3,7 +3,7 @@ import {sidePanelTabAction} from './sidePanelTabAction';
 import {InfoCircle, History, Visibility} from '@jahia/moonstone';
 import {ContentDetails} from './ContentDetails';
 import {ContentHistory} from './ContentHistory';
-import {CEPreview} from '../Preview';
+import {CEPreview} from '~/ContentEditor/editorTabs/EditPanelContent/Preview';
 import {JContentPreview} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/JContentPreview';
 
 export const registerSidePanelTabs = actionsRegistry => {

@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Badge} from '@jahia/design-system-kit';
-import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches';
 import {Preview} from '~/JContent/preview/Preview';
 import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';

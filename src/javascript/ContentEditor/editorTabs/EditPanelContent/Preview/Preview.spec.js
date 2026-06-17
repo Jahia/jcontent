@@ -2,17 +2,19 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 
-jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
-jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
+jest.mock('~/JContent/SidePanel/SidePanelContext');
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => undefined)
+}));
 jest.mock('~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches', () => ({
     setPreviewRefetcher: jest.fn(),
     invalidateRefetch: jest.fn()
 }));
-jest.mock('./Preview.utils', () => ({
-    getPreviewContext: jest.fn(() => ({
+jest.mock('~/JContent/preview/previewContext.utils', () => ({
+    buildCEPreviewContext: jest.fn(() => ({
         workspace: 'edit',
         path: '/site/digitall',
         contextConfiguration: 'module',
@@ -41,7 +43,7 @@ describe('CE Preview', () => {
                 uuid: 'test-uuid'
             }
         };
-        useContentEditorContext.mockReturnValue(editorContext);
+        useSidePanelContext.mockReturnValue(editorContext);
     });
 
     it('renders SharedPreview', () => {

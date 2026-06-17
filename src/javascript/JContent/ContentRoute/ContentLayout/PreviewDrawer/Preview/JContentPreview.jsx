@@ -4,7 +4,7 @@ import MultipleSelection from './MultipleSelection/MultipleSelection';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Preview} from '~/JContent/preview';
 import {buildPreviewContextFromNode} from '~/JContent/preview/previewContext.utils';
-import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 
 export const JContentPreview = () => {
     const {previewSelection, selection, lang, mode, isFullScreen, onFullScreenToggle} = useSidePanelContext();

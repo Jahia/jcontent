@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import {useSiteInfo} from '@jahia/data-helper';
 import {ContentEditorConfigContextProvider} from '~/ContentEditor/contexts';
 import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
-import {SidePanelContextProvider} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {SidePanelContextProvider} from '~/JContent/SidePanel';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {cmSetPreviewFullScreen} from '~/JContent/redux/preview.redux';
 import {useDispatch} from 'react-redux';

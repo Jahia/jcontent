@@ -1,4 +1,5 @@
-import {getPreviewContext, getPreviewPath, removeSiblings} from './Preview.utils';
+import {getPreviewPath, removeSiblings} from './Preview.utils';
+import {buildCEPreviewContext} from '~/JContent/preview/previewContext.utils';
 
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +23,7 @@ describe('Preview.utils', () => {
             }
         };
 
-        const previewContext = getPreviewContext(editorContext);
+        const previewContext = buildCEPreviewContext(editorContext.currentPage, editorContext.nodeData, editorContext.lang);
         expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/contents/rich_text');
 
         expect(previewContext.language).toBe('en');
@@ -55,7 +56,7 @@ describe('Preview.utils', () => {
             }
         };
 
-        const previewContext = getPreviewContext(editorContext);
+        const previewContext = buildCEPreviewContext(editorContext.currentPage, editorContext.nodeData, editorContext.lang);
         expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/contents/rich_text');
 
         expect(previewContext.language).toBe('en');
@@ -88,7 +89,7 @@ describe('Preview.utils', () => {
             }
         };
 
-        const previewContext = getPreviewContext(editorContext);
+        const previewContext = buildCEPreviewContext(editorContext.currentPage, editorContext.nodeData, editorContext.lang);
         expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/contents/rich_text');
 
         expect(previewContext.language).toBe('en');
@@ -121,7 +122,7 @@ describe('Preview.utils', () => {
             }
         };
 
-        const previewContext = getPreviewContext(editorContext);
+        const previewContext = buildCEPreviewContext(editorContext.currentPage, editorContext.nodeData, editorContext.lang);
         expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/home');
 
         expect(previewContext.language).toBe('en');

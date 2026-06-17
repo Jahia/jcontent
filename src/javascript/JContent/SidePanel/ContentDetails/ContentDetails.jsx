@@ -4,7 +4,7 @@ import {gql, useQuery} from '@apollo/client';
 import {Typography, Button, Copy} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
-import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
 import styles from './ContentDetails.scss';
 

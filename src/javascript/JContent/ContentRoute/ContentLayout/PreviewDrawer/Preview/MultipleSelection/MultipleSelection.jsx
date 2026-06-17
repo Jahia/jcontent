@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useTranslation} from 'react-i18next';
 import {Button, Copy, Typography} from '@jahia/moonstone';
-import {useSidePanelContext} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 
 import styles from '../Preview.scss';
 

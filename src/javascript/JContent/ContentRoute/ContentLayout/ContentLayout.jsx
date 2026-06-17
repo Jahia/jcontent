@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import {ContentTable} from './ContentTable';
-import {SidePanel} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel';
+import {SidePanel} from '~/JContent/SidePanel';
 import {JContentSidePanelContextProvider} from './JContentSidePanelContextProvider';
 import classNames from 'clsx';
 import FilesGrid from './FilesGrid';

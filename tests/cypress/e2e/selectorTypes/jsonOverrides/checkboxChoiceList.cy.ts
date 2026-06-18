@@ -1,6 +1,6 @@
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {JContent} from '../../page-object';
-import {CheckboxChoiceList} from '../../page-object/fields/toggleChoiceList';
+import {JContent} from '../../../page-object';
+import {CheckboxChoiceList} from '../../../page-object/fields/toggleChoiceList';
 
 describe('Checkbox choice list - clear and reselect', () => {
     const siteKey = 'checkboxChoiceListSite';
@@ -41,21 +41,21 @@ describe('Checkbox choice list - clear and reselect', () => {
             CheckboxChoiceList, 'checkboxChoiceList_checkboxes', false
         );
 
-        field.assertChecked('choice1');
-        field.assertChecked('choice2');
-        field.assertNotChecked('choice3');
+        field.assertSelected('choice1');
+        field.assertSelected('choice2');
+        field.assertNotSelected('choice3');
 
         // Step 2: Clear all values using the context menu action
         field.contextMenu().select('Clear');
-        field.assertNotChecked('choice1');
-        field.assertNotChecked('choice2');
-        field.assertNotChecked('choice3');
+        field.assertNotSelected('choice1');
+        field.assertNotSelected('choice2');
+        field.assertNotSelected('choice3');
 
         // Step 3: Select a new value and save
         field.select('choice3');
-        field.assertNotChecked('choice1');
-        field.assertNotChecked('choice2');
-        field.assertChecked('choice3');
+        field.assertNotSelected('choice1');
+        field.assertNotSelected('choice2');
+        field.assertSelected('choice3');
         contentEditor.save();
 
         // Step 4: Reopen and verify the saved state
@@ -64,15 +64,15 @@ describe('Checkbox choice list - clear and reselect', () => {
             CheckboxChoiceList, 'checkboxChoiceList_checkboxes', false
         );
 
-        field.assertNotChecked('choice1');
-        field.assertNotChecked('choice2');
-        field.assertChecked('choice3');
+        field.assertNotSelected('choice1');
+        field.assertNotSelected('choice2');
+        field.assertSelected('choice3');
 
         // Step 5: Clear all values again and save
         field.contextMenu().select('Clear');
-        field.assertNotChecked('choice1');
-        field.assertNotChecked('choice2');
-        field.assertNotChecked('choice3');
+        field.assertNotSelected('choice1');
+        field.assertNotSelected('choice2');
+        field.assertNotSelected('choice3');
         contentEditor.save();
 
         // Step 6: Reopen and verify everything is cleared
@@ -81,8 +81,8 @@ describe('Checkbox choice list - clear and reselect', () => {
             CheckboxChoiceList, 'checkboxChoiceList_checkboxes', false
         );
 
-        field.assertNotChecked('choice1');
-        field.assertNotChecked('choice2');
-        field.assertNotChecked('choice3');
+        field.assertNotSelected('choice1');
+        field.assertNotSelected('choice2');
+        field.assertNotSelected('choice3');
     });
 });

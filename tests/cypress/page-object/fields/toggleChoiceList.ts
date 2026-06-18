@@ -44,12 +44,12 @@ export class CheckboxChoiceList extends ToggleChoiceList {
     labelSel = 'label.moonstone-checkboxItem';
     inputSel = 'input.moonstone-checkbox_input';
 
-    assertChecked(label: string) {
+    assertSelected(label: string) {
         return this.get().find(`${this.inputSel}[value="${label}"]`)
             .should('have.attr', 'aria-checked', 'true');
     }
 
-    assertNotChecked(label: string) {
+    assertNotSelected(label: string) {
         return this.get().find(`${this.inputSel}[value="${label}"]`)
             .should('have.attr', 'aria-checked', 'false');
     }

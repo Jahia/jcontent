@@ -419,8 +419,11 @@ export const JahiaRenderedModulesUtil = {
         }).then(resp => {
             const dom = new DOMParser().parseFromString(resp, 'text/html');
 
+            // Placeholder per module information extraction
+            const placeholdersByParent = {};
+
             // Area-specific information extraction
-            dom.querySelectorAll('[jahiatype="module"]:not([type="placeholder"])').forEach(element => {
+            dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
                 const modulePath = element.getAttribute('path');
                 const elemType = element.getAttribute('type');
                 const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
@@ -429,31 +432,28 @@ export const JahiaRenderedModulesUtil = {
                 if (modulePath !== '*' && modulePath !== pagePath && (elemType === 'area' || elemType === 'absoluteArea')) {
                     this.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
                 }
-            });
 
-            // Placeholder per module information extraction
-            const placeholdersByParent = {};
-            dom.querySelectorAll('[jahiatype="module"][type="placeholder"]').forEach(placeholder => {
-                const ancestor = placeholder.parentElement?.closest('[jahiatype="module"]');
-                const ancestorPath = ancestor?.getAttribute('path');
-                if (ancestorPath) {
-                    if (!placeholdersByParent[ancestorPath]) {
-                        placeholdersByParent[ancestorPath] = [];
-                        const ancestorNt = ancestor.getAttribute('nodetypes')?.split(' ');
-                        if (ancestorNt) {
-                            placeholdersByParent[ancestorPath].push({
+                if (elemType === 'placeholder') {
+                    const ancestor = element.parentElement?.closest('[jahiatype="module"]');
+                    const ancestorPath = ancestor?.getAttribute('path');
+                    if (ancestorPath) {
+                        placeholdersByParent[ancestorPath].push({
+                            path: element.getAttribute('path'),
+                            nodeTypes: element.getAttribute('nodetypes')?.split(' '),
+                            placeholder: true
+                        });
+                    }
+                } else {
+                    if (!placeholdersByParent[modulePath]) {
+                        placeholdersByParent[modulePath] = [];
+                        if (nodeTypes) {
+                            placeholdersByParent[modulePath].push({
                                 path: '*',
-                                nodeTypes: ancestorNt,
+                                nodeTypes: nodeTypes,
                                 placeholder: false
                             });
                         }
                     }
-
-                    placeholdersByParent[ancestorPath].push({
-                        path: placeholder.getAttribute('path'),
-                        nodeTypes: placeholder.getAttribute('nodetypes')?.split(' '),
-                        placeholder: true
-                    });
                 }
             });
 

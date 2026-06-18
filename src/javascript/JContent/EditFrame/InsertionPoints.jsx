@@ -76,7 +76,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                 attributes: {nodeTypes: JahiaRenderedModulesUtil.resolveNodeTypes(parentPath)}
             };
         })
-        .filter(({node, attributes}) => node !== null && node !== undefined && attributes.nodeTypes.length > 0);
+        .filter(({node, attributes}) => node !== null && node !== undefined && attributes?.nodeTypes?.length > 0);
 
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;

@@ -52,7 +52,12 @@ describe('Context menu visiblity', () => {
                 });
             }).as('slowAllGql');
 
-            jcontent.getTable().getRowByName(childFolderName).get().rightclick();
+            jcontent
+                .getTable()
+                .getRowByName(childFolderName)
+                .get()
+                .find('[data-cm-role^="table-content-list-cell-name"]')
+                .rightclick();
 
             cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)', {
                 timeout: MENU_VISIBILITY_THRESHOLD_MS

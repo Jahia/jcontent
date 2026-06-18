@@ -1,6 +1,6 @@
 import {ContentEditor, JContent} from '../../page-object';
 import gql from 'graphql-tag';
-import {addNode, enableModule, publishAndWaitJobEnding} from '@jahia/cypress';
+import {addNode, enableModule} from '@jahia/cypress';
 
 describe('JContent preview tests', () => {
     const siteKey = 'jcontentSite';
@@ -9,7 +9,6 @@ describe('JContent preview tests', () => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
         enableModule('jcontent-test-module', siteKey);
-        publishAndWaitJobEnding(`/sites/${siteKey}/home`, ['en']);
         cy.apollo({
             mutation: gql`mutation {
                             jcr {
@@ -41,15 +40,14 @@ describe('JContent preview tests', () => {
     it('should honor the j:view property when previewing content', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.switchToListMode();
-        jcontent.getTable().getRowByName('test-content6-linkview').contextMenu().select('Preview');
+        jcontent.getTable().getRowByName('test-content6-linkview').get().click();
         cy.get('iframe[data-sel-role="edit-preview-frame"]')
             .its('0.contentDocument.body')
             .should('be.visible')
             .should('contain.html',
                 '<a target="" href="/cms/render/default/en/sites/jcontentSite/home/area-main/test-content6-linkview.html">test-content6-linkview</a>');
 
-        cy.get('button[data-cm-role="preview-drawer-close"]').click();
-        jcontent.getTable().getRowByName('test-content7-defaultview').contextMenu().select('Preview');
+        jcontent.getTable().getRowByName('test-content7-defaultview').click();
         cy.get('iframe[data-sel-role="edit-preview-frame"]')
             .its('0.contentDocument.body.textContent')
             .should('equal',
@@ -67,81 +65,31 @@ describe('JContent preview tests', () => {
                 '<div>No default view</div>');
     });
 
-    it('should show correct preview version in live and edit', () => {
+    it('should reflect edit workspace changes in preview', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
 
-        cy.log('Open preview');
+        cy.log('Open preview and verify initial edit version is shown');
         jcontent.openPreview('previewText');
-        cy.get('[data-sel-role=preview-type-content]').should('be.visible');
-        cy.get('[data-cm-role=preview-name]').contains('preview me');
+        cy.get('[data-sel-role="preview-container"]').should('be.visible');
+        cy.get('[data-cm-role="preview-name"]').should('contain', 'preview me');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.text', 'preview me');
 
-        cy.log('Verify live button is disabled');
-        cy.get('button[data-cm-role="live-preview-button"]')
-            .should('exist')
-            .and('be.disabled');
-        cy.get('[data-cm-role=preview-drawer-close]').click();
-
-        cy.log('Publish');
-        jcontent.getTable()
-            .getRowByName('previewText')
-            .contextMenu()
-            .submenu('Publish', 'jcontent-publishMenu').get()
-            .within(() => {
-                cy.contains('span', 'Publish preview me - English').click();
-            });
-        jcontent.clickPublishNow();
-
-        cy.log('Reopen preview');
-        jcontent.openPreview('previewText');
-        cy.get('button[data-cm-role="live-preview-button"]').should('be.visible').click();
-        cy.get('[data-cm-role=preview-name]').contains('preview me');
-        cy.get('[data-cm-role=preview-drawer-close]').click();
-
-        cy.log('Edit');
+        cy.log('Edit content');
         jcontent.editComponentByRowName('previewText');
         const ce = new ContentEditor();
         ce.getSmallTextField('jnt:text_text').addNewValue('preview me edited');
         ce.save();
 
-        cy.log('Reopen preview after edit');
+        cy.log('Reopen preview and verify edit workspace shows updated content');
         jcontent.openPreview('previewText');
-        cy.get('[data-sel-role=preview-type-content]').should('be.visible');
-        cy.get('[data-cm-role=preview-name]').contains('preview me edited');
-        cy.get('button[data-cm-role="live-preview-button"]').should('be.visible').click();
-        cy.get('[data-cm-role=preview-name]').contains('preview me');
-        cy.get('[data-cm-role=preview-drawer-close]').click();
-
-        cy.log('Publish after edit');
-        jcontent.getTable()
-            .getRowByName('previewText')
-            .contextMenu()
-            .submenu('Publish', 'jcontent-publishMenu').get()
-            .within(() => {
-                cy.contains('span', 'Publish preview me edited - English').click();
-            });
-        jcontent.clickPublishNow();
-
-        jcontent.openPreview('previewText');
-        cy.get('button[data-cm-role="live-preview-button"]').should('be.visible').click();
-        cy.get('[data-cm-role=preview-name]').contains('preview me edited');
-        cy.get('[data-cm-role=preview-drawer-close]').click();
-
-        cy.log('Unpublish');
-        jcontent.getTable()
-            .getRowByName('previewText')
-            .contextMenu()
-            .submenu('Publish', 'jcontent-publishMenu').get()
-            .within(() => {
-                cy.contains('span', 'Unpublish preview me edited - English').click();
-            });
-        cy.contains('button', 'Unpublish').click();
-
-        jcontent.openPreview('previewText');
-        cy.get('[data-sel-role=preview-type-content]').should('be.visible');
-        cy.get('[data-cm-role=preview-name]').contains('preview me edited');
-        cy.get('button[data-cm-role="live-preview-button"]')
-            .should('exist')
-            .and('be.disabled');
-        cy.get('[data-cm-role=preview-drawer-close]').click();
+        cy.get('[data-sel-role="preview-container"]').should('be.visible');
+        cy.get('[data-cm-role="preview-name"]').should('contain', 'preview me edited');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.text', 'preview me edited');
     });
 });

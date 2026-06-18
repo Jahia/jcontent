@@ -1,8 +1,9 @@
 import {addNode, createSite, deleteSite, getNodeByPath} from '@jahia/cypress';
-import {CategoryManager, JContent} from '../../page-object';
+import {CategoryManager, JContent, SidePanel} from '../../page-object';
 
 describe('Hide Preview testsuite', () => {
     const siteKey = 'hidePreviewSite';
+    const sidePanel = new SidePanel().inCE();
 
     before('Create site and content', () => {
         createSite(siteKey);
@@ -32,7 +33,7 @@ describe('Hide Preview testsuite', () => {
         getNodeByPath(`/sites/${siteKey}`).then(res => {
             cy.visit(`/jahia/administration/digitall/settings/properties#(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:${siteKey},uilang:en,uuid:'${res.data.jcr.nodeByPath.uuid}')))`);
         });
-        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
+        sidePanel.getByRole('tab-preview').should('not.exist');
     });
 
     it('Preview shouldn\'t exist for a content folder', () => {
@@ -40,7 +41,7 @@ describe('Hide Preview testsuite', () => {
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('ContentFolder');
         ce.switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
+        sidePanel.getByRole('tab-preview').should('not.exist');
     });
 
     it('Preview should be visible for a content', () => {
@@ -48,11 +49,7 @@ describe('Hide Preview testsuite', () => {
         jcontent.getAccordionItem('content-folders').click();
         const ce = jcontent.editComponentByText('Text');
         ce.switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').then($tab => {
-            if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('[data-sel-role="tab-preview"]').click();
-            }
-        });
+        sidePanel.switchToPreviewTab();
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
     });
 
@@ -60,7 +57,7 @@ describe('Hide Preview testsuite', () => {
         const cm = CategoryManager.visitCategoryManager('en');
         const ce = cm.editItem('Annual Filings');
         ce.switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
+        sidePanel.getByRole('tab-preview').should('not.exist');
     });
 
     afterEach('logout', () => {

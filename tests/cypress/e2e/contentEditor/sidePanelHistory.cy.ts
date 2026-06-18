@@ -30,14 +30,12 @@ describe('Content editor side panel - History tab', () => {
     const sitePath = `/sites/${siteKey}`;
     const contentPath = `${sitePath}/contents`;
     const homePath = `${sitePath}/home`;
+    const sidePanel = new SidePanel().inCE();
 
     const editor1 = {username: 'historyUiEditor1', password: 'History_Editor_1!'};
     const editor2 = {username: 'historyUiEditor2', password: 'History_Editor_2!'};
     const publisher = {username: 'historyUiPublisher', password: 'History_Publisher_1!'};
     const permissionTester = {username: 'historyUiPermTester', password: 'History_Perm_1!'};
-
-    const HISTORY_ITEM = '[data-sel-role="history-item"]';
-    const HISTORY_CONTAINER = '[data-sel-role="history-container"]';
 
     // Jahia writes history entries asynchronously through a Camel route — give
     // the writer enough time before snapshotting (the probe used 5 s).
@@ -151,10 +149,10 @@ describe('Content editor side panel - History tab', () => {
         const jcontent = JContent.visit(siteKey, 'en', parentAccordion);
         const ce = jcontent.editComponentByRowName(rowName);
         ce.switchToAdvancedMode();
-        new SidePanel().switchToHistoryTab();
-        cy.get(HISTORY_CONTAINER).should('be.visible');
+        sidePanel.switchToHistoryTab();
+        sidePanel.getByRole('history-container').should('be.visible');
         // Wait for at least one entry to load before callers start asserting
-        cy.get(HISTORY_ITEM).should('have.length.greaterThan', 0);
+        sidePanel.getHistoryItems().should('have.length.greaterThan', 0);
         return jcontent;
     };
 
@@ -327,14 +325,14 @@ describe('Content editor side panel - History tab', () => {
         jcontent.getAccordionItem('pages').getTreeItem('home').expand();
         jcontent.getAccordionItem('pages').getTreeItem('history-test-page').click();
         jcontent.editPage().switchToAdvancedMode();
-        new SidePanel().switchToHistoryTab();
+        sidePanel.switchToHistoryTab();
 
-        cy.get(HISTORY_ITEM).should('have.length.greaterThan', 0);
-        cy.get(HISTORY_CONTAINER).should('contain.text', 'Published');
-        cy.get(HISTORY_CONTAINER).should('contain.text', 'Created');
-        cy.get(HISTORY_CONTAINER).should('contain.text', editor1.username);
-        cy.get(HISTORY_CONTAINER).should('contain.text', editor2.username);
-        cy.get(HISTORY_CONTAINER).should('contain.text', publisher.username);
+        sidePanel.getHistoryItems().should('have.length.greaterThan', 0);
+        sidePanel.getByRole('history-container').should('contain.text', 'Published');
+        sidePanel.getByRole('history-container').should('contain.text', 'Created');
+        sidePanel.getByRole('history-container').should('contain.text', editor1.username);
+        sidePanel.getByRole('history-container').should('contain.text', editor2.username);
+        sidePanel.getByRole('history-container').should('contain.text', publisher.username);
     });
 
     // ----------------------------------------------------------------------
@@ -359,12 +357,12 @@ describe('Content editor side panel - History tab', () => {
 
         openHistoryFor('content-folders/contents', 'history-test-text');
 
-        cy.get(HISTORY_ITEM).should('have.length.greaterThan', 2);
-        cy.get(HISTORY_CONTAINER).should('contain.text', 'Published');
-        cy.get(HISTORY_CONTAINER).should('contain.text', 'Created');
-        cy.get(HISTORY_CONTAINER).should('contain.text', editor1.username);
-        cy.get(HISTORY_CONTAINER).should('contain.text', editor2.username);
-        cy.get(HISTORY_CONTAINER).should('contain.text', publisher.username);
+        sidePanel.getHistoryItems().should('have.length.greaterThan', 2);
+        sidePanel.getByRole('history-container').should('contain.text', 'Published');
+        sidePanel.getByRole('history-container').should('contain.text', 'Created');
+        sidePanel.getByRole('history-container').should('contain.text', editor1.username);
+        sidePanel.getByRole('history-container').should('contain.text', editor2.username);
+        sidePanel.getByRole('history-container').should('contain.text', publisher.username);
     });
 
     // ----------------------------------------------------------------------
@@ -398,10 +396,10 @@ describe('Content editor side panel - History tab', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/movable-folder');
         const ce = jcontent.editComponentByRowName('history-test-move');
         ce.switchToAdvancedMode();
-        new SidePanel().switchToHistoryTab();
+        sidePanel.switchToHistoryTab();
 
-        cy.get(HISTORY_ITEM).should('have.length.greaterThan', 0);
-        cy.get(HISTORY_CONTAINER).should('contain.text', 'Published');
+        sidePanel.getHistoryItems().should('have.length.greaterThan', 0);
+        sidePanel.getByRole('history-container').should('contain.text', 'Published');
     });
 
     // ----------------------------------------------------------------------
@@ -413,9 +411,7 @@ describe('Content editor side panel - History tab', () => {
         openHistoryFor('content-folders/contents', 'history-test-text');
 
         const totalAlias = 'totalCount';
-        cy.get(HISTORY_ITEM).its('length').as(totalAlias);
-
-        const sidePanel = new SidePanel();
+        sidePanel.getHistoryItems().its('length').as(totalAlias);
 
         // Filter by "Published" — every visible chip must say "Published"
         sidePanel.getHistoryFilter().find('[role="listbox"] span').click();
@@ -423,11 +419,11 @@ describe('Content editor side panel - History tab', () => {
         cy.get('.moonstone-menu').not('.moonstone-hidden')
             .contains('.moonstone-listItem', 'Published').click();
 
-        cy.get(HISTORY_ITEM).should('have.length.greaterThan', 0);
+        sidePanel.getHistoryItems().should('have.length.greaterThan', 0);
         // Single assertion against the whole jQuery set — avoids spawning a
         // per-item `cy.wrap` command (which keeps a DOM snapshot each and
         // leaks memory across runs when log history is enabled).
-        cy.get(HISTORY_ITEM).should($items => {
+        sidePanel.getHistoryItems().should($items => {
             $items.each((_, el) => {
                 expect(el.textContent || '', 'every visible entry must contain "Published"').to.contain('Published');
             });
@@ -437,7 +433,7 @@ describe('Content editor side panel - History tab', () => {
         sidePanel.getHistoryFilter().find('[role="listbox"] span').click();
         cy.get('.moonstone-menu').not('.moonstone-hidden')
             .contains('.moonstone-listItem', 'All actions').click();
-        cy.get(HISTORY_ITEM).its('length').then(restored => {
+        sidePanel.getHistoryItems().its('length').then(restored => {
             cy.get<number>(`@${totalAlias}`).then(total => {
                 expect(restored).to.equal(total);
             });
@@ -451,13 +447,13 @@ describe('Content editor side panel - History tab', () => {
         openHistoryFor('content-folders/contents', 'history-test-pagination');
 
         // First page should be full (20 items)
-        cy.get(HISTORY_ITEM).should('have.length', 20);
+        sidePanel.getHistoryItems().should('have.length', 20);
 
         // Navigate to the last page — it should have fewer items than the first page
-        cy.get(HISTORY_ITEM).its('length').then(firstPageCount => {
+        sidePanel.getHistoryItems().its('length').then(firstPageCount => {
             cy.get('[data-testid="pagination-button-last-page"]').click();
-            cy.get(HISTORY_ITEM).should('have.length.greaterThan', 0);
-            cy.get(HISTORY_ITEM).its('length').should('be.lessThan', firstPageCount);
+            sidePanel.getHistoryItems().should('have.length.greaterThan', 0);
+            sidePanel.getHistoryItems().its('length').should('be.lessThan', firstPageCount);
         });
     });
 
@@ -481,9 +477,9 @@ describe('Content editor side panel - History tab', () => {
             const ce = jcontent.editComponentByRowName('history-test-text');
             ce.switchToAdvancedMode();
 
-            cy.get('[data-sel-role="side-panel"]').should('be.visible');
-            cy.get('[data-sel-role="tab-details"]').should('be.visible');
-            cy.get('[data-sel-role="tab-history"]').should('not.exist');
+            sidePanel.getByRole('side-panel').should('be.visible');
+            sidePanel.getByRole('tab-details').should('be.visible');
+            sidePanel.getByRole('tab-history').should('not.exist');
         });
     });
 });

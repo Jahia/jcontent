@@ -28,7 +28,7 @@ describe('Create content tests', () => {
 
     it('display 18 usages', () => {
         jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
-        jcontent.switchToListMode().getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
+        jcontent.switchToListMode().getTable().getRowByName('boy-father.jpg').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         const advancedOptions = contentEditor.switchToAdvancedOptions();
         advancedOptions.checkOption('Usages', '18');
@@ -50,7 +50,7 @@ describe('Create content tests', () => {
         cy.logout();
         cy.login('bill', 'password');
         jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
-        jcontent.switchToListMode().getTable().getRowByLabel('boy-father.jpg').contextMenu().select('Edit');
+        jcontent.switchToListMode().getTable().getRowByName('boy-father.jpg').contextMenu().select('Edit');
         const contentEditor = new ContentEditor();
         const advancedOptions = contentEditor.switchToAdvancedOptions();
         advancedOptions.checkOption('Usages', '35');

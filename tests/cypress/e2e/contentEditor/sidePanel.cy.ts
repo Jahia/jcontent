@@ -3,6 +3,7 @@ import {JContent, SidePanel} from '../../page-object';
 
 describe('Content editor side panel', () => {
     const siteKey = 'sidePanelTestSite';
+    const ceSidePanel = new SidePanel().inCE();
 
     before(() => {
         createSite(siteKey, {
@@ -38,10 +39,10 @@ describe('Content editor side panel', () => {
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
 
-            cy.get('[data-sel-role="side-panel"]').should('be.visible');
-            cy.get('[data-sel-role="tab-details"]').should('be.visible');
-            cy.get('[data-sel-role="tab-history"]').should('be.visible');
-            cy.get('[data-sel-role="tab-preview"]').should('be.visible');
+            ceSidePanel.getByRole('side-panel').should('be.visible');
+            ceSidePanel.getByRole('tab-details').should('be.visible');
+            ceSidePanel.getByRole('tab-history').should('be.visible');
+            ceSidePanel.getByRole('tab-preview').should('be.visible');
         });
 
         it('should default to the preview tab', () => {
@@ -49,8 +50,8 @@ describe('Content editor side panel', () => {
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
 
-            cy.get('[data-sel-role="tab-preview"]').should('have.attr', 'aria-selected', 'true');
-            cy.get('[data-sel-role="side-panel-content"]').should('be.visible');
+            ceSidePanel.getByRole('tab-preview').should('have.attr', 'aria-selected', 'true');
+            ceSidePanel.getByRole('side-panel-content').should('be.visible');
         });
 
         it('should switch to history tab on click', () => {
@@ -58,10 +59,8 @@ describe('Content editor side panel', () => {
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
 
-            const sidePanel = new SidePanel();
-            sidePanel.switchToHistoryTab();
-
-            cy.get('[data-sel-role="history-container"]').should('be.visible');
+            ceSidePanel.switchToHistoryTab();
+            ceSidePanel.getByRole('history-container').should('be.visible');
         });
 
         it('should switch to preview tab on click', () => {
@@ -69,17 +68,15 @@ describe('Content editor side panel', () => {
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
 
-            const sidePanel = new SidePanel();
-            sidePanel.switchToPreviewTab();
+            ceSidePanel.switchToPreviewTab();
 
-            cy.get('[data-sel-role="side-panel-content"]').should('be.visible');
+            ceSidePanel.getByRole('side-panel-content').should('be.visible');
         });
 
         it('should not show side panel in non-fullscreen mode', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             jcontent.editComponentByRowName('test-text');
-
-            cy.get('[data-sel-role="side-panel"]').should('not.exist');
+            ceSidePanel.getByRole('side-panel').should('not.exist');
         });
     });
 
@@ -88,20 +85,22 @@ describe('Content editor side panel', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
-            new SidePanel().switchToDetailsTab();
+            ceSidePanel.switchToDetailsTab();
         });
 
         it('should display technical information section', () => {
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView();
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').should('be.visible');
+            ceSidePanel.getDetailsSection('technical').scrollIntoView();
+            ceSidePanel.getDetailsSection('technical').should('be.visible');
         });
 
         it('should display detail rows with copy buttons in the technical section', () => {
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]')
+            ceSidePanel
+                .getDetailsSection('technical')
                 .find('[data-sel-role="detail-row"]')
                 .should('have.length.greaterThan', 0);
 
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]')
+            ceSidePanel
+                .getDetailsSection('technical')
                 .find('[data-sel-role="detail-row"]')
                 .first()
                 .find('button')
@@ -119,7 +118,8 @@ describe('Content editor side panel', () => {
                 cy.wrap(writeText).as('clipboardWrite');
             });
 
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]')
+            ceSidePanel
+                .getDetailsSection('technical')
                 .find('[data-sel-role="detail-row"]')
                 .first()
                 .find('button')
@@ -131,7 +131,7 @@ describe('Content editor side panel', () => {
         it('should display additional details section when present', () => {
             // Additional details section appears when details array is populated
             // Its presence depends on the content type — we check the technical section exists at minimum
-            cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').should('exist');
+            ceSidePanel.getDetailsSection('technical').should('exist');
         });
     });
 
@@ -140,38 +140,37 @@ describe('Content editor side panel', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
-            new SidePanel().switchToHistoryTab();
+            ceSidePanel.switchToHistoryTab();
         });
 
         it('should display the action filter dropdown', () => {
-            cy.get('[data-sel-role="history-action-filter"]').should('be.visible');
-            cy.get('[data-sel-role="history-action-filter"] [role="listbox"]').should('exist');
+            const historyFilter = ceSidePanel.getByRole('history-action-filter');
+            historyFilter.should('be.visible');
+            historyFilter.get('[role="listbox"]').should('exist');
         });
 
         it('should show all actions in the filter dropdown', () => {
-            cy.get('[data-sel-role="history-action-filter"]  [role="listbox"] span').click();
+            ceSidePanel.getHistoryFilter().should('be.visible').find('[role="listbox"] span').click();
 
             // All known action types should be listed
-            cy.get('.moonstone-menu').should('be.visible');
-            cy.get('.moonstone-menu').should('contain.text', 'All actions');
+            ceSidePanel.getSidePanel().get('.moonstone-menu').should('be.visible');
+            ceSidePanel.getSidePanel().get('.moonstone-menu').should('contain.text', 'All actions');
         });
 
         it('should display the history container', () => {
-            cy.get('[data-sel-role="history-container"]').should('be.visible');
+            ceSidePanel.getByRole('history-container').should('be.visible');
         });
 
         it('should update the list when action filter is changed', () => {
-            const sidePanel = new SidePanel();
-
             // Open dropdown and select 'created'
-            sidePanel.getHistoryFilter().find('[role="listbox"] span').click();
+            ceSidePanel.getHistoryFilter().find('[role="listbox"] span').click();
             cy.get('.moonstone-menu').not('.moonstone-hidden').should('be.visible');
 
             // Click first non-"All actions" option scoped to the visible menu
             cy.get('.moonstone-menu').not('.moonstone-hidden').find('.moonstone-listItem').eq(1).click();
 
             // The filter button should now show a chip
-            cy.get('[data-sel-role="history-action-filter"]').should('be.visible');
+            ceSidePanel.getHistoryFilter().should('be.visible');
         });
     });
 
@@ -181,9 +180,9 @@ describe('Content editor side panel', () => {
             const ce = jcontent.editComponentByRowName('test-text');
             ce.switchToAdvancedMode();
 
-            new SidePanel().switchToPreviewTab();
-
-            cy.get('iframe[data-sel-role="edit-preview-frame"]', {timeout: 10000}).should('be.visible');
+            ceSidePanel.switchToPreviewTab();
+            ceSidePanel.getByRole('side-panel-content').should('be.visible');
+            ceSidePanel.getSidePanel().get('iframe[data-sel-role="edit-preview-frame"]', {timeout: 10000}).should('be.visible');
         });
 
         it('should not display preview iframe for a content folder', () => {
@@ -192,8 +191,8 @@ describe('Content editor side panel', () => {
             ce.switchToAdvancedMode();
 
             // Preview tab is gated by hasPreview; folders have no preview so the tab is not rendered
-            cy.get('[data-sel-role="tab-preview"]').should('not.exist');
-            cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
+            ceSidePanel.getByRole('tab-preview').should('not.exist', {timeout: 10000});
+            ceSidePanel.getSidePanel().get('iframe[data-sel-role="edit-preview-frame"]', {timeout: 10000}).should('not.exist');
         });
     });
 });

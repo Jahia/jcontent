@@ -7,7 +7,6 @@ describe('Menu tests', () => {
     beforeEach(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
         cy.loginAndStoreSession(); // Edit in chief
     });
 
@@ -19,7 +18,7 @@ describe('Menu tests', () => {
     it('Can edit content', function () {
         const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
         jcontent.switchToListMode();
-        jcontent.getTable().getRowByIndex(1).contextMenu().select('Delete');
+        jcontent.getTable().getRowByName('test-content1').contextMenu().select('Delete');
 
         cy.get('[data-sel-role="cancel-button"]').click();
     });
@@ -27,7 +26,7 @@ describe('Menu tests', () => {
     it('Can download file', function () {
         const jcontent = JContent.visit('jcontentSite', 'en', 'media/files/bootstrap/css');
         jcontent.switchToListMode();
-        jcontent.getTable().getRowByIndex(1).contextMenu().select('Download');
+        jcontent.getTable().getRowByName('bootstrap.css').contextMenu().select('Download');
         cy.window().then(win => {
             console.log(win);
         });

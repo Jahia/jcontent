@@ -1,4 +1,4 @@
-import {JContent} from '../../page-object';
+import {JContent, SidePanel} from '../../page-object';
 import {Button, getComponentBySelector} from '@jahia/cypress';
 import {addNode, deleteNode} from '@jahia/cypress';
 
@@ -107,7 +107,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
         it('Can select items in list mode and clear selection', () => {
             jcontent.getTable().selectRowByName('images');
             jcontent.getTable().selectRowByName('video');
-            jcontent.getTable().get().type('{esc}');
+            cy.get('body').type('{esc}');
 
             cy.get('[data-cm-role="selection-infos"]').should('not.exist');
         });
@@ -133,6 +133,8 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
     });
 
     describe('test selection in thumbnails view', () => {
+        const sidePanel = new SidePanel();
+
         before(() => {
             cy.loginAndStoreSession(); // Edit in chief
             jcontent = JContent.visit('digitall', 'en', 'media/files/images/backgrounds');
@@ -143,10 +145,11 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             clearSelection();
         });
 
-        it('should not be able to select item with click', () => {
+        it('should be able to select for side panel with click', () => {
             jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click();
-            jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldNotBeSelected();
             checkNoSelection();
+            sidePanel.getSidePanel().should('be.visible')
+                .get('[data-sel-role="preview-container"]').should('be.visible');
         });
 
         it('should be able to select item with meta click', () => {
@@ -204,12 +207,14 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
             checkSelectionCount(2);
         });
 
-        it('should not select anything if preview is opened', () => {
-            jcontent.getGrid().getCardByName('fans-stadium.jpg').contextMenu().select('Preview');
+        it('should be able to select even with preview selected', () => {
+            jcontent.getGrid().getCardByName('fans-stadium.jpg').get().click();
+            checkNoSelection();
+            sidePanel.getSidePanel().should('be.visible')
+                .get('[data-sel-role="preview-container"]').should('be.visible');
             jcontent.getGrid().getCardByName('forest-woman.jpg').get().click({cmdKey: true});
             jcontent.getGrid().getCardByName('fans-stadium.jpg').shouldNotBeSelected();
             jcontent.getGrid().getCardByName('forest-woman.jpg').shouldBeSelected();
-            checkNoSelection();
         });
     });
 

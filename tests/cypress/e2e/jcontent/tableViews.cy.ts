@@ -24,8 +24,8 @@ describe('Table view tests', () => {
     it('Check we display size file in Media list view', function () {
         const jcontent = JContent.visit('jcontentSite', 'en', 'media/files/bootstrap/css');
         jcontent.switchToListMode();
-        cy.get('[data-cm-role="table-content-list-cell-fileSize"]')
-            .should('be.visible')
-            .and('contain', '142.64 KB');
+        const tableRow = jcontent.getTable().getRowByName('bootstrap.css');
+        tableRow.get().get('[data-cm-role="table-content-list-cell-fileSize"]').scrollIntoView();
+        tableRow.get().should('be.visible').and('contain', '142.64 KB');
     });
 });

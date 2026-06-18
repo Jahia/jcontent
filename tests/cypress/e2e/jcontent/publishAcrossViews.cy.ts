@@ -54,9 +54,9 @@ describe('Test the save publish buttons flow', () => {
         contentEditor.create();
         jcontent.getHeaderActionButton('publish').should('exist').and('be.visible').click(); // Verify header is loaded first
         jcontent.clickPublishNow();
-        jcontent.switchToListMode().getTable().getRowByLabel('Newly Created Content').contextMenu().select('Delete');
+        jcontent.switchToListMode().getTable().getRowByName('rich-text').contextMenu().select('Delete');
         getComponent(DeleteDialog).markForDeletion();
-        jcontent.switchToStructuredView().getTable().selectRowByLabel('Newly Created Content');
+        jcontent.switchToStructuredView().getTable().selectRowByName('rich-text');
         jcontent.getHeaderActionButton('publishDeletion').click();
         jcontent.clickPublishNow();
     });

@@ -111,8 +111,7 @@ export class JContent extends BasePage {
     openPreview(name: string) {
         return this.getTable()
             .getRowByName(name)
-            .contextMenu()
-            .selectByRole('preview');
+            .click();
     }
 
     getBrowseControlMenu(): Menu {

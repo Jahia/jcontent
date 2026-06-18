@@ -17,11 +17,12 @@ describe('Menu actions preview tests', () => {
                 .getRowByLabel('Taber')
                 .contextMenu()
                 .select('Preview');
-            cy.get('[data-sel-role=preview-type-content]');
+            cy.get('[data-preview-type="content"]').should('be.visible');
             cy.get('[data-cm-role=preview-name]').contains('Taber');
         });
 
-        it('can be closed', () => {
+        // No close atm but might need to be restored
+        it.skip('can be closed', () => {
             cy.get('[data-cm-role=preview-drawer-close]').click();
             cy.get('[data-cm-role=preview-name]').should('not.exist');
         });
@@ -37,7 +38,7 @@ describe('Menu actions preview tests', () => {
                 .getCardByName('Digitall Financial Report.pdf')
                 .contextMenu()
                 .select('Preview');
-            cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
+            cy.get('[data-preview-type="pdf"]').should('be.visible');
             cy.get('[data-cm-role=preview-name]').contains('Digitall Financial Report');
         });
 
@@ -48,7 +49,7 @@ describe('Menu actions preview tests', () => {
                 .getCardByLabel('editing')
                 .contextMenu()
                 .select('Preview');
-            cy.get('[data-sel-role=preview-type-image]');
+            cy.get('[data-preview-type="image"]');
             cy.get('[data-cm-role=preview-name]').contains('editing-digitall-site.jpg');
         });
 
@@ -57,13 +58,13 @@ describe('Menu actions preview tests', () => {
                 .getGrid()
                 .getCardByLabel('dance')
                 .get().scrollIntoView().find('[data-cm-role="grid-content-list-card-name"]').scrollIntoView().click();
-            cy.get('[data-sel-role=preview-type-image]');
+            cy.get('[data-preview-type="image"]');
             cy.get('[data-cm-role=preview-name]').contains('dance-scene-free-license-cc0.jpg');
         });
 
         it('can switch to list view', () => {
             jcontent.switchToListMode();
-            cy.get('[data-sel-role=preview-type-image]');
+            cy.get('[data-preview-type="image"]');
             cy.get('[data-cm-role=preview-name]').contains('dance-scene-free-license-cc0.jpg');
         });
 
@@ -72,11 +73,11 @@ describe('Menu actions preview tests', () => {
                 .getTable()
                 .getRowByLabel('street')
                 .get().find('[data-cm-role="table-content-list-cell-nameBigIcon"]').click();
-            cy.get('[data-sel-role=preview-type-image]');
+            cy.get('[data-preview-type="image"]');
             cy.get('[data-cm-role=preview-name]').contains('street-market-fruits-grocery.jpg');
         });
 
-        it('can be closed', () => {
+        it.skip('can be closed', () => {
             cy.get('[data-cm-role=preview-drawer-close]').click();
             cy.get('[data-cm-role=preview-name]').should('not.exist');
         });
@@ -98,7 +99,7 @@ describe('Menu actions preview tests', () => {
 
             // Switch to next page then check preview
             cy.get('[data-sel-role="table-pagination-button-next-page"]').click();
-            cy.get('[data-cm-role="preview-drawer"]')
+            cy.get('[data-sel-role="side-panel-content"]')
                 .contains('Select a content item to preview it')
                 .should('be.visible');
         });

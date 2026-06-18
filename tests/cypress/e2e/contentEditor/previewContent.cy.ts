@@ -1,10 +1,11 @@
 import {PageComposer} from '../../page-object/pageComposer';
 import {addNode, deleteNode, enableModule, disableModule} from '@jahia/cypress';
-import {ContentEditor, JContent} from '../../page-object';
+import {ContentEditor, JContent, SidePanel} from '../../page-object';
 import {v4 as uuidv4} from 'uuid';
 
 describe('Preview tests', () => {
     const siteKey = 'digitall';
+    const sidePanel = new SidePanel().inCE();
     let pageComposer: PageComposer;
     const simpleText = 'Simple Text ' + uuidv4();
     const updatedText = 'Updated Text ' + uuidv4();
@@ -41,12 +42,8 @@ describe('Preview tests', () => {
             .getCardByName('Digitall Financial Report.pdf')
             .contextMenu()
             .selectByRole('editAdvanced');
-        cy.get('[data-sel-role="tab-preview"]').then($tab => {
-            if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('[data-sel-role="tab-preview"]').click({force: true});
-            }
-        });
-        cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
+        sidePanel.switchToPreviewTab();
+        cy.get('[data-preview-type="pdf"]').should('be.visible');
     });
 
     it('It shows correctly preview of edited page even if not the one currently rendered in PageComposer', () => {

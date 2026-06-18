@@ -15,7 +15,7 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
         const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
         if (isPDF(data.nodeByPath)) {
             return (
-                <div className={styles.previewContainer} data-sel-role="preview-type-pdf">
+                <div className={styles.previewContainer} data-sel-role="preview-container" data-preview-type="pdf">
                     <PDFViewer file={file} isFullScreen={isFullScreen}/>
                 </div>
             );
@@ -24,7 +24,8 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
         if (isBrowserImage(data.nodeByPath)) {
             return (
                 <div className={clsx(styles.previewContainer, styles.mediaContainer)}
-                     data-sel-role="preview-type-image"
+                     data-sel-role="preview-container"
+                     data-preview-type="image"
                 >
                     <ImageViewer file={file} isFullScreen={isFullScreen}/>
                 </div>
@@ -35,7 +36,8 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
         const isMedia = (type === 'webm' || type === 'mp4');
         return (
             <div className={clsx(styles.previewContainer, isMedia && styles.mediaContainer)}
-                 data-sel-role="preview-type-document"
+                 data-sel-role="preview-container"
+                 data-preview-type={isMedia ? 'media' : 'document'}
             >
                 <DocumentViewer file={file} isFullScreen={isFullScreen} type={type}/>
             </div>
@@ -44,7 +46,8 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
 
     return (
         <div className={clsx(styles.previewContainer, styles.contentContainer)}
-             data-sel-role="preview-type-content"
+             data-sel-role="preview-container"
+             data-preview-type="content"
         >
             <IframeViewer
                 data={data}

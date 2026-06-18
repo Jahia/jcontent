@@ -380,6 +380,11 @@ export const JahiaRenderedModulesUtil = {
     // This simply collects all placeholder nodetypes for a module, it uses module nodetypes if wildcard placeholder without nodetypes is found.
     resolveNodeTypes: function (path) {
         const moduleInfo = this.getModule(path);
+
+        if (!moduleInfo) {
+            return undefined;
+        }
+
         const placeholderNodeTypes = [];
         let containsAnyNodeTypeWildCard = false;
 

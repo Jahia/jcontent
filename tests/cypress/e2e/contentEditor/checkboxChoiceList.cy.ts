@@ -6,16 +6,6 @@ describe('Checkbox choice list - clear and reselect', () => {
     const siteKey = 'checkboxChoiceListSite';
     const contentName = 'Test Checkbox Content';
 
-    const assertChecked = (label: string) => {
-        cy.get(`input[name="checkboxChoiceList_checkboxes"][value="${label}"]`)
-            .should('have.attr', 'aria-checked', 'true');
-    };
-
-    const assertNotChecked = (label: string) => {
-        cy.get(`input[name="checkboxChoiceList_checkboxes"][value="${label}"]`)
-            .should('have.attr', 'aria-checked', 'false');
-    };
-
     before(() => {
         createSite(siteKey, {
             templateSet: 'dx-base-demo-templates',
@@ -51,21 +41,21 @@ describe('Checkbox choice list - clear and reselect', () => {
             CheckboxChoiceList, 'checkboxChoiceList_checkboxes', false
         );
 
-        assertChecked('choice1');
-        assertChecked('choice2');
-        assertNotChecked('choice3');
+        field.assertChecked('choice1');
+        field.assertChecked('choice2');
+        field.assertNotChecked('choice3');
 
         // Step 2: Clear all values using the context menu action
         field.contextMenu().select('Clear');
-        assertNotChecked('choice1');
-        assertNotChecked('choice2');
-        assertNotChecked('choice3');
+        field.assertNotChecked('choice1');
+        field.assertNotChecked('choice2');
+        field.assertNotChecked('choice3');
 
         // Step 3: Select a new value and save
         field.select('choice3');
-        assertNotChecked('choice1');
-        assertNotChecked('choice2');
-        assertChecked('choice3');
+        field.assertNotChecked('choice1');
+        field.assertNotChecked('choice2');
+        field.assertChecked('choice3');
         contentEditor.save();
 
         // Step 4: Reopen and verify the saved state
@@ -74,26 +64,25 @@ describe('Checkbox choice list - clear and reselect', () => {
             CheckboxChoiceList, 'checkboxChoiceList_checkboxes', false
         );
 
-        assertNotChecked('choice1');
-        assertNotChecked('choice2');
-        assertChecked('choice3');
+        field.assertNotChecked('choice1');
+        field.assertNotChecked('choice2');
+        field.assertChecked('choice3');
 
         // Step 5: Clear all values again and save
         field.contextMenu().select('Clear');
-        assertNotChecked('choice1');
-        assertNotChecked('choice2');
-        assertNotChecked('choice3');
+        field.assertNotChecked('choice1');
+        field.assertNotChecked('choice2');
+        field.assertNotChecked('choice3');
         contentEditor.save();
 
         // Step 6: Reopen and verify everything is cleared
         contentEditor = jcontent.editComponentByText(contentName);
-        contentEditor.getField(
+        field = contentEditor.getField(
             CheckboxChoiceList, 'checkboxChoiceList_checkboxes', false
         );
 
-        assertNotChecked('choice1');
-        assertNotChecked('choice2');
-        assertNotChecked('choice3');
+        field.assertNotChecked('choice1');
+        field.assertNotChecked('choice2');
+        field.assertNotChecked('choice3');
     });
 });
-

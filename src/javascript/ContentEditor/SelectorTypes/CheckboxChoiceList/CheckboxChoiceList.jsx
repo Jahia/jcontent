@@ -41,7 +41,6 @@ export const CheckboxChoiceList = ({field, value, id, inputContext, onChange, on
         }
     };
 
-    console.log(items, currentValue);
     return (
         <div className={styles.checkboxChoiceList}>
             <CheckboxGroup

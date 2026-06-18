@@ -58,8 +58,9 @@ const getNodeTypes = e => {
         `[type="placeholder"][path="*"][data-jahia-parent="${parentId}"]`
     )];
 
+    // No placeholders found, nothing to insert
     if (wildcardPlaceholders.length === 0) {
-        return parentTypes;
+        return [];
     }
 
     // If any wildcard placeholder has no nodetypes, include parent types as well
@@ -92,7 +93,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
             node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
             attributes: {nodeTypes: getNodeTypes(e)}
         }))
-        .filter(({node}) => node !== null && node !== undefined);
+        .filter(({node, attributes}) => node !== null && node !== undefined && attributes.nodeTypes.length > 0);
 
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;

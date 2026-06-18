@@ -12,7 +12,7 @@ export const useCreatableNodetypesTree = ({nodeTypes, childNodeName, includeSubT
         fetchPolicy: 'cache-and-network',
         notifyOnNetworkStatusChange: true,
         variables: {
-            nodeTypes: (nodeTypes && nodeTypes.length) > 0 ? nodeTypes : undefined,
+            nodeTypes: nodeTypes,
             childNodeName,
             includeSubTypes,
             uilang,

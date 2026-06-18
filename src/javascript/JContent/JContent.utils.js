@@ -381,22 +381,25 @@ export const JahiaRenderedModulesUtil = {
     resolveNodeTypes: function (path) {
         const moduleInfo = this.getModule(path);
         const placeholderNodeTypes = [];
-        const moduleNodeTypes = [];
         let containsAnyNodeTypeWildCard = false;
 
         moduleInfo?.forEach(item => {
-            if (item.path === '*' && item.nodeTypes?.length > 0) {
-                if (item.placeholder) {
-                    placeholderNodeTypes.push(...item.nodeTypes);
-                } else {
-                    moduleNodeTypes.push(...item.nodeTypes);
-                }
-            } else if (item.path === '*' && !item.nodeTypes && item.placeholder) {
+            if (item.placeholder && item.path === '*' && item.nodeTypes?.length > 0) {
+                placeholderNodeTypes.push(...item.nodeTypes);
+            } else if (item.placeholder && item.path === '*' && !item.nodeTypes) {
                 containsAnyNodeTypeWildCard = true;
             }
         });
 
-        return containsAnyNodeTypeWildCard ? [...moduleNodeTypes, ...placeholderNodeTypes] : placeholderNodeTypes;
+        if (containsAnyNodeTypeWildCard) {
+            // Wildcard placeholder without nodetypes means "accept parent's types too"
+            const parentTypes = moduleInfo
+                ?.filter(item => !item.placeholder && item.path === '*' && item.nodeTypes?.length > 0)
+                .flatMap(item => item.nodeTypes) || [];
+            return [...parentTypes, ...placeholderNodeTypes];
+        }
+
+        return placeholderNodeTypes;
     },
     extractModuleInfoFromRenderedPage: function (pagePath, language, template) {
         const renderMode = 'editframe';

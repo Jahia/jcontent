@@ -6,7 +6,7 @@
  *
  * Two factory functions are provided:
  *  - buildCEPreviewContext: used by Content Editor
- *  - buildPreviewContextFromNode: used by JContent PreviewDrawer (Phase 6)
+ *  - buildPreviewContextFromNode: used by JContentPreview side panel
  *    NOTE: requires `displayableNode` on the node object — ensure the content
  *    table GQL query includes this field before wiring Phase 6.
  */

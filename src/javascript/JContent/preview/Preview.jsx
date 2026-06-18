@@ -22,6 +22,7 @@ import {PreviewFetcher} from './PreviewFetcher';
  *   onRefetchReady       — (refetch) => void — wire to caller's refetch bus (Decision #4)
  *   onRefetchInvalidated — () => void (Decision #4)
  *   header               — optional React node rendered above the preview (badges, info, etc.)
+ *   footer               — optional React node rendered below the preview (name/size card, etc.)
  */
 export const Preview = ({
     previewContext,
@@ -30,7 +31,8 @@ export const Preview = ({
     onFullScreenToggle = null,
     onRefetchReady = null,
     onRefetchInvalidated = null,
-    header = null
+    header = null,
+    footer = null
 }) => {
     const {t} = useTranslation('jcontent');
     const [contentNotFound, setContentNotFound] = useState(false);
@@ -78,6 +80,7 @@ export const Preview = ({
                     onRefetchReady={onRefetchReady}
                 />
             )}
+            {footer}
         </Paper>
     );
 };
@@ -91,5 +94,6 @@ Preview.propTypes = {
     onFullScreenToggle: PropTypes.func,
     onRefetchReady: PropTypes.func,
     onRefetchInvalidated: PropTypes.func,
-    header: PropTypes.node
+    header: PropTypes.node,
+    footer: PropTypes.node
 };

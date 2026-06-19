@@ -378,6 +378,7 @@ export const JahiaRenderedModulesUtil = {
         return this.jahiaAreas[path];
     },
     // This simply collects all placeholder nodetypes for a module, it uses module nodetypes if wildcard placeholder without nodetypes is found.
+    // It's supposed to return undefined if module is not found and an empty list if no wildcard placeholder is found.
     resolveNodeTypes: function (path) {
         const moduleInfo = this.getModule(path);
 
@@ -422,7 +423,6 @@ export const JahiaRenderedModulesUtil = {
             // Placeholder per module information extraction
             const placeholdersByParent = {};
 
-            // Area-specific information extraction
             dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
                 const modulePath = element.getAttribute('path');
                 const elemType = element.getAttribute('type');
@@ -437,22 +437,24 @@ export const JahiaRenderedModulesUtil = {
                     const ancestor = element.parentElement?.closest('[jahiatype="module"]');
                     const ancestorPath = ancestor?.getAttribute('path');
                     if (ancestorPath) {
+                        if (!placeholdersByParent[ancestorPath]) {
+                            placeholdersByParent[ancestorPath] = [];
+                        }
+
                         placeholdersByParent[ancestorPath].push({
                             path: element.getAttribute('path'),
                             nodeTypes: element.getAttribute('nodetypes')?.split(' '),
                             placeholder: true
                         });
                     }
-                } else {
-                    if (!placeholdersByParent[modulePath]) {
-                        placeholdersByParent[modulePath] = [];
-                        if (nodeTypes) {
-                            placeholdersByParent[modulePath].push({
-                                path: '*',
-                                nodeTypes: nodeTypes,
-                                placeholder: false
-                            });
-                        }
+                } else if (!placeholdersByParent[modulePath]) {
+                    placeholdersByParent[modulePath] = [];
+                    if (nodeTypes) {
+                        placeholdersByParent[modulePath].push({
+                            path: '*',
+                            nodeTypes,
+                            placeholder: false
+                        });
                     }
                 }
             });

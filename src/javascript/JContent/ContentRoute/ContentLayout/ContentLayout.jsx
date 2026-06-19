@@ -48,17 +48,15 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
             )}
 
             <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
-                <ErrorBoundary>
-                    <JContentSidePanelContextProvider
-                        sidePanelSelection={resolvedSidePanelSelection}
-                        selection={selection}
-                        language={language}
-                        jcontentMode={jcontentMode}
-                        isFullScreen={isFullScreen}
-                    >
-                        <SidePanel/>
-                    </JContentSidePanelContextProvider>
-                </ErrorBoundary>
+                <JContentSidePanelContextProvider
+                    sidePanelSelection={resolvedSidePanelSelection}
+                    selection={selection}
+                    language={language}
+                    jcontentMode={jcontentMode}
+                    isFullScreen={isFullScreen}
+                >
+                    <SidePanel/>
+                </JContentSidePanelContextProvider>
             </div>
         </div>
     );

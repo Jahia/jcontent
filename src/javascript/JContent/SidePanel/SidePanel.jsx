@@ -5,6 +5,7 @@ import {registry} from '@jahia/ui-extender';
 import {useSidePanelContext} from './SidePanelContext';
 import styles from './SidePanel.scss';
 import {useTranslation} from 'react-i18next';
+import {ErrorBoundary} from '@jahia/jahia-ui-root';
 
 export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
     const [activeTab, setActiveTab] = useState(null);
@@ -61,9 +62,12 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                     })}
                 </Tab>
             </div>
-            <div className={styles.content} data-sel-role="side-panel-content">
-                {ActiveTabComponent && <ActiveTabComponent/>}
-            </div>
+
+            <ErrorBoundary key={activeTab}>
+                <div className={styles.content} data-sel-role="side-panel-content">
+                    {ActiveTabComponent && <ActiveTabComponent/>}
+                </div>
+            </ErrorBoundary>
         </Drawer>
     );
 };

@@ -178,11 +178,7 @@ export const adaptEditFormData = (data, lang, t, configContext) => {
     adaptSystemNameField(formData, nodeData.primaryNodeType);
 
     // In translate mode (editable target column), expand sections and make non-i18n fields read-only
-    if (
-        configContext?.advancedOpenTab === Constants.editPanel.translateTab &&
-        configContext?.sideBySideContext?.lang &&
-        !configContext?.sideBySideContext?.readOnly
-    ) {
+    if (configContext?.sideBySideContext?.lang && !configContext?.sideBySideContext?.readOnly) {
         adaptTranslateSections(formData);
     }
 

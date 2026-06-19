@@ -135,14 +135,14 @@ export const DatatableRules = ({rules, onEdit}) => {
             label: t('jcontent:label.contentEditor.visibilityTab.conditions.preview_live'),
             isSortable: false,
             width: '20%',
-            render: (value, row) => (
+            render: ({value, data}) => (
                 <>
                     <Chip icon={<Visibility/>}
                           color={value ? 'success' : 'warning'}
                         />
                     <Typography variant="caption">/</Typography>
                     <Chip icon={<Visibility/>}
-                          color={row.isMatchingLive ? 'success' : 'warning'}
+                          color={data.isMatchingLive ? 'success' : 'warning'}
                         />
                 </>
             )
@@ -231,15 +231,15 @@ export const DatatableRules = ({rules, onEdit}) => {
             columns={columns}
             primaryKey="id"
             defaultSortDirection="descending"
-            renderRow={(row, renderCells) => (
+            renderRow={({id, data, render: renderCells}) => (
                 <TableRow
-                    key={row.id}
+                    key={id}
                 >
                     {renderCells({
                         before: (
-                            <TableCellStatus color={getStatus(row.original.status).color}>
+                            <TableCellStatus color={getStatus(data.status).color}>
                                 <>
-                                    {getStatus(row.original.status).iconStart} {getStatusText(row.original, t)}
+                                    {getStatus(data.status).iconStart} {getStatusText(data, t)}
                                 </>
                             </TableCellStatus>
                         ), after: (
@@ -248,20 +248,20 @@ export const DatatableRules = ({rules, onEdit}) => {
                                     <>
                                         <EditButton buttonIcon={<Edit/>}
                                                     onClick={() => {
-                                            onEdit(row.original.rule);
+                                            onEdit(data.rule);
                                         }}/>
                                         <DeleteButton buttonIcon={<Delete/>}
                                                       onClick={() => {
-                                            if (row.original.status === 'new') {
-                                                const updatedNewRules = (formikContext.values['RULES::new'] || []).filter(r => r.uuid !== row.original.rule.uuid);
+                                            if (data.status === 'new') {
+                                                const updatedNewRules = (formikContext.values['RULES::new'] || []).filter(r => r.uuid !== data.rule.uuid);
                                                 formikContext.setFieldValue('RULES::new', updatedNewRules);
                                             } else {
                                                 const nextDeletedRules = [
                                                     ...(formikContext.values['RULES::deleted'] || []),
-                                                    row.original.rule.uuid
+                                                    data.rule.uuid
                                                 ];
                                                 // If the rule is already in updated rules we need to remove it from there
-                                                const nextUpdatedRules = (formikContext.values['RULES::updated'] || []).filter(r => r.uuid !== row.original.rule.uuid);
+                                                const nextUpdatedRules = (formikContext.values['RULES::updated'] || []).filter(r => r.uuid !== data.rule.uuid);
                                                 formikContext.setFieldValue('RULES::updated', nextUpdatedRules).then(() => {
                                                     formikContext.setFieldValue('RULES::deleted', nextDeletedRules);
                                                 });

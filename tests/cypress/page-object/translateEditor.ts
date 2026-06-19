@@ -32,7 +32,7 @@ export class TranslateEditor extends ContentEditor {
 
     getSourceColumn(): BaseComponent {
         if (!this.sourceColumnComponent) {
-            this.sourceColumnComponent = new BaseComponent(cy.get('[data-sel-role="right-column"]'));
+            this.sourceColumnComponent = new BaseComponent(cy.get('[data-sel-role="left-column"]'));
         }
 
         return this.sourceColumnComponent;
@@ -40,7 +40,7 @@ export class TranslateEditor extends ContentEditor {
 
     getTranslateColumn(): BaseComponent {
         if (!this.translateColumnComponent) {
-            this.translateColumnComponent = new BaseComponent(cy.get('[data-sel-role="left-column"]'));
+            this.translateColumnComponent = new BaseComponent(cy.get('[data-sel-role="right-column"]'));
         }
 
         return this.translateColumnComponent;

@@ -81,9 +81,9 @@ describe('translate action tests', () => {
     it('can open translate dialog on contents and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
-        cy.log('Verify source language is not English (translate target is English)');
-        translateEditor.getSourceLanguageSwitcher().isNotSelectedLang('en');
-        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        cy.log('Verify source language is default to English');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getTranslateLanguageSwitcher().isNotSelectedLang('en');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -116,9 +116,9 @@ describe('translate action tests', () => {
     it('can open translate dialog on pages and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitPage(siteKey, 'en', 'pages/home', 'home');
 
-        cy.log('Verify source language is not English (translate target is English)');
-        translateEditor.getSourceLanguageSwitcher().isNotSelectedLang('en');
-        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        cy.log('Verify source language is default to English');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getTranslateLanguageSwitcher().isNotSelectedLang('en');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -148,7 +148,7 @@ describe('translate action tests', () => {
     });
 
     it('can translate fields', () => {
-        const translateEditor = TranslateEditor.visitContent(siteKey, 'fr', 'content-folders/contents', name);
+        const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
         cy.log('Copy smallText from en to fr');
         translateEditor.getTranslateLanguageSwitcher().selectLangByValue('fr');

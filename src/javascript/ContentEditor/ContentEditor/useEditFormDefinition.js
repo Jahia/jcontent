@@ -8,7 +8,6 @@ import {getFieldValuesFromDefaultValues} from '~/ContentEditor/ContentEditor/get
 import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
 import {useFormDefinition} from '~/ContentEditor/ContentEditor/useFormDefinitions';
 import {decodeSystemName} from '../utils';
-import {adaptTranslateSections} from '~/ContentEditor/editorTabs/TranslatePanel/useTranslateReadOnlyFormDefinition';
 
 export const getInitialValues = (nodeData, sections) => {
     // Retrieve dynamic fieldSets
@@ -157,7 +156,7 @@ const getTechnicalInfo = (nodeData, t) => {
     ];
 };
 
-export const adaptEditFormData = (data, lang, t, configContext) => {
+export const adaptEditFormData = (data, lang, t) => {
     const nodeData = data.jcr.result;
     const sections = adaptSections(data.forms.editForm.sections);
 
@@ -176,11 +175,6 @@ export const adaptEditFormData = (data, lang, t, configContext) => {
     };
 
     adaptSystemNameField(formData, nodeData.primaryNodeType);
-
-    // In translate mode (editable target column), expand sections and make non-i18n fields read-only
-    if (configContext?.sideBySideContext?.lang && !configContext?.sideBySideContext?.readOnly) {
-        adaptTranslateSections(formData);
-    }
 
     return formData;
 };

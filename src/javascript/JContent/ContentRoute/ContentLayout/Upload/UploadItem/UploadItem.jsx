@@ -21,7 +21,7 @@ import {
     fileuploadTakeFromQueue,
     fileuploadUpdateUpload
 } from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
-import {createMissingFolders, onFilesSelected} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
+import {createMissingFolders, onFilesSelected, sanitizeName} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 import {uploadErrors} from '../Upload.constants';
 import clsx from 'clsx';
 
@@ -34,20 +34,17 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
 
     if (gqlError.message.indexOf('GqlJcrWrongInputException') !== -1) {
         newUpload.error = {type: uploadErrors.WRONG_INPUT};
-    }
-
-    if (gqlError.message.indexOf('ItemExistsException') !== -1) {
+    } else if (gqlError.message.indexOf('ItemExistsException') !== -1) {
         newUpload.error = {type: uploadErrors.FILE_EXISTS};
-    }
-
-    if (gqlError.message.indexOf('FileSizeLimitExceededException') !== -1) {
+    } else if (gqlError.message.indexOf('FileSizeLimitExceededException') !== -1) {
         newUpload.error = {type: uploadErrors.INCORRECT_SIZE};
-    }
-
-    if (gqlError.message.indexOf('ConstraintViolationException') !== -1) {
+    } else if (gqlError.message.indexOf('ConstraintViolationException') !== -1) {
         const [, messagePart] = gqlError.message.split('ConstraintViolationException:');
         const errMsgs = messagePart ? messagePart.trim().split('\n') : [];
         newUpload.error = {type: uploadErrors.CONSTRAINT_VIOLATION, messages: errMsgs};
+    } else {
+        // Fallback for unrecognized server errors
+        newUpload.error = {type: uploadErrors.UNKNOWN, message: gqlError.message};
     }
 }
 
@@ -87,7 +84,8 @@ export const UploadItem = ({upload, index}) => {
         }
 
         if (type === 'replace') {
-            let newPath = `${normalizedPath}/${getFileName()}`;
+            // Use sanitized name to match the actual JCR node name (server sanitizes on first upload)
+            let newPath = `${normalizedPath}/${sanitizeName(getFileName())}`;
             return registry.get('fileUpload', 'replace').handleUpload({path: newPath, file, client});
         }
 

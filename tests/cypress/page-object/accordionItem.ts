@@ -83,6 +83,7 @@ export class TreeItem extends BaseComponent {
 
     contextMenu(): Menu {
         this.get().rightclick();
+        cy.wait(1500);
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 }

@@ -32,7 +32,7 @@ export const SidePanel = () => {
     }, []);
 
     return (
-        <Paper className={styles.root} data-sel-role="side-panel" style={{padding: 0}}>
+        <Paper className={styles.root} data-sel-role="side-panel" hasPadding={false}>
             <div data-sel-role="side-panel-tabs">
                 <Tab>
                     {visibleTabs.map(tab => {

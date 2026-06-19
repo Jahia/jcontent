@@ -43,6 +43,10 @@ export const Preview = ({
         startTransition(() => setShouldDisplay(true));
     }, []);
 
+    useEffect(() => {
+        setContentNotFound(false);
+    }, [nodeData?.path]);
+
     const handleContentNotFound = useCallback(() => setContentNotFound(true), []);
 
     return (

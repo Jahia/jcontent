@@ -8,6 +8,9 @@ const NodePreviewFieldsFragment = gql`
     fragment NodePreviewFields on JCRNode {
         isFile: isNodeType(type: {types: ["jnt:file"]})
         isPage: isNodeType(type: {types: ["jnt:page"]})
+        jView: property(name: "j:view") {
+            value
+        }
         displayableNode {
             ...NodeCacheRequiredFields
             path

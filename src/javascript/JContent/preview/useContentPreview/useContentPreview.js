@@ -10,7 +10,8 @@ export const useContentPreview = ({
     contextConfiguration,
     requestAttributes,
     fetchPolicy,
-    mainResourcePath
+    mainResourcePath,
+    skip = false
 }) => {
     const variables = {
         path,
@@ -26,6 +27,7 @@ export const useContentPreview = ({
     return useQuery(CONTENT_PREVIEW_QUERY, {
         variables,
         errorPolicy: 'all',
-        fetchPolicy
+        fetchPolicy,
+        skip
     });
 };

@@ -51,8 +51,7 @@ export function zoom(iframeDocument, onContentNotFound, nodeData) {
     const isContentTemplate = nodeData?.displayableNode &&
         nodeData.displayableNode.path === nodeData.path;
 
-    if (iframeDocument.documentElement &&
-        iframeDocument.documentElement.innerHTML &&
+    if (iframeDocument.documentElement?.innerHTML &&
         !iframeDocument.documentElement.innerHTML.includes('ce_preview_skip_zoom')) {
         const contentPreview = iframeDocument.getElementById('ce_preview_content');
         if (contentPreview) {

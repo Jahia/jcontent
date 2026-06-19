@@ -24,9 +24,9 @@ const usePreviewContext = (nodeData, language) => {
         {
             path: (isFullPage && nodeData.displayableNode.path) || nodeData.path,
             template: nodeData.displayableNode ? 'default' : 'cm',
-            templateType: '.html'
+            templateType: '.html',
+            config: isFullPage ? 'page' : 'module'
         };
-    currentPage.config = isFullPage ? 'page' : 'module';
     return buildCEPreviewContext(currentPage, nodeData, language);
 };
 

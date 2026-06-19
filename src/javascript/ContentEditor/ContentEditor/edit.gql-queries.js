@@ -32,6 +32,9 @@ const NodeDataFragment = {
                     "jnt:category",
                     "jmix:mainResource"
                 ]})
+                jView: property(name: "j:view") {
+                    value
+                }
                 displayableNode {
                     ...NodeCacheRequiredFields
                     path

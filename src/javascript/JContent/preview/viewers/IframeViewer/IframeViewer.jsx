@@ -36,25 +36,27 @@ function loadAssets(assets, iframeDocument) {
 }
 
 /**
- * Extracts unprocessed <jahia:resource type="css"> tags from rendered HTML output.
+ * Extracts unprocessed <jahia:resource> tags from rendered HTML output and strips them.
  * This occurs when contextConfiguration="module" is used with mainResourcePath —
- * the aggregation pipeline has no page-level context to collect assets into,
- * so the JSP tags fall through as literal strings instead of being resolved
- * to staticAssets[]. We extract them, strip them from the HTML, and inject
- * them as real <link> elements via loadAssets.
+ * the aggregation pipeline has no page-level context to resolve them.
+ * In the hybrid path, CSS comes from the page head so assets are not collected.
+ * In the standalone module path, assets are collected for injection via loadAssets.
  *
  * @param {string} html - raw renderedContent output
+ * @param {boolean} collectAssets - whether to collect CSS assets (false in hybrid path)
  * @returns {{ cleanHtml: string, assets: Array<{key: string}> }}
  */
-function extractInlineResourceTags(html) {
+function extractInlineResourceTags(html, collectAssets = true) {
     const assets = [];
     const tagPattern = /<jahia:resource[^>]+type="css"[^>]+path="([^"]+)"[^>]*\/>/g;
     const seen = new Set();
     const cleanHtml = html.replace(tagPattern, (match, encodedPath) => {
-        const key = decodeURIComponent(encodedPath);
-        if (!seen.has(key)) {
-            seen.add(key);
-            assets.push({key});
+        if (collectAssets) {
+            const key = decodeURIComponent(encodedPath);
+            if (!seen.has(key)) {
+                seen.add(key);
+                assets.push({key});
+            }
         }
 
         return '';
@@ -62,15 +64,43 @@ function extractInlineResourceTags(html) {
     return {cleanHtml, assets};
 }
 
-export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData = null}) => {
+/**
+ * Extracts the <head> content from a fully rendered page HTML output.
+ * Used in hybrid in-context rendering to splice the page's full template CSS
+ * (Bootstrap, fonts, site theme) with the module-rendered component body.
+ *
+ * @param {string} pageHtml - full page renderedContent output
+ * @returns {string} - content between <head> and </head>, or empty string
+ */
+function extractPageHead(pageHtml) {
+    if (!pageHtml) {
+        return '';
+    }
+
+    const match = pageHtml.match(/<head>([\s\S]*?)<\/head>/i);
+    return match ? match[1] : '';
+}
+
+export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData = null, pageCssHtml = ''}) => {
     const [loading, setLoading] = useState(true);
     const {t} = useTranslation('jcontent');
     const iframeRef = useRef(null);
     const onLoadTimeoutRef = useRef(null);
 
     const rawOutput = data?.nodeByPath?.renderedContent?.output ?? '';
-    const {cleanHtml, assets: inlineAssets} = extractInlineResourceTags(rawOutput);
-    let displayValue = cleanHtml || t('label.contentManager.contentPreview.noViewAvailable');
+    const isHybrid = Boolean(pageCssHtml);
+    const {cleanHtml, assets: inlineAssets} = extractInlineResourceTags(rawOutput, !isHybrid);
+
+    let displayValue;
+    if (!cleanHtml) {
+        displayValue = t('label.contentManager.contentPreview.noViewAvailable');
+    } else if (isHybrid) {
+        // In hybrid rendering, the page CSS is injected into the iframe via <link> elements.
+        const pageHead = extractPageHead(pageCssHtml);
+        displayValue = `<html><head>${pageHead}</head><body>${cleanHtml}</body></html>`;
+    } else {
+        displayValue = cleanHtml;
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -93,9 +123,12 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
             const iframeWindow = element?.contentWindow || element;
             iframeWindow?.document?.body?.setAttribute('style', 'pointer-events: none');
 
-            if (previewContext.contextConfiguration !== 'page') {
+            if (!isHybrid && previewContext.contextConfiguration !== 'page') {
                 const staticAssets = data?.nodeByPath?.renderedContent?.staticAssets ?? [];
-                loadAssets([...staticAssets, ...inlineAssets], iframeWindow.document);
+                const seen = new Set();
+                const mergedAssets = [...staticAssets, ...inlineAssets]
+                    .filter(a => !seen.has(a.key) && seen.add(a.key));
+                loadAssets(mergedAssets, iframeWindow.document);
             }
 
             if (previewContext.requestAttributes && nodeData) {
@@ -132,6 +165,7 @@ IframeViewer.propTypes = {
     }).isRequired,
     onContentNotFound: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
+    pageCssHtml: PropTypes.string,
     nodeData: PropTypes.shape({
         isPage: PropTypes.bool,
         path: PropTypes.string,

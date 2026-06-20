@@ -13,6 +13,12 @@ jest.mock('~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches', () => (
     setPreviewRefetcher: jest.fn(),
     invalidateRefetch: jest.fn()
 }));
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn(selector => selector({pagecomposer: {currentPage: null, active: false}}))
+}));
+jest.mock('./Preview.utils', () => ({
+    getPreviewPath: jest.fn(() => '/site/digitall')
+}));
 jest.mock('~/JContent/preview/previewContext.utils', () => ({
     buildCEPreviewContext: jest.fn(() => ({
         workspace: 'edit',
@@ -21,6 +27,8 @@ jest.mock('~/JContent/preview/previewContext.utils', () => ({
         requestAttributes: []
     }))
 }));
+jest.mock('~/JContent/preview/viewers/PDFViewer', () => ({PDFViewer: () => null}));
+jest.mock('~/JContent/preview/viewers/PDFViewer/index.js', () => ({PDFViewer: () => null}));
 jest.mock('~/JContent/preview/Preview', () => ({
     // eslint-disable-next-line react/prop-types
     Preview: ({header, ...rest}) => <div data-testid="shared-preview" {...rest}>{header}</div>

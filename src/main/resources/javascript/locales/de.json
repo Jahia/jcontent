@@ -244,6 +244,7 @@
         "lockNode": "Content sperren",
         "noViewAvailable": "Keine Vorschau verfügbar",
         "noContentSelected": "Wählen Sie einen Content, um die Vorschau zu aktivieren",
+        "emptyList": "Diese Liste ist leer und kann nicht angezeigt werden",
         "delete": "Löschen",
         "translate": "Übersetzen",
         "emptyMessage": "Laden...",

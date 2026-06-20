@@ -17,6 +17,7 @@ const NodePreviewFieldsFragment = gql`
             isFolder: isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
         }
         pageAncestors: ancestors(fieldFilter: {filters: {fieldName: "primaryNodeType.name", evaluation: AMONG, values: ["jnt:page"]}}) {
+            ...NodeCacheRequiredFields
             path
         }
     }

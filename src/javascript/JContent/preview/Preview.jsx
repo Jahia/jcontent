@@ -1,8 +1,6 @@
 import React, {startTransition, useCallback, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
 import {Paper} from '@material-ui/core';
-import {Badge} from '@jahia/design-system-kit';
 import {Button, Maximize, Minimize} from '@jahia/moonstone';
 import styles from './Preview.scss';
 import {PreviewFetcher} from './PreviewFetcher';
@@ -26,6 +24,7 @@ import {PreviewFetcher} from './PreviewFetcher';
  */
 export const Preview = ({
     previewContext,
+    fallbackPreviewContext = null,
     nodeData = null,
     isFullScreen = false,
     onFullScreenToggle = null,
@@ -34,8 +33,7 @@ export const Preview = ({
     header = null,
     footer = null
 }) => {
-    const {t} = useTranslation('jcontent');
-    const [contentNotFound, setContentNotFound] = useState(false);
+    const [useFallback, setUseFallback] = useState(false);
     const [shouldDisplay, setShouldDisplay] = useState(false);
 
     // Use startTransition so host UI (form fields, etc.) renders first (Decision #8)
@@ -44,10 +42,16 @@ export const Preview = ({
     }, []);
 
     useEffect(() => {
-        setContentNotFound(false);
+        setUseFallback(false);
     }, [nodeData?.path]);
 
-    const handleContentNotFound = useCallback(() => setContentNotFound(true), []);
+    const handleContentNotFound = useCallback(() => {
+        if (fallbackPreviewContext && !useFallback) {
+            setUseFallback(true);
+        }
+    }, [fallbackPreviewContext, useFallback]);
+
+    const activeContext = (useFallback && fallbackPreviewContext) ? fallbackPreviewContext : previewContext;
 
     return (
         <Paper className={styles.previewShell}>
@@ -65,20 +69,12 @@ export const Preview = ({
                     )}
                 </div>
             )}
-            {contentNotFound && (
-                <div>
-                    <Badge
-                        badgeContent={t('jcontent:label.contentEditor.preview.contentNotFound')}
-                        color="warning"
-                        variant="normal"
-                    />
-                </div>
-            )}
             {shouldDisplay && (
                 <PreviewFetcher
+                    key={useFallback ? 'fallback' : 'primary'}
                     isFullScreen={isFullScreen}
                     nodeData={nodeData}
-                    previewContext={previewContext}
+                    previewContext={activeContext}
                     onContentNotFound={handleContentNotFound}
                     onRefetchInvalidated={onRefetchInvalidated}
                     onRefetchReady={onRefetchReady}
@@ -93,6 +89,7 @@ Preview.propTypes = {
     previewContext: PropTypes.shape({
         workspace: PropTypes.string
     }).isRequired,
+    fallbackPreviewContext: PropTypes.object,
     nodeData: PropTypes.object,
     isFullScreen: PropTypes.bool,
     onFullScreenToggle: PropTypes.func,

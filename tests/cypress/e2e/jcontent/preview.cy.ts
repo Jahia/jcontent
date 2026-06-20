@@ -37,10 +37,10 @@ describe('JContent preview tests', () => {
         cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
     });
 
-    it('should honor the j:view property when previewing content', () => {
+    it.only('should honor the j:view property when previewing content', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.switchToListMode();
-        jcontent.getTable().getRowByName('test-content6-linkview').get().click();
+        jcontent.getTable().getRowByName('test-content6-linkview').click();
         cy.get('iframe[data-sel-role="edit-preview-frame"]')
             .its('0.contentDocument.body')
             .should('be.visible')

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import NoPreviewComponent from './NoPreviewComponent/NoPreviewComponent';
+import {useEmptyListComponent} from './EmptyListComponent/EmptyListComponent';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Preview} from '~/JContent/preview';
-import {buildPreviewContextFromNode} from '~/JContent/preview/previewContext.utils';
+import {buildFallbackPreviewContextFromNode, buildPreviewContextFromNode} from '~/JContent/preview/previewContext.utils';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {Card, CardContent} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
@@ -32,6 +33,7 @@ PreviewCard.propTypes = {
 
 export const JContentPreview = () => {
     const {previewSelection, selection, lang, mode, isFullScreen, onFullScreenToggle} = useSidePanelContext();
+    const {loading: emptyListLoading, component: EmptyListComponent} = useEmptyListComponent(previewSelection, mode);
 
     if (selection.length > 0) {
         return <MultipleSelection/>;
@@ -41,7 +43,16 @@ export const JContentPreview = () => {
         return <NoPreviewComponent/>;
     }
 
+    if (emptyListLoading) {
+        return null;
+    }
+
+    if (EmptyListComponent) {
+        return EmptyListComponent;
+    }
+
     const previewContext = buildPreviewContextFromNode(previewSelection, lang, mode);
+    const fallbackPreviewContext = buildFallbackPreviewContextFromNode(previewSelection, lang, mode, previewContext);
 
     return (
         <Preview
@@ -49,6 +60,7 @@ export const JContentPreview = () => {
             isFullScreen={isFullScreen}
             nodeData={previewSelection}
             previewContext={previewContext}
+            fallbackPreviewContext={fallbackPreviewContext}
             onFullScreenToggle={onFullScreenToggle}
             onRefetchInvalidated={() => unsetRefetcher(refetchTypes.PREVIEW_COMPONENT)}
             onRefetchReady={refetch => setRefetcher(refetchTypes.PREVIEW_COMPONENT, {refetch})}

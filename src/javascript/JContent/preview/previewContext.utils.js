@@ -1,7 +1,7 @@
 /**
  * Shared preview context builder.
  *
- * Produces a previewContext object consumed by useContentPreview (via @jahia/data-helper)
+ * Produces a previewContext object consumed by useContentPreview
  * and passed to PreviewViewers / IframeViewer.
  *
  * Two factory functions are provided:
@@ -52,7 +52,7 @@ export const buildCEPreviewContext = (currentPage, nodeData, language) => {
     return {
         path,
         workspace: 'edit',
-        view: currentPage.template,
+        view: nodeData.jView?.value || currentPage.template,
         contextConfiguration: currentPage.config,
         templateType: 'html',
         language,
@@ -61,82 +61,85 @@ export const buildCEPreviewContext = (currentPage, nodeData, language) => {
     };
 };
 
+const buildInContextModuleContext = (node, closestPage, jView, base) => ({
+    ...base,
+    path: node.path,
+    view: jView?.value || 'default',
+    contextConfiguration: 'module',
+    mainResourcePath: closestPage.path,
+    cssSourcePath: closestPage.path
+});
+
 /**
  * Builds a previewContext from a JContent node (previewSelection).
- * Uses CE's contextConfiguration logic (Decision #7).
  *
- * In 'pages' mode with a jnt:page ancestor, uses in-context rendering:
- * renders the parent page and zooms to the specific node via ce_preview attributes.
+ * Three rendering strategies depending on mode and node type:
  *
- * In all other modes (contents, media, search), uses standalone rendering:
- * renders the node's displayableNode directly.
+ * 1. In-context sub-component/list (pages mode, !isDisplayableNode):
+ *    Full page render at closestPage.path + requestAttributes for zoom.
+ *    Falls back via fallbackPreviewContext (strategy 2) if zoom fails.
  *
- * @param {object} node      - JCR node object with { path, uuid, displayableNode, isPage, pageAncestors, ... }
- *                             NOTE: node must include displayableNode and pageAncestors (from GQL query)
- * @param {string} language  - from Redux state.language
- * @param {string} workspace - 'edit' | 'live'
- * @param {string} mode      - accordion mode from Redux state.jcontent.mode (e.g. 'pages', 'contents', 'media')
+ * 2. In-context main-resource (pages mode, isDisplayableNode):
+ *    Module render of the node itself with page CSS injected (cssSourcePath).
+ *    Avoids the pagination problem (main-resource may not be on the current page).
+ *
+ * 3. Out-of-context (contents/media/search mode):
+ *    isDisplayableNode → content-template render (config=page)
+ *    otherwise         → raw module render, view=null lets server use j:view→cm fallback
  */
 export const buildPreviewContextFromNode = (node, language, mode) => {
-    const {displayableNode, pageAncestors} = node;
+    const {displayableNode, pageAncestors, jView} = node;
     const closestPage = pageAncestors?.at(-1);
-    const isInPagesMode = mode === 'pages';
-    const useInContextRendering = isInPagesMode && Boolean(closestPage);
-    const view = (displayableNode || useInContextRendering) ? 'default' : 'cm';
+    const isInContextRendering = mode === 'pages' && Boolean(closestPage) && !node.isPage;
+    const isDisplayableNode = displayableNode?.path === node.path;
 
-    const isFullPage = displayableNode && !displayableNode.isFolder;
-    const path = isFullPage ? displayableNode.path : node.path;
+    const base = {workspace: 'edit', templateType: 'html', language};
 
-    if (useInContextRendering) {
-        // Add this request attribute to activate PreviewWrapperFilter during rendering
-        // which embeds id="ce_preview_content" to the resource node and to be able to zoom to it.
-        const requestAttributes = node.isPage ? undefined : [{name: 'preview_wrapper', value: node.path}];
+    if (isInContextRendering) {
+        if (isDisplayableNode) {
+            return buildInContextModuleContext(node, closestPage, jView, base);
+        }
 
+        // Sub-component or list: full page render + zoom. Falls back to module+CSS on zoom failure.
         return {
+            ...base,
             path: closestPage.path,
-            view,
-            workspace: 'edit',
+            view: 'default',
             contextConfiguration: 'page',
-            templateType: 'html',
-            language,
-            requestAttributes
-            // MainResourcePath: closestPage.path
+            requestAttributes: [
+                {name: 'ce_preview', value: node.uuid},
+                {name: 'preview_wrapper', value: node.path}
+            ]
         };
-
-        // Return {
-        //     path,
-        //     view,
-        //     workspace: 'edit',
-        //     contextConfiguration: 'module',
-        //     templateType: 'html',
-        //     language,
-        //     // requestAttributes,
-        //     mainResourcePath: closestPage.path
-        // };
     }
 
+    // Out-of-context: view=null lets the server apply the j:view→cm fallback chain.
     return {
-        path,
-        workspace: 'edit',
-        view,
-        contextConfiguration: isFullPage ? 'page' : 'module',
-        templateType: 'html',
-        language
+        ...base,
+        path: node.path,
+        view: isDisplayableNode ? (jView?.value || 'default') : null,
+        contextConfiguration: isDisplayableNode ? 'page' : 'module'
     };
 };
 
-export const oldbuildPreviewContextFromNode = (node, language) => {
-    const {displayableNode} = node;
-    const isFullPage = displayableNode && !displayableNode.isFolder;
-    const path = isFullPage ? displayableNode.path : node.path;
-    const view = displayableNode ? 'default' : 'cm';
+/**
+ * Returns the module+CSS fallback context for sub-components/lists in pages mode.
+ * Used by Preview when zoom fails on the primary full-page render.
+ * Returns null for all other cases (no fallback needed).
+ */
+export const buildFallbackPreviewContextFromNode = (node, language, mode, previousContext) => {
+    const {displayableNode, pageAncestors, jView} = node;
+    const closestPage = pageAncestors?.at(-1);
+    const isInContextRendering = mode === 'pages' && Boolean(closestPage) && !node.isPage;
+    const isDisplayableNode = displayableNode?.path === node.path;
 
-    return {
-        path,
-        workspace: 'edit',
-        view,
-        contextConfiguration: isFullPage ? 'page' : 'module',
-        templateType: 'html',
-        language
-    };
+    if (isInContextRendering && !isDisplayableNode) {
+        return buildInContextModuleContext(node, closestPage, jView, {
+            workspace: 'edit',
+            templateType: 'html',
+            language
+        });
+    }
+
+    return null;
 };

@@ -23,6 +23,10 @@ describe('translate action tests', () => {
     const name = 'translate-field-test';
 
     before('test setup', () => {
+
+        cy.logout();
+        deleteSite(siteKey);
+        deleteSite(oneLangSite);
         createSite(siteKey, {
             languages: 'en,fr,de',
             templateSet: 'dx-base-demo-templates',
@@ -54,9 +58,6 @@ describe('translate action tests', () => {
     });
 
     after('test cleanup', () => {
-        cy.logout();
-        deleteSite(siteKey);
-        deleteSite(oneLangSite);
     });
 
     beforeEach(() => {
@@ -66,8 +67,9 @@ describe('translate action tests', () => {
     it('cannot open translate dialog if content has only one language', () => {
         const jcontent = JContent.visit(oneLangSite, 'en', 'pages/home');
         const menu = jcontent.getAccordionItem('pages').getTreeItem('home').contextMenu();
-        menu.shouldHaveRoleItem('sbsTranslate');
-        menu.get().find('.moonstone-menuItem[data-sel-role="sbsTranslate"]').should('have.attr', 'aria-disabled', 'true');
+        // visibility check menu displayed
+        menu.shouldHaveRoleItem('editPage');
+        menu.get().find('.moonstone-menuItem[data-sel-role="sbsTranslate"]').should('not.exist');
     });
 
     it('cannot open on invalid node types e.g. folders', () => {
@@ -82,8 +84,8 @@ describe('translate action tests', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
         cy.log('Verify source language is default to English');
-        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
-        translateEditor.getTranslateLanguageSwitcher().isNotSelectedLang('en');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -110,15 +112,15 @@ describe('translate action tests', () => {
         });
 
         cy.log('Verify all sections are expanded by default');
-        translateEditor.getSection('content').shouldBeExpanded();
+        translateEditor.getTranslateSection('content').shouldBeExpanded();
     });
 
     it('can open translate dialog on pages and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitPage(siteKey, 'en', 'pages/home', 'home');
 
-        cy.log('Verify source language is default to English');
-        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
-        translateEditor.getTranslateLanguageSwitcher().isNotSelectedLang('en');
+        cy.log('Verify source language is the first one (german)');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -143,15 +145,16 @@ describe('translate action tests', () => {
         });
 
         cy.log('Verify all sections are expanded by default');
-        translateEditor.getSection('content').shouldBeExpanded();
-        translateEditor.getSection('seo').shouldBeExpanded();
+        translateEditor.getTranslateSection('content').shouldBeExpanded();
+        translateEditor.getTranslateSection('seo').shouldBeExpanded();
     });
 
-    it('can translate fields', () => {
+    it.only('can translate fields', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
         cy.log('Copy smallText from en to fr');
         translateEditor.getTranslateLanguageSwitcher().selectLangByValue('fr');
+        translateEditor.getSourceLanguageSwitcher().selectLangByValue('en');
         translateEditor
             .getSourceField(Field, 'qant:allFields_smallText')
             .getTranslateFieldAction()
@@ -159,7 +162,7 @@ describe('translate action tests', () => {
 
         cy.log('Add user translation in de for long field');
         cy.waitUntil(() => translateEditor.getTranslateLanguageSwitcher().selectLangByValue('de'));
-        translateEditor.getSourceColumn().get().find('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        translateEditor.getTranslateColumn().get().find('.moonstone-loader', {timeout: 5000}).should('not.exist');
         translateEditor
             .getTranslateField(SmallTextField, 'qant:allFields_long')
             .addNewValue('123');

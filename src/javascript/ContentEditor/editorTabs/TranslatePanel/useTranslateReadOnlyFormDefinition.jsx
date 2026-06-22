@@ -4,7 +4,7 @@ import {useQuery} from '@apollo/client';
 import {adaptSections} from '~/ContentEditor/ContentEditor/adaptSections';
 import {EditFormQuery} from '~/ContentEditor/ContentEditor/edit.gql-queries';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {getInitialValues} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
+import {getInitialValues, useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 
 /**
  * Adapt sections for translation mode:
@@ -115,4 +115,15 @@ export const useTranslationReadOnlyFormDefinition = ({lang, uuid, contentType}) 
     const data = (loading) ? null : adaptReadOnlyTranslateData(queryData || cachedDataRef.current[lang]);
 
     return {data, loading, error};
+};
+
+/**
+ * Form definition hook for the editable (translate-target) column.
+ * Wraps useEditFormDefinition and applies adaptTranslateSections so that
+ * non-i18n (shared) fields are set to read-only, matching the behaviour
+ * of the former useTranslateFormDefinition that was part of translateAction.
+ */
+export const useTranslateFormDefinition = () => {
+    const {data, refetch, loading, error, errorMessage} = useEditFormDefinition();
+    return {data: adaptTranslateSections(data), refetch, loading, error, errorMessage};
 };

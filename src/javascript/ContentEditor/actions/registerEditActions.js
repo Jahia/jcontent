@@ -15,11 +15,13 @@ import {
     WorkInProgress
 } from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
+import {editContentActionWrapper} from './jcontent/editContent/editContentWrapper';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
+import {useTranslateFormDefinition} from '~/ContentEditor/editorTabs/TranslatePanel/useTranslateReadOnlyFormDefinition';
 import {Constants} from '../ContentEditor.constants';
 
 export const registerEditActions = registry => {
@@ -141,15 +143,17 @@ export const registerEditActions = registry => {
         requiredSitePermission: ['viewVisibilityTab']
     });
 
-    registry.add('action', 'sbsTranslate', editContentAction, {
+    registry.add('action', 'sbsTranslate', editContentActionWrapper, {
         buttonIcon: <Translate/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
         dataSelRole: 'sbsTranslate',
         showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
         requiredSitePermission: ['translateAction'],
         getDisplayName: true,
+        getSiteLanguages: true,
         isFullscreen: true,
-        editConfig: {advancedOpenTab: Constants.editPanel.translateTab}
+        editConfig: {advancedOpenTab: Constants.editPanel.translateTab, useFormDefinition: useTranslateFormDefinition},
+        isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1
     });
 
     registry.add('action', 'translateField', translateFieldAction, {

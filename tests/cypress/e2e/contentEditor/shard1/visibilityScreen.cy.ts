@@ -127,9 +127,9 @@ describe('Visibility Screen', () => {
     });
 
     after(function () {
-        cy.logout();
         deleteSite(sitekeyNonI18n);
         deleteSite(sitekeyI18n);
+        cy.logout();
     });
 
     describe('Visibility Screen Tests', () => {
@@ -137,10 +137,6 @@ describe('Visibility Screen', () => {
 
         beforeEach(() => {
             cy.loginAndStoreSession();
-        });
-
-        afterEach(() => {
-            cy.logout();
         });
 
         it('Display visibility screen in non i18n site with only Date Time section and no rules', () => {

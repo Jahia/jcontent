@@ -271,9 +271,14 @@
  + * (cent:childObject1)
  + * (cent:childObject2)
 
+[cent:oneMultipleWithLimitTwo] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + * (cent:childObject1)
+
 [cent:twoMultipleOneNamed] > jnt:content, jmix:basicContent, jmix:editorialContent
  - someProperty (string)
  + * (cent:childObject1)
  + * (cent:childObject2)
 
-
+[cent:checkboxChoiceList] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title
+ - checkboxes (string, choicelist) = 'choice1' multiple < 'choice1', 'choice2', 'choice3'

@@ -4,6 +4,14 @@ import PropTypes from 'prop-types';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
 import {useSelector} from 'react-redux';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
+import {JahiaRenderedModulesUtil} from '../JContent.utils';
+
+/**
+ * Resolves the parent module's JCR path from a child element's data-jahia-parent attribute.
+ */
+const resolveParentPath = e => {
+    return e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent)?.getAttribute('path');
+};
 
 /**
  * This function helps resolve required nodetypes for insertion points.
@@ -30,45 +38,15 @@ import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
  * 4. There is a placeholder child with path="*" AND nodetype info defined then we use this nodetype info (see comment above).
  * 5. There is also potential for the case when there is placehoder with nodetype info and one without, in which case we want to get data for nodetypes from both locations.
  */
-const getNodeTypes = e => {
+const getPlaceholderNodeTypes = (e, parentPath) => {
     // The element is placeholder with nodetypes defined, it gives us all the info we need.
     const ownNt = e.getAttribute('nodetypes');
-    if (ownNt && e.getAttribute('type') === 'placeholder') {
+    if (ownNt) {
         return ownNt.split(' ');
     }
 
-    const parentId = e.dataset.jahiaParent;
-    if (!parentId) {
-        return [];
-    }
-
-    const parent = e.ownerDocument.getElementById(parentId);
-    if (!parent) {
-        return [];
-    }
-
-    // If the element is not a placeholder with nodetypes on it, we need to extract nodetype info from existing placeholders on the parent module or the parent module.
-    // There can be different cases. The idea is to determine if placeholders provide all the info we need (they do if they all have nodetypes attribute) or if we need to use a
-    // combination of placeholder-parent or just parent.
-    const parentNt = parent.getAttribute('nodetypes');
-    const parentTypes = parentNt ? parentNt.split(' ') : [];
-
-    // Check for wildcard placeholders (path="*") — their nodetypes take priority
-    const wildcardPlaceholders = [...parent.querySelectorAll(
-        `[type="placeholder"][path="*"][data-jahia-parent="${parentId}"]`
-    )];
-
-    if (wildcardPlaceholders.length === 0) {
-        return parentTypes;
-    }
-
-    // If any wildcard placeholder has no nodetypes, include parent types as well
-    const hasUntypedWildcard = wildcardPlaceholders.some(wp => !wp.getAttribute('nodetypes'));
-    const wildcardTypes = wildcardPlaceholders
-        .flatMap(wp => wp.getAttribute('nodetypes')?.split(' ') ?? []);
-
-    const merged = hasUntypedWildcard ? [...parentTypes, ...wildcardTypes] : wildcardTypes;
-    return [...new Set(merged)];
+    // Fallback: resolve wildcard placeholder nodetypes from pre-computed module info
+    return JahiaRenderedModulesUtil.resolveNodeTypes(parentPath);
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
@@ -76,23 +54,29 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
     const clickedPath = clickedElement.element.getAttribute('path');
 
     const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)]
-        .map(e => ({
-            element: e,
-            node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
-            attributes: {nodeTypes: getNodeTypes(e)}
-        }))
+        .map(e => {
+            const parentPath = resolveParentPath(e);
+            return {
+                element: e,
+                node: nodes?.[parentPath],
+                attributes: {nodeTypes: getPlaceholderNodeTypes(e, parentPath)}
+            };
+        })
         .filter(({node}) => node !== null && node !== undefined);
 
     // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
     const childrenElem = [...currentDocument.querySelectorAll(`[data-jahia-parent=${clickedElement.element.id}]`)]
         // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
         .filter(e => e.getAttribute('path')?.startsWith(clickedPath) && e.getAttribute('type') !== 'placeholder')
-        .map(e => ({
-            element: e,
-            node: nodes?.[e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent).getAttribute('path')],
-            attributes: {nodeTypes: getNodeTypes(e)}
-        }))
-        .filter(({node}) => node !== null && node !== undefined);
+        .map(e => {
+            const parentPath = resolveParentPath(e);
+            return {
+                element: e,
+                node: nodes?.[parentPath],
+                attributes: {nodeTypes: JahiaRenderedModulesUtil.resolveNodeTypes(parentPath)}
+            };
+        })
+        .filter(({node, attributes}) => node !== null && node !== undefined && attributes?.nodeTypes?.length > 0);
 
     // Check only first two elements to know alignment.
     const isVertical = childrenElem.length > 1 && childrenElem[1].element.getBoundingClientRect().left > childrenElem[0].element.getBoundingClientRect().left;

@@ -9,7 +9,8 @@ import styles from './CheckboxChoiceList.scss';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 
-export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChange, onBlur}) => {
+export const CheckboxChoiceList = ({field, value, id, inputContext, onChange, onBlur}) => {
+    const currentValue = value || [];
     inputContext.actionContext = {onChange, onBlur};
 
     const items = field.valueConstraints;
@@ -20,21 +21,21 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
     const isInverted = field.selectorOptions?.some(option => option.name === 'isInvertedSelection');
 
     // Check if value is a valid item in the list otherwise reset to null
-    if (value && value.length > 0) {
+    if (currentValue.length > 0) {
         const availableValues = items.map(item => item.value.string);
-        const actualValues = availableValues.filter(v => value.includes(v));
-        if (actualValues.length !== value.length) {
+        const actualValues = availableValues.filter(v => currentValue.includes(v));
+        if (actualValues.length !== currentValue.length) {
             onChange(actualValues);
         }
     }
 
     const checkboxOnChange = (ev, val, checked) => {
-        const valIndex = value.findIndex(v => v === val);
+        const valIndex = currentValue.findIndex(v => v === val);
         const isChecked = isInverted ? !checked : checked;
         if (isChecked && valIndex < 0) {
-            onChange(value.concat(val)); // Add to values if it doesn't exist
+            onChange(currentValue.concat(val)); // Add to values if it doesn't exist
         } else if (!isChecked && valIndex >= 0) {
-            const clone = [...value];
+            const clone = [...currentValue];
             clone.splice(valIndex, 1);
             onChange(clone);
         }
@@ -53,7 +54,7 @@ export const CheckboxChoiceList = ({field, value = [], id, inputContext, onChang
                         key={item.value.string}
                         fieldId={id}
                         item={item}
-                        isChecked={isInverted ? !value?.includes(item.value.string) : value?.includes(item.value.string)}/>
+                        isChecked={isInverted ? !currentValue.includes(item.value.string) : currentValue.includes(item.value.string)}/>
                 ))}
             </CheckboxGroup>
             {inputContext.displayActions && (

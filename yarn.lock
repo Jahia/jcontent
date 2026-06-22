@@ -2698,7 +2698,7 @@ __metadata:
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
-    "@jahia/moonstone": "npm:^2.20.1"
+    "@jahia/moonstone": "npm:^2.20.2"
     "@jahia/react-material": "npm:^3.0.5"
     "@jahia/stylelint-config": "npm:^0.0.3"
     "@jahia/test-framework": "npm:^1.3.1"
@@ -2800,9 +2800,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@npm:^2.20.1":
-  version: 2.20.1
-  resolution: "@jahia/moonstone@npm:2.20.1"
+"@jahia/moonstone@npm:^2.20.2":
+  version: 2.20.2
+  resolution: "@jahia/moonstone@npm:2.20.2"
   dependencies:
     "@floating-ui/react": "npm:^0.27.19"
     "@tanstack/react-table": "npm:^8.21.3"
@@ -2813,7 +2813,7 @@ __metadata:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/51ce07fa070004a0e69b9995bacd643031a5989c6c9c83c606041c117d9d2b6e64559f6411f711598caee06bdc2307ad0b277a05a01fc48c9c3ac56f113c07dc
+  checksum: 10c0/b9ef5afc0ad9e47939af722730d30d475a8b3a0425e636e5055ede5219b18c3994aee4d6ac3df6ee5ca791cd501ccd4528c110defccc9e828b651051273ce6ec
   languageName: node
   linkType: hard
 

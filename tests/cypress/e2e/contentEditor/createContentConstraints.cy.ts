@@ -56,6 +56,25 @@ describe('Create content constraints', () => {
         });
 
         addNode({
+            name: 'page-one-multiple-limit',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'One Multiple Limit Two Page', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-one-multiple-limit',
+                    primaryNodeType: 'cent:oneMultipleWithLimitTwo'
+                }]
+            }]
+        });
+
+        addNode({
             name: 'page-two-multiple-named',
             parentPathOrId: homePath,
             primaryNodeType: 'jnt:page',
@@ -196,5 +215,32 @@ describe('Create content constraints', () => {
         contextMenu.shouldHaveItem('New childObject1');
         contextMenu.shouldHaveItem('New childObject2');
     });
-});
 
+    it('resolves create actions correctly for single wildcard type that can be created multiple times with a limit', () => {
+        const jcontent = JContent
+            .visit(siteKey, 'en', 'pages/home/page-one-multiple-limit')
+            .switchToStructuredView();
+
+        // The single wildcard child type should be available
+        let contextMenu = jcontent.getTable().getRowByLabel('test-one-multiple-limit').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+
+        // Create childObject1
+        contextMenu.select('New childObject1');
+        let contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        // Verify it is still available after creation (wildcard allows multiple)
+        contextMenu = jcontent.getTable().getRowByLabel('test-one-multiple-limit').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+
+        // Create another childObject1
+        contextMenu.select('New childObject1');
+        contentEditor = new ContentEditor();
+        contentEditor.create();
+
+        // Verify it is still available
+        contextMenu = jcontent.getTable().getRowByLabel('test-one-multiple-limit').contextMenu();
+        contextMenu.shouldNotHaveItem('New childObject1');
+    });
+});

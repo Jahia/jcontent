@@ -32,13 +32,13 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
     newUpload.status = uploadStatuses.HAS_ERROR;
     console.error(`Server exception during upload of file ${filePath}: ${gqlError.message}`);
 
-    if (gqlError.message.indexOf('GqlJcrWrongInputException') !== -1) {
+    if (gqlError.message.includes('GqlJcrWrongInputException')) {
         newUpload.error = {type: uploadErrors.WRONG_INPUT};
-    } else if (gqlError.message.indexOf('ItemExistsException') !== -1) {
+    } else if (gqlError.message.includes('ItemExistsException')) {
         newUpload.error = {type: uploadErrors.FILE_EXISTS};
-    } else if (gqlError.message.indexOf('FileSizeLimitExceededException') !== -1) {
+    } else if (gqlError.message.includes('FileSizeLimitExceededException')) {
         newUpload.error = {type: uploadErrors.INCORRECT_SIZE};
-    } else if (gqlError.message.indexOf('ConstraintViolationException') !== -1) {
+    } else if (gqlError.message.includes('ConstraintViolationException')) {
         const [, messagePart] = gqlError.message.split('ConstraintViolationException:');
         const errMsgs = messagePart ? messagePart.trim().split('\n') : [];
         newUpload.error = {type: uploadErrors.CONSTRAINT_VIOLATION, messages: errMsgs};

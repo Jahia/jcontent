@@ -32,7 +32,7 @@ PreviewCard.propTypes = {
 };
 
 export const JContentPreview = () => {
-    const {previewSelection, selection, lang, mode, isFullScreen, onFullScreenToggle} = useSidePanelContext();
+    const {previewSelection, selection, lang, mode, isFullScreen} = useSidePanelContext();
     const {loading: emptyListLoading, component: EmptyListComponent} = useEmptyListComponent(previewSelection, mode);
 
     if (selection.length > 0) {
@@ -60,7 +60,6 @@ export const JContentPreview = () => {
             nodeData={previewSelection}
             previewContext={previewContext}
             fallbackPreviewContext={fallbackPreviewContext}
-            onFullScreenToggle={onFullScreenToggle}
             onRefetchInvalidated={() => unsetRefetcher(refetchTypes.PREVIEW_COMPONENT)}
             onRefetchReady={refetch => setRefetcher(refetchTypes.PREVIEW_COMPONENT, {refetch})}
         />

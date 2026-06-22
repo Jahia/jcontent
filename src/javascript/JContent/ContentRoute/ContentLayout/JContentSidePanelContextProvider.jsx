@@ -6,7 +6,7 @@ import {ContentEditorConfigContextProvider} from '~/ContentEditor/contexts';
 import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 import {SidePanelContextProvider} from '~/JContent/SidePanel';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
-import {cmSetPreviewFullScreen} from '~/JContent/redux/preview.redux';
+import {cmCloseSidePanel, cmSetPreviewFullScreen} from '~/JContent/redux/preview.redux';
 import {useDispatch} from 'react-redux';
 
 // Inner component — only rendered when sidePanelSelection is set.
@@ -37,6 +37,9 @@ const JContentSidePanelData = ({sidePanelSelection, selection, language, jconten
         // Full-screen
         isFullScreen,
         onFullScreenToggle: () => dispatch(cmSetPreviewFullScreen(!isFullScreen)),
+
+        // Close side panel
+        onClose: () => dispatch(cmCloseSidePanel()),
 
         // Refetch bus wired to JContent's registry
         onRefetchReady: refetch => setRefetcher(refetchTypes.PREVIEW_COMPONENT, {refetch}),
@@ -73,7 +76,8 @@ export const JContentSidePanelContextProvider = ({sidePanelSelection, selection,
                 mode: jcontentMode,
                 isJContent: true,
                 isFullScreen,
-                onFullScreenToggle: () => dispatch(cmSetPreviewFullScreen(!isFullScreen))
+                onFullScreenToggle: () => dispatch(cmSetPreviewFullScreen(!isFullScreen)),
+                onClose: () => dispatch(cmCloseSidePanel())
             }}
             >
                 {children}

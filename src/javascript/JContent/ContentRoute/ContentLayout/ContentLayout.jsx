@@ -22,6 +22,7 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
     }), shallowEqual);
 
     const resolvedSidePanelSelection = flattenTree(rows).find(n => n.path === sidePanelSelection);
+    const showSidePanel = Boolean(sidePanelSelection) || isFullScreen;
 
     return (
         <div className={styles.root}>
@@ -47,17 +48,19 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
                 </div>
             )}
 
-            <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
-                <JContentSidePanelContextProvider
-                    sidePanelSelection={resolvedSidePanelSelection}
-                    selection={selection}
-                    language={language}
-                    jcontentMode={jcontentMode}
-                    isFullScreen={isFullScreen}
-                >
-                    <SidePanel/>
-                </JContentSidePanelContextProvider>
-            </div>
+            {showSidePanel && (
+                <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
+                    <JContentSidePanelContextProvider
+                        sidePanelSelection={resolvedSidePanelSelection}
+                        selection={selection}
+                        language={language}
+                        jcontentMode={jcontentMode}
+                        isFullScreen={isFullScreen}
+                    >
+                        <SidePanel/>
+                    </JContentSidePanelContextProvider>
+                </div>
+            )}
         </div>
     );
 };

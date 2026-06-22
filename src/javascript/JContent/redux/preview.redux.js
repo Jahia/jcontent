@@ -13,6 +13,13 @@ export const cmSetSidePanelSelection = sidePanelSelection => (dispatch, getState
 
 cmSetSidePanelSelection.toString = () => 'CM_SET_SIDE_PANEL_SELECTION';
 
+export const cmCloseSidePanel = () => (dispatch, getState) => {
+    dispatch(cmSetSidePanelSelection(null));
+    if (getState().jcontent.previewIsFullScreen) {
+        dispatch(cmSetPreviewFullScreen(false));
+    }
+};
+
 export const previewRedux = registry => {
     const sidePanelSelectionReducer = handleAction(cmSetSidePanelSelection, (state, action) => action.payload, null);
     const previewIsFullScreenReducer = handleAction(cmSetPreviewFullScreen, (state, action) => action.payload, false);

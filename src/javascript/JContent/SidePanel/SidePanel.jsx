@@ -1,6 +1,6 @@
 import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Drawer, Tab, TabItem} from '@jahia/moonstone';
+import {Button, Close, Drawer, Tab, TabItem} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
 import {useSidePanelContext} from './SidePanelContext';
 import styles from './SidePanel.scss';
@@ -12,6 +12,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
     const ctx = useSidePanelContext();
     const {t} = useTranslation('jcontent');
 
+    const {onClose} = ctx;
     const tabs = registry.find({target: registryTarget});
     const visibleTabs = useMemo(
         () => tabs.filter(tab => tab?.isDisplayable(ctx)),
@@ -61,6 +62,15 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                         );
                     })}
                 </Tab>
+                {onClose && (
+                    <Button
+                        className={styles.closeButton}
+                        variant="ghost"
+                        icon={<Close/>}
+                        data-sel-role="side-panel-close"
+                        onClick={onClose}
+                    />
+                )}
             </div>
 
             <ErrorBoundary key={activeTab}>

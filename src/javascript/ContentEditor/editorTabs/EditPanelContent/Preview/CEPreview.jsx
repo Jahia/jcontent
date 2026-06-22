@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Badge} from '@jahia/design-system-kit';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -47,7 +47,6 @@ const usePreviewContexts = (nodeData, language, mode) => {
 export const CEPreview = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, lang} = useSidePanelContext();
-    const [isFullScreen, setIsFullScreen] = useState(false);
     const mode = useSelector(state => state.jcontent?.mode);
 
     const {primary: previewContext, fallback: fallbackPreviewContext} = usePreviewContexts(nodeData || {}, lang, mode);
@@ -90,11 +89,9 @@ export const CEPreview = () => {
     return (
         <Preview
             header={header}
-            isFullScreen={isFullScreen}
             nodeData={nodeData}
             previewContext={previewContext}
             fallbackPreviewContext={fallbackPreviewContext}
-            onFullScreenToggle={() => setIsFullScreen(prev => !prev)}
             onRefetchInvalidated={onRefetchInvalidated}
             onRefetchReady={onRefetchReady}
         />

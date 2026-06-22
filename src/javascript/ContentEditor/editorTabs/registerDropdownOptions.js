@@ -38,7 +38,7 @@ export const registerDropdownOptions = actionsRegistry => {
             />
         ),
         editPanelHeaderProps: {hideLanguageSwitcher: true},
-        isDisplayable: () => true
+        isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1
     });
 
     actionsRegistry.add('action', 'ceAdvancedTab', {

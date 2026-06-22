@@ -1,5 +1,5 @@
 import {ContentEditor, JContent} from '../../page-object';
-import {addNode, createUser, deleteUser, grantRoles} from '@jahia/cypress';
+import {addNode, createUser, deleteNode, deleteUser, grantRoles} from '@jahia/cypress';
 
 describe('Create media tests', () => {
     let jcontent: JContent;
@@ -96,5 +96,36 @@ describe('Create media tests', () => {
         JContent.visit(siteKey, 'en', 'media/files/blankFolder');
         cy.get('[data-type="upload"]').should('not.exist');
         cy.get('[data-type="emptyZone"]').should('be.visible');
+    });
+
+    it('Can replace an existing file when uploading a duplicate', function () {
+        const fileName = 'Screenshot 2025-11-14 at 08.02.10.png';
+
+        cy.loginAndStoreSession();
+        jcontent = JContent.visit(siteKey, 'en', 'media/files');
+        const media = jcontent.getMedia().open();
+
+        // Create folder and navigate into it
+        media.createFolder('media/files', 'replaceTest').visitFolder();
+
+        // Upload initial file using existing page object helpers
+        media.createFile(fileName).dndUpload('[data-type="upload"]');
+        cy.get('[data-cm-role="upload-status-success"]').should('be.visible');
+        cy.get('[data-cm-role="upload-close-button"]').click();
+
+        // Upload the same file again — triggers "File already exists" error
+        media.createFile(fileName).dndUpload('div[data-sel-role-card]');
+
+        // Verify the error appears and click Replace
+        cy.get('[data-sel-role="upload-status"]').should('be.visible');
+        cy.get('[data-sel-role="upload-error-msg"]').should('contain', 'File already exists');
+        cy.get('[data-sel-role="upload-status"]').contains('button', 'Replace').click();
+
+        // Verify the replace was successful
+        cy.get('[data-cm-role="upload-status-success"]').should('be.visible');
+        cy.get('[data-cm-role="upload-close-button"]').click();
+
+        // Clean up
+        deleteNode(`/sites/${siteKey}/files/replaceTest`);
     });
 });

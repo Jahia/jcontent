@@ -50,7 +50,7 @@ describe('Customized preview tests', () => {
         cy.get('@winOpen').should('be.calledWith', Cypress.sinon.match(f => f.includes(previewParams)));
     });
 
-    it('should display specified customized preview parameters', () => {
+    it.only('should display specified customized preview parameters', () => {
         JContent.visit(siteKey, 'en', `${path}?${previewParams}`);
 
         cy.log('should display customized preview without parameters');

@@ -140,6 +140,7 @@ describe('Language switcher tests', () => {
             .log('Language set to French');
         ce.getSmallTextField('jnt:text_text').addNewValue(frText);
 
+        ce.openSection('options');
         ce.getSmallTextField('nt:base_ce:systemName', false).addNewValue(contentName);
         ce.create();
 

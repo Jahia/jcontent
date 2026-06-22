@@ -18,7 +18,7 @@ import {useContentPreview} from './useContentPreview';
  * IframeViewer as pageCssHtml so it can extract and inject <link> elements.
  *
  * Props:
- *   previewContext     — built by buildCEPreviewContext or buildPreviewContextFromNode
+ *   previewContext     — built by buildCEPreviewContexts or buildPreviewContextsFromNode
  *   nodeData           — { isPage, path, displayableNode } — passed to IframeViewer for zoom logic
  *   onContentNotFound  — called when zoom anchor (#ce_preview_content) is missing
  *   onRefetchReady     — (refetch) => void  — called on mount; register with your refetch bus

@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import {Paper} from '@material-ui/core';
-import {Badge, Typography} from '@jahia/moonstone';
+import {Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './PreviewViewers.scss';
 

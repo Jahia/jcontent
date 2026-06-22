@@ -6,36 +6,52 @@ import {invalidateRefetch, setPreviewRefetcher} from '~/ContentEditor/ContentEdi
 import {Preview} from '~/JContent/preview/Preview';
 import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/UpdateOnSaveBadge';
 import {useSelector} from 'react-redux';
-import {buildCEPreviewContext} from '~/JContent/preview/previewContext.utils';
+import {buildPreviewContexts} from '~/JContent/preview/previewContext.utils';
+import {useEmptyListComponent} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/EmptyListComponent/EmptyListComponent';
 
-const usePreviewContext = (nodeData, language) => {
-    // Get information from legacy page composer to display the preview.
+const parseQueryString = queryString => {
+    if (!queryString) {
+        return [];
+    }
+
+    const qs = queryString.startsWith('?') ? queryString.substring(1) : queryString;
+    return qs.split('&').map(entry => {
+        const [name, value = ''] = entry.split('=');
+        return {name, value: decodeURIComponent(value)};
+    });
+};
+
+const usePreviewContexts = (nodeData, language, mode) => {
     const pageComposerCurrentPage = useSelector(state => state.pagecomposer?.currentPage);
     const pageComposerActive = useSelector(state => state.pagecomposer?.active);
 
-    // Don't use full page rendering for folders.
-    const isFullPage = nodeData.displayableNode && !nodeData.displayableNode.isFolder;
-    // Set main resource path, currently used by preview:
-    //  - path: path to display
-    //  - template: view or template to use
-    //  - templatetype: extension to use
-    //  - config: page if content can be displayed as full page or module
-    const currentPage = pageComposerActive ? pageComposerCurrentPage :
-        {
-            path: (isFullPage && nodeData.displayableNode.path) || nodeData.path,
-            template: nodeData.displayableNode ? 'default' : 'cm',
-            templateType: '.html',
-            config: isFullPage ? 'page' : 'module'
+    let closestPage = null;
+    let requestParameters = [];
+
+    if (pageComposerActive && pageComposerCurrentPage) {
+        closestPage = {
+            path: decodeURIComponent(pageComposerCurrentPage.path),
+            view: pageComposerCurrentPage.template
         };
-    return buildCEPreviewContext(currentPage, nodeData, language);
+        requestParameters = parseQueryString(pageComposerCurrentPage.queryString);
+    } else if (mode === 'pages' && !nodeData.isPage) {
+        const pageAncestor = nodeData.pageAncestors?.at(-1);
+        if (pageAncestor) {
+            closestPage = {path: pageAncestor.path};
+        }
+    }
+
+    return buildPreviewContexts(nodeData, language, {closestPage, isCEPreview: true, requestParameters});
 };
 
 export const CEPreview = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, lang} = useSidePanelContext();
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const mode = useSelector(state => state.jcontent?.mode);
 
-    const previewContext = usePreviewContext(nodeData || {}, lang);
+    const {primary: previewContext, fallback: fallbackPreviewContext} = usePreviewContexts(nodeData || {}, lang, mode);
+    const {loading: emptyListLoading, component: emptyListComponent} = useEmptyListComponent(nodeData, mode);
 
     const onRefetchReady = useCallback(refetch => {
         setPreviewRefetcher({
@@ -47,6 +63,14 @@ export const CEPreview = () => {
     const onRefetchInvalidated = useCallback(() => {
         invalidateRefetch({language: lang, path: previewContext.path});
     }, [lang, previewContext.path]);
+
+    if (emptyListLoading) {
+        return null;
+    }
+
+    if (emptyListComponent) {
+        return emptyListComponent;
+    }
 
     const header = (
         <>
@@ -69,6 +93,7 @@ export const CEPreview = () => {
             isFullScreen={isFullScreen}
             nodeData={nodeData}
             previewContext={previewContext}
+            fallbackPreviewContext={fallbackPreviewContext}
             onFullScreenToggle={() => setIsFullScreen(prev => !prev)}
             onRefetchInvalidated={onRefetchInvalidated}
             onRefetchReady={onRefetchReady}

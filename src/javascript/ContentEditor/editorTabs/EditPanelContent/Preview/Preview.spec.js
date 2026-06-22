@@ -20,12 +20,18 @@ jest.mock('./Preview.utils', () => ({
     getPreviewPath: jest.fn(() => '/site/digitall')
 }));
 jest.mock('~/JContent/preview/previewContext.utils', () => ({
-    buildCEPreviewContext: jest.fn(() => ({
-        workspace: 'edit',
-        path: '/site/digitall',
-        contextConfiguration: 'module',
-        requestAttributes: []
+    buildPreviewContexts: jest.fn(() => ({
+        primary: {
+            workspace: 'edit',
+            path: '/site/digitall',
+            contextConfiguration: 'module',
+            requestAttributes: []
+        },
+        fallback: null
     }))
+}));
+jest.mock('~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/EmptyListComponent/EmptyListComponent', () => ({
+    useEmptyListComponent: jest.fn(() => ({loading: false, component: null}))
 }));
 jest.mock('~/JContent/preview/viewers/PDFViewer', () => ({PDFViewer: () => null}));
 jest.mock('~/JContent/preview/viewers/PDFViewer/index.js', () => ({PDFViewer: () => null}));

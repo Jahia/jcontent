@@ -38,11 +38,9 @@ const EmptyListComponent = () => {
 };
 
 export const useEmptyListComponent = (node, mode) => {
-    const isDisplayableNode = Boolean(node?.displayableNode) && node.displayableNode.path === node?.path;
     const skip = mode !== 'pages' ||
         !node ||
         node.isPage ||
-        isDisplayableNode ||
         !node.pageAncestors?.length;
 
     const {data, loading} = useQuery(EMPTY_LIST_QUERY, {

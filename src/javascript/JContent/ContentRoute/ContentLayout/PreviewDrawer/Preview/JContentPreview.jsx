@@ -5,7 +5,7 @@ import {useEmptyListComponent} from './EmptyListComponent/EmptyListComponent';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Preview} from '~/JContent/preview';
-import {buildFallbackPreviewContextFromNode, buildPreviewContextFromNode} from '~/JContent/preview/previewContext.utils';
+import {buildPreviewContextsFromNode} from '~/JContent/preview/previewContext.utils';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {Card, CardContent} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
@@ -51,8 +51,7 @@ export const JContentPreview = () => {
         return EmptyListComponent;
     }
 
-    const previewContext = buildPreviewContextFromNode(previewSelection, lang, mode);
-    const fallbackPreviewContext = buildFallbackPreviewContextFromNode(previewSelection, lang, mode, previewContext);
+    const {primary: previewContext, fallback: fallbackPreviewContext} = buildPreviewContextsFromNode(previewSelection, lang, mode);
 
     return (
         <Preview

@@ -20,7 +20,10 @@ export const EditContent = ({
     // Only use hideOnNodeTypes for pre-gate — showOnNodeTypes is skipped (subtype risk)
     const skip = isDefinitelyHidden(prefetchedNode, {hideOnNodeTypes: otherProps.hideOnNodeTypes});
 
-    const res = useNodeChecks({path, language}, otherProps);
+    const res = useNodeChecks(
+        {path: path, language: language},
+        {skip, ...otherProps}
+    );
 
     if (Loading && res.loading) {
         return <Loading {...otherProps}/>;

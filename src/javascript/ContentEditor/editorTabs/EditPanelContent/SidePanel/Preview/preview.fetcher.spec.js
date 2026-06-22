@@ -48,13 +48,13 @@ jest.mock('./Preview.utils', () => {
 });
 
 beforeAll(() => {
-    window.contextJsParameters = {
+    globalThis.contextJsParameters = {
         contextPath: '/test'
     };
 });
 
 afterAll(() => {
-    delete window.contextJsParameters;
+    delete globalThis.contextJsParameters;
 });
 
 describe('Preview fetcher', () => {

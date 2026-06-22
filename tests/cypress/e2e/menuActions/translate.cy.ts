@@ -23,7 +23,6 @@ describe('translate action tests', () => {
     const name = 'translate-field-test';
 
     before('test setup', () => {
-
         cy.logout();
         deleteSite(siteKey);
         deleteSite(oneLangSite);
@@ -67,7 +66,7 @@ describe('translate action tests', () => {
     it('cannot open translate dialog if content has only one language', () => {
         const jcontent = JContent.visit(oneLangSite, 'en', 'pages/home');
         const menu = jcontent.getAccordionItem('pages').getTreeItem('home').contextMenu();
-        // visibility check menu displayed
+        // Visibility check menu displayed
         menu.shouldHaveRoleItem('editPage');
         menu.get().find('.moonstone-menuItem[data-sel-role="sbsTranslate"]').should('not.exist');
     });

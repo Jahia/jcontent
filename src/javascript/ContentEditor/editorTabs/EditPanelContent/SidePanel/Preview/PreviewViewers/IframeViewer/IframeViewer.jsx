@@ -11,7 +11,7 @@ export function zoom(iframeDocument, onContentNotFound, editorContext) {
     const isPage = editorContext.nodeData.isPage;
     const isContentTemplate = editorContext.nodeData.displayableNode && editorContext.nodeData.displayableNode.path === editorContext.nodeData.path;
 
-    if (iframeDocument.documentElement && iframeDocument.documentElement.innerHTML && !iframeDocument.documentElement.innerHTML.includes('ce_preview_skip_zoom')) {
+    if (!iframeDocument?.documentElement.innerHTML.includes('ce_preview_skip_zoom')) {
         const contentPreview = iframeDocument.getElementById('ce_preview_content');
         if (contentPreview) {
             removeSiblings(contentPreview);
@@ -55,7 +55,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
     const {t} = useTranslation('jcontent');
     const iframeRef = useRef(null);
     const onLoadTimeoutRef = useRef(null);
-    let displayValue = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
+    let displayValue = data?.nodeByPath && data?.nodeByPath.renderedContent ? data?.nodeByPath.renderedContent.output : '';
     if (displayValue === '') {
         displayValue = t('label.contentManager.contentPreview.noViewAvailable');
     }
@@ -107,6 +107,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
                     srcDoc={displayValue}
                     sandbox="allow-same-origin allow-scripts"
                     onLoad={onLoad}
+                    title="Preview"
             />
         </Paper>
     );

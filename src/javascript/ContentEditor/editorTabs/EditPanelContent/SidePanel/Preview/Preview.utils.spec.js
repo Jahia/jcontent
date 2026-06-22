@@ -1,7 +1,7 @@
 import {getPreviewContext, getPreviewPath, removeSiblings} from './Preview.utils';
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const html = fs.readFileSync(path.resolve(__dirname, './Preview.utils.test.html'), 'utf8');
 
 describe('Preview.utils', () => {

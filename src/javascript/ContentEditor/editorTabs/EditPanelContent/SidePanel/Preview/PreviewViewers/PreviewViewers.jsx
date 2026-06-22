@@ -11,9 +11,9 @@ import PDFViewer from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Previ
 
 export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
     // If node type is "jnt:file" use specific viewer
-    const isFile = data && data.nodeByPath && data.nodeByPath.lastModified && data.nodeByPath.isFile;
+    const isFile = data?.nodeByPath && data?.nodeByPath.lastModified && data?.nodeByPath.isFile;
     if (isFile) {
-        const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
+        const file = globalThis.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replaceAll(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
         if (isPDF(data.nodeByPath)) {
             return (
                 <div className={styles.previewContainer} data-sel-role="preview-type-pdf">
@@ -22,7 +22,7 @@ export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
             );
         }
 
-        if (isBrowserImage(data.nodeByPath)) {
+        if (isBrowserImage(data?.nodeByPath)) {
             return (
                 <div className={clsx(styles.previewContainer, styles.mediaContainer)}
                      data-sel-role="preview-type-image"
@@ -32,7 +32,7 @@ export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
             );
         }
 
-        const type = getFileExtension(data.nodeByPath);
+        const type = getFileExtension(data?.nodeByPath);
         const isMedia = (type === 'webm' || type === 'mp4');
         return (
             <div className={clsx(styles.previewContainer, isMedia && styles.mediaContainer)}

@@ -12,7 +12,7 @@ export const Preview = () => {
     const editorContext = useContentEditorContext();
     const [contentNotFound, setContentNotFound] = useState(false);
     const handleContentNotFound = useCallback(() => setContentNotFound(true), []);
-    const [shouldDisplayPreview, setShouldDisplayIframe] = useState(false);
+    const [ShouldDisplayIframe, setShouldDisplayIframe] = useState(false);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -46,7 +46,7 @@ export const Preview = () => {
             </div>
             {!editorContext.nodeData.isFolder &&
                 <>
-                    {shouldDisplayPreview ?
+                    {ShouldDisplayIframe ?
                         <PreviewFetcher onContentNotFound={handleContentNotFound}/> :
                         <LoaderOverlay/>}
                 </>}

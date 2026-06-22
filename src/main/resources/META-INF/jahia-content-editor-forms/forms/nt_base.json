@@ -8,28 +8,7 @@
       "labelKey": "label.engineTab.content",
       "rank": 1.0,
       "requiredPermission": "viewContentTab",
-      "expanded": true,
-      "fieldSets": [
-        {
-          "name": "<main>",
-          "rank": 0.0,
-          "fields": [
-            {
-              "rank": 0.0,
-              "name": "ce:systemName",
-              "labelKey": "label.contentEditor.section.fieldSet.system.fields.systemName",
-              "descriptionKey": "label.contentEditor.section.fieldSet.system.fields.systemNameDescription",
-              "requiredType": "String",
-              "selectorType": "SystemName",
-              "selectorOptionsMap": {
-                "maxLength": "${jahia:jahia.jcr.maxNameSize}"
-              },
-              "i18n": false,
-              "readOnly": false,
-              "multiple": false,
-              "mandatory": true
-            }]
-        }]
+      "expanded": true
     },
     {
       "name": "classification",
@@ -53,7 +32,28 @@
       "name": "options",
       "labelKey": "label.engineTab.options",
       "rank": 5.0,
-      "requiredPermission": "viewOptionsTab"
+      "requiredPermission": "viewOptionsTab",
+      "fieldSets": [
+        {
+          "name": "system",
+          "labelKey": "label.contentEditor.section.fieldSet.system.displayName",
+          "fields": [
+            {
+              "rank": 0.0,
+              "name": "ce:systemName",
+              "labelKey": "label.contentEditor.section.fieldSet.system.fields.systemName",
+              "descriptionKey": "label.contentEditor.section.fieldSet.system.fields.systemNameDescription",
+              "requiredType": "String",
+              "selectorType": "SystemName",
+              "selectorOptionsMap": {
+                "maxLength": "${jahia:jahia.jcr.maxNameSize}"
+              },
+              "i18n": false,
+              "readOnly": false,
+              "multiple": false,
+              "mandatory": true
+            }]
+        }]
     },
     {
       "name": "seo",

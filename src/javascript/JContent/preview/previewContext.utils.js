@@ -22,8 +22,9 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
  *      fallback = module+CSS strategy (used if zoom fails).
  *
  * B. Out-of-context (no closestPage):
- *    - isDisplayableNode: content-template render (config=page).
- *    - !isDisplayableNode: raw module render. view=null → server applies j:view→cm fallback.
+ *    - Always module render. CSS injected via cssSourcePath:
+ *      isDisplayableNode → cssSourcePath=node.path (its own default page render provides CSS).
+ *      !isDisplayableNode → cssSourcePath=displayableNode.path if non-folder, else no CSS.
  *
  * @param {object} node                 - JCR node with { path, uuid, isPage, displayableNode, jView }
  * @param {string} language
@@ -41,6 +42,8 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     const extraParams = requestParameters.length > 0 ? {requestParameters} : {};
     const cePreviewAttr = isCEPreview ? [{name: 'ce_preview', value: node.uuid}] : undefined;
 
+    // closestPage signals in-context rendering: the node is rendered within a known hosting page.
+    // Absent closestPage → out-of-context: the node renders standalone, without a page surround.
     if (closestPage) {
         if (isDisplayableNode) {
             // Main-resource in page context: module render with page CSS.
@@ -72,12 +75,20 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
         };
     }
 
+    // For out-of-context module renders, inject CSS by fetching the nearest displayable page.
+    // isDisplayableNode: use the node itself (its default page render provides CSS).
+    // !isDisplayableNode: use the displayable ancestor if it's a non-folder page.
+    const cssSourcePath = isDisplayableNode
+        ? node.path
+        : (displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined);
+
     return {
         primary: {
             ...base,
             path: node.path,
             view: isDisplayableNode ? (jView?.value || 'default') : null,
-            contextConfiguration: isDisplayableNode ? 'page' : 'module',
+            contextConfiguration: 'module',
+            ...(cssSourcePath && {cssSourcePath}),
             ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
             ...extraParams
         },

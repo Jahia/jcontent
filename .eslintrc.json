@@ -6,6 +6,9 @@
     "react/boolean-prop-naming": [1, { "rule": "^((is|has)[A-Z]([A-Za-z0-9]?)+|allow|hide|show)" }],
     "react-hooks/exhaustive-deps": [2]
   },
+  "globals": {
+    "globalThis": "readonly"
+  },
   "parserOptions": {
     "sourceType": "module"
   }

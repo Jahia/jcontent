@@ -31,7 +31,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
     const tabs = registry.find({target: 'editHeaderTabsActions'});
     const editTab = tabs.find(tab => tab.value === Constants.editPanel.editTab);
     if (!editTab) {
-        throw new Error(`Edit tab not found in registry for target "editHeaderTabsActions" — ensure registerDropdownOptions has been called before rendering`);
+        throw new Error('Edit tab not found in registry for target "editHeaderTabsActions" — ensure registerDropdownOptions has been called before rendering');
     }
 
     const {displayableComponent} = editTab;

@@ -37,9 +37,9 @@ const adaptTranslateSections = (data, readOnly = false) => {
             })
         }));
 
-    const expandedSections = data.expandedSections
-        ? sections?.reduce((acc, s) => ({...acc, [s.name]: true}), {...data.expandedSections})
-        : data.expandedSections;
+    const expandedSections = data.expandedSections ?
+        sections?.reduce((acc, s) => ({...acc, [s.name]: true}), {...data.expandedSections}) :
+        data.expandedSections;
 
     return {...data, sections, expandedSections};
 };

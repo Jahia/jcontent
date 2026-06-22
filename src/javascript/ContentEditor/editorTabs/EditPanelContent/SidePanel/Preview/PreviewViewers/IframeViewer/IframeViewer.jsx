@@ -106,8 +106,8 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
                     className={`${styles.iframe} ${loading ? styles.iframeLoading : ''}`}
                     srcDoc={displayValue}
                     sandbox="allow-same-origin allow-scripts"
-                    onLoad={onLoad}
                     title="Preview"
+                    onLoad={onLoad}
             />
         </Paper>
     );

@@ -211,7 +211,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             contextMenu.shouldHaveItem('New Page');
             contextMenu.shouldHaveItem('New...');
             // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(1500); // Wait for the context menu to stabilize
+            cy.wait(1000); // Wait for the context menu to stabilize
             const menu = contextMenu.submenu('Copy', 'jcontent-copyPageMenu');
             menu.should('be.visible');
             menu.select(copyActionName);
@@ -229,7 +229,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
                 .shouldNotHaveItem('Paste as reference');
         });
 
-        it.only('Should display paste action on a page', () => {
+        it('Should display paste action on a page', () => {
             const jcontent = JContent.visit('digitall', 'en', 'pages/home/about');
             copyPage(jcontent, 'about', 'Page with Sub-pages');
             jcontent

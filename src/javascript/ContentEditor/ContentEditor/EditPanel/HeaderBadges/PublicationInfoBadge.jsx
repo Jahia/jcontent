@@ -14,7 +14,7 @@ export const PublicationInfoBadge = () => {
     const {sideBySideContext} = useContentEditorConfigContext();
     const {publicationStatus, existsInLive, publicationInfoPolling} = publicationInfoContext;
     const uilang = useSelector(state => state.uilang);
-    const translateMode = Boolean(sideBySideContext.lang);
+    const translateMode = Boolean(sideBySideContext.enabled);
 
     const statuses = {
         modified: false,

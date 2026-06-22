@@ -54,7 +54,7 @@ const SourceContentFormBuilderInner = ({data}) => {
     useResizeWatcher({columnSelector: 'left-column', data});
 
     return (
-        <Formik initialValues={data?.initialValues} onSubmit={() => {}}>
+        <Formik enableReinitialize initialValues={data?.initialValues} onSubmit={() => {}}>
             <>
                 <div className={styles.languageDropDown}>
                     <span>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</span>

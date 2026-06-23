@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import React, {useCallback, useContext, useMemo, useRef, useState} from 'react';
 import {useNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
@@ -160,6 +160,15 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         createAnother
     ]);
 
+    // Capture the last valid context/sections so we can serve stale data during language-switch refetches
+    // instead of unmounting the form. Written at render time (safe — refs are local, not shared state).
+    const previousEditorContextRef = useRef(null);
+    const previousSectionsRef = useRef(null);
+    if (editorContext !== null) {
+        previousEditorContextRef.current = editorContext;
+        previousSectionsRef.current = sections;
+    }
+
     if (error) {
         // Check for ItemNotFound exception
         const is404 = (error.graphQLErrors || []).some(e => e.message?.includes('ItemNotFoundException'));
@@ -175,6 +184,19 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     }
 
     if (loading || siteInfoResult.loading || !ranAllHooks) {
+        // During language-switch refetches keep the form mounted with stale context.
+        // On the initial load (no stale context yet) show the overlay as usual.
+        if (previousEditorContextRef.current) {
+            return (
+                <ContentEditorContext.Provider value={previousEditorContextRef.current}>
+                    <ContentEditorSectionContextProvider formSections={JSON.parse(JSON.stringify(previousSectionsRef.current))}>
+                        <ApolloCacheFlushOnGWTSave/>
+                        {children}
+                    </ContentEditorSectionContextProvider>
+                </ContentEditorContext.Provider>
+            );
+        }
+
         return <LoaderOverlay/>;
     }
 

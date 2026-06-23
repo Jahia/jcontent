@@ -23,9 +23,6 @@ describe('translate action tests', () => {
     const name = 'translate-field-test';
 
     before('test setup', () => {
-        cy.logout();
-        deleteSite(siteKey);
-        deleteSite(oneLangSite);
         createSite(siteKey, {
             languages: 'en,fr,de',
             templateSet: 'dx-base-demo-templates',
@@ -57,6 +54,9 @@ describe('translate action tests', () => {
     });
 
     after('test cleanup', () => {
+        cy.logout();
+        deleteSite(siteKey);
+        deleteSite(oneLangSite);
     });
 
     beforeEach(() => {
@@ -148,7 +148,7 @@ describe('translate action tests', () => {
         translateEditor.getTranslateSection('seo').shouldBeExpanded();
     });
 
-    it.only('can translate fields', () => {
+    it('can translate fields', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
         cy.log('Copy smallText from en to fr');

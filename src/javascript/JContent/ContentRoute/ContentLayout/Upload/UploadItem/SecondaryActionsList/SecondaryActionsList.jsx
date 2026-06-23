@@ -14,7 +14,7 @@ const SecondaryActionsList = ({upload, index, doUploadAndStatusUpdate, showRenam
     }
 
     if (status === uploadStatuses.HAS_ERROR) {
-        if (error.type === uploadErrors.WRONG_INPUT) {
+        if (error?.type === uploadErrors.WRONG_INPUT || !error) {
             return <DontUploadButton upload={upload} index={index}/>;
         }
 
@@ -28,16 +28,11 @@ const SecondaryActionsList = ({upload, index, doUploadAndStatusUpdate, showRenam
             );
         }
 
-        if ([uploadErrors.FILE_NAME_SIZE, uploadErrors.FILE_NAME_INVALID].includes(error.type)) {
-            return (
-                <>
-                    <RenameButton upload={upload} showRenameDialog={showRenameDialog}/>
-                    <DontUploadButton upload={upload} index={index}/>
-                </>
-            );
-        }
-
-        if ([uploadErrors.FOLDER_CONFLICT, uploadErrors.FOLDER_FILE_NAME_SIZE, uploadErrors.FOLDER_FILE_NAME_INVALID].includes(error.type)) {
+        if ([uploadErrors.FILE_NAME_SIZE,
+            uploadErrors.FILE_NAME_INVALID,
+            uploadErrors.FOLDER_CONFLICT,
+            uploadErrors.FOLDER_FILE_NAME_SIZE,
+            uploadErrors.FOLDER_FILE_NAME_INVALID].includes(error.type)) {
             return (
                 <>
                     <RenameButton upload={upload} showRenameDialog={showRenameDialog}/>

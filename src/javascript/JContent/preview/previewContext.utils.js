@@ -93,9 +93,8 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     // For out-of-context module renders, inject CSS by fetching the nearest displayable page.
     // isDisplayableNode: use the node itself (its default page render provides CSS).
     // !isDisplayableNode: use the displayable ancestor if it's a non-folder page.
-    const cssSourcePath = isDisplayableNode ?
-        node.path :
-        (displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined);
+    const displayableAncestorPath = displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined;
+    const cssSourcePath = isDisplayableNode ? node.path : displayableAncestorPath;
 
     return {
         primary: {

@@ -30,7 +30,8 @@ export const ToolBar = () => {
         publishAction = canPublish ? 'publish' : 'publishAll';
     }
 
-    const paths = selection.length > 0 ? selection : (sidePanelSelection ? [sidePanelSelection] : []);
+    const fallbackSelection = sidePanelSelection ? [sidePanelSelection] : [];
+    const paths = selection.length > 0 ? selection : fallbackSelection;
     let context = paths.length === 1 ? {path: paths[0]} : {paths};
 
     let clear = () => selection.length > 0 ? dispatch(cmClearSelection()) : dispatch(cmSetSidePanelSelection(null));

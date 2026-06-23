@@ -4,10 +4,11 @@ export const getSiblings = function (elem) {
 
     while (sibling) {
         if (sibling !== elem) {
-            if (sibling.nodeType === 1 && sibling.tagName !== 'LINK' && sibling.tagName !== 'SCRIPT') {
-                siblings.push(sibling);
-            } else if (sibling.nodeType === 3 && sibling.textContent.trim() !== '') {
-                // Text nodes with non-whitespace content are siblings too
+            // Regular tag siblings, excluding <link> and <script> tags
+            const isElemSiblingNodes = sibling.nodeType === 1 && sibling.tagName !== 'LINK' && sibling.tagName !== 'SCRIPT';
+            // Text nodes at the same level as the zoomed-in element
+            const isTextSiblingNodes = sibling.nodeType === 3 && sibling.textContent.trim() !== '';
+            if (isElemSiblingNodes || isTextSiblingNodes) {
                 siblings.push(sibling);
             }
         }
@@ -20,7 +21,7 @@ export const getSiblings = function (elem) {
 
 export const removeSiblings = element => {
     for (const sibling of getSiblings(element)) {
-        element.parentNode.removeChild(sibling);
+        sibling?.remove();
     }
 
     if (element.parentNode && element.parentNode.tagName !== 'BODY') {

@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useSiteInfo} from '@jahia/data-helper';
 import {ContentEditorConfigContextProvider} from '~/ContentEditor/contexts';
 import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 import {SidePanelContextProvider} from '~/JContent/SidePanel';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {cmCloseSidePanel, cmSetPreviewFullScreen} from '~/JContent/redux/preview.redux';
-import {useDispatch} from 'react-redux';
 
 // Inner component — only rendered when sidePanelSelection is set.
 // Calls hooks that require ContentEditorConfigContext.

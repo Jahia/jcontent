@@ -13,7 +13,7 @@ import {NoView} from './NoView';
 export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScreen = false, onContentNotFound, pageCssHtml = ''}) => {
     const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath?.isFile;
     if (isFile) {
-        const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
+        const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replaceAll(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
         if (isPDF(data.nodeByPath)) {
             return (
                 <div className={styles.previewContainer} data-sel-role="preview-container" data-preview-type="pdf">

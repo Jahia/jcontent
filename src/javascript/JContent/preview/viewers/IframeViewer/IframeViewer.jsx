@@ -50,7 +50,7 @@ function extractInlineResourceTags(html, collectAssets = true) {
     const assets = [];
     const tagPattern = /<jahia:resource[^>]+type="css"[^>]+path="([^"]+)"[^>]*\/>/g;
     const seen = new Set();
-    const cleanHtml = html.replace(tagPattern, (match, encodedPath) => {
+    const cleanHtml = html.replaceAll(tagPattern, (match, encodedPath) => {
         if (collectAssets) {
             const key = decodeURIComponent(encodedPath);
             if (!seen.has(key)) {
@@ -77,7 +77,7 @@ function extractPageHead(pageHtml) {
         return '';
     }
 
-    const match = pageHtml.match(/<head>([\s\S]*?)<\/head>/i);
+    const match = /<head>([\s\S]*?)<\/head>/i.exec(pageHtml);
     return match ? match[1] : '';
 }
 
@@ -146,6 +146,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
         <Paper elevation={1} classes={{root: styles.contentPaper}}>
             {loading && <LoaderOverlay/>}
             <iframe ref={iframeRef}
+                    title="Content preview viewer"
                     aria-labelledby="preview-tab"
                     data-sel-role={previewContext.workspace + '-preview-frame'}
                     className={`${styles.iframe} ${loading ? styles.iframeLoading : ''}`}

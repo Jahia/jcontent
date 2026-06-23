@@ -69,7 +69,7 @@ function getElement(node, encodedPath) {
 }
 
 function getIsHighlighted(node, previewSelection, hasNoActiveSelection, selection) {
-    return (node.path === previewSelection && hasNoActiveSelection) || (selection.indexOf(node.path) > -1) || (selection.indexOf(node.uuid) > -1);
+    return (node.path === previewSelection && hasNoActiveSelection) || (selection.includes(node.path)) || (selection.includes(node.uuid));
 }
 
 // eslint-disable-next-line complexity

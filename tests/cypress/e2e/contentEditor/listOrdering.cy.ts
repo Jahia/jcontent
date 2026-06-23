@@ -1,5 +1,5 @@
-import {ContentEditor, JContent} from '../../page-object';
-import {addNode, createSite, enableModule} from '@jahia/cypress';
+import {ContentEditor, JContent, SidePanel} from '../../page-object';
+import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {ChoiceListField} from '../../page-object/fields';
 
 describe('Test list ordering', () => {
@@ -20,17 +20,17 @@ describe('Test list ordering', () => {
             primaryNodeType: 'jnt:contentList',
             children: [
                 {
-                    name: 'A',
+                    name: 'order-item1',
                     primaryNodeType: 'jnt:text',
                     properties: [{name: 'text', language: 'en', value: 'A'}]
                 },
                 {
-                    name: 'B',
+                    name: 'order-item2',
                     primaryNodeType: 'jnt:text',
                     properties: [{name: 'text', language: 'en', value: 'B'}]
                 },
                 {
-                    name: 'C',
+                    name: 'order-item3',
                     primaryNodeType: 'jnt:text',
                     properties: [{name: 'text', language: 'en', value: 'C'}]
                 }
@@ -66,7 +66,8 @@ describe('Test list ordering', () => {
         cy.login(); // Edit in chief
     });
 
-    afterEach(() => {
+    after(() => {
+        deleteSite(siteKey);
         cy.logout();
     });
 
@@ -82,17 +83,21 @@ describe('Test list ordering', () => {
         contentEditor.switchToAdvancedMode();
 
         contentEditor.getSection('listOrdering').should('exist');
-        cy.get('#A').should('have.attr', 'data-sel-field-picker-action', 'openPicker');
+        new SidePanel().switchToPreviewTab();
+        contentEditor.validateContentIsVisibleInPreview('ABC');
+
+        cy.log('Switch to automatic ordering');
+        cy.get('button#order-item1').should('have.attr', 'data-sel-field-picker-action', 'openPicker');
         cy.get('[data-sel-role-automatic-ordering="jmix:orderedList"]')
             .find('input[type="checkbox"]')
             .click({force: true});
 
-        // Select ordering by text
+        cy.log('Select ordering by text');
         contentEditor.getField(ChoiceListField, 'jmix:orderedList_firstField').selectValue('text');
         contentEditor.save();
-        // Verify order in the preview
         contentEditor.validateContentIsVisibleInPreview('CBA');
 
+        cy.log('Select order direction: asc');
         contentEditor.getField(ChoiceListField, 'jmix:orderedList_firstDirection').selectValue('asc');
         contentEditor.save();
         contentEditor.validateContentIsVisibleInPreview('ABC');

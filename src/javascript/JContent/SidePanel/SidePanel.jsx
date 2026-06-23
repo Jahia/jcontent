@@ -68,6 +68,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                         variant="ghost"
                         icon={<Close/>}
                         data-sel-role="side-panel-close"
+                        data-cm-role="preview-drawer-close"
                         onClick={onClose}
                     />
                 )}

@@ -42,7 +42,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     const extraParams = requestParameters.length > 0 ? {requestParameters} : {};
     const cePreviewAttr = isCEPreview ? [{name: 'ce_preview', value: node.uuid}] : undefined;
 
-    // closestPage signals in-context rendering: the node is rendered within a known hosting page.
+    // ClosestPage signals in-context rendering: the node is rendered within a known hosting page.
     // Absent closestPage → out-of-context: the node renders standalone, without a page surround.
     if (closestPage) {
         if (isDisplayableNode) {
@@ -75,12 +75,27 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
         };
     }
 
+    // Pages render as full page — CSS is included, no cssSourcePath needed.
+    if (node.isPage) {
+        return {
+            primary: {
+                ...base,
+                path: node.path,
+                view: jView?.value || 'default',
+                contextConfiguration: 'page',
+                ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
+                ...extraParams
+            },
+            fallback: null
+        };
+    }
+
     // For out-of-context module renders, inject CSS by fetching the nearest displayable page.
     // isDisplayableNode: use the node itself (its default page render provides CSS).
     // !isDisplayableNode: use the displayable ancestor if it's a non-folder page.
-    const cssSourcePath = isDisplayableNode
-        ? node.path
-        : (displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined);
+    const cssSourcePath = isDisplayableNode ?
+        node.path :
+        (displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined);
 
     return {
         primary: {

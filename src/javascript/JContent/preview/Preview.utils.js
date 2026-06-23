@@ -3,8 +3,13 @@ export const getSiblings = function (elem) {
     let sibling = elem.parentNode.firstChild;
 
     while (sibling) {
-        if (sibling.nodeType === 1 && sibling !== elem && sibling.tagName !== 'LINK' && sibling.tagName !== 'SCRIPT') {
-            siblings.push(sibling);
+        if (sibling !== elem) {
+            if (sibling.nodeType === 1 && sibling.tagName !== 'LINK' && sibling.tagName !== 'SCRIPT') {
+                siblings.push(sibling);
+            } else if (sibling.nodeType === 3 && sibling.textContent.trim() !== '') {
+                // Text nodes with non-whitespace content are siblings too
+                siblings.push(sibling);
+            }
         }
 
         sibling = sibling.nextSibling;

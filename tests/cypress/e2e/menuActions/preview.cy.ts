@@ -77,7 +77,7 @@ describe('Menu actions preview tests', () => {
             cy.get('[data-cm-role=preview-name]').contains('street-market-fruits-grocery.jpg');
         });
 
-        it.skip('can be closed', () => {
+        it('can be closed', () => {
             cy.get('[data-cm-role=preview-drawer-close]').click();
             cy.get('[data-cm-role=preview-name]').should('not.exist');
         });

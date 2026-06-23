@@ -28,7 +28,7 @@ const usePreviewContexts = (nodeData, language, mode) => {
     let closestPage = null;
     let requestParameters = [];
 
-    if (pageComposerActive && pageComposerCurrentPage) {
+    if (pageComposerActive && pageComposerCurrentPage && !nodeData.isPage) {
         closestPage = {
             path: decodeURIComponent(pageComposerCurrentPage.path),
             view: pageComposerCurrentPage.template

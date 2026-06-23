@@ -15,7 +15,8 @@ describe('Hide Preview testsuite', () => {
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'Text',
-            primaryNodeType: 'jnt:bigText'
+            primaryNodeType: 'jnt:bigText',
+            properties: [{name: 'text', language: 'en', value: 'Text content'}]
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/files`,
@@ -45,9 +46,8 @@ describe('Hide Preview testsuite', () => {
     });
 
     it('Preview should be visible for a content', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'home.html');
-        jcontent.getAccordionItem('content-folders').click();
-        const ce = jcontent.editComponentByText('Text');
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/Text');
+        const ce = jcontent.editContent();
         ce.switchToAdvancedMode();
         sidePanel.switchToPreviewTab();
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');

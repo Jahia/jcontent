@@ -38,7 +38,7 @@ describe('Preview.utils', () => {
         expect(previewContext.requestAttributes[0].value).toBe('dummy_uuid');
     });
 
-    it('Should preview the content as a page in case displayable node is the content itself', () => {
+    it('Should preview the content as a module with css source when displayable node is the content itself', () => {
         const nodeData = {
             uuid: 'dummy_uuid',
             path: '/sites/digitall/contents/rich_text',
@@ -50,7 +50,8 @@ describe('Preview.utils', () => {
         expect(previewContext.language).toBe('en');
         expect(previewContext.path).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.view).toBe('default');
-        expect(previewContext.contextConfiguration).toBe('page');
+        expect(previewContext.contextConfiguration).toBe('module');
+        expect(previewContext.cssSourcePath).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.templateType).toBe('html');
         expect(previewContext.workspace).toBe('edit');
         expect(previewContext.requestAttributes[0].name).toBe('ce_preview');

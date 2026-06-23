@@ -40,7 +40,7 @@ const resolveTargetPath = (frameDocument, event) => {
     return stack
         .map(element => element?.closest?.('[data-jahia-path]'))
         .find(Boolean)
-        ?.getAttribute('data-jahia-path');
+        ?.dataset.jahiaPath;
 };
 
 // Build the ContextualMenu target props for a given path, honoring the current selection.

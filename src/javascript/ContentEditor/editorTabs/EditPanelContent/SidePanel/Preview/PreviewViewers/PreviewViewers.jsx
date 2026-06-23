@@ -11,7 +11,7 @@ import PDFViewer from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Previ
 
 export const PreviewViewer = ({data, previewContext, onContentNotFound}) => {
     // If node type is "jnt:file" use specific viewer
-    const isFile = data?.nodeByPath && data?.nodeByPath.lastModified && data?.nodeByPath.isFile;
+    const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath.isFile;
     if (isFile) {
         const file = globalThis.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replaceAll(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
         if (isPDF(data.nodeByPath)) {

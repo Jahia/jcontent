@@ -79,7 +79,7 @@ export const getSiblings = function (elem) {
 
 export const removeSiblings = element => {
     for (const sibling of getSiblings(element)) {
-        element.parentNode.removeChild(sibling);
+        sibling.remove();
     }
 
     // Stop recursion if no parent, or body is parent

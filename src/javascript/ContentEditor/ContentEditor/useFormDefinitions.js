@@ -1,5 +1,5 @@
 import {useQuery} from '@apollo/client';
-import {useMemo} from 'react';
+import {useMemo, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
@@ -27,13 +27,27 @@ export const useFormDefinition = (query, adapter) => {
         errorPolicy: 'all'
     });
 
+    const previousDataRef = useRef(null);
+
     const dataCached = useMemo(() => {
         if (!error && !loading && data?.jcr) {
             return adapter(data, uilang, t, contentEditorConfigContext);
         }
     }, [data, uilang, t, contentEditorConfigContext, error, loading, adapter]);
 
+    // Track the last successfully adapted result so we can serve it during language-switch refetches
+    if (dataCached !== undefined) {
+        previousDataRef.current = dataCached;
+    }
+
     if (error || loading || !data?.jcr) {
+        // During a language-switch refetch (loading=true but stale data exists), keep the form
+        // mounted by returning the previous data. On the very first load, propagate loading=true
+        // so the initial loader overlay is shown.
+        if (loading && previousDataRef.current) {
+            return {data: previousDataRef.current, refetch, loading: false};
+        }
+
         return {
             loading,
             error,

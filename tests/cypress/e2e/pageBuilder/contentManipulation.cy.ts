@@ -75,4 +75,26 @@ describe('Page builder - content manipulation', () => {
         cy.log('Verify no error occurred and the main area is still visible');
         jcontent.getModule(areaPath).get().should('be.visible');
     });
+
+    /**
+     * Right-clicking an empty area (no selectable content under the cursor) must not open a context
+     * menu for the page or for a stale, previously-hovered element. It previously fell back to the
+     * page, so "Delete" removed the whole page. The target is now resolved from the element actually
+     * under the cursor, so a stale hover no longer leaks into the menu.
+     */
+    it('Does not target the page or a stale hovered element when right-clicking an empty area', () => {
+        cy.get('[data-sel-role="selection-infos"]').should('not.exist');
+
+        cy.log('Hover a content element so a hovered target exists, then right-click empty page space');
+        jcontent.getModule(contentListPath).hover();
+
+        cy.log('Right-click the page area where no content is under the cursor');
+        jcontent.getMainModule(homePath).get().rightclick('topLeft', {force: true});
+
+        cy.log('No context menu must open - it must not fall back to the page or the stale hovered element');
+        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)').should('not.exist');
+
+        cy.log('And nothing must become selected');
+        cy.get('[data-sel-role="selection-infos"]').should('not.exist');
+    });
 });

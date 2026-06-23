@@ -17,6 +17,13 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, selection, nodes}) 
     const contextualMenu = useRef();
     const {hoveredPath: currentPath} = useHoverContext();
 
+    // The contextmenu listener below is registered once and is long-lived, so it would otherwise
+    // capture stale values. Mirror the latest selection/nodes into refs so the handler reads fresh data.
+    const selectionRef = useRef(selection);
+    selectionRef.current = selection;
+    const nodesRef = useRef(nodes);
+    nodesRef.current = nodes;
+
     useEffect(() => {
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
             // Detects element to be a breadcrumb item or list item found in dropdown menus
@@ -44,14 +51,50 @@ const BoxesContextMenu = ({currentFrameRef, currentDocument, selection, nodes}) 
                 return;
             }
 
-            // Show context menu
+            // Resolve the element actually under the cursor at right-click time. Relying on the hovered
+            // path is unsafe: it goes stale (e.g. when moving onto the page without a hover-out fires),
+            // which used to open the menu for the wrong element or fall back to selecting the whole page.
+            // The box body overlay is pointer-events:none, so event.target there is whatever shows through
+            // (sometimes a page gap with no module). Inspect the whole stack under the cursor, which pierces
+            // pointer-events:none, and use the topmost element resolving to a data-jahia-path (content
+            // modules and their box overlays both expose it).
+            const stack = Array.from(currentDocument.elementsFromPoint?.(event.clientX, event.clientY) || [event.target]);
+            const targetPath = stack
+                .map(element => element?.closest?.('[data-jahia-path]'))
+                .find(Boolean)
+                ?.getAttribute('data-jahia-path');
+
+            // Nothing selectable under the cursor (e.g. empty area / page background): do not open a menu
+            // for a stale target or fall back to the page.
+            if (!targetPath) {
+                event.preventDefault();
+                return;
+            }
+
+            // Target the element under the cursor, mirroring the selection-aware action keys below.
+            const currentSelection = selectionRef.current;
+            let menuProps;
+            if (currentSelection.length > 1 && currentSelection.includes(targetPath)) {
+                menuProps = {path: undefined, paths: currentSelection, actionKey: 'selectedContentMenu'};
+            } else if (currentSelection.includes(targetPath)) {
+                menuProps = {path: targetPath, paths: undefined, actionKey: 'selectedContentMenu'};
+            } else if (currentSelection.length > 0) {
+                menuProps = {path: targetPath, paths: undefined, actionKey: 'notSelectedContentMenu'};
+            } else {
+                menuProps = {path: targetPath, paths: undefined, actionKey: 'contentItemContextActionsMenu'};
+            }
+
+            menuProps.currentPath = targetPath;
+            menuProps.node = nodesRef.current?.[targetPath];
+
+            // Show context menu for the resolved target
             const rect = currentFrameRef.current.getBoundingClientRect();
             const dup = new MouseEvent(event.type, {
                 ...event,
                 clientX: event.clientX + rect.x,
                 clientY: event.clientY + rect.y
             });
-            contextualMenu.current(dup);
+            contextualMenu.current(dup, menuProps);
             event.preventDefault();
         });
     }, [currentDocument, currentFrameRef]);

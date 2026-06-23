@@ -59,6 +59,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     const {
         loading,
         error,
+        isRefetching,
         data: formDefinition,
         refetch: refetchFormData
     } = useFormDefinition();
@@ -160,11 +161,14 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         createAnother
     ]);
 
-    // Capture the last valid context/sections so we can serve stale data during language-switch refetches
-    // instead of unmounting the form. Written at render time (safe — refs are local, not shared state).
+    // Capture the last fully-valid context/sections so we can serve stale data during language-switch
+    // refetches instead of unmounting the form. Written at render time (safe — refs are local).
+    // We only capture when isRefetching=false so that lang and initialValues always transition
+    // together: serving a half-baked context (new lang, stale initialValues) would fire
+    // I18nContextHandler's lang-change effect too early with the wrong Formik value base.
     const previousEditorContextRef = useRef(null);
     const previousSectionsRef = useRef(null);
-    if (editorContext !== null) {
+    if (editorContext !== null && !isRefetching) {
         previousEditorContextRef.current = editorContext;
         previousSectionsRef.current = sections;
     }
@@ -183,9 +187,11 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         return renderError(siteInfoResult, t, notificationContext);
     }
 
-    if (loading || siteInfoResult.loading || !ranAllHooks) {
+    if (loading || siteInfoResult.loading || !ranAllHooks || isRefetching) {
         // During language-switch refetches keep the form mounted with stale context.
         // On the initial load (no stale context yet) show the overlay as usual.
+        // isRefetching=true means form data is loading but we have stale data — keep
+        // serving the old editorContext so lang and initialValues transition atomically.
         if (previousEditorContextRef.current) {
             return (
                 <ContentEditorContext.Provider value={previousEditorContextRef.current}>

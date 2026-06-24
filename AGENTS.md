@@ -23,6 +23,7 @@ The repo extends `@jahia/eslint-config` (`.eslintrc.json`). Key rules to always 
 - Destructure props and state where it improves readability.
 - Boolean prop names must match `^((is|has)[A-Z]([A-Za-z0-9]?)+|allow|hide|show)` (per `react/boolean-prop-naming`).
 - React hooks: respect `react-hooks/exhaustive-deps` — list every reactive value used in a hook in its dependency array.
+- **For `data-*` attributes, use the `.dataset` API, never `getAttribute`/`setAttribute`** (per `prefer-dom-node-dataset`). Read with `element.dataset.jahiaPath`, write with `element.dataset.jahiaPath = value` — not `element.getAttribute('data-jahia-path')`. The kebab-case attribute (`data-jahia-path`) maps to the camelCase dataset key (`jahiaPath`). `getAttribute`/`setAttribute` remain correct for non-`data-` attributes (e.g. `jahiatype`, `path`).
 
 ## React conventions
 

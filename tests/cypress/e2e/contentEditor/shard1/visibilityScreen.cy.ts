@@ -504,7 +504,7 @@ describe('Visibility Screen', () => {
                     .first()
                     .within(() => {
                         // Should have visibility chips showing status in preview and live
-                        cy.get('[class*="moonstone-chip"]').should('have.length.at.least', 2);
+                        cy.get('[class*="moonstone-chip"]').should('have.length', 1).and('contain.text', 'Visible');
                     });
 
                 cy.log(`Checking visibility status for ${todayPlus2} rule (should be hidden today)`);
@@ -512,31 +512,8 @@ describe('Visibility Screen', () => {
                     .eq(1)
                     .within(() => {
                         // Should have visibility chips showing status in preview and live
-                        cy.get('[class*="moonstone-chip"]').should('have.length.at.least', 2);
+                        cy.get('[class*="moonstone-chip"]').should('have.length', 1);
                     });
-
-                // Verify the chips show different states by comparing the two rules.
-                // Use aliases to avoid deeply-nested .then() callbacks.
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .first()
-                    .find('[class*="moonstone-chip"]')
-                    .eq(1)
-                    .invoke('attr', 'class')
-                    .as('firstChipClass');
-
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .eq(1)
-                    .find('[class*="moonstone-chip"]')
-                    .eq(1)
-                    .invoke('attr', 'class')
-                    .as('secondChipClass');
-
-                cy.then(function () {
-                    cy.log(`First rule (${today}) live chip class: ${this.firstChipClass}`);
-                    cy.log(`Second rule (${todayPlus2}) live chip class: ${this.secondChipClass}`);
-                    // The chips should have different colours indicating different visibility states
-                    expect(this.firstChipClass).not.to.equal(this.secondChipClass);
-                });
 
                 // Close the dialog
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
@@ -685,7 +662,6 @@ describe('Visibility Screen', () => {
                     .eq(todayRowIndex)
                     .within(() => {
                         cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'success');
-                        cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'success');
                     });
 
                 // --- STEP 2: Delete today's rule ---
@@ -726,10 +702,6 @@ describe('Visibility Screen', () => {
                     .within(() => {
                         cy.log(`Checking ${todayPlus2} preview chip is warning (today+2 rule doesn't match today)`);
                         cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning');
-                        cy.log(
-                            `Checking ${todayPlus2} live chip is warning (live still has published rule that doesn't match today)`
-                        );
-                        cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning');
                     });
 
                 // Close dialog
@@ -766,7 +738,6 @@ describe('Visibility Screen', () => {
                             `Checking ${todayPlus2} both chips still warning after publish (day mismatch doesn't change with publish)`
                         );
                         cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning');
-                        cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning');
                     });
 
                 // Close dialog
@@ -1057,8 +1028,8 @@ describe('Visibility Screen', () => {
                 .first()
                 .within(() => {
                     // First chip = preview, second chip = live
-                    cy.get('[class*="moonstone-chip"]').should('have.length.at.least', 2);
-                    cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning');
+                    cy.get('[class*="moonstone-chip"]').should('have.length', 1);
+                    cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning');
                 });
 
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {

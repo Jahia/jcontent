@@ -40,13 +40,17 @@ export const getButtonRenderer = ({labelStyle, defaultButtonProps, noIcon} = {})
             />
         );
 
+        if (!hasWarningBadge) {
+            return button;
+        }
+
+        // Wrap the button and badge in a positioned container so the absolutely
+        // positioned badge anchors to the button instead of the page.
         return (
-            <>
+            <div className={styles.pastilleWrapper}>
                 {button}
-                {hasWarningBadge && (
-                    <Report size="big" data-sel-role={`${actionKey}_pastille`} className={styles.warningBadge}/>
-                )}
-            </>
+                <Report size="big" data-sel-role={`${actionKey}_pastille`} className={styles.warningBadge}/>
+            </div>
         );
     };
 

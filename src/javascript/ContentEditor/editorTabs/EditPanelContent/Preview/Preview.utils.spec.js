@@ -1,4 +1,5 @@
-import {getPreviewContext, getPreviewPath, removeSiblings} from './Preview.utils';
+import {getPreviewPath, removeSiblings} from './Preview.utils';
+import {buildPreviewContexts} from '~/JContent/preview/previewContext.utils';
 
 const fs = require('fs');
 const path = require('path');
@@ -6,28 +7,12 @@ const html = fs.readFileSync(path.resolve(__dirname, './Preview.utils.test.html'
 
 describe('Preview.utils', () => {
     it('Should preview the content in case no displayable node', () => {
-        let editorContext = {
-            path: '/sites/digitall/contents/rich_text',
-            lang: 'en',
-            nodeData: {
-                uuid: 'dummy_uuid',
-                path: '/sites/digitall/contents/rich_text',
-                displayableNode: null
-            },
-            currentPage: {
-                config: 'module',
-                template: 'cm',
-                path: '/sites/digitall/contents/rich_text',
-                templateType: '.html'
-            }
-        };
+        const nodeData = {uuid: 'dummy_uuid', path: '/sites/digitall/contents/rich_text', displayableNode: null};
+        const {primary: previewContext} = buildPreviewContexts(nodeData, 'en', {isCEPreview: true});
 
-        const previewContext = getPreviewContext(editorContext);
-        expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/contents/rich_text');
-
+        expect(getPreviewPath(nodeData)).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.language).toBe('en');
         expect(previewContext.path).toBe('/sites/digitall/contents/rich_text');
-        expect(previewContext.view).toBe('cm');
         expect(previewContext.contextConfiguration).toBe('module');
         expect(previewContext.templateType).toBe('html');
         expect(previewContext.workspace).toBe('edit');
@@ -36,31 +21,16 @@ describe('Preview.utils', () => {
     });
 
     it('Should preview the content in case displayable node is a folder', () => {
-        let editorContext = {
+        const nodeData = {
+            uuid: 'dummy_uuid',
             path: '/sites/digitall/contents/rich_text',
-            lang: 'en',
-            nodeData: {
-                uuid: 'dummy_uuid',
-                path: '/sites/digitall/contents/rich_text',
-                displayableNode: {
-                    path: '/sites/digitall/contents',
-                    isFolder: true
-                }
-            },
-            currentPage: {
-                config: 'module',
-                template: 'cm',
-                path: '/sites/digitall/contents/rich_text',
-                templateType: '.html'
-            }
+            displayableNode: {path: '/sites/digitall/contents', isFolder: true}
         };
+        const {primary: previewContext} = buildPreviewContexts(nodeData, 'en', {isCEPreview: true});
 
-        const previewContext = getPreviewContext(editorContext);
-        expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/contents/rich_text');
-
+        expect(getPreviewPath(nodeData)).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.language).toBe('en');
         expect(previewContext.path).toBe('/sites/digitall/contents/rich_text');
-        expect(previewContext.view).toBe('cm');
         expect(previewContext.contextConfiguration).toBe('module');
         expect(previewContext.templateType).toBe('html');
         expect(previewContext.workspace).toBe('edit');
@@ -68,33 +38,20 @@ describe('Preview.utils', () => {
         expect(previewContext.requestAttributes[0].value).toBe('dummy_uuid');
     });
 
-    it('Should preview the content as a page in case displayable node is the content itself', () => {
-        let editorContext = {
+    it('Should preview the content as a module with css source when displayable node is the content itself', () => {
+        const nodeData = {
+            uuid: 'dummy_uuid',
             path: '/sites/digitall/contents/rich_text',
-            lang: 'en',
-            nodeData: {
-                uuid: 'dummy_uuid',
-                path: '/sites/digitall/contents/rich_text',
-                displayableNode: {
-                    path: '/sites/digitall/contents/rich_text',
-                    isFolder: false
-                }
-            },
-            currentPage: {
-                config: 'page',
-                template: 'default',
-                path: '/sites/digitall/contents/rich_text',
-                templateType: '.html'
-            }
+            displayableNode: {path: '/sites/digitall/contents/rich_text', isFolder: false}
         };
+        const {primary: previewContext} = buildPreviewContexts(nodeData, 'en', {isCEPreview: true});
 
-        const previewContext = getPreviewContext(editorContext);
-        expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/contents/rich_text');
-
+        expect(getPreviewPath(nodeData)).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.language).toBe('en');
         expect(previewContext.path).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.view).toBe('default');
-        expect(previewContext.contextConfiguration).toBe('page');
+        expect(previewContext.contextConfiguration).toBe('module');
+        expect(previewContext.cssSourcePath).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.templateType).toBe('html');
         expect(previewContext.workspace).toBe('edit');
         expect(previewContext.requestAttributes[0].name).toBe('ce_preview');
@@ -102,28 +59,15 @@ describe('Preview.utils', () => {
     });
 
     it('Should preview the displayable node as a page in case displayable node exist and it\'s not a folder', () => {
-        let editorContext = {
+        const nodeData = {
+            uuid: 'dummy_uuid',
             path: '/sites/digitall/home/rich_text',
-            lang: 'en',
-            nodeData: {
-                uuid: 'dummy_uuid',
-                path: '/sites/digitall/home/rich_text',
-                displayableNode: {
-                    path: '/sites/digitall/home',
-                    isFolder: false
-                }
-            },
-            currentPage: {
-                config: 'page',
-                template: 'default',
-                path: '/sites/digitall/home',
-                templateType: '.html'
-            }
+            displayableNode: {path: '/sites/digitall/home', isFolder: false}
         };
+        const closestPage = {path: '/sites/digitall/home', view: 'default'};
+        const {primary: previewContext} = buildPreviewContexts(nodeData, 'en', {closestPage, isCEPreview: true});
 
-        const previewContext = getPreviewContext(editorContext);
-        expect(getPreviewPath(editorContext.nodeData)).toBe('/sites/digitall/home');
-
+        expect(getPreviewPath(nodeData)).toBe('/sites/digitall/home');
         expect(previewContext.language).toBe('en');
         expect(previewContext.path).toBe('/sites/digitall/home');
         expect(previewContext.view).toBe('default');
@@ -132,7 +76,7 @@ describe('Preview.utils', () => {
         expect(previewContext.workspace).toBe('edit');
         expect(previewContext.requestAttributes[0].name).toBe('ce_preview');
         expect(previewContext.requestAttributes[0].value).toBe('dummy_uuid');
-        expect(previewContext.requestAttributes[1].name).toBe('ce_preview_wrapper');
+        expect(previewContext.requestAttributes[1].name).toBe('preview_wrapper');
         expect(previewContext.requestAttributes[1].value).toBe('/sites/digitall/home/rich_text');
     });
 

@@ -1,8 +1,5 @@
 import {JContent} from '../../page-object/jcontent';
-import {
-    addNode,
-    enableModule
-} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {TagField} from '../../page-object/fields/tagField';
 import gql from 'graphql-tag';
 
@@ -11,7 +8,7 @@ describe('Tags tests in content editor', () => {
     const siteKey = 'tagsSite';
 
     before(function () {
-        cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: siteKey});
+        createSite(siteKey);
         enableModule('qa-module', siteKey);
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -45,7 +42,7 @@ describe('Tags tests in content editor', () => {
 
     after(function () {
         cy.logout();
-        cy.executeGroovy('contentEditor/deleteSite.groovy', {SITEKEY: siteKey});
+        deleteSite(siteKey);
     });
 
     beforeEach(() => {
@@ -93,7 +90,7 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-        tagField.type('onetag, threeTag, threetag, ONETAG{enter}');
+        tagField.addNewValues(['onetag', 'threeTag', 'threetag', 'ONETAG']);
 
         tagField.getTags().should('have.length', 2, {timeout: 10000});
         tagField.assertTagText('onetag', 0);

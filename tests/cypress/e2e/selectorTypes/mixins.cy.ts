@@ -9,6 +9,7 @@ import {
 describe('Test mixins', () => {
     let jcontent: JContent;
     const siteKey = 'mixinSite';
+    const sidePanel = new SidePanel().inCE();
 
     before(function () {
         cy.executeGroovy('contentEditor/createSite.groovy', {SITEKEY: siteKey});
@@ -78,10 +79,10 @@ describe('Test mixins', () => {
         contentEditor.save();
 
         // Verify mixins are displayed in technical information
-        new SidePanel().switchToDetailsTab();
-        cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView();
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Content type"]').should('contain', 'jnt:text');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Applied mixins"]').should('contain', 'jmix:geotagged');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Applied mixins"]').should('contain', 'jmix:topStory');
+        sidePanel.switchToDetailsTab();
+        sidePanel.getDetailsSection('technical').scrollIntoView();
+        sidePanel.getDetailRow('Content type').should('contain', 'jnt:text');
+        sidePanel.getDetailRow('Applied mixins').should('contain', 'jmix:geotagged');
+        sidePanel.getDetailRow('Applied mixins').should('contain', 'jmix:topStory');
     });
 });

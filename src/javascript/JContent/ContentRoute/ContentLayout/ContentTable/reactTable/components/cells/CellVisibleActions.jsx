@@ -14,6 +14,7 @@ export const CellVisibleActions = ({row, cell, column}) => {
                        {...cell.getCellProps()}
                        width={column.width}
                        data-cm-role="table-content-list-cell-actions"
+                       onClick={e => e.stopPropagation()}
         >
             {selection.length === 0 &&
                 <DisplayAction

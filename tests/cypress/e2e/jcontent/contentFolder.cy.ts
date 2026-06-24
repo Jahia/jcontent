@@ -50,7 +50,9 @@ describe('Content folders tests', () => {
 
     it('should enter the folder with double click', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        jcontent.getTable().getRowByName('folder-to-dblclick').get().dblclick();
+        // It looks like table is shifting here when loading and dblclick is targeting the wrong row. Add a loader check here.
+        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        jcontent.getTable().getRowByName('folder-to-dblclick').dblclick();
         cy.get('h1').should('contain', 'folder-to-dblclick');
     });
 

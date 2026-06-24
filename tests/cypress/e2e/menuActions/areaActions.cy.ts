@@ -64,7 +64,7 @@ describe('Area actions', () => {
 
     it('Checks that delete, copy and cut menu items are not present on areas in structured view', () => {
         jcontent.switchToStructuredView();
-        const menu = jcontent.getTable().getRowByLabel('landing')
+        const menu = jcontent.getTable().getRowByName('landing')
             .contextMenu();
         menu.shouldNotHaveItem('Delete');
         menu.shouldNotHaveItem('Copy');

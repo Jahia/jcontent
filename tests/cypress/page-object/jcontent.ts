@@ -25,6 +25,7 @@ import {PageBuilderHeaders, PageBuilderModule} from './pageBuilder';
 import VisitOptions = Cypress.VisitOptions;
 import {ContentStatusSelector} from './contentStatusSelector';
 import {ContentStatus} from './contentStatus';
+import {SidePanel} from './sidePanel';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -109,10 +110,10 @@ export class JContent extends BasePage {
     }
 
     openPreview(name: string) {
-        return this.getTable()
+        this.getTable()
             .getRowByName(name)
-            .contextMenu()
-            .selectByRole('preview');
+            .click();
+        new SidePanel().switchToTab('tab-preview');
     }
 
     getBrowseControlMenu(): Menu {

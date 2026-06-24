@@ -33,6 +33,8 @@ export class Folder extends BasePage {
         cy.get('[data-sel-role="delete-mark-button"]').click();
         // Verify dialog has been dismissed before proceeding
         cy.get('[data-sel-role="delete-mark-dialog"]').should('not.exist');
+        this.jcontent.getGrid().getCardByName(this.name)
+            .get().find('[data-status-type="markedForDeletion"]').should('be.visible');
         return this;
     }
 

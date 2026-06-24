@@ -1,9 +1,10 @@
-import {JContent} from '../../../page-object';
+import {JContent, SidePanel} from '../../../page-object';
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {Field, SmallTextField} from '../../../page-object/fields';
 
 describe('json override tests', {testIsolation: false}, () => {
     const siteKey = 'contentEditorSite';
+    const sidePanel = new SidePanel().inCE();
     const moduleName = 'jcontent-test-module';
 
     before(() => {
@@ -91,7 +92,7 @@ describe('json override tests', {testIsolation: false}, () => {
     it('can hide preview in advanced mode with json override', () => {
         const jcontent = JContent.visit('contentEditorSite', 'en', 'content-folders/contents');
         jcontent.editComponentByText('json overrides').switchToAdvancedMode();
-        cy.get('[data-sel-role="tab-preview"]').should('not.exist');
+        sidePanel.getByRole('tab-preview').should('not.exist');
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('not.exist');
     });
 

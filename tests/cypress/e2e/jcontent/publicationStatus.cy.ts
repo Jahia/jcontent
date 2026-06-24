@@ -192,8 +192,7 @@ describe('Publication status badge test', () => {
         cy.get('[data-sel-role="publishMenu"]').click();
         jcontent.publishAll();
 
-        const row = jcontent.getTable().getRowByName('search-results');
-        row.get().dblclick();
+        jcontent.getTable().getRowByName('search-results').dblclick();
         cy.get('h1').contains('Search Results');
 
         jcontent.getTable().getRowByName('simple-search-form').should('contain.text', 'Published by root');

@@ -17,6 +17,7 @@ import {ContentEditor} from '../../page-object';
 describe('Content editor form', () => {
     let jcontent: JContent;
     const siteKey = 'contentEditorSite';
+    const sidePanel = new SidePanel().inCE();
 
     before(function () {
         createSite(siteKey);
@@ -248,19 +249,19 @@ describe('Content editor form', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const ceEditor = jcontent.editComponentByRowName('myText');
         ceEditor.switchToAdvancedMode();
-        new SidePanel().switchToDetailsTab();
+        sidePanel.switchToDetailsTab();
 
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Creation date"]').should('be.visible');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Last modification date"]').should('be.visible');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Creator"]').should('be.visible');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Last contributor"]').should('be.visible').should('contain', 'root');
+        sidePanel.getDetailRow('Creation date').should('be.visible');
+        sidePanel.getDetailRow('Last modification date').should('be.visible');
+        sidePanel.getDetailRow('Creator').should('be.visible');
+        sidePanel.getDetailRow('Last contributor').should('be.visible').should('contain', 'root');
         // Publication date/publisher rows only appear after the content has been published
 
-        cy.get('[data-sel-role="details-section"][data-sel-content="technical"]').scrollIntoView();
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Main content type"]').should('contain', 'Simple text');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Content type"]').should('contain', 'jnt:text');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Path"]').should('contain', '/sites/contentEditorSite/contents/myText');
-        cy.get('[data-sel-role="detail-row"][data-sel-label="UUID"]').should('be.visible');
+        sidePanel.getDetailsSection('technical').scrollIntoView();
+        sidePanel.getDetailRow('Main content type').should('contain', 'Simple text');
+        sidePanel.getDetailRow('Content type').should('contain', 'jnt:text');
+        sidePanel.getDetailRow('Path').should('contain', '/sites/contentEditorSite/contents/myText');
+        sidePanel.getDetailRow('UUID').should('be.visible');
 
         // Switch to edit tab and modify the text (only click if not already selected)
         cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').then($tab => {
@@ -270,10 +271,10 @@ describe('Content editor form', () => {
         });
         ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');
         ceEditor.save();
-        new SidePanel().switchToDetailsTab();
+        sidePanel.switchToDetailsTab();
 
         // Verify last contributor has changed
-        cy.get('[data-sel-role="detail-row"][data-sel-label="Last contributor"]').should('contain', 'anne');
+        sidePanel.getDetailRow('Last contributor').should('contain', 'anne');
     });
 
     it('should be able to check and uncheck boolean', () => {

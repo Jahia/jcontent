@@ -126,8 +126,7 @@ describe('Content navigation', () => {
         const jc = JContent.visit('mySite1', 'en', 'pages/home');
         jc.switchToListMode();
 
-        const row = jc.getTable().getRowByName('search-results');
-        row.get().dblclick();
+        jc.getTable().getRowByName('search-results').dblclick();
         cy.get('h1').contains('Search Results');
 
         // Switch to media folders

@@ -173,7 +173,7 @@ export const EditVisibilityRulesDialog = ({
                                             weight="bold"
                                             className={classes.dialogTitle}
                                 >
-                                    {truncate(nodeData.displayName, 40)}
+                                    {t('label.contentEditor.visibilityTab.title', {name: truncate(nodeData.displayName, 40)})}
                                 </Typography>
                             </DialogTitle>
                             {nodeData.hasWritePermission ?

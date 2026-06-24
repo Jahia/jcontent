@@ -85,6 +85,43 @@ export const getFieldValues = (field, nodeData) => {
     return formFields;
 };
 
+// POC: snapshot-aware variant of getFieldValues.
+// SnapshotProperty has { name, value, values, type } — no definition.declaringNodeType.
+// We match by name only, which is safe enough for a read-only panel.
+// Risk: selectorType.adaptValue may read property.notZonedDateValue (dates) or
+// property.decryptedValue (passwords) which are absent here — those fields will render empty.
+const getFieldValuesFromSnapshot = (field, snapshotProperties) => {
+    const property = snapshotProperties?.find(prop => prop.name === field.propertyName);
+    const selectorType = resolveSelectorType(field);
+    const formFields = {};
+
+    if (!property) {
+        if (selectorType?.initValue) {
+            formFields[field.name] = selectorType.initValue(field);
+        }
+    } else if (selectorType) {
+        formFields[field.name] = selectorType.adaptValue ?
+            selectorType.adaptValue(field, property) :
+            (field.multiple ? property.values : property.value);
+    }
+
+    return formFields;
+};
+
+// POC: snapshot-aware variant of getInitialValues.
+// Drops wipInfo, systemName, and childrenOrdering — irrelevant for a read-only snapshot panel.
+export const getInitialValuesFromSnapshot = (snapshot, sections) => {
+    const nodeValues = getFields(sections)
+        .reduce((result, field) => ({...result, ...getFieldValuesFromSnapshot(field, snapshot.properties)}), {});
+
+    const extendsMixinFieldsDefaultValues = getFields(sections, undefined, fieldset => fieldset.dynamic && !fieldset.activated)
+        .reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {});
+
+    const dynamicFieldSets = getDynamicFieldSets(sections);
+
+    return {...nodeValues, ...extendsMixinFieldsDefaultValues, ...dynamicFieldSets};
+};
+
 const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
     // Retrieve only fields inside the metadata section
     const fields = getFields(sections, 'metadata');
@@ -157,8 +194,10 @@ const getTechnicalInfo = (nodeData, t) => {
 };
 
 export const adaptEditFormData = (data, lang, t) => {
-    const nodeData = data.jcr.result;
-    const sections = adaptSections(data.forms.editForm.sections);
+    console.log('adaptEditFormData', data);
+    const nodeData = data.jcr.result; // Actual GQLNode
+    // TODO convert from our custom class to that object
+    const sections = adaptSections(data.forms.editForm.sections); // TODO missing mixins
 
     const formData = {
         sections,

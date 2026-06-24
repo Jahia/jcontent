@@ -9,6 +9,7 @@ import {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel
 import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
+import {useVersionSnapshotFormDefinition} from './useVersionSnapshotFormDefinition';
 import PropTypes from 'prop-types';
 
 /**
@@ -17,14 +18,18 @@ import PropTypes from 'prop-types';
  * and opted to fetch data directly using the useTranslationReadOnlyFormDefinition hook.
  */
 export const SourceContentFormBuilder = () => {
-    const {lang, uuid, contentType} = useContentEditorConfigContext();
+    const {lang, uuid, contentType, sideBySideContext} = useContentEditorConfigContext();
     useResizeWatcher({columnSelector: 'left-column'});
 
-    const {
-        data,
-        loading,
-        error
-    } = useTranslationReadOnlyFormDefinition({lang, uuid, contentType});
+    // TODO POC: when a `date` is present in sideBySideContext, load the snapshot instead of the
+    // source-language live node. Replace with a dedicated SnapshotContentFormBuilder component
+    // once the version comparison panel is built as its own layout.
+    // this is just a hack to be able to easily switch between the 2
+    // TODO for testing purposes only. should come from the API
+    const snapshotMixins = ['qant:versionSnapshotMixinExtendTest'];
+    const snapshotHookResult = useVersionSnapshotFormDefinition({uuid, locale: lang, date: sideBySideContext?.date, snapshotMixins: snapshotMixins});
+    const translateHookResult = useTranslationReadOnlyFormDefinition({lang, uuid, contentType});
+    const {data, loading, error} = sideBySideContext?.date ? snapshotHookResult : translateHookResult;
 
     if (loading) {
         return <LoaderOverlay/>;

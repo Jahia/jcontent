@@ -66,7 +66,7 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
     return (
         <Dialog open={open}
                 aria-labelledby="form-dialog-title"
-                classes={{paper: styles.root}}
+                classes={{paper: styles.root, root: styles.dialogRoot}}
                 onClose={handleCancel}
                 onExited={onExit}
         >

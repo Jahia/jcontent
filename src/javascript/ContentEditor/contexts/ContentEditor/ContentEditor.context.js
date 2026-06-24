@@ -161,16 +161,25 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         createAnother
     ]);
 
-    // Capture the last fully-valid context/sections so we can serve stale data during language-switch
+    // Memoize the deep-cloned sections so the reference is stable between renders.
+    // It only changes when `sections` itself changes (i.e., when fresh data arrives for a new language).
+    // Passing a stable reference to ContentEditorSectionContextProvider lets it detect genuine
+    // language-switch reloads via reference inequality, while preserving in-place mutations
+    // (valueConstraints updates from dependentProperties, mixin moves from ChoiceList onChange).
+    const sectionsMemo = useMemo(
+        () => sections ? JSON.parse(JSON.stringify(sections)) : null,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [sections]
+    );
+
+    // Capture the last fully-valid context so we can serve stale data during language-switch
     // refetches instead of unmounting the form. Written at render time (safe — refs are local).
     // We only capture when isRefetching=false so that lang and initialValues always transition
     // together: serving a half-baked context (new lang, stale initialValues) would fire
     // I18nContextHandler's lang-change effect too early with the wrong Formik value base.
     const previousEditorContextRef = useRef(null);
-    const previousSectionsRef = useRef(null);
     if (editorContext !== null && !isRefetching) {
         previousEditorContextRef.current = editorContext;
-        previousSectionsRef.current = sections;
     }
 
     if (error) {
@@ -195,7 +204,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         if (previousEditorContextRef.current) {
             return (
                 <ContentEditorContext.Provider value={previousEditorContextRef.current}>
-                    <ContentEditorSectionContextProvider formSections={JSON.parse(JSON.stringify(previousSectionsRef.current))}>
+                    <ContentEditorSectionContextProvider formSections={sectionsMemo}>
                         <ApolloCacheFlushOnGWTSave/>
                         {children}
                     </ContentEditorSectionContextProvider>
@@ -208,7 +217,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
 
     return (
         <ContentEditorContext.Provider value={editorContext}>
-            <ContentEditorSectionContextProvider formSections={JSON.parse(JSON.stringify(sections))}>
+            <ContentEditorSectionContextProvider formSections={sectionsMemo}>
                 <ApolloCacheFlushOnGWTSave/>
                 {children}
             </ContentEditorSectionContextProvider>

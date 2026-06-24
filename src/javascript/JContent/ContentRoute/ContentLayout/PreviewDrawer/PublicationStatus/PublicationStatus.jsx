@@ -7,6 +7,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {lodash as _} from 'lodash';
 import {useSelector} from 'react-redux';
 import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {getDisplayName} from '~/utils/userDisplay';
 
 import styles from './PublicationStatus.scss';
 
@@ -25,7 +26,7 @@ export const PublicationStatus = ({previewSelection}) => {
             <Typography component="span"
                         className={styles.publicationInfoMarkedForDeletion}
             >
-                {t('jcontent:label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
+                {t('jcontent:label.contentManager.contentPreview.markedForDeletionBy', {userName: getDisplayName(previewSelection?.deletedByUser) || _.get(previewSelection, 'deletedBy.value', '')})}
             &nbsp;
                 <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(defaultLocale).format('LLL')}</time>
             </Typography>
@@ -38,7 +39,7 @@ export const PublicationStatus = ({previewSelection}) => {
                 <Typography component="p"
                             className={styles.publicationInfoModified}
                 >
-                    {t('jcontent:label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
+                    {t('jcontent:label.contentManager.contentPreview.modifiedBy', {userName: getDisplayName(previewSelection?.lastModifiedByUser) || _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -48,7 +49,7 @@ export const PublicationStatus = ({previewSelection}) => {
                 <Typography component="p"
                             className={styles.publicationInfoPublished}
                 >
-                    {t('jcontent:label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
+                    {t('jcontent:label.contentManager.contentPreview.publishedBy', {userName: getDisplayName(previewSelection?.lastPublishedByUser) || _.get(previewSelection, 'lastPublishedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -66,7 +67,7 @@ export const PublicationStatus = ({previewSelection}) => {
                 <Typography component="p"
                             className={styles.publicationInfoUnpublished}
                 >
-                    {t('jcontent:label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
+                    {t('jcontent:label.contentManager.contentPreview.unPublishedBy', {userName: getDisplayName(previewSelection?.lastModifiedByUser) || _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>

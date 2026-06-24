@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Add, Chip, Dropdown, Typography, Visibility} from '@jahia/moonstone';
+import {Add, Chip, Dropdown, Hidden, Typography, Visibility} from '@jahia/moonstone';
 import {Paper} from '@material-ui/core';
 import {useFormikContext} from 'formik';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
@@ -165,35 +165,37 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
             <Paper elevation={4}>
                 <DatatableRules rules={rules} onEdit={setEditingRule}/>
                 <div className={styles.row}>
-                    <Typography
-                        variant="subheading"
-                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}
-                    </Typography>
-                    {isVisible && <Chip icon={<Visibility/>}
-                                        color="success"
-                                        label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
-                    {!isVisible && <Chip icon={<Visibility/>}
-                                         color="warning"
-                                         label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
-                    <Typography
-                        variant="subheading"
-                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}
-                    </Typography>
-                    {isVisibleInLive && <Chip icon={<Visibility/>}
-                                              color="success"
-                                              label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
-                    {!isVisibleInLive && <Chip icon={<Visibility/>}
-                                               color="warning"
-                                               label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
-                </div>
-                <div className={styles.rowEnd}>
-                    <ButtonRenderer buttonLabel="Add condition"
+                    <ButtonRenderer buttonLabel={t('jcontent:label.contentEditor.visibilityTab.conditions.add')}
                                     buttonIcon={<Add/>}
                                     onClick={() => {
                                         formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
                                             handleChange();
                                         });
                                     }}/>
+                </div>
+                <div className={styles.row}>
+                    <Typography
+                        variant="body"
+                        weight="bold"
+                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}
+                    </Typography>
+                    {isVisible && <Chip icon={<Visibility/>}
+                                        color="success"
+                                        label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
+                    {!isVisible && <Chip icon={<Hidden/>}
+                                         color="warning"
+                                         label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
+                    <Typography
+                        variant="body"
+                        weight="bold"
+                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}
+                    </Typography>
+                    {isVisibleInLive && <Chip icon={<Visibility/>}
+                                              color="success"
+                                              label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
+                    {!isVisibleInLive && <Chip icon={<Hidden/>}
+                                               color="warning"
+                                               label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
                 </div>
             </Paper>
         </article>

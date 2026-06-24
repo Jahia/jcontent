@@ -1,7 +1,7 @@
 import React, {forwardRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Chip, DataTable, Delete, Edit, TableRow, Typography, Visibility} from '@jahia/moonstone';
+import {Chip, DataTable, Delete, Edit, Hidden, TableRow, Typography, Visibility} from '@jahia/moonstone';
 import {useFormikContext} from 'formik';
 import {getConditionLabel, getStatus, getStatusText} from './utils';
 import clsx from 'clsx';
@@ -137,13 +137,15 @@ export const DatatableRules = ({rules, onEdit}) => {
             width: '20%',
             render: ({value, data}) => (
                 <>
-                    <Chip icon={<Visibility/>}
+                    <Chip icon={value ? <Visibility/> : <Hidden/>}
                           color={value ? 'success' : 'warning'}
+                          label={value ? t('jcontent:label.contentEditor.visibilityTab.conditions.visible') : t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}
                         />
-                    <Typography variant="caption">/</Typography>
-                    <Chip icon={<Visibility/>}
-                          color={data.isMatchingLive ? 'success' : 'warning'}
-                        />
+                    {/* <Typography variant="caption">/</Typography> */}
+                    {/* <Chip icon={data.isMatchingLive ? <Visibility/> : <Hidden/>} */}
+                    {/*      color={data.isMatchingLive ? 'success' : 'warning'} */}
+                    {/*      label={data.isMatchingLive ? t('jcontent:label.contentEditor.visibilityTab.conditions.visible') : t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')} */}
+                    {/*    /> */}
                 </>
             )
         }

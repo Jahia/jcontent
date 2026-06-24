@@ -1,5 +1,6 @@
 import React from 'react';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
+import './Languages.scss';
 import {useSiteInfo} from '@jahia/data-helper';
 import {shallowEqual, useSelector} from 'react-redux';
 import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';

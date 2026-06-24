@@ -27,7 +27,7 @@ export const RefreshButton = getButtonRenderer({
 export const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
         variant: 'outlined',
-        size: 'big',
+        size: 'default',
         color: 'accent'
     }
 });

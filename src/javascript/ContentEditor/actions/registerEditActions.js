@@ -11,7 +11,7 @@ import {
     MoreVert,
     Save,
     Translate,
-    Visibility,
+    VisibilityCondition,
     WorkInProgress
 } from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
@@ -137,7 +137,7 @@ export const registerEditActions = registry => {
     });
 
     registry.add('action', 'editVisibilityRules', editVisibilityRulesAction, {
-        buttonIcon: <Visibility/>,
+        buttonIcon: <VisibilityCondition/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.tab.visibility',
         dataSelRole: 'sbsVisibility',
         requiredSitePermission: ['viewVisibilityTab']

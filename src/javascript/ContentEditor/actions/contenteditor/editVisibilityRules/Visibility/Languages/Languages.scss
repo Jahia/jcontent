@@ -3,3 +3,7 @@
     flex-flow: column nowrap;
     padding: var(--spacing-medium);
 }
+
+:global(label[id="jmix:i18n_j:invalidLanguages-label"] ~ div) {
+    display: none;
+}

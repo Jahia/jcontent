@@ -170,12 +170,12 @@ describe('Visibility Screen', () => {
 
             // Verify "Add condition" button is visible
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').should('be.visible');
+                cy.contains('button', 'Add a condition').should('be.visible');
             });
 
-            // Verify Save and Close buttons are visible in dialog
+            // The dialog itself only keeps the Close button (no dialog-level Save anymore)
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').should('be.visible');
+                cy.contains('button', 'Save').should('not.exist');
                 cy.contains('button', 'Close').should('be.visible');
             });
 
@@ -197,7 +197,7 @@ describe('Visibility Screen', () => {
 
             // Click Add condition button
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Verify the Add New Rule form is displayed
@@ -211,7 +211,7 @@ describe('Visibility Screen', () => {
             // Verify Cancel and Add buttons are visible
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
                 cy.contains('button', 'Close').should('be.visible');
-                cy.contains('button', 'Add').should('be.visible');
+                cy.contains('button', 'Save').should('be.visible');
             });
         });
 
@@ -224,7 +224,7 @@ describe('Visibility Screen', () => {
 
             // Click Add condition button
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Verify we're in the add new rule form by checking for dropdown
@@ -250,7 +250,7 @@ describe('Visibility Screen', () => {
 
             // Click Add condition button
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Open the condition type dropdown
@@ -315,17 +315,17 @@ describe('Visibility Screen', () => {
             });
         });
 
-        it('Verifies Save button is present and enabled when no errors', () => {
+        it('Dialog actions only expose the Close button (no dialog-level Save)', () => {
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
             // Open the visibility dialog
             openVisibilityDialog();
 
-            // Verify Save button exists and is not disabled
+            // The dialog footer keeps only the Close button now that each section saves itself
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').should('be.visible');
-                cy.contains('button', 'Save').should('not.be.disabled');
+                cy.contains('button', 'Save').should('not.exist');
+                cy.contains('button', 'Close').should('be.visible').and('not.be.disabled');
             });
 
             // Close the dialog
@@ -370,7 +370,7 @@ describe('Visibility Screen', () => {
                 // Add first rule - Today
                 cy.log(`Adding ${today} rule`);
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add condition').click();
+                    cy.contains('button', 'Add a condition').click();
                 });
 
                 // Select "Day of the week" from dropdown
@@ -392,7 +392,7 @@ describe('Visibility Screen', () => {
 
                 // Click Add button to add the rule
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add').click();
+                    cy.contains('button', 'Save').click();
                 });
 
                 // Wait for datatable to appear
@@ -407,7 +407,7 @@ describe('Visibility Screen', () => {
                 // Add second rule - Today + 2
                 cy.log(`Adding ${todayPlus2} rule`);
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add condition').click();
+                    cy.contains('button', 'Add a condition').click();
                 });
 
                 // Select "Day of the week" from dropdown again
@@ -430,7 +430,7 @@ describe('Visibility Screen', () => {
 
                 // Click Add button
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add').click();
+                    cy.contains('button', 'Save').click();
                 });
 
                 // Verify the datatable is visible and contains rows
@@ -440,7 +440,7 @@ describe('Visibility Screen', () => {
                 // Save the dialog
                 cy.log('Saving the rules');
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                    cy.contains('button', 'Close').click();
                 });
 
                 // Dialog should close after save
@@ -595,7 +595,7 @@ describe('Visibility Screen', () => {
 
                 // Save the changes
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                    cy.contains('button', 'Close').click();
                 });
 
                 // Dialog should close
@@ -612,7 +612,7 @@ describe('Visibility Screen', () => {
 
                 // Re-add today's rule (was deleted in the previous test)
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add condition').click();
+                    cy.contains('button', 'Add a condition').click();
                 });
                 getComponentByRole(Dropdown, 'condition-type').select('Day of the week');
                 cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
@@ -626,11 +626,11 @@ describe('Visibility Screen', () => {
                 // Verify today appears in the right list (selected items)
                 cy.get('@dayOfWeekField').find('[role="listbox"]').should('contain', today);
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add').click();
+                    cy.contains('button', 'Save').click();
                 });
                 cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                    cy.contains('button', 'Close').click();
                 });
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 
@@ -674,7 +674,7 @@ describe('Visibility Screen', () => {
 
                 // Save the deletion
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                    cy.contains('button', 'Close').click();
                 });
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 
@@ -805,7 +805,7 @@ describe('Visibility Screen', () => {
 
             // Click "Add condition"
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Select "Start and end date" condition type
@@ -831,7 +831,7 @@ describe('Visibility Screen', () => {
 
             // Click Add
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add').click();
+                cy.contains('button', 'Save').click();
             });
 
             // Verify the rule appeared in the datatable
@@ -840,7 +840,7 @@ describe('Visibility Screen', () => {
 
             // Save and close
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
         });
@@ -856,7 +856,7 @@ describe('Visibility Screen', () => {
 
             // Add a Day of Week condition with two days
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
@@ -880,7 +880,7 @@ describe('Visibility Screen', () => {
 
             // Click Add
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add').click();
+                cy.contains('button', 'Save').click();
             });
 
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
@@ -909,7 +909,7 @@ describe('Visibility Screen', () => {
 
             // Save the edit — the button in EditRule uses t('jcontent:label.ok') which renders as 'OK'
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'OK').click();
+                cy.contains('button', 'Save').click();
             });
 
             // Back to datatable
@@ -917,7 +917,7 @@ describe('Visibility Screen', () => {
 
             // Save the dialog
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
         });
@@ -987,7 +987,7 @@ describe('Visibility Screen', () => {
             getComponentByRole(Button, 'sbsVisibility').click();
 
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
@@ -1003,13 +1003,13 @@ describe('Visibility Screen', () => {
             cy.get('@dayField').find('[role="listbox"]').should('contain', todayPlus2);
 
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add').click();
+                cy.contains('button', 'Save').click();
             });
 
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 
@@ -1066,12 +1066,20 @@ describe('Visibility Screen', () => {
                 )
                     .as('languageSelector')
                     .should('exist');
+                // Languages Save button is disabled until a change is made
+                cy.get('[data-sel-role="languages-save-button"]').should('be.disabled');
                 cy.get('@languageSelector').contains('English').should('be.visible').click();
             });
 
-            // Save (changes) and publish
+            // The Languages section saves itself via its own Save button (enabled once dirty)
+            cy.get('[data-sel-role="languages-save-button"]').should('not.be.disabled').click();
+
+            // After saving, the Save button becomes disabled again (no pending change)
+            cy.get('[data-sel-role="languages-save-button"]', {timeout: 10000}).should('be.disabled');
+
+            // Close the dialog
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 

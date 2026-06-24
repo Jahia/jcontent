@@ -1,8 +1,39 @@
 import React from 'react';
 import {CloudCheck, Delete, Edit, NoCloud} from '@jahia/moonstone';
 import dayjs from 'dayjs';
+import {isArray} from 'lodash';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
+
+// Transform a rule (a flat map of property name -> value, plus a `type` and optionally a `uuid`)
+// into the InputVisibilityConditionInput shape expected by the saveVisibilityCondition mutation.
+const buildConditionProperties = rule => {
+    return Object.keys(rule).reduce((properties, key) => {
+        if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
+            const item = {name: key};
+            if (isArray(rule[key])) {
+                item.values = rule[key];
+            } else {
+                item.value = rule[key];
+            }
+
+            properties.push(item);
+        }
+
+        return properties;
+    }, []);
+};
+
+export const buildNewCondition = rule => ({
+    type: rule.type,
+    properties: buildConditionProperties(rule)
+});
+
+export const buildUpdatedCondition = rule => ({
+    type: rule.type,
+    uuid: rule.uuid,
+    properties: buildConditionProperties(rule)
+});
 
 export const generateUUID = () => {
     if (window.crypto.randomUUID) {

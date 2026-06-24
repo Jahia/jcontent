@@ -3,50 +3,28 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
 import {Paper} from '@material-ui/core';
-import {Formik, useFormikContext} from 'formik';
+import {Formik} from 'formik';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
 import {SaveEditedRuleButton} from './SaveEditedRuleButton';
-import {jmixConditionalVisibility} from './utils';
+import {buildUpdatedCondition, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
-import dayjs from 'dayjs';
 
-export const EditRule = ({rule, onCancel}) => {
+export const EditRule = ({rule, isMatchingAllConditions, saveConditions, onCancel}) => {
     const {t} = useTranslation('jcontent');
-    const formikContext = useFormikContext();
     console.debug('Editing rule', rule);
 
-    // Determine if this is a new rule (from RULES::new) or an existing rule
-    const isNewRule = !rule.properties;
-
-    // Build initial values based on rule structure
-    let initialValues;
-    if (isNewRule) {
-        // For new rules, extract all properties except metadata fields
-        initialValues = Object.keys(rule).reduce((acc, key) => {
-            if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
-                acc[key] = rule[key];
-            }
-
-            return acc;
-        }, {});
-    } else {
-        // For existing rules, use the properties array
-        initialValues = rule.properties.filter(prop => prop.name !== 'jcr:primaryType' && prop.name !== 'jcr:uuid').reduce((acc, prop) => {
+    // Rules are always persisted in the backend, so an edited rule always exposes its
+    // properties array coming from the server.
+    const initialValues = rule.properties
+        .filter(prop => prop.name !== 'jcr:primaryType' && prop.name !== 'jcr:uuid')
+        .reduce((acc, prop) => {
             acc[prop.name] = prop.values === null ? prop.value : prop.values;
-            // Check if we have an update rule with the same uuid if yes use this value instead
-            const updatedRules = formikContext.values['RULES::updated'] || [];
-            const updatedRule = updatedRules.find(r => r.uuid === rule.uuid);
-            if (updatedRule) {
-                acc[prop.name] = updatedRule[prop.name] === undefined ? acc[prop.name] : updatedRule[prop.name];
-            }
-
             return acc;
         }, {});
-    }
 
     const handleSubmit = useCallback(values => {
-        console.debug('Submitting form with values', values, 'and initialValues', initialValues, ' for rule', rule);
+        console.debug('Submitting edited rule with values', values, 'for rule', rule);
         const updatedRule = Object.keys(values).reduce((acc, key) => {
             if (key !== Constants.wip.fieldName && key !== 'jmix:i18n_j:invalidLanguages' && key !== jmixConditionalVisibility && !key.startsWith('RULES::')) {
                 acc[key] = values[key];
@@ -55,42 +33,23 @@ export const EditRule = ({rule, onCancel}) => {
             return acc;
         }, {});
 
-        // Get the rule type from the appropriate source
-        updatedRule.type = isNewRule ? rule.type : rule.primaryNodeType.name;
+        updatedRule.type = rule.primaryNodeType.name;
         updatedRule.uuid = rule.uuid;
-        updatedRule.timestamp = dayjs().toISOString();
-        updatedRule.username = window.contextJsParameters.user.fullname;
 
-        if (isNewRule) {
-            // For new rules, update RULES::new instead of RULES::updated
-            const prevNewRules = formikContext.values['RULES::new'] || [];
-            const existingRuleIndex = prevNewRules.findIndex(r => r.uuid === rule.uuid);
-            const nextNewRules = existingRuleIndex === -1 ?
-                prevNewRules :
-                prevNewRules.map((r, i) => i === existingRuleIndex ? updatedRule : r);
-
-            formikContext.setFieldValue('RULES::new', nextNewRules).then(() => {
-                onCancel();
-            });
-        } else {
-            // For existing rules, update RULES::updated
-            const prevUpdatedRules = formikContext.values['RULES::updated'] || [];
-            const existingRuleIndex = prevUpdatedRules.findIndex(r => r.uuid === rule.uuid);
-            const nextUpdatedRules = existingRuleIndex === -1 ?
-                [...prevUpdatedRules, updatedRule] :
-                prevUpdatedRules.map((r, i) => i === existingRuleIndex ? updatedRule : r);
-
-            formikContext.setFieldValue('RULES::updated', nextUpdatedRules).then(() => {
-                onCancel();
-            });
-        }
-    }, [formikContext, initialValues, isNewRule, onCancel, rule]);
+        // Real backend save of the updated condition.
+        saveConditions({
+            updatedConditions: [buildUpdatedCondition(updatedRule)],
+            isMatchingAllConditions
+        }).then(() => {
+            onCancel();
+        });
+    }, [rule, saveConditions, isMatchingAllConditions, onCancel]);
 
     return (
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
             <Paper elevation={4}>
                 <div className={styles.column}>
-                    <NewRule type={isNewRule ? rule.type : rule.primaryNodeType.name} node={rule}/>
+                    <NewRule type={rule.primaryNodeType.name} node={rule}/>
                     <div className={styles.rowEnd}>
                         <Button
                             size="big"
@@ -98,7 +57,7 @@ export const EditRule = ({rule, onCancel}) => {
                             onClick={() => {
                                 onCancel();
                             }}/>
-                        <SaveEditedRuleButton onCancel={onCancel}/>
+                        <SaveEditedRuleButton/>
                     </div>
                 </div>
             </Paper>
@@ -108,6 +67,7 @@ export const EditRule = ({rule, onCancel}) => {
 
 EditRule.propTypes = {
     rule: PropTypes.any,
+    isMatchingAllConditions: PropTypes.bool,
+    saveConditions: PropTypes.func.isRequired,
     onCancel: PropTypes.any
 };
-

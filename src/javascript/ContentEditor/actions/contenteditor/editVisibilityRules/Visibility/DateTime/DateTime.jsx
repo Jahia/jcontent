@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Add, Chip, Dropdown, Hidden, Typography, Visibility} from '@jahia/moonstone';
 import {Paper} from '@material-ui/core';
-import {useFormikContext} from 'formik';
+import {Formik, useFormikContext} from 'formik';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {AddNewRule} from './AddNewRule';
 import {EditRule} from './EditRule';
 import {DatatableRules} from './DatatableRules';
 import {ButtonRenderer} from './ButtonRenderers';
-import {filterRegularFieldSets, jmixConditionalVisibility} from './utils';
+import {filterRegularFieldSets} from './utils';
+import {useSaveVisibilityRules} from './useSaveVisibilityRules';
 import styles from './DateTime.scss';
 
 const Header = () => {
@@ -32,12 +33,12 @@ const Header = () => {
     );
 };
 
-export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
+const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, isVisible, isVisibleInLive, sections}) => {
     const {t} = useTranslation('jcontent');
     const [isAddingNewRule, setIsAddingNewRule] = useState(false);
     const [editingRule, setEditingRule] = useState(null);
     const [isMatchingAllConditionsUpdate, setIsMatchingAllConditionsUpdate] = useState(isMatchingAllConditions);
-    const formikContext = useFormikContext();
+    const saveConditions = useSaveVisibilityRules({uuid: node.uuid, lang, refresh});
     const section = sections.find(s => s.name === 'visibility');
     if (!section) {
         return null;
@@ -54,20 +55,10 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
         setIsAddingNewRule(!isAddingNewRule);
     };
 
-    const handleChangeEditingRule = () => {
-        setEditingRule(null);
-        refresh();
-    };
-
-    const handleSavingEditedRule = () => {
-        setEditingRule(null);
-        refresh();
-    };
-
     const handleSetIsMachingAllConditionUpdate = value => {
-        setIsMatchingAllConditionsUpdate(value);
-        if (value !== isMatchingAllConditions) {
-            formikContext.setFieldValue('RULES::isMatchingAllConditions', value);
+        if (value !== isMatchingAllConditionsUpdate) {
+            setIsMatchingAllConditionsUpdate(value);
+            saveConditions({isMatchingAllConditions: value});
         }
     };
 
@@ -84,7 +75,7 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
             break;
     }
 
-    if (rulesCount === 0 && !isAddingNewRule && formikContext.values['RULES::new'] === undefined) {
+    if (rulesCount === 0 && !isAddingNewRule) {
         // There is no rules, show the button to create a new rule
         return (
             <article>
@@ -101,13 +92,9 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
                                 {typo}
                             </Typography>
                         </div>
-                        <ButtonRenderer buttonLabel="Add condition"
+                        <ButtonRenderer buttonLabel={t('jcontent:label.contentEditor.visibilityTab.conditions.add')}
                                         buttonIcon={<Add/>}
-                                        onClick={() => {
-                                            formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
-                                                handleChange();
-                                            });
-                                        }}/>
+                                        onClick={handleChange}/>
                     </div>
                 </Paper>
             </article>
@@ -118,7 +105,10 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
         return (
             <article>
                 <Header/>
-                <AddNewRule node={node} onCancel={handleChange}/>
+                <AddNewRule node={node}
+                            isMatchingAllConditions={isMatchingAllConditionsUpdate}
+                            saveConditions={saveConditions}
+                            onCancel={handleChange}/>
             </article>
         );
     }
@@ -127,7 +117,10 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
         return (
             <article>
                 <Header/>
-                <EditRule rule={editingRule} onCancel={handleChangeEditingRule} onSave={handleSavingEditedRule}/>
+                <EditRule rule={editingRule}
+                          isMatchingAllConditions={isMatchingAllConditionsUpdate}
+                          saveConditions={saveConditions}
+                          onCancel={() => setEditingRule(null)}/>
             </article>
         );
     }
@@ -163,15 +156,14 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
                 </div>
             </div>
             <Paper elevation={4}>
-                <DatatableRules rules={rules} onEdit={setEditingRule}/>
+                <DatatableRules rules={rules}
+                                onEdit={setEditingRule}
+                                isMatchingAllConditions={isMatchingAllConditionsUpdate}
+                                saveConditions={saveConditions}/>
                 <div className={styles.row}>
                     <ButtonRenderer buttonLabel={t('jcontent:label.contentEditor.visibilityTab.conditions.add')}
                                     buttonIcon={<Add/>}
-                                    onClick={() => {
-                                        formikContext.setFieldValue(jmixConditionalVisibility, true).then(() => {
-                                            handleChange();
-                                        });
-                                    }}/>
+                                    onClick={handleChange}/>
                 </div>
                 <div className={styles.row}>
                     <Typography
@@ -202,13 +194,23 @@ export const DateTime = ({rules, refresh, node, isMatchingAllConditions, isVisib
     );
 };
 
-DateTime.propTypes = {
+DateTimeContent.propTypes = {
     rules: PropTypes.object.isRequired,
     refresh: PropTypes.func.isRequired,
     node: PropTypes.object.isRequired,
+    lang: PropTypes.string.isRequired,
     isMatchingAllConditions: PropTypes.bool.isRequired,
     isVisible: PropTypes.bool.isRequired,
     isVisibleInLive: PropTypes.bool.isRequired,
     sections: PropTypes.array
 };
 
+export const DateTime = props => (
+    // Own Formik context holding the in-progress fields of a new rule being added.
+    // Editing an existing rule uses its own nested Formik (see EditRule).
+    <Formik initialValues={{}} onSubmit={() => {}}>
+        <DateTimeContent {...props}/>
+    </Formik>
+);
+
+DateTime.propTypes = DateTimeContent.propTypes;

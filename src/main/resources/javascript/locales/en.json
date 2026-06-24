@@ -1077,6 +1077,7 @@
           "add": "Add a condition",
           "edit": "Edit condition",
           "delete": "Delete condition",
+          "loading": "Loading…",
           "ruleType": {
             "date": "Date",
             "dayOfWeek": "Day of week",

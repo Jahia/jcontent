@@ -55,7 +55,9 @@ export class CheckboxChoiceList extends ToggleChoiceList {
     }
 
     contextMenu() {
-        getComponentByRole(Button, 'content-editor/field/Choicelist', this).click();
+        const contextMenuBtn = getComponentByRole(Button, 'content-editor/field/Choicelist', this);
+        contextMenuBtn.get().scrollIntoView();
+        contextMenuBtn.click();
         return getComponentBySelector(Menu, `#menuHolder ${Menu.defaultSelector}`);
     }
 }

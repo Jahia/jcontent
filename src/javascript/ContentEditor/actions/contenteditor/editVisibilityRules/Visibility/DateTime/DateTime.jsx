@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Add, Chip, Dropdown, Hidden, Typography, Visibility} from '@jahia/moonstone';
 import {Paper} from '@material-ui/core';
-import {Formik, useFormikContext} from 'formik';
+import {Formik} from 'formik';
 import stylesFieldset from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet/FieldSet.scss';
 import {AddNewRule} from './AddNewRule';
 import {EditRule} from './EditRule';
@@ -157,9 +157,8 @@ const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, i
             </div>
             <Paper elevation={4}>
                 <DatatableRules rules={rules}
-                                onEdit={setEditingRule}
-                                isMatchingAllConditions={isMatchingAllConditionsUpdate}
-                                saveConditions={saveConditions}/>
+                                refresh={refresh}
+                                onEdit={setEditingRule}/>
                 <div className={styles.row}>
                     <ButtonRenderer buttonLabel={t('jcontent:label.contentEditor.visibilityTab.conditions.add')}
                                     buttonIcon={<Add/>}

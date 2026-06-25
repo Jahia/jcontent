@@ -61,6 +61,13 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                         value
                     }
                     isConditionMatching
+                    markedForDeletion: isNodeType(type: {types: ["jmix:markedForDeletion"]})
+                    deletionUser: property(name: "j:deletionUser", language: $language) {
+                        value
+                    }
+                    deletionDate: property(name: "j:deletionDate", language: $language) {
+                        value
+                    }
                     live: nodeInWorkspace(workspace: LIVE) {
                         ...NodeCacheRequiredFields
                         properties {
@@ -124,7 +131,7 @@ ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
 export const UpdateVisibilityRulesMutation = gql`mutation updateVisibilityRules($uuid: String!, $lang: String!,
-            $newConditions: [InputVisibilityConditionInput], $updatedConditions: [InputVisibilityConditionInput], 
+            $newConditions: [InputVisibilityConditionInput], $updatedConditions: [InputVisibilityConditionInput],
             $removedConditions: [String], $isMatchingAllConditions: Boolean!) {
     forms {
         saveVisibilityCondition(uuid: $uuid, locale: $lang, newConditions: $newConditions, updatedConditions: $updatedConditions, removedConditions: $removedConditions, isMatchingAllConditions: $isMatchingAllConditions)

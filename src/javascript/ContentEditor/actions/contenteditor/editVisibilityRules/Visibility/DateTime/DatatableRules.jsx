@@ -1,15 +1,29 @@
 import React, {forwardRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Chip, DataTable, Delete, Edit, Hidden, TableRow, Typography, Visibility} from '@jahia/moonstone';
+import {
+    Chip,
+    DataTable,
+    Delete,
+    Edit,
+    Hidden,
+    Publish,
+    TableRow,
+    Typography,
+    Undelete,
+    Visibility
+} from '@jahia/moonstone';
 import {getConditionLabel, getStatus, getStatusText} from './utils';
 import clsx from 'clsx';
 import statusCellStyles from './TableCellStatus.scss';
 import dayjs from 'dayjs';
 import {
     DeleteButton,
-    EditButton
+    EditButton,
+    PublishDeletionButton,
+    UndeleteButton
 } from '~/ContentEditor/actions/contenteditor/editVisibilityRules/Visibility/DateTime/ButtonRenderers';
+import {useConditionDeletion} from './useConditionDeletion';
 
 const TableCell = forwardRef(({
     className,
@@ -112,8 +126,9 @@ TableCellActions.propTypes = {
     actions: PropTypes.any
 };
 
-export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveConditions}) => {
+export const DatatableRules = ({rules, onEdit, refresh}) => {
     const {t} = useTranslation('jcontent');
+    const {markConditionForDeletion, unmarkConditionForDeletion, publishConditionDeletion} = useConditionDeletion({refresh});
 
     // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
@@ -122,25 +137,23 @@ export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveCond
             label: 'Condition type',
             isSortable: true,
             width: '70%',
-            sortFn: (a, b) => a.type.localeCompare(b.type)
+            sortFn: (a, b) => a.type.localeCompare(b.type),
+            render: ({value, data}) => (
+                <span className={clsx({[statusCellStyles.deletedText]: data.status === 'deleted'})}>
+                    {value}
+                </span>
+            )
         },
         {
             key: 'isMatching',
             label: t('jcontent:label.contentEditor.visibilityTab.conditions.preview_live'),
             isSortable: false,
             width: '20%',
-            render: ({value, data}) => (
-                <>
-                    <Chip icon={value ? <Visibility/> : <Hidden/>}
-                          color={value ? 'success' : 'warning'}
-                          label={value ? t('jcontent:label.contentEditor.visibilityTab.conditions.visible') : t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}
+            render: ({value}) => (
+                <Chip icon={value ? <Visibility/> : <Hidden/>}
+                      color={value ? 'success' : 'warning'}
+                      label={value ? t('jcontent:label.contentEditor.visibilityTab.conditions.visible') : t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}
                         />
-                    {/* <Typography variant="caption">/</Typography> */}
-                    {/* <Chip icon={data.isMatchingLive ? <Visibility/> : <Hidden/>} */}
-                    {/*      color={data.isMatchingLive ? 'success' : 'warning'} */}
-                    {/*      label={data.isMatchingLive ? t('jcontent:label.contentEditor.visibilityTab.conditions.visible') : t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')} */}
-                    {/*    /> */}
-                </>
             )
         }
     ];
@@ -148,6 +161,7 @@ export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveCond
     const data = useMemo(() => {
         return rules.nodes.map(rule => {
             const firstAncestor = rule?.ancestors[0];
+            const isMarkedForDeletion = rule.markedForDeletion || Boolean(rule.deletionDate?.value);
             let status = rule.aggregatedPublicationInfo.existsInLive ? 'published' : 'modified';
 
             if (status === 'published') {
@@ -157,8 +171,23 @@ export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveCond
                 }
             }
 
-            const username = status === 'modified' ? firstAncestor?.lastModifiedBy?.value : firstAncestor?.lastPublishedBy?.value;
-            const timestamp = dayjs(status === 'modified' ? firstAncestor?.lastModified?.value : firstAncestor?.lastPublished?.value).format('LLL');
+            let username = status === 'modified' ? firstAncestor?.lastModifiedBy?.value : firstAncestor?.lastPublishedBy?.value;
+            let timestamp = dayjs(status === 'modified' ? firstAncestor?.lastModified?.value : firstAncestor?.lastPublished?.value).format('LLL');
+
+            // A condition marked for deletion takes precedence over its publication status: it is
+            // displayed as "marked for deletion" until the deletion is actually published.
+            if (isMarkedForDeletion) {
+                status = 'deleted';
+                username = rule.deletionUser?.value;
+                timestamp = rule.deletionDate?.value ? dayjs(rule.deletionDate.value).format('LLL') : timestamp;
+            }
+
+            // The deletion can be published (committed) only when it is marked for deletion, publication
+            // is supported, and the condition actually exists in live (otherwise it is simply removed).
+            const pubInfo = rule.aggregatedPublicationInfo;
+            const canPublishDeletion = isMarkedForDeletion &&
+                Boolean(rule.operationsSupport?.publication) &&
+                (pubInfo?.publicationStatus !== 'NOT_PUBLISHED' || Boolean(pubInfo?.existsInLive));
 
             return {
                 id: rule.uuid,
@@ -168,6 +197,8 @@ export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveCond
                 timestamp: timestamp,
                 isMatching: rule.isConditionMatching,
                 isMatchingLive: rule.live !== null && rule.live.isConditionMatching,
+                isMarkedForDeletion: isMarkedForDeletion,
+                canPublishDeletion: canPublishDeletion,
                 rule: rule
             };
         });
@@ -195,22 +226,39 @@ export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveCond
                             </TableCellStatus>
                         ), after: (
                             <TableCellActions
-                                actions={
+                                actions={data.isMarkedForDeletion ? (
+                                    <>
+                                        {data.canPublishDeletion && (
+                                            <PublishDeletionButton buttonIcon={<Publish/>}
+                                                                   dataSelRole="publish-deletion-condition"
+                                                                   onClick={() => {
+                                                                       // Commit the deletion through the standard publication workflow.
+                                                                       publishConditionDeletion(data.rule.uuid);
+                                                                   }}/>
+                                        )}
+                                        <UndeleteButton buttonIcon={<Undelete/>}
+                                                        dataSelRole="undelete-condition"
+                                                        onClick={() => {
+                                                            // Restore a condition previously marked for deletion.
+                                                            unmarkConditionForDeletion(data.rule.path);
+                                                        }}/>
+                                    </>
+                                ) : (
                                     <>
                                         <EditButton buttonIcon={<Edit/>}
+                                                    dataSelRole="edit-condition"
                                                     onClick={() => {
                                             onEdit(data.rule);
                                         }}/>
                                         <DeleteButton buttonIcon={<Delete/>}
+                                                      dataSelRole="delete-condition"
                                                       onClick={() => {
-                                            // Real backend save of the removed condition.
-                                            saveConditions({
-                                                removedConditions: [data.rule.uuid],
-                                                isMatchingAllConditions
-                                            });
+                                            // Mark the condition for deletion (soft delete). It stays
+                                            // visible until the deletion is published, and can be undeleted.
+                                            markConditionForDeletion(data.rule.path);
                                         }}/>
                                     </>
-                                }
+                                )}
                             />
                         )
                     })}
@@ -224,6 +272,5 @@ export const DatatableRules = ({rules, onEdit, isMatchingAllConditions, saveCond
 DatatableRules.propTypes = {
     rules: PropTypes.object,
     onEdit: PropTypes.func,
-    isMatchingAllConditions: PropTypes.bool,
-    saveConditions: PropTypes.func.isRequired
+    refresh: PropTypes.func.isRequired
 };

@@ -1,4 +1,4 @@
-import {CategoryManager} from '../../../page-object';
+import {CategoryManager} from '../../page-object';
 import {BaseComponent, Button, deleteNode, Dropdown, getComponentByAttr} from '@jahia/cypress';
 import * as path from 'path';
 

@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor
 ---
 
-Fix ceontent creation when no selector options are available (#2470)
+Fix content creation when no selector options are available (#2470)

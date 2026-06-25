@@ -1076,6 +1076,9 @@
           "add": "Add a condition",
           "edit": "Edit condition",
           "delete": "Delete condition",
+          "undelete": "Undelete",
+          "publishDeletion": "Publish deletion",
+          "markedForDeletionBy": "Marked for deletion by {{userName}} on {{timestamp}}",
           "loading": "Loading…",
           "ruleType": {
             "date": "Date",

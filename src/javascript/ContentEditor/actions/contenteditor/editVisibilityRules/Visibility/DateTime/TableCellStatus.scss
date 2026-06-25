@@ -114,6 +114,11 @@
     --tableCellStatus-bar: var(--color-accent);
 }
 
+.deletedText {
+    color: var(--color-gray_dark);
+    text-decoration: line-through;
+}
+
 .tableCellActions {
     position: relative;
     overflow: visible;

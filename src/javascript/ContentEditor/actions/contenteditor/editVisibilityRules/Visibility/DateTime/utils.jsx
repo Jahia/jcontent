@@ -155,6 +155,8 @@ export const getStatusText = (rowData, t) => {
             return t('jcontent:label.contentManager.publicationStatus.published', {userName: username, timestamp});
         case 'modified':
             return t('jcontent:label.contentManager.publicationStatus.modified', {userName: username, timestamp});
+        case 'deleted':
+            return t('jcontent:label.contentEditor.visibilityTab.conditions.markedForDeletionBy', {userName: username, timestamp});
         default:
             return t('jcontent:label.contentManager.publicationStatus.new', {userName: username, timestamp});
     }

@@ -592,10 +592,8 @@ describe('Visibility Screen', () => {
                 // A row marked for deletion shows the danger status bar and an Undelete action
                 cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
                     .first()
-                    .find('td')
-                    .first()
-                    .invoke('attr', 'class')
-                    .should('match', /__danger/);
+                    .find('[data-sel-role="condition-status"] [class*="markedForDeletion"]')
+                    .should('exist');
                 cy.get('[data-sel-role="visibility-rule-table"]')
                     .find('[data-sel-role="undelete-condition"]')
                     .should('be.visible');
@@ -655,10 +653,8 @@ describe('Visibility Screen', () => {
                 // The row stays, with a danger status bar and an Undelete action; count unchanged
                 cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
                     .first()
-                    .find('td')
-                    .first()
-                    .invoke('attr', 'class')
-                    .should('match', /__danger/);
+                    .find('[data-sel-role="condition-status"] [class*="markedForDeletion"]')
+                    .should('exist');
                 cy.get('[data-sel-role="undelete-condition"]').should('be.visible');
                 cy.get('@initialCount').then((initialCount: number) => {
                     cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', initialCount);
@@ -682,11 +678,9 @@ describe('Visibility Screen', () => {
                     cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', initialCount);
                 });
                 cy.get('[data-sel-role="undelete-condition"]').should('be.visible');
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .find('td')
-                    .first()
-                    .invoke('attr', 'class')
-                    .should('match', /__danger/);
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="condition-status"] [class*="markedForDeletion"]')
+                    .should('exist');
 
                 // --- STEP 4: Undelete to restore a clean state for subsequent tests ---
                 cy.log('Step 4: Undeleting the rule to restore it');

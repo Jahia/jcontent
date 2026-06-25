@@ -13,10 +13,9 @@ import {
     Undelete,
     Visibility
 } from '@jahia/moonstone';
-import {getConditionLabel, getStatus, getStatusText} from './utils';
+import {getConditionLabel} from './utils';
 import clsx from 'clsx';
 import statusCellStyles from './TableCellStatus.scss';
-import dayjs from 'dayjs';
 import {
     DeleteButton,
     EditButton,
@@ -24,6 +23,7 @@ import {
     UndeleteButton
 } from '~/ContentEditor/actions/contenteditor/editVisibilityRules/Visibility/DateTime/ButtonRenderers';
 import {useConditionDeletion} from './useConditionDeletion';
+import PublicationStatus from '~/JContent/PublicationStatus';
 
 const TableCell = forwardRef(({
     className,
@@ -77,38 +77,6 @@ TableCell.propTypes = {
     isScrollable: PropTypes.bool
 };
 
-const TableCellStatus = forwardRef(({
-    color,
-    children,
-    className,
-    ...props
-},
-ref) => {
-    return (
-        <TableCell
-        ref={ref}
-        className={clsx(
-            statusCellStyles.tableCellStatus,
-            statusCellStyles[color],
-            className
-        )}
-        component="td"
-        width="8px"
-        {...props}
-        >
-            <div className={clsx('flexRow_nowrap', 'alignCenter', statusCellStyles.panel)}>
-                {children}
-            </div>
-        </TableCell>
-    );
-});
-
-TableCellStatus.propTypes = {
-    color: PropTypes.any,
-    children: PropTypes.node,
-    className: PropTypes.string
-};
-
 const TableCellActions = forwardRef(({className, actions, ...props}, ref) => {
     return (
         <TableCell ref={ref}
@@ -139,7 +107,7 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
             width: '70%',
             sortFn: (a, b) => a.type.localeCompare(b.type),
             render: ({value, data}) => (
-                <span className={clsx({[statusCellStyles.deletedText]: data.status === 'deleted'})}>
+                <span className={clsx({[statusCellStyles.deletedText]: data.isMarkedForDeletion})}>
                     {value}
                 </span>
             )
@@ -160,27 +128,7 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
 
     const data = useMemo(() => {
         return rules.nodes.map(rule => {
-            const firstAncestor = rule?.ancestors[0];
-            const isMarkedForDeletion = rule.markedForDeletion || Boolean(rule.deletionDate?.value);
-            let status = rule.aggregatedPublicationInfo.existsInLive ? 'published' : 'modified';
-
-            if (status === 'published') {
-                // Check if lastModified from first ancestor is superior to the timestamp of the published rule, if yes the rule is modified not published
-                if (dayjs(firstAncestor.lastModified.value).isAfter(dayjs(firstAncestor.lastPublished.value))) {
-                    status = 'modified';
-                }
-            }
-
-            let username = status === 'modified' ? firstAncestor?.lastModifiedBy?.value : firstAncestor?.lastPublishedBy?.value;
-            let timestamp = dayjs(status === 'modified' ? firstAncestor?.lastModified?.value : firstAncestor?.lastPublished?.value).format('LLL');
-
-            // A condition marked for deletion takes precedence over its publication status: it is
-            // displayed as "marked for deletion" until the deletion is actually published.
-            if (isMarkedForDeletion) {
-                status = 'deleted';
-                username = rule.deletionUser?.value;
-                timestamp = rule.deletionDate?.value ? dayjs(rule.deletionDate.value).format('LLL') : timestamp;
-            }
+            const isMarkedForDeletion = rule.markedForDeletion || Boolean(rule.deleted?.value);
 
             // The deletion can be published (committed) only when it is marked for deletion, publication
             // is supported, and the condition actually exists in live (otherwise it is simply removed).
@@ -191,10 +139,7 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
 
             return {
                 id: rule.uuid,
-                status: status,
                 type: getConditionLabel(rule.primaryNodeType.name, rule.properties, t),
-                username: username,
-                timestamp: timestamp,
                 isMatching: rule.isConditionMatching,
                 isMatchingLive: rule.live !== null && rule.live.isConditionMatching,
                 isMarkedForDeletion: isMarkedForDeletion,
@@ -219,11 +164,14 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
                 >
                     {renderCells({
                         before: (
-                            <TableCellStatus color={getStatus(data.status).color}>
-                                <>
-                                    {getStatus(data.status).iconStart} {getStatusText(data, t)}
-                                </>
-                            </TableCellStatus>
+                            <Typography isNowrap
+                                        component="td"
+                                        variant="body"
+                                        className={clsx(statusCellStyles.tableCellStatus)}
+                                        data-sel-role="condition-status"
+                            >
+                                <PublicationStatus node={data.rule}/>
+                            </Typography>
                         ), after: (
                             <TableCellActions
                                 actions={data.isMarkedForDeletion ? (

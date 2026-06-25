@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor
 ---
 
-Update z-index for New folder dialog (#2453)
+Fixed an issue where the New Folder dialog was hidden behind other modal dialogs (#2453)

@@ -61,11 +61,26 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                         value
                     }
                     isConditionMatching
+                    mixinTypes {
+                        name
+                    }
                     markedForDeletion: isNodeType(type: {types: ["jmix:markedForDeletion"]})
-                    deletionUser: property(name: "j:deletionUser", language: $language) {
+                    lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {
                         value
                     }
-                    deletionDate: property(name: "j:deletionDate", language: $language) {
+                    lastModified: property(name: "jcr:lastModified", language: $language) {
+                        value
+                    }
+                    lastPublished: property(name: "j:lastPublished", language: $language) {
+                        value
+                    }
+                    lastPublishedBy: property(name: "j:lastPublishedBy", language: $language) {
+                        value
+                    }
+                    deletedBy: property(name: "j:deletionUser", language: $language) {
+                        value
+                    }
+                    deleted: property(name: "j:deletionDate", language: $language) {
                         value
                     }
                     live: nodeInWorkspace(workspace: LIVE) {

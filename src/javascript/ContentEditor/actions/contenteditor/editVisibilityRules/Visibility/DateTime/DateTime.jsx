@@ -120,9 +120,9 @@ const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, i
         {...rules, nodes: rules.nodes.filter(rule => rule.uuid === editingRule.uuid)} :
         rules;
 
-    const data = [true, false].map(v => ({
+    const data = ['true', 'false'].map(v => ({
         value: v,
-        label: v ? t('jcontent:label.contentEditor.visibilityTab.conditions.allrules') : t('jcontent:label.contentEditor.visibilityTab.conditions.anyrule')
+        label: v === 'true' ? t('jcontent:label.contentEditor.visibilityTab.conditions.allrules') : t('jcontent:label.contentEditor.visibilityTab.conditions.anyrule')
     }));
     return (
         <article>
@@ -140,12 +140,12 @@ const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, i
                     </div>
                     <div className="flexCol">
                         <Dropdown
-                            className={styles.language}
-                            value={isMatchingAllConditionsUpdate}
+                            value={isMatchingAllConditionsUpdate ? 'true' : 'false'}
                             size="medium"
+                            variant="outlined"
                             data-sel-role="condition-matching"
                             data={data}
-                            onChange={(e, item) => handleSetIsMachingAllConditionUpdate(item.value)}
+                            onChange={(e, item) => handleSetIsMachingAllConditionUpdate(item.value === 'true')}
                         />
                     </div>
                 </div>

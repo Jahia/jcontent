@@ -136,6 +136,11 @@ public class GqlEditorFormMutations {
                 newConditions.forEach(condition -> {
                     try {
                         JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":")), condition.getPrimaryType());
+                        // Track each condition's own modification/publication metadata (jcr:lastModified,
+                        // j:lastPublished, ...) so its individual publication status can be displayed.
+                        if (addedNode.canAddMixin("jmix:conditionPublicationInfo")) {
+                            addedNode.addMixin("jmix:conditionPublicationInfo");
+                        }
                         condition.getProperties().forEach(property -> {
                             try {
                                 if (property.getValue() != null) {

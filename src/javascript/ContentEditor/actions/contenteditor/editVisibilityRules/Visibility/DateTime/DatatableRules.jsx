@@ -82,9 +82,9 @@ TableCellActions.propTypes = {
     actions: PropTypes.any
 };
 
-export const DatatableRules = ({rules, onEdit, refresh}) => {
+export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) => {
     const {t} = useTranslation('jcontent');
-    const {markConditionForDeletion, unmarkConditionForDeletion, publishConditionDeletion} = useConditionDeletion({refresh});
+    const {markConditionForDeletion, unmarkConditionForDeletion} = useConditionDeletion({refresh});
 
     // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
@@ -146,50 +146,58 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
             columns={columns}
             primaryKey="id"
             defaultSortDirection="descending"
-            renderRow={({id, data, render: renderCells}) => (
-                <TableRow
-                    key={id}
-                >
-                    {renderCells({
-                        before: (
-                            <Typography isNowrap
-                                        component="td"
-                                        variant="body"
-                                        className={clsx(statusCellStyles.tableCellStatus)}
-                                        data-sel-role="condition-status"
-                            >
-                                <PublicationStatus node={data.rule}/>
-                            </Typography>
-                        ), after: (
-                            <TableCellActions
-                                actions={data.isMarkedForDeletion ? (
-                                    <UndeleteButton buttonIcon={<Undelete/>}
-                                                    dataSelRole="undelete-condition"
-                                                    onClick={() => {
-                                                            // Restore a condition previously marked for deletion.
-                                                            unmarkConditionForDeletion(data.rule.path);
-                                                        }}/>
-                                ) : (
-                                    <>
-                                        <EditButton buttonIcon={<Edit/>}
-                                                    dataSelRole="edit-condition"
-                                                    onClick={() => {
+            renderRow={({id, data, render: renderCells}) => {
+                let actions = null;
+                if (!hideActions && data.isMarkedForDeletion) {
+                    actions = (
+                        <UndeleteButton buttonIcon={<Undelete/>}
+                                        dataSelRole="undelete-condition"
+                                        onClick={() => {
+                                            // Restore a condition previously marked for deletion.
+                                            unmarkConditionForDeletion(data.rule.path);
+                                        }}/>
+                    );
+                } else if (!hideActions) {
+                    actions = (
+                        <>
+                            <EditButton buttonIcon={<Edit/>}
+                                        dataSelRole="edit-condition"
+                                        onClick={() => {
                                             onEdit(data.rule);
                                         }}/>
-                                        <DeleteButton buttonIcon={<Delete/>}
-                                                      dataSelRole="delete-condition"
-                                                      onClick={() => {
-                                            // Mark the condition for deletion (soft delete). It stays
-                                            // visible until the deletion is published, and can be undeleted.
-                                            markConditionForDeletion(data.rule.path);
-                                        }}/>
-                                    </>
-                                )}
-                            />
-                        )
-                    })}
-                </TableRow>
-            )}
+                            <DeleteButton buttonIcon={<Delete/>}
+                                          dataSelRole="delete-condition"
+                                          onClick={() => {
+                                              // Mark the condition for deletion (soft delete). It stays
+                                              // visible until the deletion is published, and can be undeleted.
+                                              markConditionForDeletion(data.rule.path);
+                                          }}/>
+                        </>
+                    );
+                }
+
+                return (
+                    <TableRow
+                        key={id}
+                        className={clsx(statusCellStyles.tableRow)}
+                    >
+                        {renderCells({
+                            before: (
+                                <Typography isNowrap
+                                            component="td"
+                                            variant="body"
+                                            className={clsx(statusCellStyles.tableCellStatus)}
+                                            data-sel-role="condition-status"
+                                >
+                                    <PublicationStatus node={data.rule}/>
+                                </Typography>
+                            ), after: (
+                                <TableCellActions actions={actions}/>
+                            )
+                        })}
+                    </TableRow>
+                );
+            }}
             data-sel-role="visibility-rule-table"
         />
     );
@@ -198,5 +206,8 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
 DatatableRules.propTypes = {
     rules: PropTypes.object,
     onEdit: PropTypes.func,
-    refresh: PropTypes.func.isRequired
+    refresh: PropTypes.func.isRequired,
+    // When true the per-row actions (edit/delete/undelete) are hidden — used while a condition is
+    // being edited and its row is shown read-only underneath the edition panel.
+    hideActions: PropTypes.bool
 };

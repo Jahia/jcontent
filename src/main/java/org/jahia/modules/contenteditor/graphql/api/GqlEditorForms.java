@@ -90,7 +90,7 @@ public class GqlEditorForms {
 
     @GraphQLField
     @GraphQLName("editForm")
-    @GraphQLDescription("Get a editor form from a locale and an existing node")
+    @GraphQLDescription("Get an editor form from a locale and an existing node")
     public GqlEditorForm getEditForm(
         @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale,
         @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,

@@ -1,14 +1,23 @@
 import {ContentEditor, JContent, SidePanel} from '../../page-object';
-import {addNode, deleteNode, enableModule} from '@jahia/cypress';
+import {addNode, createSite, deleteNode, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('JContent preview tests', () => {
     const siteKey = 'jcontentSite';
     const sidePanel = new SidePanel();
 
     before(() => {
-        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
-        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
+        createSite(siteKey, {
+            serverName: 'jahia',
+            locale: 'en',
+            templateSet: 'jcontent-test-template'
+        });
         enableModule('jcontent-test-module', siteKey);
+        enableModule('event', siteKey);
+        enableModule('bootstrap3-components', siteKey);
+        enableModule('article', siteKey);
+        enableModule('news', siteKey);
+
+        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
 
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -27,6 +36,24 @@ describe('JContent preview tests', () => {
             primaryNodeType: 'jnt:person',
             properties: [{name: 'firstname', value: 'Preview'}, {name: 'lastname', value: 'Person'}]
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/home`,
+            name: 'head-attr-test-page',
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Head Attr Test Page', language: 'en'},
+                {name: 'j:templateName', type: 'STRING', value: 'home'}
+            ],
+            children: [{
+                name: 'pagecontent',
+                primaryNodeType: 'jnt:contentList',
+                children: [{
+                    name: 'head-attr-news',
+                    primaryNodeType: 'jnt:news',
+                    properties: [{name: 'jcr:title', value: 'Head Attr News', language: 'en'}]
+                }]
+            }]
+        });
     });
 
     beforeEach(() => {
@@ -35,7 +62,7 @@ describe('JContent preview tests', () => {
 
     after(() => {
         cy.logout();
-        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
+        deleteSite(siteKey);
     });
 
     it('should honor the j:view property when previewing content', () => {
@@ -124,6 +151,22 @@ describe('JContent preview tests', () => {
         cy.contains('This list is empty and cannot be previewed').should('be.visible');
 
         deleteNode(`/sites/${siteKey}/home/jcontent-empty-list-test`);
+    });
+
+    it('should preserve <head> element attributes in hybrid iframe srcDoc', () => {
+        // Jcontent-test-template renders <head data-stub="test"> — verifies that extractPageHead
+        // captures the full opening tag so attributes are not lost when IframeViewer builds srcDoc.
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/head-attr-test-page');
+        jcontent.switchToListMode();
+        jcontent.getTable().getRowByName('head-attr-news').click();
+        sidePanel.switchToTab('tab-preview');
+
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should($iframe => {
+            const head = $iframe[0].contentDocument.querySelector('head');
+            expect(head, 'iframe should have a head element').to.exist;
+            expect(head.getAttribute('data-stub'), '<head data-stub> attribute should be preserved from page template').to.equal('test');
+        });
     });
 
     it('should reflect edit workspace changes in preview', () => {

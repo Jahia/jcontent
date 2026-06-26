@@ -70,14 +70,14 @@ function extractInlineResourceTags(html, collectAssets = true) {
  * (Bootstrap, fonts, site theme) with the module-rendered component body.
  *
  * @param {string} pageHtml - full page renderedContent output
- * @returns {string} - content between <head> and </head>, or empty string
+ * @returns {string} - the full <head>...</head> element including opening tag attributes, or empty string
  */
 function extractPageHead(pageHtml) {
     if (!pageHtml) {
         return '';
     }
 
-    const match = /<head>([\s\S]*?)<\/head>/i.exec(pageHtml);
+    const match = /(<head[^>]*>[\s\S]*?<\/head>)/i.exec(pageHtml);
     return match ? match[1] : '';
 }
 
@@ -97,7 +97,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
     } else if (isHybrid) {
         // In hybrid rendering, the page CSS is injected into the iframe via <link> elements.
         const pageHead = extractPageHead(pageCssHtml);
-        displayValue = `<html><head>${pageHead}</head><body>${cleanHtml}</body></html>`;
+        displayValue = `<html>${pageHead}<body>${cleanHtml}</body></html>`;
     } else {
         displayValue = cleanHtml;
     }

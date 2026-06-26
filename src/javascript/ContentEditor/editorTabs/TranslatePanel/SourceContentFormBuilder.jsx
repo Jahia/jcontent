@@ -1,15 +1,18 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useResizeWatcher} from '../useResizeWatcher';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {ContentEditorSectionContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts';
+import {
+    ContentEditorSectionContextProvider,
+    useContentEditorConfigContext
+} from '~/ContentEditor/contexts';
 import {Formik} from 'formik';
-import styles from '../styles.scss';
-import {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
-import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
+import {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuilder';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useTranslationReadOnlyFormDefinition} from './useTranslateReadOnlyFormDefinition';
 import PropTypes from 'prop-types';
+import {EditPanelLanguageSwitcher} from '~/shared';
+import styles from './styles.scss';
+import {useResizeWatcher} from '../useResizeWatcher';
 
 /**
  * Displays read-only content from a source language on translation panel UI.
@@ -51,10 +54,7 @@ const SourceContentFormBuilderInner = ({data}) => {
     useResizeWatcher({columnSelector: 'left-column', data});
 
     return (
-        <Formik initialValues={{...data?.initialValues}}
-                onSubmit={() => {
-                }}
-        >
+        <Formik enableReinitialize initialValues={data?.initialValues} onSubmit={() => {}}>
             <>
                 <div className={styles.languageDropDown}>
                     <span>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</span>

@@ -22,17 +22,17 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
 
     return (
         <div className={styles.fieldContainer}>
-            <Field
-                idInput={field.name}
-                inputContext={context}
-                selectorType={selectorType}
-                field={field}/>
             {context.displayActions && <DisplayAction
                 actionKey="translateField"
                 render={ButtonRendererNoLabel}
                 field={field}
                 value={values[field.name]}
             />}
+            <Field
+                idInput={field.name}
+                inputContext={context}
+                selectorType={selectorType}
+                field={field}/>
         </div>
 
     );

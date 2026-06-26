@@ -37,7 +37,8 @@ export const SourceContentPanel = () => {
 const SourceContentPanelInner = ({baseConfig, baseContext}) => {
     const contextConfig = useMemo(() => ({
         ...baseConfig,
-        lang: baseConfig.sideBySideContext.lang,
+        // Fall back to the current editable language when no explicit source language is set
+        lang: baseConfig.sideBySideContext?.lang ?? baseConfig.lang,
         sideBySideContext: {
             ...baseConfig.sideBySideContext,
             enabled: true,
@@ -53,8 +54,6 @@ const SourceContentPanelInner = ({baseConfig, baseContext}) => {
         baseContext.nodeData?.lockedAndCannotBeEdited
     ]);
 
-    console.debug(`SourceControlLang: ${contextConfig.sideBySideContext.lang}`);
-
     return (
         <ContentEditorConfigContextProvider config={contextConfig}>
             <SourceContentFormBuilder/>
@@ -65,8 +64,8 @@ const SourceContentPanelInner = ({baseConfig, baseContext}) => {
 SourceContentPanelInner.propTypes = {
     baseConfig: PropTypes.shape({
         sideBySideContext: PropTypes.shape({
-            lang: PropTypes.string.isRequired
-        }).isRequired,
+            lang: PropTypes.string
+        }),
         lang: PropTypes.string.isRequired,
         i18nContext: PropTypes.object.isRequired,
         setI18nContext: PropTypes.func.isRequired,

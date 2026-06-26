@@ -1,8 +1,8 @@
 import React from 'react';
-import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
+import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
-import {ButtonGroup, Header, Separator, Tab, TabItem} from '@jahia/moonstone';
+import {ButtonGroup, Dropdown, Header, Separator} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -12,24 +12,9 @@ import {HeaderBadges} from '../HeaderBadges';
 import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
-import clsx from 'clsx';
 import {ContentTypeChip} from '../ContentTypeChip';
-
-const TabItemRenderer = renderProps => {
-    const {t} = useTranslation('jcontent');
-    return (
-        <TabItem
-            data-sel-role={renderProps.dataSelRole}
-            icon={renderProps.buttonIcon}
-            label={t(renderProps.buttonLabel)}
-            isSelected={renderProps.value === renderProps.activeTab}
-            onClick={e => {
-                e.stopPropagation();
-                renderProps.onClick(renderProps, e);
-            }}
-        />
-    );
-};
+import {useNodeChecks} from '@jahia/data-helper';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -40,76 +25,100 @@ const BackButtonRenderer = getButtonRenderer({
     noIcon: true
 });
 
-export const EditPanelHeader = ({title, isShowPublish, hideLanguageSwitcher, activeTabState, targetActionKey = 'content-editor/header/3dots'}) => {
-    const {nodeData} = useContentEditorContext();
+export const EditPanelHeader = ({
+    title,
+    isShowPublish,
+    hideLanguageSwitcher,
+    activeTabState,
+    targetActionKey = 'content-editor/header/3dots'
+}) => {
+    const ctx = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
 
+    // Some tabs may have `requiresAdvancedPermission: true`, we do a single perm check here
+    const res = useNodeChecks({path: ctx.path}, {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]});
+
+    const tabs = registry
+        .find({target: 'editHeaderTabsActions'})
+        .filter(tab => tab.isDisplayable(ctx) && (!tab.requiresAdvancedPermission || res.checksResult));
+
     return (
         <Header
-                title={truncate(title, 60)}
-                breadcrumb={(
-                    nodeData?.path?.startsWith('/sites') && <ContentPath path={nodeData.path}/>
-                )}
-                contentType={<ContentTypeChip/>}
-                mainActions={(
-                    <div className={clsx(styles.headerMainActions, 'flexRow_center', 'alignCenter')}>
-                        <DisplayAction
-                            actionKey="backButton"
-                            render={BackButtonRenderer}
-                            buttonLabel={t('label.contentEditor.close')}
-                        />
-                        <DisplayActions
-                            target="content-editor/header/main-save-actions"
-                            render={ButtonRenderer}
-                        />
+            title={truncate(title, 60)}
+            breadcrumb={
+                ctx.nodeData?.path?.startsWith('/sites') && (
+                    <ContentPath path={ctx.nodeData.path}/>
+                )
+            }
+            contentType={<ContentTypeChip/>}
+            mainActions={
+                <div className={styles.headerMainActions}>
+                    <DisplayAction
+                        actionKey="backButton"
+                        render={BackButtonRenderer}
+                        buttonLabel={t('label.contentEditor.close')}
+                    />
+                    <DisplayActions
+                        target="content-editor/header/main-save-actions"
+                        render={ButtonRenderer}
+                    />
 
-                        {isShowPublish && (
-                            <ButtonGroup
-                                color="accent"
-                                size="big"
-                                className={styles.publishActions}
-                            >
-                                <DisplayActions
-                                    isMainButton
-                                    target="content-editor/header/main-publish-actions"
-                                    buttonProps={{size: 'big', color: 'accent'}}
-                                    render={ButtonRendererShortLabel}
-                                />
+                    {isShowPublish && (
+                        <ButtonGroup
+                            color="accent"
+                            size="big"
+                            className={styles.publishActions}
+                        >
+                            <DisplayActions
+                                isMainButton
+                                target="content-editor/header/main-publish-actions"
+                                buttonProps={{size: 'big', color: 'accent'}}
+                                render={ButtonRendererShortLabel}
+                            />
 
-                                <PublishMenu/>
-                            </ButtonGroup>
-                        )}
-                    </div>
-                )}
-                toolbarLeft={(
-                    <div className={styles.headerToolBar}>
-                        {!hideLanguageSwitcher &&
-                            <>
-                                <EditPanelLanguageSwitcher/>
-                                <Separator variant="vertical" size="medium"/>
-                            </>}
+                            <PublishMenu/>
+                        </ButtonGroup>
+                    )}
+                </div>
+            }
+            toolbarLeft={
+                <div className={styles.headerToolBar}>
+                    {!hideLanguageSwitcher && (
+                        <>
+                            <EditPanelLanguageSwitcher/>
+                            <Separator variant="vertical" size="medium"/>
+                        </>
+                    )}
 
-                        {activeTab && (
-                            <>
-                                <Tab>
-                                    <DisplayActions
-                                        setActiveTab={setActiveTab}
-                                        activeTab={activeTab}
-                                        target="editHeaderTabsActions"
-                                        nodeData={nodeData}
-                                        render={TabItemRenderer}
-                                    />
-                                </Tab>
-                                <Separator variant="vertical" size="medium"/>
-                            </>
-                        )}
-
-                        <HeaderButtonActions targetActionKey={targetActionKey}/>
-                        <HeaderThreeDotsActions targetActionKey={targetActionKey}/>
-                    </div>
-                )}
-                status={<HeaderBadges/>}
+                    <HeaderButtonActions targetActionKey={targetActionKey}/>
+                    <HeaderThreeDotsActions targetActionKey={targetActionKey}/>
+                </div>
+            }
+            toolbarRight={
+                activeTab && (
+                    <Dropdown
+                        size="small"
+                        value={activeTab}
+                        style={{minWidth: '145px'}} // Roughly the size of "Advanced Options"
+                        data-sel-role="sel-view-mode-dropdown"
+                        data-sel-value={activeTab}
+                        data-sel-tab={tabs.find(tab => tab.value === activeTab)?.dataSelRole}
+                        data-sel-available-tabs={tabs.map(tab => tab.dataSelRole).join(',')}
+                        data={tabs.map(tab => ({
+                            value: tab.value,
+                            label: t(tab.buttonLabel),
+                            iconStart: tab.buttonIcon,
+                            attributes: {'data-sel-role': tab.dataSelRole}
+                        }))}
+                        icon={tabs.find(tab => tab.value === activeTab)?.buttonIcon}
+                        onChange={(_, item) => {
+                            setActiveTab(item.value);
+                        }}
+                    />
+                )
+            }
+            status={<HeaderBadges/>}
         />
     );
 };

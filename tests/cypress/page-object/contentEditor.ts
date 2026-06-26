@@ -322,7 +322,8 @@ export class ContentEditor extends BasePage {
 
     switchToAdvancedOptions(): AdvancedOptions {
         if (this.advancedMode) {
-            cy.get('.moonstone-tabItem[data-sel-role="tab-advanced-options"]').should('be.visible').click();
+            cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+            cy.get('[data-sel-role="tab-advanced-options"]').click();
             return new AdvancedOptions();
         }
 

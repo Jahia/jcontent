@@ -27,7 +27,7 @@ export * from '~/ContentEditor/contexts/ContentEditorConfig';
 export * from '~/ContentEditor/contexts/ContentEditorApi';
 export * from '~/ContentEditor/contexts/ContentEditorSection';
 export * from '~/ContentEditor/utils';
-export * from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
+export * from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuilder';
 export * from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';

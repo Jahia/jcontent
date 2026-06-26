@@ -1,10 +1,11 @@
 import JContentConstants from '~/JContent/JContent.constants';
 
-export const Constants = {
+export const Constants = /** @type {const} */ ({
     editPanel: {
         // DEPRECATED: use JContentConstants.availablePublicationStatuses instead
         publicationStatus: JContentConstants.availablePublicationStatuses,
-        editTab: 'EDIT'
+        editTab: 'EDIT',
+        translateTab: 'TRANSLATE'
     },
     field: {
         selectorType: {
@@ -70,4 +71,4 @@ export const Constants = {
         s: 83,
         esc: 27
     }
-};
+});

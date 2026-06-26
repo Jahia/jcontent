@@ -544,8 +544,9 @@ describe('Visibility Screen', () => {
                             .click({force: true});
                     });
 
-                // Verify we're in edit mode - the datatable should be hidden and edit form visible
-                cy.get('[data-sel-role="visibility-rule-table"]').should('not.exist');
+                // Verify we're in edit mode - the edition panel is shown on top and the datatable now
+                // keeps only the edited row visible (the other rows are hidden).
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr', {timeout: 10000}).should('have.length', 1);
                 cy.get('input[type="checkbox"]', {timeout: 10000}).filter(':visible').should('exist');
 
                 // Cancel the edit
@@ -839,8 +840,9 @@ describe('Visibility Screen', () => {
                     cy.get('button:has(svg)').filter(':visible').first().click({force: true});
                 });
 
-            // Should be in edit mode
-            cy.get('[data-sel-role="visibility-rule-table"]').should('not.exist');
+            // Should be in edit mode - the edition panel is shown and the datatable keeps only the
+            // edited row visible.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr', {timeout: 10000}).should('have.length', 1);
             cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
                 .as('editDayField')
                 .should('be.visible');
@@ -848,7 +850,9 @@ describe('Visibility Screen', () => {
             // Remove todayPlus2 from the selected days by clicking its chip/tag to deselect
             cy.get('@editDayField').find('[role="listbox"]').click();
             cy.get('@editDayField').find('menu').should('be.visible').contains(todayPlus2).click();
-            cy.get('[data-cm-role="visibilityScreen"]').click();
+            // Close the dropdown by clicking the top of the screen (away from the open menu, which now
+            // sits above the edited row and would otherwise cover the Save button).
+            cy.get('[data-cm-role="visibilityScreen"]').click('top');
 
             // Verify todayPlus2 is no longer selected
             cy.get('@editDayField').find('[role="listbox"]').should('not.contain', todayPlus2);

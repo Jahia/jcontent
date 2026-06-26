@@ -113,17 +113,12 @@ const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, i
         );
     }
 
-    if (editingRule !== null) {
-        return (
-            <article>
-                <Header/>
-                <EditRule rule={editingRule}
-                          isMatchingAllConditions={isMatchingAllConditionsUpdate}
-                          saveConditions={saveConditions}
-                          onCancel={() => setEditingRule(null)}/>
-            </article>
-        );
-    }
+    const isEditing = editingRule !== null;
+    // While editing a condition, keep only the edited row visible underneath the edition panel
+    // (the other rows are hidden); otherwise show all the rules.
+    const tableRules = isEditing ?
+        {...rules, nodes: rules.nodes.filter(rule => rule.uuid === editingRule.uuid)} :
+        rules;
 
     const data = [true, false].map(v => ({
         value: v,
@@ -155,39 +150,49 @@ const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, i
                     </div>
                 </div>
             </div>
+            {/* When editing a condition, show the edition panel on top of the (single) row being edited. */}
+            {isEditing &&
+                <EditRule rule={editingRule}
+                          isMatchingAllConditions={isMatchingAllConditionsUpdate}
+                          saveConditions={saveConditions}
+                          onCancel={() => setEditingRule(null)}/>}
             <Paper elevation={4}>
-                <DatatableRules rules={rules}
+                <DatatableRules rules={tableRules}
                                 refresh={refresh}
+                                hideActions={isEditing}
                                 onEdit={setEditingRule}/>
-                <div className={styles.row}>
-                    <ButtonRenderer buttonLabel={t('jcontent:label.contentEditor.visibilityTab.conditions.add')}
-                                    buttonIcon={<Add/>}
-                                    onClick={handleChange}/>
-                </div>
-                <div className={styles.row}>
-                    <Typography
-                        variant="body"
-                        weight="bold"
-                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}
-                    </Typography>
-                    {isVisible && <Chip icon={<Visibility/>}
-                                        color="success"
-                                        label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
-                    {!isVisible && <Chip icon={<Hidden/>}
-                                         color="warning"
-                                         label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
-                    <Typography
-                        variant="body"
-                        weight="bold"
-                    >{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}
-                    </Typography>
-                    {isVisibleInLive && <Chip icon={<Visibility/>}
-                                              color="success"
-                                              label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
-                    {!isVisibleInLive && <Chip icon={<Hidden/>}
-                                               color="warning"
-                                               label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
-                </div>
+                {!isEditing &&
+                    <>
+                        <div className={styles.row}>
+                            <ButtonRenderer buttonLabel={t('jcontent:label.contentEditor.visibilityTab.conditions.add')}
+                                            buttonIcon={<Add/>}
+                                            onClick={handleChange}/>
+                        </div>
+                        <div className={styles.row}>
+                            <Typography
+                                variant="body"
+                                weight="bold"
+                            >{t('jcontent:label.contentEditor.visibilityTab.conditions.preview')}
+                            </Typography>
+                            {isVisible && <Chip icon={<Visibility/>}
+                                                color="success"
+                                                label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
+                            {!isVisible && <Chip icon={<Hidden/>}
+                                                 color="warning"
+                                                 label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
+                            <Typography
+                                variant="body"
+                                weight="bold"
+                            >{t('jcontent:label.contentEditor.visibilityTab.conditions.live')}
+                            </Typography>
+                            {isVisibleInLive && <Chip icon={<Visibility/>}
+                                                      color="success"
+                                                      label={t('jcontent:label.contentEditor.visibilityTab.conditions.visible')}/>}
+                            {!isVisibleInLive && <Chip icon={<Hidden/>}
+                                                       color="warning"
+                                                       label={t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}/>}
+                        </div>
+                    </>}
             </Paper>
         </article>
     );

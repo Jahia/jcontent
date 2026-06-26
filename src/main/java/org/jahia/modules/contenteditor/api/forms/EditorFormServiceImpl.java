@@ -307,7 +307,11 @@ public class EditorFormServiceImpl implements EditorFormService {
 
     private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale locale, Map<String, Object> extendContext) throws RepositoryException {
         ExtendedPropertyDefinition propertyDefinition = editorFormField.getExtendedPropertyDefinition();
-        Map<String, Object> selectorOptions = editorFormField.getSelectorOptionsMap();
+        // selectorOptionsMap is null when a field has no selector options set (consistent with the
+        // null checks in getEditorForm and Field.mergeWith); normalize to an empty map to avoid NPEs.
+        Map<String, Object> selectorOptions = editorFormField.getSelectorOptionsMap() != null ?
+                editorFormField.getSelectorOptionsMap() :
+                Collections.emptyMap();
         if (propertyDefinition != null && (propertyDefinition.getSelector() == SelectorType.CHOICELIST || selectorOptions.containsKey("choicelist"))) {
             Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
 

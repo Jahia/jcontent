@@ -3,7 +3,7 @@ import {ArrowLeft} from '@jahia/moonstone';
 import {registerEditActions} from '~/ContentEditor/actions/registerEditActions';
 import {registerCreateActions} from '~/ContentEditor/actions/registerCreateActions';
 import {registerDropdownOptions} from '~/ContentEditor/editorTabs/registerDropdownOptions';
-import {registerSidePanelTabs} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/registerSidePanelTabs';
+import {registerSidePanelTabs} from '~/JContent/SidePanel/registerSidePanelTabs';
 import {goBackAction} from './actions/contenteditor/goBackAction';
 
 export const registerActions = registry => {

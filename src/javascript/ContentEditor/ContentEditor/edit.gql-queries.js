@@ -24,10 +24,25 @@ const NodeDataFragment = {
                 isFolder:isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
                 isFile: isNodeType(type: {types: ["jnt:file"]})
                 isSystemNameReadOnlyMixin: isNodeType(type: {multi: ANY, types: ["jmix:systemNameReadonly"]})
+                moveSystemNameToTop: isNodeType(type: {multi: ANY, types: [
+                    "jnt:page",
+                    "jnt:contentFolder",
+                    "jnt:folder",
+                    "jnt:file",
+                    "jnt:category",
+                    "jmix:mainResource"
+                ]})
+                jView: property(name: "j:view") {
+                    value
+                }
                 displayableNode {
                     ...NodeCacheRequiredFields
                     path
                     isFolder:isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
+                }
+                pageAncestors: ancestors(fieldFilter: {filters: {fieldName: "primaryNodeType.name", evaluation: AMONG, values: ["jnt:page"]}}) {
+                    ...NodeCacheRequiredFields
+                    path
                 }
                 translationLanguages
                 name

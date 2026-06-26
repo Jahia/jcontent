@@ -1,14 +1,31 @@
 import {BasePage} from '@jahia/cypress';
+import {ContentEditor} from './contentEditor';
 
 export class SidePanel extends BasePage {
     static defaultSelector = '[data-sel-role="side-panel"]';
 
+    private selectorScope = '';
+
+    withScope(selectorScope: string): this {
+        this.selectorScope = selectorScope;
+        return this;
+    }
+
+    inCE() {
+        return this.withScope(ContentEditor.defaultSelector);
+    }
+
+    private scoped(selector: string) {
+        return this.selectorScope ? `${this.selectorScope} ${selector}` : selector;
+    }
+
     switchToTab(tabRole: string): this {
-        cy.get(`[data-sel-role="${tabRole}"]`).then($tab => {
+        cy.get(this.scoped(`[data-sel-role="${tabRole}"]`)).then($tab => {
             if ($tab.attr('aria-selected') !== 'true') {
-                cy.get(`[data-sel-role="${tabRole}"]`).click();
+                cy.get(this.scoped(`[data-sel-role="${tabRole}"]`)).click({force: true});
             }
         });
+        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
         return this;
     }
 
@@ -24,23 +41,31 @@ export class SidePanel extends BasePage {
         return this.switchToTab('tab-preview');
     }
 
+    getByRole(role: string) {
+        return cy.get(this.scoped(`[data-sel-role="${role}"]`));
+    }
+
+    getSidePanel() {
+        return this.getByRole('side-panel');
+    }
+
     getDetailsSection(content: 'technical' | 'additional') {
-        return cy.get(`[data-sel-role="details-section"][data-sel-content="${content}"]`);
+        return cy.get(this.scoped(`[data-sel-role="details-section"][data-sel-content="${content}"]`));
     }
 
     getDetailRow(label: string) {
-        return cy.get(`[data-sel-role="detail-row"][data-sel-label="${label}"]`);
+        return cy.get(this.scoped(`[data-sel-role="detail-row"][data-sel-label="${label}"]`));
     }
 
     getHistoryFilter() {
-        return cy.get('[data-sel-role="history-action-filter"]');
+        return cy.get(this.scoped('[data-sel-role="history-action-filter"]'));
     }
 
     getHistoryItems() {
-        return cy.get('[data-sel-role="history-item"]');
+        return cy.get(this.scoped('[data-sel-role="history-item"]'));
     }
 
     getPreviewFrame() {
-        return cy.get('iframe[data-sel-role="edit-preview-frame"]');
+        return cy.get(this.scoped('iframe[data-sel-role="edit-preview-frame"]'));
     }
 }

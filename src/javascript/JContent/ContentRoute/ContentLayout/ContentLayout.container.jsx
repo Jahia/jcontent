@@ -11,7 +11,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 import ContentLayout from './ContentLayout';
 import {Error404} from '@jahia/jahia-ui-root';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
@@ -25,11 +25,10 @@ export const ContentLayoutContainer = React.memo(() => {
     const currentResult = useRef();
     const client = useApolloClient();
 
-    const {mode, path, previewSelection, previewState, filesMode, openedPaths, viewType, selection} = useSelector(state => ({
+    const {mode, path, sidePanelSelection, filesMode, openedPaths, viewType, selection} = useSelector(state => ({
         mode: state.jcontent.mode,
         path: state.jcontent.path,
-        previewSelection: state.jcontent.previewSelection,
-        previewState: state.jcontent.previewState,
+        sidePanelSelection: state.jcontent.sidePanelSelection,
         filesMode: state.jcontent.filesGrid.mode,
         openedPaths: state.jcontent.openPaths,
         viewType: state.jcontent.tableView.viewType,
@@ -38,7 +37,7 @@ export const ContentLayoutContainer = React.memo(() => {
 
     const dispatch = useDispatch();
     const setPath = (_path, params) => dispatch(cmGoto({path: _path, params}));
-    const setPreviewSelection = _previewSelection => dispatch(cmSetPreviewSelection(_previewSelection));
+    const setSidePanelSelection = _sidePanelSelection => dispatch(cmSetSidePanelSelection(_sidePanelSelection));
     const openPaths = paths => dispatch(cmOpenPaths(paths));
     const closePaths = paths => dispatch(cmClosePaths(paths));
     const removeSelection = _path => dispatch(cmRemoveSelection(_path));
@@ -82,8 +81,8 @@ export const ContentLayoutContainer = React.memo(() => {
         }
 
         // De-select any removed nodes.
-        if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-            setPreviewSelection(null);
+        if (sidePanelSelection && isDescendantOrSelf(sidePanelSelection, nodePath)) {
+            setSidePanelSelection(null);
         }
 
         return client.reFetchObservableQueries();
@@ -111,8 +110,8 @@ export const ContentLayoutContainer = React.memo(() => {
         }
 
         // De-select any removed nodes.
-        if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-            setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
+        if (sidePanelSelection && isDescendantOrSelf(sidePanelSelection, nodePath)) {
+            setSidePanelSelection(getNewNodePath(sidePanelSelection, nodePath, newPath));
         }
     }
 
@@ -221,8 +220,7 @@ export const ContentLayoutContainer = React.memo(() => {
             <ContentLayout mode={mode}
                            path={path}
                            filesMode={filesMode}
-                           previewState={previewState}
-                           previewSelection={previewSelection}
+                           sidePanelSelection={sidePanelSelection}
                            rows={rows}
                            isLoading={loading}
                            isStructured={isStructured}

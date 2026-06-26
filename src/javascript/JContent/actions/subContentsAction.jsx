@@ -1,5 +1,5 @@
 import {cmGoto, cmOpenPaths} from '../redux/JContent.redux';
-import {cmSetPreviewSelection} from '../redux/preview.redux';
+import {cmSetSidePanelSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
@@ -49,7 +49,7 @@ export const SubContentsActionComponent = ({path, node: prefetchedNode, render: 
                 expandTree({path}, client).then(({mode, ancestorPaths}) => {
                     dispatch(cmGoto({mode, path, params: {sub: !['jnt:page', 'jnt:contentFolder'].includes(res?.node?.primaryNodeType?.name)}}));
                     dispatch(cmOpenPaths(ancestorPaths));
-                    dispatch(cmSetPreviewSelection(path));
+                    dispatch(cmSetSidePanelSelection(path));
                 });
             }}
         />

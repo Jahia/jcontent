@@ -59,7 +59,7 @@ describe('delete tests', () => {
 
         cy.log('Can delete root node permanently');
         jcontent.getTable()
-            .selectRowByLabel('Page test 2');
+            .selectRowByName('test-pageDelete2');
         jcontent.checkSelectionCount(1);
 
         jcontent.getHeaderActionButton('delete').click();
@@ -135,10 +135,7 @@ describe('delete tests', () => {
 
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
 
-        jcontent.getTable()
-            .getRowByLabel('test 4')
-            .contextMenu()
-            .select('Delete (permanently)');
+        jcontent.getTable().getRowByName('test-delete4-autopublish').contextMenu().select('Delete (permanently)');
 
         cy.log('Verify dialog opens and can be deleted');
         getComponent(DeletePermanentlyDialog).delete();
@@ -166,17 +163,11 @@ describe('delete tests', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
 
         jcontent.getTable()
-            .getRowByLabel('test 5')
-            .contextMenu()
-            .select('Delete');
-
-        const dialogCss = '[data-sel-role="delete-mark-dialog"]';
-        cy.get(dialogCss)
-            .find('[data-sel-role="delete-mark-button"]')
-            .click();
+            .getRowByName('test-delete5')
+            .markForDeletion();
 
         cy.log('Verify context menu updates');
-        const contextMenu = jcontent.getTable().getRowByLabel('test 5').contextMenu();
+        const contextMenu = jcontent.getTable().getRowByName('test-delete5').contextMenu();
         contextMenu.shouldHaveItem('Undelete');
         contextMenu.shouldHaveItem('Delete (permanently)');
     });
@@ -191,7 +182,7 @@ describe('delete tests', () => {
             }`});
 
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
-        jcontent.getTable().getRowByLabel('test 6').contextMenu().should('not.contain', 'Delete');
+        jcontent.getTable().getRowByName('test-delete6').contextMenu().should('not.contain', 'Delete');
     });
 
     it.skip('does not show delete if jmix:hideDeleteAction is set', () => {
@@ -205,15 +196,15 @@ describe('delete tests', () => {
         });
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
         cy.get('.moonstone-header h1').contains('test-deleteContents').should('be.visible');
-        jcontent.getTable().getRowByLabel('test 2').contextMenu().should('contain', 'Delete');
+        jcontent.getTable().getRowByName('test-delete2').contextMenu().should('contain', 'Delete');
         cy.get('.moonstone-menu_overlay').click();
-        jcontent.getTable().getRowByLabel('test 1').contextMenu().should('not.contain', 'Delete');
+        jcontent.getTable().getRowByName('test-delete1').contextMenu().should('not.contain', 'Delete');
         cy.get('.moonstone-menu_overlay').click();
-        jcontent.getTable().getRowByLabel('test 1').contextMenu().select('Copy');
+        jcontent.getTable().getRowByName('test-delete1').contextMenu().select('Copy');
         cy.get('#message-id').contains('is in the clipboard');
-        jcontent.getTable().getRowByLabel('content-folder1').get().dblclick();
+        jcontent.getTable().getRowByName('content-folder1').get().dblclick();
         jcontent.getHeaderActionButton('paste').click();
-        jcontent.getTable().getRowByLabel('test 1').contextMenu().should('contain', 'Delete');
+        jcontent.getTable().getRowByName('test-delete1').contextMenu().should('contain', 'Delete');
     });
 
     describe('Legacy Page Composer GWT Tests', () => {

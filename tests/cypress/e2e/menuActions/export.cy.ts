@@ -18,7 +18,7 @@ describe('Export tests', () => {
 
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/content');
 
-        jcontent.getTable().getRowByLabel(labelWithSpecialCharacters).contextMenu().select('Export');
+        jcontent.getTable().getRowByName(labelWithSpecialCharacters).contextMenu().select('Export');
         const exportDialog = getComponent(ExportDialog);
         exportDialog.export(downloadsFolder);
         cy.waitUntil(() => cy.exec(`ls ${downloadsFolder}`).then(result => {
@@ -27,13 +27,14 @@ describe('Export tests', () => {
         }), {timeout: 30000, interval: 1000, errorMsg: 'Unable to download content as zip'});
 
         // Reimport exported content
-        jcontent.getTable().getRowByLabel('importFolder').get().dblclick();
+        jcontent.getTable().getRowByName('importFolder').dblclick();
+        cy.get('h1').contains('importFolder').should('be.visible');
         jcontent.import(`${downloadsFolder}/${labelWithSpecialCharacters}.zip`);
 
-        jcontent.getTable().getRowByLabel(labelWithSpecialCharacters).get().dblclick();
-        jcontent.getTable().getRowByLabel('test path 1').should('exist');
-        jcontent.getTable().getRowByLabel('test path 2').should('exist');
-        jcontent.getTable().getRowByLabel('test path 3').should('exist');
+        jcontent.getTable().getRowByName(labelWithSpecialCharacters).dblclick();
+        jcontent.getTable().getRowByName('test-content-path1').should('exist');
+        jcontent.getTable().getRowByName('test-content-path2').should('exist');
+        jcontent.getTable().getRowByName('test-content-path3').should('exist');
     }
 
     before(() => {

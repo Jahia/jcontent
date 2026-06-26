@@ -248,6 +248,7 @@
         "lockNode": "Lock content",
         "noViewAvailable": "No preview available",
         "noContentSelected": "Select a content item to preview it",
+        "emptyList": "This list is empty and cannot be previewed",
         "delete": "Delete",
         "translate": "Translate",
         "emptyMessage": "Loading...",
@@ -843,7 +844,8 @@
         "linksDefault": "Staging",
         "linksVanity": "Vanity URL",
         "linksDefaultVanity": "Default vanity",
-        "linksCopied": "Link copied"
+        "linksCopied": "Link copied",
+        "noDetailsAvailable": "Select a content item to view its details"
       },
       "history": {
         "date": "Date",

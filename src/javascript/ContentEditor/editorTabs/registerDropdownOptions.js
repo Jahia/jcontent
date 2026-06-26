@@ -3,8 +3,22 @@ import React from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
-import {SidePanel} from './EditPanelContent/SidePanel/SidePanel';
+import {SidePanel, SidePanelContextProvider} from '~/JContent/SidePanel';
+import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {SourceContentPanel} from './TranslatePanel/SourceContentPanel';
+
+/**
+ * Bridges the Content Editor context into the shared (JContent) SidePanel, which reads
+ * its data from the SidePanelContext. isJContent:false selects the Content Editor preview tab.
+ */
+const CESidePanel = () => {
+    const ceCtx = useContentEditorContext();
+    return (
+        <SidePanelContextProvider value={{...ceCtx, isJContent: false}}>
+            <SidePanel/>
+        </SidePanelContextProvider>
+    );
+};
 
 /** Registers the different options available in the advanced (fullscreen) Content Editor */
 export const registerDropdownOptions = actionsRegistry => {
@@ -16,7 +30,7 @@ export const registerDropdownOptions = actionsRegistry => {
         dataSelRole: 'tab-edit',
         displayableComponent: (
             <EditPanelContent
-                twoPanelsContentProps={{rightCol: <SidePanel/>}}
+                twoPanelsContentProps={{rightCol: <CESidePanel/>}}
             />
         ),
         isDisplayable: () => true

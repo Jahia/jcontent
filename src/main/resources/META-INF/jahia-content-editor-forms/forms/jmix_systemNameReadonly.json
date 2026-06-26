@@ -4,10 +4,10 @@
   "hasPreview": true,
   "sections": [
     {
-      "name": "content",
+      "name": "options",
       "fieldSets": [
         {
-          "name": "<main>",
+          "name": "system",
           "fields": [
             {
               "name": "ce:systemName",

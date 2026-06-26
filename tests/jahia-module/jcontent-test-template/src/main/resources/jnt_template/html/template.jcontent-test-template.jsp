@@ -14,7 +14,7 @@
 <%--@elvariable id="currentResource" type="org.jahia.services.render.Resource"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
+<head data-stub="test">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <title>${fn:escapeXml(renderContext.mainResource.node.displayableName)}</title>

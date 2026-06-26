@@ -1,7 +1,7 @@
 import {SavePropertiesMutation} from './updateNode.gql-mutation';
 import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
 import {refetchPreview} from '../EditPanel/EditPanel.refetches';
-import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/Preview/Preview.utils';
+import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
 import {PublicationInfoQuery} from '~/ContentEditor/contexts/PublicationInfo/PublicationInfo.gql-queries';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {registry} from '@jahia/ui-extender';

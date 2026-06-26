@@ -244,6 +244,7 @@
         "lockNode": "Verrouiller le contenu",
         "noViewAvailable": "Aperçu non disponible",
         "noContentSelected": "Sélectionnez un contenu pour le prévisualiser",
+        "emptyList": "Cette liste est vide et ne peut pas être prévisualisée.",
         "delete": "Supprimer",
         "translate": "Traduire",
         "emptyMessage": "Chargement en cours...",
@@ -834,7 +835,8 @@
         "linksDefault": "Préproduction",
         "linksVanity": "URL personnalisée",
         "linksDefaultVanity": "URL principale",
-        "linksCopied": "Lien copié"
+        "linksCopied": "Lien copié",
+        "noDetailsAvailable": "Sélectionnez un contenu pour afficher ses détails"
       },
       "history": {
         "date": "Date",

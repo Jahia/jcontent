@@ -1,3 +1,3 @@
-import Preview from './Preview';
+import JContentPreview from './JContentPreview';
 
-export default Preview;
+export default JContentPreview;

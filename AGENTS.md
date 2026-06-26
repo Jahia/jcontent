@@ -76,6 +76,42 @@ The repo extends `@jahia/eslint-config` (`.eslintrc.json`). Key rules to always 
 - Prefer minimal, targeted edits over rewriting entire files.
 - Match the surrounding code's style even if these instructions don't explicitly cover the case.
 
+## Commits
+
+- **Never attribute commits to the AI assistant.** Do not add a `Co-Authored-By` trailer for Claude / any LLM (or any "Generated with" line) to commit messages. Author commits as the human developer only.
+
+## Changelog (chachalog)
+
+This repo uses **chachalog** for changelog entries: one fragment file per change under `.chachalog/*.md`, aggregated into the changelog on merge to `main`. Every functional change should ship a fragment in the same branch/PR.
+
+When wrapping up work on a branch (before committing / opening a PR), ensure a fragment exists for the current branch, following this procedure:
+
+1. **Detect** whether the branch already has a fragment. Fragments are random-named, so "belongs to this branch" means "added relative to `main`":
+   ```bash
+   BASE=$(git merge-base HEAD origin/main)
+   git diff --name-only --diff-filter=AMR "$BASE"..HEAD -- '.chachalog/*.md'   # committed on branch
+   git status --porcelain -- '.chachalog/*.md'                                  # uncommitted / untracked
+   ```
+   If either lists a `.md` other than `config.mjs`, a fragment already exists — do nothing. Skip the whole procedure when on `main` (no branch context).
+2. **Check for a `no-changelog` opt-out on the open PR.** If there is an open PR for the current branch carrying the `no-changelog` label, the author has deliberately opted out — **report that the changelog is skipped because of the `no-changelog` label (mention the PR number) and stop** (do not ask, do not create). Requires `gh` to be authenticated:
+   ```bash
+   gh pr list --head "$(git branch --show-current)" --state open --json number,labels \
+     --jq '.[0] | select(.labels[].name == "no-changelog") | .number'
+   ```
+   A printed PR number means the label is present → skip. Empty output means no opt-out → continue.
+   - If `gh` is **not** authenticated or no PR exists yet, the opt-out cannot be confirmed — do **not** skip on that basis; continue to step 3.
+3. **If no fragment and no opt-out, ASK the user** whether to create one. Do not create it silently. If they decline, stop.
+4. **If they want one, ASK for the version bump**: `patch`, `minor`, or `major` (the `allowedBumps` in `.chachalog/config.mjs`).
+5. **Draft a one-line message** from the branch's commit subjects / the change just made, present it, and **ask the user to accept or edit it**.
+6. Create the fragment and stage it. The package key is always `"@jahia/jcontent"`; the filename only needs to be unique (e.g. `.chachalog/$(openssl rand -hex 4).md`):
+   ```markdown
+   ---
+   "@jahia/jcontent": <bump>
+   ---
+
+   <accepted message> (#<PR number, if known>)
+   ```
+
 ## Commands cheat-sheet
 
 - `yarn lint` — full lint (SCSS + JS).

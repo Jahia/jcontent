@@ -69,7 +69,7 @@ describe('Lock in content editor tests', () => {
 
     it('should display lock badge when current user is not the locker', () => {
         cy.logout();
-        cy.login('anne', 'password');
+        cy.loginAndStoreSession('anne', 'password');
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
 
         jcontent.editComponentByRowName('Lock me');
@@ -84,7 +84,7 @@ describe('Lock in content editor tests', () => {
 
     it('should display ready only fields when locked', () => {
         cy.logout();
-        cy.login('anne', 'password');
+        cy.loginAndStoreSession('anne', 'password');
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
 
         jcontent.editComponentByRowName('Lock me');
@@ -107,7 +107,7 @@ describe('Lock in content editor tests', () => {
         contentEditor.cancel();
 
         cy.logout();
-        cy.login('anne', 'password');
+        cy.loginAndStoreSession('anne', 'password');
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
 
         jcontent.editComponentByRowName('Lock me');
@@ -121,7 +121,7 @@ describe('Lock in content editor tests', () => {
 
     it('should display lock badge in all languages', () => {
         cy.logout();
-        cy.login('anne', 'password');
+        cy.loginAndStoreSession('anne', 'password');
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
 
         jcontent.editComponentByRowName('Lock me in all languages');

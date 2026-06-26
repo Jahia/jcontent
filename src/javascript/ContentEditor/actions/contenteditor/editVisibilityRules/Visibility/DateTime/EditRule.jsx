@@ -15,9 +15,12 @@ export const EditRule = ({rule, isMatchingAllConditions, saveConditions, onCance
     console.debug('Editing rule', rule);
 
     // Rules are always persisted in the backend, so an edited rule always exposes its
-    // properties array coming from the server.
+    // properties array coming from the server. Keep only the condition's own editable properties
+    // (dayOfWeek, start, end, ...). System/protected properties in the jcr: and j: namespaces — e.g.
+    // jcr:lastModified, j:lastPublished from the mix:lastModified / jmix:lastPublished mixins — must be
+    // excluded, otherwise they would be sent back on save and rejected as protected properties.
     const initialValues = rule.properties
-        .filter(prop => prop.name !== 'jcr:primaryType' && prop.name !== 'jcr:uuid')
+        .filter(prop => !prop.name.startsWith('jcr:') && !prop.name.startsWith('j:'))
         .reduce((acc, prop) => {
             acc[prop.name] = prop.values === null ? prop.value : prop.values;
             return acc;

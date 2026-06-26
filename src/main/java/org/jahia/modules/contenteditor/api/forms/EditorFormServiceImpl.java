@@ -106,16 +106,37 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
     }
 
+    // TODO POC only!
+    // getEditorForm() should become public in the service and `getEditFormForSnapshot()` would live in content-versioning where the `EditorFormService` would be injected
+    // same with `SnapshotNodeTypeResolver`, it will be in content-versioning module.
+    @Override
+    public Form getEditFormForSnapshot(String uuidOrPath, List<String> snapshotMixins, Locale uiLocale, Locale locale) throws EditorFormException {
+        try {
+            JCRNodeWrapper node = resolveNodeFromPathorUUID(uuidOrPath, locale);
+            return getEditorForm(node.getPrimaryNodeType(), node, node.getParent(),
+                new SnapshotNodeTypeResolver(snapshotMixins), uiLocale, locale);
+        } catch (RepositoryException e) {
+            throw new EditorFormException("Error while building edit form definition for snapshot of node: " + uuidOrPath, e);
+        }
+    }
+
     private Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Locale locale) throws EditorFormException {
+        return getEditorForm(primaryNodeType, existingNode, parentNode,
+            existingNode != null ? new JcrNodeTypeResolver(existingNode) : null,
+            uiLocale, locale);
+    }
+
+    @Override
+    public Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, NodeTypeResolver nodeTypeResolver, Locale uiLocale, Locale locale) throws EditorFormException {
         final String mode = existingNode == null ? CREATE : EDIT;
         final JCRNodeWrapper currentNode = EDIT.equals(mode) ? existingNode : parentNode;
 
         try {
             final JCRSiteNode site = currentNode.getResolveSite();
 
-            // Get all currently applied mixins if node exists, otherwise get all supertypes for the primary node type being created.
-            Collection<ExtendedNodeType> nodeTypes = (existingNode != null) ?
-                Arrays.asList(existingNode.getMixinNodeTypes()) : primaryNodeType.getSupertypeSet();
+            // Get all applied mixins from the context (live node or snapshot), or supertypes when creating.
+            Collection<ExtendedNodeType> nodeTypes = (nodeTypeResolver != null) ?
+                nodeTypeResolver.getAppliedMixins() : primaryNodeType.getSupertypeSet();
 
             // Gather all nodetypes and get associated forms
             Set<String> processedNodeTypes = new HashSet<>();
@@ -130,9 +151,9 @@ public class EditorFormServiceImpl implements EditorFormService {
                 addFormNodeType(extendMixin, site, mergeSet, locale, true, processedNodeTypes, nodeTypes);
             }
 
-            // Mixins added on node
-            if (existingNode != null) {
-                for (ExtendedNodeType mixinNodeType : existingNode.getMixinNodeTypes()) {
+            // Mixins added on node (from live node or snapshot)
+            if (nodeTypeResolver != null) {
+                for (ExtendedNodeType mixinNodeType : nodeTypeResolver.getAppliedMixins()) {
                     addFormNodeType(mixinNodeType, site, mergeSet, locale, false, processedNodeTypes, nodeTypes);
                 }
             }
@@ -183,7 +204,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            boolean isActivated = existingNode != null && existingNode.isNodeType(fieldSet.getName());
+                            boolean isActivated = nodeTypeResolver != null && nodeTypeResolver.isNodeType(fieldSet.getName());
                             boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
                             boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
                             fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);
@@ -364,6 +385,35 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
 
         return res;
+    }
+
+    // TODO just here for the POC. Will be moved to the content-versioning module.
+    private static final class SnapshotNodeTypeResolver implements NodeTypeResolver {
+        private final Collection<ExtendedNodeType> appliedMixins;
+
+        SnapshotNodeTypeResolver(List<String> snapshotMixinNames) {
+            this.appliedMixins = snapshotMixinNames.stream()
+                .map(name -> {
+                    try {
+                        return NodeTypeRegistry.getInstance().getNodeType(name);
+                    } catch (NoSuchNodeTypeException e) {
+                        logger.warn("Snapshot references unknown mixin type: {}", name);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        }
+
+        @Override
+        public Collection<ExtendedNodeType> getAppliedMixins() {
+            return appliedMixins;
+        }
+
+        @Override
+        public boolean isNodeType(String typeName) {
+            return appliedMixins.stream().anyMatch(nt -> nt.isNodeType(typeName));
+        }
     }
 
     boolean isApplicable(DefinitionRegistryItem form, JCRSiteNode site) {

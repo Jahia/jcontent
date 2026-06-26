@@ -90,13 +90,29 @@ public class GqlEditorForms {
 
     @GraphQLField
     @GraphQLName("editForm")
-    @GraphQLDescription("Get a editor form from a locale and an existing node")
+    @GraphQLDescription("Get an editor form from a locale and an existing node")
     public GqlEditorForm getEditForm(
         @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale,
         @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
         @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("UUID or path of an existing node under with the new content will be created.") String uuidOrPath)
         throws EditorFormException {
         Form form = editorFormService.getEditForm(uuidOrPath, LanguageCodeConverters.getLocaleFromCode(uiLocale), LanguageCodeConverters.getLocaleFromCode(locale));
+        return new GqlEditorForm(form);
+    }
+
+    // TODO for the POC, this GraphQL endpoint is defined here but in production, it should live in content-versioning module
+    @GraphQLField
+    @GraphQLName("editFormForSnapshot")
+    @GraphQLDescription("Get an editor form whose dynamic fieldset activation reflects a historical snapshot's mixin state rather than the live node's")
+    public GqlEditorForm getEditFormForSnapshot(
+        @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale,
+        @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
+        @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("UUID or path of the node whose form structure to use") String uuidOrPath,
+        @GraphQLName("snapshotMixins") @GraphQLNonNull @GraphQLDescription("Mixin type names active at the snapshot point in time, from CompositeContentSnapshot.mixins") List<String> snapshotMixins)
+        throws EditorFormException {
+        Form form = editorFormService.getEditFormForSnapshot(uuidOrPath, snapshotMixins,
+            LanguageCodeConverters.getLocaleFromCode(uiLocale),
+            LanguageCodeConverters.getLocaleFromCode(locale));
         return new GqlEditorForm(form);
     }
 

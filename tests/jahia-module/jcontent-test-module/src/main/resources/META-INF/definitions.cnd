@@ -283,4 +283,11 @@
 [cent:checkboxChoiceList] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title
  - checkboxes (string, choicelist) = 'choice1' multiple < 'choice1', 'choice2', 'choice3'
 
+[cent:expert] > jnt:content, jmix:droppableContent
+ - name (string)
+
+[cemix:expertMix] > jmix:mainResource mixin
+ extends = cent:expert
+ - test1 (string)
+
 

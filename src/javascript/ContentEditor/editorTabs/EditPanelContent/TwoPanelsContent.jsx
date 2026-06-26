@@ -45,7 +45,12 @@ export const TwoPanelsContent = ({
         };
     }, [hasSingleSyncedScrollbar]);
 
-    useResizeWatcher({columnSelector: 'right-column'});
+    // Only needed in synced-scroll mode: both columns share a single scrollbar, so each field on the
+    // right must line up vertically with its counterpart on the left. useResizeWatcher matches the
+    // heights of paired fields across columns to keep them aligned. When the columns scroll
+    // independently (e.g. the Edit tab with a side panel) there is nothing to align, so we skip it.
+
+    useResizeWatcher({columnSelector: hasSingleSyncedScrollbar ? 'right-column' : null});
 
     return (
         <div className={styles.twoColumnsRoot}>

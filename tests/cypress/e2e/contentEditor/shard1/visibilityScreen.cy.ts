@@ -598,11 +598,6 @@ describe('Visibility Screen', () => {
                     .find('[data-sel-role="undelete-condition"]')
                     .should('be.visible');
 
-                // The rule is published, so a "Publish deletion" action is offered to commit the removal
-                cy.get('[data-sel-role="visibility-rule-table"]')
-                    .find('[data-sel-role="publish-deletion-condition"]')
-                    .should('be.visible');
-
                 // Undelete it: the row goes back to its regular state (delete action available again)
                 cy.log('Undeleting the rule');
                 cy.get('[data-sel-role="visibility-rule-table"]')

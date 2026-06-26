@@ -1,25 +1,13 @@
 import React, {forwardRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {
-    Chip,
-    DataTable,
-    Delete,
-    Edit,
-    Hidden,
-    Publish,
-    TableRow,
-    Typography,
-    Undelete,
-    Visibility
-} from '@jahia/moonstone';
+import {Chip, DataTable, Delete, Edit, Hidden, TableRow, Typography, Undelete, Visibility} from '@jahia/moonstone';
 import {getConditionLabel} from './utils';
 import clsx from 'clsx';
 import statusCellStyles from './TableCellStatus.scss';
 import {
     DeleteButton,
     EditButton,
-    PublishDeletionButton,
     UndeleteButton
 } from '~/ContentEditor/actions/contenteditor/editVisibilityRules/Visibility/DateTime/ButtonRenderers';
 import {useConditionDeletion} from './useConditionDeletion';
@@ -175,22 +163,12 @@ export const DatatableRules = ({rules, onEdit, refresh}) => {
                         ), after: (
                             <TableCellActions
                                 actions={data.isMarkedForDeletion ? (
-                                    <>
-                                        {data.canPublishDeletion && (
-                                            <PublishDeletionButton buttonIcon={<Publish/>}
-                                                                   dataSelRole="publish-deletion-condition"
-                                                                   onClick={() => {
-                                                                       // Commit the deletion through the standard publication workflow.
-                                                                       publishConditionDeletion(data.rule.uuid);
-                                                                   }}/>
-                                        )}
-                                        <UndeleteButton buttonIcon={<Undelete/>}
-                                                        dataSelRole="undelete-condition"
-                                                        onClick={() => {
+                                    <UndeleteButton buttonIcon={<Undelete/>}
+                                                    dataSelRole="undelete-condition"
+                                                    onClick={() => {
                                                             // Restore a condition previously marked for deletion.
                                                             unmarkConditionForDeletion(data.rule.path);
                                                         }}/>
-                                    </>
                                 ) : (
                                     <>
                                         <EditButton buttonIcon={<Edit/>}

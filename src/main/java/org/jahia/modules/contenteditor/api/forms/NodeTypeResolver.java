@@ -1,9 +1,11 @@
 package org.jahia.modules.contenteditor.api.forms;
 
+import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 
 import javax.jcr.RepositoryException;
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Strategy for resolving applied mixin types and performing node-type checks during form
@@ -14,7 +16,7 @@ import java.util.Collection;
  * <p>The default implementation, {@link JcrNodeTypeResolver}, delegates directly to a
  * {@code JCRNodeWrapper} and reflects the current state of the node in the repository.
  * External modules can supply alternative implementations and pass them via
- * {@link EditorFormService#getEditorForm}.
+ * {@link EditorFormService#getEditorForm(ExtendedNodeType, JCRNodeWrapper, JCRNodeWrapper, NodeTypeResolver, Locale, Locale)}.
  */
 public interface NodeTypeResolver {
 

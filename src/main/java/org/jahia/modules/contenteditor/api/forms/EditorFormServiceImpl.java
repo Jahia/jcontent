@@ -122,8 +122,8 @@ public class EditorFormServiceImpl implements EditorFormService {
         try {
             final JCRSiteNode site = currentNode.getResolveSite();
 
-            // Get all applied mixins from the node type resolver or supertypes when creating.
-            Collection<ExtendedNodeType> nodeTypes = (existingNode != null) ?
+            // Get all applied mixins from the node type resolver or supertypes if no resolver is provided.
+            Collection<ExtendedNodeType> nodeTypes = (nodeTypeResolver != null) ?
                 nodeTypeResolver.getAppliedMixins() : primaryNodeType.getSupertypeSet();
 
             // Gather all nodetypes and get associated forms
@@ -139,7 +139,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 addFormNodeType(extendMixin, site, mergeSet, locale, true, processedNodeTypes, nodeTypes);
             }
 
-            // Mixins added on node (from the node type resolver)
+            // Mixins added on node (retrieved from the node type resolver)
             if (nodeTypeResolver != null) {
                 for (ExtendedNodeType mixinNodeType : nodeTypeResolver.getAppliedMixins()) {
                     addFormNodeType(mixinNodeType, site, mergeSet, locale, false, processedNodeTypes, nodeTypes);
@@ -192,7 +192,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            boolean isActivated = existingNode != null && nodeTypeResolver.isNodeType(fieldSet.getName());
+                            boolean isActivated = nodeTypeResolver != null && nodeTypeResolver.isNodeType(fieldSet.getName());
                             boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
                             boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
                             fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);

@@ -6,6 +6,7 @@ import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import javax.jcr.RepositoryException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * {@link NodeTypeResolver} backed by a live JCR node. Both {@link #getAppliedMixins()} and
@@ -17,6 +18,7 @@ public class JcrNodeTypeResolver implements NodeTypeResolver {
     private final JCRNodeWrapper node;
 
     JcrNodeTypeResolver(JCRNodeWrapper node) {
+        Objects.requireNonNull(node, "node cannot be null");
         this.node = node;
     }
 

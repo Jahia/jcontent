@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import PropTypes from 'prop-types';
 import {File} from '@jahia/moonstone';
 import classNames from 'clsx';
@@ -9,15 +9,19 @@ const FileViewer = React.lazy(() => import('react-file-viewer'));
 export const DocumentViewer = ({isFullScreen = false, file, type}) => {
     const renderViewer = () => {
         switch (type) {
+            case 'webm':
+            case 'mp4':
+                return <video controls src={file}><track kind="captions"/></video>;
+            case 'mp3':
+                return <audio controls src={file}><track kind="captions"/></audio>;
             // List of files compatible with react-file-viewer
             case 'docx':
             case 'xlsx':
             case 'csv':
-            case 'mp4':
-            case 'webm':
-            case 'mp3':
                 return (
-                    <FileViewer fileType={type} filePath={file}/>
+                    <Suspense fallback={null}>
+                        <FileViewer fileType={type} filePath={file}/>
+                    </Suspense>
                 );
 
             default:

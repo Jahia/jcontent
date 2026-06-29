@@ -2,6 +2,8 @@ import {JContent} from '../../page-object';
 import {addNode, createSite, deleteSite, getComponent, Menu, uploadFile} from '@jahia/cypress';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
 
+const FAST_QUERY_DELAY_MS = 100;
+const JUST_OVER_THRESHOLD_MS = 350;
 const SLOW_QUERY_DELAY_MS = 2000;
 const MENU_VISIBILITY_THRESHOLD_MS = 1500;
 
@@ -69,6 +71,65 @@ describe('Context menu visiblity', () => {
             cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
                 .find('[data-sel-role="menu-item-skeleton"]')
                 .should('not.exist');
+        });
+
+        it('should not show menu or skeletons when GQL resolves under 300ms', () => {
+            const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${folderName}`);
+            jcontent.switchToListMode();
+            jcontent.getTable().getRowByName(childFolderName).get().should('be.visible');
+
+            cy.intercept('POST', '/modules/graphql', req => {
+                req.reply(res => {
+                    res.setDelay(FAST_QUERY_DELAY_MS);
+                });
+            }).as('fastGql');
+
+            jcontent.getTable().getRowByName(childFolderName).get().rightclick();
+
+            // Menu must be hidden during the suppression window
+            cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)').should('not.exist');
+
+            // After GQL resolves the menu appears immediately with real items — no skeleton ever shown
+            cy.wait('@fastGql');
+            cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)', {
+                timeout: MENU_VISIBILITY_THRESHOLD_MS
+            }).should('be.visible')
+                .find('[data-sel-role="menu-item-skeleton"]')
+                .should('not.exist');
+        });
+
+        it('should keep skeleton visible for at least 200ms when GQL resolves just after the 300ms threshold', () => {
+            const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${folderName}`);
+            jcontent.switchToListMode();
+            jcontent.getTable().getRowByName(childFolderName).get().should('be.visible');
+
+            // GQL resolves at ~350ms: skeleton appears at 300ms but load finishes only 50ms later,
+            // which is under the 200ms minimum hold — skeletons must still be visible at that point
+            cy.intercept('POST', '/modules/graphql', req => {
+                req.reply(res => {
+                    res.setDelay(JUST_OVER_THRESHOLD_MS);
+                });
+            }).as('justOverThresholdGql');
+
+            jcontent.getTable().getRowByName(childFolderName).get().rightclick();
+
+            // Skeleton appears after the 300ms show-delay
+            cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)', {
+                timeout: MENU_VISIBILITY_THRESHOLD_MS
+            }).should('be.visible')
+                .find('[data-sel-role="menu-item-skeleton"]')
+                .should('have.length.greaterThan', 0);
+
+            // GQL finishes — skeleton has been visible < 200ms, so it must still be shown
+            cy.wait('@justOverThresholdGql');
+            cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
+                .find('[data-sel-role="menu-item-skeleton"]')
+                .should('exist');
+
+            // After the minimum hold elapses, real items replace the skeletons
+            cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)', {
+                timeout: MENU_VISIBILITY_THRESHOLD_MS
+            }).find('[data-sel-role="menu-item-skeleton"]').should('not.exist');
         });
     });
 

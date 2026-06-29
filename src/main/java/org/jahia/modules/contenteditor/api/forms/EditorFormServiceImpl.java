@@ -106,16 +106,25 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
     }
 
+
+
     private Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Locale locale) throws EditorFormException {
+        return getEditorForm(primaryNodeType, existingNode, parentNode,
+            existingNode != null ? new JcrNodeTypeResolver(existingNode) : null,
+            uiLocale, locale);
+    }
+
+    @Override
+    public Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, NodeTypeResolver nodeTypeResolver, Locale uiLocale, Locale locale) throws EditorFormException {
         final String mode = existingNode == null ? CREATE : EDIT;
         final JCRNodeWrapper currentNode = EDIT.equals(mode) ? existingNode : parentNode;
 
         try {
             final JCRSiteNode site = currentNode.getResolveSite();
 
-            // Get all currently applied mixins if node exists, otherwise get all supertypes for the primary node type being created.
-            Collection<ExtendedNodeType> nodeTypes = (existingNode != null) ?
-                Arrays.asList(existingNode.getMixinNodeTypes()) : primaryNodeType.getSupertypeSet();
+            // Get all applied mixins from the node type resolver or supertypes if no resolver is provided.
+            Collection<ExtendedNodeType> nodeTypes = (nodeTypeResolver != null) ?
+                nodeTypeResolver.getAppliedMixins() : primaryNodeType.getSupertypeSet();
 
             // Gather all nodetypes and get associated forms
             Set<String> processedNodeTypes = new HashSet<>();
@@ -130,9 +139,9 @@ public class EditorFormServiceImpl implements EditorFormService {
                 addFormNodeType(extendMixin, site, mergeSet, locale, true, processedNodeTypes, nodeTypes);
             }
 
-            // Mixins added on node
-            if (existingNode != null) {
-                for (ExtendedNodeType mixinNodeType : existingNode.getMixinNodeTypes()) {
+            // Mixins added on node (retrieved from the node type resolver)
+            if (nodeTypeResolver != null) {
+                for (ExtendedNodeType mixinNodeType : nodeTypeResolver.getAppliedMixins()) {
                     addFormNodeType(mixinNodeType, site, mergeSet, locale, false, processedNodeTypes, nodeTypes);
                 }
             }
@@ -183,7 +192,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            boolean isActivated = existingNode != null && existingNode.isNodeType(fieldSet.getName());
+                            boolean isActivated = nodeTypeResolver != null && nodeTypeResolver.isNodeType(fieldSet.getName());
                             boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
                             boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
                             fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);

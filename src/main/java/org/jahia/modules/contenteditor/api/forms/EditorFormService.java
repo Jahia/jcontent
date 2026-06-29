@@ -26,6 +26,8 @@ package org.jahia.modules.contenteditor.api.forms;
 import org.jahia.modules.contenteditor.api.forms.model.FieldValueConstraint;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.graphql.api.types.ContextEntryInput;
+import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.nodetypes.ExtendedNodeType;
 
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +63,25 @@ public interface EditorFormService {
      * @throws EditorFormException if there was an error during the generation of the form.
      */
     Form getEditForm(String uuidOrPath, Locale uiLocale, Locale locale) throws EditorFormException;
+
+    /**
+     * Retrieves a form editor structure for an existing node, with node-type resolution
+     * controlled by the supplied {@link NodeTypeResolver}. This allows callers, typically
+     * in external modules, to drive dynamic fieldset activation and mixin-conditional
+     * visibility from a source other than the current JCR node (e.g. a historical snapshot).
+     *
+     * @param primaryNodeType  the primary node type of the node
+     * @param existingNode     the node being edited (used for site, session, and permissions)
+     * @param parentNode       the parent node
+     * @param nodeTypeResolver strategy that controls which mixins are considered active and
+     *                         how type membership is evaluated
+     * @param uiLocale         the locale used to display labels
+     * @param locale           the locale used to get node data
+     * @return the generated form structure
+     * @throws EditorFormException if there was an error during form generation
+     * @see JcrNodeTypeResolver
+     */
+    Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, NodeTypeResolver nodeTypeResolver, Locale uiLocale, Locale locale) throws EditorFormException;
 
     /**
      * Retrieve field constraints for given node

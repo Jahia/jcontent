@@ -1,5 +1,5 @@
 import {JContent} from '../../../page-object';
-import {createUser, deleteUser, getNodeByPath, grantRoles} from '@jahia/cypress';
+import {createUser, deleteNode, deleteUser, getNodeByPath, grantRoles} from '@jahia/cypress';
 
 describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
     let jcontent: JContent;
@@ -114,7 +114,7 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
         it(`Should get the MIME type '${mimeType}' for the file extension '${filename}' (upload via drag and drop)`, function () {
             cy.loginAndStoreSession();
             jcontent = JContent.visit(siteKey, 'en', 'media/files');
-            const file = jcontent.getMedia()
+            jcontent.getMedia()
                 .open()
                 .uploadFileViaDragAndDrop(filename, 'assets/uploadMedia')
                 .download();
@@ -125,14 +125,14 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
             });
 
             // Clean up
-            file.markForDeletion().deletePermanently();
+            deleteNode(`/sites/${siteKey}/files/${filename}`);
         });
     });
     extensionToMimeType.forEach(({filename, mimeType}) => {
         it(`Should get the MIME type '${mimeType}' for the file extension '${filename} (upload via dialog)'`, function () {
             cy.loginAndStoreSession();
             jcontent = JContent.visit(siteKey, 'en', 'media/files');
-            const file = jcontent.getMedia()
+            jcontent.getMedia()
                 .open()
                 .uploadFileViaDialog(filename, 'assets/uploadMedia')
                 .download();
@@ -143,7 +143,7 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
             });
 
             // Clean up
-            file.markForDeletion().deletePermanently();
+            deleteNode(`/sites/${siteKey}/files/${filename}`);
         });
     });
 });

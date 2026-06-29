@@ -19,10 +19,14 @@
     padding-top: var(--spacing-medium);
     padding-bottom: var(--spacing-medium);
 
+    overflow: hidden;
+
     & div {
         max-height: 100%;
 
         background-color: var(--color-white);
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     & video {

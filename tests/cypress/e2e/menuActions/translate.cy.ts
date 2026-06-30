@@ -214,7 +214,7 @@ describe('translate action tests', () => {
         jcontent.assertHeaderActionSelected('tab-edit');
     });
 
-    it('stays in translate mode when switching the target language (#2483)', () => {
+    it('stays in translate mode when switching the target language', () => {
         ContentEditor.visit(`${parentPath}/${name}`, siteKey, 'en', 'content-folders/contents');
         const jcontent = new JContent();
         const translateEditor = new TranslateEditor();

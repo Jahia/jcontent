@@ -11,8 +11,13 @@ import {useContentEditorConfigContext} from '~/shared';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const EditPanelFullscreen = ({title}) => {
-    const {advancedOpenTab} = useContentEditorConfigContext();
-    const [activeTab, setActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
+    const config = useContentEditorConfigContext();
+    const {advancedOpenTab} = config;
+    // Prefer the active tab persisted on the config (modal-level state that survives a remount of
+    // this subtree during a language-switch refetch — see #2483). Fall back to local state when the
+    // layout is rendered without that wiring (e.g. standalone).
+    const localActiveTab = useState(advancedOpenTab ?? Constants.editPanel.editTab);
+    const [activeTab, setActiveTab] = config.setActiveTab ? [config.activeTab, config.setActiveTab] : localActiveTab;
     const {mode} = useContentEditorContext();
 
     // Without edit tab, no content editor

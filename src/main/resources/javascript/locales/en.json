@@ -1056,6 +1056,7 @@
         }
       },
       "visibilityTab": {
+        "title": "Visibility conditions for {{name}}",
         "languages": {
           "title": "Languages",
           "description": "Content will display in selected languages",
@@ -1070,11 +1071,15 @@
           "rules": "{{rulesNumber}} rules set",
           "rule": "1 rule is set",
           "norules": "No condition",
-          "allrules": "All rules must be verified for the content to be visible",
-          "anyrule": "At least one of the rules must be verified for the content to be visible",
+          "allrules": "All conditions must match",
+          "anyrule": "One condition can match",
           "add": "Add a condition",
           "edit": "Edit condition",
           "delete": "Delete condition",
+          "undelete": "Undelete",
+          "publishDeletion": "Publish deletion",
+          "markedForDeletionBy": "Marked for deletion by {{userName}} on {{timestamp}}",
+          "loading": "Loading…",
           "ruleType": {
             "date": "Date",
             "dayOfWeek": "Day of week",
@@ -1092,9 +1097,9 @@
           "startEndTimeCondition": "The content will be visible starting from {{startTime}}, until {{endTime}}",
           "startTimeCondition": "The content will be visible starting from {{startTime}}",
           "endTimeCondition": "The content will be visible until {{endTime}}",
-          "preview": "Visible in preview",
-          "live": "Visible in live",
-          "preview_live": "Matching in preview / live",
+          "preview": "Currently in preview",
+          "live": "Currently in live",
+          "preview_live": "Currently in preview",
           "visible": "Visible",
           "hidden": "Hidden"
         },

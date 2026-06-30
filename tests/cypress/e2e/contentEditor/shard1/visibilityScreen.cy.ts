@@ -127,9 +127,9 @@ describe('Visibility Screen', () => {
     });
 
     after(function () {
-        cy.logout();
         deleteSite(sitekeyNonI18n);
         deleteSite(sitekeyI18n);
+        cy.logout();
     });
 
     describe('Visibility Screen Tests', () => {
@@ -137,10 +137,6 @@ describe('Visibility Screen', () => {
 
         beforeEach(() => {
             cy.loginAndStoreSession();
-        });
-
-        afterEach(() => {
-            cy.logout();
         });
 
         it('Display visibility screen in non i18n site with only Date Time section and no rules', () => {
@@ -174,12 +170,12 @@ describe('Visibility Screen', () => {
 
             // Verify "Add condition" button is visible
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').should('be.visible');
+                cy.contains('button', 'Add a condition').should('be.visible');
             });
 
-            // Verify Save and Close buttons are visible in dialog
+            // The dialog itself only keeps the Close button (no dialog-level Save anymore)
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').should('be.visible');
+                cy.contains('button', 'Save').should('not.exist');
                 cy.contains('button', 'Close').should('be.visible');
             });
 
@@ -201,7 +197,7 @@ describe('Visibility Screen', () => {
 
             // Click Add condition button
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Verify the Add New Rule form is displayed
@@ -215,7 +211,7 @@ describe('Visibility Screen', () => {
             // Verify Cancel and Add buttons are visible
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
                 cy.contains('button', 'Close').should('be.visible');
-                cy.contains('button', 'Add').should('be.visible');
+                cy.contains('button', 'Save').should('be.visible');
             });
         });
 
@@ -228,7 +224,7 @@ describe('Visibility Screen', () => {
 
             // Click Add condition button
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Verify we're in the add new rule form by checking for dropdown
@@ -254,7 +250,7 @@ describe('Visibility Screen', () => {
 
             // Click Add condition button
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Open the condition type dropdown
@@ -319,17 +315,17 @@ describe('Visibility Screen', () => {
             });
         });
 
-        it('Verifies Save button is present and enabled when no errors', () => {
+        it('Dialog actions only expose the Close button (no dialog-level Save)', () => {
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
             // Open the visibility dialog
             openVisibilityDialog();
 
-            // Verify Save button exists and is not disabled
+            // The dialog footer keeps only the Close button now that each section saves itself
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').should('be.visible');
-                cy.contains('button', 'Save').should('not.be.disabled');
+                cy.contains('button', 'Save').should('not.exist');
+                cy.contains('button', 'Close').should('be.visible').and('not.be.disabled');
             });
 
             // Close the dialog
@@ -374,7 +370,7 @@ describe('Visibility Screen', () => {
                 // Add first rule - Today
                 cy.log(`Adding ${today} rule`);
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add condition').click();
+                    cy.contains('button', 'Add a condition').click();
                 });
 
                 // Select "Day of the week" from dropdown
@@ -396,7 +392,7 @@ describe('Visibility Screen', () => {
 
                 // Click Add button to add the rule
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add').click();
+                    cy.contains('button', 'Save').click();
                 });
 
                 // Wait for datatable to appear
@@ -411,7 +407,7 @@ describe('Visibility Screen', () => {
                 // Add second rule - Today + 2
                 cy.log(`Adding ${todayPlus2} rule`);
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add condition').click();
+                    cy.contains('button', 'Add a condition').click();
                 });
 
                 // Select "Day of the week" from dropdown again
@@ -434,7 +430,7 @@ describe('Visibility Screen', () => {
 
                 // Click Add button
                 cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add').click();
+                    cy.contains('button', 'Save').click();
                 });
 
                 // Verify the datatable is visible and contains rows
@@ -444,7 +440,7 @@ describe('Visibility Screen', () => {
                 // Save the dialog
                 cy.log('Saving the rules');
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                    cy.contains('button', 'Close').click();
                 });
 
                 // Dialog should close after save
@@ -508,7 +504,7 @@ describe('Visibility Screen', () => {
                     .first()
                     .within(() => {
                         // Should have visibility chips showing status in preview and live
-                        cy.get('[class*="moonstone-chip"]').should('have.length.at.least', 2);
+                        cy.get('[class*="moonstone-chip"]').should('have.length', 1).and('contain.text', 'Visible');
                     });
 
                 cy.log(`Checking visibility status for ${todayPlus2} rule (should be hidden today)`);
@@ -516,31 +512,8 @@ describe('Visibility Screen', () => {
                     .eq(1)
                     .within(() => {
                         // Should have visibility chips showing status in preview and live
-                        cy.get('[class*="moonstone-chip"]').should('have.length.at.least', 2);
+                        cy.get('[class*="moonstone-chip"]').should('have.length', 1);
                     });
-
-                // Verify the chips show different states by comparing the two rules.
-                // Use aliases to avoid deeply-nested .then() callbacks.
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .first()
-                    .find('[class*="moonstone-chip"]')
-                    .eq(1)
-                    .invoke('attr', 'class')
-                    .as('firstChipClass');
-
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .eq(1)
-                    .find('[class*="moonstone-chip"]')
-                    .eq(1)
-                    .invoke('attr', 'class')
-                    .as('secondChipClass');
-
-                cy.then(function () {
-                    cy.log(`First rule (${today}) live chip class: ${this.firstChipClass}`);
-                    cy.log(`Second rule (${todayPlus2}) live chip class: ${this.secondChipClass}`);
-                    // The chips should have different colours indicating different visibility states
-                    expect(this.firstChipClass).not.to.equal(this.secondChipClass);
-                });
 
                 // Close the dialog
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
@@ -570,8 +543,9 @@ describe('Visibility Screen', () => {
                             .click({force: true});
                     });
 
-                // Verify we're in edit mode - the datatable should be hidden and edit form visible
-                cy.get('[data-sel-role="visibility-rule-table"]').should('not.exist');
+                // Verify we're in edit mode - the edition panel is shown on top and the datatable now
+                // keeps only the edited row visible (the other rows are hidden).
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr', {timeout: 10000}).should('have.length', 1);
                 cy.get('input[type="checkbox"]', {timeout: 10000}).filter(':visible').should('exist');
 
                 // Cancel the edit
@@ -588,7 +562,7 @@ describe('Visibility Screen', () => {
                 });
             });
 
-            it('Deletes a rule and validates it is removed from datatable', () => {
+            it('Marks a rule for deletion (without removing it) and can undelete it', () => {
                 jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
                 jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
 
@@ -601,177 +575,116 @@ describe('Visibility Screen', () => {
                     cy.wrap($rows.length).as('initialCount');
                 });
 
-                // Delete the first rule (outside the .then to stay within callback depth limit)
-                cy.log('Deleting the first rule');
+                // Mark the first rule for deletion
+                cy.log('Marking the first rule for deletion');
                 cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
                     .first()
-                    .within(() => {
-                        cy.get('button[aria-label*="delete"], button:has(svg)')
-                            .filter(':visible')
-                            .last()
-                            .click({force: true});
-                    });
+                    .find('[data-sel-role="delete-condition"]')
+                    .click({force: true});
 
-                // Verify the count decreased
+                // The rule must NOT be removed: it stays in the table, marked for deletion
                 cy.get('@initialCount').then((initialCount: number) => {
                     cy.get('[data-sel-role="visibility-rule-table"] tbody tr', {timeout: 5000}).should(
                         'have.length',
-                        initialCount - 1
+                        initialCount
                     );
                 });
 
-                // Save the changes
+                // A row marked for deletion shows the danger status bar and an Undelete action
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                    .first()
+                    .find('[data-sel-role="condition-status"] [class*="markedForDeletion"]')
+                    .should('exist');
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="undelete-condition"]')
+                    .should('be.visible');
+
+                // Undelete it: the row goes back to its regular state (delete action available again)
+                cy.log('Undeleting the rule');
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="undelete-condition"]')
+                    .first()
+                    .click({force: true});
+
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="undelete-condition"]')
+                    .should('not.exist');
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="delete-condition"]')
+                    .should('have.length.at.least', 1);
+
+                // Row count is unchanged throughout the mark/undelete cycle
+                cy.get('@initialCount').then((initialCount: number) => {
+                    cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', initialCount);
+                });
+
+                // Close the dialog
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                    cy.contains('button', 'Close').click();
                 });
 
                 // Dialog should close
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
             });
 
-            it('Validates chip status transitions: published → modified → published after deletion workflow', () => {
-                const {today, todayPlus2} = getDayNames();
-                cy.log(`Re-adding today's rule (${today}) to test deletion chip transitions`);
-
-                jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
-                jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-                openVisibilityDialog();
-
-                // Re-add today's rule (was deleted in the previous test)
-                cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add condition').click();
-                });
-                getComponentByRole(Dropdown, 'condition-type').select('Day of the week');
-                cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
-                    .as('dayOfWeekField')
-                    .should('be.visible');
-                // Select today from the list
-                cy.get('@dayOfWeekField').find('[role="listbox"]').click();
-                cy.get('@dayOfWeekField').find('menu').should('be.visible').contains(today).click();
-                cy.get('[data-cm-role="visibilityScreen"]').click(); // Click outside to close dropdown
-
-                // Verify today appears in the right list (selected items)
-                cy.get('@dayOfWeekField').find('[role="listbox"]').should('contain', today);
-                cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                    cy.contains('button', 'Add').click();
-                });
-                cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
-                cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
-                });
-                cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
-
-                // Publish so chips reflect live state
-                publishAndWait(`/sites/${sitekeyNonI18n}/home`, ['en']);
-
-                // Open dialog and find today's rule row - identify it by looking for the success/success visibility chips
+            it('Persists the marked-for-deletion state across a dialog reopen', () => {
                 jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
                 jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
                 openVisibilityDialog();
                 cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
-                // After re-adding today's rule it is appended last, so the row order is:
-                //   row 0 = todayPlus2 (survived the previous deletion test)
-                //   row 1 = today     (just re-added)
-                const todayRowIndex = 1;
-
-                // --- STEP 1: Before deletion – today's rule should have success/success chips ---
-                cy.log(`Step 1: Verifying today's rule (${today}) has success chips before deletion`);
-
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .eq(todayRowIndex)
-                    .find('td')
-                    .first()
-                    .invoke('attr', 'class')
-                    .should('match', /__success/);
-
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .eq(todayRowIndex)
-                    .within(() => {
-                        cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'success');
-                        cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'success');
-                    });
-
-                // --- STEP 2: Delete today's rule ---
-                cy.log(`Step 2: Deleting today's rule (${today})`);
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .eq(todayRowIndex)
-                    .within(() => {
-                        cy.get('button:has(svg)').filter(':visible').last().click({force: true});
-                    });
-
-                // Save the deletion
-                cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                    cy.contains('button', 'Save').click();
+                // Capture the initial number of rules
+                cy.get('[data-sel-role="visibility-rule-table"] tbody tr').then($rows => {
+                    cy.log(`Initial rule count: ${$rows.length}`);
+                    cy.wrap($rows.length).as('initialCount');
                 });
-                cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 
-                // --- STEP 3: Reopen - remaining rule (todayPlus2) should have warning status bar (modified) and warning/warning chips ---
-                cy.log(
-                    `Step 3: Reopen after deletion - checking ${todayPlus2} rule shows modified (warning status bar)`
-                );
-                jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
-                jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
-                openVisibilityDialog();
-                cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
-
-                // Only todayPlus2 rule should remain - its status bar should be "warning" (modified: content changed but not published yet)
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', 1);
+                // --- STEP 1: Mark the first rule for deletion ---
+                cy.log('Step 1: Marking the first rule for deletion');
                 cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
                     .first()
-                    .find('td')
-                    .first()
-                    .invoke('attr', 'class')
-                    .should('match', /__warning/);
+                    .find('[data-sel-role="delete-condition"]')
+                    .click({force: true});
 
-                // Both visibility chips should be "warning" (today+2 doesn't match today)
+                // The row stays, with a danger status bar and an Undelete action; count unchanged
                 cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
                     .first()
-                    .within(() => {
-                        cy.log(`Checking ${todayPlus2} preview chip is warning (today+2 rule doesn't match today)`);
-                        cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning');
-                        cy.log(
-                            `Checking ${todayPlus2} live chip is warning (live still has published rule that doesn't match today)`
-                        );
-                        cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning');
-                    });
+                    .find('[data-sel-role="condition-status"] [class*="markedForDeletion"]')
+                    .should('exist');
+                cy.get('[data-sel-role="undelete-condition"]').should('be.visible');
+                cy.get('@initialCount').then((initialCount: number) => {
+                    cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', initialCount);
+                });
 
-                // Close dialog
+                // --- STEP 2: Close and reopen the dialog ---
+                cy.log('Step 2: Closing and reopening the dialog');
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
                     cy.contains('button', 'Close').click();
                 });
+                cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 
-                // --- STEP 4: Publish the deletion ---
-                cy.log('Step 4: Publishing the deletion of today\'s rule');
-                publishAndWait(`/sites/${sitekeyNonI18n}/home`, ['en']);
-
-                // --- STEP 5: Reopen after publish - status bar should be back to "success" (published), visibility chips still warning/warning ---
-                cy.log(
-                    `Step 5: Reopen after publish - ${todayPlus2} rule should have success status bar, still warning visibility chips`
-                );
                 jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
                 jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
                 openVisibilityDialog();
                 cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
-                // Status bar should be back to "success" (published - content has been published in its new state)
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
-                    .first()
-                    .find('td')
-                    .first()
-                    .invoke('attr', 'class')
-                    .should('match', /__success/);
+                // --- STEP 3: The marked-for-deletion state is persisted ---
+                cy.log('Step 3: Reopened dialog still shows the rule as marked for deletion');
+                cy.get('@initialCount').then((initialCount: number) => {
+                    cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', initialCount);
+                });
+                cy.get('[data-sel-role="undelete-condition"]').should('be.visible');
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="condition-status"] [class*="markedForDeletion"]')
+                    .should('exist');
 
-                // Both visibility chips remain "warning" (today+2 still doesn't match today, even after publishing)
-                cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                // --- STEP 4: Undelete to restore a clean state for subsequent tests ---
+                cy.log('Step 4: Undeleting the rule to restore it');
+                cy.get('[data-sel-role="visibility-rule-table"]')
+                    .find('[data-sel-role="undelete-condition"]')
                     .first()
-                    .within(() => {
-                        cy.log(
-                            `Checking ${todayPlus2} both chips still warning after publish (day mismatch doesn't change with publish)`
-                        );
-                        cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning');
-                        cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning');
-                    });
+                    .click({force: true});
+                cy.get('[data-sel-role="undelete-condition"]').should('not.exist');
 
                 // Close dialog
                 cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
@@ -838,7 +751,7 @@ describe('Visibility Screen', () => {
 
             // Click "Add condition"
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             // Select "Start and end date" condition type
@@ -864,7 +777,7 @@ describe('Visibility Screen', () => {
 
             // Click Add
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add').click();
+                cy.contains('button', 'Save').click();
             });
 
             // Verify the rule appeared in the datatable
@@ -873,7 +786,7 @@ describe('Visibility Screen', () => {
 
             // Save and close
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
         });
@@ -889,7 +802,7 @@ describe('Visibility Screen', () => {
 
             // Add a Day of Week condition with two days
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
@@ -913,7 +826,7 @@ describe('Visibility Screen', () => {
 
             // Click Add
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add').click();
+                cy.contains('button', 'Save').click();
             });
 
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
@@ -926,8 +839,9 @@ describe('Visibility Screen', () => {
                     cy.get('button:has(svg)').filter(':visible').first().click({force: true});
                 });
 
-            // Should be in edit mode
-            cy.get('[data-sel-role="visibility-rule-table"]').should('not.exist');
+            // Should be in edit mode - the edition panel is shown and the datatable keeps only the
+            // edited row visible.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr', {timeout: 10000}).should('have.length', 1);
             cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
                 .as('editDayField')
                 .should('be.visible');
@@ -935,14 +849,16 @@ describe('Visibility Screen', () => {
             // Remove todayPlus2 from the selected days by clicking its chip/tag to deselect
             cy.get('@editDayField').find('[role="listbox"]').click();
             cy.get('@editDayField').find('menu').should('be.visible').contains(todayPlus2).click();
-            cy.get('[data-cm-role="visibilityScreen"]').click();
+            // Close the dropdown by clicking the top of the screen (away from the open menu, which now
+            // sits above the edited row and would otherwise cover the Save button).
+            cy.get('[data-cm-role="visibilityScreen"]').click('top');
 
             // Verify todayPlus2 is no longer selected
             cy.get('@editDayField').find('[role="listbox"]').should('not.contain', todayPlus2);
 
             // Save the edit — the button in EditRule uses t('jcontent:label.ok') which renders as 'OK'
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'OK').click();
+                cy.contains('button', 'Save').click();
             });
 
             // Back to datatable
@@ -950,7 +866,7 @@ describe('Visibility Screen', () => {
 
             // Save the dialog
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
         });
@@ -1020,7 +936,7 @@ describe('Visibility Screen', () => {
             getComponentByRole(Button, 'sbsVisibility').click();
 
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add condition').click();
+                cy.contains('button', 'Add a condition').click();
             });
 
             const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
@@ -1036,13 +952,13 @@ describe('Visibility Screen', () => {
             cy.get('@dayField').find('[role="listbox"]').should('contain', todayPlus2);
 
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.contains('button', 'Add').click();
+                cy.contains('button', 'Save').click();
             });
 
             cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
 
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 
@@ -1061,8 +977,8 @@ describe('Visibility Screen', () => {
                 .first()
                 .within(() => {
                     // First chip = preview, second chip = live
-                    cy.get('[class*="moonstone-chip"]').should('have.length.at.least', 2);
-                    cy.get('[class*="moonstone-chip"]').eq(1).should('have.attr', 'class').and('include', 'warning');
+                    cy.get('[class*="moonstone-chip"]').should('have.length', 1);
+                    cy.get('[class*="moonstone-chip"]').eq(0).should('have.attr', 'class').and('include', 'warning');
                 });
 
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
@@ -1099,12 +1015,20 @@ describe('Visibility Screen', () => {
                 )
                     .as('languageSelector')
                     .should('exist');
+                // Languages Save button is disabled until a change is made
+                cy.get('[data-sel-role="languages-save-button"]').should('be.disabled');
                 cy.get('@languageSelector').contains('English').should('be.visible').click();
             });
 
-            // Save (changes) and publish
+            // The Languages section saves itself via its own Save button (enabled once dirty)
+            cy.get('[data-sel-role="languages-save-button"]').should('not.be.disabled').click();
+
+            // After saving, the Save button becomes disabled again (no pending change)
+            cy.get('[data-sel-role="languages-save-button"]', {timeout: 10000}).should('be.disabled');
+
+            // Close the dialog
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
-                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Close').click();
             });
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
 

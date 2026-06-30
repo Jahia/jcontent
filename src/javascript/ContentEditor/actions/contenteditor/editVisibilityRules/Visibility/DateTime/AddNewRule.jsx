@@ -8,11 +8,10 @@ import {useCreatableNodetypesTree} from '~/ContentEditor/actions/jcontent/create
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
-import {generateUUID, jmixConditionalVisibility} from './utils';
+import {buildNewCondition, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
-import dayjs from 'dayjs';
 
-export const AddNewRule = ({node, onCancel}) => {
+export const AddNewRule = ({node, isMatchingAllConditions, saveConditions, onCancel}) => {
     const {uilang} = useContentEditorConfigContext();
     const {t} = useTranslation('jcontent');
     const name = 'rule';
@@ -83,10 +82,11 @@ export const AddNewRule = ({node, onCancel}) => {
                                     onCancel();
                                 }}/>
                             <Button size="big"
-                                    label="Add"
+                                    color="accent"
+                                    label={t('jcontent:label.contentEditor.edit.action.goBack.btnSave')}
                                     onClick={() => {
-                                // All the new rules value have been saved in formik values we need to group them and move them under a value named RULES::new,
-                                // each of these new rules should contain all the properties of formik.values apart RULES::new,WIP::Info,jmix:i18n_j:invalidLanguages and jmix:conditionalVisibility
+                                // Collect the new rule field values held in the Formik context (everything
+                                // apart from the WIP/languages/conditionalVisibility helper keys).
                                 const newRule = Object.keys(formikContext.values).reduce((acc, key) => {
                                     if (key !== Constants.wip.fieldName && key !== 'jmix:i18n_j:invalidLanguages' && key !== jmixConditionalVisibility && !key.startsWith('RULES::')) {
                                         acc[key] = formikContext.values[key];
@@ -102,16 +102,16 @@ export const AddNewRule = ({node, onCancel}) => {
                                 }
 
                                 newRule.type = selectedType;
-                                newRule.uuid = generateUUID();
-                                newRule.timestamp = dayjs().toISOString();
-                                newRule.username = window.contextJsParameters.user.fullname;
-                                formikContext.setFieldValue('RULES::new', [
-                                    ...(formikContext.values['RULES::new'] || []),
-                                    newRule
-                                ]).then(() => {
+                                // Real backend save of the new condition.
+                                // Reset and close only on success; the error is notified
+                                // inside saveConditions so the panel stays open to retry.
+                                saveConditions({
+                                    newConditions: [buildNewCondition(newRule)],
+                                    isMatchingAllConditions
+                                }).then(() => {
                                     setSelectedType(null);
                                     onCancel();
-                                });
+                                }).catch(() => {});
                             }}/>
                         </div>
                     </>}
@@ -122,6 +122,8 @@ export const AddNewRule = ({node, onCancel}) => {
 
 AddNewRule.propTypes = {
     node: PropTypes.object,
+    isMatchingAllConditions: PropTypes.bool,
+    saveConditions: PropTypes.func.isRequired,
     onCancel: PropTypes.func
 };
 

@@ -16,3 +16,10 @@
 
 [jnt:dayOfWeekCondition] > jnt:condition
  - dayOfWeek (string,choicelist[resourceBundle]) multiple indexed=no < 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+
+// Automatically applied to every jnt:condition (via "extends") without touching the core
+// jnt:condition definition. By inheriting mix:lastModified and jmix:lastPublished, each condition
+// tracks its own modification / publication metadata (jcr:lastModified, j:lastPublished, ...), so the
+// publication status of an individual condition can be computed and displayed in the visibility editor.
+[jmix:conditionPublicationInfo] > mix:lastModified, jmix:lastPublished mixin
+ extends = jnt:condition

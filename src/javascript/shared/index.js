@@ -1,3 +1,4 @@
+export {addContextMenuTargetToActions} from '../JContent.assignActionAndMenuTargets';
 export {default as ContentTree} from '../JContent/ContentTree';
 export {default as ContentNavigation} from '../JContent/ContentNavigation';
 export {default as SiteSwitcher} from '../JContent/ContentNavigation/NavigationHeader/SwitchersLayout/SiteSwitcher';
@@ -16,6 +17,7 @@ export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQu
 export {NodeIcon} from '../utils/NodeIcon';
 export * as jcontentUtils from '../JContent/JContent.utils';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+export * as columnDefinitions from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable/columns';
 export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
 export * from '../JContent/dnd';

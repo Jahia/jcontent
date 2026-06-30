@@ -1039,6 +1039,7 @@
         }
       },
       "visibilityTab": {
+        "title": "Sichtbarkeitsbedingungen für {{name}}",
         "languages": {
           "title": "Anzeigesprachen",
           "description": "Content ist in den gewählten Sprachen sichtbar",
@@ -1058,6 +1059,8 @@
           "add": "Bedingung hinzufügen",
           "edit": "Bedingung bearbeiten",
           "delete": "Bedingung löschen",
+          "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am {{timestamp}}",
+          "loading": "Wird geladen…",
           "ruleType": {
             "date": "Datum",
             "dayOfWeek": "Wochentag",

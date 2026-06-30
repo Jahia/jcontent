@@ -1,5 +1,7 @@
 import {useCallback} from 'react';
 import {useApolloClient, useMutation} from '@apollo/client';
+import {useTranslation} from 'react-i18next';
+import {useNotifications} from '@jahia/react-material';
 import {MarkForDeletionMutation, UndeleteMutation} from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
@@ -16,6 +18,8 @@ import {triggerRefetchAll} from '~/JContent/JContent.refetches';
  */
 export const useConditionDeletion = ({refresh}) => {
     const client = useApolloClient();
+    const {t} = useTranslation('jcontent');
+    const notificationContext = useNotifications();
     const [markForDeletion] = useMutation(MarkForDeletionMutation);
     const [unmarkForDeletion] = useMutation(UndeleteMutation);
 
@@ -29,14 +33,28 @@ export const useConditionDeletion = ({refresh}) => {
     }, [client, refresh]);
 
     const markConditionForDeletion = useCallback(async path => {
-        await markForDeletion({variables: {path}});
+        try {
+            await markForDeletion({variables: {path}});
+        } catch (error) {
+            console.error('Error while marking visibility condition for deletion', error);
+            notificationContext.notify(t('jcontent:label.contentEditor.edit.action.save.error'), ['closeButton', 'closeAfter5s']);
+            throw error;
+        }
+
         await refreshAll();
-    }, [markForDeletion, refreshAll]);
+    }, [markForDeletion, refreshAll, notificationContext, t]);
 
     const unmarkConditionForDeletion = useCallback(async path => {
-        await unmarkForDeletion({variables: {path}});
+        try {
+            await unmarkForDeletion({variables: {path}});
+        } catch (error) {
+            console.error('Error while undeleting visibility condition', error);
+            notificationContext.notify(t('jcontent:label.contentEditor.edit.action.save.error'), ['closeButton', 'closeAfter5s']);
+            throw error;
+        }
+
         await refreshAll();
-    }, [unmarkForDeletion, refreshAll]);
+    }, [unmarkForDeletion, refreshAll, notificationContext, t]);
 
     const publishConditionDeletion = useCallback(uuid => {
         // Delegates to the standard publication workflow (same as the publishDeletion action). The

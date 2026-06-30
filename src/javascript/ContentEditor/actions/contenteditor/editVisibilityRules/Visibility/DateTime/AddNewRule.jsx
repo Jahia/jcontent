@@ -103,13 +103,15 @@ export const AddNewRule = ({node, isMatchingAllConditions, saveConditions, onCan
 
                                 newRule.type = selectedType;
                                 // Real backend save of the new condition.
+                                // Reset and close only on success; the error is notified
+                                // inside saveConditions so the panel stays open to retry.
                                 saveConditions({
                                     newConditions: [buildNewCondition(newRule)],
                                     isMatchingAllConditions
                                 }).then(() => {
                                     setSelectedType(null);
                                     onCancel();
-                                });
+                                }).catch(() => {});
                             }}/>
                         </div>
                     </>}

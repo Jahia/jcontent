@@ -39,6 +39,7 @@ describe('Menu actions preview tests', () => {
             uploadFile('/assets/uploadMedia/myfile2.png', `/sites/${siteKey}/files`, 'myfile2.png', 'image/png');
             uploadFile('/assets/uploadMedia/myfile.webm', `/sites/${siteKey}/files`, 'myfile.webm', 'video/webm');
             uploadFile('/assets/uploadMedia/myfile.csv', `/sites/${siteKey}/files`, 'myfile.csv', 'text/csv');
+            uploadFile('/assets/uploadMedia/myfile.docx', `/sites/${siteKey}/files`, 'myfile.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         });
 
         after(() => {
@@ -90,6 +91,12 @@ describe('Menu actions preview tests', () => {
             jcontent.getTable().getRowByName('myfile.csv').contextMenu().select('Preview');
             cy.get('[data-preview-type="document"]').should('be.visible');
             cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.csv');
+        });
+
+        it('shows document preview for docx', () => {
+            jcontent.getTable().getRowByName('myfile.docx').contextMenu().select('Preview');
+            cy.get('[data-preview-type="document"]').should('exist').and('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.docx');
         });
 
         it('can be closed', () => {

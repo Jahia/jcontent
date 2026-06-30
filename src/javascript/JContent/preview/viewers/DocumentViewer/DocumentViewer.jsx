@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {File} from '@jahia/moonstone';
 import classNames from 'clsx';
 import styles from './DocumentViewer.scss';
+import {DocxViewer} from './DocxViewer';
 
 const FileViewer = React.lazy(() => import('react-file-viewer'));
 
@@ -14,8 +15,9 @@ export const DocumentViewer = ({isFullScreen = false, file, type}) => {
                 return <video controls src={file}><track kind="captions"/></video>;
             case 'mp3':
                 return <audio controls src={file}><track kind="captions"/></audio>;
-            // List of files compatible with react-file-viewer
             case 'docx':
+                return <DocxViewer key={file} file={file}/>;
+            // List of files compatible with react-file-viewer
             case 'xlsx':
             case 'csv':
                 return (

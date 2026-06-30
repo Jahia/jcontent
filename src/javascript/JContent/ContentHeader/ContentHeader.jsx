@@ -125,6 +125,7 @@ const ContentHeader = () => {
             title={title}
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
+            className="content-header"
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={showStatus && <ContentStatuses node={node}/>}
             toolbarLeft={

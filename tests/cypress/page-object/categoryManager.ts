@@ -34,11 +34,12 @@ export class CategoryManager extends JContent {
         return this.getAccordionItem().getTreeItem(role);
     }
 
-    createCategoryNav(parentName: string, fields: {title?: string, name?: string}) {
+    createCategoryNav(parentName: string, fields: {title: string, name?: string}) {
         const accordionItem = this.getAccordionItem();
         accordionItem.getTreeItem(parentName).click();
         getComponentByRole(Button, 'jnt:category').click(); // New Category header menu
         this.editFields(fields).create();
+        this.getTable().getRowByName(fields.name || fields.title).should('be.visible');
     }
 
     editCategoryNav(name: string, fields: {title?: string, name?: string}, lang?: string) {

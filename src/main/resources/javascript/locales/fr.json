@@ -228,6 +228,72 @@
           }
         }
       },
+      "tagManager": {
+        "header": "Gestionnaire de tags - {{siteName}}",
+        "title": "Gestionnaire de tags",
+        "search": {
+          "placeholder": "Rechercher des tags",
+          "results": "{{count}} tags"
+        },
+        "table": {
+          "name": "Nom du tag",
+          "usages": "Utilisations",
+          "actions": {
+            "label": "Actions",
+            "view": "Voir les contenus taggés",
+            "edit": "Renommer le tag",
+            "remove": "Supprimer le tag",
+            "editContent": "Editer le contenu",
+            "editTagOnContent": "Modifier le tag du contenu",
+            "removeFromContent": "Retirer le tag du contenu"
+          }
+        },
+        "workspace": {
+          "default": "Tags de l'espace de travail par défaut",
+          "sync": "Les changements sont appliqués en édition et en ligne"
+        },
+        "drawer": {
+          "title": "Contenus utilisant \"{{tag}}\"",
+          "subtitle": "{{count}} contenus"
+        },
+        "rename": {
+          "title": "Renommer \"{{tag}}\"",
+          "description": "Vous êtes sur le point de renommer {{count}} occurrences de ce tag sur votre site web : {{siteName}}. Ce changement affectera également <0>votre site en ligne</0> et <1>ne peut pas être annulé</1>.",
+          "placeholder": "Saisir le nouveau nom du tag",
+          "confirm": "Renommer le tag",
+          "suggestions": "Tags suggérés"
+        },
+        "editNodeTag": {
+          "title": "Modifier \"{{tag}}\" sur {{contentName}}",
+          "description": "Remplacer le tag sélectionné pour ce contenu. Les autres tags restent inchangés.",
+          "placeholder": "Saisir le nouveau nom du tag",
+          "confirm": "Enregistrer",
+          "suggestions": "Tags suggérés"
+        },
+        "delete": {
+          "title": "Supprimer \"{{tag}}\"",
+          "description": "Vous êtes sur le point de supprimer {{count}} occurrences de ce tag sur {{siteName}}. Ce changement <0>ne peut pas être annulé</0>.",
+          "confirm": "Supprimer le tag"
+        },
+        "deleteNodeTag": {
+          "title": "Retirer \"{{tag}}\" du contenu",
+          "description": "Vous êtes sur le point de retirer \"{{tag}}\" de {{contentName}}. Ce changement <0>ne peut pas être annulé</0>.",
+          "confirm": "Retirer le tag"
+        },
+        "notifications": {
+          "renameSuccess": "{{count}} mises à jour appliquées pour \"{{tag}}\"",
+          "deleteSuccess": "{{count}} suppressions appliquées pour \"{{tag}}\"",
+          "removeFromContentSuccess": "{{count}} suppressions appliquées pour \"{{tag}}\"",
+          "updateOnContentSuccess": "\"{{tag}}\" a été remplacé par \"{{newTag}}\" sur {{contentName}}",
+          "partialFailure": "{{count}} élément(s) n'ont pas pu être traités pour \"{{tag}}\""
+        },
+        "empty": {
+          "title": "Aucun tag à afficher",
+          "description": "Aucun tag n'est actuellement disponible dans l'espace de travail par défaut.",
+          "search": "Aucun tag ne correspond à la recherche courante.",
+          "drawer": "Aucun contenu n'utilise actuellement ce tag."
+        }
+      },
       "contextMenu": {
         "lockActions": {
           "unlock": "Déverrouiller",

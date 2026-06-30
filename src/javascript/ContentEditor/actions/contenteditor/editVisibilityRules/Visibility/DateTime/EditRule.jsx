@@ -12,7 +12,6 @@ import styles from './DateTime.scss';
 
 export const EditRule = ({rule, isMatchingAllConditions, saveConditions, onCancel}) => {
     const {t} = useTranslation('jcontent');
-    console.debug('Editing rule', rule);
 
     // Rules are always persisted in the backend, so an edited rule always exposes its
     // properties array coming from the server. Keep only the condition's own editable properties
@@ -40,12 +39,14 @@ export const EditRule = ({rule, isMatchingAllConditions, saveConditions, onCance
         updatedRule.uuid = rule.uuid;
 
         // Real backend save of the updated condition.
+        // onCancel (closing the edit panel) only runs on success; the error is notified
+        // inside saveConditions so the panel stays open for the user to retry.
         saveConditions({
             updatedConditions: [buildUpdatedCondition(updatedRule)],
             isMatchingAllConditions
         }).then(() => {
             onCancel();
-        });
+        }).catch(() => {});
     }, [rule, saveConditions, isMatchingAllConditions, onCancel]);
 
     return (

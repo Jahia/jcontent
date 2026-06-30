@@ -58,7 +58,10 @@ const DateTimeContent = ({rules, refresh, node, lang, isMatchingAllConditions, i
     const handleSetIsMachingAllConditionUpdate = value => {
         if (value !== isMatchingAllConditionsUpdate) {
             setIsMatchingAllConditionsUpdate(value);
-            saveConditions({isMatchingAllConditions: value});
+            // Error notification is handled inside saveConditions; revert the optimistic toggle on failure.
+            saveConditions({isMatchingAllConditions: value}).catch(() => {
+                setIsMatchingAllConditionsUpdate(isMatchingAllConditionsUpdate);
+            });
         }
     };
 

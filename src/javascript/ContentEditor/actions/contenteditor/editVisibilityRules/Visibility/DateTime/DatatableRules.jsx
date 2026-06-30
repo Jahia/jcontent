@@ -154,7 +154,8 @@ export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) =>
                                         dataSelRole="undelete-condition"
                                         onClick={() => {
                                             // Restore a condition previously marked for deletion.
-                                            unmarkConditionForDeletion(data.rule.path);
+                                            // Error notification is handled inside the hook.
+                                            unmarkConditionForDeletion(data.rule.path).catch(() => {});
                                         }}/>
                     );
                 } else if (!hideActions) {
@@ -170,7 +171,8 @@ export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) =>
                                           onClick={() => {
                                               // Mark the condition for deletion (soft delete). It stays
                                               // visible until the deletion is published, and can be undeleted.
-                                              markConditionForDeletion(data.rule.path);
+                                              // Error notification is handled inside the hook.
+                                              markConditionForDeletion(data.rule.path).catch(() => {});
                                           }}/>
                         </>
                     );

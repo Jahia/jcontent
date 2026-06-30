@@ -1041,6 +1041,7 @@
         }
       },
       "visibilityTab": {
+        "title": "Conditions de visibilité pour {{name}}",
         "languages": {
           "title": "Langues",
           "description": "Le contenu sera visible dans les langues sélectionnées",
@@ -1060,6 +1061,8 @@
           "add": "Ajouter une condition",
           "edit": "Modifier la condition",
           "delete": "Supprimer la condition",
+          "markedForDeletionBy": "Marqué pour la suppression par {{userName}} le {{timestamp}}",
+          "loading": "Chargement…",
           "ruleType": {
             "date": "Date",
             "dayOfWeek": "Jour de la semaine",

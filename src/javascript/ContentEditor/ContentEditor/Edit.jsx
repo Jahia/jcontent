@@ -66,6 +66,7 @@ export const Edit = () => {
         <>
             <PublicationInfoContextProvider uuid={nodeData.uuid} lang={lang}>
                 <Formik
+                    enableReinitialize
                     validateOnMount
                     validateOnChange={false}
                     initialValues={initialValues}

@@ -10,7 +10,7 @@ import {
     grantRoles
 } from '@jahia/cypress';
 import {TranslateEditor} from '../../page-object/translateEditor';
-import {JContent} from '../../page-object';
+import {ContentEditor, JContent} from '../../page-object';
 import {Field, SmallTextField} from '../../page-object/fields';
 import {Dialog} from '../../page-object/dialog';
 
@@ -198,5 +198,64 @@ describe('translate action tests', () => {
             const textareaProp = props.find((prop: { name: string; }) => prop.name === 'textarea');
             expect(textareaProp.value).to.eq('textarea in English');
         });
+    });
+
+    it('stays in edit mode when switching the editing language', () => {
+        const contentEditor = ContentEditor.visit(`${parentPath}/${name}`, siteKey, 'en', 'content-folders/contents');
+        const jcontent = new JContent();
+
+        cy.log('Editor opens in edit mode');
+        jcontent.assertHeaderActionSelected('tab-edit');
+
+        cy.log('Switch the editing language from en to fr');
+        contentEditor.getLanguageSwitcherAdvancedMode().selectLangByValue('fr');
+
+        cy.log('Mode is still edit after the language switch (selector unchanged, form not remounted)');
+        jcontent.assertHeaderActionSelected('tab-edit');
+    });
+
+    it('stays in translate mode when switching the target language', () => {
+        ContentEditor.visit(`${parentPath}/${name}`, siteKey, 'en', 'content-folders/contents');
+        const jcontent = new JContent();
+        const translateEditor = new TranslateEditor();
+
+        cy.log('Editor opens in edit mode, then user switches mode to translate via the header dropdown');
+        jcontent.assertHeaderActionSelected('tab-edit');
+        jcontent.selectHeaderTab('tab-translate');
+        jcontent.assertHeaderActionSelected('tab-translate');
+        translateEditor.getTranslateColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+
+        cy.log('Change the target (editable) language from en to fr');
+        translateEditor.getTranslateLanguageSwitcher().selectLangByValue('fr');
+        translateEditor.getTranslateColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+
+        cy.log('Mode is still translate after the language switch (form not remounted) — regression guard for #2483');
+        jcontent.assertHeaderActionSelected('tab-translate');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('fr');
+    });
+
+    it('opens directly in translate mode when forced through the editor config (custom UI)', () => {
+        // Mirrors how a custom UI opens Content Editor in a chosen mode: window.CE_API.edit(CE_CONFIG)
+        JContent.visit(siteKey, 'en', 'content-folders/contents');
+
+        cy.window().its('CE_API').invoke('edit', {
+            path: `${parentPath}/${name}`,
+            site: siteKey,
+            lang: 'en',
+            isFullscreen: true,
+            advancedOpenTab: 'TRANSLATE', // Constants.editPanel.translateTab
+            sideBySideContext: {lang: 'de'} // Source (read-only) language
+        });
+
+        const translateEditor = new TranslateEditor();
+        translateEditor.getTranslateColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+        translateEditor.getSourceColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+
+        cy.log('Editor opened directly in translate mode');
+        new JContent().assertHeaderActionSelected('tab-translate');
+
+        cy.log('Editable language on the left, forced source language on the right');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
     });
 });

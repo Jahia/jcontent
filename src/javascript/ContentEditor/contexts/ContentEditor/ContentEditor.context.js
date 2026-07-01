@@ -168,7 +168,6 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     // (valueConstraints updates from dependentProperties, mixin moves from ChoiceList onChange).
     const sectionsMemo = useMemo(
         () => sections ? JSON.parse(JSON.stringify(sections)) : null,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [sections]
     );
 

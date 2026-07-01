@@ -45,7 +45,7 @@ export const useFormDefinition = (query, adapter) => {
         // mounted by returning the previous data. On the very first load, propagate loading=true
         // so the initial loader overlay is shown.
         if (loading && previousDataRef.current) {
-            // isRefetching=true tells ContentEditor.context.js to keep serving the previous editorContext
+            // The isRefetching=true flag tells ContentEditor.context.js to keep serving the previous editorContext
             // (with old lang) rather than computing a new one with stale initialValues but new lang.
             // This ensures lang and initialValues transition together when fresh data arrives.
             return {data: previousDataRef.current, refetch, loading: false, isRefetching: true};

@@ -1,4 +1,5 @@
-import {Accordion, BaseComponent, Menu, getComponentBySelector} from '@jahia/cypress';
+import {Accordion, BaseComponent, getComponentBySelector} from '@jahia/cypress';
+import {JContentMenu} from './jcontentMenu';
 import ClickOptions = Cypress.ClickOptions;
 
 export class AccordionItem {
@@ -81,8 +82,12 @@ export class TreeItem extends BaseComponent {
         });
     }
 
-    contextMenu(): Menu {
+    contextMenu(): JContentMenu {
         this.get().rightclick();
-        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        // Park the cursor away from the menu after opening it. On CI the real
+        // mouse position can coincide with where the menu renders, leaving an
+        // item pre-hovered so that a subsequent realHover() fires no mouseenter.
+        cy.get('body').realHover({position: 'topLeft'});
+        return getComponentBySelector(JContentMenu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 }

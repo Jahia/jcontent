@@ -114,6 +114,7 @@ module.exports = (env, argv) => {
                 },
                 remotes: {
                     '@jahia/app-shell': 'appShellRemote',
+                    '@jahia/jcontent': 'appShell.remotes.jcontent'
                 },
             }, Object.keys(packageJson.dependencies))),
             new CleanWebpackPlugin({

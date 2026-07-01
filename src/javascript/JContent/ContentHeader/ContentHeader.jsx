@@ -86,8 +86,10 @@ const ContentHeader = () => {
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
 
-    const viewSelector = registry.get('accordionItem', mode)?.tableConfig?.viewSelector;
-    const sortSelector = registry.get('accordionItem', mode)?.tableConfig?.sortSelector;
+    const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
+    const viewSelector = tableConfig?.viewSelector;
+    const sortSelector = tableConfig?.sortSelector;
+    const showStatus = tableConfig?.header?.showStatus !== false;
 
     const {loading, node} = useNodeInfo({path, language, displayLanguage}, {
         getPrimaryNodeType: true,
@@ -114,7 +116,7 @@ const ContentHeader = () => {
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
-            status={<ContentStatuses node={node}/>}
+            status={showStatus && <ContentStatuses node={node}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
             toolbarRight={<><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
         />
@@ -123,8 +125,9 @@ const ContentHeader = () => {
             title={title}
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
+            className="content-header"
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
-            status={<ContentStatuses node={node}/>}
+            status={showStatus && <ContentStatuses node={node}/>}
             toolbarLeft={
                 <>
                     {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}

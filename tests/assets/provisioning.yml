@@ -7,7 +7,6 @@
 
 # This modules were added during the switch from using jahia-discovery to jahia-ee
 - installBundle:
-    - 'mvn:org.jahia.modules/legacy-default-components'
     - 'mvn:org.jahia.modules/dx-base-demo-core'
     - 'mvn:org.jahia.modules/dx-base-demo-components'
     - 'mvn:org.jahia.modules/dx-base-demo-templates'

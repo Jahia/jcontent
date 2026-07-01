@@ -17,6 +17,7 @@ import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHan
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from '~/JContent/ContentTree/ContentTree.constants';
 import {booleanValue} from '~/JContent/JContent.utils';
+import {mediaColumnData} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable/columns';
 import {
     DeletionInfoQueryHandler
 } from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
@@ -194,6 +195,7 @@ export const jContentAccordionItems = registry => {
         },
         tableConfig: {
             queryHandler: FilesQueryHandler,
+            columns: mediaColumnData,
             typeFilter: ['jnt:file', 'jnt:folder'],
             viewSelector: <FileModeSelector/>,
             sortSelector: <SortSelector/>,

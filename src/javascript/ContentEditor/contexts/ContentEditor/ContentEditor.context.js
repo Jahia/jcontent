@@ -167,7 +167,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     // language-switch reloads via reference inequality, while preserving in-place mutations
     // (valueConstraints updates from dependentProperties, mixin moves from ChoiceList onChange).
     const sectionsMemo = useMemo(
-        () => sections ? JSON.parse(JSON.stringify(sections)) : null,
+        () => sections ? structuredClone(sections) : null,
         [sections]
     );
 

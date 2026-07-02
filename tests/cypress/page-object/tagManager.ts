@@ -23,6 +23,7 @@ export class TagManager extends JContent {
         jcontent.getAccordionItem('apps').click();
         jcontent.getAccordionItem('apps').getTreeItem(TAG_MANAGER_APP_KEY).get().should('be.visible').click();
         cy.get(ROOT_SELECTOR).should('be.visible');
+        cy.get('[data-cm-role="tag-manager-loader"]', {timeout: 30000}).should('not.exist');
         return new TagManager(jcontent);
     }
 

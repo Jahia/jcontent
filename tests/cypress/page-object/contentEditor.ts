@@ -129,6 +129,10 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'backButton').get().should('not.exist', {timeout: 5000});
     }
 
+    discard() {
+        getComponentByRole(Button, 'close-dialog-discard').click();
+    }
+
     addAnotherContent() {
         cy.get('#createAnother').check();
         cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');

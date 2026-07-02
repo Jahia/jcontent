@@ -153,6 +153,89 @@ export const TagManagerDrawer = ({
         }
     }, [editNodeTarget, tag, renameTagOnNode, siteKey, onMutationComplete, notify, t]);
 
+    let drawerContent;
+    if (loading) {
+        drawerContent = (
+            <div className={styles.drawerLoader}>
+                <Loader size="big"/>
+            </div>
+        );
+    } else if (error) {
+        drawerContent = (
+            <div className={styles.drawerEmpty}>
+                <Typography>{t('jcontent:label.contentManager.error.queryingContent', {details: error.message})}</Typography>
+            </div>
+        );
+    } else {
+        drawerContent = (
+            <>
+                <div className={styles.drawerList}>
+                    {nodes.map(node => (
+                        <div key={node.uuid} className={styles.drawerItem} data-cm-role="tag-manager-drawer-item" data-node-path={node.path}>
+                            <div className={styles.drawerItemInfo}>
+                                <div className={styles.drawerItemMain}>
+                                    <NodeIcon node={node}/>
+                                    <div className={styles.drawerItemText}>
+                                        <Typography weight="bold">{node.displayName}</Typography>
+                                        <Typography variant="caption">{node.path}</Typography>
+                                    </div>
+                                </div>
+                                <div className={styles.drawerItemType}>
+                                    <Typography variant="caption" weight="bold">
+                                        {node.primaryNodeType?.displayName || node.primaryNodeType?.name}
+                                    </Typography>
+                                </div>
+                            </div>
+                            <div className={styles.drawerItemActions}>
+                                <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.editTagOnContent')}>
+                                    <Button
+                                        variant="ghost"
+                                        size="small"
+                                        data-cm-role="tag-manager-edit-node-tag"
+                                        icon={<Edit/>}
+                                        onClick={() => setEditNodeTarget(node)}
+                                    />
+                                </Tooltip>
+                                <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.removeFromContent')}>
+                                    <Button
+                                        variant="ghost"
+                                        color="danger"
+                                        size="small"
+                                        data-cm-role="tag-manager-delete-node-tag"
+                                        disabled={deletingNodeId === node.uuid}
+                                        icon={<DeletePermanently/>}
+                                        onClick={() => setDeleteTarget(node)}
+                                    />
+                                </Tooltip>
+                            </div>
+                        </div>
+                    ))}
+                    {!nodes.length && (
+                        <div className={styles.drawerEmpty}>
+                            <Typography>{t('jcontent:label.contentManager.tagManager.empty.drawer')}</Typography>
+                        </div>
+                    )}
+                </div>
+                <TablePagination
+                    className={styles.pagination}
+                    totalNumberOfRows={totalCount}
+                    currentPage={page + 1}
+                    rowsPerPage={pageSize}
+                    label={{
+                        rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                        of: t('jcontent:label.pagination.of')
+                    }}
+                    rowsPerPageOptions={[10, 25, 50]}
+                    onPageChange={nextPage => setPage(nextPage - 1)}
+                    onRowsPerPageChange={newPageSize => {
+                        setPageSize(newPageSize);
+                        setPage(0);
+                    }}
+                />
+            </>
+        );
+    }
+
     return (
         <>
             <Drawer className={styles.drawerPaper} data-cm-role="tag-manager-drawer" isOpen={isOpen}>
@@ -169,81 +252,7 @@ export const TagManagerDrawer = ({
                         <Button data-cm-role="tag-manager-close-drawer" variant="ghost" icon={<Close/>} onClick={onClose}/>
                     </div>
 
-                    {loading ? (
-                        <div className={styles.drawerLoader}>
-                            <Loader size="big"/>
-                        </div>
-                    ) : error ? (
-                        <div className={styles.drawerEmpty}>
-                            <Typography>{t('jcontent:label.contentManager.error.queryingContent', {details: error.message})}</Typography>
-                        </div>
-                    ) : (
-                        <>
-                            <div className={styles.drawerList}>
-                                {nodes.map(node => (
-                                    <div key={node.uuid} className={styles.drawerItem} data-cm-role="tag-manager-drawer-item" data-node-path={node.path}>
-                                        <div className={styles.drawerItemInfo}>
-                                            <div className={styles.drawerItemMain}>
-                                                <NodeIcon node={node}/>
-                                                <div className={styles.drawerItemText}>
-                                                    <Typography weight="bold">{node.displayName}</Typography>
-                                                    <Typography variant="caption">{node.path}</Typography>
-                                                </div>
-                                            </div>
-                                            <div className={styles.drawerItemType}>
-                                                <Typography variant="caption" weight="bold">
-                                                    {node.primaryNodeType?.displayName || node.primaryNodeType?.name}
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                        <div className={styles.drawerItemActions}>
-                                            <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.editTagOnContent')}>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="small"
-                                                    data-cm-role="tag-manager-edit-node-tag"
-                                                    icon={<Edit/>}
-                                                    onClick={() => setEditNodeTarget(node)}
-                                                />
-                                            </Tooltip>
-                                            <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.removeFromContent')}>
-                                                <Button
-                                                    variant="ghost"
-                                                    color="danger"
-                                                    size="small"
-                                                    data-cm-role="tag-manager-delete-node-tag"
-                                                    disabled={deletingNodeId === node.uuid}
-                                                    icon={<DeletePermanently/>}
-                                                    onClick={() => setDeleteTarget(node)}
-                                                />
-                                            </Tooltip>
-                                        </div>
-                                    </div>
-                                ))}
-                                {!nodes.length && (
-                                    <div className={styles.drawerEmpty}>
-                                        <Typography>{t('jcontent:label.contentManager.tagManager.empty.drawer')}</Typography>
-                                    </div>
-                                )}
-                            </div>
-                            <TablePagination
-                                className={styles.pagination}
-                                totalNumberOfRows={totalCount}
-                                currentPage={page + 1}
-                                rowsPerPage={pageSize}
-                                label={{
-                                    rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                                    of: t('jcontent:label.pagination.of')
-                                }}
-                                rowsPerPageOptions={[10, 25, 50]}
-                                onPageChange={nextPage => setPage(nextPage - 1)}
-                                onRowsPerPageChange={newPageSize => {
-                                    setPageSize(newPageSize);
-                                    setPage(0);
-                                }}
-                            />
-                        </>
-                    )}
+                    {drawerContent}
                 </div>
             </Drawer>
             <DeleteNodeTagDialog

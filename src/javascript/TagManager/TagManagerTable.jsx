@@ -28,6 +28,72 @@ import {getFailedCount, getImpactedItemsCount} from './TagManager.utils';
 import styles from './TagManager.scss';
 
 /* eslint-disable react/prop-types */
+const NameCell = ({value, cell, column, row}) => (
+    <TableBodyCell key={row.id + column.id}
+                   {...cell.getCellProps()}
+                   data-cm-role="tag-manager-name"
+    >
+        <Typography>{value}</Typography>
+    </TableBodyCell>
+);
+
+const OccurrencesCell = ({value, cell, column, row}) => (
+    <TableBodyCell key={row.id + column.id}
+                   {...cell.getCellProps()}
+                   width={column.width}
+                   data-cm-role="tag-manager-occurrences"
+    >
+        <Typography>{value}</Typography>
+    </TableBodyCell>
+);
+
+const ActionsHeader = () => {
+    const {t} = useTranslation('jcontent');
+    return <Typography weight="bold">{t('jcontent:label.contentManager.tagManager.table.actions.label')}</Typography>;
+};
+
+const ActionsCell = ({row, cell, column}) => {
+    const {t} = useTranslation('jcontent');
+    return (
+        <TableBodyCell key={row.id + column.id}
+                       {...cell.getCellProps()}
+                       width={column.width}
+                       data-cm-role="tag-manager-actions"
+        >
+            <div className={styles.rowActions}>
+                <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.view')}>
+                    <Button
+                        variant="ghost"
+                        size="small"
+                        data-cm-role="tag-manager-view"
+                        icon={<Visibility/>}
+                        onClick={() => column.onView(row.original)}
+                    />
+                </Tooltip>
+                <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.edit')}>
+                    <Button
+                        variant="ghost"
+                        size="small"
+                        data-cm-role="tag-manager-rename"
+                        icon={<Edit/>}
+                        onClick={() => column.setRenameTarget(row.original)}
+                    />
+                </Tooltip>
+                <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.remove')}>
+                    <Button
+                        variant="ghost"
+                        color="danger"
+                        size="small"
+                        data-cm-role="tag-manager-delete"
+                        icon={<DeletePermanently/>}
+                        onClick={() => column.setDeleteTarget(row.original)}
+                    />
+                </Tooltip>
+            </div>
+        </TableBodyCell>
+    );
+};
+
 export const TagManagerTable = ({
     siteKey,
     siteName,
@@ -155,14 +221,7 @@ export const TagManagerTable = ({
             property: 'name',
             label: 'jcontent:label.contentManager.tagManager.table.name',
             sortable: true,
-            Cell: ({value, cell, column, row}) => (
-                <TableBodyCell key={row.id + column.id}
-                               {...cell.getCellProps()}
-                               data-cm-role="tag-manager-name"
-                >
-                    <Typography>{value}</Typography>
-                </TableBodyCell>
-            )
+            Cell: NameCell
         },
         {
             Header,
@@ -171,60 +230,18 @@ export const TagManagerTable = ({
             label: 'jcontent:label.contentManager.tagManager.table.usages',
             sortable: true,
             width: 180,
-            Cell: ({value, cell, column, row}) => (
-                <TableBodyCell key={row.id + column.id}
-                               {...cell.getCellProps()}
-                               width={column.width}
-                               data-cm-role="tag-manager-occurrences"
-                >
-                    <Typography>{value}</Typography>
-                </TableBodyCell>
-            )
+            Cell: OccurrencesCell
         },
         {
-            Header: () => <Typography weight="bold">{t('jcontent:label.contentManager.tagManager.table.actions.label')}</Typography>,
+            Header: ActionsHeader,
             id: 'actions',
             width: 180,
-            Cell: ({row, cell, column}) => (
-                <TableBodyCell key={row.id + column.id}
-                               {...cell.getCellProps()}
-                               width={column.width}
-                               data-cm-role="tag-manager-actions"
-                >
-                    <div className={styles.rowActions}>
-                        <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.view')}>
-                            <Button
-                                variant="ghost"
-                                size="small"
-                                data-cm-role="tag-manager-view"
-                                icon={<Visibility/>}
-                                onClick={() => onView(row.original)}
-                            />
-                        </Tooltip>
-                        <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.edit')}>
-                            <Button
-                                variant="ghost"
-                                size="small"
-                                data-cm-role="tag-manager-rename"
-                                icon={<Edit/>}
-                                onClick={() => setRenameTarget(row.original)}
-                            />
-                        </Tooltip>
-                        <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.remove')}>
-                            <Button
-                                variant="ghost"
-                                color="danger"
-                                size="small"
-                                data-cm-role="tag-manager-delete"
-                                icon={<DeletePermanently/>}
-                                onClick={() => setDeleteTarget(row.original)}
-                            />
-                        </Tooltip>
-                    </div>
-                </TableBodyCell>
-            )
+            onView,
+            setRenameTarget,
+            setDeleteTarget,
+            Cell: ActionsCell
         }
-    ]), [onView, t]);
+    ]), [onView, setRenameTarget, setDeleteTarget]);
 
     const {
         getTableProps,
@@ -238,6 +255,73 @@ export const TagManagerTable = ({
         sort,
         onSort: (column, order) => onSort({order, orderBy: column.property})
     }, useSort);
+
+    let tableContent;
+    if (isLoading) {
+        tableContent = (
+            <div className={styles.loaderContainer}>
+                <Loader size="big"/>
+            </div>
+        );
+    } else if (error) {
+        tableContent = (
+            <div className={styles.emptyState}>
+                <Typography variant="heading">{t('jcontent:label.contentManager.error.contentUnavailable')}</Typography>
+                <Typography>{t('jcontent:label.contentManager.error.queryingContent', {details: error.message})}</Typography>
+            </div>
+        );
+    } else if (totalCount === 0) {
+        tableContent = (
+            <div className={styles.emptyState}>
+                <Typography variant="heading">{t('jcontent:label.contentManager.tagManager.empty.title')}</Typography>
+                <Typography>{normalizedSearch ? t('jcontent:label.contentManager.tagManager.empty.search') : t('jcontent:label.contentManager.tagManager.empty.description')}</Typography>
+            </div>
+        );
+    } else {
+        tableContent = (
+            <div className={styles.tableSection}>
+                <div className={styles.tableWrapper}>
+                    <Table {...getTableProps()} style={{width: '100%', minWidth: '720px'}}>
+                        <ContentListHeader headerGroups={headerGroups}/>
+                        <TableBody {...getTableBodyProps()}>
+                            {rows.map(row => {
+                                prepareRow(row);
+                                const isSelected = row.original.name === selectedTag;
+                                return (
+                                    <TableRow
+                                        key={row.id}
+                                        {...row.getRowProps()}
+                                        data-cm-role="tag-manager-row"
+                                        data-tag-name={row.original.name}
+                                        className={isSelected ? styles.selectedRow : undefined}
+                                    >
+                                        {row.cells.map(cell => (
+                                            <React.Fragment key={cell.column.id}>
+                                                {cell.render('Cell')}
+                                            </React.Fragment>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
+                <TablePagination
+                    className={styles.pagination}
+                    totalNumberOfRows={totalCount}
+                    currentPage={page + 1}
+                    rowsPerPage={pageSize}
+                    label={{
+                        rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                        of: t('jcontent:label.pagination.of')
+                    }}
+                    rowsPerPageOptions={[10, 25, 50, 100]}
+                    onPageChange={nextPage => setPage(nextPage - 1)}
+                    onRowsPerPageChange={newPageSize => setPageSize(newPageSize)}
+                />
+            </div>
+        );
+    }
 
     return (
         <>
@@ -258,63 +342,7 @@ export const TagManagerTable = ({
                     </Typography>
                 </div>
 
-                {isLoading ? (
-                    <div className={styles.loaderContainer}>
-                        <Loader size="big"/>
-                    </div>
-                ) : error ? (
-                    <div className={styles.emptyState}>
-                        <Typography variant="heading">{t('jcontent:label.contentManager.error.contentUnavailable')}</Typography>
-                        <Typography>{t('jcontent:label.contentManager.error.queryingContent', {details: error.message})}</Typography>
-                    </div>
-                ) : totalCount === 0 ? (
-                    <div className={styles.emptyState}>
-                        <Typography variant="heading">{t('jcontent:label.contentManager.tagManager.empty.title')}</Typography>
-                        <Typography>{normalizedSearch ? t('jcontent:label.contentManager.tagManager.empty.search') : t('jcontent:label.contentManager.tagManager.empty.description')}</Typography>
-                    </div>
-                ) : (
-                    <div className={styles.tableSection}>
-                        <div className={styles.tableWrapper}>
-                            <Table {...getTableProps()} style={{width: '100%', minWidth: '720px'}}>
-                                <ContentListHeader headerGroups={headerGroups}/>
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map(row => {
-                                        prepareRow(row);
-                                        const isSelected = row.original.name === selectedTag;
-                                        return (
-                                            <TableRow
-                                                key={row.id}
-                                                {...row.getRowProps()}
-                                                data-cm-role="tag-manager-row"
-                                                data-tag-name={row.original.name}
-                                                className={isSelected ? styles.selectedRow : undefined}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <React.Fragment key={cell.column.id}>
-                                                        {cell.render('Cell')}
-                                                    </React.Fragment>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </div>
-                        <TablePagination
-                            className={styles.pagination}
-                            totalNumberOfRows={totalCount}
-                            currentPage={page + 1}
-                            rowsPerPage={pageSize}
-                            label={{
-                                rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                                of: t('jcontent:label.pagination.of')
-                            }}
-                            rowsPerPageOptions={[10, 25, 50, 100]}
-                            onPageChange={nextPage => setPage(nextPage - 1)}
-                            onRowsPerPageChange={newPageSize => setPageSize(newPageSize)}
-                        />
-                    </div>
-                )}
+                {tableContent}
             </div>
 
             <RenameTagDialog

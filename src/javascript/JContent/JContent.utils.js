@@ -355,8 +355,18 @@ export const getTitle = (t, item, prefix = 'jContent') => {
     return item.label ? `${prefix} - ${t(item.label)}` : `${prefix} - ${item.key}`;
 };
 
-export const JahiaAreasUtil = {
+export const JahiaRenderedModulesUtil = {
     jahiaAreas: {},
+    jahiaModules: {},
+    setModules: function (modules) {
+        this.jahiaModules = modules;
+    },
+    addModule: function (path, data) {
+        this.jahiaModules[path] = data;
+    },
+    getModule: function (path) {
+        return this.jahiaModules[path];
+    },
     addArea: function (path, elemAttrs) {
         this.jahiaAreas[path] = elemAttrs;
     },
@@ -366,6 +376,93 @@ export const JahiaAreasUtil = {
     },
     getArea: function (path) {
         return this.jahiaAreas[path];
+    },
+    // This simply collects all placeholder nodetypes for a module, it uses module nodetypes if wildcard placeholder without nodetypes is found.
+    // It's supposed to return undefined if module is not found and an empty list if no wildcard placeholder is found.
+    resolveNodeTypes: function (path) {
+        const moduleInfo = this.getModule(path);
+
+        if (!moduleInfo) {
+            return undefined;
+        }
+
+        const placeholderNodeTypes = [];
+        let containsAnyNodeTypeWildCard = false;
+
+        moduleInfo?.forEach(item => {
+            if (item.placeholder && item.path === '*' && item.nodeTypes?.length > 0) {
+                placeholderNodeTypes.push(...item.nodeTypes);
+            } else if (item.placeholder && item.path === '*' && !item.nodeTypes) {
+                containsAnyNodeTypeWildCard = true;
+            }
+        });
+
+        if (containsAnyNodeTypeWildCard) {
+            // Wildcard placeholder without nodetypes means "accept parent's types too"
+            const parentTypes = moduleInfo
+                ?.filter(item => !item.placeholder && item.path === '*' && item.nodeTypes?.length > 0)
+                .flatMap(item => item.nodeTypes) || [];
+            return [...parentTypes, ...placeholderNodeTypes];
+        }
+
+        return placeholderNodeTypes;
+    },
+    extractModuleInfoFromRenderedPage: function (pagePath, language, template) {
+        const renderMode = 'editframe';
+        const encodedPath = pagePath.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
+        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
+        console.debug(`Fetching html for ${url} to extract module information.`);
+
+        fetch(url, {
+            method: 'get'
+        }).then(resp => {
+            return resp.text();
+        }).then(resp => {
+            const dom = new DOMParser().parseFromString(resp, 'text/html');
+
+            // Placeholder per module information extraction
+            const placeholdersByParent = {};
+
+            dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
+                const modulePath = element.getAttribute('path');
+                const elemType = element.getAttribute('type');
+                const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
+                const limit = element.getAttribute('listlimit') ?? undefined;
+
+                if (modulePath !== '*' && modulePath !== pagePath && (elemType === 'area' || elemType === 'absoluteArea')) {
+                    this.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
+                }
+
+                if (elemType === 'placeholder') {
+                    const ancestor = element.parentElement?.closest('[jahiatype="module"]');
+                    const ancestorPath = ancestor?.getAttribute('path');
+                    if (ancestorPath) {
+                        if (!placeholdersByParent[ancestorPath]) {
+                            placeholdersByParent[ancestorPath] = [];
+                        }
+
+                        placeholdersByParent[ancestorPath].push({
+                            path: element.getAttribute('path'),
+                            nodeTypes: element.getAttribute('nodetypes')?.split(' '),
+                            placeholder: true
+                        });
+                    }
+                } else if (!placeholdersByParent[modulePath]) {
+                    placeholdersByParent[modulePath] = [];
+                    if (nodeTypes) {
+                        placeholdersByParent[modulePath].push({
+                            path: '*',
+                            nodeTypes,
+                            placeholder: false
+                        });
+                    }
+                }
+            });
+
+            this.setModules(placeholdersByParent);
+        }).catch(e => {
+            console.error('Failed to capture areas for page', e);
+        });
     }
 };
 

@@ -17,7 +17,7 @@ import {BasicSearch} from './basicSearch';
 import {CreateContent} from './createContent';
 import {ContentEditor} from './contentEditor';
 import {Media} from './media';
-import {ContentTable} from './contentTable';
+import {ContentTable, ContentTableRow} from './contentTable';
 import {AccordionItem} from './accordionItem';
 import {ContentGrid} from './contentGrid';
 import {CompareDialog} from './compareDialog';
@@ -25,6 +25,7 @@ import {PageBuilderHeaders, PageBuilderModule} from './pageBuilder';
 import VisitOptions = Cypress.VisitOptions;
 import {ContentStatusSelector} from './contentStatusSelector';
 import {ContentStatus} from './contentStatus';
+import {SidePanel} from './sidePanel';
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav;
@@ -109,10 +110,10 @@ export class JContent extends BasePage {
     }
 
     openPreview(name: string) {
-        return this.getTable()
+        this.getTable()
             .getRowByName(name)
-            .contextMenu()
-            .selectByRole('preview');
+            .click();
+        new SidePanel().switchToTab('tab-preview');
     }
 
     getBrowseControlMenu(): Menu {
@@ -148,6 +149,13 @@ export class JContent extends BasePage {
 
     getTable(): ContentTable {
         return getComponent(ContentTable, null, el => expect(el).to.be.visible);
+    }
+
+    createFolder(folderName: string): ContentTableRow {
+        this.getHeaderActionButton('createContentFolder').click();
+        cy.get('#folder-name').type(folderName);
+        cy.get('[data-cm-role="create-folder-as-confirm"]').click();
+        return this.getTable().getRowByName(folderName);
     }
 
     getGrid(): ContentGrid {
@@ -253,8 +261,13 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
+    selectHeaderTab(role: string) {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get(`[data-sel-role="${role}"]`).click();
+    }
+
     assertHeaderActionSelected(role: string) {
-        this.getHeaderActionButton(role).should('have.class', 'moonstone-tabItem_selected');
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').should('have.attr', 'data-sel-tab', role);
     }
 
     publish() {

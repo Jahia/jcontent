@@ -75,4 +75,24 @@ describe('Page builder - content manipulation', () => {
         cy.log('Verify no error occurred and the main area is still visible');
         jcontent.getModule(areaPath).get().should('be.visible');
     });
+
+    /**
+     * Right-clicking an empty area (nothing selected, no selectable content under the cursor)
+     * must not fall back to the page. It previously opened a context menu targeting the page,
+     * so "Delete" removed the whole page. Desired behavior: if nothing is selected or selectable,
+     * the page should not be selected by default.
+     */
+    it('Does not target the page when right-clicking an empty area with nothing selected', () => {
+        cy.log('Nothing is selected initially');
+        cy.get('[data-sel-role="selection-infos"]').should('not.exist');
+
+        cy.log('Right-click the page area without hovering or selecting any content');
+        jcontent.getMainModule(homePath).get().rightclick('topLeft', {force: true});
+
+        cy.log('The context menu must not open (it used to target the page)');
+        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)').should('not.exist');
+
+        cy.log('And the page must not become selected');
+        cy.get('[data-sel-role="selection-infos"]').should('not.exist');
+    });
 });

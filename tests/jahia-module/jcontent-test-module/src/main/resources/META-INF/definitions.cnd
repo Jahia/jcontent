@@ -24,6 +24,12 @@
  - moduleI18nRBAutocreatedString (string) = resourceBundle('kiss') autocreated internationalized
  - moduleClassInitString (string) = useClass(org.jahia.modules.textfieldinitializer.InitTextValue)
 
+// Regression test type for jcontent#2374: a property with NO default value, validated by a
+// custom OSGi validator. Because it has no default value it is absent from the create form's
+// initial values, which used to prevent its constraint violation from being mapped to the field.
+[cent:noDefaultValidator] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title
+ - noDefaultString (string)
+
 [cent:testTextField] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:autoPublish
 
 [cent:defaultValueTest] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery
@@ -196,6 +202,8 @@
 - double2 (double)
 - double3 (double)
 - longReq (long) mandatory
+- longOpenLower (long) < '(0,)'
+- longOpenUpper (long) < '(,10]'
 
 // Regression test types for jahia-private#4940:
 // jmix:templateMixin with NO visible properties must still be applied via addMixin choicelist
@@ -257,5 +265,29 @@
   + * (cent:childObject4)
   + * (cent:childObject5)
   + * (cent:childObject6)
+
+[cent:twoMultipleWithLimitTwo] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + * (cent:childObject1)
+ + * (cent:childObject2)
+
+[cent:oneMultipleWithLimitTwo] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + * (cent:childObject1)
+
+[cent:twoMultipleOneNamed] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - someProperty (string)
+ + * (cent:childObject1)
+ + * (cent:childObject2)
+
+[cent:checkboxChoiceList] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title
+ - checkboxes (string, choicelist) = 'choice1' multiple < 'choice1', 'choice2', 'choice3'
+
+[cent:expert] > jnt:content, jmix:droppableContent
+ - name (string)
+
+[cemix:expertMix] > jmix:mainResource mixin
+ extends = cent:expert
+ - test1 (string)
 
 

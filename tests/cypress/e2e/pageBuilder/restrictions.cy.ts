@@ -148,6 +148,55 @@ describe('Page builder', () => {
         });
     });
 
+    // Regression for the "Create another" checkbox bypassing the j:numberOfItems limit.
+    describe('area item count limit with "Create another"', function () {
+        const areaPath = '/sites/jcontentSite/home/area-main/createAnotherLimitArea';
+
+        beforeEach(() => {
+            addNode({
+                name: 'createAnotherLimitArea',
+                parentPathOrId: '/sites/jcontentSite/home/area-main',
+                primaryNodeType: 'jnt:absoluteArea',
+                properties: [
+                    {name: 'j:allowedTypes', values: ['jnt:text']},
+                    {name: 'j:numberOfItems', value: 2},
+                    {name: 'j:level', value: 0}
+                ]
+            });
+            jcontent = JContent
+                .visit('jcontentSite', 'en', 'pages/home')
+                .switchToPageBuilder();
+        });
+
+        afterEach(() => {
+            deleteNode(areaPath);
+        });
+
+        it('should respect j:numberOfItems while "Create another" is checked', () => {
+            const area = jcontent.getModule(areaPath);
+            area.get().scrollIntoView();
+            area.getCreateButtons().getButtonByRole('jnt:text').get().first().click();
+
+            const contentEditor = new ContentEditor();
+
+            // First item, with "Create another" checked: editor stays open.
+            contentEditor.openSection('content').expand().get().find('input[name="jnt:text_text"]').type('limit item 1');
+            contentEditor.addAnotherContent();
+            contentEditor.create();
+
+            // Only one slot left: the (last allowed) second item must hide the checkbox,
+            // even though "Create another" was checked.
+            cy.get('#createAnother').should('not.exist');
+
+            // Create the second (last allowed) item.
+            contentEditor.openSection('content').expand().get().find('input[name="jnt:text_text"]').type('limit item 2');
+            contentEditor.create();
+
+            // Limit reached: the editor closes instead of reopening a blank form for a 3rd item.
+            cy.get(ContentEditor.defaultSelector).should('not.exist');
+        });
+    });
+
     // Template 'contentType' from 'jcontent-test-template' has an area content restriction of pbnt:contentRestriction
     describe('Template content type restriction', () => {
         const siteKey = 'restrictedSite';

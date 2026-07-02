@@ -29,7 +29,12 @@ export const EditPanelCompact = ({title, createAnother}) => {
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
-    const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
+    const editTab = tabs.find(tab => tab.value === Constants.editPanel.editTab);
+    if (!editTab) {
+        throw new Error('Edit tab not found in registry for target "editHeaderTabsActions" — ensure registerDropdownOptions has been called before rendering');
+    }
+
+    const {displayableComponent} = editTab;
 
     return (
         <>
@@ -51,10 +56,10 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 </div>
             </DialogTitle>
             <DialogContent className="flexCol" id="contenteditor-dialog-content" data-sel-role="form-container">
-                <EditPanelContent/>
+                {displayableComponent}
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
-                {createAnother && (
+                {createAnother && !createAnother.disabled && (
                     <>
                         <Checkbox className={styles.checkbox} id="createAnother" checked={createAnother.value} onChange={() => createAnother.set(!createAnother.value)}/>
                         <Typography isUpperCase component="label" htmlFor="createAnother" variant="button" className={styles.checkbox}>
@@ -70,7 +75,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 <div className={styles.saveActions}>
                     <DisplayActions
                         buttonProps={accentColorButtonProps}
-                        isCreateAnother={createAnother?.value}
+                        isCreateAnother={createAnother?.value && !createAnother?.disabled}
                         target="content-editor/header/main-save-actions"
                         render={ButtonRenderer}
                     />

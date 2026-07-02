@@ -68,6 +68,17 @@ export const CreateFormQuery = gql`
                     name
                 }
                 lockedAndCannotBeEdited
+                # Parent item-count limit info, used to enforce j:numberOfItems / jmix:listSizeLimit
+                # while the "Create another" checkbox is checked (refetched on each create-another save).
+                childrenCount: children(typesFilter: {types: ["nt:base"], multi: ANY}) {
+                    pageInfo {
+                        totalCount
+                    }
+                }
+                isListSizeLimit: isNodeType(type: {multi: ANY, types: ["jmix:listSizeLimit"]})
+                limitProperty: property(name: "limit") {
+                    value
+                }
                 displayableNode {
                     ...NodeCacheRequiredFields
                     path

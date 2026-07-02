@@ -1,6 +1,7 @@
 import {ContentEditor} from './contentEditor';
 import {JContent} from './jcontent';
 import {Field} from './fields';
+import {Section} from './section';
 import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
 import {BaseComponent, getComponentByAttr, getComponentBySelector} from '@jahia/cypress';
 import {LanguageSwitcher} from './languageSwitcher';
@@ -17,8 +18,8 @@ export class TranslateEditor extends ContentEditor {
 
         const _instance = new TranslateEditor();
         // Make sure the translate editor is loaded before proceeding
-        _instance.getTranslateColumn().get().get('.moonstone-loader', {timeout: 5000}).should('not.exist');
-        _instance.getSourceColumn().get().get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        _instance.getTranslateColumn().get().find('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        _instance.getSourceColumn().get().find('.moonstone-loader', {timeout: 5000}).should('not.exist');
         return _instance;
     }
 
@@ -32,7 +33,7 @@ export class TranslateEditor extends ContentEditor {
 
     getSourceColumn(): BaseComponent {
         if (!this.sourceColumnComponent) {
-            this.sourceColumnComponent = new BaseComponent(cy.get('[data-sel-role="left-column"]'));
+            this.sourceColumnComponent = new BaseComponent(cy.get('[data-sel-role="right-column"]'));
         }
 
         return this.sourceColumnComponent;
@@ -40,7 +41,7 @@ export class TranslateEditor extends ContentEditor {
 
     getTranslateColumn(): BaseComponent {
         if (!this.translateColumnComponent) {
-            this.translateColumnComponent = new BaseComponent(cy.get('[data-sel-role="right-column"]'));
+            this.translateColumnComponent = new BaseComponent(cy.get('[data-sel-role="left-column"]'));
         }
 
         return this.translateColumnComponent;
@@ -60,6 +61,13 @@ export class TranslateEditor extends ContentEditor {
 
     getTranslateField<FieldType extends Field>(FieldComponent: ComponentType<FieldType>, fieldName: string): Field {
         return getComponentByAttr(FieldComponent, 'data-sel-content-editor-field', fieldName, this.getTranslateColumn());
+    }
+
+    getTranslateSection(sectionName: string): Section {
+        const selector = `[data-sel-content-editor-fields-group="${sectionName}"], [data-sel-content-editor-fields-group-display-name="${sectionName}"]`;
+        const section = getComponentBySelector(Section, selector, this.getTranslateColumn());
+        (section as Section & {sectionName: string}).sectionName = sectionName;
+        return section;
     }
 
     getSourceLanguageSwitcher(): LanguageSwitcher {

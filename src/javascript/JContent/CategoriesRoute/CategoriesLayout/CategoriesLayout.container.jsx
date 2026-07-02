@@ -15,16 +15,10 @@ export const CategoriesLayoutContainer = () => {
     const {t} = useTranslation('jcontent');
     const currentResult = useRef();
 
-    const {
-        mode,
-        path,
-        previewSelection,
-        previewState,
-        filesMode,
-        viewType
-    } = useSelector(state => ({
+    const {mode, path, viewType} = useSelector(state => ({
         mode: state.jcontent.mode,
-        path: state.jcontent.path
+        path: state.jcontent.path,
+        viewType: state.jcontent.tableView?.viewType
     }), shallowEqual);
 
     const dispatch = useDispatch();
@@ -76,9 +70,6 @@ export const CategoriesLayoutContainer = () => {
             <CategoriesLayout isContentNotFound
                               mode={mode}
                               path={path}
-                              filesMode={filesMode}
-                              previewState={previewState}
-                              previewSelection={previewSelection}
                               rows={[]}
                               isStructured={isStructured}
                               isLoading={loading}
@@ -110,9 +101,6 @@ export const CategoriesLayoutContainer = () => {
             )}
             <CategoriesLayout mode={mode}
                               path={path}
-                              filesMode={filesMode}
-                              previewState={previewState}
-                              previewSelection={previewSelection}
                               rows={rows}
                               isLoading={loading}
                               isStructured={isStructured}

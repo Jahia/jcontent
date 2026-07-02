@@ -310,6 +310,7 @@
         "lockNode": "Content sperren",
         "noViewAvailable": "Keine Vorschau verfügbar",
         "noContentSelected": "Wählen Sie einen Content, um die Vorschau zu aktivieren",
+        "emptyList": "Diese Liste ist leer und kann nicht angezeigt werden",
         "delete": "Löschen",
         "translate": "Übersetzen",
         "emptyMessage": "Laden...",
@@ -828,7 +829,8 @@
           "maxLength": "Maximal {{selectorOptions.maxLength}} Zeichen.",
           "invalidLink": "Der Link {{0}} ist defekt",
           "invalidSelectorType": "Der für diese Eigenschaft definierte Selektor ist nicht mit dem Eigenschaftstyp kompatibel und kann nicht angezeigt werden. Bitte überprüfen Sie Ihre Definitionen.",
-          "constraintViolation": "{{0}}"
+          "constraintViolation": "{{0}}",
+          "refNotFound": "Die angegebene Referenz wurde nicht im System gefunden. Stellen Sie sicher, dass der Verweis existiert, oder leeren Sie das Feld."
         },
         "tab": {
           "edit": "Bearbeiten",
@@ -898,7 +900,8 @@
         "linksDefault": "Staging",
         "linksVanity": "Vanity URL",
         "linksDefaultVanity": "Haupt-URL",
-        "linksCopied": "Link kopiert"
+        "linksCopied": "Link kopiert",
+        "noDetailsAvailable": "Wählen Sie einen Content, um dessen Details anzuzeigen"
       },
       "history": {
         "date": "Datum",

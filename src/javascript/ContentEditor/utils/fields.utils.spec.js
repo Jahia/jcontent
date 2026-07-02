@@ -695,19 +695,24 @@ describe('EditPanel utils', () => {
     const lang = 'fr';
 
     describe('getDataToMutate', () => {
-        testCases.forEach(({name, nodeData, formValues, ExpectedPropsToSave, ExpectedPropsToDelete, skipCreate, expectedPropsFieldMapping, newExpectedPropsToSave, newExpectedPropsFieldMapping}) => {
+        // Every field's property name maps to its form field name in propFieldNameMapping,
+        // regardless of whether the field currently holds a value, so server-side constraint
+        // violations can always be resolved to a field. It is therefore the same for every case.
+        const fullPropFieldNameMapping = getFields(sections).reduce((acc, field) => ({...acc, [field.propertyName]: field.name}), {});
+
+        testCases.forEach(({name, nodeData, formValues, ExpectedPropsToSave, ExpectedPropsToDelete, skipCreate, newExpectedPropsToSave}) => {
             it(`Existing ${name}`, () => {
                 const {propsToSave, propsToDelete, propFieldNameMapping} = getDataToMutate({nodeData, formValues, sections, lang, i18nContext: {}});
                 expect(propsToSave).toEqual(ExpectedPropsToSave || []);
                 expect(propsToDelete).toEqual(ExpectedPropsToDelete || []);
-                expect(propFieldNameMapping).toEqual(expectedPropsFieldMapping || {});
+                expect(propFieldNameMapping).toEqual(fullPropFieldNameMapping);
             });
             if (!skipCreate) {
                 it(`New ${name}`, () => {
                     const {propsToSave, propsToDelete, propFieldNameMapping} = getDataToMutate({formValues, sections, lang, i18nContext: {}});
                     expect(propsToSave).toEqual(newExpectedPropsToSave || ExpectedPropsToSave || []);
                     expect(propsToDelete).toEqual(ExpectedPropsToDelete || []);
-                    expect(propFieldNameMapping).toEqual(newExpectedPropsFieldMapping || expectedPropsFieldMapping || {});
+                    expect(propFieldNameMapping).toEqual(fullPropFieldNameMapping);
                 });
             }
         });

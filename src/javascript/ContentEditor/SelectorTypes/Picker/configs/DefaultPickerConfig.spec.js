@@ -39,7 +39,7 @@ describe('ContentPicker config', () => {
 
         it('should return no data, no error when loading', () => {
             useQuery.mockImplementation(() => ({loading: true}));
-            expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: true, notFound: true});
+            expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: true, notFound: false});
         });
 
         it('should return no data when there is no uuid given', () => {
@@ -49,12 +49,12 @@ describe('ContentPicker config', () => {
 
         it('should return error when there is error', () => {
             useQuery.mockImplementation(() => ({loading: false, error: 'oops'}));
-            expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: false, error: 'oops', notFound: true});
+            expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: false, error: 'oops', notFound: false});
         });
 
         it('should return not found when the resource has been removed', () => {
-            useQuery.mockImplementation(() => ({loading: false, data: undefined, error: undefined}));
-            expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: false, notFound: true});
+            useQuery.mockImplementation(() => ({loading: false, data: {jcr: {result: []}}, error: undefined}));
+            expect(usePickerInputData('uuid', {lang: 'fr'})).toEqual({loading: false, error: undefined, notFound: true});
         });
 
         it('should adapt data when graphql return some data', () => {

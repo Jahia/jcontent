@@ -2,14 +2,14 @@ import React from 'react';
 import {ArrowLeft} from '@jahia/moonstone';
 import {registerEditActions} from '~/ContentEditor/actions/registerEditActions';
 import {registerCreateActions} from '~/ContentEditor/actions/registerCreateActions';
-import {registerTabBarActions} from '~/ContentEditor/editorTabs/registerTabBarActions';
-import {registerSidePanelTabs} from '~/ContentEditor/editorTabs/EditPanelContent/SidePanel/registerSidePanelTabs';
+import {registerDropdownOptions} from '~/ContentEditor/editorTabs/registerDropdownOptions';
+import {registerSidePanelTabs} from '~/JContent/SidePanel/registerSidePanelTabs';
 import {goBackAction} from './actions/contenteditor/goBackAction';
 
 export const registerActions = registry => {
     registerEditActions(registry);
     registerCreateActions(registry);
-    registerTabBarActions(registry);
+    registerDropdownOptions(registry);
     registerSidePanelTabs(registry);
 
     registry.add('action', 'backButton', goBackAction, {

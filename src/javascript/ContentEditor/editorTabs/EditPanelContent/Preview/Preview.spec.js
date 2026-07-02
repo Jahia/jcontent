@@ -1,130 +1,89 @@
-import React, {useEffect} from 'react';
-
+import React from 'react';
+import {shallow} from 'enzyme';
 import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
-import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
-import {useFormikContext} from 'formik';
+import {useSidePanelContext} from '~/JContent/SidePanel';
 
-jest.mock('react-pdf', () => ({
-    pdfjs: {
-        GlobalWorkerOptions: {
-            workerSrc: ''
-        }
-    },
+jest.mock('~/JContent/SidePanel/SidePanelContext');
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => undefined)
+}));
+jest.mock('~/ContentEditor/ContentEditor/EditPanel/EditPanel.refetches', () => ({
+    setPreviewRefetcher: jest.fn(),
+    invalidateRefetch: jest.fn()
+}));
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn(selector => selector({pagecomposer: {currentPage: null, active: false}}))
+}));
+jest.mock('./Preview.utils', () => ({
+    getPreviewPath: jest.fn(() => '/site/digitall')
+}));
+jest.mock('~/JContent/preview/previewContext.utils', () => ({
+    buildPreviewContexts: jest.fn(() => ({
+        primary: {
+            workspace: 'edit',
+            path: '/site/digitall',
+            contextConfiguration: 'module',
+            requestAttributes: []
+        },
+        fallback: null
+    }))
+}));
+jest.mock('~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/EmptyListComponent/EmptyListComponent', () => ({
+    useEmptyListComponent: jest.fn(() => ({loading: false, component: null}))
+}));
+jest.mock('~/JContent/preview/viewers/PDFViewer', () => ({PDFViewer: () => null}));
+jest.mock('~/JContent/preview/viewers/PDFViewer/index.js', () => ({PDFViewer: () => null}));
+jest.mock('~/JContent/preview/Preview', () => ({
     // eslint-disable-next-line react/prop-types
-    Document: ({children}) => <div>{children}</div>,
-    Page: () => <div>Page</div>
+    Preview: ({header, ...rest}) => <div data-testid="shared-preview" {...rest}>{header}</div>
 }));
 
-jest.mock('formik');
-jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
-jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
-jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
+import {CEPreview} from './CEPreview';
 
-jest.mock('react', () => {
-    return {
-        ...jest.requireActual('react'),
-        useEffect: jest.fn()
-    };
-});
+// Helper: shallow-render a React element returned as a prop
+const renderProp = element => shallow(<div>{element}</div>);
 
-jest.useFakeTimers();
-
-import {Preview} from './Preview';
-
-describe('Preview Container', () => {
-    let defaultProps;
-    let formik;
+describe('CE Preview', () => {
     let editorContext;
 
     beforeEach(() => {
-        formik = {
-            dirty: false
-        };
-        defaultProps = {
-        };
         editorContext = {
             path: '/site/digitall',
             lang: 'fr',
             nodeData: {
-                isFolder: false
+                isFolder: false,
+                uuid: 'test-uuid'
             }
         };
-        useEffect.mockReset();
-        useContentEditorContext.mockReturnValue(editorContext);
-        useContentEditorConfigContext.mockReturnValue({});
-
-        useFormikContext.mockReturnValue(formik);
+        useSidePanelContext.mockReturnValue(editorContext);
     });
 
-    it('should not display preview on first render', () => {
-        const cmp = shallowWithTheme(<Preview {...defaultProps}/>, {}, dsGenericTheme);
-        expect(cmp.find('Memo()').exists()).toBe(false);
-        expect(cmp.find('LoaderOverlay').exists()).toBe(true);
+    it('renders SharedPreview', () => {
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        expect(cmp.find('Preview').exists()).toBe(true);
     });
 
-    it('should not display preview on folder', () => {
+    it('includes UpdateOnSaveBadge in header', () => {
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        const headerEl = cmp.find('Preview').prop('header');
+        const header = renderProp(headerEl);
+        expect(header.find('UpdateOnSaveBadge').exists()).toBe(true);
+    });
+
+    it('shows no-preview badge in header for folder nodes', () => {
         editorContext.nodeData.isFolder = true;
-        const cmp = shallowWithTheme(<Preview {...defaultProps}/>, {}, dsGenericTheme);
-        useEffect.mock.calls[0][0]();
-        jest.runAllTimers();
-        cmp.setProps();
-        expect(cmp.find('Memo()').exists()).toBe(false);
-        expect(cmp.find('LoaderOverlay').exists()).toBe(false);
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        const headerEl = cmp.find('Preview').prop('header');
+        const header = renderProp(headerEl);
+        expect(header.find('DsBadge').exists()).toBe(true);
     });
 
-    it('should display preview after a timeout', () => {
-        const cmp = shallowWithTheme(<Preview {...defaultProps}/>, {}, dsGenericTheme);
-        useEffect.mock.calls[0][0]();
-        jest.runAllTimers();
-        cmp.setProps();
-        expect(cmp.find('Memo()').exists()).toBe(true);
-        expect(cmp.find('LoaderOverlay').exists()).toBe(false);
-    });
-
-    it('should display the badge preview update on save when content is updated', () => {
-        formik.dirty = true;
-
-        const cmp = shallowWithTheme(
-            <Preview {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        );
-
-        expect(cmp.find('UpdateOnSaveBadge').dive().find('DsBadge').exists()).toBe(true);
-    });
-
-    it('should hide the badge preview update on save when content is not updated', () => {
-        const cmp = shallowWithTheme(
-            <Preview {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        );
-
-        expect(cmp.find('DsBadge').exists()).toBe(false);
-    });
-
-    it('should show a badge for no preview for folder', () => {
-        editorContext.nodeData.isFolder = true;
-        const cmp = shallowWithTheme(
-            <Preview {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        );
-
-        expect(cmp.find('DsBadge').exists()).toBe(true);
-    });
-
-    it('should show a badge when cannot find content to display ', () => {
-        const cmp = shallowWithTheme(
-            <Preview {...defaultProps}/>,
-            {},
-            dsGenericTheme
-        );
-        useEffect.mock.calls[0][0]();
-        jest.runAllTimers();
-        cmp.setProps();
-        cmp.find('Memo()').simulate('contentNotFound');
-        expect(cmp.find('DsBadge').exists()).toBe(true);
+    it('does not show no-preview badge for non-folder nodes', () => {
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        const headerEl = cmp.find('Preview').prop('header');
+        const header = renderProp(headerEl);
+        expect(header.find('DsBadge').exists()).toBe(false);
     });
 });

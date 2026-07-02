@@ -86,7 +86,9 @@ describe('Copy Cut and Paste tests with jcontent', () => {
                 .selectByRole('copy');
             cy.get('#message-id').contains('myfile.pdf (Document1) is in the clipboard');
             jcontent.getAccordionItem('media').getTreeItem('bootstrap').click();
+            cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
             jcontent.getHeaderActionButton('paste').click();
+            cy.get('#message-id').contains('successfully pasted');
             jcontent.getGrid().getCardByName('myfile.pdf').should('be.visible');
         });
 
@@ -215,6 +217,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             const menu = contextMenu.submenu('Copy', 'jcontent-copyPageMenu');
             menu.should('be.visible');
             menu.select(copyActionName);
+            cy.get('#message-id').contains('is in the clipboard');
         };
 
         // Failing on hover to submenu but ok with other tests; skipping for now

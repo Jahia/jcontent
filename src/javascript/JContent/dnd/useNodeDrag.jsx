@@ -5,7 +5,7 @@ import {getEmptyImage} from 'react-dnd-html5-backend';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
-import {JahiaAreasUtil} from '../JContent.utils';
+import {JahiaRenderedModulesUtil} from '../JContent.utils';
 import {PATH_CATEGORIES_ITSELF} from '../actions/actions.constants';
 
 const prepareRes = ({selection, path, nodeDragData}) => {
@@ -53,7 +53,7 @@ export function useNodeDrag({dragSource, isUseDragData, nodeDragData}) {
         res = prepareRes({selection, path: dragSource.path, nodeDragData});
     }
 
-    const isDraggable = Boolean(res.checksResult) && !JahiaAreasUtil.isJahiaArea(dragSource?.path);
+    const isDraggable = Boolean(res.checksResult) && !JahiaRenderedModulesUtil.isJahiaArea(dragSource?.path);
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({
         type: 'node',
         item: dragSource,
@@ -67,7 +67,7 @@ export function useNodeDrag({dragSource, isUseDragData, nodeDragData}) {
     }) : ({
         type: 'nodes',
         item: res.nodes,
-        canDrag: () => res.checksResult && !JahiaAreasUtil.isJahiaArea(dragSource?.path) && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
+        canDrag: () => res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(dragSource?.path) && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
         collect: monitor => ({
             dragClasses: monitor.isDragging() ? [styles.drag] : []
         })

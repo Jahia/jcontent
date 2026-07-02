@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {
-    CM_DRAWER_STATES,
     cmCloseTablePaths,
     cmGoto,
     cmOpenPaths,
@@ -12,7 +11,7 @@ import {
 } from '~/JContent/redux/JContent.redux';
 import {extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 import {cmSetPage, cmSetPageSize} from '~/JContent/redux/pagination.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {ContentEmptyDropZone} from './ContentEmptyDropZone';
@@ -37,7 +36,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
+    const {mode, sidePanelSelection, siteKey, path, pagination, selection, searchTerms, tableOpenPaths, sort} = useSelector(selector, shallowEqual);
     const columns = useMemo(() => {
         if (propColumns) {
             return propColumns;
@@ -49,7 +48,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
         return mode === JContentConstants.mode.MEDIA ? mediaColumnData : mainColumnData;
     }, [mode, propColumns]);
-    const onPreviewSelect = useCallback(_previewSelection => dispatch(cmSetPreviewSelection(_previewSelection)), [dispatch]);
+    const onSidePanelSelect = useCallback(_sidePanelSelection => dispatch(cmSetSidePanelSelection(_sidePanelSelection)), [dispatch]);
     const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);
     const setPageSize = useCallback(pageSize => dispatch(cmSetPageSize(pageSize)), [dispatch]);
     const mainPanelRef = useRef(null);
@@ -61,7 +60,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         listLength: paths.length,
         onSelectionChange: index => {
             if (isPreviewOpened) {
-                onPreviewSelect(paths[index]);
+                onSidePanelSelect(paths[index]);
             }
         }
     });
@@ -132,8 +131,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         }));
     }, [mode, dispatch, siteKey]);
 
-    const columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : mainColumnData;
-    const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+    const columnData = reducedColumnData;
+    const isPreviewOpened = true;
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
@@ -190,13 +189,13 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                                      row={row}
                                      tableConfig={tableConfig}
                                      selection={selection}
-                                     previewSelection={previewSelection}
+                                     sidePanelSelection={sidePanelSelection}
                                      isPreviewOpened={isPreviewOpened}
                                      setSelectedItemIndex={setSelectedItemIndex}
                                      doubleClickNavigation={doubleClickNavigation}
                                      virtualizer={rowVirtualizer}
                                      virtualRow={virtualRow}
-                                     onPreviewSelect={onPreviewSelect}
+                                     onPreviewSelect={onSidePanelSelect}
                                 />
                             );
                         })}
@@ -233,12 +232,11 @@ ContentTable.propTypes = {
 ContentTable.defaultProps = {
     selector: state => ({
         mode: state.jcontent.mode,
-        previewSelection: state.jcontent.previewSelection,
+        sidePanelSelection: state.jcontent.sidePanelSelection,
         siteKey: state.site,
         site: state.site,
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
-        previewState: state.jcontent.previewState,
         selection: state.jcontent.selection,
         tableView: state.jcontent.tableView,
         searchTerms: state.jcontent.params.searchTerms,

@@ -34,9 +34,9 @@ export const MainActionBar = () => {
             {showPageBuilder ? (
                 <>
                     { !isFolder && (
-                        <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
-                            <DisplayAction isMediumLabel actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'outlined', size: 'big', className: styles.item}}/>
-                            <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'outlined', size: 'big', icon: <ChevronDown/>}}/>
+                        <ButtonGroup size="big" variant="outlined" color="default" className={styles.item}>
+                            <DisplayAction isMediumLabel actionKey="openInPreview" path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{className: styles.item}}/>
+                            <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{icon: <ChevronDown/>}}/>
                         </ButtonGroup>)}
                     <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
                 </>

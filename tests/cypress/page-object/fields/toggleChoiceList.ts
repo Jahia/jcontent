@@ -44,8 +44,20 @@ export class CheckboxChoiceList extends ToggleChoiceList {
     labelSel = 'label.moonstone-checkboxItem';
     inputSel = 'input.moonstone-checkbox_input';
 
+    assertSelected(label: string) {
+        return this.get().find(`${this.inputSel}[value="${label}"]`)
+            .should('have.attr', 'aria-checked', 'true');
+    }
+
+    assertNotSelected(label: string) {
+        return this.get().find(`${this.inputSel}[value="${label}"]`)
+            .should('have.attr', 'aria-checked', 'false');
+    }
+
     contextMenu() {
-        getComponentByRole(Button, 'content-editor/field/Choicelist', this).click();
+        const contextMenuBtn = getComponentByRole(Button, 'content-editor/field/Choicelist', this);
+        contextMenuBtn.get().scrollIntoView();
+        contextMenuBtn.click();
         return getComponentBySelector(Menu, `#menuHolder ${Menu.defaultSelector}`);
     }
 }

@@ -62,7 +62,7 @@ const _adaptDecimalValues = (fieldType, value) => {
     return fieldType === 'DECIMAL' || fieldType === 'DOUBLE' ? value && value.replace(',', '.') : value;
 };
 
-function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, propFieldNameMapping, forceUpdate}) {
+function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
     if (value !== undefined && value !== null && value !== '') {
         const fieldType = field.requiredType;
 
@@ -108,8 +108,6 @@ function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, pr
             });
         }
     }
-
-    propFieldNameMapping[field.propertyName] = field.name;
 }
 
 export function getDataToMutate({nodeData, formValues, i18nContext, sections, lang}) {
@@ -123,14 +121,23 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
 
     const keys = new Set(Object.keys(formValues));
     Object.values(i18nContext).filter(ctx => ctx.values !== undefined).forEach(ctx => Object.keys(ctx.values).forEach(k => keys.add(k)));
-    const fields = sections && getFields(sections).filter(field => !nodeData || !field.readOnly);
+    const allFields = sections ? getFields(sections) : [];
+    const fields = allFields.filter(field => !nodeData || !field.readOnly);
     const mixinsToMutate = getMixinsToMutate(nodeData, formValues, sections);
+
+    // Map every field's property name to its form field name, regardless of whether it currently
+    // holds a value. Server-side constraint violations (e.g. custom validators) reference the
+    // property name, and must be resolvable to a field even when the field is empty and has no
+    // default value (and is therefore absent from formValues).
+    allFields.forEach(field => {
+        propFieldNameMapping[field.propertyName] = field.name;
+    });
 
     keys.forEach(key => {
         const field = fields.find(field => field.name === key);
         if (field) {
             const value = formValues[key];
-            updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, propFieldNameMapping});
+            updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete});
 
             if (field.i18n) {
                 Object.keys(i18nContext).filter(i18nLang => i18nLang !== lang && i18nLang !== 'shared' && i18nLang !== 'memo').forEach(i18nLang => {
@@ -148,7 +155,6 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
                             mixinsToMutate,
                             propsToSave,
                             propsToDelete,
-                            propFieldNameMapping,
                             forceUpdate
                         });
                     }

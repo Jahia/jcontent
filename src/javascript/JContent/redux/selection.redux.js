@@ -1,7 +1,7 @@
 import {cmSetPage, cmSetPageSize} from './pagination.redux';
 import {cmSetSort} from './sort.redux';
 import {createAction, handleActions} from 'redux-actions';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 
 const getAction = (path, type) => (dispatch, getState) => {
     dispatch({
@@ -9,8 +9,8 @@ const getAction = (path, type) => (dispatch, getState) => {
         payload: path
     });
     let s = getState().jcontent;
-    if (s.selection.length > 0 && s.previewSelection) {
-        dispatch(cmSetPreviewSelection(null));
+    if (s.selection.length > 0 && s.sidePanelSelection) {
+        dispatch(cmSetSidePanelSelection(null));
     }
 };
 

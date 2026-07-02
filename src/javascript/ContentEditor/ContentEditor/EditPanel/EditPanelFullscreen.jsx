@@ -1,50 +1,65 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import styles from './EditPanel.scss';
-import clsx from 'clsx';
 import {registry} from '@jahia/ui-extender';
 import {LayoutContent} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {EditPanelHeader} from './EditPanelHeader';
+import {EditPanelHeader} from './EditPanelHeader/EditPanelHeader';
+import {useContentEditorConfigContext} from '~/shared';
+import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const EditPanelFullscreen = ({title}) => {
-    const [activeTab, setActiveTab] = useState(Constants.editPanel.editTab);
+    const {advancedOpenTab} = useContentEditorConfigContext();
+    const [activeTab, setActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
     const {mode} = useContentEditorContext();
 
     // Without edit tab, no content editor
     const tabs = registry.find({target: 'editHeaderTabsActions'});
-    const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
-    const OtherTabComponent = tabs.find(tab => tab.value === activeTab && tab.value !== Constants.editPanel.editTab)?.displayableComponent;
+    const tab = tabs.find(t => t.value === activeTab);
+
+    if (!tab) {
+        throw new CeModalError(`No tab found for the current active tab value (${activeTab}), check the registry for the "editHeaderTabsActions" target (valid values are: ${tabs.map(t => t.value).join(', ')})`);
+    }
+
+    // Track which tabs have been visited so we mount them lazily but keep them
+    // mounted afterwards (CSS show/hide), preserving scroll position and local state.
+    const [mountedTabs, setMountedTabs] = useState(() => new Set([activeTab]));
+    useEffect(() => {
+        setMountedTabs(prev => {
+            if (prev.has(activeTab)) {
+                return prev;
+            }
+
+            const next = new Set(prev);
+            next.add(activeTab);
+            return next;
+        });
+    }, [activeTab]);
 
     return (
         <LayoutContent
             className={styles.main}
             hasPadding={false}
             header={(
-                <EditPanelHeader title={title}
-                                 isShowPublish={mode === Constants.routes.baseEditRoute}
-                                 activeTabState={[activeTab, setActiveTab]}
+                <EditPanelHeader
+                    {...tab.editPanelHeaderProps}
+                    title={title}
+                    isShowPublish={mode === Constants.routes.baseEditRoute}
+                    activeTabState={[activeTab, setActiveTab]}
                 />
             )}
             content={(
                 <>
-                    <div className={clsx(
-                        activeTab === Constants.editPanel.editTab ? 'flexFluid' : styles.hideTab,
-                        'flexCol'
-                    )}
-                    >
-                        <EditPanelContent/>
-                    </div>
-                    {OtherTabComponent && (
-                        <div className={clsx(
-                            Constants.editPanel.editTab === activeTab ? styles.hideTab : 'flexFluid',
-                            'flexCol'
-                        )}
+                    {tabs.map(t => (
+                        <div
+                            key={t.value}
+                            className={clsx('flexFluid', 'flexCol', t.value !== activeTab && styles.hideTab)}
                         >
-                            <OtherTabComponent/>
+                            {mountedTabs.has(t.value) && t.displayableComponent}
                         </div>
-                    )}
+                    ))}
                 </>
             )}
         />
@@ -54,4 +69,3 @@ export const EditPanelFullscreen = ({title}) => {
 EditPanelFullscreen.propTypes = {
     title: PropTypes.string.isRequired
 };
-

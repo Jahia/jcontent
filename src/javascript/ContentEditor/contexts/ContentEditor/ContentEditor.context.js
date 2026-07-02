@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {useNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {ApolloCacheFlushOnGWTSave} from './ApolloCacheFlushOnGWTSave';
 import {ContentEditorSectionContextProvider} from '../ContentEditorSection';
 import {useContentEditorConfigContext} from '../ContentEditorConfig';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
@@ -42,19 +42,14 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     const {t} = useTranslation('jcontent');
     const [errors, setErrors] = useState(null);
     const contentEditorConfigContext = useContentEditorConfigContext();
-    // Get information from legacy page composer to display the preview.
-    const {pageComposerCurrentPage, pageComposerActive, uiLanguage} = useSelector(state => ({
-        pageComposerCurrentPage: state?.pagecomposer?.currentPage,
-        pageComposerActive: state?.pagecomposer?.active,
-        uiLanguage: state?.uilang
-    }), shallowEqual);
+    const uiLanguage = useSelector(state => state?.uilang);
     const {i18nContext, setI18nContext, resetI18nContext} = useInitI18nContext(overrides);
 
     // Persist 'create another' chekbox state during language switch
-    const createAnotherState = useState(false);
-    const createAnother = {
-        value: createAnotherState[0], set: createAnotherState[1]
-    };
+    const [createAnotherValue, setCreateAnotherValue] = useState(false);
+    const createAnother = useMemo(() => ({
+        value: createAnotherValue, set: setCreateAnotherValue
+    }), [createAnotherValue]);
 
     const {lang, mode, name} = contentEditorConfigContext;
 
@@ -97,6 +92,74 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         !siteInfoResult.error ? {nodeData, siteInfo: siteInfoResult.data.jcr.result} : undefined
     );
 
+    // Build editor context. Memoized so consumers don't re-render on every provider render.
+    // Computed unconditionally (before the early returns below) to respect the rules of hooks;
+    // returns null while data isn't ready, which the early returns then handle.
+    const editorContext = useMemo(() => {
+        if (error || siteInfoResult.error || loading || siteInfoResult.loading || !ranAllHooks) {
+            return null;
+        }
+
+        return {
+            path: nodeData.path,
+            lang,
+            browserLang,
+            site,
+            mode,
+            name,
+            siteInfo: {
+                ...siteInfoResult.siteInfo,
+                languages: siteInfoResult.siteInfo.languages.filter(language => language.activeInEdit)
+            },
+            nodeData,
+            details,
+            technicalInfo,
+            initialValues,
+            expandedSections,
+            hasPreview,
+            showAdvancedMode,
+            title,
+            nodeTypeName,
+            nodeTypeDisplayName,
+            refetchFormData,
+            errors,
+            setErrors,
+            i18nContext,
+            setI18nContext,
+            resetI18nContext,
+            createAnother
+        };
+    }, [
+        error,
+        siteInfoResult.error,
+        siteInfoResult.loading,
+        siteInfoResult.siteInfo,
+        loading,
+        ranAllHooks,
+        nodeData,
+        lang,
+        browserLang,
+        site,
+        mode,
+        name,
+        details,
+        technicalInfo,
+        initialValues,
+        expandedSections,
+        hasPreview,
+        showAdvancedMode,
+        title,
+        nodeTypeName,
+        nodeTypeDisplayName,
+        refetchFormData,
+        errors,
+        setErrors,
+        i18nContext,
+        setI18nContext,
+        resetI18nContext,
+        createAnother
+    ]);
+
     if (error) {
         // Check for ItemNotFound exception
         const is404 = (error.graphQLErrors || []).some(e => e.message?.includes('ItemNotFoundException'));
@@ -114,54 +177,6 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     if (loading || siteInfoResult.loading || !ranAllHooks) {
         return <LoaderOverlay/>;
     }
-
-    // Don't use full page rendering for folders.
-    const isFullPage = nodeData.displayableNode && !nodeData.displayableNode.isFolder;
-    // Set main resource path, currently used by preview:
-    //  - path: path to display
-    //  - template: view or template to use
-    //  - templatetype: extension to use
-    //  - config: page if content can be displayed as full page or module
-    const currentPage = pageComposerActive ? pageComposerCurrentPage :
-        {
-            path: (isFullPage && nodeData.displayableNode.path) || nodeData.path,
-            template: nodeData.displayableNode ? 'default' : 'cm',
-            templateType: '.html'
-        };
-    currentPage.config = isFullPage ? 'page' : 'module';
-
-    // Build editor context
-    // Memoize context values
-    const editorContext = {
-        path: nodeData.path,
-        currentPage,
-        lang,
-        browserLang,
-        site,
-        mode,
-        name,
-        siteInfo: {
-            ...siteInfoResult.siteInfo,
-            languages: siteInfoResult.siteInfo.languages.filter(language => language.activeInEdit)
-        },
-        nodeData,
-        details,
-        technicalInfo,
-        initialValues,
-        expandedSections,
-        hasPreview,
-        showAdvancedMode,
-        title,
-        nodeTypeName,
-        nodeTypeDisplayName,
-        refetchFormData,
-        errors,
-        setErrors,
-        i18nContext,
-        setI18nContext,
-        resetI18nContext,
-        createAnother
-    };
 
     return (
         <ContentEditorContext.Provider value={editorContext}>

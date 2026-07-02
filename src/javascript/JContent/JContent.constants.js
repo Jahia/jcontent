@@ -1,4 +1,4 @@
-const JContentConstants = {
+const JContentConstants = /** @type {const} */ ({
     namingInvalidCharactersRegexp: /[\\/:*?"'<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
     availablePublicationStatuses: {
@@ -57,6 +57,6 @@ const JContentConstants = {
         }
     },
     tableRowHeight: 48
-};
+});
 
 export default JContentConstants;

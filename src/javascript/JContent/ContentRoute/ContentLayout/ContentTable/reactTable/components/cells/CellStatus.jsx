@@ -35,7 +35,14 @@ export const CellStatus = ({cell, column, row}) => {
                     <Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>} color="warning"/>
                 </Tooltip>}
             {node.lockOwner !== null &&
-            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color={isMarkedForDeletion(node) ? 'danger' : 'default'}/></Tooltip>}
+                <Tooltip title={t('jcontent:label.contentManager.locked')}>
+                    <Chip
+                        className={classes.statusCellItem}
+                        icon={<Lock fontSize="small"/>}
+                        data-sel-role="locked-content"
+                        data-marked-for-deletion={Boolean(isMarkedForDeletion(node)).toString()}
+                        color={isMarkedForDeletion(node) ? 'danger' : 'default'}/>
+                </Tooltip>}
             {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${subNodesCountText} item(s)`} icon={<Subdirectory/>}/>}
         </TableBodyCell>
     );

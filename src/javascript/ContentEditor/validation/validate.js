@@ -107,13 +107,26 @@ const rangeFieldValidation = (values, field) => {
             try {
                 const {lowerBoundary, disableLowerBoundary, upperBoundary, disableUpperBoundary} = extractRangeConstraints(constraint.value.string);
 
+                // Open-ended ranges like (0,) have an empty boundary; skip the check for that side
+                const parseBoundary = boundary => {
+                    if (boundary === undefined || boundary === null || String(boundary).trim() === '') {
+                        return undefined;
+                    }
+
+                    const boundaryAsNumber = Number(boundary);
+                    return Number.isNaN(boundaryAsNumber) ? undefined : boundaryAsNumber;
+                };
+
+                const lower = parseBoundary(lowerBoundary);
+                const upper = parseBoundary(upperBoundary);
+
                 return fieldValues
                     .every(fieldValue => {
                         const fieldValueAsNumber = Number(fieldValue);
                         // Lower boundary Check
-                        const lowerBoundaryOk = disableLowerBoundary ? fieldValueAsNumber > Number(lowerBoundary) : fieldValueAsNumber >= Number(lowerBoundary);
+                        const lowerBoundaryOk = lower === undefined || (disableLowerBoundary ? fieldValueAsNumber > lower : fieldValueAsNumber >= lower);
                         // Upper boundary Check
-                        const upperBoundaryOk = disableUpperBoundary ? fieldValueAsNumber < Number(upperBoundary) : fieldValueAsNumber <= Number(upperBoundary);
+                        const upperBoundaryOk = upper === undefined || (disableUpperBoundary ? fieldValueAsNumber < upper : fieldValueAsNumber <= upper);
                         return lowerBoundaryOk && upperBoundaryOk;
                     });
             } catch (e) {
@@ -132,7 +145,8 @@ const patternFieldValidation = (values, field) => {
 
     // QA-14633: choicelist values are passed as value constraints, so we only need to do an equals comparison
     // instead of running the selector options through Regex.
-    const strictValidation = field.selectorType === Constants.field.selectorType.CHOICELIST;
+    // Custom choice list selectors are expected to have 'choicelist' in the selector name when the name is lowecased.
+    const strictValidation = field?.selectorType === Constants.field.selectorType.CHOICELIST || field?.selectorType?.toLowerCase().includes(Constants.field.selectorType.CHOICELIST.toLowerCase());
 
     if (field.selectorOptions?.some(option => option.name === 'skipValidation' && option.value === 'true')) {
         return;

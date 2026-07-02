@@ -19,14 +19,14 @@ mutation createDeleteContent {
                             primaryNodeType: "jnt:contentFolder"
                             children: [
                                 {
-                                    name: "test-delete3"
+                                    name: "test-delete3-folder"
                                     primaryNodeType: "jnt:bigText"
-                                    properties: [{ name: "text", language: "en", value: "test 4" }]
+                                    properties: [{ name: "text", language: "en", value: "test 3" }]
                                 }
                                 {
-                                    name: "test-delete4"
+                                    name: "test-delete4-folder"
                                     primaryNodeType: "jnt:bigText"
-                                    properties: [{ name: "text", language: "en", value: "test 5" }]
+                                    properties: [{ name: "text", language: "en", value: "test 4" }]
                                 }
                             ]
                         }
@@ -43,7 +43,7 @@ mutation createDeleteContent {
                         {
                             name: "test-delete4-autopublish"
                             primaryNodeType: "jnt:bigText"
-                            properties: [{ name: "text", language: "en", value: "test 4" }]
+                            properties: [{ name: "text", language: "en", value: "test 4 autopublish" }]
                             mixins: ["jmix:autoPublish"]
                         }
                         {

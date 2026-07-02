@@ -241,4 +241,26 @@ describe('Picker tests', () => {
         picker.getGrid().get().find('div[data-sel-role-card="allrealtylogo_light.png"]').dblclick({force: true});
         contentEditor.getPickerField(contentTypes.fileReference.fieldNodeType, contentTypes.fileReference.multiple).checkValue('allrealtylogo_light.png');
     });
+
+    it('opens the New folder dialog on top of the image picker', () => {
+        const contentEditor = jcontent.createContent(contentTypes.fileReference.typeName);
+        const picker = contentEditor
+            .getPickerField(contentTypes.fileReference.fieldNodeType, contentTypes.fileReference.multiple)
+            .open();
+
+        picker.getAccordionItem('picker-media').getTreeItem('files').shouldBeSelected();
+
+        cy.log('click New folder inside the picker');
+        picker.get().find('button[data-sel-role="createFolder"]').should('be.enabled').click();
+
+        cy.log('the Create folder dialog must be stacked above the picker (regression: it rendered behind it)');
+        // Typing without {force} enforces actionability and fails if the field is covered by the picker overlay
+        cy.get('#folder-name').should('be.visible').type('zindex-check');
+        cy.get('#folder-name').should('have.value', 'zindex-check');
+
+        cy.log('close without creating the folder');
+        cy.get('[data-cm-role="create-folder-as-cancel"]').click();
+        picker.cancel();
+        contentEditor.cancel();
+    });
 });

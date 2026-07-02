@@ -1,30 +1,29 @@
-import {CM_DRAWER_STATES, CM_PREVIEW_MODES} from './JContent.redux';
-import {createActions, handleAction, handleActions} from 'redux-actions';
+import {createActions, handleAction} from 'redux-actions';
 
-export const {cmSetPreviewMode, cmSetPreviewState} = createActions('CM_SET_PREVIEW_MODE', 'CM_SET_PREVIEW_STATE');
+export const {cmSetPreviewFullScreen} = createActions('CM_SET_PREVIEW_FULL_SCREEN');
 
-export const cmSetPreviewSelection = previewSelection => (dispatch, getState) => {
-    if (!previewSelection || getState().jcontent.selection.length === 0) {
+export const cmSetSidePanelSelection = sidePanelSelection => (dispatch, getState) => {
+    if (!sidePanelSelection || getState().jcontent.selection.length === 0) {
         dispatch({
-            type: 'CM_SET_PREVIEW_SELECTION',
-            payload: previewSelection
+            type: 'CM_SET_SIDE_PANEL_SELECTION',
+            payload: sidePanelSelection
         });
     }
 };
 
-cmSetPreviewSelection.toString = () => 'CM_SET_PREVIEW_SELECTION';
+cmSetSidePanelSelection.toString = () => 'CM_SET_SIDE_PANEL_SELECTION';
+
+export const cmCloseSidePanel = () => (dispatch, getState) => {
+    dispatch(cmSetSidePanelSelection(null));
+    if (getState().jcontent.previewIsFullScreen) {
+        dispatch(cmSetPreviewFullScreen(false));
+    }
+};
 
 export const previewRedux = registry => {
-    const previewSelectionReducer = handleAction(cmSetPreviewSelection, (state, action) => action.payload, null);
+    const sidePanelSelectionReducer = handleAction(cmSetSidePanelSelection, (state, action) => action.payload, null);
+    const previewIsFullScreenReducer = handleAction(cmSetPreviewFullScreen, (state, action) => action.payload, false);
 
-    const previewModeReducer = handleActions({
-        [cmSetPreviewMode]: (state, action) => action.payload,
-        [cmSetPreviewState]: () => CM_PREVIEW_MODES.EDIT
-    }, CM_PREVIEW_MODES.EDIT);
-
-    const previewStateReducer = handleAction(cmSetPreviewState, (state, action) => action.payload, CM_DRAWER_STATES.HIDE);
-
-    registry.add('redux-reducer', 'previewMode', {targets: ['jcontent'], reducer: previewModeReducer});
-    registry.add('redux-reducer', 'previewState', {targets: ['jcontent'], reducer: previewStateReducer});
-    registry.add('redux-reducer', 'previewSelection', {targets: ['jcontent'], reducer: previewSelectionReducer});
+    registry.add('redux-reducer', 'previewIsFullScreen', {targets: ['jcontent'], reducer: previewIsFullScreenReducer});
+    registry.add('redux-reducer', 'sidePanelSelection', {targets: ['jcontent'], reducer: sidePanelSelectionReducer});
 };

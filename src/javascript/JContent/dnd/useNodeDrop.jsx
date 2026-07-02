@@ -179,7 +179,12 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                 if (onSaved) {
                     onSaved();
                 } else {
-                    const moveResults = Object.fromEntries(data.jcr.mutateNodes.map(n => [n.node.uuid, n.node]));
+                    let moveResults = [];
+
+                    if (data?.jcr?.mutateNodes) {
+                        moveResults = Object.fromEntries(data.jcr.mutateNodes.map(n => [n.node.uuid, n.node]));
+                    }
+
                     refreshTree(destParent.path, nodes, moveResults);
                 }
 

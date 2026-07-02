@@ -2,7 +2,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from '@apollo/client';
 import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
-import {getName, hasMixin, JahiaAreasUtil} from '~/JContent/JContent.utils';
+import {getName, hasMixin, JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
 import {copypaste} from './copyPaste.redux';
 import PropTypes from 'prop-types';
@@ -36,7 +36,7 @@ export const CopyCutActionComponent = withNotifications()(({
     const subPagesCondition = (others.hideIfHasNoSubPages) ? {getSubNodesCount: ['jnt:page', 'jmix:navMenuItem']} : {};
 
     const pathHidden = !paths && path && (
-        JahiaAreasUtil.isJahiaArea(path) ||
+        JahiaRenderedModulesUtil.isJahiaArea(path) ||
         others.hideForPaths?.some(p => new RegExp(p).test(path))
     );
     const skip = pathHidden || (!paths && isDefinitelyHidden(prefetchedNode, {
@@ -66,7 +66,7 @@ export const CopyCutActionComponent = withNotifications()(({
         return false;
     }
 
-    const isVisible = res.checksResult && !JahiaAreasUtil.isJahiaArea(path || paths) &&
+    const isVisible = res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(path || paths) &&
         (res.node ?
             !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
             res.nodes?.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)

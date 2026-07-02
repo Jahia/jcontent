@@ -14,6 +14,7 @@ import gql from 'graphql-tag';
 import {AdvancedOptions} from './advancedOptions';
 import {Section} from './section';
 import {ContentStatus} from './contentStatus';
+import {SidePanel} from './sidePanel';
 
 export class ContentEditor extends BasePage {
     static defaultSelector = '[aria-labelledby="dialog-content-editor"]';
@@ -204,13 +205,7 @@ export class ContentEditor extends BasePage {
     }
 
     switchToSidePanelPreviewTab() {
-        // Use force:true to handle the race where React applies tab selection (pointer-events:none)
-        // between the aria-selected check and the actual click. Clicking an already-selected tab is a no-op.
-        cy.get('[data-sel-role="tab-preview"]').then($tab => {
-            if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('[data-sel-role="tab-preview"]').click({force: true});
-            }
-        });
+        new SidePanel().inCE().switchToPreviewTab();
     }
 
     validateContentIsVisibleInPreview(content: string) {
@@ -327,7 +322,8 @@ export class ContentEditor extends BasePage {
 
     switchToAdvancedOptions(): AdvancedOptions {
         if (this.advancedMode) {
-            cy.get('.moonstone-tabItem[data-sel-role="tab-advanced-options"]').should('be.visible').click();
+            cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+            cy.get('[data-sel-role="tab-advanced-options"]').click();
             return new AdvancedOptions();
         }
 

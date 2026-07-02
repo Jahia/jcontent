@@ -13,7 +13,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 export const Row = ({
     row,
     selection,
-    previewSelection,
+    sidePanelSelection,
     isPreviewOpened,
     setSelectedItemIndex,
     onPreviewSelect,
@@ -25,7 +25,7 @@ export const Row = ({
 }) => {
     const rowProps = row.getRowProps();
     const node = row.original;
-    const isPreviewSelected = node.path === previewSelection && isPreviewOpened;
+    const isPreviewSelected = node.path === sidePanelSelection && isPreviewOpened;
 
     const contextualMenu = useRef();
 
@@ -98,7 +98,7 @@ export const Row = ({
 Row.propTypes = {
     row: PropTypes.object.isRequired,
     selection: PropTypes.array,
-    previewSelection: PropTypes.object,
+    sidePanelSelection: PropTypes.object,
     isPreviewOpened: PropTypes.bool,
     setSelectedItemIndex: PropTypes.func,
     onPreviewSelect: PropTypes.func,

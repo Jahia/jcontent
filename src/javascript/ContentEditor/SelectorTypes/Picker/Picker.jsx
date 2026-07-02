@@ -178,7 +178,7 @@ export const Picker = ({
     const {t} = useTranslation('jcontent');
     const {lang} = useContentEditorConfigContext();
     const [isDialogOpen, setDialogOpen] = useState(false);
-    const {setFieldValue, setFieldTouched} = useFormikContext();
+    const {setFieldValue, setFieldTouched, setFieldError} = useFormikContext();
 
     const parsedOptions = getOptions(field, inputContext);
     const pickerConfig = mergeDeep({}, DefaultPickerConfig, inputContext.selectorType.pickerConfig, parsedOptions.pickerConfig);
@@ -201,6 +201,19 @@ export const Picker = ({
             dispatch(cePickerSetTableViewMode(pickerConfig.defaultViewMode));
         }
     }, [dispatch, pickerConfig.defaultViewMode]);
+
+    useEffect(() => {
+        let timeoutId;
+        if (notFound) {
+            // Must clear callstack to allow formik's validate function to run first.
+            timeoutId = setTimeout(() => {
+                setFieldError(field.name, 'refNotFound');
+                setFieldTouched(field.name, true, false);
+            }, 0);
+        }
+
+        return () => clearTimeout(timeoutId);
+    }, [notFound, field.name, setFieldError, setFieldTouched]);
 
     if (error) {
         const message = t(

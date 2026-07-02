@@ -1,6 +1,5 @@
 import React from 'react';
-import {CM_DRAWER_STATES} from '../redux/JContent.redux';
-import {cmSetPreviewSelection, cmSetPreviewState} from '../redux/preview.redux';
+import {cmSetSidePanelSelection} from '../redux/preview.redux';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
@@ -37,8 +36,7 @@ export const PreviewActionComponent = ({path, node: prefetchedNode, render: Rend
             isVisible={res.checksResult && viewMode !== JContentConstants.tableView.viewMode.PAGE_BUILDER}
             enabled={res.checksResult}
             onClick={() => {
-                dispatch(cmSetPreviewSelection(path));
-                dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
+                dispatch(cmSetSidePanelSelection(path));
             }}
         />
     );

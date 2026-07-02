@@ -62,8 +62,10 @@ jobs:
       matrix:
         config_file:
           - cypress.config-contentEditor.ts
+          - cypress.config-contentEditor2.ts
           - cypress.config-selectorTypes.ts
           - cypress.config-jcontent.ts
+          - cypress.config-jcontent2.ts
           - cypress.config-menuActions.ts
           - cypress.config-pageBuilder.ts
           - cypress.config-pickers.ts

@@ -1,4 +1,5 @@
 import {JContent} from '../../page-object';
+import {createSite, deleteSite, uploadFile} from '@jahia/cypress';
 
 describe('Menu actions preview tests', () => {
     before(() => {
@@ -17,7 +18,7 @@ describe('Menu actions preview tests', () => {
                 .getRowByLabel('Taber')
                 .contextMenu()
                 .select('Preview');
-            cy.get('[data-sel-role=preview-type-content]');
+            cy.get('[data-preview-type="content"]').should('be.visible');
             cy.get('[data-cm-role=preview-name]').contains('Taber');
         });
 
@@ -28,52 +29,67 @@ describe('Menu actions preview tests', () => {
     });
 
     describe('test preview in media tab', {testIsolation: false}, () => {
-        let jcontent;
+        const siteKey = 'previewMediaSite';
+        let jcontent: JContent;
 
-        it('shows preview on PDF', () => {
-            jcontent = JContent.visit('digitall', 'en', 'media/files/images/pdf');
-            jcontent
-                .getGrid()
-                .getCardByName('Digitall Financial Report.pdf')
-                .contextMenu()
-                .select('Preview');
-            cy.get('[data-sel-role=preview-type-pdf]').should('be.visible');
-            cy.get('[data-cm-role=preview-name]').contains('Digitall Financial Report');
+        before(() => {
+            createSite(siteKey);
+            uploadFile('/assets/uploadMedia/myfile.pdf', `/sites/${siteKey}/files`, 'myfile.pdf', 'application/pdf');
+            uploadFile('/assets/uploadMedia/myfile.png', `/sites/${siteKey}/files`, 'myfile.png', 'image/png');
+            uploadFile('/assets/uploadMedia/myfile2.png', `/sites/${siteKey}/files`, 'myfile2.png', 'image/png');
+            uploadFile('/assets/uploadMedia/myfile.webm', `/sites/${siteKey}/files`, 'myfile.webm', 'video/webm');
+            uploadFile('/assets/uploadMedia/myfile.csv', `/sites/${siteKey}/files`, 'myfile.csv', 'text/csv');
         });
 
-        it('shows preview on files', () => {
-            jcontent = JContent.visit('digitall', 'en', 'media/files/images/banners');
-            jcontent
-                .getGrid()
-                .getCardByLabel('editing')
-                .contextMenu()
-                .select('Preview');
-            cy.get('[data-sel-role=preview-type-image]');
-            cy.get('[data-cm-role=preview-name]').contains('editing-digitall-site.jpg');
+        after(() => {
+            deleteSite(siteKey);
         });
 
-        it('can select another item', () => {
-            jcontent
-                .getGrid()
-                .getCardByLabel('dance')
+        it('shows PDF preview', () => {
+            jcontent = JContent.visit(siteKey, 'en', 'media/files');
+            jcontent.getGrid().getCardByName('myfile.pdf').contextMenu().select('Preview');
+            cy.get('[data-preview-type="pdf"]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.pdf');
+        });
+
+        it('shows image preview when selecting png', () => {
+            jcontent.getGrid().getCardByName('myfile.png')
                 .get().scrollIntoView().find('[data-cm-role="grid-content-list-card-name"]').scrollIntoView().click();
-            cy.get('[data-sel-role=preview-type-image]');
-            cy.get('[data-cm-role=preview-name]').contains('dance-scene-free-license-cc0.jpg');
+            cy.get('[data-preview-type="image"]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.png');
         });
 
-        it('can switch to list view', () => {
+        it('can select another image', () => {
+            jcontent.getGrid().getCardByName('myfile2.png')
+                .get().scrollIntoView().find('[data-cm-role="grid-content-list-card-name"]').scrollIntoView().click();
+            cy.get('[data-preview-type="image"]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile2.png');
+        });
+
+        it('can switch to list view and preview persists', () => {
             jcontent.switchToListMode();
-            cy.get('[data-sel-role=preview-type-image]');
-            cy.get('[data-cm-role=preview-name]').contains('dance-scene-free-license-cc0.jpg');
+            cy.get('[data-preview-type="image"]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile2.png');
         });
 
-        it('can select another item', () => {
-            jcontent
-                .getTable()
-                .getRowByLabel('street')
+        it('can select another item from list view', () => {
+            jcontent.getTable().getRowByName('myfile.png')
                 .get().find('[data-cm-role="table-content-list-cell-nameBigIcon"]').click();
-            cy.get('[data-sel-role=preview-type-image]');
-            cy.get('[data-cm-role=preview-name]').contains('street-market-fruits-grocery.jpg');
+            cy.get('[data-preview-type="image"]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.png');
+        });
+
+        it('shows video preview for webm', () => {
+            jcontent.getTable().getRowByName('myfile.webm').contextMenu().select('Preview');
+            cy.get('[data-preview-type="media"]').should('be.visible');
+            cy.get('[data-preview-type="media"]').find('video').should('exist');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.webm');
+        });
+
+        it('shows document preview for csv', () => {
+            jcontent.getTable().getRowByName('myfile.csv').contextMenu().select('Preview');
+            cy.get('[data-preview-type="document"]').should('be.visible');
+            cy.get('[data-cm-role=preview-name]').should('contain', 'myfile.csv');
         });
 
         it('can be closed', () => {
@@ -98,7 +114,7 @@ describe('Menu actions preview tests', () => {
 
             // Switch to next page then check preview
             cy.get('[data-sel-role="table-pagination-button-next-page"]').click();
-            cy.get('[data-cm-role="preview-drawer"]')
+            cy.get('[data-sel-role="side-panel-content"]')
                 .contains('Select a content item to preview it')
                 .should('be.visible');
         });

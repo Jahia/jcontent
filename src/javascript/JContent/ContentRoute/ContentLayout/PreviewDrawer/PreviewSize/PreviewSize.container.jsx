@@ -11,10 +11,9 @@ const useMetadataPreview = variables => {
     });
 };
 
-export const PreviewSizeContainer = ({node, previewMode}) => {
-    previewMode = previewMode?.toUpperCase();
+export const PreviewSizeContainer = ({node}) => {
     const {data, loading, refetch} = useMetadataPreview({
-        workspace: previewMode,
+        workspace: 'EDIT',
         path: node.path
     });
 
@@ -23,19 +22,18 @@ export const PreviewSizeContainer = ({node, previewMode}) => {
     }
 
     /*
-     * Sometimes data that comes back doesn't match previewMode requested
+     * Sometimes data that comes back doesn't match the requested workspace
      * e.g. when requests are fired off one after the other.
      * Wait until request matches
      */
     const dataWorkspace = data?.jcr?.nodeByPath?.workspace;
-    return (loading || dataWorkspace !== previewMode) ?
+    return (loading || dataWorkspace !== 'EDIT') ?
         (<PreviewSize node={node}/>) :
         (<PreviewSize node={data?.jcr?.nodeByPath || {}}/>);
 };
 
 PreviewSizeContainer.propTypes = {
-    node: PropTypes.object.isRequired,
-    previewMode: PropTypes.string.isRequired
+    node: PropTypes.object.isRequired
 };
 
 export default PreviewSizeContainer;

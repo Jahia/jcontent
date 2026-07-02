@@ -265,7 +265,7 @@ export const EditFrame = () => {
                 <iframe ref={iframe}
                         width="100%"
                         height="100%"
-                        style={{position: 'absolute'}}
+                        style={{position: 'absolute', border: '0'}}
                         id="page-builder-frame-1"
                         data-sel-role="page-builder-frame-active"
                         onLoad={iFrameOnLoad}
@@ -273,7 +273,7 @@ export const EditFrame = () => {
                 <iframe ref={iframeSwap}
                         width="100%"
                         height="100%"
-                        style={{position: 'absolute', top: -10000}}
+                        style={{position: 'absolute', top: -10000, border: '0'}}
                         id="page-builder-frame-2"
                         data-sel-role="page-builder-frame-inactive"
                         onLoad={iFrameOnLoad}

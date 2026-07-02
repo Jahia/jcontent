@@ -45,9 +45,11 @@
 .nocondition {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     min-width: 100%;
+    min-height: 5rem;
+    margin-top: var(--moon-spacing-medium);
     margin-bottom: var(--spacing-large);
     margin-left: var(--spacing-large);
 }

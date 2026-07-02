@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
+import {isEqual} from 'lodash';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -161,15 +162,30 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         createAnother
     ]);
 
-    // Memoize the deep-cloned sections so the reference is stable between renders.
-    // It only changes when `sections` itself changes (i.e., when fresh data arrives for a new language).
-    // Passing a stable reference to ContentEditorSectionContextProvider lets it detect genuine
-    // language-switch reloads via reference inequality, while preserving in-place mutations
-    // (valueConstraints updates from dependentProperties, mixin moves from ChoiceList onChange).
-    const sectionsMemo = useMemo(
-        () => sections ? structuredClone(sections) : null,
-        [sections]
-    );
+    // Produce a deep-cloned `sections` whose REFERENCE only changes when the section content
+    // genuinely changes (language switch / fresh server data). `sections` from useFormDefinition
+    // can get a new reference on incidental re-renders (unstable upstream deps) with identical
+    // content; returning a fresh clone in that case makes ContentEditorSectionContextProvider
+    // resync `sections.current` and clobber the in-place mutations that dependentProperties /
+    // ChoiceList onChange handlers write onto it (valueConstraints, mixin moves) — which is why
+    // dependent choicelists and mixins stopped rendering. Keying on content instead of reference
+    // keeps the clone stable so those mutations survive, while still refreshing on a real reload.
+    // ponytail: deep-equal only runs when the ref actually changed; sections are small, cost is negligible.
+    const sectionsSourceRef = useRef(null);
+    const sectionsCloneRef = useRef(null);
+    const sectionsMemo = useMemo(() => {
+        if (!sections) {
+            return null;
+        }
+
+        if (sectionsCloneRef.current && isEqual(sectionsSourceRef.current, sections)) {
+            return sectionsCloneRef.current;
+        }
+
+        sectionsSourceRef.current = sections;
+        sectionsCloneRef.current = structuredClone(sections);
+        return sectionsCloneRef.current;
+    }, [sections]);
 
     // Capture the last fully-valid context so we can serve stale data during language-switch
     // refetches instead of unmounting the form. Written at render time (safe — refs are local).
@@ -206,6 +222,20 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
                     <ContentEditorSectionContextProvider formSections={sectionsMemo}>
                         <ApolloCacheFlushOnGWTSave/>
                         {children}
+                        {/* While stale data is served, the form is about to be reinitialized
+                            (enableReinitialize in Edit.jsx) the moment fresh data arrives, so any
+                            keystrokes typed into the still-mounted form during this window would be
+                            clobbered — that is what dropped characters on language switch. Block
+                            interaction with a transparent overlay: no spinner/dim so the no-remount
+                            goal keeps its no-flash benefit, while Cypress and real users can't type
+                            into a form that is mid-transition. See #2447.
+                            ponytail: fixed viewport overlay; scope to the editor only if it ever
+                            blocks something it shouldn't during the (brief) refetch window. */}
+                        <div
+                            aria-busy="true"
+                            data-sel-role="ce-refetch-blocker"
+                            style={{position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, zIndex: 9999, cursor: 'wait'}}
+                        />
                     </ContentEditorSectionContextProvider>
                 </ContentEditorContext.Provider>
             );

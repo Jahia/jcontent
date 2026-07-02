@@ -55,16 +55,6 @@ const buildMenuProps = (targetPath, selection, nodes) => {
     return {path: targetPath, paths: undefined, actionKey, currentPath: targetPath, node};
 };
 
-/**
- * @deprecated since version 3.4.0 https://github.com/Jahia/jcontent/pull/1879
- * This component will be removed in version 4.0.0.
- * @component
- * @param {Object} props Component props
- * @param {Object} props.currentFrameRef Reference to the current frame
- * @param {Object} props.currentDocument Current document object
- * @param {string} props.currentHoveredRef Current content path
- * @param {string[]} props.selection Array of selected paths
- */
 const BoxesContextMenu = ({currentFrameRef, currentDocument, selection, nodes}) => {
     const contextualMenu = useRef();
     const {hoveredPath: currentPath} = useHoverContext();

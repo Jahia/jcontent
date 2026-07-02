@@ -259,7 +259,7 @@ export const TagManagerTable = ({
     let tableContent;
     if (isLoading) {
         tableContent = (
-            <div className={styles.loaderContainer}>
+            <div className={styles.loaderContainer} data-cm-role="tag-manager-loader">
                 <Loader size="big"/>
             </div>
         );

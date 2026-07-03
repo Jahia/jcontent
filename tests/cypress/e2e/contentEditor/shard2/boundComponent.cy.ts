@@ -1,5 +1,5 @@
 import {JContent, JContentPageBuilder} from '../../../page-object';
-import { addNode, deleteSite, enableModule, setNodeProperty } from '@jahia/cypress'
+import {addNode, deleteSite, enableModule, setNodeProperty} from '@jahia/cypress';
 
 describe('Bound component tests', () => {
     const siteKey = 'boundComponentSite';
@@ -22,7 +22,7 @@ describe('Bound component tests', () => {
     });
 
     it('Bound component can be added via content editor', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents')
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         jcontent.switchToListMode();
         const contentEditor = jcontent.createContent('cent:boundComponent');
         const picker = contentEditor.getPickerField('jmix:bindedComponent_j:bindedComponent').open();

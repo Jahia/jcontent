@@ -290,4 +290,15 @@
  extends = cent:expert
  - test1 (string)
 
+// https://github.com/Jahia/jcontent/issues/2412
+// Regression test types for non-deterministic field assignment when mixin B
+// is both a supertype of mixin A and in the extend mixins list for jnt:page.
+[cemix:supertypeExtendMixin] mixin
+ extends = jnt:page
+ - title (string) internationalized
+ - description (string) internationalized
+
+[cemix:subtypeExtendMixin] > cemix:supertypeExtendMixin mixin
+ extends = jnt:page
+ - pageType (string)
 

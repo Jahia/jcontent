@@ -14,6 +14,12 @@ export class Field extends BaseComponent {
         // Empty method
     }
 
+    assertVisible() {
+        this.get().scrollIntoView({offset: {top: -200, left: 0}});
+        this.get().should('be.visible');
+        return this;
+    }
+
     hasMandatory() {
         this.get().scrollIntoView().find('[data-sel-content-editor-field-mandatory]')
             .should('be.visible')

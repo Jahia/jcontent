@@ -148,6 +148,10 @@
         "refresh": "Ergebnis aktualisieren",
         "normalPrompt": "Wonach suchen Sie?",
         "sql2Prompt": "Sie verwenden SQL2-Queries. Bitte besuchen Sie die <0>Academy</0> für mehr Infos.",
+        "placeholders": {
+          "sql2SearchFrom": "SQL2-FROM-Klausel (ohne Klammern)",
+          "sql2SearchWhere": "zusätzliche WHERE-Klausel"
+        },
         "modal": {
           "cancel": "Abbrechen"
         }

@@ -1,3 +1,7 @@
+.fullWidth {
+    width: 100%;
+}
+
 .fieldset {
     margin-right: 0;
     margin-bottom: var(--spacing-medium);
@@ -6,10 +10,14 @@
     border-bottom: none;
 
     .label {
+        margin-bottom: var(--moon-spacing-nano);
+
         color: var(--color-gray);
     }
 }
 
 .academyLink {
+    margin-bottom: var(--moon-spacing-nano);
+
     text-align: right;
 }

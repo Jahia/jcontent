@@ -152,6 +152,10 @@
         "refresh": "Refresh results",
         "normalPrompt": "What are you looking for?",
         "sql2Prompt": "You are using SQL2 queries. Please visit the <0>Academy</0> for more info.",
+        "placeholders": {
+          "sql2SearchFrom": "SQL2 FROM clause (without brackets)",
+          "sql2SearchWhere": "additional WHERE clause"
+        },
         "modal": {
           "cancel": "Cancel"
         }

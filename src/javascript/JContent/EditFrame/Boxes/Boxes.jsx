@@ -254,12 +254,6 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
                     element.dataset.jahiaPath = `${parent.dataset.jahiaPath}/${modulePath}`;
                 }
 
-                // If component is bindable (boostrap Pager for example) it can be the case that nothing is bound to it, as result it may be empty and difficult to edit.
-                // We need to make sure it is large enough to be selectable. This mimics what was previously done in page composer.
-                if (element.offsetHeight === 0 && element.getAttribute('bindable') === 'true') {
-                    element.style['min-height'] = '28px';
-                }
-
                 _modules.push(element);
             }
         });

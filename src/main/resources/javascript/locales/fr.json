@@ -149,6 +149,10 @@
         "refresh": "Rafraîchir les résultats",
         "normalPrompt": "Que cherchez-vous ?",
         "sql2Prompt": "Vous utilisez des requêtes SQL2. Consultez l'<0>Academy</0> pour plus d'informations.",
+        "placeholders": {
+          "sql2SearchFrom": "Clause FROM SQL2 (sans crochets)",
+          "sql2SearchWhere": "clause WHERE supplémentaire"
+        },
         "modal": {
           "cancel": "Annuler"
         }

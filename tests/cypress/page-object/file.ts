@@ -90,6 +90,11 @@ export class File extends BasePage {
         cy.get('[data-sel-role="delete-mark-button"]').click();
         // Verify dialog has been dismissed before proceeding
         cy.get('[data-sel-role="delete-mark-dialog"]').should('not.exist');
+        // Wait until the card actually reflects the marked-for-deletion state before returning:
+        // deletePermanently() reopens the context menu, and that action only exists once the
+        // jmix:markedForDeletion mixin has propagated to the grid. Without this the menu can open
+        // too early and the deletePermanently item is never found (flaky). Same guard as Folder.
+        this.getGridCard().get().find('[data-status-type="markedForDeletion"]').should('be.visible');
         return this;
     }
 

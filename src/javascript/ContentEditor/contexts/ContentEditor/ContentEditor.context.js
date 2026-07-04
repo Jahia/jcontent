@@ -212,11 +212,12 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     }
 
     if (loading || siteInfoResult.loading || !ranAllHooks || isRefetching) {
-        // During language-switch refetches keep the form mounted with stale context.
-        // On the initial load (no stale context yet) show the overlay as usual.
-        // isRefetching=true means form data is loading but we have stale data — keep
-        // serving the old editorContext so lang and initialValues transition atomically.
-        if (previousEditorContextRef.current) {
+        // Keep the form mounted with stale context ONLY during a language-switch refetch
+        // (isRefetching, set by useFormDefinition only when lang changed). Any other refetch
+        // (mixin toggle, dependent-field mutation, save) falls through to the LoaderOverlay below,
+        // matching pre-#2447 behaviour — otherwise the stale context + blocker overlay would clobber
+        // and block the in-progress interaction (e.g. adding a mixin). See #2447.
+        if (isRefetching && previousEditorContextRef.current) {
             return (
                 <ContentEditorContext.Provider value={previousEditorContextRef.current}>
                     <ContentEditorSectionContextProvider formSections={sectionsMemo}>

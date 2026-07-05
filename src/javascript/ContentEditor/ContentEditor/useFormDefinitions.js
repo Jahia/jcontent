@@ -36,22 +36,17 @@ export const useFormDefinition = (query, adapter) => {
         }
     }, [data, uilang, t, contentEditorConfigContext, error, loading, adapter]);
 
-    // Track the last successfully adapted result (and the lang it belongs to) so we can serve it
-    // during language-switch refetches.
     if (dataCached !== undefined) {
         previousDataRef.current = dataCached;
         previousLangRef.current = lang;
     }
 
     if (error || loading || !data?.jcr) {
-        // Keep the form mounted with stale data ONLY for a genuine language switch (lang moved away
-        // from the cached data's lang). Any other refetch (save, mixin toggle, dependent-field
-        // mutation) keeps the original loading behaviour so the form is not held in the
-        // stale/interaction-blocked state that clobbered mixin toggles. See #2447.
+        // Serve stale data ONLY during a language-switch refetch (lang moved away from the cached
+        // data's lang) — structural refetches (save, mixin toggle, dependent field) must keep the
+        // loading behaviour or in-progress edits get clobbered. isRefetching tells the context to
+        // keep serving the previous editorContext so lang and initialValues transition together.
         if (loading && previousDataRef.current && lang !== previousLangRef.current) {
-            // The isRefetching=true flag tells ContentEditor.context.js to keep serving the previous editorContext
-            // (with old lang) rather than computing a new one with stale initialValues but new lang.
-            // This ensures lang and initialValues transition together when fresh data arrives.
             return {data: previousDataRef.current, refetch, loading: false, isRefetching: true};
         }
 

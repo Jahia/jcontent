@@ -62,12 +62,9 @@ export const Edit = () => {
         });
     }, [client, t, notificationContext, editCallback, contentEditorConfigContext, lang, nodeData, sections, i18nContext]);
 
-    // With enableReinitialize, Formik resets values whenever the initialValues REFERENCE changes.
-    // The adapter can recompute initialValues (same content, new identity) on incidental re-renders;
-    // letting those through resets in-progress edits — e.g. a just-toggled mixin fieldset collapses
-    // mid-interaction (mixins.cy.ts race). Only hand Formik a new reference when it may legitimately
-    // differ: language switch or a different node. Same-lang/same-node keeps pre-#2447 semantics
-    // (never reinitialize); imperative resetForm calls (save) are unaffected.
+    // Formik reinitializes whenever the initialValues REFERENCE changes, and the adapter recomputes
+    // it (same content, new identity) on incidental re-renders — which would reset in-progress
+    // edits. Only hand Formik a new reference on a genuine language or node change.
     const stableInitialValuesRef = useRef({lang, uuid: nodeData.uuid, initialValues});
     if (stableInitialValuesRef.current.lang !== lang || stableInitialValuesRef.current.uuid !== nodeData.uuid) {
         stableInitialValuesRef.current = {lang, uuid: nodeData.uuid, initialValues};

@@ -162,15 +162,9 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         createAnother
     ]);
 
-    // Produce a deep-cloned `sections` whose REFERENCE only changes when the section content
-    // genuinely changes (language switch / fresh server data). `sections` from useFormDefinition
-    // can get a new reference on incidental re-renders (unstable upstream deps) with identical
-    // content; returning a fresh clone in that case makes ContentEditorSectionContextProvider
-    // resync `sections.current` and clobber the in-place mutations that dependentProperties /
-    // ChoiceList onChange handlers write onto it (valueConstraints, mixin moves) — which is why
-    // dependent choicelists and mixins stopped rendering. Keying on content instead of reference
-    // keeps the clone stable so those mutations survive, while still refreshing on a real reload.
-    // ponytail: deep-equal only runs when the ref actually changed; sections are small, cost is negligible.
+    // Clone `sections` with a reference that only changes when the content genuinely changes: a
+    // fresh clone on incidental re-renders would make the section provider resync and clobber the
+    // in-place mutations from dependentProperties/ChoiceList handlers (dependent fields, mixins).
     const sectionsSourceRef = useRef(null);
     const sectionsCloneRef = useRef(null);
     const sectionsMemo = useMemo(() => {
@@ -187,11 +181,9 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         return sectionsCloneRef.current;
     }, [sections]);
 
-    // Capture the last fully-valid context so we can serve stale data during language-switch
-    // refetches instead of unmounting the form. Written at render time (safe — refs are local).
-    // We only capture when isRefetching=false so that lang and initialValues always transition
-    // together: serving a half-baked context (new lang, stale initialValues) would fire
-    // I18nContextHandler's lang-change effect too early with the wrong Formik value base.
+    // Last fully-valid context, served during language-switch refetches. Only captured while
+    // isRefetching=false so lang and initialValues always transition together — a half-baked
+    // context would fire I18nContextHandler's lang-change effect with the wrong value base.
     const previousEditorContextRef = useRef(null);
     if (editorContext !== null && !isRefetching) {
         previousEditorContextRef.current = editorContext;
@@ -212,26 +204,17 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     }
 
     if (loading || siteInfoResult.loading || !ranAllHooks || isRefetching) {
-        // Keep the form mounted with stale context ONLY during a language-switch refetch
-        // (isRefetching, set by useFormDefinition only when lang changed). Any other refetch
-        // (mixin toggle, dependent-field mutation, save) falls through to the LoaderOverlay below,
-        // matching pre-#2447 behaviour — otherwise the stale context + blocker overlay would clobber
-        // and block the in-progress interaction (e.g. adding a mixin). See #2447.
+        // Keep the form mounted with stale context only during a language-switch refetch;
+        // any other refetch falls through to the LoaderOverlay as before.
         if (isRefetching && previousEditorContextRef.current) {
             return (
                 <ContentEditorContext.Provider value={previousEditorContextRef.current}>
                     <ContentEditorSectionContextProvider formSections={sectionsMemo}>
                         <ApolloCacheFlushOnGWTSave/>
                         {children}
-                        {/* While stale data is served, the form is about to be reinitialized
-                            (enableReinitialize in Edit.jsx) the moment fresh data arrives, so any
-                            keystrokes typed into the still-mounted form during this window would be
-                            clobbered — that is what dropped characters on language switch. Block
-                            interaction with a transparent overlay: no spinner/dim so the no-remount
-                            goal keeps its no-flash benefit, while Cypress and real users can't type
-                            into a form that is mid-transition. See #2447.
-                            ponytail: fixed viewport overlay; scope to the editor only if it ever
-                            blocks something it shouldn't during the (brief) refetch window. */}
+                        {/* Transparent blocker: keystrokes typed while stale data is served would
+                            be clobbered by the reinitialize when fresh data arrives. No spinner/dim
+                            so the switch stays flash-free. */}
                         <div
                             aria-busy="true"
                             data-sel-role="ce-refetch-blocker"

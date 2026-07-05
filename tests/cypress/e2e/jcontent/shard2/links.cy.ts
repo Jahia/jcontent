@@ -145,8 +145,8 @@ describe('Links in jcontent', () => {
             ]
         });
         jcontent.switchToStructuredView();
-        jcontent.getTable().getRowByLabel('external2-link-nav').element.contains('External link');
-        jcontent.getTable().getRowByLabel('About').element.contains('Internal Link');
+        jcontent.getTable().getRowByName('external2-link-nav').element.contains('External link');
+        jcontent.getTable().getRowByName('my-internal-link').element.contains('Internal Link');
         jcontent.getTable().element.contains('Menu Entry').should('not.exist');
     });
 });

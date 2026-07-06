@@ -212,6 +212,7 @@ export class JContent extends BasePage {
 
     switchToStructuredView(): JContent {
         this.switchToMode('Structured');
+        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
         return this;
     }
 

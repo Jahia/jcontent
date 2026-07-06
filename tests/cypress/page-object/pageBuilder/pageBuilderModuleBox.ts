@@ -33,4 +33,9 @@ export class PageBuilderModuleBox extends BaseComponent {
     assertIsClicked(): Cypress.Chainable<JQuery> {
         return this.get().should('have.attr', 'data-box-clicked', 'true');
     }
+
+    assertHasEmptyOverlay(): Cypress.Chainable<JQuery> {
+        this.get().scrollIntoView();
+        return this.get().should('contain', 'Nothing to display');
+    }
 }

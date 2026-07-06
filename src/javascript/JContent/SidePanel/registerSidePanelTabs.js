@@ -1,10 +1,12 @@
 import React from 'react';
 import {sidePanelTabAction} from './sidePanelTabAction';
-import {InfoCircle, History, Visibility} from '@jahia/moonstone';
+import {ContentReference, InfoCircle, History, Visibility} from '@jahia/moonstone';
 import {ContentDetails} from './ContentDetails';
 import {ContentHistory} from './ContentHistory';
+import {ContentUsages} from './ContentUsages';
 import {CEPreview} from '~/ContentEditor/editorTabs/EditPanelContent/Preview';
 import {JContentPreview} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/JContentPreview';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const registerSidePanelTabs = actionsRegistry => {
     actionsRegistry.add('action', 'ceSidePanelDetailsTab', sidePanelTabAction, {
@@ -24,6 +26,18 @@ export const registerSidePanelTabs = actionsRegistry => {
         displayableComponent: ContentHistory,
         isDisplayable: () => true,
         requiredPermission: ['viewHistoryTab']
+    });
+
+    actionsRegistry.add('action', 'ceSidePanelUsagesTab', sidePanelTabAction, {
+        buttonLabel: 'jcontent:label.contentEditor.sidePanel.usages',
+        buttonIcon: <ContentReference/>,
+        targets: ['sidePanelTabsActions:4'],
+        dataSelRole: 'tab-usages',
+        displayableComponent: ContentUsages,
+        hideOnNodeTypes: ['jnt:virtualsite'],
+        // In Content Editor the tab only makes sense in edit mode: in create mode
+        // ctx.path points to the parent node
+        isDisplayable: ({isJContent, mode}) => Boolean(isJContent) || mode === Constants.routes.baseEditRoute
     });
 
     actionsRegistry.add('action', 'ceSidePanelPreviewTab', sidePanelTabAction, {

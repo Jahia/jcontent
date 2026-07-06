@@ -59,7 +59,8 @@ export const useOpenInLiveData = path => {
         node.publicationInfo.status !== 'UNPUBLISHED';
 
     const currentHostname = globalThis.location.hostname;
-    const isHostnameInList = [serverName, ...serverNameAliases].includes(currentHostname);
+    const isHostnameInList = [serverName, ...serverNameAliases].includes(currentHostname) ||
+        serverNameAliases.includes('localhost');
     return {
         selectedServerName,
         selectServerName,

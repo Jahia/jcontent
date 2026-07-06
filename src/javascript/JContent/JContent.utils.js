@@ -471,14 +471,16 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
         return url;
     }
 
-    let host = location.hostname;
-
     // Use current host for preview urls
-    if (isLive && serverName !== 'localhost') {
+    let host = location.hostname;
+    let port = location.port ? `:${location.port}` : '';
+
+    if (isLive && serverName && serverName !== 'localhost' && serverName !== location.hostname) {
         host = serverName;
+        port = '';
     }
 
-    return `${location.protocol}//${host}:${location.port}${url}`;
+    return `${location.protocol}//${host}${port}${url}`;
 };
 
 /**

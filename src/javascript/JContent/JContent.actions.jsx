@@ -19,7 +19,6 @@ import {
     MoreVert,
     NoCloud,
     OpenInBrowser,
-    OpenInNew,
     Paste,
     PasteAsReference,
     Publish,
@@ -50,7 +49,6 @@ import {
     LocateActionComponent,
     LockActionComponent,
     OpenInJContentActionComponent,
-    OpenInLiveActionComponent,
     OpenInPreviewActionComponent,
     PasteActionComponent,
     PreviewActionComponent,
@@ -414,12 +412,6 @@ export const jContentActions = registry => {
         buttonIcon: <OpenInBrowser/>,
         buttonLabel: 'jcontent:label.contentManager.actions.openInPageBuilder',
         component: OpenInPageBuilderActionComponent
-    });
-
-    registry.add('action', 'openInLive', {
-        buttonIcon: <OpenInNew/>,
-        buttonLabel: 'jcontent:label.contentManager.actions.openInLive',
-        component: OpenInLiveActionComponent
     });
 
     registry.add('action', 'openInPreviewMenu', menuActionWithRenderer, {

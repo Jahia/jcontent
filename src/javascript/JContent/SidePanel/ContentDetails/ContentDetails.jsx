@@ -235,7 +235,6 @@ const ContentLinks = () => {
 export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, technicalInfo, details} = useSidePanelContext();
-    const isDevMode = window.contextJsParameters?.config?.operatingMode === 'development';
 
     if (!nodeData) {
         return (
@@ -270,7 +269,7 @@ export const ContentDetails = () => {
 
             <ContentLinks/>
 
-            {isDevMode && technicalInfo && technicalInfo.length > 0 && (
+            {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
                     <Typography variant="subheading" className={styles.sectionTitle}>
                         {t('jcontent:label.contentEditor.sidePanel.technical')}

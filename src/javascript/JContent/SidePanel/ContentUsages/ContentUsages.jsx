@@ -10,7 +10,7 @@ import styles from './ContentUsages.scss';
 const MAX_BADGES = 2;
 
 const localeChips = (locales, t) => {
-    const sortedLanguages = locales.indexOf(null) >= 0 ?
+    const sortedLanguages = locales.includes(null) ?
         [t('jcontent:label.contentEditor.edit.sharedLanguages')] :
         locales.map(l => l.toUpperCase()).sort();
     const totalCount = sortedLanguages.length;

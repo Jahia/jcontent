@@ -7,6 +7,13 @@ export const useContentEditorSectionContext = () => useContext(ContentEditorSect
 export const ContentEditorSectionContextProvider = ({formSections, children}) => {
     const sections = useRef(formSections);
 
+    // Keep sections.current in sync when formSections changes (e.g. language switch that doesn't
+    // remount this provider). The parent memoizes the clone so this only fires on genuine reloads,
+    // not on every render — preserving in-place mutations from dependentProperties / ChoiceList.
+    if (sections.current !== formSections) {
+        sections.current = formSections;
+    }
+
     const [, setChangeCount] = useState(0);
 
     const onSectionsUpdate = () => {

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {useNotifications} from '@jahia/react-material';
 import {Formik} from 'formik';
 import {EditPanel} from './EditPanel/EditPanel';
@@ -62,13 +62,22 @@ export const Edit = () => {
         });
     }, [client, t, notificationContext, editCallback, contentEditorConfigContext, lang, nodeData, sections, i18nContext]);
 
+    // Formik reinitializes whenever the initialValues REFERENCE changes, and the adapter recomputes
+    // it (same content, new identity) on incidental re-renders — which would reset in-progress
+    // edits. Only hand Formik a new reference on a genuine language or node change.
+    const stableInitialValuesRef = useRef({lang, uuid: nodeData.uuid, initialValues});
+    if (stableInitialValuesRef.current.lang !== lang || stableInitialValuesRef.current.uuid !== nodeData.uuid) {
+        stableInitialValuesRef.current = {lang, uuid: nodeData.uuid, initialValues};
+    }
+
     return (
         <>
             <PublicationInfoContextProvider uuid={nodeData.uuid} lang={lang}>
                 <Formik
+                    enableReinitialize
                     validateOnMount
                     validateOnChange={false}
-                    initialValues={initialValues}
+                    initialValues={stableInitialValuesRef.current.initialValues}
                     validate={validate(sections)}
                     onSubmit={handleSubmit}
                 >

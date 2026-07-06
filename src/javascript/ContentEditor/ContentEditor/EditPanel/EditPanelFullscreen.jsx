@@ -11,8 +11,12 @@ import {useContentEditorConfigContext} from '~/shared';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 
 export const EditPanelFullscreen = ({title}) => {
-    const {advancedOpenTab} = useContentEditorConfigContext();
-    const [activeTab, setActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
+    const config = useContentEditorConfigContext();
+    const {advancedOpenTab} = config;
+    // Tab state lives on the modal config so it survives subtree remounts during a language
+    // switch (#2483); fall back to local state when rendered without that wiring.
+    const [localActiveTab, setLocalActiveTab] = useState(advancedOpenTab ?? Constants.editPanel.editTab);
+    const [activeTab, setActiveTab] = config.setActiveTab ? [config.activeTab, config.setActiveTab] : [localActiveTab, setLocalActiveTab];
     const {mode} = useContentEditorContext();
 
     // Without edit tab, no content editor

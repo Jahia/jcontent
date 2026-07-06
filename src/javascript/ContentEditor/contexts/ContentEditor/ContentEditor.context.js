@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import React, {useCallback, useContext, useMemo, useRef, useState} from 'react';
 import {useNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
 import * as PropTypes from 'prop-types';
@@ -10,6 +10,7 @@ import {useSelector} from 'react-redux';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
+import {isEqual} from 'lodash';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -59,6 +60,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
     const {
         loading,
         error,
+        isRefetching,
         data: formDefinition,
         refetch: refetchFormData
     } = useFormDefinition();
@@ -160,6 +162,33 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         createAnother
     ]);
 
+    // Clone `sections` with a reference that only changes when the content genuinely changes: a
+    // fresh clone on incidental re-renders would make the section provider resync and clobber the
+    // in-place mutations from dependentProperties/ChoiceList handlers (dependent fields, mixins).
+    const sectionsSourceRef = useRef(null);
+    const sectionsCloneRef = useRef(null);
+    const sectionsMemo = useMemo(() => {
+        if (!sections) {
+            return null;
+        }
+
+        if (sectionsCloneRef.current && isEqual(sectionsSourceRef.current, sections)) {
+            return sectionsCloneRef.current;
+        }
+
+        sectionsSourceRef.current = sections;
+        sectionsCloneRef.current = structuredClone(sections);
+        return sectionsCloneRef.current;
+    }, [sections]);
+
+    // Last fully-valid context, served during language-switch refetches. Only captured while
+    // isRefetching=false so lang and initialValues always transition together — a half-baked
+    // context would fire I18nContextHandler's lang-change effect with the wrong value base.
+    const previousEditorContextRef = useRef(null);
+    if (editorContext !== null && !isRefetching) {
+        previousEditorContextRef.current = editorContext;
+    }
+
     if (error) {
         // Check for ItemNotFound exception
         const is404 = (error.graphQLErrors || []).some(e => e.message?.includes('ItemNotFoundException'));
@@ -174,13 +203,34 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         return renderError(siteInfoResult, t, notificationContext);
     }
 
-    if (loading || siteInfoResult.loading || !ranAllHooks) {
+    if (loading || siteInfoResult.loading || !ranAllHooks || isRefetching) {
+        // Keep the form mounted with stale context only during a language-switch refetch;
+        // any other refetch falls through to the LoaderOverlay as before.
+        if (isRefetching && previousEditorContextRef.current) {
+            return (
+                <ContentEditorContext.Provider value={previousEditorContextRef.current}>
+                    <ContentEditorSectionContextProvider formSections={sectionsMemo}>
+                        <ApolloCacheFlushOnGWTSave/>
+                        {children}
+                        {/* Transparent blocker: keystrokes typed while stale data is served would
+                            be clobbered by the reinitialize when fresh data arrives. No spinner/dim
+                            so the switch stays flash-free. */}
+                        <div
+                            aria-busy="true"
+                            data-sel-role="ce-refetch-blocker"
+                            style={{position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, zIndex: 9999, cursor: 'wait'}}
+                        />
+                    </ContentEditorSectionContextProvider>
+                </ContentEditorContext.Provider>
+            );
+        }
+
         return <LoaderOverlay/>;
     }
 
     return (
         <ContentEditorContext.Provider value={editorContext}>
-            <ContentEditorSectionContextProvider formSections={JSON.parse(JSON.stringify(sections))}>
+            <ContentEditorSectionContextProvider formSections={sectionsMemo}>
                 <ApolloCacheFlushOnGWTSave/>
                 {children}
             </ContentEditorSectionContextProvider>

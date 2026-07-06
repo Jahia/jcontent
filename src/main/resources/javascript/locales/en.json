@@ -710,10 +710,9 @@
         },
         "advancedOption": {
           "technicalInformation": {
-            "contentType": "Main content type",
+            "contentType": "Content type",
             "details": "Details",
             "label": "Technical information",
-            "nodeTypeName": "Content type",
             "inheritedMixins": "Inherited mixins",
             "appliedMixins": "Applied mixins",
             "path": "Path",

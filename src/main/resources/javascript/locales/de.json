@@ -704,10 +704,9 @@
         },
         "advancedOption": {
           "technicalInformation": {
-            "contentType": "Haupt Content Typ",
+            "contentType": "Content-Typ",
             "details": "Details",
             "label": "Technische Informationen",
-            "nodeTypeName": "Content-Typ",
             "inheritedMixins": "Geerbte Mixins",
             "appliedMixins": "Angewandte Mixins",
             "path": "Pfad",

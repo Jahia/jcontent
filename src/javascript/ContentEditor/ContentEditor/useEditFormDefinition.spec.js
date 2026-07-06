@@ -209,11 +209,7 @@ describe('adaptEditFormData', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).technicalInfo).toEqual([
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType',
-                value: 'ContentType'
-            },
-            {
-                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.nodeTypeName',
-                value: 'jcr:contentType'
+                value: 'ContentType (jcr:contentType)'
             },
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins',

@@ -705,10 +705,9 @@
         },
         "advancedOption": {
           "technicalInformation": {
-            "contentType": "Type de contenu principal",
+            "contentType": "Type de contenu",
             "details": "Détails",
             "label": "Informations techniques",
-            "nodeTypeName": "Type de contenu",
             "inheritedMixins": "Mixins hérités",
             "appliedMixins": "Mixins appliqués",
             "path": "Chemin",

@@ -259,8 +259,9 @@ describe('Content editor form', () => {
         // Publication date/publisher rows only appear after the content has been published
 
         sidePanel.getDetailsSection('technical').scrollIntoView();
-        sidePanel.getDetailRow('Main content type').should('contain', 'Simple text');
-        sidePanel.getDetailRow('Content type').should('contain', 'jnt:text');
+        sidePanel.getDetailRow('Content type').should('contain', 'Simple text (jnt:text)');
+        sidePanel.getDetailRow('Inherited mixins').should('be.visible');
+        sidePanel.getDetailRow('Applied mixins').should('be.visible');
         sidePanel.getDetailRow('Path').should('contain', '/sites/contentEditorSite/contents/myText');
         sidePanel.getDetailRow('UUID').should('be.visible');
 

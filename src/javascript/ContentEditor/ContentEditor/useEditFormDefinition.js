@@ -128,11 +128,7 @@ const getTechnicalInfo = (nodeData, t) => {
     return [
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType'),
-            value: nodeData.primaryNodeType.displayName
-        },
-        {
-            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.nodeTypeName'),
-            value: nodeData.primaryNodeType.name
+            value: `${nodeData.primaryNodeType.displayName} (${nodeData.primaryNodeType.name})`
         },
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins'),

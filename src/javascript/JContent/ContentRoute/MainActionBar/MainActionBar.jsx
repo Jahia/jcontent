@@ -4,6 +4,7 @@ import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
 import {shallowEqual, useSelector} from 'react-redux';
+import {OpenInLiveButtonGroup} from './OpenInLiveButtonGroup';
 import styles from './MainActionBar.scss';
 
 const ButtonRenderer = getButtonRenderer({defaultButtonProps: {size: 'big'}});
@@ -40,7 +41,7 @@ export const MainActionBar = () => {
                     <DisplayAction menuUseElementAnchor actionKey="openInPreviewMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{icon: <ChevronDown/>}}/>
                 </ButtonGroup>)}
 
-            <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
+            <OpenInLiveButtonGroup path={path} isDisabled={isDisabled}/>
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction isMediumLabel actionKey={publishAction} path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
                 <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} isDisabled={isDisabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent', icon: <ChevronDown/>}}/>

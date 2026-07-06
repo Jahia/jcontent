@@ -22,7 +22,7 @@ export const DocxViewer = ({file}) => {
             .then(buf => mammoth.convertToHtml({arrayBuffer: buf}, {includeDefaultStyleMap: true}))
             .then(result => {
                 if (mountedRef.current) {
-                    setHtml(DOMPurify.sanitize(result.value));
+                    setHtml(DOMPurify.sanitize(result.value, {USE_PROFILES: {html: true}}));
                 }
             })
             .catch(err => {

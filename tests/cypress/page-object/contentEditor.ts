@@ -297,9 +297,13 @@ export class ContentEditor extends BasePage {
         return r;
     }
 
+    getDynamicFieldset(mixinType: string): Cypress.Chainable<JQuery<HTMLElement>> {
+        return cy.get(`span[data-sel-role-dynamic-fieldset="${mixinType}"]`);
+    }
+
     toggleOption(optionType: string, optionFieldName?: string) {
-        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).scrollIntoView({offset: {left: 0, top: -100}});
-        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).find('input').click({force: true});
+        this.getDynamicFieldset(optionType).scrollIntoView({offset: {left: 0, top: -100}});
+        this.getDynamicFieldset(optionType).find('input').click({force: true});
         if (optionFieldName) {
             cy.contains(optionFieldName, {timeout: 30000}).should('exist');
         }

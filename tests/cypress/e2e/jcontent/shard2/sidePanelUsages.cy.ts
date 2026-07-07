@@ -11,6 +11,9 @@ describe('jContent side panel usages tab', () => {
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', value: 'jc-usages-empty-text', language: 'en'}]
         });
+    });
+
+    beforeEach(() => {
         cy.loginAndStoreSession();
     });
 

@@ -17,6 +17,9 @@ describe('Content editor side panel usages tab', () => {
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', value: 'side-panel-usages-empty-text', language: 'en'}]
         });
+    });
+
+    beforeEach(() => {
         cy.loginAndStoreSession();
     });
 

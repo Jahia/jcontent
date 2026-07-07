@@ -1,7 +1,7 @@
 import {engineTabsPermissionCheckQuery} from './engineTabs.permission.gql-query';
 import {registry} from '@jahia/ui-extender';
 import {openEngineTabsAction} from './openEngineTabsAction';
-import {getNodeTypes} from './engineTabs.utils';
+import {getGwtEngineTabs} from './engineTabs.utils';
 import {useQuery} from '@apollo/client';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
@@ -16,21 +16,10 @@ export const tabShouldBeDisplayed = (advancedOptionsTabs, actionKey) => {
  */
 export const useRegisterEngineTabActions = () => {
     const {nodeData, site} = useContentEditorContext();
-    const {path, displayName, uuid, mixinTypes, primaryNodeType} = nodeData;
-
-    if (!window.authoringApi.getEditTabs) {
-        console.warn('DX version is not able to load GWT engine tabs in content editor');
-    }
 
     // Get tabs from GWT authoring API
-    const tabs = window.authoringApi.getEditTabs(
-        path,
-        uuid,
-        displayName,
-        mixinTypes.map(mixinType => mixinType.name),
-        getNodeTypes(primaryNodeType),
-        primaryNodeType.hasOrderableChildNodes
-    ).filter(t => !['contributeMode', 'content', 'metadata', 'layout', 'options', 'categories', 'listOrdering', 'channels', 'history'].includes(t.id));
+    const tabs = getGwtEngineTabs(nodeData)
+        .filter(t => !['contributeMode', 'content', 'metadata', 'layout', 'options', 'categories', 'listOrdering', 'channels', 'history'].includes(t.id));
     const {loading, error, data} = useQuery(engineTabsPermissionCheckQuery(tabs, site));
 
     if (!error && !loading) {
@@ -50,8 +39,6 @@ export const useRegisterEngineTabActions = () => {
                 }
             });
     }
-
-    console.log('Tabs', tabs);
 
     return {loading, error, tabs};
 };

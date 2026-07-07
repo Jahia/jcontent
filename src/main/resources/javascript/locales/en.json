@@ -782,6 +782,7 @@
         "tab": {
           "edit": "Edit",
           "advanced": "Advanced options",
+          "workflows": "Workflows",
           "visibility": "Visibility Rules"
         }
       },

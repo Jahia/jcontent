@@ -1,40 +1,14 @@
-import React, {useState} from 'react';
-import {openEngineTab} from './engineTabs.utils';
-import {CloseConfirmationDialog} from '~/ContentEditor/CloseConfirmationDialog';
+import React from 'react';
 import PropTypes from 'prop-types';
-import {useFormikContext} from 'formik';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
-import {isDirty} from '~/ContentEditor/utils';
+import {useOpenEngineTabsWithConfirmation} from './useOpenEngineTabsWithConfirmation';
 
 export const OpenEngineTabs = ({tabs, render: Render, ...otherProps}) => {
-    const [open, setOpen] = useState(false);
-    const formik = useFormikContext();
-    const {nodeData, i18nContext, resetI18nContext} = useContentEditorContext();
-
-    const dirty = isDirty(formik, i18nContext);
+    const {openTabs, confirmationDialog} = useOpenEngineTabsWithConfirmation(tabs);
 
     return (
         <>
-            <CloseConfirmationDialog
-                isOpen={open}
-                actionCallback={({discard}) => {
-                    if (discard) {
-                        resetI18nContext();
-                        formik.resetForm();
-                    }
-
-                    openEngineTab(nodeData, tabs);
-                }}
-                onCloseDialog={() => setOpen(false)}
-            />
-            <Render {...otherProps}
-                    onClick={() => {
-                        if (dirty) {
-                            setOpen(true);
-                        } else {
-                            openEngineTab(nodeData, tabs);
-                        }
-                    }}/>
+            {confirmationDialog}
+            <Render {...otherProps} onClick={openTabs}/>
         </>
     );
 };

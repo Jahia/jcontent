@@ -338,4 +338,9 @@ export class ContentEditor extends BasePage {
         this.switchToAdvancedMode();
         return this.switchToAdvancedOptions();
     }
+
+    openWorkflowsFromModesDropdown() {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get('[data-sel-role="tab-workflows"]').should('be.visible').click();
+    }
 }

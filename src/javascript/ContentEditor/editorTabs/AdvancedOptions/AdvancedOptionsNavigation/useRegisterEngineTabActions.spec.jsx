@@ -6,7 +6,8 @@ import {openEngineTabsAction} from './openEngineTabsAction';
 
 jest.mock('./engineTabs.utils', () => {
     return {
-        getNodeTypes: jest.fn()
+        getNodeTypes: jest.fn(),
+        getGwtEngineTabs: jest.fn(() => global.window.authoringApi.getEditTabs())
     };
 });
 

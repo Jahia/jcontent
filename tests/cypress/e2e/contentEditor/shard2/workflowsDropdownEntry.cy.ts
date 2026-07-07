@@ -1,24 +1,41 @@
 import {ContentEditor, JContent} from '../../../page-object';
-import {Button, getComponentByRole} from '@jahia/cypress';
+import {addNode, Button, deleteNode, getComponentByRole} from '@jahia/cypress';
 
 describe('Workflows entry in the modes dropdown', () => {
-    const nodePath = '/sites/digitall/home/area-main/highlights/people-first';
+    const siteKey = 'digitall';
+    const highlightPath = `/sites/${siteKey}/home/area-main/highlights/people-first`;
+    const textName = 'workflows-dropdown-text';
+    const textPath = `/sites/${siteKey}/contents/${textName}`;
     let contentEditor: ContentEditor;
     let jcontent: JContent;
 
+    before(() => {
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: textName,
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'Initial text', language: 'en'}]
+        });
+    });
+
+    after(() => {
+        deleteNode(textPath);
+    });
+
     beforeEach(() => {
         cy.loginAndStoreSession();
-        contentEditor = ContentEditor.visit(nodePath, 'digitall', 'en', 'pages/home');
-        jcontent = new JContent();
     });
 
     it('Should show the Workflows entry in an Advanced options section of the modes dropdown', () => {
+        contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
         cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
         cy.get('[data-option-type="group"]').contains('Advanced options').should('be.visible');
         cy.get('[data-sel-role="tab-workflows"]').should('be.visible');
     });
 
     it('Should open the GWT workflow modal directly when there are no unsaved changes', () => {
+        contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
+        jcontent = new JContent();
         contentEditor.openWorkflowsFromModesDropdown();
         cy.get('#JahiaGxtEditEngineTabs').should('be.visible');
         cy.get('button.x-btn-text').contains('Cancel').click();
@@ -28,13 +45,14 @@ describe('Workflows entry in the modes dropdown', () => {
     });
 
     it('Should ask for confirmation when there are unsaved changes', () => {
-        contentEditor.getSmallTextField('jdnt:highlight_description', false).addNewValue('Modified description', true);
+        contentEditor = ContentEditor.visit(textPath, siteKey, 'en', 'content-folders/contents');
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('Modified text', true);
 
         // Continue editing: modal stays closed, changes are kept
         contentEditor.openWorkflowsFromModesDropdown();
         getComponentByRole(Button, 'close-dialog-cancel').click();
         cy.get('#JahiaGxtEditEngineTabs').should('not.exist');
-        contentEditor.getSmallTextField('jdnt:highlight_description', false).checkValue('Modified description');
+        contentEditor.getSmallTextField('jnt:text_text').checkValue('Modified text');
 
         // Discard: changes are dropped and the workflow modal opens
         contentEditor.openWorkflowsFromModesDropdown();
@@ -44,6 +62,8 @@ describe('Workflows entry in the modes dropdown', () => {
     });
 
     it('Should still open GWT tabs from the advanced options panel', () => {
+        contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
+        jcontent = new JContent();
         // Regression check for the openEngineTabsAction refactoring
         jcontent.selectHeaderTab('tab-advanced-options');
         jcontent.assertHeaderActionSelected('tab-advanced-options');

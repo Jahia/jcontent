@@ -41,12 +41,14 @@ export const OpenInLiveButtonGroup = ({path, isDisabled}) => {
         <>
             <ButtonGroup size="big" variant="outlined" color="accent" className={styles.item}>
                 <Button
+                    data-sel-role="openInLive"
                     label={t('jcontent:label.contentManager.actions.openInLive')}
                     icon={<OpenInNew/>}
                     isDisabled={isDisabled}
                     onClick={handleOpen}
                 />
                 <Button
+                    data-sel-role="openInLiveChevron"
                     icon={<ChevronDown/>}
                     isDisabled={isDisabled}
                     aria-label={t('jcontent:label.contentManager.actions.openInLive')}

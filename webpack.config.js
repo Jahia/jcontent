@@ -31,7 +31,10 @@ module.exports = (env, argv) => {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
             alias: {
-                '~': path.resolve(__dirname, './src/javascript')
+                '~': path.resolve(__dirname, './src/javascript'),
+                // Konva's `main` points to its Node entry (needs node-canvas); with
+                // mainFields not including `browser` we must alias to the browser build.
+                'konva$': 'konva/lib/index.js'
             },
             fallback: {
                 "url": false,

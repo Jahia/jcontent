@@ -90,7 +90,7 @@
         "dialogRename": "Umbenennen",
         "replaceWith": "Ersetzen mit",
         "drop": "Drop Datei und Ordner hier ab",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",
@@ -353,43 +353,17 @@
       "editImage": {
         "action": "Bild-Editor",
         "title": "Bildausgabe",
-        "resize": "Größe anpassen",
-        "crop": "Zuschneiden",
-        "rotate": "Drehen",
-        "rotateInfo": "Drehen Sie das Bild und überschreiben die existierende Datei, oder speichern Sie es als neue Datei",
-        "rotateLeft": "Links",
-        "rotateRight": "Rechts",
-        "width": "Breite",
-        "height": "Höhe",
-        "undo": "Änderungen zurücksetzen",
-        "saveAs": "Speichern als...",
         "save": "Speichern",
-        "unsavedChanges": "Nicht gespeicherte Änderungen",
-        "resizeInfo": "Sie können individuelle Werte eingeben",
-        "cropInfo": "Geben Sie eine Zuschnittsgröße ein",
-        "tooltip": "Speichern oder verwerfen Sie Ihre Änderungen, bevor Sie weitere Bearbeitungen starten",
-        "goBack": "Zurück",
-        "exitConfirmation": "Sie haben nicht gespeicherte Änderungen. Sind Sie sicher, dass Sie abbrechen und die Änderungen verwerfen möchten?",
-        "continueEditing": "Bearbeitung fortsetzen",
-        "discardChangesTitle": "Änderungen verwerfen?",
-        "discardChangesButton": "Änderungen verwerfen",
+        "saveAs": "Speichern als...",
+        "cancel": "Abbrechen",
+        "saveError": "Das Bild konnte nicht gespeichert werden",
         "saveAsDialog": {
           "title": "Speichern als",
           "text": "Geben Sie einen Datei-Namen ein",
-          "filename": "Bestandsnaam",
           "cancel": "Abbrechen",
           "save": "Speichern"
         },
-        "editingMessage": "Sie editieren nun {{imageName}}",
-        "savedMessage": "Gespeichert",
-        "ratioLocked": "Seitenverhältnis aktiviert",
-        "ratioUnlocked": "Seitenverhältnis deaktiviert",
-        "confirmSaveDialog": {
-          "title": "Datei ersetzen",
-          "text": "Eine Datei mit diesem Namen existiert bereits. Möchten Sie fortfahren?",
-          "no": "Nein",
-          "yes": "Ja"
-        }
+        "close": "Schließen"
       },
       "subContent": "({{count}} sub-Inhalt)",
       "subContent_plural": "({{count}} sub-Inhalte)",
@@ -397,13 +371,13 @@
         "title": "Neuer Ordner",
         "text": "Geben Sie einen Ordner-Namen ein",
         "exists": "Ein Ordner mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "renameAction": {
         "title": "Umbenennen",
         "text": "Geben Sie einen Namen ein",
         "exists": "Eine Datei mit diesem Namen existiert bereits",
-        "invalidChars": "Ungültige Zeichen: \/:*?\"<>'|%"
+        "invalidChars": "Ungültige Zeichen: /:*?\"<>'|%"
       },
       "downloadFile": {
         "title": "Datei herunterladen",
@@ -498,7 +472,7 @@
           "some": "Einige dieser Elemente werden aktuell durch andere Elemente referenziert. Die Löschung dieser Elemente erzeugt zerstörte Referenzen.",
           "tooMany": "Das System konnte nicht verifizieren, ob die zu löschenden Elemente aktuell durch andere Elemente referenziert werden (Anzahl zur Verifizierung ist zu groß). Sie können die Verwendung der aufgelisteten Elemente manuell verifizieren."
         },
-        "locked":{
+        "locked": {
           "permanently": {
             "title": "Löschung nicht möglich",
             "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde.",
@@ -686,7 +660,7 @@
             "clickHere": "klicken Sie hier.",
             "dialogTitle": "In Arbeit (WIP)",
             "dialogSubTitle": "Markieren Sie Ihren Content als Work in Progress wenn Sie die Veröffentlichung des Contents verhindern wollen. Um mehr über das Work in Progress Feature zu erfahren, ",
-            "label" : {
+            "label": {
               "mark": "Als \"In Arbeit\" markieren",
               "unmark": "Nicht als \"In Arbeit\" markieren"
             },
@@ -766,7 +740,7 @@
           "advanced": "Erweiterte Optionen"
         }
       },
-      "header":  {
+      "header": {
         "languageSwitcher": {
           "switchLanguage": "Sprache wechseln",
           "addTranslation": {
@@ -811,7 +785,7 @@
           "filterLabel": "Nach Content-Typen suchen"
         }
       },
-      "section":{
+      "section": {
         "fieldSet": {
           "content": {
             "displayName": "Content"
@@ -887,13 +861,13 @@
         "itemsSelected_plural": "{{count}} elemente ausgewählt"
       },
       "picker": {
-        "navigation" : {
+        "navigation": {
           "categories": "Kategorien",
           "sites": "Sites"
         },
         "rightPanel": {
           "actionsCaption": "Nicht auswählbare Elemente werden in dieser Ansicht nicht gelistet",
-          "searchContextOptions" : {
+          "searchContextOptions": {
             "search": "Search in",
             "allUsers": "Alle Nutzer",
             "globalUsers": "Globale Benutzer",
@@ -971,18 +945,18 @@
         }
       },
       "visibilityTab": {
-        "languages" : {
-          "title" : "Anzeigesprachen",
+        "languages": {
+          "title": "Anzeigesprachen",
           "description": "Content ist in den gewählten Sprachen sichtbar",
-          "label" : "Content in spezifischer Sprache verstecken",
-          "leftList" : "Der Content wird sichtbar sein in:",
-          "rightList" : "Der Content wird nicht sichtbar sein in:"
+          "label": "Content in spezifischer Sprache verstecken",
+          "leftList": "Der Content wird sichtbar sein in:",
+          "rightList": "Der Content wird nicht sichtbar sein in:"
         },
-        "conditions" : {
-          "title" : "Datum und Uhrzeit",
-          "rules" : "{{rulesNumber}} Bedingungen definiert",
-          "rule" : "Eine Bedingung definiert",
-          "norules" : "Keine Bedingung definiert"
+        "conditions": {
+          "title": "Datum und Uhrzeit",
+          "rules": "{{rulesNumber}} Bedingungen definiert",
+          "rule": "Eine Bedingung definiert",
+          "norules": "Keine Bedingung definiert"
         }
       }
     },

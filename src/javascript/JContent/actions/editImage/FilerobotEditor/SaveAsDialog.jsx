@@ -24,6 +24,7 @@ export const SaveAsDialog = ({isOpen, handleClose, handleSave, name, onChangeNam
                     error={!isNameValid}
                     value={name}
                     id="fileName"
+                    inputProps={{'data-cm-role': 'image-save-as-name'}}
                     margin="dense"
                     onChange={onChangeName}
                 />

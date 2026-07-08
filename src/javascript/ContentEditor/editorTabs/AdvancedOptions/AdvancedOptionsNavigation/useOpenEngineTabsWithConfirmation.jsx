@@ -9,22 +9,25 @@ import {isDirty} from '~/ContentEditor/utils';
  * Provides the logic to open GWT engine tabs with an unsaved changes check: if the form is
  * dirty, a confirmation dialog (continue editing/discard/save) is shown before opening the engine.
  *
- * @param tabs array of GWT engine tab ids to open (e.g. ['workflow'])
+ * @param defaultTabs array of GWT engine tab ids to open when none are specified at call time
  * @returns {{openTabs: function, confirmationDialog: JSX.Element}} openTabs triggers the flow;
- *          confirmationDialog must be rendered by the caller
+ *          confirmationDialog must be rendered by the caller. openTabs accepts an optional
+ *          array of tab ids to override the default.
  */
-export const useOpenEngineTabsWithConfirmation = tabs => {
+export const useOpenEngineTabsWithConfirmation = defaultTabs => {
     const [open, setOpen] = useState(false);
+    const [pendingTabs, setPendingTabs] = useState(defaultTabs);
     const formik = useFormikContext();
     const {nodeData, i18nContext, resetI18nContext} = useContentEditorContext();
 
     const dirty = isDirty(formik, i18nContext);
 
-    const openTabs = () => {
+    const openTabs = (tabIds = defaultTabs) => {
         if (dirty) {
+            setPendingTabs(tabIds);
             setOpen(true);
         } else {
-            openEngineTab(nodeData, tabs);
+            openEngineTab(nodeData, tabIds);
         }
     };
 
@@ -37,7 +40,7 @@ export const useOpenEngineTabsWithConfirmation = tabs => {
                     formik.resetForm();
                 }
 
-                openEngineTab(nodeData, tabs);
+                openEngineTab(nodeData, pendingTabs);
             }}
             onCloseDialog={() => setOpen(false)}
         />

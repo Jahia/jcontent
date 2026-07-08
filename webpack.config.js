@@ -93,8 +93,11 @@ module.exports = (env, argv) => {
                     }
                 },
                 {
+                    // Plain CSS shipped by deps (react-filerobot-image-editor, @scaleflex/ui,
+                    // tippy.js, ...) and by packages/editframe-styles — no CSS modules. Moonstone's CSS is
+                    // already handled by its own rules (...moonstone above).
                     test: /\.css$/,
-                    include: [path.join(__dirname,'node_modules/react-image-crop'), path.join(__dirname, 'packages/editframe-styles/dist')],
+                    exclude: [path.join(__dirname, 'node_modules/@jahia/moonstone')],
                     resourceQuery: {not: [/url/]},
                     sideEffects: true,
                     use: ['style-loader', 'css-loader']

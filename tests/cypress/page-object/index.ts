@@ -12,3 +12,4 @@ export {
     PageBuilderModuleFooter,
     PageBuilderModuleCreateButton
 } from './pageBuilder';
+export * from './imageEditor';

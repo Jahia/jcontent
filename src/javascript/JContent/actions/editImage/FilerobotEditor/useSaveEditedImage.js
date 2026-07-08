@@ -52,7 +52,9 @@ export function useSaveEditedImage(path, mimeType, language) {
     }, [client]);
 
     const save = useCallback(async canvas => {
-        const nodeName = decodeURIComponent(path.substring(path.lastIndexOf('/') + 1));
+        // The JCR path is not URI-encoded; use the node name verbatim (decoding
+        // would throw on legal names containing '%').
+        const nodeName = path.substring(path.lastIndexOf('/') + 1);
         const file = await canvasToFile(canvas, nodeName, format);
         await client.mutate({
             mutation: updateFileContent,

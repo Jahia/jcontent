@@ -3,15 +3,24 @@ import {getNodeByPath} from '@jahia/cypress';
 
 describe('Image editor tests', {numTestsKeptInMemory: 1}, () => {
     const siteKey = 'imageEditorSite';
-    const fileName = 'snowbearHome.jpeg';
+    // Fixture file to upload; the upload sanitizes the node name (lowercased base)
+    const fixtureFileName = 'snowbearHome.jpeg';
+    const fileName = 'snowbearhome.jpeg';
 
     let jcontent: JContent;
 
+    // J:width/j:height sit on the file node (jmix:image); jcr:mimeType on its jcr:content child
     const getImageProperties = (nodeName: string) => {
-        return getNodeByPath(`/sites/${siteKey}/files/${nodeName}/jcr:content`, ['jcr:mimeType', 'j:width', 'j:height'])
+        return getNodeByPath(`/sites/${siteKey}/files/${nodeName}`, ['j:width', 'j:height'])
             .then(res => {
                 const properties: {name: string, value: string}[] = res?.data?.jcr?.nodeByPath?.properties || [];
                 return properties.reduce((acc, p) => ({...acc, [p.name]: p.value}), {} as Record<string, string>);
+            })
+            .then(dimensions => {
+                return getNodeByPath(`/sites/${siteKey}/files/${nodeName}/jcr:content`, ['jcr:mimeType']).then(res => {
+                    const properties: {name: string, value: string}[] = res?.data?.jcr?.nodeByPath?.properties || [];
+                    return properties.reduce((acc, p) => ({...acc, [p.name]: p.value}), dimensions);
+                });
             });
     };
 
@@ -19,7 +28,7 @@ describe('Image editor tests', {numTestsKeptInMemory: 1}, () => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.loginAndStoreSession();
         JContent.visit(siteKey, 'en', 'media/files');
-        new JContent().getMedia().open().uploadFileViaDialog(fileName, 'contentEditor');
+        new JContent().getMedia().open().uploadFileViaDialog(fixtureFileName, 'contentEditor');
     });
 
     after(function () {

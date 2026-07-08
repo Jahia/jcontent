@@ -17,8 +17,12 @@ const FilerobotImageEditor = React.lazy(() => import('react-filerobot-image-edit
 // eager chunk does not need to import the library.
 const TABS_IDS = ['Adjust', 'Annotate', 'Watermark', 'Filters', 'Finetune', 'Resize'];
 
-// Rendering scale for the exported canvas.
-const SAVING_PIXEL_RATIO = 4;
+// Rendering scale for the exported canvas. Filerobot re-renders the design at the
+// image's full resolution and multiplies it by this ratio (Konva.pixelRatio), so
+// anything above 1 would inflate the saved dimensions — e.g. a resize to 400px
+// would store a 1600px image with the Filerobot default of 4. Keep it at 1 so the
+// stored image matches the edited dimensions exactly.
+const SAVING_PIXEL_RATIO = 1;
 
 const isNameValid = name => {
     const maxNameSize = window.contextJsParameters?.config?.maxNameSize || 128;

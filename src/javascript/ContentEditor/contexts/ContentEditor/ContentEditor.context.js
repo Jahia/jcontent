@@ -11,6 +11,7 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
 import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBeforeContextHooks';
 import {isEqual} from 'lodash';
+import {cloneDeep} from 'es-toolkit';
 
 export const ContentEditorContext = React.createContext({});
 
@@ -177,7 +178,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         }
 
         sectionsSourceRef.current = sections;
-        sectionsCloneRef.current = structuredClone(sections);
+        sectionsCloneRef.current = cloneDeep(sections);
         return sectionsCloneRef.current;
     }, [sections]);
 

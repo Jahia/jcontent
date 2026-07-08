@@ -4,7 +4,13 @@ import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';
 import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
-import ImageEditorDialog from '~/JContent/actions/editImage/ImageEditorDialog';
+import FilerobotEditor from '~/JContent/actions/editImage/FilerobotEditor';
+
+// SVG editing would rasterize the vector source; animated GIFs would be flattened
+// to a single frame. The editor works on a canvas re-encode, so both are excluded.
+const EXCLUDED_MIMETYPES = ['image/svg+xml', 'image/gif'];
+
+const RENDERER_KEY = 'imageEditorDialog';
 
 export const EditImageActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
@@ -16,7 +22,8 @@ export const EditImageActionComponent = ({path, node: prefetchedNode, render: Re
             skip,
             showOnNodeTypes,
             requiredPermission: ['jcr:write'],
-            requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction]
+            requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction],
+            getMimeType: true
         }
     );
 
@@ -28,16 +35,22 @@ export const EditImageActionComponent = ({path, node: prefetchedNode, render: Re
         return false;
     }
 
+    const mimeType = res.node?.mimeType;
+    const isVisible = Boolean(res.checksResult) &&
+        Boolean(mimeType) &&
+        !EXCLUDED_MIMETYPES.includes(mimeType);
+
     const onExit = () => {
-        componentRenderer.destroy('createFolderDialog');
+        componentRenderer.destroy(RENDERER_KEY);
     };
 
     return (
         <Render
             {...others}
-            isVisible={res.checksResult}
+            isVisible={isVisible}
+            enabled={isVisible}
             onClick={() => {
-                componentRenderer.render('createFolderDialog', ImageEditorDialog, {path, onExit});
+                componentRenderer.render(RENDERER_KEY, FilerobotEditor, {path, mimeType, onExit});
             }}
         />
     );

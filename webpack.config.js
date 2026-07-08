@@ -34,7 +34,10 @@ module.exports = (env, argv) => {
                 '~': path.resolve(__dirname, './src/javascript'),
                 // Webpack does not support ?url on package identifiers,
                 // so we alias the identifier to its resolved path
-                'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css')
+                'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css'),
+                // Konva's `main` points to its Node entry (needs node-canvas); with
+                // mainFields not including `browser` we must alias to the browser build.
+                'konva$': 'konva/lib/index.js'
             },
             fallback: {
                 "url": false,

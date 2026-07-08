@@ -1,0 +1,51 @@
+/*
+ * Custom size for the image editor modal. Moonstone's `size` prop is a fixed enum
+ * (small/medium/large/full); this overrides the panel dimensions via the `className`
+ * that Moonstone applies to the modal panel.
+ */
+.editorModal {
+    width: 92vw !important;
+    max-width: 1500px !important;
+    height: 88vh !important;
+    max-height: 88vh !important;
+}
+
+/* let the editor body fill the remaining panel height (panel is a column flexbox) */
+.editorBody {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.editorCanvas {
+    position: relative;
+
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.footer {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.footerError {
+    margin-right: auto;
+
+    color: var(--moon-color-danger, #f44053);
+}
+
+.footerSpacer {
+    margin-left: auto;
+}

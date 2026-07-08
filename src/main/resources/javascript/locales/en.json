@@ -711,8 +711,6 @@
         "advancedOption": {
           "technicalInformation": {
             "contentType": "Content type",
-            "details": "Details",
-            "label": "Technical information",
             "inheritedMixins": "Inherited mixins",
             "appliedMixins": "Applied mixins",
             "path": "Path",
@@ -959,11 +957,6 @@
           "metadata": "The description, keywords and tag can be edited directly from the Edit tab. However, if you really need to, you can use the legacy interface to edit them. But be aware that this interface will be removed in a future update.",
           "layout": "The layout options can be edited directly from the Edit tab. However, if you really need to, you can use the legacy interface to edit them. But be aware that this interface will be removed in a future update."
         }
-      },
-      "vanityTab": {
-        "title": "Vanity URLs",
-        "label": "Vanity URLs can be managed through a dedicated feature, available in the \"3 dots icon\" button in the toolbar, or using the Manage vanity URLs button below.",
-        "noPermissionLabel": "You do not have permission to manage vanity URLs."
       },
       "selection": {
         "itemsSelected": "{{count}} item selected",

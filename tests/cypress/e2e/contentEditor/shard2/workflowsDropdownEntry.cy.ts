@@ -60,15 +60,4 @@ describe('Workflows entry in the modes dropdown', () => {
         cy.get('#JahiaGxtEditEngineTabs').should('be.visible');
         cy.get('button.x-btn-text').contains('Cancel').click();
     });
-
-    it('Should still open GWT tabs from the advanced options panel', () => {
-        contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
-        jcontent = new JContent();
-        // Regression check for the openEngineTabsAction refactoring
-        jcontent.selectHeaderTab('tab-advanced-options');
-        jcontent.assertHeaderActionSelected('tab-advanced-options');
-        cy.get('[data-sel-role="advanced-options-nav"] li').contains('Workflow').click();
-        cy.get('#JahiaGxtEditEngineTabs').should('be.visible');
-        cy.get('button.x-btn-text').contains('Cancel').click();
-    });
 });

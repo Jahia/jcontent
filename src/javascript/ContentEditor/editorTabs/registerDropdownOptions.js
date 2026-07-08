@@ -1,7 +1,6 @@
-import {Edit, Setting, Translate} from '@jahia/moonstone';
+import {Edit, Translate} from '@jahia/moonstone';
 import React from 'react';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {AdvancedOptions} from './AdvancedOptions';
 import {EditPanelContent} from './EditPanelContent';
 import {SidePanel, SidePanelContextProvider} from '~/JContent/SidePanel';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
@@ -53,17 +52,5 @@ export const registerDropdownOptions = actionsRegistry => {
         ),
         editPanelHeaderProps: {hideLanguageSwitcher: true},
         isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1
-    });
-
-    actionsRegistry.add('action', 'ceAdvancedTab', {
-        buttonLabel: 'jcontent:label.contentEditor.edit.tab.advanced',
-        buttonIcon: <Setting/>,
-        targets: ['editHeaderTabsActions:3'],
-        value: 'advanced',
-        dataSelRole: 'tab-advanced-options',
-        displayableComponent: <AdvancedOptions/>,
-        editPanelHeaderProps: {hideLanguageSwitcher: true},
-        isDisplayable: props => props.mode === Constants.routes.baseEditRoute,
-        requiresAdvancedPermission: true
     });
 };

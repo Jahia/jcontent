@@ -190,12 +190,8 @@ describe('Editor url test', () => {
         const baseUrl = '/jahia/jcontent/digitall/en/pages/home/about';
         const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:digitall,uilang:en,uuid:'${validUuid}')))`;
         cy.visit(`${baseUrl}#${ceParams}`);
-        jcontent = new JContent();
-        jcontent.selectHeaderTab('tab-advanced-options');
-        jcontent.assertHeaderActionSelected('tab-advanced-options');
-        cy.get('[data-sel-role="advanced-options-nav"] li')
-            .contains('Edit roles')
-            .click();
+        contentEditor = new ContentEditor();
+        contentEditor.openEditRolesFromModesDropdown();
         cy.get('#JahiaGxtEditEngineTabs button').contains('Break all inheritance').click();
         cy.get('button.x-btn-text').contains('Save').click();
     });
@@ -218,12 +214,8 @@ describe('Editor url test', () => {
         const baseUrl = '/jahia/jcontent/digitall/en/pages/home/about';
         const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:digitall,uilang:en,uuid:'${validUuid}')))`;
         cy.visit(`${baseUrl}#${ceParams}`);
-        jcontent = new JContent();
-        jcontent.selectHeaderTab('tab-advanced-options');
-        jcontent.assertHeaderActionSelected('tab-advanced-options');
-        cy.get('[data-sel-role="advanced-options-nav"] li')
-            .contains('Edit roles')
-            .click();
+        contentEditor = new ContentEditor();
+        contentEditor.openEditRolesFromModesDropdown();
         cy.get('#JahiaGxtEditEngineTabs button').contains('Restore all inheritance').click();
         cy.get('button.x-btn-text').contains('Save').click();
     });

@@ -15,8 +15,8 @@ import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 import {ContentTypeChip} from '../ContentTypeChip';
 import {useNodeChecks} from '@jahia/data-helper';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {useEngineTabAvailability} from '~/ContentEditor/editorTabs/AdvancedOptions/AdvancedOptionsNavigation/useEngineTabAvailability';
-import {useOpenEngineTabsWithConfirmation} from '~/ContentEditor/editorTabs/AdvancedOptions/AdvancedOptionsNavigation/useOpenEngineTabsWithConfirmation';
+import {useEngineTabAvailability} from '~/ContentEditor/editorTabs/engineTabs/useEngineTabAvailability';
+import {useOpenEngineTabsWithConfirmation} from '~/ContentEditor/editorTabs/engineTabs/useOpenEngineTabsWithConfirmation';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}

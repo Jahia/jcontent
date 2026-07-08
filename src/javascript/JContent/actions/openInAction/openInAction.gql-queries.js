@@ -19,6 +19,9 @@ const OpenInActionQuery = gql`
                 site {
                     ...NodeCacheRequiredFields
                     serverName
+                    additionalServerNames: property(name: "j:serverNameAliases") {
+                        values
+                    }
                 }
             }
         }

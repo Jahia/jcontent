@@ -320,6 +320,9 @@
         },
         "locate": "Finden",
         "openInLive": "Live",
+        "openInLiveDefaultDomain": "Standard-Domain",
+        "openInLiveAdditionalDomains": "Weitere Domain(s)",
+        "openInLiveCurrentDomain": "Aktuelle Domain",
         "openInPreview": "Vorschau",
         "compareStagingToLive": "Vergleich Staging vs Live Version",
         "customizedPreview": {

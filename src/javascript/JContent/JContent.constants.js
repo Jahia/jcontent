@@ -36,7 +36,8 @@ const JContentConstants = /** @type {const} */ ({
     localStorageKeys: {
         viewType: 'jcontent_view_type',
         viewMode: 'jcontent_view_mode',
-        filesSelectorMode: 'jcontent_files_selector_mode'
+        filesSelectorMode: 'jcontent_files_selector_mode',
+        liveServerName: 'jcontent-live-servername'
     },
     accordionPermissions: {
         pagesAccordionAccess: 'pagesAccordionAccess',

@@ -17,6 +17,10 @@ const FilerobotImageEditor = React.lazy(() => import('react-filerobot-image-edit
 // eager chunk does not need to import the library.
 const TABS_IDS = ['Adjust', 'Annotate', 'Watermark', 'Filters', 'Finetune', 'Resize'];
 
+// Locales react-filerobot-image-editor ships translations for; anything else
+// falls back to English rather than an untranslated UI.
+const FILEROBOT_LANGUAGES = ['en', 'fr', 'de', 'it', 'pt', 'es', 'nl', 'pl', 'ro'];
+
 // Rendering scale for the exported canvas. Filerobot re-renders the design at the
 // image's full resolution and multiplies it by this ratio (Konva.pixelRatio), so
 // anything above 1 would inflate the saved dimensions — e.g. a resize to 400px
@@ -33,10 +37,13 @@ const isNameValid = name => {
 
 export const FilerobotEditor = ({path, mimeType, onExit}) => {
     const {t} = useTranslation('jcontent');
-    const language = useSelector(state => state.language);
+    // Content language for the new node's jcr:title on Save as; fall back to the UI
+    // language then English so the (non-null) $lang mutation variable is always set.
+    const language = useSelector(state => state.language) || window.contextJsParameters?.uilang || 'en';
     const {format, save, saveAs} = useSaveEditedImage(path, mimeType, language);
     const [error, setError] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [isDirty, setDirty] = useState(false);
     const [isSaveAsOpen, setSaveAsOpen] = useState(false);
     const [saveAsName, setSaveAsName] = useState('');
 
@@ -46,7 +53,9 @@ export const FilerobotEditor = ({path, mimeType, onExit}) => {
     // the file's original format.
     const getImgDataRef = useRef(null);
 
-    const nodeName = decodeURIComponent(path.substring(path.lastIndexOf('/') + 1));
+    // The JCR path prop is not URI-encoded, so the node name is used verbatim
+    // (decoding it would throw on legal names containing '%').
+    const nodeName = path.substring(path.lastIndexOf('/') + 1);
     // Same-origin (cookie auth) and cache-busted so the latest binary is always loaded.
     const source = useMemo(
         () => window.contextJsParameters.contextPath +
@@ -124,7 +133,8 @@ export const FilerobotEditor = ({path, mimeType, onExit}) => {
                                 savingPixelRatio={SAVING_PIXEL_RATIO}
                                 tabsIds={TABS_IDS}
                                 defaultTabId="Resize"
-                                language={uilang === 'fr' ? 'fr' : uilang === 'de' ? 'de' : 'en'}
+                                language={FILEROBOT_LANGUAGES.includes(uilang) ? uilang : 'en'}
+                                onModify={() => setDirty(true)}
                                 onClose={closingReason => {
                                     if (closingReason !== 'after-saving') {
                                         onExit();
@@ -162,7 +172,7 @@ export const FilerobotEditor = ({path, mimeType, onExit}) => {
                             size="big"
                             color="accent"
                             label={t('jcontent:label.contentManager.editImage.save')}
-                            isDisabled={saving}
+                            isDisabled={saving || !isDirty}
                             isLoading={saving}
                             data-cm-role="image-save-button"
                             onClick={() => runSave(save)}

@@ -60,7 +60,7 @@ export const useOpenInLiveData = path => {
 
     const currentHostname = globalThis.location.hostname;
     const isHostnameInList = [serverName, ...serverNameAliases].includes(currentHostname) ||
-        serverNameAliases.includes('localhost');
+        [serverName, ...serverNameAliases].includes('localhost');
     return {
         selectedServerName,
         selectServerName,

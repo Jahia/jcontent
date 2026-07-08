@@ -106,6 +106,13 @@ describe('Open in Live tests', () => {
                 .should('have.class', 'moonstone-selected');
         });
 
+        it('does not show current domain section when localhost is in the server names list', () => {
+            visitWithStub();
+            getComponentByRole(Button, 'openInLiveChevron').click();
+            cy.get('.moonstone-menu:not(.moonstone-hidden)').should('be.visible');
+            cy.contains('Current domain').should('not.exist');
+        });
+
         it('selecting an alias opens URL with that alias', () => {
             visitWithStub();
             getComponentByRole(Button, 'openInLiveChevron').click();

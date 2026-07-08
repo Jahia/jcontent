@@ -232,6 +232,72 @@
           }
         }
       },
+      "tagManager": {
+        "header": "Tag-Manager - {{siteName}}",
+        "title": "Tag-Manager",
+        "search": {
+          "placeholder": "Tags suchen",
+          "results": "{{count}} Tags"
+        },
+        "table": {
+          "name": "Tag-Name",
+          "usages": "Verwendungen",
+          "actions": {
+            "label": "Aktionen",
+            "view": "Getaggte Inhalte anzeigen",
+            "edit": "Tag umbenennen",
+            "remove": "Tag entfernen",
+            "editContent": "Inhalt bearbeiten",
+            "editTagOnContent": "Tag im Inhalt bearbeiten",
+            "removeFromContent": "Tag vom Inhalt entfernen"
+          }
+        },
+        "workspace": {
+          "default": "Tags des Standard-Workspaces",
+          "sync": "Änderungen werden in Edit und Live angewendet"
+        },
+        "drawer": {
+          "title": "Inhalte mit \"{{tag}}\"",
+          "subtitle": "{{count}} Inhalte"
+        },
+        "rename": {
+          "title": "\"{{tag}}\" umbenennen",
+          "description": "Sie sind dabei, {{count}} Vorkommen dieses Tags auf Ihrer Website umzubenennen: {{siteName}}. Diese Änderung betrifft auch <0>Ihre Live-Site</0> und <1>kann nicht rückgängig gemacht werden</1>.",
+          "placeholder": "Neuen Tag-Namen eingeben",
+          "confirm": "Tag umbenennen",
+          "suggestions": "Vorgeschlagene Tags"
+        },
+        "editNodeTag": {
+          "title": "\"{{tag}}\" in {{contentName}} bearbeiten",
+          "description": "Den ausgewählten Tag für diesen Inhalt ersetzen. Andere Tags bleiben unverändert.",
+          "placeholder": "Neuen Tag-Namen eingeben",
+          "confirm": "Speichern",
+          "suggestions": "Vorgeschlagene Tags"
+        },
+        "delete": {
+          "title": "\"{{tag}}\" entfernen",
+          "description": "Sie sind dabei, {{count}} Vorkommen dieses Tags auf {{siteName}} zu löschen. Diese Änderung <0>kann nicht rückgängig gemacht werden</0>.",
+          "confirm": "Tag entfernen"
+        },
+        "deleteNodeTag": {
+          "title": "\"{{tag}}\" aus Inhalt entfernen",
+          "description": "Sie sind dabei, \"{{tag}}\" aus {{contentName}} zu entfernen. Diese Änderung <0>kann nicht rückgängig gemacht werden</0>.",
+          "confirm": "Tag entfernen"
+        },
+        "notifications": {
+          "renameSuccess": "{{count}} Aktualisierungen für {{tag}} angewendet",
+          "deleteSuccess": "{{count}} Entfernungen für {{tag}} angewendet",
+          "removeFromContentSuccess": "{{count}} Entfernungen für {{tag}} angewendet",
+          "updateOnContentSuccess": "{{tag}} wurde in {{contentName}} zu {{newTag}} geändert",
+          "partialFailure": "{{count}} Element(e) konnten für \"{{tag}}\" nicht verarbeitet werden"
+        },
+        "empty": {
+          "title": "Keine Tags vorhanden",
+          "description": "Im Standard-Workspace sind derzeit keine Tags verfügbar.",
+          "search": "Kein Tag passt zur aktuellen Suche.",
+          "drawer": "Dieser Tag wird derzeit von keinem Inhalt verwendet."
+        }
+      },
       "contextMenu": {
         "lockActions": {
           "unlock": "Sperre aufheben",

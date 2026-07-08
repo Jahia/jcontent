@@ -30,7 +30,7 @@ describe('Workflows entry in the modes dropdown', () => {
         contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
         cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
         cy.get('[data-option-type="group"]').contains('Advanced options').should('be.visible');
-        cy.get('[data-sel-role="tab-workflows"]').should('be.visible');
+        cy.get('[data-sel-role="tab-workflow"]').should('be.visible');
     });
 
     it('Should open the GWT workflow modal directly when there are no unsaved changes', () => {

@@ -329,7 +329,7 @@ export class ContentEditor extends BasePage {
 
     openWorkflowsFromModesDropdown() {
         cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
-        cy.get('[data-sel-role="tab-workflows"]').should('be.visible').click();
+        cy.get('[data-sel-role="tab-workflow"]').should('be.visible').click();
     }
 
     openEditRolesFromModesDropdown() {

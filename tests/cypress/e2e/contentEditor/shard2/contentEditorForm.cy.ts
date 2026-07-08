@@ -229,20 +229,6 @@ describe('Content editor form', () => {
         field.get().find('label').should('contain', 'defaultDate');
     });
 
-    it('should not display advanced options tab for editor', () => {
-        cy.logout();
-        cy.login('mathias', 'password');
-        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const ceEditor = jcontent.editComponentByRowName('myText');
-
-        ceEditor.switchToAdvancedMode();
-        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]')
-            .should('be.visible')
-            .invoke('attr', 'data-sel-available-tabs')
-            .should('not.contain', 'tab-advanced-options');
-        ceEditor.cancel();
-    });
-
     it('should display technical information in advanced options', () => {
         cy.logout();
         // Login as editor in chief

@@ -15,8 +15,8 @@ import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 import {ContentTypeChip} from '../ContentTypeChip';
 import {useNodeChecks} from '@jahia/data-helper';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {useEngineTabAvailability} from '~/ContentEditor/editorTabs/AdvancedOptions/AdvancedOptionsNavigation/useEngineTabAvailability';
-import {useOpenEngineTabsWithConfirmation} from '~/ContentEditor/editorTabs/AdvancedOptions/AdvancedOptionsNavigation/useOpenEngineTabsWithConfirmation';
+import {useEngineTabAvailability} from '~/ContentEditor/editorTabs/engineTabs/useEngineTabAvailability';
+import {useOpenEngineTabsWithConfirmation} from '~/ContentEditor/editorTabs/engineTabs/useOpenEngineTabsWithConfirmation';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -45,9 +45,14 @@ export const EditPanelHeader = ({
         .find({target: 'editHeaderTabsActions'})
         .filter(tab => tab.isDisplayable(ctx) && (!tab.requiresAdvancedPermission || res.checksResult));
 
-    const {availableTabs: workflowTabs} = useEngineTabAvailability(['workflow']);
-    const {openTabs: openWorkflows, confirmationDialog: workflowsConfirmationDialog} = useOpenEngineTabsWithConfirmation(['workflow']);
-    const hasWorkflowsEntry = res.checksResult && workflowTabs.length > 0;
+    const engineTabIds = ['workflow', 'liveroles', 'editroles'];
+    const engineTabIcons = {
+        workflow: <Workflow/>
+        // Liveroles and editroles icons can be added here once available
+    };
+    const {availableTabs: engineTabs} = useEngineTabAvailability(engineTabIds);
+    const {openTabs: openEngineTab, confirmationDialog: engineConfirmationDialog} = useOpenEngineTabsWithConfirmation(engineTabIds);
+    const hasEngineEntries = res.checksResult && engineTabs.length > 0;
 
     const tabOptions = tabs.map(tab => ({
         value: tab.value,
@@ -58,16 +63,16 @@ export const EditPanelHeader = ({
 
     // The moonstone Dropdown supports either a flat list or groups only, so entries switch
     // to grouped form (with an unlabeled group on top) once the advanced options section shows
-    const dropdownData = hasWorkflowsEntry ? [
+    const dropdownData = hasEngineEntries ? [
         {groupLabel: '', options: tabOptions},
         {
             groupLabel: t('label.contentEditor.edit.tab.advanced'),
-            options: [{
-                value: 'workflows',
-                label: t('label.contentEditor.edit.tab.workflows'),
-                iconStart: <Workflow/>,
-                attributes: {'data-sel-role': 'tab-workflows'}
-            }]
+            options: engineTabs.map(tab => ({
+                value: tab.id,
+                label: tab.title,
+                iconStart: engineTabIcons[tab.id],
+                attributes: {'data-sel-role': `tab-${tab.id}`}
+            }))
         }
     ] : tabOptions;
 
@@ -126,7 +131,7 @@ export const EditPanelHeader = ({
             toolbarRight={
                 activeTab && (
                     <>
-                        {workflowsConfirmationDialog}
+                        {engineConfirmationDialog}
                         <Dropdown
                             size="small"
                             value={activeTab}
@@ -138,8 +143,8 @@ export const EditPanelHeader = ({
                             data={dropdownData}
                             icon={tabs.find(tab => tab.value === activeTab)?.buttonIcon}
                             onChange={(_, item) => {
-                                if (item.value === 'workflows') {
-                                    openWorkflows();
+                                if (engineTabIds.includes(item.value)) {
+                                    openEngineTab([item.value]);
                                 } else {
                                     setActiveTab(item.value);
                                 }

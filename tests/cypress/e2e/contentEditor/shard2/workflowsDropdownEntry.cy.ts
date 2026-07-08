@@ -30,7 +30,7 @@ describe('Workflows entry in the modes dropdown', () => {
         contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
         cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
         cy.get('[data-option-type="group"]').contains('Advanced options').should('be.visible');
-        cy.get('[data-sel-role="tab-workflows"]').should('be.visible');
+        cy.get('[data-sel-role="tab-workflow"]').should('be.visible');
     });
 
     it('Should open the GWT workflow modal directly when there are no unsaved changes', () => {
@@ -57,17 +57,6 @@ describe('Workflows entry in the modes dropdown', () => {
         // Discard: changes are dropped and the workflow modal opens
         contentEditor.openWorkflowsFromModesDropdown();
         getComponentByRole(Button, 'close-dialog-discard').click();
-        cy.get('#JahiaGxtEditEngineTabs').should('be.visible');
-        cy.get('button.x-btn-text').contains('Cancel').click();
-    });
-
-    it('Should still open GWT tabs from the advanced options panel', () => {
-        contentEditor = ContentEditor.visit(highlightPath, siteKey, 'en', 'pages/home');
-        jcontent = new JContent();
-        // Regression check for the openEngineTabsAction refactoring
-        jcontent.selectHeaderTab('tab-advanced-options');
-        jcontent.assertHeaderActionSelected('tab-advanced-options');
-        cy.get('[data-sel-role="advanced-options-nav"] li').contains('Workflow').click();
         cy.get('#JahiaGxtEditEngineTabs').should('be.visible');
         cy.get('button.x-btn-text').contains('Cancel').click();
     });

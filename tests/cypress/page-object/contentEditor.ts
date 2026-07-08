@@ -11,7 +11,6 @@ import {ChoiceListField, ChoiceTreeField, DateField, Field, PickerField, RichTex
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
-import {AdvancedOptions} from './advancedOptions';
 import {Section} from './section';
 import {ContentStatus} from './contentStatus';
 import {SidePanel} from './sidePanel';
@@ -328,19 +327,13 @@ export class ContentEditor extends BasePage {
         return Breadcrumb.findByContent(content, ContentEditor.defaultSelector);
     }
 
-    switchToAdvancedOptions(): AdvancedOptions {
-        if (this.advancedMode) {
-            cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
-            cy.get('[data-sel-role="tab-advanced-options"]').click();
-            return new AdvancedOptions();
-        }
-
-        this.switchToAdvancedMode();
-        return this.switchToAdvancedOptions();
-    }
-
     openWorkflowsFromModesDropdown() {
         cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
-        cy.get('[data-sel-role="tab-workflows"]').should('be.visible').click();
+        cy.get('[data-sel-role="tab-workflow"]').should('be.visible').click();
+    }
+
+    openEditRolesFromModesDropdown() {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get('[data-sel-role="tab-editroles"]').should('be.visible').click();
     }
 }

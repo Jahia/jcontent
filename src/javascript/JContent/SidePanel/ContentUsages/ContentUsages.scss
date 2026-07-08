@@ -1,0 +1,55 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--spacing-medium);
+    overflow-y: auto;
+}
+
+.warning {
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
+}
+
+.nameCell {
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    min-width: 0;
+}
+
+.icon {
+    flex-shrink: 0;
+}
+
+.nameText {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.path {
+    color: var(--color-gray);
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-nano);
+    min-width: 0;
+    max-width: 100%;
+}
+
+.chip {
+    max-width: 100%;
+    overflow: hidden;
+
+    > * {
+        overflow: hidden;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}

@@ -41,6 +41,10 @@ export class SidePanel extends BasePage {
         return this.switchToTab('tab-preview');
     }
 
+    switchToUsagesTab(): this {
+        return this.switchToTab('tab-usages');
+    }
+
     getByRole(role: string) {
         return cy.get(this.scoped(`[data-sel-role="${role}"]`));
     }
@@ -67,5 +71,13 @@ export class SidePanel extends BasePage {
 
     getPreviewFrame() {
         return cy.get(this.scoped('iframe[data-sel-role="edit-preview-frame"]'));
+    }
+
+    getUsagesTable() {
+        return cy.get(this.scoped('[data-sel-role="usages-table"]'));
+    }
+
+    getUsagesRows() {
+        return this.getUsagesTable().find('tbody tr');
     }
 }

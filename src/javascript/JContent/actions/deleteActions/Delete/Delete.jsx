@@ -16,40 +16,10 @@ import {
 import InfoTable from './InfoTable';
 import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
-import {getName} from '~/JContent';
 import {isPathChildOfAnotherPath, JahiaRenderedModulesUtil} from '../../../JContent.utils';
+import {renderLabel} from './renderLabel';
 import {useNotifications} from '@jahia/react-material';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
-
-const getLabel = ({dialogType, locked, count, data, firstNode, pages, folders, t}) => {
-    if (locked) {
-        return t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
-            count: count,
-            name: data.jcr.nodesByPath.map(n => getName(n)).join(', '),
-            parentName: firstNode && getName(firstNode?.rootDeletionInfo[0])
-        });
-    }
-
-    if (!count) {
-        return t('jcontent:label.contentManager.deleteAction.loading');
-    }
-
-    if (count === 1) {
-        return t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
-            name: firstNode && getName(firstNode)
-        });
-    }
-
-    if (pages === 0 && folders === 0) {
-        return t(`jcontent:label.contentManager.deleteAction.${dialogType}.itemsOnly`, {count});
-    }
-
-    if (pages === 0) {
-        return t(`jcontent:label.contentManager.deleteAction.${dialogType}.filesAndFolders`, {count, folders});
-    }
-
-    return t(`jcontent:label.contentManager.deleteAction.${dialogType}.items`, {count, pages});
-};
 
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
@@ -66,7 +36,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                 _hasUsages || [node, ...node.allDescendants.nodes].some(p => p?.usagesCount > 0), false
         );
     const usagesOverflow = dialogType !== 'undelete' && data?.jcr?.nodesByPath?.reduce((isOverflow, node) => isOverflow || node.allDescendants.nodes.length === 100, false);
-    const label = getLabel({dialogType, locked, count, data, firstNode, pages, folders, t});
+    const label = renderLabel({dialogType, locked, count, data, firstNode, pages, folders, t});
 
     return (
         <>
@@ -83,7 +53,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
             {isMutationLoading ?
                 <Loader size="big" style={{width: '100%'}}/> :
                 <DialogContent>
-                    <DialogContentText className={styles.content} dangerouslySetInnerHTML={{__html: label}}/>
+                    <DialogContentText className={styles.content}>{label}</DialogContentText>
                     {hasUsages && count === 1 &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
                     {hasUsages && count !== 1 &&

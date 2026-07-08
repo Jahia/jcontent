@@ -53,7 +53,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
             {isMutationLoading ?
                 <Loader size="big" style={{width: '100%'}}/> :
                 <DialogContent>
-                    <DialogContentText className={styles.content}>{label}</DialogContentText>
+                    <DialogContentText className={styles.content} data-sel-role="delete-message">{label}</DialogContentText>
                     {hasUsages && count === 1 &&
                         <DialogContentText>{t('jcontent:label.contentManager.deleteAction.hasUsages.single')}</DialogContentText>}
                     {hasUsages && count !== 1 &&

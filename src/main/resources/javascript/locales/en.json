@@ -486,7 +486,7 @@
         },
         "mark": {
           "title": "Mark for deletion",
-          "item": "You are about to delete <span>{{name}}</span>",
+          "item": "You are about to delete <0>{{name}}</0>",
           "items": "You are about to delete <span>{{count}} items</span>, including <span>{{pages}} page(s)</span>",
           "filesAndFolders": "You are about to delete <span>{{count}} items</span>, including <span>{{folders}} folder(s)</span>",
           "itemsOnly": "You are about to delete <span>{{count}} items</span>",
@@ -494,7 +494,7 @@
         },
         "permanently": {
           "title": "Delete permanently",
-          "item": "You are about to permanently delete <span>{{name}}</span>. <strong>This operation cannot be undone.</strong>",
+          "item": "You are about to permanently delete <0>{{name}}</0>. <1>This operation cannot be undone.</1>",
           "items": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{pages}} page(s)</span>. <strong>This operation cannot be undone.</strong>",
           "filesAndFolders": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{folders}} folder(s)</span>. <strong>This operation cannot be undone.</strong>",
           "itemsOnly": "You are about to permanently delete <span>{{count}} items</span>. <strong>This operation cannot be undone.</strong>",
@@ -502,7 +502,7 @@
         },
         "undelete": {
           "title": "Undelete",
-          "item": "Do you really want to undelete <span>{{name}}</span> ?",
+          "item": "Do you really want to undelete <0>{{name}}</0> ?",
           "items": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{pages}} page(s)</span> ?",
           "filesAndFolders": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{folders}} folder(s)</span> ?",
           "itemsOnly": "Do you really want to undelete <span>{{count}} items</span> ?",
@@ -516,13 +516,13 @@
         "locked": {
           "permanently": {
             "title": "Cannot be deleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
-            "content_plural": "{{count}} items <strong>{{name}}</strong> cannot currently be deleted on their own. Please undelete, or permanently delete, their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "content": "The content item <0>{{name}}</0> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <1>{{parentName}}</1> which was the one initially marked for deletion.",
+            "content_plural": "{{count}} items <0>{{name}}</0> cannot currently be deleted on their own. Please undelete, or permanently delete, their parent content <1>{{parentName}}</1> which was the one initially marked for deletion."
           },
           "undelete": {
             "title": "Cannot be undeleted",
-            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion.",
-            "content_plural": "{{count}} items <strong>{{name}}</strong> cannot currently be undeleted on their own. Please undelete their parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+            "content": "The content item <0>{{name}}</0> cannot currently be undeleted on its own. Please undelete its parent content <1>{{parentName}}</1> which was the one initially marked for deletion.",
+            "content_plural": "{{count}} items <0>{{name}}</0> cannot currently be undeleted on their own. Please undelete their parent content <1>{{parentName}}</1> which was the one initially marked for deletion."
           }
         },
         "details": "DETAILS",

@@ -2,7 +2,7 @@ import React from 'react';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
-import {ButtonGroup, Dropdown, Header, Separator, Workflow} from '@jahia/moonstone';
+import {ButtonGroup, Dropdown, Header, Separator, Workflow, EditRole, LiveRole} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -47,8 +47,9 @@ export const EditPanelHeader = ({
 
     const engineTabIds = ['workflow', 'liveroles', 'editroles'];
     const engineTabIcons = {
-        workflow: <Workflow/>
-        // Liveroles and editroles icons can be added here once available
+        workflow: <Workflow/>,
+        liveroles: <LiveRole/>,
+        editroles: <EditRole/>
     };
     const {availableTabs: engineTabs} = useEngineTabAvailability(engineTabIds);
     const {openTabs: openEngineTab, confirmationDialog: engineConfirmationDialog} = useOpenEngineTabsWithConfirmation(engineTabIds);

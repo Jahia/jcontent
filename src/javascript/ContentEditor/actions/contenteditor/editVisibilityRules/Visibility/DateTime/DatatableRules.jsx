@@ -6,7 +6,7 @@ import {useFormikContext} from 'formik';
 import {getConditionLabel, getStatus, getStatusText} from './utils';
 import clsx from 'clsx';
 import statusCellStyles from './TableCellStatus.scss';
-import dayjs from 'dayjs';
+import {dayjs, formatDatetime} from 'date-formatter';
 import {
     DeleteButton,
     EditButton
@@ -190,10 +190,10 @@ export const DatatableRules = ({rules, onEdit}) => {
             let timestamp;
             if (isUpdated && updatedRule) {
                 username = updatedRule.username;
-                timestamp = dayjs(updatedRule.timestamp).format('LLL');
+                timestamp = formatDatetime(updatedRule.timestamp, {format: 'long'});
             } else {
                 username = status === 'modified' ? firstAncestor?.lastModifiedBy?.value : firstAncestor?.lastPublishedBy?.value;
-                timestamp = dayjs(status === 'modified' ? firstAncestor?.lastModified?.value : firstAncestor?.lastPublished?.value).format('LLL');
+                timestamp = formatDatetime(status === 'modified' ? firstAncestor?.lastModified?.value : firstAncestor?.lastPublished?.value, {format: 'long'});
             }
 
             return {
@@ -216,7 +216,7 @@ export const DatatableRules = ({rules, onEdit}) => {
                     values: rule[value]
                 })), t),
                 username: rule.username,
-                timestamp: dayjs(rule.timestamp).format('LLL'),
+                timestamp: formatDatetime(rule.timestamp, {format: 'long'}),
                 rule: rule
             };
         }));

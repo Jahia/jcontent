@@ -17,17 +17,19 @@ jest.mock('~/ContentEditor/SelectorTypes/resolveSelectorType', () => {
     };
 });
 
-jest.mock('~/ContentEditor/date.config', () => {
-    return date => {
-        return {
-            locale() {
-                return {
-                    format(format) {
-                        return `formatted date: ${date} format: ${format}`;
-                    }
-                };
-            }
-        };
+jest.mock('date-formatter', () => {
+    return {
+        dayjs: date => {
+            return {
+                locale() {
+                    return {
+                        format(format) {
+                            return `formatted date: ${date} format: ${format}`;
+                        }
+                    };
+                }
+            };
+        }
     };
 });
 

@@ -10,7 +10,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
 import {generateUUID, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 
 export const AddNewRule = ({node, onCancel}) => {
     const {uilang} = useContentEditorConfigContext();
@@ -124,4 +124,3 @@ AddNewRule.propTypes = {
     node: PropTypes.object,
     onCancel: PropTypes.func
 };
-

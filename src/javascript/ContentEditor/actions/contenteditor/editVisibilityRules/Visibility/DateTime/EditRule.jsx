@@ -9,7 +9,7 @@ import {NewRule} from './NewRule';
 import {SaveEditedRuleButton} from './SaveEditedRuleButton';
 import {jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 
 export const EditRule = ({rule, onCancel}) => {
     const {t} = useTranslation('jcontent');
@@ -110,4 +110,3 @@ EditRule.propTypes = {
     rule: PropTypes.any,
     onCancel: PropTypes.any
 };
-

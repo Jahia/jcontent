@@ -4,7 +4,7 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Chip, Language, Pill, Typography} from '@jahia/moonstone';
 import styles from './ContentHistory.scss';
 import {ACTION_CONFIG} from './ContentHistory';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 
 const MAX_DISPLAY_NAME_LENGTH = 80;
 

@@ -1,0 +1,22 @@
+{
+  "name": "date-formatter",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown --no-config -f esm,cjs"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.21"
+  },
+  "devDependencies": {
+    "@jahia/ui-extender": "^2.0.0",
+    "tsdown": "^0.22.3"
+  }
+}

@@ -1,3 +1,9 @@
+.wrapper {
+    display: flex;
+    flex: 1; // Fill the parent container vertically
+    overflow: hidden; // Children handle their own scrollbar
+}
+
 .twoColumnsRoot {
     display: grid;
     flex: 1;

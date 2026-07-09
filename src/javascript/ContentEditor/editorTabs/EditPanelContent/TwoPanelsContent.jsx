@@ -1,3 +1,4 @@
+import {Paper} from '@jahia/moonstone';
 import {useResizeWatcher} from '../useResizeWatcher';
 import styles from './TwoPanelsContent.scss';
 import clsx from 'clsx';
@@ -7,6 +8,7 @@ import React, {useEffect, useRef} from 'react';
 export const TwoPanelsContent = ({
     leftCol,
     rightCol,
+    rightSidebar,
     hasSingleSyncedScrollbar = false
 }) => {
     const leftColRef = useRef(null);
@@ -53,21 +55,24 @@ export const TwoPanelsContent = ({
     useResizeWatcher({columnSelector: hasSingleSyncedScrollbar ? 'right-column' : null});
 
     return (
-        <div className={styles.twoColumnsRoot}>
-            <div
-                ref={leftColRef}
-                className={clsx(styles.col, hasSingleSyncedScrollbar && styles.hideScrollbar)}
-                data-sel-role="left-column"
-            >
-                {leftCol}
+        <div className={styles.wrapper}>
+            <div className={styles.twoColumnsRoot}>
+                <div
+                    ref={leftColRef}
+                    className={clsx(styles.col, hasSingleSyncedScrollbar && styles.hideScrollbar)}
+                    data-sel-role="left-column"
+                >
+                    {leftCol}
+                </div>
+                <div
+                    ref={rightColRef}
+                    className={styles.col}
+                    data-sel-role="right-column"
+                >
+                    {rightCol}
+                </div>
             </div>
-            <div
-                ref={rightColRef}
-                className={styles.col}
-                data-sel-role="right-column"
-            >
-                {rightCol}
-            </div>
+            {rightSidebar && <Paper hasPadding={false}>{rightSidebar}</Paper>}
         </div>
     );
 };
@@ -75,5 +80,6 @@ export const TwoPanelsContent = ({
 TwoPanelsContent.propTypes = {
     leftCol: PropTypes.node,
     rightCol: PropTypes.node,
+    rightSidebar: PropTypes.node,
     hasSingleSyncedScrollbar: PropTypes.bool
 };

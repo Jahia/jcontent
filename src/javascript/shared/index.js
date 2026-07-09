@@ -33,3 +33,7 @@ export * from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuild
 export * from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';
+export {EditPanelContent} from '~/ContentEditor/editorTabs/EditPanelContent/EditPanelContent';
+
+// New date-formatter package to improve consistency
+export * as dateFormatter from 'date-formatter';

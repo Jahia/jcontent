@@ -7,7 +7,7 @@ import {DatePickerInput} from './DatePickerInput';
 import doc from './DatePickerInput.md';
 import {DSProvider} from '@jahia/design-system-kit';
 
-import '../../date.config';
+import 'date-formatter';
 
 const lang = () => select('lang', ['en', 'fr', 'de']);
 const readOnly = () => boolean('readOnly', false);

@@ -1,5 +1,5 @@
 import {extractRangeConstraints, getDynamicFieldSetNameOfField} from '~/ContentEditor/utils';
-import dayjs from '~/ContentEditor/date.config';
+import {dayjs} from 'date-formatter';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const dateFieldValidation = (values, field) => {

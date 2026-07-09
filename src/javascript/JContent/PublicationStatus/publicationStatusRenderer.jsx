@@ -1,12 +1,8 @@
 import React from 'react';
-import dayjs from 'dayjs';
+import {formatDatetime} from 'date-formatter';
 import {Tooltip} from '@material-ui/core';
 import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {CloudCheck, Delete, File, NoCloud, Warning} from '@jahia/moonstone';
-
-function getFormattedDate(date, locale) {
-    return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');
-}
 
 class PublicationStatusUnpublished {
     geti18nDetailsMessage(node, t) {
@@ -56,7 +52,7 @@ class PublicationStatusPublished {
         return (
             <>
                 { t('jcontent:label.contentManager.publicationStatus.published', {userName, timestamp: ''}) }
-                <time>{getFormattedDate(lastPublished, locale)}</time>
+                <time>{formatDatetime(lastPublished, {locale: getDefaultLocale(locale), format: 'long'})}</time>
             </>
         );
     }
@@ -82,7 +78,7 @@ class PublicationStatusModified {
         return (
             <>
                 { t('jcontent:label.contentManager.publicationStatus.modified', {userName, timestamp: ''}) }
-                <time>{getFormattedDate(lastModified, locale)}</time>
+                <time>{formatDatetime(lastModified, {locale: getDefaultLocale(locale), format: 'long'})}</time>
             </>
         );
     }
@@ -111,7 +107,7 @@ class PublicationStatusMarkedForDeletion {
         return (
             <>
                 { t('jcontent:label.contentManager.publicationStatus.markedForDeletion', {userName, timestamp: ''}) }
-                <time>{getFormattedDate(deletedTs, locale)}</time>
+                <time>{formatDatetime(deletedTs, {locale: getDefaultLocale(locale), format: 'long'})}</time>
             </>
         );
     }

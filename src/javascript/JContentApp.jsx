@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import JContent from './JContent';
 import {CssBaseline} from '@material-ui/core';
-import './date.config';
 import {initClipboardWatcher} from '~/JContent/actions/copyPaste/localStorageHandler';
 import {useApolloClient} from '@apollo/client';
 import {useDispatch} from 'react-redux';

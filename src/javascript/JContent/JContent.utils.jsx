@@ -358,7 +358,7 @@ export const getTitle = (t, item, prefix = 'jContent') => {
 export const JahiaRenderedModulesUtil = {
     jahiaAreas: {},
     jahiaModules: {},
-    setModules: function (modules) {
+    setModules(modules) {
         this.jahiaModules = modules;
     },
     addModule: function (path, data) {

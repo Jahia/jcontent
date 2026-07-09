@@ -7,6 +7,7 @@ import {useNodeInfo} from '@jahia/data-helper';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {getRegistryTarget} from '../JContent.utils';
+import {useBundleVersionFilter} from '../useBundleVersionFilter';
 
 export const AdditionalAppsTree = ({item, target}) => {
     const {site, path} = useSelector(state => ({site: state.site, path: state.jcontent.path}), shallowEqual);
@@ -16,6 +17,7 @@ export const AdditionalAppsTree = ({item, target}) => {
     const selected = path.substr(1);
 
     const {tree, routes, defaultOpenedItems, allPermissions} = useAdminRouteTreeStructure(target, selected);
+    const bundleVersionFilter = useBundleVersionFilter(routes);
 
     const {node, loading, error} = useNodeInfo({path: '/sites/' + site}, {
         getPermissions: allPermissions,
@@ -26,7 +28,8 @@ export const AdditionalAppsTree = ({item, target}) => {
     if (!loading && !error && selected === '') {
         const firstItem = routes.find(route => route.isSelectable &&
             (route.requiredPermission === undefined || node[route.requiredPermission] !== false) &&
-            (route.requireModuleInstalledOnSite === undefined || node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) > -1)
+            (route.requireModuleInstalledOnSite === undefined || node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) > -1) &&
+            bundleVersionFilter(route)
         );
         if (firstItem) {
             switchSelection = firstItem.key;
@@ -46,6 +49,7 @@ export const AdditionalAppsTree = ({item, target}) => {
     const data = tree
         .filter(route => route.requiredPermission === undefined || node[route.requiredPermission] !== false)
         .filter(route => route.requireModuleInstalledOnSite === undefined || node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) > -1)
+        .filter(bundleVersionFilter)
         .map(route => ({
             id: route.key,
             label: t(route.label),

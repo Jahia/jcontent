@@ -1,5 +1,6 @@
 import {useSelector} from 'react-redux';
 import {useAdminRouteTreeStructure, RouteWithTitle} from '@jahia/jahia-ui-root';
+import {useBundleVersionFilter} from '../useBundleVersionFilter';
 import {useNodeInfo} from '@jahia/data-helper';
 import {Switch} from 'react-router';
 import React from 'react';
@@ -14,6 +15,7 @@ export const AdditionalAppsRoute = ({match, target}) => {
     const {t} = useTranslation('jcontent');
 
     const {routes: adminRoutes, allPermissions} = useAdminRouteTreeStructure(target);
+    const bundleVersionFilter = useBundleVersionFilter(adminRoutes || []);
     const {node} = useNodeInfo({path: '/sites/' + site}, {
         getPermissions: allPermissions,
         getSiteInstalledModules: true
@@ -25,7 +27,8 @@ export const AdditionalAppsRoute = ({match, target}) => {
         .filter(route =>
             route.requireModuleInstalledOnSite === undefined ||
             (node && node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1)
-        );
+        )
+        .filter(bundleVersionFilter);
 
     return (
         <Switch>

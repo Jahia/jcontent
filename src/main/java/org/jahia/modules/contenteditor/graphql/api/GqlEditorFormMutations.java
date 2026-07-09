@@ -28,10 +28,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jahia.api.Constants;
 import org.jahia.modules.contenteditor.api.forms.EditorFormException;
-import org.jahia.modules.contenteditor.api.forms.EditorFormService;
 import org.jahia.modules.contenteditor.api.forms.PublicationService;
 import org.jahia.modules.contenteditor.api.lock.StaticEditorLockService;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
+import org.jahia.modules.graphql.provider.dxm.node.GqlJcrPropertyInput;
 import org.jahia.modules.graphql.provider.dxm.osgi.annotations.GraphQLOsgiService;
 import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
@@ -50,17 +50,11 @@ import java.util.Collection;
  */
 public class GqlEditorFormMutations {
     private static final Logger logger = LoggerFactory.getLogger(GqlEditorFormMutations.class);
+    public static final String J_CONDITIONAL_VISIBILITY = "j:conditionalVisibility";
 
-    private EditorFormService editorFormService;
     private PublicationService publicationService;
 
     private JCRSessionFactory jcrSessionFactory;
-
-    @Inject
-    @GraphQLOsgiService
-    public void setEditorFormService(EditorFormService editorFormService) {
-        this.editorFormService = editorFormService;
-    }
 
     @Inject
     @GraphQLOsgiService
@@ -111,7 +105,7 @@ public class GqlEditorFormMutations {
     @GraphQLField
     @GraphQLDescription("Save the visibility condition for the given node")
     public boolean saveVisibilityCondition(
-        @GraphQLName("uuid") @GraphQLNonNull @GraphQLDescription("UUID of the parent nodes ofr teh visibility condition") String uuid,
+        @GraphQLName("uuid") @GraphQLNonNull @GraphQLDescription("UUID of the parent nodes for the visibility condition") String uuid,
         @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
         @GraphQLName("newConditions") @GraphQLDescription("New visibility conditions to create") Collection<VisibilityConditionInput> newConditions,
         @GraphQLName("updatedConditions") @GraphQLDescription("Existing visibility conditions to update") Collection<VisibilityConditionInput> updatedConditions,
@@ -121,85 +115,88 @@ public class GqlEditorFormMutations {
         try {
             JCRSessionWrapper session = jcrSessionFactory.getCurrentUserSession(Constants.EDIT_WORKSPACE, LanguageCodeConverters.languageCodeToLocale(locale));
             JCRNodeWrapper jcrNode = session.getNodeByUUID(uuid);
-            // Ensure node is jmix:conditionalVisibility
-            if (!jcrNode.isNodeType("jmix:conditionalVisibility")) {
-                jcrNode.addMixin("jmix:conditionalVisibility");
-            }
-            // get the children named j:conditionalVisibility if not available add it
-            if (!jcrNode.hasNode("j:conditionalVisibility")) {
-                jcrNode.addNode("j:conditionalVisibility", "jnt:conditionalVisibility");
-            }
-            JCRNodeWrapper conditions = jcrNode.getNode("j:conditionalVisibility");
+            JCRNodeWrapper conditions = getOrCreateConditionsNode(jcrNode);
             conditions.setProperty("j:forceMatchAllConditions", isMatchingAllConditionsUpdate);
-            // deal with the new conditions
-            if(CollectionUtils.isNotEmpty(newConditions)) {
-                newConditions.forEach(condition -> {
-                    try {
-                        JCRNodeWrapper addedNode = conditions.addNode(JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":")), condition.getPrimaryType());
-                        // Track each condition's own modification/publication metadata (jcr:lastModified,
-                        // j:lastPublished, ...) so its individual publication status can be displayed.
-                        if (addedNode.canAddMixin("jmix:conditionPublicationInfo")) {
-                            addedNode.addMixin("jmix:conditionPublicationInfo");
-                        }
-                        condition.getProperties().forEach(property -> {
-                            try {
-                                if (property.getValue() != null) {
-                                    addedNode.setProperty(property.getName(), property.getValue());
-                                } else if (!CollectionUtils.isEmpty(property.getValues())) {
-                                    addedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
-                                }
-                            } catch (RepositoryException e) {
-                                throw new DataFetchingException(e);
-                            }
-                        });
-                    } catch (RepositoryException e) {
-                        throw new DataFetchingException(e);
-                    }
-                });
-            }
-            // deal with the updated condition
-            if(CollectionUtils.isNotEmpty(updatedConditions)) {
-                updatedConditions.forEach(condition -> {
-                    try {
-                        JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
-                        if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
-                            condition.getProperties().forEach(property -> {
-                                try {
-                                    if (property.getValue() != null) {
-                                        updatedNode.setProperty(property.getName(), property.getValue());
-                                    } else if (!CollectionUtils.isEmpty(property.getValues())) {
-                                        updatedNode.setProperty(property.getName(), property.getValues().toArray(new String[0]));
-                                    }
-                                } catch (RepositoryException e) {
-                                    throw new DataFetchingException(e);
-                                }
-                            });
-                        }
-                    } catch (RepositoryException e) {
-                        throw new DataFetchingException(e);
-                    }
-                });
-            }
-            // deal with the removed conditions
-            if(CollectionUtils.isNotEmpty(removedConditions)) {
-                removedConditions.forEach(condition -> {
-                    try {
-                        JCRNodeWrapper removedNode = session.getNodeByUUID(condition);
-                        if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
-                            removedNode.remove();
-                        }
-                    } catch (RepositoryException e) {
-                        throw new DataFetchingException(e);
-                    }
-                });
-            }
-            if(session.hasPendingChanges()) {
+
+            addNewConditions(conditions, newConditions);
+            updateConditions(session, conditions, updatedConditions);
+            removeConditions(session, conditions, removedConditions);
+
+            if (session.hasPendingChanges()) {
                 session.save();
                 return true;
             }
             return false;
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);
+        }
+    }
+
+    /**
+     * Return the j:conditionalVisibility child node holding the conditions, creating the
+     * jmix:conditionalVisibility mixin and the child node on the fly if they are missing.
+     */
+    private JCRNodeWrapper getOrCreateConditionsNode(JCRNodeWrapper jcrNode) throws RepositoryException {
+        if (!jcrNode.isNodeType("jmix:conditionalVisibility")) {
+            jcrNode.addMixin("jmix:conditionalVisibility");
+        }
+        if (!jcrNode.hasNode(J_CONDITIONAL_VISIBILITY)) {
+            jcrNode.addNode(J_CONDITIONAL_VISIBILITY, "jnt:conditionalVisibility");
+        }
+        return jcrNode.getNode(J_CONDITIONAL_VISIBILITY);
+    }
+
+    private void addNewConditions(JCRNodeWrapper conditions, Collection<VisibilityConditionInput> newConditions) throws RepositoryException {
+        if (CollectionUtils.isEmpty(newConditions)) {
+            return;
+        }
+        for (VisibilityConditionInput condition : newConditions) {
+            String nodeName = JCRContentUtils.findAvailableNodeName(conditions, StringUtils.substringAfterLast(condition.getPrimaryType(), ":"));
+            JCRNodeWrapper addedNode = conditions.addNode(nodeName, condition.getPrimaryType());
+            // Track each condition's own modification/publication metadata (jcr:lastModified,
+            // j:lastPublished, ...) so its individual publication status can be displayed.
+            if (addedNode.canAddMixin("jmix:conditionPublicationInfo")) {
+                addedNode.addMixin("jmix:conditionPublicationInfo");
+            }
+            applyProperties(addedNode, condition);
+        }
+    }
+
+    private void updateConditions(JCRSessionWrapper session, JCRNodeWrapper conditions, Collection<VisibilityConditionInput> updatedConditions) throws RepositoryException {
+        if (CollectionUtils.isEmpty(updatedConditions)) {
+            return;
+        }
+        for (VisibilityConditionInput condition : updatedConditions) {
+            JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
+            if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                applyProperties(updatedNode, condition);
+            }
+        }
+    }
+
+    private void removeConditions(JCRSessionWrapper session, JCRNodeWrapper conditions, Collection<String> removedConditions) throws RepositoryException {
+        if (CollectionUtils.isEmpty(removedConditions)) {
+            return;
+        }
+        for (String conditionUuid : removedConditions) {
+            JCRNodeWrapper removedNode = session.getNodeByUUID(conditionUuid);
+            if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                removedNode.remove();
+            }
+        }
+    }
+
+    /**
+     * Copy the condition input properties onto the given node, using the single value when set,
+     * otherwise the multiple values.
+     */
+    private void applyProperties(JCRNodeWrapper node, VisibilityConditionInput condition) throws RepositoryException {
+        for (GqlJcrPropertyInput property : condition.getProperties()) {
+            if (property.getValue() != null) {
+                node.setProperty(property.getName(), property.getValue());
+            } else if (!CollectionUtils.isEmpty(property.getValues())) {
+                node.setProperty(property.getName(), property.getValues().toArray(new String[0]));
+            }
         }
     }
 }

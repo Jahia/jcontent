@@ -11,7 +11,7 @@
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
     "build:production-analyze": "yarn build:production --analyze",
-    "build:types": "(tsc || true) && tsc-alias && tsdown",
+    "build:types": "yarn workspaces foreach --recursive --topological-dev --exclude @jahia/jcontent run build && (tsc || true) && tsc-alias && tsdown",
     "watch": "yarn webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node",

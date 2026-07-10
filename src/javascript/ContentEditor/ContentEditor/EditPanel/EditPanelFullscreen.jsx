@@ -64,6 +64,7 @@ export const EditPanelFullscreen = ({title}) => {
                     title={title}
                     isShowPublish={mode === Constants.routes.baseEditRoute}
                     activeTabState={[activeTab, setActiveTab]}
+                    displayableTabs={displayableTabs}
                 />
             )}
             content={(

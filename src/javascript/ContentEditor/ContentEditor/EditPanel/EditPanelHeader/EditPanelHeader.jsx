@@ -17,7 +17,6 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useEngineTabAvailability} from '~/ContentEditor/editorTabs/engineTabs/useEngineTabAvailability';
 import {useOpenEngineTabsWithConfirmation} from '~/ContentEditor/editorTabs/engineTabs/useOpenEngineTabsWithConfirmation';
-import {useEditHeaderTabs} from '~/ContentEditor/editorTabs/useEditHeaderTabs';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -33,6 +32,7 @@ export const EditPanelHeader = ({
     isShowPublish,
     hideLanguageSwitcher,
     activeTabState,
+    displayableTabs = [],
     targetActionKey = 'content-editor/header/3dots'
 }) => {
     const ctx = useContentEditorContext();
@@ -42,9 +42,6 @@ export const EditPanelHeader = ({
     // Some tabs may have `requiresAdvancedPermission: true`, we do a single perm check here
     const res = useNodeChecks({path: ctx.path}, {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]});
 
-    // Registry tabs the user may see (isDisplayable + each tab's own requiredPermission/requiredSitePermission),
-    // then the existing canSeeAdvancedOptionsTab gate for tabs flagged requiresAdvancedPermission.
-    const {tabs: displayableTabs} = useEditHeaderTabs();
     const tabs = displayableTabs.filter(tab => !tab.requiresAdvancedPermission || res.checksResult);
 
     const engineTabIds = ['workflow', 'liveroles', 'editroles'];
@@ -171,5 +168,6 @@ EditPanelHeader.propTypes = {
             1: PropTypes.func.isRequired
         })
     ),
+    displayableTabs: PropTypes.array,
     targetActionKey: PropTypes.string
 };

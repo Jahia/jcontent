@@ -1,5 +1,5 @@
 import React from 'react';
-import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
 import {ButtonGroup, Dropdown, Header, Separator, Workflow, EditRole, LiveRole} from '@jahia/moonstone';
@@ -17,6 +17,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useEngineTabAvailability} from '~/ContentEditor/editorTabs/engineTabs/useEngineTabAvailability';
 import {useOpenEngineTabsWithConfirmation} from '~/ContentEditor/editorTabs/engineTabs/useOpenEngineTabsWithConfirmation';
+import {useEditHeaderTabs} from '~/ContentEditor/editorTabs/useEditHeaderTabs';
 
 const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {size: 'big', color: 'accent'}
@@ -41,9 +42,10 @@ export const EditPanelHeader = ({
     // Some tabs may have `requiresAdvancedPermission: true`, we do a single perm check here
     const res = useNodeChecks({path: ctx.path}, {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]});
 
-    const tabs = registry
-        .find({target: 'editHeaderTabsActions'})
-        .filter(tab => tab.isDisplayable(ctx) && (!tab.requiresAdvancedPermission || res.checksResult));
+    // Registry tabs the user may see (isDisplayable + each tab's own requiredPermission/requiredSitePermission),
+    // then the existing canSeeAdvancedOptionsTab gate for tabs flagged requiresAdvancedPermission.
+    const {tabs: displayableTabs} = useEditHeaderTabs();
+    const tabs = displayableTabs.filter(tab => !tab.requiresAdvancedPermission || res.checksResult);
 
     const engineTabIds = ['workflow', 'liveroles', 'editroles'];
     const engineTabIcons = {

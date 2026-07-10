@@ -35,7 +35,7 @@ const useInitI18nContext = contextProps => {
         }));
     }, [setI18nContext]);
 
-    return (contextProps && contextProps.i18nContext && contextProps.setI18nContext && contextProps.resetI18nContext) ?
+    return (contextProps?.i18nContext && contextProps.setI18nContext && contextProps.resetI18nContext) ?
         contextProps : {i18nContext, setI18nContext, resetI18nContext};
 };
 

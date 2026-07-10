@@ -116,9 +116,9 @@ export const getNewCounter = nodes => {
     let max = 0;
     nodes.forEach(node => {
         let name = removeFileExtension(node.name);
-        let extracted = name.match(/[0-9]+$/g);
+        let extracted = name.match(/\d{1,15}$/g);
         if (extracted !== null) {
-            let counter = parseInt(extracted[0], 10);
+            let counter = Number.parseInt(extracted[0], 10);
             if (counter > max) {
                 max = counter;
             }
@@ -128,7 +128,7 @@ export const getNewCounter = nodes => {
 };
 
 export const allowDoubleClickNavigation = (nodeType, subNodes, fcn, node = null) => {
-    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 ||
+    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].includes(nodeType) ||
         (subNodes && subNodes > 0) ||
         (node && isCMISFolder(node))) {
         return fcn;
@@ -138,7 +138,7 @@ export const allowDoubleClickNavigation = (nodeType, subNodes, fcn, node = null)
 };
 
 export const getDefaultLocale = lang => {
-    return ['en', 'fr', 'de'].indexOf(lang) > -1 ? lang : 'en';
+    return ['en', 'fr', 'de'].includes(lang) ? lang : 'en';
 };
 
 export const getLanguageLabel = (languages, currentLang) => {
@@ -260,8 +260,8 @@ export const getName = node => {
 
 export const pathExistsInTree = (path, tree, pathAccessor) => {
     if (Array.isArray(tree)) {
-        for (let i = 0; i < tree.length; i++) {
-            if (pathExistsInTree(path, tree[i], pathAccessor)) {
+        for (const node of tree) {
+            if (pathExistsInTree(path, node, pathAccessor)) {
                 return true;
             }
         }
@@ -297,12 +297,12 @@ export const getRegistryTarget = function (item, target) {
 
 export const buildUrl = ({site, language, mode, path, params}) => {
     let registryItem = registry.get('accordionItem', mode);
-    if (registryItem && registryItem.getUrlPathPart) {
+    if (registryItem?.getUrlPathPart) {
         path = registryItem.getUrlPathPart(site, path, registryItem);
     }
 
     // Special chars in folder naming
-    path = path.replace(/[^/]/g, encodeURIComponent);
+    path = path.replaceAll(/[^/]/g, encodeURIComponent);
 
     let queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);
     return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
@@ -312,7 +312,7 @@ export const expandTree = (variables, client) => {
     return client.query({query: variables.path ? GetAncestorsQueryByPath : GetAncestorsQueryById, variables}).then(res => {
         let node = res.data.jcr.node;
         const params = {selectionNode: node};
-        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params));
+        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem?.(params));
         const mode = acc.key;
         const site = node.site.name;
         const parentPath = acc.getPathForItem(node);
@@ -409,8 +409,8 @@ export const JahiaRenderedModulesUtil = {
     },
     extractModuleInfoFromRenderedPage: function (pagePath, language, template) {
         const renderMode = 'editframe';
-        const encodedPath = pagePath.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
-        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
+        const encodedPath = pagePath.replaceAll(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
+        const url = `${globalThis.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
         console.debug(`Fetching html for ${url} to extract module information.`);
 
         fetch(url, {

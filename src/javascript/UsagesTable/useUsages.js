@@ -3,12 +3,17 @@ import {UsagesQuery} from './UsagesTable.gql-queries';
 
 // Sort contract: {order: 'ASC'|'DESC'|'', orderBy: 'displayName'|''} — same as UsagesTable
 export const useUsages = (path, language, sort) => {
+    let sortType = null;
+    if (sort.order !== '') {
+        sortType = sort.order === 'DESC' ? 'DESC' : 'ASC';
+    }
+
     const {data, loading, error} = useQuery(UsagesQuery, {
         variables: {
             path,
             language,
             fieldSorter: sort.orderBy === '' ? null : {
-                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
+                sortType,
                 fieldName: sort.orderBy === '' ? null : 'node.' + sort.orderBy,
                 ignoreCase: true
             }

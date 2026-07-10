@@ -72,7 +72,7 @@ export const TwoPanelsContent = ({
                     {rightCol}
                 </div>
             </div>
-            {rightSidebar && <Paper hasPadding={false}>{rightSidebar}</Paper>}
+            {rightSidebar && <Paper hasPadding={false} style={{margin: 'var(--moon-spacing-small)'}}>{rightSidebar}</Paper>}
         </div>
     );
 };

@@ -480,7 +480,7 @@
         },
         "mark": {
           "title": "Zur Löschung markiert",
-          "item": "Sie sind dabei, <span>{{name}}</span> zu löschen.",
+          "item": "Sie sind dabei, <0>{{name}}</0> zu löschen.",
           "items": "Sie sind dabei, <span>{{count}} Element(e)</span> zu löschen, darunter <span>{{pages}} Seite(n)</span>.",
           "filesAndFolders": "Sie sind dabei, <span>{{count}} Element(e)</span> zu löschen, darunter <span>{{folders}} Ordner</span>.",
           "itemsOnly": "Sie sind dabei, <span>{{count}} Element(e)</span> zu löschen.",
@@ -488,7 +488,7 @@
         },
         "permanently": {
           "title": "Löschen",
-          "item": "Sie sind dabei, die Löschung von <span>{{name}}</span> zu veröffentlichen. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
+          "item": "Sie sind dabei, die Löschung von <0>{{name}}</0> zu veröffentlichen. <1>Dies kann nicht rückgängig gemacht werden.</1>",
           "items": "Sie sind dabei, die Löschung von <span>{{count}} Element(e)</span> zu veröffentlichen, darunter <span>{{pages}} Seite(n)</span>. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
           "filesAndFolders": "Sie sind dabei, die Löschung von <span>{{count}} Element(e)</span> zu veröffentlichen, darunter <span>{{folders}} Ordner</span>. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
           "itemsOnly": "Sie sind dabei, die Löschung von <span>{{count}} Element(e)</span> zu veröffentlichen. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
@@ -496,7 +496,7 @@
         },
         "undelete": {
           "title": "Wiederherstellen",
-          "item": "Möchten Sie wirklich <span>{{name}}</span> wiederherstellen?",
+          "item": "Möchten Sie wirklich <0>{{name}}</0> wiederherstellen?",
           "items": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen, darunter <span>{{pages}} Seite(n)</span> ?",
           "filesAndFolders": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen, darunter <span>{{folders}} Ordner</span> ?",
           "itemsOnly": "Möchten Sie wirklich <span>{{count}} Element(e)</span> wiederherstellen?",
@@ -510,13 +510,13 @@
         "locked": {
           "permanently": {
             "title": "Löschung nicht möglich",
-            "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde.",
-            "content_plural": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein gelöscht werden. Bitte stellen Sie diese wieder her, oder löschen Sie das übergeordnete Element <strong>{{parentName}}</strong>, welches zuerst zur Löschung markiert wurde."
+            "content": "Das Element <0>{{name}}</0> kann aktuell nicht allein gelöscht werden. Bitte stellen Sie es wieder her, oder löschen Sie das übergeordnete Element <1>{{parentName}}</1>, welches zuerst zur Löschung markiert wurde.",
+            "content_plural": "Die {{count}} Elemente <0>{{name}}</0> können aktuell nicht allein gelöscht werden. Bitte stellen Sie diese wieder her, oder löschen Sie das übergeordnete Element <1>{{parentName}}</1>, welches zuerst zur Löschung markiert wurde."
           },
           "undelete": {
             "title": "Wiederherstellung nicht möglich",
-            "content": "Das Element <strong>{{name}}</strong> kann aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde.",
-            "content_plural": "Die {{count}} Elemente <strong>{{name}}</strong> können aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <strong>{{parentName}}</strong> wieder her, welches zuerst zur Löschung markiert wurde."
+            "content": "Das Element <0>{{name}}</0> kann aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <1>{{parentName}}</1> wieder her, welches zuerst zur Löschung markiert wurde.",
+            "content_plural": "Die {{count}} Elemente <0>{{name}}</0> können aktuell nicht allein wiederhergestellt werden. Bitte stellen Sie das übergeordnete Element <1>{{parentName}}</1> wieder her, welches zuerst zur Löschung markiert wurde."
           }
         },
         "error": "Die angeforderte Operation konnte am ausgewählten Content nicht durchgeführt werden. Dialog wird geschlossen und Daten werden neu geladen."
@@ -1040,6 +1040,7 @@
         }
       },
       "visibilityTab": {
+        "title": "Sichtbarkeitsbedingungen für {{name}}",
         "languages": {
           "title": "Anzeigesprachen",
           "description": "Content ist in den gewählten Sprachen sichtbar",
@@ -1059,6 +1060,8 @@
           "add": "Bedingung hinzufügen",
           "edit": "Bedingung bearbeiten",
           "delete": "Bedingung löschen",
+          "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am {{timestamp}}",
+          "loading": "Wird geladen…",
           "ruleType": {
             "date": "Datum",
             "dayOfWeek": "Wochentag",

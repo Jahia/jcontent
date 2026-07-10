@@ -1,3 +1,11 @@
+.wrapper {
+    display: flex;
+    flex: 1; // Fill the parent container vertically
+    overflow: hidden; // Children handle their own scrollbar
+
+    background: var(--moon-color-white);
+}
+
 .twoColumnsRoot {
     display: grid;
     flex: 1;

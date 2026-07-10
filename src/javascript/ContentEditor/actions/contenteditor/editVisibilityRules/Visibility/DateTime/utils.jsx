@@ -1,6 +1,6 @@
 import React from 'react';
 import {CloudCheck, Delete, Edit, NoCloud} from '@jahia/moonstone';
-import dayjs from 'dayjs';
+import {dayjs, formatDatetime} from 'date-formatter';
 import {isArray} from 'lodash';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
@@ -127,8 +127,8 @@ export const getConditionLabel = (name, properties, t) => {
             const startDate = properties.find(p => p.name === 'start')?.value;
             const endDate = properties.find(p => p.name === 'end')?.value;
             return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getDateLabel(startDate)), {
-                startDate: startDate === undefined ? '' : dayjs(startDate).format('LLL'),
-                endDate: endDate === undefined ? '' : dayjs(endDate).format('LLL')
+                startDate: startDate === undefined ? '' : formatDatetime(startDate, {format: 'long'}),
+                endDate: endDate === undefined ? '' : formatDatetime(endDate, {format: 'long'})
             });
         }
 

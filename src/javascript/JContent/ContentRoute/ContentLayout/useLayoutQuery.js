@@ -31,7 +31,7 @@ export function useLayoutQuery(options, fragments, queryVariables, accordionItem
 
     queryVariables = {...queryHandler.getQueryVariables(options), ...queryVariables};
 
-    const treeParams = queryHandler.getTreeParams && queryHandler.getTreeParams(options);
+    const treeParams = queryHandler.getTreeParams?.(options);
 
     const isStructured = queryHandler.isStructured(options);
 

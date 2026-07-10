@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 import {extractRangeConstraints} from '~/ContentEditor/utils';
 
 const _buildDisableDay = ({type, boundary, disableBoundary, datetime, offset}) => {

@@ -35,8 +35,8 @@ export function getDynamicFieldSets(sections) {
  * the fields in fieldSets of only the specified section.
  *
  * @param {array} sections    array object contains sections
- * @param {string} sectionName string value refer to the section name
- * @param {function} fieldSetFilter optional fieldset filter
+ * @param {string} [sectionName] string value refer to the section name
+ * @param {function} [fieldSetFilter] optional fieldset filter
  * @returns {array} fields    array object contains fields
  */
 export function getFields(sections, sectionName, fieldSetFilter) {

@@ -126,4 +126,3 @@ AddNewRule.propTypes = {
     saveConditions: PropTypes.func.isRequired,
     onCancel: PropTypes.func
 };
-

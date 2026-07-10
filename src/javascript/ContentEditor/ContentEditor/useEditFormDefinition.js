@@ -1,4 +1,4 @@
-import dayjs from '~/ContentEditor/date.config';
+import {dayjs} from 'date-formatter';
 import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {adaptSystemNameField} from './adaptSystemNameField';

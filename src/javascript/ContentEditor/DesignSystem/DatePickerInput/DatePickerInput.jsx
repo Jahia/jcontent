@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {DatePicker} from '../DatePicker';
 
-import dayjs from '../../date.config';
+import {dayjs} from 'date-formatter';
 
 import {Popover} from '@material-ui/core';
 import NumberFormat from 'react-number-format';

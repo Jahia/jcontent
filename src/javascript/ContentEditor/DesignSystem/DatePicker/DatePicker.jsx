@@ -14,7 +14,7 @@ import esLocale from 'dayjs/locale/es';
 import ptLocale from 'dayjs/locale/pt';
 import itLocale from 'dayjs/locale/it';
 
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 import {generateWeekdaysShort, getDateTime, getHourFromDisabledDays} from '../DatePickerInput/date.util';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';

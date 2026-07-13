@@ -761,7 +761,7 @@
           "invalidPattern": "Die Eingabe entspricht nicht den Vorgaben der Content-Typ-Definition",
           "invalidNumber": "Bitte geben Sie eine gültige Nummer ein",
           "invalidRange": "Die Eingabe entspricht nicht den Vorgaben der Content-Typ-Definition",
-          "invalidSystemName": "Systemname darf nicht die folgenden Sonderzeichen enthalten: '/:*?\"<>|%'",
+          "invalidSystemName": "Systemname darf nicht die folgenden Sonderzeichen enthalten: '/:*?\"<>|%;'",
           "required": "",
           "alreadyExist": "Ein Element mit demselben Systemnamen ist bereits vorhanden. Bitte wählen Sie ein anderes aus",
           "maxLength": "Maximal {{selectorOptions.maxLength}} Zeichen.",

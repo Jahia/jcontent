@@ -772,4 +772,36 @@ describe('validate', () => {
             });
         });
     });
+
+    describe('systemName', () => {
+        const systemNameFieldName = 'nt:base_ce:systemName';
+        const buildSystemNameSections = value => ({
+            sections: [{
+                fieldSets: [{
+                    name: 'fieldSet1',
+                    dynamic: false,
+                    fields: [{name: systemNameFieldName, requiredType: 'STRING'}]
+                }]
+            }],
+            values: {[systemNameFieldName]: value}
+        });
+
+        it('should not return an error for a valid system name', () => {
+            const {sections, values} = buildSystemNameSections('financeops2026.jpg');
+            expect(validate(sections)(values)).toEqual({[systemNameFieldName]: undefined});
+        });
+
+        it('should return invalidSystemName when the name contains a semicolon', () => {
+            const {sections, values} = buildSystemNameSections('financeops202;6.jpg');
+            expect(validate(sections)(values)).toEqual({[systemNameFieldName]: 'invalidSystemName'});
+        });
+
+        it.each(['a/b', 'a:b', 'a*b', 'a?b', 'a"b', 'a<b', 'a>b', 'a|b', 'a%b', 'a\\b'])(
+            'should return invalidSystemName for the forbidden character in "%s"',
+            value => {
+                const {sections, values} = buildSystemNameSections(value);
+                expect(validate(sections)(values)).toEqual({[systemNameFieldName]: 'invalidSystemName'});
+            }
+        );
+    });
 });

@@ -132,6 +132,9 @@ const actionTargetAssignments = {
         'delete',
         'deletePermanently',
         'undelete',
+        'export',
+        'exportPage',
+        'import',
         // Hardcoded so 'Open in page composer' can be always added at the end of this list
         'contentActionsSeparator3:50'
     ],

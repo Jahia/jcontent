@@ -1,5 +1,5 @@
 import React from 'react';
-import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
 import {ButtonGroup, Dropdown, Header, Separator, Workflow, EditRole, LiveRole} from '@jahia/moonstone';
@@ -32,6 +32,7 @@ export const EditPanelHeader = ({
     isShowPublish,
     hideLanguageSwitcher,
     activeTabState,
+    displayableTabs = [],
     targetActionKey = 'content-editor/header/3dots'
 }) => {
     const ctx = useContentEditorContext();
@@ -41,9 +42,7 @@ export const EditPanelHeader = ({
     // Some tabs may have `requiresAdvancedPermission: true`, we do a single perm check here
     const res = useNodeChecks({path: ctx.path}, {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]});
 
-    const tabs = registry
-        .find({target: 'editHeaderTabsActions'})
-        .filter(tab => tab.isDisplayable(ctx) && (!tab.requiresAdvancedPermission || res.checksResult));
+    const tabs = displayableTabs.filter(tab => !tab.requiresAdvancedPermission || res.checksResult);
 
     const engineTabIds = ['workflow', 'liveroles', 'editroles'];
     const engineTabIcons = {
@@ -169,5 +168,6 @@ EditPanelHeader.propTypes = {
             1: PropTypes.func.isRequired
         })
     ),
+    displayableTabs: PropTypes.array,
     targetActionKey: PropTypes.string
 };

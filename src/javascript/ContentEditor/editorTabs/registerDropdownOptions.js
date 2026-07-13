@@ -51,6 +51,7 @@ export const registerDropdownOptions = actionsRegistry => {
             />
         ),
         editPanelHeaderProps: {hideLanguageSwitcher: true},
+        requiredSitePermission: ['translateAction'],
         isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1
     });
 };

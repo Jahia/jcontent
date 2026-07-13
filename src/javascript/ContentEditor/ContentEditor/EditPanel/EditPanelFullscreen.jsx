@@ -9,6 +9,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {EditPanelHeader} from './EditPanelHeader/EditPanelHeader';
 import {useContentEditorConfigContext} from '~/shared';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {useEditHeaderTabs} from '~/ContentEditor/editorTabs/useEditHeaderTabs';
 
 export const EditPanelFullscreen = ({title}) => {
     const config = useContentEditorConfigContext();
@@ -26,6 +27,17 @@ export const EditPanelFullscreen = ({title}) => {
     if (!tab) {
         throw new CeModalError(`No tab found for the current active tab value (${activeTab}), check the registry for the "editHeaderTabsActions" target (valid values are: ${tabs.map(t => t.value).join(', ')})`);
     }
+
+    // Guard against the active tab being one the user isn't permitted to see (e.g. reached via
+    // advancedOpenTab without the tab's required permission): fall back to the always-available
+    // edit tab once permission checks resolve. The header dropdown never offers forbidden tabs.
+    const {tabs: displayableTabs, loading: tabsLoading} = useEditHeaderTabs();
+    const isActiveTabAllowed = displayableTabs.some(t => t.value === activeTab);
+    useEffect(() => {
+        if (!tabsLoading && activeTab && displayableTabs.length > 0 && !isActiveTabAllowed) {
+            setActiveTab(Constants.editPanel.editTab);
+        }
+    }, [tabsLoading, displayableTabs, activeTab, isActiveTabAllowed, setActiveTab]);
 
     // Track which tabs have been visited so we mount them lazily but keep them
     // mounted afterwards (CSS show/hide), preserving scroll position and local state.
@@ -52,6 +64,7 @@ export const EditPanelFullscreen = ({title}) => {
                     title={title}
                     isShowPublish={mode === Constants.routes.baseEditRoute}
                     activeTabState={[activeTab, setActiveTab]}
+                    displayableTabs={displayableTabs}
                 />
             )}
             content={(

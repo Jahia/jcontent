@@ -2,7 +2,7 @@ import React from 'react';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel, getButtonRenderer} from '~/ContentEditor/utils';
 import {truncate} from '~/utils';
-import {ButtonGroup, Dropdown, Header, Separator, Workflow, EditRole, LiveRole} from '@jahia/moonstone';
+import {ButtonGroup, Dropdown, Header, Separator} from '@jahia/moonstone';
 import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
@@ -35,22 +35,18 @@ export const EditPanelHeader = ({
     displayableTabs = [],
     targetActionKey = 'content-editor/header/3dots'
 }) => {
-    const ctx = useContentEditorContext();
+    const {nodeData, site, mode} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
 
     // Some tabs may have `requiresAdvancedPermission: true`, we do a single perm check here
-    const res = useNodeChecks({path: ctx.path}, {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]});
-
+    const res = useNodeChecks(
+        {path: nodeData?.path},
+        {requiredSitePermission: [Constants.permissions.canSeeAdvancedOptionsTab]}
+    );
     const tabs = displayableTabs.filter(tab => !tab.requiresAdvancedPermission || res.checksResult);
 
-    const engineTabIds = ['workflow', 'liveroles', 'editroles'];
-    const engineTabIcons = {
-        workflow: <Workflow/>,
-        liveroles: <LiveRole/>,
-        editroles: <EditRole/>
-    };
-    const {availableTabs: engineTabs} = useEngineTabAvailability(engineTabIds);
+    const {engineTabs, engineTabIds} = useEngineTabAvailability({nodeData, site, mode});
     const {openTabs: openEngineTab, confirmationDialog: engineConfirmationDialog} = useOpenEngineTabsWithConfirmation(engineTabIds);
     const hasEngineEntries = res.checksResult && engineTabs.length > 0;
 
@@ -70,7 +66,7 @@ export const EditPanelHeader = ({
             options: engineTabs.map(tab => ({
                 value: tab.id,
                 label: tab.title,
-                iconStart: engineTabIcons[tab.id],
+                iconStart: tab.icon,
                 attributes: {'data-sel-role': `tab-${tab.id}`}
             }))
         }
@@ -80,8 +76,8 @@ export const EditPanelHeader = ({
         <Header
             title={truncate(title, 60)}
             breadcrumb={
-                ctx.nodeData?.path?.startsWith('/sites') && (
-                    <ContentPath path={ctx.nodeData.path}/>
+                nodeData?.path?.startsWith('/sites') && (
+                    <ContentPath path={nodeData.path}/>
                 )
             }
             contentType={<ContentTypeChip/>}

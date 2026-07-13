@@ -1,7 +1,6 @@
 import {useEngineTabAvailability} from './useEngineTabAvailability';
 import {useQuery} from '@apollo/client';
 import {getGwtEngineTabs} from './engineTabs.utils';
-import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor/ContentEditor.context';
 
 jest.mock('./engineTabs.utils', () => {
     return {
@@ -21,19 +20,22 @@ jest.mock('./engineTabs.permission.gql-query', () => {
     };
 });
 
-jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => {
+jest.mock('@jahia/moonstone', () => {
     return {
-        useContentEditorContext: jest.fn()
+        EditRole: () => null,
+        LiveRole: () => null,
+        Version: () => null,
+        Workflow: () => null
     };
 });
 
 describe('useEngineTabAvailability', () => {
     let useQueryResponse;
-    let contentEditorContext;
+    let hookArgs;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        contentEditorContext = {
+        hookArgs = {
             mode: 'edit',
             site: 'digitall',
             nodeData: {
@@ -44,11 +46,9 @@ describe('useEngineTabAvailability', () => {
                 primaryNodeType: {name: 'jnt:content', supertypes: [], hasOrderableChildNodes: false}
             }
         };
-        useContentEditorContext.mockImplementation(() => contentEditorContext);
 
         getGwtEngineTabs.mockImplementation(() => [
-            {id: 'workflow', title: 'Workflow', requiredPermission: 'viewWorkflowTab'},
-            {id: 'usages', title: 'Usages'}
+            {id: 'workflow', title: 'Workflow', requiredPermission: 'viewWorkflowTab'}
         ]);
 
         useQueryResponse = {
@@ -66,50 +66,51 @@ describe('useEngineTabAvailability', () => {
     });
 
     it('should return the tab when it is available and permission is granted', () => {
-        const {availableTabs} = useEngineTabAvailability(['workflow']);
+        const {engineTabs} = useEngineTabAvailability(hookArgs);
 
-        expect(availableTabs).toHaveLength(1);
-        expect(availableTabs[0].id).toBe('workflow');
+        expect(engineTabs).toHaveLength(1);
+        expect(engineTabs[0].id).toBe('workflow');
     });
 
     it('should not return the tab when the permission is denied', () => {
         useQueryResponse.data = {jcr: {nodeByPath: {workflow: false}}};
 
-        const {availableTabs} = useEngineTabAvailability(['workflow']);
+        const {engineTabs} = useEngineTabAvailability(hookArgs);
 
-        expect(availableTabs).toHaveLength(0);
+        expect(engineTabs).toHaveLength(0);
     });
 
     it('should return tabs without required permission without querying permissions', () => {
-        const {availableTabs} = useEngineTabAvailability(['usages']);
+        getGwtEngineTabs.mockImplementation(() => [
+            {id: 'versioning', title: 'Versioning'}
+        ]);
 
-        expect(availableTabs).toHaveLength(1);
-        expect(availableTabs[0].id).toBe('usages');
+        const {engineTabs} = useEngineTabAvailability(hookArgs);
+
+        expect(engineTabs).toHaveLength(1);
+        expect(engineTabs[0].id).toBe('versioning');
     });
 
     it('should not return the tab when GWT does not provide it', () => {
         getGwtEngineTabs.mockImplementation(() => []);
 
-        const {availableTabs} = useEngineTabAvailability(['workflow']);
+        const {engineTabs} = useEngineTabAvailability(hookArgs);
 
-        expect(availableTabs).toHaveLength(0);
+        expect(engineTabs).toHaveLength(0);
     });
 
     it('should not return any tab outside of edit mode', () => {
-        contentEditorContext.mode = 'create';
+        const {engineTabs} = useEngineTabAvailability({...hookArgs, mode: 'create'});
 
-        const {availableTabs} = useEngineTabAvailability(['workflow']);
-
-        expect(availableTabs).toHaveLength(0);
+        expect(engineTabs).toHaveLength(0);
         expect(getGwtEngineTabs).not.toHaveBeenCalled();
     });
 
     it('should return no tabs while the permission query is loading', () => {
         useQueryResponse.loading = true;
 
-        const {availableTabs, loading} = useEngineTabAvailability(['workflow']);
+        const {engineTabs} = useEngineTabAvailability(hookArgs);
 
-        expect(loading).toBe(true);
-        expect(availableTabs).toHaveLength(0);
+        expect(engineTabs).toHaveLength(0);
     });
 });

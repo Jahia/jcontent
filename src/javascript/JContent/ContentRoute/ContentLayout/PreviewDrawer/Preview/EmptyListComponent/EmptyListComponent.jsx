@@ -11,7 +11,10 @@ const EMPTY_LIST_QUERY = gql`
     query PreviewEmptyListCheck($path: String!) {
         jcr {
             nodeByPath(path: $path) {
+                uuid
+                workspace
                 primaryNodeType {
+                    name
                     hasOrderableChildNodes
                 }
                 previewSubNodes: children(typesFilter: {types: ["jnt:file", "jnt:folder", "jnt:content", "jnt:contentFolder"], multi: ANY}) {

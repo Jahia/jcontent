@@ -12,6 +12,8 @@ const GET_CONTENT_LINKS = gql`
     query getContentLinks($path: String!, $languages: [String]!) {
         live: jcr(workspace: LIVE) {
             nodeByPath(path: $path) {
+                uuid
+                workspace
                 vanityUrls(languages: $languages) {
                     url
                     active
@@ -23,6 +25,8 @@ const GET_CONTENT_LINKS = gql`
         }
         edit: jcr(workspace: EDIT) {
             nodeByPath(path: $path) {
+                uuid
+                workspace
                 vanityUrls(languages: $languages) {
                     url
                     active

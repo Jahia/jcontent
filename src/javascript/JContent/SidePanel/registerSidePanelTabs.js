@@ -35,6 +35,8 @@ export const registerSidePanelTabs = actionsRegistry => {
         dataSelRole: 'tab-usages',
         displayableComponent: ContentUsages,
         hideOnNodeTypes: ['jnt:virtualsite'],
+        // Same permission as the usages entry of the former advanced options screen
+        requiredPermission: ['viewUsagesTab'],
         // In Content Editor the tab only makes sense in edit mode: in create mode
         // ctx.path points to the parent node
         isDisplayable: ({isJContent, mode}) => Boolean(isJContent) || mode === Constants.routes.baseEditRoute

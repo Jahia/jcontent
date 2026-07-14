@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Chip, DataTable, Typography, Warning} from '@jahia/moonstone';
+import {DisplayAction} from '@jahia/ui-extender';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {useUsages} from '~/UsagesTable/useUsages';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {NodeIcon} from '~/utils';
+import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
+import PublicationStatus from '~/JContent/PublicationStatus';
 import styles from './ContentUsages.scss';
 
 const MAX_BADGES = 2;
@@ -62,6 +65,13 @@ export const ContentUsages = () => {
 
     const columns = [
         {
+            key: 'status',
+            label: '',
+            width: '16px',
+            cellProps: {className: styles.statusCellTd},
+            render: ({data}) => <PublicationStatus isCompact node={data} className={styles.statusBar}/>
+        },
+        {
             key: 'displayName',
             label: t('jcontent:label.contentManager.listColumns.name'),
             isSortable: true,
@@ -80,6 +90,19 @@ export const ContentUsages = () => {
             label: t('jcontent:label.contentEditor.sidePanel.language'),
             width: '120px',
             render: ({data}) => localeChips(data.locales, t)
+        },
+        {
+            key: 'actions',
+            label: '',
+            width: '48px',
+            render: ({data}) => (
+                <div onClick={e => e.stopPropagation()}>
+                    <DisplayAction actionKey="contentItemActionsMenu"
+                                   path={data.path}
+                                   render={ButtonRendererNoLabel}
+                                   buttonProps={{variant: 'ghost', size: 'default'}}/>
+                </div>
+            )
         }
     ];
 

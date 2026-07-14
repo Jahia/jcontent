@@ -7,6 +7,8 @@ describe('Search tests', () => {
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
+        // Two nodes whose system names differ only by case, to check name search is case-insensitive
+        cy.apollo({mutationFile: 'jcontent/createCaseSensitiveContent.graphql'});
     });
 
     after(function () {
@@ -83,6 +85,26 @@ describe('Search tests', () => {
                 .verifyResults(['Very Rich text to find with tag'])
                 .verifyResultType('Rich text')
                 .verifyTotalCount(1);
+        });
+
+        // Regression: name search must be case-insensitive, like content search. Both an uppercase
+        // and a lowercase term must return both nodes whose names differ only by case.
+        it('Test name search is case-insensitive with an uppercase term', function () {
+            basicSearch
+                .searchTerm('Bercy')
+                .searchInWholeSite()
+                .executeSearch()
+                .verifyResults(['upperCaseDoc', 'lowerCaseDoc'])
+                .verifyTotalCount(2);
+        });
+
+        it('Test name search is case-insensitive with a lowercase term', function () {
+            basicSearch
+                .searchTerm('bercy')
+                .searchInWholeSite()
+                .executeSearch()
+                .verifyResults(['upperCaseDoc', 'lowerCaseDoc'])
+                .verifyTotalCount(2);
         });
     });
 

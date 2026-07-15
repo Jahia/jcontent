@@ -1,0 +1,22 @@
+mutation createCaseSensitiveContent($parentPath: String! = "/sites/jcontentSite/home/area-main") {
+    jcr {
+        mutateNode(pathOrId: $parentPath) {
+            addChildrenBatch(
+                nodes: [
+                    {
+                        name: "Bercyclette"
+                        primaryNodeType: "jnt:bigText"
+                        properties: [{ name: "text", language: "en", value: "upperCaseDoc marker" }]
+                    }
+                    {
+                        name: "bercyclette"
+                        primaryNodeType: "jnt:bigText"
+                        properties: [{ name: "text", language: "en", value: "lowerCaseDoc marker" }]
+                    }
+                ]
+            ) {
+                uuid
+            }
+        }
+    }
+}

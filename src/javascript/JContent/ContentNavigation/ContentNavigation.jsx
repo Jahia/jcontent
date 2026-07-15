@@ -4,6 +4,7 @@ import {Accordion, SecondaryNav} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {getRegistryTarget} from '../JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
+import styles from './ContentNavigation.scss';
 
 const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, handleNavigation, header, isReversed}) => {
     const {t} = useTranslation('jcontent');
@@ -30,7 +31,8 @@ const ContentNavigation = ({accordionItems, accordionItemTarget, mode, siteKey, 
     }
 
     return (
-        <SecondaryNav defaultSize={{height: '100%', width: '245px'}}
+        <SecondaryNav className={styles.nav}
+                      defaultSize={{height: '100%', width: '245px'}}
                       header={header}
                       isReversed={isReversed}
         >

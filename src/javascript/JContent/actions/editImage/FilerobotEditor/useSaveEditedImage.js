@@ -3,6 +3,7 @@ import {useApolloClient} from '@apollo/client';
 import {updateFileContent, uploadFile} from '~/JContent/ContentRoute/ContentLayout/Upload/UploadItem/UploadItem.gql-mutations';
 import {sanitizeName} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 import {refetchTypes, triggerRefetch} from '~/JContent/JContent.refetches';
+import {getNodeName} from './paths';
 
 // The edited canvas is re-encoded in the file's original format so editing never
 // silently changes the stored format. Formats a canvas cannot encode fall back to
@@ -13,9 +14,12 @@ const EXPORT_FORMATS = {
     'image/webp': {extension: 'webp', quality: 0.9}
 };
 
-export const getExportFormat = mimeType => (EXPORT_FORMATS[mimeType] ?
-    {mimeType, ...EXPORT_FORMATS[mimeType]} :
-    {mimeType: 'image/png', ...EXPORT_FORMATS['image/png']});
+const DEFAULT_FORMAT = {mimeType: 'image/png', ...EXPORT_FORMATS['image/png']};
+
+export const getExportFormat = mimeType => {
+    const entry = EXPORT_FORMATS[mimeType];
+    return entry ? {mimeType, ...entry} : DEFAULT_FORMAT;
+};
 
 const canvasToFile = async (canvas, name, format) => {
     const blob = await new Promise(resolve => canvas.toBlob(resolve, format.mimeType, format.quality));
@@ -52,10 +56,7 @@ export function useSaveEditedImage(path, mimeType, language) {
     }, [client]);
 
     const save = useCallback(async canvas => {
-        // The JCR path is not URI-encoded; use the node name verbatim (decoding
-        // would throw on legal names containing '%').
-        const nodeName = path.substring(path.lastIndexOf('/') + 1);
-        const file = await canvasToFile(canvas, nodeName, format);
+        const file = await canvasToFile(canvas, getNodeName(path), format);
         await client.mutate({
             mutation: updateFileContent,
             variables: {path, mimeType: format.mimeType, fileHandle: file}

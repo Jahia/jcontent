@@ -6,6 +6,7 @@ import {Button, Loader, Modal, ModalBody, ModalFooter, ModalHeader, Typography} 
 import JContentConstants from '~/JContent/JContent.constants';
 import {useSaveEditedImage} from './useSaveEditedImage';
 import {filerobotTheme} from './filerobotTheme';
+import {encodeJcrPath, getNodeName} from './paths';
 import SaveAsDialog from './SaveAsDialog';
 import styles from './FilerobotEditor.scss';
 
@@ -53,27 +54,27 @@ export const FilerobotEditor = ({path, mimeType, onExit}) => {
     // the file's original format.
     const getImgDataRef = useRef(null);
 
-    // The JCR path prop is not URI-encoded, so the node name is used verbatim
-    // (decoding it would throw on legal names containing '%').
-    const nodeName = path.substring(path.lastIndexOf('/') + 1);
+    const nodeName = getNodeName(path);
     // Same-origin (cookie auth) and cache-busted so the latest binary is always loaded.
     const source = useMemo(
         () => window.contextJsParameters.contextPath +
             '/files/default' +
-            path.replace(/[^/]/g, encodeURIComponent) +
+            encodeJcrPath(path) +
             '?ts=' + Date.now(),
         [path]
     );
 
     const getEditedCanvas = () => {
-        const getData = getImgDataRef.current;
-        if (typeof getData !== 'function') {
+        const getCurrentImgData = getImgDataRef.current;
+        if (typeof getCurrentImgData !== 'function') {
             return null;
         }
 
         try {
-            const result = getData({name: nodeName, extension: format.extension}, SAVING_PIXEL_RATIO);
-            return result?.imageData?.imageCanvas || null;
+            // Filerobot returns { imageData: { imageCanvas, ... }, designState }.
+            const imageFileInfo = {name: nodeName, extension: format.extension};
+            const {imageData} = getCurrentImgData(imageFileInfo, SAVING_PIXEL_RATIO) || {};
+            return imageData?.imageCanvas || null;
         } catch (e) {
             console.error('[jcontent] could not read edited image', e);
             return null;
@@ -157,7 +158,6 @@ export const FilerobotEditor = ({path, mimeType, onExit}) => {
                             label={t('jcontent:label.contentManager.editImage.cancel')}
                             isDisabled={saving}
                             data-cm-role="image-editor-cancel"
-                            className={error ? undefined : styles.footerSpacer}
                             onClick={() => onExit()}
                         />
                         <Button

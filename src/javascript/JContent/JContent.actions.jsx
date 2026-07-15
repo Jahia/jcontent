@@ -129,7 +129,7 @@ export const jContentActions = registry => {
         buttonIcon: <Cloud/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         menuTarget: 'publishMenu',
-        hideOnNodeTypes: ['jnt:category'],
+        hideOnNodeTypes: ['jnt:category', 'jmix:nolive', 'jmix:autoPublish'],
         isMenuPreload: true
     });
     registry.add('action', 'publish', {

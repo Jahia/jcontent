@@ -24,7 +24,7 @@ export const PublishManagerActionComponent = props => {
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
         getPermissions: ['publish', 'publication-start'],
-        hideOnNodeTypes: ['jnt:category', 'jmix:markedForDeletion']
+        hideOnNodeTypes: ['jnt:category', 'jmix:markedForDeletion', 'jmix:nolive', 'jmix:autoPublish']
     });
 
     if (res.loading) {

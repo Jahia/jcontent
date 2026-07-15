@@ -38,6 +38,20 @@ describe('jContent side panel usages tab', () => {
 
         sidePanel.getUsagesTable().should('be.visible');
         sidePanel.getUsagesRows().should('have.length.at.least', 1);
+
+        // Each row shows the compact publication status bar
+        sidePanel.getUsagesRows().first()
+            .find('[data-cm-role="publication-info"]')
+            .should('have.attr', 'data-cm-value');
+
+        // Each row has the standard three-dot content actions menu
+        sidePanel.getUsagesRows().first()
+            .find('[data-sel-role="contentItemActionsMenu"]')
+            .click();
+        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
+            .should('be.visible')
+            .and('contain.text', 'Edit');
+        cy.get('.moonstone-menu_overlay').click();
     });
 
     it('displays the empty state for an item without usages', () => {

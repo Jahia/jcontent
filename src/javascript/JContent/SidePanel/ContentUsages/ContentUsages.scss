@@ -13,6 +13,22 @@
     margin-bottom: var(--spacing-medium);
 }
 
+/* The publication status bar is absolutely positioned against the cell and
+   must be allowed to span the full row height */
+td.statusCellTd {
+    position: relative;
+
+    padding: 0;
+    overflow: visible;
+}
+
+.statusBar {
+    top: 0;
+    left: 0;
+
+    height: 100%;
+}
+
 .nameCell {
     display: flex;
     gap: var(--spacing-small);

@@ -372,28 +372,42 @@ public class EditorFormServiceImpl implements EditorFormService {
             for (ExtendedNodeType nodeType : m.keySet()) {
                 // Check if the current type matches (is a subtype of) the base type key,
                 // meaning the extensions of this key are applicable to our current type
-                if (current.isNodeType(nodeType.getName())) {
-                    for (ExtendedNodeType extension : m.get(nodeType)) {
-                        // Only include extensions that belong to modules installed on the current site.
-                        // System module types are always included regardless of site installation.
-                        // Skip already visited extensions to prevent duplicates and infinite loops.
-                        if ((installedModules == null || extension.getTemplatePackage() == null
-                            || extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system")
-                            || installedModules.contains(extension.getTemplatePackage().getId()))
-                            && !visited.contains(extension.getName())) {
-                            res.add(extension);
-                            visited.add(extension.getName());
-                            // Enqueue this extension so its own extensions are also discovered in subsequent iterations
-                            // (e.g., if mymix:internalLink extends mymix:commonLink which extends mynt:nodetypeVanilla,
-                            // mymix:internalLink will be found when processing mymix:commonLink)
-                            toProcess.add(extension);
-                        }
+                if (!current.isNodeType(nodeType.getName())) {
+                    continue;
+                }
+
+                for (ExtendedNodeType extension : m.get(nodeType)) {
+                    // Skip already visited extensions to prevent duplicates and infinite loops,
+                    // and extensions that don't belong to a module installed on the current site.
+                    if (visited.contains(extension.getName()) || !isExtensionAvailable(extension, installedModules)) {
+                        continue;
                     }
+
+                    res.add(extension);
+                    visited.add(extension.getName());
+                    // Enqueue this extension so its own extensions are also discovered in subsequent iterations
+                    // (e.g., if mymix:internalLink extends mymix:commonLink which extends mynt:nodetypeVanilla,
+                    // mymix:internalLink will be found when processing mymix:commonLink)
+                    toProcess.add(extension);
                 }
             }
         }
 
         return res;
+    }
+
+    /**
+     * Determines whether a mixin extension is available in the current context.
+     * When {@code installedModules} is {@code null} (system-level call) all extensions are available.
+     * Otherwise, only extensions from system modules or from modules installed on the site are available.
+     */
+    private boolean isExtensionAvailable(ExtendedNodeType extension, Set<String> installedModules) {
+        if (installedModules == null || extension.getTemplatePackage() == null) {
+            return true;
+        }
+
+        return extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system")
+            || installedModules.contains(extension.getTemplatePackage().getId());
     }
 
     boolean isApplicable(DefinitionRegistryItem form, JCRSiteNode site) {

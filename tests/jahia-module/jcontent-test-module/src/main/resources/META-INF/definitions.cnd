@@ -271,6 +271,9 @@
  + * (cent:childObject1)
  + * (cent:childObject2)
 
+[cent:textArea] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - area1 (string, textarea[height='220'])
+
 [cent:oneMultipleWithLimitTwo] > jnt:content, jmix:basicContent, jmix:editorialContent
  - someProperty (string)
  + * (cent:childObject1)

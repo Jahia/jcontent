@@ -49,4 +49,21 @@ describe('TextArea component', () => {
         expect(props.onChange.mock.calls.length).toBe(1);
         expect(props.onChange).toHaveBeenCalledWith('text');
     });
+
+    it('should not set any height style when no height option is set', () => {
+        const cmp = shallow(<TextAreaField {...props}/>);
+        expect(cmp.props().style).toBeUndefined();
+    });
+
+    it('should apply the height selector option to height and maxHeight', () => {
+        props.field.selectorOptions = [{name: 'height', value: '220'}];
+        const cmp = shallow(<TextAreaField {...props}/>);
+        expect(cmp.props().style).toEqual({height: 220, maxHeight: 220});
+    });
+
+    it('should not set any height style for a non-numeric height option', () => {
+        props.field.selectorOptions = [{name: 'height', value: 'not-a-number'}];
+        const cmp = shallow(<TextAreaField {...props}/>);
+        expect(cmp.props().style).toBeUndefined();
+    });
 });

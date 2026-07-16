@@ -307,3 +307,11 @@
  extends = jnt:page
  - pageType (string)
 
+
+// resourceBundle choicelist labels must follow the editor UI locale, not the content locale.
+// captionAlignment covers the initial form load; the mainChoice/dependentChoice pair covers the
+// dependentProperties refetch (fieldConstraints), which re-resolves resourceBundle labels server-side.
+[cent:resourceBundleChoicelist] > jnt:content, jmix:basicContent
+ - captionAlignment (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
+ - mainChoice (string, choicelist[resourceBundle]) = 'a' indexed=no < 'a', 'b'
+ - dependentChoice (string, choicelist[resourceBundle, dependentProperties='mainChoice']) indexed=no < 'x', 'y'

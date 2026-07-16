@@ -77,7 +77,7 @@ export const registerSelectorTypesOnChange = registry => {
                             nodeType: dependentPropertiesField.nodeType,
                             fieldName: dependentPropertiesField.propertyName,
                             context: context,
-                            uilang: onChangeContext.lang,
+                            uilang: onChangeContext.uilang || onChangeContext.lang,
                             language: onChangeContext.lang
                         }
                     }).then(({data}) => ({

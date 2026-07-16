@@ -207,6 +207,23 @@
 - longOpenLower (long) < '(0,)'
 - longOpenUpper (long) < '(,10]'
 
+[cemix:commonLink] mixin
+ - linkLabel (string) i18n
+ - linkType (string, choicelist[myLinkTypeInitializer]) = 'internalLink'
+
+[cemix:internalLink] > jmix:templateMixin mixin
+ extends = cemix:commonLink
+ - internalLink (weakreference)
+
+[cemix:externalLink] > jmix:templateMixin mixin
+ extends = cemix:commonLink
+ - externalLink (string) mandatory
+
+[cent:nodetypeVanilla] > jnt:content, mix:title, jmix:basicContent
+
+[cemix:mixinExtendWithLink] > cemix:commonLink mixin
+ extends = cent:nodetypeVanilla
+
 // Regression test types for jahia-private#4940:
 // jmix:templateMixin with NO visible properties must still be applied via addMixin choicelist
 [cent:emptyTemplateMixinTest] > jnt:content, jmix:basicContent, jmix:editorialContent

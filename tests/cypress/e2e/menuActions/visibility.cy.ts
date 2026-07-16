@@ -1,12 +1,19 @@
 import {JContent} from '../../page-object';
-import {Button, getComponentByRole, Menu} from '@jahia/cypress';
+import {addNode, Button, getComponentByRole, Menu} from '@jahia/cypress';
 
 describe('Actions visibility', () => {
     let jcontent: JContent;
     const SITEKEY = 'actionVisibility';
+    const NAV_MENU_TEXT_NAME = 'testNavMenuText';
 
     before(() => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: SITEKEY});
+        addNode({
+            parentPathOrId: `/sites/${SITEKEY}/home`,
+            name: NAV_MENU_TEXT_NAME,
+            primaryNodeType: 'jnt:navMenuText',
+            properties: [{name: 'jcr:title', value: 'Test NavMenuText', language: 'en'}]
+        });
     });
 
     after(() => {
@@ -31,6 +38,15 @@ describe('Actions visibility', () => {
         menu.shouldHaveItem('Copy');
         menu.shouldHaveItem('Cut');
         menu.shouldHaveItem('Delete');
+        menu.shouldHaveItem('Export');
+        menu.shouldHaveItem('Import content');
+    });
+
+    it('Displays accordionContent actions for a navMenuText node', () => {
+        jcontent = JContent.visit(SITEKEY, 'en', 'pages/home');
+        jcontent.getAccordionItem('pages').getTreeItem('home').expand();
+        const menu = jcontent.getAccordionItem('pages').getTreeItem(NAV_MENU_TEXT_NAME).contextMenu();
+        menu.shouldHaveItem('Export');
     });
 
     it('Displays browserControlBar action', () => {

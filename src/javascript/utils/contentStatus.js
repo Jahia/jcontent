@@ -18,16 +18,15 @@ export function setPublicationStatus(statuses, publicationStatus, existsInLive) 
             statuses.modified = true;
             statuses.published = true;
             break;
-        case PUBLISHED:
-            statuses.published = true;
-            break;
         case NOT_PUBLISHED:
         case UNPUBLISHED:
             statuses.published = false;
             break;
+        case PUBLISHED:
         case MARKED_FOR_DELETION:
-            // We look at existsInLive property to determine if the content is published or not
+            // For MARKED_FOR_DELETION, we look at existsInLive property to determine if the content is published or not
             // since publicationStatus is masked by the MARKED_FOR_DELETION status when content is published
+            // For PUBLISHED, we handle jmix:nolive case where status is PUBLISHED but content is not in live
             statuses.published = existsInLive;
             break;
         default:

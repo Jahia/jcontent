@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '../JContent.utils';
+import {hasMixin, isMarkedForDeletion} from '../JContent.utils';
 import {useSelector} from 'react-redux';
 
 const checkActionOnNodes = res => {
@@ -9,15 +9,12 @@ const checkActionOnNodes = res => {
 };
 
 const checkAction = node => node.operationsSupport.publication &&
-    isMarkedForDeletion(node) &&
-    (node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' ||
-        (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
-            (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));
+    isMarkedForDeletion(node) && (node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' || node.aggregatedPublicationInfo.existsInLive);
 
 export const PublishDeletionActionComponent = ({path, paths, node: prefetchedNode, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
     const language = useSelector(state => state.language);
 
-    const skip = !paths && Boolean(prefetchedNode) && !isMarkedForDeletion(prefetchedNode);
+    const skip = !paths && Boolean(prefetchedNode) && (!isMarkedForDeletion(prefetchedNode) || hasMixin(prefetchedNode, 'jmix:nolive'));
 
     const res = useNodeChecks({path, paths, language}, {
         skip,
@@ -25,7 +22,7 @@ export const PublishDeletionActionComponent = ({path, paths, node: prefetchedNod
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
         requiredPermission: ['publish'],
-        hideOnNodeTypes: ['jnt:virtualsite']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jmix:nolive']
     }, {
         fetchPolicy: 'network-only'
     });
@@ -38,7 +35,7 @@ export const PublishDeletionActionComponent = ({path, paths, node: prefetchedNod
         return false;
     }
 
-    let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
+    let isVisible = res.checksResult && (res.node ? checkAction(res.node) : checkActionOnNodes(res));
 
     return (
         <Render

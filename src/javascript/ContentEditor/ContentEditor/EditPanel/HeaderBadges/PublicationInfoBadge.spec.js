@@ -37,7 +37,8 @@ jest.mock('~/ContentEditor/contexts/PublicationInfo', () => {
         },
         {
             publicationInfoPolling: false,
-            publicationStatus: 'PUBLISHED'
+            publicationStatus: 'PUBLISHED',
+            existsInLive: true
         },
         {
             publicationInfoPolling: false,
@@ -58,6 +59,11 @@ jest.mock('~/ContentEditor/contexts/PublicationInfo', () => {
         {
             publicationInfoPolling: false,
             publicationStatus: 'UNKNOWN_STATUS'
+        },
+        {
+            publicationInfoPolling: false,
+            publicationStatus: 'PUBLISHED',
+            existsInLive: false
         }
     ];
     return {
@@ -138,6 +144,13 @@ describe('PublicationInfoBadge', () => {
         let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
 
         expect(wrapper.containsMatchingElement(<PublicationStatus type="warning" tooltip="translated_label.contentEditor.publicationStatusTooltip.unknown"/>)).toBeTruthy();
+        expect(wrapper.find('Status')).toHaveLength(1);
+    });
+
+    it('Should display "not published" badge when PUBLISHED but not in live (jmix:nolive)', () => {
+        let wrapper = shallow(<PublicationInfoBadge classes={{}}/>);
+
+        expect(wrapper.containsMatchingElement(<PublicationStatus type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 });

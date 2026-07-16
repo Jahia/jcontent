@@ -15,9 +15,7 @@ const checkActionOnNodes = res => {
 const checkAction = node => {
     const isCategory = (node['jnt:category'] || node.primaryNodeType?.name === 'jnt:category');
     const isMarkForDeletionAllowed = node.operationsSupport.markForDeletion &&
-        isMarkedForDeletion(node) &&
-        node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
-        (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
+        isMarkedForDeletion(node) && !node.aggregatedPublicationInfo.existsInLive;
     const isAutoPublish = node['jmix:autoPublish'];
     return Boolean(isCategory || isMarkForDeletionAllowed || isAutoPublish);
 };

@@ -230,6 +230,14 @@ export const publicationStatusByName = {
             return this.MARKED_FOR_DELETION;
         }
 
-        return this[node.aggregatedPublicationInfo.publicationStatus] || this.UNKNOWN;
+        const pubInfo = node.aggregatedPublicationInfo;
+
+        // 'jmix:nolive' case where status is PUBLISHED but the node does not exist in live
+        if (pubInfo.publicationStatus === 'PUBLISHED' &&
+            !pubInfo.existsInLive) {
+            return this.NOT_PUBLISHED;
+        }
+
+        return this[pubInfo.publicationStatus] || this.UNKNOWN;
     }
 };

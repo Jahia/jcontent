@@ -205,21 +205,21 @@ export class JContent extends BasePage {
     }
 
     switchToListMode(): JContent {
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         this.switchToMode('List');
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         return this;
     }
 
     switchToStructuredView(): JContent {
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         this.switchToMode('Structured');
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         return this;
     }
 
     switchToPageBuilder(): JContentPageBuilder {
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         this.switchToMode('Page Builder');
         return new JContentPageBuilder(this);
     }

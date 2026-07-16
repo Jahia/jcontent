@@ -90,11 +90,18 @@ describe('System name sync test', () => {
         checkSystemName(contentEditor, 'news-title');
 
         // Check copy title button is now disabled
-        getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.disabled');
+        // Scroll with an offset first: visibility checks fail when the button sits under the sticky section header
+        getComponentByRole(Button, 'syncSystemName').get()
+            .scrollIntoView({offset: {left: 0, top: -100}})
+            .should('be.visible')
+            .and('be.disabled');
         // Edit title into "edited-title"
         contentEditor.getSmallTextField('jnt:news_jcr:title').addNewValue('edited-title');
         // Check copy title is enabled
-        getComponentByRole(Button, 'syncSystemName').should('be.visible').should('be.enabled');
+        getComponentByRole(Button, 'syncSystemName').get()
+            .scrollIntoView({offset: {left: 0, top: -100}})
+            .should('be.visible')
+            .and('be.enabled');
         contentEditor.cancelAndDiscard();
     });
 

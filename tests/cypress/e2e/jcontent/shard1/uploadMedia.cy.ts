@@ -91,7 +91,7 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
     it('Can display custom validation error messages', function () {
         /* Filename should start with UploadErrorValidator.TEST_NODE_NAME_PREFIX
          * from jcontent-test-module to trigger validation error */
-        const filename = 'uploadConstraintValidation1.txt';
+        const filename = 'uploadconstraintvalidation1.txt';
 
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');

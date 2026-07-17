@@ -472,7 +472,7 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
     }
 
     // Strip host from absolute URL — path is identical across all server names for the same site
-    const path = url.replace(/^https*:\/\/[^/]+/, '');
+    const path = url.replace(/^https?:\/\/[^/]+/, '');
     const port = location.port ? `:${location.port}` : '';
 
     const isCurrentDomain = !isLive || !serverName || serverName === location.hostname;

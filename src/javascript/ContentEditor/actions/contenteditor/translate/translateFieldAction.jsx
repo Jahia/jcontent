@@ -4,12 +4,19 @@ import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentE
 import {ArrowLeft} from '@jahia/moonstone';
 import styles from './styles.scss';
 
-export const TranslateFieldActionComponent = ({field, value, render: Render}) => {
+export const TranslateFieldActionComponent = ({field, value, hasDiff, render: Render}) => {
     const {sideBySideContext} = useContentEditorConfigContext();
     const {setI18nContext} = useContentEditorContext();
 
-    const {enabled, translateLang, hasWritePermission, lockedAndCannotBeEdited} = sideBySideContext || {};
+    const {enabled, translateLang, hasWritePermission, lockedAndCannotBeEdited, showDiff} = sideBySideContext || {};
     if (!enabled || !field.i18n || !translateLang) {
+        return;
+    }
+
+    // In diff mode (issue #2556) the restore arrow is shown only where the value differs from the
+    // compared node — copying an identical value would be a no-op. Outside diff mode the arrow keeps
+    // showing on every valued field (unchanged Translate-tab behaviour).
+    if (showDiff && !hasDiff) {
         return;
     }
 
@@ -53,6 +60,7 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
 TranslateFieldActionComponent.propTypes = {
     field: PropTypes.object.isRequired,
     value: PropTypes.any,
+    hasDiff: PropTypes.bool,
     render: PropTypes.func.isRequired
 };
 

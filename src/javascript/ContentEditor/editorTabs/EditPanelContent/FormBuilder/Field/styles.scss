@@ -6,3 +6,22 @@
     flex-direction: row;
     align-items: stretch;
 }
+
+// Side-by-side diff mode (issue #2556): a blue vertical bar on the left edge of a field whose value
+// differs from the compared node, marking what changed in the read-only compare column.
+.fieldContainerDiff {
+    padding-left: var(--spacing-small);
+
+    &::before {
+        content: '';
+
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        width: 2px;
+
+        background-color: var(--color-accent);
+    }
+}

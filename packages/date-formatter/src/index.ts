@@ -33,7 +33,7 @@ const formatMap = {
 
 export function formatDatetime(
   date: Parameters<typeof dayjs>[0],
-  options: {
+  options?: {
     /**
      * The format in which to display the date
      * @default 'short'

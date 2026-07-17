@@ -52,8 +52,10 @@ describe('resolveUrlForLiveOrPreview', () => {
     const absoluteServerb = 'http://serverb/cms/render/live/en/sites/siteb/home.html';
 
     const setLocation = (hostname, port = '') => {
-        delete globalThis.location;
-        globalThis.location = {hostname, port, protocol: 'http:'};
+        Object.defineProperty(window, 'location', {
+            configurable: true,
+            value: {hostname, port, protocol: 'http:'}
+        });
     };
 
     describe('null / falsy url', () => {

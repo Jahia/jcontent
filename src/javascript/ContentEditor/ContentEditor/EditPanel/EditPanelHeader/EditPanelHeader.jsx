@@ -11,6 +11,7 @@ import {EditPanelLanguageSwitcher} from '../EditPanelLanguageSwitcher';
 import {HeaderBadges} from '../HeaderBadges';
 import PropTypes from 'prop-types';
 import {ContentPath} from './ContentPath';
+import {buildTabOption} from './editHeaderTabOptions';
 import {HeaderButtonActions, HeaderThreeDotsActions} from '../HeaderActions';
 import {ContentTypeChip} from '../ContentTypeChip';
 import {useNodeChecks} from '@jahia/data-helper';
@@ -50,12 +51,7 @@ export const EditPanelHeader = ({
     const {openTabs: openEngineTab, confirmationDialog: engineConfirmationDialog} = useOpenEngineTabsWithConfirmation(engineTabIds);
     const hasEngineEntries = res.checksResult && engineTabs.length > 0;
 
-    const tabOptions = tabs.map(tab => ({
-        value: tab.value,
-        label: t(tab.buttonLabel),
-        iconStart: tab.buttonIcon,
-        attributes: {'data-sel-role': tab.dataSelRole}
-    }));
+    const tabOptions = tabs.map(tab => buildTabOption(tab, t));
 
     // The moonstone Dropdown supports either a flat list or groups only, so entries switch
     // to grouped form (with an unlabeled group on top) once the advanced options section shows

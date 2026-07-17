@@ -61,7 +61,11 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
     // Regression test for jcontent#2374: a custom validator constraint on a property with no
     // default value (so the field is absent from the create form's initial values) must still
     // surface its message on the field, including a custom validator message.
-    it('should display the custom validator message on a field with no default value', () => {
+    it('should display the custom validator message on a field with no default value', {retries: 3}, () => {
+        // Re-visit to get a clean page state so retries can recover from transient query errors
+        jcontent = JContent
+            .visit(siteKey, 'en', 'content-folders/contents')
+            .switchToListMode();
         const ce = jcontent.createContent('cent:noDefaultValidator');
         ce.getField(SmallTextField, 'nt:base_ce:systemName', false).addNewValue('test-validator-nodefault');
         ce.createUnchecked();

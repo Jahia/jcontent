@@ -57,7 +57,8 @@ export class Media extends BasePage {
     private waitForUploadToComplete(): void {
         cy.get('[data-cm-role="upload-status-success"]').should('be.visible');
         cy.get('[data-cm-role="upload-close-button"]').click();
-        cy.get('[data-cm-role="upload-status-success"]').should('not.be.visible');
+        // The upload snackbar is unmounted once closed; 'not.be.visible' would fail on a removed element
+        cy.get('[data-cm-role="upload-status-success"]').should('not.exist');
     }
 
     switchView(displayMode: 'list' | 'grid') {

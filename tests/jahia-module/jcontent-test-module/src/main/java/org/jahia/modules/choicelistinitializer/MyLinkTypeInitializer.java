@@ -13,14 +13,10 @@ import java.util.*;
 @Component(service = {ModuleChoiceListInitializer.class})
 public class MyLinkTypeInitializer implements ModuleChoiceListInitializer {
     private String key;
-    @Activate
-    public void activate(Map<String, ?> props) {
-
-    }
 
     @Override
     public String getKey() {
-        return "myLinkTypeInitializer";
+        return key;
     }
 
     @Override

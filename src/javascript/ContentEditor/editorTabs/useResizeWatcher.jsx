@@ -58,9 +58,8 @@ function processResizeEntries(columnSelector) {
     return entries => {
         const processedFields = new Set();
 
-        // When the height of a block changes, the navigator may decide to update the scroll position
-        // not to confuse users. Unfortunately, this browser behavior does the opposite. Instead we
-        // preserve the scroll position of both columns, restore them at the end of the layout update.
+        // When the height of a block changes, the navigator may decide to update the scroll position not to confuse users. Unfortunately, this browser behavior causes weird scroll rollbacks.
+        // Instead we preserve the scroll position of both columns, restore them at the end of the layout update.
         const leftColumn = document.querySelector('[data-sel-role="left-column"]');
         const rightColumn = document.querySelector('[data-sel-role="right-column"]');
         const savedLeftScrollTop = leftColumn?.scrollTop;

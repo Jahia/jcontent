@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import {ContentEditorFragment} from './fragments';
 
 const NodeDataFragment = {
     nodeData: {
@@ -128,81 +129,17 @@ const NodeDataFragment = {
     }
 };
 
-// The section → fieldSet → field selection shared by every editor-form query. Exported so other
-// consumers (e.g. the content-versioning version-history panel, which renders a read-only snapshot
-// form with the same shape) can spread it instead of copy-pasting the selection and drifting from it.
-export const EditFormSectionsFragment = gql`
-    fragment EditFormSections on GqlEditorForm {
-        sections {
-            name
-            displayName
-            description
-            visible
-            expanded
-            fieldSets {
-                name
-                displayName
-                description
-                visible
-                dynamic
-                activated
-                hasEnableSwitch
-                readOnly
-                fields {
-                    name
-                    displayName
-                    description
-                    errorMessage
-                    visible
-                    mandatory
-                    i18n
-                    multiple
-                    readOnly
-                    requiredType
-                    selectorType
-                    declaringNodeType
-                    selectorOptions {
-                        name
-                        value
-                        values
-                    }
-                    valueConstraints {
-                        value {
-                            type
-                            string
-                        }
-                        displayValue
-                        displayValueKey
-                        properties {
-                            name
-                            value
-                        }
-                    }
-                    defaultValues {
-                        string
-                    }
-                }
-            }
-        }
-    }
-`;
-
 export const EditFormQuery = gql`
     query editForm($uilang:String!, $language:String!, $uuid: String!, $writePermission: String!, $childrenFilterTypes: [String]!) {
         forms {
             editForm(uiLocale: $uilang, locale: $language, uuidOrPath: $uuid) {
-                name
-                displayName
-                description
-                hasPreview
-                showAdvancedMode
-                ...EditFormSections
+                ...ContentEditorFragment
             }
         }
         jcr {
             ...NodeData
         }
     }
-    ${EditFormSectionsFragment}
+    ${ContentEditorFragment}
     ${NodeDataFragment.nodeData.gql}
 `;

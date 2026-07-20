@@ -101,11 +101,11 @@ function processResizeEntries(columnSelector) {
         }
 
         // Restore pre-layout update scroll positions to avoid weird jumps
-        if (leftColumn && savedLeftScrollTop !== undefined && leftColumn.scrollTop !== savedLeftScrollTop) {
+        if (leftColumn && savedLeftScrollTop !== undefined && areDifferent(leftColumn.scrollTop, savedLeftScrollTop)) {
             leftColumn.scrollTop = savedLeftScrollTop;
         }
 
-        if (rightColumn && savedRightScrollTop !== undefined && rightColumn.scrollTop !== savedRightScrollTop) {
+        if (rightColumn && savedRightScrollTop !== undefined && areDifferent(rightColumn.scrollTop, savedRightScrollTop)) {
             rightColumn.scrollTop = savedRightScrollTop;
         }
     };

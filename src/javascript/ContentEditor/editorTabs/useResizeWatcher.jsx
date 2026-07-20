@@ -90,7 +90,7 @@ function processResizeEntries(columnSelector) {
             const pairHeight = elPair?.scrollHeight || 0;
             const minHeight = Math.max(currentHeight, pairHeight);
 
-            // Only set minHeight when the gap exceeds the tolerance
+            // Only set minHeight if there's a difference
             if (areDifferent(currentHeight, minHeight)) {
                 el.style.minHeight = `${minHeight}px`;
             }

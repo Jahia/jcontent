@@ -50,6 +50,19 @@ export const useResizeWatcher = ({columnSelector}) => {
 const areDifferent = (a, b) => Math.abs(a - b) > 1;
 
 /**
+ * Restores the scroll position of a column if it has changed.
+ * Extracted to reduce cognitive complexity of `processResizeEntries`.
+ *
+ * @param {Element|undefined} column
+ * @param {number} scrollPosition
+ */
+const restoreScrollPositions = (column, scrollPosition) => {
+    if (column && scrollPosition !== undefined && areDifferent(column.scrollTop, scrollPosition)) {
+        column.scrollTop = scrollPosition;
+    }
+};
+
+/**
  * Util function to bind columnSelector to the resize processing logic to be used in useCallback fn.
  *
  * @param {"left-column"|"right-column"} columnSelector
@@ -101,12 +114,7 @@ function processResizeEntries(columnSelector) {
         }
 
         // Restore pre-layout update scroll positions to avoid weird jumps
-        if (leftColumn && savedLeftScrollTop !== undefined && areDifferent(leftColumn.scrollTop, savedLeftScrollTop)) {
-            leftColumn.scrollTop = savedLeftScrollTop;
-        }
-
-        if (rightColumn && savedRightScrollTop !== undefined && areDifferent(rightColumn.scrollTop, savedRightScrollTop)) {
-            rightColumn.scrollTop = savedRightScrollTop;
-        }
+        restoreScrollPositions(leftColumn, savedLeftScrollTop);
+        restoreScrollPositions(rightColumn, savedRightScrollTop);
     };
 }

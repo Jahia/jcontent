@@ -36,7 +36,9 @@ export class CategoryManager extends JContent {
 
     createCategoryNav(parentName: string, fields: {title: string, name?: string}) {
         const accordionItem = this.getAccordionItem();
-        accordionItem.getTreeItem(parentName).click();
+        const parentItem = accordionItem.getTreeItem(parentName);
+        parentItem.click();
+        parentItem.shouldBeSelected();
         getComponentByRole(Button, 'jnt:category').click(); // New Category header menu
         this.editFields(fields).create();
         this.getTable().getRowByName(fields.name || fields.title).should('be.visible');

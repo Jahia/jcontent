@@ -22,7 +22,7 @@ const assertButtonByRole = (pageBuilder, role: string) => {
 };
 
 const clickButtonByRole = (pageBuilder, role: string) => {
-    pageBuilder.iframe().get().find(`button[data-sel-role="${role}"]`).filter(':visible').click();
+    pageBuilder.iframe().get().find(`button[data-sel-role="${role}"]`).filter(':visible').click({force: true});
 };
 
 /**

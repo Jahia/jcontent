@@ -9,6 +9,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererNoLabel, propertyHasChanged} from '~/ContentEditor/utils';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
+import {useTranslation} from 'react-i18next';
 
 export const FieldContainer = React.memo(({field, inputContext}) => {
     const selectorType = resolveSelectorType(field);
@@ -22,6 +23,7 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
     }), [inputContext, selectorType]);
     const {values} = useFormikContext();
     const {sideBySideContext} = useContentEditorConfigContext();
+    const {t} = useTranslation('jcontent');
 
     // Side-by-side diff mode (opt-in via sideBySideContext.showDiff): flag fields whose value in this
     // read-only compare column differs from the compared live node (sideBySideContext.targetNodeData),
@@ -31,8 +33,15 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
     const hasDiff = Boolean(diffMode && sideBySideContext.targetNodeData &&
         propertyHasChanged(values[field.name], field, sideBySideContext.targetNodeData));
 
+    // WCAG 1.4.1: the blue bar alone signals "changed" by colour. Add a non-colour cue (a title/tooltip
+    // surfaced to assistive tech) so the difference is perceivable on fields with no arrow (non-i18n).
+    const diffTitle = (diffMode && hasDiff) ? t('label.contentEditor.edit.action.translate.fieldDiff') : undefined;
+
     return (
-        <div className={clsx(styles.fieldContainer, diffMode && hasDiff && styles.fieldContainerDiff)}>
+        <div
+            className={clsx(styles.fieldContainer, diffMode && hasDiff && styles.fieldContainerDiff)}
+            title={diffTitle}
+        >
             {context.displayActions && <DisplayAction
                 actionKey="translateField"
                 render={ButtonRendererNoLabel}

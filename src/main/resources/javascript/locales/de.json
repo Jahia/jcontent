@@ -640,7 +640,8 @@
           "translate": {
             "name": "Übersetzen",
             "sourceLanguage": "Ausgangssprache",
-            "translateToLanguage": "Übersetzen nach"
+            "translateToLanguage": "Übersetzen nach",
+            "fieldDiff": "Der Wert weicht von der verglichenen Version ab"
           },
           "goBack": {
             "edit": {

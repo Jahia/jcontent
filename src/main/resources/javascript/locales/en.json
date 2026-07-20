@@ -647,7 +647,8 @@
           "translate": {
             "name": "Translate",
             "sourceLanguage": "Source language",
-            "translateToLanguage": "Translate to"
+            "translateToLanguage": "Translate to",
+            "fieldDiff": "Value differs from the compared version"
           },
           "goBack": {
             "edit": {

@@ -641,7 +641,8 @@
           "translate": {
             "name": "Traduire",
             "sourceLanguage": "Langue source",
-            "translateToLanguage": "Traduire vers"
+            "translateToLanguage": "Traduire vers",
+            "fieldDiff": "La valeur diffère de la version comparée"
           },
           "goBack": {
             "edit": {

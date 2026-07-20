@@ -41,11 +41,30 @@ export const useResizeWatcher = ({columnSelector}) => {
 };
 
 /**
+ * Compares pixel values with a tolerance of 1px.
+ * We used to do `a !== b` but it triggered unnecessary reflows on high DPI screens.
+ *
+ * @param {number} a
+ * @param {number} b
+ */
+const areDifferent = (a, b) => Math.abs(a - b) > 1;
+
+/**
  * Util function to bind columnSelector to the resize processing logic to be used in useCallback fn.
+ *
+ * @param {"left-column"|"right-column"} columnSelector
  */
 function processResizeEntries(columnSelector) {
     return entries => {
         const processedFields = new Set();
+
+        // When the height of a block changes, the navigator may decide to update the scroll position
+        // not to confuse users. Unfortunately, this browser behavior does the opposite. Instead we
+        // preserve the scroll position of both columns, restore them at the end of the layout update.
+        const leftColumn = document.querySelector('[data-sel-role="left-column"]');
+        const rightColumn = document.querySelector('[data-sel-role="right-column"]');
+        const savedLeftScrollTop = leftColumn?.scrollTop;
+        const savedRightScrollTop = rightColumn?.scrollTop;
 
         for (const entry of entries) {
             const el = entry.target;
@@ -72,14 +91,23 @@ function processResizeEntries(columnSelector) {
             const pairHeight = elPair?.scrollHeight || 0;
             const minHeight = Math.max(currentHeight, pairHeight);
 
-            // Only set minHeight if there's a difference
-            if (currentHeight !== minHeight) {
+            // Only set minHeight when the gap exceeds the tolerance
+            if (areDifferent(currentHeight, minHeight)) {
                 el.style.minHeight = `${minHeight}px`;
             }
 
-            if (elPair && pairHeight !== minHeight) {
+            if (elPair && areDifferent(pairHeight, minHeight)) {
                 elPair.style.minHeight = `${minHeight}px`;
             }
+        }
+
+        // Restore pre-layout update scroll positions to avoid weird jumps
+        if (leftColumn && savedLeftScrollTop !== undefined && leftColumn.scrollTop !== savedLeftScrollTop) {
+            leftColumn.scrollTop = savedLeftScrollTop;
+        }
+
+        if (rightColumn && savedRightScrollTop !== undefined && rightColumn.scrollTop !== savedRightScrollTop) {
+            rightColumn.scrollTop = savedRightScrollTop;
         }
     };
 }

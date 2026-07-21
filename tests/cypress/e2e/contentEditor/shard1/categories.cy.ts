@@ -180,13 +180,11 @@ describe('Categories tests', () => {
 
         const categoryField = contentEditor.getChoiceTreeField('jmix:categorized_j:defaultCategory', true);
         const choiceTree = categoryField.openTree();
-
         choiceTree.selectEntry('cat éàü & spécial');
         categoryField.closeTree();
-
         categoryField.getValues().should('contain', 'cat éàü & spécial');
-
         contentEditor.save();
+        cy.get('[role="alertdialog"]', {timeout: 5000}).should('not.exist');
 
         // Re-open and verify the category was persisted
         const editorReopen = jcontent.editComponentByRowName('testSimpleText');

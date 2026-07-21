@@ -14,11 +14,16 @@ const resolveParentPath = e => {
 };
 
 /**
- * A child only warrants an insertion point if it actually renders something visible: it must
- * contain at least one element that is not display:none. A fully hidden child would otherwise get
- * a stray insertion point positioned over nothing.
+ * A child only warrants an insertion point if it actually renders something. A child with no child
+ * elements (empty, or holding only text) qualifies. Otherwise at least one of its child elements
+ * must not be display:none — a child whose elements are all hidden would get a stray insertion
+ * point positioned over nothing.
  */
 const hasVisibleContent = e => {
+    if (e.children.length === 0) {
+        return true;
+    }
+
     const view = e.ownerDocument.defaultView;
     return [...e.children].some(child => view.getComputedStyle(child).display !== 'none');
 };

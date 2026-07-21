@@ -220,7 +220,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
 
-                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, locale, new HashMap<>()));
+                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, uiLocale, new HashMap<>()));
                     }
                     fieldSet.setFields(fieldSet.getFields().stream()
                         .filter(Field::isVisible)
@@ -314,7 +314,9 @@ public class EditorFormServiceImpl implements EditorFormService {
         return value;
     }
 
-    private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale locale, Map<String, Object> extendContext) throws RepositoryException {
+    // Takes the UI locale, not the content locale: choicelist display values are editor labels
+    // and must follow the UI language, like all other form labels (see initializeLabel calls).
+    private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Map<String, Object> extendContext) throws RepositoryException {
         ExtendedPropertyDefinition propertyDefinition = editorFormField.getExtendedPropertyDefinition();
         // selectorOptionsMap is null when a field has no selector options set (consistent with the
         // null checks in getEditorForm and Field.mergeWith); normalize to an empty map to avoid NPEs.
@@ -332,7 +334,7 @@ public class EditorFormServiceImpl implements EditorFormService {
             List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
             for (Map.Entry<String, Object> entry : selectorOptions.entrySet()) {
                 if (initializers.containsKey(entry.getKey())) {
-                    initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, locale, context);
+                    initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, uiLocale, context);
                 }
             }
 
@@ -415,7 +417,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 .flatMap(fieldSet -> fieldSet.getFields().stream())
                 .filter(field -> (fieldNodeType.equals(field.getDeclaringNodeType()) || primaryNodeType.equals(field.getDeclaringNodeType())) && fieldName.equals(field.getName()))
                 .findFirst()
-                .map(ThrowingFunction.unchecked(field -> getValueConstraints(nodeType, field, node, parentNode, locale, extendContext)))
+                .map(ThrowingFunction.unchecked(field -> getValueConstraints(nodeType, field, node, parentNode, uiLocale, extendContext)))
                 .orElse(Collections.emptyList());
         } catch (RepositoryException e) {
             throw new EditorFormException("Error while building field constraints for" + " node: " + nodeUuidOrPath + ", node type: " + primaryNodeType + ", parent node: " + parentNodeUuidOrPath + ", field node type: " + fieldNodeType + ", field name: " + fieldName, e);

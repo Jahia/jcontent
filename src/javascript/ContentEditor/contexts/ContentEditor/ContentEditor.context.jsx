@@ -106,6 +106,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         return {
             path: nodeData.path,
             lang,
+            uilang: uiLanguage,
             browserLang,
             site,
             mode,
@@ -141,6 +142,7 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
         ranAllHooks,
         nodeData,
         lang,
+        uiLanguage,
         browserLang,
         site,
         mode,

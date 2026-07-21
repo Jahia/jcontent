@@ -53,6 +53,23 @@ const takeTicket = (sections, fieldName) => {
 
 const isLatestTicket = (sections, fieldName, ticket) => constraintsTickets.get(sections)?.get(fieldName) === ticket;
 
+const applyFieldConstraints = (results, sections) => {
+    let updated = false;
+    results.forEach(({data, dependentPropertiesField, ticket}) => {
+        if (data?.forms?.fieldConstraints && isLatestTicket(sections, dependentPropertiesField.name, ticket)) {
+            const fieldToUpdate = getFields(sections).find(f => f.name === dependentPropertiesField.name);
+            if (fieldToUpdate && !arrayEquals(fieldToUpdate.valueConstraints, data.forms.fieldConstraints)) {
+                // Update field in place (for those who keep a constant ref on sectionsContext)
+                fieldToUpdate.valueConstraints = data.forms.fieldConstraints;
+                // And recreate the full sections object to make change detection work
+                recreate(sections);
+                updated = true;
+            }
+        }
+    });
+    return updated;
+};
+
 export const registerSelectorTypesOnChange = registry => {
     registry.add('selectorType.onChange', 'dependentProperties', {
         targets: ['*'],
@@ -110,20 +127,7 @@ export const registerSelectorTypesOnChange = registry => {
 
                 return undefined;
             })).then(results => {
-                let updated = false;
-                results.forEach(({data, dependentPropertiesField, ticket}) => {
-                    if (data?.forms?.fieldConstraints && isLatestTicket(sections, dependentPropertiesField.name, ticket)) {
-                        const fieldToUpdate = getFields(sections).find(f => f.name === dependentPropertiesField.name);
-                        if (fieldToUpdate && !arrayEquals(fieldToUpdate.valueConstraints, data.forms.fieldConstraints)) {
-                            // Update field in place (for those who keep a constant ref on sectionsContext)
-                            fieldToUpdate.valueConstraints = data.forms.fieldConstraints;
-                            // And recreate the full sections object to make change detection work
-                            recreate(sections);
-                            updated = true;
-                        }
-                    }
-                });
-                if (updated) {
+                if (applyFieldConstraints(results, sections)) {
                     onChangeContext.onSectionsUpdate();
                     console.debug(`Triggering update to field ${field.name} due to dependentProperties change.`);
                 }

@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import {ContentEditorFragment} from './fragments';
 
 const NodeDataFragment = {
     nodeData: {
@@ -132,67 +133,13 @@ export const EditFormQuery = gql`
     query editForm($uilang:String!, $language:String!, $uuid: String!, $writePermission: String!, $childrenFilterTypes: [String]!) {
         forms {
             editForm(uiLocale: $uilang, locale: $language, uuidOrPath: $uuid) {
-                name
-                displayName
-                description
-                hasPreview
-                showAdvancedMode
-                sections {
-                    name
-                    displayName
-                    description
-                    visible
-                    expanded
-                    fieldSets {
-                        name
-                        displayName
-                        description
-                        visible
-                        dynamic
-                        activated
-                        hasEnableSwitch
-                        readOnly
-                        fields {
-                            name
-                            displayName
-                            description
-                            errorMessage
-                            visible
-                            mandatory
-                            i18n
-                            multiple
-                            readOnly
-                            requiredType
-                            selectorType
-                            declaringNodeType
-                            selectorOptions {
-                                name
-                                value
-                                values
-                            }
-                            valueConstraints {
-                                value {
-                                    type
-                                    string
-                                }
-                                displayValue
-                                displayValueKey
-                                properties {
-                                    name
-                                    value
-                                }
-                            }
-                            defaultValues {
-                                string
-                            }
-                        }
-                    }
-                }
+                ...ContentEditorFragment
             }
         }
         jcr {
             ...NodeData
         }
     }
+    ${ContentEditorFragment}
     ${NodeDataFragment.nodeData.gql}
 `;

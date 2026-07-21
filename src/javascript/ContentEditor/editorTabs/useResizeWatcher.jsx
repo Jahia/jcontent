@@ -41,11 +41,42 @@ export const useResizeWatcher = ({columnSelector}) => {
 };
 
 /**
+ * Compares pixel values with a tolerance of 1px.
+ * We used to do `a !== b` but it triggered unnecessary reflows on high DPI screens.
+ *
+ * @param {number} a
+ * @param {number} b
+ */
+const areDifferent = (a, b) => Math.abs(a - b) > 1;
+
+/**
+ * Restores the scroll position of a column if it has changed.
+ * Extracted to reduce cognitive complexity of `processResizeEntries`.
+ *
+ * @param {Element|undefined} column
+ * @param {number} scrollPosition
+ */
+const restoreScrollPositions = (column, scrollPosition) => {
+    if (column && scrollPosition !== undefined && areDifferent(column.scrollTop, scrollPosition)) {
+        column.scrollTop = scrollPosition;
+    }
+};
+
+/**
  * Util function to bind columnSelector to the resize processing logic to be used in useCallback fn.
+ *
+ * @param {"left-column"|"right-column"} columnSelector
  */
 function processResizeEntries(columnSelector) {
     return entries => {
         const processedFields = new Set();
+
+        // When the height of a block changes, the navigator may decide to update the scroll position not to confuse users. Unfortunately, this browser behavior causes weird scroll rollbacks.
+        // Instead we preserve the scroll position of both columns, restore them at the end of the layout update.
+        const leftColumn = document.querySelector('[data-sel-role="left-column"]');
+        const rightColumn = document.querySelector('[data-sel-role="right-column"]');
+        const savedLeftScrollTop = leftColumn?.scrollTop;
+        const savedRightScrollTop = rightColumn?.scrollTop;
 
         for (const entry of entries) {
             const el = entry.target;
@@ -73,13 +104,17 @@ function processResizeEntries(columnSelector) {
             const minHeight = Math.max(currentHeight, pairHeight);
 
             // Only set minHeight if there's a difference
-            if (currentHeight !== minHeight) {
+            if (areDifferent(currentHeight, minHeight)) {
                 el.style.minHeight = `${minHeight}px`;
             }
 
-            if (elPair && pairHeight !== minHeight) {
+            if (elPair && areDifferent(pairHeight, minHeight)) {
                 elPair.style.minHeight = `${minHeight}px`;
             }
         }
+
+        // Restore pre-layout update scroll positions to avoid weird jumps
+        restoreScrollPositions(leftColumn, savedLeftScrollTop);
+        restoreScrollPositions(rightColumn, savedRightScrollTop);
     };
 }

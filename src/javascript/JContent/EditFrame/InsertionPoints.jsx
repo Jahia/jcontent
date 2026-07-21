@@ -14,6 +14,16 @@ const resolveParentPath = e => {
 };
 
 /**
+ * A child only warrants an insertion point if it actually renders something visible: it must
+ * contain at least one element that is not display:none. A fully hidden child would otherwise get
+ * a stray insertion point positioned over nothing.
+ */
+const hasVisibleContent = e => {
+    const view = e.ownerDocument.defaultView;
+    return [...e.children].some(child => view.getComputedStyle(child).display !== 'none');
+};
+
+/**
  * This function helps resolve required nodetypes for insertion points.
  *
  * Why is this necessary?
@@ -66,8 +76,9 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
 
     // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
     const childrenElem = [...currentDocument.querySelectorAll(`[data-jahia-parent=${clickedElement.element.id}]`)]
-        // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
-        .filter(e => e.getAttribute('path')?.startsWith(clickedPath) && e.getAttribute('type') !== 'placeholder')
+        // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath.
+        // Also require the child to render at least one visible element, otherwise its insertion point has nothing to anchor to.
+        .filter(e => e.getAttribute('path')?.startsWith(clickedPath) && e.getAttribute('type') !== 'placeholder' && hasVisibleContent(e))
         .map(e => {
             const parentPath = resolveParentPath(e);
             return {

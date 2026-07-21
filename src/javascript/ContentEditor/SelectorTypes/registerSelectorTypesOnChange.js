@@ -34,6 +34,25 @@ function recreate(sections) {
     });
 }
 
+// Latest FieldConstraints request id per dependent field, per sections generation. Concurrent
+// requests for the same field (e.g. the value transitions around a language switch) can resolve
+// out of order; only the last-issued one may apply.
+const constraintsTickets = new WeakMap();
+
+const takeTicket = (sections, fieldName) => {
+    let byField = constraintsTickets.get(sections);
+    if (!byField) {
+        byField = new Map();
+        constraintsTickets.set(sections, byField);
+    }
+
+    const ticket = (byField.get(fieldName) || 0) + 1;
+    byField.set(fieldName, ticket);
+    return ticket;
+};
+
+const isLatestTicket = (sections, fieldName, ticket) => constraintsTickets.get(sections)?.get(fieldName) === ticket;
+
 export const registerSelectorTypesOnChange = registry => {
     registry.add('selectorType.onChange', 'dependentProperties', {
         targets: ['*'],
@@ -68,6 +87,8 @@ export const registerSelectorTypesOnChange = registry => {
                         value: currentValue === null ? [] : currentValue
                     });
 
+                    const ticket = takeTicket(sections, dependentPropertiesField.name);
+
                     return onChangeContext.client.query({
                         query: FieldConstraints,
                         variables: {
@@ -82,24 +103,23 @@ export const registerSelectorTypesOnChange = registry => {
                         }
                     }).then(({data}) => ({
                         data,
-                        dependentPropertiesField
+                        dependentPropertiesField,
+                        ticket
                     }));
                 }
 
                 return undefined;
             })).then(results => {
                 let updated = false;
-                results.forEach(({data, dependentPropertiesField}) => {
-                    if (data) {
-                        if (data?.forms?.fieldConstraints) {
-                            const fieldToUpdate = getFields(sections).find(f => f.name === dependentPropertiesField.name);
-                            if (fieldToUpdate && !arrayEquals(fieldToUpdate.valueConstraints, data.forms.fieldConstraints)) {
-                                // Update field in place (for those who keep a constant ref on sectionsContext)
-                                fieldToUpdate.valueConstraints = data.forms.fieldConstraints;
-                                // And recreate the full sections object to make change detection work
-                                recreate(sections);
-                                updated = true;
-                            }
+                results.forEach(({data, dependentPropertiesField, ticket}) => {
+                    if (data?.forms?.fieldConstraints && isLatestTicket(sections, dependentPropertiesField.name, ticket)) {
+                        const fieldToUpdate = getFields(sections).find(f => f.name === dependentPropertiesField.name);
+                        if (fieldToUpdate && !arrayEquals(fieldToUpdate.valueConstraints, data.forms.fieldConstraints)) {
+                            // Update field in place (for those who keep a constant ref on sectionsContext)
+                            fieldToUpdate.valueConstraints = data.forms.fieldConstraints;
+                            // And recreate the full sections object to make change detection work
+                            recreate(sections);
+                            updated = true;
                         }
                     }
                 });

@@ -250,6 +250,22 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
 
     const currentValue = values[field.name];
 
+    // Sections are replaced with a fresh server copy when the form reloads without remounting
+    // (language switch, see ContentEditorSection.context). That copy is computed from persisted
+    // state only, so it loses client-side handler effects (dependent valueConstraints, addMixin
+    // fieldset moves). Re-fire the registered handlers exactly as a fresh mount would; declared
+    // before the [currentValue] effect so a same-commit value+sections change fires only once.
+    const lastSectionsRef = useRef(sectionsContext.sections);
+    useEffect(() => {
+        if (lastSectionsRef.current !== sectionsContext.sections) {
+            lastSectionsRef.current = sectionsContext.sections;
+            onChangeValue.current = undefined;
+            if (currentValue !== null && currentValue !== undefined) {
+                registeredOnChangeRef.current(currentValue);
+            }
+        }
+    }, [sectionsContext.sections, currentValue]);
+
     useEffect(() => {
         if (initialValue.current !== null && initialValue.current !== undefined) {
             // Init

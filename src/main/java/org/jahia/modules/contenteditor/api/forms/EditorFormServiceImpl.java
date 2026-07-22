@@ -316,45 +316,48 @@ public class EditorFormServiceImpl implements EditorFormService {
 
     // Takes the UI locale, not the content locale: choicelist display values are editor labels
     // and must follow the UI language, like all other form labels (see initializeLabel calls).
-    private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Map<String, Object> extendContext) throws RepositoryException {
+    private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Map<String, Object> extendContext) {
         ExtendedPropertyDefinition propertyDefinition = editorFormField.getExtendedPropertyDefinition();
         // selectorOptionsMap is null when a field has no selector options set (consistent with the
         // null checks in getEditorForm and Field.mergeWith); normalize to an empty map to avoid NPEs.
         Map<String, Object> selectorOptions = editorFormField.getSelectorOptionsMap() != null ?
                 editorFormField.getSelectorOptionsMap() :
                 Collections.emptyMap();
-        if (propertyDefinition != null && (propertyDefinition.getSelector() == SelectorType.CHOICELIST || selectorOptions.containsKey("choicelist"))) {
-            Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
-
-            Map<String, Object> context = new HashMap<>();
-            context.put("contextType", primaryNodeType);
-            context.put("contextNode", existingNode);
-            context.put("contextParent", parentNode);
-            context.putAll(extendContext);
-            List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : selectorOptions.entrySet()) {
-                if (initializers.containsKey(entry.getKey())) {
-                    initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, uiLocale, context);
-                }
-            }
-
-            List<FieldValueConstraint> valueConstraints = new ArrayList<>();
-            for (ChoiceListValue choiceListValue : initialChoiceListValues) {
-                FieldValueConstraint cst = new FieldValueConstraint();
-                cst.setDisplayValue(choiceListValue.getDisplayName());
-                cst.setValue(FieldValue.convert(choiceListValue.getValue()));
-                cst.setPropertyList(choiceListValue.getProperties() != null ?
-                        choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
-                        Collections.emptyList()
-                );
-                valueConstraints.add(cst);
-            }
-
-            // If we cannot get choicelist initializer with selector options return default constraints
-            return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : valueConstraints;
+        if (propertyDefinition == null || (propertyDefinition.getSelector() != SelectorType.CHOICELIST && !selectorOptions.containsKey("choicelist"))) {
+            return editorFormField.getValueConstraints();
         }
 
-        return editorFormField.getValueConstraints();
+        Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
+
+        Map<String, Object> context = new HashMap<>();
+        context.put("contextType", primaryNodeType);
+        context.put("contextNode", existingNode);
+        context.put("contextParent", parentNode);
+        context.putAll(extendContext);
+        List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : selectorOptions.entrySet()) {
+            if (initializers.containsKey(entry.getKey())) {
+                initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, uiLocale, context);
+            }
+        }
+
+        // If we cannot get choicelist initializer with selector options return default constraints
+        return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : toValueConstraints(initialChoiceListValues);
+    }
+
+    private static List<FieldValueConstraint> toValueConstraints(List<ChoiceListValue> choiceListValues) {
+        List<FieldValueConstraint> valueConstraints = new ArrayList<>();
+        for (ChoiceListValue choiceListValue : choiceListValues) {
+            FieldValueConstraint cst = new FieldValueConstraint();
+            cst.setDisplayValue(choiceListValue.getDisplayName());
+            cst.setValue(FieldValue.convert(choiceListValue.getValue()));
+            cst.setPropertyList(choiceListValue.getProperties() != null ?
+                    choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
+                    Collections.emptyList()
+            );
+            valueConstraints.add(cst);
+        }
+        return valueConstraints;
     }
 
     private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRSiteNode site) throws NoSuchNodeTypeException {

@@ -25,7 +25,7 @@ export const decodeSystemName = (systemName: string) => {
  * @returns the encoded system name
  */
 export const encodeSystemName = (systemName: string) => {
-    systemName = systemName.replace(/[/:]/g, '');
+    systemName = systemName.replaceAll(/[/:]/g, '');
     if (systemName && systemName.length > 0) {
         let encodedSystemName = '';
         // First Step: Encode characters using encodeURI js API

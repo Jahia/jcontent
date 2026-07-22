@@ -192,7 +192,7 @@
     "sync-pom-version-to-package": "^1.6.1",
     "tsc-alias": "^1.8.16",
     "tsdown": "^0.22.3",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitest": "^3.2.1",
     "webpack": "^5.105.4",
     "webpack-bundle-analyzer": "^4.10.2",

@@ -66,6 +66,7 @@ describe('Compare staging/live tests', () => {
         compareDialog.getStagingFrame().find('span[class="diff-html-added"]').should('not.exist');
     });
 
+    // To be fixed in https://github.com/Jahia/jcontent/issues/2115#issuecomment-5050884505
     it.skip('should publish', () => {
         const jcontent = JContent.visit(siteKey, 'en', path);
         const compareDialog = jcontent.getCompareDialog();

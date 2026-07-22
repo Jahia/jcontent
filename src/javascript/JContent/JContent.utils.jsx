@@ -478,16 +478,17 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
     const isCurrentDomain = !isLive || !serverName || serverName === location.hostname;
     const isLocalServer = serverName === 'localhost';
 
+    let resolvedUrl = '';
     if (isCurrentDomain) {
-        return `${location.protocol}//${location.hostname}${port}${path}`;
+        resolvedUrl = `${location.protocol}//${location.hostname}${port}${path}`;
+    } else if (isLocalServer) {
+        resolvedUrl = `${location.protocol}//localhost${port}${path}`;
+    } else {
+        // External server name: no port
+        resolvedUrl = `${location.protocol}//${serverName}${path}`;
     }
 
-    if (isLocalServer) {
-        return `${location.protocol}//localhost${port}${path}`;
-    }
-
-    // External server name: no port
-    return `${location.protocol}//${serverName}${path}`;
+    return resolvedUrl;
 };
 
 /**

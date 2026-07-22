@@ -7,7 +7,11 @@ describe('Compare staging/live tests', () => {
     const path = `pages/home#(jcontent:(compareDialog:(open:!t,path:/sites/${siteKey}/home)))`;
 
     beforeEach(() => {
-        createSite(siteKey);
+        createSite(siteKey, {
+            templateSet: 'dx-base-demo-templates',
+            locale: 'en',
+            serverName: new URL(Cypress.config('baseUrl')).hostname
+        });
         cy.apollo({mutation: createContentMutation(siteKey)});
         publishAndWaitJobEnding(`/sites/${siteKey}`);
         addNode({
@@ -69,6 +73,11 @@ describe('Compare staging/live tests', () => {
         compareDialog.getStagingFrame().find('div').contains('test added').should('exist');
         compareDialog.getLiveFrame().find('div').contains('test added').should('not.exist');
         compareDialog.publish();
+        compareDialog.getLiveFrame().then($body => {
+            const href = $body[0].ownerDocument.location.href;
+            cy.log('live frame url:', href);
+            expect(href).to.include(new URL(Cypress.config('baseUrl')).hostname);
+        });
         compareDialog.getLiveFrame().find('div[class="col-md-12"]').contains('test added', {timeout: 2000}).should('exist');
     });
 });

@@ -156,9 +156,11 @@ export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) =>
                 const publishDeletionLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.publishDeletion');
 
                 // Tooltips use the native `title` attribute (via buttonProps) rather than moonstone's
-                // <Tooltip>: the latter renders its bubble inline (no portal) and gets clipped/covered
-                // inside this scrollable dialog table. `title` is always rendered on top by the browser.
-                // `aria-label` mirrors it for accessibility since these buttons are icon-only.
+                // <Tooltip>. moonstone renders its tooltip bubble inline (no portal), so it is truncated
+                // by the `overflow: hidden` on the moonstone DataTable and is never fully visible inside
+                // this table. A moonstone issue has been filed to fix that; until it lands we rely on the
+                // native `title` (which the browser always paints on top, un-clippable), mirrored by
+                // `aria-label` for accessibility since these buttons are icon-only.
                 let actions = null;
                 if (!hideActions && data.isMarkedForDeletion) {
                     actions = (

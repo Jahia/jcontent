@@ -28,7 +28,7 @@
     },
     "devDependencies": {
         "@4tw/cypress-drag-drop": "^2.3.0",
-        "@jahia/cypress": "^8.2.1",
+        "@jahia/cypress": "git+ssh://git@github.com/Jahia/jahia-cypress.git#jahia-log-marker",
         "@jahia/jahia-reporter": "^1.5.0",
         "@types/node": "^22.14.0",
         "@typescript-eslint/eslint-plugin": "^8.29.1",
@@ -37,7 +37,7 @@
         "cypress-iframe": "^1.0.1",
         "cypress-multi-reporters": "^2.0.5",
         "cypress-terminal-report": "^5.0.2",
-        "cypress-wait-until": "^1.7.2",
+        "cypress-wait-until": "^3.0.2",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^10.1.1",
         "eslint-plugin-chai-friendly": "^1.0.1",

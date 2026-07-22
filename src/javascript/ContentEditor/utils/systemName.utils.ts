@@ -3,9 +3,9 @@
  * we need to decode it before display, see @encodeSystemName for encoding specs
  *
  * @param systemName the system name to be decode
- * @returns {*} the decoded system name
+ * @returns the decoded system name
  */
-export const decodeSystemName = systemName => {
+export const decodeSystemName = (systemName: string) => {
     if (systemName && systemName.length > 0) {
         // First step: Special decoding for '*' character
         const decodedSystemName = systemName.split('%2A').join('*');
@@ -22,9 +22,9 @@ export const decodeSystemName = systemName => {
  * So we will encode them
  *
  * @param systemName the system name to be encode
- * @returns {*} the encoded system name
+ * @returns the encoded system name
  */
-export const encodeSystemName = systemName => {
+export const encodeSystemName = (systemName: string) => {
     systemName = systemName.replace(/[/:]/g, '');
     if (systemName && systemName.length > 0) {
         let encodedSystemName = '';

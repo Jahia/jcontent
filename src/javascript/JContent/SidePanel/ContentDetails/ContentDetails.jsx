@@ -136,6 +136,8 @@ const encodePathSegments = path => (path || '')
     .map(segment => encodeURIComponent(segment))
     .join('/');
 
+// Retained for an upcoming rework of the links section; not rendered for now as it is not yet mature.
+// eslint-disable-next-line no-unused-vars
 const ContentLinks = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, siteInfo, hasPreview} = useSidePanelContext();
@@ -236,6 +238,43 @@ const ContentLinks = () => {
     );
 };
 
+// Links section for files: shows the functional staging and live URLs. Built with the same logic
+// as the download dialog's "copy URL" (see DownloadFileDialog).
+const FileLinks = () => {
+    const {t} = useTranslation('jcontent');
+    const {nodeData} = useSidePanelContext();
+
+    const isFile = nodeData?.primaryNodeType?.name === 'jnt:file' ||
+        (nodeData?.primaryNodeType?.supertypes || []).some(type => type.name === 'jnt:file');
+
+    if (!isFile) {
+        return null;
+    }
+
+    const contextPath = window.contextJsParameters?.contextPath || '';
+    const buildFileUrl = mode => new URL(`${contextPath}/files/${mode}${nodeData.path}`, window.location.href).toString();
+    const stagingUrl = buildFileUrl('default');
+    const liveUrl = buildFileUrl('live');
+
+    return (
+        <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
+            <Typography variant="subheading" className={styles.sectionTitle}>
+                {t('jcontent:label.contentEditor.sidePanel.links')}
+            </Typography>
+            <LinkRow
+                label={t('jcontent:label.contentEditor.sidePanel.linksDefault')}
+                displayValue={stagingUrl}
+                copyValue={stagingUrl}
+            />
+            <LinkRow
+                label={t('jcontent:label.contentEditor.sidePanel.linksLive')}
+                displayValue={liveUrl}
+                copyValue={liveUrl}
+            />
+        </div>
+    );
+};
+
 export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, technicalInfo, details} = useSidePanelContext();
@@ -271,7 +310,7 @@ export const ContentDetails = () => {
                 </div>
             )}
 
-            <ContentLinks/>
+            <FileLinks/>
 
             {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">

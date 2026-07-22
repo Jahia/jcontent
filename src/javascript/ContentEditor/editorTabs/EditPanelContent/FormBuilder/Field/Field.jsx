@@ -250,22 +250,6 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
 
     const currentValue = values[field.name];
 
-    // Sections are replaced with a fresh server copy when the form reloads without remounting
-    // (language switch, see ContentEditorSection.context). That copy is computed from persisted
-    // state only, so it loses client-side handler effects (dependent valueConstraints, addMixin
-    // fieldset moves). Re-fire the registered handlers exactly as a fresh mount would; declared
-    // before the [currentValue] effect so a same-commit value+sections change fires only once.
-    const lastSectionsRef = useRef(sectionsContext.sections);
-    useEffect(() => {
-        if (lastSectionsRef.current !== sectionsContext.sections) {
-            lastSectionsRef.current = sectionsContext.sections;
-            onChangeValue.current = undefined;
-            if (currentValue !== null && currentValue !== undefined) {
-                registeredOnChangeRef.current(currentValue);
-            }
-        }
-    }, [sectionsContext.sections, currentValue]);
-
     useEffect(() => {
         if (initialValue.current !== null && initialValue.current !== undefined) {
             // Init
@@ -278,9 +262,20 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
         };
     }, [count]);
 
+    // Sections are replaced with a fresh server copy when the form reloads without remounting
+    // (language switch, see ContentEditorSection.context). That copy is computed from persisted
+    // state only, so it loses client-side handler effects (dependent valueConstraints, addMixin
+    // fieldset moves). Forgetting the last notified value makes the call below re-fire the
+    // handlers exactly as a fresh mount would, even when the field value itself is unchanged.
+    const lastSectionsRef = useRef(sectionsContext.sections);
     useEffect(() => {
+        if (lastSectionsRef.current !== sectionsContext.sections) {
+            lastSectionsRef.current = sectionsContext.sections;
+            onChangeValue.current = undefined;
+        }
+
         registeredOnChangeRef.current(currentValue);
-    }, [currentValue]);
+    }, [currentValue, sectionsContext.sections]);
 
     const firstField = sectionsContext.sections ? sectionsContext.sections[0]?.fieldSets[0]?.fields[0] === field : false;
 

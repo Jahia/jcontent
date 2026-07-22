@@ -244,10 +244,7 @@ const FileLinks = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData} = useSidePanelContext();
 
-    const isFile = nodeData?.primaryNodeType?.name === 'jnt:file' ||
-        (nodeData?.primaryNodeType?.supertypes || []).some(type => type.name === 'jnt:file');
-
-    if (!isFile) {
+    if (!nodeData?.isFile) {
         return null;
     }
 

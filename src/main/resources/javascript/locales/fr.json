@@ -1076,15 +1076,6 @@
             "dayOfWeek": "Le contenu sera visible les jours de la semaine sélectionnés.",
             "time": "Le contenu sera visible à partir de l'heure spécifiée ou jusqu'à l'heure spécifiée, selon la configuration de la condition."
           },
-          "daysOfWeek": {
-            "monday": "lundi",
-            "tuesday": "mardi",
-            "wednesday": "mercredi",
-            "thursday": "jeudi",
-            "friday": "vendredi",
-            "saturday": "samedi",
-            "sunday": "dimanche"
-          },
           "dayOfWeekCondition": "Le contenu sera visible les jours de la semaine suivants : {{days}}",
           "startEndDateCondition": "Le contenu sera visible à partir du {{startDate}} et jusqu'au {{endDate}}",
           "startDateCondition": "Le contenu sera visible à partir du {{startDate}}",

@@ -1092,15 +1092,6 @@
             "dayOfWeek": "The content will be visible on the selected days of the week.",
             "time": "The content will be visible starting from the specified time, or until the specified time, depending on the configuration of the rule."
           },
-          "daysOfWeek": {
-            "monday": "Monday",
-            "tuesday": "Tuesday",
-            "wednesday": "Wednesday",
-            "thursday": "Thursday",
-            "friday": "Friday",
-            "saturday": "Saturday",
-            "sunday": "Sunday"
-          },
           "dayOfWeekCondition": "The content will be visible on the selected days of the week: {{days}}",
           "startEndDateCondition": "The content will be visible starting from {{startDate}}, until {{endDate}}",
           "startDateCondition": "The content will be visible starting from {{startDate}}",

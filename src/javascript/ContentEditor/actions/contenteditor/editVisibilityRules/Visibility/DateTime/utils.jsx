@@ -1,6 +1,6 @@
 import React from 'react';
 import {CloudCheck, Delete, Edit, NoCloud} from '@jahia/moonstone';
-import {formatDatetime, formatTime} from 'date-formatter';
+import {formatDatetime, formatDayOfWeek, formatTime} from 'date-formatter';
 import {isArray} from 'lodash';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
@@ -113,9 +113,9 @@ export const getStatus = status => {
 
 // Localise the stored day-of-week choicelist values (raw keys: 'monday'…'sunday') into the UI
 // language, then join them for interpolation into the dayOfWeekCondition sentence.
-const formatDaysOfWeek = (values, t) => {
+const formatDaysOfWeek = (values, uilang) => {
     return (values || [])
-        .map(day => t('jcontent:label.contentEditor.visibilityTab.conditions.daysOfWeek.' + String(day).toLowerCase()))
+        .map(day => formatDayOfWeek(day, {locale: uilang}))
         .join(', ');
 };
 
@@ -130,7 +130,7 @@ export const getConditionLabel = (name, properties, t, uilang = window.contextJs
 
     switch (name) {
         case 'jnt:dayOfWeekCondition':
-            return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: formatDaysOfWeek(properties.find(p => p.name === 'dayOfWeek')?.values, t)});
+            return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: formatDaysOfWeek(properties.find(p => p.name === 'dayOfWeek')?.values, uilang)});
         case 'jnt:startEndDateCondition': {
             const startDate = properties.find(p => p.name === 'start')?.value;
             const endDate = properties.find(p => p.name === 'end')?.value;

@@ -1,27 +1,25 @@
 import {getConditionLabel} from './utils';
 
 // Mock the workspace date-formatter so we can assert the locale is threaded through and control output.
-jest.mock('date-formatter', () => ({
-    formatDatetime: (date, opts) => `${date}|${opts.locale}|${opts.format}`,
-    formatTime: (hour, minute, opts) => `${hour}:${minute}|${opts.locale}|LT`
-}), {virtual: true});
+jest.mock('date-formatter', () => {
+    const dayNames = {
+        monday: 'lundi',
+        tuesday: 'mardi',
+        wednesday: 'mercredi',
+        thursday: 'jeudi',
+        friday: 'vendredi',
+        saturday: 'samedi',
+        sunday: 'dimanche'
+    };
+    return {
+        formatDatetime: (date, opts) => `${date}|${opts.locale}|${opts.format}`,
+        formatTime: (hour, minute, opts) => `${hour}:${minute}|${opts.locale}|LT`,
+        formatDayOfWeek: day => dayNames[String(day).toLowerCase()]
+    };
+}, {virtual: true});
 
-// Translation mock: resolves day-name keys to readable names and interpolates the sentence keys, mirroring i18next.
-const dayNames = {
-    monday: 'lundi',
-    tuesday: 'mardi',
-    wednesday: 'mercredi',
-    thursday: 'jeudi',
-    friday: 'vendredi',
-    saturday: 'samedi',
-    sunday: 'dimanche'
-};
+// Translation mock: interpolates the sentence keys, mirroring i18next.
 const t = (key, opts = {}) => {
-    const dayMatch = key.match(/daysOfWeek\.(\w+)$/);
-    if (dayMatch) {
-        return dayNames[dayMatch[1]];
-    }
-
     if (key.endsWith('dayOfWeekCondition')) {
         return `Jours : ${opts.days}`;
     }

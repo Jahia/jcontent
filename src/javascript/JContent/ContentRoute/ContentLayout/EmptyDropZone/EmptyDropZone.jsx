@@ -10,6 +10,7 @@ import styles from './EmptyDropZone.scss';
 import clsx from 'clsx';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {className: styles.button, size: 'big'}});
 
@@ -32,7 +33,7 @@ const EmptyDropZone = ({component: Component, isCanDrop, allowDrop, uploadType, 
     );
 
     if (permissions.loading || nodeInfo.loading) {
-        return 'Loading...';
+        return <LoaderOverlay/>;
     }
 
     if (nodeInfo.node?.lockOwner) {

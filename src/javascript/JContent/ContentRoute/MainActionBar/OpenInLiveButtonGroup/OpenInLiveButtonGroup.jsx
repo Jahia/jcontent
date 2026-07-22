@@ -20,6 +20,10 @@ export const OpenInLiveButtonGroup = ({path, isDisabled}) => {
 
     const {urlPath, serverName, serverNameAliases, currentHostname} = liveData;
 
+    if (!urlPath) {
+        return null;
+    }
+
     const handleOpen = () => {
         const url = resolveUrlForLiveOrPreview(urlPath, true, selectedServerName || serverName);
         window.open(url, '_blank');

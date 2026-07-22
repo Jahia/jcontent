@@ -467,20 +467,24 @@ export const JahiaRenderedModulesUtil = {
 };
 
 export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
-    if (!url || url.match(/^https*:\/\//)) {
-        return url;
+    // Strip host from absolute URL — path is identical across all server names for the same site
+    const path = url.replace(/^https?:\/\/[^/]+/, '');
+    const port = location.port ? `:${location.port}` : '';
+
+    const isCurrentDomain = !isLive || !serverName || serverName === location.hostname;
+    const isLocalServer = serverName === 'localhost';
+
+    let resolvedUrl = '';
+    if (isCurrentDomain) {
+        resolvedUrl = `${location.protocol}//${location.hostname}${port}${path}`;
+    } else if (isLocalServer) {
+        resolvedUrl = `${location.protocol}//localhost${port}${path}`;
+    } else {
+        // External server name: no port
+        resolvedUrl = `${location.protocol}//${serverName}${path}`;
     }
 
-    // Use current host for preview urls
-    let host = location.hostname;
-    let port = location.port ? `:${location.port}` : '';
-
-    if (isLive && serverName && serverName !== 'localhost' && serverName !== location.hostname) {
-        host = serverName;
-        port = '';
-    }
-
-    return `${location.protocol}//${host}${port}${url}`;
+    return resolvedUrl;
 };
 
 /**

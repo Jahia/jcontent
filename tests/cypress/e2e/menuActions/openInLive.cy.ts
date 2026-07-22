@@ -58,10 +58,9 @@ describe('Open in Live tests', () => {
         it('opens with default server name when localStorage is empty', () => {
             visitWithStub();
             getComponentByRole(Button, 'openInLive').click();
-            const localHostname = new URL(Cypress.config('baseUrl')).hostname;
             cy.get('@winOpen').should(
                 'be.calledWith',
-                Cypress.sinon.match(f => f.includes(localHostname) && !f.includes(alias1))
+                Cypress.sinon.match(f => f.includes(serverName) && !f.includes(alias1))
             );
         });
 
@@ -151,10 +150,9 @@ describe('Open in Live tests', () => {
                 expect(win.localStorage.getItem(storageKey)).to.equal(serverName);
             });
             getComponentByRole(Button, 'openInLive').click();
-            const localHostname = new URL(Cypress.config('baseUrl')).hostname;
             cy.get('@winOpen').should(
                 'be.calledWith',
-                Cypress.sinon.match(f => f.includes(localHostname) && !f.includes('unknown.invalid.host'))
+                Cypress.sinon.match(f => f.includes(serverName) && !f.includes('unknown.invalid.host'))
             );
         });
     });

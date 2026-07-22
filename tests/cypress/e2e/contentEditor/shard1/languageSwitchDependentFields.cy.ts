@@ -57,11 +57,13 @@ describe('Language switch keeps dependent fields driven by unsaved changes', () 
         picker.select();
         pickerField.assertValue('Home');
 
-        // Switch to French without saving: the unsaved link type must keep the picker in the form
+        // Switch to French without saving: the unsaved link type must keep the picker in the form.
+        // The card label is the target's displayName resolved in the editing language; the home
+        // page has no French title, so it falls back to the node name 'home'.
         contentEditor.getLanguageSwitcher().selectLangByValue('fr');
         cy.wait('@createForm');
         linknodeIsVisible();
-        contentEditor.getPickerField(linknodeField).assertValue('Home');
+        contentEditor.getPickerField(linknodeField).assertValue('home');
 
         // And survive the round trip back to English
         contentEditor.getLanguageSwitcher().selectLangByValue('en');

@@ -193,7 +193,7 @@
     "stylelint": "^13.7.1",
     "sync-pom-version-to-package": "^1.6.1",
     "tsc-alias": "^1.8.16",
-    "tsdown": "^0.22.3",
+    "tsdown": "^0.22.13",
     "typescript": "^6.0.3",
     "vitest": "^3.2.1",
     "webpack": "^5.105.4",

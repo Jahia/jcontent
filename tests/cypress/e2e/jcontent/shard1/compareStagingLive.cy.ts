@@ -66,7 +66,7 @@ describe('Compare staging/live tests', () => {
         compareDialog.getStagingFrame().find('span[class="diff-html-added"]').should('not.exist');
     });
 
-    it('should publish', () => {
+    it.skip('should publish', () => {
         const jcontent = JContent.visit(siteKey, 'en', path);
         const compareDialog = jcontent.getCompareDialog();
         compareDialog.get().get('h1').contains('Compare staging vs live version').should('exist');

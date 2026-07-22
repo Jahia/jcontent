@@ -125,6 +125,12 @@
     gap: var(--spacing-small);
 }
 
+// Real (non display:contents) box so the Tooltip's popper can anchor reliably around the
+// action buttons, whose shared renderer wraps them in a display:contents element.
+.tooltipAnchor {
+    display: inline-flex;
+}
+
 .displayHover {
     position: absolute;
     top: 0;

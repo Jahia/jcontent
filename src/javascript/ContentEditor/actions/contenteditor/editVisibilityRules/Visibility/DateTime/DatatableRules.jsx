@@ -1,16 +1,18 @@
 import React, {forwardRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Chip, DataTable, Delete, Edit, Hidden, TableRow, Typography, Undelete, Visibility} from '@jahia/moonstone';
+import {Chip, CloudCheck, DataTable, Delete, Edit, Hidden, TableRow, Tooltip, Typography, Undelete, Visibility} from '@jahia/moonstone';
 import {getConditionLabel} from './utils';
 import clsx from 'clsx';
 import statusCellStyles from './TableCellStatus.scss';
 import {
     DeleteButton,
     EditButton,
+    PublishDeletionButton,
     UndeleteButton
 } from '~/ContentEditor/actions/contenteditor/editVisibilityRules/Visibility/DateTime/ButtonRenderers';
 import {useConditionDeletion} from './useConditionDeletion';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import PublicationStatus from '~/JContent/PublicationStatus';
 
 const TableCell = forwardRef(({
@@ -84,13 +86,14 @@ TableCellActions.propTypes = {
 
 export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) => {
     const {t} = useTranslation('jcontent');
-    const {markConditionForDeletion, unmarkConditionForDeletion} = useConditionDeletion({refresh});
+    const {uilang} = useContentEditorConfigContext();
+    const {markConditionForDeletion, unmarkConditionForDeletion, publishConditionDeletion} = useConditionDeletion({refresh});
 
     // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
         {
             key: 'type',
-            label: 'Condition type',
+            label: t('jcontent:label.contentEditor.visibilityTab.conditions.condition'),
             isSortable: true,
             width: '70%',
             sortFn: (a, b) => a.type.localeCompare(b.type),
@@ -127,7 +130,7 @@ export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) =>
 
             return {
                 id: rule.uuid,
-                type: getConditionLabel(rule.primaryNodeType.name, rule.properties, t),
+                type: getConditionLabel(rule.primaryNodeType.name, rule.properties, t, uilang),
                 isMatching: rule.isConditionMatching,
                 isMatchingLive: rule.live !== null && rule.live.isConditionMatching,
                 isMarkedForDeletion: isMarkedForDeletion,
@@ -135,7 +138,7 @@ export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) =>
                 rule: rule
             };
         });
-    }, [rules, t]);
+    }, [rules, t, uilang]);
 
     return (
         <DataTable
@@ -147,33 +150,68 @@ export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) =>
             primaryKey="id"
             defaultSortDirection="descending"
             renderRow={({id, data, render: renderCells}) => {
+                const editLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.edit');
+                const deleteLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.delete');
+                const undeleteLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.undelete');
+                const publishDeletionLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.publishDeletion');
+
                 let actions = null;
                 if (!hideActions && data.isMarkedForDeletion) {
                     actions = (
-                        <UndeleteButton buttonIcon={<Undelete/>}
-                                        dataSelRole="undelete-condition"
-                                        onClick={() => {
-                                            // Restore a condition previously marked for deletion.
-                                            // Error notification is handled inside the hook.
-                                            unmarkConditionForDeletion(data.rule.path).catch(() => {});
-                                        }}/>
+                        <>
+                            <Tooltip label={undeleteLabel}>
+                                <span className={statusCellStyles.tooltipAnchor}>
+                                    <UndeleteButton buttonIcon={<Undelete/>}
+                                                    dataSelRole="undelete-condition"
+                                                    buttonProps={{'aria-label': undeleteLabel}}
+                                                    onClick={() => {
+                                                        // Restore a condition previously marked for deletion.
+                                                        // Error notification is handled inside the hook.
+                                                        unmarkConditionForDeletion(data.rule.path).catch(() => {});
+                                                    }}/>
+                                </span>
+                            </Tooltip>
+                            {data.canPublishDeletion &&
+                                <Tooltip label={publishDeletionLabel}>
+                                    <span className={statusCellStyles.tooltipAnchor}>
+                                        <PublishDeletionButton buttonIcon={<CloudCheck/>}
+                                                               dataSelRole="publish-deletion-condition"
+                                                               buttonProps={{'aria-label': publishDeletionLabel}}
+                                                               onClick={() => {
+                                                                   // Commit the deletion through the standard
+                                                                   // publication workflow.
+                                                                   publishConditionDeletion(data.rule.uuid);
+                                                               }}/>
+                                    </span>
+                                </Tooltip>}
+                        </>
                     );
                 } else if (!hideActions) {
                     actions = (
                         <>
-                            <EditButton buttonIcon={<Edit/>}
-                                        dataSelRole="edit-condition"
-                                        onClick={() => {
-                                            onEdit(data.rule);
-                                        }}/>
-                            <DeleteButton buttonIcon={<Delete/>}
-                                          dataSelRole="delete-condition"
-                                          onClick={() => {
-                                              // Mark the condition for deletion (soft delete). It stays
-                                              // visible until the deletion is published, and can be undeleted.
-                                              // Error notification is handled inside the hook.
-                                              markConditionForDeletion(data.rule.path).catch(() => {});
-                                          }}/>
+                            <Tooltip label={editLabel}>
+                                <span className={statusCellStyles.tooltipAnchor}>
+                                    <EditButton buttonIcon={<Edit/>}
+                                                dataSelRole="edit-condition"
+                                                buttonProps={{'aria-label': editLabel}}
+                                                onClick={() => {
+                                                    onEdit(data.rule);
+                                                }}/>
+                                </span>
+                            </Tooltip>
+                            <Tooltip label={deleteLabel}>
+                                <span className={statusCellStyles.tooltipAnchor}>
+                                    <DeleteButton buttonIcon={<Delete/>}
+                                                  dataSelRole="delete-condition"
+                                                  buttonProps={{'aria-label': deleteLabel}}
+                                                  onClick={() => {
+                                                      // Mark the condition for deletion (soft delete). It stays
+                                                      // visible until the deletion is published, and can be undeleted.
+                                                      // Error notification is handled inside the hook.
+                                                      markConditionForDeletion(data.rule.path).catch(() => {});
+                                                  }}/>
+                                </span>
+                            </Tooltip>
                         </>
                     );
                 }

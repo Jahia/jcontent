@@ -1052,6 +1052,7 @@
         "conditions" : {
           "title" : "Jour et heure",
           "type": "Type",
+          "condition": "Condition",
           "typeDescription": "Définir la condition à appliquer.",
           "rules" : "{{rulesNumber}} conditions définies",
           "rule" : "1 condition définie",
@@ -1061,6 +1062,8 @@
           "add": "Ajouter une condition",
           "edit": "Modifier la condition",
           "delete": "Supprimer la condition",
+          "undelete": "Annuler la suppression",
+          "publishDeletion": "Publier la suppression",
           "markedForDeletionBy": "Marqué pour la suppression par {{userName}} le {{timestamp}}",
           "loading": "Chargement…",
           "ruleType": {
@@ -1073,6 +1076,15 @@
             "dayOfWeek": "Le contenu sera visible les jours de la semaine sélectionnés.",
             "time": "Le contenu sera visible à partir de l'heure spécifiée ou jusqu'à l'heure spécifiée, selon la configuration de la condition."
           },
+          "daysOfWeek": {
+            "monday": "lundi",
+            "tuesday": "mardi",
+            "wednesday": "mercredi",
+            "thursday": "jeudi",
+            "friday": "vendredi",
+            "saturday": "samedi",
+            "sunday": "dimanche"
+          },
           "dayOfWeekCondition": "Le contenu sera visible les jours de la semaine suivants : {{days}}",
           "startEndDateCondition": "Le contenu sera visible à partir du {{startDate}} et jusqu'au {{endDate}}",
           "startDateCondition": "Le contenu sera visible à partir du {{startDate}}",
@@ -1082,7 +1094,7 @@
           "endTimeCondition": "Le contenu sera visible jusqu'à {{endTime}}",
           "preview": "Visible en aperçu",
           "live": "Visible en live",
-          "preview_live": "Correspondance aperçu / live",
+          "preview_live": "Actuellement en aperçu",
           "visible": "Visible",
           "hidden": "Masqué"
         },

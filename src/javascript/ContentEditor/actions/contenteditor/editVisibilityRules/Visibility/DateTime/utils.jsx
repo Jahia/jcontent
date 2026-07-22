@@ -111,7 +111,15 @@ export const getStatus = status => {
     };
 };
 
-export const getConditionLabel = (name, properties, t) => {
+// Localise the stored day-of-week choicelist values (raw keys: 'monday'…'sunday') into the UI
+// language, then join them for interpolation into the dayOfWeekCondition sentence.
+const formatDaysOfWeek = (values, t) => {
+    return (values || [])
+        .map(day => t('jcontent:label.contentEditor.visibilityTab.conditions.daysOfWeek.' + String(day).toLowerCase()))
+        .join(', ');
+};
+
+export const getConditionLabel = (name, properties, t, uilang = window.contextJsParameters?.uilang) => {
     const getDateLabel = startDate => {
         return (startDate === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endDateCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startDateCondition';
     };
@@ -120,15 +128,18 @@ export const getConditionLabel = (name, properties, t) => {
         return (startHour === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endTimeCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startTimeCondition';
     };
 
+    // Format an HH:mm time in the UI language so 'LT' respects the locale (e.g. 24h in fr/de vs 12h in en).
+    const formatTime = (hour, minute) => dayjs(`${hour}:${minute}`, 'HH:mm').locale(uilang).format('LT');
+
     switch (name) {
         case 'jnt:dayOfWeekCondition':
-            return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: properties.find(p => p.name === 'dayOfWeek')?.values});
+            return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: formatDaysOfWeek(properties.find(p => p.name === 'dayOfWeek')?.values, t)});
         case 'jnt:startEndDateCondition': {
             const startDate = properties.find(p => p.name === 'start')?.value;
             const endDate = properties.find(p => p.name === 'end')?.value;
             return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getDateLabel(startDate)), {
-                startDate: startDate === undefined ? '' : formatDatetime(startDate, {format: 'long'}),
-                endDate: endDate === undefined ? '' : formatDatetime(endDate, {format: 'long'})
+                startDate: startDate === undefined ? '' : formatDatetime(startDate, {format: 'long', locale: uilang}),
+                endDate: endDate === undefined ? '' : formatDatetime(endDate, {format: 'long', locale: uilang})
             });
         }
 
@@ -138,8 +149,8 @@ export const getConditionLabel = (name, properties, t) => {
             const endHour = properties.find(p => p.name === 'endHour')?.value;
             const endMinute = properties.find(p => p.name === 'endMinute')?.value;
             return t((startHour !== undefined && endHour !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndTimeCondition' : getTimeLabel(startHour)), {
-                startTime: startHour === undefined ? '' : dayjs(`${startHour}:${startMinute}`, 'HH:mm').format('LT'),
-                endTime: endHour === undefined ? '' : dayjs(`${endHour}:${endMinute}`, 'HH:mm').format('LT')
+                startTime: startHour === undefined ? '' : formatTime(startHour, startMinute),
+                endTime: endHour === undefined ? '' : formatTime(endHour, endMinute)
             });
         }
 

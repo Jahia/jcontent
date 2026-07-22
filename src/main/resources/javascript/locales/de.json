@@ -1051,6 +1051,7 @@
         "conditions" : {
           "title" : "Datum und Uhrzeit",
           "type": "Typ",
+          "condition": "Bedingung",
           "typeDescription": "Definieren Sie die Bedingung, die angewendet werden soll.",
           "rules" : "{{rulesNumber}} Bedingungen definiert",
           "rule" : "Eine Bedingung definiert",
@@ -1060,6 +1061,8 @@
           "add": "Bedingung hinzufügen",
           "edit": "Bedingung bearbeiten",
           "delete": "Bedingung löschen",
+          "undelete": "Löschung rückgängig machen",
+          "publishDeletion": "Löschung veröffentlichen",
           "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am {{timestamp}}",
           "loading": "Wird geladen…",
           "ruleType": {
@@ -1072,6 +1075,15 @@
             "dayOfWeek": "Der Inhalt wird an den ausgewählten Wochentagen sichtbar sein.",
             "time": "Der Inhalt wird ab der angegebenen Uhrzeit oder bis zur angegebenen Uhrzeit sichtbar sein, abhängig von der Konfiguration der Bedingung."
           },
+          "daysOfWeek": {
+            "monday": "Montag",
+            "tuesday": "Dienstag",
+            "wednesday": "Mittwoch",
+            "thursday": "Donnerstag",
+            "friday": "Freitag",
+            "saturday": "Samstag",
+            "sunday": "Sonntag"
+          },
           "dayOfWeekCondition": "Der Inhalt wird an den folgenden Wochentagen sichtbar sein: {{days}}",
           "startEndDateCondition": "Der Inhalt wird ab {{startDate}} bis {{endDate}} sichtbar sein",
           "startDateCondition": "Der Inhalt wird ab {{startDate}} sichtbar sein",
@@ -1081,7 +1093,7 @@
           "endTimeCondition": "Der Inhalt wird bis {{endTime}} sichtbar sein",
           "preview": "In der Vorschau sichtbar",
           "live": "Live sichtbar",
-          "preview_live": "Übereinstimmung in Vorschau / Live",
+          "preview_live": "Aktuell in der Vorschau",
           "visible": "Sichtbar",
           "hidden": "Ausgeblendet"
         }

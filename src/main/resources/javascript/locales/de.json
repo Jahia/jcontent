@@ -697,7 +697,9 @@
             "dialogSubTitle": "Markieren Sie Ihren Content als Work in Progress wenn Sie die Veröffentlichung des Contents verhindern wollen. Um mehr über das Work in Progress Feature zu erfahren, ",
             "label": {
               "mark": "Als \"In Arbeit\" markieren",
-              "unmark": "Nicht als \"In Arbeit\" markieren"
+              "unmark": "Nicht als \"In Arbeit\" markieren",
+              "markShort": "Als WIP markieren",
+              "unmarkShort": "Nicht als WIP markieren"
             },
             "localizedPropertiesOnly": "Nur sprachabhängige Eigenschaften in",
             "localizedPropertiesOnlySubText": "Der Inhalt der selektierten Sprache wird nicht veröffentlicht. Trotzdem können einzelne Properties, die von allen Sprachen verwendet werden, Teil eines Veröffentlichungs-Prozesses sein.",

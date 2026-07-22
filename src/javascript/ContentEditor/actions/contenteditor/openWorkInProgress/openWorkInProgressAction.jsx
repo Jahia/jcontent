@@ -21,7 +21,7 @@ export const OpenWorkInProgressModal = ({render: Render, ...otherProps}) => {
     // Content is marked as WIP only for this lang; we can just toggle this status instead of showing modal
     const wipOnlyForLang = wipForLang && wipInfo.languages.length === 1;
     const isWIP = wipInfo?.status === Constants.wip.status.ALL_CONTENT || wipForLang;
-    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${isWIP ? 'unmark' : 'mark'}`;
+    const buttonLabel = `jcontent:label.contentEditor.edit.action.workInProgress.label.${isWIP ? 'unmark' : 'mark'}${singleLanguage ? '' : 'Short'}`;
 
     const openModal = () => {
         componentRenderer.render(

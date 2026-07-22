@@ -16,7 +16,6 @@ export const CopyLanguageDialog = ({
     onCloseDialog,
     uuid,
     formik,
-    sideBySideContext,
     defaultLanguage
 }) => {
     const client = useApolloClient();
@@ -41,22 +40,16 @@ export const CopyLanguageDialog = ({
         onCloseDialog();
     };
 
-    // Override selected option with sbsOption from translate action if it exists and use that as source language
-    const sbsOption = availableLanguages
-        .map(e => ({value: e.language, label: e.uiLanguageDisplayName}))
-        .find(e => e.value === sideBySideContext.lang);
+    const languageOptions = useMemo(() => availableLanguages.map(element => ({
+        value: element.language,
+        label: element.uiLanguageDisplayName
+    })), [availableLanguages]);
 
     const defaultLanguageOption = useMemo(() => {
-        const availableLanguageOption = availableLanguages.find(al => al.language === defaultLanguage) || availableLanguages[0];
-        if (availableLanguageOption) {
-            return {
-                label: availableLanguageOption.uiLanguageDisplayName,
-                value: availableLanguageOption.language
-            };
-        }
-    }, [defaultLanguage, availableLanguages]);
+        return languageOptions.find(option => option.value === defaultLanguage) || languageOptions[0];
+    }, [defaultLanguage, languageOptions]);
 
-    const defaultOption = sbsOption || {
+    const defaultOption = {
         label: t('jcontent:label.contentEditor.edit.action.copyLanguage.defaultValue'),
         value: 'void'
     };
@@ -104,20 +97,16 @@ export const CopyLanguageDialog = ({
                 <Typography className={styles.copyFromLabel}>
                     {t('jcontent:label.contentEditor.edit.action.copyLanguage.listLabel')}
                 </Typography>
-                {sbsOption ?
-                    <Typography>{sbsOption.label}</Typography> :
+                {languageOptions.length === 1 ?
+                    <Typography className={styles.language} data-sel-role="from-language-label">
+                        {currentOption.label}
+                    </Typography> :
                     <Dropdown
                         className={styles.language}
                         value={currentOption.value}
                         size="medium"
                         data-sel-role="from-language-selector"
-                        isDisabled={Boolean(sbsOption)}
-                        data={sbsOption || defaultLanguageOption ? availableLanguages.map(element => {
-                            return {
-                                value: element.language,
-                                label: element.uiLanguageDisplayName
-                            };
-                        }) : [defaultOption]}
+                        data={languageOptions.length > 0 ? languageOptions : [defaultOption]}
                         onChange={handleOnChange}
                     />}
                 <Typography className={styles.label}>
@@ -157,6 +146,5 @@ CopyLanguageDialog.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     uuid: PropTypes.string.isRequired,
     onCloseDialog: PropTypes.func.isRequired,
-    sideBySideContext: PropTypes.shape({lang: PropTypes.string}),
     defaultLanguage: PropTypes.string.isRequired
 };

@@ -2,12 +2,8 @@ import {getConditionLabel} from './utils';
 
 // Mock the workspace date-formatter so we can assert the locale is threaded through and control output.
 jest.mock('date-formatter', () => ({
-    dayjs: input => ({
-        locale: loc => ({
-            format: fmt => `${input}|${loc}|${fmt}`
-        })
-    }),
-    formatDatetime: (date, opts) => `${date}|${opts.locale}|${opts.format}`
+    formatDatetime: (date, opts) => `${date}|${opts.locale}|${opts.format}`,
+    formatTime: (hour, minute, opts) => `${hour}:${minute}|${opts.locale}|LT`
 }), {virtual: true});
 
 // Translation mock: resolves day-name keys to readable names and interpolates the sentence keys, mirroring i18next.

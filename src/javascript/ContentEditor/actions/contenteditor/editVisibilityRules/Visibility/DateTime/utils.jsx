@@ -1,6 +1,6 @@
 import React from 'react';
 import {CloudCheck, Delete, Edit, NoCloud} from '@jahia/moonstone';
-import {dayjs, formatDatetime} from 'date-formatter';
+import {formatDatetime, formatTime} from 'date-formatter';
 import {isArray} from 'lodash';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
@@ -128,9 +128,6 @@ export const getConditionLabel = (name, properties, t, uilang = window.contextJs
         return (startHour === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endTimeCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startTimeCondition';
     };
 
-    // Format an HH:mm time in the UI language so 'LT' respects the locale (e.g. 24h in fr/de vs 12h in en).
-    const formatTime = (hour, minute) => dayjs(`${hour}:${minute}`, 'HH:mm').locale(uilang).format('LT');
-
     switch (name) {
         case 'jnt:dayOfWeekCondition':
             return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: formatDaysOfWeek(properties.find(p => p.name === 'dayOfWeek')?.values, t)});
@@ -149,8 +146,8 @@ export const getConditionLabel = (name, properties, t, uilang = window.contextJs
             const endHour = properties.find(p => p.name === 'endHour')?.value;
             const endMinute = properties.find(p => p.name === 'endMinute')?.value;
             return t((startHour !== undefined && endHour !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndTimeCondition' : getTimeLabel(startHour)), {
-                startTime: startHour === undefined ? '' : formatTime(startHour, startMinute),
-                endTime: endHour === undefined ? '' : formatTime(endHour, endMinute)
+                startTime: startHour === undefined ? '' : formatTime(startHour, startMinute, {locale: uilang}),
+                endTime: endHour === undefined ? '' : formatTime(endHour, endMinute, {locale: uilang})
             });
         }
 

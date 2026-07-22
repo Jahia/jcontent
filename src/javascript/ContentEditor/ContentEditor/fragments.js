@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
+import {graphql} from 'gql';
 
 /** Fragment on `GqlEditorForm` to populate Content Editor forms. */
-export const ContentEditorFragment = gql`
+export const ContentEditorFragment = graphql(`
     fragment ContentEditorFragment on GqlEditorForm {
         hasPreview
         showAdvancedMode
@@ -57,4 +57,4 @@ export const ContentEditorFragment = gql`
             }
         }
     }
-`;
+`);

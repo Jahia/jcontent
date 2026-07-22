@@ -467,10 +467,6 @@ export const JahiaRenderedModulesUtil = {
 };
 
 export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
-    if (!url) {
-        return url;
-    }
-
     // Strip host from absolute URL — path is identical across all server names for the same site
     const path = url.replace(/^https?:\/\/[^/]+/, '');
     const port = location.port ? `:${location.port}` : '';

@@ -58,15 +58,6 @@ describe('resolveUrlForLiveOrPreview', () => {
         });
     };
 
-    describe('null / falsy url', () => {
-        it('returns url unchanged when url is falsy', () => {
-            setLocation('localhost', '8080');
-            expect(resolveUrlForLiveOrPreview(null, true, 'localhost')).toBeNull();
-            expect(resolveUrlForLiveOrPreview('', true, 'localhost')).toBe('');
-            expect(resolveUrlForLiveOrPreview(undefined, true, 'localhost')).toBeUndefined();
-        });
-    });
-
     describe('preview (isLive=false) or no serverName', () => {
         it('uses current domain with port for preview', () => {
             setLocation('servera', '8080');

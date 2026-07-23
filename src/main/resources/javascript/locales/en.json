@@ -631,7 +631,7 @@
             "dialogSubTitle": "\"Copy from\" allows you to copy ALL content fields from another language into the current language.",
             "dialogTitle": "Copy from",
             "listLabel": "Copy from",
-            "name": "Copy from languages"
+            "name": "Copy a language"
           },
           "save": {
             "name": "Save",
@@ -703,7 +703,9 @@
             "dialogSubTitle": "Mark your content as work in progress to prevent the publication of your content. To find out more about Work in progress ",
             "label": {
               "mark": "Mark as Work in progress",
-              "unmark": "Unmark as Work in progress"
+              "unmark": "Unmark as Work in progress",
+              "markShort": "Mark as WIP",
+              "unmarkShort": "Unmark as WIP"
             },
             "localizedPropertiesOnly": "Localised properties only in",
             "localizedPropertiesOnlySubText": "The content won't be publishable in the selected languages. However, properties that are shared by all languages can be part of a publication.",

@@ -22,7 +22,7 @@ export function getFullLanguageName(languages, id) {
  */
 export function getI18nFieldAndValues(formAndData) {
     const {forms, jcr} = formAndData.data;
-    const adaptedSections = adaptSections(forms.editForm.sections);
+    const adaptedSections = adaptSections(forms.editForm);
     const initialValues = getInitialValues(jcr.result, adaptedSections);
     return adaptedSections
         .flatMap(section => section.fieldSets)

@@ -154,7 +154,7 @@ const getTechnicalInfo = (nodeData, t) => {
 
 export const adaptEditFormData = (data, lang, t) => {
     const nodeData = data.jcr.result;
-    const sections = adaptSections(data.forms.editForm.sections);
+    const sections = adaptSections(data.forms.editForm);
 
     const formData = {
         sections,

@@ -14,6 +14,20 @@ import {ContentEditor, JContent} from '../../page-object';
 import {Field, SmallTextField} from '../../page-object/fields';
 import {Dialog} from '../../page-object/dialog';
 
+/** Ensures that we display more than "Content" and "SEO" sections. */
+const assertSectionsBeyondContentAndSeo = (translateEditor: TranslateEditor) => {
+    translateEditor.getTranslateColumn().get()
+        .find('[data-sel-content-editor-fields-group]')
+        .then($els => {
+            const names = $els.toArray().map(el => el.getAttribute('data-sel-content-editor-fields-group'));
+            expect(names, 'translate sections').to.include('content');
+            expect(
+                names.filter(n => n !== 'content' && n !== 'seo'),
+                'sections beyond content/seo'
+            ).to.have.length.greaterThan(0);
+        });
+};
+
 describe('translate action tests', () => {
     const siteKey = 'translateSite';
     const oneLangSite = 'oneLangSite';
@@ -90,9 +104,9 @@ describe('translate action tests', () => {
         translateEditor.getSourceFields()
             .each($field => new Field(cy.wrap($field)).isReadOnly());
 
-        cy.log('Verify shared languages on translate column are read-only');
+        cy.log('Verify shared (non-i18n) fields on the translate column are editable');
         translateEditor.getTranslateFields().filter('[data-sel-i18n="false"]')
-            .each($field => new Field(cy.wrap($field)).isReadOnly());
+            .each($field => new Field(cy.wrap($field)).isNotReadOnly());
 
         cy.log('Verify shared languages on source column do not contain translate fields button');
         translateEditor.getSourceFields().filter('[data-sel-i18n="false"]')
@@ -110,8 +124,8 @@ describe('translate action tests', () => {
                 .should('have.attr', 'disabled');
         });
 
-        cy.log('Verify all sections are expanded by default');
-        translateEditor.getTranslateSection('content').shouldBeExpanded();
+        cy.log('Verify the full set of sections is shown, not just content/seo');
+        assertSectionsBeyondContentAndSeo(translateEditor);
     });
 
     it('can open translate dialog on pages and has the correct settings', () => {
@@ -125,9 +139,9 @@ describe('translate action tests', () => {
         translateEditor.getSourceFields()
             .each($field => new Field(cy.wrap($field)).isReadOnly());
 
-        cy.log('Verify shared languages on translate column are read-only');
+        cy.log('Verify shared (non-i18n) fields on the translate column are editable');
         translateEditor.getTranslateFields().filter('[data-sel-i18n="false"]')
-            .each($field => new Field(cy.wrap($field)).isReadOnly());
+            .each($field => new Field(cy.wrap($field)).isNotReadOnly());
 
         cy.log('Verify shared languages on source column do not contain translate fields button');
         translateEditor.getSourceFields().filter('[data-sel-i18n="false"]')
@@ -146,6 +160,9 @@ describe('translate action tests', () => {
         cy.log('Verify all sections are expanded by default');
         translateEditor.getTranslateSection('content').shouldBeExpanded();
         translateEditor.getTranslateSection('seo').shouldBeExpanded();
+
+        cy.log('Verify the full set of sections is shown, not just content/seo');
+        assertSectionsBeyondContentAndSeo(translateEditor);
     });
 
     it('can translate fields', () => {
@@ -232,6 +249,9 @@ describe('translate action tests', () => {
         cy.log('Mode is still translate after the language switch (form not remounted) — regression guard for #2483');
         jcontent.assertHeaderActionSelected('tab-translate');
         translateEditor.getTranslateLanguageSwitcher().isSelectedLang('fr');
+
+        cy.log('Reaching translate via Advanced Edit shows the same full section set as the translate action (#2514)');
+        assertSectionsBeyondContentAndSeo(translateEditor);
     });
 
     it('opens directly in translate mode when forced through the editor config (custom UI)', () => {

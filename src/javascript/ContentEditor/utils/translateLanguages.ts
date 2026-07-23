@@ -24,6 +24,15 @@ interface FirstOtherLanguageParams {
     currentLanguage: string;
 }
 
+interface FirstUntranslatedLanguageParams {
+    /** active-in-edit language codes */
+    languages?: string[];
+    /** language codes the node is already translated into */
+    translationLanguages?: string[];
+    /** the source language to exclude (the language being translated from) */
+    currentLanguage: string;
+}
+
 /**
  * Source language when entering translate mode by switching the header tab from edit to
  * translate (scenario 1). Among the languages that are active in edit AND already have a
@@ -63,4 +72,22 @@ export const getFirstOtherLanguage = ({languages = [], currentLanguage}: FirstOt
         .sort((a, b) => a.localeCompare(b));
 
     return candidates[0] ?? currentLanguage;
+};
+
+/**
+ * Target (editable) language for the right-click "Translate to" action (scenario 2): translate
+ * *from* the current language *to* another one. Among the active-in-edit languages, excluding the
+ * current (source) language, pick the first one alphabetically that does not yet have a translation.
+ * When every other language is already translated there is nothing left to translate to, so fall
+ * back to the first other language alphabetically (and to the current language if it is the only one).
+ *
+ * @param params the active languages, existing translations and the current (source) language
+ * @returns the target language code
+ */
+export const getFirstUntranslatedLanguage = ({languages = [], translationLanguages = [], currentLanguage}: FirstUntranslatedLanguageParams): string => {
+    const untranslated = languages
+        .filter(language => language !== currentLanguage && !translationLanguages.includes(language))
+        .sort((a, b) => a.localeCompare(b));
+
+    return untranslated[0] ?? getFirstOtherLanguage({languages, currentLanguage});
 };

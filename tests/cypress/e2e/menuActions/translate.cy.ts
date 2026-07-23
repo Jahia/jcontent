@@ -93,12 +93,23 @@ describe('translate action tests', () => {
             .shouldNotHaveRoleItem('sbsTranslate');
     });
 
+    it('labels the context-menu action "Translate to"', () => {
+        // The action reads as "translate from the current language to others" (#2484)
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents').switchToListMode();
+        jcontent.getTable().getRowByName(name).contextMenu()
+            .get().find('[data-sel-role="sbsTranslate"]')
+            .should('contain.text', 'Translate to');
+    });
+
     it('can open translate dialog on contents and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
-        cy.log('Verify source language is default to English');
-        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
-        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        // "Translate to" translates from the current language to another one: the source is the current
+        // language (en), and the target defaults to the first untranslated language alphabetically. The
+        // node is translated in en only, so the target is de. (#2484)
+        cy.log('Verify source is the current language (en) and target is the first untranslated language (de)');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('de');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -131,9 +142,10 @@ describe('translate action tests', () => {
     it('can open translate dialog on pages and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitPage(siteKey, 'en', 'pages/home', 'home');
 
-        cy.log('Verify source language is the first one (german)');
-        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
-        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        // Source is the current language (en); target defaults to the first untranslated language (de). (#2484)
+        cy.log('Verify source is the current language (en) and target is the first untranslated language (de)');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('de');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()

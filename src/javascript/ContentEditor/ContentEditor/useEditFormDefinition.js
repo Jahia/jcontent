@@ -1,4 +1,4 @@
-import {dayjs} from 'date-formatter';
+import {formatDatetime} from 'date-formatter';
 import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {adaptSystemNameField} from './adaptSystemNameField';
@@ -112,7 +112,7 @@ const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
                     label: field.displayName,
                     value: jcrDefinition &&
                         jcrDefinition.value &&
-                        dayjs(jcrDefinition.value).locale(lang).format('L HH:mm'),
+                        formatDatetime(jcrDefinition.value, {locale: lang}),
                     copyable: false
                 };
             }

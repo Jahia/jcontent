@@ -4,7 +4,7 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Chip, Language, Pill, Typography} from '@jahia/moonstone';
 import styles from './ContentHistory.scss';
 import {ACTION_CONFIG} from './ContentHistory';
-import {dayjs} from 'date-formatter';
+import {formatDatetime} from 'date-formatter';
 
 const MAX_DISPLAY_NAME_LENGTH = 80;
 
@@ -50,7 +50,7 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
             return '-';
         }
 
-        return dayjs(dateString).locale(uiLanguage).format('L HH:mm');
+        return formatDatetime(dateString, {locale: uiLanguage});
     }, [uiLanguage]);
 
     if (isLoading && !data) {

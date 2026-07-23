@@ -1051,6 +1051,7 @@
         "conditions" : {
           "title" : "Datum und Uhrzeit",
           "type": "Typ",
+          "condition": "Bedingung",
           "typeDescription": "Definieren Sie die Bedingung, die angewendet werden soll.",
           "rules" : "{{rulesNumber}} Bedingungen definiert",
           "rule" : "Eine Bedingung definiert",
@@ -1060,6 +1061,8 @@
           "add": "Bedingung hinzufügen",
           "edit": "Bedingung bearbeiten",
           "delete": "Bedingung löschen",
+          "undelete": "Löschung rückgängig machen",
+          "publishDeletion": "Löschung veröffentlichen",
           "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am {{timestamp}}",
           "loading": "Wird geladen…",
           "ruleType": {
@@ -1081,7 +1084,7 @@
           "endTimeCondition": "Der Inhalt wird bis {{endTime}} sichtbar sein",
           "preview": "In der Vorschau sichtbar",
           "live": "Live sichtbar",
-          "preview_live": "Übereinstimmung in Vorschau / Live",
+          "preview_live": "Aktuell in der Vorschau",
           "visible": "Sichtbar",
           "hidden": "Ausgeblendet"
         }

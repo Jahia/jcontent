@@ -51,3 +51,61 @@ export function formatDatetime(
     .locale(options?.locale || window.contextJsParameters.uilang)
     .format(formatMap[options?.format || 'short']);
 }
+
+const timeFormatMap = {
+  short: 'LT', // localized time, e.g. 2:30 PM (en) / 14:30 (fr)
+  long: 'LTS', // localized time with seconds
+};
+
+export function formatTime(
+  hour: string | number,
+  minute: string | number,
+  options?: {
+    /**
+     * The format in which to display the time
+     * @default 'short'
+     */
+    format?: keyof typeof timeFormatMap;
+
+    /**
+     * The locale in which to display the time
+     * @default window.contextJsParameters.uilang
+     */
+    locale?: string;
+  }
+) {
+  return dayjs(`${hour}:${minute}`, 'HH:mm')
+    .locale(options?.locale || window.contextJsParameters.uilang)
+    .format(timeFormatMap[options?.format || 'short']);
+}
+
+// dayjs day-of-week indices: 0 = Sunday … 6 = Saturday (locale-independent)
+const dayOfWeekIndex: Record<string, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+};
+
+/**
+ * Localize a day-of-week key (e.g. 'monday') into its full weekday name in the
+ * given locale, using dayjs' bundled locale data (e.g. 'monday' -> 'lundi' / 'Montag').
+ */
+export function formatDayOfWeek(
+  day: string,
+  options?: {
+    /**
+     * The locale in which to display the weekday
+     * @default window.contextJsParameters.uilang
+     */
+    locale?: string;
+  }
+) {
+  return dayjs()
+    .locale(options?.locale || window.contextJsParameters.uilang)
+    .day(dayOfWeekIndex[String(day).toLowerCase()])
+    .format('dddd');
+}

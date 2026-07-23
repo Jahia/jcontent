@@ -40,8 +40,25 @@ export const isDescendant = (path, ancestorPath) => {
 };
 
 export const canEditInPageBuilder = (path, nodes, site) => {
-    // Check that the node is from the same site and not e reference
-    return isDescendant(path, `/sites/${site}`) && !isFromReference(path, nodes);
+    // A reference is never editable in Page Builder, wherever it resolves to
+    if (isFromReference(path, nodes)) {
+        return false;
+    }
+
+    // By default, a node is editable when it belongs to the currently selected site
+    if (isDescendant(path, `/sites/${site}`)) {
+        return true;
+    }
+
+    // Extension point: projects can register additional editable roots so their content
+    // gets Page Builder boxes even though it lives outside the currently selected site
+    // (e.g. a shared content repository site mounted in the Contents accordion).
+    // Each entry provides either a `rootPath` string or a `matches(path, {nodes, site})`
+    // predicate returning a boolean.
+    return registry.find({type: 'pageBuilderEditableRoot'})
+        .some(entry => (typeof entry.matches === 'function' ?
+            entry.matches(path, {nodes, site}) :
+            Boolean(entry.rootPath) && isDescendant(path, entry.rootPath)));
 };
 
 // This determines if the node is included as part of content reference in which case we don't want to have a box for it.

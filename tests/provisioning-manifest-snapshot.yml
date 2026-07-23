@@ -5,6 +5,7 @@
 - include: 'provisioning.yml'
 - installBundle:
     - 'mvn:org.jahia.modules/request-safety-patch/1.10.0'
+  autoStart: true
 
 # uninstall only if it exists, otherwise it throws an error
 # need to hardcode version for uninstall

@@ -17,6 +17,13 @@ jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => 
     };
 });
 
+let mockSectionsContext;
+jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context', () => {
+    return {
+        useContentEditorSectionContext: () => (mockSectionsContext)
+    };
+});
+
 jest.mock('@apollo/client');
 
 jest.mock('react', () => {
@@ -92,6 +99,8 @@ describe('Field component', () => {
             idInput: 'FieldID'
         };
 
+        mockSectionsContext = {};
+
         result = {data: {forms: {fieldConstraints: []}}};
         useQuery.mockReturnValue(result);
     });
@@ -141,6 +150,70 @@ describe('Field component', () => {
         expect(result[0]).toBe(onChangePreviousValue);
         expect(result[1]).toBe(onChangeCurrentValue);
         expect(formik.setFieldValue).toHaveBeenCalledWith('text', onChangeCurrentValue);
+    });
+
+    it('should re-fire registered onChange when sections are reloaded', () => {
+        const calls = [];
+        registry.add('selectorType.onChange', 'sectionsReloadCallbacks', {
+            targets: ['DatePicker'],
+            onChange: (previousValue, currentValue) => {
+                calls.push([previousValue, currentValue]);
+            }
+        });
+
+        defaultProps.input = props => <Text {...props}/>;
+        defaultProps.field.multiple = false;
+        useFormikContext.mockReturnValue({
+            errors: {},
+            touched: {},
+            values: {text: 'internal'},
+            setFieldValue: jest.fn(),
+            setFieldTouched: jest.fn()
+        });
+        mockSectionsContext = {sections: [{name: 'content', fieldSets: []}]};
+
+        const cmp = shallowWithTheme(
+            <Field {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        );
+
+        // Init fires the handlers once
+        expect(calls).toEqual([[undefined, 'internal']]);
+        calls.length = 0;
+
+        // Re-render with unchanged sections: no re-fire
+        cmp.setProps({idInput: 'FieldID'});
+        expect(calls).toEqual([]);
+
+        // Sections replaced by a reload (e.g. language switch): mount-like re-fire
+        mockSectionsContext = {sections: [{name: 'content', fieldSets: []}]};
+        cmp.setProps({idInput: 'FieldID'});
+        expect(calls).toEqual([[undefined, 'internal']]);
+    });
+
+    it('should not re-fire onChange on sections reload when field has no value', () => {
+        const calls = [];
+        registry.add('selectorType.onChange', 'sectionsReloadNoValueCallbacks', {
+            targets: ['DatePicker'],
+            onChange: (previousValue, currentValue) => {
+                calls.push([previousValue, currentValue]);
+            }
+        });
+
+        defaultProps.input = props => <Text {...props}/>;
+        defaultProps.field.multiple = false;
+        mockSectionsContext = {sections: [{name: 'content', fieldSets: []}]};
+
+        const cmp = shallowWithTheme(
+            <Field {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        );
+
+        mockSectionsContext = {sections: [{name: 'content', fieldSets: []}]};
+        cmp.setProps({idInput: 'FieldID'});
+        expect(calls).toEqual([]);
     });
 
     it('should render a "Shared in all languages" when field is not i18n and site have multiple languages', () => {

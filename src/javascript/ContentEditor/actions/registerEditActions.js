@@ -21,7 +21,6 @@ import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageActio
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
-import {useTranslateFormDefinition} from '~/ContentEditor/editorTabs/TranslatePanel/useTranslateReadOnlyFormDefinition';
 import {Constants} from '../ContentEditor.constants';
 
 export const registerEditActions = registry => {
@@ -152,7 +151,7 @@ export const registerEditActions = registry => {
         getDisplayName: true,
         getSiteLanguages: true,
         isFullscreen: true,
-        editConfig: {advancedOpenTab: Constants.editPanel.translateTab, useFormDefinition: useTranslateFormDefinition},
+        editConfig: {advancedOpenTab: Constants.editPanel.translateTab},
         isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1
     });
 

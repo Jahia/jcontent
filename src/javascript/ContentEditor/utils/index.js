@@ -7,6 +7,7 @@ export * from './getCapitalized';
 export * from './getChildrenOrder';
 export * from './getNodeTypeIcon';
 export * from './systemName.utils';
+export * from './translateLanguages';
 export * from './useKeydownListener';
 export * from './useSwitchLanguage';
 export * from './useReorderList';

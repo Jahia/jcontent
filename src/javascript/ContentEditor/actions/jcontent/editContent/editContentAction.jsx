@@ -4,6 +4,7 @@ import * as PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
+import {getFirstOtherLanguage} from '~/ContentEditor/utils';
 
 export const EditContent = ({
     path,
@@ -33,9 +34,10 @@ export const EditContent = ({
         return false;
     }
 
-    // For side-by-side, pick a source language that is active and different from the current language, if any
-    const languages = res.node?.site?.languages?.filter(l => l.activeInEdit) || [];
-    const sourceLang = languages.find(l => l.language !== language) || languages[0];
+    // For side-by-side (translate mode), the editable/target language stays the current language;
+    // the source (read-only) language defaults to the first other active language alphabetically (#2484).
+    const languages = (res.node?.site?.languages || []).filter(l => l.activeInEdit).map(l => l.language);
+    const sourceLang = getFirstOtherLanguage({languages, currentLanguage: language});
 
     return (
         <Render
@@ -47,7 +49,7 @@ export const EditContent = ({
                     lang: language,
                     isFullscreen,
                     editCallback,
-                    sideBySideContext: {lang: sourceLang?.language},
+                    sideBySideContext: {lang: sourceLang},
                     ...otherProps.editConfig
                 })}
         />

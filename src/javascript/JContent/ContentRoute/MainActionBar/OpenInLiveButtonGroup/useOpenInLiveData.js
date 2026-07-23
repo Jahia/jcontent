@@ -59,8 +59,22 @@ export const useOpenInLiveData = path => {
         node.publicationInfo.status !== 'UNPUBLISHED';
 
     const currentHostname = globalThis.location.hostname;
-    const isHostnameInList = [serverName, ...serverNameAliases].includes(currentHostname) ||
+    const currentSitePath = node?.site?.path;
+    const allSites = data?.jcr?.allSites?.siteNodes ?? [];
+
+    // Guard 1: hostname already in this site's names (no duplicate), or site uses localhost.
+    // Jahia resolves site context from the request hostname — using localhost across different
+    // hostnames renders in the wrong site context.
+    const isHostnameInCurrentSite = [serverName, ...serverNameAliases].includes(currentHostname) ||
         [serverName, ...serverNameAliases].includes('localhost');
+
+    // Guard 2: hostname is already claimed by a different site — Jahia would resolve that other
+    // site's context instead, opening the wrong site.
+    const isHostnameClaimedByAnotherSite = allSites.some(site =>
+        site.site?.path !== currentSitePath &&
+        [site.site?.serverName, ...(site.site?.additionalServerNames?.values ?? [])].includes(currentHostname)
+    );
+
     return {
         selectedServerName,
         selectServerName,
@@ -68,7 +82,7 @@ export const useOpenInLiveData = path => {
             urlPath: node.renderUrl,
             serverName,
             serverNameAliases,
-            currentHostname: isHostnameInList ? null : currentHostname
+            currentHostname: (isHostnameInCurrentSite || isHostnameClaimedByAnotherSite) ? null : currentHostname
         } : null
     };
 };

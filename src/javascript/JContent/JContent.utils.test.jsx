@@ -47,31 +47,31 @@ describe('resolveUrlForLiveOrPreview', () => {
     //   absolute (http://servera/cms/render/...) when j:serverName is non-localhost
 
     const relativePath = '/cms/render/live/en/sites/digitall/home.html';
-    const absoluteServera = 'http://servera/cms/render/live/en/sites/luxe/home.html';
-    const absoluteServeraWithPort = 'http://servera:8080/cms/render/live/en/sites/luxe/home.html';
-    const absoluteServerb = 'http://serverb/cms/render/live/en/sites/siteb/home.html';
+    const absoluteServera = 'https://servera/cms/render/live/en/sites/luxe/home.html';
+    const absoluteServeraWithPort = 'https://servera:8080/cms/render/live/en/sites/luxe/home.html';
+    const absoluteServerb = 'https://serverb/cms/render/live/en/sites/siteb/home.html';
 
     const setLocation = (hostname, port = '') => {
         Object.defineProperty(window, 'location', {
             configurable: true,
-            value: {hostname, port, protocol: 'http:'}
+            value: {hostname, port, protocol: 'https:'}
         });
     };
 
     describe('preview (isLive=false) or no serverName', () => {
         it('uses current domain with port for preview', () => {
             setLocation('servera', '8080');
-            expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('http://servera:8080/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('https://servera:8080/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('uses current domain with port when serverName is not provided', () => {
             setLocation('servera', '8080');
-            expect(resolveUrlForLiveOrPreview(relativePath, true, null)).toBe('http://servera:8080/cms/render/live/en/sites/digitall/home.html');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, null)).toBe('https://servera:8080/cms/render/live/en/sites/digitall/home.html');
         });
 
         it('omits port when on standard port', () => {
             setLocation('servera', '');
-            expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('http://servera/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
         });
     });
 
@@ -79,19 +79,19 @@ describe('resolveUrlForLiveOrPreview', () => {
         beforeEach(() => setLocation('servera', '8080'));
 
         it('luxe: select servera (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('http://servera:8080/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera:8080/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select server2 (alias, external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('http://server2/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('digitall: select localhost → opens at localhost with port', () => {
-            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('http://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
         });
 
         it('siteb: select serverb (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('http://serverb/cms/render/live/en/sites/siteb/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
         });
     });
 
@@ -99,19 +99,19 @@ describe('resolveUrlForLiveOrPreview', () => {
         beforeEach(() => setLocation('localhost', '8080'));
 
         it('luxe: select servera (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('http://servera/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select server2 (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('http://server2/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('digitall: select localhost (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('http://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
         });
 
         it('siteb: select serverb (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('http://serverb/cms/render/live/en/sites/siteb/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
         });
     });
 
@@ -119,23 +119,23 @@ describe('resolveUrlForLiveOrPreview', () => {
         beforeEach(() => setLocation('serverb', '8080'));
 
         it('luxe: select servera (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'servera')).toBe('http://servera/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select server2 (external alias) → opens without port, not at servera', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'server2')).toBe('http://server2/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select serverb (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'serverb')).toBe('http://serverb:8080/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'serverb')).toBe('https://serverb:8080/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('digitall: select localhost → opens at localhost with port, not at serverb', () => {
-            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('http://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
         });
 
         it('siteb: select serverb (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('http://serverb:8080/cms/render/live/en/sites/siteb/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb:8080/cms/render/live/en/sites/siteb/home.html');
         });
     });
 
@@ -143,19 +143,19 @@ describe('resolveUrlForLiveOrPreview', () => {
         beforeEach(() => setLocation('server2', '8080'));
 
         it('luxe: select servera (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('http://servera/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select server2 (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('http://server2:8080/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2:8080/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('digitall: select localhost → opens at localhost with port, not at server2', () => {
-            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('http://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
         });
 
         it('siteb: select serverb (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('http://serverb/cms/render/live/en/sites/siteb/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
         });
     });
 
@@ -163,27 +163,27 @@ describe('resolveUrlForLiveOrPreview', () => {
         beforeEach(() => setLocation('local1', '8080'));
 
         it('luxe: select servera (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('http://servera/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select server2 (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('http://server2/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('luxe: select local1 (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'local1')).toBe('http://local1:8080/cms/render/live/en/sites/luxe/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'local1')).toBe('https://local1:8080/cms/render/live/en/sites/luxe/home.html');
         });
 
         it('digitall: select localhost → opens at localhost with port, not at local1', () => {
-            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('http://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
         });
 
         it('siteb: select serverb (external) → opens without port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('http://serverb/cms/render/live/en/sites/siteb/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
         });
 
         it('siteb: select local1 (current domain) → opens with port', () => {
-            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'local1')).toBe('http://local1:8080/cms/render/live/en/sites/siteb/home.html');
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'local1')).toBe('https://local1:8080/cms/render/live/en/sites/siteb/home.html');
         });
     });
 });

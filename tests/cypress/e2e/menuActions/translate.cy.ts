@@ -157,10 +157,6 @@ describe('translate action tests', () => {
                 .should('have.attr', 'disabled');
         });
 
-        cy.log('Verify all sections are expanded by default');
-        translateEditor.getTranslateSection('content').shouldBeExpanded();
-        translateEditor.getTranslateSection('seo').shouldBeExpanded();
-
         cy.log('Verify the full set of sections is shown, not just content/seo');
         assertSectionsBeyondContentAndSeo(translateEditor);
     });

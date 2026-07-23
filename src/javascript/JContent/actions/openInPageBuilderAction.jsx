@@ -18,17 +18,16 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
     const showOnNodeTypes = ['jmix:mainResource'];
     // The jmix:mainResource is a supertype-inherited mixin, so it never appears in the
     // prefetched node's mixinTypes — the fast-path can't decide it, defer to useNodeChecks.
-    const skip = !isPageBuilderMode;
 
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
-        skip,
+        skip: isPageBuilderMode,
         showOnNodeTypes
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;
     }
 
-    if (skip || !res.node) {
+    if (isPageBuilderMode || !res.node) {
         return (<Render {...others} isVisible={false}/>);
     }
 

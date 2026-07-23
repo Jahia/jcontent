@@ -7,7 +7,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {batchActions} from 'redux-batched-actions';
 import {expandTree} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
-import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
+
 export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
@@ -16,7 +16,9 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
     const isPageBuilderMode = (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER);
 
     const showOnNodeTypes = ['jmix:mainResource'];
-    const skip = !isPageBuilderMode && isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
+    // The jmix:mainResource is a supertype-inherited mixin, so it never appears in the
+    // prefetched node's mixinTypes — the fast-path can't decide it, defer to useNodeChecks.
+    const skip = !isPageBuilderMode;
 
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
         skip,

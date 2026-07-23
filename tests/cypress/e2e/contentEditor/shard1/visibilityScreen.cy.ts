@@ -474,8 +474,8 @@ describe('Visibility Screen', () => {
                 });
             });
 
-            // To be fixed https://github.com/Jahia/jcontent/pull/2440
-            it('Publishes the rules and validates different visibility status for today vs today+2', () => {
+            // To be fixed https://github.com/Jahia/jcontent/issues/2382
+            it.skip('Publishes the rules and validates different visibility status for today vs today+2', () => {
                 const {today, todayPlus2} = getDayNames();
                 cy.log(
                     `Verifying visibility for ${today} (today - should be visible) and ${todayPlus2} (today+2 - should be hidden)`

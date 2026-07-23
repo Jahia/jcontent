@@ -21,6 +21,9 @@ describe('translate action tests', () => {
 
     const parentPath = `/sites/${siteKey}/contents`;
     const name = 'translate-field-test';
+    // A node translated into every active language, to exercise the source-language defaulting
+    // when switching from edit to translate (#2484).
+    const multiLangName = 'translate-multilang-test';
 
     before('test setup', () => {
         createSite(siteKey, {
@@ -39,6 +42,17 @@ describe('translate action tests', () => {
             properties: [
                 {name: 'smallText', value: 'smallText in English', language: 'en'},
                 {name: 'textarea', value: 'textarea in English', language: 'en'}
+            ]
+        });
+
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            primaryNodeType: 'qant:allFields',
+            name: multiLangName,
+            properties: [
+                {name: 'smallText', value: 'smallText in English', language: 'en'},
+                {name: 'smallText', value: 'smallText in French', language: 'fr'},
+                {name: 'smallText', value: 'smallText in German', language: 'de'}
             ]
         });
 
@@ -79,12 +93,23 @@ describe('translate action tests', () => {
             .shouldNotHaveRoleItem('sbsTranslate');
     });
 
+    it('labels the context-menu action "Translate to"', () => {
+        // The action reads as "translate from the current language to others" (#2484)
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents').switchToListMode();
+        jcontent.getTable().getRowByName(name).contextMenu()
+            .get().find('[data-sel-role="sbsTranslate"]')
+            .should('contain.text', 'Translate to');
+    });
+
     it('can open translate dialog on contents and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitContent(siteKey, 'en', 'content-folders/contents', name);
 
-        cy.log('Verify source language is default to English');
-        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
-        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        // "Translate to" translates from the current language to another one: the source is the current
+        // language (en), and the target defaults to the first untranslated language alphabetically. The
+        // node is translated in en only, so the target is de. (#2484)
+        cy.log('Verify source is the current language (en) and target is the first untranslated language (de)');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('de');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -117,9 +142,10 @@ describe('translate action tests', () => {
     it('can open translate dialog on pages and has the correct settings', () => {
         const translateEditor = TranslateEditor.visitPage(siteKey, 'en', 'pages/home', 'home');
 
-        cy.log('Verify source language is the first one (german)');
-        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
-        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        // Source is the current language (en); target defaults to the first untranslated language (de). (#2484)
+        cy.log('Verify source is the current language (en) and target is the first untranslated language (de)');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('de');
 
         cy.log('Verify source column fields are read-only');
         translateEditor.getSourceFields()
@@ -232,6 +258,42 @@ describe('translate action tests', () => {
         cy.log('Mode is still translate after the language switch (form not remounted) — regression guard for #2483');
         jcontent.assertHeaderActionSelected('tab-translate');
         translateEditor.getTranslateLanguageSwitcher().isSelectedLang('fr');
+    });
+
+    it('defaults the source language to the first translated language alphabetically when switching to translate', () => {
+        // Editing in EN (default). The node is translated in en/fr/de, so among the other active
+        // languages the source defaults to the first alphabetically (de), not the default (en, the target). (#2484)
+        ContentEditor.visit(`${parentPath}/${multiLangName}`, siteKey, 'en', 'content-folders/contents');
+        const jcontent = new JContent();
+        const translateEditor = new TranslateEditor();
+
+        jcontent.assertHeaderActionSelected('tab-edit');
+        jcontent.selectHeaderTab('tab-translate');
+        jcontent.assertHeaderActionSelected('tab-translate');
+        translateEditor.getTranslateColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+        translateEditor.getSourceColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+
+        cy.log('Target stays English, source defaults to German (first other translated language)');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('en');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('de');
+    });
+
+    it('defaults the source language to the site default when switching to translate from another language', () => {
+        // Editing in FR. Among the other translated active languages (en/de), the source defaults to
+        // the site default language (en) rather than the first alphabetically (de). (#2484)
+        ContentEditor.visit(`${parentPath}/${multiLangName}`, siteKey, 'fr', 'content-folders/contents');
+        const jcontent = new JContent();
+        const translateEditor = new TranslateEditor();
+
+        jcontent.assertHeaderActionSelected('tab-edit');
+        jcontent.selectHeaderTab('tab-translate');
+        jcontent.assertHeaderActionSelected('tab-translate');
+        translateEditor.getTranslateColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+        translateEditor.getSourceColumn().get().find('.moonstone-loader', {timeout: 10000}).should('not.exist');
+
+        cy.log('Target stays French, source defaults to English (the site default language)');
+        translateEditor.getTranslateLanguageSwitcher().isSelectedLang('fr');
+        translateEditor.getSourceLanguageSwitcher().isSelectedLang('en');
     });
 
     it('opens directly in translate mode when forced through the editor config (custom UI)', () => {

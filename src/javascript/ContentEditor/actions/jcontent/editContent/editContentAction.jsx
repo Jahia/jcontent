@@ -4,6 +4,8 @@ import * as PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
+import {getFirstOtherLanguage, getFirstUntranslatedLanguage} from '~/ContentEditor/utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const EditContent = ({
     path,
@@ -33,9 +35,21 @@ export const EditContent = ({
         return false;
     }
 
-    // For side-by-side, pick a source language that is active and different from the current language, if any
-    const languages = res.node?.site?.languages?.filter(l => l.activeInEdit) || [];
-    const sourceLang = languages.find(l => l.language !== language) || languages[0];
+    // Default the side-by-side languages when opening the editor (#2484). The two entry points
+    // into translate mode behave differently, distinguished by the action opening on the translate tab:
+    //  - Plain edit actions (edit, editAdvanced, quickEdit, …) keep editing the current language;
+    //    the source (read-only) column defaults to the first other active language alphabetically.
+    //  - The right-click "Translate to" action translates *from* the current language *to* another one,
+    //    so the source is the current language and the editable/target defaults to the first active
+    //    language, alphabetically, that has no translation yet.
+    const languages = (res.node?.site?.languages || []).filter(l => l.activeInEdit).map(l => l.language);
+    const isTranslateAction = otherProps.editConfig?.advancedOpenTab === Constants.editPanel.translateTab;
+    const editLang = isTranslateAction ?
+        getFirstUntranslatedLanguage({languages, translationLanguages: res.node?.translationLanguages, currentLanguage: language}) :
+        language;
+    const sourceLang = isTranslateAction ?
+        language :
+        getFirstOtherLanguage({languages, currentLanguage: language});
 
     return (
         <Render
@@ -44,10 +58,10 @@ export const EditContent = ({
             onClick={() =>
                 api.edit({
                     uuid: res.node.uuid,
-                    lang: language,
+                    lang: editLang,
                     isFullscreen,
                     editCallback,
-                    sideBySideContext: {lang: sourceLang?.language},
+                    sideBySideContext: {lang: sourceLang},
                     ...otherProps.editConfig
                 })}
         />

@@ -7,6 +7,8 @@ import styles from './EditPanelHeader.scss';
 import {PublishMenu} from './PublishMenu';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts/ContentEditorConfig';
+import {getTranslateSourceLanguage} from '~/ContentEditor/utils';
 import {EditPanelLanguageSwitcher} from '../EditPanelLanguageSwitcher';
 import {HeaderBadges} from '../HeaderBadges';
 import PropTypes from 'prop-types';
@@ -36,7 +38,8 @@ export const EditPanelHeader = ({
     displayableTabs = [],
     targetActionKey = 'content-editor/header/3dots'
 }) => {
-    const {nodeData, site, mode} = useContentEditorContext();
+    const {nodeData, siteInfo, site, mode, lang} = useContentEditorContext();
+    const {setSideBySideContext} = useContentEditorConfigContext();
     const {t} = useTranslation('jcontent');
     const [activeTab, setActiveTab] = activeTabState || [];
 
@@ -138,6 +141,22 @@ export const EditPanelHeader = ({
                                 if (engineTabIds.includes(item.value)) {
                                     openEngineTab([item.value]);
                                 } else {
+                                    // Entering translate mode: default the source (read-only) language.
+                                    // The target stays the current editable language; the source is the
+                                    // site default among already-translated active languages, else the
+                                    // first alphabetically, else the current language (#2484).
+                                    if (item.value === Constants.editPanel.translateTab) {
+                                        setSideBySideContext?.(prev => ({
+                                            ...prev,
+                                            lang: getTranslateSourceLanguage({
+                                                languages: siteInfo?.languages?.map(l => l.language),
+                                                translationLanguages: nodeData?.translationLanguages,
+                                                defaultLanguage: siteInfo?.defaultLanguage,
+                                                targetLanguage: lang
+                                            })
+                                        }));
+                                    }
+
                                     setActiveTab(item.value);
                                 }
                             }}

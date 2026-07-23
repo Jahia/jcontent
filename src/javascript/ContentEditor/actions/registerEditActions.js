@@ -16,6 +16,7 @@ import {
 } from '@jahia/moonstone';
 import {editContentAction} from './jcontent/editContent/editContentAction';
 import {editContentActionWrapper} from './jcontent/editContent/editContentWrapper';
+import {editContentTranslationLanguagesFragment} from './jcontent/editContent/editContent.gql-queries';
 import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openWorkInProgressAction';
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
@@ -145,12 +146,15 @@ export const registerEditActions = registry => {
 
     registry.add('action', 'sbsTranslate', editContentActionWrapper, {
         buttonIcon: <Translate/>,
-        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
+        // "Translate to": this action translates from the current language to another one (#2484)
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.translateToLanguage',
         dataSelRole: 'sbsTranslate',
         showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
         requiredSitePermission: ['translateAction'],
         getDisplayName: true,
         getSiteLanguages: true,
+        // Needed to default the target to a not-yet-translated language (#2484)
+        applyFragment: editContentTranslationLanguagesFragment,
         isFullscreen: true,
         editConfig: {advancedOpenTab: Constants.editPanel.translateTab, useFormDefinition: useTranslateFormDefinition},
         isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1

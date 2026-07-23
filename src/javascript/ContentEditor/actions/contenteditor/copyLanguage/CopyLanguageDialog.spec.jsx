@@ -36,8 +36,7 @@ describe('CopyLanguageDialog', () => {
             }],
             t: jest.fn(key => 'translated_' + key),
             onCloseDialog: jest.fn(),
-            formik: {},
-            sideBySideContext: {}
+            formik: {}
         };
     });
 

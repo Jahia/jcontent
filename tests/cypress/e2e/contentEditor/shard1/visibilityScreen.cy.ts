@@ -1056,7 +1056,9 @@ describe('Visibility Screen', () => {
         const richTextVisible = 'visibility-copy-visible';
         const richTextVisibleText = 'Visible Visibility Content';
         const testPageName = 'testPageVisibility';
+        const refPageName = 'testPageVisibilityRef';
         const areaMainPath = `/sites/${sitekeyNonI18n}/home/${testPageName}/area-main`;
+        const refAreaMainPath = `/sites/${sitekeyNonI18n}/home/${refPageName}/area-main`;
 
         before(() => {
             const {today: todayDay, todayPlus2: notTodayDay} = getDayNames();
@@ -1068,7 +1070,7 @@ describe('Visibility Screen', () => {
                 properties: [{name: 'text', value: richTextHiddenText, language: 'en'}]
             });
             cy.apollo({
-                mutationFile: 'contentEditor/visibility/createVisibilityCondition.graphql',
+                mutationFile: 'contentEditor/visibility/createRules.graphql',
                 variables: {
                     contentPath: `/sites/${sitekeyNonI18n}/contents/${richTextHidden}`,
                     dayOfWeek: [notTodayDay.toLowerCase()]
@@ -1082,7 +1084,7 @@ describe('Visibility Screen', () => {
                 properties: [{name: 'text', value: richTextVisibleText, language: 'en'}]
             });
             cy.apollo({
-                mutationFile: 'contentEditor/visibility/createVisibilityCondition.graphql',
+                mutationFile: 'contentEditor/visibility/createRules.graphql',
                 variables: {
                     contentPath: `/sites/${sitekeyNonI18n}/contents/${richTextVisible}`,
                     dayOfWeek: [todayDay.toLowerCase()]
@@ -1100,11 +1102,24 @@ describe('Visibility Screen', () => {
                 children: [{name: 'area-main', primaryNodeType: 'jnt:contentList'}]
             });
 
+            // Dedicated page for the reference scenarios, isolated from the copy/paste page above.
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/home`,
+                name: refPageName,
+                primaryNodeType: 'jnt:page',
+                properties: [
+                    {name: 'jcr:title', value: 'testPageVisibilityRef', language: 'en'},
+                    {name: 'j:templateName', type: 'STRING', value: 'simple'}
+                ],
+                children: [{name: 'area-main', primaryNodeType: 'jnt:contentList'}]
+            });
+
             publishAndWait(`/sites/${sitekeyNonI18n}`);
         });
 
         after(() => {
             deleteNode(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+            deleteNode(`/sites/${sitekeyNonI18n}/home/${refPageName}`);
             deleteNode(`/sites/${sitekeyNonI18n}/contents/${richTextHidden}`);
             deleteNode(`/sites/${sitekeyNonI18n}/contents/${richTextVisible}`);
             cy.logout();
@@ -1176,7 +1191,7 @@ describe('Visibility Screen', () => {
 
         it('referenced content with visible condition is shown in live', () => {
             addNode({
-                parentPathOrId: areaMainPath,
+                parentPathOrId: refAreaMainPath,
                 name: 'ref-visible',
                 primaryNodeType: 'jnt:contentReference',
                 properties: [
@@ -1184,16 +1199,16 @@ describe('Visibility Screen', () => {
                 ]
             });
 
-            publishAndWait(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+            publishAndWait(`/sites/${sitekeyNonI18n}/home/${refPageName}`);
 
             // Verify the referenced content is visible in live
-            cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
+            cy.visit(`/sites/${sitekeyNonI18n}/home/${refPageName}.html`);
             cy.get('body').should('contain', richTextVisibleText);
         });
 
         it('referenced content with not-visible condition is hidden in live', () => {
             addNode({
-                parentPathOrId: areaMainPath,
+                parentPathOrId: refAreaMainPath,
                 name: 'ref-hidden',
                 primaryNodeType: 'jnt:contentReference',
                 properties: [
@@ -1201,10 +1216,10 @@ describe('Visibility Screen', () => {
                 ]
             });
 
-            publishAndWait(`/sites/${sitekeyNonI18n}/home/${testPageName}`);
+            publishAndWait(`/sites/${sitekeyNonI18n}/home/${refPageName}`);
 
             // Verify the referenced content is NOT visible in live
-            cy.visit(`/sites/${sitekeyNonI18n}/home/${testPageName}.html`);
+            cy.visit(`/sites/${sitekeyNonI18n}/home/${refPageName}.html`);
             cy.get('body').should('not.contain', richTextHiddenText);
         });
     }); // End describe('Visibility Conditions on Copied Content')

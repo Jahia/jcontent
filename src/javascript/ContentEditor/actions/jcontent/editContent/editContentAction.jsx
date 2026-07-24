@@ -4,8 +4,9 @@ import * as PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
-import {getFirstOtherLanguage, getFirstUntranslatedLanguage} from '~/ContentEditor/utils';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {editContentTranslationLanguagesFragment} from './editContent.gql-queries';
+import {getBestSourceLanguage, getBestTargetLanguage} from '~/ContentEditor/utils/translateLanguages';
 
 export const EditContent = ({
     path,
@@ -35,21 +36,26 @@ export const EditContent = ({
         return false;
     }
 
-    // Default the side-by-side languages when opening the editor (#2484). The two entry points
-    // into translate mode behave differently, distinguished by the action opening on the translate tab:
-    //  - Plain edit actions (edit, editAdvanced, quickEdit, …) keep editing the current language;
-    //    the source (read-only) column defaults to the first other active language alphabetically.
-    //  - The right-click "Translate to" action translates *from* the current language *to* another one,
-    //    so the source is the current language and the editable/target defaults to the first active
-    //    language, alphabetically, that has no translation yet.
-    const languages = (res.node?.site?.languages || []).filter(l => l.activeInEdit).map(l => l.language);
-    const isTranslateAction = otherProps.editConfig?.advancedOpenTab === Constants.editPanel.translateTab;
-    const editLang = isTranslateAction ?
-        getFirstUntranslatedLanguage({languages, translationLanguages: res.node?.translationLanguages, currentLanguage: language}) :
-        language;
-    const sourceLang = isTranslateAction ?
+    // We have no guarentee that the site node is fully populated as they are many ways to get to this code
+    // Consider all values nullable
+    const defaultLanguage = res.node?.site?.defaultLanguage;
+    const activeLanguages = (res.node?.site?.languages || [])
+        .filter(lang => lang.activeInEdit)
+        .map(lang => lang.language)
+        .sort((a, z) => a.localeCompare(z));
+    const availableTranslations = (res.node?.translationLanguages || []).sort((a, z) => a.localeCompare(z));
+
+    // `Right click > Advanced editing` and `Right click > Translate to` both open this panel
+    // but should pick different source and target languages
+    const isTranslateTo = otherProps.editConfig?.advancedOpenTab === Constants.editPanel.translateTab;
+
+    const sourceLang = isTranslateTo ?
         language :
-        getFirstOtherLanguage({languages, currentLanguage: language});
+        getBestSourceLanguage(language, availableTranslations, defaultLanguage);
+
+    const targetLang = isTranslateTo ?
+        getBestTargetLanguage(language, availableTranslations, activeLanguages) :
+        language;
 
     return (
         <Render
@@ -58,7 +64,7 @@ export const EditContent = ({
             onClick={() =>
                 api.edit({
                     uuid: res.node.uuid,
-                    lang: editLang,
+                    lang: targetLang,
                     isFullscreen,
                     editCallback,
                     sideBySideContext: {lang: sourceLang},
@@ -84,5 +90,6 @@ EditContent.propTypes = {
 };
 
 export const editContentAction = {
-    component: EditContent
+    component: EditContent,
+    applyFragment: editContentTranslationLanguagesFragment
 };

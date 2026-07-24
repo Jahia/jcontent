@@ -2,7 +2,7 @@ import React from 'react';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 import {JahiaRenderedModulesUtil} from '../JContent.utils';
 
@@ -65,7 +65,7 @@ const getPlaceholderNodeTypes = (e, parentPath) => {
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
-    const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}));
+    const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}), shallowEqual);
     const clickedPath = clickedElement.element.getAttribute('path');
 
     const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)]

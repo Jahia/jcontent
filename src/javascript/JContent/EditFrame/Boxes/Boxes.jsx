@@ -386,7 +386,7 @@ export const Boxes = ({currentDocument, currentFrameRef, currentDndInfo, addInte
     const memoizedPlaceholders = useMemo(() => {
         return createButtons
             .map(({node, element}) => (
-                <div key={`createButtons-${node.path}`} style={{display: clickedElement ? 'none' : undefined}}>
+                <div key={`createButtons-${element.getAttribute('id')}`} style={{display: clickedElement ? 'none' : undefined}}>
                     <Create key={element.getAttribute('id')}
                             node={node}
                             nodes={nodes}

@@ -6,6 +6,7 @@ import {
 } from '~/ContentEditor/contexts';
 import PropTypes from 'prop-types';
 import {SourceContentFormBuilder} from './SourceContentFormBuilder';
+import {getBestSourceLanguage} from '~/ContentEditor/utils/translateLanguages';
 
 /**
  * Wrapper component for displaying the source content in a translation workflow.
@@ -35,24 +36,36 @@ export const SourceContentPanel = () => {
  * - Renders the SourceContentFormBuilder with overridden configuration
  */
 const SourceContentPanelInner = ({baseConfig, baseContext}) => {
-    const contextConfig = useMemo(() => ({
-        ...baseConfig,
-        // Fall back to the current editable language when no explicit source language is set
-        lang: baseConfig.sideBySideContext?.lang ?? baseConfig.lang,
-        sideBySideContext: {
-            ...baseConfig.sideBySideContext,
-            enabled: true,
-            readOnly: true,
-            translateLang: baseConfig.lang, // Editable language
-            // We set this based on the editable nodeData (from baseContext), not read-only nodeData
-            hasWritePermission: baseContext.nodeData?.hasWritePermission,
-            lockedAndCannotBeEdited: baseContext.nodeData?.lockedAndCannotBeEdited
-        }
-    }), [
-        baseConfig,
-        baseContext.nodeData?.hasWritePermission,
-        baseContext.nodeData?.lockedAndCannotBeEdited
-    ]);
+    const contextConfig = useMemo(() => {
+        const translationLanguages = baseContext.nodeData?.translationLanguages;
+        const targetLanguage = baseConfig.lang; // Editable language
+        const explicitSourceLanguage = baseConfig.sideBySideContext?.lang;
+        const defaultLanguage = baseContext.siteInfo?.defaultLanguage;
+
+        // Pick the source language that makes the most sense for the user
+        const sourceLanguage = (explicitSourceLanguage && explicitSourceLanguage !== targetLanguage) ?
+            explicitSourceLanguage :
+            getBestSourceLanguage(
+                targetLanguage,
+                [...(translationLanguages || [])].sort((a, z) => a.localeCompare(z)),
+                defaultLanguage
+            );
+
+        return {
+            ...baseConfig,
+            lang: sourceLanguage,
+            sideBySideContext: {
+                ...baseConfig.sideBySideContext,
+                lang: sourceLanguage,
+                enabled: true,
+                readOnly: true,
+                translateLang: targetLanguage,
+                // We set this based on the editable nodeData (from baseContext), not read-only nodeData
+                hasWritePermission: baseContext.nodeData?.hasWritePermission,
+                lockedAndCannotBeEdited: baseContext.nodeData?.lockedAndCannotBeEdited
+            }
+        };
+    }, [baseConfig, baseContext.nodeData, baseContext.siteInfo]);
 
     return (
         <ContentEditorConfigContextProvider config={contextConfig}>
@@ -74,8 +87,11 @@ SourceContentPanelInner.propTypes = {
     baseContext: PropTypes.shape({
         nodeData: PropTypes.shape({
             hasWritePermission: PropTypes.bool,
-            lockedAndCannotBeEdited: PropTypes.bool
+            lockedAndCannotBeEdited: PropTypes.bool,
+            translationLanguages: PropTypes.arrayOf(PropTypes.string)
+        }),
+        siteInfo: PropTypes.shape({
+            defaultLanguage: PropTypes.string
         })
     }).isRequired
 };
-

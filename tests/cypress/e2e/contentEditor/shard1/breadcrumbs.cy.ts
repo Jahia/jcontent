@@ -1,4 +1,4 @@
-import {ContentEditor, JContent} from '../../../page-object';
+import {JContent} from '../../../page-object';
 import {addNode, createSite, deleteSite} from '@jahia/cypress';
 
 describe('Create content tests', () => {
@@ -10,18 +10,22 @@ describe('Create content tests', () => {
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'breadcrumbFolder',
-            primaryNodeType: 'jnt:contentFolder'
+            primaryNodeType: 'jnt:contentFolder',
+            children: [{
+                name: 'mylist',
+                primaryNodeType: 'jnt:contentList',
+                children: [{name: 'atext', primaryNodeType: 'jnt:text'}]
+            }]
         });
         addNode({
-            parentPathOrId: `/sites/${siteKey}/contents/breadcrumbFolder`,
-            name: 'mylist',
+            parentPathOrId: `/sites/${siteKey}/home`,
+            name: 'area-main',
             primaryNodeType: 'jnt:contentList',
-            children: [
-                {
-                    name: 'atext',
-                    primaryNodeType: 'jnt:text'
-                }
-            ]
+            children: [{
+                name: 'test-content1',
+                primaryNodeType: 'jnt:bigText',
+                properties: [{name: 'text', language: 'en', value: 'test 1'}]
+            }]
         });
     });
 
@@ -37,8 +41,7 @@ describe('Create content tests', () => {
     it('Checks breadcrumbs inside CE on a content list', () => {
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/breadcrumbFolder/mylist');
         jcontent.switchToListMode();
-        jcontent.editComponentByRowName('atext');
-        const contentEditor = new ContentEditor();
+        const contentEditor = jcontent.editComponentByRowName('atext');
         contentEditor.switchToAdvancedMode();
 
         contentEditor.getBreadcrumb('mylist').should('be.visible');
@@ -47,14 +50,15 @@ describe('Create content tests', () => {
     });
 
     it('Checks breadcrumbs inside CE of a page', () => {
-        jcontent = JContent.visit(siteKey, 'en', 'pages/home/search-results');
+        jcontent = JContent.visit(siteKey, 'en', 'pages/home');
+        cy.get('h1').contains('Home');
+        cy.get('.moonstone-loader').should('not.exist');
         jcontent.switchToListMode();
-        jcontent.editComponentByRowName('simple-search-form');
-        const contentEditor = new ContentEditor();
+        const contentEditor = jcontent.editComponentByRowName('test-content1');
         contentEditor.switchToAdvancedMode();
 
-        contentEditor.getBreadcrumb('Search Results').should('be.visible');
-        contentEditor.getBreadcrumb('landing').should('be.visible').click();
-        cy.get('h1').contains('landing');
+        contentEditor.getBreadcrumb('Home').should('be.visible');
+        contentEditor.getBreadcrumb('area-main').should('be.visible').click();
+        cy.get('h1').contains('area-main');
     });
 });

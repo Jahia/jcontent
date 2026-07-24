@@ -37,7 +37,12 @@ export function getBestTargetLanguage(
 ) {
     const set = new Set(availableTranslations);
 
-    // Return the first active language that is not the source language and does not have a translation yet
-    // Fallback to the source language if none is found
-    return activeLanguages.find(lang => lang !== sourceLanguage && !set.has(lang)) ?? sourceLanguage;
+    const nonSourceLanguages = activeLanguages.filter(
+        lang => lang !== sourceLanguage
+    );
+
+    // Return the first non-source active language that does not have a translation yet.
+    // If the node is fully translated, return the first non-source active language alphabetically.
+    // Fall back to the source language.
+    return nonSourceLanguages.find(lang => !set.has(lang)) ?? nonSourceLanguages[0] ?? sourceLanguage;
 }

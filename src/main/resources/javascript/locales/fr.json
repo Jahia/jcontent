@@ -625,7 +625,7 @@
             "dialogSubTitle": "\"Copier depuis\" permet de copier le contenu des champs depuis une langue vers la langue courante.",
             "dialogTitle": "Copier depuis",
             "listLabel": "Copier depuis",
-            "name": "Copier depuis une langue"
+            "name": "Copier une langue"
           },
           "save": {
             "name": "Enregistrer",
@@ -698,7 +698,9 @@
             "dialogSubTitle": "Vous pouvez marquer le contenu comme \"travail en cours\" pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
             "label": {
               "mark": "Marquer comme \"travail en cours\"",
-              "unmark": "Ne pas marquer comme \"travail en cours\""
+              "unmark": "Ne pas marquer comme \"travail en cours\"",
+              "markShort": "Marquer comme WIP",
+              "unmarkShort": "Ne pas marquer comme WIP"
             },
             "localizedPropertiesOnly": "Propriétés internationalisées seulement",
             "localizedPropertiesOnlySubText": "Le contenu ne sera pas publiable dans les langues sélectionnées. Les propriétés communes à toutes les langues peuvent cependant faire partie d'une publication.",

@@ -1,4 +1,17 @@
-import {getNewCounter, removeFileExtension, isDescendant, resolveUrlForLiveOrPreview} from './JContent.utils';
+import {registry} from '@jahia/ui-extender';
+import {
+    canEditInPageBuilder,
+    getNewCounter,
+    isDescendant,
+    removeFileExtension,
+    resolveUrlForLiveOrPreview
+} from './JContent.utils';
+
+jest.mock('@jahia/ui-extender', () => ({
+    registry: {
+        find: jest.fn(() => [])
+    }
+}));
 
 describe('removeFileExtension', () => {
     it('should remove file extension', () => {
@@ -199,5 +212,45 @@ describe('isDescendant', () => {
         expect(isDescendant('', '/site/test')).toBe(false);
         expect(isDescendant('/site', null)).toBe(false);
         expect(isDescendant('/site', '')).toBe(true);
+    });
+});
+
+describe('canEditInPageBuilder', () => {
+    const site = 'mySite';
+    const nodes = {
+        '/sites/otherSite/ref': {primaryNodeType: {name: 'jnt:contentReference'}}
+    };
+
+    beforeEach(() => {
+        registry.find.mockReturnValue([]);
+    });
+
+    it('should allow editing nodes from the current site', () => {
+        expect(canEditInPageBuilder('/sites/mySite/home/content', nodes, site)).toBe(true);
+    });
+
+    it('should not allow editing nodes from another site by default', () => {
+        expect(canEditInPageBuilder('/sites/otherSite/home/content', nodes, site)).toBe(false);
+    });
+
+    it('should never allow editing references, even from the current site', () => {
+        const refNodes = {'/sites/mySite/list': {primaryNodeType: {name: 'jnt:contentReference'}}};
+        expect(canEditInPageBuilder('/sites/mySite/list@/node', refNodes, site)).toBe(false);
+    });
+
+    it('should allow editing nodes under a registered editable root path', () => {
+        registry.find.mockReturnValue([{rootPath: '/sites/filesSite/contents'}]);
+        expect(canEditInPageBuilder('/sites/filesSite/contents/foo', nodes, site)).toBe(true);
+        expect(canEditInPageBuilder('/sites/filesSite/other/foo', nodes, site)).toBe(false);
+    });
+
+    it('should allow editing nodes matched by a registered predicate', () => {
+        registry.find.mockReturnValue([{matches: path => path.startsWith('/sites/filesSite/')}]);
+        expect(canEditInPageBuilder('/sites/filesSite/anything', nodes, site)).toBe(true);
+    });
+
+    it('should not allow editing a reference even if it lives under a registered editable root', () => {
+        registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
+        expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
     });
 });

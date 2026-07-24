@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {batchActions} from 'redux-batched-actions';
@@ -44,6 +44,7 @@ const constraintsByType = {
 export const FileUploadActionComponent = props => {
     const {path, uploadType, node: prefetchedNode, render: Render, loading: Loading} = props;
     const componentRenderer = useContext(ComponentRendererContext);
+    const language = useSelector(state => state.language);
     const dispatch = useDispatch();
     const dispatchBatch = actions => dispatch(batchActions(actions));
 
@@ -56,7 +57,7 @@ export const FileUploadActionComponent = props => {
     });
 
     const res = useNodeChecks(
-        {path},
+        {path, language},
         {
             skip,
             ...constraints,

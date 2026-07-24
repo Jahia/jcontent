@@ -144,7 +144,7 @@ export const registerEditActions = registry => {
 
     registry.add('action', 'sbsTranslate', editContentActionWrapper, {
         buttonIcon: <Translate/>,
-        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name',
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.translateToLanguage',
         dataSelRole: 'sbsTranslate',
         showOnNodeTypes: ['jnt:page', 'jmix:mainResource', 'jmix:editorialContent', 'jmix:translatableScreen'],
         requiredSitePermission: ['translateAction'],

@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {isDefinitelyHidden} from '~/JContent/actions/utils/nodeVisibilityUtils';
 import {EditContent} from './editContentAction';
+import {editContentTranslationLanguagesFragment} from './editContent.gql-queries';
 
 /**
  * Wrapper around EditContent that supports an optional `isDisplayable` predicate
@@ -69,5 +70,6 @@ EditContentWrapper.propTypes = {
 };
 
 export const editContentActionWrapper = {
-    component: EditContentWrapper
+    component: EditContentWrapper,
+    applyFragment: editContentTranslationLanguagesFragment
 };

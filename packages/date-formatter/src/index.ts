@@ -96,7 +96,7 @@ export function formatDayOfWeek(
   day: string,
   options?: {
     /**
-     * The format in which to display the time
+     * The format in which to display the weekday
      * @default 'full'
      */
     format?: keyof typeof weekdayFormatMap;
@@ -113,7 +113,7 @@ export function formatDayOfWeek(
   // If the day is not a valid day-of-week key, return it as-is
   if (index === -1) return day;
 
-  return dayjs.Ls[options?.locale || window.contextJsParameters.uilang][
+  return dayjs.Ls[options?.locale || window.contextJsParameters.uilang]?.[
     weekdayFormatMap[options?.format || 'full']
   ]?.[index] ?? day;
 }

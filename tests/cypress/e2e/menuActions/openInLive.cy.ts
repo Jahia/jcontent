@@ -2,6 +2,8 @@ import {Button, createSite, deleteSite, getComponentByRole, publishAndWaitJobEnd
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
 
+const currentHostname = new URL(Cypress.config('baseUrl')).hostname;
+
 describe('Open in Live tests', () => {
     const siteKey = 'openInLiveSite';
     const storageKey = 'jcontent-live-servername';
@@ -105,7 +107,10 @@ describe('Open in Live tests', () => {
                 .should('have.class', 'moonstone-selected');
         });
 
-        it('does not show current domain section when localhost is in the server names list', () => {
+        it('does not show current domain section for localhost-serverName site', () => {
+            // Localhost sites are intentionally local-only — Jahia resolves sites by hostname,
+            // so opening a localhost site at a different hostname renders in the wrong site context.
+            // "Current domain" must never appear regardless of what hostname the user is browsing from.
             visitWithStub();
             getComponentByRole(Button, 'openInLiveChevron').click();
             cy.get('.moonstone-menu:not(.moonstone-hidden)').should('be.visible');
@@ -154,6 +159,79 @@ describe('Open in Live tests', () => {
                 'be.calledWith',
                 Cypress.sinon.match(f => f.includes(serverName) && !f.includes('unknown.invalid.host'))
             );
+        });
+    });
+
+    describe('current domain — cross-site hostname guard', () => {
+        // Guard 2: "Current domain" must not appear when the current hostname is already the
+        // server name of a different Jahia site (opening it would render that other site instead).
+        // Requires a site with a non-localhost serverName to bypass guard 1.
+        const extSiteKey = 'openInLiveSiteExt';
+        const extServerName = 'external.example.com';
+
+        const visitExtWithStub = () =>
+            JContent.visit(extSiteKey, 'en', 'pages/home', {
+                onBeforeLoad(win: Window) {
+                    // @ts-expect-error window definition does not have "open" for some reason
+                    cy.stub(win, 'open').as('winOpen');
+                }
+            });
+
+        before(() => {
+            createSite(extSiteKey, {templateSet: 'dx-base-demo-templates', serverName: extServerName, locale: 'en'});
+            publishAndWaitJobEnding(`/sites/${extSiteKey}/home`, ['en']);
+            cy.loginAndStoreSession();
+        });
+
+        after(() => {
+            cy.logout();
+            deleteSite(extSiteKey);
+        });
+
+        beforeEach(() => {
+            cy.clearLocalStorage();
+            cy.loginAndStoreSession();
+        });
+
+        it('shows current domain section when current hostname is not claimed by any site', () => {
+            // No site in the test environment has serverName=currentHostname → guard 2 does not fire.
+            // Guard 1 also does not fire (extServerName is not localhost, not currentHostname).
+            // "Current domain: currentHostname" must appear.
+            visitExtWithStub();
+            getComponentByRole(Button, 'openInLiveChevron').click();
+            cy.get('.moonstone-menu:not(.moonstone-hidden)').should('be.visible');
+            cy.contains('Current domain').should('be.visible');
+            cy.get('.moonstone-menu:not(.moonstone-hidden)')
+                .contains('.moonstone-menuItem', currentHostname)
+                .should('be.visible');
+        });
+
+        it('does not show current domain section when current hostname is claimed by another site', () => {
+            // Add currentHostname as an alias on the OTHER site (openInLiveSite) so guard 2 fires
+            // when viewing openInLiveSiteExt — Jahia would resolve currentHostname to openInLiveSite.
+            const setAliases = (values: string[]) => cy.apollo({
+                mutation: gql`
+                    mutation SetServerNameAliases($pathOrId: String!, $values: [String]!) {
+                        jcr {
+                            mutateNode(pathOrId: $pathOrId) {
+                                mutateProperty(name: "j:serverNameAliases") {
+                                    setValues(values: $values)
+                                }
+                            }
+                        }
+                    }
+                `,
+                variables: {pathOrId: `/sites/${siteKey}`, values}
+            });
+
+            setAliases([alias1, alias2, currentHostname]);
+
+            visitExtWithStub();
+            getComponentByRole(Button, 'openInLiveChevron').click();
+            cy.get('.moonstone-menu:not(.moonstone-hidden)').should('be.visible');
+            cy.contains('Current domain').should('not.exist');
+
+            setAliases([alias1, alias2]);
         });
     });
 });

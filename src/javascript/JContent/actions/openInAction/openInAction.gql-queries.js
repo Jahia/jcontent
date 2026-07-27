@@ -24,6 +24,18 @@ const OpenInActionQuery = gql`
                     }
                 }
             }
+            allSites: nodesByQuery(query: "select * from [jnt:virtualsite] where ischildnode('/sites')") {
+                siteNodes: nodes {
+                    ...NodeCacheRequiredFields
+                    site {
+                        ...NodeCacheRequiredFields
+                        serverName
+                        additionalServerNames: property(name: "j:serverNameAliases") {
+                            values
+                        }
+                    }
+                }
+            }
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}

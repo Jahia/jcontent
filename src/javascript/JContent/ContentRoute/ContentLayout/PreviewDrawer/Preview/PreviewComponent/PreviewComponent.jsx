@@ -130,6 +130,7 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
             <Paper elevation={1} classes={{root: styles.contentPaper}}>
                 <iframe key={data && data.nodeByPath ? data.nodeByPath.path : 'NoPreviewAvailable'}
                         ref={element => iframeLoadContent({assets, displayValue, element, domLoadedCallback, iFrameStyle})}
+                        title="Content preview viewer"
                         data-sel-role={workspace + '-preview-frame'}
                         className={styles.contentIframe}
                         {...iframeProps}

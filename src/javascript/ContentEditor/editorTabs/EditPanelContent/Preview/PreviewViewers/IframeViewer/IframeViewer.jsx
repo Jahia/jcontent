@@ -113,6 +113,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
         <Paper elevation={1} classes={{root: styles.contentPaper}}>
             {loading && <LoaderOverlay/>}
             <iframe ref={iframeRef}
+                    title="Content preview viewer"
                     aria-labelledby="preview-tab"
                     data-sel-role={previewContext.workspace + '-preview-frame'}
                     className={`${styles.iframe} ${loading ? styles.iframeLoading : ''}`}

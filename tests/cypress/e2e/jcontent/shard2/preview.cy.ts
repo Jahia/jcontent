@@ -37,6 +37,11 @@ describe('JContent preview tests', () => {
             properties: [{name: 'firstname', value: 'Preview'}, {name: 'lastname', value: 'Person'}]
         });
         addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'previewInlineScript',
+            primaryNodeType: 'cent:previewInlineScript'
+        });
+        addNode({
             parentPathOrId: `/sites/${siteKey}/home`,
             name: 'head-attr-test-page',
             primaryNodeType: 'jnt:page',
@@ -166,6 +171,28 @@ describe('JContent preview tests', () => {
             const head = $iframe[0].contentDocument.querySelector('head');
             expect(head, 'iframe should have a head element').to.exist;
             expect(head.getAttribute('data-stub'), '<head data-stub> attribute should be preserved from page template').to.equal('test');
+        });
+    });
+
+    it('should render content as a static document, without running scripts it contains', () => {
+        // The preview shows layout only: the frame renders the markup but must not execute the
+        // inline <script> the cent:previewInlineScript view emits. The frame must nonetheless
+        // stay readable from the app (same-origin), which the marker assertion below also proves.
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.openPreview('previewInlineScript');
+
+        cy.get('[data-sel-role="preview-container"]').should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.text', 'previewInlineScript marker');
+
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should($iframe => {
+            const doc = $iframe[0].contentDocument;
+            expect(doc.querySelector('[data-testid="preview-inline-script-marker"]'),
+                'rendered markup should be displayed').to.exist;
+            expect(doc.documentElement.dataset.previewScriptRan,
+                'inline script in the rendered content should not have run').to.be.undefined;
         });
     });
 

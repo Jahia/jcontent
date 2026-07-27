@@ -153,6 +153,10 @@
 
 [cent:previewWrapper] > jnt:content, jmix:basicContent
 
+// Renders a view containing an inline <script> — used to assert that the preview frame shows the
+// rendered markup as a static document and does not run scripts embedded in it.
+[cent:previewInlineScript] > jnt:content, jmix:basicContent
+
 // Tests for examples provided in academy
 // https://academy.jahia.com/documentation/jahia/jahia-8/developer/extending-and-customizing-jahia-ui/customizing-content-editor-forms/examples-of-content-definition-json-overrides
 

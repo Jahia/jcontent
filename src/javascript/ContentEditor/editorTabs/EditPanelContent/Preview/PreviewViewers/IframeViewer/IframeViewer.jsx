@@ -23,6 +23,18 @@ export function zoom(iframeDocument, onContentNotFound, editorContext) {
     }
 }
 
+/**
+ * Sandbox flags for the preview frame.
+ *
+ * The preview is a *static layout* rendering of a node: only stylesheets are added to the frame and
+ * its body is made non-interactive on load (`pointer-events: none`), so the framed document never
+ * needs to run scripts of its own.
+ *
+ * `allow-same-origin` IS required and must stay — `loadAssets` and `zoom` reach into the frame's
+ * `document` from this component, which is only possible while the frame keeps our origin.
+ */
+const PREVIEW_SANDBOX = 'allow-same-origin';
+
 function loadAsset(asset, iframeHeadEl) {
     return new Promise(resolve => {
         const linkEl = document.createElement('link');
@@ -105,7 +117,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound}) => {
                     data-sel-role={previewContext.workspace + '-preview-frame'}
                     className={`${styles.iframe} ${loading ? styles.iframeLoading : ''}`}
                     srcDoc={displayValue}
-                    sandbox="allow-same-origin allow-scripts"
+                    sandbox={PREVIEW_SANDBOX}
                     onLoad={onLoad}
             />
         </Paper>

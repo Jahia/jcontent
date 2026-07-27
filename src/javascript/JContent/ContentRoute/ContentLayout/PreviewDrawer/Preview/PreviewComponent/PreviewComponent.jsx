@@ -9,6 +9,19 @@ import ImageViewer from './ImageViewer';
 import {useTranslation} from 'react-i18next';
 import styles from './PreviewComponent.scss';
 
+/**
+ * Sandbox flags for the preview frame.
+ *
+ * The preview is a *static layout* rendering of a node: only stylesheets are added to the frame and
+ * its body is made non-interactive once written, so the framed document never needs to run scripts
+ * of its own.
+ *
+ * `allow-same-origin` IS required and must stay — `writeInIframe` and `loadAssets` reach into the
+ * frame's `document` from this component, which is only possible while the frame keeps our origin.
+ * It is applied after `iframeProps` so a caller cannot widen it by accident.
+ */
+const PREVIEW_SANDBOX = 'allow-same-origin';
+
 function writeInIframe(html, iframeWindow) {
     return new Promise((resolve, reject) => {
         iframeWindow.document.open();
@@ -120,6 +133,7 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
                         data-sel-role={workspace + '-preview-frame'}
                         className={styles.contentIframe}
                         {...iframeProps}
+                        sandbox={PREVIEW_SANDBOX}
                 />
             </Paper>
         </div>

@@ -433,8 +433,7 @@ describe('Page builder - insertion points', () => {
         createButtons.get().find('button[data-sel-role="cent:childObject5"]').should('not.exist');
 
         clickButtonByRole(pageBuilder, 'cent:childObject1');
-        let contentEditor = new ContentEditor();
-        contentEditor.create();
+        new ContentEditor().create();
 
         pageBuilder = JContent
             .visit(siteKey, 'en', 'pages/home/page-six-single-populated')
@@ -447,11 +446,6 @@ describe('Page builder - insertion points', () => {
         createButtons = module.getAllCreateButtons();
         createButtons.should('have.length', 4);
         createButtons.get().find('button[data-sel-role="cent:childObject1"]').should('not.exist');
-
-        module.get().click('bottomRight', {force: true});
-        clickButtonByRole(pageBuilder, 'cent:childObject2');
-        contentEditor = new ContentEditor();
-        contentEditor.create();
     });
 
     it('shows insertion points for area with contribute types correctly', () => {

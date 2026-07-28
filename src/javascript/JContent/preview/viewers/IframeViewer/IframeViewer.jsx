@@ -6,6 +6,18 @@ import {zoom} from '~/JContent/preview/Preview.utils';
 import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 
+/**
+ * Sandbox flags for the preview frame.
+ *
+ * The preview is a *static layout* rendering of a node: only CSS assets are collected
+ * (`staticAssets(type: "css")`) and the frame body is made non-interactive on load
+ * (`pointer-events: none`), so the framed document never needs to run scripts of its own.
+ *
+ * `allow-same-origin` IS required and must stay — `loadAssets` and `zoom` below reach into the
+ * frame's `document` from this component, which is only possible while the frame keeps our origin.
+ */
+const PREVIEW_SANDBOX = 'allow-same-origin';
+
 function loadAsset(asset, iframeHeadEl) {
     return new Promise(resolve => {
         const linkEl = document.createElement('link');
@@ -151,7 +163,7 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
                     data-sel-role={previewContext.workspace + '-preview-frame'}
                     className={`${styles.iframe} ${loading ? styles.iframeLoading : ''}`}
                     srcDoc={displayValue}
-                    sandbox="allow-same-origin allow-scripts"
+                    sandbox={PREVIEW_SANDBOX}
                     onLoad={onLoad}
             />
         </Paper>

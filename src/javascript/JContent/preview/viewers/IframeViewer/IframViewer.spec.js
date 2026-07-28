@@ -25,6 +25,17 @@ describe('IframeViewer', () => {
         const cmp = shallow(<IframeViewer {...props}/>);
         expect(cmp.find('LoaderOverlay').exists()).toBe(true);
     });
+
+    it('should render the rendered content as a static document, without running its scripts', () => {
+        const cmp = shallow(<IframeViewer {...props}/>);
+        const sandbox = cmp.find('iframe').prop('sandbox');
+
+        // The preview shows layout only - the framed document must not execute scripts.
+        expect(sandbox).not.toContain('allow-scripts');
+        // ...but it must stay same-origin, otherwise loadAssets and zoom can no longer reach
+        // the frame's document and the preview loses its CSS and its zoom behaviour.
+        expect(sandbox).toContain('allow-same-origin');
+    });
 });
 
 describe('Zoom test', () => {

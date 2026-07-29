@@ -39,14 +39,15 @@ const GET_CONTENT_LINKS = gql`
     }
 `;
 
-const DetailRow = ({label, value, isCopyable = true}) => {
+const DetailRow = ({label, value, copyValue = value, isCopyable = true}) => {
     const {t} = useTranslation('jcontent');
-    const canCopy = isCopyable && value !== '-';
     const notificationContext = useNotifications();
     const isChips = Array.isArray(value);
+    const isLink = typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
+    const textToCopy = isChips ? value.join('; ') : copyValue;
+    const canCopy = isCopyable && Boolean(textToCopy) && value !== '-';
 
     const handleCopy = useCallback(() => {
-        const textToCopy = Array.isArray(value) ? value.join('; ') : value;
         if (textToCopy) {
             try {
                 const copyPromise = navigator.clipboard?.writeText(textToCopy);
@@ -57,10 +58,33 @@ const DetailRow = ({label, value, isCopyable = true}) => {
                 console.error('Unable to copy to clipboard', error);
             }
         }
-    }, [value, notificationContext, t]);
+    }, [textToCopy, notificationContext, t]);
 
     if (!value) {
         return null;
+    }
+
+    let valueContent;
+    if (isChips) {
+        valueContent = (
+            <div className={styles.chips}>
+                {value.map(name => (
+                    <Chip key={name} label={name} color="default"/>
+                ))}
+            </div>
+        );
+    } else if (isLink) {
+        valueContent = (
+            <Typography isNowrap component="a" variant="body" className={styles.value} href={value} target="_blank">
+                {value}
+            </Typography>
+        );
+    } else {
+        valueContent = (
+            <Typography isNowrap variant="body" className={styles.value}>
+                {value}
+            </Typography>
+        );
     }
 
     return (
@@ -69,17 +93,7 @@ const DetailRow = ({label, value, isCopyable = true}) => {
                 {label}
             </Typography>
             <div className={styles.valueWrapper}>
-                {isChips ? (
-                    <div className={styles.chips}>
-                        {value.map(name => (
-                            <Chip key={name} label={name} color="default"/>
-                        ))}
-                    </div>
-                ) : (
-                    <Typography variant="body" className={styles.value}>
-                        {value}
-                    </Typography>
-                )}
+                {valueContent}
                 {canCopy && (
                     <Button
                         icon={<Copy/>}
@@ -96,50 +110,8 @@ const DetailRow = ({label, value, isCopyable = true}) => {
 DetailRow.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    copyValue: PropTypes.string,
     isCopyable: PropTypes.bool
-};
-
-const LinkRow = ({label, displayValue, copyValue}) => {
-    const {t} = useTranslation('jcontent');
-    const notificationContext = useNotifications();
-
-    const handleCopy = useCallback(() => {
-        if (copyValue) {
-            const copyPromise = navigator.clipboard?.writeText(copyValue);
-            copyPromise?.then(() => {
-                notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.linksCopied'), ['closeButton']);
-            });
-        }
-    }, [copyValue, notificationContext, t]);
-
-    if (!displayValue || !copyValue) {
-        return null;
-    }
-
-    return (
-        <div className={styles.detailRow} data-sel-role="detail-row" data-sel-label={label}>
-            <Typography variant="caption" className={styles.label}>
-                {label}
-            </Typography>
-            <div className={styles.value}>
-                <Typography variant="body" component="span" className={styles.linkValue}>
-                    {displayValue}
-                </Typography>
-                <Button
-                    icon={<Copy/>}
-                    variant="ghost"
-                    className={styles.copyButton}
-                    onClick={handleCopy}
-                />
-            </div>
-        </div>
-    );
-};
-
-LinkRow.propTypes = {
-    label: PropTypes.string.isRequired,
-    displayValue: PropTypes.string,
-    copyValue: PropTypes.string
 };
 
 // URL-encode each segment of a JCR path while keeping the slashes intact
@@ -225,7 +197,7 @@ const ContentLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
 
@@ -237,10 +209,10 @@ const ContentLinks = () => {
                         </Typography>
                     )}
                     {links.map(link => (
-                        <LinkRow
+                        <DetailRow
                             key={`${language}-${link.label}-${link.displayValue}`}
                             label={link.label}
-                            displayValue={link.displayValue}
+                            value={link.displayValue}
                             copyValue={link.copyValue}
                         />
                     ))}
@@ -267,18 +239,16 @@ const FileLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" weight="semiBold" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
-            <LinkRow
+            <DetailRow
                 label={t('jcontent:label.contentEditor.sidePanel.linksDefault')}
-                displayValue={stagingUrl}
-                copyValue={stagingUrl}
+                value={stagingUrl}
             />
-            <LinkRow
+            <DetailRow
                 label={t('jcontent:label.contentEditor.sidePanel.linksLive')}
-                displayValue={liveUrl}
-                copyValue={liveUrl}
+                value={liveUrl}
             />
         </div>
     );

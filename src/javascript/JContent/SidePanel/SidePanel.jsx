@@ -35,7 +35,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
     }, []);
 
     return (
-        <Drawer isOpen className={styles.root} data-sel-role="side-panel">
+        <Drawer isOpen className={styles.root} hasPadding={false} data-sel-role="side-panel">
             <div className={styles.tabs} data-sel-role="side-panel-tabs">
                 <Tab>
                     {visibleTabs.map(tab => {

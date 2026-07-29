@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {gql, useQuery} from '@apollo/client';
-import {Typography, Button, Copy, Chip} from '@jahia/moonstone';
+import {Typography, Button, Copy, Chip, DataTable} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -267,7 +267,7 @@ const FileLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="semiBold" className={styles.sectionTitle}>
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
             <LinkRow
@@ -287,6 +287,25 @@ const FileLinks = () => {
 export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, technicalInfo, details} = useSidePanelContext();
+
+    const publicationColumns = [
+        {
+            key: 'type',
+            label: t('jcontent:label.contentEditor.sidePanel.type'),
+            cellProps: ({id}) => ({'data-sel-role': `detail-type-${id}`})
+        },
+        {
+            key: 'date',
+            label: t('jcontent:label.contentEditor.sidePanel.date'),
+            cellProps: ({id}) => ({'data-sel-role': `detail-date-${id}`})
+        },
+        {
+            key: 'user',
+            label: t('jcontent:label.contentEditor.sidePanel.user'),
+            cellProps: ({id}) => ({'data-sel-role': `detail-user-${id}`})
+        }
+    ];
+
     if (!nodeData) {
         return (
             <div className={styles.empty}>
@@ -302,19 +321,15 @@ export const ContentDetails = () => {
             {details && details.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="additional">
                     <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
-                        {t('jcontent:label.contentEditor.sidePanel.additional')}
+                        {t('jcontent:label.contentEditor.sidePanel.publicationDetails')}
                     </Typography>
 
-                    <div className={styles.detailsGrid}>
-                        {details.map(detail => (
-                            <DetailRow
-                                key={detail.label + detail.value}
-                                label={detail.label}
-                                value={detail.value}
-                                isCopyable={detail.copyable}
-                            />
-                        ))}
-                    </div>
+                    <DataTable
+                        data={details}
+                        columns={publicationColumns}
+                        primaryKey="id"
+                        enablePagination={false}
+                    />
                 </div>
             )}
 

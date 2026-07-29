@@ -85,43 +85,33 @@ export const getFieldValues = (field, nodeData) => {
     return formFields;
 };
 
-const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
-    // Retrieve only fields inside the metadata section
-    const fields = getFields(sections, 'metadata');
+const getDetailsValue = (nodeData = {}, lang = 'en', t = key => key) => {
+    const getValue = name => nodeData.properties?.find(prop => prop.name === name)?.value;
+    const getDate = name => {
+        const value = getValue(name);
+        return value ? formatDatetime(value, {locale: lang}) : undefined;
+    };
 
-    const fieldNamesToGet = ['j:lastPublished',
-        'j:lastPublishedBy',
-        'jcr:created',
-        'jcr:createdBy',
-        'jcr:lastModified',
-        'jcr:lastModifiedBy'];
-
-    if (!fields) {
-        return [];
-    }
-
-    return fields
-        .filter(field => fieldNamesToGet.indexOf(field.name) > -1)
-        .map(field => {
-            const jcrDefinition = nodeData.properties.find(
-                prop => prop.name === field.name
-            );
-
-            if (field.selectorType.includes('Date')) {
-                return {
-                    label: field.displayName,
-                    value: jcrDefinition &&
-                        jcrDefinition.value &&
-                        formatDatetime(jcrDefinition.value, {locale: lang}),
-                    copyable: false
-                };
-            }
-
-            return {
-                label: field.displayName,
-                value: jcrDefinition && jcrDefinition.value
-            };
-        });
+    return [
+        {
+            id: 'creation',
+            type: t('jcontent:label.contentEditor.sidePanel.creation'),
+            date: getDate('jcr:created'),
+            user: getValue('jcr:createdBy')
+        },
+        {
+            id: 'lastModification',
+            type: t('jcontent:label.contentEditor.sidePanel.modification'),
+            date: getDate('jcr:lastModified'),
+            user: getValue('jcr:lastModifiedBy')
+        },
+        {
+            id: 'lastPublication',
+            type: t('jcontent:label.contentEditor.sidePanel.lastPublication'),
+            date: getDate('j:lastPublished'),
+            user: getValue('j:lastPublishedBy')
+        }
+    ];
 };
 
 const getTechnicalInfo = (nodeData, t) => {
@@ -165,7 +155,7 @@ export const adaptEditFormData = (data, lang, t) => {
         hasPreview: data.forms.editForm.hasPreview,
         showAdvancedMode: data.forms.editForm.showAdvancedMode,
         nodeData,
-        details: getDetailsValue(data.forms.editForm.sections, nodeData, lang),
+        details: getDetailsValue(nodeData, lang, t),
         technicalInfo: getTechnicalInfo(nodeData, t),
         title: nodeData.displayName,
         nodeTypeDisplayName: nodeData.primaryNodeType.displayName,

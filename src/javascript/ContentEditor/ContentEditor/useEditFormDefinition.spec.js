@@ -169,28 +169,62 @@ describe('adaptEditFormData', () => {
         });
     });
 
-    it('should add details object with data needed', () => {
-        graphqlResponse.forms.editForm.sections[0].name = 'metadata';
-        graphqlResponse.forms.editForm.sections[0].fieldSets[0].fields[0].name = 'jcr:created';
-        graphqlResponse.jcr.result.properties[0].name = 'jcr:created';
+    it('should add publication details grouped by type, formatting dates and reading authors', () => {
+        graphqlResponse.jcr.result.properties = [
+            {name: 'jcr:created', value: '2019-05-07T11:33:31.056'},
+            {name: 'jcr:createdBy', value: 'Pam'},
+            {name: 'jcr:lastModified', value: '2020-06-08T12:00:00.000'},
+            {name: 'jcr:lastModifiedBy', value: 'Jim'},
+            {name: 'j:lastPublished', value: '2021-07-09T13:00:00.000'},
+            {name: 'j:lastPublishedBy', value: 'Dwight'}
+        ];
+
         expect(adaptEditFormData(graphqlResponse, 'fr', t).details).toEqual([
             {
-                label: 'labelled',
-                value: '2019-05-07T11:33:31.056'
+                id: 'creation',
+                type: 'jcontent:label.contentEditor.sidePanel.creation',
+                date: 'formatted datetime: 2019-05-07T11:33:31.056',
+                user: 'Pam'
+            },
+            {
+                id: 'lastModification',
+                type: 'jcontent:label.contentEditor.sidePanel.modification',
+                date: 'formatted datetime: 2020-06-08T12:00:00.000',
+                user: 'Jim'
+            },
+            {
+                id: 'lastPublication',
+                type: 'jcontent:label.contentEditor.sidePanel.lastPublication',
+                date: 'formatted datetime: 2021-07-09T13:00:00.000',
+                user: 'Dwight'
             }
         ]);
     });
 
-    it('should display the date according to user preference', () => {
-        graphqlResponse.forms.editForm.sections[0].name = 'metadata';
-        graphqlResponse.forms.editForm.sections[0].fieldSets[0].fields[0].selectorType = 'DatePicker';
-        graphqlResponse.forms.editForm.sections[0].fieldSets[0].fields[0].name = 'jcr:lastModified';
-        graphqlResponse.jcr.result.properties[0].name = 'jcr:lastModified';
+    it('should leave publication date/user undefined when the property is missing', () => {
+        graphqlResponse.jcr.result.properties = [
+            {name: 'jcr:created', value: '2019-05-07T11:33:31.056'},
+            {name: 'jcr:createdBy', value: 'Pam'}
+        ];
+
         expect(adaptEditFormData(graphqlResponse, 'fr', t).details).toEqual([
             {
-                label: 'labelled',
-                value: 'formatted datetime: 2019-05-07T11:33:31.056',
-                copyable: false
+                id: 'creation',
+                type: 'jcontent:label.contentEditor.sidePanel.creation',
+                date: 'formatted datetime: 2019-05-07T11:33:31.056',
+                user: 'Pam'
+            },
+            {
+                id: 'lastModification',
+                type: 'jcontent:label.contentEditor.sidePanel.modification',
+                date: undefined,
+                user: undefined
+            },
+            {
+                id: 'lastPublication',
+                type: 'jcontent:label.contentEditor.sidePanel.lastPublication',
+                date: undefined,
+                user: undefined
             }
         ]);
     });

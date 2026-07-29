@@ -2,9 +2,9 @@ import React, {useCallback} from 'react';
 import {Languages} from './Languages/Languages';
 import {DateTime} from './DateTime';
 import classes from './Visibility.scss';
-import {useApolloClient, useMutation, useQuery} from '@apollo/client';
+import {useApolloClient, useQuery} from '@apollo/client';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
-import {UpdateVisibilityRulesMutation, VisibilityQuery} from './Visibility.gql-queries';
+import {VisibilityQuery} from './Visibility.gql-queries';
 import {Button, Chip, Typography, Visibility} from '@jahia/moonstone';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import {DisplayAction} from '@jahia/ui-extender';
@@ -12,15 +12,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {ButtonRenderer} from '~/ContentEditor/utils';
 import {useTranslation} from 'react-i18next';
-import {Formik} from 'formik';
 import {ContentEditorConfigContextProvider, ContentEditorContextProvider} from '~/ContentEditor/contexts';
 import {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
-import {SaveButton} from '~/ContentEditor/CloseConfirmationDialog/SaveButton';
 import {updateNode} from '~/ContentEditor/ContentEditor/updateNode';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useNotifications} from '@jahia/react-material';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {isArray} from 'lodash';
 import {truncate} from '~/utils';
 
 export const EditVisibilityRulesDialog = ({
@@ -33,7 +30,7 @@ export const EditVisibilityRulesDialog = ({
 }) => {
     const {t} = useTranslation('jcontent');
     const {editCallback} = contentEditorConfigContext;
-    const {lang, nodeData, initialValues, i18nContext} = contentEditorContext;
+    const {lang, nodeData, i18nContext} = contentEditorContext;
     const {data, loading, refetch} = useQuery(VisibilityQuery, {
         variables: {
             path: nodeData.path,
@@ -42,114 +39,56 @@ export const EditVisibilityRulesDialog = ({
     });
     const client = useApolloClient();
     const notificationContext = useNotifications();
-    const [saveRules] = useMutation(UpdateVisibilityRulesMutation);
 
-    const handleSubmit = useCallback(async (values, actions) => {
-        const visibilitySectionOnly = sections.filter(s => s.name === 'visibility');
-        visibilitySectionOnly[0].fieldSets.find(fs => fs.name === 'jmix:conditionalVisibility').dynamic = true;
-        console.debug('Submitting form with values', values, 'and initialValues', initialValues, ' and visibility section', visibilitySectionOnly, 'for node', nodeData);
+    // Save the Languages section independently of the Date/Time conditions. Only the
+    // jmix:i18n fieldset (j:invalidLanguages) is persisted here.
+    const handleSaveLanguages = useCallback(async (values, actions) => {
+        const visibilitySection = sections.find(s => s.name === 'visibility');
+        const languagesSection = {
+            ...visibilitySection,
+            fieldSets: visibilitySection.fieldSets.filter(fs => fs.name === 'jmix:i18n')
+        };
 
-        // New rules are under RULES::new
-        const newRules = values['RULES::new'] ? values['RULES::new'] : [];
-        // Transform new rules in an array of InputGqlVisibilityConditionInput
-        const gqlNewRules = newRules.map(rule => {
-            const gqlRule = {
-                type: rule.type,
-                properties: []
-            };
-            Object.keys(rule).forEach(key => {
-                if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
-                    const item = {
-                        name: key
-                    };
-                    if (isArray(rule[key])) {
-                        item.values = rule[key];
-                    } else {
-                        item.value = rule[key];
-                    }
-
-                    gqlRule.properties.push(item);
-                }
-            });
-            return gqlRule;
-        });
-        // Updated rules are under RULES::updated
-        const updatedRules = values['RULES::updated'] ? values['RULES::updated'] : [];
-        const gqlUpdatedRules = updatedRules.map(rule => {
-            const gqlRule = {
-                type: rule.type,
-                uuid: rule.uuid,
-                properties: []
-            };
-            Object.keys(rule).forEach(key => {
-                if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
-                    const item = {
-                        name: key
-                    };
-                    if (isArray(rule[key])) {
-                        item.values = rule[key];
-                    } else {
-                        item.value = rule[key];
-                    }
-
-                    gqlRule.properties.push(item);
-                }
-            });
-            return gqlRule;
-        });
-        // Deleted rules are under RULES::deleted
-        const deletedRules = values['RULES::deleted'] ? values['RULES::deleted'] : [];
-
-        await saveRules({
-            variables: {
-                uuid: nodeData.uuid,
-                lang,
-                newConditions: gqlNewRules,
-                updatedConditions: gqlUpdatedRules,
-                removedConditions: deletedRules,
-                isMatchingAllConditions: values['RULES::isMatchingAllConditions'] ? values['RULES::isMatchingAllConditions'] : false
-            }
-        });
-
-        return updateNode({
+        const info = await updateNode({
             client,
             t,
             notificationContext,
             actions,
             data: {
                 nodeData,
-                sections: visibilitySectionOnly,
+                sections: [languagesSection],
                 values,
                 language: lang,
                 i18nContext
             },
-            editCallback: info => {
-                const {originalNode, updatedNode} = info;
-
-                editCallback(info, contentEditorConfigContext);
+            editCallback: cbInfo => {
+                editCallback(cbInfo, contentEditorConfigContext);
                 // Hard reFetch to be able to enable publication menu from jContent menu displayed in header
-                // Note that node cache is flushed in save.request.js, we should probably replace this operation with
-                // Something less invasive as this one reloads ALL queries.
-                if (originalNode.path === updatedNode.path) {
-                    client.reFetchObservableQueries();
-                    triggerRefetchAll();
-                    refetch();
-                }
+                client.reFetchObservableQueries();
+                triggerRefetchAll();
+                refetch();
             }
         });
-    }, [sections, initialValues, nodeData, saveRules, lang, client, t, notificationContext, i18nContext, editCallback, contentEditorConfigContext, refetch]);
+
+        if (info) {
+            // Reset the dirty state so the Save button becomes disabled again
+            actions.resetForm({values});
+        }
+
+        return info;
+    }, [sections, nodeData, client, t, notificationContext, lang, i18nContext, editCallback, contentEditorConfigContext, refetch]);
 
     if (loading || !data?.jcr?.nodeByPath) {
         return <LoaderOverlay/>;
     }
 
-    // Keep only the initial values we need for the new formik context (languages and date/time rules) to avoid confusion with the formik context of the content editor form. (jmix:i18n_j:invalidLanguages)
+    // Keep only the initial values we need for the Languages formik context (j:invalidLanguages + WIP)
     const nodeByPath = data.jcr.nodeByPath;
-    const invalidLanguages = nodeByPath.invalidLanguages?.values;
-    const formikFilteredInitialValues = {
+    const invalidLanguages = nodeByPath.invalidLanguages?.values || [];
+    const languagesInitialValues = {
         'jmix:i18n_j:invalidLanguages': invalidLanguages
     };
-    formikFilteredInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
+    languagesInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
 
     const isMatchingAllConditions = nodeByPath.conditionalVisibility.nodes.length > 0 ? nodeByPath.conditionalVisibility.nodes[0].isMatchingAllConditions.booleanValue : false;
     const isVisible = nodeByPath.isVisible;
@@ -157,58 +96,58 @@ export const EditVisibilityRulesDialog = ({
     return (
         <ContentEditorConfigContextProvider config={contentEditorConfigContext}>
             <ContentEditorContextProvider useFormDefinition={useEditFormDefinition} context={contentEditorContext}>
-                <Formik initialValues={formikFilteredInitialValues} onSubmit={handleSubmit}>
-                    <Dialog
-                        fullWidth
-                        data-sel-role="edit-visibility-rules-dialog"
-                        className={clsx(classes.dialog, classes.dialogOverflow)}
-                        open={isOpen}
-                        maxWidth="lg"
-                        onClose={onCloseDialog}
-                    >
-                        <div className={classes.header}>
-                            <DialogTitle id="dialog-language-title" className={classes.titleContainer}>
-                                <Typography isNoWrap
-                                            variant="heading"
-                                            weight="bold"
-                                            className={classes.dialogTitle}
-                                >
-                                    {truncate(nodeData.displayName, 40)}
-                                </Typography>
-                            </DialogTitle>
-                            {nodeData.hasWritePermission ?
-                                <DisplayAction actionKey="publishAllRules"
-                                               render={ButtonRenderer}
-                                               nodeData={nodeData}/> :
-                                <Chip data-sel-role="read-only-badge"
-                                      label={t('label.readOnly')}
-                                      icon={<Visibility/>}
-                                      color="warning"
-                                />}
+                <Dialog
+                    fullWidth
+                    data-sel-role="edit-visibility-rules-dialog"
+                    className={clsx(classes.dialog, classes.dialogOverflow)}
+                    open={isOpen}
+                    maxWidth="lg"
+                    onClose={onCloseDialog}
+                >
+                    <div className={classes.header}>
+                        <DialogTitle id="dialog-language-title" className={classes.titleContainer}>
+                            <Typography isNoWrap
+                                        variant="heading"
+                                        weight="bold"
+                                        className={classes.dialogTitle}
+                            >
+                                {t('label.contentEditor.visibilityTab.title', {name: truncate(nodeData.displayName, 40)})}
+                            </Typography>
+                        </DialogTitle>
+                        {nodeData.hasWritePermission ?
+                            <DisplayAction actionKey="publishAllRules"
+                                           render={ButtonRenderer}
+                                           nodeData={nodeData}/> :
+                            <Chip data-sel-role="read-only-badge"
+                                  label={t('label.readOnly')}
+                                  icon={<Visibility/>}
+                                  color="warning"
+                            />}
+                    </div>
+                    <DialogContent className={classes.dialogContent}>
+
+                        <div className={classes.container} data-cm-role="visibilityScreen">
+                            <Languages sections={sections}
+                                       initialValues={languagesInitialValues}
+                                       onSubmit={handleSaveLanguages}/>
+                            <DateTime rules={nodeByPath.rules}
+                                      refresh={refetch}
+                                      node={nodeData}
+                                      lang={lang}
+                                      sections={sections}
+                                      isMatchingAllConditions={isMatchingAllConditions}
+                                      isVisible={isVisible}
+                                      isVisibleInLive={isVisibleInLive}/>
                         </div>
-                        <DialogContent className={classes.dialogContent}>
 
-                            <div className={classes.container} data-cm-role="visibilityScreen">
-                                <Languages invalidLanguages={invalidLanguages} sections={sections}/>
-                                <DateTime rules={nodeByPath.rules}
-                                          refresh={refetch}
-                                          node={nodeData}
-                                          sections={sections}
-                                          isMatchingAllConditions={isMatchingAllConditions}
-                                          isVisible={isVisible}
-                                          isVisibleInLive={isVisibleInLive}/>
-                            </div>
-
-                        </DialogContent>
-                        <DialogActions className={classes.actions}>
-                            <SaveButton actionCallback={onCloseDialog} onCloseDialog={onCloseDialog}/>
-                            <Button
-                                size="big"
-                                label={t('jcontent:label.contentEditor.close')}
-                                onClick={onCloseDialog}/>
-                        </DialogActions>
-                    </Dialog>
-                </Formik>
+                    </DialogContent>
+                    <DialogActions className={classes.actions}>
+                        <Button
+                            size="big"
+                            label={t('jcontent:label.contentEditor.close')}
+                            onClick={onCloseDialog}/>
+                    </DialogActions>
+                </Dialog>
             </ContentEditorContextProvider>
         </ContentEditorConfigContextProvider>
     );

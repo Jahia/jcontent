@@ -1,39 +1,28 @@
-mutation {
+mutation createRules($contentPath: String!, $dayOfWeek: [String]!) {
     jcr {
-        mutateNode(pathOrId: "/sites/jcontentSite/home/area-main/test-content1") {
+        mutateNode(pathOrId: $contentPath) {
             addChildrenBatch(
                 nodes: [
                     {
-                        name: "j:conditionalVisibility",
-                        primaryNodeType: "jnt:conditionalVisibility",
+                        name: "j:conditionalVisibility"
+                        primaryNodeType: "jnt:conditionalVisibility"
                         children: [
                             {
-                                name: "dayOfWeekCondition",
-                                primaryNodeType: "jnt:dayOfWeekCondition",
+                                name: "dayOfWeekCondition"
+                                primaryNodeType: "jnt:dayOfWeekCondition"
                                 properties: [
                                     {
                                         name: "dayOfWeek"
-                                        values: ["monday"]
+                                        values: $dayOfWeek
                                     }
                                 ]
-                                useAvailableNodeName: true
-                            },
-                            {
-                                name: "dayOfWeekCondition",
-                                primaryNodeType: "jnt:dayOfWeekCondition",
-                                properties: [
-                                    {
-                                        name: "dayOfWeek"
-                                        values: ["friday"]
-                                    }
-                                ]
-                                useAvailableNodeName: true
                             }
-                        ]}
-                ]) {
+                        ]
+                    }
+                ]
+            ) {
                 uuid
             }
         }
     }
 }
-

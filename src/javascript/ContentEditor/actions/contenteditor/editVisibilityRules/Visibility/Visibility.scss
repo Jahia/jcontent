@@ -10,7 +10,7 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        align-items: center;
+        align-items: flex-start;
         align-self: stretch;
         padding: 25px 32px;
     }
@@ -24,7 +24,7 @@
     display: flex;
     flex: 1 0 0;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     max-width: 100%;
     height: 28px;
     padding: unset !important;
@@ -44,10 +44,15 @@
 }
 
 .dialogContent {
+    // Keep the dialog a constant size whatever the Date/Time sub-view is (no-rules / add /
+    // table / edit). The content area is clamped to a stable height and scrolls internally
+    // instead of letting the whole dialog grow when the Add condition form is shown.
+    height: clamp(480px, 72vh, 860px);
     padding: 24px !important;
 
     border-top: 1px solid #e0e6ea;
     border-bottom: 1px solid #e0e6ea;
+    overflow-y: auto;
 }
 
 .label {

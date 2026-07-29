@@ -5,6 +5,7 @@ export const GetContentHistoryQuery = gql`
         jcr {
             nodeByPath(path: $path) {
                 uuid
+                workspace
                 history {
                     count(withLanguageNodes: $withLanguageNodes, action: $action)
                     entries(withLanguageNodes: $withLanguageNodes, action: $action, offset: $offset, limit: $limit) {

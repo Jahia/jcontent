@@ -1,16 +1,19 @@
 import React, {forwardRef, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Chip, DataTable, Delete, Edit, TableRow, Typography, Visibility} from '@jahia/moonstone';
-import {useFormikContext} from 'formik';
-import {getConditionLabel, getStatus, getStatusText} from './utils';
+import {Chip, CloudCheck, DataTable, Delete, Edit, Hidden, TableRow, Typography, Undelete, Visibility} from '@jahia/moonstone';
+import {getConditionLabel} from './utils';
 import clsx from 'clsx';
 import statusCellStyles from './TableCellStatus.scss';
-import dayjs from 'dayjs';
 import {
     DeleteButton,
-    EditButton
+    EditButton,
+    PublishDeletionButton,
+    UndeleteButton
 } from '~/ContentEditor/actions/contenteditor/editVisibilityRules/Visibility/DateTime/ButtonRenderers';
+import {useConditionDeletion} from './useConditionDeletion';
+import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
+import PublicationStatus from '~/JContent/PublicationStatus';
 
 const TableCell = forwardRef(({
     className,
@@ -64,38 +67,6 @@ TableCell.propTypes = {
     isScrollable: PropTypes.bool
 };
 
-const TableCellStatus = forwardRef(({
-    color,
-    children,
-    className,
-    ...props
-},
-ref) => {
-    return (
-        <TableCell
-        ref={ref}
-        className={clsx(
-            statusCellStyles.tableCellStatus,
-            statusCellStyles[color],
-            className
-        )}
-        component="td"
-        width="8px"
-        {...props}
-        >
-            <div className={clsx('flexRow_nowrap', 'alignCenter', statusCellStyles.panel)}>
-                {children}
-            </div>
-        </TableCell>
-    );
-});
-
-TableCellStatus.propTypes = {
-    color: PropTypes.any,
-    children: PropTypes.node,
-    className: PropTypes.string
-};
-
 const TableCellActions = forwardRef(({className, actions, ...props}, ref) => {
     return (
         <TableCell ref={ref}
@@ -113,114 +84,61 @@ TableCellActions.propTypes = {
     actions: PropTypes.any
 };
 
-export const DatatableRules = ({rules, onEdit}) => {
-    const formikContext = useFormikContext();
+export const DatatableRules = ({rules, onEdit, refresh, hideActions = false}) => {
     const {t} = useTranslation('jcontent');
-
-    const newRules = formikContext.values['RULES::new'];
-    const updatedRules = formikContext.values['RULES::updated'];
-    const deletedRules = formikContext.values['RULES::deleted'];
+    const {uilang} = useContentEditorConfigContext();
+    const {markConditionForDeletion, unmarkConditionForDeletion, publishConditionDeletion} = useConditionDeletion({refresh});
 
     // We are adding two extra columns not declared here, so we need to keep the width overall at 90%
     const columns = [
         {
             key: 'type',
-            label: 'Condition type',
+            label: t('jcontent:label.contentEditor.visibilityTab.conditions.condition'),
             isSortable: true,
             width: '70%',
-            sortFn: (a, b) => a.type.localeCompare(b.type)
+            sortFn: (a, b) => a.type.localeCompare(b.type),
+            render: ({value, data}) => (
+                <span className={clsx({[statusCellStyles.deletedText]: data.isMarkedForDeletion})}>
+                    {value}
+                </span>
+            )
         },
         {
             key: 'isMatching',
             label: t('jcontent:label.contentEditor.visibilityTab.conditions.preview_live'),
             isSortable: false,
             width: '20%',
-            render: ({value, data}) => (
-                <>
-                    <Chip icon={<Visibility/>}
-                          color={value ? 'success' : 'warning'}
+            render: ({value}) => (
+                <Chip icon={value ? <Visibility/> : <Hidden/>}
+                      color={value ? 'success' : 'warning'}
+                      label={value ? t('jcontent:label.contentEditor.visibilityTab.conditions.visible') : t('jcontent:label.contentEditor.visibilityTab.conditions.hidden')}
                         />
-                    <Typography variant="caption">/</Typography>
-                    <Chip icon={<Visibility/>}
-                          color={data.isMatchingLive ? 'success' : 'warning'}
-                        />
-                </>
             )
         }
     ];
 
     const data = useMemo(() => {
-        const getProperties = rule => {
-            // Find if there's an updated version of this rule
-            const updatedRule = updatedRules?.find(r => r.uuid === rule.uuid);
+        return rules.nodes.map(rule => {
+            const isMarkedForDeletion = rule.markedForDeletion || Boolean(rule.deleted?.value);
 
-            if (updatedRule) {
-                // If the rule has been updated, transform the updated properties into the expected format
-                return Object.keys(updatedRule)
-                    .filter(key => key !== 'type' && key !== 'uuid')
-                    .map(key => ({
-                        name: key,
-                        value: updatedRule[key],
-                        values: updatedRule[key]
-                    }));
-            }
-
-            // Otherwise, return the original rule's properties
-            return rule.properties;
-        };
-
-        return rules.nodes.filter(rule => {
-            return (deletedRules === undefined || !deletedRules.includes(rule.uuid));
-        }).map(rule => {
-            const updatedRule = updatedRules?.find(r => r.uuid === rule.uuid);
-            const isUpdated = Boolean(updatedRule);
-            const firstAncestor = rule?.ancestors[0];
-            let status = rule.aggregatedPublicationInfo.existsInLive && !isUpdated ? 'published' : 'modified';
-
-            if (status === 'published') {
-                // Check if lastModified from first ancestor is superior to the timestamp of the published rule, if yes the rule is modified not published
-                if (dayjs(firstAncestor.lastModified.value).isAfter(dayjs(firstAncestor.lastPublished.value))) {
-                    status = 'modified';
-                }
-            }
-
-            // If the rule has been updated, use the username and timestamp from the updated rule
-            // Otherwise, use the information from the ancestor
-            let username;
-            let timestamp;
-            if (isUpdated && updatedRule) {
-                username = updatedRule.username;
-                timestamp = dayjs(updatedRule.timestamp).format('LLL');
-            } else {
-                username = status === 'modified' ? firstAncestor?.lastModifiedBy?.value : firstAncestor?.lastPublishedBy?.value;
-                timestamp = dayjs(status === 'modified' ? firstAncestor?.lastModified?.value : firstAncestor?.lastPublished?.value).format('LLL');
-            }
+            // The deletion can be published (committed) only when it is marked for deletion, publication
+            // is supported, and the condition actually exists in live (otherwise it is simply removed).
+            const pubInfo = rule.aggregatedPublicationInfo;
+            const canPublishDeletion = isMarkedForDeletion &&
+                Boolean(rule.operationsSupport?.publication) &&
+                (pubInfo?.publicationStatus !== 'NOT_PUBLISHED' || Boolean(pubInfo?.existsInLive));
 
             return {
                 id: rule.uuid,
-                status: status,
-                type: getConditionLabel(rule.primaryNodeType.name, getProperties(rule), t),
-                username: username,
-                timestamp: timestamp,
+                type: getConditionLabel(rule.primaryNodeType.name, rule.properties, t, uilang),
                 isMatching: rule.isConditionMatching,
                 isMatchingLive: rule.live !== null && rule.live.isConditionMatching,
+                isMarkedForDeletion: isMarkedForDeletion,
+                canPublishDeletion: canPublishDeletion,
                 rule: rule
             };
-        }).concat(newRules === undefined ? [] : newRules.map(rule => {
-            return {
-                id: rule.uuid,
-                status: 'new',
-                type: getConditionLabel(rule.type, Object.keys(rule).filter(value => value !== 'type').map(value => ({
-                    name: value,
-                    value: rule[value],
-                    values: rule[value]
-                })), t),
-                username: rule.username,
-                timestamp: dayjs(rule.timestamp).format('LLL'),
-                rule: rule
-            };
-        }));
-    }, [newRules, updatedRules, deletedRules, rules, t]);
+        });
+    }, [rules, t, uilang]);
 
     return (
         <DataTable
@@ -231,49 +149,85 @@ export const DatatableRules = ({rules, onEdit}) => {
             columns={columns}
             primaryKey="id"
             defaultSortDirection="descending"
-            renderRow={({id, data, render: renderCells}) => (
-                <TableRow
-                    key={id}
-                >
-                    {renderCells({
-                        before: (
-                            <TableCellStatus color={getStatus(data.status).color}>
-                                <>
-                                    {getStatus(data.status).iconStart} {getStatusText(data, t)}
-                                </>
-                            </TableCellStatus>
-                        ), after: (
-                            <TableCellActions
-                                actions={
-                                    <>
-                                        <EditButton buttonIcon={<Edit/>}
-                                                    onClick={() => {
+            renderRow={({id, data, render: renderCells}) => {
+                const editLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.edit');
+                const deleteLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.delete');
+                const undeleteLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.undelete');
+                const publishDeletionLabel = t('jcontent:label.contentEditor.visibilityTab.conditions.publishDeletion');
+
+                // Tooltips use the native `title` attribute (via buttonProps) rather than moonstone's
+                // <Tooltip>. moonstone renders its tooltip bubble inline (no portal), so it is truncated
+                // by the `overflow: hidden` on the moonstone DataTable and is never fully visible inside
+                // this table. A moonstone issue has been filed to fix that; until it lands we rely on the
+                // native `title` (which the browser always paints on top, un-clippable), mirrored by
+                // `aria-label` for accessibility since these buttons are icon-only.
+                let actions = null;
+                if (!hideActions && data.isMarkedForDeletion) {
+                    actions = (
+                        <>
+                            <UndeleteButton buttonIcon={<Undelete/>}
+                                            dataSelRole="undelete-condition"
+                                            buttonProps={{title: undeleteLabel, 'aria-label': undeleteLabel}}
+                                            onClick={() => {
+                                                // Restore a condition previously marked for deletion.
+                                                // Error notification is handled inside the hook.
+                                                unmarkConditionForDeletion(data.rule.path).catch(() => {});
+                                            }}/>
+                            {data.canPublishDeletion &&
+                                <PublishDeletionButton buttonIcon={<CloudCheck/>}
+                                                       dataSelRole="publish-deletion-condition"
+                                                       buttonProps={{title: publishDeletionLabel, 'aria-label': publishDeletionLabel}}
+                                                       onClick={() => {
+                                                           // Commit the deletion through the standard
+                                                           // publication workflow.
+                                                           publishConditionDeletion(data.rule.uuid);
+                                                       }}/>}
+                        </>
+                    );
+                } else if (!hideActions) {
+                    actions = (
+                        <>
+                            <EditButton buttonIcon={<Edit/>}
+                                        dataSelRole="edit-condition"
+                                        buttonProps={{title: editLabel, 'aria-label': editLabel}}
+                                        onClick={() => {
                                             onEdit(data.rule);
                                         }}/>
-                                        <DeleteButton buttonIcon={<Delete/>}
-                                                      onClick={() => {
-                                            if (data.status === 'new') {
-                                                const updatedNewRules = (formikContext.values['RULES::new'] || []).filter(r => r.uuid !== data.rule.uuid);
-                                                formikContext.setFieldValue('RULES::new', updatedNewRules);
-                                            } else {
-                                                const nextDeletedRules = [
-                                                    ...(formikContext.values['RULES::deleted'] || []),
-                                                    data.rule.uuid
-                                                ];
-                                                // If the rule is already in updated rules we need to remove it from there
-                                                const nextUpdatedRules = (formikContext.values['RULES::updated'] || []).filter(r => r.uuid !== data.rule.uuid);
-                                                formikContext.setFieldValue('RULES::updated', nextUpdatedRules).then(() => {
-                                                    formikContext.setFieldValue('RULES::deleted', nextDeletedRules);
-                                                });
-                                            }
-                                        }}/>
-                                    </>
-                                }
-                            />
-                        )
-                    })}
-                </TableRow>
-            )}
+                            <DeleteButton buttonIcon={<Delete/>}
+                                          dataSelRole="delete-condition"
+                                          buttonProps={{title: deleteLabel, 'aria-label': deleteLabel}}
+                                          onClick={() => {
+                                              // Mark the condition for deletion (soft delete). It stays
+                                              // visible until the deletion is published, and can be undeleted.
+                                              // Error notification is handled inside the hook.
+                                              markConditionForDeletion(data.rule.path).catch(() => {});
+                                          }}/>
+                        </>
+                    );
+                }
+
+                return (
+                    <TableRow
+                        key={id}
+                        className={clsx(statusCellStyles.tableRow)}
+                    >
+                        {renderCells({
+                            before: (
+                                <Typography isNowrap
+                                            component="td"
+                                            variant="body"
+                                            className={clsx(statusCellStyles.tableCellStatus)}
+                                            data-sel-role="condition-status"
+                                >
+                                    <PublicationStatus node={data.rule}/>
+                                </Typography>
+                            ), after: (
+                                <TableCellActions actions={actions}/>
+                            )
+                        })}
+                    </TableRow>
+                );
+            }}
             data-sel-role="visibility-rule-table"
         />
     );
@@ -281,5 +235,9 @@ export const DatatableRules = ({rules, onEdit}) => {
 
 DatatableRules.propTypes = {
     rules: PropTypes.object,
-    onEdit: PropTypes.func
+    onEdit: PropTypes.func,
+    refresh: PropTypes.func.isRequired,
+    // When true the per-row actions (edit/delete/undelete) are hidden — used while a condition is
+    // being edited and its row is shown read-only underneath the edition panel.
+    hideActions: PropTypes.bool
 };

@@ -17,19 +17,9 @@ jest.mock('~/ContentEditor/SelectorTypes/resolveSelectorType', () => {
     };
 });
 
-jest.mock('~/ContentEditor/date.config', () => {
-    return date => {
-        return {
-            locale() {
-                return {
-                    format(format) {
-                        return `formatted date: ${date} format: ${format}`;
-                    }
-                };
-            }
-        };
-    };
-});
+jest.mock('date-formatter', () => ({
+    formatDatetime: date => `formatted datetime: ${date}`
+}));
 
 const t = val => val;
 
@@ -199,7 +189,7 @@ describe('adaptEditFormData', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).details).toEqual([
             {
                 label: 'labelled',
-                value: 'formatted date: 2019-05-07T11:33:31.056 format: L HH:mm',
+                value: 'formatted datetime: 2019-05-07T11:33:31.056',
                 copyable: false
             }
         ]);
@@ -209,11 +199,7 @@ describe('adaptEditFormData', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).technicalInfo).toEqual([
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType',
-                value: 'ContentType'
-            },
-            {
-                label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.nodeTypeName',
-                value: 'jcr:contentType'
+                value: 'ContentType (jcr:contentType)'
             },
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins',

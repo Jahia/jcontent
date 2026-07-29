@@ -16,6 +16,22 @@ export const DeleteButton = getButtonRenderer({
     }
 });
 
+export const UndeleteButton = getButtonRenderer({
+    defaultButtonProps: {
+        variant: 'ghost',
+        size: 'default',
+        color: 'default'
+    }
+});
+
+export const PublishDeletionButton = getButtonRenderer({
+    defaultButtonProps: {
+        variant: 'ghost',
+        size: 'default',
+        color: 'danger'
+    }
+});
+
 export const RefreshButton = getButtonRenderer({
     labelStyle: 'none',
     defaultButtonProps: {
@@ -27,7 +43,7 @@ export const RefreshButton = getButtonRenderer({
 export const ButtonRenderer = getButtonRenderer({
     defaultButtonProps: {
         variant: 'outlined',
-        size: 'big',
+        size: 'default',
         color: 'accent'
     }
 });

@@ -11,7 +11,10 @@ export const SearchQueryHandler = {
         searchPath,
         nodeType: (searchContentType || 'jmix:searchable'),
         searchTerms,
-        nodeNameSearchTerms: `%${searchTerms}%`,
+        // LOWER_CASE on the j:nodename LIKE constraint lowercases the column server-side, so the
+        // pattern must be lowercased too for the match to work — keeps file-name search case-insensitive
+        // and consistent with the (analyzer-based) content search.
+        nodeNameSearchTerms: `%${(searchTerms || '').toLowerCase()}%`,
         language: lang,
         displayLanguage: uilang,
         offset: pagination.currentPage * pagination.pageSize,

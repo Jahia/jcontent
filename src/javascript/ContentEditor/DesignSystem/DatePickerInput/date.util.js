@@ -1,7 +1,7 @@
 // Look at https://github.com/MadMG/moment-jdateformatparser/blob/master/moment-jdateformatparser.js
 // for the javaFormatMapping
 
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 
 export const generateWeekdaysShort = locale => {
     return {

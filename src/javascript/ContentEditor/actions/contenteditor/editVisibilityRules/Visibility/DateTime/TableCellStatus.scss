@@ -63,19 +63,18 @@
 .tableCellStatus {
     position: relative;
 
+    display: flex;
+
+    // Stretch to the row height (the row is a flexbox with align-items: center, which would
+    // otherwise vertically centre this cell and let the absolute PublicationStatus overflow into
+    // the next row). align-self: stretch only takes effect when the cross size is auto, hence no
+    // explicit height here; the stretched cell then gives the absolute root a definite height to fill.
+    align-self: stretch;
+    min-width: 6px;
+
     padding: 0;
     /* stylelint-disable-next-line declaration-no-important */
     overflow: visible !important;
-
-    border-left: 6px solid var(--tableCellStatus-bar);
-
-    &:hover {
-        .panel {
-            max-width: 500px;
-
-            visibility: visible;
-        }
-    }
 }
 
 .success {
@@ -114,6 +113,11 @@
     --tableCellStatus-bar: var(--color-accent);
 }
 
+.deletedText {
+    color: var(--color-gray_dark);
+    text-decoration: line-through;
+}
+
 .tableCellActions {
     position: relative;
     overflow: visible;
@@ -134,4 +138,13 @@
     background: var(--moon-row-background);
 
     visibility: var(--moon-cellAction-visibility, hidden);
+}
+
+.tableRow {
+    height: 48px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+
+    border-bottom: 1px solid var(--color-gray_light);
 }

@@ -49,13 +49,13 @@ describe('Mark as WIP action tests', () => {
         cy.log('Verify wipALL shows unmark WIP action');
         ce = jcontent.editComponentByRowName('wipALL');
         cy.get('[data-sel-role="wip-info-chip"]').should('be.visible');
-        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Unmark as Work in progress');
+        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Unmark as WIP');
         ce.cancel();
 
         cy.log('Verify wipFR shows mark WIP action');
         ce = jcontent.editComponentByRowName('wipFR');
         cy.get('[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('not.exist');
-        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Mark as Work in progress');
+        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Mark as WIP');
         ce.cancel();
     });
 
@@ -66,13 +66,13 @@ describe('Mark as WIP action tests', () => {
         cy.log('Verify wipALL shows unmark WIP action');
         ce = jcontent.editComponentByRowName('wipALL');
         cy.get('[data-sel-role="wip-info-chip"]').should('be.visible');
-        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Unmark as Work in progress');
+        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Unmark as WIP');
         ce.cancel();
 
         cy.log('Verify wipFR shows unmark WIP action');
         ce = jcontent.editComponentByRowName('wipFR');
         cy.get('[data-sel-role="wip-info-chip"]', {timeout: 5000}).should('be.visible');
-        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Unmark as Work in progress');
+        getComponentByRole(Button, 'workInProgressAction').should('contain', 'Unmark as WIP');
 
         cy.log('toggle WIP status as unmarked if only one language');
         getComponentByRole(Button, 'workInProgressAction').click(); // No WIP modal

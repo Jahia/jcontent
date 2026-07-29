@@ -13,7 +13,7 @@ export const SearchQuery = gql`
                         any: [
                             {contains: $searchTerms}
                             {contains: $searchTerms, property: "j:tagList"}
-                            {like: $nodeNameSearchTerms, property: "j:nodename"}
+                            {like: $nodeNameSearchTerms, property: "j:nodename", function: LOWER_CASE}
                         ]
                     }
                 },

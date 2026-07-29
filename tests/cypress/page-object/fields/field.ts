@@ -14,6 +14,12 @@ export class Field extends BaseComponent {
         // Empty method
     }
 
+    assertVisible() {
+        this.get().scrollIntoView({offset: {top: -200, left: 0}});
+        this.get().should('be.visible');
+        return this;
+    }
+
     hasMandatory() {
         this.get().scrollIntoView().find('[data-sel-content-editor-field-mandatory]')
             .should('be.visible')
@@ -22,6 +28,10 @@ export class Field extends BaseComponent {
 
     isReadOnly() {
         this.get().should('have.attr', 'data-sel-content-editor-field-readonly', 'true');
+    }
+
+    isNotReadOnly() {
+        this.get().invoke('attr', 'data-sel-content-editor-field-readonly').should('not.eq', 'true');
     }
 
     getTranslateFieldAction(): Cypress.Chainable {

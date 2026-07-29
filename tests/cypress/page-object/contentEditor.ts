@@ -11,7 +11,6 @@ import {ChoiceListField, ChoiceTreeField, DateField, Field, PickerField, RichTex
 import {LanguageSwitcher} from './languageSwitcher';
 import {Breadcrumb} from './breadcrumb';
 import gql from 'graphql-tag';
-import {AdvancedOptions} from './advancedOptions';
 import {Section} from './section';
 import {ContentStatus} from './contentStatus';
 import {SidePanel} from './sidePanel';
@@ -127,6 +126,10 @@ export class ContentEditor extends BasePage {
         getComponentByRole(Button, 'backButton').click();
         getComponentByRole(Button, 'close-dialog-discard').click();
         getComponentByRole(Button, 'backButton').get().should('not.exist', {timeout: 5000});
+    }
+
+    discard() {
+        getComponentByRole(Button, 'close-dialog-discard').click();
     }
 
     addAnotherContent() {
@@ -293,9 +296,13 @@ export class ContentEditor extends BasePage {
         return r;
     }
 
+    getDynamicFieldset(mixinType: string): Cypress.Chainable<JQuery<HTMLElement>> {
+        return cy.get(`span[data-sel-role-dynamic-fieldset="${mixinType}"]`);
+    }
+
     toggleOption(optionType: string, optionFieldName?: string) {
-        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).scrollIntoView({offset: {left: 0, top: -100}});
-        cy.get(`span[data-sel-role-dynamic-fieldset="${optionType}"]`).find('input').click({force: true});
+        this.getDynamicFieldset(optionType).scrollIntoView({offset: {left: 0, top: -100}});
+        this.getDynamicFieldset(optionType).find('input').click({force: true});
         if (optionFieldName) {
             cy.contains(optionFieldName, {timeout: 30000}).should('exist');
         }
@@ -320,13 +327,13 @@ export class ContentEditor extends BasePage {
         return Breadcrumb.findByContent(content, ContentEditor.defaultSelector);
     }
 
-    switchToAdvancedOptions(): AdvancedOptions {
-        if (this.advancedMode) {
-            cy.get('.moonstone-tabItem[data-sel-role="tab-advanced-options"]').should('be.visible').click();
-            return new AdvancedOptions();
-        }
+    openWorkflowsFromModesDropdown() {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get('[data-sel-role="tab-workflow"]').should('be.visible').click();
+    }
 
-        this.switchToAdvancedMode();
-        return this.switchToAdvancedOptions();
+    openEditRolesFromModesDropdown() {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get('[data-sel-role="tab-editroles"]').should('be.visible').click();
     }
 }

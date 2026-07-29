@@ -2,7 +2,7 @@ import React from 'react';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useButtonsData} from '~/JContent/EditFrame/Boxes/dataHooks/useButtonsData';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {usePasteData} from '~/JContent/EditFrame/Boxes/dataHooks/usePasteData';
 import {JahiaRenderedModulesUtil} from '../JContent.utils';
 
@@ -11,6 +11,21 @@ import {JahiaRenderedModulesUtil} from '../JContent.utils';
  */
 const resolveParentPath = e => {
     return e.dataset.jahiaParent && e.ownerDocument.getElementById(e.dataset.jahiaParent)?.getAttribute('path');
+};
+
+/**
+ * A child only warrants an insertion point if it actually renders something. A child with no child
+ * elements (empty, or holding only text) qualifies. Otherwise at least one of its child elements
+ * must not be display:none — a child whose elements are all hidden would get a stray insertion
+ * point positioned over nothing.
+ */
+const hasVisibleContent = e => {
+    if (e.children.length === 0) {
+        return true;
+    }
+
+    const view = e.ownerDocument.defaultView;
+    return [...e.children].some(child => view.getComputedStyle(child).display !== 'none');
 };
 
 /**
@@ -50,7 +65,7 @@ const getPlaceholderNodeTypes = (e, parentPath) => {
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
-    const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}));
+    const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}), shallowEqual);
     const clickedPath = clickedElement.element.getAttribute('path');
 
     const originalInsertionButtons = [...currentDocument.querySelectorAll(`[type="placeholder"][data-jahia-parent=${clickedElement.element.id}]`)]
@@ -66,8 +81,9 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
 
     // Get all children of the clicked element that are [type="existingNode"] and add insertion points for each (insertion points appear on top)
     const childrenElem = [...currentDocument.querySelectorAll(`[data-jahia-parent=${clickedElement.element.id}]`)]
-        // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath
-        .filter(e => e.getAttribute('path')?.startsWith(clickedPath) && e.getAttribute('type') !== 'placeholder')
+        // Need to make sure that existingNode is not a weakreference but a subnode, which we can do by checking subpath.
+        // Also require the child to render at least one visible element, otherwise its insertion point has nothing to anchor to.
+        .filter(e => e.getAttribute('path')?.startsWith(clickedPath) && e.getAttribute('type') !== 'placeholder' && hasVisibleContent(e))
         .map(e => {
             const parentPath = resolveParentPath(e);
             return {

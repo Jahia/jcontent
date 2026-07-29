@@ -1,0 +1,24 @@
+.nav {
+    // The Jahia UI shell applies a global custom scrollbar whose thumb switches colour on hover
+    // (`::-webkit-scrollbar-thumb:hover`), which makes the thumb disappear in Chrome on the
+    // accordion panels (issue #1600). Re-declare the scrollbar for these panels and their
+    // scrollable children, keeping the same thumb colour on hover so it stays visible.
+    :global(.moonstone-accordionItem_content),
+    :global(.moonstone-accordionItem_content) * {
+        &::-webkit-scrollbar {
+            width: 0.5em;
+            height: 0.5em;
+        }
+
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-corner {
+            background: none;
+        }
+
+        &::-webkit-scrollbar-thumb,
+        &::-webkit-scrollbar-thumb:hover {
+            border: 0;
+            background: var(--moon-color-gray);
+        }
+    }
+}

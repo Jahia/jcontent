@@ -120,6 +120,22 @@ describe('Create content tests', () => {
         cy.url().should('contain', '?param=test');
     });
 
+    it('should close CE when clicking outside modal', () => {
+        // Open CE with no changes, click outside to close
+        jcontent.editComponentByRowName('My simple text');
+        cy.get(ContentEditor.defaultSelector).parent().click(10, 10);
+        cy.get(ContentEditor.defaultSelector).should('not.exist');
+        cy.get('h1').should('contain', 'contents');
+
+        // Open CE, make a change, click outside to trigger unsaved changes dialog, discard
+        jcontent.editComponentByRowName('My simple text');
+        const contentEditor = new ContentEditor();
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue('some change');
+        cy.get(ContentEditor.defaultSelector).parent().click(10, 10);
+        contentEditor.discard();
+        cy.get(ContentEditor.defaultSelector).should('not.exist');
+    });
+
     it('should display the on-change div', () => {
         const contentEditor = jcontent.editComponentByRowName('On change text');
         contentEditor.switchToAdvancedMode();

@@ -1,62 +1,12 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import {ContentEditorFragment} from './fragments';
 
 export const CreateFormQuery = gql`
     query createForm($uilang:String!, $language:String!, $uuid:String!, $primaryNodeType:String!) {
         forms {
             createForm(primaryNodeType: $primaryNodeType, uiLocale: $uilang, locale: $language, uuidOrPath: $uuid) {
-                name
-                displayName
-                description
-                sections {
-                    name
-                    displayName
-                    description
-                    visible
-                    expanded
-                    fieldSets {
-                        name
-                        displayName
-                        description
-                        visible
-                        dynamic
-                        activated
-                        hasEnableSwitch
-                        fields {
-                            name
-                            displayName
-                            description
-                            errorMessage
-                            visible
-                            mandatory
-                            i18n
-                            multiple
-                            readOnly
-                            requiredType
-                            selectorType
-                            selectorOptions {
-                                name
-                                value
-                                values
-                            }
-                            valueConstraints {
-                                value {
-                                    type
-                                    string
-                                }
-                                displayValue
-                                displayValueKey
-                                properties {
-                                    name
-                                    value
-                                }
-                            }
-                            defaultValues {
-                                string
-                            }
-                        }
-                    }
-                }
+                ...ContentEditorFragment
             }
         }
         jcr {
@@ -124,7 +74,7 @@ export const CreateFormQuery = gql`
                 isSystemNameReadOnlyMixin: isNodeType(type: {multi: ANY, types: ["jmix:systemNameReadonly"]})
             }
         }
-       
     }
+    ${ContentEditorFragment}
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;

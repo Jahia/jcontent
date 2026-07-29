@@ -1,0 +1,19 @@
+{
+  "name": "gql",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "gql.tada generate-output && gql.tada turbo && tsdown --no-config -f esm,cjs --dts false"
+  },
+  "dependencies": {
+    "gql.tada": "^1.11.2",
+    "tsdown": "^0.22.3"
+  }
+}

@@ -1,4 +1,4 @@
-import dayjs from '~/ContentEditor/date.config';
+import {formatDatetime} from 'date-formatter';
 import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {adaptSystemNameField} from './adaptSystemNameField';
@@ -112,7 +112,7 @@ const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
                     label: field.displayName,
                     value: jcrDefinition &&
                         jcrDefinition.value &&
-                        dayjs(jcrDefinition.value).locale(lang).format('L HH:mm'),
+                        formatDatetime(jcrDefinition.value, {locale: lang}),
                     copyable: false
                 };
             }
@@ -128,11 +128,7 @@ const getTechnicalInfo = (nodeData, t) => {
     return [
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType'),
-            value: nodeData.primaryNodeType.displayName
-        },
-        {
-            label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.nodeTypeName'),
-            value: nodeData.primaryNodeType.name
+            value: `${nodeData.primaryNodeType.displayName} (${nodeData.primaryNodeType.name})`
         },
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins'),
@@ -158,7 +154,7 @@ const getTechnicalInfo = (nodeData, t) => {
 
 export const adaptEditFormData = (data, lang, t) => {
     const nodeData = data.jcr.result;
-    const sections = adaptSections(data.forms.editForm.sections);
+    const sections = adaptSections(data.forms.editForm);
 
     const formData = {
         sections,

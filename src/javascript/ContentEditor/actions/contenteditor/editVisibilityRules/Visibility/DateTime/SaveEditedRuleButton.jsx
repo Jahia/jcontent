@@ -8,7 +8,8 @@ export const SaveEditedRuleButton = () => {
     const {t} = useTranslation('jcontent');
     return (
         <Button size="big"
-                label={t('jcontent:label.ok')}
+                color="accent"
+                label={t('jcontent:label.contentEditor.edit.action.goBack.btnSave')}
                 onClick={() => {
         formikContext.submitForm();
     }}/>

@@ -172,6 +172,38 @@ describe('delete tests', () => {
         contextMenu.shouldHaveItem('Delete (permanently)');
     });
 
+    it('allows to mark nolive node for deletion and delete permanently', () => {
+        const nodePath = `/sites/${siteKey}/contents/test-deleteContents/test-delete-nolive`;
+
+        cy.log('Verify nolive node exists before starting test');
+        cy.apollo({
+            query: gql`query { jcr { nodeByPath(path: "${nodePath}") {uuid}}}`
+        }).should(resp => {
+            expect(resp?.data.jcr.nodeByPath).not.to.be.null;
+        });
+
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents/test-deleteContents');
+
+        cy.log('Check publication status shows not published before marking for deletion');
+        jcontent.getTable().getRowByName('test-delete-nolive').click();
+        jcontent.assertStatusType('notPublished');
+
+        cy.log('Mark node for deletion');
+        jcontent.getTable().getRowByName('test-delete-nolive').markForDeletion();
+
+        cy.log('Delete node permanently');
+        jcontent.getTable().getRowByName('test-delete-nolive').contextMenu().select('Delete (permanently)');
+        getComponent(DeletePermanentlyDialog).delete();
+
+        cy.log('Verify nolive node is deleted');
+        cy.apollo({
+            query: gql`query { jcr { nodeByPath(path: "${nodePath}") {uuid}}}`,
+            errorPolicy: 'ignore'
+        }).should(resp => {
+            expect(resp?.data.jcr.nodeByPath).to.be.null;
+        });
+    });
+
     it('Does not show delete action on locked nodes', () => {
         cy.apollo({mutation: gql`mutation lockNode {
                 jcr {

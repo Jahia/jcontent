@@ -90,7 +90,7 @@ public class GqlEditorForms {
 
     @GraphQLField
     @GraphQLName("editForm")
-    @GraphQLDescription("Get a editor form from a locale and an existing node")
+    @GraphQLDescription("Get an editor form from a locale and an existing node")
     public GqlEditorForm getEditForm(
         @GraphQLName("uiLocale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String uiLocale,
         @GraphQLName("locale") @GraphQLNonNull @GraphQLDescription("A string representation of a locale, in IETF BCP 47 language tag format, ie en_US, en, fr, fr_CH, ...") String locale,
@@ -237,7 +237,11 @@ public class GqlEditorForms {
 
         QueryManager queryManager = session.getWorkspace().getQueryManager();
         for (String type : nodeTypes) {
-            count += queryManager.createQuery("SELECT count " + "AS [rep:count()] " + "FROM [" + type + "] " + "WHERE isdescendantnode(['" + JCRContentUtils.sqlEncode(node.getPath()) + "'])", Query.JCR_SQL2).execute().getRows().nextRow().getValue("count").getLong();
+            // Resolve the requested type against the node type registry and use its canonical name in
+            // the query. Only a real node type name (which cannot contain query syntax) can reach the
+            // FROM clause — a crafted value is rejected here instead of altering the query structure.
+            String typeName = NodeTypeRegistry.getInstance().getNodeType(type).getName();
+            count += queryManager.createQuery("SELECT count " + "AS [rep:count()] " + "FROM [" + typeName + "] " + "WHERE isdescendantnode(['" + JCRContentUtils.sqlEncode(node.getPath()) + "'])", Query.JCR_SQL2).execute().getRows().nextRow().getValue("count").getLong();
             if (limit != null && limit > 0 && count >= limit) {
                 return limit;
             }

@@ -205,18 +205,21 @@ export class JContent extends BasePage {
     }
 
     switchToListMode(): JContent {
+        cy.get('.moonstone-loader').should('not.exist');
         this.switchToMode('List');
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         return this;
     }
 
     switchToStructuredView(): JContent {
+        cy.get('.moonstone-loader').should('not.exist');
         this.switchToMode('Structured');
+        cy.get('.moonstone-loader').should('not.exist');
         return this;
     }
 
     switchToPageBuilder(): JContentPageBuilder {
-        cy.get('.moonstone-loader', {timeout: 5000}).should('not.exist');
+        cy.get('.moonstone-loader').should('not.exist');
         this.switchToMode('Page Builder');
         return new JContentPageBuilder(this);
     }
@@ -261,8 +264,13 @@ export class JContent extends BasePage {
         return getComponentBySelector(Button, `.moonstone-header button[data-sel-role="${role}"]`);
     }
 
+    selectHeaderTab(role: string) {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get(`[data-sel-role="${role}"]`).click();
+    }
+
     assertHeaderActionSelected(role: string) {
-        this.getHeaderActionButton(role).should('have.class', 'moonstone-tabItem_selected');
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').should('have.attr', 'data-sel-tab', role);
     }
 
     publish() {

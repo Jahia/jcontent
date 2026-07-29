@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FieldContainer} from '../../../Field';
+import {FieldContainer} from '../../../Field/Field.container';
 import {useFormikContext} from 'formik';
 import {useTranslation} from 'react-i18next';
 import {adaptSectionToDisplayableRows, getDisplayedRows} from './AutomaticOrdering.utils';

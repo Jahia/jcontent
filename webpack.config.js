@@ -29,7 +29,7 @@ module.exports = (env, argv) => {
         },
         resolve: {
             mainFields: ['module', 'main'],
-            extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
+            extensions: ['.mjs', '.ts', '.tsx', '.js', '.jsx', '.json', '.scss'],
             alias: {
                 '~': path.resolve(__dirname, './src/javascript'),
                 // Webpack does not support ?url on package identifiers,
@@ -69,7 +69,7 @@ module.exports = (env, argv) => {
                     use: ["source-map-loader"],
                 },
                 {
-                    test: /\.jsx?$/,
+                    test: /\.[jt]sx?$/,
                     include: [path.join(__dirname, 'src')],
                     use: {
                         loader: 'babel-loader',
@@ -79,7 +79,8 @@ module.exports = (env, argv) => {
                                     modules: false,
                                     targets: {chrome: '60', edge: '44', firefox: '54', safari: '12'}
                                 }],
-                                '@babel/preset-react'
+                                '@babel/preset-react',
+                                '@babel/preset-typescript'
                             ],
                             plugins: [
                                 'lodash',

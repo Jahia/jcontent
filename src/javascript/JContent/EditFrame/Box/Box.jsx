@@ -249,7 +249,15 @@ export const Box = React.memo(({
     });
 
     isHeaderDisplayed = !isSomethingSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
-    if (!isHeaderDisplayed && !isHovered && !isSelected && !isStatusHighlighted) {
+
+    const isBindableEmpty = element.getAttribute('bindable') === 'true' &&
+        (!element.hasChildNodes() || !element.textContent?.trim());
+
+    if (isBindableEmpty) {
+        element.style['min-height'] = '100px';
+    }
+
+    if (!isHeaderDisplayed && !isHovered && !isSelected && !isStatusHighlighted && !isBindableEmpty) {
         return false;
     }
 
@@ -313,7 +321,7 @@ export const Box = React.memo(({
     const boxStyle = !isAnythingDragging && isClicked && breadcrumbs.length > 0 ? styles.withHeaderAndFooter : styles.withHeader;
     const hasNoTranslationOverlay = displayStatuses.has('noTranslation') &&
         !isMarkedForDeletionRoot &&
-        !element.hasChildNodes();
+        (!element.hasChildNodes() || !element.textContent?.trim());
 
     return (
         <div ref={rootDiv}
@@ -333,7 +341,7 @@ export const Box = React.memo(({
                 (isSelected || isClicked) && !isAnythingDragging ? styles.boxSelected : '',
                 (isStatusHighlighted) && styles.boxHighlighted,
                 displayStatuses.has('notVisible') && styles.boxNotVisible,
-                (hasNoTranslationOverlay) && styles.noDisplayOverlay)}
+                (hasNoTranslationOverlay || isBindableEmpty) && styles.noDisplayOverlay)}
                  style={{
                      '--jcontent-borderColor': borderColor
                  }}
@@ -341,7 +349,7 @@ export const Box = React.memo(({
                 {isHeaderDisplayed && Header}
                 {BoxStatus}
 
-                {hasNoTranslationOverlay &&
+                {(hasNoTranslationOverlay || isBindableEmpty) &&
                     <div className={styles.overlayLabel} style={{height: currentOffset.height}}>
                         {t('label.contentManager.pageBuilder.emptyContent')}
                     </div>}

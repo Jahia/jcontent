@@ -56,6 +56,10 @@ mutation createDeleteContent {
                             primaryNodeType: "jnt:bigText"
                             properties: [{ name: "text", language: "en", value: "test 6" }]
                         }
+                        {
+                            name: "test-delete-nolive"
+                            primaryNodeType: "cent:testNoLiveNode"
+                        }
                     ]
                 ) {
                     uuid

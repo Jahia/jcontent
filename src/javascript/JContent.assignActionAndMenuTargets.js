@@ -39,6 +39,10 @@ const assignTargetsForActions = (targetActions, registry) => {
     });
 };
 
+export const addContextMenuTargetToActions = (targetName, actions) => {
+    assignTargetsForActions({[targetName]: actions}, registry);
+};
+
 const actionTargetAssignments = {
     '--contentActions': ['createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'createContent', 'replaceFile', 'locate', 'preview', 'createContentFolder', 'rename', 'edit', 'editPage', 'zip', 'editAdvanced', 'editSource', 'editPageAdvanced', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'createFolder', 'downloadFile', 'copy', 'copyPageMenu', 'cut', 'paste', 'pasteReference', 'fileUpload', 'publishDeletion', 'delete', 'deletePermanently', 'undelete', 'exportPage', 'export', 'downloadAsZip', 'import', 'lock', 'unlock', 'clearAllLocks', 'publishMenu', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2', 'subContents'],
     createMenuActions: [
@@ -128,6 +132,9 @@ const actionTargetAssignments = {
         'delete',
         'deletePermanently',
         'undelete',
+        'export',
+        'exportPage',
+        'import',
         // Hardcoded so 'Open in page composer' can be always added at the end of this list
         'contentActionsSeparator3:50'
     ],

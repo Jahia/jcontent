@@ -89,6 +89,18 @@ export class ChoiceListField extends Field {
     }
 
     /**
+     * Opens the dropdown, asserts that each given option value displays the expected label and closes the dropdown.
+     * @param options Expected displayed label per option value.
+     */
+    shouldHaveOptionLabels(options: Record<string, string>): void {
+        this.openDropdown();
+        Object.entries(options).forEach(([value, label]) => {
+            this.get().find(`.moonstone-menuItem[data-value="${value}"]`).should('have.text', label);
+        });
+        this.closeDropdown();
+    }
+
+    /**
      * Opens the dropdown, asserts that the available values in the choice list match the provided list exactly (order and content) and closes the dropdown.
      * Opens the dropdown to check and closes it after.
      * @param values The exact set of values expected to be available.

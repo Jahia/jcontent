@@ -2,7 +2,7 @@ import * as React from 'react';
 import {MenuItem, withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {Input, Select} from '@jahia/design-system-kit';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 
 const style = () => {
     const commonStyle = {

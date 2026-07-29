@@ -1,4 +1,17 @@
-import {getNewCounter, removeFileExtension, isDescendant} from './JContent.utils';
+import {registry} from '@jahia/ui-extender';
+import {
+    canEditInPageBuilder,
+    getNewCounter,
+    isDescendant,
+    removeFileExtension,
+    resolveUrlForLiveOrPreview
+} from './JContent.utils';
+
+jest.mock('@jahia/ui-extender', () => ({
+    registry: {
+        find: jest.fn(() => [])
+    }
+}));
 
 describe('removeFileExtension', () => {
     it('should remove file extension', () => {
@@ -36,6 +49,158 @@ describe('getNewCounter', () => {
     });
 });
 
+describe('resolveUrlForLiveOrPreview', () => {
+    // Sites used in test scenarios:
+    //   luxe    → j:serverName=servera, aliases=[server2]
+    //   digitall → j:serverName=localhost
+    //   siteb   → j:serverName=serverb
+
+    // renderUrl from GQL:
+    //   relative (/cms/render/...) when j:serverName=localhost
+    //   absolute (http://servera/cms/render/...) when j:serverName is non-localhost
+
+    const relativePath = '/cms/render/live/en/sites/digitall/home.html';
+    const absoluteServera = 'https://servera/cms/render/live/en/sites/luxe/home.html';
+    const absoluteServeraWithPort = 'https://servera:8080/cms/render/live/en/sites/luxe/home.html';
+    const absoluteServerb = 'https://serverb/cms/render/live/en/sites/siteb/home.html';
+
+    const setLocation = (hostname, port = '') => {
+        Object.defineProperty(window, 'location', {
+            configurable: true,
+            value: {hostname, port, protocol: 'https:'}
+        });
+    };
+
+    describe('preview (isLive=false) or no serverName', () => {
+        it('uses current domain with port for preview', () => {
+            setLocation('servera', '8080');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('https://servera:8080/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('uses current domain with port when serverName is not provided', () => {
+            setLocation('servera', '8080');
+            expect(resolveUrlForLiveOrPreview(relativePath, true, null)).toBe('https://servera:8080/cms/render/live/en/sites/digitall/home.html');
+        });
+
+        it('omits port when on standard port', () => {
+            setLocation('servera', '');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+    });
+
+    describe('login to servera (luxe default server name)', () => {
+        beforeEach(() => setLocation('servera', '8080'));
+
+        it('luxe: select servera (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera:8080/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select server2 (alias, external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('digitall: select localhost → opens at localhost with port', () => {
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+        });
+
+        it('siteb: select serverb (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
+        });
+    });
+
+    describe('login to localhost (digitall default server name)', () => {
+        beforeEach(() => setLocation('localhost', '8080'));
+
+        it('luxe: select servera (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select server2 (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('digitall: select localhost (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+        });
+
+        it('siteb: select serverb (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
+        });
+    });
+
+    describe('login to serverb (siteb default server name)', () => {
+        beforeEach(() => setLocation('serverb', '8080'));
+
+        it('luxe: select servera (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select server2 (external alias) → opens without port, not at servera', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select serverb (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServeraWithPort, true, 'serverb')).toBe('https://serverb:8080/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('digitall: select localhost → opens at localhost with port, not at serverb', () => {
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+        });
+
+        it('siteb: select serverb (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb:8080/cms/render/live/en/sites/siteb/home.html');
+        });
+    });
+
+    describe('login to server2 (luxe additional server name)', () => {
+        beforeEach(() => setLocation('server2', '8080'));
+
+        it('luxe: select servera (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select server2 (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2:8080/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('digitall: select localhost → opens at localhost with port, not at server2', () => {
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+        });
+
+        it('siteb: select serverb (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
+        });
+    });
+
+    describe('login to local1 (not any site\'s server name)', () => {
+        beforeEach(() => setLocation('local1', '8080'));
+
+        it('luxe: select servera (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select server2 (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'server2')).toBe('https://server2/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('luxe: select local1 (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'local1')).toBe('https://local1:8080/cms/render/live/en/sites/luxe/home.html');
+        });
+
+        it('digitall: select localhost → opens at localhost with port, not at local1', () => {
+            expect(resolveUrlForLiveOrPreview(relativePath, true, 'localhost')).toBe('https://localhost:8080/cms/render/live/en/sites/digitall/home.html');
+        });
+
+        it('siteb: select serverb (external) → opens without port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'serverb')).toBe('https://serverb/cms/render/live/en/sites/siteb/home.html');
+        });
+
+        it('siteb: select local1 (current domain) → opens with port', () => {
+            expect(resolveUrlForLiveOrPreview(absoluteServerb, true, 'local1')).toBe('https://local1:8080/cms/render/live/en/sites/siteb/home.html');
+        });
+    });
+});
+
 describe('isDescendant', () => {
     it('should check if path is descendant of an ancestor', () => {
         expect(isDescendant('/site', '/site')).toBe(false);
@@ -47,5 +212,45 @@ describe('isDescendant', () => {
         expect(isDescendant('', '/site/test')).toBe(false);
         expect(isDescendant('/site', null)).toBe(false);
         expect(isDescendant('/site', '')).toBe(true);
+    });
+});
+
+describe('canEditInPageBuilder', () => {
+    const site = 'mySite';
+    const nodes = {
+        '/sites/otherSite/ref': {primaryNodeType: {name: 'jnt:contentReference'}}
+    };
+
+    beforeEach(() => {
+        registry.find.mockReturnValue([]);
+    });
+
+    it('should allow editing nodes from the current site', () => {
+        expect(canEditInPageBuilder('/sites/mySite/home/content', nodes, site)).toBe(true);
+    });
+
+    it('should not allow editing nodes from another site by default', () => {
+        expect(canEditInPageBuilder('/sites/otherSite/home/content', nodes, site)).toBe(false);
+    });
+
+    it('should never allow editing references, even from the current site', () => {
+        const refNodes = {'/sites/mySite/list': {primaryNodeType: {name: 'jnt:contentReference'}}};
+        expect(canEditInPageBuilder('/sites/mySite/list@/node', refNodes, site)).toBe(false);
+    });
+
+    it('should allow editing nodes under a registered editable root path', () => {
+        registry.find.mockReturnValue([{rootPath: '/sites/filesSite/contents'}]);
+        expect(canEditInPageBuilder('/sites/filesSite/contents/foo', nodes, site)).toBe(true);
+        expect(canEditInPageBuilder('/sites/filesSite/other/foo', nodes, site)).toBe(false);
+    });
+
+    it('should allow editing nodes matched by a registered predicate', () => {
+        registry.find.mockReturnValue([{matches: path => path.startsWith('/sites/filesSite/')}]);
+        expect(canEditInPageBuilder('/sites/filesSite/anything', nodes, site)).toBe(true);
+    });
+
+    it('should not allow editing a reference even if it lives under a registered editable root', () => {
+        registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
+        expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
     });
 });

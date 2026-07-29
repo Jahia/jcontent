@@ -40,14 +40,12 @@ export const adaptCreateFormData = (data, lang, t, contentEditorConfigContext) =
         'subNodesCount_nt:base': result.childrenCount?.pageInfo?.totalCount || 0,
         'jmix:listSizeLimit': result.isListSizeLimit
     };
-    const sections = adaptSections(data.forms.createForm.sections);
+    const sections = adaptSections(data.forms.createForm);
 
     const formData = {
         sections,
         expandedSections: getExpandedSections(sections),
-        initialValues: {
-            ...getInitialValues(sections, nodeData)
-        },
+        initialValues: getInitialValues(sections, nodeData),
         hasPreview: false,
         showAdvancedMode: true,
         nodeData,

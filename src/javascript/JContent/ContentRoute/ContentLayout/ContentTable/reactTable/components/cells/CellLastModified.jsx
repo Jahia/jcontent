@@ -2,7 +2,7 @@ import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 import css from '../../../ContentTable.scss';
-import dayjs from 'dayjs';
+import {formatDatetime} from 'date-formatter';
 import {ButtonRendererIconButton} from '~/utils/getButtonRenderer';
 import {getDefaultLocale} from '~/JContent/JContent.utils';
 import {DisplayActions} from '@jahia/ui-extender';
@@ -18,7 +18,7 @@ export const CellLastModified = ({row, value, cell, column}) => {
         >
             <div className={css.cellLastModified}>
                 <Typography className={css.cellLastModifiedText} component="time">
-                    {dayjs(value).locale(getDefaultLocale(uilang)).format('lll')}
+                    {formatDatetime(value, {locale: getDefaultLocale(uilang)})}
                 </Typography>
                 {selection.length === 0 &&
                     <div className={css.cellActions}

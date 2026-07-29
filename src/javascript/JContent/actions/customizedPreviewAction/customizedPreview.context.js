@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 

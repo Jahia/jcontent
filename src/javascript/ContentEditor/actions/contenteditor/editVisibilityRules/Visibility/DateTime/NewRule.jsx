@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {CreateFormQuery} from '~/ContentEditor/ContentEditor/create.gql-queries';
-import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field';
+import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';
 import styles from './DateTime.scss';
 
 export const NewRule = ({type, node}) => {
@@ -48,4 +48,3 @@ NewRule.propTypes = {
     type: PropTypes.string,
     node: PropTypes.object
 };
-

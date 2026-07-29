@@ -5,7 +5,7 @@ import styles from '~/JContent/actions/customizedPreviewAction/customizedPreview
 import clsx from 'clsx';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererShortLabel} from '~/ContentEditor/utils';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 import PropTypes from 'prop-types';
 import {useChannelData} from './useChannelData';
 

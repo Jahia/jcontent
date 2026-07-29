@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {DatePickerInput} from '~/ContentEditor/DesignSystem/DatePickerInput';
-import dayjs from 'dayjs';
+import {dayjs} from 'date-formatter';
 import {fillDisabledDaysFromJCRConstraints} from './DateTimePicker.utils';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {specificDateFormat} from './DateTimePicker.formats';

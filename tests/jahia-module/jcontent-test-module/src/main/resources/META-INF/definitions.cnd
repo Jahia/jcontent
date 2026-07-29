@@ -32,6 +32,8 @@
 
 [cent:testTextField] > jnt:content, mix:title, jmix:basicContent, jmix:editorialContent, jmix:autoPublish
 
+[cent:testNoLiveNode] > jnt:content, jmix:basicContent, jmix:nolive
+
 [cent:defaultValueTest] > jnt:content, jmix:basicContent, jmix:editorialContent, mix:title noquery
  - defaultString (string) = 'Default string'
  - defaultI18nString (string) = 'Default i18n string' internationalized
@@ -150,6 +152,10 @@
 [cent:mainResourceLinkTest] > jnt:content, jmix:mainResource, mix:title, jmix:editorialContent
 
 [cent:previewWrapper] > jnt:content, jmix:basicContent
+
+// Renders a view containing an inline <script> — used to assert that the preview frame shows the
+// rendered markup as a static document and does not run scripts embedded in it.
+[cent:previewInlineScript] > jnt:content, jmix:basicContent
 
 // Tests for examples provided in academy
 // https://academy.jahia.com/documentation/jahia/jahia-8/developer/extending-and-customizing-jahia-ui/customizing-content-editor-forms/examples-of-content-definition-json-overrides
@@ -288,6 +294,9 @@
  + * (cent:childObject1)
  + * (cent:childObject2)
 
+[cent:textArea] > jnt:content, jmix:basicContent, jmix:editorialContent
+  - area1 (string, textarea[height='220'])
+
 [cent:oneMultipleWithLimitTwo] > jnt:content, jmix:basicContent, jmix:editorialContent
  - someProperty (string)
  + * (cent:childObject1)
@@ -307,4 +316,23 @@
  extends = cent:expert
  - test1 (string)
 
+// https://github.com/Jahia/jcontent/issues/2412
+// Regression test types for non-deterministic field assignment when mixin B
+// is both a supertype of mixin A and in the extend mixins list for jnt:page.
+[cemix:supertypeExtendMixin] mixin
+ extends = jnt:page
+ - title (string) internationalized
+ - description (string) internationalized
 
+[cemix:subtypeExtendMixin] > cemix:supertypeExtendMixin mixin
+ extends = jnt:page
+ - pageType (string)
+
+
+// resourceBundle choicelist labels must follow the editor UI locale, not the content locale.
+// captionAlignment covers the initial form load; the mainChoice/dependentChoice pair covers the
+// dependentProperties refetch (fieldConstraints), which re-resolves resourceBundle labels server-side.
+[cent:resourceBundleChoicelist] > jnt:content, jmix:basicContent
+ - captionAlignment (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
+ - mainChoice (string, choicelist[resourceBundle]) = 'a' indexed=no < 'a', 'b'
+ - dependentChoice (string, choicelist[resourceBundle, dependentProperties='mainChoice']) indexed=no < 'x', 'y'

@@ -6,15 +6,23 @@
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "lib": ["dom"],
+    "lib": ["dom", "es2021"],
     "module": "preserve",
-    "outDir": "./types",
+    "outDir": "./types/raw",
     "rootDir": "./src/javascript",
     "skipLibCheck": true,
     "target": "esnext",
     "paths": {
       "~/*": ["./src/javascript/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "./schema.graphql",
+        "tadaOutputLocation": "./packages/gql/src/graphql-live.d.ts",
+        "tadaTurboLocation": "./packages/gql/src/graphql-cache.d.ts"
+      }
+    ]
   },
   "include": ["src/javascript/**/*"]
 }

@@ -73,7 +73,7 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-        tagField.type('tag1, tag2{enter}');
+        tagField.type('tag1, tag2{enter}', {delay: 100, force: true});
 
         tagField.getTags().should('have.length', 2, {timeout: 10000});
         tagField.assertTagText('tag1', 0);
@@ -107,7 +107,7 @@ describe('Tags tests in content editor', () => {
         contentEditor.toggleOption('jmix:tagged', 'Tags');
 
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-        tagField.type('hello,  {enter}');
+        tagField.type('hello,  {enter}', {delay: 100, force: true});
 
         tagField.getTags().should('have.length', 1, {timeout: 10000});
         tagField.assertTagText('hello', 0);

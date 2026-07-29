@@ -46,13 +46,14 @@ describe('test Copy Language action', () => {
         });
     };
 
-    /** Open 'toLang' editor and copy from 'fromLang' language */
-    const setCopyLanguage = (path: string, toLang: string, fromLang: string, buttonRole: string) => {
+    /** Open 'toLang' editor and apply the copy when 'fromLang' is the only source language: no dropdown, it's shown pre-selected as a label */
+    const setCopyLanguageSingleOption = (path: string, toLang: string, fromLang: string, buttonRole: string) => {
         JContent.visit(ThreeLanguagesSiteKey, toLang, path).editContent();
         getComponentByRole(Button, 'copyLanguageAction').click();
 
         const copyLangDialog = getComponentByRole(BaseComponent, 'copy-language-dialog');
-        getComponentByRole(Dropdown, 'from-language-selector').select(fromLang);
+        cy.get('[data-sel-role="from-language-selector"]', {timeout: 10000}).should('not.exist');
+        getComponentByRole(BaseComponent, 'from-language-label', copyLangDialog).should('contain', fromLang);
         getComponentByRole(Button, buttonRole, copyLangDialog).click();
     };
 
@@ -64,12 +65,13 @@ describe('test Copy Language action', () => {
             .and('contain', fromLang);
     };
 
-    const checkCopyLanguageDoesNotHaveLang = (path: string, toLang: string, fromLang: string) => {
+    /** When there is a single source language available, it is shown pre-selected as a label instead of a dropdown */
+    const checkCopyLanguageSingleOption = (path: string, toLang: string, fromLang: string) => {
         JContent.visit(ThreeLanguagesSiteKey, toLang, path).editContent();
         getComponentByRole(Button, 'copyLanguageAction').click();
-        getComponentByRole(Dropdown, 'from-language-selector').get().click();
-        getComponentByRole(Dropdown, 'from-language-selector').should('be.visible')
-            .and('not.contain', fromLang);
+        cy.get('[data-sel-role="from-language-selector"]', {timeout: 10000}).should('not.exist');
+        getComponentByRole(BaseComponent, 'from-language-label').should('be.visible')
+            .and('contain', fromLang);
     };
 
     it('copies field from English to French and saves', () => {
@@ -89,11 +91,11 @@ describe('test Copy Language action', () => {
         const contentEditor = new ContentEditor();
 
         cy.log('Test cancel button works');
-        setCopyLanguage('content-folders/contents/all-fields', 'fr', 'English', 'cancel-button');
+        setCopyLanguageSingleOption('content-folders/contents/all-fields', 'fr', 'English', 'cancel-button');
         checkFields(path, '', 'fr');
 
         cy.log('Test apply button saves changes');
-        setCopyLanguage('content-folders/contents/all-fields', 'fr', 'English', 'apply-button');
+        setCopyLanguageSingleOption('content-folders/contents/all-fields', 'fr', 'English', 'apply-button');
         contentEditor.save();
         checkFields(path, 'Text in English', 'fr');
     });
@@ -115,7 +117,7 @@ describe('test Copy Language action', () => {
 
         const contentEditor = new ContentEditor();
 
-        setCopyLanguage('content-folders/contents/all-fields-empty', 'fr', 'English', 'apply-button');
+        setCopyLanguageSingleOption('content-folders/contents/all-fields-empty', 'fr', 'English', 'apply-button');
         contentEditor.save();
 
         getNodeByPath(path, ['smallText', 'textarea'], 'fr').then(result => {
@@ -145,7 +147,7 @@ describe('test Copy Language action', () => {
         const path = `/sites/${ThreeLanguagesSiteKey}/contents/all-fields-multiple`;
         const contentEditor = new ContentEditor();
 
-        setCopyLanguage('content-folders/contents/all-fields-multiple', 'fr', 'English', 'apply-button');
+        setCopyLanguageSingleOption('content-folders/contents/all-fields-multiple', 'fr', 'English', 'apply-button');
         contentEditor.save();
 
         getNodeByPath(path, ['bigtext'], 'fr').then(result => {
@@ -171,7 +173,8 @@ describe('test Copy Language action', () => {
 
         let path = 'content-folders/contents/all-fields-two-languages';
 
-        checkCopyLanguageDoesNotHaveLang(path, 'en', 'German');
+        cy.log('Only French has a translation: it is shown pre-selected as a label, German is not selectable');
+        checkCopyLanguageSingleOption(path, 'en', 'French');
 
         addNode({
             parentPathOrId: `/sites/${ThreeLanguagesSiteKey}/contents`,

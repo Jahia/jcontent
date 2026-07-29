@@ -1,26 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu} from '@jahia/moonstone';
-import {MenuLoadingContext} from './MenuLoadingContext';
+import {MenuLoadingContext, useMenuLoadingDelay} from './MenuLoadingContext';
 
-export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, menuKey, ...otherProps}) => (
-    <Menu
-        {...anchor}
-        data-sel-role={'jcontent-' + menuKey}
-        style={{zIndex: isSubMenu ? 9001 : 9000}}
-        hasOverlay={isOpen && !isSubMenu}
-        isDisplayed={isOpen}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onClose={onClose}
-        onExited={onExited}
-        {...otherProps}
-    >
-        <MenuLoadingContext.Provider value={isLoading}>
-            {children}
-        </MenuLoadingContext.Provider>
-    </Menu>
-);
+export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, menuKey, ...otherProps}) => {
+    const {showMenu, effectiveLoading} = useMenuLoadingDelay(isOpen, isLoading);
+
+    return (
+        <Menu
+            {...anchor}
+            data-sel-role={'jcontent-' + menuKey}
+            style={{zIndex: isSubMenu ? 9001 : 9000}}
+            hasOverlay={showMenu && !isSubMenu}
+            isDisplayed={showMenu}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onClose={onClose}
+            onExited={onExited}
+            {...otherProps}
+        >
+            <MenuLoadingContext.Provider value={effectiveLoading}>
+                {children}
+            </MenuLoadingContext.Provider>
+        </Menu>
+    );
+};
 
 MenuRenderer.propTypes = {
     /**

@@ -15,6 +15,7 @@ The repo extends `@jahia/eslint-config` (`.eslintrc.json`). Key rules to always 
 - **Strict equality only**: use `===` and `!==`. **Never** use `==` or `!=`, even when comparing to `null`/`undefined`.
   - To check "null or undefined", prefer `value == null` is **NOT allowed** — instead use `value === null || value === undefined`, or simply `!value` when truthy/falsy semantics are acceptable.
 - **Prefer optional chaining** over negation guards for null/undefined property access. Use `obj?.prop` instead of `!obj || obj.prop` patterns.
+- **Prefer the `Number` static methods** over the global functions: always use `Number.parseInt`, `Number.parseFloat`, `Number.isNaN`, `Number.isFinite` instead of the globals `parseInt`, `parseFloat`, `isNaN`, `isFinite` (flagged by SonarQube).
 - 4-space indentation. No tabs.
 - Single quotes for strings. Backticks only for template literals.
 - Always include semicolons.

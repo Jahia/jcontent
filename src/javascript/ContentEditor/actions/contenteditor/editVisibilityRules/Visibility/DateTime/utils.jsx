@@ -1,8 +1,39 @@
 import React from 'react';
 import {CloudCheck, Delete, Edit, NoCloud} from '@jahia/moonstone';
-import dayjs from 'dayjs';
+import {formatDatetime, formatDayOfWeek, formatTime} from 'date-formatter';
+import {isArray} from 'lodash';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
+
+// Transform a rule (a flat map of property name -> value, plus a `type` and optionally a `uuid`)
+// into the InputVisibilityConditionInput shape expected by the saveVisibilityCondition mutation.
+const buildConditionProperties = rule => {
+    return Object.keys(rule).reduce((properties, key) => {
+        if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
+            const item = {name: key};
+            if (isArray(rule[key])) {
+                item.values = rule[key];
+            } else {
+                item.value = rule[key];
+            }
+
+            properties.push(item);
+        }
+
+        return properties;
+    }, []);
+};
+
+export const buildNewCondition = rule => ({
+    type: rule.type,
+    properties: buildConditionProperties(rule)
+});
+
+export const buildUpdatedCondition = rule => ({
+    type: rule.type,
+    uuid: rule.uuid,
+    properties: buildConditionProperties(rule)
+});
 
 export const generateUUID = () => {
     if (window.crypto.randomUUID) {
@@ -80,7 +111,15 @@ export const getStatus = status => {
     };
 };
 
-export const getConditionLabel = (name, properties, t) => {
+// Localise the stored day-of-week choicelist values (raw keys: 'monday'…'sunday') into the UI
+// language, then join them for interpolation into the dayOfWeekCondition sentence.
+const formatDaysOfWeek = (values, uilang) => {
+    return (values || [])
+        .map(day => formatDayOfWeek(day, {locale: uilang}))
+        .join(', ');
+};
+
+export const getConditionLabel = (name, properties, t, uilang = window.contextJsParameters?.uilang) => {
     const getDateLabel = startDate => {
         return (startDate === undefined) ? 'jcontent:label.contentEditor.visibilityTab.conditions.endDateCondition' : 'jcontent:label.contentEditor.visibilityTab.conditions.startDateCondition';
     };
@@ -91,13 +130,13 @@ export const getConditionLabel = (name, properties, t) => {
 
     switch (name) {
         case 'jnt:dayOfWeekCondition':
-            return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: properties.find(p => p.name === 'dayOfWeek')?.values});
+            return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: formatDaysOfWeek(properties.find(p => p.name === 'dayOfWeek')?.values, uilang)});
         case 'jnt:startEndDateCondition': {
             const startDate = properties.find(p => p.name === 'start')?.value;
             const endDate = properties.find(p => p.name === 'end')?.value;
             return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getDateLabel(startDate)), {
-                startDate: startDate === undefined ? '' : dayjs(startDate).format('LLL'),
-                endDate: endDate === undefined ? '' : dayjs(endDate).format('LLL')
+                startDate: startDate === undefined ? '' : formatDatetime(startDate, {format: 'long', locale: uilang}),
+                endDate: endDate === undefined ? '' : formatDatetime(endDate, {format: 'long', locale: uilang})
             });
         }
 
@@ -107,8 +146,8 @@ export const getConditionLabel = (name, properties, t) => {
             const endHour = properties.find(p => p.name === 'endHour')?.value;
             const endMinute = properties.find(p => p.name === 'endMinute')?.value;
             return t((startHour !== undefined && endHour !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndTimeCondition' : getTimeLabel(startHour)), {
-                startTime: startHour === undefined ? '' : dayjs(`${startHour}:${startMinute}`, 'HH:mm').format('LT'),
-                endTime: endHour === undefined ? '' : dayjs(`${endHour}:${endMinute}`, 'HH:mm').format('LT')
+                startTime: startHour === undefined ? '' : formatTime(`${startHour}:${startMinute}`, {locale: uilang}),
+                endTime: endHour === undefined ? '' : formatTime(`${endHour}:${endMinute}`, {locale: uilang})
             });
         }
 
@@ -124,6 +163,8 @@ export const getStatusText = (rowData, t) => {
             return t('jcontent:label.contentManager.publicationStatus.published', {userName: username, timestamp});
         case 'modified':
             return t('jcontent:label.contentManager.publicationStatus.modified', {userName: username, timestamp});
+        case 'deleted':
+            return t('jcontent:label.contentEditor.visibilityTab.conditions.markedForDeletionBy', {userName: username, timestamp});
         default:
             return t('jcontent:label.contentManager.publicationStatus.new', {userName: username, timestamp});
     }

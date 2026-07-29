@@ -63,7 +63,7 @@ public class JCRNodeContentEditorExtensions {
     @GraphQLField
     @GraphQLName("findAvailableNodeName")
     @GraphQLDescription("Returns the next available name for a node, appending if needed numbers.")
-    public String findAvailableNodeName(@GraphQLName("nodeType") String nodeTypeName, @GraphQLName("language") String language) {
+    public String findAvailableNodeName(@GraphQLName("nodeType") @GraphQLDescription("Node type used to generate the base name") String nodeTypeName, @GraphQLName("language") @GraphQLDescription("Language used to resolve the node type label") String language) {
         try {
             ExtendedNodeType nodeType = NodeTypeRegistry.getInstance().getNodeType(nodeTypeName);
 

@@ -149,6 +149,10 @@
         "refresh": "Rafraîchir les résultats",
         "normalPrompt": "Que cherchez-vous ?",
         "sql2Prompt": "Vous utilisez des requêtes SQL2. Consultez l'<0>Academy</0> pour plus d'informations.",
+        "placeholders": {
+          "sql2SearchFrom": "Clause FROM SQL2 (sans crochets)",
+          "sql2SearchWhere": "clause WHERE supplémentaire"
+        },
         "modal": {
           "cancel": "Annuler"
         }
@@ -316,6 +320,9 @@
         },
         "locate": "Localiser",
         "openInLive": "Live",
+        "openInLiveDefaultDomain": "Domaine par défaut",
+        "openInLiveAdditionalDomains": "Domaine(s) supplémentaire(s)",
+        "openInLiveCurrentDomain": "Domaine actuel",
         "openInPreview": "Aperçu",
         "compareStagingToLive": "Comparer la version de travail et la version publiée",
         "customizedPreview": {
@@ -474,7 +481,7 @@
         },
         "mark": {
           "title": "Marquer pour suppression",
-          "item": "Vous allez supprimer <span>{{name}}</span>",
+          "item": "Vous allez supprimer <0>{{name}}</0>",
           "items": "Vous allez supprimer <span>{{count}} éléments</span>, dont <span>{{pages}} page(s)</span>",
           "filesAndFolders": "Vous allez supprimer <span>{{count}} éléments</span>, dont <span>{{folders}} dossier(s)</span>",
           "itemsOnly": "Vous allez supprimer <span>{{count}} éléments</span>",
@@ -482,7 +489,7 @@
         },
         "permanently": {
           "title": "Supprimer définitivement",
-          "item": "Vous allez supprimer définitivement <span>{{name}}</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
+          "item": "Vous allez supprimer définitivement <0>{{name}}</0>. <1>Cette opération ne peut pas être annulée.</1>",
           "items": "Vous allez supprimer définitivement <span>{{count}} éléments</span>, dont <span>{{pages}} page(s)</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
           "filesAndFolders": "Vous allez supprimer définitivement <span>{{count}} éléments</span>, dont <span>{{folders}} dossier(s)</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
           "itemsOnly": "Vous allez supprimer définitivement <span>{{count}} éléments</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
@@ -490,7 +497,7 @@
         },
         "undelete": {
           "title": "Annuler la suppression",
-          "item": "Souhaitez-vous annuler la suppression de <span>{{name}}</span> ?",
+          "item": "Souhaitez-vous annuler la suppression de <0>{{name}}</0> ?",
           "items": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span>, dont <span>{{pages}} page(s)</span> ?",
           "filesAndFolders": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span>, dont <span>{{folders}} dossier(s)</span> ?",
           "itemsOnly": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span> ?",
@@ -504,13 +511,13 @@
         "locked": {
           "permanently": {
             "title": "Impossible de supprimer",
-            "content": "L’élément <strong>{{name}}</strong> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content": "L’élément <0>{{name}}</0> ne peut actuellement pas être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <1>{{parentName}}</1>, qui est le contenu initialement marqué pour suppression. ",
+            "content_plural": "Il y a ${count} éléments <0>{{name}}</0> qui ne peuvent pas être supprimés. Veuillez restaurer, ou supprimer définitivement le contenu parent <1>{{parentName}}</1> qui est le contenu initialement marqué pour suppression."
           },
           "undelete": {
             "title": "Impossible d'annuler la suppression",
-            "content": "Il n’est actuellement pas possible d’annuler directement la suppression de l’élément <strong>{{name}}</strong>. Veuillez annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. ",
-            "content_plural": "Il y a ${count} éléments <strong>{{name}}</strong> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <strong>{{parentName}}</strong> qui est le contenu initialement marqué pour suppression."
+            "content": "Il n’est actuellement pas possible d’annuler directement la suppression de l’élément <0>{{name}}</0>. Veuillez annuler la suppression de son contenu parent <1>{{parentName}}</1>, qui est le contenu initialement marqué pour suppression. ",
+            "content_plural": "Il y a ${count} éléments <0>{{name}}</0> qui ne peuvent pas être restaurés. Veuillez restaurer, ou supprimer définitivement le contenu parent <1>{{parentName}}</1> qui est le contenu initialement marqué pour suppression."
           }
         },
         "error": "Impossible d'exécuter l'opération demandée. Fermeture de la fenêtre et rafraîchissement des données."
@@ -618,7 +625,7 @@
             "dialogSubTitle": "\"Copier depuis\" permet de copier le contenu des champs depuis une langue vers la langue courante.",
             "dialogTitle": "Copier depuis",
             "listLabel": "Copier depuis",
-            "name": "Copier depuis une langue"
+            "name": "Copier une langue"
           },
           "save": {
             "name": "Enregistrer",
@@ -691,7 +698,9 @@
             "dialogSubTitle": "Vous pouvez marquer le contenu comme \"travail en cours\" pour en empêcher sa publication. Pour en savoir plus sur l'option Marquer comme travail en cours, ",
             "label": {
               "mark": "Marquer comme \"travail en cours\"",
-              "unmark": "Ne pas marquer comme \"travail en cours\""
+              "unmark": "Ne pas marquer comme \"travail en cours\"",
+              "markShort": "Marquer comme WIP",
+              "unmarkShort": "Ne pas marquer comme WIP"
             },
             "localizedPropertiesOnly": "Propriétés internationalisées seulement",
             "localizedPropertiesOnlySubText": "Le contenu ne sera pas publiable dans les langues sélectionnées. Les propriétés communes à toutes les langues peuvent cependant faire partie d'une publication.",
@@ -701,10 +710,7 @@
         },
         "advancedOption": {
           "technicalInformation": {
-            "contentType": "Type de contenu principal",
-            "details": "Détails",
-            "label": "Informations techniques",
-            "nodeTypeName": "Type de contenu",
+            "contentType": "Type de contenu",
             "inheritedMixins": "Mixins hérités",
             "appliedMixins": "Mixins appliqués",
             "path": "Chemin",
@@ -758,7 +764,7 @@
           "invalidPattern": "La valeur ne correspond pas aux contraintes définies dans le fichier de définition des types de contenu",
           "invalidNumber": "Veuillez fournir un numéro valide",
           "invalidRange": "La valeur ne correspond pas aux contraintes définies dans le fichier de définition des types de contenu",
-          "invalidSystemName": "Le nom système ne peut contenir les caractères suivants ‘/:*?\"<>|%’",
+          "invalidSystemName": "Le nom système ne peut contenir les caractères suivants ‘/:*?\"<>|%;’",
           "required": "",
           "alreadyExist": "Il y a déjà un objet avec ce nom système, veuillez en choisir un autre",
           "maxLength": "{{selectorOptions.maxLength}} caractères maximum",
@@ -770,6 +776,7 @@
         "tab": {
           "edit": "Éditer",
           "advanced": "Options avancées",
+          "workflows": "Workflows",
           "visibility": "Visibilité"
         }
       },
@@ -809,6 +816,7 @@
         "details": "Détails",
         "preview": "Aperçu",
         "history": "Historique",
+        "usages": "Utilisations",
         "generalInfo": "Informations Générales",
         "name": "Nom",
         "path": "Chemin",
@@ -946,11 +954,6 @@
           "layout": "Les options de rendu peuvent être modifiées directement depuis l'onglet Editer. Cependant, si nécessaire, vous pouvez utiliser l'ancienne interface d'édition. Mais celle-ci sera supprimée dans une future mise à jour."
         }
       },
-      "vanityTab": {
-        "title": "URLs personnalisées",
-        "label": "Les URLs personnalisées peuvent être gérées depuis un écran dédié, accessible depuis le menu aux 3 points verticaux de la barre d'action, ou via le bouton  \"Gérer les URLs personnalisées\" ci-dessous.",
-        "noPermissionLabel": "Vous n'avez pas la permission de gérer les URLs personnalisées."
-      },
       "selection": {
         "itemsSelected": "{{count}} élément sélectionné",
         "itemsSelected_plural": "{{count}} éléments sélectionnés"
@@ -1040,6 +1043,7 @@
         }
       },
       "visibilityTab": {
+        "title": "Conditions de visibilité pour {{name}}",
         "languages": {
           "title": "Langues",
           "description": "Le contenu sera visible dans les langues sélectionnées",
@@ -1050,6 +1054,7 @@
         "conditions" : {
           "title" : "Jour et heure",
           "type": "Type",
+          "condition": "Condition",
           "typeDescription": "Définir la condition à appliquer.",
           "rules" : "{{rulesNumber}} conditions définies",
           "rule" : "1 condition définie",
@@ -1059,6 +1064,10 @@
           "add": "Ajouter une condition",
           "edit": "Modifier la condition",
           "delete": "Supprimer la condition",
+          "undelete": "Annuler la suppression",
+          "publishDeletion": "Publier la suppression",
+          "markedForDeletionBy": "Marqué pour la suppression par {{userName}} le {{timestamp}}",
+          "loading": "Chargement…",
           "ruleType": {
             "date": "Date",
             "dayOfWeek": "Jour de la semaine",
@@ -1078,7 +1087,7 @@
           "endTimeCondition": "Le contenu sera visible jusqu'à {{endTime}}",
           "preview": "Visible en aperçu",
           "live": "Visible en live",
-          "preview_live": "Correspondance aperçu / live",
+          "preview_live": "Actuellement en aperçu",
           "visible": "Visible",
           "hidden": "Masqué"
         },

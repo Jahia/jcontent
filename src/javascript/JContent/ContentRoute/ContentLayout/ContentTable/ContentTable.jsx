@@ -22,7 +22,7 @@ import {useTable} from 'react-table';
 import {useVirtualizer} from '@tanstack/react-virtual';
 import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import {ContentListHeader} from './ContentListHeader/ContentListHeader';
-import {mainColumnData, mediaColumnData, reducedColumnData, searchColumnData} from './reactTable/columns';
+import {allColumnData, mainColumnData, reducedColumnData, searchColumnData} from './reactTable/columns';
 import {ContentTableWrapper} from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
@@ -42,11 +42,18 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             return propColumns;
         }
 
+        const configColumns = registry.get('accordionItem', mode)?.tableConfig?.columns;
+        if (configColumns) {
+            return configColumns
+                .map(c => typeof c === 'string' ? allColumnData.find(col => col.id === c) : c)
+                .filter(Boolean);
+        }
+
         if (isInSearchMode(mode)) {
             return searchColumnData;
         }
 
-        return mode === JContentConstants.mode.MEDIA ? mediaColumnData : mainColumnData;
+        return mainColumnData;
     }, [mode, propColumns]);
     const onSidePanelSelect = useCallback(_sidePanelSelection => dispatch(cmSetSidePanelSelection(_sidePanelSelection)), [dispatch]);
     const setCurrentPage = useCallback(page => dispatch(cmSetPage(page - 1)), [dispatch]);

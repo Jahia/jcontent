@@ -6,8 +6,7 @@ import {useTable} from 'react-table';
 import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
 import {ContentListHeader} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-import {useQuery} from '@apollo/client';
-import {UsagesQuery} from './UsagesTable.gql-queries';
+import {useUsages} from './useUsages';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -19,29 +18,7 @@ const columns = defaultCols.map(c => (typeof c === 'string') ? allColumnData.fin
 export const UsagesTable = ({path, language}) => {
     const {t} = useTranslation('jcontent');
     const [sort, setSort] = useState({order: 'ASC', orderBy: 'displayName'});
-    const {data, loading} = useQuery(UsagesQuery, {
-        variables: {
-            path,
-            language,
-            fieldSorter: sort.orderBy === '' ? null : {
-                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
-                fieldName: sort.orderBy === '' ? null : 'node.' + sort.orderBy,
-                ignoreCase: true
-            }
-        },
-        fetchPolicy: 'cache-and-network'
-    });
-
-    const usagesCount = data?.jcr?.nodeByPath?.usagesCount;
-    const usages = data?.jcr?.nodeByPath?.usages?.nodes ? Object.values(data.jcr.nodeByPath.usages.nodes.reduce((acc, ref) => (
-        {
-            ...acc,
-            [ref.node.uuid]: {
-                ...ref.node,
-                locales: ref.properties.map(property => property.language)
-            }
-        }
-    ), {})) : [];
+    const {usages, usagesCount, visibleUsages, loading} = useUsages(path, language, sort);
 
     const {
         getTableProps,
@@ -66,7 +43,6 @@ export const UsagesTable = ({path, language}) => {
     }
 
     let externalUsagesWarning = null;
-    const visibleUsages = usages.reduce((prev, current) => prev + current.locales.length, 0);
 
     if (Number.isInteger(usagesCount) && Number.isInteger(visibleUsages) && usagesCount !== visibleUsages) {
         externalUsagesWarning = (

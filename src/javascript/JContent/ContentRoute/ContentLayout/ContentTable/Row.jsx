@@ -52,6 +52,11 @@ export const Row = ({
         contextualMenu.current(event);
     };
 
+    let contextualMenuActionKey = tableConfig.contextualMenu ?? 'contentItemContextActionsMenu';
+    if (selection.length > 0) {
+        contextualMenuActionKey = selection.includes(node.path) ? 'selectedContentMenu' : 'notSelectedContentMenu';
+    }
+
     return (
         <TableRow {...rowProps}
                   ref={node => virtualizer.measureElement(node)} // Measure dynamic row height
@@ -84,10 +89,10 @@ export const Row = ({
         >
             <ContextualMenu
                 setOpenRef={contextualMenu}
-                actionKey={selection.length === 0 ? 'contentItemContextActionsMenu' : (selection.indexOf(node.path) === -1 ? 'notSelectedContentMenu' : 'selectedContentMenu')}
+                actionKey={contextualMenuActionKey}
                 currentPath={node.path}
-                path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
-                paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
+                path={selection.length === 0 || !selection.includes(node.path) ? node.path : null}
+                paths={selection.length === 0 || !selection.includes(node.path) ? null : selection}
                 node={node}
             />
             {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
@@ -104,6 +109,7 @@ Row.propTypes = {
     onPreviewSelect: PropTypes.func,
     doubleClickNavigation: PropTypes.func,
     tableConfig: PropTypes.shape({
+        contextualMenu: PropTypes.string,
         dnd: PropTypes.shape({
             canDrag: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
             canDrop: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),

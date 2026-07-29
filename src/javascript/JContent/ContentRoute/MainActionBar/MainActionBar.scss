@@ -3,7 +3,7 @@
 }
 
 .item {
-    & + & {
+    & ~ & {
         margin-left: var(--spacing-small);
     }
 }

@@ -17,7 +17,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
                 action: 'drag-drop',
                 waitForAnimations: true
             });
-        cy.get('[data-sel-role-card="snowbearhome.jpeg"]').should('be.visible');
+        cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible');
     });
 
     after(function () {
@@ -73,7 +73,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
 
         const picker = internalLinkField.open();
         picker.wait();
-        cy.get('[data-sel-role-card="snowbearhome.jpeg"]').should('be.visible').contains('snowbearhome.jpeg').click();
+        cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible').contains('snowbearHome.jpeg').click();
         picker.select();
 
         contentEditor.getSmallTextField('jnt:imageReferenceLink_jcr:title').addNewValue(cypressDocumentManagerImageReferenceLinkTest);

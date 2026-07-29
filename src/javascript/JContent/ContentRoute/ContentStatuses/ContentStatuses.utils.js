@@ -1,11 +1,7 @@
-import dayjs from 'dayjs';
+import {formatDatetime} from 'date-formatter';
 
 import {getDefaultLocale} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
-
-function formatDate(date, locale = 'en', format = 'LLL') {
-    return dayjs(date).locale(locale).format(format);
-}
 
 const tooltips = {
     locked: node => {
@@ -24,7 +20,7 @@ const tooltips = {
             key: 'label.contentManager.publicationStatus.markedForDeletion',
             args: {
                 userName: deletedBy || '?',
-                timestamp: formatDate(date, locale)
+                timestamp: formatDatetime(date, {locale})
             }
         };
     },
@@ -33,7 +29,7 @@ const tooltips = {
             key: 'label.contentManager.publicationStatus.modified',
             args: {
                 userName: node?.lastModifiedBy?.value || '?',
-                timestamp: formatDate(node?.lastModified?.value, locale)
+                timestamp: formatDatetime(node?.lastModified?.value, {locale})
             }
         };
     },
@@ -47,7 +43,7 @@ const tooltips = {
             key: 'label.contentManager.publicationStatus.published',
             args: {
                 userName: node?.lastPublishedBy?.value || '?',
-                timestamp: formatDate(node?.lastPublished?.value, locale)
+                timestamp: formatDatetime(node?.lastPublished?.value, {locale})
             }
         };
     },

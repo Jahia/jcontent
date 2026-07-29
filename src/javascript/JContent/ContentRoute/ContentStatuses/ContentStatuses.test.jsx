@@ -32,7 +32,8 @@ describe('ContentStatuses', () => {
     it('should only render a \'Published\' status when published', () => {
         const node = {
             aggregatedPublicationInfo: {
-                publicationStatus: 'PUBLISHED'
+                publicationStatus: 'PUBLISHED',
+                existsInLive: true
             }
         };
         const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
@@ -68,6 +69,19 @@ describe('ContentStatuses', () => {
         expect(wrapper.containsMatchingElement(<Status type="markedForDeletion" tooltip={expectedTooltip}/>)).toBeTruthy();
         expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
+    });
+
+    it('should render a \'Not Published\' status when published but not in live (jmix:nolive)', () => {
+        const node = {
+            aggregatedPublicationInfo: {
+                publicationStatus: 'PUBLISHED',
+                existsInLive: false
+            }
+        };
+        const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
+
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('should render a \'Modified\' status when modified', () => {

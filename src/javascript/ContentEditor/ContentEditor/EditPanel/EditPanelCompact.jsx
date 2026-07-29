@@ -29,7 +29,12 @@ export const EditPanelCompact = ({title, createAnother}) => {
     const {t} = useTranslation('jcontent');
 
     const tabs = registry.find({target: 'editHeaderTabsActions'});
-    const EditPanelContent = tabs.find(tab => tab.value === Constants.editPanel.editTab).displayableComponent;
+    const editTab = tabs.find(tab => tab.value === Constants.editPanel.editTab);
+    if (!editTab) {
+        throw new Error('Edit tab not found in registry for target "editHeaderTabsActions" — ensure registerDropdownOptions has been called before rendering');
+    }
+
+    const {displayableComponent} = editTab;
 
     return (
         <>
@@ -51,7 +56,7 @@ export const EditPanelCompact = ({title, createAnother}) => {
                 </div>
             </DialogTitle>
             <DialogContent className="flexCol" id="contenteditor-dialog-content" data-sel-role="form-container">
-                <EditPanelContent/>
+                {displayableComponent}
             </DialogContent>
             <DialogActions className={styles.dialogActions}>
                 {createAnother && !createAnother.disabled && (

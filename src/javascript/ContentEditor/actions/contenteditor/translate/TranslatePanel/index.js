@@ -1,1 +1,0 @@
-export {TranslatePanel} from './TranslatePanel';

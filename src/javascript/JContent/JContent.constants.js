@@ -1,4 +1,4 @@
-const JContentConstants = {
+const JContentConstants = /** @type {const} */ ({
     namingInvalidCharactersRegexp: /[\\/:*?"'<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
     availablePublicationStatuses: {
@@ -36,7 +36,8 @@ const JContentConstants = {
     localStorageKeys: {
         viewType: 'jcontent_view_type',
         viewMode: 'jcontent_view_mode',
-        filesSelectorMode: 'jcontent_files_selector_mode'
+        filesSelectorMode: 'jcontent_files_selector_mode',
+        liveServerName: 'jcontent-live-servername'
     },
     accordionPermissions: {
         pagesAccordionAccess: 'pagesAccordionAccess',
@@ -57,6 +58,6 @@ const JContentConstants = {
         }
     },
     tableRowHeight: 48
-};
+});
 
 export default JContentConstants;

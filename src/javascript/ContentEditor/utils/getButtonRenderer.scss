@@ -11,6 +11,11 @@
 }
 
 .pastilleWrapper {
+    // Layout-neutral by default so wrapping every button does not affect inline/ButtonGroup layouts.
+    display: contents;
+}
+
+.pastilleWrapper.hasBadge {
     position: relative;
 
     display: flex;

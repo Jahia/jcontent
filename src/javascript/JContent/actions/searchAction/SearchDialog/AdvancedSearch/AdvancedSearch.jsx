@@ -1,47 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Trans} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import styles from './AdvancedSearch.scss';
 import SearchLocation from '../SearchLocation';
-import {Typography} from '@jahia/moonstone';
-import {Input} from '@jahia/design-system-kit';
-
-export const Sql2Input = ({cmRole, maxLength, onChange, onSearch, size, style, value}) => {
-    const onKeyDown = e => {
-        if (e.key === 'Enter') {
-            onSearch();
-        }
-    };
-
-    return (
-        <Input fullWidth
-               inputProps={{maxLength: maxLength, size: size, 'data-cm-role': cmRole}}
-               value={value}
-               style={style}
-               onChange={onChange}
-               onKeyDown={onKeyDown}
-        />
-    );
-};
-
-Sql2Input.propTypes = {
-    cmRole: PropTypes.string.isRequired,
-    maxLength: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onSearch: PropTypes.func.isRequired,
-    size: PropTypes.number,
-    style: PropTypes.object,
-    value: PropTypes.string.isRequired
-};
+import {Input, Typography} from '@jahia/moonstone';
 
 export const AdvancedSearch = ({
     searchForm: {searchPath, sql2SearchFrom, sql2SearchWhere},
     searchFormSetters: {setSearchPath, setSql2SearchFrom, setSql2SearchWhere}, performSearch
 }) => {
-    const onKeyPress = e => {
-        const code = e.keyCode || e.which;
-
-        if (code === 13) {
+    const {t} = useTranslation('jcontent');
+    const onKeyDown = e => {
+        if (e.key === 'Enter') {
             performSearch();
         }
     };
@@ -53,33 +23,39 @@ export const AdvancedSearch = ({
             </div>
             <div className={styles.fieldset}>
                 <Typography variant="caption" weight="semiBold" className={styles.label}>SELECT * FROM</Typography>
-                <Input fullWidth
-                       inputProps={{maxLength: 100, size: 15, 'data-sel-role': 'search-input-from'}}
+                <Input className={styles.fullWidth}
+                       name="sql2SearchFrom"
+                       maxLength={100}
+                       placeholder={t('label.contentManager.search.placeholders.sql2SearchFrom')}
+                       data-sel-role="search-input-from"
                        value={sql2SearchFrom}
                        onChange={event => {
                            setSql2SearchFrom(event.target.value);
                        }}
-                       onKeyPress={onKeyPress}
+                       onKeyDown={onKeyDown}
                 />
             </div>
             <div className={styles.fieldset}>
                 <Typography variant="caption" weight="semiBold" className={styles.label}>WHERE
                     ISDESCENDANTNODE(&apos;{searchPath}&apos;) AND
                 </Typography>
-                <Input fullWidth
-                       inputProps={{maxLength: 2000, 'data-sel-role': 'search-input-where'}}
+                <Input className={styles.fullWidth}
+                       name="sql2SearchWhere"
+                       maxLength={2000}
+                       placeholder={t('label.contentManager.search.placeholders.sql2SearchWhere')}
+                       data-sel-role="search-input-where"
                        value={sql2SearchWhere}
                        onChange={event => {
                            setSql2SearchWhere(event.target.value);
                        }}
-                       onKeyPress={onKeyPress}
+                       onKeyDown={onKeyDown}
                 />
 
                 <Typography variant="caption" className={styles.academyLink}>
                     <Trans i18nKey="jcontent:label.contentManager.search.sql2Prompt"
                            components={[
                                <a key="sql2Prompt"
-                                  href={window.contextJsParameters.config.links.sql2CheatSheet}
+                                  href="https://academy.jahia.com/documentation/jahia-cms/jahia-8.2/developer/leveraging-jahia-backend-capabilities/jcrsql2-query-cheat-sheet"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                >

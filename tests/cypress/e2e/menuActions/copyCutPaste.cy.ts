@@ -217,6 +217,7 @@ describe('Copy Cut and Paste tests with jcontent', () => {
             const menu = contextMenu.submenu('Copy', 'jcontent-copyPageMenu');
             menu.should('be.visible');
             menu.select(copyActionName);
+            cy.get('#message-id').contains('is in the clipboard');
         };
 
         // Failing on hover to submenu but ok with other tests; skipping for now

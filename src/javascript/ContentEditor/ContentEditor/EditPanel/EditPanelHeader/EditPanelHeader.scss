@@ -15,5 +15,10 @@
 }
 
 .headerMainActions {
-    gap: var(--spacing-small);
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--moon-spacing-small);
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
 }

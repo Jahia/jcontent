@@ -106,16 +106,25 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
     }
 
+
+
     private Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Locale locale) throws EditorFormException {
+        return getEditorForm(primaryNodeType, existingNode, parentNode,
+            existingNode != null ? new JcrNodeTypeResolver(existingNode) : null,
+            uiLocale, locale);
+    }
+
+    @Override
+    public Form getEditorForm(ExtendedNodeType primaryNodeType, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, NodeTypeResolver nodeTypeResolver, Locale uiLocale, Locale locale) throws EditorFormException {
         final String mode = existingNode == null ? CREATE : EDIT;
         final JCRNodeWrapper currentNode = EDIT.equals(mode) ? existingNode : parentNode;
 
         try {
             final JCRSiteNode site = currentNode.getResolveSite();
 
-            // Get all currently applied mixins if node exists, otherwise get all supertypes for the primary node type being created.
-            Collection<ExtendedNodeType> nodeTypes = (existingNode != null) ?
-                Arrays.asList(existingNode.getMixinNodeTypes()) : primaryNodeType.getSupertypeSet();
+            // Get all applied mixins from the node type resolver or supertypes if no resolver is provided.
+            Collection<ExtendedNodeType> nodeTypes = (nodeTypeResolver != null) ?
+                nodeTypeResolver.getAppliedMixins() : primaryNodeType.getSupertypeSet();
 
             // Gather all nodetypes and get associated forms
             Set<String> processedNodeTypes = new HashSet<>();
@@ -130,9 +139,9 @@ public class EditorFormServiceImpl implements EditorFormService {
                 addFormNodeType(extendMixin, site, mergeSet, locale, true, processedNodeTypes, nodeTypes);
             }
 
-            // Mixins added on node
-            if (existingNode != null) {
-                for (ExtendedNodeType mixinNodeType : existingNode.getMixinNodeTypes()) {
+            // Mixins added on node (retrieved from the node type resolver)
+            if (nodeTypeResolver != null) {
+                for (ExtendedNodeType mixinNodeType : nodeTypeResolver.getAppliedMixins()) {
                     addFormNodeType(mixinNodeType, site, mergeSet, locale, false, processedNodeTypes, nodeTypes);
                 }
             }
@@ -183,7 +192,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            boolean isActivated = existingNode != null && existingNode.isNodeType(fieldSet.getName());
+                            boolean isActivated = nodeTypeResolver != null && nodeTypeResolver.isNodeType(fieldSet.getName());
                             boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
                             boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
                             fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);
@@ -211,7 +220,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
 
-                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, locale, new HashMap<>()));
+                        field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, uiLocale, new HashMap<>()));
                     }
                     fieldSet.setFields(fieldSet.getFields().stream()
                         .filter(Field::isVisible)
@@ -305,45 +314,50 @@ public class EditorFormServiceImpl implements EditorFormService {
         return value;
     }
 
-    private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale locale, Map<String, Object> extendContext) throws RepositoryException {
+    // Takes the UI locale, not the content locale: choicelist display values are editor labels
+    // and must follow the UI language, like all other form labels (see initializeLabel calls).
+    private List<FieldValueConstraint> getValueConstraints(ExtendedNodeType primaryNodeType, Field editorFormField, JCRNodeWrapper existingNode, JCRNodeWrapper parentNode, Locale uiLocale, Map<String, Object> extendContext) {
         ExtendedPropertyDefinition propertyDefinition = editorFormField.getExtendedPropertyDefinition();
         // selectorOptionsMap is null when a field has no selector options set (consistent with the
         // null checks in getEditorForm and Field.mergeWith); normalize to an empty map to avoid NPEs.
         Map<String, Object> selectorOptions = editorFormField.getSelectorOptionsMap() != null ?
                 editorFormField.getSelectorOptionsMap() :
                 Collections.emptyMap();
-        if (propertyDefinition != null && (propertyDefinition.getSelector() == SelectorType.CHOICELIST || selectorOptions.containsKey("choicelist"))) {
-            Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
-
-            Map<String, Object> context = new HashMap<>();
-            context.put("contextType", primaryNodeType);
-            context.put("contextNode", existingNode);
-            context.put("contextParent", parentNode);
-            context.putAll(extendContext);
-            List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : selectorOptions.entrySet()) {
-                if (initializers.containsKey(entry.getKey())) {
-                    initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, locale, context);
-                }
-            }
-
-            List<FieldValueConstraint> valueConstraints = new ArrayList<>();
-            for (ChoiceListValue choiceListValue : initialChoiceListValues) {
-                FieldValueConstraint cst = new FieldValueConstraint();
-                cst.setDisplayValue(choiceListValue.getDisplayName());
-                cst.setValue(FieldValue.convert(choiceListValue.getValue()));
-                cst.setPropertyList(choiceListValue.getProperties() != null ?
-                        choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
-                        Collections.emptyList()
-                );
-                valueConstraints.add(cst);
-            }
-
-            // If we cannot get choicelist initializer with selector options return default constraints
-            return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : valueConstraints;
+        if (propertyDefinition == null || (propertyDefinition.getSelector() != SelectorType.CHOICELIST && !selectorOptions.containsKey("choicelist"))) {
+            return editorFormField.getValueConstraints();
         }
 
-        return editorFormField.getValueConstraints();
+        Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
+
+        Map<String, Object> context = new HashMap<>();
+        context.put("contextType", primaryNodeType);
+        context.put("contextNode", existingNode);
+        context.put("contextParent", parentNode);
+        context.putAll(extendContext);
+        List<ChoiceListValue> initialChoiceListValues = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : selectorOptions.entrySet()) {
+            if (initializers.containsKey(entry.getKey())) {
+                initialChoiceListValues = initializers.get(entry.getKey()).getChoiceListValues(propertyDefinition, (String) entry.getValue(), initialChoiceListValues, uiLocale, context);
+            }
+        }
+
+        // If we cannot get choicelist initializer with selector options return default constraints
+        return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : toValueConstraints(initialChoiceListValues);
+    }
+
+    private static List<FieldValueConstraint> toValueConstraints(List<ChoiceListValue> choiceListValues) {
+        List<FieldValueConstraint> valueConstraints = new ArrayList<>();
+        for (ChoiceListValue choiceListValue : choiceListValues) {
+            FieldValueConstraint cst = new FieldValueConstraint();
+            cst.setDisplayValue(choiceListValue.getDisplayName());
+            cst.setValue(FieldValue.convert(choiceListValue.getValue()));
+            cst.setPropertyList(choiceListValue.getProperties() != null ?
+                    choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
+                    Collections.emptyList()
+            );
+            valueConstraints.add(cst);
+        }
+        return valueConstraints;
     }
 
     private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRSiteNode site) throws NoSuchNodeTypeException {
@@ -392,6 +406,12 @@ public class EditorFormServiceImpl implements EditorFormService {
                 }
             }
         }
+
+        // If mixin A extends mixin B and both are in the list, remove B.
+        // A already carries B's properties via the supertype chain, so keeping both
+        // causes non-deterministic field assignment during fieldset merge.
+        res.removeIf(mixin -> res.stream()
+            .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
 
         return res;
     }
@@ -444,7 +464,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 .flatMap(fieldSet -> fieldSet.getFields().stream())
                 .filter(field -> (fieldNodeType.equals(field.getDeclaringNodeType()) || primaryNodeType.equals(field.getDeclaringNodeType())) && fieldName.equals(field.getName()))
                 .findFirst()
-                .map(ThrowingFunction.unchecked(field -> getValueConstraints(nodeType, field, node, parentNode, locale, extendContext)))
+                .map(ThrowingFunction.unchecked(field -> getValueConstraints(nodeType, field, node, parentNode, uiLocale, extendContext)))
                 .orElse(Collections.emptyList());
         } catch (RepositoryException e) {
             throw new EditorFormException("Error while building field constraints for" + " node: " + nodeUuidOrPath + ", node type: " + primaryNodeType + ", parent node: " + parentNodeUuidOrPath + ", field node type: " + fieldNodeType + ", field name: " + fieldName, e);

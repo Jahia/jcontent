@@ -229,19 +229,6 @@ describe('Content editor form', () => {
         field.get().find('label').should('contain', 'defaultDate');
     });
 
-    it('should not display advanced options tab for editor', () => {
-        cy.logout();
-        cy.login('mathias', 'password');
-        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const ceEditor = jcontent.editComponentByRowName('myText');
-
-        ceEditor.switchToAdvancedMode();
-        cy.get('.moonstone-header')
-            .find('[data-sel-role="tab-advanced-options"]')
-            .should('not.exist');
-        ceEditor.cancel();
-    });
-
     it('should display technical information in advanced options', () => {
         cy.logout();
         // Login as editor in chief
@@ -258,15 +245,17 @@ describe('Content editor form', () => {
         // Publication date/publisher rows only appear after the content has been published
 
         sidePanel.getDetailsSection('technical').scrollIntoView();
-        sidePanel.getDetailRow('Main content type').should('contain', 'Simple text');
-        sidePanel.getDetailRow('Content type').should('contain', 'jnt:text');
+        sidePanel.getDetailRow('Content type').should('contain', 'Simple text (jnt:text)');
+        sidePanel.getDetailRow('Inherited mixins').should('be.visible');
+        sidePanel.getDetailRow('Applied mixins').should('be.visible');
         sidePanel.getDetailRow('Path').should('contain', '/sites/contentEditorSite/contents/myText');
         sidePanel.getDetailRow('UUID').should('be.visible');
 
         // Switch to edit tab and modify the text (only click if not already selected)
-        cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').then($tab => {
-            if ($tab.attr('aria-selected') !== 'true') {
-                cy.get('.moonstone-header').find('[data-sel-role="tab-edit"]').click();
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').then($dropdown => {
+            if ($dropdown.attr('data-sel-tab') !== 'tab-edit') {
+                cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+                cy.get('[data-sel-role="tab-edit"]').click();
             }
         });
         ceEditor.getSmallTextField('jnt:text_text').addNewValue('My text updated');

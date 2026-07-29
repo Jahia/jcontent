@@ -1,9 +1,5 @@
-import dayjs from 'dayjs';
+import {formatDatetime} from 'date-formatter';
 import {Constants} from '../../../ContentEditor.constants';
-
-function formatDate(date, locale, format = 'LLL') {
-    return dayjs(date).locale(locale).format(format);
-}
 
 const tooltips = {
     modified: (publicationInfoContext, uilang) => {
@@ -11,7 +7,7 @@ const tooltips = {
             key: 'label.contentEditor.publicationStatusTooltip.modified',
             args: {
                 userName: publicationInfoContext.lastModifiedBy || '?',
-                timestamp: formatDate(publicationInfoContext.lastModified, uilang)
+                timestamp: formatDatetime(publicationInfoContext.lastModified, {format: 'long', locale: uilang})
             }
         };
     },
@@ -20,7 +16,7 @@ const tooltips = {
             key: 'label.contentEditor.publicationStatusTooltip.published',
             args: {
                 userName: publicationInfoContext.lastPublishedBy || '?',
-                timestamp: formatDate(publicationInfoContext.lastPublished, uilang)
+                timestamp: formatDatetime(publicationInfoContext.lastPublished, {format: 'long', locale: uilang})
             }
         };
     },

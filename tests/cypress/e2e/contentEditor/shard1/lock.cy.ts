@@ -54,7 +54,8 @@ describe('Lock in content editor tests', () => {
 
         jcontent.editComponentByRowName('Delete me');
         const contentEditor = new ContentEditor();
-        contentEditor.switchToAdvancedMode();
+        // ShowAdvancedMode is false for deletion-marked content, so skip switchToAdvancedMode
+        // The lock badge is visible in compact mode (dialog header)
         cy.get('div[data-sel-role="lock-info-badge"]').should('be.visible');
         contentEditor.cancel();
     });

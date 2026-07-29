@@ -122,3 +122,4 @@ export const mainColumnData = [publicationStatus, selection, name, status, type,
 export const searchColumnData = [publicationStatus, selection, nameBigIcon, status, type, createdBy, lastModified, visibleActions];
 export const mediaColumnData = [publicationStatus, selection, nameBigIcon, status, usages, fileSize, mediaType, createdBy, lastModified, visibleActions];
 export const reducedColumnData = [publicationStatus, selection, name, status, createdBy, lastModified, visibleActions];
+export const allColumnData = [publicationStatus, selection, name, nameBigIcon, status, type, createdBy, lastModified, visibleActions, fileSize, usages];

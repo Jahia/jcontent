@@ -1,3 +1,4 @@
+export {addContextMenuTargetToActions} from '../JContent.assignActionAndMenuTargets';
 export {default as ContentTree} from '../JContent/ContentTree';
 export {default as ContentNavigation} from '../JContent/ContentNavigation';
 export {default as SiteSwitcher} from '../JContent/ContentNavigation/NavigationHeader/SwitchersLayout/SiteSwitcher';
@@ -16,18 +17,24 @@ export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQu
 export {NodeIcon} from '../utils/NodeIcon';
 export * as jcontentUtils from '../JContent/JContent.utils';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+export * as columnDefinitions from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable/columns';
 export {FileCard, FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
-export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
-export * from '../JContent/dnd';
+export {BaseChildrenQuery, BaseDescendantsQuery, BaseQueryHandler, BaseTreeQueryHandler, ContentFoldersQueryHandler, FilesQueryHandler, PagesQueryHandler, QueryHandlersFragments, SearchQueryHandler, Sql2SearchQueryHandler} from '../JContent/ContentRoute/ContentLayout/queryHandlers';
+export {DragLayer, useConnector, useFileDrop, useNodeDrag, useNodeDrop} from '../JContent/dnd';
 export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 
 // Content-editor shared/index.js
-export * from '~/ContentEditor/contexts/ContentEditor';
-export * from '~/ContentEditor/contexts/ContentEditorConfig';
-export * from '~/ContentEditor/contexts/ContentEditorApi';
-export * from '~/ContentEditor/contexts/ContentEditorSection';
-export * from '~/ContentEditor/utils';
-export * from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder';
-export * from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
+export {ContentEditorContext, ContentEditorContextProvider, useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
+export {ContentEditorConfigContext, ContentEditorConfigContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts/ContentEditorConfig';
+export {ContentEditorApiContext, ContentEditorApiContextProvider, useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi';
+export {ContentEditorSectionContext, ContentEditorSectionContextProvider, useContentEditorSectionContext} from '~/ContentEditor/contexts/ContentEditorSection';
+export {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel, checkIfValuesAreDifferent, decodeSystemName, encodeJCRPath, encodeSystemName, extractRangeConstraints, getButtonRenderer, getCapitalized, getChildrenOrder, getDataToMutate, getDynamicFieldSetNameOfField, getDynamicFieldSets, getFields, getNodeTypeIcon, getValuePropName, isDirty, onDirectionalReorder, onListIndexReorder, propertyHasChanged, useKeydownListener, useReorderDrag, useReorderDrop, useReorderList, useSwitchLanguage} from '~/ContentEditor/utils';
+export {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuilder';
+export {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';
+export {EditPanelContent} from '~/ContentEditor/editorTabs/EditPanelContent/EditPanelContent';
+export {ContentEditorFragment} from '~/ContentEditor/ContentEditor/fragments';
+
+// New date-formatter package to improve consistency
+export * as dateFormatter from 'date-formatter';

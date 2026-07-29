@@ -65,6 +65,12 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
     mergedConfig.sideBySideContext = sideBySideContext;
     mergedConfig.setSideBySideContext = setSideBySideContext;
 
+    // The modal never remounts during a language switch, unlike the editor subtree below — keep
+    // the active tab here so the selected mode survives (#2483).
+    const [activeTab, setActiveTab] = useState(mergedConfig.advancedOpenTab ?? Constants.editPanel.editTab);
+    mergedConfig.activeTab = activeTab;
+    mergedConfig.setActiveTab = setActiveTab;
+
     const {createCallback, editCallback, onClosedCallback} = mergedConfig;
 
     mergedConfig.updateEditorConfig = updateEditorConfig;

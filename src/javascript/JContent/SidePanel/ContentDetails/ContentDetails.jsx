@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {gql, useQuery} from '@apollo/client';
-import {Typography, Button, Copy} from '@jahia/moonstone';
+import {Typography, Button, Copy, Chip} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -39,14 +39,17 @@ const GET_CONTENT_LINKS = gql`
     }
 `;
 
-const DetailRow = ({label, value, isCopyable = true, children}) => {
+const DetailRow = ({label, value, isCopyable = true}) => {
     const {t} = useTranslation('jcontent');
+    const canCopy = isCopyable && value !== '-';
     const notificationContext = useNotifications();
+    const isChips = Array.isArray(value);
 
     const handleCopy = useCallback(() => {
-        if (value) {
+        const textToCopy = Array.isArray(value) ? value.join('; ') : value;
+        if (textToCopy) {
             try {
-                const copyPromise = navigator.clipboard?.writeText(value);
+                const copyPromise = navigator.clipboard?.writeText(textToCopy);
                 copyPromise?.then(() => {
                     notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
                 });
@@ -56,18 +59,28 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
         }
     }, [value, notificationContext, t]);
 
-    if (!value && !children) {
+    if (!value) {
         return null;
     }
 
     return (
         <div className={styles.detailRow} data-sel-role="detail-row" data-sel-label={label}>
-            <Typography variant="caption" className={styles.label}>
+            <Typography isNowrap variant="body" weight="semiBold" className={styles.label}>
                 {label}
             </Typography>
-            <div className={styles.value}>
-                {children || <Typography variant="body" component="span">{value}</Typography>}
-                {value && isCopyable && (
+            <div className={styles.valueWrapper}>
+                {isChips ? (
+                    <div className={styles.chips}>
+                        {value.map(name => (
+                            <Chip key={name} label={name} color="default"/>
+                        ))}
+                    </div>
+                ) : (
+                    <Typography variant="body" className={styles.value}>
+                        {value}
+                    </Typography>
+                )}
+                {canCopy && (
                     <Button
                         icon={<Copy/>}
                         variant="ghost"
@@ -82,9 +95,8 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
 
 DetailRow.propTypes = {
     label: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    isCopyable: PropTypes.bool,
-    children: PropTypes.node
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    isCopyable: PropTypes.bool
 };
 
 const LinkRow = ({label, displayValue, copyValue}) => {
@@ -275,7 +287,6 @@ const FileLinks = () => {
 export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, technicalInfo, details} = useSidePanelContext();
-
     if (!nodeData) {
         return (
             <div className={styles.empty}>
@@ -290,7 +301,7 @@ export const ContentDetails = () => {
         <div className={styles.container}>
             {details && details.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="additional">
-                    <Typography variant="subheading" className={styles.sectionTitle}>
+                    <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                         {t('jcontent:label.contentEditor.sidePanel.additional')}
                     </Typography>
 
@@ -311,13 +322,13 @@ export const ContentDetails = () => {
 
             {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
-                    <Typography variant="subheading" className={styles.sectionTitle}>
+                    <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                         {t('jcontent:label.contentEditor.sidePanel.technical')}
                     </Typography>
 
                     {technicalInfo.map(info => (
                         <DetailRow
-                            key={info.label + info.value}
+                            key={info.label}
                             label={info.label}
                             value={info.value}
                         />

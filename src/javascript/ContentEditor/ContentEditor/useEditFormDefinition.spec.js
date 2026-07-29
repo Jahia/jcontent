@@ -203,11 +203,11 @@ describe('adaptEditFormData', () => {
             },
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins',
-                value: 'jmix:baseContent'
+                value: ['jmix:baseContent']
             },
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.appliedMixins',
-                value: 'Mixin1; Mixin2'
+                value: ['Mixin1', 'Mixin2']
             },
             {
                 label: 'jcontent:label.contentEditor.edit.advancedOption.technicalInformation.path',

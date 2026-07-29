@@ -125,6 +125,11 @@ const getDetailsValue = (sections = [], nodeData = {}, lang = 'en') => {
 };
 
 const getTechnicalInfo = (nodeData, t) => {
+    const inheritedMixins = (nodeData.primaryNodeType.supertypes ?? [])
+        .filter(s => s.mixin)
+        .map(s => s.name);
+    const appliedMixins = nodeData.mixinTypes.map(m => m.name);
+
     return [
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.contentType'),
@@ -132,14 +137,11 @@ const getTechnicalInfo = (nodeData, t) => {
         },
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.inheritedMixins'),
-            value: (nodeData.primaryNodeType.supertypes ?? [])
-                .filter(s => s.mixin)
-                .map(s => s.name)
-                .join('; ') || '-'
+            value: inheritedMixins.length > 0 ? inheritedMixins : '-'
         },
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.appliedMixins'),
-            value: nodeData.mixinTypes.map(m => m.name).join('; ') || '-'
+            value: appliedMixins.length > 0 ? appliedMixins : '-'
         },
         {
             label: t('jcontent:label.contentEditor.edit.advancedOption.technicalInformation.path'),

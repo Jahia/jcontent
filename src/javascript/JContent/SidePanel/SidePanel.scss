@@ -10,7 +10,11 @@
     border-bottom: 1px solid var(--color-border);
 
     .closeButton {
-        margin-left: auto;
+        position: absolute;
+        top: var(--moon-spacing-medium);
+        right: var(--moon-spacing-medium);
+
+        opacity: 0.6;
     }
 }
 
@@ -19,4 +23,6 @@
     flex: 1;
     flex-direction: column;
     overflow: auto;
+
+    margin-top: var(--moon-spacing-medium);
 }

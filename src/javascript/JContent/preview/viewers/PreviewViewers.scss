@@ -6,14 +6,14 @@
     align-items: center;
     min-height: 0;
 
-    background-color: #eff2f4;
+    // background-color: #eff2f4;
 }
 
 .noPreviewContainer {
     display: flex;
     flex: 1 1 0%;
 
-    background-color: #eff2f4;
+    // background-color: #eff2f4;
 }
 
 .center {
@@ -31,9 +31,10 @@
 }
 
 .mediaContainer {
-    background-color: #1f262a;
+    // background-color: #1f262a;
+    background-color: var(--moon-color-dark);
 }
 
 .contentContainer {
-    padding: 24px;
+    // padding: 24px;
 }

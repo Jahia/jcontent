@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {Paper} from '@material-ui/core';
+// import {Paper} from '@material-ui/core';
+import {Paper} from "@jahia/moonstone";
 import {ContentTable} from './ContentTable';
 import {SidePanel} from '~/JContent/SidePanel';
 import {JContentSidePanelContextProvider} from './JContentSidePanelContextProvider';
@@ -31,7 +32,7 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
                     className={classNames(styles.content)}
                     onContextMenu={event => contextualMenu.current(event)}
                 >
-                    <Paper className={styles.contentPaper}>
+                    <Paper className={styles.contentPaper} hasPadding={false}>
                         <ErrorBoundary key={filesMode}>
                             {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
                                 <FilesGrid totalCount={totalCount}

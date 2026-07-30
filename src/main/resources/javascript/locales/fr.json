@@ -856,6 +856,8 @@
         "filterByAction": "Filtrer par action",
         "allActions": "Toutes les actions",
         "noEntries": "Aucune entrée d'historique trouvée",
+        "noEntriesDescription": "Les modifications apportées à ce contenu apparaîtront ici.",
+        "noEntriesForFilter": "Aucune entrée ne correspond au filtre sélectionné.",
         "errorLoading": "Erreur lors du chargement de l'historique",
         "actions": {
           "created": "Créé",

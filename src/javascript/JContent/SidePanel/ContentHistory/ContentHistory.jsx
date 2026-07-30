@@ -10,10 +10,13 @@ import {
     HandleMove,
     CloudUpload,
     NoCloud,
-    Pagination
+    Pagination,
+    EmptyData,
+    Typography
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useSidePanelContext} from '~/JContent/SidePanel';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './ContentHistory.scss';
 import {HistoryList} from '~/JContent/SidePanel/ContentHistory/HistoryList';
 
@@ -85,6 +88,33 @@ export const ContentHistory = () => {
 
     const entries = data?.jcr?.nodeByPath?.history?.entries || [];
     const totalCount = data?.jcr?.nodeByPath?.history?.count || 0;
+    const isEmpty = entries.length === 0;
+
+    // Initial load, before any data is available.
+    if (loading && !data) {
+        return <LoaderOverlay/>;
+    }
+
+    if (error) {
+        return (
+            <div className={styles.error}>
+                <Typography variant="body">
+                    {t('jcontent:label.contentEditor.history.errorLoading')}
+                </Typography>
+            </div>
+        );
+    }
+
+    // Empty state: no history at all (no active filter).
+    if (isEmpty && !actionFilter) {
+        return (
+            <EmptyData
+                data-sel-role="history-empty"
+                title={t('jcontent:label.contentEditor.history.noEntries')}
+                message={t('jcontent:label.contentEditor.history.noEntriesDescription')}
+            />
+        );
+    }
 
     return (
         <div className={styles.container} data-sel-role="history-container">
@@ -94,6 +124,7 @@ export const ContentHistory = () => {
                     data={getActionOptions}
                     className={styles.dropDown}
                     variant="outlined"
+                    size="small"
                     onChange={(e, option) => {
                         setActionFilter(option.value);
                         setPage(0);
@@ -101,16 +132,18 @@ export const ContentHistory = () => {
                 />
             </div>
 
-            <div className={styles.listContainer}>
+            {isEmpty ? (
+                <EmptyData
+                    data-sel-role="history-filter-empty"
+                    message={t('jcontent:label.contentEditor.history.noEntriesForFilter')}
+                />
+            ) : (
                 <HistoryList
-                    isLoading={loading}
-                    error={error}
                     entries={entries}
-                    data={data}
                     uiLanguage={uiLanguage}
                     t={t}
                 />
-            </div>
+            )}
 
             {totalCount > 0 && (
                 <div className={styles.paginationContainer}>

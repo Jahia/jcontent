@@ -21,7 +21,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    overflow: auto;
-
     margin-top: var(--moon-spacing-large);
+    padding: 0 var(--moon-spacing-medium);
+    overflow: auto;
 }

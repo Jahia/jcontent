@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: var(--spacing-medium);
 }
 
 .filters {
@@ -11,13 +10,6 @@
 
 .dropDown {
     width: 200px;
-}
-
-.listContainer {
-    flex: 1;
-    overflow-y: auto;
-
-    min-height: 0;
 }
 
 .historyItem {
@@ -82,13 +74,6 @@
 
 .metadata {
     color: var(--color-gray);
-}
-
-.emptyState {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--spacing-large);
 }
 
 .error {

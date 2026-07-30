@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {gql, useQuery} from '@apollo/client';
-import {Typography, Button, Copy, Chip, DataTable} from '@jahia/moonstone';
+import {Typography, Button, Copy, Chip, DataTable, EmptyData} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -278,11 +278,10 @@ export const ContentDetails = () => {
 
     if (!nodeData) {
         return (
-            <div className={styles.empty}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.sidePanel.noDetailsAvailable')}
-                </Typography>
-            </div>
+            <EmptyData
+                data-sel-role="details-empty"
+                message={t('jcontent:label.contentEditor.sidePanel.noDetailsAvailable')}
+            />
         );
     }
 

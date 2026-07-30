@@ -855,6 +855,8 @@
         "filterByAction": "Nach Aktion filtern",
         "allActions": "Alle Aktionen",
         "noEntries": "Keine Verlaufseinträge gefunden",
+        "noEntriesDescription": "Änderungen an diesem Inhalt werden hier angezeigt.",
+        "noEntriesForFilter": "Keine Einträge entsprechen dem ausgewählten Filter.",
         "errorLoading": "Fehler beim Laden des Verlaufs",
         "actions": {
           "created": "Erstellt",

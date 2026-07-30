@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Chip, DataTable, Typography, Warning} from '@jahia/moonstone';
+import {Chip, DataTable, EmptyData, Typography, Warning} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {useUsages} from '~/UsagesTable/useUsages';
@@ -47,19 +47,16 @@ export const ContentUsages = () => {
     );
 
     if (usages.length === 0) {
-        return (
+        return externalUsagesWarning ? (
             <section className={styles.container} data-sel-role="usages-empty">
-                {externalUsagesWarning || (
-                    <>
-                        <Typography variant="heading">
-                            {t('jcontent:label.contentEditor.edit.advancedOption.usages.none')}
-                        </Typography>
-                        <Typography variant="body">
-                            {t('jcontent:label.contentEditor.edit.advancedOption.usages.noneDescription')}
-                        </Typography>
-                    </>
-                )}
+                {externalUsagesWarning}
             </section>
+        ) : (
+            <EmptyData
+                data-sel-role="usages-empty"
+                title={t('jcontent:label.contentEditor.edit.advancedOption.usages.none')}
+                message={t('jcontent:label.contentEditor.edit.advancedOption.usages.noneDescription')}
+            />
         );
     }
 

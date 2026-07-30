@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
-import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Chip, Language, Pill, Typography} from '@jahia/moonstone';
 import styles from './ContentHistory.scss';
 import {ACTION_CONFIG} from './ContentHistory';
@@ -44,7 +43,7 @@ const getUserDisplayName = entry => {
     return userKey || '-';
 };
 
-const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLanguage, t}) => {
+const HistoryList = React.memo(({entries, uiLanguage, t}) => {
     const formatDate = useCallback(dateString => {
         if (!dateString) {
             return '-';
@@ -52,10 +51,6 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
 
         return formatDatetime(dateString, {locale: uiLanguage});
     }, [uiLanguage]);
-
-    if (isLoading && !data) {
-        return <LoaderOverlay/>;
-    }
 
     const getActionChip = (action, t) => {
         const config = ACTION_CONFIG[action];
@@ -72,26 +67,6 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
             />
         );
     };
-
-    if (error) {
-        return (
-            <div className={styles.error}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.history.errorLoading')}
-                </Typography>
-            </div>
-        );
-    }
-
-    if (entries.length === 0) {
-        return (
-            <div className={styles.emptyState}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.history.noEntries')}
-                </Typography>
-            </div>
-        );
-    }
 
     return entries.map(entry => {
         const {typeLabelKey, displayName, fullDisplayName, technicalName} = getTargetInfo(entry);
@@ -122,7 +97,7 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
                     {entry.language ? (
                         <Pill label={entry.language?.toUpperCase()} color="default"/>
                     ) : (
-                        <Pill label={<Language/>} color="default"/>
+                        <Pill label={<Language size="small"/>} color="default"/>
                     )}
                 </div>
             </div>
@@ -133,10 +108,7 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
 HistoryList.displayName = 'HistoryList';
 
 HistoryList.propTypes = {
-    isLoading: PropTypes.bool,
-    error: PropTypes.object,
     entries: PropTypes.arrayOf(PropTypes.object).isRequired,
-    data: PropTypes.object,
     uiLanguage: PropTypes.string,
     t: PropTypes.func.isRequired
 };

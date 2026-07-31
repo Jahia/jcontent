@@ -23,19 +23,20 @@ describe('Page builder - content views', () => {
     const richTextA = 'richtextA';
     const richTextB = 'richtextB';
     const newsName = 'newsA';
+    const newsVanityUrl = '/news/news-a-title';
 
     const linkSelector = (name: string) => `a[href$="/${name}.html"]`;
 
-    const assertRenderedLinks = (names: string[]) => {
+    const assertRenderedLinks = (targets: string[]) => {
         cy.get('body').should($body => {
             const hrefs = [...$body.find('a[href]')].map(a => a.getAttribute('href')).join(' , ');
-            const newsDefaultView = $body.find('.newsListItem').length > 0;
-            names.forEach(name => {
-                expect(hrefs, `link to ${name} (news default view rendered: ${newsDefaultView}) among`)
-                    .to.contain(`/${name}.`);
+            targets.forEach(target => {
+                expect(hrefs, `link to ${target} among`).to.contain(target);
             });
         });
     };
+
+    const renderedLinkTargets = [`/${richTextA}.html`, `/${richTextB}.html`, newsVanityUrl];
 
     const selectView = (contentEditor: ContentEditor, fieldName: string, view: string) => {
         const field = contentEditor.getField(ChoiceListField, fieldName);
@@ -162,11 +163,11 @@ describe('Page builder - content views', () => {
     it('renders contents as links in preview and in live', () => {
         cy.log('Verify the links in preview');
         cy.visit(`/cms/render/default/en${pagePath}.html`);
-        assertRenderedLinks([richTextA, richTextB, newsName]);
+        assertRenderedLinks(renderedLinkTargets);
 
         cy.log('Publish the page and verify the links in live');
         publishAndWaitJobEnding(pagePath, ['en']);
         cy.visit(`/cms/render/live/en${pagePath}.html`);
-        assertRenderedLinks([richTextA, richTextB, newsName]);
+        assertRenderedLinks(renderedLinkTargets);
     });
 });

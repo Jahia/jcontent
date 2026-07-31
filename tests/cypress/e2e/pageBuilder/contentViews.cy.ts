@@ -24,7 +24,7 @@ describe('Page builder - content views', () => {
     const richTextB = 'richtextB';
     const newsName = 'newsA';
 
-    const linkSelector = (name: string) => `a[href$="/${name}.html"]`;
+    const linkSelector = (name: string) => `a[href*="/${name}."][href$=".html"]`;
 
     const selectView = (contentEditor: ContentEditor, fieldName: string, view: string) => {
         const field = contentEditor.getField(ChoiceListField, fieldName);
@@ -157,7 +157,7 @@ describe('Page builder - content views', () => {
 
         cy.log('Publish the page and verify the links in live');
         publishAndWaitJobEnding(pagePath, ['en']);
-        cy.visit(`${pagePath}.html`);
+        cy.visit(`/cms/render/live/en${pagePath}.html`);
         [richTextA, richTextB, newsName].forEach(name => {
             cy.get(linkSelector(name)).should('exist');
         });

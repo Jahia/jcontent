@@ -6,3 +6,22 @@
     flex-direction: row;
     align-items: stretch;
 }
+
+.leadingActions {
+    // Place the field's inline actions just left of the field
+    position: absolute;
+    top: 0;
+    right: 100%;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    margin-right: calc(var(--spacing-large) - 2px); // Substract border width for better effect
+    padding-right: var(--spacing-small);
+
+    border-right: 2px solid transparent;
+
+    &:has(button:not(:disabled)):hover {
+        border-right-color: var(--color-accent);
+    }
+}

@@ -47,3 +47,15 @@ export function adaptSections(
 /** Utility function to return an object of expanded status for the given sections. */
 export const getExpandedSections = (sections: Array<{ name: string; expanded: boolean }>) =>
     Object.fromEntries(sections.map(section => [section.name, section.expanded]));
+
+/** One Content Editor form section, as adapted from `GqlEditorForm` by `adaptSections`. */
+export type EditorSection = ReturnType<typeof adaptSections>[number];
+
+/** A fieldset within a Content Editor section. */
+export type EditorFieldSet = EditorSection['fieldSets'][number];
+
+/**
+ * A single Content Editor form field — what jContent passes as the `field` prop to actions on the
+ * `content-editor/field/leading-actions` target and to FormBuilder selector components.
+ */
+export type EditorField = EditorFieldSet['fields'][number];

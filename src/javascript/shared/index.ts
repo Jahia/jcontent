@@ -35,7 +35,7 @@ export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDe
 export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';
 export {EditPanelContent} from '~/ContentEditor/editorTabs/EditPanelContent/EditPanelContent';
 export {ContentEditorFragment} from '~/ContentEditor/ContentEditor/fragments';
-export {adaptSections, getExpandedSections} from '~/ContentEditor/ContentEditor/adaptSections';
+export {adaptSections, getExpandedSections, type EditorField, type EditorFieldSet, type EditorSection} from '~/ContentEditor/ContentEditor/adaptSections';
 
 // New date-formatter package to improve consistency
 export * as dateFormatter from 'date-formatter';

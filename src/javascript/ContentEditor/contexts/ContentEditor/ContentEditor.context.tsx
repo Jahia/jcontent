@@ -13,7 +13,10 @@ import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBefore
 import {isEqual} from 'lodash';
 import {cloneDeep} from 'es-toolkit';
 
-export const ContentEditorContext = React.createContext({});
+export const ContentEditorContext = React.createContext<{
+    nodeData?: {hasWritePermission?: boolean; lockedAndCannotBeEdited?: boolean};
+    setI18nContext?: (updater: (prev: any) => any) => void;
+}>({});
 
 export const useContentEditorContext = () => useContext(ContentEditorContext);
 

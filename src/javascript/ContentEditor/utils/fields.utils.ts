@@ -1,3 +1,5 @@
+import type {EditorField, EditorFieldSet, EditorSection} from '../ContentEditor/adaptSections';
+
 /**
  * This function perform creation of object contains only dynamic fieldSets
  * The dynamic fieldSet retrieved from sections will be added to object with
@@ -13,15 +15,15 @@
  * Note: the activated property will be used to determine if the dynamic
  * fieldSet will be active on the form or not.
  *
- * @param {array} sections the sections of the form
- * @returns {object} dynamic fieldSets with key value object
+ * @param sections the sections of the form
+ * @returns dynamic fieldSets with key value object
  */
-export function getDynamicFieldSets(sections) {
-    return sections.reduce((result, section) => {
+export function getDynamicFieldSets(sections: EditorSection[]) {
+    return sections.reduce<Record<string, boolean>>((result, section) => {
         const fieldSets = section
             .fieldSets
             .filter(filedSet => filedSet.dynamic)
-            .reduce((result, fieldSet) => ({...result, [fieldSet.name]: fieldSet.activated}), {});
+            .reduce<Record<string, boolean>>((result, fieldSet) => ({...result, [fieldSet.name]: fieldSet.activated}), {});
 
         return {...result, ...fieldSets};
     }, {});
@@ -34,12 +36,12 @@ export function getDynamicFieldSets(sections) {
  * - When the sectionName parameter is provided, the function returns all
  * the fields in fieldSets of only the specified section.
  *
- * @param {array} sections    array object contains sections
- * @param {string} [sectionName] string value refer to the section name
- * @param {function} [fieldSetFilter] optional fieldset filter
- * @returns {array} fields    array object contains fields
+ * @param sections array object contains sections
+ * @param sectionName string value refer to the section name
+ * @param fieldSetFilter optional fieldset filter
+ * @returns array object contains fields
  */
-export function getFields(sections, sectionName, fieldSetFilter) {
+export function getFields(sections: EditorSection[], sectionName?: string, fieldSetFilter?: (fieldset: EditorFieldSet) => unknown) {
     if (!sections) {
         return [];
     }
@@ -174,10 +176,10 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
 
 /**
  * Get the value property name used to read the value(s) of a given property field
- * @param {object} field the property field
- * @returns {object} the name and option of the value property to use
+ * @param field the property field
+ * @returns the name and option of the value property to use
  */
-export function getValuePropName(field) {
+export function getValuePropName(field: EditorField): {name: string; option?: string} {
     const result = field.multiple ? {name: 'values'} : {name: 'value'};
 
     if (field.selectorOptions?.find(selector => selector.name === 'password')) {
@@ -195,7 +197,7 @@ export function getValuePropName(field) {
  * @returns {string} property name for comparison
  * @private
  */
-function _getPropertyNameToCompare(field) {
+function _getPropertyNameToCompare(field: EditorField) {
     if (field.requiredType === 'DATE') {
         return field.multiple ? 'notZonedDateValues' : 'notZonedDateValue';
     }
@@ -222,12 +224,12 @@ export function checkIfValuesAreDifferent(firstValue, secondValue, requiredType)
 
 /**
  * Check if the value of a given field have changed, comparing the currentValue with the original value stored in the nodeData object
- * @param {*} currentValue the current field value
- * @param {object} field the field
- * @param {object} nodeData the original node data
- * @returns {boolean} true if the value have changed.
+ * @param currentValue the current field value
+ * @param field the field
+ * @param nodeData the original node data
+ * @returns true if the value have changed.
  */
-export function propertyHasChanged(currentValue, field, nodeData) {
+export function propertyHasChanged(currentValue: any, field: EditorField, nodeData: any) {
     // Retrieve previous value
     // eslint-disable-next-line no-warning-comments
     // TODO https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
@@ -273,11 +275,11 @@ export function propertyHasChanged(currentValue, field, nodeData) {
  * This function allow to get the fieldSet name of given field name, only in case the fieldSet is dynamic
  * return undefined if the fieldSet of the field is not dynamic
  *
- * @param {array} sections sections datas
- * @param {object} sourceField field to search fieldSet
- * @returns {string} name of fieldSet
+ * @param sections sections datas
+ * @param sourceField field to search fieldSet
+ * @returns name of fieldSet
  */
-export function getDynamicFieldSetNameOfField(sections, sourceField) {
+export function getDynamicFieldSetNameOfField(sections: EditorSection[], sourceField: EditorField) {
     for (const section of sections) {
         for (const fieldSet of section.fieldSets) {
             if (fieldSet.dynamic && fieldSet.name === sourceField.nodeType) {
@@ -290,11 +292,11 @@ export function getDynamicFieldSetNameOfField(sections, sourceField) {
 /**
  * This function check if the node has mixin or not.
  *
- * @param {object} node node to check if it has mixin or not
- * @param {string} mixin mixin name
- * @returns {boolean} true if the node has mixin, false otherwise.
+ * @param node node to check if it has mixin or not
+ * @param mixin mixin name
+ * @returns true if the node has mixin, false otherwise.
  */
-function hasNodeMixin(node, mixin) {
+function hasNodeMixin(node: any, mixin: string): boolean {
     return node && node.mixinTypes && node.mixinTypes.find(mixinType => mixinType.name === mixin);
 }
 

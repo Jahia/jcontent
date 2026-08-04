@@ -864,7 +864,7 @@
         "modifiedBy": "Modified By",
         "filterByAction": "Filter by action",
         "allActions": "All actions",
-        "noEntries": "No history entries found",
+        "noEntries": "No history",
         "noEntriesDescription": "Changes made to this content will appear here.",
         "noEntriesForFilter": "No entries match the selected filter.",
         "errorLoading": "Error loading history",

@@ -74,32 +74,30 @@ const HistoryList = React.memo(({entries, uiLanguage, t}) => {
             <div key={entry.id} className={styles.historyItem} data-sel-role="history-item">
                 <div className={styles.itemAction}>
                     {getActionChip(entry.action, t)}
+                    <Typography variant="caption" isNowrap className={styles.typeLabel}>
+                        {t(typeLabelKey)}
+                    </Typography>
                 </div>
                 <div className={styles.itemContent}>
                     <div className={styles.itemNames}>
-                        <Typography variant="body" weight="bold" className={styles.targetName} title={fullDisplayName}>
+                        <Typography variant="body" weight="bold" isNowrap className={`${styles.targetName} moon-flexFluid`} title={fullDisplayName}>
                             {displayName}
                         </Typography>
                         {technicalName !== displayName && (
-                            <Typography variant="body" className={styles.technicalName}>
+                            <Typography variant="body" isNowrap className={styles.technicalName}>
                                 ({technicalName})
                             </Typography>
                         )}
-                        <Typography variant="caption" weight="bold" className={styles.typeLabel}>
-                            {t(typeLabelKey)}
-                        </Typography>
                     </div>
-                    <Typography variant="caption" className={styles.metadata}>
+                    <Typography variant="caption" isNowrap className={styles.metadata}>
                         {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
                     </Typography>
                 </div>
-                <div className={styles.itemLanguage}>
-                    {entry.language ? (
-                        <Pill label={entry.language?.toUpperCase()} color="default"/>
-                    ) : (
-                        <Pill label={<Language size="small"/>} color="default"/>
-                    )}
-                </div>
+                {entry.language ? (
+                    <Pill className={styles.itemLanguage} label={entry.language?.toUpperCase()} color="default"/>
+                ) : (
+                    <Pill className={styles.itemLanguage} label={<Language size="small"/>} color="default"/>
+                )}
             </div>
         );
     });

@@ -1,7 +1,9 @@
 .root {
-    width: 100%;
+    min-width: 100%;
+
+    max-width: 50%;
     height: 100%;
-    padding: var(--moon-spacing-medium) 0;
+    padding: var(--moon-spacing-small) 0;
 }
 
 .tabs {
@@ -10,8 +12,8 @@
 
     .closeButton {
         position: absolute;
-        top: var(--moon-spacing-medium);
-        right: var(--moon-spacing-medium);
+        top: var(--moon-spacing-small);
+        right: var(--moon-spacing-small);
 
         opacity: 0.6;
     }

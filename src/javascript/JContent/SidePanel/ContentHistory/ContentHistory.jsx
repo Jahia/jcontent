@@ -49,13 +49,13 @@ export const ContentHistory = () => {
     const uiLanguage = useSelector(state => state.uilang);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(20);
-    const [actionFilter, setActionFilter] = useState(null);
+    const [actionFilter, setActionFilter] = useState('all');
 
     const {data, loading, error} = useQuery(GetContentHistoryQuery, {
         variables: {
             path: nodeData?.path,
             withLanguageNodes: true,
-            action: actionFilter,
+            action: actionFilter === 'all' ? null : actionFilter,
             offset: page * pageSize,
             limit: pageSize,
             uiLanguage: uiLanguage
@@ -80,7 +80,7 @@ export const ContentHistory = () => {
             .map(toOption);
 
         return [
-            {groupLabel: '', options: [{value: null, label: t('jcontent:label.contentEditor.history.allActions')}]},
+            {groupLabel: '', options: [{value: 'all', label: t('jcontent:label.contentEditor.history.allActions')}]},
             {groupLabel: t('jcontent:label.contentEditor.history.node'), options: nodeOptions},
             {groupLabel: t('jcontent:label.contentEditor.history.property'), options: propertyOptions}
         ];
@@ -106,7 +106,7 @@ export const ContentHistory = () => {
     }
 
     // Empty state: no history at all (no active filter).
-    if (isEmpty && !actionFilter) {
+    if (isEmpty && actionFilter === 'all') {
         return (
             <EmptyData
                 data-sel-role="history-empty"

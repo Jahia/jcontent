@@ -3,31 +3,34 @@
     flex: 1; // Fill the parent container vertically
     overflow: hidden; // Children handle their own scrollbar
 
-    background: var(--moon-color-white);
+    background: var(--moon-color-light);
 }
 
 .twoColumnsRoot {
     display: grid;
     flex: 1;
     grid-template-columns: 1fr 1fr;
-
-    background-color: var(--color-light);
     overflow: hidden;
 
     .col {
         display: flex;
         flex-direction: column;
         min-width: 0;
-        overflow: auto;
+        padding: var(--moon-spacing-medium);
+        overflow: hidden;
     }
 
     /* This hides scrollbars across modern browsers */
     .hideScrollbar {
-        scrollbar-width: none;     /* Firefox */
-        -ms-overflow-style: none;  /* IE 10+ */
+        /* Firefox */
+        scrollbar-width: none;
+
+        /* IE 10+ */
+        -ms-overflow-style: none;
     }
 
     .hideScrollbar::-webkit-scrollbar {
-        display: none; /* For WebKit browsers */
+        /* For WebKit browsers */
+        display: none;
     }
 }

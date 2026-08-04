@@ -718,7 +718,7 @@
           },
           "usages": {
             "path": "Emplacement",
-            "none": "Pas d’utilisation",
+            "none": "Aucune utilisation",
             "noneDescription": "Cet élément n’est référencé par aucun autre contenu.",
             "restricted": "Ce contenu est utilisé dans {{total}} emplacements mais vos droits de lecture ne vous permettent d'en voir que {{visible}}. Contactez un administrateur pour étendre vos permissions, si nécessaire."
           }
@@ -852,10 +852,10 @@
         "node": "Contenu",
         "language": "Langue",
         "languageShort": "Lg.",
-        "modifiedBy": "Modifié Par",
+        "modifiedBy": "Modifié par",
         "filterByAction": "Filtrer par action",
         "allActions": "Toutes les actions",
-        "noEntries": "Aucune entrée d'historique trouvée",
+        "noEntries": "Aucun historique",
         "noEntriesDescription": "Les modifications apportées à ce contenu apparaîtront ici.",
         "noEntriesForFilter": "Aucune entrée ne correspond au filtre sélectionné.",
         "errorLoading": "Erreur lors du chargement de l'historique",

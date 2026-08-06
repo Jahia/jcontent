@@ -26,13 +26,11 @@ jobs:
     timeout-minutes: 140
     steps:
       - uses: jahia/jahia-modules-action/helper@v2
-      - uses: KengoTODA/actions-setup-docker-compose@main
+      - uses: KengoTODA/actions-setup-docker-compose@477353946803dd64eaa44008b865b6bfc88cab4e # v1.2.4
         with:
           version: '1.29.2'
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 'lts/*'
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
       - uses: jahia/jahia-modules-action/integration-tests@v2
         with:
           module_id: jcontent
@@ -78,7 +76,7 @@ jobs:
           incident_google_api_key_base64: ${{ secrets.INCIDENT_GOOGLE_PRIVATE_KEY_BASE64 }}
           zencrepes_secret: ${{ secrets.ZENCREPES_WEBHOOK_SECRET }}
       - name: Test Report
-        uses: phoenix-actions/test-reporting@v12
+        uses: phoenix-actions/test-reporting@41efe7ebebe7ef156ef46f6b0acf50ec0f10315b # v12
         id: test-report
         if: success() || failure()
         with:

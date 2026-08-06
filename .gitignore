@@ -8,7 +8,6 @@ target
 src/main/resources/javascript/bundles
 node
 node_modules
-yarn-error.log
 /src/main/resources/javascript/apps
 /.externalToolBuilders
 graphql.config.json
@@ -21,8 +20,6 @@ coverage/
 
 # macOS
 .DS_Store
-.yalc
-yalc.lock
 
 # Don't commit build artifacts
 /types
@@ -30,6 +27,3 @@ yalc.lock
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 **/.yarn/*
 !**/.yarn/patches
-!**/.yarn/plugins
-!**/.yarn/sdks
-!**/.yarn/versions

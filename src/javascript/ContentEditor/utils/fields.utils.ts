@@ -60,8 +60,8 @@ export function getFields(sections: EditorSection[], sectionName?: string, field
     }, []);
 }
 
-const _adaptDecimalValues = (fieldType, value) => {
-    return fieldType === 'DECIMAL' || fieldType === 'DOUBLE' ? value && value.replace(',', '.') : value;
+const _adaptDecimalValues = (fieldType: string, value: string | null | undefined) => {
+    return fieldType === 'DECIMAL' || fieldType === 'DOUBLE' ? value?.replace(',', '.') : value;
 };
 
 function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
@@ -144,7 +144,7 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
             if (field.i18n) {
                 Object.keys(i18nContext).filter(i18nLang => i18nLang !== lang && i18nLang !== 'shared' && i18nLang !== 'memo').forEach(i18nLang => {
                     const translatedValue = i18nContext[i18nLang].values[key];
-                    if (typeof translatedValue !== 'undefined') {
+                    if (translatedValue !== undefined) {
                         // This means there are updated values in other languages, and we want to save them without relaying on propertyHasChanged()
                         // as the value in i18nContext may be identical to value in current language as is the case when copy-to-language is used.
                         const forceUpdate = true;
@@ -223,6 +223,34 @@ export function checkIfValuesAreDifferent(firstValue, secondValue, requiredType)
 }
 
 /**
+ * Check if the values of a multiple field have changed
+ * @param currentValue the current field values
+ * @param previousValue the original field values
+ * @param requiredType type of the values
+ * @returns true if the values have changed.
+ * @private
+ */
+function _multipleValuesHaveChanged(currentValue: any[], previousValue: any[], requiredType: string) {
+    // Check if both array are null or undefined
+    if (!currentValue && !previousValue) {
+        return false;
+    }
+
+    // Check if one array is null or undefined
+    if (!currentValue || !previousValue) {
+        return true;
+    }
+
+    // Check array size
+    if (currentValue.length !== previousValue.length) {
+        return true;
+    }
+
+    // Check values
+    return currentValue.some((value, i) => checkIfValuesAreDifferent(value, previousValue[i], requiredType));
+}
+
+/**
  * Check if the value of a given field have changed, comparing the currentValue with the original value stored in the nodeData object
  * @param currentValue the current field value
  * @param field the field
@@ -233,8 +261,8 @@ export function propertyHasChanged(currentValue: any, field: EditorField, nodeDa
     // Retrieve previous value
     // eslint-disable-next-line no-warning-comments
     // TODO https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
-    const propertyData = nodeData && nodeData.properties && nodeData.properties.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.nodeType);
-    const previousValue = propertyData && propertyData[_getPropertyNameToCompare(field)];
+    const propertyData = nodeData?.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.nodeType);
+    const previousValue = propertyData?.[_getPropertyNameToCompare(field)];
 
     // Specific case for j:invalidLanguages
     if (field.propertyName === 'j:invalidLanguages' && !previousValue && currentValue.length === 0) {
@@ -243,29 +271,7 @@ export function propertyHasChanged(currentValue: any, field: EditorField, nodeDa
 
     // Compare previous value
     if (field.multiple) {
-        // Check if both array are null or undefined
-        if (!currentValue && !previousValue) {
-            return false;
-        }
-
-        // Check if one array is null or undefined
-        if (!currentValue || !previousValue) {
-            return true;
-        }
-
-        // Check array size
-        if (currentValue.length !== previousValue.length) {
-            return true;
-        }
-
-        // Check values
-        for (var i = 0; i < currentValue.length; ++i) {
-            if (checkIfValuesAreDifferent(currentValue[i], previousValue[i], field.requiredType)) {
-                return true;
-            }
-        }
-
-        return false;
+        return _multipleValuesHaveChanged(currentValue, previousValue, field.requiredType);
     }
 
     return checkIfValuesAreDifferent(currentValue, previousValue, field.requiredType);
@@ -297,7 +303,7 @@ export function getDynamicFieldSetNameOfField(sections: EditorSection[], sourceF
  * @returns true if the node has mixin, false otherwise.
  */
 function hasNodeMixin(node: any, mixin: string): boolean {
-    return node && node.mixinTypes && node.mixinTypes.find(mixinType => mixinType.name === mixin);
+    return Boolean(node?.mixinTypes?.some(mixinType => mixinType.name === mixin));
 }
 
 function getMixinsToMutate(nodeData, formValues, sections) {
@@ -336,5 +342,5 @@ function getMixinsToMutate(nodeData, formValues, sections) {
 }
 
 export function isDirty(formik, i18nContext) {
-    return formik.dirty || Object.keys(i18nContext).filter(l => l !== 'shared' && l !== 'memo').length > 0;
+    return formik.dirty || Object.keys(i18nContext).some(l => l !== 'shared' && l !== 'memo');
 }

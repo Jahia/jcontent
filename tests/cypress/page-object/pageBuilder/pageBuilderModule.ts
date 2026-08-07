@@ -15,6 +15,50 @@ export class PageBuilderModule extends BaseComponent {
         return this.get();
     }
 
+    /**
+     * Hovers this module until jContent has drawn its page-builder box, re-firing the hover on
+     * every attempt.
+     *
+     * `realHover()` dispatches a single mouseover, and Cypress retry-ability replays the last
+     * *query* of a chain, never the *actions* that precede it. So a hover landing before the
+     * EditFrame overlay has attached its listeners to a freshly (re)loaded iframe is a
+     * permanently lost event, not a slow one: the downstream `getBox()` can then only sit there
+     * until it times out. Re-hovering is the only thing that recovers it.
+     *
+     * @param timeout total budget in ms before giving up
+     * @param interval delay in ms between two hover attempts
+     * @param requireHovered also wait for the box to carry `data-box-hovered="true"`
+     */
+    hoverUntilBoxed({timeout = 10000, interval = 250, requireHovered = false} = {}) {
+        const boxSelector = `[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]` +
+            (requireHovered ? '[data-box-hovered="true"]' : '');
+        const deadline = Date.now() + timeout;
+
+        const attempt = () => {
+            this.get().realHover();
+            // JQuery's find() is synchronous and yields an empty set instead of retrying and then
+            // failing, which is what makes the outcome branchable — cy.find() could not be used here.
+            return this.parentFrame.get().then($frame => {
+                if ($frame.find(boxSelector).length > 0) {
+                    return;
+                }
+
+                if (Date.now() > deadline) {
+                    throw new Error(
+                        `Page-builder box never appeared for "${this.path}" after ${timeout}ms of re-hovering. ` +
+                        'The module itself is rendered, but jContent did not box it.'
+                    );
+                }
+
+                // eslint-disable-next-line cypress/no-unnecessary-waiting
+                return cy.wait(interval).then(() => attempt());
+            });
+        };
+
+        attempt();
+        return this.get();
+    }
+
     getBox(): PageBuilderModuleBox {
         return getComponentByAttr(PageBuilderModuleBox, 'data-jahia-path', this.path, this.parentFrame);
     }
@@ -42,7 +86,7 @@ export class PageBuilderModule extends BaseComponent {
     }
 
     getHeader(selectFirst = false): PageBuilderModuleHeader {
-        this.hover();
+        this.hoverUntilBoxed({requireHovered: selectFirst});
         if (selectFirst) {
             // Hovered state is only for unselected modules; this fails if the module is already selected
             this.getBox().assertIsHovered();

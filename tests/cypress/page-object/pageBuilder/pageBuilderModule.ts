@@ -15,6 +15,66 @@ export class PageBuilderModule extends BaseComponent {
         return this.get();
     }
 
+    /**
+     * Hovers this module until jContent has drawn its page-builder box, re-firing the hover on
+     * every attempt.
+     *
+     * `realHover()` dispatches a single mouseover, and Cypress retry-ability replays the last
+     * *query* of a chain, never the *actions* that precede it. So a hover landing before the
+     * EditFrame overlay has attached its listeners to a freshly (re)loaded iframe is a
+     * permanently lost event, not a slow one: the downstream `getBox()` can then only sit there
+     * until it times out.
+     *
+     * `cy.waitUntil` owns the timing on purpose: its budget starts when the queue reaches the
+     * command, so the deadline cannot be spent by whatever ran before it.
+     *
+     * @param timeout total budget in ms before giving up; defaults to the suite's own
+     *   defaultCommandTimeout, so this never shrinks a budget a consumer has configured
+     * @param interval delay in ms between two hover attempts
+     */
+    hoverUntilBoxed({timeout = Cypress.config('defaultCommandTimeout'), interval = 250} = {}) {
+        // Always wait for the hovered state, not merely for the box to exist: a box also renders
+        // when it is selected or status-highlighted (Box.jsx returns null only when none of
+        // isHeaderDisplayed / isHovered / isSelected / isStatusHighlighted / isBindableEmpty
+        // holds), so "the box is present" does not mean "the hover landed".
+        const boxSelector =
+            `[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"][data-box-hovered="true"]`;
+        let attempts = 0;
+
+        cy.waitUntil(() => {
+            attempts++;
+            // Caveat, deliberately recorded here rather than only in review: Box.jsx binds
+            // mouseenter/mouseleave, which fire only on a real pointer TRANSITION. Re-issuing
+            // realHover() at the same coordinates therefore does not always produce a fresh
+            // mouseenter — it does when the DOM under the cursor changed in between (the overlay
+            // mounting late is exactly that case), but it is not a guaranteed re-trigger.
+            // Guaranteeing it would mean moving the pointer away and back, which risks hovering a
+            // neighbouring box and mutating the state under test.
+            this.get().realHover();
+            // JQuery's find() is synchronous and yields an empty set instead of retrying and then
+            // failing, which is what lets waitUntil see a plain boolean.
+            return this.parentFrame.get().then($frame => $frame.find(boxSelector).length > 0);
+        }, {
+            timeout,
+            interval,
+            errorMsg: `Page-builder box for "${this.path}" never reached data-box-hovered="true". ` +
+                'The module itself is rendered, but jContent did not register the hover on it.'
+        }).then(() => {
+            // Silent when the box was already there, loud when it was not. A retry loop that
+            // absorbs a degrading overlay in silence would hide the very latency it works around,
+            // so make every extra attempt visible in the run log instead.
+            //
+            // cy.task, not cy.log: cypress-terminal-report is configured printLogsToConsole/File
+            // 'onFail', so a cy.log here would be discarded on exactly the green runs this number
+            // is meant to measure.
+            if (attempts > 1) {
+                cy.task('log', `hoverUntilBoxed: box for "${this.path}" only appeared on attempt ${attempts}`);
+            }
+        });
+
+        return this.get();
+    }
+
     getBox(): PageBuilderModuleBox {
         return getComponentByAttr(PageBuilderModuleBox, 'data-jahia-path', this.path, this.parentFrame);
     }
@@ -42,7 +102,7 @@ export class PageBuilderModule extends BaseComponent {
     }
 
     getHeader(selectFirst = false): PageBuilderModuleHeader {
-        this.hover();
+        this.hoverUntilBoxed();
         if (selectFirst) {
             // Hovered state is only for unselected modules; this fails if the module is already selected
             this.getBox().assertIsHovered();

@@ -1,5 +1,9 @@
 # @jahia/jcontent Changelog
 
+## 3.8.0
+
+* Fix insertion points inserting content at the end of the list instead of at their own position
+
 ## 3.7.0
 
 ### New Features

@@ -1,4 +1,4 @@
-import {addNode, createSite, deleteSite, enableModule, getComponent, getComponentBySelector, getNodeByPath, Menu} from '@jahia/cypress';
+import {addNode, createSite, deleteNode, deleteSite, enableModule, getComponent, getComponentBySelector, getNodeByPath, Menu} from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor, ContentTypeSelector, JContent} from '../../page-object';
 import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
@@ -518,6 +518,82 @@ describe('Page builder - insertion points', () => {
             expect(names[1]).to.not.be.oneOf(['text-a', 'text-b', 'text-c']);
             expect(names[2]).to.eq('text-b');
             expect(names[3]).to.eq('text-c');
+            // Restore the fixture to its original three nodes for the paste tests below
+            deleteNode(`${areaPath}/${names[1]}`);
+        });
+    });
+
+    // Regression: paste at an insertion point must land at the clicked position, not appended at the end
+    it('pastes content at the position of the clicked insertion point', () => {
+        const areaPath = `${homePath}/page-ordering/area-main`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-ordering')
+            .switchToPageBuilder();
+
+        const contextMenu = pageBuilder.getModule(`${areaPath}/text-a`, false).contextMenu(true, false);
+        cy.waitUntil(() => contextMenu.selectByRole('copy')).then(() => {
+            cy.get('#message-id').contains('in the clipboard');
+        });
+
+        const area = pageBuilder.getModule(areaPath, false);
+        area.get().scrollIntoView();
+        area.get().click('bottomLeft', {force: true});
+
+        // Click the insertion point anchored on text-c, i.e. the one rendered between text-b and text-c
+        pageBuilder.getModule(`${areaPath}/text-c`, false).get().invoke('attr', 'id').then(id => {
+            pageBuilder.iframe().get()
+                .find(`[jahiatype="createbuttons"][data-jahia-id="${id}"] button[data-sel-role="paste"]`)
+                .click({force: true});
+        });
+
+        cy.get('#message-id').contains('successfully pasted');
+
+        getNodeByPath(areaPath, [], 'en', ['jnt:text']).then(result => {
+            const names = result.data.jcr.nodeByPath.children.nodes.map(node => node.name);
+            expect(names).to.have.length(4);
+            // Pasted node takes text-c's former position; the existing nodes keep their relative order
+            expect(names[0]).to.eq('text-a');
+            expect(names[1]).to.eq('text-b');
+            expect(names[2]).to.not.be.oneOf(['text-a', 'text-b', 'text-c']);
+            expect(names[3]).to.eq('text-c');
+            deleteNode(`${areaPath}/${names[2]}`);
+        });
+    });
+
+    // Regression: paste as reference at an insertion point must land at the clicked position, not appended at the end
+    it('pastes referenced content at the position of the clicked insertion point', () => {
+        const areaPath = `${homePath}/page-ordering/area-main`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-ordering')
+            .switchToPageBuilder();
+
+        const contextMenu = pageBuilder.getModule(`${areaPath}/text-a`, false).contextMenu(true, false);
+        cy.waitUntil(() => contextMenu.selectByRole('copy')).then(() => {
+            cy.get('#message-id').contains('in the clipboard');
+        });
+
+        const area = pageBuilder.getModule(areaPath, false);
+        area.get().scrollIntoView();
+        area.get().click('bottomLeft', {force: true});
+
+        // Click the insertion point anchored on text-c, i.e. the one rendered between text-b and text-c
+        pageBuilder.getModule(`${areaPath}/text-c`, false).get().invoke('attr', 'id').then(id => {
+            pageBuilder.iframe().get()
+                .find(`[jahiatype="createbuttons"][data-jahia-id="${id}"] button[data-sel-role="pasteReference"]`)
+                .click({force: true});
+        });
+
+        cy.get('#message-id').contains('successfully pasted');
+
+        getNodeByPath(areaPath, [], 'en', ['jnt:text', 'jnt:contentReference']).then(result => {
+            const names = result.data.jcr.nodeByPath.children.nodes.map(node => node.name);
+            expect(names).to.have.length(4);
+            // Reference node takes text-c's former position; the existing nodes keep their relative order
+            expect(names[0]).to.eq('text-a');
+            expect(names[1]).to.eq('text-b');
+            expect(names[2]).to.not.be.oneOf(['text-a', 'text-b', 'text-c']);
+            expect(names[3]).to.eq('text-c');
+            deleteNode(`${areaPath}/${names[2]}`);
         });
     });
 

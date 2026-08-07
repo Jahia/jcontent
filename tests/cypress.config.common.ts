@@ -33,10 +33,11 @@ export const baseConfig = {
                     return null;
                 },
 
-                // cy.log is captured by cypress-terminal-report, which is configured onFail only,
-                // so anything logged during a PASSING test is discarded. Diagnostics that are only
-                // meaningful when things go RIGHT — timings, retry counts — need this instead: it
-                // runs in Node, so it reaches the runner's stdout and survives in the CI log.
+                // Diagnostics logged with cy.log are captured by cypress-terminal-report, which is
+                // configured onFail only, so anything logged during a PASSING test is discarded.
+                // Numbers that are only meaningful when things go RIGHT — timings, retry counts —
+                // need this instead: it runs in Node, so it reaches the runner's stdout and
+                // survives in the archived CI log whatever the outcome.
                 log(message) {
                     console.log(message);
                     return null;

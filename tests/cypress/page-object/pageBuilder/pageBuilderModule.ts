@@ -60,8 +60,12 @@ export class PageBuilderModule extends BaseComponent {
             // Silent when the box was already there, loud when it was not. A retry loop that
             // absorbs a degrading overlay in silence would hide the very latency it works around,
             // so make every extra attempt visible in the run log instead.
+            //
+            // cy.task, not cy.log: cypress-terminal-report is configured printLogsToConsole/File
+            // 'onFail', so a cy.log here would be discarded on exactly the green runs this number
+            // is meant to measure.
             if (attempts > 1) {
-                cy.log(`hoverUntilBoxed: box for "${this.path}" only appeared on attempt ${attempts}`);
+                cy.task('log', `hoverUntilBoxed: box for "${this.path}" only appeared on attempt ${attempts}`);
             }
         });
 

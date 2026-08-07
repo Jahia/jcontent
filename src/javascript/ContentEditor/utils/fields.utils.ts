@@ -259,8 +259,7 @@ function _multipleValuesHaveChanged(currentValue: any[], previousValue: any[], r
  */
 export function propertyHasChanged(currentValue: any, field: EditorField, nodeData: any) {
     // Retrieve previous value
-    // eslint-disable-next-line no-warning-comments
-    // TODO https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
+    // Perf: https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
     const propertyData = nodeData?.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.nodeType);
     const previousValue = propertyData?.[_getPropertyNameToCompare(field)];
 

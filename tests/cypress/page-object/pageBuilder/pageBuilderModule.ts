@@ -31,11 +31,14 @@ export class PageBuilderModule extends BaseComponent {
      * @param timeout total budget in ms before giving up; defaults to the suite's own
      *   defaultCommandTimeout, so this never shrinks a budget a consumer has configured
      * @param interval delay in ms between two hover attempts
-     * @param requireHovered also wait for the box to carry `data-box-hovered="true"`
      */
-    hoverUntilBoxed({timeout = Cypress.config('defaultCommandTimeout'), interval = 250, requireHovered = false} = {}) {
-        const boxSelector = `[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]` +
-            (requireHovered ? '[data-box-hovered="true"]' : '');
+    hoverUntilBoxed({timeout = Cypress.config('defaultCommandTimeout'), interval = 250} = {}) {
+        // Always wait for the hovered state, not merely for the box to exist: a box also renders
+        // when it is selected or status-highlighted (Box.jsx returns null only when none of
+        // isHeaderDisplayed / isHovered / isSelected / isStatusHighlighted / isBindableEmpty
+        // holds), so "the box is present" does not mean "the hover landed".
+        const boxSelector =
+            `[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"][data-box-hovered="true"]`;
         let attempts = 0;
 
         cy.waitUntil(() => {
@@ -54,8 +57,8 @@ export class PageBuilderModule extends BaseComponent {
         }, {
             timeout,
             interval,
-            errorMsg: `Page-builder box${requireHovered ? ' with data-box-hovered="true"' : ''} never appeared ` +
-                `for "${this.path}". The module itself is rendered, but jContent did not box it.`
+            errorMsg: `Page-builder box for "${this.path}" never reached data-box-hovered="true". ` +
+                'The module itself is rendered, but jContent did not register the hover on it.'
         }).then(() => {
             // Silent when the box was already there, loud when it was not. A retry loop that
             // absorbs a degrading overlay in silence would hide the very latency it works around,
@@ -99,7 +102,7 @@ export class PageBuilderModule extends BaseComponent {
     }
 
     getHeader(selectFirst = false): PageBuilderModuleHeader {
-        this.hoverUntilBoxed({requireHovered: selectFirst});
+        this.hoverUntilBoxed();
         if (selectFirst) {
             // Hovered state is only for unselected modules; this fails if the module is already selected
             this.getBox().assertIsHovered();

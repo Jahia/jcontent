@@ -1,5 +1,6 @@
 import {ContentEditor, JContent} from '../../../page-object';
 import {addNode, createUser, deleteNode, deleteUser, grantRoles} from '@jahia/cypress';
+import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
 
 describe('Create media tests', () => {
     let jcontent: JContent;
@@ -127,5 +128,67 @@ describe('Create media tests', () => {
 
         // Clean up
         deleteNode(`/sites/${siteKey}/files/replaceTest`);
+    });
+
+    it('Can create an image reference (jnt:imageReferenceLink) in content-folders', function () {
+        const imageName = 'myfile.png';
+
+        cy.loginAndStoreSession();
+        jcontent = JContent.visit(siteKey, 'en', 'media/files');
+        jcontent.getMedia().open().uploadFileViaDialog(imageName, 'assets/uploadMedia');
+
+        // Create an image reference link
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.createContent(contentTypes.imageReference.typeName);
+        contentEditor.getSmallTextField('jnt:imageReferenceLink_jcr:title').addNewValue('imageRefLinkTest');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('image-ref-link-test');
+
+        const picker = contentEditor
+            .getPickerField(contentTypes.imageReference.fieldNodeType, contentTypes.imageReference.multiple)
+            .open();
+        picker.getAccordionItem('picker-media').getTreeItem('files').click();
+        picker.getGrid().get().find(`div[data-sel-role-card="${imageName}"]`).dblclick({force: true});
+
+        contentEditor
+            .getPickerField(contentTypes.imageReference.fieldNodeType, contentTypes.imageReference.multiple)
+            .assertValue('myfile.png');
+        contentEditor.create();
+
+        // Verify the created content now appears in the content-folders listing
+        jcontent.switchToListMode();
+        jcontent.getTable().getRowByName('image-ref-link-test');
+
+        // Clean up
+        deleteNode(`/sites/${siteKey}/contents/image-ref-link-test`);
+        deleteNode(`/sites/${siteKey}/files/${imageName}`);
+    });
+
+    it('Can replace a file using the "Replace with" action', function () {
+        const fileName = 'myfile.png';
+
+        cy.loginAndStoreSession();
+        jcontent = JContent.visit(siteKey, 'en', 'media/files');
+        const media = jcontent.getMedia().open();
+
+        // Create a dedicated folder and navigate into it
+        media.createFolder('media/files', 'replaceWithTest').visitFolder();
+
+        // Upload the initial image
+        const file = media.uploadFileViaDialog(fileName, 'assets/uploadMedia');
+
+        // Replace its content with a different file via the "Replace with" action
+        file.replaceWith('cypress/fixtures/assets/uploadMedia/myfile2.png');
+
+        // The replace should complete successfully
+        cy.get('[data-cm-role="upload-status-success"]').should('be.visible');
+        cy.get('[data-cm-role="upload-close-button"]').click();
+
+        // The node keeps its original name and no new node is created
+        jcontent.getGrid().getCardByName(fileName).get().should('be.visible');
+        cy.get('[data-cm-role="grid-content-list-card"][data-sel-role-card="myfile2.png"]').should('not.exist');
+        cy.get('[data-cm-role="grid-content-list-card"]').should('have.length', 1);
+
+        // Clean up
+        deleteNode(`/sites/${siteKey}/files/replaceWithTest`);
     });
 });

@@ -1,0 +1,9 @@
+query getInvalidLanguages($path: String!) {
+    jcr {
+        nodeByPath(path: $path) {
+            invalidLanguages: property(name: "j:invalidLanguages") {
+                values
+            }
+        }
+    }
+}

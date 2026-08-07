@@ -98,6 +98,32 @@ const resetVisibilityRules = (sitekey: string) => {
 };
 
 // ---------------------------------------------------------------------------
+// resetLanguageRestriction: clears the j:invalidLanguages property that the
+// Languages section of the visibility screen stores directly on the content
+// node (NOT on the j:conditionalVisibility child node, so resetVisibilityRules
+// does not cover it). Query-then-delete avoids cy.apollo throwing when the
+// property is absent. Callers must republish afterwards to restore live state.
+// ---------------------------------------------------------------------------
+const resetLanguageRestriction = (sitekey: string) => {
+    const nodePath = `/sites/${sitekey}/home/area-main/test-content1`;
+    // The j:invalidLanguages property is multi-valued, so query `values` (not `value`,
+    // which is always null for multi-valued properties). property() returns null when
+    // absent, so the delete only runs when a restriction is actually present.
+    cy.apollo({
+        queryFile: 'jcontent/getInvalidLanguages.graphql',
+        variables: {path: nodePath}
+    }).then(({data}) => {
+        const values = data?.jcr?.nodeByPath?.invalidLanguages?.values;
+        if (Array.isArray(values) && values.length > 0) {
+            cy.apollo({
+                variables: {pathOrId: nodePath, property: 'j:invalidLanguages'},
+                mutationFile: 'jcontent/jcrDeleteProperty.graphql'
+            });
+        }
+    });
+};
+
+// ---------------------------------------------------------------------------
 // All inner suites share the same pair of sites. Site lifecycle (createSite /
 // deleteSite) lives in this outer describe so the sites are never prematurely
 // destroyed between suites.
@@ -917,6 +943,10 @@ describe('Visibility Screen', () => {
             cy.loginAndStoreSession();
             resetVisibilityRules(sitekeyNonI18n);
             resetVisibilityRules(sitekeyI18n);
+            // The Languages restriction (j:invalidLanguages) lives on the content node and
+            // persists across tests, so clear it too and republish to restore a clean,
+            // fully-visible live state before every test.
+            resetLanguageRestriction(sitekeyI18n);
             publishAndWait(`/sites/${sitekeyNonI18n}/home`, ['en']);
             publishAndWait(`/sites/${sitekeyI18n}/home`, ['en']);
         });
@@ -1044,6 +1074,55 @@ describe('Visibility Screen', () => {
                 .getBox()
                 .getStatus('notVisible')
                 .should('be.visible');
+
+            // The badge is not enough: verify the content is actually gone from the
+            // rendered live (en) page while the other contents are still there.
+            cy.visit(`/sites/${sitekeyI18n}/home.html`);
+            cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
+        });
+
+        it('Content restricted for a language disappears from the live-rendered page (i18n site)', () => {
+            const homeLivePath = `/sites/${sitekeyI18n}/home.html`;
+            const contentPath = `/sites/${sitekeyI18n}/home/area-main/test-content1`;
+
+            // Check the content is rendered in live before any restriction
+            cy.visit(homeLivePath);
+            cy.get('body').should('contain.text', 'test 1test 2test 3');
+
+            // Remove English on test-content1
+            jcontent = JContent.visit(sitekeyI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.get(
+                    '[data-sel-content-editor-field*="invalidLanguages"], [data-sel-content-editor-field*="j:invalidLanguages"]'
+                )
+                    .contains('English')
+                    .should('be.visible')
+                    .click();
+            });
+            cy.get('[data-sel-role="languages-save-button"]').should('not.be.disabled').click();
+            cy.get('[data-sel-role="languages-save-button"]', {timeout: 10000}).should('be.disabled');
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+
+            // Publish, then confirm the content is no longer rendered in live in English
+            publishAndWait(`/sites/${sitekeyI18n}/home`, ['en']);
+            cy.visit(homeLivePath);
+            cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
+
+            // Remove the restriction and republish — the content is rendered again in live
+            cy.apollo({
+                variables: {pathOrId: contentPath, property: 'j:invalidLanguages'},
+                mutationFile: 'jcontent/jcrDeleteProperty.graphql'
+            });
+            publishAndWait(`/sites/${sitekeyI18n}/home`, ['en']);
+            cy.visit(homeLivePath);
+            cy.get('body').should('contain.text', 'test 1test 2test 3');
         });
     }); // End describe('Visibility Live Mode Tests')
 

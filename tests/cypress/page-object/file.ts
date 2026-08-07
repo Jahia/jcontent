@@ -85,6 +85,12 @@ export class File extends BasePage {
         return this;
     }
 
+    replaceWith(fixturePath: string): File {
+        this.getGridCard().contextMenu().selectByRole('replaceFile');
+        cy.get('input#file-upload-input[type="file"]').selectFile(fixturePath, {force: true});
+        return this;
+    }
+
     markForDeletion(): File {
         this.getGridCard().contextMenu().selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();

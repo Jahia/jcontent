@@ -23,7 +23,10 @@ export class PageBuilderModule extends BaseComponent {
      * *query* of a chain, never the *actions* that precede it. So a hover landing before the
      * EditFrame overlay has attached its listeners to a freshly (re)loaded iframe is a
      * permanently lost event, not a slow one: the downstream `getBox()` can then only sit there
-     * until it times out. Re-hovering is the only thing that recovers it.
+     * until it times out.
+     *
+     * `cy.waitUntil` owns the timing on purpose: its budget starts when the queue reaches the
+     * command, so the deadline cannot be spent by whatever ran before it.
      *
      * @param timeout total budget in ms before giving up; defaults to the suite's own
      *   defaultCommandTimeout, so this never shrinks a budget a consumer has configured
@@ -33,39 +36,33 @@ export class PageBuilderModule extends BaseComponent {
     hoverUntilBoxed({timeout = Cypress.config('defaultCommandTimeout'), interval = 250, requireHovered = false} = {}) {
         const boxSelector = `[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]` +
             (requireHovered ? '[data-box-hovered="true"]' : '');
+        let attempts = 0;
 
-        // Start the clock when the queue REACHES this command, not when the test body enqueues it.
-        // A test body runs to completion before the first command executes, so a deadline computed
-        // here at enqueue time would already be spent by everything that ran in between.
-        cy.then(() => {
-            const started = Date.now();
-            let attempts = 0;
-
-            const attempt = () => {
-                attempts++;
-                this.get().realHover();
-                // JQuery's find() is synchronous and yields an empty set instead of retrying and then
-                // failing, which is what makes the outcome branchable — cy.find() could not be used here.
-                return this.parentFrame.get().then($frame => {
-                    if ($frame.find(boxSelector).length > 0) {
-                        return;
-                    }
-
-                    const elapsed = Date.now() - started;
-                    if (elapsed > timeout) {
-                        throw new Error(
-                            `Page-builder box${requireHovered ? ' with data-box-hovered="true"' : ''} never appeared ` +
-                            `for "${this.path}" after ${attempts} hover attempts over ${elapsed}ms. ` +
-                            'The module itself is rendered, but jContent did not box it.'
-                        );
-                    }
-
-                    // eslint-disable-next-line cypress/no-unnecessary-waiting
-                    return cy.wait(interval).then(() => attempt());
-                });
-            };
-
-            return attempt();
+        cy.waitUntil(() => {
+            attempts++;
+            // Caveat, deliberately recorded here rather than only in review: Box.jsx binds
+            // mouseenter/mouseleave, which fire only on a real pointer TRANSITION. Re-issuing
+            // realHover() at the same coordinates therefore does not always produce a fresh
+            // mouseenter — it does when the DOM under the cursor changed in between (the overlay
+            // mounting late is exactly that case), but it is not a guaranteed re-trigger.
+            // Guaranteeing it would mean moving the pointer away and back, which risks hovering a
+            // neighbouring box and mutating the state under test.
+            this.get().realHover();
+            // JQuery's find() is synchronous and yields an empty set instead of retrying and then
+            // failing, which is what lets waitUntil see a plain boolean.
+            return this.parentFrame.get().then($frame => $frame.find(boxSelector).length > 0);
+        }, {
+            timeout,
+            interval,
+            errorMsg: `Page-builder box${requireHovered ? ' with data-box-hovered="true"' : ''} never appeared ` +
+                `for "${this.path}". The module itself is rendered, but jContent did not box it.`
+        }).then(() => {
+            // Silent when the box was already there, loud when it was not. A retry loop that
+            // absorbs a degrading overlay in silence would hide the very latency it works around,
+            // so make every extra attempt visible in the run log instead.
+            if (attempts > 1) {
+                cy.log(`hoverUntilBoxed: box for "${this.path}" only appeared on attempt ${attempts}`);
+            }
         });
 
         return this.get();

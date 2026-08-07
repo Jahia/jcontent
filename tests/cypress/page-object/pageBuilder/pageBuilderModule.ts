@@ -25,37 +25,49 @@ export class PageBuilderModule extends BaseComponent {
      * permanently lost event, not a slow one: the downstream `getBox()` can then only sit there
      * until it times out. Re-hovering is the only thing that recovers it.
      *
-     * @param timeout total budget in ms before giving up
+     * @param timeout total budget in ms before giving up; defaults to the suite's own
+     *   defaultCommandTimeout, so this never shrinks a budget a consumer has configured
      * @param interval delay in ms between two hover attempts
      * @param requireHovered also wait for the box to carry `data-box-hovered="true"`
      */
-    hoverUntilBoxed({timeout = 10000, interval = 250, requireHovered = false} = {}) {
+    hoverUntilBoxed({timeout = Cypress.config('defaultCommandTimeout'), interval = 250, requireHovered = false} = {}) {
         const boxSelector = `[data-sel-role="page-builder-box"][data-jahia-path="${this.path}"]` +
             (requireHovered ? '[data-box-hovered="true"]' : '');
-        const deadline = Date.now() + timeout;
 
-        const attempt = () => {
-            this.get().realHover();
-            // JQuery's find() is synchronous and yields an empty set instead of retrying and then
-            // failing, which is what makes the outcome branchable — cy.find() could not be used here.
-            return this.parentFrame.get().then($frame => {
-                if ($frame.find(boxSelector).length > 0) {
-                    return;
-                }
+        // Start the clock when the queue REACHES this command, not when the test body enqueues it.
+        // A test body runs to completion before the first command executes, so a deadline computed
+        // here at enqueue time would already be spent by everything that ran in between.
+        cy.then(() => {
+            const started = Date.now();
+            let attempts = 0;
 
-                if (Date.now() > deadline) {
-                    throw new Error(
-                        `Page-builder box never appeared for "${this.path}" after ${timeout}ms of re-hovering. ` +
-                        'The module itself is rendered, but jContent did not box it.'
-                    );
-                }
+            const attempt = () => {
+                attempts++;
+                this.get().realHover();
+                // JQuery's find() is synchronous and yields an empty set instead of retrying and then
+                // failing, which is what makes the outcome branchable — cy.find() could not be used here.
+                return this.parentFrame.get().then($frame => {
+                    if ($frame.find(boxSelector).length > 0) {
+                        return;
+                    }
 
-                // eslint-disable-next-line cypress/no-unnecessary-waiting
-                return cy.wait(interval).then(() => attempt());
-            });
-        };
+                    const elapsed = Date.now() - started;
+                    if (elapsed > timeout) {
+                        throw new Error(
+                            `Page-builder box${requireHovered ? ' with data-box-hovered="true"' : ''} never appeared ` +
+                            `for "${this.path}" after ${attempts} hover attempts over ${elapsed}ms. ` +
+                            'The module itself is rendered, but jContent did not box it.'
+                        );
+                    }
 
-        attempt();
+                    // eslint-disable-next-line cypress/no-unnecessary-waiting
+                    return cy.wait(interval).then(() => attempt());
+                });
+            };
+
+            return attempt();
+        });
+
         return this.get();
     }
 

@@ -2833,6 +2833,7 @@ __metadata:
     mime: "npm:^3.0.0"
     notistack: "npm:^3.0.1"
     pdfjs-dist: "npm:5.4.296"
+    pkg-pr-new: "npm:^0.0.86"
     prismjs: "npm:^1.26.0"
     prop-types: "npm:^15.7.2"
     query-string: "npm:5"
@@ -18183,6 +18184,15 @@ __metadata:
   dependencies:
     find-up: "npm:^5.0.0"
   checksum: 10c0/793a496d685dc55bbbdbbb22d884535c3b29241e48e3e8d37e448113a71b9e42f5481a61fdc672d7322de12fbb2c584dd3a68bf89b18fffce5c48a390f911bc5
+  languageName: node
+  linkType: hard
+
+"pkg-pr-new@npm:^0.0.86":
+  version: 0.0.86
+  resolution: "pkg-pr-new@npm:0.0.86"
+  bin:
+    pkg-pr-new: bin/cli.js
+  checksum: 10c0/83b5a885f23fd82a29dc4c4729b3c712feed7d206ee5cd640afb6bf38c37be6515e8fc0f0af19da4dda4a37f4eb65f0728e53846da75158e143bbd3b56e9f226
   languageName: node
   linkType: hard
 

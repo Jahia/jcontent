@@ -123,10 +123,27 @@ export const EditFrame = () => {
                     iframeSwap.current.setAttribute('data-sel-role', 'page-builder-frame-inactive');
                     iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
 
-                    setTimeout(() => {
-                        // Firefox hack, if scroll has moved when redrawing
-                        if (Math.floor(iframe.current.contentWindow.scrollY) !== pos.scrollTop) {
-                            iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
+                    // The frame's layout can still be settling right after it becomes visible
+                    // (images without reserved dimensions, fonts, etc. finishing to load), which
+                    // drifts the scroll position away from pos. Keep re-asserting it until the
+                    // frame's content height has stopped changing, instead of a single fixed-delay retry.
+                    const settledWindow = iframe.current.contentWindow;
+                    const settledDocument = iframe.current.contentDocument;
+                    let lastHeight = settledDocument.documentElement.scrollHeight;
+                    let stableChecks = 0;
+                    let checks = 0;
+                    const settleInterval = setInterval(() => {
+                        checks++;
+                        const height = settledDocument.documentElement.scrollHeight;
+                        stableChecks = height === lastHeight ? stableChecks + 1 : 0;
+                        lastHeight = height;
+
+                        if (Math.floor(settledWindow.scrollY) !== pos.scrollTop) {
+                            settledWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
+                        }
+
+                        if (stableChecks >= 2 || checks >= 10) {
+                            clearInterval(settleInterval);
                         }
                     }, 100);
                 });

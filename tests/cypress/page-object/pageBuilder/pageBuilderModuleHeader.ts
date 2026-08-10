@@ -19,7 +19,7 @@ export class PageBuilderModuleHeader extends BaseComponent {
     }
 
     scrollToTop(): this {
-        cy.get('iframe[data-sel-role="page-builder-frame-active"]').then($iframe => {
+        cy.get<HTMLIFrameElement>('iframe[data-sel-role="page-builder-frame-active"]').then($iframe => {
             $iframe[0].contentWindow.scrollTo(0, 0);
         });
         return this;

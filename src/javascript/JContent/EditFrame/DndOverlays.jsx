@@ -20,6 +20,8 @@ export const DndOverlays = ({currentDndInfo}) => {
 
     return (
         <>
+            <div className={clsx(styles.scrollEdgeIndicator, styles.scrollEdgeTop)}/>
+            <div className={clsx(styles.scrollEdgeIndicator, styles.scrollEdgeBottom)}/>
             {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
             {dropTarget && <DropArea dropTarget={dropTarget} isDropAllowed={dropAllowed}/>}
             {dropTarget && relative && <Insert relative={relative}/>}

@@ -14,9 +14,7 @@
   <description>Minimal JavaScript modules template set for testing</description>
 
   <properties>
-    <node.version>v22.18.0</node.version>
-    <yarn.version>v1.22.22</yarn.version>
-    <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
+    <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
     <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
   </properties>
 
@@ -53,35 +51,30 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>${frontend-maven-plugin.version}</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec-maven-plugin.version}</version>
         <configuration>
-          <nodeVersion>${node.version}</nodeVersion>
-          <yarnVersion>${yarn.version}</yarnVersion>
-          <installDirectory>target</installDirectory>
+          <executable>yarn</executable>
         </configuration>
         <executions>
           <execution>
-            <id>install node and yarn</id>
-            <goals>
-              <goal>install-node-and-yarn</goal>
-            </goals>
-          </execution>
-          <execution>
             <id>yarn install</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>yarn</goal>
+              <goal>exec</goal>
             </goals>
           </execution>
           <execution>
             <id>yarn build</id>
             <phase>package</phase>
             <goals>
-              <goal>yarn</goal>
+              <goal>exec</goal>
             </goals>
             <configuration>
-              <arguments>build</arguments>
+              <arguments>
+                <argument>build</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>

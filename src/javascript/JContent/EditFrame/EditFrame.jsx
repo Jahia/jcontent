@@ -18,6 +18,7 @@ import {batchActions} from 'redux-batched-actions';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
+import {captureAnchor, restoreAnchor} from './EditFrame.anchor';
 import scopedStyles from 'editframe-styles/scoped.css?url';
 
 function addEventListeners(target, manager, iframeRef) {
@@ -100,6 +101,8 @@ export const EditFrame = () => {
 
     const iframe = useRef();
     const iframeSwap = useRef();
+    const cancelRestore = useRef(() => {});
+    const pendingAnchor = useRef(null);
 
     const currentDndInfo = useRef({});
 
@@ -112,23 +115,28 @@ export const EditFrame = () => {
             if (iframe.current !== loadedIframe) {
                 iframeSwap.current = iframe.current;
                 iframe.current = loadedIframe;
-                const pos = {
-                    scrollLeft: Math.floor(iframeSwap.current.contentWindow.scrollX || iframeSwap.current.contentWindow.pageXOffset),
-                    scrollTop: Math.floor(iframeSwap.current.contentWindow.scrollY || iframeSwap.current.contentWindow.pageYOffset)
-                };
+                // What the editor was looking at, noted when the reload was asked for if it was a
+                // refresh — by the time the document is here, the outgoing one has already been
+                // pulled about by the refetch.
+                const anchor = pendingAnchor.current || captureAnchor(iframeSwap.current.contentWindow);
+                const {scrollX, scrollY} = iframeSwap.current.contentWindow;
+                pendingAnchor.current = null;
+
                 setTimeout(() => {
-                    iframeSwap.current.style.top = '-10000';
+                    // A unitless length is invalid CSS, so this has to carry its unit or the outgoing
+                    // frame stays right where it is, covering the one we just swapped in.
+                    iframeSwap.current.style.top = '-10000px';
                     iframe.current.style.top = '0';
                     iframe.current.setAttribute('data-sel-role', 'page-builder-frame-active');
                     iframeSwap.current.setAttribute('data-sel-role', 'page-builder-frame-inactive');
-                    iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
 
-                    setTimeout(() => {
-                        // Firefox hack, if scroll has moved when redrawing
-                        if (Math.floor(iframe.current.contentWindow.scrollY) !== pos.scrollTop) {
-                            iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
-                        }
-                    }, 100);
+                    cancelRestore.current();
+                    if (anchor) {
+                        cancelRestore.current = restoreAnchor(iframe.current.contentWindow, anchor, {fallback: {scrollX, scrollY}});
+                    } else {
+                        // Nothing was in view to anchor to — an empty page. The offset is all we have.
+                        iframe.current.contentWindow.scrollTo(scrollX, scrollY);
+                    }
                 });
             }
         }
@@ -151,6 +159,15 @@ export const EditFrame = () => {
     };
 
     function refresh() {
+        // Note what the editor is looking at now, before anything reacts to the refresh: the
+        // refetchers fire synchronously from here and the document on screen is sized in part by
+        // the data they replace, so a moment later this is no longer a faithful reading.
+        // Anchor on the content being worked on. An ordinary Content Editor save reaches us through
+        // triggerRefetchAll, which says nothing about what changed, so the clicked element is what
+        // identifies it — and holding that is both what the report asks for and far steadier than
+        // picking whatever module happens to be nearest the top edge at this instant.
+        pendingAnchor.current = captureAnchor(iframe.current.contentWindow, clickedElement?.path);
+
         if (iframeSwap.current.contentWindow.location.href === iframe.current.contentWindow.location.href) {
             iframeSwap.current.contentWindow.location.reload();
         } else {
@@ -220,6 +237,7 @@ export const EditFrame = () => {
         return () => {
             setClickedElementHook(() => undefined);
             clearInterval(interval);
+            cancelRestore.current();
         };
     }, []);
 

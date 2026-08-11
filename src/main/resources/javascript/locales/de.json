@@ -642,6 +642,15 @@
             "sourceLanguage": "Ausgangssprache",
             "translateToLanguage": "Übersetzen nach"
           },
+          "editAllLanguages": {
+            "name": "In allen Sprachen bearbeiten",
+            "dialogTitle": "{{contentName}} ({{contentType}})",
+            "languageCounter": "{{filled}}/{{total}}",
+            "fieldSwitcherLabel": "Dieses Feld übersetzen:",
+            "copyFromSourceLanguage": "Wert aus {{language}} kopieren",
+            "btnCancel": "Abbrechen",
+            "btnSave": "Speichern"
+          },
           "goBack": {
             "edit": {
               "title": "Nicht gespeicherte Änderungen",

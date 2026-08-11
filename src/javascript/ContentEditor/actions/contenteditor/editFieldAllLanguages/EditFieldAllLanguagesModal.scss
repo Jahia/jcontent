@@ -1,0 +1,94 @@
+// Doubled class name increases specificity over MUI's own maxWidth breakpoint style,
+// matching the content editor's own dialog (ContentEditorModal.scss) so this modal covers it fully.
+.dialog.dialog {
+    display: flex;
+    flex-direction: column;
+    width: 1080px;
+    max-width: calc(100vw - 56px);
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
+    margin: 0;
+}
+
+.languageCounter {
+    flex: 0 0 auto;
+    margin-left: auto;
+    color: var(--color-gray);
+}
+
+.fieldSwitcherRow {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--spacing-medium);
+    padding: 0 var(--spacing-large) var(--spacing-medium);
+}
+
+.fieldSwitcherLabel {
+    flex: 0 0 auto;
+}
+
+.modalBody {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    overflow-y: auto;
+}
+
+.languageRow {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+    border-bottom: 1px solid var(--color-gray);
+
+    &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+}
+
+.languageLabel {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--spacing-small);
+    min-width: 2.5rem;
+    padding-top: var(--spacing-small);
+}
+
+.languageFieldRow {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: flex-start;
+    gap: var(--spacing-small);
+    min-width: 0;
+}
+
+.languageField {
+    flex: 0 0 90%;
+    min-width: 0;
+}
+
+.languageActions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: var(--spacing-nano);
+    padding-top: var(--spacing-small);
+}
+
+// CKEditor sets its own height inline from the field's CND config, sized for full-page editing -
+// too short once several language rows are stacked in this modal. Force a taller viewport here.
+.languageField :global(.cke_contents) {
+    height: 400px !important;
+}
+
+.readOnlyBadge {
+    flex: 0 0 auto;
+}
+
+.error {
+    color: var(--color-warning);
+}

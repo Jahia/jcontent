@@ -643,6 +643,15 @@
             "sourceLanguage": "Langue source",
             "translateToLanguage": "Traduire vers"
           },
+          "editAllLanguages": {
+            "name": "Éditer dans toutes les langues",
+            "dialogTitle": "{{contentName}} ({{contentType}})",
+            "languageCounter": "{{filled}}/{{total}}",
+            "fieldSwitcherLabel": "Traduire ce champ :",
+            "copyFromSourceLanguage": "Copier la valeur de {{language}}",
+            "btnCancel": "Annuler",
+            "btnSave": "Enregistrer"
+          },
           "goBack": {
             "edit": {
               "title": "Modifications non enregistrées",

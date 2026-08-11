@@ -1,4 +1,4 @@
-import {addNode, createSite, deleteSite} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, setNodeProperty} from '@jahia/cypress';
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 
 /**
@@ -20,6 +20,7 @@ describe('Page builder - frame keeps its position', () => {
     const areaPath = `${homePath}/${areaName}`;
     const listCount = 12;
     const editedListPath = `${areaPath}/list-${listCount}`;
+    const watchedPath = `${areaPath}/list-9`;
     const editedTextPath = `${editedListPath}/text-${listCount}`;
 
     const activeFrame = () => cy.get('[data-sel-role="page-builder-frame-active"]');
@@ -159,6 +160,37 @@ describe('Page builder - frame keeps its position', () => {
 
                 // Nothing was edited here, so the content must come back where it was
                 shouldSettleAt(editedListPath, topBeforeRefresh, 1);
+            });
+        });
+    });
+
+    /**
+     * The case that decides why the view is remembered as content and not as a scroll offset: when the
+     * layout ABOVE the viewport changes height, the same offset frames different content. Measured
+     * here at 884px of growth above the fold — restoring the offset would leave the editor looking
+     * that far from where they were.
+     *
+     * The change has to come from above the fold, since an element growing only pushes what is below
+     * it. Editing from the content tree, or another author's change, does exactly this.
+     */
+    it('Keeps the content in view when the layout above it changes height', () => {
+        jcontent.getModule(watchedPath).getBox().get().should('exist');
+
+        activeFrame().then($frame => {
+            const win = ($frame[0] as HTMLIFrameElement).contentWindow;
+            const element = win.document.querySelector(`[jahiatype="module"][path="${watchedPath}"]`);
+            win.scrollTo(0, win.scrollY + element.getBoundingClientRect().top);
+        });
+
+        viewportTopOf(watchedPath).then(topBefore => {
+            // Content well above the fold grows substantially
+            setNodeProperty(`${areaPath}/list-2/text-2`, 'text', '<p>Content number 2</p>'.repeat(30), 'en');
+
+            activeFrame().invoke('attr', 'id').then(frameIdBefore => {
+                jcontent.refresh();
+                activeFrame().invoke('attr', 'id').should('not.eq', frameIdBefore);
+
+                shouldSettleAt(watchedPath, topBefore, 1);
             });
         });
     });

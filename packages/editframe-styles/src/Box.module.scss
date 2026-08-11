@@ -236,11 +236,13 @@ $colorDragging: var(--moon-color-white);
 .scrollEdgeIndicator {
     position: fixed;
     left: 0;
+    z-index: $indexScrollEdge;
+
+    display: flex;
+    justify-content: center;
 
     width: 100%;
     height: $scrollEdgeZoneHeight;
-
-    z-index: $indexScrollEdge;
 
     pointer-events: none;
 }
@@ -248,13 +250,21 @@ $colorDragging: var(--moon-color-white);
 .scrollEdgeTop {
     top: 0;
 
+    align-items: flex-start;
+
     background-color: var(--moon-color-accent);
 }
 
 .scrollEdgeBottom {
     bottom: 0;
 
+    align-items: flex-end;
+
     background-color: var(--moon-color-accent);
+}
+
+.scrollEdgeIndicator svg.scrollEdgeIcon {
+    fill: var(--moon-color-white);
 }
 
 .flexrow {

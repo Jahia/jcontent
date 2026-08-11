@@ -10,10 +10,10 @@
     }
   },
   "scripts": {
-    "build": "gql.tada generate-output && gql.tada turbo && tsdown --no-config -f esm,cjs --dts false"
+    "build": "node build.mjs"
   },
   "dependencies": {
-    "gql.tada": "^1.11.2",
+    "gql.tada": "^1.11.3",
     "tsdown": "^0.22.3"
   }
 }

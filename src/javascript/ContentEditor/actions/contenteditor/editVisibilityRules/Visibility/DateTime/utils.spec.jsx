@@ -1,4 +1,4 @@
-import {getConditionLabel} from './utils';
+import {buildNewCondition, buildUpdatedCondition, getConditionLabel} from './utils';
 
 // Mock the workspace date-formatter so we can assert the locale is threaded through and control output.
 jest.mock('date-formatter', () => {
@@ -56,8 +56,53 @@ describe('getConditionLabel', () => {
     });
 
     it('formats the date condition in the UI locale', () => {
-        const properties = [{name: 'start', value: '2026-07-22T10:00:00.000'}];
+        const properties = [{name: 'start', notZonedDateValue: '2026-07-22T10:00:00.000'}];
         expect(getConditionLabel('jnt:startEndDateCondition', properties, t, 'de'))
             .toBe('A partir du 2026-07-22T10:00:00.000|de|long');
+    });
+
+    it('reads the zone-less server value, ignoring a stale/shifted raw value', () => {
+        const properties = [{name: 'start', value: '2026-07-22T09:00:00.000Z', notZonedDateValue: '2026-07-22T10:00:00.000'}];
+        expect(getConditionLabel('jnt:startEndDateCondition', properties, t, 'de'))
+            .toBe('A partir du 2026-07-22T10:00:00.000|de|long');
+    });
+});
+
+describe('buildNewCondition / buildUpdatedCondition', () => {
+    it('marks start/end date properties as NOT_ZONED_DATE, passing the zone-less value through unchanged', () => {
+        const rule = {type: 'jnt:startEndDateCondition', start: '2027-01-01T00:00:00.000', end: '2027-01-02T00:00:00.000'};
+        expect(buildNewCondition(rule)).toEqual({
+            type: 'jnt:startEndDateCondition',
+            properties: [
+                {name: 'start', value: '2027-01-01T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'},
+                {name: 'end', value: '2027-01-02T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}
+            ]
+        });
+    });
+
+    it('leaves non-date properties untouched, with no type/option fields', () => {
+        const rule = {type: 'jnt:dayOfWeekCondition', dayOfWeek: ['monday', 'tuesday']};
+        expect(buildNewCondition(rule)).toEqual({
+            type: 'jnt:dayOfWeekCondition',
+            properties: [{name: 'dayOfWeek', values: ['monday', 'tuesday']}]
+        });
+    });
+
+    it('omits an empty end date rather than sending an unparsable NOT_ZONED_DATE value', () => {
+        const rule = {type: 'jnt:startEndDateCondition', start: '2027-01-01T00:00:00.000', end: ''};
+        const result = buildNewCondition(rule);
+        expect(result.properties.find(p => p.name === 'end')).toBeUndefined();
+        expect(result.properties).toEqual([
+            {name: 'start', value: '2027-01-01T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}
+        ]);
+    });
+
+    it('includes the uuid for an updated condition', () => {
+        const rule = {type: 'jnt:startEndDateCondition', uuid: 'abc-123', start: '2027-01-01T00:00:00.000'};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:startEndDateCondition',
+            uuid: 'abc-123',
+            properties: [{name: 'start', value: '2027-01-01T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}]
+        });
     });
 });

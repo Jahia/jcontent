@@ -77,6 +77,8 @@ services:
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
             SKIP_TESTS: ${SKIP_TESTS:-false}
             TESTS_PROFILE: ${TESTS_PROFILE:-}
+            # Match the jahia/mariadb services' TZ
+            TZ: ${TIMEZONE}
         networks:
             - stack
 

@@ -59,6 +59,22 @@ const publishAndWait = (path: string, languages: string[] = ['en']) => {
     );
 };
 
+// The DateTimePicker's masked input takes 12 digits with no separators (MM/DD/YYYY HH:mm,
+// matching the 'en-US' navigator.language the Cypress browser reports) — the mask itself
+// inserts the slashes/colon as each position is filled in.
+const toPickerDigits = (date: Date) => {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${pad(date.getMonth() + 1)}${pad(date.getDate())}${date.getFullYear()}${pad(date.getHours())}${pad(date.getMinutes())}`;
+};
+
+// Same wall-clock fields as `date`, offset by `days` — used to build a visibility window
+// that comfortably spans (or excludes) "now" without depending on exact run time.
+const daysFrom = (days: number, date: Date = new Date()) => {
+    const shifted = new Date(date);
+    shifted.setDate(shifted.getDate() + days);
+    return shifted;
+};
+
 // Helper to get day names for testing
 const getDayNames = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -794,6 +810,83 @@ describe('Visibility Screen', () => {
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
         });
 
+        it('Round-trips a Start and End Date condition\'s date/time exactly when reopened for edit', () => {
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Start and end date');
+
+            cy.get('[data-sel-content-editor-field="start"]', {timeout: 10000}).should('be.visible');
+
+            // Distinct, unambiguous date/times (different month, day, hour and minute) so that a
+            // timezone shift — which moves by whole hours and can cross a day boundary — is caught,
+            // rather than picked twice, midnight, or another value a shift could coincidentally match.
+            const startDigits = '011520270915'; // 01/15/2027 09:15
+            const endDigits = '022020271745'; // 02/20/2027 17:45
+
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-sel-content-editor-field="start"] input').type(startDigits, {delay: 50});
+            cy.get('[data-sel-content-editor-field="end"] input').clear();
+            cy.get('[data-sel-content-editor-field="end"] input').type(endDigits, {delay: 50});
+
+            // Capture exactly what the masked inputs display right after typing — this is what the
+            // reopened form is compared against below, regardless of the mask's date field order.
+            let typedStart: string;
+            let typedEnd: string;
+            cy.get('[data-sel-content-editor-field="start"] input').invoke('val').then(val => {
+                typedStart = String(val);
+            });
+            cy.get('[data-sel-content-editor-field="end"] input').invoke('val').then(val => {
+                typedEnd = String(val);
+            });
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+
+            // The row label is formatted server-side (notZonedDateValue) then displayed verbatim —
+            // a write/read timezone mismatch would render a shifted date and/or time here.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .should('contain.text', 'January 15, 2027 9:15 AM')
+                .and('contain.text', 'February 20, 2027 5:45 PM');
+
+            // Reopen the condition for edit.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .within(() => {
+                    cy.get('button:has(svg)').filter(':visible').first().click({force: true});
+                });
+
+            // The re-edit form must show back exactly what was typed — no compounding drift.
+            cy.get('[data-sel-content-editor-field="start"] input', {timeout: 10000}).should($input => {
+                expect($input.val()).to.equal(typedStart);
+            });
+            cy.get('[data-sel-content-editor-field="end"] input').should($input => {
+                expect($input.val()).to.equal(typedEnd);
+            });
+
+            // Leave without resaving — this test only verifies the round trip, not a further edit.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Cancel').click();
+            });
+
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+        });
+
         it('Adds Day of Week condition with multiple days and removes one', () => {
             const {today, todayPlus2} = getDayNames();
 
@@ -989,6 +1082,87 @@ describe('Visibility Screen', () => {
             });
 
             // Validate test 1 is not visible in live anymore
+            cy.visit(`/sites/${sitekeyNonI18n}/home.html`);
+            cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
+        });
+
+        it('Shows content in live mode when now falls inside a Start and End Date condition\'s window', () => {
+            cy.visit(`/sites/${sitekeyNonI18n}/home.html`);
+            cy.get('body').contains('test 2').should('contain.text', 'test 1test 2test 3');
+
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+            getComponentByRole(Button, 'sbsVisibility').click();
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Start and end date');
+
+            cy.get('[data-sel-content-editor-field="start"]', {timeout: 10000}).should('be.visible');
+
+            // A window that comfortably spans "now" (±2 days), so the assertion doesn't depend on
+            // exactly how long the test itself takes to run.
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-sel-content-editor-field="start"] input').type(toPickerDigits(daysFrom(-2)), {delay: 50});
+            cy.get('[data-sel-content-editor-field="end"] input').clear();
+            cy.get('[data-sel-content-editor-field="end"] input').type(toPickerDigits(daysFrom(2)), {delay: 50});
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+
+            publishAndWait(`/sites/${sitekeyNonI18n}/home`, ['en']);
+
+            // "Now" falls inside [start, end]: the condition matches, content stays visible.
+            cy.visit(`/sites/${sitekeyNonI18n}/home.html`);
+            cy.get('body').should('contain.text', 'test 1test 2test 3');
+        });
+
+        it('Hides content in live mode when now falls outside a Start and End Date condition\'s window', () => {
+            cy.visit(`/sites/${sitekeyNonI18n}/home.html`);
+            cy.get('body').contains('test 2').should('contain.text', 'test 1test 2test 3');
+
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+            getComponentByRole(Button, 'sbsVisibility').click();
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Start and end date');
+
+            cy.get('[data-sel-content-editor-field="start"]', {timeout: 10000}).should('be.visible');
+
+            // A window that ended in the past (both start and end before "now" by a comfortable margin).
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-sel-content-editor-field="start"] input').type(toPickerDigits(daysFrom(-4)), {delay: 50});
+            cy.get('[data-sel-content-editor-field="end"] input').clear();
+            cy.get('[data-sel-content-editor-field="end"] input').type(toPickerDigits(daysFrom(-2)), {delay: 50});
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+
+            publishAndWait(`/sites/${sitekeyNonI18n}/home`, ['en']);
+
+            // "Now" falls outside [start, end]: the condition no longer matches, content is hidden.
             cy.visit(`/sites/${sitekeyNonI18n}/home.html`);
             cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
         });

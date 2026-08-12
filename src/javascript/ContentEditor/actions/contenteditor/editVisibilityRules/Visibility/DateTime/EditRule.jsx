@@ -21,7 +21,9 @@ export const EditRule = ({rule, isMatchingAllConditions, saveConditions, onCance
     const initialValues = rule.properties
         .filter(prop => !prop.name.startsWith('jcr:') && !prop.name.startsWith('j:'))
         .reduce((acc, prop) => {
-            acc[prop.name] = prop.values === null ? prop.value : prop.values;
+            acc[prop.name] = prop.values === null ?
+                (prop.notZonedDateValue ?? prop.value) :
+                (prop.notZonedDateValues ?? prop.values);
             return acc;
         }, {});
 

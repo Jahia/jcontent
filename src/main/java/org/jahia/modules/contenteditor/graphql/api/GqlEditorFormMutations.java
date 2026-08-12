@@ -31,7 +31,7 @@ import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.PublicationService;
 import org.jahia.modules.contenteditor.api.lock.StaticEditorLockService;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
-import org.jahia.modules.graphql.provider.dxm.node.GqlJcrPropertyInput;
+import org.jahia.modules.graphql.provider.dxm.node.GqlJcrMutationSupport;
 import org.jahia.modules.graphql.provider.dxm.osgi.annotations.GraphQLOsgiService;
 import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
@@ -158,7 +158,7 @@ public class GqlEditorFormMutations {
             if (addedNode.canAddMixin("jmix:conditionPublicationInfo")) {
                 addedNode.addMixin("jmix:conditionPublicationInfo");
             }
-            applyProperties(addedNode, condition);
+            GqlJcrMutationSupport.setProperties(addedNode, condition.getProperties());
         }
     }
 
@@ -169,7 +169,7 @@ public class GqlEditorFormMutations {
         for (VisibilityConditionInput condition : updatedConditions) {
             JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
             if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
-                applyProperties(updatedNode, condition);
+                GqlJcrMutationSupport.setProperties(updatedNode, condition.getProperties());
             }
         }
     }
@@ -182,20 +182,6 @@ public class GqlEditorFormMutations {
             JCRNodeWrapper removedNode = session.getNodeByUUID(conditionUuid);
             if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
                 removedNode.remove();
-            }
-        }
-    }
-
-    /**
-     * Copy the condition input properties onto the given node, using the single value when set,
-     * otherwise the multiple values.
-     */
-    private void applyProperties(JCRNodeWrapper node, VisibilityConditionInput condition) throws RepositoryException {
-        for (GqlJcrPropertyInput property : condition.getProperties()) {
-            if (property.getValue() != null) {
-                node.setProperty(property.getName(), property.getValue());
-            } else if (!CollectionUtils.isEmpty(property.getValues())) {
-                node.setProperty(property.getName(), property.getValues().toArray(new String[0]));
             }
         }
     }

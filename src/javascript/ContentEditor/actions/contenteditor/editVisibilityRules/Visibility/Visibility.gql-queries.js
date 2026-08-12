@@ -20,6 +20,8 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                             name
                             values
                             value
+                            notZonedDateValue
+                            notZonedDateValues
                         }
                     }
                 }
@@ -35,6 +37,8 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                         name
                         values
                         value
+                        notZonedDateValue
+                        notZonedDateValues
                     }
                 }
             }
@@ -59,6 +63,8 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                         name
                         values
                         value
+                        notZonedDateValue
+                        notZonedDateValues
                     }
                     isConditionMatching
                     mixinTypes {
@@ -89,6 +95,8 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                             name
                             value
                             values
+                            notZonedDateValue
+                            notZonedDateValues
                         }
                         isConditionMatching
                     }

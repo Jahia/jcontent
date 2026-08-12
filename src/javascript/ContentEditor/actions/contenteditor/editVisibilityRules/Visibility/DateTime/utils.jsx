@@ -5,16 +5,32 @@ import {isArray} from 'lodash';
 
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
 
+// The only DATE-typed properties across all visibility condition types (definitions.cnd).
+const DATE_PROPERTY_NAMES = ['start', 'end'];
+
 // Transform a rule (a flat map of property name -> value, plus a `type` and optionally a `uuid`)
 // into the InputVisibilityConditionInput shape expected by the saveVisibilityCondition mutation.
 const buildConditionProperties = rule => {
     return Object.keys(rule).reduce((properties, key) => {
         if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
+            const isDateProperty = DATE_PROPERTY_NAMES.includes(key);
+
+            // An empty date can't be parsed as a NOT_ZONED_DATE value on the server —
+            // omit it, same as never having set it.
+            if (isDateProperty && rule[key] === '') {
+                return properties;
+            }
+
             const item = {name: key};
             if (isArray(rule[key])) {
                 item.values = rule[key];
             } else {
                 item.value = rule[key];
+            }
+
+            if (isDateProperty) {
+                item.type = 'DATE';
+                item.option = 'NOT_ZONED_DATE';
             }
 
             properties.push(item);
@@ -132,8 +148,8 @@ export const getConditionLabel = (name, properties, t, uilang = window.contextJs
         case 'jnt:dayOfWeekCondition':
             return t('jcontent:label.contentEditor.visibilityTab.conditions.dayOfWeekCondition', {days: formatDaysOfWeek(properties.find(p => p.name === 'dayOfWeek')?.values, uilang)});
         case 'jnt:startEndDateCondition': {
-            const startDate = properties.find(p => p.name === 'start')?.value;
-            const endDate = properties.find(p => p.name === 'end')?.value;
+            const startDate = properties.find(p => p.name === 'start')?.notZonedDateValue;
+            const endDate = properties.find(p => p.name === 'end')?.notZonedDateValue;
             return t((startDate !== undefined && endDate !== undefined ? 'jcontent:label.contentEditor.visibilityTab.conditions.startEndDateCondition' : getDateLabel(startDate)), {
                 startDate: startDate === undefined ? '' : formatDatetime(startDate, {format: 'long', locale: uilang}),
                 endDate: endDate === undefined ? '' : formatDatetime(endDate, {format: 'long', locale: uilang})

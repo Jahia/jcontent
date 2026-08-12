@@ -28,6 +28,16 @@ FieldValueWatcher.propTypes = {
     onValueChange: PropTypes.func.isRequired
 };
 
+// Every row but the source language's drops the field name/description/badges/3-dots menu, so
+// language code + field + copy icon fit on one compact line instead of repeating the full header
+// on every row.
+const COMPACT_INPUT_CONTEXT = {
+    displayLabels: false,
+    displayBadges: false,
+    displayActions: false,
+    displayDescription: false
+};
+
 export const LanguageFieldRow = React.forwardRef(({field, language, value, isReadOnly, editorContext, isSourceLanguage, sourceLanguageCode, onValueChange, onCopyFromSourceLanguage}, formikRef) => {
     const {t} = useTranslation('jcontent');
     const rowField = useMemo(() => ({...field, readOnly: isReadOnly}), [field, isReadOnly]);
@@ -81,7 +91,7 @@ export const LanguageFieldRow = React.forwardRef(({field, language, value, isRea
                             <ContentEditorConfigContextProvider config={rowConfig}>
                                 <ContentEditorContext.Provider value={rowEditorContext}>
                                     <ContentEditorSectionContextProvider formSections={[]}>
-                                        <FieldContainer field={rowField}/>
+                                        <FieldContainer field={rowField} inputContext={isSourceLanguage ? undefined : COMPACT_INPUT_CONTEXT}/>
                                     </ContentEditorSectionContextProvider>
                                 </ContentEditorContext.Provider>
                             </ContentEditorConfigContextProvider>

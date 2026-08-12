@@ -94,7 +94,8 @@ describe('Field component', () => {
                 displayBadges: true,
                 displayActions: true,
                 displayLabels: true,
-                displayErrors: true
+                displayErrors: true,
+                displayDescription: true
             },
             idInput: 'FieldID'
         };
@@ -300,6 +301,20 @@ describe('Field component', () => {
         defaultProps.field.multiple = false;
 
         defaultProps.field.description = '';
+        const cmp = shallowWithTheme(
+            <Field {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        );
+
+        expect(cmp.debug()).not.toContain('This is a description for this text field.');
+    });
+
+    it('should not display the description label when inputContext.displayDescription is false', () => {
+        defaultProps.input = props => <Text {...props}/>;
+        defaultProps.field.multiple = false;
+        defaultProps.inputContext.displayDescription = false;
+
         const cmp = shallowWithTheme(
             <Field {...defaultProps}/>,
             {},

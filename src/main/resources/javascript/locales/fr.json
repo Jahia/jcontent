@@ -646,7 +646,7 @@
           "editAllLanguages": {
             "name": "Éditer dans toutes les langues",
             "dialogTitle": "{{contentName}} ({{contentType}})",
-            "languageCounter": "{{filled}}/{{total}}",
+            "languageCounter": "{{filled}}/{{total}} langues remplies",
             "fieldSwitcherLabel": "Traduire ce champ :",
             "copyFromSourceLanguage": "Copier la valeur de {{language}}",
             "mandatoryFieldCleared": "Ce champ est obligatoire et ne peut pas être enregistré vide.",

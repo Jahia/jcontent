@@ -102,7 +102,38 @@ describe('buildNewCondition / buildUpdatedCondition', () => {
         expect(buildUpdatedCondition(rule)).toEqual({
             type: 'jnt:startEndDateCondition',
             uuid: 'abc-123',
-            properties: [{name: 'start', value: '2027-01-01T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}]
+            properties: [{name: 'start', value: '2027-01-01T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}],
+            deletedProperties: []
+        });
+    });
+
+    it('deletes a date cleared to an empty string, rather than silently leaving the old value in place', () => {
+        const rule = {type: 'jnt:startEndDateCondition', uuid: 'abc-123', start: '2027-01-01T00:00:00.000', end: ''};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:startEndDateCondition',
+            uuid: 'abc-123',
+            properties: [{name: 'start', value: '2027-01-01T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}],
+            deletedProperties: ['end']
+        });
+    });
+
+    it('deletes a date cleared to null (DatePickerInput\'s own clear path), same as an empty string', () => {
+        const rule = {type: 'jnt:startEndDateCondition', uuid: 'abc-123', start: null, end: '2027-01-02T00:00:00.000'};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:startEndDateCondition',
+            uuid: 'abc-123',
+            properties: [{name: 'end', value: '2027-01-02T00:00:00.000', type: 'DATE', option: 'NOT_ZONED_DATE'}],
+            deletedProperties: ['start']
+        });
+    });
+
+    it('does not ask to delete a non-date property left falsy — only start/end get the delete treatment', () => {
+        const rule = {type: 'jnt:timeOfDayCondition', uuid: 'abc-123', startHour: ''};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:timeOfDayCondition',
+            uuid: 'abc-123',
+            properties: [{name: 'startHour', value: ''}],
+            deletedProperties: []
         });
     });
 });

@@ -15,9 +15,10 @@ const buildConditionProperties = rule => {
         if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
             const isDateProperty = DATE_PROPERTY_NAMES.includes(key);
 
-            // An empty date can't be parsed as a NOT_ZONED_DATE value on the server —
-            // omit it, same as never having set it.
-            if (isDateProperty && rule[key] === '') {
+            // A cleared date arrives as '' (typed then erased) or null (DatePickerInput's own
+            // clear path) — neither can be parsed as a NOT_ZONED_DATE value on the server, and
+            // isn't a value to set at all. The caller routes it to deletedProperties instead.
+            if (isDateProperty && !rule[key]) {
                 return properties;
             }
 
@@ -40,6 +41,11 @@ const buildConditionProperties = rule => {
     }, []);
 };
 
+// A cleared date property has no value left to set — it must be explicitly deleted server-side,
+// or the previously-saved value is silently left in place (the mutation only ever sets the
+// properties it's given, it never removes one that's simply absent from the list).
+const buildDeletedProperties = rule => Object.keys(rule).filter(key => DATE_PROPERTY_NAMES.includes(key) && !rule[key]);
+
 export const buildNewCondition = rule => ({
     type: rule.type,
     properties: buildConditionProperties(rule)
@@ -48,7 +54,8 @@ export const buildNewCondition = rule => ({
 export const buildUpdatedCondition = rule => ({
     type: rule.type,
     uuid: rule.uuid,
-    properties: buildConditionProperties(rule)
+    properties: buildConditionProperties(rule),
+    deletedProperties: buildDeletedProperties(rule)
 });
 
 export const generateUUID = () => {

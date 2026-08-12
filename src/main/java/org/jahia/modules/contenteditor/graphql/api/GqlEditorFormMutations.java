@@ -169,6 +169,7 @@ public class GqlEditorFormMutations {
         for (VisibilityConditionInput condition : updatedConditions) {
             JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
             if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
+                deleteProperties(updatedNode, condition.getDeletedProperties());
                 GqlJcrMutationSupport.setProperties(updatedNode, condition.getProperties());
             }
         }
@@ -182,6 +183,22 @@ public class GqlEditorFormMutations {
             JCRNodeWrapper removedNode = session.getNodeByUUID(conditionUuid);
             if (removedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
                 removedNode.remove();
+            }
+        }
+    }
+
+    /**
+     * Remove the named properties from the given condition node, e.g. a date field that was
+     * cleared — omitting a property from the update's properties list only leaves it unset,
+     * it never removes an existing value.
+     */
+    private void deleteProperties(JCRNodeWrapper node, Collection<String> propertyNames) throws RepositoryException {
+        if (CollectionUtils.isEmpty(propertyNames)) {
+            return;
+        }
+        for (String propertyName : propertyNames) {
+            if (node.hasProperty(propertyName)) {
+                node.getProperty(propertyName).remove();
             }
         }
     }

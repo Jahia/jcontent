@@ -887,6 +887,92 @@ describe('Visibility Screen', () => {
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
         });
 
+        it('Clearing an existing end date on a Start and End Date condition actually removes it, not just hides it', () => {
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Start and end date');
+
+            cy.get('[data-sel-content-editor-field="start"]', {timeout: 10000}).should('be.visible');
+
+            // Save with both a start and an end date set.
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-sel-content-editor-field="start"] input').type('011520270915', {delay: 50}); // 01/15/2027 09:15
+            cy.get('[data-sel-content-editor-field="end"] input').clear();
+            cy.get('[data-sel-content-editor-field="end"] input').type('022020271745', {delay: 50}); // 02/20/2027 17:45
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .should('contain.text', 'January 15, 2027 9:15 AM')
+                .and('contain.text', 'February 20, 2027 5:45 PM');
+
+            // Reopen the condition and clear only the end date.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .within(() => {
+                    cy.get('button:has(svg)').filter(':visible').first().click({force: true});
+                });
+
+            cy.get('[data-sel-content-editor-field="end"] input', {timeout: 10000}).clear();
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+
+            // The label must drop the end date entirely (the "until ..." clause), not just fail
+            // to update it — a stale end date left in place would still show a "until" clause.
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .should('contain.text', 'January 15, 2027 9:15 AM')
+                .and('not.contain.text', 'February 20, 2027')
+                .and('not.contain.text', 'until');
+
+            // Reload from scratch (no client-side cache) and reopen for edit: the end field must
+            // come back empty. Before the fix, the mutation only ever set the properties it was
+            // given and never removed one that was simply absent — so the end date would silently
+            // survive on the node and reappear here even though the label above already looked fixed.
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .within(() => {
+                    cy.get('button:has(svg)').filter(':visible').first().click({force: true});
+                });
+
+            cy.get('[data-sel-content-editor-field="start"] input', {timeout: 10000})
+                .should('have.value', '01/15/2027 09:15');
+            cy.get('[data-sel-content-editor-field="end"] input')
+                .should('not.have.value', '02/20/2027 17:45')
+                .and($input => {
+                    expect(String($input.val())).not.to.contain('2027');
+                });
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Cancel').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+        });
+
         it('Adds Day of Week condition with multiple days and removes one', () => {
             const {today, todayPlus2} = getDayNames();
 

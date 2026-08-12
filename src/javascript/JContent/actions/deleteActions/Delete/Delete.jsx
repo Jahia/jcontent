@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Button, Information, Loader} from '@jahia/moonstone';
+import {Button, Loader} from '@jahia/moonstone';
 import styles from './Delete.scss';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
@@ -14,6 +14,7 @@ import {
     UndeleteMutation
 } from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
 import InfoTable from './InfoTable';
+import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
 import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 import {isPathChildOfAnotherPath, JahiaRenderedModulesUtil} from '../../../JContent.utils';
 import {renderLabel} from './renderLabel';
@@ -42,7 +43,7 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
             <DialogTitle>
                 {t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`)}
                 <Button className={styles.button}
-                        icon={<Information/>}
+                        icon={<SvgInformation/>}
                         variant="ghost"
                         onClick={() => {
                             setInfoOpen(true);

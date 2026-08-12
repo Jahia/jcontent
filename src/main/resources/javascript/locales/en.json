@@ -186,6 +186,8 @@
           "placeholder": "Search on page titles",
           "ariaLabel": "Search pages by name",
           "noResults": "No pages found",
+          "resultsFound": "{{count}} result found",
+          "resultsFound_plural": "{{count}} results found",
           "clear": "Clear search"
         }
       },

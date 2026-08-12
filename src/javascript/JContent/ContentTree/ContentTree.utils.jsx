@@ -28,6 +28,55 @@ function getParentPath(path) {
     return path.substr(0, path.lastIndexOf('/'));
 }
 
+/**
+ * Paths from the given path's parent up to (and including) rootPath, so they can be added to the
+ * tree's openPaths and the ancestor branches get fetched/expanded by useTreeEntries.
+ * @param {string} path the descendant path to walk up from
+ * @param {string} rootPath the tree's root path, walking stops once reached
+ * @returns {string[]} ancestor paths, nearest parent first
+ */
+function getAncestorPaths(path, rootPath) {
+    const ancestors = [];
+    let current = getParentPath(path);
+    while (current && current.length >= rootPath.length) {
+        ancestors.push(current);
+        if (current === rootPath) {
+            break;
+        }
+
+        current = getParentPath(current);
+    }
+
+    return ancestors;
+}
+
+/**
+ * Wraps the first case-insensitive occurrence of `term` within `label` in a highlight span, so only
+ * the matched word is underlined rather than the whole tree row.
+ * @param {string} label the node's display name
+ * @param {string} term the active search term
+ * @returns {string|JSX.Element} the original label, or a fragment with the match wrapped, when found
+ */
+function highlightSearchMatch(label, term) {
+    if (!term) {
+        return label;
+    }
+
+    const matchIndex = label.toLowerCase().indexOf(term.toLowerCase());
+    if (matchIndex === -1) {
+        return label;
+    }
+
+    const matchEnd = matchIndex + term.length;
+    return (
+        <>
+            {label.slice(0, matchIndex)}
+            <span className={styles.searchMatchText}>{label.slice(matchIndex, matchEnd)}</span>
+            {label.slice(matchEnd)}
+        </>
+    );
+}
+
 function findInTree(tree, id) {
     for (let i = 0; i < tree.length; i++) {
         if (tree[i].id === id) {
@@ -41,7 +90,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode, virtualizer, loading, openPaths}) {
+function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps, viewMode, virtualizer, loading, openPaths, searchMatchedPaths = [], searchTerm = ''}) {
     const tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -56,9 +105,11 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
 
         const parentPath = getParentPath(treeEntry.path);
 
+        const isSearchMatch = searchMatchedPaths.includes(treeEntry.path);
+
         const element = {
             id: treeEntry.path,
-            label: treeEntry.node.displayName,
+            label: isSearchMatch ? highlightSearchMatch(treeEntry.node.displayName, searchTerm) : treeEntry.node.displayName,
             hasChildren: treeEntry.hasChildren && treeEntry.openable,
             parent: parentPath,
             isSelectable: treeEntry.selectable,
@@ -106,4 +157,4 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
     return tree;
 }
 
-export {convertPathsToTree, getParentPath, findInTree};
+export {convertPathsToTree, getParentPath, getAncestorPaths, findInTree};

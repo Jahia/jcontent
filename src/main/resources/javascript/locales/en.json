@@ -181,7 +181,13 @@
       "tree": {
         "hide": "Hide Tree",
         "show": "Show Tree",
-        "title": "Tree"
+        "title": "Tree",
+        "search": {
+          "placeholder": "Search on page titles",
+          "ariaLabel": "Search pages by name",
+          "noResults": "No pages found",
+          "clear": "Clear search"
+        }
       },
       "browsePages": "Browse Pages",
       "refresh": "Refresh",

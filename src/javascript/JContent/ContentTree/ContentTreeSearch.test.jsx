@@ -5,6 +5,7 @@ import {dsGenericTheme} from '@jahia/design-system-kit';
 import {useLazyQuery} from '@apollo/client';
 import {useDispatch} from 'react-redux';
 import {ContentTreeSearch} from './ContentTreeSearch';
+import {buildTitleSearchConstraint} from './ContentTreeSearch.utils';
 import {cmOpenPaths} from '~/JContent/redux/JContent.redux';
 
 jest.mock('@apollo/client', () => ({
@@ -22,7 +23,16 @@ describe('ContentTreeSearch', () => {
     let defaultProps;
 
     beforeEach(() => {
-        search = jest.fn().mockResolvedValue({data: {jcr: {nodesByCriteria: {nodes: []}}}});
+        search = jest.fn().mockResolvedValue({
+            data: {
+                jcr: {
+                    pages: {nodes: []},
+                    menuTitles: {nodes: []},
+                    internalLinks: {nodes: []},
+                    externalLinks: {nodes: []}
+                }
+            }
+        });
         dispatch = jest.fn();
         onMatchedPaths = jest.fn();
 
@@ -56,8 +66,7 @@ describe('ContentTreeSearch', () => {
         expect(search).toHaveBeenCalledWith({
             variables: {
                 rootPath: '/sites/testsite',
-                nodeType: 'jnt:page',
-                searchTerm: '%about%',
+                nodeConstraint: buildTitleSearchConstraint('about'),
                 language: 'en',
                 limit: 50
             }
@@ -78,7 +87,7 @@ describe('ContentTreeSearch', () => {
         cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
 
         expect(search).toHaveBeenCalledWith({
-            variables: expect.objectContaining({searchTerm: '%about%'})
+            variables: expect.objectContaining({nodeConstraint: buildTitleSearchConstraint('About')})
         });
     });
 
@@ -110,12 +119,15 @@ describe('ContentTreeSearch', () => {
         search = jest.fn().mockResolvedValue({
             data: {
                 jcr: {
-                    nodesByCriteria: {
+                    pages: {
                         nodes: [
                             {uuid: '1', path: '/sites/testsite/home/about'},
                             {uuid: '2', path: '/sites/testsite/home/contact'}
                         ]
-                    }
+                    },
+                    menuTitles: {nodes: []},
+                    internalLinks: {nodes: []},
+                    externalLinks: {nodes: []}
                 }
             }
         });
@@ -129,12 +141,69 @@ describe('ContentTreeSearch', () => {
         expect(onMatchedPaths).toHaveBeenCalledWith(['/sites/testsite/home/about', '/sites/testsite/home/contact'], 'a');
     });
 
-    it('should show a "no results" message when the search returns no matches', async () => {
+    it('should merge matches from pages, menu titles, internal links and external links', async () => {
+        search = jest.fn().mockResolvedValue({
+            data: {
+                jcr: {
+                    pages: {nodes: [{uuid: '1', path: '/sites/testsite/home/about'}]},
+                    menuTitles: {nodes: [{uuid: '2', path: '/sites/testsite/home/menu'}]},
+                    internalLinks: {nodes: [{uuid: '3', path: '/sites/testsite/home/internal-link'}]},
+                    externalLinks: {nodes: [{uuid: '4', path: '/sites/testsite/home/external-link'}]}
+                }
+            }
+        });
+        useLazyQuery.mockReturnValue([search, {loading: false}]);
+
+        const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
+        typeValue(cmp, 'a');
+        await cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
+
+        expect(onMatchedPaths).toHaveBeenCalledWith([
+            '/sites/testsite/home/about',
+            '/sites/testsite/home/menu',
+            '/sites/testsite/home/internal-link',
+            '/sites/testsite/home/external-link'
+        ], 'a');
+    });
+
+    it('should announce a "no results" message when the search returns no matches', async () => {
         const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
         typeValue(cmp, 'nomatch');
         await cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
         cmp.update();
 
-        expect(cmp.find('[data-sel-role="content-tree-search-no-results"]').length).toBe(1);
+        const resultCount = cmp.find('[data-sel-role="content-tree-search-result-count"]');
+        expect(resultCount.props()['aria-live']).toBe('polite');
+        expect(resultCount.text()).toContain('jcontent:label.contentManager.tree.search.noResults');
+    });
+
+    it('should announce the number of results when the search returns matches', async () => {
+        search = jest.fn().mockResolvedValue({
+            data: {
+                jcr: {
+                    pages: {nodes: [{uuid: '1', path: '/sites/testsite/home/about'}]},
+                    menuTitles: {nodes: []},
+                    internalLinks: {nodes: []},
+                    externalLinks: {nodes: []}
+                }
+            }
+        });
+        useLazyQuery.mockReturnValue([search, {loading: false}]);
+
+        const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
+        typeValue(cmp, 'about');
+        await cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
+        cmp.update();
+
+        const resultCount = cmp.find('[data-sel-role="content-tree-search-result-count"]');
+        expect(resultCount.text()).toContain('jcontent:label.contentManager.tree.search.resultsFound');
+    });
+
+    it('should render an empty, but always-mounted result-count region before any search runs', () => {
+        const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
+
+        const resultCount = cmp.find('[data-sel-role="content-tree-search-result-count"]');
+        expect(resultCount.length).toBe(1);
+        expect(resultCount.text()).toBe('');
     });
 });

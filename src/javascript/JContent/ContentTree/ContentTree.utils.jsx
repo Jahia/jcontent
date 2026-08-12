@@ -6,6 +6,7 @@ import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
 import {DefaultEntry, Link, Section, Tag} from '@jahia/moonstone';
+import {stripAccents} from './ContentTreeSearch.utils';
 
 export function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {
@@ -62,7 +63,11 @@ function highlightSearchMatch(label, term) {
         return label;
     }
 
-    const matchIndex = label.toLowerCase().indexOf(term.toLowerCase());
+    // Compare accent-stripped forms - an unaccented search term (e.g. "cafe") matches an accented
+    // label (e.g. "Café") on the backend, and stripping preserves character offsets 1-for-1 (each
+    // accented character decomposes to its base letter plus a combining mark that gets removed, so
+    // the base letter still lines up with the same position in the original, unstripped label).
+    const matchIndex = stripAccents(label.toLowerCase()).indexOf(stripAccents(term.toLowerCase()));
     if (matchIndex === -1) {
         return label;
     }

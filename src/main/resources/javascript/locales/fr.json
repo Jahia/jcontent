@@ -182,6 +182,8 @@
           "placeholder": "Rechercher par titre de page",
           "ariaLabel": "Rechercher des pages par nom",
           "noResults": "Aucune page trouvée",
+          "resultsFound": "{{count}} résultat trouvé",
+          "resultsFound_plural": "{{count}} résultats trouvés",
           "clear": "Effacer la recherche"
         }
       },

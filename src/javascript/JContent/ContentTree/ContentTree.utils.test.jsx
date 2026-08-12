@@ -122,6 +122,28 @@ describe('convertPathsToTree', () => {
         expect(nonMatch.label).toBe('Home');
     });
 
+    it('highlights an accented label when searched with its unaccented spelling', () => {
+        const accentedEntries = [...entries, {
+            path: '/sites/testsite/home/cafe',
+            node: {
+                primaryNodeType: {
+                    name: 'jnt:page'
+                },
+                displayName: 'Café'
+            },
+            hasChildren: false,
+            virtualRow: {
+                start: 0
+            }
+        }];
+
+        const withMatches = convertPathsToTree({treeEntries: accentedEntries, searchMatchedPaths: ['/sites/testsite/home/cafe'], searchTerm: 'cafe'});
+        const match = findInTree(withMatches, '/sites/testsite/home/cafe');
+
+        expect(React.isValidElement(match.label)).toBe(true);
+        expect(renderToStaticMarkup(match.label)).toBe('<span class="searchMatchText">Café</span>');
+    });
+
     it('leaves the label as plain text when there is no active search', () => {
         const withoutMatches = convertPathsToTree({treeEntries: entries});
         const node = findInTree(withoutMatches, '/sites/testsite/home/about');

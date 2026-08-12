@@ -8,21 +8,24 @@ import {useTranslation} from 'react-i18next';
 import {cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import {getAncestorPaths} from './ContentTree.utils';
 import {SearchTreeNodesQuery} from './ContentTreeSearch.gql-queries';
+import {buildTitleSearchConstraint} from './ContentTreeSearch.utils';
 import styles from './ContentTreeSearch.scss';
 
 const SEARCH_RESULTS_LIMIT = 50;
 
-export const ContentTreeSearch = ({rootPath, language, searchNodeType, onMatchedPaths}) => {
+export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState('');
-    const [showNoResults, setShowNoResults] = useState(false);
+    // Null before any search has run (nothing to announce yet); a number once one has, so the
+    // aria-live region below always has something meaningful to read out, including zero.
+    const [resultCount, setResultCount] = useState(null);
     const [search, {loading}] = useLazyQuery(SearchTreeNodesQuery, {fetchPolicy: 'network-only'});
 
     const triggerSearch = useCallback(() => {
         const term = inputValue.trim();
         if (!term) {
-            setShowNoResults(false);
+            setResultCount(null);
             onMatchedPaths([], '');
             return;
         }
@@ -30,13 +33,18 @@ export const ContentTreeSearch = ({rootPath, language, searchNodeType, onMatched
         search({
             variables: {
                 rootPath,
-                nodeType: searchNodeType,
-                searchTerm: `%${term.toLowerCase()}%`,
+                nodeConstraint: buildTitleSearchConstraint(term),
                 language,
                 limit: SEARCH_RESULTS_LIMIT
             }
         }).then(result => {
-            const matches = result?.data?.jcr?.nodesByCriteria?.nodes || [];
+            const criteriaResults = result?.data?.jcr || {};
+            const matches = [
+                ...(criteriaResults.pages?.nodes || []),
+                ...(criteriaResults.menuTitles?.nodes || []),
+                ...(criteriaResults.internalLinks?.nodes || []),
+                ...(criteriaResults.externalLinks?.nodes || [])
+            ];
             const ancestorPaths = new Set();
             matches.forEach(node => {
                 getAncestorPaths(node.path, rootPath).forEach(ancestorPath => ancestorPaths.add(ancestorPath));
@@ -47,13 +55,13 @@ export const ContentTreeSearch = ({rootPath, language, searchNodeType, onMatched
             }
 
             onMatchedPaths(matches.map(node => node.path), term);
-            setShowNoResults(matches.length === 0);
+            setResultCount(matches.length);
         });
-    }, [inputValue, rootPath, searchNodeType, language, search, dispatch, onMatchedPaths]);
+    }, [inputValue, rootPath, language, search, dispatch, onMatchedPaths]);
 
     const clearSearch = useCallback(() => {
         setInputValue('');
-        setShowNoResults(false);
+        setResultCount(null);
         onMatchedPaths([], '');
     }, [onMatchedPaths]);
 
@@ -93,15 +101,20 @@ export const ContentTreeSearch = ({rootPath, language, searchNodeType, onMatched
                     onClick={triggerSearch}
                 />
             </div>
-            {showNoResults && (
-                <Typography
-                    className={styles.noResults}
-                    variant="caption"
-                    data-sel-role="content-tree-search-no-results"
-                >
-                    {t('jcontent:label.contentManager.tree.search.noResults')}
-                </Typography>
-            )}
+            {/* Always mounted (even with empty text) so screen readers reliably announce updates -
+                aria-live regions are meant to persist in the DOM, not be added/removed per search. */}
+            <Typography
+                className={styles.searchStatusMessage}
+                variant="caption"
+                aria-live="polite"
+                data-sel-role="content-tree-search-result-count"
+            >
+                {resultCount === null ?
+                    '' :
+                    (resultCount === 0 ?
+                        t('jcontent:label.contentManager.tree.search.noResults') :
+                        t('jcontent:label.contentManager.tree.search.resultsFound', {count: resultCount}))}
+            </Typography>
         </div>
     );
 };
@@ -109,12 +122,7 @@ export const ContentTreeSearch = ({rootPath, language, searchNodeType, onMatched
 ContentTreeSearch.propTypes = {
     rootPath: PropTypes.string.isRequired,
     language: PropTypes.string.isRequired,
-    onMatchedPaths: PropTypes.func.isRequired,
-    searchNodeType: PropTypes.string
-};
-
-ContentTreeSearch.defaultProps = {
-    searchNodeType: 'jnt:page'
+    onMatchedPaths: PropTypes.func.isRequired
 };
 
 export default ContentTreeSearch;

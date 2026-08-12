@@ -655,6 +655,7 @@
             "languageCounter": "{{filled}}/{{total}}",
             "fieldSwitcherLabel": "Translate this field:",
             "copyFromSourceLanguage": "Copy value from {{language}}",
+            "mandatoryFieldCleared": "This field is mandatory and cannot be saved empty.",
             "btnCancel": "Cancel",
             "btnSave": "Save"
           },

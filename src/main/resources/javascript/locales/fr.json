@@ -649,6 +649,7 @@
             "languageCounter": "{{filled}}/{{total}}",
             "fieldSwitcherLabel": "Traduire ce champ :",
             "copyFromSourceLanguage": "Copier la valeur de {{language}}",
+            "mandatoryFieldCleared": "Ce champ est obligatoire et ne peut pas être enregistré vide.",
             "btnCancel": "Annuler",
             "btnSave": "Enregistrer"
           },

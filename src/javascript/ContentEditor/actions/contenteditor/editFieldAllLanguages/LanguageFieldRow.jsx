@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Formik, useFormikContext} from 'formik';
 import {useTranslation} from 'react-i18next';
@@ -8,6 +8,7 @@ import {ContentEditorConfigContextProvider, ContentEditorContext, ContentEditorS
 import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {CopyFromSourceLanguageIcon} from './CopyFromSourceLanguageIcon';
+import {hasValue} from './editFieldAllLanguages.utils';
 import styles from './EditFieldAllLanguagesModal.scss';
 
 // Reports this row's live value up to the modal (for the languages-filled counter) as it changes,
@@ -30,6 +31,15 @@ FieldValueWatcher.propTypes = {
 export const LanguageFieldRow = React.forwardRef(({field, language, value, isReadOnly, editorContext, isSourceLanguage, sourceLanguageCode, onValueChange, onCopyFromSourceLanguage}, formikRef) => {
     const {t} = useTranslation('jcontent');
     const rowField = useMemo(() => ({...field, readOnly: isReadOnly}), [field, isReadOnly]);
+
+    // A mandatory field that already had a value can't be saved back to empty (server-side
+    // constraint) - warn as soon as the user clears it here, instead of letting them hit Save
+    // and get a generic "content cannot be saved" error.
+    const [showMandatoryClearedWarning, setShowMandatoryClearedWarning] = useState(false);
+    const handleValueChange = useCallback(currentValue => {
+        onValueChange(currentValue);
+        setShowMandatoryClearedWarning(field.mandatory && hasValue(field, value) && !hasValue(field, currentValue));
+    }, [field, value, onValueChange]);
 
     const rowConfig = useMemo(() => ({
         lang: language.language,
@@ -57,9 +67,17 @@ export const LanguageFieldRow = React.forwardRef(({field, language, value, isRea
             </div>
             <div className={styles.languageFieldRow}>
                 <div className={styles.languageField}>
+                    {showMandatoryClearedWarning && (
+                        <Typography
+                            className={styles.mandatoryClearedWarning}
+                            data-sel-role={`edit-all-languages-mandatory-warning-${language.language}`}
+                        >
+                            {t('jcontent:label.contentEditor.edit.action.editAllLanguages.mandatoryFieldCleared')}
+                        </Typography>
+                    )}
                     <Formik innerRef={formikRef} initialValues={{[field.name]: value}} onSubmit={() => {}}>
                         <>
-                            <FieldValueWatcher fieldName={field.name} onValueChange={onValueChange}/>
+                            <FieldValueWatcher fieldName={field.name} onValueChange={handleValueChange}/>
                             <ContentEditorConfigContextProvider config={rowConfig}>
                                 <ContentEditorContext.Provider value={rowEditorContext}>
                                     <ContentEditorSectionContextProvider formSections={[]}>

@@ -177,7 +177,13 @@
       "tree": {
         "hide": "Navigation aus",
         "show": "Navigation ein",
-        "title": "Navigationsbaum"
+        "title": "Navigationsbaum",
+        "search": {
+          "placeholder": "Nach Seitentiteln suchen",
+          "ariaLabel": "Seiten nach Namen suchen",
+          "noResults": "Keine Seiten gefunden",
+          "clear": "Suche zurücksetzen"
+        }
       },
       "browsePages": "Seiten durchsuchen",
       "refresh": "Aktualisieren",

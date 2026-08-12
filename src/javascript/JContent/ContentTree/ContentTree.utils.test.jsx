@@ -1,4 +1,6 @@
-import {convertPathsToTree, findInTree, getParentPath} from './ContentTree.utils';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {convertPathsToTree, findInTree, getAncestorPaths, getParentPath} from './ContentTree.utils';
 
 describe('getParentPath', () => {
     it('should return parent path', () => {
@@ -6,6 +8,24 @@ describe('getParentPath', () => {
         expect(getParentPath('/sites/testsite/home/about')).toEqual('/sites/testsite/home');
         expect(getParentPath('/sites/testsite')).toEqual('/sites');
         expect(getParentPath('/a/b/c/d')).toEqual('/a/b/c');
+    });
+});
+
+describe('getAncestorPaths', () => {
+    it('should return every ancestor up to and including rootPath', () => {
+        expect(getAncestorPaths('/sites/testsite/home/about/history', '/sites/testsite')).toEqual([
+            '/sites/testsite/home/about',
+            '/sites/testsite/home',
+            '/sites/testsite'
+        ]);
+    });
+
+    it('should return only rootPath for a direct child of the root', () => {
+        expect(getAncestorPaths('/sites/testsite/home', '/sites/testsite')).toEqual(['/sites/testsite']);
+    });
+
+    it('should return an empty array when the path is the root itself', () => {
+        expect(getAncestorPaths('/sites/testsite', '/sites/testsite')).toEqual([]);
     });
 });
 
@@ -91,4 +111,21 @@ describe('convertPathsToTree', () => {
     expect(tree[0].children[0].id).toEqual('/sites/testsite/home');
     expect(tree[0].children[0].children[0].id).toEqual('/sites/testsite/home/about');
     expect(tree[0].children[0].children[0].children[0].id).toEqual('/sites/testsite/home/about/history');
+
+    it('wraps only the matched substring of a matched entry\'s label, others untouched', () => {
+        const withMatches = convertPathsToTree({treeEntries: entries, searchMatchedPaths: ['/sites/testsite/home/about'], searchTerm: 'bo'});
+        const match = findInTree(withMatches, '/sites/testsite/home/about');
+        const nonMatch = findInTree(withMatches, '/sites/testsite/home');
+
+        expect(React.isValidElement(match.label)).toBe(true);
+        expect(renderToStaticMarkup(match.label)).toBe('A<span class="searchMatchText">bo</span>ut');
+        expect(nonMatch.label).toBe('Home');
+    });
+
+    it('leaves the label as plain text when there is no active search', () => {
+        const withoutMatches = convertPathsToTree({treeEntries: entries});
+        const node = findInTree(withoutMatches, '/sites/testsite/home/about');
+
+        expect(node.className).not.toMatch(/searchMatch/);
+    });
 });

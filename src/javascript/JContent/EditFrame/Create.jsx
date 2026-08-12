@@ -66,18 +66,15 @@ export const getElemAttributes = ({element, parent}) => {
     // otherwise it breaks create button for specific child nodes.
     const isInsertionPoint = element.getAttribute('type') !== 'placeholder';
 
-    // For an insertion point the element is the existing child the point sits above, so its name is the
-    // node to insert before (used to reorder whatever gets created/pasted into that position).
-    const nodeName = element.getAttribute('path')?.split('/').pop();
-
     // This means this button is inserted as an extra with no underlying placeholder in place. So it makes no sense
     // to make any conclusions about nodetypes or path. This information is passed in as a prop instead.
     if (isInsertionPoint) {
-        return {nodeName};
+        return {};
     }
 
     const isMultipleChildPlaceholder = element.getAttribute('path') === '*';
     const nodePath = (isMultipleChildPlaceholder) ? null : element.getAttribute('path');
+    const nodeName = element.getAttribute('path').split('/').pop();
 
     // Nodetypes should not be undefined here because if nothing is found nothing should be used
     let nodeTypes = [];
@@ -102,10 +99,7 @@ const useReorderNodes = ({parentPath}) => {
         }
 
         names = names.filter(Boolean);
-        if (beforeNodeName) {
-            names.push(beforeNodeName);
-        }
-
+        names.push(beforeNodeName);
         console.debug(`Reordering node ${names.join(',')}`);
         client.mutate({
             variables: {

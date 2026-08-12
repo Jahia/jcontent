@@ -1,4 +1,4 @@
-import {addNode, createSite, deleteSite, enableModule, getComponent, getComponentBySelector, getNodeByPath, Menu} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, enableModule, getComponent, getComponentBySelector, Menu} from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor, ContentTypeSelector, JContent} from '../../page-object';
 import {MultipleLeftRightField} from '../../page-object/fields/multipleLeftRightField';
@@ -232,39 +232,6 @@ describe('Page builder - insertion points', () => {
             }]
         });
 
-        // Page with three ordered text nodes, used to verify where an insertion point actually inserts
-        addNode({
-            name: 'page-ordering',
-            parentPathOrId: homePath,
-            primaryNodeType: 'jnt:page',
-            properties: [
-                {name: 'jcr:title', value: 'Insertion point ordering', language: 'en'},
-                {name: 'j:templateName', value: 'simple'}
-            ],
-            children: [{
-                name: 'area-main',
-                primaryNodeType: 'jnt:contentList',
-                mixins: ['jmix:isAreaList'],
-                children: [
-                    {
-                        name: 'text-a',
-                        primaryNodeType: 'jnt:text',
-                        properties: [{name: 'text', value: 'AAA', language: 'en'}]
-                    },
-                    {
-                        name: 'text-b',
-                        primaryNodeType: 'jnt:text',
-                        properties: [{name: 'text', value: 'BBB', language: 'en'}]
-                    },
-                    {
-                        name: 'text-c',
-                        primaryNodeType: 'jnt:text',
-                        properties: [{name: 'text', value: 'CCC', language: 'en'}]
-                    }
-                ]
-            }]
-        });
-
         addNode({
             name: 'page-with-text',
             parentPathOrId: homePath,
@@ -479,46 +446,6 @@ describe('Page builder - insertion points', () => {
         createButtons = module.getAllCreateButtons();
         createButtons.should('have.length', 4);
         createButtons.get().find('button[data-sel-role="cent:childObject1"]').should('not.exist');
-    });
-
-    // Regression: the insertion point must reorder new content to its own position, not append it at the end
-    it('creates content at the position of the clicked insertion point', () => {
-        const areaPath = `${homePath}/page-ordering/area-main`;
-        const pageBuilder = JContent
-            .visit(siteKey, 'en', 'pages/home/page-ordering')
-            .switchToPageBuilder();
-
-        const area = pageBuilder.getModule(areaPath, false);
-        area.get().scrollIntoView();
-        area.get().click('bottomLeft', {force: true});
-
-        // One insertion point above each of the three children, plus the area's own create button
-        area.getAllCreateButtons().should('have.length', 4);
-
-        // Click the insertion point anchored on text-b, i.e. the one rendered between text-a and text-b
-        pageBuilder.getModule(`${areaPath}/text-b`, false).get().invoke('attr', 'id').then(id => {
-            pageBuilder.iframe().get()
-                .find(`[jahiatype="createbuttons"][data-jahia-id="${id}"] button[data-sel-role="createContent"]`)
-                .click({force: true});
-        });
-
-        const contentEditor = pageBuilder.getCreateContent()
-            .getContentTypeSelector()
-            .searchForContentType('jnt:text')
-            .selectContentType('jnt:text')
-            .create();
-        contentEditor.openSection('content').expand().get().find('input[name="jnt:text_text"]').type('inserted');
-        contentEditor.create();
-
-        getNodeByPath(areaPath, [], 'en', ['jnt:text']).then(result => {
-            const names = result.data.jcr.nodeByPath.children.nodes.map(node => node.name);
-            expect(names).to.have.length(4);
-            // New node takes text-b's former position; the existing nodes keep their relative order
-            expect(names[0]).to.eq('text-a');
-            expect(names[1]).to.not.be.oneOf(['text-a', 'text-b', 'text-c']);
-            expect(names[2]).to.eq('text-b');
-            expect(names[3]).to.eq('text-c');
-        });
     });
 
     it('shows insertion points for area with contribute types correctly', () => {

@@ -68,7 +68,7 @@ jobs:
           yarn build
 
           echo; echo "Incrementing version for release.."
-          npm version prerelease --preid=tests
+          yarn version --prerelease --preid=tests
           git verify-commit $( git rev-parse HEAD )
           git push --follow-tags 
 

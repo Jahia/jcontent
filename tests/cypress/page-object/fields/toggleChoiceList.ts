@@ -9,7 +9,7 @@ export class ToggleChoiceList extends Field {
     labelSel = 'label';
     inputSel = 'input';
 
-    assertLabelVisible(label: string) {
+    assertVisible(label: string) {
         return this.get().scrollIntoView()
             .contains(this.labelSel, label).should('be.visible');
     }

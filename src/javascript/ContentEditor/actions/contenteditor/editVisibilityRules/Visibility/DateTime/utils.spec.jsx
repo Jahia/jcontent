@@ -1,4 +1,4 @@
-import {buildNewCondition, buildUpdatedCondition, getConditionLabel} from './utils';
+import {buildNewCondition, buildUpdatedCondition, getConditionLabel, isSaveDisabled} from './utils';
 
 // Mock the workspace date-formatter so we can assert the locale is threaded through and control output.
 jest.mock('date-formatter', () => {
@@ -135,5 +135,36 @@ describe('buildNewCondition / buildUpdatedCondition', () => {
             properties: [{name: 'startHour', value: ''}],
             deletedProperties: []
         });
+    });
+});
+
+describe('isSaveDisabled', () => {
+    it('disables saving a Start and End Date condition when neither start nor end is set', () => {
+        expect(isSaveDisabled('jnt:startEndDateCondition', {})).toBe(true);
+        expect(isSaveDisabled('jnt:startEndDateCondition', {start: '', end: ''})).toBe(true);
+        expect(isSaveDisabled('jnt:startEndDateCondition', {start: null, end: null})).toBe(true);
+    });
+
+    it('allows saving a Start and End Date condition with only one of start/end set', () => {
+        expect(isSaveDisabled('jnt:startEndDateCondition', {start: '2027-01-01T00:00:00.000', end: ''})).toBe(false);
+        expect(isSaveDisabled('jnt:startEndDateCondition', {start: '', end: '2027-01-02T00:00:00.000'})).toBe(false);
+    });
+
+    it('allows saving a Start and End Date condition with both start and end set', () => {
+        expect(isSaveDisabled('jnt:startEndDateCondition', {start: '2027-01-01T00:00:00.000', end: '2027-01-02T00:00:00.000'})).toBe(false);
+    });
+
+    it('disables saving a Day of Week condition when no day is selected', () => {
+        expect(isSaveDisabled('jnt:dayOfWeekCondition', {dayOfWeek: []})).toBe(true);
+        expect(isSaveDisabled('jnt:dayOfWeekCondition', {})).toBe(true);
+    });
+
+    it('allows saving a Day of Week condition with at least one day selected', () => {
+        expect(isSaveDisabled('jnt:dayOfWeekCondition', {dayOfWeek: ['monday']})).toBe(false);
+        expect(isSaveDisabled('jnt:dayOfWeekCondition', {dayOfWeek: ['monday', 'tuesday']})).toBe(false);
+    });
+
+    it('never disables saving other condition types, regardless of their values', () => {
+        expect(isSaveDisabled('jnt:timeOfDayCondition', {})).toBe(false);
     });
 });

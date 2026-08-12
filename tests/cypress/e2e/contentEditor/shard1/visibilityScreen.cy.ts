@@ -761,6 +761,111 @@ describe('Visibility Screen', () => {
             cy.logout();
         });
 
+        it('Disables Save for a new Start and End Date condition while both dates are blank', () => {
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Start and end date');
+
+            cy.get('[data-sel-content-editor-field="start"]', {timeout: 10000}).should('be.visible');
+
+            // Neither date is set yet — a condition with no start and no end is a no-op, so
+            // Save must be disabled rather than let the editor create a rule that does nothing.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            // Filling in just one of the two (still a legitimate, open-ended condition) re-enables it.
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-sel-content-editor-field="start"] input').type('010120270000', {delay: 50});
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('not.be.disabled');
+            });
+
+            // Clearing it back to blank disables Save again.
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            // Setting the end date instead is equally sufficient to re-enable Save.
+            cy.get('[data-sel-content-editor-field="end"] input').type('020120271200', {delay: 50});
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('not.be.disabled');
+            });
+
+            // Leave without saving — this test only verifies the disabled state, not a save.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+        });
+
+        it('Disables Save when editing a Start and End Date condition down to both dates blank', () => {
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Start and end date');
+
+            cy.get('[data-sel-content-editor-field="start"]', {timeout: 10000}).should('be.visible');
+            cy.get('[data-sel-content-editor-field="start"] input').clear();
+            cy.get('[data-sel-content-editor-field="start"] input').type('011520270915', {delay: 50}); // 01/15/2027 09:15
+            cy.get('[data-sel-content-editor-field="end"] input').clear();
+            cy.get('[data-sel-content-editor-field="end"] input').type('022020271745', {delay: 50}); // 02/20/2027 17:45
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+
+            // Reopen the saved condition and clear both dates.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .within(() => {
+                    cy.get('button:has(svg)').filter(':visible').first().click({force: true});
+                });
+
+            cy.get('[data-sel-content-editor-field="start"] input', {timeout: 10000}).clear();
+            cy.get('[data-sel-content-editor-field="end"] input').clear();
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            // Leave without saving — the previously-saved condition must be left untouched.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Cancel').click();
+            });
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .should('contain.text', 'January 15, 2027 9:15 AM')
+                .and('contain.text', 'February 20, 2027 5:45 PM');
+
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+        });
+
         it('Adds a Start and End Date condition leaving end date empty', () => {
             jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
             jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
@@ -967,6 +1072,123 @@ describe('Visibility Screen', () => {
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
                 cy.contains('button', 'Cancel').click();
             });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+        });
+
+        it('Disables Save for a new Day of Week condition while no day is selected', () => {
+            const {today} = getDayNames();
+
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Day of the week');
+
+            cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
+                .as('dayField')
+                .should('be.visible');
+
+            // No day selected yet — a condition that matches no day of the week is a no-op, so
+            // Save must be disabled rather than let the editor create a rule that does nothing.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            // Selecting a single day re-enables Save.
+            cy.get('@dayField').find('[role="listbox"]').click();
+            cy.get('@dayField').find('menu').should('be.visible').contains(today).click();
+            cy.get('[data-cm-role="visibilityScreen"]').click('top');
+            cy.get('@dayField').find('[role="listbox"]').should('contain', today);
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('not.be.disabled');
+            });
+
+            // Deselecting it back down to zero disables Save again.
+            cy.get('@dayField').find('[role="listbox"]').click();
+            cy.get('@dayField').find('menu').should('be.visible').contains(today).click();
+            cy.get('[data-cm-role="visibilityScreen"]').click('top');
+            cy.get('@dayField').find('[role="listbox"]').should('not.contain', today);
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            // Leave without saving — this test only verifies the disabled state, not a save.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
+                cy.contains('button', 'Close').click();
+            });
+            cy.get('[data-sel-role="edit-visibility-rules-dialog"]').should('not.exist');
+        });
+
+        it('Disables Save when editing a Day of Week condition down to no days selected', () => {
+            const {today} = getDayNames();
+
+            jcontent = JContent.visit(sitekeyNonI18n, 'en', 'pages/home');
+            jcontent.switchToListMode().getTable().getRowByName('test-content1').contextMenu().select('Edit');
+
+            getComponentByRole(Button, 'sbsVisibility').click();
+            getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Add a condition').click();
+            });
+
+            const conditionTypeDropdown = getComponentByRole(Dropdown, 'condition-type');
+            conditionTypeDropdown.select('Day of the week');
+
+            cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
+                .as('dayField')
+                .should('be.visible');
+
+            cy.get('@dayField').find('[role="listbox"]').click();
+            cy.get('@dayField').find('menu').should('be.visible').contains(today).click();
+            cy.get('[data-cm-role="visibilityScreen"]').click('top');
+            cy.get('@dayField').find('[role="listbox"]').should('contain', today);
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').click();
+            });
+            cy.get('[data-sel-role="visibility-rule-table"]', {timeout: 10000}).should('be.visible');
+
+            // Reopen the saved condition and deselect its only day.
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .within(() => {
+                    cy.get('button:has(svg)').filter(':visible').first().click({force: true});
+                });
+
+            cy.get('[data-sel-content-editor-field="dayOfWeek"]', {timeout: 10000})
+                .as('editDayField')
+                .should('be.visible');
+            cy.get('@editDayField').find('[role="listbox"]').click();
+            cy.get('@editDayField').find('menu').should('be.visible').contains(today).click();
+            cy.get('[data-cm-role="visibilityScreen"]').click('top');
+            cy.get('@editDayField').find('[role="listbox"]').should('not.contain', today);
+
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            // Leave without saving — the previously-saved condition must be left untouched.
+            cy.get('[data-cm-role="visibilityScreen"]').within(() => {
+                cy.contains('button', 'Cancel').click();
+            });
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr')
+                .first()
+                .should('contain.text', today);
+
             cy.get('[data-sel-role="edit-visibility-rules-dialog"]').within(() => {
                 cy.contains('button', 'Close').click();
             });

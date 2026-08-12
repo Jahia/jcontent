@@ -6,14 +6,14 @@ import {isArray} from 'lodash';
 export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
 
 // The only DATE-typed properties across all visibility condition types (definitions.cnd).
-const DATE_PROPERTY_NAMES = ['start', 'end'];
+const DATE_PROPERTY_NAMES = new Set(['start', 'end']);
 
 // Transform a rule (a flat map of property name -> value, plus a `type` and optionally a `uuid`)
 // into the InputVisibilityConditionInput shape expected by the saveVisibilityCondition mutation.
 const buildConditionProperties = rule => {
     return Object.keys(rule).reduce((properties, key) => {
         if (key !== 'type' && key !== 'uuid' && key !== 'username' && key !== 'timestamp') {
-            const isDateProperty = DATE_PROPERTY_NAMES.includes(key);
+            const isDateProperty = DATE_PROPERTY_NAMES.has(key);
 
             // A cleared date arrives as '' (typed then erased) or null (DatePickerInput's own
             // clear path) — neither can be parsed as a NOT_ZONED_DATE value on the server, and
@@ -44,7 +44,23 @@ const buildConditionProperties = rule => {
 // A cleared date property has no value left to set — it must be explicitly deleted server-side,
 // or the previously-saved value is silently left in place (the mutation only ever sets the
 // properties it's given, it never removes one that's simply absent from the list).
-const buildDeletedProperties = rule => Object.keys(rule).filter(key => DATE_PROPERTY_NAMES.includes(key) && !rule[key]);
+const buildDeletedProperties = rule => Object.keys(rule).filter(key => DATE_PROPERTY_NAMES.has(key) && !rule[key]);
+
+// A jnt:startEndDateCondition with neither start nor end set, or a jnt:dayOfWeekCondition with
+// no day selected, is a no-op condition — saving it can only confuse the editor who will see a
+// rule that visibly does nothing. For dates, having just one of the two is a legitimate,
+// intentional "open-ended" condition and stays allowed.
+export const isSaveDisabled = (type, values) => {
+    if (type === 'jnt:startEndDateCondition') {
+        return !values.start && !values.end;
+    }
+
+    if (type === 'jnt:dayOfWeekCondition') {
+        return !values.dayOfWeek || values.dayOfWeek.length === 0;
+    }
+
+    return false;
+};
 
 export const buildNewCondition = rule => ({
     type: rule.type,

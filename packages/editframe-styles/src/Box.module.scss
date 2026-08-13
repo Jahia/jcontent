@@ -2,6 +2,8 @@ $barHeight: 32px;
 $barMargin: 2px;
 $indexSelected: 25000;
 $indexHovered: 18000;
+$indexScrollEdge: 30000;
+$scrollEdgeZoneHeight: 10px;
 $bgColorDragging: var(--moon-color-success);
 $colorDragging: var(--moon-color-white);
 
@@ -229,6 +231,40 @@ $colorDragging: var(--moon-color-white);
 
 .draggedOverlay {
     background-color: var(--moon-color-dark20);
+}
+
+.scrollEdgeIndicator {
+    position: fixed;
+    left: 0;
+    z-index: $indexScrollEdge;
+
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+    height: $scrollEdgeZoneHeight;
+
+    pointer-events: none;
+}
+
+.scrollEdgeTop {
+    top: 0;
+
+    align-items: flex-start;
+
+    background-color: var(--moon-color-accent);
+}
+
+.scrollEdgeBottom {
+    bottom: 0;
+
+    align-items: flex-end;
+
+    background-color: var(--moon-color-accent);
+}
+
+.scrollEdgeIndicator svg.scrollEdgeIcon {
+    fill: var(--moon-color-white);
 }
 
 .flexrow {

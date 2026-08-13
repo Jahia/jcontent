@@ -16,9 +16,18 @@
  * early leaves the editor looking at the wrong part of the page — which is the whole defect. So stop
  * when the page has actually gone quiet (QUIET_FOR with the anchor on target and the height still),
  * and only fall back on HARD_CAP for a page that never stops moving.
+ *
+ * Both windows are wall-clock milliseconds, and both are sized from what a long page actually does.
+ * Measured on digitall's home page (55000px tall, 1332 modules) by sampling the document every 100ms
+ * after a page-builder reload: it arrives 33060px tall, is still growing at 11.4s, and reaches its
+ * final 54836px at 14.9s — and it grows in bursts, going as long as 3.6s between them looking exactly
+ * like a page that has finished. A quiet window shorter than that pause is not evidence of anything,
+ * and a cap shorter than the settle abandons the anchor mid-load. Waiting longer than needed is the
+ * cheap mistake here: with the page still, the watch only reads it, and the moment the editor touches
+ * the scrollbar it steps out for good.
  */
-export const QUIET_FOR = 2000;
-export const HARD_CAP = 15000;
+export const QUIET_FOR = 5000;
+export const HARD_CAP = 30000;
 export const POLL_INTERVAL = 50;
 
 /** Below this, a correction is not worth making — sub-pixel layout noise, not a real shift. */
@@ -27,7 +36,21 @@ const TOLERANCE = 1;
 // Anything the user does to scroll the frame themselves — once they take over, we step out.
 const USER_SCROLL_EVENTS = ['wheel', 'touchmove', 'keydown'];
 
-const findModule = (win, path) => win.document.querySelector(`[jahiatype="module"][path="${path}"]`);
+/**
+ * A page-builder module renders `path="*"` when it stands for content in general rather than one
+ * node — an insertion point in an empty area, say. It is not an identity, and there are hundreds of
+ * them on a page of any size, so it can never be an anchor: looking one up in the reloaded document
+ * returns whichever comes first, which is near the top of the page and has nothing to do with the
+ * module that was in view. Anchoring on it therefore reads as an enormous drift and drags the editor
+ * to the top of the page — measured on digitall's home page as a jump from 30035px to 814px.
+ */
+const NOT_A_NODE = '*';
+
+const isAnchorable = path => path && path !== NOT_A_NODE;
+
+const findModule = (win, path) => (isAnchorable(path) ?
+    win.document.querySelector(`[jahiatype="module"][path="${path}"]`) :
+    null);
 
 /**
  * The module the editor is looking at: of those the viewport shows, the one starting closest to its
@@ -54,7 +77,7 @@ export const captureAnchor = (win, workedOnPath) => {
         }
     }
 
-    return [...win.document.querySelectorAll('[jahiatype="module"][path]')]
+    return [...win.document.querySelectorAll(`[jahiatype="module"][path]:not([path="${NOT_A_NODE}"])`)]
         .map(element => ({element, rect: element.getBoundingClientRect()}))
         .filter(({rect}) => rect.bottom > 0 && rect.top < win.innerHeight)
         .map(({element, rect}) => ({path: element.getAttribute('path'), top: rect.top}))
@@ -125,19 +148,30 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
     // next thing to load. What ends the watch is the page going quiet — no correction needed and no
     // change in height for a while — because that is the only evidence that there is nothing left to
     // move the anchor.
+    //
+    // Both windows are read off the clock rather than counted in ticks. Counting assumes the interval
+    // fires on schedule, and on the page that needs this most it does not come close: measured on
+    // digitall's home page, a 50ms interval fired every 806ms while the reloaded document laid itself
+    // out, because it is competing with that layout for the frame's one thread. Counted in ticks, the
+    // 2s quiet window then lasts 32s and the 15s cap that is supposed to bound the whole thing lasts
+    // nearly 4 minutes — so the watch spends most of a minute overriding a scroll position the editor
+    // is trying to change.
     let lastHeight = win.document.documentElement.scrollHeight;
-    let quiet = 0;
-    let elapsed = 0;
+    const startedAt = Date.now();
+    let quietSince = startedAt;
 
     poll = win.setInterval(() => {
         correct();
-        elapsed += interval;
 
         const height = win.document.documentElement.scrollHeight;
-        quiet = (corrected || height !== lastHeight) ? 0 : quiet + interval;
+        const now = Date.now();
+        if (corrected || height !== lastHeight) {
+            quietSince = now;
+        }
+
         lastHeight = height;
 
-        if (quiet >= quietFor || elapsed >= cap) {
+        if (now - quietSince >= quietFor || now - startedAt >= cap) {
             stop();
         }
     }, interval);

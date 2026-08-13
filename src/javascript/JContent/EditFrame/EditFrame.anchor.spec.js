@@ -1,4 +1,4 @@
-import {captureAnchor, HARD_CAP, QUIET_FOR, restoreAnchor} from './EditFrame.anchor';
+import {captureAnchor, HARD_CAP, POLL_INTERVAL, QUIET_FOR, restoreAnchor} from './EditFrame.anchor';
 
 /**
  * A window with a list of modules at known document positions, which we can move around the way a
@@ -20,13 +20,25 @@ const createWindow = ({modules, viewportHeight = 500}) => {
         removeEventListener() {}
     };
 
-    const element = module => ({
-        getAttribute: name => (name === 'path' ? module.path : null),
-        getBoundingClientRect: () => ({
-            top: module.documentTop - win.scrollY,
-            bottom: module.documentTop + module.height - win.scrollY
-        })
-    });
+    // Queries run against a real document rather than a hand-rolled matcher, so that what the
+    // selectors actually mean is part of what these tests check — the defect being guarded here was
+    // a selector matching modules it should not have. It is rebuilt per query because the tests move
+    // the modules about mid-flight, the way a page settling after a reload does.
+    const asDocument = () => {
+        const doc = document.implementation.createHTMLDocument();
+        win.modules.forEach(module => {
+            const element = doc.createElement('div');
+            element.setAttribute('jahiatype', 'module');
+            element.setAttribute('path', module.path);
+            element.getBoundingClientRect = () => ({
+                top: module.documentTop - win.scrollY,
+                bottom: module.documentTop + module.height - win.scrollY
+            });
+            doc.body.appendChild(element);
+        });
+
+        return doc;
+    };
 
     win.document = {
         documentElement: {
@@ -34,12 +46,8 @@ const createWindow = ({modules, viewportHeight = 500}) => {
                 return win.modules.reduce((tallest, m) => Math.max(tallest, m.documentTop + m.height), 0);
             }
         },
-        querySelectorAll: () => win.modules.map(element),
-        querySelector: selector => {
-            const path = selector.match(/path="([^"]+)"/)[1];
-            const module = win.modules.find(m => m.path === path);
-            return module ? element(module) : null;
-        }
+        querySelectorAll: selector => asDocument().querySelectorAll(selector),
+        querySelector: selector => asDocument().querySelector(selector)
     };
 
     return win;
@@ -108,6 +116,36 @@ describe('captureAnchor', () => {
 
     it('should return nothing when there is no module to anchor to', () => {
         expect(captureAnchor(createWindow({modules: []}))).toBeNull();
+    });
+
+    // A module standing for content in general rather than one node renders path="*". Hundreds of them
+    // sit on a page of any size, so the path identifies nothing: looked up in the reloaded document it
+    // finds whichever comes first, near the top of the page, and the anchor drags the editor there.
+    it('should not anchor on a module that stands for content in general', () => {
+        const win = createWindow({modules: [
+            {path: '*', documentTop: 400, height: 100},
+            {path: '/area/text', documentTop: 500, height: 100}
+        ]});
+        win.scrollTo(0, 400);
+
+        // The insertion point starts exactly at the top edge and would win on geometry alone
+        expect(captureAnchor(win)).toEqual({path: '/area/text', top: 100});
+    });
+
+    it('should return nothing when the only modules in view stand for content in general', () => {
+        const win = createWindow({modules: [{path: '*', documentTop: 0, height: 100}]});
+
+        // Better the raw offset than an anchor that resolves to an unrelated part of the page
+        expect(captureAnchor(win)).toBeNull();
+    });
+
+    it('should not anchor on the content being worked on when it has no path of its own', () => {
+        const win = createWindow({modules: [
+            {path: '*', documentTop: 0, height: 100},
+            {path: '/area/text', documentTop: 100, height: 100}
+        ]});
+
+        expect(captureAnchor(win, '*')).toEqual({path: '/area/text', top: 100});
     });
 });
 
@@ -212,6 +250,47 @@ describe('restoreAnchor', () => {
         jest.advanceTimersByTime(QUIET_FOR);
 
         expect(win.scrollY).toBe(275);
+    });
+
+    // The page this exists for is the page that starves the timer: the interval competes with the
+    // layout of the document it is watching, over one thread. Measured on digitall's home page, a 50ms
+    // interval fired every 806ms. Both windows therefore have to come off the clock — counted in ticks,
+    // the 2s quiet window lasted 32s of real time and the 15s cap nearly 4 minutes, and the watch spent
+    // most of a minute putting back a scroll position the editor was trying to change.
+    it('should measure the quiet window in real time, not in ticks', () => {
+        const starved = 16;
+        const win = createWindow({modules: modules()});
+        win.setInterval = (callback, requested) => setInterval(callback, requested * starved);
+
+        restoreAnchor(win, {path: '/b', top: 100});
+        jest.advanceTimersByTime(QUIET_FOR + (POLL_INTERVAL * starved));
+
+        const settled = win.scrollY;
+        win.modules[1].documentTop = 4000;
+        jest.advanceTimersByTime(QUIET_FOR * starved);
+
+        expect(win.scrollY).toBe(settled);
+    });
+
+    it('should give up at the hard cap in real time on a page that never settles', () => {
+        const starved = 16;
+        const win = createWindow({modules: modules()});
+        win.setInterval = (callback, requested) => setInterval(callback, requested * starved);
+
+        restoreAnchor(win, {path: '/b', top: 100});
+
+        // Past the cap, plus the tick that notices it — a starved interval only reads the clock when it
+        // gets to run
+        for (let elapsed = 0; elapsed < HARD_CAP + (POLL_INTERVAL * starved); elapsed += 500) {
+            win.modules[1].documentTop += 10;
+            jest.advanceTimersByTime(500);
+        }
+
+        const abandoned = win.scrollY;
+        win.modules[1].documentTop += 1000;
+        jest.advanceTimersByTime(HARD_CAP);
+
+        expect(win.scrollY).toBe(abandoned);
     });
 
     it('should stop when cancelled', () => {

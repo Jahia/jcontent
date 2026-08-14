@@ -437,7 +437,6 @@ describe('EditPanel utils', () => {
                 language: 'fr',
                 name: 'date',
                 type: 'DATE',
-                option: 'NOT_ZONED_DATE',
                 value: 'newDate'
             }],
             expectedPropsFieldMapping: {
@@ -460,7 +459,6 @@ describe('EditPanel utils', () => {
                 language: 'fr',
                 name: 'multipleDate',
                 type: 'DATE',
-                option: 'NOT_ZONED_DATE',
                 values: ['newDate']
             }],
             expectedPropsFieldMapping: {
@@ -589,11 +587,11 @@ describe('EditPanel utils', () => {
             nodeData: {
                 properties: [{
                     name: 'multipleDate',
-                    notZonedDateValues: ['date1', 'date2'],
+                    values: ['date1', 'date2'],
                     ...baseFieldSet
                 }, {
                     name: 'date',
-                    notZonedDateValue: 'single-date',
+                    value: 'single-date',
                     ...baseFieldSet
                 }]
             },
@@ -625,7 +623,6 @@ describe('EditPanel utils', () => {
                 language: 'fr',
                 name: 'multipleDate',
                 type: 'DATE',
-                option: 'NOT_ZONED_DATE',
                 values: ['date1', 'date2', 'date3']
             }],
             expectedPropsFieldMapping: {
@@ -646,7 +643,6 @@ describe('EditPanel utils', () => {
                 language: 'fr',
                 name: 'multipleDate',
                 type: 'DATE',
-                option: 'NOT_ZONED_DATE',
                 values: ['date1', 'date2', 'date3']
             }],
             expectedPropsFieldMapping: {
@@ -676,7 +672,6 @@ describe('EditPanel utils', () => {
                 language: 'fr',
                 name: 'multipleDate',
                 type: 'DATE',
-                option: 'NOT_ZONED_DATE',
                 values: ['new value']
             }, {
                 language: 'fr',
@@ -749,13 +744,11 @@ describe('EditPanel utils', () => {
     describe('getValuePropName', () => {
         it('should return the good value prop name based on the field', () => {
             expect(getValuePropName({multiple: true, requiredType: 'DATE'})).toEqual({
-                name: 'values',
-                option: 'NOT_ZONED_DATE'
+                name: 'values'
             });
 
             expect(getValuePropName({multiple: false, requiredType: 'DATE'})).toEqual({
-                name: 'value',
-                option: 'NOT_ZONED_DATE'
+                name: 'value'
             });
 
             expect(getValuePropName({multiple: true, requiredType: 'type'})).toEqual({name: 'values'});

@@ -1020,6 +1020,7 @@
           "displayValue": "Date",
           "description": "Datum aus einem Kalender wählen"
         },
+        "localTimeHint": "Angezeigt in Ihrer lokalen Zeitzone ({{zone}})",
         "text": {
           "displayValue": "Text",
           "description": "Simple-Text Eingabe"

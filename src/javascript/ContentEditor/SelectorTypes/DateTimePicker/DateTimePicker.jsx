@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
+import {Typography} from '@jahia/moonstone';
 
 import {DatePickerInput} from '~/ContentEditor/DesignSystem/DatePickerInput';
-import {dayjs} from 'date-formatter';
+import {toDate, toUtcIsoString} from 'date-formatter';
 import {fillDisabledDaysFromJCRConstraints} from './DateTimePicker.utils';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {specificDateFormat} from './DateTimePicker.formats';
@@ -29,7 +31,12 @@ function getDateFormat(editorContext) {
     return userNavigatorLocale in specificDateFormat ? specificDateFormat[userNavigatorLocale] : 'DD/MM/YYYY';
 }
 
+// The browser's own IANA zone name (e.g. "America/New_York") -- shown alongside every date/time
+// field so the displayed value is never ambiguous about whose timezone it's in.
+const browserTimeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlur}) => {
+    const {t} = useTranslation('jcontent');
     const variant = variantMapper[field.selectorType];
     const isDateTime = variant === 'datetime';
     const disabledDays = fillDisabledDaysFromJCRConstraints(field, isDateTime);
@@ -44,21 +51,28 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
     const displayDateMask = isDateTime ? maskLocale + ' __:__' : maskLocale;
 
     return (
-        <DatePickerInput
-            dayPickerProps={{disabledDays}}
-            lang={uilang}
-            initialValue={value ? dayjs(value).toDate() : null}
-            displayDateFormat={displayDateFormat}
-            displayDateMask={displayDateMask}
-            readOnly={field.readOnly}
-            variant={variant}
-            id={id}
-            aria-labelledby={`${field.name}-label`}
-            onChange={date => {
-                onChange(date && dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSS'));
-            }}
-            onBlur={onBlur}
-        />
+        <div>
+            <DatePickerInput
+                dayPickerProps={{disabledDays}}
+                lang={uilang}
+                initialValue={value ? toDate(value) : null}
+                displayDateFormat={displayDateFormat}
+                displayDateMask={displayDateMask}
+                readOnly={field.readOnly}
+                variant={variant}
+                id={id}
+                aria-labelledby={`${field.name}-label`}
+                onChange={date => {
+                    // The value stored server-side is a real UTC instant; the picker itself always
+                    // works in the browser's own local time (typed digits in, displayed digits out).
+                    onChange(date && toUtcIsoString(date));
+                }}
+                onBlur={onBlur}
+            />
+            <Typography variant="caption" data-sel-role="date-field-timezone-hint">
+                {t('jcontent:label.contentEditor.selectorTypes.localTimeHint', {zone: browserTimeZone})}
+            </Typography>
+        </div>
     );
 };
 

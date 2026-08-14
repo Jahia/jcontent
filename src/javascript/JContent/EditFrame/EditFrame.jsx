@@ -118,7 +118,11 @@ export const EditFrame = () => {
                 // What the editor was looking at, noted when the reload was asked for if it was a
                 // refresh — by the time the document is here, the outgoing one has already been
                 // pulled about by the refetch.
-                const anchor = pendingAnchor.current || captureAnchor(iframeSwap.current.contentWindow);
+                // Boxed, because refresh() legitimately captures nothing when no module is in view, and
+                // a bare null could not be told apart from "this was not a refresh" — which would send
+                // us scanning the whole outgoing document again for the same answer.
+                const pending = pendingAnchor.current;
+                const anchor = pending ? pending.anchor : captureAnchor(iframeSwap.current.contentWindow);
                 const {scrollX, scrollY} = iframeSwap.current.contentWindow;
                 pendingAnchor.current = null;
 
@@ -166,7 +170,7 @@ export const EditFrame = () => {
         // triggerRefetchAll, which says nothing about what changed, so the clicked element is what
         // identifies it — and holding that is both what the report asks for and far steadier than
         // picking whatever module happens to be nearest the top edge at this instant.
-        pendingAnchor.current = captureAnchor(iframe.current.contentWindow, clickedElement?.path);
+        pendingAnchor.current = {anchor: captureAnchor(iframe.current.contentWindow, clickedElement?.path)};
 
         if (iframeSwap.current.contentWindow.location.href === iframe.current.contentWindow.location.href) {
             iframeSwap.current.contentWindow.location.reload();

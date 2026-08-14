@@ -36,19 +36,27 @@ const TOLERANCE = 1;
 // Anything the user does to scroll the frame themselves — once they take over, we step out.
 const USER_SCROLL_EVENTS = ['wheel', 'touchmove', 'keydown'];
 
+/** How much of the viewport's right edge counts as the scrollbar when it takes no layout width. */
+const OVERLAY_SCROLLBAR_BAND = 20;
+
 /**
- * A page-builder module renders `path="*"` when it stands for content in general rather than one
- * node — an insertion point in an empty area, say. It is not an identity, and there are hundreds of
- * them on a page of any size, so it can never be an anchor: looking one up in the reloaded document
- * returns whichever comes first, which is near the top of the page and has nothing to do with the
- * module that was in view. Anchoring on it therefore reads as an enormous drift and drags the editor
- * to the top of the page — measured on digitall's home page as a jump from 30035px to 814px.
+ * Only an absolute path identifies the node a module is showing, and only an identity can be an
+ * anchor — it has to be found again in the reloaded document, and found as the *same* module.
+ *
+ * Two kinds of value fail that. A module renders `path="*"` when it stands for content in general
+ * rather than one node — an insertion point in an empty area, say — and there are hundreds of those
+ * on a page of any size. A module can also render a path relative to its parent, which is why
+ * Boxes.jsx resolves one against `data-jahia-parent` before it uses it. Either way the lookup returns
+ * whichever such module comes first in the document — near the top of the page, and nothing to do
+ * with what was in view — so the anchor reads as an enormous drift and drags the editor there:
+ * measured on digitall's home page as a jump from 30035px to 814px.
  */
-const NOT_A_NODE = '*';
+const identifiesANode = path => Boolean(path) && path.startsWith('/');
 
-const isAnchorable = path => path && path !== NOT_A_NODE;
+/** Matches only the modules whose path is an identity, per identifiesANode. */
+const ANCHORABLE = '[jahiatype="module"][path^="/"]';
 
-const findModule = (win, path) => (isAnchorable(path) ?
+const findModule = (win, path) => (identifiesANode(path) ?
     win.document.querySelector(`[jahiatype="module"][path="${path}"]`) :
     null);
 
@@ -73,14 +81,14 @@ export const captureAnchor = (win, workedOnPath) => {
         const preferred = findModule(win, workedOnPath);
         const rect = preferred?.getBoundingClientRect();
         if (rect && rect.bottom > 0 && rect.top < win.innerHeight) {
-            return {path: workedOnPath, top: rect.top};
+            return {path: workedOnPath, top: rect.top, left: rect.left};
         }
     }
 
-    return [...win.document.querySelectorAll(`[jahiatype="module"][path]:not([path="${NOT_A_NODE}"])`)]
+    return [...win.document.querySelectorAll(ANCHORABLE)]
         .map(element => ({element, rect: element.getBoundingClientRect()}))
         .filter(({rect}) => rect.bottom > 0 && rect.top < win.innerHeight)
-        .map(({element, rect}) => ({path: element.getAttribute('path'), top: rect.top}))
+        .map(({element, rect}) => ({path: element.getAttribute('path'), top: rect.top, left: rect.left}))
         .reduce((best, candidate) => {
             if (!best) {
                 return candidate;
@@ -95,7 +103,32 @@ export const captureAnchor = (win, workedOnPath) => {
 /** How far the anchored module currently sits from where it should be. Null if it is gone. */
 const drift = (win, anchor) => {
     const element = findModule(win, anchor.path);
-    return element ? element.getBoundingClientRect().top - anchor.top : null;
+    if (!element) {
+        return null;
+    }
+
+    const rect = element.getBoundingClientRect();
+    return {down: rect.top - anchor.top, across: rect.left - anchor.left};
+};
+
+/**
+ * A press on the frame's own scrollbar, which is the one way of scrolling that produces no wheel,
+ * touch or key event — so without this the watch would carry on overriding an editor dragging the
+ * thumb, for as long as it holds the anchor.
+ *
+ * Deliberately not a `scroll` listener comparing against the position we set: the browser moves the
+ * scroll by itself too (scroll anchoring, keeping content still as the page above it grows), and
+ * reading that as the editor taking over would abandon the anchor on exactly the slow-loading pages
+ * this exists for.
+ */
+const isScrollbarPress = (win, event) => {
+    const laidOut = win.document.documentElement.clientWidth;
+
+    // A classic scrollbar is left out of clientWidth, so anything at or past it is on the bar. An
+    // overlay scrollbar (macOS) takes no width at all and sits over the content, so there the last few
+    // pixels of the viewport have to stand in for it.
+    const isOverlay = win.innerWidth - laidOut < 1;
+    return event.clientX >= (isOverlay ? win.innerWidth - OVERLAY_SCROLLBAR_BAND : laidOut);
 };
 
 /**
@@ -105,32 +138,66 @@ const drift = (win, anchor) => {
  * scrollbar — we never fight them for it. Returns a function that stops it early.
  */
 export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap = HARD_CAP, interval = POLL_INTERVAL} = {}) => {
+    // Once the anchored content is missing, this watch treats it as missing for good. It can come back
+    // — a refetch re-rendering the module — and lining up with it then would throw the editor to
+    // wherever it reappeared, which is the opposite of holding the view still.
     let isAnchorGone = false;
-    let corrected = false;
+    let moved = false;
 
-    const correct = () => {
+    const holdAnchor = () => {
         const offBy = drift(win, anchor);
 
         if (offBy === null) {
-            // The content we were anchored to is not in the new document — deleted, or moved
-            // elsewhere. There is nothing to line up with, so the offset the editor had is the best
-            // guess available, and a single shot at it beats scrolling somewhere unrelated.
+            // Not in the new document: deleted, or moved elsewhere.
             isAnchorGone = true;
-            if (fallback) {
-                win.scrollTo(fallback.scrollX, fallback.scrollY);
-            }
-
             return;
         }
 
-        corrected = Math.abs(offBy) > TOLERANCE;
-        if (corrected) {
-            win.scrollTo(win.scrollX, win.scrollY + offBy);
+        if (Math.abs(offBy.down) > TOLERANCE || Math.abs(offBy.across) > TOLERANCE) {
+            win.scrollTo(win.scrollX + offBy.across, win.scrollY + offBy.down);
         }
     };
 
+    /**
+     * With nothing to line up with, the offset the editor had is the best guess left. It is worth
+     * re-asserting rather than firing once: the reloaded document is far shorter than it ends up
+     * (33060px of an eventual 54836px, measured on digitall's home page), so a single shot at an offset
+     * beyond what it can scroll to yet is silently clamped, and nothing would ever come back to it.
+     */
+    const holdOffset = () => {
+        if (!fallback) {
+            return;
+        }
+
+        if (Math.abs(fallback.scrollY - win.scrollY) > TOLERANCE || Math.abs(fallback.scrollX - win.scrollX) > TOLERANCE) {
+            win.scrollTo(fallback.scrollX, fallback.scrollY);
+        }
+    };
+
+    const correct = () => {
+        const wasDown = win.scrollY;
+        const wasAcross = win.scrollX;
+
+        if (!isAnchorGone) {
+            holdAnchor();
+        }
+
+        // Checked again rather than in an else: holdAnchor may have just discovered the content is
+        // gone, and the offset should take over on this same pass.
+        if (isAnchorGone) {
+            holdOffset();
+        }
+
+        // What the quiet window is really asking is whether the view is still being pulled about, so
+        // what counts is whether it actually moved — not whether we asked it to. An ask the document is
+        // too short to honour yet moves nothing, and counting that as movement would keep the watch
+        // alive, and fighting the editor, for the whole of the cap.
+        moved = Math.abs(win.scrollY - wasDown) > TOLERANCE || Math.abs(win.scrollX - wasAcross) > TOLERANCE;
+    };
+
     correct();
-    if (isAnchorGone) {
+    if (isAnchorGone && !fallback) {
+        // Nothing in the new document to line up with, and no offset to fall back on.
         return () => {};
     }
 
@@ -142,7 +209,14 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
         }
 
         USER_SCROLL_EVENTS.forEach(type => win.removeEventListener(type, stop));
+        win.removeEventListener('mousedown', onScrollbarPress);
     };
+
+    function onScrollbarPress(event) {
+        if (isScrollbarPress(win, event)) {
+            stop();
+        }
+    }
 
     // Deliberately not "stop once it lines up": it lines up immediately, then drifts again on the
     // next thing to load. What ends the watch is the page going quiet — no correction needed and no
@@ -165,7 +239,7 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
 
         const height = win.document.documentElement.scrollHeight;
         const now = Date.now();
-        if (corrected || height !== lastHeight) {
+        if (moved || height !== lastHeight) {
             quietSince = now;
         }
 
@@ -177,6 +251,7 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
     }, interval);
 
     USER_SCROLL_EVENTS.forEach(type => win.addEventListener(type, stop));
+    win.addEventListener('mousedown', onScrollbarPress);
 
     return stop;
 };

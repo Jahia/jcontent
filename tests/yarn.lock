@@ -182,7 +182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/cypress@npm:^8.2.1":
+"@jahia/cypress@npm:8.2.1":
   version: 8.2.1
   resolution: "@jahia/cypress@npm:8.2.1"
   dependencies:
@@ -243,7 +243,7 @@ __metadata:
   resolution: "@jahia/jcontent-cypress@workspace:."
   dependencies:
     "@4tw/cypress-drag-drop": "npm:^2.3.0"
-    "@jahia/cypress": "npm:^8.2.1"
+    "@jahia/cypress": "npm:8.2.1"
     "@jahia/jahia-reporter": "npm:^1.5.0"
     "@types/node": "npm:^22.14.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.29.1"

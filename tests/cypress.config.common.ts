@@ -44,6 +44,11 @@ export const baseConfig = {
                 }
             });
 
+            // Announced here, next to the registration, so the two cannot drift: the page objects
+            // published in @jahia/jcontent-cypress fall back to cy.log unless a consumer's config
+            // declares the 'log' task above, and this file is not part of the published package.
+            config.env.jcontentCypressLogTask = true;
+
             // Clean up videos for passing tests after compression has finished
             on('after:run', results => {
                 if (results && 'runs' in results) {

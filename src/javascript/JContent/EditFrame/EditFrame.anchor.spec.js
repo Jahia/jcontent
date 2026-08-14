@@ -308,6 +308,34 @@ describe('restoreAnchor', () => {
     });
 
     /**
+     * A frame pinned at the end of a document that has not finished arriving cannot be corrected at all:
+     * the position the anchor needs is further down than the document can scroll to yet, so every ask
+     * lands short and nothing on screen moves. It looks exactly like a page that has settled, and letting
+     * go there is letting go a moment before the rest of the page arrives and pushes the content away —
+     * which is how a refresh landed the watched content 132px below where it started.
+     */
+    it('should keep holding while the document is too short to be corrected', () => {
+        const win = createWindow({modules: [
+            {path: '/a', documentTop: 0, height: 300},
+            {path: '/b', documentTop: 300, height: 300}
+        ]});
+
+        // 600 tall against a 500 viewport, so 100 is the end of it, and /b cannot come up past 200
+        win.scrollTo(0, 100);
+        restoreAnchor(win, {path: '/b', top: 0, left: 0});
+        expect(win.scrollY).toBe(100);
+
+        // Long enough that a watch mistaking the clamp for quiet would have stepped out by now
+        jest.advanceTimersByTime(QUIET_FOR + POLL_INTERVAL);
+
+        // The rest of the page arrives
+        win.modules.push({path: '/c', documentTop: 600, height: 900});
+        jest.advanceTimersByTime(POLL_INTERVAL * 2);
+
+        expect(win.scrollY).toBe(300);
+    });
+
+    /**
      * The anchored content can go missing after the watch has started — a refetch removing the module
      * the editor just deleted, say. Handing that to the offset is only half the job: the watch also has
      * to be able to finish. Counting "a correction was called for" as movement leaves the last answer

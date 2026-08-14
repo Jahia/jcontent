@@ -143,6 +143,18 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
     // wherever it reappeared, which is the opposite of holding the view still.
     let isAnchorGone = false;
     let moved = false;
+    let isClamped = false;
+
+    /**
+     * Scrolls where asked, and notices when the frame could not go there — a reloaded document is
+     * shorter than it ends up, so a position further down than it can reach yet lands short of the ask.
+     * That is the page still owing us height, not the page having settled, and the difference decides
+     * whether the watch waits or lets go.
+     */
+    const scrollTowards = (across, down) => {
+        win.scrollTo(across, down);
+        isClamped = isClamped || Math.abs(win.scrollY - down) > TOLERANCE;
+    };
 
     const holdAnchor = () => {
         const offBy = drift(win, anchor);
@@ -154,7 +166,7 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
         }
 
         if (Math.abs(offBy.down) > TOLERANCE || Math.abs(offBy.across) > TOLERANCE) {
-            win.scrollTo(win.scrollX + offBy.across, win.scrollY + offBy.down);
+            scrollTowards(win.scrollX + offBy.across, win.scrollY + offBy.down);
         }
     };
 
@@ -170,13 +182,14 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
         }
 
         if (Math.abs(fallback.scrollY - win.scrollY) > TOLERANCE || Math.abs(fallback.scrollX - win.scrollX) > TOLERANCE) {
-            win.scrollTo(fallback.scrollX, fallback.scrollY);
+            scrollTowards(fallback.scrollX, fallback.scrollY);
         }
     };
 
     const correct = () => {
         const wasDown = win.scrollY;
         const wasAcross = win.scrollX;
+        isClamped = false;
 
         if (!isAnchorGone) {
             holdAnchor();
@@ -189,9 +202,7 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
         }
 
         // What the quiet window is really asking is whether the view is still being pulled about, so
-        // what counts is whether it actually moved — not whether we asked it to. An ask the document is
-        // too short to honour yet moves nothing, and counting that as movement would keep the watch
-        // alive, and fighting the editor, for the whole of the cap.
+        // what counts is whether it actually moved — not whether we asked it to.
         moved = Math.abs(win.scrollY - wasDown) > TOLERANCE || Math.abs(win.scrollX - wasAcross) > TOLERANCE;
     };
 
@@ -255,7 +266,12 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
 
         const height = win.document.documentElement.scrollHeight;
         const now = Date.now();
-        if (moved || height !== lastHeight) {
+
+        // Three things say the page is not done with us: the view moved, it changed height, or it could
+        // not go where the anchor needs it. That last one is the one worth spelling out — a frame pinned
+        // at the end of a document that has not finished arriving looks perfectly still, and reading
+        // that as settled lets go exactly when the rest of the page is about to push the content away.
+        if (moved || isClamped || height !== lastHeight) {
             quietSince = now;
         }
 

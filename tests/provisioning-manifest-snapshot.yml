@@ -6,14 +6,19 @@
     - uninstallBundle: 'mvn:org.jahia.modules/content-editor/3.6.0'
 
 - addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/@snapshots@noreleases@id=JahiaPublicSnapshots'
+# The jcontent-owned coordinates below are version-pinned on purpose. Left unversioned, Maven
+# resolves the HIGHEST snapshot in the repository, which is not necessarily the line this branch
+# builds: 3.8.0-SNAPSHOT is still published but abandoned (last built 2026-07-28), so an
+# unversioned coordinate silently installs that stale artifact instead of the current line.
+# Keep these in step with the version in the root pom.xml.
 - installBundle:
-    - 'mvn:org.jahia.modules/jcontent'
+    - 'mvn:org.jahia.modules/jcontent/3.7.1-SNAPSHOT'
     - 'mvn:org.jahia.modules/jahia-page-composer'
     - 'mvn:org.jahia.modules/jahia-administration'
     - 'mvn:org.jahia.modules/graphql-dxm-provider'
     - 'mvn:org.jahia.modules/jahia-ui-root'
-    - 'mvn:org.jahia.test/jcontent-test-module'
-    - 'mvn:org.jahia.test/jcontent-test-template'
+    - 'mvn:org.jahia.test/jcontent-test-module/3.7.1-SNAPSHOT'
+    - 'mvn:org.jahia.test/jcontent-test-template/3.7.1-SNAPSHOT'
     - 'js:mvn:org.jahia.modules.javascript/jcontent-test-js-template/LATEST/tgz'
   autoStart: true
   uninstallPreviousVersion: true

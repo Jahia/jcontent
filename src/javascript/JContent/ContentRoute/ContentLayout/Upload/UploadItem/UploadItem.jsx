@@ -32,7 +32,17 @@ function setServerErrorStatus(newUpload, filePath, gqlError) {
     newUpload.status = uploadStatuses.HAS_ERROR;
     console.error(`Server exception during upload of file ${filePath}: ${gqlError.message}`);
 
-    if (gqlError.message.includes('GqlJcrWrongInputException')) {
+    // Constraint violations come with a structured payload, one entry per violation. Read it
+    // first: the message alone does not always name the exception, so matching on the text is
+    // not reliable. The message check below stays as a fallback.
+    const constraintViolations = gqlError.graphQLErrors?.[0]?.extensions?.constraintViolations;
+
+    if (constraintViolations?.length > 0) {
+        newUpload.error = {
+            type: uploadErrors.CONSTRAINT_VIOLATION,
+            messages: constraintViolations.map(violation => violation.constraintMessage)
+        };
+    } else if (gqlError.message.includes('GqlJcrWrongInputException')) {
         newUpload.error = {type: uploadErrors.WRONG_INPUT};
     } else if (gqlError.message.includes('ItemExistsException')) {
         newUpload.error = {type: uploadErrors.FILE_EXISTS};

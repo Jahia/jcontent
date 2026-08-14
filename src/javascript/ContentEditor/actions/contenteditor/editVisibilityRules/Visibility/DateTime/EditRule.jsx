@@ -61,7 +61,7 @@ export const EditRule = ({rule, isMatchingAllConditions, saveConditions, onCance
                             onClick={() => {
                                 onCancel();
                             }}/>
-                        <SaveEditedRuleButton/>
+                        <SaveEditedRuleButton type={rule.primaryNodeType.name}/>
                     </div>
                 </div>
             </Paper>

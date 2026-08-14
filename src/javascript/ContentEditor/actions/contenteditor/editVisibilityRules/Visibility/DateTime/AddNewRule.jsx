@@ -8,7 +8,7 @@ import {useCreatableNodetypesTree} from '~/ContentEditor/actions/jcontent/create
 import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {NewRule} from './NewRule';
-import {buildNewCondition, jmixConditionalVisibility} from './utils';
+import {buildNewCondition, isSaveDisabled, jmixConditionalVisibility} from './utils';
 import styles from './DateTime.scss';
 
 export const AddNewRule = ({node, isMatchingAllConditions, saveConditions, onCancel}) => {
@@ -84,6 +84,7 @@ export const AddNewRule = ({node, isMatchingAllConditions, saveConditions, onCan
                             <Button size="big"
                                     color="accent"
                                     label={t('jcontent:label.contentEditor.edit.action.goBack.btnSave')}
+                                    isDisabled={isSaveDisabled(selectedType, formikContext.values)}
                                     onClick={() => {
                                 // Collect the new rule field values held in the Formik context (everything
                                 // apart from the WIP/languages/conditionalVisibility helper keys).

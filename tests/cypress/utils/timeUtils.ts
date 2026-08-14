@@ -39,3 +39,11 @@ export const localWallClockToUtcIso = ({timezoneId, year, month, day, hour, minu
     const offsetMs = getTimezoneOffsetMs(guess, timezoneId);
     return new Date(guess.getTime() - offsetMs).toISOString();
 };
+
+// Same wall-clock fields as `date`, offset by `days` -- used to build a visibility window that
+// comfortably spans (or excludes) "now" without depending on exact run time.
+export const daysFrom = (days: number, date: Date = new Date()): Date => {
+    const shifted = new Date(date.getTime());
+    shifted.setDate(shifted.getDate() + days);
+    return shifted;
+};

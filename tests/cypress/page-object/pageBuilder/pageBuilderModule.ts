@@ -5,6 +5,28 @@ import {PageBuilderModuleFooter} from './pageBuilderModuleFooter';
 import {PageBuilderModuleCreateButton} from './pageBuilderModuleCreateButton';
 import {PageBuilderModuleBox} from './pageBuilderModuleBox';
 
+/**
+ * Reports a diagnostic that has to survive a PASSING run.
+ *
+ * cypress-terminal-report is configured printLogsToConsole/File 'onFail', so a cy.log is discarded
+ * on exactly the green runs a retry count is meant to measure. A Node-side task is the only thing
+ * that reaches the runner's stdout whatever the outcome — but this file ships in
+ * @jahia/jcontent-cypress, and the task it wants lives in the CONSUMER's setupNodeEvents. jContent
+ * declares it in cypress.config.common.ts, which `files: ["dist"]` does not publish, so calling it
+ * unconditionally fails every consuming repo that never declared it.
+ *
+ * Hence the opt-in: the config that registers the task is the one that announces it, and everyone
+ * else degrades to cy.log. Losing a diagnostic line is the acceptable failure here; failing another
+ * team's suite is not.
+ */
+const logToRunner = (message: string) => {
+    if (Cypress.env('jcontentCypressLogTask')) {
+        cy.task('log', message);
+    } else {
+        cy.log(message);
+    }
+};
+
 export class PageBuilderModule extends BaseComponent {
     static defaultSelector = '[jahiatype="module"]';
     parentFrame: BaseComponent;
@@ -71,13 +93,10 @@ export class PageBuilderModule extends BaseComponent {
         }).then(() => {
             // Silent when the box was already there, loud when it was not. A retry loop that
             // absorbs a degrading overlay in silence would hide the very latency it works around,
-            // so make every extra attempt visible in the run log instead.
-            //
-            // cy.task, not cy.log: cypress-terminal-report is configured printLogsToConsole/File
-            // 'onFail', so a cy.log here would be discarded on exactly the green runs this number
-            // is meant to measure.
+            // so make every extra attempt visible in the run log instead. See logToRunner for why
+            // this does not reach for cy.task directly.
             if (attempts > 1) {
-                cy.task('log', `hoverUntilBoxed: box for "${this.path}" only appeared on attempt ${attempts}`);
+                logToRunner(`hoverUntilBoxed: box for "${this.path}" only appeared on attempt ${attempts}`);
             }
         });
 

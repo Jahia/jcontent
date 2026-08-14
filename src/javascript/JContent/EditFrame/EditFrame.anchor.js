@@ -234,6 +234,22 @@ export const restoreAnchor = (win, anchor, {fallback, quietFor = QUIET_FOR, cap 
     const startedAt = Date.now();
     let quietSince = startedAt;
 
+    // Left as a timer knowingly, and this is the case against it: reading scrollHeight and every
+    // getBoundingClientRect forces the frame to lay out synchronously, and this asks for both several
+    // times a second, on the one thread that is already busy laying out the document it is watching.
+    // The contention is real and measured — the 50ms interval above actually fired every 806ms on
+    // digitall's home page, and a 100ms sampler in the parent window stalled up to 3105ms, so it is the
+    // whole main thread rather than this frame — and this poll is one of the things on it, alongside the
+    // 50ms interval EditFrame already runs for the boxes.
+    //
+    // What is *not* established is that it makes any difference to how long the page takes to settle,
+    // and guessing at that by loosening the interval would trade a real behaviour for an unmeasured
+    // one. So no change here for now; it wants a measurement first — settle time at 50ms against, say,
+    // 150ms, on a page of this size.
+    //
+    // A ResizeObserver would not simply replace this either: it reports the document changing size, and
+    // the anchor can move without that happening at all — content above it replaced by content of the
+    // same height. Something at a low frequency would still have to watch for that.
     poll = win.setInterval(() => {
         correct();
 

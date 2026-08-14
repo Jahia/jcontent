@@ -49,12 +49,23 @@ describe('DateTimePicker component', () => {
         expect(cmp.props().id).toBe(props.id);
     });
 
-    it('should call onChange with the local value converted to a UTC instant', () => {
+    it('should call onChange with the local value converted to a UTC instant, for DateTimePicker', () => {
+        props.field.selectorType = 'DateTimePicker';
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
         const localDate = new Date(2019, 6, 14, 21, 7, 12);
         cmp.simulate('change', localDate);
 
         expect(props.onChange).toHaveBeenCalledWith(localDate.toISOString());
+    });
+
+    it('should call onChange with just the picked calendar day, for DatePicker', () => {
+        // No time-of-day, so no instant conversion -- the day must come back exactly as picked,
+        // as UTC midnight, regardless of this test runner's own local timezone.
+        props.field.selectorType = 'DatePicker';
+        const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
+        cmp.simulate('change', new Date(2019, 6, 14));
+
+        expect(props.onChange).toHaveBeenCalledWith('2019-07-14T00:00:00.000Z');
     });
 
     it('should call onChange with null when cleared', () => {
@@ -64,9 +75,16 @@ describe('DateTimePicker component', () => {
         expect(props.onChange).toHaveBeenCalledWith(null);
     });
 
-    it('should render a hint showing the browser\'s timezone', () => {
+    it('should render a hint showing the browser\'s timezone, for DateTimePicker', () => {
+        props.field.selectorType = 'DateTimePicker';
         const cmp = shallow(<DateTimePicker {...props}/>);
         expect(cmp.find('[data-sel-role="date-field-timezone-hint"]').exists()).toBe(true);
+    });
+
+    it('should NOT render a timezone hint for DatePicker, since its value has no timezone dependency', () => {
+        props.field.selectorType = 'DatePicker';
+        const cmp = shallow(<DateTimePicker {...props}/>);
+        expect(cmp.find('[data-sel-role="date-field-timezone-hint"]').exists()).toBe(false);
     });
 
     it('should give readOnly', () => {

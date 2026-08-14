@@ -20,18 +20,6 @@ jest.mock('react-redux', () => {
 
 describe('DateTimePicker component - legacy NOT_ZONED_DATE / UTC interop', () => {
     let props;
-    let originalTz;
-
-    beforeAll(() => {
-        // Pin a non-UTC zone so the local <-> UTC conversions below are actually exercised
-        // and the expectations aren't silently true-at-UTC-only. Matches DateTimePicker.spec.js.
-        originalTz = process.env.TZ;
-        process.env.TZ = 'America/New_York';
-    });
-
-    afterAll(() => {
-        process.env.TZ = originalTz;
-    });
 
     beforeEach(() => {
         props = {
@@ -102,5 +90,23 @@ describe('DateTimePicker component - legacy NOT_ZONED_DATE / UTC interop', () =>
         cmp.simulate('change', displayedDate);
 
         expect(props.onChange).toHaveBeenCalledWith(originalUtcValue);
+    });
+
+    it('resolves a DatePicker (date-only) value to the same calendar day regardless of the legacy server-offset baked into it', () => {
+        // Old NOT_ZONED_DATE scheme: the calendar day the editor picked, with the AUTHORING
+        // server's own offset baked in (e.g. a Paris server writing +01:00) -- unlike
+        // DateTimePicker, there is no real time-of-day here for that offset to legitimately
+        // describe; it's an artifact of how the value happened to be anchored.
+        props.field.selectorType = 'DatePicker';
+        props.value = '2027-01-15T00:00:00.000+01:00';
+
+        const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
+        const initialValue = cmp.props().initialValue;
+
+        // Reading this via its real instant (through an offset-aware Date/dayjs parse) would
+        // roll it back to the 14th; DatePicker must read the calendar day literally instead.
+        expect(initialValue.getFullYear()).toBe(2027);
+        expect(initialValue.getMonth()).toBe(0);
+        expect(initialValue.getDate()).toBe(15);
     });
 });

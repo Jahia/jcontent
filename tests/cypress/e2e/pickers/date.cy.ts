@@ -104,4 +104,32 @@ describe('Date picker tests', () => {
         ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
         ce.getDateField('qant:pickers_datetimepicker').checkValue('02/09/2027 08:15');
     });
+
+    it('Test Date Picker stores the exact calendar day regardless of browser timezone', () => {
+        const nodePath = '/sites/testsite/contents/contentEditorPickers';
+
+        cy.login();
+
+        // Europe/Paris is UTC+1 in January (no DST) -- a positive offset, so a broken conversion
+        // that treats local midnight as a real UTC instant would roll the stored calendar day
+        // back by one (midnight Jan 15 Paris = 23:00 Jan 14 UTC).
+        cy.setBrowserTimezone('Europe/Paris');
+        let ce = ContentEditor.visit(nodePath, 'testsite', 'en', 'content-folders/contents');
+        ce.getDateField('qant:pickers_datepicker').addNewValue('01/15/2027');
+        ce.save();
+
+        // A date-only field has no time-of-day, so there is no legitimate "instant" for it to be
+        // converted through -- the calendar day is the only thing that matters, and the raw
+        // stored value must carry it literally, not shifted by whichever timezone happened to
+        // write it.
+        GraphqlUtils.getPropertyValue(nodePath, 'datepicker').then(rawValue => {
+            expect(rawValue).to.match(/^2027-01-15/);
+        });
+
+        // Reading it back from a DIFFERENT, "further behind" timezone must show the exact same
+        // day -- proving the stored value isn't an instant whose calendar day shifts per viewer.
+        cy.setBrowserTimezone('Pacific/Honolulu');
+        ce = ContentEditor.visit(nodePath, 'testsite', 'en', 'content-folders/contents');
+        ce.getDateField('qant:pickers_datepicker').checkValue('01/15/2027');
+    });
 });

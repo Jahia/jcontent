@@ -47,3 +47,17 @@ export const daysFrom = (days: number, date: Date = new Date()): Date => {
     shifted.setDate(shifted.getDate() + days);
     return shifted;
 };
+
+// The inverse of localWallClockToUtcIso: what a UTC instant displays as (MM/DD/YYYY HH:mm) WHEN
+// OBSERVED IN `timezoneId` -- e.g. for asserting a DateTimePicker's displayed value against a
+// stored UTC value under whatever timezone the browser under test currently has, without
+// hardcoding that timezone's offset arithmetic into the expectation. Same guess-then-correct
+// technique as getTimezoneOffsetMs, just added instead of subtracted, and read back with UTC
+// getters (not local ones) so this is independent of the test-runner process's own timezone too.
+export const utcIsoToWallClockDisplay = (utcIso: string, timezoneId: string): string => {
+    const instant = new Date(utcIso);
+    const offsetMs = getTimezoneOffsetMs(instant, timezoneId);
+    const shifted = new Date(instant.getTime() + offsetMs);
+    const pad = (n: number) => (n < 10 ? '0' + n : String(n));
+    return `${pad(shifted.getUTCMonth() + 1)}/${pad(shifted.getUTCDate())}/${shifted.getUTCFullYear()} ${pad(shifted.getUTCHours())}:${pad(shifted.getUTCMinutes())}`;
+};

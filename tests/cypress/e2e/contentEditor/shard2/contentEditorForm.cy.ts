@@ -13,6 +13,12 @@ import {
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../../page-object';
+import {utcIsoToWallClockDisplay} from '../../../utils/timeUtils';
+
+// SharedDate's default value is a genuine UTC instant, so what it displays as depends on the
+// browser's own timezone -- read live from the window under test rather than assumed, so this
+// isn't hardcoded to whichever timezone happens to be configured wherever this suite is run.
+const getBrowserTimezone = () => cy.window().then(win => new win.Intl.DateTimeFormat().resolvedOptions().timeZone);
 
 describe('Content editor form', () => {
     let jcontent: JContent;
@@ -306,7 +312,10 @@ describe('Content editor form', () => {
             .should('have.attr', 'aria-checked', 'true');
         cy.frameLoaded('iframe.cke_wysiwyg_frame');
         cy.iframe('iframe.cke_wysiwyg_frame').should('contain', 'value 1');
-        cy.get('input[id="qant:AllFieldsDefault_sharedDate"]').should('have.value', '06/04/2019 00:00');
+        getBrowserTimezone().then(timezoneId => {
+            cy.get('input[id="qant:AllFieldsDefault_sharedDate"]')
+                .should('have.value', utcIsoToWallClockDisplay('2019-06-04T00:00:00.000Z', timezoneId));
+        });
         cy.get('input[name="qant:AllFieldsDefault_sharedDecimal"]').should('have.value', '1234567890.123457');
         cy.get('input[name="jmix:defaultPropMixin_mixinPropWithDefaultValue"]').should('have.value', 'value 1');
     });
@@ -336,8 +345,12 @@ describe('Content editor form', () => {
             .should('contain', 'value 1');
         cy.iframe('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBigtext[1]"] iframe.cke_wysiwyg_frame')
             .should('contain', 'value 2');
-        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[0]"]').should('have.value', '06/04/2019 00:00');
-        cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[1]"]').should('have.value', '06/04/2029 00:00');
+        getBrowserTimezone().then(timezoneId => {
+            cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[0]"]')
+                .should('have.value', utcIsoToWallClockDisplay('2019-06-04T00:00:00.000Z', timezoneId));
+            cy.get('input[id="qant:allFieldsMultipleDefault_sharedDate[1]"]')
+                .should('have.value', utcIsoToWallClockDisplay('2029-06-04T00:00:00.000Z', timezoneId));
+        });
         cy.get('input[name="qant:allFieldsMultipleDefault_sharedDecimal[0]"]').should('have.value', '1234567890.123457');
         cy.get('input[name="qant:allFieldsMultipleDefault_sharedDecimal[1]"]').should('have.value', '1134567890.113457');
     });

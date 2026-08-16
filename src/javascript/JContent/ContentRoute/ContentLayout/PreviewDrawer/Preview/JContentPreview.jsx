@@ -32,7 +32,7 @@ PreviewCard.propTypes = {
 };
 
 export const JContentPreview = () => {
-    const {previewSelection, selection, lang, mode, isFullScreen} = useSidePanelContext();
+    const {previewSelection, selection, lang, mode, isFullScreen, workspace = 'edit'} = useSidePanelContext();
     const {loading: emptyListLoading, component: EmptyListComponent} = useEmptyListComponent(previewSelection, mode);
 
     if (selection.length > 0) {
@@ -51,7 +51,7 @@ export const JContentPreview = () => {
         return EmptyListComponent;
     }
 
-    const {primary: previewContext, fallback: fallbackPreviewContext} = buildPreviewContextsFromNode(previewSelection, lang, mode);
+    const {primary: previewContext, fallback: fallbackPreviewContext} = buildPreviewContextsFromNode(previewSelection, lang, mode, workspace);
 
     return (
         <Preview

@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useMemo, useEffect} from 'react';
+import React, {useState, useCallback, useMemo, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Close, Drawer, Tab, TabItem} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
@@ -7,8 +7,12 @@ import styles from './SidePanel.scss';
 import {useTranslation} from 'react-i18next';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 
-export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
+export const SidePanel = ({registryTarget = 'sidePanelTabsActions', initialTab = null}) => {
     const [activeTab, setActiveTab] = useState(null);
+    // Requested opening tab, consumed once: either when that tab reports itself visible,
+    // or as soon as the user picks a tab. Until then the first visible tab is shown, so a
+    // requested tab that never becomes displayable simply falls back to the default one.
+    const pendingInitialTab = useRef(initialTab);
     const ctx = useSidePanelContext();
     const {t} = useTranslation('jcontent');
 
@@ -31,7 +35,19 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
     // Called by each SidePanelTab once it confirms it's visible.
     // Only the first call sets the default — preserving priority order (tabs are sorted by target weight).
     const onVisible = useCallback(value => {
+        if (pendingInitialTab.current === value) {
+            pendingInitialTab.current = null;
+            setActiveTab(value);
+            return;
+        }
+
         setActiveTab(current => current === null ? value : current);
+    }, []);
+
+    // Any explicit tab selection wins over a not-yet-displayable requested initial tab.
+    const selectTab = useCallback(value => {
+        pendingInitialTab.current = null;
+        setActiveTab(value);
     }, []);
 
     return (
@@ -48,7 +64,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                                 {...tabProps}
                                 value={tab.key}
                                 activeTab={activeTab}
-                                setActiveTab={setActiveTab}
+                                setActiveTab={selectTab}
                                 render={({onClick}) => (
                                     <TabItem
                                         label={t(tab.buttonLabel)}
@@ -84,5 +100,6 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
 };
 
 SidePanel.propTypes = {
-    registryTarget: PropTypes.string
+    registryTarget: PropTypes.string,
+    initialTab: PropTypes.string
 };

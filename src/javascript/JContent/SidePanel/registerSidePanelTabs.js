@@ -8,8 +8,13 @@ import {CEPreview} from '~/ContentEditor/editorTabs/EditPanelContent/Preview';
 import {JContentPreview} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/JContentPreview';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
+/**
+ * Registers the side panel tabs. Uses `addOrReplace` so it stays idempotent: the exposed
+ * `./ContentSidePanel` federation module registers the tabs on demand when a foreign host
+ * loads it before (or without) jContent's own init bootstrap.
+ */
 export const registerSidePanelTabs = actionsRegistry => {
-    actionsRegistry.add('action', 'ceSidePanelDetailsTab', sidePanelTabAction, {
+    actionsRegistry.addOrReplace('action', 'ceSidePanelDetailsTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.details',
         buttonIcon: <InfoCircle/>,
         targets: ['sidePanelTabsActions:2'],
@@ -18,7 +23,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         isDisplayable: () => true
     });
 
-    actionsRegistry.add('action', 'ceSidePanelHistoryTab', sidePanelTabAction, {
+    actionsRegistry.addOrReplace('action', 'ceSidePanelHistoryTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.history',
         buttonIcon: <History/>,
         targets: ['sidePanelTabsActions:3'],
@@ -28,7 +33,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         requiredPermission: ['viewHistoryTab']
     });
 
-    actionsRegistry.add('action', 'ceSidePanelUsagesTab', sidePanelTabAction, {
+    actionsRegistry.addOrReplace('action', 'ceSidePanelUsagesTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.usages',
         buttonIcon: <ContentReference/>,
         targets: ['sidePanelTabsActions:4'],
@@ -42,7 +47,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         isDisplayable: ({isJContent, mode}) => Boolean(isJContent) || mode === Constants.routes.baseEditRoute
     });
 
-    actionsRegistry.add('action', 'ceSidePanelPreviewTab', sidePanelTabAction, {
+    actionsRegistry.addOrReplace('action', 'ceSidePanelPreviewTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentEditor.sidePanel.preview',
         buttonIcon: <Visibility/>,
         targets: ['sidePanelTabsActions:1'],
@@ -51,7 +56,7 @@ export const registerSidePanelTabs = actionsRegistry => {
         isDisplayable: ({hasPreview, isJContent}) => Boolean(hasPreview) && !isJContent
     });
 
-    actionsRegistry.add('action', 'jcontentSidePanelPreviewTab', sidePanelTabAction, {
+    actionsRegistry.addOrReplace('action', 'jcontentSidePanelPreviewTab', sidePanelTabAction, {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
         buttonIcon: <Visibility/>,
         targets: ['sidePanelTabsActions:1'],

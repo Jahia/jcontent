@@ -135,6 +135,7 @@ module.exports = (env, argv) => {
                 exposes: {
                     '.': './src/javascript/shared',
                     './JContent/actions': './src/javascript/JContent/actions/index',
+                    './ContentSidePanel': './src/javascript/ContentSidePanel/index',
                     './init': './src/javascript/init'
                 },
                 remotes: {

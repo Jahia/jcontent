@@ -34,11 +34,12 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
  * @param {boolean} [options.isCEPreview]  - Attach ce_preview requestAttribute to signal CE preview mode
  *   to other modules. true for CE, false for JContent.
  * @param {Array}   [options.requestParameters] - CE page composer query string params.
+ * @param {string}  [options.workspace]         - Rendering workspace, 'edit' (default) or 'live'.
  */
-export const buildPreviewContexts = (node, language, {closestPage = null, isCEPreview = false, requestParameters = []} = {}) => {
+export const buildPreviewContexts = (node, language, {closestPage = null, isCEPreview = false, requestParameters = [], workspace = 'edit'} = {}) => {
     const {displayableNode, jView} = node;
     const isDisplayableNode = displayableNode?.path === node.path;
-    const base = {workspace: 'edit', templateType: 'html', language};
+    const base = {workspace, templateType: 'html', language};
     const extraParams = requestParameters.length > 0 ? {requestParameters} : {};
     const cePreviewAttr = isCEPreview ? [{name: 'ce_preview', value: node.uuid}] : undefined;
 
@@ -114,10 +115,10 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
  * JContent: builds { primary, fallback } from a content table node.
  * Derives closestPage from pageAncestors when in pages mode.
  */
-export const buildPreviewContextsFromNode = (node, language, mode) => {
+export const buildPreviewContextsFromNode = (node, language, mode, workspace = 'edit') => {
     const pageAncestor = node.pageAncestors?.at(-1);
     const closestPage = mode === 'pages' && pageAncestor && !node.isPage ?
         {path: pageAncestor.path} :
         null;
-    return buildPreviewContexts(node, language, {closestPage});
+    return buildPreviewContexts(node, language, {closestPage, workspace});
 };

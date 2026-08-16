@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 import {getAliasForLanguage} from './getPublicationDecision';
-import {getPropertiesAliasForLanguage} from './getMissingMandatoryProperties';
 
 /**
  * Builds the publication pre-flight query, with one aliased aggregatedPublicationInfo per target language.
@@ -30,26 +29,19 @@ export const buildPreflightQuery = languages => gql`
 `;
 
 /**
- * Builds the blocked-details query, executed only when the pre-flight found blocked pairs (the happy path
- * stays at a single round-trip). Per blocked node it fetches:
+ * The blocked-details query, executed only when the pre-flight found blocked pairs (the happy path stays at
+ * a single round-trip). Per blocked node it fetches:
  * - the site languages (displayName, mandatory flag) used to render the language sections,
- * - the primary node type property definitions, from which the mandatory internationalized candidates are
- *   derived (see getMissingMandatoryProperties: a display-only mirror of the server check
- *   JCRNodeWrapperImpl.checkI18nAndMandatoryPropertiesForLocale; the blocked verdict itself stays
- *   server-authoritative via aggregatedPublicationInfo),
- * - one aliased localized properties list per blocked language. The property names cannot be filtered
- *   server-side (the candidate list depends on each node's primary node type, unknown before this query), so
- *   all property names are fetched and the candidates are intersected client-side; GraphQL omits properties
- *   absent on the localized node (no fallback), the same presence test as the server's i18n.hasProperty.
- *
- * Language codes come from the site configuration and are inlined as literals, as GraphQL variables cannot
- * hold a dynamic number of values.
- *
- * @param {array} blockedLanguages the language codes with at least one MANDATORY_LANGUAGE_UNPUBLISHABLE pair
- * @returns {object} the query document
+ * - the missing mandatory internationalized properties per blocked language, computed server-side by this
+ *   module's own GraphQL extension (JCRNodePublicationExtensions.missingMandatoryI18nProperties), an exact
+ *   mirror of the core check JCRNodeWrapperImpl.checkI18nAndMandatoryPropertiesForLocale; the blocked
+ *   verdict itself stays server-authoritative via aggregatedPublicationInfo. The module extension is used
+ *   instead of graphql-core's primaryNodeType.properties because the latter returns the non-overridden
+ *   inherited definitions (e.g. jcr:title on jnt:page reported as non-mandatory), unlike the resolved
+ *   definition map the server check uses.
  */
-export const buildBlockedDetailsQuery = blockedLanguages => gql`
-    query publicationBlockedDetails($uuids: [String!]!, $uiLanguage: String!) {
+export const BlockedDetailsQuery = gql`
+    query publicationBlockedDetails($uuids: [String!]!, $languages: [String!]!, $uiLocale: String!) {
         jcr {
             nodesById(uuids: $uuids) {
                 ...NodeCacheRequiredFields
@@ -63,19 +55,13 @@ export const buildBlockedDetailsQuery = blockedLanguages => gql`
                         activeInEdit
                     }
                 }
-                primaryNodeType {
-                    name
+                missingMandatoryI18nProperties(languages: $languages, uiLocale: $uiLocale) {
+                    language
                     properties {
                         name
-                        mandatory
-                        internationalized
-                        displayName(language: $uiLanguage)
+                        label
                     }
                 }
-                ${blockedLanguages.map(language => `
-                ${getPropertiesAliasForLanguage(language)}: properties(language: "${language}") {
-                    name
-                }`).join('')}
             }
         }
     }

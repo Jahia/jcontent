@@ -4,7 +4,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PublicationBlockedDialog from './PublicationBlockedDialog';
 import JContentConstants from '~/JContent/JContent.constants';
-import {buildBlockedDetailsQuery, buildPreflightQuery} from './publication.gql-queries';
+import {BlockedDetailsQuery, buildPreflightQuery} from './publication.gql-queries';
 import {getPublicationDecision, publicationDecisionTypes, toPublicationPairs} from './getPublicationDecision';
 import {toMissingPropertiesByPair} from './getMissingMandatoryProperties';
 
@@ -20,9 +20,9 @@ const {MANDATORY_LANGUAGE_UNPUBLISHABLE} = JContentConstants.availablePublicatio
  * request is delegated to the GWT bridge unchanged.
  *
  * When the dialog must be shown, a second query (blocked path only, keeping the happy path at one
- * round-trip) fetches the display details: the site languages, and per blocked node the mandatory
- * internationalized property definitions plus the localized properties present in each blocked language,
- * from which the missing properties are derived (see getMissingMandatoryProperties). A failure of that
+ * round-trip) fetches the display details: the site languages, and per blocked node the missing mandatory
+ * internationalized properties per blocked language, computed server-side by this module's GraphQL
+ * extension (see getMissingMandatoryProperties for the mapping and the parity contract). A failure of that
  * details query degrades gracefully to the dialog without property details.
  *
  * @returns {Function} an async function accepting {uuids, allSubTree, allLanguages, checkForUnpublication,
@@ -83,8 +83,8 @@ export const useOpenPublicationWorkflow = () => {
                 .filter(pair => pair.publicationStatus === MANDATORY_LANGUAGE_UNPUBLISHABLE)
                 .map(pair => pair.language))];
             const {data: detailsData} = await client.query({
-                query: buildBlockedDetailsQuery(blockedLanguages),
-                variables: {uuids: blockedNodeUuids, uiLanguage: uiLanguage || currentLanguage},
+                query: BlockedDetailsQuery,
+                variables: {uuids: blockedNodeUuids, languages: blockedLanguages, uiLocale: uiLanguage || currentLanguage},
                 fetchPolicy: 'network-only'
             });
             const detailNodes = detailsData.jcr.nodesById;

@@ -151,30 +151,38 @@ describe('PublicationBlockedDialog', () => {
         expect(window.CE_API.edit).toHaveBeenCalledWith({uuid: 'uuid-1', lang: 'en', isFullscreen: false});
     });
 
-    it('should label the primary button with the count of distinct publishable languages', () => {
+    it('should show an enabled Publish button when pairs remain publishable', () => {
         const cmp = shallowDialog(defaultProps);
 
         const continueButton = cmp.find({'data-sel-role': 'continue-button'});
         expect(continueButton.props().isDisabled).toBe(false);
-        // Two pairs in two distinct languages (fr, de)
-        expect(t).toHaveBeenCalledWith(
-            'jcontent:label.contentManager.publicationBlockedDialog.publishAvailable',
-            {count: 2}
-        );
+        expect(continueButton.props().label).toBe('translated_jcontent:label.contentManager.publicationBlockedDialog.publish');
         expect(cmp.find({'data-sel-role': 'cancel-button'})).toHaveLength(1);
         expect(cmp.find({'data-sel-role': 'nothing-to-publish'})).toHaveLength(0);
     });
 
-    it('should disable the primary button with an explanation when nothing remains publishable', () => {
+    it('should list the pairs that will actually be published in their own section', () => {
+        const cmp = shallowDialog(defaultProps);
+
+        const toPublishSection = cmp.find({'data-sel-role': 'languages-to-publish'});
+        expect(toPublishSection).toHaveLength(1);
+        const items = toPublishSection.find({'data-sel-role': 'to-publish-item'});
+        expect(items).toHaveLength(2);
+        expect(items.at(0).text()).toContain('Home');
+        expect(items.at(0).text()).toContain('/sites/mySite/home');
+        expect(items.at(1).text()).toContain('News');
+        expect(items.at(1).text()).toContain('/sites/mySite/news');
+    });
+
+    it('should disable the Publish button with an explanation and no to-publish section when nothing remains publishable', () => {
         defaultProps.pairsToPublish = [];
         const cmp = shallowDialog(defaultProps);
 
-        expect(cmp.find({'data-sel-role': 'continue-button'}).props().isDisabled).toBe(true);
+        const continueButton = cmp.find({'data-sel-role': 'continue-button'});
+        expect(continueButton.props().isDisabled).toBe(true);
+        expect(continueButton.props().label).toBe('translated_jcontent:label.contentManager.publicationBlockedDialog.publish');
         expect(cmp.find({'data-sel-role': 'nothing-to-publish'})).toHaveLength(1);
-        expect(t).toHaveBeenCalledWith(
-            'jcontent:label.contentManager.publicationBlockedDialog.publishAvailable',
-            {count: 0}
-        );
+        expect(cmp.find({'data-sel-role': 'languages-to-publish'})).toHaveLength(0);
     });
 
     it('should publish only the pairs needing publication on continue and close the dialog', async () => {

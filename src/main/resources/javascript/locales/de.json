@@ -55,8 +55,8 @@
         "conflicts": "Konflikte",
         "heldBackTitle": "Vollständige Sprachen zurückgehalten",
         "heldBackDescription": "Die folgenden Inhalte sind in ihrer Sprache vollständig, ihre Veröffentlichung wird jedoch zurückgehalten, bis die verpflichtende(n) Sprache(n) {{languages}} vervollständigt sind.",
-        "publishAvailable": "{{count}} verfügbare Sprache veröffentlichen",
-        "publishAvailable_plural": "{{count}} verfügbare Sprachen veröffentlichen",
+        "willBePublished": "Wird veröffentlicht",
+        "publish": "Veröffentlichen",
         "nothingToPublish": "Es kann keine Sprache veröffentlicht werden, bis die oben genannten Probleme behoben sind.",
         "cancel": "Abbrechen",
         "close": "Schließen"

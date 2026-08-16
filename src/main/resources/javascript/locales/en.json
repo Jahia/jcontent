@@ -57,8 +57,8 @@
         "conflicts": "Conflicts",
         "heldBackTitle": "Complete languages held back",
         "heldBackDescription": "The following content is complete in its language, but publication is held back until the mandatory language(s) {{languages}} are completed.",
-        "publishAvailable": "Publish {{count}} available language",
-        "publishAvailable_plural": "Publish {{count}} available languages",
+        "willBePublished": "Will be published",
+        "publish": "Publish",
         "nothingToPublish": "No language can be published until the issues above are resolved.",
         "cancel": "Cancel",
         "close": "Close"

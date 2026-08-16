@@ -59,11 +59,13 @@ export const PublicationBlockedDialog = ({blockedPairs, heldBackPairs, pairsToPu
     const [isOpen, setIsOpen] = useState(true);
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const availableLanguagesCount = new Set(pairsToPublish.map(pair => pair.language)).size;
+    const hasPairsToPublish = pairsToPublish.length > 0;
 
     const unpublishablePairs = blockedPairs.filter(pair => pair.publicationStatus === MANDATORY_LANGUAGE_UNPUBLISHABLE);
     const conflictPairs = blockedPairs.filter(pair => pair.publicationStatus === CONFLICT);
     const blockedLanguageGroups = groupPairsByLanguage(unpublishablePairs, siteLanguages);
+    // Ordered like the site languages, consistently with the blocked sections
+    const orderedPairsToPublish = groupPairsByLanguage(pairsToPublish, siteLanguages).flatMap(group => group.pairs);
 
     const getSiteLanguage = language => (siteLanguages || []).find(siteLanguage => siteLanguage.language === language);
     const getLanguageLabel = language => {
@@ -217,7 +219,24 @@ export const PublicationBlockedDialog = ({blockedPairs, heldBackPairs, pairsToPu
                             ))}
                         </ul>
                     </section>}
-                {availableLanguagesCount === 0 &&
+                {hasPairsToPublish &&
+                    <section className={styles.section} data-sel-role="languages-to-publish">
+                        <div className={styles.sectionHeader}>
+                            <Typography variant="subheading" weight="bold">
+                                {t('jcontent:label.contentManager.publicationBlockedDialog.willBePublished')}
+                            </Typography>
+                        </div>
+                        <ul className={styles.itemList}>
+                            {orderedPairsToPublish.map(pair => (
+                                <li key={`${pair.uuid}-${pair.language}`} data-sel-role="to-publish-item">
+                                    <Typography>
+                                        <strong>{pair.displayName}</strong> ({pair.path}) - {getLanguageLabel(pair.language)}
+                                    </Typography>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>}
+                {!hasPairsToPublish &&
                     <DialogContentText data-sel-role="nothing-to-publish">
                         {t('jcontent:label.contentManager.publicationBlockedDialog.nothingToPublish')}
                     </DialogContentText>}
@@ -226,15 +245,15 @@ export const PublicationBlockedDialog = ({blockedPairs, heldBackPairs, pairsToPu
                 <Button size="big"
                         isDisabled={isPublishing}
                         data-sel-role="cancel-button"
-                        label={availableLanguagesCount === 0 ?
-                            t('jcontent:label.contentManager.publicationBlockedDialog.close') :
-                            t('jcontent:label.contentManager.publicationBlockedDialog.cancel')}
+                        label={hasPairsToPublish ?
+                            t('jcontent:label.contentManager.publicationBlockedDialog.cancel') :
+                            t('jcontent:label.contentManager.publicationBlockedDialog.close')}
                         onClick={handleClose}/>
                 <Button size="big"
-                        isDisabled={isPublishing || availableLanguagesCount === 0}
+                        isDisabled={isPublishing || !hasPairsToPublish}
                         color="accent"
                         data-sel-role="continue-button"
-                        label={t('jcontent:label.contentManager.publicationBlockedDialog.publishAvailable', {count: availableLanguagesCount})}
+                        label={t('jcontent:label.contentManager.publicationBlockedDialog.publish')}
                         onClick={handleContinue}/>
             </DialogActions>
         </Dialog>

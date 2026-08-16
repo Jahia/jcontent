@@ -45,6 +45,13 @@
         "markedForDeletion": "Zur Löschung markiert von {{userName}} am {{timestamp}}",
         "unknown": "Veröffentlichungsstatus nicht verfügbar"
       },
+      "publicationBlockedDialog": {
+        "title": "Veröffentlichung",
+        "continueQuestion": "Möchten Sie fortfahren?",
+        "cancel": "Abbrechen",
+        "continue": "Fortfahren",
+        "close": "Schließen"
+      },
       "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
       "downloadAsZip": "als ZIP herunterladen",
       "fileUpload": {

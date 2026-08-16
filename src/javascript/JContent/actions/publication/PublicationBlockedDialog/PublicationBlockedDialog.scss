@@ -1,0 +1,16 @@
+.content {
+    min-width: 480px;
+}
+
+.group {
+    margin-bottom: var(--spacing-medium);
+}
+
+.itemList {
+    margin: var(--spacing-small) 0 0;
+    padding-left: var(--spacing-large);
+
+    li {
+        margin-bottom: var(--spacing-small);
+    }
+}

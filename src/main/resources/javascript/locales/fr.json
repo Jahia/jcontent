@@ -45,6 +45,13 @@
         "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}",
         "unknown": "Statut de publication indisponible"
       },
+      "publicationBlockedDialog": {
+        "title": "Publication",
+        "continueQuestion": "Voulez-vous continuer ?",
+        "cancel": "Annuler",
+        "continue": "Continuer",
+        "close": "Fermer"
+      },
       "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",
       "downloadAsZip": "Télécharger comme Zip",
       "fileUpload": {

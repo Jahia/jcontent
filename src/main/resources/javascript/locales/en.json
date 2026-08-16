@@ -47,6 +47,13 @@
         "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}",
         "unknown": "Publication status unavailable"
       },
+      "publicationBlockedDialog": {
+        "title": "Publication",
+        "continueQuestion": "Would you like to continue?",
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "close": "Close"
+      },
       "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",
       "downloadAsZip": "Download as zip",
       "fileUpload": {

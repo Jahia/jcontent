@@ -16,12 +16,28 @@ const createStaticStore = state => ({
     dispatch: action => action
 });
 
+/**
+ * Interface implementors of the DXM GraphQL schema (see schema.graphql).
+ *
+ * Apollo Client 3 dropped heuristic fragment matching: without this map a fragment declared
+ * on an interface — and every jContent query spreads `...NodeCacheRequiredFields on JCRNode`
+ * — matches nothing, and its fields (uuid, path, workspace) are silently stripped from the
+ * result. The app shell's own client carries the same information, so this only matters for
+ * the fallback client. Keep in sync with the `implements` clauses of schema.graphql
+ * (3 interfaces, no unions at the time of writing).
+ */
+export const POSSIBLE_TYPES = {
+    JCRNode: ['GenericJCRNode', 'JCRSite', 'VanityUrl'],
+    JCRItemDefinition: ['JCRNodeDefinition', 'JCRPropertyDefinition'],
+    Principal: ['Group', 'User']
+};
+
 const createFallbackClient = () => new ApolloClient({
     link: new HttpLink({
         uri: `${window.contextJsParameters?.contextPath || ''}/modules/graphql`,
         credentials: 'same-origin'
     }),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({possibleTypes: POSSIBLE_TYPES})
 });
 
 /**

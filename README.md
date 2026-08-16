@@ -124,7 +124,10 @@ What the component provides internally:
 - the side panel tab registrations, when jContent's `./init` bootstrap has not run;
 - Apollo client, redux store and notification provider **only when the host tree lacks them**
   (mounting outside the app shell React tree). Inside the app shell the panel shares the host's
-  Apollo cache, store and notification queue.
+  Apollo cache, store and notification queue. The fallback client has to declare the schema's
+  `possibleTypes`: Apollo Client 3 needs them to match `...NodeCacheRequiredFields on JCRNode`,
+  and without them every query silently loses `uuid` / `path` / `workspace`
+  (`ContentSidePanelProviders.spec.js` checks that map against `schema.graphql`).
 
 Route-bound behaviour that is deliberately dropped: the full-screen toggle, the close button, the
 multi-selection view and jContent's refetch bus — all of them need jContent's own layout and redux

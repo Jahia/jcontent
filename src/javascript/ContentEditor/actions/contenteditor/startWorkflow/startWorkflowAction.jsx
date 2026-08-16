@@ -4,10 +4,12 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 import {useFormikContext} from 'formik';
 import {isDirty} from '~/ContentEditor/utils';
+import {useOpenPublicationWorkflow} from '~/JContent/actions/publication/useOpenPublicationWorkflow';
 
 const StartWorkFlow = ({isMainButton, render: Render, loading: Loading, ...otherProps}) => {
     const {nodeData, lang, i18nContext, siteInfo} = useContentEditorContext();
     const {hasPublishPermission, hasStartPublicationWorkflowPermission, lockedAndCannotBeEdited} = nodeData;
+    const openPublicationWorkflow = useOpenPublicationWorkflow();
 
     const formik = useFormikContext();
 
@@ -49,12 +51,12 @@ const StartWorkFlow = ({isMainButton, render: Render, loading: Loading, ...other
                 buttonLabelShort={(siteInfo?.languages.length > 1) ?
                     '' : 'jcontent:label.contentEditor.edit.action.startWorkflow.shortName'}
                 onClick={() => {
-                    window.authoringApi.openPublicationWorkflow(
-                        [nodeData.uuid],
-                        false, // Not publishing all subNodes (AKA sub pages)
-                        false, // Not publishing all language
-                        false // Not unpublish action
-                    );
+                    openPublicationWorkflow({
+                        uuids: [nodeData.uuid],
+                        allSubTree: false, // Not publishing all subNodes (AKA sub pages)
+                        allLanguages: false, // Not publishing all language
+                        checkForUnpublication: false // Not unpublish action
+                    });
                 }}
         />
     );

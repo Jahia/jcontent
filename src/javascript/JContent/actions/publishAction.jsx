@@ -8,6 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {CloudCheck} from '@jahia/moonstone';
 import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
+import {useOpenPublicationWorkflow} from './publication/useOpenPublicationWorkflow';
 
 function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;
@@ -120,6 +121,7 @@ export const PublishActionComponent = props => {
     const {id, path, paths, node: prefetchedNode, language, publishType, isPublishingAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation('jcontent');
+    const openPublicationWorkflow = useOpenPublicationWorkflow();
 
     const skip = !paths && (
         isDefinitelyHidden(prefetchedNode, constraintsByType[publishType]) ||
@@ -177,9 +179,21 @@ export const PublishActionComponent = props => {
             enabled={actionEnabled}
             onClick={() => {
                 if (path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', isPublishingAllLanguages, publishType === 'unpublish');
+                    openPublicationWorkflow({
+                        uuids: [res.node.uuid],
+                        allSubTree: publishType === 'publishAll',
+                        allLanguages: isPublishingAllLanguages,
+                        checkForUnpublication: publishType === 'unpublish',
+                        siteLanguages: res.node.site?.languages
+                    });
                 } else if (paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), publishType === 'publishAll', isPublishingAllLanguages, publishType === 'unpublish');
+                    openPublicationWorkflow({
+                        uuids: res.nodes.map(n => n.uuid),
+                        allSubTree: publishType === 'publishAll',
+                        allLanguages: isPublishingAllLanguages,
+                        checkForUnpublication: publishType === 'unpublish',
+                        siteLanguages: res.nodes[0]?.site?.languages
+                    });
                 }
             }}
         />

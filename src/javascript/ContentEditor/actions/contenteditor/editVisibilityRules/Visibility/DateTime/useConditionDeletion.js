@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {MarkForDeletionMutation, UndeleteMutation} from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import {useOpenPublicationWorkflow} from '~/JContent/actions/publication/useOpenPublicationWorkflow';
 
 /**
  * Hook handling the deletion lifecycle of a single visibility condition, reusing the standard
@@ -22,6 +23,7 @@ export const useConditionDeletion = ({refresh}) => {
     const notificationContext = useNotifications();
     const [markForDeletion] = useMutation(MarkForDeletionMutation);
     const [unmarkForDeletion] = useMutation(UndeleteMutation);
+    const openPublicationWorkflow = useOpenPublicationWorkflow();
 
     const refreshAll = useCallback(async () => {
         // Hard refresh so the publication menu in the jContent header and the rule statuses stay in sync.
@@ -59,8 +61,8 @@ export const useConditionDeletion = ({refresh}) => {
     const publishConditionDeletion = useCallback(uuid => {
         // Delegates to the standard publication workflow (same as the publishDeletion action). The
         // deletion is committed once the workflow completes.
-        window.authoringApi.openPublicationWorkflow([uuid], false, false);
-    }, []);
+        openPublicationWorkflow({uuids: [uuid], allSubTree: false, allLanguages: false});
+    }, [openPublicationWorkflow]);
 
     return {markConditionForDeletion, unmarkConditionForDeletion, publishConditionDeletion};
 };

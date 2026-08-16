@@ -9,6 +9,11 @@ jest.mock('formik');
 jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 
+const mockOpenPublicationWorkflow = jest.fn();
+jest.mock('~/JContent/actions/publication/useOpenPublicationWorkflow', () => ({
+    useOpenPublicationWorkflow: () => mockOpenPublicationWorkflow
+}));
+
 describe('startWorkflow action', () => {
     let formik;
     let defaultProps;
@@ -19,9 +24,7 @@ describe('startWorkflow action', () => {
     beforeEach(() => {
         StartWorkflowAction = startWorkflowAction.component;
 
-        window.authoringApi = {
-            openPublicationWorkflow: jest.fn()
-        };
+        mockOpenPublicationWorkflow.mockClear();
 
         defaultProps = {
             render: jest.fn(),
@@ -81,14 +84,14 @@ describe('startWorkflow action', () => {
         expect(cmp.props().isVisible).toBe(false);
     });
 
-    it('should call GWT command', () => {
+    it('should open the publication workflow', () => {
         const cmp = shallow(<StartWorkflowAction {...defaultProps}/>);
         cmp.props().onClick({
             nodeData: {uuid: 'hello'},
             enabled: true
         });
 
-        expect(window.authoringApi.openPublicationWorkflow).toHaveBeenCalled();
+        expect(mockOpenPublicationWorkflow).toHaveBeenCalled();
     });
 
     it('should not display startWorkflowAction when user doesn\'t have start workflow right', () => {

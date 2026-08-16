@@ -3,6 +3,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {hasMixin, isMarkedForDeletion} from '../JContent.utils';
 import {useSelector} from 'react-redux';
+import {useOpenPublicationWorkflow} from './publication/useOpenPublicationWorkflow';
 
 const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
@@ -13,6 +14,7 @@ const checkAction = node => node.operationsSupport.publication &&
 
 export const PublishDeletionActionComponent = ({path, paths, node: prefetchedNode, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
     const language = useSelector(state => state.language);
+    const openPublicationWorkflow = useOpenPublicationWorkflow();
 
     const skip = !paths && Boolean(prefetchedNode) && (!isMarkedForDeletion(prefetchedNode) || hasMixin(prefetchedNode, 'jmix:nolive'));
 
@@ -44,9 +46,17 @@ export const PublishDeletionActionComponent = ({path, paths, node: prefetchedNod
             buttonProps={{...buttonProps, color: 'danger'}}
             onClick={() => {
                 if (path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], isAllSubTree, isPublishingAllLanguages);
+                    openPublicationWorkflow({
+                        uuids: [res.node.uuid],
+                        allSubTree: isAllSubTree,
+                        allLanguages: isPublishingAllLanguages
+                    });
                 } else if (paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), isAllSubTree, isPublishingAllLanguages);
+                    openPublicationWorkflow({
+                        uuids: res.nodes.map(n => n.uuid),
+                        allSubTree: isAllSubTree,
+                        allLanguages: isPublishingAllLanguages
+                    });
                 }
             }}
         />

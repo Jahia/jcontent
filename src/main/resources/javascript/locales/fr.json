@@ -46,10 +46,19 @@
         "unknown": "Statut de publication indisponible"
       },
       "publicationBlockedDialog": {
-        "title": "Publication",
-        "continueQuestion": "Voulez-vous continuer ?",
+        "title": "Publication bloquée pour certaines langues",
+        "intro": "Certains contenus ne peuvent pas être publiés car des valeurs obligatoires sont manquantes. Les langues concernées seront ignorées.",
+        "mandatoryLanguage": "Langue obligatoire",
+        "missingProperties": "Champs obligatoires manquants :",
+        "descendantsIncomplete": "Un ou plusieurs sous-éléments sont incomplets dans cette langue",
+        "editInLanguage": "Modifier en {{language}}",
+        "conflicts": "Conflits",
+        "heldBackTitle": "Langues complètes en attente",
+        "heldBackDescription": "Les contenus suivants sont complets dans leur langue, mais leur publication est retenue tant que la ou les langues obligatoires {{languages}} ne sont pas complétées.",
+        "publishAvailable": "Publier {{count}} langue disponible",
+        "publishAvailable_plural": "Publier {{count}} langues disponibles",
+        "nothingToPublish": "Aucune langue ne peut être publiée tant que les problèmes ci-dessus ne sont pas résolus.",
         "cancel": "Annuler",
-        "continue": "Continuer",
         "close": "Fermer"
       },
       "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",

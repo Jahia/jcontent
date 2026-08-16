@@ -48,10 +48,19 @@
         "unknown": "Publication status unavailable"
       },
       "publicationBlockedDialog": {
-        "title": "Publication",
-        "continueQuestion": "Would you like to continue?",
+        "title": "Publication blocked for some languages",
+        "intro": "Some content cannot be published because mandatory values are missing. The affected languages will be skipped.",
+        "mandatoryLanguage": "Mandatory language",
+        "missingProperties": "Missing mandatory fields:",
+        "descendantsIncomplete": "One or more sub-items are incomplete in this language",
+        "editInLanguage": "Edit in {{language}}",
+        "conflicts": "Conflicts",
+        "heldBackTitle": "Complete languages held back",
+        "heldBackDescription": "The following content is complete in its language, but publication is held back until the mandatory language(s) {{languages}} are completed.",
+        "publishAvailable": "Publish {{count}} available language",
+        "publishAvailable_plural": "Publish {{count}} available languages",
+        "nothingToPublish": "No language can be published until the issues above are resolved.",
         "cancel": "Cancel",
-        "continue": "Continue",
         "close": "Close"
       },
       "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",

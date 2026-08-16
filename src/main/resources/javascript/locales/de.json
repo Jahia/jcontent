@@ -46,10 +46,19 @@
         "unknown": "Veröffentlichungsstatus nicht verfügbar"
       },
       "publicationBlockedDialog": {
-        "title": "Veröffentlichung",
-        "continueQuestion": "Möchten Sie fortfahren?",
+        "title": "Veröffentlichung für einige Sprachen blockiert",
+        "intro": "Einige Inhalte können nicht veröffentlicht werden, da Pflichtwerte fehlen. Die betroffenen Sprachen werden übersprungen.",
+        "mandatoryLanguage": "Verpflichtende Sprache",
+        "missingProperties": "Fehlende Pflichtfelder:",
+        "descendantsIncomplete": "Ein oder mehrere Unterelemente sind in dieser Sprache unvollständig",
+        "editInLanguage": "In {{language}} bearbeiten",
+        "conflicts": "Konflikte",
+        "heldBackTitle": "Vollständige Sprachen zurückgehalten",
+        "heldBackDescription": "Die folgenden Inhalte sind in ihrer Sprache vollständig, ihre Veröffentlichung wird jedoch zurückgehalten, bis die verpflichtende(n) Sprache(n) {{languages}} vervollständigt sind.",
+        "publishAvailable": "{{count}} verfügbare Sprache veröffentlichen",
+        "publishAvailable_plural": "{{count}} verfügbare Sprachen veröffentlichen",
+        "nothingToPublish": "Es kann keine Sprache veröffentlicht werden, bis die oben genannten Probleme behoben sind.",
         "cancel": "Abbrechen",
-        "continue": "Fortfahren",
         "close": "Schließen"
       },
       "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",

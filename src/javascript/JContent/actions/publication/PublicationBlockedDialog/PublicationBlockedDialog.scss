@@ -1,9 +1,16 @@
 .content {
-    min-width: 480px;
+    min-width: 560px;
 }
 
-.group {
+.section {
     margin-bottom: var(--spacing-medium);
+}
+
+.sectionHeader {
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+    margin-bottom: var(--spacing-small);
 }
 
 .itemList {
@@ -13,4 +20,31 @@
     li {
         margin-bottom: var(--spacing-small);
     }
+}
+
+.itemHeader {
+    display: flex;
+    gap: var(--spacing-small);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.itemNames {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.itemPath {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.chipList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-small);
+    align-items: center;
+    margin-top: var(--spacing-small);
 }

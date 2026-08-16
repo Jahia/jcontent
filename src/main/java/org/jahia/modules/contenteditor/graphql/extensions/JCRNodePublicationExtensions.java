@@ -28,12 +28,16 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLNonNull;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jahia.modules.contenteditor.api.forms.EditorFormServiceImpl;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlMissingMandatoryI18nProperties;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlMissingMandatoryI18nProperty;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.decorator.JCRSiteNode;
+import org.jahia.services.content.nodetypes.ExtendedItemDefinition;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
 import org.jahia.utils.LanguageCodeConverters;
@@ -86,6 +90,7 @@ public class JCRNodePublicationExtensions {
         try {
             JCRNodeWrapper jcrNode = node.getNode();
             ExtendedNodeType primaryNodeType = jcrNode.getPrimaryNodeType();
+            JCRSiteNode site = jcrNode.getResolveSite();
             List<ExtendedPropertyDefinition> candidates = new ArrayList<>();
             for (ExtendedPropertyDefinition definition : primaryNodeType.getPropertyDefinitionsAsMap().values()) {
                 if (definition.isInternationalized() && definition.isMandatory()) {
@@ -93,7 +98,7 @@ public class JCRNodePublicationExtensions {
                 }
             }
 
-            Locale labelLocale = uiLocale != null ? LanguageCodeConverters.getLocaleFromCode(uiLocale) : null;
+            Locale labelLocale = LanguageCodeConverters.languageCodeToLocale(uiLocale);
             List<GqlMissingMandatoryI18nProperties> result = new ArrayList<>();
             for (String language : languages) {
                 Locale locale = LanguageCodeConverters.getLocaleFromCode(language);
@@ -101,7 +106,7 @@ public class JCRNodePublicationExtensions {
                 List<GqlMissingMandatoryI18nProperty> missing = new ArrayList<>();
                 for (ExtendedPropertyDefinition definition : candidates) {
                     if (i18n == null || !i18n.hasProperty(definition.getName())) {
-                        missing.add(new GqlMissingMandatoryI18nProperty(definition.getName(), resolveLabel(definition, labelLocale, primaryNodeType)));
+                        missing.add(new GqlMissingMandatoryI18nProperty(definition.getName(), resolveLabel(definition, labelLocale, primaryNodeType, site)));
                     }
                 }
 
@@ -114,12 +119,35 @@ public class JCRNodePublicationExtensions {
         }
     }
 
-    private static String resolveLabel(ExtendedPropertyDefinition definition, Locale labelLocale, ExtendedNodeType primaryNodeType) {
-        if (labelLocale == null) {
+    /**
+     * Resolves the property display name through the same resource-bundle cascade as Content Editor's
+     * Field.initializeLabel (this module's forms implementation), so the dialog shows the same label as the
+     * editor form: the primary node type bundle first, then the declaring type of the (possibly overriding)
+     * definition, then the declaring type of the original overridden definition - e.g. jcr:title re-declared
+     * mandatory by jnt:page resolves through mix:title's mix_title.jcr_title key - falling back to the JCR
+     * name. A plain ExtendedItemDefinition.getLabel would stop at the override's own bundle key and return
+     * the resource-key-style fallback (jcr_title) instead of the localized label.
+     */
+    private static String resolveLabel(ExtendedPropertyDefinition definition, Locale labelLocale, ExtendedNodeType primaryNodeType, JCRSiteNode site) {
+        if (labelLocale == null || site == null) {
             return definition.getName();
         }
 
-        String label = definition.getLabel(labelLocale, primaryNodeType);
-        return StringUtils.isNotBlank(label) ? label : definition.getName();
+        String label = lookupLabel(definition, labelLocale, primaryNodeType, site);
+        if (StringUtils.isEmpty(label)) {
+            label = lookupLabel(definition, labelLocale, definition.getDeclaringNodeType(), site);
+        }
+
+        if (StringUtils.isEmpty(label)) {
+            ExtendedItemDefinition overriddenDefinition = definition.getOverridenDefinition();
+            label = lookupLabel(overriddenDefinition, labelLocale, overriddenDefinition.getDeclaringNodeType(), site);
+        }
+
+        return StringUtils.isNotEmpty(label) ? label : definition.getName();
+    }
+
+    private static String lookupLabel(ExtendedItemDefinition definition, Locale locale, ExtendedNodeType nodeType, JCRSiteNode site) {
+        String prefix = nodeType.getTemplatePackage() != null ? nodeType.getTemplatePackage().getBundle().getSymbolicName() + ":" : "";
+        return StringEscapeUtils.unescapeHtml(EditorFormServiceImpl.resolveResourceKey(prefix + definition.getResourceBundleKey(nodeType), locale, site));
     }
 }

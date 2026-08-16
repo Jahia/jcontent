@@ -2,6 +2,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 
 const {
     MANDATORY_LANGUAGE_UNPUBLISHABLE,
+    MANDATORY_LANGUAGE_VALID,
     CONFLICT,
     NOT_PUBLISHED,
     UNPUBLISHED,
@@ -90,10 +91,15 @@ export const groupPairsByNode = pairs => Object.values(pairs.reduce((acc, pair) 
  *                                      -> SHOW_PARTIALLY_BLOCKED_DIALOG (Continue publishes only the pairs needing
  *                                         publication)
  *
+ * Dialog decisions also carry the heldBackPairs: (node, language) pairs in MANDATORY_LANGUAGE_VALID status,
+ * i.e. complete in their language but held back until the site-mandatory language(s) are completed. They are
+ * neither blocked (GWT never showed the dialog for them) nor publishable; the dialog surfaces them as an
+ * informational section, a state that used to be completely invisible.
+ *
  * @param {object} params
  * @param {array} params.pairs (node, language) pairs, each carrying publicationStatus and allowedToPublishWithoutWorkflow
  * @param {boolean} params.checkForUnpublication whether the request is an unpublication
- * @returns {object} the decision, with the blocked pairs and the pairs to publish when a dialog must be shown
+ * @returns {object} the decision, with the blocked, held back and to-publish pairs when a dialog must be shown
  */
 export const getPublicationDecision = ({pairs, checkForUnpublication}) => {
     if (checkForUnpublication) {
@@ -106,15 +112,16 @@ export const getPublicationDecision = ({pairs, checkForUnpublication}) => {
         return {type: publicationDecisionTypes.DELEGATE_TO_GWT};
     }
 
+    const heldBackPairs = pairs.filter(pair => pair.publicationStatus === MANDATORY_LANGUAGE_VALID);
     const pairsToPublish = pairs.filter(pair => needsPublicationStatuses.includes(pair.publicationStatus));
 
     if (pairsToPublish.length === 0) {
-        return {type: publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG, blockedPairs, pairsToPublish};
+        return {type: publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG, blockedPairs, heldBackPairs, pairsToPublish};
     }
 
     if (pairsToPublish.some(pair => pair.allowedToPublishWithoutWorkflow !== true)) {
         return {type: publicationDecisionTypes.DELEGATE_TO_GWT};
     }
 
-    return {type: publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG, blockedPairs, pairsToPublish};
+    return {type: publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG, blockedPairs, heldBackPairs, pairsToPublish};
 };

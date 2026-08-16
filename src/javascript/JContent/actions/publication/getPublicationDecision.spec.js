@@ -136,6 +136,21 @@ describe('getPublicationDecision', () => {
         expect(decision.type).toBe(publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG);
         expect(decision.blockedPairs).toEqual([blockedEn]);
         expect(decision.pairsToPublish).toEqual([]);
+        expect(decision.heldBackPairs).toEqual([validFr]);
+    });
+
+    it('should expose the MANDATORY_LANGUAGE_VALID pairs as held back on the partially blocked dialog too', () => {
+        const blockedEn = pair({publicationStatus: 'MANDATORY_LANGUAGE_UNPUBLISHABLE'});
+        const validEs = pair({language: 'es', publicationStatus: 'MANDATORY_LANGUAGE_VALID'});
+        const modifiedFr = pair({language: 'fr', publicationStatus: 'MODIFIED'});
+        const decision = getPublicationDecision({
+            pairs: [blockedEn, validEs, modifiedFr],
+            checkForUnpublication: false
+        });
+
+        expect(decision.type).toBe(publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG);
+        expect(decision.heldBackPairs).toEqual([validEs]);
+        expect(decision.pairsToPublish).toEqual([modifiedFr]);
     });
 
     it('should treat MARKED_FOR_DELETION pairs as needing publication', () => {

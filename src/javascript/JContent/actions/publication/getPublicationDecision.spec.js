@@ -29,21 +29,35 @@ describe('getPublicationDecision', () => {
         expect(decision.type).toBe(publicationDecisionTypes.DELEGATE_TO_GWT);
     });
 
-    it('should show the partially blocked dialog when every surviving pair can bypass the workflow', () => {
+    it('should show the partially blocked dialog when every pair needing publication can bypass the workflow', () => {
         const blockedEn = pair({publicationStatus: 'MANDATORY_LANGUAGE_UNPUBLISHABLE'});
         const blockedDe = pair({language: 'de', publicationStatus: 'CONFLICT'});
-        const survivingFr = pair({language: 'fr', publicationStatus: 'MODIFIED'});
+        const modifiedFr = pair({language: 'fr', publicationStatus: 'MODIFIED'});
         const decision = getPublicationDecision({
-            pairs: [blockedEn, survivingFr, blockedDe],
+            pairs: [blockedEn, modifiedFr, blockedDe],
             checkForUnpublication: false
         });
 
         expect(decision.type).toBe(publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG);
         expect(decision.blockedPairs).toEqual([blockedEn, blockedDe]);
-        expect(decision.survivingPairs).toEqual([survivingFr]);
+        expect(decision.pairsToPublish).toEqual([modifiedFr]);
     });
 
-    it('should delegate to GWT when a surviving pair requires a workflow (conservative hybrid fallback)', () => {
+    it('should exclude pairs with nothing to publish from the pairs to publish', () => {
+        const blockedEs = pair({language: 'es', publicationStatus: 'MANDATORY_LANGUAGE_UNPUBLISHABLE'});
+        const publishedEn = pair({publicationStatus: 'PUBLISHED'});
+        const modifiedFr = pair({language: 'fr', publicationStatus: 'MODIFIED'});
+        const decision = getPublicationDecision({
+            pairs: [publishedEn, modifiedFr, blockedEs],
+            checkForUnpublication: false
+        });
+
+        expect(decision.type).toBe(publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG);
+        expect(decision.blockedPairs).toEqual([blockedEs]);
+        expect(decision.pairsToPublish).toEqual([modifiedFr]);
+    });
+
+    it('should delegate to GWT when a pair needing publication requires a workflow (conservative hybrid fallback)', () => {
         const decision = getPublicationDecision({
             pairs: [
                 pair({publicationStatus: 'MANDATORY_LANGUAGE_UNPUBLISHABLE'}),
@@ -53,6 +67,19 @@ describe('getPublicationDecision', () => {
         });
 
         expect(decision.type).toBe(publicationDecisionTypes.DELEGATE_TO_GWT);
+    });
+
+    it('should ignore the workflow flag of pairs with nothing to publish', () => {
+        const blockedEs = pair({language: 'es', publicationStatus: 'CONFLICT'});
+        const publishedEn = pair({publicationStatus: 'PUBLISHED', allowedToPublishWithoutWorkflow: false});
+        const modifiedFr = pair({language: 'fr', publicationStatus: 'MODIFIED'});
+        const decision = getPublicationDecision({
+            pairs: [publishedEn, modifiedFr, blockedEs],
+            checkForUnpublication: false
+        });
+
+        expect(decision.type).toBe(publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG);
+        expect(decision.pairsToPublish).toEqual([modifiedFr]);
     });
 
     it('should show the all blocked dialog when every pair is blocked', () => {
@@ -65,7 +92,25 @@ describe('getPublicationDecision', () => {
 
         expect(decision.type).toBe(publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG);
         expect(decision.blockedPairs).toEqual([blockedEn, blockedFr]);
-        expect(decision.survivingPairs).toEqual([]);
+        expect(decision.pairsToPublish).toEqual([]);
+    });
+
+    it('should show the all blocked dialog when the non-blocked pairs are already published', () => {
+        // Real case: /sites/luxe/home/buy with en=PUBLISHED, fr=PUBLISHED, es=blocked. GWT shows the
+        // OK-only info box because nothing remains to publish once the blocked rows are removed.
+        const blockedEs = pair({language: 'es', publicationStatus: 'MANDATORY_LANGUAGE_UNPUBLISHABLE'});
+        const decision = getPublicationDecision({
+            pairs: [
+                pair({publicationStatus: 'PUBLISHED'}),
+                pair({language: 'fr', publicationStatus: 'PUBLISHED'}),
+                blockedEs
+            ],
+            checkForUnpublication: false
+        });
+
+        expect(decision.type).toBe(publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG);
+        expect(decision.blockedPairs).toEqual([blockedEs]);
+        expect(decision.pairsToPublish).toEqual([]);
     });
 
     it('should not treat MANDATORY_LANGUAGE_VALID as blocked and delegate to GWT when only such pairs exist', () => {
@@ -80,17 +125,29 @@ describe('getPublicationDecision', () => {
         expect(decision.type).toBe(publicationDecisionTypes.DELEGATE_TO_GWT);
     });
 
-    it('should treat MANDATORY_LANGUAGE_VALID pairs as surviving pairs when blocked pairs exist', () => {
+    it('should treat MANDATORY_LANGUAGE_VALID pairs as having nothing to publish when blocked pairs exist', () => {
         const blockedEn = pair({publicationStatus: 'CONFLICT'});
-        const survivingFr = pair({language: 'fr', publicationStatus: 'MANDATORY_LANGUAGE_VALID'});
+        const validFr = pair({language: 'fr', publicationStatus: 'MANDATORY_LANGUAGE_VALID'});
         const decision = getPublicationDecision({
-            pairs: [blockedEn, survivingFr],
+            pairs: [blockedEn, validFr],
+            checkForUnpublication: false
+        });
+
+        expect(decision.type).toBe(publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG);
+        expect(decision.blockedPairs).toEqual([blockedEn]);
+        expect(decision.pairsToPublish).toEqual([]);
+    });
+
+    it('should treat MARKED_FOR_DELETION pairs as needing publication', () => {
+        const blockedEn = pair({publicationStatus: 'CONFLICT'});
+        const deletionFr = pair({language: 'fr', publicationStatus: 'MARKED_FOR_DELETION'});
+        const decision = getPublicationDecision({
+            pairs: [blockedEn, deletionFr],
             checkForUnpublication: false
         });
 
         expect(decision.type).toBe(publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG);
-        expect(decision.blockedPairs).toEqual([blockedEn]);
-        expect(decision.survivingPairs).toEqual([survivingFr]);
+        expect(decision.pairsToPublish).toEqual([deletionFr]);
     });
 
     it('should delegate to GWT for unpublication, even with blocked pairs', () => {

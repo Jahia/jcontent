@@ -11,9 +11,9 @@ import {getPublicationDecision, publicationDecisionTypes, toPublicationPairs} fr
  *
  * Before delegating to GWT, it runs a pre-flight GraphQL query checking, per selected node and target
  * language, whether the publication is blocked (MANDATORY_LANGUAGE_UNPUBLISHABLE or CONFLICT status). When
- * the legacy GWT confirmation would fire and every non-blocked pair can be published without workflow, a
- * Moonstone dialog replaces it (see PublicationBlockedDialog); in every other case the request is delegated
- * to the GWT bridge unchanged.
+ * the legacy GWT confirmation would fire and every pair actually needing publication can be published
+ * without workflow, a Moonstone dialog replaces it (see PublicationBlockedDialog); in every other case the
+ * request is delegated to the GWT bridge unchanged.
  *
  * @returns {Function} an async function accepting {uuids, allSubTree, allLanguages, checkForUnpublication,
  *                     siteLanguages}, where siteLanguages is the list of site language objects (used to
@@ -66,7 +66,7 @@ export const useOpenPublicationWorkflow = () => {
 
         componentRenderer.render('publicationBlockedDialog', PublicationBlockedDialog, {
             blockedPairs: decision.blockedPairs,
-            survivingPairs: decision.survivingPairs,
+            pairsToPublish: decision.pairsToPublish,
             isAllSubTree: allSubTree,
             onExit: () => componentRenderer.destroy('publicationBlockedDialog')
         });

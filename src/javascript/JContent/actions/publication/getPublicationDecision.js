@@ -1,6 +1,13 @@
 import JContentConstants from '~/JContent/JContent.constants';
 
-const {MANDATORY_LANGUAGE_UNPUBLISHABLE, CONFLICT} = JContentConstants.availablePublicationStatuses;
+const {
+    MANDATORY_LANGUAGE_UNPUBLISHABLE,
+    CONFLICT,
+    NOT_PUBLISHED,
+    UNPUBLISHED,
+    MODIFIED,
+    MARKED_FOR_DELETION
+} = JContentConstants.availablePublicationStatuses;
 
 /**
  * Publication statuses that make a (node, language) pair blocked, i.e. that would trigger the legacy GWT
@@ -8,6 +15,15 @@ const {MANDATORY_LANGUAGE_UNPUBLISHABLE, CONFLICT} = JContentConstants.available
  * blocked: GWT does not show the dialog for it.
  */
 export const blockedPublicationStatuses = [MANDATORY_LANGUAGE_UNPUBLISHABLE, CONFLICT];
+
+/**
+ * Publication statuses meaning a (node, language) pair actually has something to publish. Non-blocked pairs
+ * in any other status (PUBLISHED, MANDATORY_LANGUAGE_VALID, ...) have nothing to do and never survive the
+ * legacy GWT flow either (the server-side filtering drops them), so they must neither keep the
+ * partially-blocked variant alive nor be re-published by Continue. MARKED_FOR_DELETION needs publication:
+ * publishing it is what commits the deletion (publishDeletion flow).
+ */
+export const needsPublicationStatuses = [NOT_PUBLISHED, UNPUBLISHED, MODIFIED, MARKED_FOR_DELETION];
 
 export const publicationDecisionTypes = {
     DELEGATE_TO_GWT: 'DELEGATE_TO_GWT',
@@ -63,19 +79,21 @@ export const groupPairsByNode = pairs => Object.values(pairs.reduce((acc, pair) 
  * Decides how a publication request must be handled, based on the pre-flight publication info.
  *
  * Decision table:
- * - checkForUnpublication            -> DELEGATE_TO_GWT (unpublication never triggers the legacy dialog)
- * - no blocked pair                  -> DELEGATE_TO_GWT (the legacy confirm cannot fire; happy path unchanged)
- * - blocked pairs, no surviving pair -> SHOW_ALL_BLOCKED_DIALOG (informational variant)
- * - blocked pairs, and at least one surviving pair cannot bypass the workflow
- *                                    -> DELEGATE_TO_GWT (conservative hybrid fallback: the legacy dialog and the
- *                                       workflow dashboard keep handling this residual case)
- * - blocked pairs, and every surviving pair can bypass the workflow
- *                                    -> SHOW_PARTIALLY_BLOCKED_DIALOG (Continue publishes only the surviving pairs)
+ * - checkForUnpublication              -> DELEGATE_TO_GWT (unpublication never triggers the legacy dialog)
+ * - no blocked pair                    -> DELEGATE_TO_GWT (the legacy confirm cannot fire; happy path unchanged)
+ * - blocked pairs, no pair needing publication (the rest is PUBLISHED, MANDATORY_LANGUAGE_VALID, ...)
+ *                                      -> SHOW_ALL_BLOCKED_DIALOG (informational variant, matching GWT's OK-only box)
+ * - blocked pairs, and at least one pair needing publication cannot bypass the workflow
+ *                                      -> DELEGATE_TO_GWT (conservative hybrid fallback: the legacy dialog and the
+ *                                         workflow dashboard keep handling this residual case)
+ * - blocked pairs, and every pair needing publication can bypass the workflow
+ *                                      -> SHOW_PARTIALLY_BLOCKED_DIALOG (Continue publishes only the pairs needing
+ *                                         publication)
  *
  * @param {object} params
  * @param {array} params.pairs (node, language) pairs, each carrying publicationStatus and allowedToPublishWithoutWorkflow
  * @param {boolean} params.checkForUnpublication whether the request is an unpublication
- * @returns {object} the decision, with the blocked/surviving pairs when a dialog must be shown
+ * @returns {object} the decision, with the blocked pairs and the pairs to publish when a dialog must be shown
  */
 export const getPublicationDecision = ({pairs, checkForUnpublication}) => {
     if (checkForUnpublication) {
@@ -88,15 +106,15 @@ export const getPublicationDecision = ({pairs, checkForUnpublication}) => {
         return {type: publicationDecisionTypes.DELEGATE_TO_GWT};
     }
 
-    const survivingPairs = pairs.filter(pair => !blockedPublicationStatuses.includes(pair.publicationStatus));
+    const pairsToPublish = pairs.filter(pair => needsPublicationStatuses.includes(pair.publicationStatus));
 
-    if (survivingPairs.length === 0) {
-        return {type: publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG, blockedPairs, survivingPairs};
+    if (pairsToPublish.length === 0) {
+        return {type: publicationDecisionTypes.SHOW_ALL_BLOCKED_DIALOG, blockedPairs, pairsToPublish};
     }
 
-    if (survivingPairs.some(pair => pair.allowedToPublishWithoutWorkflow !== true)) {
+    if (pairsToPublish.some(pair => pair.allowedToPublishWithoutWorkflow !== true)) {
         return {type: publicationDecisionTypes.DELEGATE_TO_GWT};
     }
 
-    return {type: publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG, blockedPairs, survivingPairs};
+    return {type: publicationDecisionTypes.SHOW_PARTIALLY_BLOCKED_DIALOG, blockedPairs, pairsToPublish};
 };

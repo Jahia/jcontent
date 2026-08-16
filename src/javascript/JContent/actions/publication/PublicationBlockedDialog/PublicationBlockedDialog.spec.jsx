@@ -29,7 +29,7 @@ describe('PublicationBlockedDialog', () => {
                 {uuid: 'uuid-1', path: '/sites/mySite/home', displayName: 'Home', language: 'en', publicationStatus: 'MANDATORY_LANGUAGE_UNPUBLISHABLE', allowedToPublishWithoutWorkflow: true},
                 {uuid: 'uuid-2', path: '/sites/mySite/news', displayName: 'News', language: 'fr', publicationStatus: 'CONFLICT', allowedToPublishWithoutWorkflow: true}
             ],
-            survivingPairs: [
+            pairsToPublish: [
                 {uuid: 'uuid-1', path: '/sites/mySite/home', displayName: 'Home', language: 'fr', publicationStatus: 'MODIFIED', allowedToPublishWithoutWorkflow: true}
             ],
             isAllSubTree: false,
@@ -67,8 +67,8 @@ describe('PublicationBlockedDialog', () => {
         expect(cmp.find({'data-sel-role': 'close-button'}).exists()).toBe(false);
     });
 
-    it('should show the informational variant with a single close button when everything is blocked', () => {
-        defaultProps.survivingPairs = [];
+    it('should show the informational variant with a single close button when nothing remains to publish', () => {
+        defaultProps.pairsToPublish = [];
         const cmp = shallowDialog(defaultProps);
 
         expect(cmp.find({'data-sel-role': 'continue-question'}).exists()).toBe(false);
@@ -77,7 +77,7 @@ describe('PublicationBlockedDialog', () => {
         expect(cmp.find({'data-sel-role': 'close-button'}).exists()).toBe(true);
     });
 
-    it('should publish only the surviving pairs on continue and close the dialog', async () => {
+    it('should publish only the pairs needing publication on continue and close the dialog', async () => {
         defaultProps.isAllSubTree = true;
         const cmp = shallowDialog(defaultProps);
 

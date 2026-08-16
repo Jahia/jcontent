@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 /**
- * Builds the mutation publishing the surviving (node, language) pairs, with one aliased mutateNode per node.
+ * Builds the mutation publishing the (node, language) pairs needing publication, with one aliased mutateNode per node.
  * UUIDs and language codes come from the JCR and are inlined as literals, as GraphQL variables cannot hold a
  * dynamic number of values.
  *

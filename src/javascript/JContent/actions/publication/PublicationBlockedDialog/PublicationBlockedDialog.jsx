@@ -18,17 +18,17 @@ const statusDescriptionKeys = {
 
 /**
  * Moonstone replacement for the legacy GWT "missing mandatory property / conflict" publication confirmation.
- * Lists the blocked (node, language) pairs grouped by status; Continue publishes only the surviving pairs,
- * Cancel aborts everything. When every pair is blocked, an informational variant with a single Close button
- * is shown instead.
+ * Lists the blocked (node, language) pairs grouped by status; Continue publishes only the pairs actually
+ * needing publication, Cancel aborts everything. When nothing remains to publish, an informational variant
+ * with a single Close button is shown instead.
  */
-export const PublicationBlockedDialog = ({blockedPairs, survivingPairs, isAllSubTree, onExit}) => {
+export const PublicationBlockedDialog = ({blockedPairs, pairsToPublish, isAllSubTree, onExit}) => {
     const {t} = useTranslation('jcontent');
     const client = useApolloClient();
     const [isOpen, setIsOpen] = useState(true);
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const isAllBlocked = survivingPairs.length === 0;
+    const isAllBlocked = pairsToPublish.length === 0;
 
     const blockedGroups = Object.keys(statusDescriptionKeys)
         .map(status => ({status, pairs: blockedPairs.filter(pair => pair.publicationStatus === status)}))
@@ -41,7 +41,7 @@ export const PublicationBlockedDialog = ({blockedPairs, survivingPairs, isAllSub
     const handleContinue = () => {
         setIsPublishing(true);
         client.mutate({
-            mutation: buildPublishMutation(groupPairsByNode(survivingPairs)),
+            mutation: buildPublishMutation(groupPairsByNode(pairsToPublish)),
             variables: {includeSubTree: isAllSubTree}
         }).then(() => {
             enqueueSnackbar(t('jcontent:label.contentManager.publicationStatus.notification.publish'), {autoHideDuration: 3000});
@@ -124,7 +124,7 @@ const publicationPairPropType = PropTypes.shape({
 
 PublicationBlockedDialog.propTypes = {
     blockedPairs: PropTypes.arrayOf(publicationPairPropType).isRequired,
-    survivingPairs: PropTypes.arrayOf(publicationPairPropType).isRequired,
+    pairsToPublish: PropTypes.arrayOf(publicationPairPropType).isRequired,
     isAllSubTree: PropTypes.bool.isRequired,
     onExit: PropTypes.func.isRequired
 };

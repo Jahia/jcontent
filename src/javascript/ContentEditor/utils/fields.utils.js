@@ -182,8 +182,6 @@ export function getValuePropName(field) {
 
     if (field.selectorOptions?.find(selector => selector.name === 'password')) {
         result.option = 'ENCRYPTED';
-    } else if (field.requiredType === 'DATE') {
-        result.option = 'NOT_ZONED_DATE';
     }
 
     return result;
@@ -196,10 +194,6 @@ export function getValuePropName(field) {
  * @private
  */
 function _getPropertyNameToCompare(field) {
-    if (field.requiredType === 'DATE') {
-        return field.multiple ? 'notZonedDateValues' : 'notZonedDateValue';
-    }
-
     return field.multiple ? 'values' : 'value';
 }
 

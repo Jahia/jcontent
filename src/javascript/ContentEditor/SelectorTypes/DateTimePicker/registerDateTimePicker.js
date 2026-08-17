@@ -1,7 +1,7 @@
 import {DateTimePicker} from './DateTimePicker';
 
 const adaptDateProperty = (field, property) => {
-    return field.multiple ? property.notZonedDateValues : property.notZonedDateValue;
+    return field.multiple ? property.values : property.value;
 };
 
 export const registerDateTimePicker = ceRegistry => {

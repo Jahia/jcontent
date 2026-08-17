@@ -58,22 +58,47 @@ export class GraphqlUtils {
     public static getNodeId = (path: string, as?: string) => {
         const asValue = typeof as === 'undefined' ? 'ret' : as;
 
-        return cy.apollo({
-            variables: {
-                path: path
-            },
-            queryFile: 'jcontent/jcrGetNode.graphql'
-        }).its('data.jcr.nodeByPath.uuid').as(asValue);
+        return cy
+            .apollo({
+                variables: {
+                    path: path
+                },
+                queryFile: 'jcontent/jcrGetNode.graphql'
+            })
+            .its('data.jcr.nodeByPath.uuid')
+            .as(asValue);
     };
 
     public static getNode = (path: string) => {
-        return cy.apollo({
-            variables: {
-                path: path
-            },
-            queryFile: 'jcontent/jcrGetNode.graphql',
-            errorPolicy: 'all'
-        }).its('data.jcr.nodeByPath');
+        return cy
+            .apollo({
+                variables: {
+                    path: path
+                },
+                queryFile: 'jcontent/jcrGetNode.graphql',
+                errorPolicy: 'all'
+            })
+            .its('data.jcr.nodeByPath');
+    };
+
+    // Fetches a single property's raw, unformatted value directly from the backend -- bypassing
+    // any UI/display formatting entirely. Needed whenever a UI-only round-trip (type -> save ->
+    // reopen -> same value back) can't tell two different storage conventions apart because both
+    // are internally self-consistent for a single browser talking to itself (e.g. verifying a
+    // date is genuinely stored as a UTC instant, not merely displayed to look right).
+    public static readonly getPropertyValue = (path: string, property: string) => {
+        return cy
+            .apollo({
+                variables: {
+                    path: path,
+                    properties: [property]
+                },
+                queryFile: 'jcontent/jcrGetNode.graphql'
+            })
+            .then(result => {
+                const properties = result?.data?.jcr?.nodeByPath?.properties ?? [];
+                return properties.find(p => p.name === property)?.value;
+            });
     };
 
     public static setProperty = (pathOrId: string, property: string, value: string, language: string) => {

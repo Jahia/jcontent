@@ -31,7 +31,7 @@ import org.jahia.modules.contenteditor.api.forms.EditorFormException;
 import org.jahia.modules.contenteditor.api.forms.PublicationService;
 import org.jahia.modules.contenteditor.api.lock.StaticEditorLockService;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
-import org.jahia.modules.graphql.provider.dxm.node.GqlJcrPropertyInput;
+import org.jahia.modules.graphql.provider.dxm.node.GqlJcrMutationSupport;
 import org.jahia.modules.graphql.provider.dxm.osgi.annotations.GraphQLOsgiService;
 import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
@@ -158,7 +158,7 @@ public class GqlEditorFormMutations {
             if (addedNode.canAddMixin("jmix:conditionPublicationInfo")) {
                 addedNode.addMixin("jmix:conditionPublicationInfo");
             }
-            applyProperties(addedNode, condition);
+            GqlJcrMutationSupport.setProperties(addedNode, condition.getProperties());
         }
     }
 
@@ -169,7 +169,8 @@ public class GqlEditorFormMutations {
         for (VisibilityConditionInput condition : updatedConditions) {
             JCRNodeWrapper updatedNode = session.getNodeByUUID(condition.getUuid());
             if (updatedNode.getParent().getIdentifier().equals(conditions.getIdentifier())) {
-                applyProperties(updatedNode, condition);
+                deleteProperties(updatedNode, condition.getDeletedProperties());
+                GqlJcrMutationSupport.setProperties(updatedNode, condition.getProperties());
             }
         }
     }
@@ -187,15 +188,15 @@ public class GqlEditorFormMutations {
     }
 
     /**
-     * Copy the condition input properties onto the given node, using the single value when set,
-     * otherwise the multiple values.
+     * Remove the named properties from the given condition node, e.g. a date field that was cleared
      */
-    private void applyProperties(JCRNodeWrapper node, VisibilityConditionInput condition) throws RepositoryException {
-        for (GqlJcrPropertyInput property : condition.getProperties()) {
-            if (property.getValue() != null) {
-                node.setProperty(property.getName(), property.getValue());
-            } else if (!CollectionUtils.isEmpty(property.getValues())) {
-                node.setProperty(property.getName(), property.getValues().toArray(new String[0]));
+    private void deleteProperties(JCRNodeWrapper node, Collection<String> propertyNames) throws RepositoryException {
+        if (CollectionUtils.isEmpty(propertyNames)) {
+            return;
+        }
+        for (String propertyName : propertyNames) {
+            if (node.hasProperty(propertyName)) {
+                node.getProperty(propertyName).remove();
             }
         }
     }

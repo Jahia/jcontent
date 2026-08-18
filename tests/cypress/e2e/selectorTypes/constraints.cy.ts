@@ -45,6 +45,7 @@ describe('constraints', () => {
             .visit('jcontentSite', 'en', 'pages/home')
             .switchToStructuredView();
         const contentEditor = jcontent.editComponentByText('list');
+        contentEditor.getTitle().should('be.visible').contains('list');
         contentEditor.closeSection('content');
         contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
         contentEditor.getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
@@ -58,6 +59,7 @@ describe('constraints', () => {
             .visit('jcontentSite', 'en', 'content-folders/contents')
             .switchToListMode();
         const contentEditor = jcontent.editComponentByText('folder1');
+        contentEditor.getTitle().should('be.visible').contains('folder1');
         contentEditor.closeSection('content');
         contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
         contentEditor
@@ -93,6 +95,7 @@ describe('constraints', () => {
             .visit('jcontentSite', 'en', 'content-folders/contents')
             .switchToListMode();
         const contentEditor = jcontent.editComponentByText('folder1');
+        contentEditor.getTitle().should('be.visible').contains('folder1');
         contentEditor.closeSection('content');
         contentEditor
             .getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)

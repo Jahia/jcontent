@@ -1,4 +1,3 @@
-/// <reference types="./graphql-cache.d.ts" />
 import { initGraphQLTada } from 'gql.tada';
 import type { introspection } from './graphql-live.d.ts';
 

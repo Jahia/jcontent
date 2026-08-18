@@ -140,7 +140,9 @@ export class PageBuilderModule extends BaseComponent {
             this.click(); // Header shows up only when selected
         }
 
-        return this.getBox().getHeader();
+        // See waitUntilStable's doc: a click grows the box for its header, which can otherwise
+        // pin the header over a stale, pre-reflow position for the space of one 50ms poll tick.
+        return this.getBox().waitUntilStable().getHeader();
     }
 
     getFooter() {

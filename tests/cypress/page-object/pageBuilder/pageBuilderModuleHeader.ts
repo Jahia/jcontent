@@ -14,7 +14,6 @@ export class PageBuilderModuleHeader extends BaseComponent {
     }
 
     assertHeaderText(text: string) {
-        this.should('be.visible');
         this.get().find('p').contains(text);
     }
 

@@ -1,159 +1,73 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-import {DatePicker} from '../DatePicker';
-
+import {DateTimeInput} from '@jahia/moonstone';
 import {dayjs} from 'date-formatter';
+import {useTranslation} from 'react-i18next';
 
-import {Popover} from '@material-ui/core';
-import NumberFormat from 'react-number-format';
-import {Button, Calendar, Input} from '@jahia/moonstone';
 import styles from './DatePickerInput.scss';
 
-const datetimeFormat = {
-    date: 'L',
-    datetime: 'L HH:mm'
+const variantToType = {
+    date: 'date',
+    datetime: 'dateTime'
 };
 
-const formatDateTime = (datetime, lang, variant, displayDateFormat) => {
-    if (!datetime) {
-        return '';
-    }
+const dayjsToLdmlToken = {YYYY: 'yyyy', YY: 'yy', DD: 'dd', D: 'd'};
 
-    return dayjs(datetime)
-        .locale(lang)
-        .format(displayDateFormat || datetimeFormat[variant]);
+// 'DD/MM/YYYY HH:mm' -> 'dd/MM/yyyy', the time being rendered by its own sub-input
+const toLdmlDateFormat = format => (format ?
+    String(format).replace(/[Hhms:]/g, '').trim().replaceAll(/YYYY|YY|DD|D/g, token => dayjsToLdmlToken[token]) :
+    undefined);
+
+const getBoundary = (disabledDays, boundary) => {
+    const date = Array.isArray(disabledDays) && disabledDays.find(range => range?.[boundary])?.[boundary];
+    return date ? dayjs(date).format('YYYY-MM-DD') : undefined;
 };
 
-export const getMaskOptions = (displayDateMask, isDateTime) => {
-    const defaultDateMask = isDateTime ? '__/__/____ __:__' : '__/__/____';
-    const mask = displayDateMask ? displayDateMask : defaultDateMask;
-    return {
-        mask: mask.replace(/_/g, '#'),
-        empty: mask
-    };
-};
+// Unlike `new Date()`, dayjs reads a date-only ISO string as local time rather than UTC midnight
+const toDate = value => (value ? dayjs(value.toString()).toDate() : null);
 
 export const DatePickerInput = ({
-    variant,
+    variant = 'date',
     lang,
-    dayPickerProps,
-    onChange,
-    onBlur,
-    initialValue,
-    readOnly,
-    displayDateFormat,
+    dayPickerProps = {},
+    onChange = () => {},
+    onBlur = () => {},
+    initialValue = null,
+    readOnly = false,
+    displayDateFormat = null,
     displayDateMask,
     ...props
 }) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [datetime, setDatetime] = useState(initialValue);
-    const [datetimeString, setDatetimeString] = useState(
-        formatDateTime(initialValue, lang, variant, displayDateFormat)
-    );
+    const {t} = useTranslation('jcontent');
+    const type = variantToType[variant];
+    const dateFormat = toLdmlDateFormat(displayDateFormat);
+    const minDate = getBoundary(dayPickerProps.disabledDays, 'before');
+    const maxDate = getBoundary(dayPickerProps.disabledDays, 'after');
 
-    useEffect(() => {
-        setDatetime(initialValue);
-        setDatetimeString(formatDateTime(initialValue, lang, variant, displayDateFormat));
-    }, [setDatetime, setDatetimeString, initialValue, lang, variant, displayDateFormat]);
+    const value = initialValue ?
+        dayjs(initialValue).format(type === 'dateTime' ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD') :
+        null;
 
-    const isDateTime = variant === 'datetime';
-    const containerRef = useRef();
-    const maskOptions = getMaskOptions(displayDateMask, isDateTime);
-
-    const handleOpenPicker = () => {
-        if (!readOnly) {
-            setAnchorEl(containerRef.current);
-        }
-    };
-
-    const handleInputChange = e => {
-        if (e && e.target) {
-            setDatetimeString(e.target.value);
-
-            if (maskOptions.empty === e.target.value) {
-                setDatetime(null);
-                onChange(null);
-            } else if (!e.target.value.includes('_')) {
-                const newDate = dayjs(e.target.value, displayDateFormat || datetimeFormat[variant], lang);
-                if (newDate.isValid()) {
-                    setDatetimeString(newDate.locale(lang).format(displayDateFormat || datetimeFormat[variant]));
-                    setDatetime(newDate.toDate());
-                    onChange(newDate.toDate());
-                } else {
-                    onChange(e.target.value);
-                }
-            }
-        }
-    };
-
-    const postfixComponent = (
-        <Button aria-label="Open date picker"
-                variant="ghost"
-                icon={<Calendar/>}
-                onClick={handleOpenPicker}
-        />
-    );
+    console.log('test composant détecté');
 
     return (
-        <div ref={containerRef}>
-            <NumberFormat
-                customInput={Input}
-                className={styles.input}
-                size="big"
-                format={maskOptions.mask}
-                placeholder={maskOptions.empty}
-                mask="_"
-                data-sel-readonly={readOnly}
-                postfixComponents={postfixComponent}
-                isReadOnly={readOnly}
-                value={datetimeString}
-                onChange={handleInputChange}
-                onBlur={onBlur}
-                {...props}
-            />
-            <Popover open={Boolean(anchorEl)}
-                     anchorEl={anchorEl}
-                     anchorOrigin={{
-                         vertical: 'bottom',
-                         horizontal: 'left'
-                     }}
-                     transformOrigin={{
-                         vertical: 'top',
-                         horizontal: 'left'
-                     }}
-                     onClose={() => {
-                         onChange(datetime);
-                         onBlur();
-                         setAnchorEl(null);
-                    }}
-            >
-                <DatePicker
-                    variant={variant}
-                    lang={lang}
-                    selectedDateTime={datetime}
-                    onSelectDateTime={_datetime => {
-                        setDatetime(_datetime);
-                        setDatetimeString(
-                            formatDateTime(_datetime, lang, variant, displayDateFormat)
-                        );
-                    }}
-                    {...dayPickerProps}
-                />
-            </Popover>
-        </div>
+        <DateTimeInput
+            className={styles.input}
+            type={type}
+            size="big"
+            locale={lang}
+            dateFormat={dateFormat}
+            minDate={minDate}
+            maxDate={maxDate}
+            value={value}
+            isReadOnly={readOnly}
+            data-sel-readonly={readOnly}
+            i18n={{todayButton: t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.today')}}
+            onChange={(event, newValue) => onChange(toDate(newValue))}
+            onBlur={onBlur}
+            {...props}
+        />
     );
-};
-
-DatePickerInput.defaultProps = {
-    dayPickerProps: {},
-    variant: 'date',
-    onChange: () => {},
-    onBlur: () => {},
-    initialValue: null,
-    readOnly: false,
-    displayDateFormat: null,
-    displayDateMask: null
 };
 
 DatePickerInput.propTypes = {
@@ -166,6 +80,9 @@ DatePickerInput.propTypes = {
     // eslint-disable-next-line react/boolean-prop-naming
     readOnly: PropTypes.bool,
     displayDateFormat: PropTypes.string,
+    /**
+     * @deprecated DateTimeInput handles its own input masking; this prop is ignored.
+     */
     displayDateMask: PropTypes.string
 };
 

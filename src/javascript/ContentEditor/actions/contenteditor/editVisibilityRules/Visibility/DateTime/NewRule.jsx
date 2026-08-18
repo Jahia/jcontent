@@ -8,6 +8,7 @@ import {useContentEditorConfigContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {CreateFormQuery} from '~/ContentEditor/ContentEditor/create.gql-queries';
 import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';
+import {TimeOfDayRule} from './TimeOfDayRule';
 import styles from './DateTime.scss';
 
 export const NewRule = ({type, node}) => {
@@ -33,6 +34,10 @@ export const NewRule = ({type, node}) => {
     console.debug('Create form definition for type', type, 'and node', node, 'is', data, 'and loading is', loading);
     if (loading) {
         return <Typography>{t('jcontent:label.contentEditor.visibilityTab.conditions.loading')}</Typography>;
+    }
+
+    if (type === 'jnt:timeOfDayCondition') {
+        return <TimeOfDayRule/>;
     }
 
     const contentSection = data.forms.createForm?.sections.find(s => s.name === 'content');

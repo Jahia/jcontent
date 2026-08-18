@@ -1101,6 +1101,8 @@
           "startEndTimeCondition": "The content will be visible starting from {{startTime}}, until {{endTime}}",
           "startTimeCondition": "The content will be visible starting from {{startTime}}",
           "endTimeCondition": "The content will be visible until {{endTime}}",
+          "startTime": "Start time",
+          "endTime": "End time",
           "preview": "Currently in preview",
           "live": "Currently in live",
           "preview_live": "Currently in preview",

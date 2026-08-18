@@ -1,3 +1,5 @@
-.input {
-    max-width: 200px;
+// DateTimeInput lays its date and time fields out in a flex row with its own gap.
+// Keep them on a single line instead of letting the time field wrap underneath.
+.input.input {
+    flex-wrap: nowrap;
 }

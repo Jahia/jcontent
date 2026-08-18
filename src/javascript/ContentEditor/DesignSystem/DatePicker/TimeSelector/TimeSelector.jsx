@@ -48,7 +48,7 @@ const TimeSelectorCmp = ({classes, disabledHours, selectedHour, onHourSelected, 
                     component="li"
                     variant="zeta"
                     onClick={() => onHourSelected(hour)}
-                    onKeyUp={e => {
+                    onKeyPress={e => {
                         if (e.key === 'Enter') {
                             onHourSelected(hour);
                         }

@@ -44,7 +44,7 @@ export const BasicSearch = ({
                        value={searchTerms}
                        placeholder={t('label.contentManager.search.normalPrompt')}
                        onChange={event => setSearchTerms(event.target.value)}
-                       onKeyUp={event => {
+                       onKeyPress={event => {
                            const code = event.keyCode || event.which;
 
                            if (code === 13) {

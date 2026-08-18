@@ -80,7 +80,7 @@ describe('BasicSearch', () => {
                                              performSearch={performSearch}/>);
 
         const input = wrapper.find('Input').at(0);
-        input.prop('onKeyUp')({keyCode: 13});
+        input.prop('onKeyPress')({keyCode: 13});
         expect(hasPerformSearch).toBeTruthy();
     });
 

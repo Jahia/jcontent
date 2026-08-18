@@ -8,15 +8,15 @@ export const Insert = ({relative}) => {
     let className = styles.horizontalInsert;
 
     if (relative.insertPosition === 'insertBefore' || relative.insertPosition === 'top') {
-        style.height = '2px';
+        style.height = '4px';
     } else if (relative.insertPosition === 'insertAfter' || relative.insertPosition === 'bottom') {
-        style.height = '2px';
+        style.height = '4px';
         style.top = relative.position.top + relative.position.height;
     } else if (relative.insertPosition === 'left') {
-        style.width = '2px';
+        style.width = '4px';
         className = styles.verticalInsert;
     } else if (relative.insertPosition === 'right') {
-        style.width = '2px';
+        style.width = '4px';
         style.left = relative.position.left + relative.position.width;
         className = styles.verticalInsert;
     }

@@ -7,14 +7,18 @@
 
 - addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/@snapshots@noreleases@id=JahiaPublicSnapshots'
 - installBundle:
-    - 'mvn:org.jahia.modules/jcontent'
     - 'mvn:org.jahia.modules/jahia-page-composer'
     - 'mvn:org.jahia.modules/jahia-administration'
     - 'mvn:org.jahia.modules/graphql-dxm-provider'
     - 'mvn:org.jahia.modules/jahia-ui-root'
-    - 'mvn:org.jahia.test/jcontent-test-module'
-    - 'mvn:org.jahia.test/jcontent-test-template'
-    - 'mvn:org.jahia.test/jcontent-test-js-template'
   autoStart: true
   uninstallPreviousVersion: true
 - include: 'provisioning.yml'
+
+- installBundle:
+    - 'mvn:org.jahia.modules/jcontent/3.6.2-SNAPSHOT'
+    - 'mvn:org.jahia.test/jcontent-test-module/3.6.2-SNAPSHOT'
+    - 'mvn:org.jahia.test/jcontent-test-template/3.6.2-SNAPSHOT'
+    - 'mvn:org.jahia.test/jcontent-test-js-template/3.6.2-SNAPSHOT'
+  autoStart: true
+  uninstallPreviousVersion: true

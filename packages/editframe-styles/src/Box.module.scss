@@ -197,11 +197,11 @@ $colorDragging: var(--moon-color-white);
 }
 
 .horizontalInsert {
-    border-bottom: 2px dashed $bgColorDragging;
+    border-bottom: 4px dashed $bgColorDragging;
 }
 
 .verticalInsert {
-    border-right: 2px dashed $bgColorDragging;
+    border-right: 4px dashed $bgColorDragging;
 }
 
 :global .moonstone-tableHead {

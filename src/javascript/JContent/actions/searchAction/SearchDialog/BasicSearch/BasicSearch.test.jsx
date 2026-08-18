@@ -54,7 +54,6 @@ describe('BasicSearch', () => {
                                              }}/>);
 
         const dropdown = wrapper.find('Dropdown').at(0);
-        expect(dropdown.props().label).toBe('translated_label.contentManager.search.anyContent');
         expect(dropdown.props().value).toBe('');
     });
 
@@ -66,7 +65,6 @@ describe('BasicSearch', () => {
                                              }}/>);
 
         const dropdown = wrapper.find('Dropdown').at(0);
-        expect(dropdown.props().label).toBe(contentTypeData[1].label);
         expect(dropdown.props().value).toBe(contentTypeData[1].value);
     });
 
@@ -82,7 +80,7 @@ describe('BasicSearch', () => {
                                              performSearch={performSearch}/>);
 
         const input = wrapper.find('Input').at(0);
-        input.prop('onKeyPress')({keyCode: 13});
+        input.prop('onKeyUp')({keyCode: 13});
         expect(hasPerformSearch).toBeTruthy();
     });
 

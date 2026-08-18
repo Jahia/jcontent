@@ -44,7 +44,7 @@ export const BasicSearch = ({
                        value={searchTerms}
                        placeholder={t('label.contentManager.search.normalPrompt')}
                        onChange={event => setSearchTerms(event.target.value)}
-                       onKeyPress={event => {
+                       onKeyUp={event => {
                            const code = event.keyCode || event.which;
 
                            if (code === 13) {
@@ -61,7 +61,6 @@ export const BasicSearch = ({
                     <Dropdown data={contentTypeSelectData}
                               size="medium"
                               icon={selectedContentType && selectedContentType.iconStart}
-                              label={selectedContentType && selectedContentType.label}
                               value={searchContentType}
                               className={styles.dropdown}
                               data-sel-role="content-type-dropdown"

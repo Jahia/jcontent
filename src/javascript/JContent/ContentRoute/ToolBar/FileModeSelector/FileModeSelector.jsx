@@ -49,7 +49,6 @@ export const FileModeSelector = ({selector, setModeAction}) => {
                   size="small"
                   data={tableViewDropdownData(t, mode)}
                   data-sel-role="sel-view-mode-dropdown"
-                  label={t(`jcontent:label.contentManager.filesGrid.${mode}`)}
                   value={mode}
                   icon={icons[mode]}
                   onChange={(e, item) => handleChange(item.value)}

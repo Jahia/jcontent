@@ -69,7 +69,6 @@ export const DownloadFileDialog = ({path, onExit}) => {
                             className={styles.dropdown}
                             variant="outlined"
                             data={dropdownData}
-                            label={dropdownData.find(f => f.value === mode).label}
                             value={mode}
                             onChange={(e, item) => setMode(item.value)}
                         />

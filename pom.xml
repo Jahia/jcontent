@@ -125,7 +125,6 @@
             org.jahia.modules.contenteditor.api.forms,
             org.jahia.modules.contenteditor.api.forms.model,
         </export-package>
-        <sonar.sources>src/javascript</sonar.sources>
     </properties>
 
     <repositories>

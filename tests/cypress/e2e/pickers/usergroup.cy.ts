@@ -20,9 +20,9 @@ describe('Picker tests - Usergroup', () => {
         const contentEditor = jcontent.createContent('qant:pickers');
         const picker = contentEditor.getPickerField('qant:pickers_usergrouppicker').open();
         picker.search('admin');
-        picker.verifyResultsLength(2);
+        picker.verifyResultsLength(3);
         picker.getTableRow('administrators').should('be.visible');
-        picker.getTableRow('site-administrators').should('be.visible');
+        picker.getTableRow('site-administrators').should('be.visible'); // There's 2 - one from systemsite, and one from digitall
     });
     it('Usergroup Picker - Select administrators', () => {
         const contentEditor = jcontent.createContent('qant:pickers');

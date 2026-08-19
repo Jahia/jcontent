@@ -656,6 +656,13 @@
             "dialogTitle": "{{contentName}} ({{contentType}})",
             "languageCounter": "{{filled}}/{{total}} langues remplies",
             "fieldSwitcherLabel": "Traduire ce champ :",
+            "unsavedChanges": {
+                "title": "Modifications non enregistrées",
+                "message": "Des modifications ne sont pas enregistrées dans l'éditeur de contenu. L'édition d'un champ dans toutes les langues part du contenu enregistré : ces modifications n'y apparaîtraient pas et seraient écrasées. Que voulez-vous en faire ?"
+            },
+            "fieldOptionLabel": "{{fieldName}} ({{filled}}/{{total}})",
+            "previousField": "Champ précédent",
+            "nextField": "Champ suivant",
             "copyFromSourceLanguage": "Copier la valeur de {{language}}",
             "mandatoryFieldCleared": "Ce champ est obligatoire et ne peut pas être enregistré vide.",
             "btnCancel": "Annuler",

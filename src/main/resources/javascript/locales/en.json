@@ -662,6 +662,13 @@
             "dialogTitle": "{{contentName}} ({{contentType}})",
             "languageCounter": "{{filled}}/{{total}} languages filled",
             "fieldSwitcherLabel": "Translate this field:",
+            "unsavedChanges": {
+                "title": "Unsaved changes",
+                "message": "There are unsaved changes in the content editor. Editing a field in all languages works from the saved content, so those changes would not appear there and would be overwritten. What do you want to do with them?"
+            },
+            "fieldOptionLabel": "{{fieldName}} ({{filled}}/{{total}})",
+            "previousField": "Previous field",
+            "nextField": "Next field",
             "copyFromSourceLanguage": "Copy value from {{language}}",
             "mandatoryFieldCleared": "This field is mandatory and cannot be saved empty.",
             "btnCancel": "Cancel",

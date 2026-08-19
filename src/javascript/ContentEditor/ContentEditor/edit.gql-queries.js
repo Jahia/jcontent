@@ -22,6 +22,7 @@ const NodeDataFragment = {
                 }
                 isSite: isNodeType(type: {multi: ANY, types: ["jnt:virtualsite"]})
                 isPage: isNodeType(type: {multi: ANY, types: ["jnt:page"]})
+                isRenderedAsPage: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
                 isFolder:isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
                 isFile: isNodeType(type: {types: ["jnt:file"]})
                 isSystemNameReadOnlyMixin: isNodeType(type: {multi: ANY, types: ["jmix:systemNameReadonly"]})

@@ -54,6 +54,11 @@ are bookmarkeable.
 The main route contains the site key and the language of the content as well as the mode in which we are (pages, search,
 apps) which is parsed in `JContent.redux.js`. The routing is done in the `ContentRoute` component.
 
+### Extension points
+
+jContent exposes registry targets other modules can contribute buttons to, without importing
+anything from jContent itself. They are documented in [EXTENSION-POINTS.md](EXTENSION-POINTS.md).
+
 ## Open-Source
 
 This is an Open-Source module, you can find more details about Open-Source @ Jahia [in this repository](https://github.com/Jahia/open-source).

@@ -655,6 +655,13 @@
             "dialogTitle": "{{contentName}} ({{contentType}})",
             "languageCounter": "{{filled}}/{{total}} Sprachen ausgefüllt",
             "fieldSwitcherLabel": "Dieses Feld übersetzen:",
+            "unsavedChanges": {
+                "title": "Ungespeicherte Änderungen",
+                "message": "Im Content-Editor gibt es ungespeicherte Änderungen. Die Bearbeitung eines Feldes in allen Sprachen geht vom gespeicherten Inhalt aus - diese Änderungen wären dort nicht sichtbar und würden überschrieben. Was möchten Sie damit tun?"
+            },
+            "fieldOptionLabel": "{{fieldName}} ({{filled}}/{{total}})",
+            "previousField": "Vorheriges Feld",
+            "nextField": "Nächstes Feld",
             "copyFromSourceLanguage": "Wert aus {{language}} kopieren",
             "mandatoryFieldCleared": "Dieses Feld ist obligatorisch und kann nicht leer gespeichert werden.",
             "btnCancel": "Abbrechen",

@@ -7,11 +7,12 @@ import {SaveButton} from './SaveButton';
 import styles from './CloseConfirmationDialog.scss';
 import {useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 
-export const CloseConfirmationDialog = React.memo(({isOpen, onCloseDialog, actionCallback}) => {
+export const CloseConfirmationDialog = React.memo(({isOpen, titleKey, messageKey, onCloseDialog, actionCallback}) => {
     const {t} = useTranslation('jcontent');
     const {mode} = useContentEditorContext();
-    const titleKey = `jcontent:label.contentEditor.edit.action.goBack.${mode}.title`;
-    const messageKey = `jcontent:label.contentEditor.edit.action.goBack.${mode}.message`;
+    // Callers that ask about something other than closing the editor pass their own wording.
+    const resolvedTitleKey = titleKey || `jcontent:label.contentEditor.edit.action.goBack.${mode}.title`;
+    const resolvedMessageKey = messageKey || `jcontent:label.contentEditor.edit.action.goBack.${mode}.message`;
     const handleDiscard = () => {
         onCloseDialog();
         actionCallback({discard: true});
@@ -26,11 +27,11 @@ export const CloseConfirmationDialog = React.memo(({isOpen, onCloseDialog, actio
             onClose={onCloseDialog}
         >
             <DialogTitle id="alert-dialog-slide-title">
-                {t(titleKey)}
+                {t(resolvedTitleKey)}
             </DialogTitle>
             <DialogContent className={styles.dialogContent}>
                 <Typography>
-                    {t(messageKey)}
+                    {t(resolvedMessageKey)}
                 </Typography>
             </DialogContent>
             <DialogActions>
@@ -59,6 +60,10 @@ CloseConfirmationDialog.displayName = 'CloseConfirmationDialog';
 
 CloseConfirmationDialog.propTypes = {
     isOpen: PropTypes.bool.isRequired,
+    /** Overrides the default "closing the editor" wording */
+    titleKey: PropTypes.string,
+    /** Overrides the default "closing the editor" wording */
+    messageKey: PropTypes.string,
     actionCallback: PropTypes.func.isRequired,
     onCloseDialog: PropTypes.func.isRequired
 };

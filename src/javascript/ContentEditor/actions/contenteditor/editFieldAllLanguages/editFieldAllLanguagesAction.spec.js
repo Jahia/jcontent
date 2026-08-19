@@ -16,6 +16,9 @@ jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
 jest.mock('~/ContentEditor/contexts/ContentEditorConfig/ContentEditorConfig.context');
 jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
 
+// Named so the action's button can be told apart from the confirmation dialog in the shallow tree.
+const RenderMock = () => '';
+
 describe('editFieldAllLanguagesAction', () => {
     let defaultProps;
     let editorContext;
@@ -24,7 +27,7 @@ describe('editFieldAllLanguagesAction', () => {
 
     beforeEach(() => {
         defaultProps = {
-            render: () => '',
+            render: RenderMock,
             field: {name: 'title', displayName: 'Title', i18n: true, readOnly: false, visible: true, selectorOptions: []}
         };
 
@@ -75,7 +78,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().isVisible).toBe(true);
+        expect(cmp.find('RenderMock').props().isVisible).toBe(true);
     });
 
     it('is not visible for a non-i18n field', () => {
@@ -86,7 +89,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().isVisible).toBe(false);
+        expect(cmp.find('RenderMock').props().isVisible).toBe(false);
     });
 
     it('is not visible when there is only one language', () => {
@@ -97,7 +100,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().isVisible).toBe(false);
+        expect(cmp.find('RenderMock').props().isVisible).toBe(false);
     });
 
     it('is not visible for a password field', () => {
@@ -108,7 +111,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().isVisible).toBe(false);
+        expect(cmp.find('RenderMock').props().isVisible).toBe(false);
     });
 
     it('is not visible while creating new content', () => {
@@ -119,7 +122,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().isVisible).toBe(false);
+        expect(cmp.find('RenderMock').props().isVisible).toBe(false);
     });
 
     it('is not visible when already rendering inside one of its own modal rows', () => {
@@ -130,7 +133,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().isVisible).toBe(false);
+        expect(cmp.find('RenderMock').props().isVisible).toBe(false);
     });
 
     it('is not enabled when the node is locked', () => {
@@ -141,7 +144,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        expect(cmp.props().enabled).toBe(false);
+        expect(cmp.find('RenderMock').props().enabled).toBe(false);
     });
 
     it('opens the modal on click', () => {
@@ -151,7 +154,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
 
         expect(componentRenderer.render).toHaveBeenCalledWith(
             'editFieldAllLanguagesModal',
@@ -175,7 +178,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
         const {languages} = componentRenderer.render.mock.calls[0][2];
 
         expect(languages.map(l => l.language)).toEqual(['fr', 'de', 'en', 'es']);
@@ -188,10 +191,78 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
         const {fields} = componentRenderer.render.mock.calls[0][2];
 
         expect(fields.map(f => f.name)).toEqual(['title', 'summary']);
+    });
+
+    const withSeoSection = ({isSeoVisible = true} = {}) => {
+        useContentEditorSectionContext.mockReturnValue({
+            sections: [
+                {
+                    name: 'content',
+                    fieldSets: [{visible: true, dynamic: false, fields: [defaultProps.field]}]
+                },
+                {
+                    name: 'seo',
+                    visible: isSeoVisible,
+                    fieldSets: [{
+                        visible: true,
+                        dynamic: false,
+                        fields: [{name: 'jcr:description', displayName: 'Description', i18n: true, visible: true, selectorOptions: []}]
+                    }]
+                },
+                {
+                    name: 'options',
+                    visible: true,
+                    fieldSets: [{
+                        visible: true,
+                        dynamic: false,
+                        fields: [{name: 'someOption', displayName: 'Option', i18n: true, visible: true, selectorOptions: []}]
+                    }]
+                }
+            ]
+        });
+    };
+
+    const openedFields = () => {
+        const cmp = shallowWithTheme(
+            <EditFieldAllLanguagesActionComponent {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        );
+
+        cmp.find('RenderMock').props().onClick();
+        return componentRenderer.render.mock.calls[0][2].fields.map(f => f.name);
+    };
+
+    it('offers the SEO fields when the node is rendered as a page', () => {
+        editorContext.nodeData.isRenderedAsPage = true;
+        withSeoSection();
+
+        expect(openedFields()).toEqual(['title', 'jcr:description']);
+    });
+
+    it('does not offer the SEO fields when the node is not rendered as a page', () => {
+        editorContext.nodeData.isRenderedAsPage = false;
+        withSeoSection();
+
+        expect(openedFields()).toEqual(['title']);
+    });
+
+    it('does not offer the SEO fields when the SEO section is hidden or not permitted', () => {
+        editorContext.nodeData.isRenderedAsPage = true;
+        withSeoSection({isSeoVisible: false});
+
+        expect(openedFields()).toEqual(['title']);
+    });
+
+    it('never offers fields from sections other than content and SEO', () => {
+        editorContext.nodeData.isRenderedAsPage = true;
+        withSeoSection();
+
+        expect(openedFields()).not.toContain('someOption');
     });
 
     it('excludes fields from a not-yet-activated dynamic fieldSet', () => {
@@ -211,7 +282,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
         const {fields} = componentRenderer.render.mock.calls[0][2];
 
         expect(fields.map(f => f.name)).toEqual(['title']);
@@ -235,7 +306,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
         const {fields} = componentRenderer.render.mock.calls[0][2];
 
         expect(fields.map(f => f.name)).toEqual(['title', 'tags']);
@@ -248,7 +319,7 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
         const {onSaved} = componentRenderer.render.mock.calls[0][2];
         onSaved(defaultProps.field, {en: 'new value', fr: 'valeur'});
 
@@ -262,10 +333,95 @@ describe('editFieldAllLanguagesAction', () => {
             dsGenericTheme
         );
 
-        cmp.props().onClick();
+        cmp.find('RenderMock').props().onClick();
         const {onClose} = componentRenderer.render.mock.calls[0][2];
         onClose();
 
         expect(componentRenderer.destroy).toHaveBeenCalledWith('editFieldAllLanguagesModal');
+    });
+
+    describe('unsaved changes in the content editor', () => {
+        const build = () => shallowWithTheme(
+            <EditFieldAllLanguagesActionComponent {...defaultProps}/>,
+            {},
+            dsGenericTheme
+        );
+        const confirmation = cmp => cmp.find('CloseConfirmationDialog');
+
+        beforeEach(() => {
+            useContentEditorConfigContext.mockReturnValue({confirmationDialog: true});
+            formik.dirty = true;
+            formik.resetForm = jest.fn();
+            formik.validateForm = jest.fn();
+            editorContext.i18nContext = {};
+            editorContext.resetI18nContext = jest.fn();
+        });
+
+        it('opens the modal straight away when nothing is unsaved', () => {
+            formik.dirty = false;
+            const cmp = build();
+
+            cmp.find('RenderMock').props().onClick();
+
+            expect(componentRenderer.render).toHaveBeenCalled();
+            expect(confirmation(cmp).props().isOpen).toBe(false);
+        });
+
+        it('asks what to do instead of opening the modal when there are unsaved changes', () => {
+            const cmp = build();
+
+            cmp.find('RenderMock').props().onClick();
+
+            expect(componentRenderer.render).not.toHaveBeenCalled();
+            expect(cmp.find('CloseConfirmationDialog').props().isOpen).toBe(true);
+        });
+
+        it('also asks when only another language was edited', () => {
+            formik.dirty = false;
+            editorContext.i18nContext = {fr: {values: {title: 'edited'}}};
+            const cmp = build();
+
+            cmp.find('RenderMock').props().onClick();
+
+            expect(componentRenderer.render).not.toHaveBeenCalled();
+        });
+
+        it('uses its own wording rather than the close-the-editor one', () => {
+            const cmp = build();
+
+            expect(confirmation(cmp).props().titleKey)
+                .toBe('jcontent:label.contentEditor.edit.action.editAllLanguages.unsavedChanges.title');
+            expect(confirmation(cmp).props().messageKey)
+                .toBe('jcontent:label.contentEditor.edit.action.editAllLanguages.unsavedChanges.message');
+        });
+
+        it('opens the modal once the changes were saved from the dialog', () => {
+            const cmp = build();
+
+            confirmation(cmp).props().actionCallback({});
+
+            expect(componentRenderer.render).toHaveBeenCalled();
+            expect(formik.resetForm).not.toHaveBeenCalled();
+        });
+
+        it('puts the editor form back to the saved content when the changes are discarded', () => {
+            const cmp = build();
+
+            confirmation(cmp).props().actionCallback({discard: true});
+
+            expect(formik.resetForm).toHaveBeenCalled();
+            expect(editorContext.resetI18nContext).toHaveBeenCalled();
+            expect(componentRenderer.render).toHaveBeenCalled();
+        });
+
+        it('never asks when the editor has confirmation dialogs turned off', () => {
+            useContentEditorConfigContext.mockReturnValue({confirmationDialog: false});
+            const cmp = build();
+
+            cmp.find('RenderMock').props().onClick();
+
+            expect(componentRenderer.render).toHaveBeenCalled();
+            expect(confirmation(cmp).exists()).toBe(false);
+        });
     });
 });

@@ -8,6 +8,7 @@ import {ContentEditorConfigContextProvider, ContentEditorContext, ContentEditorS
 import {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {CopyFromSourceLanguageIcon} from './CopyFromSourceLanguageIcon';
+import {LanguageRowActions, findRowActions} from './LanguageRowActions';
 import {hasValue} from './editFieldAllLanguages.utils';
 import styles from './EditFieldAllLanguagesModal.scss';
 
@@ -38,7 +39,7 @@ const COMPACT_INPUT_CONTEXT = {
     displayDescription: false
 };
 
-export const LanguageFieldRow = React.forwardRef(({field, language, value, isReadOnly, editorContext, isSourceLanguage, sourceLanguageCode, onValueChange, onCopyFromSourceLanguage}, formikRef) => {
+export const LanguageFieldRow = React.forwardRef(({field, language, value, originalValue, isReadOnly, editorContext, isSourceLanguage, sourceLanguageCode, hasSourceValue, getValue, getSourceValue, onValueChange, onSetValue, onCopyFromSourceLanguage}, formikRef) => {
     const {t} = useTranslation('jcontent');
     const rowField = useMemo(() => ({...field, readOnly: isReadOnly}), [field, isReadOnly]);
 
@@ -46,10 +47,11 @@ export const LanguageFieldRow = React.forwardRef(({field, language, value, isRea
     // constraint) - warn as soon as the user clears it here, instead of letting them hit Save
     // and get a generic "content cannot be saved" error.
     const [showMandatoryClearedWarning, setShowMandatoryClearedWarning] = useState(false);
+    const repositoryValue = originalValue === undefined ? value : originalValue;
     const handleValueChange = useCallback(currentValue => {
         onValueChange(currentValue);
-        setShowMandatoryClearedWarning(field.mandatory && hasValue(field, value) && !hasValue(field, currentValue));
-    }, [field, value, onValueChange]);
+        setShowMandatoryClearedWarning(field.mandatory && hasValue(field, repositoryValue) && !hasValue(field, currentValue));
+    }, [field, repositoryValue, onValueChange]);
 
     const rowConfig = useMemo(() => ({
         lang: language.language,
@@ -60,6 +62,11 @@ export const LanguageFieldRow = React.forwardRef(({field, language, value, isRea
     }), [language.language]);
 
     const rowEditorContext = useMemo(() => ({...editorContext, lang: language.language}), [editorContext, language.language]);
+
+    const showCopyButton = !isSourceLanguage && !isReadOnly;
+    // Registrations happen once at module init, long before this modal can be opened, so reading the
+    // registry during render is stable - it only decides whether the actions container is needed at all.
+    const hasRowActions = findRowActions().length > 0;
 
     return (
         <div className={styles.languageRow} data-sel-role={`edit-all-languages-row-${language.language}`}>
@@ -98,16 +105,31 @@ export const LanguageFieldRow = React.forwardRef(({field, language, value, isRea
                         </>
                     </Formik>
                 </div>
-                {!isSourceLanguage && !isReadOnly && (
+                {(showCopyButton || hasRowActions) && (
                     <div className={styles.languageActions}>
-                        <IconButton
-                            data-sel-role={`edit-all-languages-copy-${language.language}`}
-                            title={t('jcontent:label.contentEditor.edit.action.editAllLanguages.copyFromSourceLanguage', {language: sourceLanguageCode.toUpperCase()})}
-                            aria-label={t('jcontent:label.contentEditor.edit.action.editAllLanguages.copyFromSourceLanguage', {language: sourceLanguageCode.toUpperCase()})}
-                            onClick={onCopyFromSourceLanguage}
-                        >
-                            <CopyFromSourceLanguageIcon size="small"/>
-                        </IconButton>
+                        {showCopyButton && (
+                            <IconButton
+                                data-sel-role={`edit-all-languages-copy-${language.language}`}
+                                title={t('jcontent:label.contentEditor.edit.action.editAllLanguages.copyFromSourceLanguage', {language: sourceLanguageCode.toUpperCase()})}
+                                aria-label={t('jcontent:label.contentEditor.edit.action.editAllLanguages.copyFromSourceLanguage', {language: sourceLanguageCode.toUpperCase()})}
+                                onClick={onCopyFromSourceLanguage}
+                            >
+                                <CopyFromSourceLanguageIcon size="small"/>
+                            </IconButton>
+                        )}
+                        <LanguageRowActions
+                            field={field}
+                            language={language.language}
+                            sourceLanguage={sourceLanguageCode}
+                            isSourceLanguage={isSourceLanguage}
+                            isReadOnly={isReadOnly}
+                            hasSourceValue={hasSourceValue}
+                            nodeUuid={editorContext.nodeData.uuid}
+                            editorContext={editorContext}
+                            getValue={getValue}
+                            getSourceValue={getSourceValue}
+                            onSetValue={onSetValue}
+                        />
                     </div>
                 )}
             </div>
@@ -125,10 +147,16 @@ LanguageFieldRow.propTypes = {
         localizedDisplayName: PropTypes.string
     }).isRequired,
     value: PropTypes.any,
+    /** What the repository holds for this language, when `value` is a not-yet-saved edit restored on field switch */
+    originalValue: PropTypes.any,
     isReadOnly: PropTypes.bool,
     editorContext: PropTypes.object.isRequired,
     isSourceLanguage: PropTypes.bool,
     sourceLanguageCode: PropTypes.string.isRequired,
+    hasSourceValue: PropTypes.bool,
+    getValue: PropTypes.func.isRequired,
+    getSourceValue: PropTypes.func.isRequired,
     onValueChange: PropTypes.func.isRequired,
+    onSetValue: PropTypes.func.isRequired,
     onCopyFromSourceLanguage: PropTypes.func.isRequired
 };

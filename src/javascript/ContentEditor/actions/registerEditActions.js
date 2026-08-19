@@ -23,6 +23,7 @@ import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editCont
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
 import {editFieldAllLanguagesAction} from './contenteditor/editFieldAllLanguages/editFieldAllLanguagesAction';
+import {ROW_ACTIONS_MENU, ROW_ACTIONS_TARGET} from './contenteditor/editFieldAllLanguages/LanguageRowActions';
 import {Constants} from '../ContentEditor.constants';
 
 export const registerEditActions = registry => {
@@ -165,5 +166,15 @@ export const registerEditActions = registry => {
     registry.add('action', 'editFieldAllLanguages', editFieldAllLanguagesAction, {
         buttonIcon: <Language/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.editAllLanguages.name'
+    });
+
+    /* Collapses the actions other modules contributed to a language row of the "edit in all
+       languages" modal, once more than one of them is registered (see LanguageRowActions). */
+    registry.add('action', ROW_ACTIONS_MENU, registry.get('action', 'menuAction'), {
+        buttonIcon: <MoreVert/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.moreOptions',
+        menuTarget: ROW_ACTIONS_TARGET,
+        dataSelRole: 'edit-all-languages-row-3dots',
+        isMenuPreload: true
     });
 };

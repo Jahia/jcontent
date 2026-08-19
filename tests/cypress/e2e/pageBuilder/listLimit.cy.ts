@@ -65,8 +65,12 @@ describe('Page builder - list limit restrictions tests', () => {
         });
 
         it('should not show paste button when limit is reached', () => {
+            // No select-first (contextMenu's selectFirst arg): selecting pins the header, and on
+            // a box this short the pinned header's own footer can render right on top of it —
+            // see clipboard.cy.ts / restrictions.cy.ts for the same, already-proven
+            // hover-and-right-click pattern for a Copy action.
             jcontent.getModule(`/sites/${contentSiteKey}/home/area-main/test-content1`, false)
-                .contextMenu(true)
+                .contextMenu(false, false)
                 .select('Copy');
 
             cy.log('Assert no paste buttons after copy');

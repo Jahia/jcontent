@@ -56,9 +56,13 @@ describe('Page builder - content manipulation', () => {
         jcontent.getModule(areaPath).get().scrollIntoView();
 
         cy.log('Mark the content list for deletion');
-        jcontent.getModule(contentListPath, false)
-            .contextMenu(true, false)
-            .select('Delete');
+        // This list has a single child, so its own trailing "+ New content" button covers most
+        // of the module's clickable area — contextMenu's selectFirst arg can't help here, since
+        // it forces only the right-click, not the plain select-click it runs first internally.
+        // Force that select-click ourselves, then let contextMenu just hover + right-click.
+        const contentListModule = jcontent.getModule(contentListPath, false);
+        contentListModule.click({force: true});
+        contentListModule.contextMenu(false, true).select('Delete');
         getComponent(DeleteDialog).markForDeletion();
 
         // Refresh jcontent

@@ -132,6 +132,7 @@ describe('Page builder', () => {
             const row = jcontent.getTable().getRowByLabel('landing');
             row.contextMenu().selectByRole('edit');
             const contentEditor = new ContentEditor();
+            contentEditor.closeSection('content');
             contentEditor.toggleOption('jmix:contributeMode', 'Content type restrictions');
             contentEditor.getField(MultipleLeftRightField, 'jmix:contributeMode_j:contributeTypes', true)
                 .addNewValue('Banner')

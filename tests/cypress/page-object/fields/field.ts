@@ -38,7 +38,7 @@ export class Field extends BaseComponent {
         return this.get().scrollIntoView().parent().find('[data-sel-role="translate-field"]');
     }
 
-    getErrorMessage(): Cypress.Chainable {
-        return this.get().scrollIntoView().find('[data-sel-error]');
+    getErrorMessage(errorCode?: string): Cypress.Chainable {
+        return this.get().scrollIntoView().find(errorCode ? `[data-sel-error="${errorCode}"]` : '[data-sel-error]');
     }
 }

@@ -68,8 +68,9 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
                 id={id}
                 aria-labelledby={`${field.name}-label`}
                 onChange={date => {
-                    if (!date) {
-                        onChange(null);
+                    // If not valid dates, pass raw data to onChange for validation
+                    if (!date || !(date instanceof Date)) {
+                        onChange(date);
                         return;
                     }
 

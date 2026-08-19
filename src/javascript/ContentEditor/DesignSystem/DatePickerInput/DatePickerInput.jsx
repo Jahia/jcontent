@@ -75,7 +75,7 @@ export const DatePickerInput = ({
                 setDatetime(null);
                 onChange(null);
             } else if (!e.target.value.includes('_')) {
-                const newDate = dayjs(e.target.value, displayDateFormat || datetimeFormat[variant], lang);
+                const newDate = dayjs(e.target.value, displayDateFormat || datetimeFormat[variant], lang, true);
                 if (newDate.isValid()) {
                     setDatetimeString(newDate.locale(lang).format(displayDateFormat || datetimeFormat[variant]));
                     setDatetime(newDate.toDate());

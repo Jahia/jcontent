@@ -132,4 +132,14 @@ describe('Date picker tests', () => {
         ce = ContentEditor.visit(nodePath, 'testsite', 'en', 'content-folders/contents');
         ce.getDateField('qant:pickers_datepicker').checkValue('01/15/2027');
     });
+
+    it('Test Date time Picker shows a validation error for an out-of-range typed value', () => {
+        cy.login();
+        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const dateField = ce.getDateField('qant:pickers_datetimepicker');
+        dateField.get().find('input[type="text"]').clear().type('99/99/9999 99:99', {force: true});
+        // Validation only runs on blur/save in this form; click to trigger
+        cy.get('body').click();
+        dateField.getErrorMessage('invalidDate').should('be.visible');
+    });
 });

@@ -118,7 +118,7 @@
     "uuid": "^11.1.0"
   },
   "resolutions": {
-    "@jahia/moonstone": "https://pkg.pr.new/@jahia/moonstone@1410.tgz",
+    "@jahia/moonstone": "https://pkg.pr.new/@jahia/moonstone@1416.tgz",
     "@apollo/client": "^3",
     "react": "^18.3.1",
     "graphql": "^16.10.0",

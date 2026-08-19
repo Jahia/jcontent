@@ -31,8 +31,23 @@ export const baseConfig = {
                     }
 
                     return null;
+                },
+
+                // Diagnostics logged with cy.log are captured by cypress-terminal-report, which is
+                // configured onFail only, so anything logged during a PASSING test is discarded.
+                // Numbers that are only meaningful when things go RIGHT — timings, retry counts —
+                // need this instead: it runs in Node, so it reaches the runner's stdout and
+                // survives in the archived CI log whatever the outcome.
+                log(message) {
+                    console.log(message);
+                    return null;
                 }
             });
+
+            // Announced here, next to the registration, so the two cannot drift: the page objects
+            // published in @jahia/jcontent-cypress fall back to cy.log unless a consumer's config
+            // declares the 'log' task above, and this file is not part of the published package.
+            config.env.jcontentCypressLogTask = true;
 
             // Clean up videos for passing tests
             on('after:spec', (spec, results) => {

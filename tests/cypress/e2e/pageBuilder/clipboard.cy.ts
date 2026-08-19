@@ -24,9 +24,13 @@ describe('Page builder - clipboard tests', () => {
     });
 
     it('should show paste button when we copy', function () {
-        // We don't force right-click otherwise it might bring up page context menu
+        // We don't force right-click otherwise it might bring up page context menu. Nor do we
+        // select first (contextMenu's selectFirst arg): selecting pins the header, and on a box
+        // this short the pinned header's own footer can render right on top of it — see
+        // restrictions.cy.ts's identical copy-then-check-paste-elsewhere flow for the same,
+        // already-proven hover-and-right-click pattern.
         const contentPath = `/sites/${siteKey}/home/area-main/test-content1`;
-        const contextMenu = jcontent.getModule(contentPath, false).contextMenu(true, false);
+        const contextMenu = jcontent.getModule(contentPath, false).contextMenu(false, false);
         cy.waitUntil(() => contextMenu.selectByRole('copy')).then(() => {
             cy.get('#message-id').contains('in the clipboard');
         });
@@ -40,8 +44,9 @@ describe('Page builder - clipboard tests', () => {
     });
 
     it('should remove paste button when we clear clipboard', function () {
-        // We don't force right-click otherwise it might bring up page context menu
-        const contextMenu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(true, false);
+        // See the previous test: no force (native context menu risk) and no select-first (pinned
+        // header/footer overlap risk on this short a box).
+        const contextMenu = jcontent.getModule(`/sites/${siteKey}/home/area-main/test-content1`, false).contextMenu(false, false);
         cy.waitUntil(() => contextMenu.selectByRole('copy')).then(() => {
             cy.get('#message-id').contains('in the clipboard');
         });

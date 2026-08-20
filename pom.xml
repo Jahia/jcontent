@@ -62,6 +62,7 @@
             javax.jcr;version="[2.0,3)",
             javax.jcr.lock;version="[2.0,3)",
             javax.jcr.nodetype;version="[2.0,3)",
+            javax.jcr.observation;version="[2.0,3)",
             javax.jcr.query;version="[2.0,3)",
             javax.servlet.http,
             org.apache.commons.collections4,
@@ -144,6 +145,21 @@
     </repositories>
 
     <dependencies>
+        <!--
+            Reads IPTC, XMP and EXIF straight out of an image binary. Jahia core only ever sees what
+            Tika hands it, which for PNG and WebP is nothing usable: PNG arrives as an unparsed XMP
+            packet plus a hex-encoded IPTC blob, and WebP has no configured parser at all. Reading the
+            binary ourselves is the only way to cover those formats.
+
+            Compile scope on purpose: the parent pom embeds every compile dependency into the bundle
+            (Embed-Dependency, Embed-Transitive), which pulls xmpcore in with it. Embedding rather
+            than importing keeps us off Jahia's internal Tika version, which is not ours to pin.
+        -->
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>metadata-extractor</artifactId>
+            <version>2.18.0</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.gemini.blueprint</groupId>
             <artifactId>gemini-blueprint-core</artifactId>

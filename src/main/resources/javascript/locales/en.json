@@ -729,6 +729,10 @@
           }
         },
         "sharedLanguages": "Shared by all languages",
+        "fieldSet": {
+            "showEmptyFields": "Show all fields, including empty ones",
+            "hideEmptyFields": "Show only fields that have a value"
+        },
         "fields": {
           "actions": {
             "replace": "Change",

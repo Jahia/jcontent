@@ -1,0 +1,233 @@
+package org.jahia.modules.jcontent.rules
+
+// Stores the IPTC metadata of an uploaded image on the file node, as properties of jmix:iptc
+// (see META-INF/definitions.cnd).
+//
+// Nothing here does the reading: Jahia already extracts IPTC on upload, because it parses JPEG
+// with Tika's JpegParser, which runs metadata-extractor and emits every IPTC tag under its display
+// name. Those values reach the rule engine as ExtractedVariable facts, and core simply discards the
+// ones its own mapping table does not name - which is all of the IPTC ones. These rules pick them
+// up by name, so no change to Jahia core is needed.
+//
+// One rule per field is the only option here: the DSL can match a metadata field by name, but has
+// no consequence able to resolve a name to a property, which is what core's mapping table does in
+// Java for EXIF.
+
+// list any import classes here.
+import org.jahia.services.content.rules.*
+import org.slf4j.Logger
+
+// declare any global variables here
+global User user
+global Service service
+global Logger logger
+
+rule "Store the IPTC Object Name of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Object Name" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcObjectName of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Headline of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Headline" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcHeadline of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Caption/Abstract of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Caption/Abstract" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCaption of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Caption Writer/Editor of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Caption Writer/Editor" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCaptionWriter of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Keywords of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Keywords" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcKeywords of the node with the value of iptcValue
+end
+
+rule "Store the IPTC By-line of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "By-line" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcByline of the node with the value of iptcValue
+end
+
+rule "Store the IPTC By-line Title of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "By-line Title" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcBylineTitle of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Credit of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Credit" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCredit of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Source of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Source" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcSource of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Copyright Notice of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Copyright Notice" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCopyrightNotice of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Contact of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Contact" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcContact of the node with the value of iptcValue
+end
+
+rule "Store the IPTC City of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "City" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCity of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Sub-location of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Sub-location" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcSublocation of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Province/State of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Province/State" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcProvinceState of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Country/Primary Location Name of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Country/Primary Location Name" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCountry of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Date Created of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Date Created" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcDateCreated of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Category of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Category" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcCategory of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Supplemental Category(s) of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Supplemental Category(s)" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcSupplementalCategories of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Special Instructions of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Special Instructions" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcSpecialInstructions of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Urgency of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Urgency" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcUrgency of the node with the value of iptcValue
+end
+
+rule "Store the IPTC Original Transmission Reference of an uploaded image"
+    salience 10
+    when
+        A file content has been modified
+        The metadata field "Original Transmission Reference" identified by iptcValue has been extracted
+    then
+        Add the type jmix:iptc
+        Set the property j:iptcTransmissionReference of the node with the value of iptcValue
+end

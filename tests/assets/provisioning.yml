@@ -45,5 +45,5 @@
 
 # We can't install jcontent module 3.6.2 when jahia env has a higher version of jcontent already installed
 # We need to uninstall jcontent module here to be able to install the built version
-- sleep: 10000
-- uninstallBundle: 'jcontent'
+# - sleep: 10000
+# - uninstallBundle: 'jcontent'

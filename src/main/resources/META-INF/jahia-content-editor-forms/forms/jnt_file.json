@@ -1,0 +1,25 @@
+{
+  "nodeType": "jnt:file",
+  "priority": 3.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "<main>",
+          "fields": [
+            {
+              "rank": 1.0,
+              "name": "ce:systemName",
+              "labelKey": "label.contentEditor.section.fieldSet.system.fields.systemNameFile"
+            },
+            {
+              "name": "j:filename",
+              "hide": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

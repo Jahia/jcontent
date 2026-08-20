@@ -723,6 +723,10 @@
           }
         },
         "sharedLanguages": "Von allen Sprachen geteilt",
+        "fieldSet": {
+            "showEmptyFields": "Alle Felder anzeigen, auch leere",
+            "hideEmptyFields": "Nur ausgefüllte Felder anzeigen"
+        },
         "fields": {
           "actions": {
             "replace": "Änderung",

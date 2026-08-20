@@ -23,6 +23,12 @@
     margin-bottom: var(--spacing-big);
 }
 
+.fieldSetTitleRow {
+    display: flex;
+    gap: var(--spacing-small);
+    align-items: center;
+}
+
 .fieldSetTitle {
     width: auto;
 }

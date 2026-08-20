@@ -26,6 +26,7 @@ yalc.lock
 
 # Don't commit build artifacts
 /types
+*.log
 
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 **/.yarn/*

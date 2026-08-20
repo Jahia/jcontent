@@ -1,31 +1,27 @@
-// Migrated from the legacy Selenium class org.jahia.selenium.scripts.publication.StartAllWorkflowsTest
-// (tracking issue Jahia/selenium#1600). Covers FT-001, the only one of that class's eight FTs whose
-// assertion lives in jContent; the other seven are mail, workflow-dashboard and live-rendering
-// assertions and land in jahia-ee.
+// Migrated from the legacy Selenium class StartAllWorkflowsTest (Jahia/selenium#1600), FT-001.
 //
-// The dialog under test is raised by core, not by jContent: PublicationWorkflow's publication-info
-// callback splits the nodes it got back into publishable and unpublishable, and when both sets are
-// non-empty it opens a GXT confirm box listing the unpublishable ones under their status label
-// (label.publication.mandatorylanguageunpublishable) followed by message.continue. Choosing Yes
-// continues with the publishable remainder. jContent's "publish all in all languages" action is one
-// of the entry points into that callback, which is why the case belongs here.
-//
-// The site therefore needs a language the page was never translated into: publication resolves the
-// status per locale, and a page with no i18n node for `es` is MANDATORY_LANGUAGE_UNPUBLISHABLE there
-// while staying publishable in `en` and `fr`. No mandatory-language configuration is involved.
+// The dialog is raised by core, not by jContent: PublicationWorkflow opens a GXT confirm box when a
+// publish-all covers both publishable and unpublishable nodes. So the site needs a language the page
+// was never translated into — without `es` here the dialog never appears and the test is vacuous.
 
-import {addNode, context, createSite, createUser, deleteSite, deleteUser, grantRoles, jfaker} from '@jahia/cypress';
+import {addNode, context, createSite, createUser, deleteUser, grantRoles} from '@jahia/cypress';
 import {JContent} from '../../../page-object';
 
-const PREFIX = 'pubwarn';
-const suffix = jfaker.string.alphanumeric({length: 6, casing: 'lower'});
-const siteKey = `${PREFIX}${suffix}`;
+const siteKey = 'publishAllWarningSite';
 const pageName = 'wkfpage';
-const editor = {username: `${PREFIX}${suffix}editor`, password: 'password'};
+const editor = {username: 'publishAllWarningEditor', password: 'password'};
+
+// Both scripts are guarded — deleteSite.groovy checks the site exists, and @jahia/cypress'
+// deleteUser.groovy checks the user does — so this runs as a defensive pre-clean too, ahead of a
+// previous run whose own teardown failed.
+const removeFixtures = () => {
+    cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: siteKey});
+    deleteUser(editor.username);
+};
 
 describe('Publish all in all languages, with content untranslated in one of them', () => {
     before(() => {
-        cy.executeGroovy('jcontent/deleteSitesAndUsersByPrefix.groovy', {PREFIX});
+        removeFixtures();
 
         createSite(siteKey, {
             templateSet: 'dx-base-demo-templates',
@@ -62,8 +58,7 @@ describe('Publish all in all languages, with content untranslated in one of them
     });
 
     after(() => {
-        deleteSite(siteKey);
-        deleteUser(editor.username);
+        removeFixtures();
         cy.logout();
     });
 

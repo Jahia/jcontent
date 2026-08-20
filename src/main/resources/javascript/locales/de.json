@@ -727,6 +727,11 @@
             "showEmptyFields": "Alle Felder anzeigen, auch leere",
             "hideEmptyFields": "Nur ausgefüllte Felder anzeigen"
         },
+        "filenameMimeType": {
+          "badge": "Sollte auf .{{extension}} enden",
+          "badgeUnknownExtension": "Name passt nicht zum Dateityp",
+          "tooltip": "Diese Datei ist {{mimeType}} und passt damit nicht zu ihrem Namen. Passen Sie den Namen an, sodass die Endung dem tatsächlichen Dateityp entspricht."
+        },
         "fields": {
           "actions": {
             "replace": "Änderung",

@@ -733,6 +733,11 @@
             "showEmptyFields": "Show all fields, including empty ones",
             "hideEmptyFields": "Show only fields that have a value"
         },
+        "filenameMimeType": {
+          "badge": "Should end in .{{extension}}",
+          "badgeUnknownExtension": "Name does not match file type",
+          "tooltip": "This file is {{mimeType}}, which does not match its name. Update the name so its extension matches the actual file type."
+        },
         "fields": {
           "actions": {
             "replace": "Change",

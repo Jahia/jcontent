@@ -7,8 +7,37 @@ import {DocumentViewer} from './DocumentViewer';
 import {ImageViewer} from './ImageViewer';
 import {IframeViewer} from './IframeViewer';
 import {PDFViewer} from './PDFViewer';
-import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
+import {getFileExtension, isBrowserImage, isImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 import {NoView} from './NoView';
+
+// Appends a rendition selector to a file URL that may or may not already carry a query string.
+const withRendition = (fileUrl, rendition) => `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}t=${rendition}`;
+
+/**
+ * What the image preview loads. Renditions are PNG, so for a format the browser cannot decode they
+ * are the only option and the original must never be used - that is what left TIFF and PSD previews
+ * blank. For a format it can decode, the 800px rendition caps the payload (a 12 MB TIFF or a 6000px
+ * JPEG is a lot of bytes for a 550px viewport) and the viewer still renders anything smaller at its
+ * natural size, so nothing is ever upscaled.
+ *
+ * Returns null when there is nothing displayable, which the caller turns into a plain icon rather
+ * than a broken image.
+ */
+const getPreviewImageUrl = (node, originalUrl) => {
+    if (isBrowserImage(node)) {
+        return node.hasThumbnail3 ? withRendition(originalUrl, 'thumbnail3') : originalUrl;
+    }
+
+    if (node.hasThumbnail3) {
+        return withRendition(originalUrl, 'thumbnail3');
+    }
+
+    if (node.hasThumbnail2) {
+        return withRendition(originalUrl, 'thumbnail2');
+    }
+
+    return node.hasThumbnail ? withRendition(originalUrl, 'thumbnail') : null;
+};
 
 export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScreen = false, onContentNotFound, pageCssHtml = ''}) => {
     const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath?.isFile;
@@ -22,19 +51,20 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
             );
         }
 
-        if (isBrowserImage(data.nodeByPath)) {
-            return (
+        if (isImage(data.nodeByPath)) {
+            const imageUrl = getPreviewImageUrl(data.nodeByPath, file);
+            return imageUrl ? (
                 <div className={clsx(styles.previewContainer, styles.mediaContainer)}
                      data-sel-role="preview-container"
                      data-preview-type="image"
                 >
                     <ImageViewer
                         alt={decodeURIComponent(data.nodeByPath.path.split('/').pop())}
-                        file={file}
+                        file={imageUrl}
                         isFullScreen={isFullScreen}
                     />
                 </div>
-            );
+            ) : <NoView/>;
         }
 
         const type = getFileExtension(data.nodeByPath);

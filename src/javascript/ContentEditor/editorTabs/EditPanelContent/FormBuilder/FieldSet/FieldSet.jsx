@@ -3,14 +3,10 @@ import {Toggle} from '@jahia/design-system-kit';
 import {Button, Edit, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {FieldSetPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {FieldContainer} from '../Field/Field.container';
 import {useFormikContext} from 'formik';
 import styles from './FieldSet.scss';
-
-// Field sets whose properties are read out of an uploaded file rather than authored: in practice
-// most of them are empty, so showing all of them buries the handful that carry a value. These show
-// only the filled ones, with a button to reveal the rest for editing.
-const SPARSE_FIELD_SETS = ['jmix:exif', 'jmix:iptc'];
 
 const hasValue = value => {
     if (Array.isArray(value)) {
@@ -25,7 +21,9 @@ export const FieldSet = ({fieldset}) => {
     const {values, handleChange} = useFormikContext();
     const [showEmptyFields, setShowEmptyFields] = useState(false);
     const activatedFieldSet = !fieldset.dynamic || (values && values[fieldset.name]);
-    const isSparse = SPARSE_FIELD_SETS.includes(fieldset.name);
+    // Read out of the uploaded binary rather than authored: show only the filled fields, with a
+    // button to reveal the rest for editing.
+    const isSparse = Constants.fileMetadataFieldSets.includes(fieldset.name);
 
     if (!fieldset.hasEnableSwitch && fieldset.fields.filter(f => f.visible).length === 0) {
         return false;

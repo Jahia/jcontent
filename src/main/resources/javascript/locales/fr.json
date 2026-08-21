@@ -846,6 +846,8 @@
         "lockType": "Type de Verrouillage",
         "technical": "Informations Techniques",
         "additional": "Détails Supplémentaires",
+        "exifMetadata": "Données EXIF disponibles",
+        "iptcMetadata": "Données XMP/IPTC disponibles",
         "copiedToClipboard": "Copié dans le presse-papiers",
         "links": "Liens",
         "linksLive": "En ligne",

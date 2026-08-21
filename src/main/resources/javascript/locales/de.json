@@ -845,6 +845,8 @@
         "lockType": "Sperrtyp",
         "technical": "Technische Informationen",
         "additional": "Zusätzliche Details",
+        "exifMetadata": "Verfügbare EXIF-Daten",
+        "iptcMetadata": "Verfügbare XMP/IPTC-Daten",
         "copiedToClipboard": "In die Zwischenablage kopiert",
         "links": "Links",
         "linksLive": "Live",

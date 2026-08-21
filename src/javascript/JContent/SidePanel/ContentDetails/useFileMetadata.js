@@ -1,6 +1,7 @@
 import {useMemo} from 'react';
 import {gql, useQuery} from '@apollo/client';
 import {useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 import {useSidePanelContext} from '../SidePanelContext';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
@@ -9,6 +10,15 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 // prunes anything hidden out of its payload, so a form definition that hides these field sets from
 // Content Editor would otherwise empty this panel too.
 const NODE_TYPES = Constants.fileMetadataFieldSets;
+
+// Section titles come from our own bundle rather than from the node type label, so that they read
+// the same here as they do on the Content Editor field sets. Core labels jmix:exif "Picture file
+// (EXIF)", which names a kind of file rather than a group of metadata. Any field set added later
+// and not listed here falls back to its node type label.
+const SECTION_TITLE_KEYS = {
+    'jmix:exif': 'jcontent:label.contentEditor.sidePanel.exifMetadata',
+    'jmix:iptc': 'jcontent:label.contentEditor.sidePanel.iptcMetadata'
+};
 
 const GET_FILE_METADATA = gql`
     query getFileMetadata($uuid: String!, $language: String!, $uilang: String!, $nodeTypes: [String]!) {
@@ -72,6 +82,7 @@ export const adaptFileMetadata = (data, nodeTypeNames = NODE_TYPES) => {
 };
 
 export const useFileMetadata = () => {
+    const {t} = useTranslation('jcontent');
     const {nodeData, lang} = useSidePanelContext();
     const uilang = useSelector(state => state.uilang);
     const uuid = nodeData?.uuid;
@@ -82,5 +93,8 @@ export const useFileMetadata = () => {
         skip: !uuid || !lang || !uilang || !nodeData?.isFile
     });
 
-    return useMemo(() => adaptFileMetadata(data), [data]);
+    return useMemo(() => adaptFileMetadata(data).map(group => ({
+        ...group,
+        displayName: SECTION_TITLE_KEYS[group.name] ? t(SECTION_TITLE_KEYS[group.name]) : group.displayName
+    })), [data, t]);
 };

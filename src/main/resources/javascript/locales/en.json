@@ -855,6 +855,8 @@
         "lockType": "Lock Type",
         "technical": "Technical Information",
         "additional": "Additional Details",
+        "exifMetadata": "Available EXIF data",
+        "iptcMetadata": "Available XMP/IPTC data",
         "copiedToClipboard": "Copied to clipboard",
         "links": "Links",
         "linksLive": "Live",

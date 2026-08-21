@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
+import {useFileMetadata} from './useFileMetadata';
 import styles from './ContentDetails.scss';
 
 const GET_CONTENT_LINKS = gql`
@@ -272,6 +273,42 @@ const FileLinks = () => {
     );
 };
 
+// Metadata read out of the uploaded binary: one section per provenance (EXIF, XMP/IPTC), each
+// listing only the fields that carry a value. Titles and labels come localised from the node type
+// definitions, so nothing here is translated locally.
+const FileMetadata = () => {
+    const fileMetadata = useFileMetadata();
+
+    if (fileMetadata.length === 0) {
+        return null;
+    }
+
+    return (
+        <>
+            {fileMetadata.map(group => (
+                <div
+                    key={group.name}
+                    className={styles.section}
+                    data-sel-role="details-section"
+                    data-sel-content={group.name}
+                >
+                    <Typography variant="subheading" className={styles.sectionTitle}>
+                        {group.displayName}
+                    </Typography>
+
+                    {group.entries.map(entry => (
+                        <DetailRow
+                            key={entry.label}
+                            label={entry.label}
+                            value={entry.value}
+                        />
+                    ))}
+                </div>
+            ))}
+        </>
+    );
+};
+
 export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, technicalInfo, details} = useSidePanelContext();
@@ -308,6 +345,8 @@ export const ContentDetails = () => {
             )}
 
             <FileLinks/>
+
+            <FileMetadata/>
 
             {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">

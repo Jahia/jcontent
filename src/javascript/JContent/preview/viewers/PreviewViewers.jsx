@@ -28,7 +28,11 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
                      data-sel-role="preview-container"
                      data-preview-type="image"
                 >
-                    <ImageViewer file={file} isFullScreen={isFullScreen}/>
+                    <ImageViewer
+                        alt={decodeURIComponent(data.nodeByPath.path.split('/').pop())}
+                        file={file}
+                        isFullScreen={isFullScreen}
+                    />
                 </div>
             );
         }

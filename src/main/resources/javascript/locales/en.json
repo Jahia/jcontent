@@ -363,6 +363,16 @@
         "removed": "{{count}} previously selected items have been removed from the selection, as they are not displayed in this view",
         "addTo": "Add to selection"
       },
+      "focalPoint": {
+        "action": "Set focal point",
+        "title": "Focal point",
+        "help": "Click the part of the image that must stay visible. Views that crop this image to another shape keep this point in frame instead of cropping from the centre.",
+        "value": "Focal point: {{position}}",
+        "reset": "Reset to centre",
+        "cancel": "Cancel",
+        "error": "The focal point could not be saved.",
+        "save": "Save"
+      },
       "editImage": {
         "action": "Image editor",
         "title": "Image edition",

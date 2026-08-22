@@ -359,6 +359,16 @@
         "removed": "{{count}} éléments précédemment sélectionnés ont été enlevés de la sélection, car non affichés dans cette vue",
         "addTo": "Ajouter à la sélection"
       },
+      "focalPoint": {
+        "action": "Définir le point d'intérêt",
+        "title": "Point d'intérêt",
+        "help": "Cliquez sur la partie de l'image qui doit rester visible. Les vues qui recadrent cette image dans un autre format conservent ce point plutôt que de recadrer depuis le centre.",
+        "value": "Point d'intérêt : {{position}}",
+        "reset": "Recentrer",
+        "cancel": "Annuler",
+        "error": "Le point d'intérêt n'a pas pu être enregistré.",
+        "save": "Enregistrer"
+      },
       "editImage": {
         "action": "Editeur d'images",
         "title": "Edition d'image",

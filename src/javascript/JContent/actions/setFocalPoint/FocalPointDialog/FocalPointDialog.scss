@@ -1,0 +1,57 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+}
+
+.help {
+    color: var(--color-gray);
+}
+
+// The frame shrink-wraps the image so the marker, positioned in percentages, lands on the picture
+// rather than on the letterboxing a fixed-size container would add.
+.imageFrame {
+    position: relative;
+
+    align-self: center;
+
+    max-width: 100%;
+
+    line-height: 0;
+
+    background-color: var(--color-gray_dark40);
+}
+
+.image {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 60vh;
+
+    cursor: crosshair;
+}
+
+.marker {
+    position: absolute;
+
+    width: 22px;
+    height: 22px;
+    // Percentages place the marker's top-left corner, so pull it back by half its own size to centre
+    // it on the chosen point.
+    margin-top: -11px;
+    margin-left: -11px;
+
+    border: 2px solid var(--color-light);
+    border-radius: 50%;
+
+    // Readable over both a light and a dark image without needing to know which it is
+    box-shadow: 0 0 0 2px var(--color-accent_dark), inset 0 0 0 2px var(--color-accent_dark);
+
+    pointer-events: none;
+}
+
+.value {
+    align-self: center;
+
+    color: var(--color-gray);
+}

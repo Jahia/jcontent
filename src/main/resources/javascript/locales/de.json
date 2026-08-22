@@ -359,6 +359,16 @@
         "removed": "Zuvor selektierte Elemente, die nicht in dieser Ansicht angezeigt werden können, wurden von der Selektion entfernt",
         "addTo": "Zur Selektion hinzufügen"
       },
+      "focalPoint": {
+        "action": "Fokuspunkt festlegen",
+        "title": "Fokuspunkt",
+        "help": "Klicken Sie auf den Bildbereich, der sichtbar bleiben soll. Ansichten, die dieses Bild anders zuschneiden, halten diesen Punkt im Bild, statt aus der Mitte zu schneiden.",
+        "value": "Fokuspunkt: {{position}}",
+        "reset": "Auf Mitte zurücksetzen",
+        "cancel": "Abbrechen",
+        "error": "Der Fokuspunkt konnte nicht gespeichert werden.",
+        "save": "Speichern"
+      },
       "editImage": {
         "action": "Bild-Editor",
         "title": "Bildausgabe",

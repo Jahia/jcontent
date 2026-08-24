@@ -521,3 +521,14 @@ export const isCMISFolder = node => {
 export const isCMISFile = node => {
     return hasMixin(node, 'cmismix:document');
 };
+
+/**
+ * Check if a node is an area, which is stored as a content list carrying this mixin. Neither the
+ * primary node type nor the path tells an area apart from an ordinary list, so this is what every
+ * surface has to ask to name and picture areas the same way.
+ * @param {Object} node - The node object with mixinTypes array
+ * @returns {boolean} - True if the node has the jmix:isAreaList mixin
+ */
+export const isAreaList = node => {
+    return hasMixin(node, 'jmix:isAreaList');
+};

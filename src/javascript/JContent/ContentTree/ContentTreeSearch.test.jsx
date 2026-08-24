@@ -199,6 +199,24 @@ describe('ContentTreeSearch', () => {
         expect(resultCount.text()).toContain('jcontent:label.contentManager.tree.search.resultsFound');
     });
 
+    it('should announce a failure and clear matches when the search query fails', async () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        search = jest.fn().mockRejectedValue(new Error('network down'));
+        useLazyQuery.mockReturnValue([search, {loading: false}]);
+
+        const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
+        typeValue(cmp, 'about');
+        cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
+        // The rejection skips the .then before reaching the .catch, so let the whole chain settle.
+        await new Promise(resolve => setTimeout(resolve, 0));
+        cmp.update();
+
+        expect(onMatchedPaths).toHaveBeenCalledWith([], '');
+        expect(cmp.find('[data-sel-role="content-tree-search-result-count"]').text())
+            .toContain('jcontent:label.contentManager.tree.search.error');
+        consoleError.mockRestore();
+    });
+
     it('should render an empty, but always-mounted result-count region before any search runs', () => {
         const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
 

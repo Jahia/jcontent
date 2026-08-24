@@ -184,7 +184,8 @@
           "noResults": "Aucune page trouvée",
           "resultsFound": "{{count}} résultat trouvé",
           "resultsFound_plural": "{{count}} résultats trouvés",
-          "clear": "Effacer la recherche"
+          "clear": "Effacer la recherche",
+          "error": "La recherche n'a pas pu aboutir, veuillez réessayer"
         }
       },
       "browsePages": "Parcourir les pages",

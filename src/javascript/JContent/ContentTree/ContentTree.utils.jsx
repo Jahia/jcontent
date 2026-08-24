@@ -101,6 +101,10 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
         return tree;
     }
 
+    // Built once rather than scanning the match array for every visible entry - the tree can hold
+    // a lot of entries and a search can return up to its own result limit of matches.
+    const matchedPaths = new Set(searchMatchedPaths);
+
     treeEntries.forEach(treeEntry => {
         const notPublished = treeEntry.node.publicationStatus && (
             treeEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED ||
@@ -110,7 +114,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
 
         const parentPath = getParentPath(treeEntry.path);
 
-        const isSearchMatch = searchMatchedPaths.includes(treeEntry.path);
+        const isSearchMatch = matchedPaths.has(treeEntry.path);
 
         const element = {
             id: treeEntry.path,

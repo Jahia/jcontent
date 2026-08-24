@@ -188,7 +188,8 @@
           "noResults": "No pages found",
           "resultsFound": "{{count}} result found",
           "resultsFound_plural": "{{count}} results found",
-          "clear": "Clear search"
+          "clear": "Clear search",
+          "error": "The search could not be completed, please try again"
         }
       },
       "browsePages": "Browse Pages",

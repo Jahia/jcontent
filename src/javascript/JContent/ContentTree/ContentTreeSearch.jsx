@@ -13,19 +13,41 @@ import styles from './ContentTreeSearch.scss';
 
 const SEARCH_RESULTS_LIMIT = 50;
 
+/**
+ * The message the aria-live region announces for the current search state.
+ * @param {?object} status null before any search has run, otherwise a result count or a failure
+ * @param {function} t the translation function
+ * @returns {string} the message to announce, empty when there is nothing to say yet
+ */
+const getStatusMessage = (status, t) => {
+    if (!status) {
+        return '';
+    }
+
+    if (status.failed) {
+        return t('jcontent:label.contentManager.tree.search.error');
+    }
+
+    if (status.count === 0) {
+        return t('jcontent:label.contentManager.tree.search.noResults');
+    }
+
+    return t('jcontent:label.contentManager.tree.search.resultsFound', {count: status.count});
+};
+
 export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState('');
-    // Null before any search has run (nothing to announce yet); a number once one has, so the
-    // aria-live region below always has something meaningful to read out, including zero.
-    const [resultCount, setResultCount] = useState(null);
+    // Null before any search has run (nothing to announce yet); a {count} or {failed} object once
+    // one has, so the aria-live region below always has something meaningful to read out.
+    const [status, setStatus] = useState(null);
     const [search, {loading}] = useLazyQuery(SearchTreeNodesQuery, {fetchPolicy: 'network-only'});
 
     const triggerSearch = useCallback(() => {
         const term = inputValue.trim();
         if (!term) {
-            setResultCount(null);
+            setStatus(null);
             onMatchedPaths([], '');
             return;
         }
@@ -55,13 +77,19 @@ export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
             }
 
             onMatchedPaths(matches.map(node => node.path), term);
-            setResultCount(matches.length);
+            setStatus({count: matches.length});
+        }).catch(error => {
+            // A failed search must not leave the tree showing stale matches, and announcing "no
+            // results" would be a lie - report the failure instead.
+            console.error('Error while searching the content tree', error);
+            onMatchedPaths([], '');
+            setStatus({failed: true});
         });
     }, [inputValue, rootPath, language, search, dispatch, onMatchedPaths]);
 
     const clearSearch = useCallback(() => {
         setInputValue('');
-        setResultCount(null);
+        setStatus(null);
         onMatchedPaths([], '');
     }, [onMatchedPaths]);
 
@@ -109,11 +137,7 @@ export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
                 aria-live="polite"
                 data-sel-role="content-tree-search-result-count"
             >
-                {resultCount === null ?
-                    '' :
-                    (resultCount === 0 ?
-                        t('jcontent:label.contentManager.tree.search.noResults') :
-                        t('jcontent:label.contentManager.tree.search.resultsFound', {count: resultCount}))}
+                {getStatusMessage(status, t)}
             </Typography>
         </div>
     );

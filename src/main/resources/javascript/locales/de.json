@@ -184,7 +184,8 @@
           "noResults": "Keine Seiten gefunden",
           "resultsFound": "{{count}} Ergebnis gefunden",
           "resultsFound_plural": "{{count}} Ergebnisse gefunden",
-          "clear": "Suche zurücksetzen"
+          "clear": "Suche zurücksetzen",
+          "error": "Die Suche konnte nicht abgeschlossen werden, bitte versuchen Sie es erneut"
         }
       },
       "browsePages": "Seiten durchsuchen",

@@ -1,6 +1,6 @@
 ---
 # Allowed version bumps: patch, minor, major
-"@jahia/jcontent": patch
+"@jahia/jcontent": minor 
 ---
 
-Fixed migrating away from the legacy visibility/advanced-visibility modules so it completes correctly and consistently on every node of a cluster, instead of hanging the install or leaving conditional-visibility rules broken on some nodes.
+Fixed visibility migration script so that module uninstall is performed on all cluster nodes (#2726)

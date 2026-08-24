@@ -181,11 +181,10 @@ export const registerPickerReducer = registry => {
         [cePickerSetMultiple]: (state, action) => ({
             ...state,
             multiple: action.payload
-        }),
-        FILEUPLOAD_UPDATE_UPLOAD: (state, action) => ({
-            ...state,
-            selection: action.payload.uuid ? (state.multiple ? [action.payload.uuid, ...state.selection] : [action.payload.uuid]) : state.selection
         })
+        // An upload used to select itself from here, which no reducer can do correctly: the
+        // selection has to respect what the picker accepts, and only the loaded node knows
+        // whether it does. useSelectUploadedNodes answers for it instead.
     }, initialState);
 
     registry.add('redux-reducer', 'picker', {targets: [COMBINED_REDUCERS_NAME], reducer: picker});

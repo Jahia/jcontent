@@ -24,6 +24,40 @@ export const showChipField = (is18nField, wipInfo, currentLanguage) => {
     return is18nField && wipInfo && wipInfo.status === Constants.wip.status.LANGUAGES && wipInfo.languages.indexOf(currentLanguage) > -1;
 };
 
+// Kept as a plain render function rather than a component (like renderField below) so the badges
+// stay part of Field's own shallow-rendered output.
+const renderFieldBadges = ({field, wipInfo, editorContext, hasMandatoryError, t}) => (
+    <>
+        {field.mandatory && (
+            <Chip
+                className={styles.badge}
+                data-sel-content-editor-field-mandatory={Boolean(hasMandatoryError)}
+                label={t('jcontent:label.contentEditor.edit.validation.required')}
+                color={hasMandatoryError ? 'warning' : 'accent'}
+            />
+        )}
+        {field.readOnly && (
+            <ReadOnlyBadge isReadOnly={field.readOnly}/>
+        )}
+        {showChipField(field.i18n, wipInfo, editorContext.lang) && (
+            <Chip
+                className={styles.badge}
+                data-sel-role="wip-info-chip-field"
+                label={t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelField')}
+                color="warning"
+            />
+        )}
+        {(!field.i18n && editorContext.siteInfo.languages.length > 1) && (
+            <Chip
+                className={styles.badge}
+                icon={<Language/>}
+                label={t('jcontent:label.contentEditor.edit.sharedLanguages')}
+                color="default"
+            />
+        )}
+    </>
+);
+
 const renderField = (
     inputContext,
     field,
@@ -51,36 +85,7 @@ const renderField = (
                 >
                     <Typography weight="bold">{field.displayName}</Typography>
                 </InputLabel>
-                {inputContext.displayBadges && (
-                <>
-                    {field.mandatory && (
-                    <Chip
-                                className={styles.badge}
-                                data-sel-content-editor-field-mandatory={Boolean(hasMandatoryError)}
-                                label={t('jcontent:label.contentEditor.edit.validation.required')}
-                                color={hasMandatoryError ? 'warning' : 'accent'}
-                            />
-                        )}
-                    {field.readOnly && (
-                    <ReadOnlyBadge isReadOnly={field.readOnly}/>
-                        )}
-                    {showChipField(field.i18n, wipInfo, editorContext.lang) && (
-                    <Chip
-                                className={styles.badge}
-                                data-sel-role="wip-info-chip-field"
-                                label={t('jcontent:label.contentEditor.edit.action.workInProgress.chipLabelField')}
-                                color="warning"
-                            />
-                        )}
-                    {(!field.i18n && editorContext.siteInfo.languages.length > 1) &&
-                    <Chip
-                                className={styles.badge}
-                                icon={<Language/>}
-                                label={t('jcontent:label.contentEditor.edit.sharedLanguages')}
-                                color="default"
-                            />}
-                </>
-                )}
+                {inputContext.displayBadges && renderFieldBadges({field, wipInfo, editorContext, hasMandatoryError, t})}
                 <div className="flexFluid"/>
                 <DisplayAction
                     actionKey="content-editor/field/3dots"

@@ -28,16 +28,31 @@ describe('media pickers', () => {
     });
 
     describe('image picker', () => {
-        // The jmix:image mixin covers formats a browser cannot display - TIFF, PSD, camera raw.
-        // Filtering those out of the picker was tried and deliberately dropped: editors reference
-        // print resolution files on purpose, and the picker is not the place to overrule them. It
-        // goes on the node type alone, so anything the repository counts as an image stays pickable.
-        it('should offer every image type, including formats a browser cannot display', () => {
-            expect(mimeFiltersOf(configs.image, 'picker-media')).toEqual([]);
-            expect(mimeFiltersOf(configs.image, 'picker-search')).toEqual([]);
+        it('should offer the formats a browser can render', () => {
+            expect(mimeFiltersOf(configs.image, 'picker-media'))
+                .toEqual(expect.arrayContaining(['jpeg', 'png', 'gif', 'webp', 'svg']));
         });
 
-        it('should select on image types', () => {
+        it('should not offer image formats a browser cannot render', () => {
+            // These are jmix:image too, so nothing else keeps them out of an image field.
+            const offered = mimeFiltersOf(configs.image, 'picker-media');
+
+            ['tiff', 'psd', 'photoshop', 'raw'].forEach(format => {
+                expect(offered).not.toContain(format);
+            });
+        });
+
+        it('should keep folders browsable, since they carry no mime type', () => {
+            expect(configs.image.accordionItem['picker-media'].tableConfig.tableDisplayFilter)
+                .toEqual(expect.arrayContaining([{evaluation: 'EQUAL', fieldName: 'isFile', value: 'false'}]));
+        });
+
+        it('should restrict search to the same formats, so it cannot surface the others', () => {
+            expect(mimeFiltersOf(configs.image, 'picker-search'))
+                .toEqual(mimeFiltersOf(configs.image, 'picker-media'));
+        });
+
+        it('should still select on image types, the restriction being about what is displayable', () => {
             expect(configs.image.selectableTypesTable).toEqual(['jmix:image']);
         });
     });

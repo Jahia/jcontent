@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor 
 ---
 
-Fixed visibility migration script so that module uninstall is performed on all cluster nodes (#2726)
+Fixed the visibility migration script to ensure that module uninstallation is performed on all cluster nodes. (#2726)

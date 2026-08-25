@@ -10,3 +10,4 @@ export * from './systemName.utils';
 export * from './useKeydownListener';
 export * from './useSwitchLanguage';
 export * from './useReorderList';
+export * from './useMovedItemFocus';

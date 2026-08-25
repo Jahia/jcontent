@@ -1021,6 +1021,7 @@
           "displayValue": "Date",
           "description": "Sélectionner une date dans un calendrier"
         },
+        "localTimeHint": "Affiché dans votre fuseau horaire local ({{zone}})",
         "text": {
           "displayValue": "Text",
           "description": "Champ texte"

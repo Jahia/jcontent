@@ -26,6 +26,22 @@ dayjs.extend(isSameOrBefore);
 const deprecatedDayjs = dayjs;
 export { deprecatedDayjs as dayjs };
 
+/**
+ * Parses a date-like value (ISO string, timestamp, Date, ...) into a native Date object, in the
+ * browser's local time.
+ */
+export function toDate(date: Parameters<typeof dayjs>[0]): Date {
+  return dayjs(date).toDate();
+}
+
+/**
+ * Serializes a date-like value (ISO string, timestamp, Date, ...) as a UTC instant, in the
+ * standard `YYYY-MM-DDTHH:mm:ss.SSSZ` ISO 8601 format.
+ */
+export function toUtcIsoString(date: Parameters<typeof dayjs>[0]): string {
+  return dayjs(date).toISOString();
+}
+
 const formatMap = {
   short: 'lll',
   long: 'LLL',

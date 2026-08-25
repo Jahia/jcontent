@@ -3,6 +3,7 @@ import {useDragLayer} from 'react-dnd';
 import PropTypes from 'prop-types';
 import {boxStyles as styles} from 'editframe-styles';
 import clsx from 'clsx';
+import {ArrowDown, ArrowUp} from '@jahia/moonstone';
 import {DropArea} from './DropArea';
 import {Insert} from './Insert';
 
@@ -20,6 +21,12 @@ export const DndOverlays = ({currentDndInfo}) => {
 
     return (
         <>
+            <div className={clsx(styles.scrollEdgeIndicator, styles.scrollEdgeTop)}>
+                <ArrowUp className={styles.scrollEdgeIcon}/>
+            </div>
+            <div className={clsx(styles.scrollEdgeIndicator, styles.scrollEdgeBottom)}>
+                <ArrowDown className={styles.scrollEdgeIcon}/>
+            </div>
             {draggedOverlayPosition && <div className={clsx(styles.root, styles.draggedOverlay)} style={draggedOverlayPosition}/>}
             {dropTarget && <DropArea dropTarget={dropTarget} isDropAllowed={dropAllowed}/>}
             {dropTarget && relative && <Insert relative={relative}/>}

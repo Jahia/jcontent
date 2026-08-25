@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next';
-import {CheckboxItem} from '@jahia/moonstone/dist/components/CheckboxGroup/CheckboxItem';
+import {CheckboxItem} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 

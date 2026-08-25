@@ -153,6 +153,10 @@ services:
             SUPER_USER_PASSWORD: ${SUPER_USER_PASSWORD}
             SKIP_TESTS: ${SKIP_TESTS:-false}
             TESTS_PROFILE: ${TESTS_PROFILE:-}
+            # Match the jahia/mariadb services' TZ, so the browser under test runs in a non-UTC
+            # zone and can actually catch a date/timezone bug (at UTC, local == UTC and the bug
+            # is invisible).
+            TZ: ${TIMEZONE}
         networks:
             - stack
 

@@ -25,10 +25,16 @@ public class VisibilityConditionInput {
     @GraphQLDescription("The properties to set on the visibility condition node")
     private Collection<GqlJcrPropertyInput> properties;
 
-    public VisibilityConditionInput(@GraphQLName("type") String primaryType, @GraphQLName("uuid") String uuid, @GraphQLName("properties") Collection<GqlJcrPropertyInput> properties) {
+    @GraphQLField
+    @GraphQLName("deletedProperties")
+    @GraphQLDescription("The names of properties to remove from an existing visibility condition node")
+    private Collection<String> deletedProperties;
+
+    public VisibilityConditionInput(@GraphQLName("type") String primaryType, @GraphQLName("uuid") String uuid, @GraphQLName("properties") Collection<GqlJcrPropertyInput> properties, @GraphQLName("deletedProperties") Collection<String> deletedProperties) {
         this.primaryType = primaryType;
         this.uuid = uuid;
         this.properties = properties;
+        this.deletedProperties = deletedProperties;
     }
 
     public String getPrimaryType() {
@@ -41,5 +47,9 @@ public class VisibilityConditionInput {
 
     public Collection<GqlJcrPropertyInput> getProperties() {
         return properties;
+    }
+
+    public Collection<String> getDeletedProperties() {
+        return deletedProperties;
     }
 }

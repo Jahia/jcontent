@@ -12,9 +12,7 @@ export const getFieldValuesFromDefaultValues = field => {
         if (selectorType.adaptValue) {
             formFields[field.name] = selectorType.adaptValue(field, {
                 value: mappedValues[0],
-                notZonedDateValue: mappedValues[0],
-                values: mappedValues,
-                notZonedDateValues: mappedValues
+                values: mappedValues
             });
         } else {
             formFields[field.name] = field.multiple ? mappedValues : mappedValues[0];

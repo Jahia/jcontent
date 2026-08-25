@@ -32,28 +32,20 @@ jobs:
         with:
           node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
-      - name: Prepare GPG
-        shell: bash
-        run: |
-          echo $GPG_KEY | base64 --decode | gpg --batch --allow-secret-key-import --import
-          rm -rf /tmp/gpg.sh
-          echo '#!/bin/bash' >> /tmp/gpg.sh
-          echo 'gpg --batch --pinentry-mode=loopback --passphrase $GPG_KEY_PASSPHRASE $@' >> /tmp/gpg.sh
-          chmod +x /tmp/gpg.sh
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
+      - name: Import jahia-ci GPG signing key
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY }}
+          passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Setting up github configuration
         shell: bash
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.email "jahia-ci@jahia.com"
-          git config --global user.name "Jahia CI"
-          git config --global commit.gpgsign true
-          git config --global user.signingkey $GPG_KEY_ID
-          git config --global gpg.program /tmp/gpg.sh
-        env:
-          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+          git config --global user.name "jahia-ci"
       - name: Build and publish jContent test module
         shell: bash
         run: |
@@ -68,9 +60,13 @@ jobs:
           yarn build
 
           echo; echo "Incrementing version for release.."
-          yarn version --prerelease --preid=tests
-          git verify-commit $( git rev-parse HEAD )
-          git push --follow-tags 
+          npm version prerelease --preid=tests --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          git add package.json
+          git commit -m "[skip-ci] Cypress test module release v$NEW_VERSION"
+          git tag "v$NEW_VERSION"
+          git verify-commit HEAD
+          git push --follow-tags
 
           if "${{ inputs.is_dry_run }}"; then
             if [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then
@@ -79,9 +75,7 @@ jobs:
               echo "Executing npm publish in dry-run mode"
               npm publish --access public --tag latest --dry-run
             fi
-          else 
+          else
             echo "Publishing jContent tests in npm..."
             npm publish --access public --tag latest
           fi
-        env:
-          GPG_KEY_PASSPHRASE: ${{ secrets.GPG_KEY_PASSPHRASE }}

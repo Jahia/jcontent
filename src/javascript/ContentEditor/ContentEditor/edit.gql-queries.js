@@ -87,10 +87,8 @@ const NodeDataFragment = {
                 properties(language: $language) {
                     name
                     value
-                    notZonedDateValue
                     decryptedValue
                     values
-                    notZonedDateValues
                     decryptedValues
                     definition {
                         declaringNodeType {

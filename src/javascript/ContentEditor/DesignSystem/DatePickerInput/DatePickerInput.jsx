@@ -48,8 +48,6 @@ export const DatePickerInput = ({
         dayjs(initialValue).format(type === 'dateTime' ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD') :
         null;
 
-    console.log('test composant détecté');
-
     return (
         <DateTimeInput
             className={styles.input}

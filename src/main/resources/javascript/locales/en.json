@@ -1037,6 +1037,7 @@
           "displayValue": "Date",
           "description": "Select a date from a calendar"
         },
+        "localTimeHint": "Shown in your local time zone ({{zone}})",
         "text": {
           "displayValue": "Text",
           "description": "Simple text input"

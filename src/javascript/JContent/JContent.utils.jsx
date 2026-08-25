@@ -1,9 +1,6 @@
-import React from 'react';
 import * as _ from 'lodash';
 import ellipsize from 'ellipsize';
 import JContentConstants from './JContent.constants';
-import {getIcon} from '@jahia/icons';
-import {Layers, Tag} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
 import {GetAncestorsQueryById, GetAncestorsQueryByPath} from '~/JContent/JContentUtils.gql-queries';
 import rison from 'rison';
@@ -173,14 +170,8 @@ export const uppercaseFirst = string => {
     return string.charAt(0).toUpperCase() + string.substr(1);
 };
 
-export const getNodeTypeIcon = typeName => {
-    if (typeName === 'jnt:category') {
-        return <Tag/>;
-    }
-
-    const Icon = getIcon(typeName) || Layers;
-    return <Icon/>;
-};
+// Kept exported from here for the callers that already import it from this module.
+export {getNodeTypeIcon} from '~/utils/nodeTypeIcons';
 
 export const isObject = item => {
     return (item && typeof item === 'object' && !Array.isArray(item));

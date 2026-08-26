@@ -30,6 +30,7 @@ describe('jContent side panel - file metadata', () => {
         const media = JContent.visit('digitall', 'en', folder).getMedia().open();
         mediaReadyToUpload();
         media.uploadFileViaDialog(withMetadata, 'assets');
+        mediaReadyToUpload();
         media.uploadFileViaDialog(withoutMetadata, 'assets/uploadMedia');
     });
 

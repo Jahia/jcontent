@@ -59,6 +59,7 @@ describe('IPTC/XMP provenance', () => {
         const media = JContent.visit(siteKey, 'en', 'media/files').getMedia().open();
         mediaReadyToUpload();
         media.uploadFileViaDialog(jpeg, 'assets');
+        mediaReadyToUpload();
         media.uploadFileViaDialog(png, 'assets');
 
         waitForMixin(pathTo(jpeg));

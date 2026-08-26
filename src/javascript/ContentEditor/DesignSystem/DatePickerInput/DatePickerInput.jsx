@@ -25,10 +25,6 @@ const formatDateTime = (datetime, lang, variant, displayDateFormat) => {
         .format(displayDateFormat || datetimeFormat[variant]);
 };
 
-// A stored value that fails to parse into a real date (corrupt existing data, or a raw
-// unparsable string round-tripped back in as initialValue) is still `instanceof Date` and
-// truthy, but carries NaN internals -- passing it to the calendar crashes react-day-picker's
-// month arithmetic. Treat it the same as no date at all when a component first mounts with it.
 const sanitizeDate = date => (date instanceof Date && Number.isNaN(date.getTime()) ? null : date);
 
 export const getMaskOptions = (displayDateMask, isDateTime) => {
@@ -59,14 +55,7 @@ export const DatePickerInput = ({
     );
 
     useEffect(() => {
-        // A truthy-but-unparseable initialValue only happens when the parent echoes back the raw
-        // out-of-range text just typed/pasted (DateTimePicker forwards it through onChange
-        // unconverted, for validation, then re-derives initialValue from it on the next render).
-        // Resyncing from that echo would blank/reformat the field, wiping out the exact text the
-        // "invalidDate" error needs to display against -- so leave the current display untouched.
-        // It also keeps `datetime` at its last safe value instead of ever becoming an Invalid
-        // Date, which is what crashed the calendar (Jahia/jcontent#2653) if it was opened
-        // afterwards -- and unlike this effect, nothing else corrects that value back on its own.
+        // Leave current display as-is if invalid instead of clearing it.
         if (initialValue && !dayjs(initialValue).isValid()) {
             return;
         }

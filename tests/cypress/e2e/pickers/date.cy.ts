@@ -1,16 +1,19 @@
-import {addNode, createSite, createUser, deleteSite, deleteUser, grantRoles} from '@jahia/cypress';
+import {addNode, createSite, createUser, deleteSite, deleteUser, enableModule, grantRoles} from '@jahia/cypress';
 
-import {ContentEditor} from '../../page-object/contentEditor';
+import {ContentEditor} from '../../page-object';
 import {GraphqlUtils} from '../../utils/graphqlUtils';
 import {localWallClockToUtcIso, WallClock} from '../../utils/timeUtils';
 
 describe('Date picker tests', () => {
+    const siteKey = 'datePickerSite';
+
     before('Create required content', () => {
-        createSite('testsite');
+        createSite(siteKey);
+        enableModule('qa-module', siteKey);
         createUser('myUser', 'password', [{name: 'preferredLanguage', value: 'es'}]);
-        grantRoles('/sites/testsite', ['editor'], 'myUser', 'USER');
+        grantRoles(`/sites/${siteKey}`, ['editor'], 'myUser', 'USER');
         addNode({
-            parentPathOrId: '/sites/testsite/contents',
+            parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'contentEditorPickers',
             primaryNodeType: 'qant:pickers'
         });
@@ -18,12 +21,12 @@ describe('Date picker tests', () => {
 
     after('Remove tests content', () => {
         deleteUser('myUser');
-        deleteSite('testsite');
+        deleteSite(siteKey);
     });
 
     it('Test Date Picker', () => {
         cy.login();
-        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         const dateField = ce.getDateField('qant:pickers_datepicker');
         dateField.checkValue('');
         const today = dateField.getTodayDate();
@@ -33,7 +36,7 @@ describe('Date picker tests', () => {
 
     it('Test without using picker', () => {
         cy.login();
-        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         const dateField = ce.getDateField('qant:pickers_datepicker');
         const today = dateField.getTodayDate();
         dateField.checkValue('');
@@ -43,7 +46,7 @@ describe('Date picker tests', () => {
 
     it('Test Date time Picker without using picker', () => {
         cy.login();
-        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         const dateField = ce.getDateField('qant:pickers_datetimepicker');
         dateField.checkValue('');
         dateField.pickTodayDate();
@@ -54,7 +57,7 @@ describe('Date picker tests', () => {
 
     it('Test Date Picker with spanish user', () => {
         cy.login('myUser', 'password');
-        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         const dateField = ce.getDateField('qant:pickers_datepicker');
         dateField.checkValue('');
         const today = dateField.getTodayDate();
@@ -63,7 +66,7 @@ describe('Date picker tests', () => {
     });
 
     it('stores UTC value and browser displays localized datetime', () => {
-        const nodePath = '/sites/testsite/contents/contentEditorPickers';
+        const nodePath = `/sites/${siteKey}/contents/contentEditorPickers`;
 
         const assertStoredAsUtc = (wallClock: WallClock) => {
             GraphqlUtils.getPropertyValue(nodePath, 'datetimepicker').then(rawValue => {
@@ -79,7 +82,7 @@ describe('Date picker tests', () => {
         // Phase 1: America/Toronto (UTC-5 in January). Close to local midnight, so a broken
         // conversion would visibly shift the CALENDAR DAY too, not just the hour.
         cy.setBrowserTimezone('America/Toronto');
-        let ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        let ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         let dateField = ce.getDateField('qant:pickers_datetimepicker');
         dateField.addNewValue('01/15/2027 23:30');
         ce.save();
@@ -88,25 +91,25 @@ describe('Date picker tests', () => {
         // Fresh page navigation (not just re-reading in-memory state), same overridden timezone --
         // proves the READ path also correctly converts the now-verified UTC instant back to the
         // same local wall clock, not just that the write happened to be right.
-        ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         ce.getDateField('qant:pickers_datetimepicker').checkValue('01/15/2027 23:30');
 
         // Phase 2: Asia/Tokyo (UTC+9, no DST) -- a completely different, opposite-sign offset,
         // proving the conversion tracks the BROWSER's timezone rather than some fixed value that
         // happened to produce the right answer once.
         cy.setBrowserTimezone('Asia/Tokyo');
-        ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         dateField = ce.getDateField('qant:pickers_datetimepicker');
         dateField.addNewValue('02/09/2027 08:15');
         ce.save();
         assertStoredAsUtc({timezoneId: 'Asia/Tokyo', year: 2027, month: 2, day: 9, hour: 8, minute: 15});
 
-        ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         ce.getDateField('qant:pickers_datetimepicker').checkValue('02/09/2027 08:15');
     });
 
     it('Test Date Picker stores the exact calendar day regardless of browser timezone', () => {
-        const nodePath = '/sites/testsite/contents/contentEditorPickers';
+        const nodePath = `/sites/${siteKey}/contents/contentEditorPickers`;
 
         cy.login();
 
@@ -114,7 +117,7 @@ describe('Date picker tests', () => {
         // that treats local midnight as a real UTC instant would roll the stored calendar day
         // back by one (midnight Jan 15 Paris = 23:00 Jan 14 UTC).
         cy.setBrowserTimezone('Europe/Paris');
-        let ce = ContentEditor.visit(nodePath, 'testsite', 'en', 'content-folders/contents');
+        let ce = ContentEditor.visit(nodePath, siteKey, 'en', 'content-folders/contents');
         ce.getDateField('qant:pickers_datepicker').addNewValue('01/15/2027');
         ce.save();
 
@@ -129,17 +132,33 @@ describe('Date picker tests', () => {
         // Reading it back from a DIFFERENT, "further behind" timezone must show the exact same
         // day -- proving the stored value isn't an instant whose calendar day shifts per viewer.
         cy.setBrowserTimezone('Pacific/Honolulu');
-        ce = ContentEditor.visit(nodePath, 'testsite', 'en', 'content-folders/contents');
+        ce = ContentEditor.visit(nodePath, siteKey, 'en', 'content-folders/contents');
         ce.getDateField('qant:pickers_datepicker').checkValue('01/15/2027');
     });
 
     it('Test Date time Picker shows a validation error for an out-of-range typed value', () => {
         cy.login();
-        const ce = ContentEditor.visit('/sites/testsite/contents/contentEditorPickers', 'testsite', 'en', 'content-folders/contents');
+        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         const dateField = ce.getDateField('qant:pickers_datetimepicker');
         dateField.get().find('input[type="text"]').clear().type('99/99/9999 99:99', {force: true});
         // Validation only runs on blur/save in this form; click to trigger
-        cy.get('body').click();
+        dateField.get().click('right');
         dateField.getErrorMessage('invalidDate').should('be.visible');
+    });
+
+    // Race condition test: typing an out-of-range value then opening the
+    // calendar crashes to the app's error page. The typed invalid string round-trips through
+    // Formik and comes back down as an "Invalid Date" object (instanceof Date, but NaN inside),
+    // which briefly lands in this component's `datetime` state before a second, self-correcting
+    // onChange(null) settles it back to null. Opening the calendar during that narrow window hands
+    // react-day-picker the Invalid Date, and its month arithmetic (Helpers.getWeekArray) throws.
+    // `{delay: 0}` + an immediate forced click is what reliably lands inside that window -- a
+    // slower/real interaction can miss it, which is why this was hard to reproduce by hand.
+    it('does not crash date picker after an out-of-range-typed value', () => {
+        cy.login();
+        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
+        const dateField = ce.getDateField('qant:pickers_datetimepicker');
+        dateField.get().find('input[type="text"]').clear().type('99/99/9999 99:99', {force: true, delay: 0});
+        dateField.open();
     });
 });

@@ -1,0 +1,21 @@
+.content {
+    padding-bottom: var(--spacing-medium);
+}
+
+.empty {
+    color: var(--color-gray);
+}
+
+.group {
+    margin-bottom: var(--spacing-medium);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.groupTitle {
+    margin-bottom: var(--spacing-small);
+
+    font-weight: 600;
+}

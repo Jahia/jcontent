@@ -1,9 +1,10 @@
 import React from 'react';
 import {unsetFieldAction} from '~/ContentEditor/SelectorTypes/actions/unsetFieldAction';
-import {Close, Edit, MoreVert, Upload, Visibility} from '@jahia/moonstone';
+import {Close, Edit, MoreVert, Tag, Upload, Visibility} from '@jahia/moonstone';
 import {replaceAction} from './replaceAction';
 import {openInTabAction} from './openInTabAction';
 import {previewInTabAction} from './previewInTabAction';
+import {imageMetadataAction} from './imageMetadataAction';
 
 export const registerPickerActions = registry => {
     registry.add('action', 'content-editor/field/Picker', registry.get('action', 'menuAction'), {
@@ -58,5 +59,11 @@ export const registerPickerActions = registry => {
         buttonIcon: <Visibility/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.previewTab',
         targets: ['content-editor/field/Picker:3', 'content-editor/field/MultiplePicker:3']
+    });
+
+    registry.add('action', 'imageMetadata', imageMetadataAction, {
+        buttonIcon: <Tag/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.imageMetadata.name',
+        targets: ['content-editor/field/Picker:4', 'content-editor/field/MultiplePicker:4']
     });
 };

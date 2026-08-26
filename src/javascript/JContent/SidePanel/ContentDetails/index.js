@@ -1,1 +1,1 @@
-export {ContentDetails} from './ContentDetails';
+export {ContentDetails, DetailRow} from './ContentDetails';

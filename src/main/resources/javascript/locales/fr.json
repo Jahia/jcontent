@@ -750,7 +750,12 @@
             "clear": "Effacer",
             "selectAll": "Sélectionnez toutes les valeurs",
             "add": "Ajouter",
-            "previewTab": "Prévisualisé dans un nouvel onglet"
+            "previewTab": "Prévisualisé dans un nouvel onglet",
+            "imageMetadata": {
+              "name": "Afficher les métadonnées de l’image",
+              "title": "Métadonnées de {{name}}",
+              "none": "Cette image ne contient aucune métadonnée EXIF ou XMP/IPTC."
+            }
           },
           "contentPicker": {
             "notFoundContent": "Référence cassée",

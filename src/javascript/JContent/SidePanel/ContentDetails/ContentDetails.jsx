@@ -40,7 +40,7 @@ const GET_CONTENT_LINKS = gql`
     }
 `;
 
-const DetailRow = ({label, value, isCopyable = true, children}) => {
+export const DetailRow = ({label, value, isCopyable = true, onCopied, children}) => {
     const {t} = useTranslation('jcontent');
     const notificationContext = useNotifications();
 
@@ -50,12 +50,13 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
                 const copyPromise = navigator.clipboard?.writeText(value);
                 copyPromise?.then(() => {
                     notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
+                    onCopied?.();
                 });
             } catch (error) {
                 console.error('Unable to copy to clipboard', error);
             }
         }
-    }, [value, notificationContext, t]);
+    }, [value, notificationContext, onCopied, t]);
 
     if (!value && !children) {
         return null;
@@ -85,6 +86,8 @@ DetailRow.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.string,
     isCopyable: PropTypes.bool,
+    /** Called once the value has actually reached the clipboard, never when the copy failed */
+    onCopied: PropTypes.func,
     children: PropTypes.node
 };
 

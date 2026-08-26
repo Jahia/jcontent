@@ -276,6 +276,18 @@
             <artifactId>module-test-framework</artifactId>
             <version>8.2.0.0</version>
             <scope>test</scope>
+            <exclusions>
+                <!--
+                  Brings TestNG 6.9.10 in transitively, and surefire refuses to start at all when it
+                  finds a TestNG older than 6.14.3 - "TestNG support requires version 6.14.3 or
+                  higher" - which fails the build before a single test runs. The tests here are
+                  JUnit, so nothing is lost by keeping TestNG off the test classpath entirely.
+                -->
+                <exclusion>
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

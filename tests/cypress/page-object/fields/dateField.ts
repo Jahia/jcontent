@@ -45,6 +45,8 @@ export class DateField extends Field {
 
     public open() {
         this.get().parent().find('button').click();
+        cy.get('.DayPicker').should('be.visible');
+        return this;
     }
 
     public close() {

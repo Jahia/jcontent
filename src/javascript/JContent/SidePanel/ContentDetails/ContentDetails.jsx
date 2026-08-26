@@ -74,6 +74,7 @@ export const DetailRow = ({label, value, isCopyable = true, onCopied, children})
                         icon={<Copy/>}
                         variant="ghost"
                         className={styles.copyButton}
+                        data-sel-role="copy-value"
                         onClick={handleCopy}
                     />
                 )}

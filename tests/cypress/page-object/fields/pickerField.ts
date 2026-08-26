@@ -1,4 +1,4 @@
-import {Button, getComponentByAttr, getComponentByRole} from '@jahia/cypress';
+import {Button, getComponentByAttr, getComponentByRole, getComponentBySelector, Menu} from '@jahia/cypress';
 import {Picker} from '../picker';
 import {Field} from './field';
 
@@ -19,5 +19,18 @@ export class PickerField extends Field {
 
     assertHasNoValue() {
         this.get().find('[data-testid="cardSelector-displayName"]').should('not.exist');
+    }
+
+    /**
+     * Opens the three-dots menu beside the reference card. Only a single-valued picker draws one:
+     * content-editor/field/MultiplePicker is registered but rendered nowhere, so a multiple field
+     * has move and remove buttons and no menu to open.
+     */
+    openMenu(): Menu {
+        this.get()
+            .find('[data-sel-role="content-editor/field/Picker"]')
+            .scrollIntoView({offset: {left: 0, top: -150}})
+            .click({force: true});
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 }

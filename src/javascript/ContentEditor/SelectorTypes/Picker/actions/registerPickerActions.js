@@ -64,6 +64,7 @@ export const registerPickerActions = registry => {
     registry.add('action', 'imageMetadata', imageMetadataAction, {
         buttonIcon: <Tag/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.fields.actions.imageMetadata.name',
-        targets: ['content-editor/field/Picker:4', 'content-editor/field/MultiplePicker:4']
+        targets: ['content-editor/field/Picker:4', 'content-editor/field/MultiplePicker:4'],
+        dataSelRole: 'imageMetadata'
     });
 };

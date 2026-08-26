@@ -19,17 +19,11 @@ def toSwitch = ["jnt:timeOfDayCondition", "jnt:dayOfWeekCondition", "jnt:startEn
 Thread.start {
     sleep(2000)
 
-    log.info("Checking if bundle with symbolic name {} needs to be uninstalled", source);
-    ModuleManager moduleManager = BundleUtils.getOsgiService(ModuleManager.class, null);
-    source.forEach { symbolicName ->
-        Bundle bundle = BundleUtils.getBundleBySymbolicName(symbolicName, null);
-        if (bundle != null) {
-            log.info("Bundle {} is present in version {}, uninstalling... ", symbolicName, bundle.getVersion().toString());
-            moduleManager.uninstall(symbolicName, null);
-            log.info("Successfully uninstalled bundle {}",symbolicName);
-        }
-    }
-
+    // Switch the nodetypes BEFORE uninstalling the source bundles. Uninstalling a module bundle
+    // already unregisters its own CND-declared nodetypes as ordinary cleanup - when nothing has
+    // this type in use, that housekeeping wipes the very types below before we get a chance to
+    // relabel them, and "Switch nodetype:" silently never happens (only survives today when JCR's
+    // in-use protection happens to block that unregister on content still using the old type).
     log.info("Check for nodetypes to switch from " + source + " to " + target + " (" + toSwitch.size() + " nodetypes to switch)");
     NodeTypeRegistry nodeTypeRegistry = NodeTypeRegistry.getInstance();
     nodeTypeRegistry.getAllNodeTypes(source).forEach { nodeType ->
@@ -43,6 +37,17 @@ Thread.start {
                 field.setAccessible(false);
             }
             log.info("Successfully switched nodetype: {} to {}",nodeType.getName(),nodeType.getSystemId());
+        }
+    }
+
+    log.info("Checking if bundle with symbolic name {} needs to be uninstalled", source);
+    ModuleManager moduleManager = BundleUtils.getOsgiService(ModuleManager.class, null);
+    source.forEach { symbolicName ->
+        Bundle bundle = BundleUtils.getBundleBySymbolicName(symbolicName, null);
+        if (bundle != null) {
+            log.info("Bundle {} is present in version {}, uninstalling... ", symbolicName, bundle.getVersion().toString());
+            moduleManager.uninstall(symbolicName, null);
+            log.info("Successfully uninstalled bundle {}",symbolicName);
         }
     }
 

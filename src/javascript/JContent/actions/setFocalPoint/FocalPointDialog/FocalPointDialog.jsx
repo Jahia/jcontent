@@ -89,7 +89,6 @@ export const FocalPointDialog = ({path, onExit}) => {
                 {!loading && node && (
                     <>
                         <div className={styles.imageFrame}>
-                            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
                             <img
                                 ref={imageRef}
                                 className={styles.image}

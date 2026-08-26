@@ -7,8 +7,9 @@ import FocalPointDialog from './FocalPointDialog';
 
 export const SetFocalPointActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    // jmix:image rather than jmix:focalPoint: the mixin reaches every image through "extends", so
-    // gating on it would say nothing, and the action has to be offered before a point exists.
+    // Gate on jmix:image rather than jmix:focalPoint: that mixin reaches every image through
+    // "extends", so gating on it would say nothing, and the action has to be offered before a
+    // point exists.
     const showOnNodeTypes = ['jmix:image'];
     const skip = isDefinitelyHidden(prefetchedNode, {showOnNodeTypes});
     const res = useNodeChecks({path}, {skip, showOnNodeTypes, requiredPermission: ['jcr:write']});

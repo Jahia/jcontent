@@ -30,9 +30,25 @@ const EXPECTED: Record<string, string> = {
     'j:iptcTransmissionReference': 'webp transmission ref'
 };
 
-const MULTIPLE: Record<string, string[]> = {
-    'j:iptcKeywords': ['webp keyword one', 'webp keyword two'],
-    'j:iptcSupplementalCategories': ['webp supp cat one', 'webp supp cat two']
+/**
+ * XMP carries these as arrays, but the CND declares them single-valued, so ImageIptcExtractor joins
+ * them with IptcPropertyMapping.MULTI_VALUE_SEPARATOR. Asserting the joined string rather than an
+ * array is the point: it pins the separator, which is what a reader has to split on.
+ */
+const JOINED: Record<string, string> = {
+    'j:iptcKeywords': 'webp keyword one; webp keyword two',
+    'j:iptcSupplementalCategories': 'webp supp cat one; webp supp cat two'
+};
+
+/**
+ * The upload button belongs to the media accordion, which is still settling right after a visit -
+ * and more so when a previous spec has just deleted a site. Waiting for it explicitly turns an
+ * intermittent "never found button[data-sel-role=fileUpload]" into a wait that either succeeds or
+ * says what it was waiting for.
+ */
+const mediaReadyToUpload = () => {
+    cy.get('.moonstone-loader', {timeout: 30000}).should('not.exist');
+    cy.get('button[data-sel-role="fileUpload"]', {timeout: 30000}).should('be.visible');
 };
 
 describe('IPTC/XMP extraction on upload', () => {
@@ -44,10 +60,9 @@ describe('IPTC/XMP extraction on upload', () => {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
         cy.loginAndStoreSession();
 
-        JContent.visit(siteKey, 'en', 'media/files')
-            .getMedia()
-            .open()
-            .uploadFileViaDialog(fileName, 'assets');
+        const media = JContent.visit(siteKey, 'en', 'media/files').getMedia().open();
+        mediaReadyToUpload();
+        media.uploadFileViaDialog(fileName, 'assets');
 
         // The extraction runs in a listener on the uploaded binary, so the mixin appears slightly
         // after the upload call returns. Wait for the mixin rather than for a fixed delay.
@@ -101,25 +116,25 @@ describe('IPTC/XMP extraction on upload', () => {
         });
     });
 
-    it('keeps every value of a multi-valued field, in order', function () {
+    it('joins the values of an XMP array into one property, separator included', function () {
         cy.apollo({
             query: gql`query {
                 jcr {
                     nodeByPath(path: "${filePath}") {
-                        properties(names: [${Object.keys(MULTIPLE).map(n => `"${n}"`).join(',')}]) {
+                        properties(names: [${Object.keys(JOINED).map(n => `"${n}"`).join(',')}]) {
                             name
-                            values
+                            value
                         }
                     }
                 }
             }`
         }).then(({data}) => {
-            const actual: Record<string, string[]> = {};
-            data.jcr.nodeByPath.properties.forEach((p: {name: string; values: string[]}) => {
-                actual[p.name] = p.values;
+            const actual: Record<string, string> = {};
+            data.jcr.nodeByPath.properties.forEach((p: {name: string; value: string}) => {
+                actual[p.name] = p.value;
             });
 
-            expect(actual).to.deep.equal(MULTIPLE);
+            expect(actual).to.deep.equal(JOINED);
         });
     });
 

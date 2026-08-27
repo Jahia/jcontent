@@ -53,7 +53,12 @@ export class SidePanel extends BasePage {
         return this.getByRole('side-panel');
     }
 
-    getDetailsSection(content: 'technical' | 'additional') {
+    /**
+     * `content` is 'technical' or 'additional' for the fixed sections, or a node type name for a
+     * file metadata group — those sections are one per mixin carrying extracted data, so the value
+     * is open-ended rather than a fixed pair.
+     */
+    getDetailsSection(content: string) {
         return cy.get(this.scoped(`[data-sel-role="details-section"][data-sel-content="${content}"]`));
     }
 

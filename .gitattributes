@@ -1,0 +1,5 @@
+# Shell scripts end up executed inside Linux containers - the cypress test image COPYs them
+# straight in - where a CRLF shebang makes the kernel look for an interpreter named `bash\r` and
+# then report the script itself as "required file not found", which points at the wrong file
+# entirely. Keep them LF in the working tree whatever core.autocrlf is set to locally.
+*.sh text eol=lf

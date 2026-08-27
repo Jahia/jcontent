@@ -755,7 +755,12 @@
             "clear": "Clear",
             "selectAll": "Select all values",
             "add": "Add",
-            "previewTab": "Preview in a new tab"
+            "previewTab": "Preview in a new tab",
+            "imageMetadata": {
+              "name": "Show image metadata",
+              "title": "Metadata of {{name}}",
+              "none": "This image carries no EXIF or XMP/IPTC metadata."
+            }
           },
           "contentPicker": {
             "notFoundContent": "Broken reference",

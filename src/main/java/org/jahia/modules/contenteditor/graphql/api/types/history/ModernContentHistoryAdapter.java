@@ -50,26 +50,49 @@ import java.util.stream.Stream;
 @Deprecated(since = "jContent 3.x", forRemoval = true)
 class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
-    private static final Method paginatedMethod;
-    private static final Method countMethod;
+    private static volatile Method paginatedMethod;
+    private static volatile Method countMethod;
 
-    static {
-        try {
-            paginatedMethod = ContentHistoryService.class.getMethod(
-                "getNodeHistory",
-                JCRNodeWrapper.class,
-                boolean.class,
-                int.class,
-                int.class
-            );
-            countMethod = ContentHistoryService.class.getMethod(
-                "getNodeHistoryCount",
-                JCRNodeWrapper.class,
-                boolean.class
-            );
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Modern methods not available - should use LegacyContentHistoryAdapter", e);
+    /**
+     * Resolve the optimized methods on first use rather than in a static initializer.
+     * Initializing this class must never fail on 8.2.1.0-8.2.3.x: the class is loaded while the
+     * GraphQL provider registers its types, long before {@link ContentHistoryAdapter} gets to pick
+     * an implementation, and a failing initializer aborts that registration wholesale - which
+     * leaves Content Editor without its form types and breaks every edit.
+     */
+    private static void resolveMethods() {
+        if (paginatedMethod == null || countMethod == null) {
+            synchronized (ModernContentHistoryAdapter.class) {
+                if (paginatedMethod == null || countMethod == null) {
+                    try {
+                        paginatedMethod = ContentHistoryService.class.getMethod(
+                            "getNodeHistory",
+                            JCRNodeWrapper.class,
+                            boolean.class,
+                            int.class,
+                            int.class
+                        );
+                        countMethod = ContentHistoryService.class.getMethod(
+                            "getNodeHistoryCount",
+                            JCRNodeWrapper.class,
+                            boolean.class
+                        );
+                    } catch (NoSuchMethodException e) {
+                        throw new IllegalStateException("Modern methods not available - should use LegacyContentHistoryAdapter", e);
+                    }
+                }
+            }
         }
+    }
+
+    private static Method paginatedMethod() {
+        resolveMethods();
+        return paginatedMethod;
+    }
+
+    private static Method countMethod() {
+        resolveMethods();
+        return countMethod;
     }
 
     @Override
@@ -81,7 +104,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             // If action filter is provided, get all entries and filter manually as the current API does not provide such capability
             // TODO: replace with a service implementation when jahia parent version >= 8.2.4.0
             if (action != null && !action.trim().isEmpty()) {
-                entries = (List<HistoryEntry>) paginatedMethod.invoke(
+                entries = (List<HistoryEntry>) paginatedMethod().invoke(
                     ContentHistoryService.getInstance(),
                     node,
                     withLanguageNodes,
@@ -109,7 +132,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             }
 
             // No action filter, use pagination directly
-            return (List<HistoryEntry>) paginatedMethod.invoke(
+            return (List<HistoryEntry>) paginatedMethod().invoke(
                 ContentHistoryService.getInstance(),
                 node,
                 withLanguageNodes,
@@ -128,7 +151,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             // TODO: replace with a service implementation
             if (action != null && !action.trim().isEmpty()) {
                 @SuppressWarnings("unchecked")
-                List<HistoryEntry> allEntries = (List<HistoryEntry>) paginatedMethod.invoke(
+                List<HistoryEntry> allEntries = (List<HistoryEntry>) paginatedMethod().invoke(
                     ContentHistoryService.getInstance(),
                     node,
                     withLanguageNodes,
@@ -142,7 +165,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
             }
 
             // No action filter, use count method directly
-            return (Integer) countMethod.invoke(
+            return (Integer) countMethod().invoke(
                 ContentHistoryService.getInstance(),
                 node,
                 withLanguageNodes

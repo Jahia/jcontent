@@ -749,7 +749,12 @@
             "clear": "Leeren",
             "selectAll": "Alle Werte auswählen",
             "add": "Hinzufügen",
-            "previewTab": "In einem neuen Tab Vorschau"
+            "previewTab": "In einem neuen Tab Vorschau",
+            "imageMetadata": {
+              "name": "Bildmetadaten anzeigen",
+              "title": "Metadaten von {{name}}",
+              "none": "Dieses Bild enthält keine EXIF- oder XMP/IPTC-Metadaten."
+            }
           },
           "contentPicker": {
             "notFoundContent": "Gebrochene Referenz",

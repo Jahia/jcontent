@@ -81,20 +81,35 @@ export const adaptFileMetadata = (data, nodeTypeNames = NODE_TYPES) => {
         .filter(group => group.entries.length > 0);
 };
 
-export const useFileMetadata = () => {
+/**
+ * Metadata groups for one node, given its uuid. Kept separate from the side panel so the same
+ * reading can be shown wherever a file is referenced rather than only where it is the node being
+ * looked at — notably under an image picker in Content Editor.
+ *
+ * @param {object} params the node to read
+ * @param {string} params.uuid uuid of the file to read the metadata of
+ * @param {string} params.lang language the values are read in
+ * @param {boolean} [params.skip] skip the lookup, for a node known not to be a file
+ * @returns {object[]} one group per node type carrying at least one filled property
+ */
+export const useNodeFileMetadata = ({uuid, lang, skip = false}) => {
     const {t} = useTranslation('jcontent');
-    const {nodeData, lang} = useSidePanelContext();
     const uilang = useSelector(state => state.uilang);
-    const uuid = nodeData?.uuid;
 
     const {data} = useQuery(GET_FILE_METADATA, {
         variables: {uuid, language: lang, uilang, nodeTypes: NODE_TYPES},
-        // These mixins only ever land on a file, so there is nothing to look up for other content
-        skip: !uuid || !lang || !uilang || !nodeData?.isFile
+        skip: skip || !uuid || !lang || !uilang
     });
 
     return useMemo(() => adaptFileMetadata(data).map(group => ({
         ...group,
         displayName: SECTION_TITLE_KEYS[group.name] ? t(SECTION_TITLE_KEYS[group.name]) : group.displayName
     })), [data, t]);
+};
+
+export const useFileMetadata = () => {
+    const {nodeData, lang} = useSidePanelContext();
+
+    // These mixins only ever land on a file, so there is nothing to look up for other content
+    return useNodeFileMetadata({uuid: nodeData?.uuid, lang, skip: !nodeData?.isFile});
 };

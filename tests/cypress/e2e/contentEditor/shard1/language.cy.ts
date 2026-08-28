@@ -117,17 +117,34 @@ describe('Language switcher tests', () => {
     });
 
     it('Create content - should not leak unsaved text into another language after switching', () => {
+        // The form definition is refetched on every language switch; waiting on it anchors each
+        // assertion after the reload, so an empty field cannot pass on a transient state.
+        cy.intercept('POST', '**/modules/graphql', req => {
+            if (JSON.stringify(req.body).includes('createForm')) {
+                req.alias = 'createForm';
+            }
+        });
+
         const ce: ContentEditor = jcontent.createContent('jnt:text');
         cy.get('#contenteditor-dialog-title').should('be.visible').and('contain', 'Create Simple text');
+        cy.wait('@createForm');
 
         cy.log('Type text in English without saving');
         ce.getSmallTextField('jnt:text_text').addNewValue('Cypress test - unsaved English text');
 
         cy.log('Switch language to French without saving the English text first');
         ce.getLanguageSwitcher().select('French');
+        cy.wait('@createForm');
 
         cy.log('The French field must start empty, not carry over the unsaved English text');
         ce.getSmallTextField('jnt:text_text').checkValue('');
+
+        // Without this, a regression that cleared every i18n field on every update would still
+        // pass the assertion above while destroying the text typed in English.
+        cy.log('Switching back must restore the English text, not clear it too');
+        ce.getLanguageSwitcher().select('English');
+        cy.wait('@createForm');
+        ce.getSmallTextField('jnt:text_text').checkValue('Cypress test - unsaved English text');
     });
 
     it('Edit content - should show the target language translation, not unsaved text from the previous one', () => {
@@ -165,6 +182,14 @@ describe('Language switcher tests', () => {
             `
         });
 
+        // The form definition is refetched on every language switch; waiting on it anchors each
+        // assertion after the reload rather than on the still-displayed previous language.
+        cy.intercept('POST', '**/modules/graphql', req => {
+            if (JSON.stringify(req.body).includes('editForm')) {
+                req.alias = 'editForm';
+            }
+        });
+
         // The content table labels a jnt:text row with its text value, not its system name
         const ce = JContent.visit(siteKey, 'en', 'content-folders/contents/lang-switcher-edit-test')
             .editComponentByText('saved english');
@@ -175,12 +200,14 @@ describe('Language switcher tests', () => {
         cy.log('Type over it without saving, then switch to French');
         ce.getSmallTextField('jnt:text_text').addNewValue('unsaved english edit');
         ce.getLanguageSwitcher().select('French');
+        cy.wait('@editForm');
 
         cy.log('French must show its own saved translation - not the unsaved English text, and not blank');
         ce.getSmallTextField('jnt:text_text').checkValue('saved french');
 
         cy.log('Switching back keeps the unsaved English edit');
         ce.getLanguageSwitcher().select('English');
+        cy.wait('@editForm');
         ce.getSmallTextField('jnt:text_text').checkValue('unsaved english edit');
 
         cy.apollo({

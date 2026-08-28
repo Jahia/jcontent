@@ -9,24 +9,32 @@ export const I18nContextHandler = () => {
     const {lang, i18nContext, setI18nContext} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
     const formikRef = useRef();
+    const previousLangRef = useRef(lang);
 
     useEffect(() => {
         formikRef.current = formik;
     }, [formik]);
 
     useEffect(() => {
+        const langChanged = previousLangRef.current !== lang;
+        previousLangRef.current = lang;
+
         if (i18nContext.shared || i18nContext[lang]) {
-            // I18n-scoped fields must not carry over the language just left: reset them to their
-            // initial value before re-applying whatever was already saved for this language in
-            // i18nContext[lang]. Without this, switching to a language visited for the first time
-            // keeps the previous language's unsaved, still-in-formik text in those fields.
-            const i18nFieldNames = sections ?
-                getFields(sections).filter(field => field.i18n && !field.readOnly).map(field => field.name) :
-                [];
             const baseValues = {...formikRef.current.values};
-            i18nFieldNames.forEach(name => {
-                baseValues[name] = formikRef.current.initialValues[name];
-            });
+            if (langChanged) {
+                const i18nFieldNames = sections ?
+                    getFields(sections).filter(field => field.i18n && !field.readOnly).map(field => field.name) :
+                    [];
+                i18nFieldNames.forEach(name => {
+                    if (Object.prototype.hasOwnProperty.call(formikRef.current.initialValues, name)) {
+                        baseValues[name] = formikRef.current.initialValues[name];
+                    } else {
+                        // Fully delete property if it doesn't exist and not just set to falsey
+                        // as this affects formik's dirty state
+                        delete baseValues[name];
+                    }
+                });
+            }
 
             formikRef.current.setValues({
                 ...baseValues,

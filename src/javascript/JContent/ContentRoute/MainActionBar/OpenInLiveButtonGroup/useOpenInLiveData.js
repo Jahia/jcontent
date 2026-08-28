@@ -7,7 +7,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 
 const STORAGE_KEY = JContentConstants.localStorageKeys.liveServerName;
 
-export const useOpenInLiveData = path => {
+export const useOpenInLiveData = (path, siteKey) => {
     const language = useSelector(state => state.language);
     const {data, loading, error, refetch} = useQuery(OpenInActionQuery, {
         variables: {path, language, workspace: 'LIVE'},
@@ -36,6 +36,13 @@ export const useOpenInLiveData = path => {
         const allNames = [serverName, ...serverNameAliases];
         const stored = localStorage.getItem(STORAGE_KEY);
         const effective = stored && allNames.includes(stored) ? stored : serverName;
+        const isCurrentSiteLocalhostOnly = allNames.length === 1 && allNames.includes('localhost') && currentHostname !== 'localhost';
+        if (effective === 'localhost') {
+            if (isCurrentSiteLocalhostOnly) {
+                setSelectedServerName(data?.jcr?.allSites?.siteNodes.find(site => site?.site.sitekey === siteKey)?.site.serverName);
+                return;
+            }
+        }
 
         if (effective !== selectedServerName) {
             setSelectedServerName(effective);
@@ -45,7 +52,7 @@ export const useOpenInLiveData = path => {
             localStorage.setItem(STORAGE_KEY, effective);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [serverName, serverNameAliases.join(',')]);
+    }, [serverName, serverNameAliases.join(','), data?.jcr?.allSites?.siteNodes]);
 
     const selectServerName = name => {
         localStorage.setItem(STORAGE_KEY, name);
@@ -62,17 +69,21 @@ export const useOpenInLiveData = path => {
     const currentSitePath = node?.site?.path;
     const allSites = data?.jcr?.allSites?.siteNodes ?? [];
 
+    // Before guarding we need to check if the site is only in localhost and
+    // browsed from another domain as it is usually the case for shared sites
+    const serverNamesArray = [serverName, ...serverNameAliases];
+    const isCurrentSiteLocalhostOnly = serverNamesArray.length === 1 && serverNamesArray.includes('localhost') && currentHostname !== 'localhost';
     // Guard 1: hostname already in this site's names (no duplicate), or site uses localhost.
     // Jahia resolves site context from the request hostname — using localhost across different
     // hostnames renders in the wrong site context.
-    const isHostnameInCurrentSite = [serverName, ...serverNameAliases].includes(currentHostname) ||
-        [serverName, ...serverNameAliases].includes('localhost');
+    const isHostnameInCurrentSite = !isCurrentSiteLocalhostOnly && (serverNamesArray.includes(currentHostname) ||
+        serverNamesArray.includes('localhost'));
 
     // Guard 2: hostname is already claimed by a different site — Jahia would resolve that other
     // site's context instead, opening the wrong site.
-    const isHostnameClaimedByAnotherSite = allSites.some(site =>
+    const isHostnameClaimedByAnotherSite = !isCurrentSiteLocalhostOnly && (allSites.some(site =>
         site.site?.path !== currentSitePath &&
-        [site.site?.serverName, ...(site.site?.additionalServerNames?.values ?? [])].includes(currentHostname)
+        [site.site?.serverName, ...(site.site?.additionalServerNames?.values ?? [])].includes(currentHostname))
     );
 
     return {
@@ -80,8 +91,8 @@ export const useOpenInLiveData = path => {
         selectServerName,
         liveData: isVisible ? {
             urlPath: node.renderUrl,
-            serverName,
-            serverNameAliases,
+            serverName: isCurrentSiteLocalhostOnly ? allSites.find(site => site?.site.sitekey === siteKey)?.site.serverName : serverName,
+            serverNameAliases: isCurrentSiteLocalhostOnly ? allSites.find(site => site?.site.sitekey === siteKey)?.site.additionalServerNames?.values ?? [] : serverNameAliases,
             currentHostname: (isHostnameInCurrentSite || isHostnameClaimedByAnotherSite) ? null : currentHostname
         } : null
     };

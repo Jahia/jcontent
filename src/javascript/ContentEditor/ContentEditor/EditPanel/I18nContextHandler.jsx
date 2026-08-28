@@ -6,7 +6,7 @@ import {getFields} from '~/ContentEditor/utils';
 export const I18nContextHandler = () => {
     const formik = useFormikContext();
     const contentEditorConfigContext = useContentEditorConfigContext();
-    const {lang, i18nContext, setI18nContext} = useContentEditorContext();
+    const {lang, i18nContext, setI18nContext, initialValues} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
     const formikRef = useRef();
     const previousLangRef = useRef(lang);
@@ -22,27 +22,28 @@ export const I18nContextHandler = () => {
         if (i18nContext.shared || i18nContext[lang]) {
             const baseValues = {...formikRef.current.values};
             if (langChanged) {
-                const i18nFieldNames = sections ?
-                    getFields(sections).filter(field => field.i18n && !field.readOnly).map(field => field.name) :
-                    [];
-                i18nFieldNames.forEach(name => {
-                    if (Object.prototype.hasOwnProperty.call(formikRef.current.initialValues, name)) {
-                        baseValues[name] = formikRef.current.initialValues[name];
-                    } else {
-                        // Fully delete property if it doesn't exist and not just set to falsey
-                        // as this affects formik's dirty state
-                        delete baseValues[name];
-                    }
-                });
+                getFields(sections)
+                    .filter(field => field.i18n && !field.readOnly)
+                    .forEach(({name}) => {
+                        if (Object.hasOwn(initialValues, name)) {
+                            baseValues[name] = initialValues[name];
+                        } else {
+                            // Fully delete property if it doesn't exist and not just set to falsey
+                            // as this affects formik's dirty state
+                            delete baseValues[name];
+                        }
+                    });
             }
 
             formikRef.current.setValues({
                 ...baseValues,
                 ...i18nContext.shared?.values,
                 ...i18nContext[lang]?.values
-            }, i18nContext[lang]);
+            // Emptying a field leaves the Validation banner on the outgoing language's errors:
+            // both modes set validateOnChange=false, so nothing revalidates on its own.
+            }, langChanged || i18nContext[lang]);
         }
-    }, [contentEditorConfigContext, i18nContext, lang, sections]);
+    }, [contentEditorConfigContext, i18nContext, lang, sections, initialValues]);
 
     useEffect(() => {
         setI18nContext(prev => ({

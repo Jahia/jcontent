@@ -14,27 +14,27 @@ export const SaveErrorModal = ({i18nErrors, fields, isOpen, siteInfo, onClose}) 
 
     const message = (siteInfo.languages.length === 1) ? (
         <Typography>
-            {Object.keys(i18nErrors).reduce((p, k) => [...p, ...Object.keys(i18nErrors[k])], []).map(k => fields.find(f => f.name === k).displayName).join(',')}
+            {Object.keys(i18nErrors).reduce((p, k) => [...p, ...Object.keys(i18nErrors[k])], []).map(k => fields.find(f => f.name === k).displayName).join(', ')}
         </Typography>
     ) : (
         <ul>
             {i18nErrors.shared && (
                 <Typography component="li">
-                    {t('jcontent:label.contentEditor.edit.sharedLanguages')} :&nbsp;
+                    {t('jcontent:label.contentEditor.edit.validation.listLabel', {label: t('jcontent:label.contentEditor.edit.sharedLanguages')})}&nbsp;
                     {
                         Object.keys(i18nErrors.shared)
                             .map(k => fields.find(f => f.name === k).displayName)
-                            .join(',')
+                            .join(', ')
                     }
                 </Typography>
             )}
             {langs.filter(lang => lang !== 'shared').map(lang => (
                 <Typography key={lang} component="li">
-                    {getCapitalized(siteInfo.languages.find(l => l.language === lang).displayName)} :&nbsp;
+                    {t('jcontent:label.contentEditor.edit.validation.listLabel', {label: getCapitalized(siteInfo.languages.find(l => l.language === lang).displayName)})}&nbsp;
                     {
                         Object.keys(i18nErrors[lang])
                             .map(k => fields.find(f => f.name === k).displayName)
-                            .join(',')
+                            .join(', ')
                     }
                 </Typography>
             ))}

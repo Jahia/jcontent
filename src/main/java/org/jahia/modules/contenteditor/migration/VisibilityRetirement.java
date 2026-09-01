@@ -73,7 +73,6 @@ import java.util.List;
  * is retried, but the retries are bounded because this runs inside jContent's own start. When they
  * are exhausted jContent starts with the source still in place, which is the situation this class
  * exists to avoid, so the failure is logged as an error naming the module and what to do about it.
-
  *
  * <p>Once no supported upgrade path still has a source installed, this class and its call in the
  * activator can go.
@@ -199,5 +198,4 @@ public final class VisibilityRetirement {
             Thread.currentThread().interrupt();
         }
     }
-
 }

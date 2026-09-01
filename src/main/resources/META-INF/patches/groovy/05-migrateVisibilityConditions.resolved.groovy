@@ -8,10 +8,14 @@ def sources = ["advanced-visibility", "visibility"];
 def target = "jcontent";
 def toSwitch = ["jnt:timeOfDayCondition", "jnt:dayOfWeekCondition", "jnt:startEndDateCondition"];
 
-/** 
- * Prerequisite: uninstall sources modules prior to  execution of this script.
- * Can be done either manually or done automatically by installing visibility-migrator beforehand.
- * Note that uninstalling sources manually before installing means no visibility conditions are enabled between the transitions
+/**
+ * Moves the visibility condition node types over to jContent. Half of the migration: this part
+ * changes who owns the definitions, and jContent's own activator removes the module they came
+ * from, on every node, before jContent registers the condition rules.
+ *
+ * No prerequisite. Removing the source by hand beforehand also works, at the cost of a window in
+ * which no visibility condition is evaluated; leaving it in place has no such window, because the
+ * handover here and the removal there happen within the same bundle start.
  */
 
 def liveSources = FrameworkService.getBundleContext().getBundles().findAll {
@@ -19,11 +23,12 @@ def liveSources = FrameworkService.getBundleContext().getBundles().findAll {
 }.collect { it.getSymbolicName() };
 
 if (!liveSources.isEmpty()) {
-    // Warn rather than stop. Core unregisters condition rules, background actions and rules
-    // packages by NAME, so uninstalling a source module later drops jContent's registrations
-    // alongside its own - a hazard this script cannot prevent and must not hide.
-    log.warn("Switching visibility condition nodetypes to {} while {} is still installed. Conditions keep working, but uninstalling {} will clear {}'s condition rules, background actions and rules package. Install visibility-migrator, which removes the source before {} registers anything.",
-            target, liveSources, liveSources, target, target);
+    // Not a warning any more, and nothing for the reader to do. This script runs in the resolved
+    // phase, and jContent's own activator removes the source a moment later, before jContent
+    // registers the condition rules that uninstalling it would otherwise tear down. Saying so
+    // here keeps the two halves legible to whoever reads the log in that order.
+    log.info("Switching visibility condition nodetypes to {} while {} is still installed. jContent removes {} from this node as it starts, before registering its condition rules.",
+            target, liveSources, liveSources);
 }
 
 def stranded = NodeTypeRegistry.getInstance().getAllNodeTypes(sources).findAll { toSwitch.contains(it.getName()) };

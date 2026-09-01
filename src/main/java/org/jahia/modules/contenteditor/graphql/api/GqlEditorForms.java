@@ -157,7 +157,7 @@ public class GqlEditorForms {
         } else {
             entries = NodeTypesUtils.getContentTypesAsTree(allowedNodeTypes, excludedNodeTypes, includeSubTypes, parentNode.getPath(), getSession(locale), locale);
         }
-        return entries.stream().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).sorted(Comparator.comparing(GqlNodeTypeTreeEntry::getName)).collect(Collectors.toList());
+        return entries.stream().sorted().map(entry -> new GqlNodeTypeTreeEntry(entry, nodeIdentifier)).collect(Collectors.toList());
     }
 
     @GraphQLField

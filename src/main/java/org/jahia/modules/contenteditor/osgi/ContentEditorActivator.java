@@ -24,6 +24,7 @@
 package org.jahia.modules.contenteditor.osgi;
 
 import org.jahia.modules.contenteditor.migration.Migrator;
+import org.jahia.modules.contenteditor.migration.VisibilityRetirement;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -35,6 +36,10 @@ public class ContentEditorActivator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) {
+        // First, and deliberately: this runs before the module extender registers jContent's
+        // package and rules, which is the only window in which the modules jContent takes the
+        // visibility conditions over from can be removed without tearing those rules down again.
+        VisibilityRetirement.retireSources(bundleContext);
         Migrator.migrate();
     }
 

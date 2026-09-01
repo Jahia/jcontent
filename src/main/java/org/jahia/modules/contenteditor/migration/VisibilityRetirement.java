@@ -88,9 +88,11 @@ public final class VisibilityRetirement {
             }
             // WARN, not INFO: removing a module the operator may have installed on purpose is not
             // routine, and it must be visible in a log someone actually reads.
-            logger.warn("Removing {} on this node before jContent registers its condition rules. "
-                    + "jContent owns the visibility condition node types, so the two cannot both "
-                    + "provide them.", names(present));
+            if (logger.isWarnEnabled()) {
+                logger.warn("Removing {} on this node before jContent registers its condition rules. "
+                        + "jContent owns the visibility condition node types, so the two cannot both "
+                        + "provide them.", names(present));
+            }
             for (Bundle source : present) {
                 uninstallLocally(source);
             }

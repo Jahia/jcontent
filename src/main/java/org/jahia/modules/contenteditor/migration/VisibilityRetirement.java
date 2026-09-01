@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Removes the modules jContent takes the visibility conditions over from, on this node, before
@@ -75,12 +73,7 @@ import java.util.Set;
  * is retried, but the retries are bounded because this runs inside jContent's own start. When they
  * are exhausted jContent starts with the source still in place, which is the situation this class
  * exists to avoid, so the failure is logged as an error naming the module and what to do about it.
- *
- * <p>Removing a source also strands anything that declared a dependency on it. The extender parks
- * a module whose declared dependency has no registered version and does not resolve it again, and
- * a custom module may legitimately depend on a public module such as visibility. Such modules are
- * named in the log before the removal, because the breakage otherwise surfaces on a later restart,
- * far from this upgrade.
+
  *
  * <p>Once no supported upgrade path still has a source installed, this class and its call in the
  * activator can go.
@@ -95,6 +88,15 @@ public final class VisibilityRetirement {
      * installed first.
      */
     private static final List<String> SOURCES = Arrays.asList("advanced-visibility", "visibility");
+
+    /**
+     * Uninstalling needs the framework's global lock, and this thread holds jContent's bundle lock
+     * while it asks. Felix refuses that combination rather than deadlocking, so a module install
+     * running at the same moment can make one attempt fail. The contention is brief, hence the
+     * retry; the attempts are few and the wait short, because this runs inside jContent's start.
+     */
+    private static final int ATTEMPTS = 3;
+    private static final long BACKOFF_MS = 200L;
 
     private VisibilityRetirement() {
     }
@@ -116,16 +118,6 @@ public final class VisibilityRetirement {
                 logger.warn("Removing {} on this node before jContent registers its condition rules. "
                         + "jContent owns the visibility condition node types, so the two cannot both "
                         + "provide them.", names(present));
-            }
-            List<String> dependents = dependentsOf(context, present);
-            if (!dependents.isEmpty()) {
-                // The extender parks a module whose declared dependency has no registered version,
-                // and never resolves it again. A custom module may legitimately depend on a public
-                // source module, so name what is about to be stranded instead of leaving the
-                // operator to find out on a later restart.
-                logger.warn("These modules declare a dependency on a module being removed and will "
-                        + "stop being resolved: {}. Remove the dependency or replace it with "
-                        + "jcontent, which now owns the condition node types.", String.join(", ", dependents));
             }
             for (Bundle source : present) {
                 uninstallLocally(source);
@@ -163,15 +155,6 @@ public final class VisibilityRetirement {
         }
         return joined.toString();
     }
-
-    /**
-     * Uninstalling needs the framework's global lock, and this thread holds jContent's bundle lock
-     * while it asks. Felix refuses that combination rather than deadlocking, so a module install
-     * running at the same moment can make one attempt fail. The contention is brief, hence the
-     * retry; the attempts are few and the wait short, because this runs inside jContent's start.
-     */
-    private static final int ATTEMPTS = 3;
-    private static final long BACKOFF_MS = 200L;
 
     private static void uninstallLocally(Bundle source) {
         String name = source.getSymbolicName();
@@ -217,31 +200,4 @@ public final class VisibilityRetirement {
         }
     }
 
-    /**
-     * The installed modules that declare a Jahia-Depends on one of the modules being removed. The
-     * manifest header is read directly rather than through TemplatePackageRegistry, because this
-     * runs before jContent's own package is registered.
-     */
-    private static List<String> dependentsOf(BundleContext context, List<Bundle> doomed) {
-        Set<String> going = new HashSet<>();
-        for (Bundle bundle : doomed) {
-            going.add(bundle.getSymbolicName());
-        }
-        List<String> dependents = new ArrayList<>();
-        for (Bundle bundle : context.getBundles()) {
-            String header = bundle.getHeaders().get("Jahia-Depends");
-            if (header == null || going.contains(bundle.getSymbolicName())) {
-                continue;
-            }
-            for (String token : header.split(",")) {
-                // Each entry is a module name, optionally followed by =<minimum version>.
-                String name = token.split("=")[0].trim();
-                if (going.contains(name)) {
-                    dependents.add(bundle.getSymbolicName());
-                    break;
-                }
-            }
-        }
-        return dependents;
-    }
 }

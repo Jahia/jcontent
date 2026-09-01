@@ -2,6 +2,7 @@ package org.jahia.modules.contenteditor.migration;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,27 +19,31 @@ import java.util.List;
  * afterwards tears down the condition rules, the background actions and the rules package that
  * jContent has by then registered under the same node type names, because
  * VisibilityService.removeCondition matches on the node type name alone and does not check which
- * module registered it. Until now the answer was a separate migrator module installed alongside.
+ * instance is being unbound. Until now the answer was a separate migrator module installed
+ * alongside.
  *
  * <p>Two properties make it possible to do it here instead.
  *
- * <p>The first is <em>when</em> this runs. The module extender listens synchronously, so its
- * handling of a bundle event finishes before the framework moves on. By the time this activator
- * is called from inside Felix.startBundle, the extender has already handled RESOLVED: the package
- * is registered and the definitions are deployed. What it has NOT yet done is <em>start</em> the
- * module, and the condition rules are registered there, on the STARTED event that Felix fires
- * after this returns. The rules are the thing an uninstall of the source tears down, so this is
- * the last moment at which they are not yet at risk.
+ * <p>The first is <em>when</em> this runs. jContent's condition rules are Declarative Services
+ * components, and the service registry is what carries them to VisibilityService: an osgi:list on
+ * VisibilityConditionRule binds each one through TemplatePackageRegistry, which calls addCondition
+ * on bind and removeCondition on unbind. SCR activates those components once the bundle is ACTIVE,
+ * which is after this activator returns. So at this point jContent has registered no rule yet, and
+ * removing a source cannot take one down.
  *
- * <p>The second is <em>how</em> it removes them. Bundle.stop() and Bundle.uninstall() act on this
- * node only. They do not go through ModuleManager, so there is no cluster operation to wait for.
- * That matters beyond tidiness: a clustered uninstall asked for from a module lifecycle callback
- * does not complete, because Jahia gives Karaf Cellar's event dispatcher a single worker thread
- * and the caller is occupying it. The local call has nothing to wait for. Every node runs its own
- * activator, so every node removes its own copy.
+ * <p>The second is <em>how</em> it removes them. Bundle.stop() and Bundle.uninstall() do not go
+ * through ModuleManager, so there is no cluster operation to wait for. That matters beyond
+ * tidiness: a clustered uninstall asked for from a module lifecycle callback does not complete,
+ * because Jahia gives Karaf Cellar's event dispatcher a single worker thread and the caller is
+ * occupying it. The local call has nothing to wait for. Every node runs its own activator, so
+ * every node removes its own copy.
  *
- * <p>Nothing here is allowed to throw. An exception escaping an activator aborts the bundle start,
- * which would leave jContent itself down.
+ * <p>Local is not the same as invisible, and one effect does reach the cluster. The module
+ * extender handles the uninstall synchronously, and on the processing server that schedules
+ * clearModuleNodes for the removed module, which deletes its nodes in the shared repository. That
+ * deletion is wanted, and it is the same one a clustered uninstall would produce. It runs on a
+ * Quartz thread, so it is neither ordered against what follows here nor covered by the error
+ * handling below.
  *
  * <p>The two halves of the migration do not run on the same nodes, which is deliberate and easy
  * to misread. 05-migrateVisibilityConditions.resolved.groovy is a patch script, and the extender
@@ -62,6 +67,11 @@ import java.util.List;
  * continuously would close the window, at the price of a permanent listener in jContent for a
  * state someone has to create deliberately, so it is left open and written down instead.
  *
+ * <p>A source that cannot be removed is the other gap. The framework refuses to stop or uninstall
+ * a bundle another thread is already moving, and this makes one attempt at each source with no
+ * retry. jContent then starts with the source still in place, which is the situation this class
+ * exists to avoid, so the failure is logged as an error naming the module.
+ *
  * <p>Once no supported upgrade path still has a source installed, this class and its call in the
  * activator can go.
  */
@@ -69,7 +79,11 @@ public final class VisibilityRetirement {
 
     private static final Logger logger = LoggerFactory.getLogger(VisibilityRetirement.class);
 
-    /** The modules whose condition node types jContent takes over. */
+    /**
+     * The modules whose condition node types jContent takes over, most dependent first. Removal
+     * follows this order rather than the framework's, so a module is never removed while another
+     * in the list may still be wired to it.
+     */
     private static final List<String> SOURCES = Arrays.asList("advanced-visibility", "visibility");
 
     private VisibilityRetirement() {
@@ -102,11 +116,18 @@ public final class VisibilityRetirement {
         }
     }
 
+    /**
+     * The installed sources, in SOURCES order. Iterating that list rather than the framework's
+     * bundles is what makes the order real: getBundles() answers in bundle id order, which is
+     * install order, and would remove a dependency before the module wired to it.
+     */
     private static List<Bundle> findSources(BundleContext context) {
         List<Bundle> found = new ArrayList<>();
-        for (Bundle bundle : context.getBundles()) {
-            if (SOURCES.contains(bundle.getSymbolicName()) && bundle.getState() != Bundle.UNINSTALLED) {
-                found.add(bundle);
+        for (String name : SOURCES) {
+            for (Bundle bundle : context.getBundles()) {
+                if (name.equals(bundle.getSymbolicName()) && bundle.getState() != Bundle.UNINSTALLED) {
+                    found.add(bundle);
+                }
             }
         }
         return found;
@@ -129,12 +150,20 @@ public final class VisibilityRetirement {
         // nanoTime, not currentTimeMillis: this is a duration, and a wall-clock adjustment
         // mid-migration would print a negative one.
         long began = System.nanoTime();
+        // A failed stop must not skip the uninstall, because uninstall() stops an active bundle
+        // itself. Giving up here would leave the source in place for the sake of a step it repeats.
         try {
             source.stop();
+        } catch (BundleException | RuntimeException e) {
+            logger.warn("Could not stop {} v{} on this node; uninstalling it anyway", name, version, e);
+        }
+        try {
             source.uninstall();
-            logger.info("Removed {} v{} on this node in {} ms", name, version,
-                    (System.nanoTime() - began) / 1_000_000L);
-        } catch (Exception e) {  // NOSONAR - one source failing must not stop the next
+            if (logger.isWarnEnabled()) {
+                logger.warn("Removed {} v{} on this node in {} ms", name, version,
+                        (System.nanoTime() - began) / 1_000_000L);
+            }
+        } catch (BundleException | RuntimeException e) {
             logger.error("Cannot remove {} v{} on this node. jContent starts, but the condition "
                     + "rules will be torn down when {} is next stopped or removed.", name, version,
                     name, e);

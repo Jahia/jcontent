@@ -27,6 +27,8 @@ import org.jahia.modules.contenteditor.migration.Migrator;
 import org.jahia.modules.contenteditor.migration.VisibilityRetirement;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Content editor Activator, used to execute code when module is STARTING,
@@ -34,12 +36,22 @@ import org.osgi.framework.BundleContext;
  */
 public class ContentEditorActivator implements BundleActivator {
 
+    private static final Logger logger = LoggerFactory.getLogger(ContentEditorActivator.class);
+
     @Override
     public void start(BundleContext bundleContext) {
-        // First, and deliberately: this runs before the module extender registers jContent's
-        // package and rules, which is the only window in which the modules jContent takes the
-        // visibility conditions over from can be removed without tearing those rules down again.
-        VisibilityRetirement.retireSources(bundleContext);
+        // First, and deliberately: this runs before SCR activates jContent's condition rules,
+        // which is the only window in which the modules jContent takes the visibility conditions
+        // over from can be removed without tearing those rules down again.
+        //
+        // Throwable, not Exception: anything escaping an activator aborts the bundle start, and
+        // that includes the LinkageError a class this activator touches for the first time can
+        // raise before its own handlers exist. A failed retirement must not take jContent down.
+        try {
+            VisibilityRetirement.retireSources(bundleContext);
+        } catch (Throwable t) {  // NOSONAR - see above: jContent must start even if this fails
+            logger.error("Could not retire the visibility source modules; jContent starts anyway", t);
+        }
         Migrator.migrate();
     }
 

@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Removes the modules jContent takes the visibility conditions over from, on this node, before
@@ -67,10 +69,18 @@ import java.util.List;
  * continuously would close the window, at the price of a permanent listener in jContent for a
  * state someone has to create deliberately, so it is left open and written down instead.
  *
- * <p>A source that cannot be removed is the other gap. The framework refuses to stop or uninstall
- * a bundle another thread is already moving, and this makes one attempt at each source with no
- * retry. jContent then starts with the source still in place, which is the situation this class
- * exists to avoid, so the failure is logged as an error naming the module.
+ * <p>A source that cannot be removed is the other gap. Uninstalling needs the framework's global
+ * lock, which Felix will not grant to a thread already holding a bundle lock, so a module install
+ * running at the same moment can make the attempt fail. That contention is brief and the removal
+ * is retried, but the retries are bounded because this runs inside jContent's own start. When they
+ * are exhausted jContent starts with the source still in place, which is the situation this class
+ * exists to avoid, so the failure is logged as an error naming the module and what to do about it.
+ *
+ * <p>Removing a source also strands anything that declared a dependency on it. The extender parks
+ * a module whose declared dependency has no registered version and does not resolve it again, and
+ * a custom module may legitimately depend on a public module such as visibility. Such modules are
+ * named in the log before the removal, because the breakage otherwise surfaces on a later restart,
+ * far from this upgrade.
  *
  * <p>Once no supported upgrade path still has a source installed, this class and its call in the
  * activator can go.
@@ -80,9 +90,9 @@ public final class VisibilityRetirement {
     private static final Logger logger = LoggerFactory.getLogger(VisibilityRetirement.class);
 
     /**
-     * The modules whose condition node types jContent takes over, most dependent first. Removal
-     * follows this order rather than the framework's, so a module is never removed while another
-     * in the list may still be wired to it.
+     * The modules whose condition node types jContent takes over. Removal follows this list rather
+     * than the framework's own order, so it does not depend on which module happened to be
+     * installed first.
      */
     private static final List<String> SOURCES = Arrays.asList("advanced-visibility", "visibility");
 
@@ -107,6 +117,16 @@ public final class VisibilityRetirement {
                         + "jContent owns the visibility condition node types, so the two cannot both "
                         + "provide them.", names(present));
             }
+            List<String> dependents = dependentsOf(context, present);
+            if (!dependents.isEmpty()) {
+                // The extender parks a module whose declared dependency has no registered version,
+                // and never resolves it again. A custom module may legitimately depend on a public
+                // source module, so name what is about to be stranded instead of leaving the
+                // operator to find out on a later restart.
+                logger.warn("These modules declare a dependency on a module being removed and will "
+                        + "stop being resolved: {}. Remove the dependency or replace it with "
+                        + "jcontent, which now owns the condition node types.", String.join(", ", dependents));
+            }
             for (Bundle source : present) {
                 uninstallLocally(source);
             }
@@ -118,8 +138,8 @@ public final class VisibilityRetirement {
 
     /**
      * The installed sources, in SOURCES order. Iterating that list rather than the framework's
-     * bundles is what makes the order real: getBundles() answers in bundle id order, which is
-     * install order, and would remove a dependency before the module wired to it.
+     * bundles is what makes the order fixed: getBundles() answers in bundle id order, which is
+     * install order, so it would vary with how the environment was built.
      */
     private static List<Bundle> findSources(BundleContext context) {
         List<Bundle> found = new ArrayList<>();
@@ -144,6 +164,15 @@ public final class VisibilityRetirement {
         return joined.toString();
     }
 
+    /**
+     * Uninstalling needs the framework's global lock, and this thread holds jContent's bundle lock
+     * while it asks. Felix refuses that combination rather than deadlocking, so a module install
+     * running at the same moment can make one attempt fail. The contention is brief, hence the
+     * retry; the attempts are few and the wait short, because this runs inside jContent's start.
+     */
+    private static final int ATTEMPTS = 3;
+    private static final long BACKOFF_MS = 200L;
+
     private static void uninstallLocally(Bundle source) {
         String name = source.getSymbolicName();
         String version = source.getVersion().toString();
@@ -157,16 +186,62 @@ public final class VisibilityRetirement {
         } catch (BundleException | RuntimeException e) {
             logger.warn("Could not stop {} v{} on this node; uninstalling it anyway", name, version, e);
         }
-        try {
-            source.uninstall();
-            if (logger.isWarnEnabled()) {
-                logger.warn("Removed {} v{} on this node in {} ms", name, version,
-                        (System.nanoTime() - began) / 1_000_000L);
+        Exception last = null;
+        for (int attempt = 1; attempt <= ATTEMPTS; attempt++) {
+            try {
+                source.uninstall();
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Removed {} v{} on this node in {} ms", name, version,
+                            (System.nanoTime() - began) / 1_000_000L);
+                }
+                return;
+            } catch (BundleException | RuntimeException e) {
+                last = e;
+                if (attempt < ATTEMPTS) {
+                    logger.warn("Attempt {} of {} to remove {} v{} failed; retrying", attempt,
+                            ATTEMPTS, name, version, e);
+                    sleep(BACKOFF_MS);
+                }
             }
-        } catch (BundleException | RuntimeException e) {
-            logger.error("Cannot remove {} v{} on this node. jContent starts, but the condition "
-                    + "rules will be torn down when {} is next stopped or removed.", name, version,
-                    name, e);
         }
+        logger.error("Cannot remove {} v{} on this node after {} attempts. jContent starts, but the "
+                + "condition rules will be torn down when {} is next stopped or removed. To recover, "
+                + "uninstall {} and redeploy jContent.", name, version, ATTEMPTS, name, name, last);
+    }
+
+    private static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * The installed modules that declare a Jahia-Depends on one of the modules being removed. The
+     * manifest header is read directly rather than through TemplatePackageRegistry, because this
+     * runs before jContent's own package is registered.
+     */
+    private static List<String> dependentsOf(BundleContext context, List<Bundle> doomed) {
+        Set<String> going = new HashSet<>();
+        for (Bundle bundle : doomed) {
+            going.add(bundle.getSymbolicName());
+        }
+        List<String> dependents = new ArrayList<>();
+        for (Bundle bundle : context.getBundles()) {
+            String header = bundle.getHeaders().get("Jahia-Depends");
+            if (header == null || going.contains(bundle.getSymbolicName())) {
+                continue;
+            }
+            for (String token : header.split(",")) {
+                // Each entry is a module name, optionally followed by =<minimum version>.
+                String name = token.split("=")[0].trim();
+                if (going.contains(name)) {
+                    dependents.add(bundle.getSymbolicName());
+                    break;
+                }
+            }
+        }
+        return dependents;
     }
 }

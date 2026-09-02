@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Removes the modules jContent takes the visibility conditions over from, on this node, before
@@ -145,14 +146,9 @@ public final class VisibilityRetirement {
     }
 
     private static String names(List<Bundle> bundles) {
-        StringBuilder joined = new StringBuilder();
-        for (Bundle bundle : bundles) {
-            if (joined.length() > 0) {
-                joined.append(", ");
-            }
-            joined.append(bundle.getSymbolicName()).append(" v").append(bundle.getVersion());
-        }
-        return joined.toString();
+        return bundles.stream()
+                .map(bundle -> bundle.getSymbolicName() + " v" + bundle.getVersion())
+                .collect(Collectors.joining(", "));
     }
 
     private static void uninstallLocally(Bundle source) {
@@ -186,9 +182,11 @@ public final class VisibilityRetirement {
                 }
             }
         }
-        logger.error("Cannot remove {} v{} on this node after {} attempts. jContent starts, but the "
-                + "condition rules will be torn down when {} is next stopped or removed. To recover, "
-                + "uninstall {} and redeploy jContent.", name, version, ATTEMPTS, name, name, last);
+        logger.error("Cannot remove {} v{} on this node after {} attempts. jContent starts, but "
+                + "visibility conditions on this node break as soon as {} is stopped or removed, "
+                + "because unbinding it also unregisters jContent's own condition rules. To recover, "
+                + "uninstall {} and then redeploy jContent, in that order.",
+                name, version, ATTEMPTS, name, name, last);
     }
 
     private static void sleep(long millis) {

@@ -22,9 +22,14 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
  *      fallback = module+CSS strategy (used if zoom fails).
  *
  * B. Out-of-context (no closestPage):
- *    - Always module render. CSS injected via cssSourcePath:
- *      isDisplayableNode → cssSourcePath=node.path (its own default page render provides CSS).
- *      !isDisplayableNode → cssSourcePath=displayableNode.path if non-folder, else no CSS.
+ *    - isDisplayableNode: full 'page' render of the node itself. `displayableNode === node`
+ *      means core resolved a template for it — a page template for a page, a content template
+ *      for content carrying jmix:mainResource. That template is only applied under the 'page'
+ *      configuration (templateNodeFilter applies on wrappedcontent,page,gwt), so any other
+ *      configuration renders the bare view instead of the content template. The template
+ *      output is a full document, so it carries its own CSS.
+ *    - !isDisplayableNode: module render of the view. CSS injected via cssSourcePath, taken
+ *      from the displayable ancestor when it is a non-folder page.
  *
  * @param {object} node                 - JCR node with { path, uuid, isPage, displayableNode, jView }
  * @param {string} language
@@ -75,13 +80,20 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
         };
     }
 
-    // Pages render as full page — CSS is included, no cssSourcePath needed.
-    if (node.isPage) {
+    // The node has a template of its own — page template, or content template for content
+    // holding jmix:mainResource. Render it as a full page so that template is applied; its
+    // output already includes the CSS, so no cssSourcePath is needed.
+    const hasOwnTemplate = isDisplayableNode && !displayableNode.isFolder;
+    if (node.isPage || hasOwnTemplate) {
         return {
             primary: {
                 ...base,
                 path: node.path,
-                view: jView?.value || 'default',
+                // Under the page configuration this argument is the *template* name, not a view
+                // name - JCRTemplateResolver nulls it when it equals "default" and otherwise matches
+                // it against template node names. The node's own j:view is a view name and would
+                // fail resolution, so pass "default" and let core honour j:templateName instead.
+                view: 'default',
                 contextConfiguration: 'page',
                 ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
                 ...extraParams
@@ -90,17 +102,15 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
         };
     }
 
-    // For out-of-context module renders, inject CSS by fetching the nearest displayable page.
-    // isDisplayableNode: use the node itself (its default page render provides CSS).
-    // !isDisplayableNode: use the displayable ancestor if it's a non-folder page.
-    const displayableAncestorPath = displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined;
-    const cssSourcePath = isDisplayableNode ? node.path : displayableAncestorPath;
+    // No template of its own: render the view standalone and inject CSS by fetching the
+    // nearest displayable ancestor as a page, when that ancestor is a non-folder page.
+    const cssSourcePath = displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined;
 
     return {
         primary: {
             ...base,
             path: node.path,
-            view: isDisplayableNode ? (jView?.value || 'default') : null,
+            view: null,
             contextConfiguration: 'module',
             ...(cssSourcePath && {cssSourcePath}),
             ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),

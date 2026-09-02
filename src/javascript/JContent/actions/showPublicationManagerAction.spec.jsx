@@ -29,7 +29,8 @@ describe('PublishManagerActionComponent', () => {
                 node: {
                     displayName: 'Taber',
                     primaryNodeType: {name: 'jnt:person'},
-                    mixinTypes: [{name: 'jmix:renderable'}],
+                    // The shape getProperties(['jcr:mixinTypes']) really returns
+                    properties: [{name: 'jcr:mixinTypes', value: null, values: ['jdmix:socialIcons', 'jmix:renderable']}],
                     site: {
                         languages: [
                             {language: 'en', activeInEdit: true},
@@ -68,7 +69,7 @@ describe('PublishManagerActionComponent', () => {
             '/sites/digitall/contents/person-portrait-1',
             'Taber',
             ['jnt:person'],
-            ['jmix:renderable'],
+            ['jdmix:socialIcons', 'jmix:renderable'],
             'digitall',
             ['jmix:publication'],
             [{language: 'en', activeInEdit: true}]

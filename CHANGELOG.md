@@ -1,5 +1,33 @@
 # @jahia/jcontent Changelog
 
+## 3.8.0
+
+### New Features
+
+* Add auto-scroll indicators when dragging content in page builder (#2658)
+
+* Fixed Visibility condition start/end datetime property so they no longer change when viewing saved values (#2653). All date/time fields are now saved in UTC and also now display datetime based on browser timezone. Clearing a visibility date property also now removes it instead of silently keeping the old value.
+
+* Fix insertion points inserting content at the end of the list instead of at their own position
+
+* Changed the visibility conditions upgrade: jContent now owns the date, time and day-of-week conditions, and removes the modules that provided them on every cluster node. If your environment has the `visibility` or `advanced-visibility` module installed, upgrading jContent uninstalls it, and no separate migration module is needed. Your existing visibility conditions keep working and need no edit. After the upgrade, check that neither module is listed in Administration, Modules. Do not reinstall either one: it would take ownership of the condition types back from jContent. If one of your own modules declares a dependency on `visibility`, remove that dependency before upgrading, or the module will stop loading. (#2724, #2726)
+
+### Bug Fixes
+
+* Keep the page builder on the same content when it reloads after a save, instead of coming back somewhere else and losing sight of the content being edited (#2664)
+
+* Fix checkbox choice list selection not registering when clicked (#2643)
+
+* Changed file upload so files are no longer versioned at upload time. Files are still versioned when they are published, so only the extra version taken during the upload is affected. Upload-time versioning was already removed in the GraphQL provider 3.9.0, so nothing changes for installations running that version or later.
+
+* Fixed switching languages while creating content so it no longer copies unsaved text into the new language. (#2738)
+
+* Fixed file upload so a refused upload shows its validation messages again instead of a generic error.
+
+* Sort the content type selector by display name instead of system name (#2747)
+
+* Open the publication manager from the publication dropdown again: the action read the node primary node type without asking the node checks for it, so the click threw instead of opening the dashboard. It also read the mixins from the wrong place, so the manager was always handed an empty mixin list (#2715)
+
 ## 3.7.0
 
 ### New Features

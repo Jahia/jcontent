@@ -92,4 +92,82 @@ describe('FieldSet component', () => {
 
         expect(cmp.find('WithStyles(ToggleCmp)').exists()).toBe(false);
     });
+
+    describe('a sparse field set such as jmix:exif', () => {
+        const toggle = cmp => cmp.find('[data-sel-role="fieldset-show-empty-jmix:exif"]');
+
+        beforeEach(() => {
+            props.fieldset = {
+                name: 'jmix:exif',
+                displayName: 'Available EXIF data',
+                dynamic: false,
+                readOnly: false,
+                visible: true,
+                fields: [
+                    {displayName: 'Make', name: 'j:make', visible: true},
+                    {displayName: 'Model', name: 'j:model', visible: true},
+                    {displayName: 'Flash', name: 'j:flash', visible: true}
+                ]
+            };
+            formikContext.values = {'j:make': 'Canon', 'j:model': '', 'j:flash': undefined};
+        });
+
+        const build = () => shallowWithTheme(<FieldSet {...props}/>, {}, dsGenericTheme);
+
+        it('shows only the fields that hold a value', () => {
+            const fields = build().find('FieldContainer');
+
+            expect(fields.length).toBe(1);
+            expect(fields.at(0).props().field.name).toBe('j:make');
+        });
+
+        it('reveals every field once the button is clicked', () => {
+            const cmp = build();
+
+            toggle(cmp).simulate('click');
+            cmp.update();
+
+            expect(cmp.find('FieldContainer').length).toBe(3);
+        });
+
+        it('goes back to only the filled fields when clicked again', () => {
+            const cmp = build();
+
+            toggle(cmp).simulate('click');
+            cmp.update();
+            toggle(cmp).simulate('click');
+            cmp.update();
+
+            expect(cmp.find('FieldContainer').length).toBe(1);
+        });
+
+        it('counts a multiple field as filled only when an entry is not empty', () => {
+            props.fieldset.fields = [
+                {displayName: 'Empty list', name: 'j:emptyList', visible: true},
+                {displayName: 'Filled list', name: 'j:filledList', visible: true}
+            ];
+            formikContext.values = {'j:emptyList': ['', ''], 'j:filledList': ['', 'something']};
+
+            const fields = build().find('FieldContainer');
+
+            expect(fields.length).toBe(1);
+            expect(fields.at(0).props().field.name).toBe('j:filledList');
+        });
+
+        it('treats the IPTC field set the same way', () => {
+            props.fieldset.name = 'jmix:iptc';
+            const cmp = shallowWithTheme(<FieldSet {...props}/>, {}, dsGenericTheme);
+
+            expect(cmp.find('FieldContainer').length).toBe(1);
+            expect(cmp.find('[data-sel-role="fieldset-show-empty-jmix:iptc"]').exists()).toBe(true);
+        });
+
+        it('leaves other field sets showing every field', () => {
+            props.fieldset.name = 'jmix:somethingElse';
+            const cmp = build();
+
+            expect(cmp.find('FieldContainer').length).toBe(3);
+            expect(toggle(cmp).exists()).toBe(false);
+        });
+    });
 });

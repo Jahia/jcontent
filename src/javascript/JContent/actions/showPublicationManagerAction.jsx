@@ -21,6 +21,9 @@ export const PublishManagerActionComponent = props => {
     const res = useNodeChecks({path, language}, {
         skip,
         getDisplayName: true,
+        // Read at onClick time as res.node.primaryNodeType.name; useNodeInfo only puts the field
+        // in the query when this option is set, so without it the click throws.
+        getPrimaryNodeType: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
         getPermissions: ['publish', 'publication-start'],

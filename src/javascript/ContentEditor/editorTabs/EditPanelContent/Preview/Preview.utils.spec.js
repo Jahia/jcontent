@@ -38,7 +38,7 @@ describe('Preview.utils', () => {
         expect(previewContext.requestAttributes[0].value).toBe('dummy_uuid');
     });
 
-    it('Should preview the content as a module with css source when displayable node is the content itself', () => {
+    it('Should preview the content through its own content template when the displayable node is the content itself', () => {
         const nodeData = {
             uuid: 'dummy_uuid',
             path: '/sites/digitall/contents/rich_text',
@@ -50,12 +50,43 @@ describe('Preview.utils', () => {
         expect(previewContext.language).toBe('en');
         expect(previewContext.path).toBe('/sites/digitall/contents/rich_text');
         expect(previewContext.view).toBe('default');
-        expect(previewContext.contextConfiguration).toBe('module');
-        expect(previewContext.cssSourcePath).toBe('/sites/digitall/contents/rich_text');
+        expect(previewContext.contextConfiguration).toBe('page');
+        expect(previewContext.cssSourcePath).toBeUndefined();
         expect(previewContext.templateType).toBe('html');
         expect(previewContext.workspace).toBe('edit');
         expect(previewContext.requestAttributes[0].name).toBe('ce_preview');
         expect(previewContext.requestAttributes[0].value).toBe('dummy_uuid');
+    });
+
+    it('Should not pass j:view as the template name when rendering the content template', () => {
+        // Under contextConfiguration=page the view argument is the template name, so a j:view
+        // value such as digitall's person-portrait-1 (j:view=event) would fail template
+        // resolution and leave the preview empty. Core picks the template from j:templateName.
+        const nodeData = {
+            uuid: 'dummy_uuid',
+            path: '/sites/digitall/contents/rich_text',
+            displayableNode: {path: '/sites/digitall/contents/rich_text', isFolder: false},
+            jView: {value: 'event'}
+        };
+        const {primary: previewContext} = buildPreviewContexts(nodeData, 'en', {isCEPreview: true});
+
+        expect(previewContext.contextConfiguration).toBe('page');
+        expect(previewContext.view).toBe('default');
+    });
+
+    it('Should preview a node without a template of its own as a module, with the ancestor page as CSS source', () => {
+        const nodeData = {
+            uuid: 'dummy_uuid',
+            path: '/sites/digitall/contents/rich_text',
+            displayableNode: {path: '/sites/digitall/home', isFolder: false}
+        };
+        const {primary: previewContext} = buildPreviewContexts(nodeData, 'en', {isCEPreview: true});
+
+        expect(previewContext.path).toBe('/sites/digitall/contents/rich_text');
+        expect(previewContext.contextConfiguration).toBe('module');
+        // Null lets the server fall back to j:view, then to the cm view
+        expect(previewContext.view).toBeNull();
+        expect(previewContext.cssSourcePath).toBe('/sites/digitall/home');
     });
 
     it('Should preview the displayable node as a page in case displayable node exist and it\'s not a folder', () => {

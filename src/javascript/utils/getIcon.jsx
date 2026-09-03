@@ -23,7 +23,7 @@ import {
     Tag,
     SiteWeb
 } from '@jahia/moonstone';
-import {isCMISFile, isCMISFolder} from '~/JContent/JContent.utils';
+import {isAreaList, isCMISFile, isCMISFolder} from '~/JContent/JContent.utils';
 
 const imgExtensions = ['avif', 'png', 'jpeg', 'jpg', 'gif', 'svg', 'img', 'webp'];
 const videoExtensions = ['avi', 'mp4', 'mkv', 'mpg', 'wmv', 'mpeg', 'mov', 'webm', 'video'];
@@ -190,7 +190,7 @@ export function getIconFromNode(node, props = {}) {
         return <File {...props}/>;
     }
 
-    if (node?.mixinTypes?.find(m => m.name && m.name === 'jmix:isAreaList')) {
+    if (isAreaList(node)) {
         return <Area {...props}/>;
     }
 

@@ -613,7 +613,8 @@
           "invalidForm": "Formulaire non valide",
           "fieldsInError": "Un champ en erreur",
           "fieldsInError_plural": "{{count}} champs en erreur",
-          "otherLanguages": "Autres langues en erreur"
+          "otherLanguages": "Autres langues en erreur",
+          "listLabel": "{{label}} :"
         },
         "action": {
           "copyLanguage": {

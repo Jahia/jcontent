@@ -23,6 +23,7 @@
  */
 package org.jahia.modules.contenteditor.api.forms;
 
+import org.jahia.modules.contenteditor.api.forms.model.FieldLanguageValue;
 import org.jahia.modules.contenteditor.api.forms.model.FieldValueConstraint;
 import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.graphql.api.types.ContextEntryInput;
@@ -98,4 +99,17 @@ public interface EditorFormService {
      * @throws EditorFormException if there was an error when processing the node data
      */
     List<FieldValueConstraint> getFieldConstraints(String nodeUuidOrPath, String parentNodeUuidOrPath, String primaryNodeType, String fieldNodeType, String fieldName, List<ContextEntryInput> context, Locale uiLocale, Locale locale) throws EditorFormException;
+
+    /**
+     * Retrieves a single field's value(s) in every requested language, in one call - so that a field
+     * can be edited across all site languages without switching the whole editor's locale.
+     *
+     * @param uuidOrPath UUID or path of the node to read the field from
+     * @param fieldName  the name of the field (property) to retrieve
+     * @param multiple   whether the field accepts multiple values
+     * @param locales    the list of locales to retrieve the value for
+     * @return one {@link FieldLanguageValue} per requested locale, in the same order
+     * @throws EditorFormException if there was an error reading the property in one of the requested locales
+     */
+    List<FieldLanguageValue> getFieldValuesByLanguage(String uuidOrPath, String fieldName, boolean multiple, List<Locale> locales) throws EditorFormException;
 }

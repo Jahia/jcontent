@@ -19,6 +19,7 @@ import {isPathChildOfAnotherPath, JahiaRenderedModulesUtil} from '../../../JCont
 import {renderLabel} from './renderLabel';
 import {useNotifications} from '@jahia/react-material';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
+import {useCloseOnNavigation} from '~/utils';
 
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
@@ -116,6 +117,8 @@ const getMutation = dialogType => {
 const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
     const [open, setOpen] = useState(true);
     const [infoOpen, setInfoOpen] = useState(false);
+
+    useCloseOnNavigation(() => setOpen(false));
     const {pagePath, template, language} = useSelector(state => ({
         pagePath: state.jcontent.path,
         language: state.language,

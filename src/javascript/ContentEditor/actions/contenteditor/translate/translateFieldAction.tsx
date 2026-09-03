@@ -2,16 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useContentEditorConfigContext, useContentEditorContext} from '~/ContentEditor/contexts';
 import {ArrowLeft} from '@jahia/moonstone';
-import styles from './styles.scss';
 
 export const TranslateFieldActionComponent = ({field, value, render: Render}) => {
     const {sideBySideContext} = useContentEditorConfigContext();
     const {setI18nContext} = useContentEditorContext();
 
     const {enabled, translateLang, hasWritePermission, lockedAndCannotBeEdited} = sideBySideContext || {};
-    if (!enabled || !field.i18n || !translateLang) {
-        return;
-    }
 
     const handleOnClick = () => {
         setI18nContext(prevState => {
@@ -35,18 +31,17 @@ export const TranslateFieldActionComponent = ({field, value, render: Render}) =>
     };
 
     return (
-        <div className={styles.translate}>
-            <Render
-              buttonIcon={<ArrowLeft/>}
-              enabled={Boolean(value) && hasWritePermission && !lockedAndCannotBeEdited}
-              dataSelRole="translate-field"
-              buttonProps={{
-                  variant: 'ghost',
-                  color: 'accent'
-              }}
-              onClick={handleOnClick}
-          />
-        </div>
+        <Render
+            buttonIcon={<ArrowLeft/>}
+            isVisible={Boolean(enabled) && Boolean(field.i18n) && Boolean(translateLang)}
+            enabled={Boolean(value) && hasWritePermission && !lockedAndCannotBeEdited}
+            dataSelRole="translate-field"
+            buttonProps={{
+                variant: 'ghost',
+                color: 'accent'
+            }}
+            onClick={handleOnClick}
+        />
     );
 };
 
@@ -54,8 +49,4 @@ TranslateFieldActionComponent.propTypes = {
     field: PropTypes.object.isRequired,
     value: PropTypes.any,
     render: PropTypes.func.isRequired
-};
-
-export const translateFieldAction = {
-    component: TranslateFieldActionComponent
 };

@@ -43,6 +43,9 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
 export const buildPreviewContexts = (node, language, {closestPage = null, isCEPreview = false, requestParameters = []} = {}) => {
     const {displayableNode, jView} = node;
     const isDisplayableNode = displayableNode?.path === node.path;
+    // A folder resolves no template and renders nothing, so it is neither a template holder
+    // nor usable as a CSS donor. Both uses below build on this.
+    const isDisplayablePage = Boolean(displayableNode) && !displayableNode.isFolder;
     const base = {workspace: 'edit', templateType: 'html', language};
     const extraParams = requestParameters.length > 0 ? {requestParameters} : {};
     const cePreviewAttr = isCEPreview ? [{name: 'ce_preview', value: node.uuid}] : undefined;
@@ -83,7 +86,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     // The node has a template of its own — page template, or content template for content
     // holding jmix:mainResource. Render it as a full page so that template is applied; its
     // output already includes the CSS, so no cssSourcePath is needed.
-    const hasOwnTemplate = isDisplayableNode && !displayableNode.isFolder;
+    const hasOwnTemplate = isDisplayableNode && isDisplayablePage;
     if (node.isPage || hasOwnTemplate) {
         return {
             primary: {
@@ -104,7 +107,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
 
     // No template of its own: render the view standalone and inject CSS by fetching the
     // nearest displayable ancestor as a page, when that ancestor is a non-folder page.
-    const cssSourcePath = displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined;
+    const cssSourcePath = isDisplayablePage ? displayableNode.path : undefined;
 
     return {
         primary: {

@@ -1,6 +1,10 @@
 const JContentConstants = /** @type {const} */ ({
     namingInvalidCharactersRegexp: /[\\/:*?"'<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
+    // The marker mixin (a supertype of jnt:page and jmix:mainResource) that lets a node open in the Page Builder
+    visuallyEditableNodeType: 'jmix:visuallyEditable',
+    // The wrapper template the default module ships: renders any content as the one box of an otherwise empty page
+    contentTemplate: 'content-template',
     availablePublicationStatuses: {
         PUBLISHED: 'PUBLISHED',
         MODIFIED: 'MODIFIED',

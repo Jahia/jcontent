@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor
 ---
 
-Added the Page Builder for content that opens visually without a page of its own, straight from its content folder (#PR)
+Added the Page Builder for content that opens visually without a page of its own, straight from its content folder (#2766)

@@ -246,6 +246,14 @@ public class EditorFormServiceImpl implements EditorFormService {
                 section.setVisible(section.isVisible() && section.getFieldSets().stream().anyMatch(FieldSet::isVisible));
             }
 
+            // Sibling extend-mixins each keep their own copy of a property inherited from a shared
+            // supertype, so that whichever one is switched on shows it (see Form#findAndRemoveField).
+            // Two of them switched on at once would put two inputs over a single property, and on
+            // save the second silently overwrites the first -- so among the ACTIVE fieldsets the
+            // property is edited in one place. The inactive ones keep their copy for when they are
+            // switched on. Runs here because it needs the activated flag set above.
+            removeFieldsEditedElsewhere(form);
+
             // Remove empty sections
             form.setSections(form.getSections().stream()
                 .filter(Section::isVisible)
@@ -384,6 +392,26 @@ public class EditorFormServiceImpl implements EditorFormService {
             .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
 
         return res;
+    }
+
+    /**
+     * Leaves one editable copy of each property among the fieldsets that are actually active,
+     * keeping the first and dropping the rest. Fieldsets that are not active are left alone: their
+     * copy is what makes the property appear when the reader switches them on.
+     *
+     * <p>Identity is {@link Field#getKey()}, declaring type plus name, so this only ever collapses
+     * what is genuinely one property -- two inherited copies of the same supertype definition, not
+     * two properties that merely share a name.
+     */
+    private static void removeFieldsEditedElsewhere(Form form) {
+        Set<String> alreadyEditable = new HashSet<>();
+        for (Section section : form.getSections()) {
+            for (FieldSet fieldSet : section.getFieldSets()) {
+                if (Boolean.TRUE.equals(fieldSet.isActivated())) {
+                    fieldSet.getFields().removeIf(field -> !alreadyEditable.add(field.getKey()));
+                }
+            }
+        }
     }
 
     boolean isApplicable(DefinitionRegistryItem form, JCRSiteNode site) {

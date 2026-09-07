@@ -229,9 +229,31 @@ public class Form implements DefinitionRegistryItem {
         }
     }
 
-    public Optional<Field> findAndRemoveField(Field otherField) {
+    /**
+     * Finds a field already placed somewhere in this form and takes it out, so the caller can
+     * re-home it in the fieldset being merged. A property redefined further down a hierarchy is
+     * the same field as the one already placed and has to move, rather than appear twice.
+     *
+     * <p>One case has to be left alone: two fieldsets that are both contributed by mixins
+     * extending the edited type. Those are the dynamic fieldsets a reader switches on and off, and
+     * sibling mixins routinely inherit the same property from a shared supertype -- same declaring
+     * type, same name, so {@link Field#getKey()} is identical for each of them. Taking that field
+     * out of one sibling to hand it to the next leaves every sibling but one missing a field it
+     * genuinely carries, which is #2746. Siblings keep their own copy instead.
+     *
+     * <p>The exception is deliberately no wider than that. A static form definition still claims a
+     * field from a dynamic fieldset, which is how the SEO fieldset gathers the jmix:seoHtmlHead
+     * properties instead of them showing up twice.
+     *
+     * @param target the fieldset the field is being merged into. Never protected from itself, so
+     *               merging a static definition into a dynamic fieldset still updates the field in
+     *               place instead of duplicating it.
+     */
+    public Optional<Field> findAndRemoveField(Field otherField, FieldSet target) {
         return sections.stream().flatMap(section ->
-            section.getFieldSets().stream().flatMap(fieldSet -> {
+            section.getFieldSets().stream()
+                .filter(fieldSet -> fieldSet == target || !(keepsItsOwnFields(fieldSet) && keepsItsOwnFields(target)))
+                .flatMap(fieldSet -> {
                 Optional<Field> foundField = fieldSet.getFields().stream().filter(field -> otherField.getExtendedPropertyDefinition() != null ? field.getKey().equals(otherField.getKey()) : field.getName().equals(otherField.getName())).findFirst();
                 if (foundField.isPresent()) {
                     fieldSet.getFields().remove(foundField.get());
@@ -239,5 +261,15 @@ public class Form implements DefinitionRegistryItem {
                 }
                 return Stream.of();
         })).findFirst();
+    }
+
+    /**
+     * Whether a fieldset holds on to the fields it was generated with, rather than lending them to
+     * whoever merges next. True of a fieldset generated from a mixin that extends another type --
+     * the same test EditorFormServiceImpl uses to decide a fieldset is dynamic.
+     */
+    private static boolean keepsItsOwnFields(FieldSet fieldSet) {
+        ExtendedNodeType fieldSetNodeType = fieldSet.getNodeType();
+        return fieldSetNodeType != null && !fieldSetNodeType.getMixinExtends().isEmpty();
     }
 }

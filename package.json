@@ -1,6 +1,6 @@
 {
   "name": "@jahia/jcontent",
-  "version": "3.7.1-SNAPSHOT",
+  "version": "3.7.1",
   "type": "commonjs",
   "workspaces": [
     "packages/*"

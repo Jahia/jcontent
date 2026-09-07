@@ -7,6 +7,7 @@ import Text from '~/ContentEditor/SelectorTypes/Text/Text';
 import {registry} from '@jahia/ui-extender';
 import {useQuery} from '@apollo/client';
 import {useFormikContext} from 'formik';
+import {t} from 'react-i18next';
 
 jest.mock('formik');
 
@@ -343,6 +344,32 @@ describe('Field component', () => {
         );
 
         expect(cmp.debug()).toContain('errors.required');
+    });
+
+    it('should not html-escape a constraint message that came from the server', () => {
+        // The definition's constraint.error.message reaches the form untouched, and the
+        // constraintViolation translation is literally "{{0}}" -- so i18next's own escaping is
+        // the only thing between that message and the screen. With it on, an apostrophe arrives
+        // as "L&#39;entree est invalide", which React then prints verbatim, entity and all.
+        // See jcontent#2748.
+        t.mockClear();
+        useFormikContext.mockReturnValue({
+            errors: {text: "constraintViolation_L'entree est invalide"},
+            touched: {},
+            values: {},
+            setFieldValue: jest.fn(),
+            setFieldTouched: jest.fn()
+        });
+
+        shallowWithTheme(<Field {...defaultProps}/>, {}, dsGenericTheme);
+
+        expect(t).toHaveBeenCalledWith(
+            'jcontent:label.contentEditor.edit.errors.constraintViolation',
+            expect.objectContaining({
+                0: "L'entree est invalide",
+                interpolation: {escapeValue: false}
+            })
+        );
     });
 });
 

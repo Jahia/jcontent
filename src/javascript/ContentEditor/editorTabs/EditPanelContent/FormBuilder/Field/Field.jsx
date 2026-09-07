@@ -135,12 +135,12 @@ const renderField = (
                 {shouldDisplayErrors ?
                     field.errorMessage ?
                         field.errorMessage :
-                        // escapeValue false because the result is rendered as a React text node,
-                        // which escapes it again. i18next's own escaping turns a message the
-                        // server supplied -- constraintViolation is just "{{0}}", the untouched
-                        // text of the definition's constraint.error.message -- into entities that
-                        // React then prints literally: "L&#39;entrée est invalide". Leaving it off
-                        // introduces no injection here, since React never treats this as markup.
+                        // Escaping is off because the result is rendered as a React text
+                        // node, which escapes it again. i18next's own escaping turns a message
+                        // the server supplied -- constraintViolation is just "{{0}}", the
+                        // untouched text of the definition's constraint.error.message -- into
+                        // entities React then prints literally: "L&#39;entrée est invalide".
+                        // Nothing is injectable here, since React never treats this as markup.
                         t(`jcontent:label.contentEditor.edit.errors.${errorName}`, {
                             ...buildFlatFieldObject(field),
                             ...errorArgs,

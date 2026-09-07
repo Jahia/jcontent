@@ -354,7 +354,7 @@ describe('Field component', () => {
         // See jcontent#2748.
         t.mockClear();
         useFormikContext.mockReturnValue({
-            errors: {text: "constraintViolation_L'entree est invalide"},
+            errors: {text: 'constraintViolation_L\'entree est invalide'},
             touched: {},
             values: {},
             setFieldValue: jest.fn(),
@@ -366,7 +366,7 @@ describe('Field component', () => {
         expect(t).toHaveBeenCalledWith(
             'jcontent:label.contentEditor.edit.errors.constraintViolation',
             expect.objectContaining({
-                0: "L'entree est invalide",
+                0: 'L\'entree est invalide',
                 interpolation: {escapeValue: false}
             })
         );

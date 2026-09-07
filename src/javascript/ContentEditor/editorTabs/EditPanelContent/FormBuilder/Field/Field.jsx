@@ -8,7 +8,7 @@ import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {MultipleField} from './MultipleField';
 import {SingleField} from './SingleField';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {buildFlatFieldObject} from './field.utils';
+import {errorTranslationOptions} from './field.utils';
 import {DisplayAction, registry} from '@jahia/ui-extender';
 import {contentEditorHelper} from './contentEditorHelper';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
@@ -135,17 +135,8 @@ const renderField = (
                 {shouldDisplayErrors ?
                     field.errorMessage ?
                         field.errorMessage :
-                        // Escaping is off because the result is rendered as a React text
-                        // node, which escapes it again. i18next's own escaping turns a message
-                        // the server supplied -- constraintViolation is just "{{0}}", the
-                        // untouched text of the definition's constraint.error.message -- into
-                        // entities React then prints literally: "L&#39;entrée est invalide".
-                        // Nothing is injectable here, since React never treats this as markup.
-                        t(`jcontent:label.contentEditor.edit.errors.${errorName}`, {
-                            ...buildFlatFieldObject(field),
-                            ...errorArgs,
-                            interpolation: {escapeValue: false}
-                        }) :
+                        // See errorTranslationOptions for why escaping is off here.
+                        t(`jcontent:label.contentEditor.edit.errors.${errorName}`, errorTranslationOptions(field, errorArgs)) :
                     ''}&nbsp;
             </Typography>
         )}

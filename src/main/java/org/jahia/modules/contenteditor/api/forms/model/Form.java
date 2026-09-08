@@ -245,14 +245,27 @@ public class Form implements DefinitionRegistryItem {
      * field from a dynamic fieldset, which is how the SEO fieldset gathers the jmix:seoHtmlHead
      * properties instead of them showing up twice.
      *
+     * <p>Only a generated field can be a sibling's own inherited copy, and a generated field is one
+     * that carries a JCR property definition. A field arriving from a static form definition
+     * carries none: it is an override looking for the generated field to settle on, and it names
+     * the section it wants that field to end up in. Refusing it the field it is overriding does not
+     * leave the form unchanged -- the caller falls back to a blank {@code new Field()}, so the form
+     * ends up with the real field in its generated section AND a twin in the section the definition
+     * asked for, carrying nothing but the override. That twin has no property definition, no
+     * required type and no value constraints, which is what took the editor down on a content
+     * folder: jcontent's own jmix:contributeMode definition re-homes j:contributeTypes into the
+     * listOrdering section, and the twin left behind had no constraint list for the selector to
+     * read. So the protection applies only to a generated field claiming another generated field.
+     *
      * @param target the fieldset the field is being merged into. Never protected from itself, so
      *               merging a static definition into a dynamic fieldset still updates the field in
      *               place instead of duplicating it.
      */
     public Optional<Field> findAndRemoveField(Field otherField, FieldSet target) {
+        boolean incomingIsGenerated = otherField.getExtendedPropertyDefinition() != null;
         return sections.stream().flatMap(section ->
             section.getFieldSets().stream()
-                .filter(fieldSet -> fieldSet == target || !(keepsItsOwnFields(fieldSet) && keepsItsOwnFields(target)))
+                .filter(fieldSet -> fieldSet == target || !(incomingIsGenerated && keepsItsOwnFields(fieldSet) && keepsItsOwnFields(target)))
                 .flatMap(fieldSet -> {
                 Optional<Field> foundField = fieldSet.getFields().stream().filter(field -> otherField.getExtendedPropertyDefinition() != null ? field.getKey().equals(otherField.getKey()) : field.getName().equals(otherField.getName())).findFirst();
                 if (foundField.isPresent()) {

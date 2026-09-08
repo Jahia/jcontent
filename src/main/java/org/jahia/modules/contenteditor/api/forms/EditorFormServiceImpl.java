@@ -332,7 +332,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 editorFormField.getSelectorOptionsMap() :
                 Collections.emptyMap();
         if (propertyDefinition == null || (propertyDefinition.getSelector() != SelectorType.CHOICELIST && !selectorOptions.containsKey("choicelist"))) {
-            return editorFormField.getValueConstraints();
+            return constraintsOrEmpty(editorFormField);
         }
 
         Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
@@ -350,7 +350,19 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
 
         // If we cannot get choicelist initializer with selector options return default constraints
-        return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : toValueConstraints(initialChoiceListValues);
+        return selectorOptions.isEmpty() ? constraintsOrEmpty(editorFormField) : toValueConstraints(initialChoiceListValues);
+    }
+
+    /**
+     * A field's own constraints, never null. A field carries none when it has no JCR property
+     * definition behind it or no choicelist to resolve -- a plain text property, or the bare copy a
+     * fieldset gets when it may not take a field from a sibling. The clients read this list without
+     * checking it, so handing them null turns a form that merely has nothing to choose from into a
+     * failed render.
+     */
+    private static List<FieldValueConstraint> constraintsOrEmpty(Field editorFormField) {
+        List<FieldValueConstraint> constraints = editorFormField.getValueConstraints();
+        return constraints != null ? constraints : Collections.emptyList();
     }
 
     private static List<FieldValueConstraint> toValueConstraints(List<ChoiceListValue> choiceListValues) {

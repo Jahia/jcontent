@@ -119,6 +119,21 @@ describe('Test Choicetree selector type', () => {
             expect(savedValues).to.include(choicetreeContent11Uuid);
         });
     });
+    it('can clear all selected values with the clear action', () => {
+        const contentEditor = jcontent.createContent('cent:testChoiceTree');
+        const choiceTreeField = contentEditor.getChoiceTreeField('cent:testChoiceTree_multipleChoiceTree', true);
+        const choiceTree = choiceTreeField.openTree();
+        // Select values across two levels
+        choiceTree.selectEntry('choiceTreeContent2');
+        choiceTree.openEntry('choiceTreeContent1');
+        choiceTree.selectEntry('choiceTreeContent1-1');
+        choiceTreeField.getValues().should('have.length', 2);
+        // Clear the whole selection with the dropdown clear (Reset) button
+        choiceTreeField.closeTree();
+        choiceTreeField.clearAll();
+        choiceTreeField.getValues().should('have.length', 0);
+    });
+
     it('can handle choice tree selector for multiple types', () => {
         // Check tree is opened at category root, open it to see other types
         const contentEditor = jcontent.createContent('cent:testChoiceTree');

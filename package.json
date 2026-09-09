@@ -131,7 +131,8 @@
     "trim-newlines": "^3.0.1",
     "strip-ansi": "^6.0.1",
     "xlsx": "^0.17.0",
-    "string-width": "^4.2.3"
+    "string-width": "^4.2.3",
+    "@jahia/moonstone": "link:/Users/cedric/projects/modules/moonstone"
   },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",

@@ -1,24 +1,44 @@
-export const choiceTreeAdapter = ({nodes, parent, selectedValues, locale}) => {
-    // LocaleCompare in JS expect a locale like en-US NOT en_US which Jahia uses.
-    if (locale && locale.indexOf('_') !== -1) {
-        locale = locale.replace('_', '-');
-    }
+import {displayIcon, findInTree, getParentPath} from '~/JContent/ContentTree/ContentTree.utils';
 
-    return nodes
-        .filter(entry => entry.parent.uuid === parent.uuid)
-        .map(entry => {
-            return {
-                id: entry.value,
-                value: entry.value,
-                label: entry.label,
-                expanded: nodes.filter(cat => cat.parent.uuid === entry.uuid).filter(cat => selectedValues && selectedValues.includes(cat.uuid)).length > 0,
-                checked: selectedValues ? selectedValues.includes(entry.uuid) : undefined,
-                children: choiceTreeAdapter({
-                    nodes,
-                    locale,
-                    parent: entry,
-                    selectedValues
-                }).sort((c1, c2) => c1.label.localeCompare(c2.label, locale))
-            };
-        });
+// Build moonstone TreeView data from the flat `treeEntries` produced by the shared
+// `useTreeEntries` hook. This mirrors JContent's ContentTree `convertPathsToTree`,
+// trimmed down to what a form-field picker needs (no publication status, DnD,
+// virtualization or contextual menu) and keyed so selection maps back to uuids.
+//
+// Nodes are keyed on `id: path` (that is what `useTreeEntries`, `openPaths` and
+// TreeView expect), while `value: uuid` carries the identifier actually stored in
+// the field value.
+export const choiceTreeAdapter = ({treeEntries, openPaths = [], loading}) => {
+    const tree = [];
+
+    treeEntries.forEach(treeEntry => {
+        const {node} = treeEntry;
+        const parentPath = getParentPath(treeEntry.path);
+
+        const element = {
+            id: treeEntry.path,
+            value: node.uuid,
+            label: node.displayName,
+            hasChildren: treeEntry.hasChildren && treeEntry.openable,
+            isClosable: treeEntry.depth > 0 && treeEntry.hasChildren,
+            isSelectable: treeEntry.selectable,
+            // Show a spinner on a branch whose children are still being fetched.
+            isLoading: loading && !treeEntry.open && treeEntry.openable && openPaths.includes(treeEntry.path),
+            iconStart: displayIcon(node),
+            children: [],
+            treeItemProps: {
+                'data-sel-role': node.name,
+                node
+            }
+        };
+
+        const parent = findInTree(tree, parentPath);
+        if (parent !== undefined && !findInTree(parent.children, element.id)) {
+            parent.children.push(element);
+        } else if (!findInTree(tree, element.id)) {
+            tree.push(element);
+        }
+    });
+
+    return tree;
 };

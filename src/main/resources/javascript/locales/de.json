@@ -1040,6 +1040,9 @@
         "radioButton": {
           "displayValue": "Radio button",
           "description": "Alternative zum Dropdown zum Auswählen eines Elements aus einer Liste"
+        },
+        "choiceTree": {
+          "placeholder": "Wert auswählen"
         }
       },
       "visibilityTab": {

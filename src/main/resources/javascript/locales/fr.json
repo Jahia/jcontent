@@ -1041,6 +1041,9 @@
         "radioButton": {
           "displayValue": "Bouton radio",
           "description": "Alternative à la liste déroulante à choix unique pour sélectionner un élément"
+        },
+        "choiceTree": {
+          "placeholder": "Sélectionner une valeur"
         }
       },
       "visibilityTab": {

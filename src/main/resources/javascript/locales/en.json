@@ -1057,6 +1057,9 @@
         "radioButton": {
           "displayValue": "Radio button",
           "description": "Alternative to dropdown for selecting an item from a list"
+        },
+        "choiceTree": {
+          "placeholder": "Select a value"
         }
       },
       "visibilityTab": {

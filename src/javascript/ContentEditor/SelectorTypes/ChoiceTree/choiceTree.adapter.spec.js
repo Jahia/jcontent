@@ -1,144 +1,50 @@
 import {choiceTreeAdapter} from './choiceTree.adapter';
 
+// The adapter now converts the flat `treeEntries` produced by `useTreeEntries`
+// (path-keyed, one level at a time) into moonstone TreeView data. Each entry
+// mirrors the shape returned by the hook.
+const entry = ({path, uuid, name, displayName, depth, hasChildren = false, openable = hasChildren, selectable = true, open = false}) => ({
+    path,
+    depth,
+    open,
+    openable,
+    selectable,
+    hasChildren,
+    node: {uuid, name, displayName, primaryNodeType: {name: 'jnt:category'}}
+});
+
 describe('choice tree adapter', () => {
-    let nodes;
-    beforeEach(() => {
-        nodes = [
-            {uuid: 'A', value: 'A', label: 'aa', parent: {uuid: 'category'}},
-            {uuid: 'B', value: 'B', label: 'bb', parent: {uuid: 'A'}},
-            {uuid: 'orphan', value: 'orphan', label: 'orphan', parent: {uuid: 'Unkown'}},
-            {uuid: 'C', value: 'C', label: 'cc', parent: {uuid: 'B'}},
-            {uuid: 'D', value: 'D', label: 'dd', parent: {uuid: 'C'}},
-            {uuid: 'E', value: 'E', label: 'ee', parent: {uuid: 'C'}},
-            {uuid: 'E', value: 'E', label: 'ee', parent: {uuid: 'C'}},
-            {uuid: 'C2', value: 'C2', label: 'cc1', parent: {uuid: 'B'}},
-            {uuid: 'leaf', value: 'leaf', label: 'leaf', parent: {uuid: 'category'}}
+    it('should return an empty array when there are no entries', () => {
+        expect(choiceTreeAdapter({treeEntries: []})).toEqual([]);
+    });
+
+    it('should nest entries by path and expose uuid as value', () => {
+        const treeEntries = [
+            entry({path: '/root/a', uuid: 'A', name: 'a', displayName: 'aa', depth: 1, hasChildren: true}),
+            entry({path: '/root/a/b', uuid: 'B', name: 'b', displayName: 'bb', depth: 2}),
+            entry({path: '/root/leaf', uuid: 'leaf', name: 'leaf', displayName: 'leaf', depth: 1})
         ];
+
+        const tree = choiceTreeAdapter({treeEntries, openPaths: ['/root/a'], loading: false});
+
+        expect(tree).toHaveLength(2);
+        const [a, leaf] = tree;
+
+        expect(a).toMatchObject({id: '/root/a', value: 'A', label: 'aa', hasChildren: true, isClosable: true, isSelectable: true});
+        expect(a.children).toHaveLength(1);
+        expect(a.children[0]).toMatchObject({id: '/root/a/b', value: 'B', label: 'bb', hasChildren: false});
+
+        expect(leaf).toMatchObject({id: '/root/leaf', value: 'leaf', hasChildren: false, isClosable: false});
+        expect(leaf.children).toHaveLength(0);
     });
 
-    it('should return empty array when there is no nodes', () => {
-        expect(choiceTreeAdapter({nodes: [], parent: {uuid: 'category'}})).toEqual([]);
-    });
+    it('should flag a branch as loading while its open children are being fetched', () => {
+        const treeEntries = [
+            entry({path: '/root/a', uuid: 'A', name: 'a', displayName: 'aa', depth: 1, hasChildren: true, open: false})
+        ];
 
-    it('should build a tree', () => {
-        const parent = {uuid: 'category'};
-        const tree = choiceTreeAdapter({nodes, parent});
+        const tree = choiceTreeAdapter({treeEntries, openPaths: ['/root/a'], loading: true});
 
-        expect(tree).toEqual([
-            {
-                id: 'A',
-                value: 'A',
-                label: 'aa',
-                expanded: false,
-                children: [{
-                    id: 'B',
-                    value: 'B',
-                    label: 'bb',
-                    expanded: false,
-                    children: [{
-                        id: 'C',
-                        value: 'C',
-                        label: 'cc',
-                        expanded: false,
-                        children: [{
-                            id: 'D',
-                            value: 'D',
-                            label: 'dd',
-                            expanded: false,
-                            children: []
-                        }, {
-                            id: 'E',
-                            value: 'E',
-                            label: 'ee',
-                            expanded: false,
-                            children: []
-                        }, {
-                            id: 'E',
-                            value: 'E',
-                            label: 'ee',
-                            expanded: false,
-                            children: []
-                        }]
-                    }, {
-                        id: 'C2',
-                        value: 'C2',
-                        label: 'cc1',
-                        expanded: false,
-                        children: []
-                    }]
-                }]
-            }, {
-                id: 'leaf',
-                value: 'leaf',
-                label: 'leaf',
-                expanded: false,
-                children: []
-            }
-        ]);
-    });
-
-    it('should set value checked when uuid correspond to the selectedValues', () => {
-        const parent = {uuid: 'category'};
-        const selectedValues = ['B', 'C'];
-
-        expect(choiceTreeAdapter({nodes, parent, selectedValues})).toEqual([
-            {
-                id: 'A',
-                value: 'A',
-                label: 'aa',
-                expanded: true,
-                checked: false,
-                children: [{
-                    id: 'B',
-                    value: 'B',
-                    label: 'bb',
-                    expanded: true,
-                    checked: true,
-                    children: [{
-                        id: 'C',
-                        value: 'C',
-                        label: 'cc',
-                        expanded: false,
-                        checked: true,
-                        children: [{
-                            id: 'D',
-                            value: 'D',
-                            label: 'dd',
-                            expanded: false,
-                            checked: false,
-                            children: []
-                        }, {
-                            id: 'E',
-                            value: 'E',
-                            label: 'ee',
-                            expanded: false,
-                            checked: false,
-                            children: []
-                        }, {
-                            id: 'E',
-                            value: 'E',
-                            label: 'ee',
-                            expanded: false,
-                            checked: false,
-                            children: []
-                        }]
-                    }, {
-                        id: 'C2',
-                        value: 'C2',
-                        label: 'cc1',
-                        expanded: false,
-                        checked: false,
-                        children: []
-                    }]
-                }]
-            }, {
-                id: 'leaf',
-                value: 'leaf',
-                label: 'leaf',
-                expanded: false,
-                checked: false,
-                children: []
-            }
-        ]);
+        expect(tree[0].isLoading).toBe(true);
     });
 });

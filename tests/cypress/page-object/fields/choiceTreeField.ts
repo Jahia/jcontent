@@ -19,6 +19,11 @@ export class ChoiceTreeField extends Field {
         return this;
     }
 
+    clearAll(): ChoiceTreeField {
+        this.get().find('[data-sel-role="choice-tree"] [aria-label="Reset"]').click();
+        return this;
+    }
+
     getValues(): Cypress.Chainable<JQuery> {
         return this.get().get('.moonstone-dropdown_tags').find('button');
     }

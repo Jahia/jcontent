@@ -6,13 +6,12 @@ import {errorTranslationOptions} from './field.utils';
 /**
  * What the reader actually ends up seeing, as opposed to which options were passed.
  *
- * Field.spec covers the wiring -- that the component hands these options to t(). This covers the
- * behaviour they exist for, by translating through the shipped locale bundles with a real
- * i18next: the errors here carry text jContent did not write, and i18next escapes interpolated
- * values by default, so an apostrophe in a constraint message reached the screen as "&#39;"
- * (jcontent#2748). Both halves are needed. The wiring test alone would still pass if i18next
- * changed what the option means; this one alone would still pass if the component stopped
- * passing it.
+ * The wiring -- that the component hands these options to t(), and that what comes out is what
+ * the reader sees -- is covered end to end in Cypress: contentEditorForm.cy.ts for a constraint
+ * message from a resource bundle, validation.cy.ts for one from a server-side validator. This
+ * covers the same guarantee per language and per message, cheaply: the errors here carry text
+ * jContent did not write, and i18next escapes interpolated values by default, so an apostrophe
+ * in a constraint message reached the screen as "&#39;" (jcontent#2748).
  *
  * react-i18next is mocked project-wide (see @jahia/test-framework's jestConfig.moduleNameMapper),
  * which is why this drives i18next directly rather than rendering the component.

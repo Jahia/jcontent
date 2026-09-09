@@ -5,7 +5,7 @@ import {satisfies} from 'compare-versions';
 import {TagManager} from './TagManager';
 
 const normalize = v => v?.match(/\d+/g)?.join('.');
-const REQUIRED_GQL_DXM_VERSION = '>=3.8';
+const REQUIRED_GQL_DXM_VERSION = '>=3.11';
 
 const TagManagerRoute = () => {
     const siteKey = useSelector(state => state.site);
@@ -13,7 +13,7 @@ const TagManagerRoute = () => {
 };
 
 export const register = registry => {
-    const version = window.contextJsParameters?.config?.graphqlDxmProviderVersion;
+    const version = globalThis.contextJsParameters?.config?.graphqlDxmProviderVersion;
     if (version && satisfies(normalize(version), REQUIRED_GQL_DXM_VERSION)) {
         registry.add('adminRoute', 'jctagsmanager', {
             targets: ['jcontent'],

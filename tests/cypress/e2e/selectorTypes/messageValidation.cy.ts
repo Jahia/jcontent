@@ -3,8 +3,8 @@ import {ContentEditor} from '../../page-object';
 
 // Migrated from the Selenium test FieldsValidationTest.testClientSideValidation (Jahia/jcontent#2765).
 
-describe('Content Editor - client-side field validation', () => {
-    const siteKey = 'clientSideValidationSite';
+describe('Content Editor - validation messages across fields', () => {
+    const siteKey = 'messageValidationSite';
     const contentName = 'allFields';
     const contentPath = `/sites/${siteKey}/contents/${contentName}`;
 
@@ -19,10 +19,6 @@ describe('Content Editor - client-side field validation', () => {
 
     const invalidDate = '99/99/9999 99:99';
     const validDate = new Date(2019, 10, 25, 10, 5);
-
-    // The edit form validates on mount and on blur, never on change so a value has to lose focus before its error is raised or cleared
-    const blurField = (fieldName: string) =>
-        cy.get(`[data-sel-content-editor-field="${fieldName}"]`).find('input[type="text"]').blur();
 
     const forced = true;
 
@@ -53,15 +49,13 @@ describe('Content Editor - client-side field validation', () => {
     it('reports the email field own constraint message, and clears it once the address is valid', () => {
         const ce = ContentEditor.visit(contentPath, siteKey, 'en', 'content-folders/contents');
 
-        ce.getSmallTextField(emailFieldName).addNewValue(invalidEmail);
-        blurField(emailFieldName);
+        ce.getSmallTextField(emailFieldName).addNewValue(invalidEmail).blurTextField();
         ce.getSmallTextField(emailFieldName)
             .getErrorMessage(emailErrorCode)
             .should('be.visible')
             .and('contain', emailErrorMessage);
 
-        ce.getSmallTextField(emailFieldName).addNewValue(validEmail);
-        blurField(emailFieldName);
+        ce.getSmallTextField(emailFieldName).addNewValue(validEmail).blurTextField();
         ce.getSmallTextField(emailFieldName).getErrorMessage().should('not.exist');
     });
 
@@ -69,14 +63,13 @@ describe('Content Editor - client-side field validation', () => {
         const ce = ContentEditor.visit(contentPath, siteKey, 'en', 'content-folders/contents');
 
         ce.getSmallTextField(emailFieldName).addNewValue(invalidEmail);
-        ce.getDateField(dateFieldName).addNewValue(validDate, forced);
-        blurField(dateFieldName);
+        ce.getDateField(dateFieldName).addNewValue(validDate, forced).blurTextField();
         ce.getSmallTextField(emailFieldName).getErrorMessage(emailErrorCode).should('be.visible');
         ce.getDateField(dateFieldName).getErrorMessage().should('not.exist');
 
         ce.getSmallTextField(emailFieldName).addNewValue(validEmail);
         typeInvalidDate();
-        blurField(dateFieldName);
+        ce.getDateField(dateFieldName).blurTextField();
         ce.getDateField(dateFieldName).getErrorMessage('invalidDate').should('be.visible');
         ce.getSmallTextField(emailFieldName).getErrorMessage().should('not.exist');
     });

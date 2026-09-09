@@ -128,16 +128,13 @@ const renderField = (
                 </div>
             )}
             </div>
+            {/* Only rendered when there is an error, so neither the message nor the selector
+                needs to re-test for one. See errorTranslationOptions for why escaping is off. */}
             {inputContext.displayErrors && shouldDisplayErrors && (
             <Typography className={styles.errorMessage}
-                        data-sel-error={shouldDisplayErrors && errorName}
+                        data-sel-error={errorName}
             >
-                {shouldDisplayErrors ?
-                    field.errorMessage ?
-                        field.errorMessage :
-                        // See errorTranslationOptions for why escaping is off here.
-                        t(`jcontent:label.contentEditor.edit.errors.${errorName}`, errorTranslationOptions(field, errorArgs)) :
-                    ''}&nbsp;
+                {field.errorMessage || t(`jcontent:label.contentEditor.edit.errors.${errorName}`, errorTranslationOptions(field, errorArgs))}&nbsp;
             </Typography>
         )}
         </div>

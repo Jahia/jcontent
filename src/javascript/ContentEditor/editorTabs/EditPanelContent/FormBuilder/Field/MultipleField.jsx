@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FastField, useFormikContext} from 'formik';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {useReorderList} from '~/ContentEditor/utils';
+import {useMovedItemFocus, useReorderList} from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 
@@ -14,6 +14,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
     const fieldValue = Array.isArray(values[field.name]) ? values[field.name] : [];
 
     const {reorderedItems, handleReorder, reset} = useReorderList(fieldValue);
+    const {requestFocus, focusIdFor} = useMovedItemFocus();
 
     const multipleFieldOnChange = (index, newData) => {
         onChange({index, value: newData});
@@ -34,10 +35,11 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
         onBlur();
     };
 
-    const handleFinalReorder = () => {
+    const handleFinalReorder = movedId => {
         const newValues = reorderedItems.map(({item}) => item);
         setFieldValue(field.name, newValues);
         setFieldTouched(field.name, true, false);
+        requestFocus(movedId);
     };
 
     return (
@@ -67,6 +69,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
                                 field={field}
                                 index={index}
                                 isDraggable={!field.readOnly && values[field.name].length > 1}
+                                focusId={focusIdFor(id)}
                                 onFieldRemove={onFieldRemove}
                                 onValueReorder={handleReorder}
                                 onValueReorderDropped={handleFinalReorder}

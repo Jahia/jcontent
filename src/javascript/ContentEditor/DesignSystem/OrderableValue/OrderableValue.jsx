@@ -3,12 +3,17 @@ import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {Button, Tooltip, Close, HandleDrag} from '@jahia/moonstone';
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
+import {useFocusOnMove, useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
 import clsx from 'clsx';
 
-export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValueReorderDropped, onValueReorderAborted, index, component, isReferenceCard = false, isDraggable = false}) => {
+export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValueReorderDropped, onValueReorderAborted, index, component, isReferenceCard = false, isDraggable = false, focusId}) => {
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
+    const staticRef = useRef(null);
+    // The value as a whole takes the focus after a move, so it has to be reachable whether or not
+    // it is draggable - only the draggable one is wired to react-dnd.
+    const valueRef = isDraggable ? ref : staticRef;
+    useFocusOnMove(valueRef, focusId);
     const name = `${field.name}[${index}]`;
     const readOnly = field.readOnly;
     const [{handlerId}, drop] = useReorderDrop(
@@ -17,7 +22,7 @@ export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValu
             accept: `REFERENCE_CARD_${field.name}`
         });
     const [{isDragging}, drag, dragPreview] = useReorderDrag(
-        {item: {id, index}, onDrop: onValueReorderDropped, onAbort: onValueReorderAborted},
+        {item: {id, index}, onDrop: () => onValueReorderDropped(id), onAbort: onValueReorderAborted},
         {
             type: `REFERENCE_CARD_${field.name}`,
             canDrag: () => isDraggable
@@ -31,7 +36,9 @@ export const OrderableValue = ({id, field, onFieldRemove, onValueReorder, onValu
 
     return (
         <div
-            ref={isDraggable ? ref : undefined}
+            ref={valueRef}
+            // Focusable programmatically after a move, without joining the tab order.
+            tabIndex={-1}
             className={clsx(
                 styles.draggableCard,
                 isDragging && styles.draggingCard
@@ -69,5 +76,6 @@ OrderableValue.propTypes = {
     index: PropTypes.number.isRequired,
     component: PropTypes.object.isRequired,
     isReferenceCard: PropTypes.bool,
-    isDraggable: PropTypes.bool
+    isDraggable: PropTypes.bool,
+    focusId: PropTypes.number
 };

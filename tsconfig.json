@@ -18,11 +18,20 @@
     "plugins": [
       {
         "name": "gql.tada/ts-plugin",
-        "schema": "./schema.graphql",
-        "tadaOutputLocation": "./packages/gql/src/graphql-live.d.ts",
-        "tadaTurboLocation": "./packages/gql/src/graphql-cache.d.ts"
+        "schemas": [
+          {
+            // Use a single named schema to skip the `declare module 'gql.tada'``
+            // declaration that would otherwise create a super large TS bundle
+            // https://github.com/0no-co/gql.tada/blob/1d8dd3464fb42eff2173aae8ec6eb90a42639182/packages/internal/src/introspection/output.ts#L78-L86
+            "name": "jahia",
+            "schema": "./schema.graphql",
+            "tadaOutputLocation": "./packages/gql/src/graphql-live.d.ts",
+            // Preprocess existing GQL fragments to prevent perf issues
+            "tadaTurboLocation": "./src/javascript/.graphql-cache.d.ts"
+          }
+        ]
       }
     ]
   },
-  "include": ["src/javascript/**/*"]
+  "include": ["src/javascript/**/*", "src/javascript/.graphql-cache.d.ts"]
 }

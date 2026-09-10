@@ -8,9 +8,12 @@ import {Button} from '@jahia/moonstone';
 import {UsagesTable} from '~/UsagesTable';
 import {useSelector} from 'react-redux';
 import {ellipsizeText} from '~/JContent/JContent.utils';
+import {useCloseOnNavigation} from '~/utils';
 
 const UsagesDialog = ({isOpen, onExited, onClose, path, language, name}) => {
     const {t} = useTranslation('jcontent');
+
+    useCloseOnNavigation(onClose);
 
     return (
         <Dialog maxWidth="xl"

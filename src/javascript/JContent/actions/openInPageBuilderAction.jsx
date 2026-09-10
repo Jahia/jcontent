@@ -15,8 +15,8 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
     const isSearch = (mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH);
     const isPageBuilderMode = (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER);
 
-    const showOnNodeTypes = ['jmix:mainResource'];
-    // The jmix:mainResource is a supertype-inherited mixin, so it never appears in the
+    const showOnNodeTypes = [JContentConstants.visuallyEditableNodeType];
+    // The mixin is supertype-inherited (pages, main resources), so it never appears in the
     // prefetched node's mixinTypes — the fast-path can't decide it, defer to useNodeChecks.
 
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {

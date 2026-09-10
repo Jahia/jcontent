@@ -19,7 +19,7 @@ export const GetContentPath = gql`
                 primaryNodeType {
                     name
                 }
-                isNodeType(type: {multi: ANY, types: ["jmix:mainResource", "jnt:page"]})
+                isNodeType(type: {types: ["jmix:visuallyEditable"]})
                 ...ContentVisibleInContentTree
                 ancestors(fieldFilter: {
                     filters: [
@@ -32,7 +32,7 @@ export const GetContentPath = gql`
                     primaryNodeType {
                         name
                     }
-                    isNodeType(type: {multi: ANY, types: ["jmix:mainResource", "jnt:page"]})
+                    isNodeType(type: {types: ["jmix:visuallyEditable"]})
                     ...ContentVisibleInContentTree
                     ...NodeCacheRequiredFields
                 }

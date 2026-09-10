@@ -40,7 +40,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, viewMode, path} = useSelector(selector, shallowEqual);
-    const info = useNodeInfo({path}, {getIsNodeTypes: ['jnt:page', 'jmix:mainResource']});
+    const info = useNodeInfo({path}, {getIsNodeTypes: [JContentConstants.visuallyEditableNodeType]});
 
     const accordion = registry.get('accordionItem', mode);
     let availableModes = accordion?.tableConfig?.availableModes || defaultAvailableModes;
@@ -52,7 +52,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const hiddenViewModes = accordion?.tableConfig?.hiddenViewModes || [];
     availableModes = availableModes.filter(v => !hiddenViewModes.includes(v));
 
-    const disabledPageBuilder = info.node && !info.node['jnt:page'] && !info.node['jmix:mainResource'];
+    const disabledPageBuilder = info.node && !info.node[JContentConstants.visuallyEditableNodeType];
     const disabled = disabledPageBuilder ? [PAGE_BUILDER] : [];
 
     const onChange = vm => dispatch(setTableViewModeAction(vm));

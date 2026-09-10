@@ -612,7 +612,8 @@
           "invalidForm": "Fehler im Formular",
           "fieldsInError": "Ein Feld mit Fehler",
           "fieldsInError_plural": "{{count}} Felder mit Fehler",
-          "otherLanguages": "Weitere Sprachen mit Fehler"
+          "otherLanguages": "Weitere Sprachen mit Fehler",
+          "listLabel": "{{label}}:"
         },
         "action": {
           "copyLanguage": {

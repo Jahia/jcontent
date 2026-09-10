@@ -60,7 +60,6 @@ import {
     UndeleteActionComponent,
     UnlockActionComponent,
     UnzipActionComponent,
-    ZipActionComponent,
     CompareHtmlActionComponent,
     FlushCacheActionComponent,
     PublishManagerActionComponent
@@ -387,11 +386,6 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.fileUpload.replaceWith',
         uploadType: 'replaceWith',
         component: FileUploadActionComponent
-    });
-    registry.add('action', 'zip', {
-        buttonIcon: <FileZip/>,
-        buttonLabel: 'jcontent:label.contentManager.zipUnzip.zip',
-        component: ZipActionComponent
     });
     registry.add('action', 'unzip', {
         buttonIcon: <FileZip/>,

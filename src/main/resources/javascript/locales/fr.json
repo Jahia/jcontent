@@ -177,7 +177,16 @@
       "tree": {
         "hide": "Masquer l'arborescence",
         "show": "Afficher l'arborescence",
-        "title": "Arborescence"
+        "title": "Arborescence",
+        "search": {
+          "placeholder": "Rechercher par titre de page",
+          "ariaLabel": "Rechercher des pages par nom",
+          "noResults": "Aucune page trouvée",
+          "resultsFound": "{{count}} résultat trouvé",
+          "resultsFound_plural": "{{count}} résultats trouvés",
+          "clear": "Effacer la recherche",
+          "error": "La recherche n'a pas pu aboutir, veuillez réessayer"
+        }
       },
       "browsePages": "Parcourir les pages",
       "refresh": "Rafraîchir",

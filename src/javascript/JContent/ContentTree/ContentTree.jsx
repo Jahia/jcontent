@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useCallback} from 'react';
+import React, {useEffect, useRef, useCallback, useState} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {displayName, lockInfo, operationSupport, useNodeInfo, useTreeEntries} from '@jahia/data-helper';
@@ -6,6 +6,7 @@ import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
+import {ContentTreeSearch} from './ContentTreeSearch';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
@@ -40,7 +41,8 @@ export const accordionPropType = PropTypes.shape({
             canDropFile: PropTypes.bool,
             canReorder: PropTypes.bool
         }),
-        showContextMenuOnRootPath: PropTypes.bool
+        showContextMenuOnRootPath: PropTypes.bool,
+        enableSearch: PropTypes.bool
     }).isRequired
 });
 
@@ -151,6 +153,12 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
     const nodeInfo = useNodeInfo({path}, {getParent: true});
     const {treeEntries, refetch, loading} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
+    const [searchMatchedPaths, setSearchMatchedPaths] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const handleSearchResults = useCallback((matchedPaths, term) => {
+        setSearchMatchedPaths(matchedPaths);
+        setSearchTerm(term);
+    }, []);
 
     if (dataRef.current === null || treeEntries.length > 0) {
         dataRef.current = treeEntries;
@@ -217,13 +225,18 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         viewMode: viewMode,
         virtualizer: rowVirtualizer,
         loading,
-        openPaths
+        openPaths,
+        searchMatchedPaths,
+        searchTerm
     });
 
     return (
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             {item.treeConfig.showContextMenuOnRootPath && <ContextualMenu setOpenRef={rootContextualMenu} actionKey="rootContentMenu"/>}
+            {item.treeConfig.enableSearch && (
+                <ContentTreeSearch rootPath={rootPath} language={lang} onMatchedPaths={handleSearchResults}/>
+            )}
             <div ref={mainRef}
                  data-cm-role="navtree-holder"
                  style={{height: '100%', overflow: 'auto'}}

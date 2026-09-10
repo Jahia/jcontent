@@ -359,6 +359,16 @@
         "removed": "Zuvor selektierte Elemente, die nicht in dieser Ansicht angezeigt werden können, wurden von der Selektion entfernt",
         "addTo": "Zur Selektion hinzufügen"
       },
+      "focalPoint": {
+        "action": "Fokuspunkt festlegen",
+        "title": "Fokuspunkt",
+        "help": "Klicken Sie auf den Bildbereich, der sichtbar bleiben soll. Ansichten, die dieses Bild anders zuschneiden, halten diesen Punkt im Bild, statt aus der Mitte zu schneiden.",
+        "value": "Fokuspunkt: {{position}}",
+        "reset": "Auf Mitte zurücksetzen",
+        "cancel": "Abbrechen",
+        "error": "Der Fokuspunkt konnte nicht gespeichert werden.",
+        "save": "Speichern"
+      },
       "editImage": {
         "action": "Bild-Editor",
         "title": "Bildausgabe",
@@ -723,6 +733,15 @@
           }
         },
         "sharedLanguages": "Von allen Sprachen geteilt",
+        "fieldSet": {
+            "showEmptyFields": "Alle Felder anzeigen, auch leere",
+            "hideEmptyFields": "Nur ausgefüllte Felder anzeigen"
+        },
+        "filenameMimeType": {
+          "badge": "Sollte auf .{{extension}} enden",
+          "badgeUnknownExtension": "Name passt nicht zum Dateityp",
+          "tooltip": "Diese Datei ist {{mimeType}} und passt damit nicht zu ihrem Namen. Passen Sie den Namen an, sodass die Endung dem tatsächlichen Dateityp entspricht."
+        },
         "fields": {
           "actions": {
             "replace": "Änderung",
@@ -836,6 +855,8 @@
         "lockType": "Sperrtyp",
         "technical": "Technische Informationen",
         "additional": "Zusätzliche Details",
+        "exifMetadata": "Verfügbare EXIF-Daten",
+        "iptcMetadata": "Verfügbare XMP/IPTC-Daten",
         "copiedToClipboard": "In die Zwischenablage kopiert",
         "links": "Links",
         "linksLive": "Live",

@@ -18,6 +18,29 @@ function getMode(state, config) {
     return state.contenteditor.picker.fileView.mode;
 }
 
+/**
+ * Image formats a browser renders natively, as tokens matched against the mime type.
+ *
+ * jmix:image covers more than a browser can show - a TIFF, a PSD or a camera raw file are all
+ * images to the repository - but an image field exists to put a picture on a page, and those
+ * cannot be put on one: the visitor gets a broken image, and the editor only finds out later.
+ * The picker therefore offers what can actually be displayed. This is the same list the
+ * thumbnail service keeps, so both agree on what "displayable" means.
+ *
+ * Add a format here as browsers gain support for it.
+ */
+const WEB_RENDERABLE_IMAGE_FORMATS = ['jpeg', 'jpg', 'png', 'gif', 'webp', 'avif', 'svg', 'bmp', 'icon'];
+
+const renderableImageFilters = WEB_RENDERABLE_IMAGE_FORMATS.map(format => ({
+    evaluation: 'CONTAINS',
+    fieldName: 'content.mimeType.value',
+    value: format
+}));
+
+// Folders carry no mime type, so they need their own way past a filter list combined with ANY,
+// otherwise browsing the media tree in the dialog would come up empty.
+const FOLDERS_PASS = {evaluation: 'EQUAL', fieldName: 'isFile', value: 'false'};
+
 const viewModeSelectorProps = config => ({
     selector: state => ({
         mode: getMode(state, config)
@@ -62,6 +85,18 @@ export const registerMediaPickers = registry => {
         },
         searchContentType: 'jmix:image',
         selectableTypesTable: ['jmix:image'],
+        accordionItem: {
+            'picker-media': {
+                tableConfig: {
+                    tableDisplayFilter: [...renderableImageFilters, FOLDERS_PASS]
+                }
+            },
+            'picker-search': {
+                tableConfig: {
+                    tableDisplayFilter: renderableImageFilters
+                }
+            }
+        },
         pickerCaptionComponent: FilePickerCaption
     });
 

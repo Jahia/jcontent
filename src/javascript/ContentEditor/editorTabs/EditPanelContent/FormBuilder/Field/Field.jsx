@@ -8,7 +8,7 @@ import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {MultipleField} from './MultipleField';
 import {SingleField} from './SingleField';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {buildFlatFieldObject} from './field.utils';
+import {errorTranslationOptions} from './field.utils';
 import {DisplayAction, registry} from '@jahia/ui-extender';
 import {contentEditorHelper} from './contentEditorHelper';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
@@ -128,15 +128,13 @@ const renderField = (
                 </div>
             )}
             </div>
+            {/* Only rendered when there is an error, so neither the message nor the selector
+                needs to re-test for one. See errorTranslationOptions for why escaping is off. */}
             {inputContext.displayErrors && shouldDisplayErrors && (
             <Typography className={styles.errorMessage}
-                        data-sel-error={shouldDisplayErrors && errorName}
+                        data-sel-error={errorName}
             >
-                {shouldDisplayErrors ?
-                    field.errorMessage ?
-                        field.errorMessage :
-                        t(`jcontent:label.contentEditor.edit.errors.${errorName}`, {...buildFlatFieldObject(field), ...errorArgs}) :
-                    ''}&nbsp;
+                {field.errorMessage || t(`jcontent:label.contentEditor.edit.errors.${errorName}`, errorTranslationOptions(field, errorArgs))}&nbsp;
             </Typography>
         )}
         </div>

@@ -58,6 +58,7 @@ services:
         profiles: ["test"]
         image: '${TESTS_IMAGE}'
         container_name: cypress
+        shm_size: 2gb
         deploy:
             resources:
                 limits:

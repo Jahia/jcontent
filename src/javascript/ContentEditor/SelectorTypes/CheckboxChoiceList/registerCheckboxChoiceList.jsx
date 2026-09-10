@@ -15,7 +15,7 @@ export const registerCheckboxChoiceList = registry => {
         ],
         initValue: field => {
             const findDefaultPropFn = v => v?.properties?.find(p => p.name === 'defaultProperty' && p.value === 'true');
-            const defaultValueConstraints = field.valueConstraints?.filter(findDefaultPropFn);
+            const defaultValueConstraints = (field.valueConstraints ?? []).filter(findDefaultPropFn);
             return defaultValueConstraints.map(v => v.value.string);
         }
     });
@@ -57,7 +57,7 @@ export const registerCheckboxChoiceList = registry => {
         ],
         initValue: field => {
             const findDefaultPropFn = v => v?.properties?.find(p => p.name === 'defaultProperty' && p.value === 'true');
-            const defaultValueConstraints = field.valueConstraints?.filter(findDefaultPropFn);
+            const defaultValueConstraints = (field.valueConstraints ?? []).filter(findDefaultPropFn);
             return defaultValueConstraints.map(v => v.value.string);
         }
     });

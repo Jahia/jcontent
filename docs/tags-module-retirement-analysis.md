@@ -98,6 +98,65 @@ runtime dependency on the node types being retired. That is not the case here:
 3. **The four HTTP actions are a separate integration surface** (non-GraphQL, used at least by
    jExperience) that the new Tag Manager doesn't touch at all.
 
+## A fourth option: unregister the legacy admin route from the UI only
+
+None of A/B/C touch the actual complaint driving this analysis, which is narrower than "retire the
+module": today, with both `tags` and the new Tag Manager installed, a site admin sees **two**
+"Tags" entries in the menu — the old iframe-based one and the new one — because `tags` registers
+its own client-side admin route independently of anything jContent does.
+
+`tags` registers that entry from a plain JS asset,
+[`tagmanager.js`](https://github.com/Jahia/tags/blob/main/src/main/resources/javascript/apps/tagmanager.js):
+
+```javascript
+window.jahia.uiExtender.registry.add('adminRoute', 'tagsmanager', {
+    targets: ['jcontent:50'],
+    label: 'tags:label.title',
+    icon: window.jahia.moonstone.toIconComponent('CollectionsBookmark'),
+    isSelectable: true,
+    requiredPermission: 'tagManager',
+    requireModuleInstalledOnSite: 'tags',
+    iframeUrl: window.contextJsParameters.contextPath + '/cms/editframe/default/$lang/sites/$site-key.tagsManager.html'
+});
+```
+
+`@jahia/ui-extender`'s registry is a plain client-side key/value store
+([`registry.ts`](https://github.com/Jahia/javascript-components/blob/main/packages/ui-extender/src/registry/registry.ts))
+and exposes a first-class `remove(type, key)` alongside `add`. There is an existing production
+precedent for one module removing another's registry entries this way: `remotepublish`'s
+[`init.js`](https://github.com/Jahia/remotepublish/blob/main/war/src/javascript/init.js) registers
+a `callback` targeting `jahiaApp-init:9999` — a very late priority on the app's own init event —
+whose body calls `registry.remove(...)` on `adminRoute`/`primary-nav-item` entries it wants gone.
+The high priority is what makes the ordering safe: every module's top-level script (including
+`tags`'s `tagmanager.js`, which calls `registry.add` unconditionally at load time, not inside a
+callback) has already run by the time `jahiaApp-init` fires, so a callback registered against it
+is guaranteed to execute after every other module's registration, however that module orders its
+own asset relative to jContent's.
+
+The same pattern in jContent:
+
+```javascript
+registry.add('callback', 'hideLegacyTagsManagerRoute', {
+    targets: ['jahiaApp-init:9999'],
+    callback: () => registry.remove('adminRoute', 'tagsmanager')
+});
+```
+
+This removes only the menu entry and its iframe. Everything else about `tags` is untouched: the
+bundle stays installed and `ACTIVE`, its 5 node types and the `jmix:tagsContent` mixin stay
+registered, its 4 Spring-bean HTTP actions (`AddTag`/`RemoveTag`/`MatchingTags`/`TransformTag`,
+the ones `jexperience` calls directly) keep working exactly as today, and the content-facing
+widgets (tag cloud, tagging, display-tags, related-tagging) keep rendering. Nothing server-side
+changes, so the `jexperience` hard-dependency problem that rules out option A as scoped does not
+arise here at all — this is a client-only registry operation, not an OSGi lifecycle one.
+
+The tradeoff: this solves the "two Tags entries in the menu" duplication and lets the new Tag
+Manager be the sole admin entry point, but it does not touch the question A/B were meant to
+answer — whether to stop shipping/maintaining `tags` at all. `tags` still installs, still needs a
+`jahia-depends` from anything that wants it, and still carries its own upkeep cost; retiring it
+later (as B, or A once `jexperience` is addressed) remains a separate decision this option leaves
+open rather than forecloses.
+
 ## Options for the CTO office to weigh in on
 
 - **A — Full retirement**, following `#2752` exactly (activator-level `stop()`/`uninstall()` of
@@ -115,7 +174,11 @@ runtime dependency on the node types being retired. That is not the case here:
 - **C — No retirement now.** Ship the new Tag Manager alongside the legacy one (as today via the
   `graphql-dxm-provider` version gate), revisit `tags` retirement as a separate, later effort once
   `jexperience`'s dependency is addressed and/or the content-facing widgets have a plan.
+- **D — UI-only unregistration**, described above: hide the legacy `tagsmanager` admin route from
+  jContent's own JS, leave the `tags` module itself entirely untouched. Compatible with, and not
+  exclusive of, doing B or A later — D just stops the duplicate menu entry from confusing admins
+  in the meantime, with none of A's or B's risk.
 
-This document takes no position between B and C beyond flagging that **A is not safe as scoped**
-without first addressing `jexperience`. No code has been written; the next step is direction from
-the CTO office on which option (or which combination) to implement.
+This document takes no position between B, C and D beyond flagging that **A is not safe as
+scoped** without first addressing `jexperience`. No code has been written; the next step is
+direction from the CTO office on which option (or which combination) to implement.

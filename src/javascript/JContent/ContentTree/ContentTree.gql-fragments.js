@@ -7,7 +7,6 @@ const PickerItemsFragment = {
             mixinTypes {
                 name
             }
-            isMainResource: isNodeType(type: {types: "jmix:mainResource"})
         }`
     },
     isPublished: {

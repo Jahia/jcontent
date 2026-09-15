@@ -1,3 +1,5 @@
+import JContentConstants from '~/JContent/JContent.constants';
+
 /**
  * Shared helper for in-context module render with page CSS injection.
  * Used for both the main-resource in-context strategy and as the sub-component fallback.
@@ -12,6 +14,26 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
 });
 
 /**
+ * The page whose head gives an out-of-context module render its CSS.
+ * isDisplayableNode: the node itself (its default page render provides CSS).
+ * Otherwise the displayable ancestor if it is a non-folder page. A content with no page at all (a form in a content
+ * folder) is rendered through the content-template wrapper instead: that is the document its preview URL uses, and
+ * where the site loads its stylesheets for such content.
+ */
+const getOutOfContextCssSource = (node, isDisplayableNode) => {
+    const {displayableNode} = node;
+    if (isDisplayableNode) {
+        return {cssSourcePath: node.path};
+    }
+
+    if (displayableNode && !displayableNode.isFolder) {
+        return {cssSourcePath: displayableNode.path};
+    }
+
+    return {cssSourcePath: node.path, cssSourceView: JContentConstants.contentTemplate};
+};
+
+/**
  * Core preview context builder. Returns { primary, fallback }.
  *
  * Rendering strategies:
@@ -24,7 +46,8 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
  * B. Out-of-context (no closestPage):
  *    - Always module render. CSS injected via cssSourcePath:
  *      isDisplayableNode → cssSourcePath=node.path (its own default page render provides CSS).
- *      !isDisplayableNode → cssSourcePath=displayableNode.path if non-folder, else no CSS.
+ *      !isDisplayableNode → cssSourcePath=displayableNode.path if non-folder, else the node itself rendered
+ *      through the content-template wrapper (cssSourceView), the page every standalone content is previewed in.
  *
  * @param {object} node                 - JCR node with { path, uuid, isPage, displayableNode, jView }
  * @param {string} language
@@ -91,18 +114,13 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     }
 
     // For out-of-context module renders, inject CSS by fetching the nearest displayable page.
-    // isDisplayableNode: use the node itself (its default page render provides CSS).
-    // !isDisplayableNode: use the displayable ancestor if it's a non-folder page.
-    const displayableAncestorPath = displayableNode && !displayableNode.isFolder ? displayableNode.path : undefined;
-    const cssSourcePath = isDisplayableNode ? node.path : displayableAncestorPath;
-
     return {
         primary: {
             ...base,
             path: node.path,
             view: isDisplayableNode ? (jView?.value || 'default') : null,
             contextConfiguration: 'module',
-            ...(cssSourcePath && {cssSourcePath}),
+            ...getOutOfContextCssSource(node, isDisplayableNode),
             ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
             ...extraParams
         },

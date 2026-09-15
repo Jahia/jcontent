@@ -22,6 +22,9 @@ jest.mock('@jahia/data-helper', () => {
     };
 });
 jest.mock('~/ContentEditor/ContentTypeSelectorModal', () => jest.fn());
+jest.mock('./useOpenInPageBuilderAfterCreate', () => ({
+    useOpenInPageBuilderAfterCreate: ({onCreate, onClosed}) => ({handleCreate: onCreate, handleClosed: onClosed})
+}));
 jest.mock('./createContent.utils', () => {
     return {
         useCreatableNodetypesTree: jest.fn(),

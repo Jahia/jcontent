@@ -74,6 +74,18 @@ export const getNodeByPath = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
+export const getIsVisuallyEditable = gql`
+    query getIsVisuallyEditable($uuid: String!, $visuallyEditableNodeType: String!) {
+        jcr {
+            nodeById(uuid: $uuid) {
+                ...NodeCacheRequiredFields
+                isVisuallyEditable: isNodeType(type: {types: [$visuallyEditableNodeType]})
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
+
 export const getNodeTypeInfo = gql`
     query getNodeTypeInfo($nodeTypes: [String]!, $uiLocale: String!) {
         forms {

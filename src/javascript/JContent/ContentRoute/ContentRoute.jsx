@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
 import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
 import ContentHeader from '../ContentHeader';
@@ -9,9 +10,34 @@ import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
 import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
-import {setTableViewMode} from '~/JContent/redux/JContent.redux';
+import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
 import {JahiaRenderedModulesUtil} from '../JContent.utils';
+
+// A visually editable node that is not its own displayable node has no page, hence no template to render the frame
+// with: it goes through the content-template wrapper instead. Pages and main resources keep an empty template.
+const getFrameTemplateState = (node, canShowEditFrame, template) => {
+    const isWrapperTemplateNeeded = canShowEditFrame && node.displayableNode?.path !== node.path;
+    return {isWrapperTemplateNeeded, isFrameTemplateReady: !isWrapperTemplateNeeded || template !== ''};
+};
+
+// The template lives in the URL (state.jcontent.template) so that a reload keeps it; cmGoto resets it on every
+// navigation, so it is set again each time the Page Builder opens on such a node.
+const useWrapperTemplate = (isPageBuilderView, isWrapperTemplateNeeded, template) => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (isPageBuilderView && isWrapperTemplateNeeded && template === '') {
+            dispatch(cmGoto({template: JContentConstants.contentTemplate}));
+        }
+    }, [dispatch, isPageBuilderView, isWrapperTemplateNeeded, template]);
+};
+
+// The frame waits for its template: loading the bare node URL first would show the error page for a moment
+const PageBuilderFrame = ({isReady}) => (isReady ? <EditFrame/> : <LoaderOverlay/>);
+
+PageBuilderFrame.propTypes = {
+    isReady: PropTypes.bool.isRequired
+};
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
@@ -25,13 +51,15 @@ export const ContentRoute = () => {
         params: state.jcontent.params
     }), shallowEqual);
     const dispatch = useDispatch();
-    const nodeTypes = ['jnt:page', 'jmix:mainResource'];
-    const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
+    const {visuallyEditableNodeType} = JContentConstants;
+    const res = useNodeInfo({path}, {getIsNodeTypes: [visuallyEditableNodeType], getDisplayableNodePath: true});
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
-    const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
+    const canShowEditFrame = Boolean(res?.node) && Boolean(res.node[visuallyEditableNodeType]) && !isOpenDialog;
+    const {isWrapperTemplateNeeded, isFrameTemplateReady} = getFrameTemplateState(res.node, canShowEditFrame, template);
+    useWrapperTemplate(isPageBuilderView, isWrapperTemplateNeeded, template);
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
@@ -41,10 +69,10 @@ export const ContentRoute = () => {
 
     // Captured area information is used to block delete/move/copy/cut actions on areas
     useEffect(() => {
-        if (path && language && canShowEditFrame) {
+        if (path && language && canShowEditFrame && isFrameTemplateReady) {
             JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, language, template);
         }
-    }, [path, language, template, canShowEditFrame]);
+    }, [path, language, template, canShowEditFrame, isFrameTemplateReady]);
 
     if (isOpenDialog) {
         return null;
@@ -74,7 +102,7 @@ export const ContentRoute = () => {
         <MainLayout header={<ContentHeader/>}>
             <LoaderSuspense>
                 <ErrorBoundary>
-                    {(isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
+                    {(isPageBuilderView && canShowEditFrame) ? <PageBuilderFrame isReady={isFrameTemplateReady}/> : <ContentLayout/>}
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

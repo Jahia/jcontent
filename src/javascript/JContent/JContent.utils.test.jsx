@@ -3,6 +3,7 @@ import {
     canEditInPageBuilder,
     getNewCounter,
     isDescendant,
+    JahiaRenderedModulesUtil,
     removeFileExtension,
     resolveUrlForLiveOrPreview
 } from './JContent.utils';
@@ -252,5 +253,89 @@ describe('canEditInPageBuilder', () => {
     it('should not allow editing a reference even if it lives under a registered editable root', () => {
         registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
         expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
+    });
+});
+
+describe('JahiaRenderedModulesUtil', () => {
+    const nodePath = '/sites/mySite/contents/someObject';
+    const parse = html => JahiaRenderedModulesUtil.parseModuleInfo(
+        new DOMParser().parseFromString(html, 'text/html'),
+        nodePath
+    );
+
+    // The util is a module-level singleton, so a capture outlives the test that took it.
+    beforeEach(() => JahiaRenderedModulesUtil.setModules({}, undefined));
+
+    describe('parseModuleInfo', () => {
+        it('should attribute a placeholder to the module element wrapping it', () => {
+            const modules = parse(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}">
+                    <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+                </div>
+            `);
+            expect(modules[nodePath]).toContainEqual({
+                path: 'childObject2',
+                nodeTypes: ['cent:childObject2'],
+                placeholder: true
+            });
+        });
+
+        it('should attribute a placeholder with no module ancestor to the rendered node', () => {
+            // A node rendered on its own carries no module wrapper, which is how a content folder's
+            // content comes back. Without the fallback these placeholders are dropped.
+            const modules = parse(`
+                <div jahiatype="module" type="placeholder" path="childObject1" nodetypes="cent:childObject1"></div>
+                <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+                <div jahiatype="module" type="placeholder" path="*"></div>
+            `);
+            expect(modules[nodePath].map(entry => entry.path)).toEqual(['childObject1', 'childObject2', '*']);
+        });
+
+        it('should not attribute a placeholder to a preceding sibling module', () => {
+            const modules = parse(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}/childObject1"></div>
+                <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+            `);
+            expect(modules[`${nodePath}/childObject1`]).toEqual([]);
+            expect(modules[nodePath].map(entry => entry.path)).toEqual(['childObject2']);
+        });
+    });
+
+    describe('hasRenderingFor', () => {
+        it('should cover the captured page and its descendants', () => {
+            JahiaRenderedModulesUtil.setModules({}, '/sites/mySite/home');
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home')).toBe(true);
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home/area/node')).toBe(true);
+        });
+
+        it('should not cover a node outside the captured page', () => {
+            JahiaRenderedModulesUtil.setModules({}, '/sites/mySite/home');
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/contents/someObject')).toBe(false);
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home2')).toBe(false);
+        });
+
+        it('should cover nothing when no page has been captured', () => {
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home')).toBe(false);
+        });
+    });
+
+    describe('getNamedPlaceholders', () => {
+        it('should keep only the named placeholders', () => {
+            JahiaRenderedModulesUtil.setModules({
+                [nodePath]: [
+                    {path: '*', nodeTypes: ['cent:childObject3'], placeholder: false},
+                    {path: '*', nodeTypes: ['cent:childObject3'], placeholder: true},
+                    {path: '/sites/mySite/absolute', nodeTypes: ['cent:x'], placeholder: true},
+                    {path: 'childObject2', nodeTypes: ['cent:childObject2'], placeholder: true}
+                ]
+            }, '/sites/mySite/contents');
+            expect(JahiaRenderedModulesUtil.getNamedPlaceholders(nodePath)).toEqual([
+                {name: 'childObject2', nodeTypes: ['cent:childObject2']}
+            ]);
+        });
+
+        it('should return nothing for a node that was never captured', () => {
+            expect(JahiaRenderedModulesUtil.getNamedPlaceholders(nodePath)).toEqual([]);
+        });
     });
 });

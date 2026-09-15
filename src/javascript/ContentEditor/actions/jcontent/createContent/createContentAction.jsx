@@ -11,6 +11,7 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
+import {useNamedChildPlaceholders} from './useNamedChildPlaceholders';
 
 export const CreateContent = ({
     contextNodePath,
@@ -47,6 +48,8 @@ export const CreateContent = ({
             getProperties: ['limit']
         }
     );
+    const {loading: loadingPlaceholders, placeholders} = useNamedChildPlaceholders({path, language});
+
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.resolveNodeTypes(path);
     const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
@@ -59,34 +62,48 @@ export const CreateContent = ({
         showOnNodeTypes
     });
 
-    const {loading, isVisible, flattenedNodeTypes, actions, missingNodes} = useMemo(() => {
+    const {loading, isVisible, flattenedNodeTypes, actions, namedActions, missingNodes} = useMemo(() => {
         const defaultProps = {
-            loading: Loading && (loadingTypes || res.loading || nodeInfo.loading),
+            loading: Loading && (loadingTypes || res.loading || nodeInfo.loading || loadingPlaceholders),
             isVisible: false,
             flattenedNodeTypes: [],
             actions: [],
+            namedActions: [],
             missingNodes: true
         };
         if (defaultProps.loading) {
             return defaultProps;
         }
 
+        // A named placeholder is creatable on its own, so an empty type tree only means "nothing
+        // to create" when there is no named child left either.
         const templateLimit = JahiaRenderedModulesUtil.getArea(path)?.limit;
-        if (!res || !res.node || (nodeTypesTree && nodeTypesTree.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
+        const noWildcardType = nodeTypesTree?.length === 0;
+        if (!res?.node || (noWildcardType && placeholders.length === 0) || childrenLimitReachedOrExceeded(nodeInfo?.node, templateLimit)) {
             return {...defaultProps, loading: false};
         }
 
         const flattenedNodeTypes = flattenNodeTypes(nodeTypesTree);
         const actions = transformNodeTypesToActions(flattenedNodeTypes, hasBypassChildrenLimit, nodeInfo.node?.name);
+        // Keyed by name, not by node type: two named children may share one type.
+        const namedActions = placeholders.map(placeholder => ({
+            key: `named:${placeholder.name}`,
+            actionKey: `named:${placeholder.name}`,
+            nodeTypesTree: placeholder.nodeTypes,
+            createdNodeName: placeholder.name,
+            buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
+            buttonLabelParams: {typeName: placeholder.name}
+        }));
 
         return {
             loading: false,
             isVisible: res.checksResult,
             flattenedNodeTypes,
             actions,
+            namedActions,
             missingNodes: false
         };
-    }, [path, Loading, hasBypassChildrenLimit, loadingTypes, res, nodeInfo, nodeTypesTree]);
+    }, [path, Loading, hasBypassChildrenLimit, loadingTypes, loadingPlaceholders, placeholders, res, nodeInfo, nodeTypesTree]);
 
     useEffect(() => {
         onVisibilityChanged?.(isVisible);
@@ -125,26 +142,21 @@ export const CreateContent = ({
         ...labelProps
     } : {};
 
-    // Add named child creation actions if named placeholders were found in rendering
-    if (JahiaRenderedModulesUtil.getModule(path)) {
-        JahiaRenderedModulesUtil.getModule(path).filter(ent => ent.path !== '*' && !ent.path?.startsWith('/')).forEach(ent => {
-            actions.push({
-                key: ent.nodeTypes[0],
-                actionKey: ent.nodeTypes[0],
-                nodeTypesTree: ent.nodeTypes,
-                createdNodeName: ent.path,
-                buttonLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.contentOfType',
-                buttonLabelParams: {typeName: ent.path}
-            });
-        });
-    }
+    // Past the direct-button limit transformNodeTypesToActions yields undefined, and the generic
+    // "all types" entry stands in for the list. Either way the named children are appended to a new
+    // array: the memoized one must not be mutated, or a re-render appends them twice.
+    const allActions = [
+        ...(actions || [{
+            key: 'allTypes',
+            nodeTypeIcon: otherProps.defaultIcon,
+            tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric',
+            tooltipParams: {parent: nodeInfo.node?.name}
+        }]),
+        ...namedActions
+    ];
 
-    return (actions || [{
-        key: 'allTypes',
-        nodeTypeIcon: otherProps.defaultIcon,
-        tooltipLabel: 'jcontent:label.contentEditor.CMMActions.createNewContent.tooltipGeneric',
-        tooltipParams: {parent: nodeInfo.node?.name}}]).map(result => (
-            <Render
+    return allActions.map(result => (
+        <Render
             key={result.key}
             enabled={!isDisabled && !res.node?.lockOwner}
             buttonIcon={result.nodeTypeIcon || otherProps.defaultIcon}

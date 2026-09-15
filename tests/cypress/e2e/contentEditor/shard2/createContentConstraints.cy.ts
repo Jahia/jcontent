@@ -8,6 +8,8 @@ describe('Create content constraints', () => {
     const twoMultipleChild1Path = `${twoMultiplePath}/childObject1-1`;
     const oneMultiplePath = `${homePath}/page-one-multiple/area-main/test-one-multiple`;
     const oneMultipleChild1Path = `${oneMultiplePath}/childObject1`;
+    const contentsPath = `/sites/${siteKey}/contents`;
+    const inFolderPath = `${contentsPath}/test-named-in-folder`;
 
     before(() => {
         createSite(siteKey, {
@@ -72,6 +74,12 @@ describe('Create content constraints', () => {
                     primaryNodeType: 'cent:oneMultipleWithLimitTwo'
                 }]
             }]
+        });
+
+        addNode({
+            name: 'test-named-in-folder',
+            parentPathOrId: contentsPath,
+            primaryNodeType: 'cent:twoChildObjectsOneMultiple'
         });
 
         addNode({
@@ -212,6 +220,40 @@ describe('Create content constraints', () => {
 
         // Verify both are still available
         contextMenu = jcontent.getTable().getRowByLabel('test-two-multiple-named').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+        contextMenu.shouldHaveItem('New childObject2');
+    });
+
+    it('resolves named create actions in a content folder, where no page is rendered', () => {
+        // A content folder has no view of its own, so nothing renders the node in the route. The
+        // named placeholders still come from the node's own rendering - see #2310.
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+
+        let contextMenu = jcontent.getTable().getRowByLabel('test-named-in-folder').contextMenu();
+        contextMenu.shouldHaveItem('New childObject1');
+        contextMenu.shouldHaveItem('New childObject2');
+        contextMenu.shouldHaveItem('New childObject3');
+
+        // A named child that exists is no longer offered, exactly as in page builder
+        contextMenu.select('New childObject1');
+        new ContentEditor().create();
+
+        contextMenu = jcontent.getTable().getRowByLabel('test-named-in-folder').contextMenu();
+        contextMenu.shouldNotHaveItem('New childObject1');
+        contextMenu.shouldHaveItem('New childObject2');
+        contextMenu.shouldHaveItem('New childObject3');
+
+        deleteNode(`${inFolderPath}/childObject1`);
+    });
+
+    it('resolves named create actions on a page after leaving a content folder', () => {
+        // The per-node rendering must not displace the capture taken for a page route.
+        JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const jcontent = JContent
+            .visit(siteKey, 'en', 'pages/home/page-two-multiple-named')
+            .switchToStructuredView();
+
+        const contextMenu = jcontent.getTable().getRowByLabel('test-two-multiple-named').contextMenu();
         contextMenu.shouldHaveItem('New childObject1');
         contextMenu.shouldHaveItem('New childObject2');
     });

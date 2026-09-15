@@ -375,8 +375,17 @@ export const getTitle = (t, item, prefix = 'jContent') => {
 export const JahiaRenderedModulesUtil = {
     jahiaAreas: {},
     jahiaModules: {},
-    setModules(modules) {
+    capturedPath: undefined,
+    setModules(modules, capturedPath) {
         this.jahiaModules = modules;
+        this.capturedPath = capturedPath;
+    },
+    // Whether the node sits inside the page whose rendering produced the current capture. Outside
+    // that subtree an absent entry means "never rendered", not "the view exposes nothing" - a
+    // content folder is never rendered, so its nodes are rendered one at a time instead.
+    hasRenderingFor: function (path) {
+        return Boolean(path && this.capturedPath) &&
+            (path === this.capturedPath || path.startsWith(this.capturedPath + '/'));
     },
     addModule: function (path, data) {
         this.jahiaModules[path] = data;
@@ -424,59 +433,78 @@ export const JahiaRenderedModulesUtil = {
 
         return placeholderNodeTypes;
     },
+    // The named children still creatable under a node, as [{name, nodeTypes}]. A placeholder is
+    // what the view emits for a child that does not exist yet, so an occupied name is absent by
+    // construction.
+    getNamedPlaceholders: function (path) {
+        return (this.getModule(path) || [])
+            .filter(entry => entry.placeholder && entry.path !== '*' && !entry.path?.startsWith('/'))
+            .map(entry => ({name: entry.path, nodeTypes: entry.nodeTypes}));
+    },
+    /**
+     * Collect the module information out of one rendering.
+     *
+     * @param {Document} dom the parsed rendering
+     * @param {string} rootPath the node that was rendered - a placeholder with no module ancestor
+     * belongs to it. A page render nests every placeholder under the module element of its parent,
+     * but a node rendered on its own has no such wrapper, so without this its placeholders would be
+     * dropped for want of a parent.
+     * @returns {object} placeholders and wildcard node types, keyed by parent path
+     */
+    parseModuleInfo: function (dom, rootPath) {
+        const placeholdersByParent = {};
+
+        dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
+            const modulePath = element.getAttribute('path');
+            const elemType = element.getAttribute('type');
+            const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
+            const limit = element.getAttribute('listlimit') ?? undefined;
+
+            if (modulePath !== '*' && modulePath !== rootPath && (elemType === 'area' || elemType === 'absoluteArea')) {
+                this.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
+            }
+
+            if (elemType === 'placeholder') {
+                const ancestor = element.parentElement?.closest('[jahiatype="module"]');
+                const ancestorPath = ancestor?.getAttribute('path') ?? rootPath;
+                if (ancestorPath) {
+                    if (!placeholdersByParent[ancestorPath]) {
+                        placeholdersByParent[ancestorPath] = [];
+                    }
+
+                    placeholdersByParent[ancestorPath].push({
+                        path: element.getAttribute('path'),
+                        nodeTypes: element.getAttribute('nodetypes')?.split(' '),
+                        placeholder: true
+                    });
+                }
+            } else if (!placeholdersByParent[modulePath]) {
+                placeholdersByParent[modulePath] = [];
+                if (nodeTypes) {
+                    placeholdersByParent[modulePath].push({
+                        path: '*',
+                        nodeTypes,
+                        placeholder: false
+                    });
+                }
+            }
+        });
+
+        return placeholdersByParent;
+    },
     extractModuleInfoFromRenderedPage: function (pagePath, language, template) {
         const renderMode = 'editframe';
         const encodedPath = pagePath.replaceAll(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${globalThis.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
         console.debug(`Fetching html for ${url} to extract module information.`);
 
-        fetch(url, {
+        return fetch(url, {
             method: 'get'
         }).then(resp => {
             return resp.text();
         }).then(resp => {
             const dom = new DOMParser().parseFromString(resp, 'text/html');
-
-            // Placeholder per module information extraction
-            const placeholdersByParent = {};
-
-            dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
-                const modulePath = element.getAttribute('path');
-                const elemType = element.getAttribute('type');
-                const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
-                const limit = element.getAttribute('listlimit') ?? undefined;
-
-                if (modulePath !== '*' && modulePath !== pagePath && (elemType === 'area' || elemType === 'absoluteArea')) {
-                    this.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
-                }
-
-                if (elemType === 'placeholder') {
-                    const ancestor = element.parentElement?.closest('[jahiatype="module"]');
-                    const ancestorPath = ancestor?.getAttribute('path');
-                    if (ancestorPath) {
-                        if (!placeholdersByParent[ancestorPath]) {
-                            placeholdersByParent[ancestorPath] = [];
-                        }
-
-                        placeholdersByParent[ancestorPath].push({
-                            path: element.getAttribute('path'),
-                            nodeTypes: element.getAttribute('nodetypes')?.split(' '),
-                            placeholder: true
-                        });
-                    }
-                } else if (!placeholdersByParent[modulePath]) {
-                    placeholdersByParent[modulePath] = [];
-                    if (nodeTypes) {
-                        placeholdersByParent[modulePath].push({
-                            path: '*',
-                            nodeTypes,
-                            placeholder: false
-                        });
-                    }
-                }
-            });
-
-            this.setModules(placeholdersByParent);
+            this.setModules(this.parseModuleInfo(dom, pagePath), pagePath);
         }).catch(e => {
             console.error('Failed to capture areas for page', e);
         });

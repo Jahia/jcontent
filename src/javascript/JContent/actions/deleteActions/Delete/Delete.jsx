@@ -159,7 +159,9 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             }
 
             triggerRefetchAll();
-            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
+            if (JahiaRenderedModulesUtil.hasRenderingFor(pagePath)) {
+                JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
+            }
 
             if (onDeleted) {
                 onDeleted();
@@ -168,7 +170,10 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             notificationContext.notify(t('jcontent:label.contentManager.deleteAction.error'), ['closeButton']);
             queryPaths.forEach(_path => client.cache.flushNodeEntryByPath(_path));
             triggerRefetchAll();
-            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
+            if (JahiaRenderedModulesUtil.hasRenderingFor(pagePath)) {
+                JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
+            }
+
             setOpen(false);
         });
     };

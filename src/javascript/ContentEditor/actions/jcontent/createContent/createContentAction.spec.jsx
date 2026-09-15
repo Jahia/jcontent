@@ -10,6 +10,8 @@ import {
     childrenLimitReachedOrExceeded
 } from './createContent.utils';
 
+import {useNamedChildPlaceholders} from './useNamedChildPlaceholders';
+
 import {createContentAction} from './createContentAction';
 
 jest.mock('react-redux', () => {
@@ -39,13 +41,18 @@ jest.mock('~/JContent/JContent.utils', () => {
         }
     };
 });
+jest.mock('./useNamedChildPlaceholders', () => {
+    return {useNamedChildPlaceholders: jest.fn()};
+});
 
 describe('CreateNewContent', () => {
     let CreateNewContent;
     let defaultProps;
     let loading;
     let nodeTypes;
+    let placeholders;
     beforeEach(() => {
+        placeholders = [];
         CreateNewContent = createContentAction.component;
         defaultProps = {
             render: jest.fn(() => {
@@ -78,6 +85,7 @@ describe('CreateNewContent', () => {
         });
         transformNodeTypesToActions.mockImplementation(l => l);
         childrenLimitReachedOrExceeded.mockImplementation(() => false);
+        useNamedChildPlaceholders.mockImplementation(() => ({loading: false, placeholders}));
     });
 
     it('should not render CreateNewContent when loading', () => {
@@ -123,5 +131,47 @@ describe('CreateNewContent', () => {
         const renderingComponent = cmp.find('mockConstructor').at(0).shallow();
         console.log(renderingComponent.debug());
         expect(cmp.props().isAllTypes).toBe(true);
+    });
+    it('should add one action per named placeholder', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        loading = false;
+        nodeTypes = ['nodetype1'];
+        placeholders = [
+            {name: 'childObject2', nodeTypes: ['cent:childObject2']},
+            {name: 'childobject3', nodeTypes: ['cent:childObject2']}
+        ];
+        const cmp = shallow(<CreateNewContent {...defaultProps}/>);
+        expect(cmp.length).toBe(3);
+        expect(cmp.at(1).props().createdNodeName).toBe('childObject2');
+        expect(cmp.at(2).props().createdNodeName).toBe('childobject3');
+    });
+    it('should key named actions by name so two children of one type do not collide', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        loading = false;
+        nodeTypes = [];
+        placeholders = [
+            {name: 'childObject2', nodeTypes: ['cent:childObject2']},
+            {name: 'childobject3', nodeTypes: ['cent:childObject2']}
+        ];
+        const cmp = shallow(<CreateNewContent {...defaultProps}/>);
+        const keys = cmp.map(node => node.key());
+        expect(new Set(keys).size).toBe(keys.length);
+    });
+    it('should stay visible when only named placeholders are creatable', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        loading = false;
+        nodeTypes = [];
+        placeholders = [{name: 'childObject2', nodeTypes: ['cent:childObject2']}];
+        const cmp = shallow(<CreateNewContent {...defaultProps}/>);
+        expect(cmp.length).toBe(1);
+        expect(cmp.at(0).props().createdNodeName).toBe('childObject2');
+    });
+    it('should render nothing when neither a type nor a named placeholder is creatable', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        loading = false;
+        nodeTypes = [];
+        placeholders = [];
+        const cmp = shallow(<CreateNewContent {...defaultProps}/>);
+        expect(cmp.props().isVisible).toBe(false);
     });
 });

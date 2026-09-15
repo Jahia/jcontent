@@ -39,7 +39,7 @@ export const useNamedChildPlaceholders = ({path, language}) => {
     }
 
     const dom = new DOMParser().parseFromString(output, 'text/html');
-    const modules = JahiaRenderedModulesUtil.parseModuleInfo(dom, path);
+    const modules = JahiaRenderedModulesUtil.parseModuleInfo(dom, path, true);
 
     return {
         loading: false,

@@ -258,9 +258,10 @@ describe('canEditInPageBuilder', () => {
 
 describe('JahiaRenderedModulesUtil', () => {
     const nodePath = '/sites/mySite/contents/someObject';
-    const parse = html => JahiaRenderedModulesUtil.parseModuleInfo(
+    const parse = (html, standalone = true) => JahiaRenderedModulesUtil.parseModuleInfo(
         new DOMParser().parseFromString(html, 'text/html'),
-        nodePath
+        nodePath,
+        standalone
     );
 
     // The util is a module-level singleton, so a capture outlives the test that took it.
@@ -289,6 +290,16 @@ describe('JahiaRenderedModulesUtil', () => {
                 <div jahiatype="module" type="placeholder" path="*"></div>
             `);
             expect(modules[nodePath].map(entry => entry.path)).toEqual(['childObject1', 'childObject2', '*']);
+        });
+
+        it('should drop a placeholder with no module ancestor out of a page render', () => {
+            // The page route renders a whole page, whose root is a mainmodule this selector never
+            // matches. A parentless placeholder there is not the page's own, and adopting it would
+            // give the page's create action named children that belong to something else.
+            const modules = parse(`
+                <div jahiatype="module" type="placeholder" path="childObject1" nodetypes="cent:childObject1"></div>
+            `, false);
+            expect(modules[nodePath]).toBeUndefined();
         });
 
         it('should not attribute a placeholder to a preceding sibling module', () => {

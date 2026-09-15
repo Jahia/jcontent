@@ -445,13 +445,16 @@ export const JahiaRenderedModulesUtil = {
      * Collect the module information out of one rendering.
      *
      * @param {Document} dom the parsed rendering
-     * @param {string} rootPath the node that was rendered - a placeholder with no module ancestor
-     * belongs to it. A page render nests every placeholder under the module element of its parent,
-     * but a node rendered on its own has no such wrapper, so without this its placeholders would be
-     * dropped for want of a parent.
+     * @param {string} rootPath the node that was rendered
+     * @param {boolean} standalone whether that node was rendered on its own, which is how a node
+     * outside a page is read. It then carries no module wrapper, so a placeholder with no module
+     * ancestor is its own. A page render instead nests every placeholder under the module element
+     * of its parent, and its root element is a mainmodule, which this selector never matches - so
+     * a parentless placeholder there belongs to no node this capture models, and the page route has
+     * always dropped it. Adopting it would hand the page its own named create actions.
      * @returns {object} placeholders and wildcard node types, keyed by parent path
      */
-    parseModuleInfo: function (dom, rootPath) {
+    parseModuleInfo: function (dom, rootPath, standalone = false) {
         const placeholdersByParent = {};
 
         dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
@@ -466,7 +469,7 @@ export const JahiaRenderedModulesUtil = {
 
             if (elemType === 'placeholder') {
                 const ancestor = element.parentElement?.closest('[jahiatype="module"]');
-                const ancestorPath = ancestor?.getAttribute('path') ?? rootPath;
+                const ancestorPath = ancestor?.getAttribute('path') ?? (standalone ? rootPath : undefined);
                 if (ancestorPath) {
                     if (!placeholdersByParent[ancestorPath]) {
                         placeholdersByParent[ancestorPath] = [];

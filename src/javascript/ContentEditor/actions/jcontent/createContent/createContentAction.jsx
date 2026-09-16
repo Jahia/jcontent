@@ -48,7 +48,7 @@ export const CreateContent = ({
             getProperties: ['limit']
         }
     );
-    const {loading: loadingPlaceholders, placeholders} = useNamedChildPlaceholders({path, language});
+    const {loading: loadingPlaceholders, placeholders} = useNamedChildPlaceholders({path, language, skip: res.loading || !res.checksResult});
 
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
     let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.resolveNodeTypes(path);

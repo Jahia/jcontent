@@ -21,7 +21,7 @@ export const useNamedChildPlaceholders = ({path, language}) => {
 
     const {data, loading} = useQuery(getNodeEditRendering, {
         variables: {path, language},
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'no-cache',
         skip: fromRoute || !path || !language
     });
 

@@ -1,4 +1,4 @@
-import {addNode, createSite, deleteSite, deleteNode, enableModule} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, deleteNode} from '@jahia/cypress';
 import {TagManager} from '../../page-object';
 
 describe('Tag Manager', () => {
@@ -58,7 +58,6 @@ describe('Tag Manager', () => {
             serverName: 'localhost',
             locale: 'en'
         });
-        enableModule('tags', siteKey);
     });
 
     after(function () {

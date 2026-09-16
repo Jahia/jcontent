@@ -12,10 +12,13 @@ const TagManagerRoute = () => {
     return <TagManager key={siteKey}/>;
 };
 
+export const TAG_MANAGER_ROUTE_KEY = 'jctagsmanager';
+const LEGACY_TAGS_MANAGER_ROUTE_KEY = 'tagsmanager';
+
 export const register = registry => {
     const version = globalThis.contextJsParameters?.config?.graphqlDxmProviderVersion;
     if (version && satisfies(normalize(version), REQUIRED_GQL_DXM_VERSION)) {
-        registry.add('adminRoute', 'jctagsmanager', {
+        registry.add('adminRoute', TAG_MANAGER_ROUTE_KEY, {
             targets: ['jcontent'],
             label: 'jcontent:label.contentManager.navigation.manage.tags.title',
             icon: <Tag/>,
@@ -24,4 +27,19 @@ export const register = registry => {
             render: () => <TagManagerRoute/>
         });
     }
+};
+
+// The legacy tags module registers its own admin route from a plain script, which app-shell
+// evaluates before any module init runs; a late jahiaApp-init callback is therefore guaranteed
+// to see it. Only hide it when the new Tag Manager is actually registered, so sites running an
+// older graphql-dxm-provider keep the legacy screen.
+export const registerLegacyTagsManagerRemoval = registry => {
+    registry.add('callback', 'hideLegacyTagsManagerRoute', {
+        targets: ['jahiaApp-init:9999'],
+        callback: () => {
+            if (registry.get('adminRoute', TAG_MANAGER_ROUTE_KEY)) {
+                registry.remove('adminRoute', LEGACY_TAGS_MANAGER_ROUTE_KEY);
+            }
+        }
+    });
 };

@@ -1,5 +1,5 @@
 import {addNode, createSite, deleteSite, deleteNode} from '@jahia/cypress';
-import {TagManager} from '../../page-object';
+import {TagManager} from '../../../page-object';
 
 describe('Tag Manager', () => {
     const siteKey = 'tagManagerTest';

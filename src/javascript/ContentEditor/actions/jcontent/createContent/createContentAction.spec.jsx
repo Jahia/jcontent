@@ -166,6 +166,22 @@ describe('CreateNewContent', () => {
         expect(cmp.length).toBe(1);
         expect(cmp.at(0).props().createdNodeName).toBe('childObject2');
     });
+    it('should not render the node until the action checks pass', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        loading = false;
+        nodeTypes = ['nodetype1'];
+        useNodeChecks.mockImplementation(() => ({node: {uuid: 'xxx'}, checksResult: false, loading: false}));
+        shallow(<CreateNewContent {...defaultProps}/>);
+        expect(useNamedChildPlaceholders).toHaveBeenCalledWith(expect.objectContaining({skip: true}));
+    });
+    it('should render the node once the action checks pass', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        loading = false;
+        nodeTypes = ['nodetype1'];
+        useNodeChecks.mockImplementation(() => ({node: {uuid: 'xxx'}, checksResult: true, loading: false}));
+        shallow(<CreateNewContent {...defaultProps}/>);
+        expect(useNamedChildPlaceholders).toHaveBeenCalledWith(expect.objectContaining({skip: false}));
+    });
     it('should render nothing when neither a type nor a named placeholder is creatable', () => {
         defaultProps.path = '/sites/digitall/contents/someObject';
         loading = false;

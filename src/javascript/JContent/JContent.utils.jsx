@@ -372,6 +372,20 @@ export const getTitle = (t, item, prefix = 'jContent') => {
     return item.label ? `${prefix} - ${t(item.label)}` : `${prefix} - ${item.key}`;
 };
 
+/**
+ * The named children among a parent's module entries, as [{name, nodeTypes}].
+ *
+ * An entry without node types is dropped: the rendering omits the attribute when neither the view
+ * nor the definition constrains the placeholder, and the editor has nothing to create from.
+ *
+ * @param {Array} entries the module entries collected for one parent
+ * @returns {{name: string, nodeTypes: string[]}[]} the creatable named children
+ */
+export const toNamedPlaceholders = entries => (entries || [])
+    .filter(entry => entry.placeholder && entry.path !== '*' && !entry.path?.startsWith('/'))
+    .filter(entry => entry.nodeTypes?.length > 0)
+    .map(entry => ({name: entry.path, nodeTypes: entry.nodeTypes}));
+
 export const JahiaRenderedModulesUtil = {
     jahiaAreas: {},
     jahiaModules: {},
@@ -437,9 +451,7 @@ export const JahiaRenderedModulesUtil = {
     // what the view emits for a child that does not exist yet, so an occupied name is absent by
     // construction.
     getNamedPlaceholders: function (path) {
-        return (this.getModule(path) || [])
-            .filter(entry => entry.placeholder && entry.path !== '*' && !entry.path?.startsWith('/'))
-            .map(entry => ({name: entry.path, nodeTypes: entry.nodeTypes}));
+        return toNamedPlaceholders(this.getModule(path));
     },
     /**
      * Collect the module information out of one rendering.

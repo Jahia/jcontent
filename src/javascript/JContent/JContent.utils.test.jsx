@@ -4,6 +4,7 @@ import {
     getNewCounter,
     isDescendant,
     JahiaRenderedModulesUtil,
+    toNamedPlaceholders,
     removeFileExtension,
     resolveUrlForLiveOrPreview
 } from './JContent.utils';
@@ -347,6 +348,21 @@ describe('JahiaRenderedModulesUtil', () => {
 
         it('should return nothing for a node that was never captured', () => {
             expect(JahiaRenderedModulesUtil.getNamedPlaceholders(nodePath)).toEqual([]);
+        });
+    });
+
+    describe('toNamedPlaceholders', () => {
+        it('should drop a placeholder the rendering left without node types', () => {
+            // ModuleTag omits the nodetypes attribute when neither the view nor the definition
+            // constrains the placeholder, and the editor has nothing to create from.
+            expect(toNamedPlaceholders([
+                {path: 'unconstrained', nodeTypes: undefined, placeholder: true},
+                {path: 'childObject2', nodeTypes: ['cent:childObject2'], placeholder: true}
+            ])).toEqual([{name: 'childObject2', nodeTypes: ['cent:childObject2']}]);
+        });
+
+        it('should return nothing when there are no entries', () => {
+            expect(toNamedPlaceholders(undefined)).toEqual([]);
         });
     });
 });

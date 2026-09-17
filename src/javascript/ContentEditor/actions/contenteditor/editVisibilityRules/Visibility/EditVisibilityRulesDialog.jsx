@@ -98,6 +98,7 @@ export const EditVisibilityRulesDialog = ({
             <ContentEditorContextProvider useFormDefinition={useEditFormDefinition} context={contentEditorContext}>
                 <Dialog
                     fullWidth
+                    disableEnforceFocus
                     data-sel-role="edit-visibility-rules-dialog"
                     className={clsx(classes.dialog, classes.dialogOverflow)}
                     open={isOpen}

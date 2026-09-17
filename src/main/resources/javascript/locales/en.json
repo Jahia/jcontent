@@ -1031,13 +1031,15 @@
         "dateTimePicker": {
           "displayValue": "Date time",
           "description": "Select date and time from a calendar",
-          "today": "Today"
+          "today": "Today",
+          "nextMonth": "Next month",
+          "previousMonth": "Previous month",
+          "timezone": "Timezone"
         },
         "datePicker": {
           "displayValue": "Date",
           "description": "Select a date from a calendar"
         },
-        "localTimeHint": "Shown in your local time zone ({{zone}})",
         "text": {
           "displayValue": "Text",
           "description": "Simple text input"
@@ -1102,6 +1104,8 @@
           "startEndTimeCondition": "The content will be visible starting from {{startTime}}, until {{endTime}}",
           "startTimeCondition": "The content will be visible starting from {{startTime}}",
           "endTimeCondition": "The content will be visible until {{endTime}}",
+          "startTime": "Start time",
+          "endTime": "End time",
           "preview": "Currently in preview",
           "live": "Currently in live",
           "preview_live": "Currently in preview",

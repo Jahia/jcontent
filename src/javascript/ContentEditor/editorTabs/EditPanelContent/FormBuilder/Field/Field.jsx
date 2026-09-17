@@ -236,7 +236,8 @@ export const Field = ({inputContext, idInput, selectorType, field}) => {
     }, [field.name, registeredOnChange, setFieldValue, setFieldTouched]);
 
     const onBlur = useCallback(() => {
-        setFieldTouched(field.name);
+        // Deferred so a value emitted in the same tick as the blur is validated (formik#2059)
+        setTimeout(() => setFieldTouched(field.name));
     }, [field.name, setFieldTouched]);
 
     const registeredOnChangeRef = useRef(registeredOnChange);

@@ -1,6 +1,7 @@
 import {getComponentByAttr} from '@jahia/cypress';
 import {Field} from './field';
 
+// Moonstone renders a date input plus, on datetime fields, a time input (the one with inputmode="numeric")
 export class DateField extends Field {
     addNewValue(newValue: string, force?: boolean): this
     addNewValue(date: Date, force?: boolean): this
@@ -10,11 +11,14 @@ export class DateField extends Field {
             newValueOrDate instanceof Date ? DateField.toPickerDisplayValue(newValueOrDate) : newValueOrDate;
         // `force` reaches clear() as well as type(): on a form long enough to make the section
         // header sticky, this input ends up position: fixed underneath it, and no scroll can
-        // uncover it — so both actions need it, not just the typing.
-        this.get().find('input[type="text"]')
-            .clear({force: force})
-            .type(newValue, {force: force})
-            .should('have.value', newValue);
+        // uncover it -- so both actions need it, not just the typing.
+        const [date, time] = DateField.splitDateTime(newValue);
+        this.getDateInput().clear({force: force}).type(date, {force: force}).should('have.value', date);
+        if (time) {
+            // Focusing the time input commits the typed date; blurring it commits the typed time
+            this.getTimeInput().clear({force: force}).type(time, {force: force}).should('have.value', time).blur();
+        }
+
         return this;
     }
 
@@ -22,71 +26,73 @@ export class DateField extends Field {
         return getComponentByAttr(DateField, 'data-sel-content-editor-field', fieldName);
     }
 
-    // The value this field's masked input displays for `date`, formatted to match what the mask
-    // shows back (MM/DD/YYYY HH:mm, matching the 'en-US' navigator.language the Cypress browser
-    // reports).
+    // Formats `date` as the picker displays it (MM/DD/YYYY HH:mm for the Cypress browser's en-US locale)
     private static toPickerDisplayValue(date: Date): string {
         const pad = (n: number) => (n < 10 ? '0' : '') + n;
         return `${pad(date.getMonth() + 1)}/${pad(date.getDate())}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
-    // Clears the field WITHOUT typing a replacement -- e.g. to verify clearing an existing date
-    // and saving actually removes it. Deliberately does not assert against a specific "empty"
-    // value here: the masked input resets to its own placeholder string (e.g.
-    // "__/__/____ __:__"), not a bare '', and that placeholder's exact shape depends on the
-    // locale-derived date format -- see checkEmpty() for a format-agnostic way to verify it.
-    clearValue() {
-        this.get().find('input[type="text"]').clear();
+    // 'MM/DD/YYYY HH:mm' -> ['MM/DD/YYYY', 'HH:mm']; 'MM/DD/YYYY' -> ['MM/DD/YYYY', undefined]
+    private static splitDateTime(value: string): [string, string | undefined] {
+        const [date, time] = value.split(' ');
+        return [date, time];
+    }
+
+    // A datetime field has two text inputs; blur whichever one currently holds the focus.
+    blurTextField() {
+        this.get().then($field => {
+            const $focused = $field.find('input:focus');
+            if ($focused.length > 0) {
+                cy.wrap($focused).blur();
+            }
+        });
         return this;
     }
 
-    // Asserts the field holds no actual date/time -- i.e. its displayed value contains no digits
-    // at all, only the mask's own placeholder/separator characters. Format-agnostic: robust
-    // regardless of which locale-derived mask shape (date-only vs datetime, MM/DD vs DD/MM) is
-    // in effect, unlike asserting an exact placeholder string.
+    getDateInput() {
+        return this.get().find('input:not([inputmode="numeric"])');
+    }
+
+    getTimeInput() {
+        return this.get().find('input[inputmode="numeric"]');
+    }
+
+    // Clears every sub-input without typing a replacement; the commit to form state happens on blur
+    clearValue() {
+        this.get().find('input').each($input => cy.wrap($input).clear());
+        return this;
+    }
+
+    // Asserts the field holds no actual date/time: no sub-input contains any digit
     checkEmpty() {
-        this.get().find('input').invoke('val').should('match', /^\D*$/);
+        this.get().find('input').each($input => cy.wrap($input).invoke('val').should('match', /^\D*$/));
         return this;
     }
 
     public open() {
-        this.get().parent().find('button').click();
-        cy.get('.DayPicker').should('be.visible');
+        this.getDateInput().click();
+        cy.get('[data-testid="calendar"]').should('be.visible');
         return this;
     }
 
     public close() {
-        cy.get('.DayPicker').parent().parent().parent().parent().click({waitForAnimations: true, multiple: true});
-        cy.get('.DayPicker').should('not.exist');
+        // Escape in the date input closes the popover without selecting anything
+        this.getDateInput().type('{esc}');
+        cy.get('[data-testid="calendar"]').should('not.exist');
     }
 
     pickTodayDate() {
         this.open();
-        cy.get('.DayPicker-Day--today').click();
-        this.close();
+        cy.get('[data-testid="calendar"]').find('[data-today] button').click();
+        // Selecting a day closes the popover on its own
+        cy.get('[data-testid="calendar"]').should('not.exist');
     }
 
-    select({month = null, year = null, date = null, time = null}) {
-        this.open();
-        if (month) {
-            cy.get('.DayPicker').find('#select-month').click();
-            cy.get('#menu-month').find(`[data-value=${month}]`).click();
-        }
-
-        if (year) {
-            cy.get('.DayPicker').find('#select-year').click();
-            cy.get('#menu-year').find(`[data-value=${year}]`).click();
-        }
-
-        if (date) {
-            cy.get('.DayPicker').find('.DayPicker-Body').contains(date).click();
-        }
-
+    select({time}: {time?: string}) {
         if (time) {
-            cy.get('.TimePicker').contains(time).click();
+            // Blur commits the typed time to the field
+            this.getTimeInput().clear().type(time).blur();
         }
-
-        this.close();
     }
 
     getTodayDate(): string {
@@ -103,6 +109,10 @@ export class DateField extends Field {
     }
 
     checkValue(expectedValue: string) {
-        this.get().find('input').should('have.value', expectedValue);
+        const [date, time] = DateField.splitDateTime(expectedValue);
+        this.getDateInput().should('have.value', date);
+        if (time) {
+            this.getTimeInput().should('have.value', time);
+        }
     }
 }

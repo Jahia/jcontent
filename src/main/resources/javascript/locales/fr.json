@@ -1015,13 +1015,15 @@
         "dateTimePicker": {
           "displayValue": "Date & heure",
           "description": "Sélectionner une date et un horaire dans un calendrier",
-          "today": "Aujourd'hui"
+          "today": "Aujourd'hui",
+          "nextMonth": "Mois suivant",
+          "previousMonth": "Mois précédent",
+          "timezone": "Fuseau horaire"
         },
         "datePicker": {
           "displayValue": "Date",
           "description": "Sélectionner une date dans un calendrier"
         },
-        "localTimeHint": "Affiché dans votre fuseau horaire local ({{zone}})",
         "text": {
           "displayValue": "Text",
           "description": "Champ texte"

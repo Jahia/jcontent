@@ -1,6 +1,0 @@
-// DateTimeInput sizes itself from its parent and wraps its time field underneath when cramped.
-// Give it the room for both fields so it keeps them on one line without truncating the date.
-.input.input {
-    flex-wrap: nowrap;
-    min-width: 250px;
-}

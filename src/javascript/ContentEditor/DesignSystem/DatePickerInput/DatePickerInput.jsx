@@ -1,56 +1,76 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DateTimeInput} from '@jahia/moonstone';
-import {dayjs} from 'date-formatter';
+import {dayjs, toDate, toUtcIsoString} from 'date-formatter';
 import {useTranslation} from 'react-i18next';
 
-import styles from './DatePickerInput.scss';
-
+// Moonstone's modes; only 'zonedDateTime' renders the timezone selector
 const variantToType = {
     date: 'date',
-    datetime: 'dateTime'
+    datetime: 'dateTime',
+    zonedDatetime: 'zonedDateTime'
 };
 
 const dayjsToLdmlToken = {YYYY: 'yyyy', YY: 'yy', DD: 'dd', D: 'd'};
 
-// 'DD/MM/YYYY HH:mm' -> 'dd/MM/yyyy', the time being rendered by its own sub-input
+const timezoneSelectorProps = {'data-sel-role': 'date-field-timezone-selector'};
+
+// 'DD/MM/YYYY HH:mm' -> 'dd/MM/yyyy'
 const toLdmlDateFormat = format => (format ?
     String(format).replace(/[Hhms:]/g, '').trim().replaceAll(/YYYY|YY|DD|D/g, token => dayjsToLdmlToken[token]) :
     undefined);
 
-const getBoundary = (disabledDays, boundary) => {
-    const date = Array.isArray(disabledDays) && disabledDays.find(range => range?.[boundary])?.[boundary];
-    return date ? dayjs(date).format('YYYY-MM-DD') : undefined;
+// A zoned value is a Temporal.Instant; the other modes emit a local wall-clock date / date-time
+const toConsumerDate = (value, type) => {
+    if (!value) {
+        return null;
+    }
+
+    return type === 'zonedDateTime' ?
+        new Date(Number(value.epochMilliseconds)) :
+        toDate(value.toString());
 };
 
-// Unlike `new Date()`, dayjs reads a date-only ISO string as local time rather than UTC midnight
-const toDate = value => (value ? dayjs(value.toString()).toDate() : null);
+// Moonstone takes ISO strings, never a Date: an instant for the zoned mode, a local wall-clock otherwise
+const toMoonstoneValue = (initialValue, type) => {
+    if (!initialValue) {
+        return null;
+    }
+
+    if (type === 'zonedDateTime') {
+        return toUtcIsoString(initialValue);
+    }
+
+    return dayjs(initialValue).format(type === 'dateTime' ? 'YYYY-MM-DDTHH:mm' : 'YYYY-MM-DD');
+};
 
 export const DatePickerInput = ({
     variant = 'date',
     lang,
-    dayPickerProps = {},
+    minDate,
+    maxDate,
     onChange = () => {},
     onBlur = () => {},
     initialValue = null,
     readOnly = false,
     displayDateFormat = null,
-    displayDateMask,
     ...props
 }) => {
     const {t} = useTranslation('jcontent');
     const type = variantToType[variant];
     const dateFormat = toLdmlDateFormat(displayDateFormat);
-    const minDate = getBoundary(dayPickerProps.disabledDays, 'before');
-    const maxDate = getBoundary(dayPickerProps.disabledDays, 'after');
 
-    const value = initialValue ?
-        dayjs(initialValue).format(type === 'dateTime' ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD') :
-        null;
+    const i18n = React.useMemo(() => ({
+        todayButton: t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.today'),
+        nextMonth: t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.nextMonth'),
+        previousMonth: t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.previousMonth'),
+        timezone: t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.timezone')
+    }), [t]);
+
+    const value = toMoonstoneValue(initialValue, type);
 
     return (
         <DateTimeInput
-            className={styles.input}
             type={type}
             size="big"
             locale={lang}
@@ -60,8 +80,9 @@ export const DatePickerInput = ({
             value={value}
             isReadOnly={readOnly}
             data-sel-readonly={readOnly}
-            i18n={{todayButton: t('jcontent:label.contentEditor.selectorTypes.dateTimePicker.today')}}
-            onChange={(event, newValue) => onChange(toDate(newValue))}
+            timezoneSelectorProps={timezoneSelectorProps}
+            i18n={i18n}
+            onChange={(event, newValue) => onChange(toConsumerDate(newValue, type))}
             onBlur={onBlur}
             {...props}
         />
@@ -69,19 +90,16 @@ export const DatePickerInput = ({
 };
 
 DatePickerInput.propTypes = {
-    dayPickerProps: PropTypes.object,
+    minDate: PropTypes.string,
+    maxDate: PropTypes.string,
     lang: PropTypes.oneOf(['fr', 'en', 'de']).isRequired,
-    variant: PropTypes.oneOf(['date', 'datetime']),
+    variant: PropTypes.oneOf(['date', 'datetime', 'zonedDatetime']),
     initialValue: PropTypes.object,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     // eslint-disable-next-line react/boolean-prop-naming
     readOnly: PropTypes.bool,
-    displayDateFormat: PropTypes.string,
-    /**
-     * @deprecated DateTimeInput handles its own input masking; this prop is ignored.
-     */
-    displayDateMask: PropTypes.string
+    displayDateFormat: PropTypes.string
 };
 
 DatePickerInput.displayName = 'DatePickerInput';

@@ -1983,6 +1983,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@daypicker/react@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "@daypicker/react@npm:10.0.1"
+  dependencies:
+    react-day-picker: "npm:10.0.1"
+  peerDependencies:
+    "@types/react": ">=16.8.0"
+    react: ">=16.8.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/0a31153456a41c83b7af4eda0a050a0e92777871187e14b3be2000c8bf055dc4eb2e83a5a7def1ce055a79f15a521774ddfd56b527309468823d37ff66504dec
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:0.5.7, @discoveryjs/json-ext@npm:^0.5.3":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -2484,55 +2499,55 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.7.5":
-  version: 1.7.5
-  resolution: "@floating-ui/core@npm:1.7.5"
+"@floating-ui/core@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@floating-ui/core@npm:1.8.0"
   dependencies:
-    "@floating-ui/utils": "npm:^0.2.11"
-  checksum: 10c0/f9c52205e198b231d63a387b09c659aab08c46a1899e0b0bbe147b8b4f048b546f15ba17cb5d2a471da9534f1883d979425e13e5c4ceee67be63e4b0abd4db5d
+    "@floating-ui/utils": "npm:^0.2.12"
+  checksum: 10c0/cece958f6fab0f8cd7740cd57988c4f8bc5356dca39dd4c093433d44c91952c3a02c7a54d93d7ed6c078b6544d531a29f66621d2839c8bfbb4467dca6aed7df0
   languageName: node
   linkType: hard
 
-"@floating-ui/dom@npm:^1.7.6":
-  version: 1.7.6
-  resolution: "@floating-ui/dom@npm:1.7.6"
+"@floating-ui/dom@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@floating-ui/dom@npm:1.8.0"
   dependencies:
-    "@floating-ui/core": "npm:^1.7.5"
-    "@floating-ui/utils": "npm:^0.2.11"
-  checksum: 10c0/5c098e0d7b58c9bc769f276cca1766994c2c9c70c92d091a61bba8b3e9be53c011e0a79a8457fc2fb2f3d91697a26eb52e0a4962ef936dc963b45f58613c212f
+    "@floating-ui/core": "npm:^1.8.0"
+    "@floating-ui/utils": "npm:^0.2.12"
+  checksum: 10c0/c32b2de7a596b69cfffa909c7028825e14f6319be1b45da529f8943c89fe16b75a49c214e800c87ded3f172353d3b99163d50072f11410488e756961b7b629cc
   languageName: node
   linkType: hard
 
-"@floating-ui/react-dom@npm:^2.1.8":
-  version: 2.1.8
-  resolution: "@floating-ui/react-dom@npm:2.1.8"
+"@floating-ui/react-dom@npm:^2.1.9":
+  version: 2.1.9
+  resolution: "@floating-ui/react-dom@npm:2.1.9"
   dependencies:
-    "@floating-ui/dom": "npm:^1.7.6"
+    "@floating-ui/dom": "npm:^1.8.0"
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/26260ca4bb23b57c73b824062505abf977a008ce6e0463bdacca74f7e49853c4cd1d2bbf1a77c6caa17fa37dfffda2c6c4cd07a8737ebd7474aaff7818401d75
+  checksum: 10c0/9fa9851069738cb9591a1ab2da16e257f193eae5fd2d6d48ad0b1e73f3c049929b6805c5ad43d4af3c1da63c60b215b0ee4651a1fe5caeb80e66d9d423744348
   languageName: node
   linkType: hard
 
-"@floating-ui/react@npm:^0.27.19":
-  version: 0.27.19
-  resolution: "@floating-ui/react@npm:0.27.19"
+"@floating-ui/react@npm:^0.27.20":
+  version: 0.27.20
+  resolution: "@floating-ui/react@npm:0.27.20"
   dependencies:
-    "@floating-ui/react-dom": "npm:^2.1.8"
-    "@floating-ui/utils": "npm:^0.2.11"
+    "@floating-ui/react-dom": "npm:^2.1.9"
+    "@floating-ui/utils": "npm:^0.2.12"
     tabbable: "npm:^6.0.0"
   peerDependencies:
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 10c0/2a2cdfd3e67e0606833b63f922ad2a9037974f22b944e1cb8c0991b4c40450f8413d69745c0bbf4646e5ba283747f60d2fdc9a8d289b68b24448e59d81a3a96d
+  checksum: 10c0/5ebeb4c877128e9a274692849ceb2103b370441626e97ade38c25db5d94371dd7274292eda05208cc5d1c92c594a59595a1909799c2ac8ff44f9e651a4fe55b3
   languageName: node
   linkType: hard
 
-"@floating-ui/utils@npm:^0.2.11":
-  version: 0.2.11
-  resolution: "@floating-ui/utils@npm:0.2.11"
-  checksum: 10c0/f4bcea1559bdbb721ecc8e8ead423ac58d6a5b6e70b602cf0810ba6ad4ed1c77211b207faa88b278a9042f0c743133de08a203ed6741c1b6443423332884d5b3
+"@floating-ui/utils@npm:^0.2.12":
+  version: 0.2.12
+  resolution: "@floating-ui/utils@npm:0.2.12"
+  checksum: 10c0/bb910b90d56991a62011afaf5f8e0c4b7fb6dab69403f4dd17fbd6eb25560b28d533dff9791f270b4f459852e9006a1077b5d73cbedb5e34d9424afc6a828314
   languageName: node
   linkType: hard
 
@@ -2779,7 +2794,7 @@ __metadata:
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
-    "@jahia/moonstone": "npm:^2.20.3"
+    "@jahia/moonstone": "npm:^2.21.0"
     "@jahia/react-material": "npm:^3.0.5"
     "@jahia/stylelint-config": "npm:^0.0.3"
     "@jahia/test-framework": "npm:^1.3.1"
@@ -2845,7 +2860,6 @@ __metadata:
     query-string: "npm:5"
     react: "npm:^18.3.1"
     react-colorful: "npm:^5.6.1"
-    react-day-picker: "npm:^7.4.0"
     react-dnd: "npm:^16.0.1"
     react-dnd-cjs: "npm:^9.5.1"
     react-dnd-html5-backend: "npm:^16.0.1"
@@ -2889,22 +2903,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@1416.tgz":
-  version: 2.20.3
-  resolution: "@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@1416.tgz"
+"@jahia/moonstone@npm:^2.21.0":
+  version: 2.21.0
+  resolution: "@jahia/moonstone@npm:2.21.0"
   dependencies:
-    "@floating-ui/react": "npm:^0.27.19"
+    "@daypicker/react": "npm:^10.0.1"
+    "@floating-ui/react": "npm:^0.27.20"
     "@tanstack/react-table": "npm:^8.21.3"
     clsx: "npm:^2.1.1"
     re-resizable: "npm:^6.11.2"
-    react-day-picker: "npm:^9.14.0"
-    temporal-polyfill: "npm:^0.3.2"
+    temporal-polyfill: "npm:^1.0.4"
     to-px: "npm:^1.1.0"
   peerDependencies:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/461ce51a7de28fa2c2770eba1158a4102acc4c95ed22642c8529d388591c3148de5e2a1576c1779c1811325f61494f22ba5f95f3ab89adb3c59ad50307f4c42c
+  checksum: 10c0/298690d74d90dab8abedd30fcde1cc0726e0abb266731aa5305b9fd51d63c4661c7ec713998b25ee6cd43222705c401c2b6613829f7b59fd634145d435b00bcf
   languageName: node
   linkType: hard
 
@@ -5623,13 +5637,6 @@ __metadata:
     postcss: ">=7.0.0"
     postcss-syntax: ">=0.36.2"
   checksum: 10c0/6c6fe3a1af4a0a3823686bb5b8d9cbc9f4b52abdf62269338de1bcf906aae29e3a231740febcb2f9cba9d31da0d4f48086284ed6b4c43655273a7a60ebf76e80
-  languageName: node
-  linkType: hard
-
-"@tabby_ai/hijri-converter@npm:1.0.5":
-  version: 1.0.5
-  resolution: "@tabby_ai/hijri-converter@npm:1.0.5"
-  checksum: 10c0/40044f463ff57855315c8925461942311460bb64e16706480dde98142f40bcd8e9925bb6fee401fd209397b5bb25368d1529c85b1e6c7e6216ea2085f6aaf61e
   languageName: node
   linkType: hard
 
@@ -10009,13 +10016,6 @@ __metadata:
     es-errors: "npm:^1.3.0"
     is-data-view: "npm:^1.0.1"
   checksum: 10c0/fa7aa40078025b7810dcffc16df02c480573b7b53ef1205aa6a61533011005c1890e5ba17018c692ce7c900212b547262d33279fde801ad9843edc0863bf78c4
-  languageName: node
-  linkType: hard
-
-"date-fns-jalali@npm:4.1.0-0":
-  version: 4.1.0-0
-  resolution: "date-fns-jalali@npm:4.1.0-0"
-  checksum: 10c0/f9ad98d9f7e8e5abe0d070dc806b0c8baded2b1208626c42e92cbd2605b5171f5714d6b79b20cc2666267d821699244c9d0b5e93274106cf57d6232da77596ed
   languageName: node
   linkType: hard
 
@@ -19040,28 +19040,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-day-picker@npm:^7.4.0":
-  version: 7.4.10
-  resolution: "react-day-picker@npm:7.4.10"
-  dependencies:
-    prop-types: "npm:^15.6.2"
-  peerDependencies:
-    react: ~0.13.x || ~0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: 10c0/547cb211fb63121837bc5bf989d5ff51938d87328a495ca7a2b089454ac09e2193ff48f25858a2d75d080c1cd597165ff5506d2505a4acec31bc11dd8250e879
-  languageName: node
-  linkType: hard
-
-"react-day-picker@npm:^9.14.0":
-  version: 9.14.0
-  resolution: "react-day-picker@npm:9.14.0"
+"react-day-picker@npm:10.0.1":
+  version: 10.0.1
+  resolution: "react-day-picker@npm:10.0.1"
   dependencies:
     "@date-fns/tz": "npm:^1.4.1"
-    "@tabby_ai/hijri-converter": "npm:1.0.5"
     date-fns: "npm:^4.1.0"
-    date-fns-jalali: "npm:4.1.0-0"
   peerDependencies:
+    "@types/react": ">=16.8.0"
     react: ">=16.8.0"
-  checksum: 10c0/5d26b2e8e28fb504c2ec577bda2ea26709ccab07555aada0674bd72ae38963de6f5cab135d936bb2fef935f97f73c6510657b15b936766e53d5c65811d13289a
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/2ca2690f5e8c22b0fd24079b68959110ec199ec7d5ac74f26cfe6dad3cadf7d781458a9a654673dd47009e4fbb8548711ec0ae048e41dd3cf1d4ede16dadad55
   languageName: node
   linkType: hard
 
@@ -22537,19 +22528,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"temporal-polyfill@npm:^0.3.2":
-  version: 0.3.2
-  resolution: "temporal-polyfill@npm:0.3.2"
+"temporal-polyfill@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "temporal-polyfill@npm:1.0.4"
   dependencies:
-    temporal-spec: "npm:0.3.1"
-  checksum: 10c0/762795c94e1b6cb0574541d0b09f805ff23b0a2c9d0356ab3fc0205e390a3bce73e047de2fdc54c7d149d6e6d781aa1d95aa62afa5de4c83cb79c129b0e502da
+    temporal-spec: "npm:1.0.1"
+    temporal-utils: "npm:1.0.2"
+  checksum: 10c0/b93905805462090e94069841bfa99d162aaec07766a2fa4a8aed28159e3c3296c03a3224b5c6ea14cc65890f299094b21d1702ee6d3cd15cdaae967c22809b33
   languageName: node
   linkType: hard
 
-"temporal-spec@npm:0.3.1":
-  version: 0.3.1
-  resolution: "temporal-spec@npm:0.3.1"
-  checksum: 10c0/e38eae391bd59ae675f1925a65c8ef302933cf9ce98efedaf2e69269e8c36f2b5d486cd3084367f04a6c1ea0289b925690c0df20a73f0c4629b531775924e850
+"temporal-spec@npm:1.0.1":
+  version: 1.0.1
+  resolution: "temporal-spec@npm:1.0.1"
+  checksum: 10c0/99f6bfe4a8e59cd0664d0e97706798a1e10d42b1b682da9b60778a4cb9a23362da01ea3d83a674ef426ed743bbab835e2e3d1acea5d2d4a9eabe33863237b014
+  languageName: node
+  linkType: hard
+
+"temporal-utils@npm:1.0.2":
+  version: 1.0.2
+  resolution: "temporal-utils@npm:1.0.2"
+  checksum: 10c0/062cacb33662e4e2547e1ebea98e994d3835d98bf528744256714cd0c4219d43ffd526a500bbce12392468f802a01de058885e8d73453c11ed7ca67fa6e327fb
   languageName: node
   linkType: hard
 

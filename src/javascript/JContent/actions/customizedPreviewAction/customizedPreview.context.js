@@ -17,9 +17,7 @@ export const CustomizedPreviewContextProvider = ({children}) => {
     const [variant, setVariant] = useState(params.variant);
 
     const setDayJs = val => {
-        if (val) {
-            setDate(dayjs(val));
-        }
+        setDate(val ? dayjs(val) : null);
     };
 
     const clearAll = () => {

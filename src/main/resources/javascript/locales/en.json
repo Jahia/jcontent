@@ -1031,13 +1031,15 @@
         "dateTimePicker": {
           "displayValue": "Date time",
           "description": "Select date and time from a calendar",
-          "today": "Today"
+          "today": "Today",
+          "nextMonth": "Next month",
+          "previousMonth": "Previous month",
+          "timezone": "Timezone"
         },
         "datePicker": {
           "displayValue": "Date",
           "description": "Select a date from a calendar"
         },
-        "localTimeHint": "Shown in your local time zone ({{zone}})",
         "text": {
           "displayValue": "Text",
           "description": "Simple text input"

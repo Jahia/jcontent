@@ -8,7 +8,7 @@ export class SmallTextField extends Field {
             this.get().find(SmallTextField.ADD_FIELD_SEL).click();
             this.get().find('input').last().as('textinput');
             // Prevent field from being hidden by sticky header
-            this.get().scrollIntoView();
+            this.get().scrollIntoView({offset: {top: -200, left: 0}});
             cy.get('@textinput').type(newValue, {force: force});
 
             if (checked) {
@@ -17,7 +17,7 @@ export class SmallTextField extends Field {
         } else {
             this.get().find('input[type="text"]').as('textinput');
             // Prevent field from being hidden by sticky header
-            this.get().scrollIntoView();
+            this.get().scrollIntoView({offset: {top: -200, left: 0}});
             cy.get('@textinput').clear({force: force, scrollBehavior: false});
             cy.get('@textinput').type(newValue, {force: force, scrollBehavior: false});
             if (checked) {

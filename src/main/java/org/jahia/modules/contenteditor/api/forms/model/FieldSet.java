@@ -293,7 +293,7 @@ public class FieldSet implements DefinitionRegistryItem, Ranked {
 
     private void mergeFields(List<Field> otherFields, Form form) {
         for (Field otherField : otherFields) {
-            Field existingField = form.findAndRemoveField(otherField).orElseGet(this::addField);
+            Field existingField = form.findAndRemoveField(otherField, this).orElseGet(this::addField);
             existingField.mergeWith(otherField);
             if (!fields.contains(existingField)) {
                 fields.add(existingField);

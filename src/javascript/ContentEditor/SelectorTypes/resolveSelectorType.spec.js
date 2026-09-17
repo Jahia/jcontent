@@ -138,5 +138,38 @@ describe('Selector Types', () => {
             });
             expect(initValue).toEqual('My Expected Value');
         });
+
+        // The server hands back no constraint list at all for a field that has nothing to choose
+        // from -- a selector set on a property with no choicelist behind it, which is what a bare
+        // copy of a field looks like. Reading the list without checking it took the whole editor
+        // down on a content folder (#2746), so every selector that reads it is covered here.
+        describe.each([
+            ['Choicelist'],
+            ['ChoiceList'],
+            ['CheckboxChoiceList'],
+            ['CheckboxesToMultiLeftRight'],
+            ['MultipleLeftRightSelector'],
+            ['RadioChoiceList']
+        ])('%s initValue', selectorType => {
+            it.each([
+                ['null', null],
+                ['undefined', undefined],
+                ['absent', 'absent']
+            ])('survives a %s constraint list', (_, valueConstraints) => {
+                const selector = resolveSelectorType({selectorType});
+                const field = valueConstraints === 'absent' ? {} : {valueConstraints};
+
+                expect(() => selector.initValue(field)).not.toThrow();
+            });
+
+            it('offers nothing to select when there is no constraint list', () => {
+                const selector = resolveSelectorType({selectorType});
+                const initValue = selector.initValue({valueConstraints: null});
+
+                // Either no value at all, or an empty selection -- never a value invented from
+                // a list that was not there.
+                expect(initValue === undefined || initValue.length === 0).toBe(true);
+            });
+        });
     });
 });

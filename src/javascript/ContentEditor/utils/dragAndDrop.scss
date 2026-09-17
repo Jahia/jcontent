@@ -33,10 +33,21 @@
         }
     }
 
-    &:hover * > * {
+    &:hover * > *,
+    // The move buttons are hover-only, which leaves an item moved by one of them with no way to
+    // move it again: it has travelled out from under the pointer. Focus keeps them reachable.
+    &:focus-within * > * {
         visibility: visible;
 
         pointer-events: auto;
+    }
+
+    // Says where an item has landed after being moved. Deliberately :focus rather than
+    // :focus-visible: the focus here follows a mouse click on a move button, which the
+    // :focus-visible heuristics exclude, and that is exactly the case that needs the marker.
+    &:focus {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
     }
 
     :global(.moonstone-checkbox) {

@@ -10,6 +10,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {
     getButtonRenderer,
     onDirectionalReorder,
+    useMovedItemFocus,
     useReorderList
 } from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
@@ -71,9 +72,17 @@ const getSimpleElement = (field, error, notFound, t, pickerConfig, fieldData, se
 
 const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove, t, setDialogOpen, isDialogOpen}) => {
     const {handleReorder, reorderedItems, reset} = useReorderList(fieldData);
-    const handleReorderDropped = () => {
+    const {requestFocus, focusIdFor} = useMovedItemFocus();
+    const handleReorderDropped = movedId => {
         // Once reorder is finalized, commit to formik
         setValue(reorderedItems.map(({item}) => item.uuid));
+        requestFocus(movedId);
+    };
+
+    // The move itself belongs to the field above; the focus belongs here, where the list is drawn.
+    const handleValueMove = (droppedId, direction, movedId) => {
+        onValueMove(droppedId, direction);
+        requestFocus(movedId);
     };
 
     return (
@@ -84,6 +93,7 @@ const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove
                         key={id}
                         isReferenceCard
                         id={id}
+                        focusId={focusIdFor(id)}
                         isDraggable={!field.readOnly && fieldData.length > 1}
                         component={<ReferenceCard
                             id={item.name}
@@ -99,7 +109,7 @@ const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove
                                                 icon={<ChevronFirstList/>}
                                                 data-sel-action={`moveToFirst_${index}`}
                                                 aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}
-                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'first')}
+                                                onClick={() => handleValueMove(`${field.name}[${index}]`, 'first', id)}
                                             />
                                         </Tooltip>
                                         <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}>
@@ -109,7 +119,7 @@ const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove
                                                 icon={<ChevronLastList/>}
                                                 data-sel-action={`moveToLast_${index}`}
                                                 aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}
-                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'last')}
+                                                onClick={() => handleValueMove(`${field.name}[${index}]`, 'last', id)}
                                             />
                                         </Tooltip>
                                     </div>
@@ -121,7 +131,7 @@ const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove
                                                 icon={<ChevronUp/>}
                                                 data-sel-action={`moveUp_${index}`}
                                                 aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveUp')}
-                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'up')}
+                                                onClick={() => handleValueMove(`${field.name}[${index}]`, 'up', id)}
                                             />
                                         </Tooltip>
                                         <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}>
@@ -131,7 +141,7 @@ const MultipleElement = ({fieldData, field, setValue, onValueMove, onFieldRemove
                                                 icon={<ChevronDown/>}
                                                 data-sel-action={`moveDown_${index}`}
                                                 aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}
-                                                onClick={() => onValueMove(`${field.name}[${index}]`, 'down')}
+                                                onClick={() => handleValueMove(`${field.name}[${index}]`, 'down', id)}
                                             />
                                         </Tooltip>
                                     </div>

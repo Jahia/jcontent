@@ -1,7 +1,10 @@
 import React, {useContext} from 'react';
 import * as PropTypes from 'prop-types';
 
-export const ContentEditorConfigContext = React.createContext({});
+export const ContentEditorConfigContext = React.createContext<{
+    uuid?: string;
+    lang?: string;
+}>({});
 export const useContentEditorConfigContext = () => useContext(ContentEditorConfigContext);
 
 export const ContentEditorConfigContextProvider = ({config, children}) => (

@@ -13,7 +13,10 @@ import {useOnBeforeContextHooks} from '~/ContentEditor/ContentEditor/useOnBefore
 import {isEqual} from 'lodash';
 import {cloneDeep} from 'es-toolkit';
 
-export const ContentEditorContext = React.createContext({});
+export const ContentEditorContext = React.createContext<{
+    nodeData?: {hasWritePermission?: boolean; lockedAndCannotBeEdited?: boolean};
+    setI18nContext?: (updater: (prev: any) => any) => void;
+}>({});
 
 export const useContentEditorContext = () => useContext(ContentEditorContext);
 
@@ -24,7 +27,7 @@ const renderError = (siteInfoResult, t, notificationContext) => {
     return null;
 };
 
-const useInitI18nContext = contextProps => {
+const useInitI18nContext = () => {
     const [i18nContext, setI18nContext] = useState({
         memo: {count: 1}
     });
@@ -35,17 +38,16 @@ const useInitI18nContext = contextProps => {
         }));
     }, [setI18nContext]);
 
-    return (contextProps?.i18nContext && contextProps.setI18nContext && contextProps.resetI18nContext) ?
-        contextProps : {i18nContext, setI18nContext, resetI18nContext};
+    return {i18nContext, setI18nContext, resetI18nContext};
 };
 
-export const ContentEditorContextProvider = ({useFormDefinition, overrides, children}) => {
+export const ContentEditorContextProvider = ({useFormDefinition, children}) => {
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
     const [errors, setErrors] = useState(null);
     const contentEditorConfigContext = useContentEditorConfigContext();
     const uiLanguage = useSelector(state => state?.uilang);
-    const {i18nContext, setI18nContext, resetI18nContext} = useInitI18nContext(overrides);
+    const {i18nContext, setI18nContext, resetI18nContext} = useInitI18nContext();
 
     // Persist 'create another' chekbox state during language switch
     const [createAnotherValue, setCreateAnotherValue] = useState(false);
@@ -243,7 +245,6 @@ export const ContentEditorContextProvider = ({useFormDefinition, overrides, chil
 
 ContentEditorContextProvider.propTypes = {
     useFormDefinition: PropTypes.func.isRequired,
-    overrides: PropTypes.object,
     children: PropTypes.node.isRequired
 };
 

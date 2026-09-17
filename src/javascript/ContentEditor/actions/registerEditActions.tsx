@@ -20,10 +20,11 @@ import {openWorkInProgressAction} from './contenteditor/openWorkInProgress/openW
 import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageAction';
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
-import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
+import {TranslateFieldActionComponent} from './contenteditor/translate/translateFieldAction';
 import {Constants} from '../ContentEditor.constants';
+import {registry} from '@jahia/ui-extender';
 
-export const registerEditActions = registry => {
+export const registerEditActions = () => {
     // Edit action button in JContent; need separate actions for content and pages
     registry.add('action', 'edit', editContentAction, {
         buttonIcon: <Edit/>,
@@ -155,7 +156,8 @@ export const registerEditActions = registry => {
         isDisplayable: ({siteInfo}) => siteInfo?.languages?.length > 1
     });
 
-    registry.add('action', 'translateField', translateFieldAction, {
+    registry.add('action', 'translateField', {
+        component: TranslateFieldActionComponent,
         buttonIcon: <ArrowRight/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name'
     });

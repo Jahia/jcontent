@@ -4,7 +4,7 @@ import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {Field} from './Field';
 import styles from './styles.scss';
-import {DisplayAction} from '@jahia/ui-extender';
+import {DisplayActions} from '@jahia/ui-extender';
 import {ButtonRendererNoLabel} from '~/ContentEditor/utils';
 import {useFormikContext} from 'formik';
 
@@ -22,12 +22,18 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
 
     return (
         <div className={styles.fieldContainer}>
-            {context.displayActions && <DisplayAction
-                actionKey="translateField"
-                render={ButtonRendererNoLabel}
-                field={field}
-                value={values[field.name]}
-            />}
+            {context.displayActions && (
+                <div className={styles.leadingActions}>
+                    <DisplayActions
+                        target="content-editor/field/leading-actions"
+                        render={ButtonRendererNoLabel}
+                        field={field}
+                        value={values[field.name]}
+                        selectorType={selectorType}
+                        inputContext={context}
+                    />
+                </div>
+            )}
             <Field
                 idInput={field.name}
                 inputContext={context}

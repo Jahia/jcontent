@@ -54,6 +54,7 @@ export const EditPanelContent = ({
 EditPanelContent.propTypes = {
     twoPanelsContentProps: PropTypes.shape({
         rightCol: PropTypes.node.isRequired,
+        rightSidebar: PropTypes.node,
         hasSingleSyncedScrollbar: PropTypes.bool
     }),
     hasLanguageSwitchTopOfLeftCol: PropTypes.bool

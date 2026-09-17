@@ -21,6 +21,9 @@ export const PublishManagerActionComponent = props => {
     const res = useNodeChecks({path, language}, {
         skip,
         getDisplayName: true,
+        // Read at onClick time as res.node.primaryNodeType.name; useNodeInfo only puts the field
+        // in the query when this option is set, so without it the click throws.
+        getPrimaryNodeType: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
         getPermissions: ['publish', 'publication-start'],
@@ -36,7 +39,10 @@ export const PublishManagerActionComponent = props => {
     }
 
     const isVisible = !paths && res.checksResult && typeof window?.authoringApi?.showPublicationManager === 'function';
-    const mixinTypes = res.node?.mixinTypes ? res.node.mixinTypes.map(mixinType => mixinType.name) : [];
+    // GetProperties(['jcr:mixinTypes']) delivers the mixins under properties, not as
+    // node.mixinTypes - the same two shapes hasMixin() has to cope with. Reading node.mixinTypes
+    // off a useNodeChecks result always yielded [], so the manager never saw the node's mixins.
+    const mixinTypes = res.node?.properties?.find(prop => prop.name === 'jcr:mixinTypes')?.values ?? [];
 
     return (
         <Render

@@ -25,7 +25,7 @@ export const ContentStatusSelector = () => {
         label: t(`jcontent:label.contentManager.contentStatusSelector.${v}`),
         value: v,
         iconStart: icons[v],
-        iconEnd: <Pill className={styles.iconEndCount} label={contentStatus[v]?.size.toString()}/>,
+        iconEnd: <Pill className={styles.iconEndCount}>{contentStatus[v]?.size.toString()}</Pill>,
         attributes: {
             'aria-selected': statusMode === v,
             'data-sel-role': `status-view-mode-${v}`

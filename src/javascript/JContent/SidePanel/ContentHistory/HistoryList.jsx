@@ -120,9 +120,9 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
                 </div>
                 <div className={styles.itemLanguage}>
                     {entry.language ? (
-                        <Pill label={entry.language?.toUpperCase()} color="default"/>
+                        <Pill color="default">{entry.language?.toUpperCase()}</Pill>
                     ) : (
-                        <Pill label={<Language/>} color="default"/>
+                        <Pill color="default"><Language/></Pill>
                     )}
                 </div>
             </div>

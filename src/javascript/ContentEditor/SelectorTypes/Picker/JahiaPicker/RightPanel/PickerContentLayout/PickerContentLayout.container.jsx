@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import styles from './PickerContentLayout.scss';
 import {cePickerOpenPaths} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import PickerFilesGrid from './PickerFilesGrid';
+import {useSelectUploadedNodes} from './useSelectUploadedNodes';
 import PropTypes from 'prop-types';
 
 const setRefetcher = (name, refetcherData) => {
@@ -111,6 +112,10 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
             dispatch(cePickerOpenPaths(expand(result.nodes, autoExpand.current.level)));
         }
     }, [dispatch, result, isStructured, path, viewType, loading, autoExpand, autoExpandLevels]);
+
+    // Rows on screen right now: while a new query runs, the previous ones are still displayed.
+    // Read without touching currentResult, which the render below owns.
+    useSelectUploadedNodes((loading ? currentResult.current : result)?.nodes, isMultiple);
 
     if (!loading && !result) {
         if (error) {

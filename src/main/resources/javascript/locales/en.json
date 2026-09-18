@@ -48,6 +48,11 @@
         "unknown": "Publication status unavailable"
       },
       "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",
+      "contentType": {
+        "area": "Area",
+        "absoluteArea": "Absolute area",
+        "list": "List"
+      },
       "downloadAsZip": "Download as zip",
       "fileUpload": {
         "nothingToDisplay": "Nothing to display",

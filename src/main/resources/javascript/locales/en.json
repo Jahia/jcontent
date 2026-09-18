@@ -619,7 +619,8 @@
           "invalidForm": "Invalid form",
           "fieldsInError": "There is one validation error",
           "fieldsInError_plural": "There are {{count}} validation errors",
-          "otherLanguages": "Other languages in error"
+          "otherLanguages": "Other languages in error",
+          "listLabel": "{{label}}:"
         },
         "action": {
           "copyLanguage": {

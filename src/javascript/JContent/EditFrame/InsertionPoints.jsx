@@ -60,7 +60,7 @@ const getPlaceholderNodeTypes = (e, parentPath) => {
         return ownNt.split(' ');
     }
 
-    // Fallback: resolve wildcard placeholder nodetypes from pre-computed module info
+    // Fallback: resolve the types out of the captured rendering of the parent module
     return JahiaRenderedModulesUtil.resolveNodeTypes(parentPath);
 };
 

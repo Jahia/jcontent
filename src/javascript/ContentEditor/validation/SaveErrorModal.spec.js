@@ -5,6 +5,9 @@ import {dsGenericTheme} from '@jahia/design-system-kit';
 
 import {SaveErrorModal} from './SaveErrorModal';
 
+// The dialog closes itself on navigation, which reads the location from the store.
+jest.mock('react-redux', () => ({useSelector: jest.fn(() => ({})), shallowEqual: jest.fn()}));
+
 describe('SaveErrorModal', () => {
     let props;
     beforeEach(() => {

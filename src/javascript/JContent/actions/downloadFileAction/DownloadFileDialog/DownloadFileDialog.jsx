@@ -10,7 +10,7 @@ import {
     FileInfoQueryLive
 } from '~/JContent/actions/downloadFileAction/DownloadFileDialog/DownloadFileDialog.gql-queries';
 import clsx from 'clsx';
-import {NodeIcon} from '~/utils';
+import {NodeIcon, useCloseOnNavigation} from '~/utils';
 import {FileSize} from '~/shared';
 import {useNotifications} from '@jahia/react-material';
 
@@ -35,6 +35,8 @@ export const DownloadFileDialog = ({path, onExit}) => {
     const liveNode = liveData?.jcr?.nodeById;
 
     const handleClose = () => setOpen(false);
+
+    useCloseOnNavigation(handleClose);
 
     const currentNode = mode === 'live' ? liveNode : node;
     const href = new URL(`${window.contextJsParameters.contextPath}/files/${mode}${currentNode?.path}`, window.location.href).toString();

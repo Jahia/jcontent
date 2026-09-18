@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import pl.touk.throwing.ThrowingFunction;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -425,6 +426,36 @@ public class EditorFormServiceImpl implements EditorFormService {
         } catch (RepositoryException e) {
             throw new EditorFormException("Error while building field constraints for" + " node: " + nodeUuidOrPath + ", node type: " + primaryNodeType + ", parent node: " + parentNodeUuidOrPath + ", field node type: " + fieldNodeType + ", field name: " + fieldName, e);
         }
+    }
+
+    @Override
+    public List<FieldLanguageValue> getFieldValuesByLanguage(String uuidOrPath, String fieldName, boolean multiple, List<Locale> locales) throws EditorFormException {
+        List<FieldLanguageValue> result = new ArrayList<>();
+        for (Locale locale : locales) {
+            try {
+                JCRNodeWrapper node = resolveNodeFromPathorUUID(uuidOrPath, locale);
+
+                List<FieldValue> values = new ArrayList<>();
+                if (node.hasProperty(fieldName)) {
+                    javax.jcr.Property property = node.getProperty(fieldName);
+                    if (multiple) {
+                        for (Value value : property.getValues()) {
+                            values.add(FieldValue.convert(value));
+                        }
+                    } else {
+                        values.add(FieldValue.convert(property.getValue()));
+                    }
+                }
+
+                JCRSessionWrapper session = node.getSession();
+                boolean readOnly = JCRContentUtils.isLockedAndCannotBeEdited(node)
+                    || !node.hasPermission("jcr:modifyProperties_" + session.getWorkspace().getName() + "_" + locale.toString());
+                result.add(new FieldLanguageValue(locale.toString(), values, readOnly));
+            } catch (RepositoryException e) {
+                throw new EditorFormException("Error while reading field '" + fieldName + "' for node: " + uuidOrPath + " in locale: " + locale, e);
+            }
+        }
+        return result;
     }
 
 }

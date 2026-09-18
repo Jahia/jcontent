@@ -8,6 +8,7 @@ import {
     CloudUpload,
     Copy,
     Edit,
+    Language,
     MoreVert,
     Save,
     Translate,
@@ -21,6 +22,7 @@ import {copyLanguageAction} from './contenteditor/copyLanguage/copyLanguageActio
 import {editContentSourceAction} from '~/ContentEditor/actions/jcontent/editContent/editContentSourceAction';
 import {editVisibilityRulesAction} from '~/ContentEditor/actions/contenteditor/editVisibilityRules/editVisbilityRules';
 import {translateFieldAction} from './contenteditor/translate/translateFieldAction';
+import {editFieldAllLanguagesAction} from './contenteditor/editFieldAllLanguages/editFieldAllLanguagesAction';
 import {Constants} from '../ContentEditor.constants';
 
 export const registerEditActions = registry => {
@@ -158,5 +160,10 @@ export const registerEditActions = registry => {
     registry.add('action', 'translateField', translateFieldAction, {
         buttonIcon: <ArrowRight/>,
         buttonLabel: 'jcontent:label.contentEditor.edit.action.translate.name'
+    });
+
+    registry.add('action', 'editFieldAllLanguages', editFieldAllLanguagesAction, {
+        buttonIcon: <Language/>,
+        buttonLabel: 'jcontent:label.contentEditor.edit.action.editAllLanguages.name'
     });
 };

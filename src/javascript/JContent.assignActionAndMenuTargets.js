@@ -369,6 +369,9 @@ const actionTargetAssignments = {
     'translate/header/3dots': [
         'goToWorkInProgress',
         'copyLanguageAction'
+    ],
+    'content-editor/field/3dots': [
+        'editFieldAllLanguages'
     ]
 };
 

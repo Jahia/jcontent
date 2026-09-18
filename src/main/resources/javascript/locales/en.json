@@ -649,6 +649,16 @@
             "sourceLanguage": "Source language",
             "translateToLanguage": "Translate to"
           },
+          "editAllLanguages": {
+            "name": "Edit in all languages",
+            "dialogTitle": "{{contentName}} ({{contentType}})",
+            "languageCounter": "{{filled}}/{{total}} languages filled",
+            "fieldSwitcherLabel": "Translate this field:",
+            "copyFromSourceLanguage": "Copy value from {{language}}",
+            "mandatoryFieldCleared": "This field is mandatory and cannot be saved empty.",
+            "btnCancel": "Cancel",
+            "btnSave": "Save"
+          },
           "goBack": {
             "edit": {
               "title": "Unsaved changes",

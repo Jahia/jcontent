@@ -351,6 +351,67 @@ describe('JahiaRenderedModulesUtil', () => {
         });
     });
 
+    describe('resolveNodeTypes', () => {
+        const capture = html => {
+            JahiaRenderedModulesUtil.setModules(parse(html), nodePath);
+            return JahiaRenderedModulesUtil.resolveNodeTypes(nodePath);
+        };
+
+        it('should fall back to the module\'s own node types when the view renders its children itself', () => {
+            // Such a view emits no wildcard placeholder, so the module element is the only thing
+            // left that names what the definition accepts as an unnamed child.
+            expect(capture(`
+                <div jahiatype="module" type="list" path="${nodePath}" nodetypes="cent:childObject1">
+                    <div jahiatype="module" type="existingNode" path="${nodePath}/child1"></div>
+                </div>
+            `)).toEqual(['cent:childObject1']);
+        });
+
+        it('should take the wildcard placeholder node types alone when it carries them', () => {
+            // The placeholder holds the contribute types, which the module element does not.
+            expect(capture(`
+                <div jahiatype="module" type="list" path="${nodePath}" nodetypes="jmix:droppableContent">
+                    <div jahiatype="module" type="placeholder" path="*" nodetypes="cent:childObject1 cent:childObject2"></div>
+                </div>
+            `)).toEqual(['cent:childObject1', 'cent:childObject2']);
+        });
+
+        it('should add the module\'s own node types when a wildcard placeholder carries none', () => {
+            expect(capture(`
+                <div jahiatype="module" type="list" path="${nodePath}" nodetypes="cent:childObject1">
+                    <div jahiatype="module" type="placeholder" path="*"></div>
+                </div>
+            `)).toEqual(['cent:childObject1']);
+        });
+
+        it('should merge both sources once when typed and untyped wildcard placeholders coexist', () => {
+            expect(capture(`
+                <div jahiatype="module" type="list" path="${nodePath}" nodetypes="cent:childObject1 cent:childObject2">
+                    <div jahiatype="module" type="placeholder" path="*" nodetypes="cent:childObject2"></div>
+                    <div jahiatype="module" type="placeholder" path="*"></div>
+                </div>
+            `)).toEqual(['cent:childObject1', 'cent:childObject2']);
+        });
+
+        it('should ignore a named placeholder', () => {
+            expect(capture(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}">
+                    <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+                </div>
+            `)).toEqual([]);
+        });
+
+        it('should return nothing creatable when neither the module nor a placeholder is constrained', () => {
+            expect(capture(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}"></div>
+            `)).toEqual([]);
+        });
+
+        it('should return undefined for a node that was never rendered', () => {
+            expect(JahiaRenderedModulesUtil.resolveNodeTypes(nodePath)).toBeUndefined();
+        });
+    });
+
     describe('toNamedPlaceholders', () => {
         it('should drop a placeholder the rendering left without node types', () => {
             // ModuleTag omits the nodetypes attribute when neither the view nor the definition

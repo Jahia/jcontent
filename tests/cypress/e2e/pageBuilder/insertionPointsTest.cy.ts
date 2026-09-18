@@ -184,6 +184,30 @@ describe('Page builder - insertion points', () => {
             }]
         });
 
+        // Page with cent:selfRenderedList, whose view renders its children itself
+        addNode({
+            name: 'page-self-rendered-list',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Self Rendered List', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-self-rendered-list',
+                    primaryNodeType: 'cent:selfRenderedList',
+                    children: [{
+                        name: 'childObject1',
+                        primaryNodeType: 'cent:childObject1'
+                    }]
+                }]
+            }]
+        });
+
         // Page with cent:twoChildObjectsOneMultiple with childObject2 already populated
         addNode({
             name: 'page-two-one-multiple-populated',
@@ -402,6 +426,34 @@ describe('Page builder - insertion points', () => {
         header.getButton('contentItemActionsMenu').click();
 
         // This verifies that we can create an item of childObject1 type as defined by the definition using context menu
+        const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.selectByRole('createContent');
+
+        const selector = getComponent(ContentTypeSelector);
+        const ce = selector.searchForContentType('cent:childObject1').selectContentType('cent:childObject1').create();
+        ce.cancel();
+    });
+
+    it('shows an insertion point and a create action on a list whose view renders its own children', () => {
+        // The view loops over the children and emits no path="*" placeholder, so the module's own
+        // nodetypes attribute is all that names what the list accepts (#2771).
+        const modulePath = `${homePath}/page-self-rendered-list/area-main/test-self-rendered-list`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-self-rendered-list')
+            .switchToPageBuilder();
+
+        const module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
+        // The insertion point over the child the view rendered itself
+        const createButtons = module.getAllCreateButtons();
+        createButtons.getButtonByRole('cent:childObject1').should('exist').should('have.length', 1);
+
+        // And the same type out of the context menu of the list
+        const header = module.getBox().getHeader();
+        header.getButton('contentItemActionsMenu').click();
+
         const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
         menu.selectByRole('createContent');
 

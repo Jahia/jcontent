@@ -17,6 +17,7 @@ import {getButtonRenderer} from '~/ContentEditor/utils';
 import {useFormikContext} from 'formik';
 import styles from './Field.scss';
 import {ReadOnlyBadge} from '~/ContentEditor/ContentEditor/EditPanel/HeaderBadges/ReadOnlyBadge';
+import {FilenameMimeTypeBadge} from './FilenameMimeTypeBadge';
 
 const ButtonRenderer = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {variant: 'ghost'}});
 
@@ -64,6 +65,7 @@ const renderField = (
                     {field.readOnly && (
                     <ReadOnlyBadge isReadOnly={field.readOnly}/>
                         )}
+                    <FilenameMimeTypeBadge field={field}/>
                     {showChipField(field.i18n, wipInfo, editorContext.lang) && (
                     <Chip
                                 className={styles.badge}

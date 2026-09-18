@@ -62,6 +62,10 @@ export const Constants = /** @type {const} */ ({
         setContentLimitsOnAreas: 'setContentLimitsOnAreas'
     },
     childrenFilterTypes: ['jnt:content', 'jmix:manuallyOrderable', 'jnt:page', 'jmix:navMenuItem'],
+    // Field sets whose properties are read out of an uploaded binary rather than authored (EXIF,
+    // XMP/IPTC). Most of their fields are empty on any given image, so both the edit form and the
+    // side panel's details tab list only the filled ones, and keep each provenance in its own group.
+    fileMetadataFieldSets: ['jmix:exif', 'jmix:iptc'],
     color: {
         hexColorRegexp: /^#([a-f0-9]{3,4}|[a-f0-9]{4}(?:[a-f0-9]{2}){1,2})\b$/i,
         errorCode: 'invalidColor',

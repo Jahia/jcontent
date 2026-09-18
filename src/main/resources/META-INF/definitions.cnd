@@ -1,3 +1,4 @@
+<j = 'http://www.jahia.org/jahia/1.0'>
 <jnt = 'http://www.jahia.org/jahia/nt/1.0'>
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 
@@ -23,3 +24,49 @@
 // publication status of an individual condition can be computed and displayed in the visibility editor.
 [jmix:conditionPublicationInfo] > mix:lastModified, jmix:lastPublished mixin
  extends = jnt:condition
+
+// IPTC metadata read out of an uploaded image. Deliberately mirrors how Jahia core stores EXIF
+// (jmix:exif in 10-extension-nodetypes.cnd): one string property per field, itemtype = metadata so
+// the content editor groups it with the other metadata, and the mixin applied per node rather than
+// via "extends" so only images that actually carry IPTC get it.
+//
+// Core already extracts these values on upload - Tika's JpegParser runs metadata-extractor, whose
+// CopyUnknownFieldsHandler emits every IPTC tag under its display name - but drops them because its
+// mapping table names no IPTC field. META-INF/rules.drl picks them up and stores them here.
+[jmix:iptc] mixin
+ itemtype = metadata
+ - j:iptcObjectName (string) nofulltext
+ - j:iptcHeadline (string) nofulltext
+ - j:iptcCaption (string) nofulltext
+ - j:iptcCaptionWriter (string) nofulltext
+ - j:iptcKeywords (string) nofulltext
+ - j:iptcByline (string) nofulltext
+ - j:iptcBylineTitle (string) nofulltext
+ - j:iptcCredit (string) nofulltext
+ - j:iptcSource (string) nofulltext
+ - j:iptcCopyrightNotice (string) nofulltext
+ - j:iptcContact (string) nofulltext
+ - j:iptcCity (string) nofulltext
+ - j:iptcSublocation (string) nofulltext
+ - j:iptcProvinceState (string) nofulltext
+ - j:iptcCountry (string) nofulltext
+ - j:iptcDateCreated (string) nofulltext
+ - j:iptcCategory (string) nofulltext
+ - j:iptcSupplementalCategories (string) nofulltext
+ - j:iptcSpecialInstructions (string) nofulltext
+ - j:iptcUrgency (string) nofulltext
+ - j:iptcTransmissionReference (string) nofulltext
+
+// Point of interest of an image, as a percentage of its width and height, so that a template
+// cropping to a different aspect ratio can keep the subject in frame instead of cropping from the
+// centre. Consumed at render time as a CSS object-position, which means it costs no extra rendition
+// and no image processing.
+//
+// "extends" makes the mixin available on every image without applying it - it is added to the node
+// when an editor first places a point, and removed again when they reset it. An absent focal point
+// means the centre, which is what an uninformed crop does anyway, so existing images need no
+// migration and only the ones actually pointed at carry the mixin.
+[jmix:focalPoint] mixin
+ extends = jmix:image
+ - j:focalX (double) nofulltext
+ - j:focalY (double) nofulltext

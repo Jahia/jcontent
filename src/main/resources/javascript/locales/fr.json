@@ -359,6 +359,16 @@
         "removed": "{{count}} éléments précédemment sélectionnés ont été enlevés de la sélection, car non affichés dans cette vue",
         "addTo": "Ajouter à la sélection"
       },
+      "focalPoint": {
+        "action": "Définir le point d'intérêt",
+        "title": "Point d'intérêt",
+        "help": "Cliquez sur la partie de l'image qui doit rester visible. Les vues qui recadrent cette image dans un autre format conservent ce point plutôt que de recadrer depuis le centre.",
+        "value": "Point d'intérêt : {{position}}",
+        "reset": "Recentrer",
+        "cancel": "Annuler",
+        "error": "Le point d'intérêt n'a pas pu être enregistré.",
+        "save": "Enregistrer"
+      },
       "editImage": {
         "action": "Editeur d'images",
         "title": "Edition d'image",
@@ -724,6 +734,15 @@
           }
         },
         "sharedLanguages": "Partagé par toutes les langues",
+        "fieldSet": {
+            "showEmptyFields": "Afficher tous les champs, y compris les champs vides",
+            "hideEmptyFields": "Afficher uniquement les champs renseignés"
+        },
+        "filenameMimeType": {
+          "badge": "Devrait se terminer par .{{extension}}",
+          "badgeUnknownExtension": "Le nom ne correspond pas au type de fichier",
+          "tooltip": "Ce fichier est de type {{mimeType}}, ce qui ne correspond pas à son nom. Modifiez le nom pour que son extension corresponde au type réel du fichier."
+        },
         "fields": {
           "actions": {
             "replace": "Modifier",
@@ -837,6 +856,8 @@
         "lockType": "Type de Verrouillage",
         "technical": "Informations Techniques",
         "additional": "Détails Supplémentaires",
+        "exifMetadata": "Données EXIF disponibles",
+        "iptcMetadata": "Données XMP/IPTC disponibles",
         "copiedToClipboard": "Copié dans le presse-papiers",
         "links": "Liens",
         "linksLive": "En ligne",

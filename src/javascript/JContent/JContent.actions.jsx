@@ -29,6 +29,7 @@ import {
     Separator,
     Subdirectory,
     SwapHoriz,
+    Target,
     Undelete,
     Unlock,
     Upload,
@@ -44,6 +45,7 @@ import {
     DownloadAsZipActionComponent,
     DownloadFileActionComponent,
     EditImageActionComponent,
+    SetFocalPointActionComponent,
     ExportActionComponent,
     FileUploadActionComponent,
     LocateActionComponent,
@@ -376,6 +378,11 @@ export const jContentActions = registry => {
         buttonIcon: <EditImage/>,
         buttonLabel: 'jcontent:label.contentManager.editImage.action',
         component: EditImageActionComponent
+    });
+    registry.add('action', 'setFocalPoint', {
+        buttonIcon: <Target/>,
+        buttonLabel: 'jcontent:label.contentManager.focalPoint.action',
+        component: SetFocalPointActionComponent
     });
     registry.add('action', 'downloadFile', {
         buttonIcon: <CloudDownload/>,

@@ -134,6 +134,7 @@ export const jContentAccordionItems = registry => {
             selectableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:externalLink', 'jnt:nodeLink', 'jnt:navMenuText', 'jmix:visibleInPagesTree'],
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText', 'jmix:visibleInPagesTree'],
             rootLabel: 'jcontent:label.contentManager.browsePages',
+            enableSearch: true,
             dnd: {
                 canDrag: showPageBuilder, canDrop: showPageBuilder, canReorder: showPageBuilder
             },

@@ -417,8 +417,17 @@ export const JahiaRenderedModulesUtil = {
     getArea: function (path) {
         return this.jahiaAreas[path];
     },
-    // This simply collects all placeholder nodetypes for a module, it uses module nodetypes if wildcard placeholder without nodetypes is found.
-    // It's supposed to return undefined if module is not found and an empty list if no wildcard placeholder is found.
+    // The types creatable as an unnamed child of a module, out of the captured rendering.
+    //
+    // Wildcard placeholders that all carry nodetypes answer on their own: they hold the contribute
+    // types, which the module element does not. Every other shape falls back to the module's own
+    // nodetypes, written from the definition's unnamed-child constraints - so a view that renders
+    // its children itself, and therefore emits no wildcard placeholder at all, still names what it
+    // accepts. Returns undefined for a module that was never rendered, which is not the same answer
+    // as an empty list.
+    //
+    // Contribute types are out of reach here: Jahia writes them onto the placeholder only, so a view
+    // that emits none leaves this answer wider than a placeholder's would have been.
     resolveNodeTypes: function (path) {
         const moduleInfo = this.getModule(path);
 
@@ -426,26 +435,18 @@ export const JahiaRenderedModulesUtil = {
             return undefined;
         }
 
-        const placeholderNodeTypes = [];
-        let containsAnyNodeTypeWildCard = false;
+        const wildcardPlaceholders = moduleInfo.filter(item => item.placeholder && item.path === '*');
+        const placeholderNodeTypes = wildcardPlaceholders.flatMap(item => item.nodeTypes ?? []);
 
-        moduleInfo?.forEach(item => {
-            if (item.placeholder && item.path === '*' && item.nodeTypes?.length > 0) {
-                placeholderNodeTypes.push(...item.nodeTypes);
-            } else if (item.placeholder && item.path === '*' && !item.nodeTypes) {
-                containsAnyNodeTypeWildCard = true;
-            }
-        });
-
-        if (containsAnyNodeTypeWildCard) {
-            // Wildcard placeholder without nodetypes means "accept parent's types too"
-            const parentTypes = moduleInfo
-                ?.filter(item => !item.placeholder && item.path === '*' && item.nodeTypes?.length > 0)
-                .flatMap(item => item.nodeTypes) || [];
-            return [...parentTypes, ...placeholderNodeTypes];
+        if (wildcardPlaceholders.length > 0 && wildcardPlaceholders.every(item => item.nodeTypes?.length > 0)) {
+            return [...new Set(placeholderNodeTypes)];
         }
 
-        return placeholderNodeTypes;
+        const ownNodeTypes = moduleInfo
+            .filter(item => !item.placeholder && item.path === '*')
+            .flatMap(item => item.nodeTypes ?? []);
+
+        return [...new Set([...ownNodeTypes, ...placeholderNodeTypes])];
     },
     // The named children still creatable under a node, as [{name, nodeTypes}]. A placeholder is
     // what the view emits for a child that does not exist yet, so an occupied name is absent by

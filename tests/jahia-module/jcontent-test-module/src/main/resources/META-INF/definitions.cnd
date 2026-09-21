@@ -248,6 +248,9 @@
 [cent:oneChildMultipleList] > jnt:contentList, jmix:editorialContent orderable
   + * (cent:childObject1)
 
+[cent:selfRenderedList] > jnt:contentList, jmix:editorialContent orderable
+  + * (cent:childObject1)
+
  [cent:twoChildObjectsOneMultiple] > jnt:content, jmix:basicContent, jmix:editorialContent
   - someProperty (string)
   + childObject1 (cent:childObject1)

@@ -8,6 +8,12 @@
     background-color: #00c853;
 }
 
+/* The row-level mark of a search hit. The highlight above can only show a term the label holds,
+   while a hit on the system name or on a stemmed title leaves the label untouched. */
+.ContentTree_Item.searchMatch {
+    box-shadow: inset 2px 0 0 0 #00c853;
+}
+
 .ContentTree_Item.notPublishedReversed {
     color: var(--color-gray_light60);
 }

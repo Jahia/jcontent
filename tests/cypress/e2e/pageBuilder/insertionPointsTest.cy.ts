@@ -208,6 +208,26 @@ describe('Page builder - insertion points', () => {
             }]
         });
 
+        // Page with an empty cent:selfRenderedList, where no insertion point can anchor
+        addNode({
+            name: 'page-self-rendered-list-empty',
+            parentPathOrId: homePath,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Self Rendered List Empty', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{
+                name: 'area-main',
+                primaryNodeType: 'jnt:contentList',
+                mixins: ['jmix:isAreaList'],
+                children: [{
+                    name: 'test-self-rendered-list-empty',
+                    primaryNodeType: 'cent:selfRenderedList'
+                }]
+            }]
+        });
+
         // Page with cent:twoChildObjectsOneMultiple with childObject2 already populated
         addNode({
             name: 'page-two-one-multiple-populated',
@@ -451,6 +471,29 @@ describe('Page builder - insertion points', () => {
         createButtons.getButtonByRole('cent:childObject1').should('exist').should('have.length', 1);
 
         // And the same type out of the context menu of the list
+        const header = module.getBox().getHeader();
+        header.getButton('contentItemActionsMenu').click();
+
+        const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.selectByRole('createContent');
+
+        const selector = getComponent(ContentTypeSelector);
+        const ce = selector.searchForContentType('cent:childObject1').selectContentType('cent:childObject1').create();
+        ce.cancel();
+    });
+
+    it('shows a create action on an empty list whose view renders its own children', () => {
+        // Nothing carries data-jahia-parent while the list is empty, so no insertion point can
+        // anchor and the context menu is the only way to create the first child.
+        const modulePath = `${homePath}/page-self-rendered-list-empty/area-main/test-self-rendered-list-empty`;
+        const pageBuilder = JContent
+            .visit(siteKey, 'en', 'pages/home/page-self-rendered-list-empty')
+            .switchToPageBuilder();
+
+        const module = pageBuilder.getModule(modulePath, false);
+        module.get().scrollIntoView();
+        module.get().click('bottomLeft', {force: true});
+
         const header = module.getBox().getHeader();
         header.getButton('contentItemActionsMenu').click();
 

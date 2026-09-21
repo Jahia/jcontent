@@ -425,6 +425,9 @@ export const JahiaRenderedModulesUtil = {
     // its children itself, and therefore emits no wildcard placeholder at all, still names what it
     // accepts. Returns undefined for a module that was never rendered, which is not the same answer
     // as an empty list.
+    //
+    // Contribute types are out of reach here: Jahia writes them onto the placeholder only, so a view
+    // that emits none leaves this answer wider than a placeholder's would have been.
     resolveNodeTypes: function (path) {
         const moduleInfo = this.getModule(path);
 

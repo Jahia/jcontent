@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import {cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import {getAncestorPaths} from './ContentTree.utils';
 import {SearchTreeNodesQuery} from './ContentTreeSearch.gql-queries';
-import {buildTitleSearchConstraint} from './ContentTreeSearch.utils';
+import {buildSearchTerms, normalizeSearchTerm} from './ContentTreeSearch.utils';
 import styles from './ContentTreeSearch.scss';
 
 const SEARCH_RESULTS_LIMIT = 50;
@@ -45,8 +45,15 @@ export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
     const [search, {loading}] = useLazyQuery(SearchTreeNodesQuery, {fetchPolicy: 'network-only'});
 
     const triggerSearch = useCallback(() => {
-        const term = inputValue.trim();
-        if (!term) {
+        // The term the tree highlights has to be normalised exactly like the one the query is
+        // built from, or a hit found through the collapsed `like` pattern is left unhighlighted.
+        const term = normalizeSearchTerm(inputValue);
+        // Null when the input holds nothing the query can use - an empty term, but also one made
+        // only of punctuation, which the tokenizer drops. Sending it anyway would either throw
+        // (an empty contains expression) or match the whole tree (a "%%" pattern), so take the
+        // same path as an empty term: clear the matches and the status.
+        const searchTerms = buildSearchTerms(inputValue);
+        if (!searchTerms) {
             setStatus(null);
             onMatchedPaths([], '');
             return;
@@ -55,7 +62,7 @@ export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
         search({
             variables: {
                 rootPath,
-                nodeConstraint: buildTitleSearchConstraint(term),
+                ...searchTerms,
                 language,
                 limit: SEARCH_RESULTS_LIMIT
             }
@@ -101,7 +108,10 @@ export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
                     placeholder={t('jcontent:label.contentManager.tree.search.placeholder')}
                     value={inputValue}
                     disabled={loading}
-                    inputProps={{'aria-label': t('jcontent:label.contentManager.tree.search.ariaLabel')}}
+                    inputProps={{
+                        'aria-label': t('jcontent:label.contentManager.tree.search.ariaLabel'),
+                        'data-sel-role': 'content-tree-search-input'
+                    }}
                     onChange={e => setInputValue(e.target.value)}
                     onKeyUp={e => {
                         if (e.key === 'Enter') {

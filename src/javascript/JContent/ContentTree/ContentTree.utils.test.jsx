@@ -120,6 +120,25 @@ describe('convertPathsToTree', () => {
         expect(React.isValidElement(match.label)).toBe(true);
         expect(renderToStaticMarkup(match.label)).toBe('A<span class="searchMatchText">bo</span>ut');
         expect(nonMatch.label).toBe('Home');
+
+        // The row marker comes in addition to the text highlight, never instead of it.
+        expect(match.treeItemProps['data-sel-search-match']).toBe('true');
+    });
+
+    it('marks a matched row even when its label does not hold the term', () => {
+        // What a hit on the system name, or on a stemmed title, looks like: the backend matched
+        // the node but the label holds nothing to underline. The tree is not filtered by the
+        // search either, so the marker is the only thing that tells the row from its siblings.
+        const withMatches = convertPathsToTree({treeEntries: entries, searchMatchedPaths: ['/sites/testsite/home/about'], searchTerm: 'zzznotinthelabel'});
+        const match = findInTree(withMatches, '/sites/testsite/home/about');
+        const nonMatch = findInTree(withMatches, '/sites/testsite/home');
+
+        expect(match.label).toBe('About');
+        expect(match.treeItemProps['data-sel-search-match']).toBe('true');
+        expect(match.className).toMatch(/searchMatch/);
+
+        expect(nonMatch.treeItemProps['data-sel-search-match']).toBeUndefined();
+        expect(nonMatch.className).not.toMatch(/searchMatch/);
     });
 
     it('highlights an accented label when searched with its unaccented spelling', () => {
@@ -149,5 +168,6 @@ describe('convertPathsToTree', () => {
         const node = findInTree(withoutMatches, '/sites/testsite/home/about');
 
         expect(node.className).not.toMatch(/searchMatch/);
+        expect(node.treeItemProps['data-sel-search-match']).toBeUndefined();
     });
 });

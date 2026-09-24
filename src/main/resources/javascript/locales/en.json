@@ -305,6 +305,13 @@
           "many": "{{size}} items are in the clipboard"
         }
       },
+      "undo": {
+        "action": "Undo",
+        "move": "Undo last move: '{{name}}' to '{{dest}}'",
+        "move_plural": "Undo last move: {{count}} categories to '{{dest}}'",
+        "failed": "Undo failed, try again",
+        "dismiss": "Dismiss"
+      },
       "move": {
         "success": "{{count}} item has been moved to {{dest}}",
         "success_plural": "{{count}} items have been moved to {{dest}}.",

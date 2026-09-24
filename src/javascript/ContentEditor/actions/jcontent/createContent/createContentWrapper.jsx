@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import {CreateContent} from '~/ContentEditor/actions/jcontent/createContent/createContentAction';
 import {useQuery} from '@apollo/client';
 import {getNodeTypeInfo} from '~/ContentEditor/actions/jcontent/createContent/createContent.gql-queries';
+import {getCreateChildrenButtonLimit} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 import {toIconComponent} from '@jahia/moonstone';
 
 export const CreateContentWrapper = ({
@@ -21,7 +22,7 @@ export const CreateContentWrapper = ({
     render,
     loading,
     ...otherProps}) => {
-    const skipQuery = !nodeTypes || nodeTypes.length <= 1 || nodeTypes.length > Number(contextJsParameters.config.jcontent['createChildrenDirectButtons.limit']);
+    const skipQuery = !nodeTypes || nodeTypes.length <= 1 || nodeTypes.length > getCreateChildrenButtonLimit();
 
     const {data} = useQuery(getNodeTypeInfo, {
         variables: {

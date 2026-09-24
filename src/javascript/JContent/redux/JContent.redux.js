@@ -12,6 +12,9 @@ const ROUTER_REDUX_ACTION = '@@router/LOCATION_CHANGE';
 
 const defaultState = {app: 'jcontent', site: '', language: '', mode: '', path: '', template: '', params: {}};
 
+// Categories is a level 2 entry of the Taxonomy app (registered by jahia-ui-root)
+export const CATEGORIES_ROUTE = '/taxonomy/categories';
+
 const apps = {
     jcontent: {
         extractParamsFromUrl: (pathname, search) => {
@@ -64,8 +67,9 @@ const apps = {
         }
     },
     'category-manager': {
+        // Categories lives under the Taxonomy app: /taxonomy/categories/:lang/:mode/...
         extractParamsFromUrl: (pathname, search) => {
-            const [, , language, mode, ...pathElements] = pathname.split('/');
+            const [, , , language, mode, ...pathElements] = pathname.split('/');
             const registryItem = registry.get('accordionItem', mode);
             pathElements.splice(0, 0, 'categories');
             const path = decodeURIComponent(((registryItem && registryItem.getPath && registryItem.getPath('systemsite', pathElements)) || ('/' + pathElements.join('/'))));
@@ -75,7 +79,7 @@ const apps = {
         buildUrl: ({language, mode, path, params}) => {
             const queryString = _.isEmpty(params) ? '' : '?params=' + rison.encode_uri(params);
             path = path.startsWith('/sites/systemsite/categories') ? path.substring('/sites/systemsite/categories'.length) : '';
-            return `/category-manager/${language}/${mode}${path}${queryString}`;
+            return `${CATEGORIES_ROUTE}/${language}/${mode}${path}${queryString}`;
         }
     }
 };
@@ -87,8 +91,11 @@ const buildUrl = ({app, site, language, mode, path, template, params}) => {
     }
 };
 
+// Categories is nested under the Taxonomy app, so its app id cannot be read off the first path segment
+const resolveApp = pathname => (pathname.startsWith(CATEGORIES_ROUTE) ? 'category-manager' : pathname.split('/')[1]);
+
 export const extractParamsFromUrl = (pathname, search) => {
-    const app = pathname.split('/')[1];
+    const app = resolveApp(pathname);
     if (apps[app]) {
         return apps[app].extractParamsFromUrl(pathname, search);
     }
@@ -155,22 +162,22 @@ export const jContentRedux = registry => {
         [cmPreSearchModeMemo]: (state, action) => action.payload
     }, '');
     const appReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]] ? action.payload.location.pathname.split('/')[1] : state
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)] ? resolveApp(action.payload.location.pathname) : state
     }, currentValueFromUrl.app);
     const modeReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode || state
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode || state
     }, currentValueFromUrl.mode);
     const pathReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path || state
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path || state
     }, currentValueFromUrl.path);
     const paramsReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params || state
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params || state
     }, currentValueFromUrl.params);
     const siteReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site || state
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site || state
     }, '');
     const languageReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language || state
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language || state
     }, '');
     const tableViewModeReducer = handleActions({
         [setTableViewMode]: (state, action) => ({...state, viewMode: action.payload}),
@@ -180,7 +187,7 @@ export const jContentRedux = registry => {
         viewType: localStorage.getItem(JContentConstants.localStorageKeys.viewType) || JContentConstants.tableView.viewType.CONTENT
     });
     const templateReducer = handleActions({
-        [ROUTER_REDUX_ACTION]: (state, action) => apps[action.payload.location.pathname.split('/')[1]]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).template || ''
+        [ROUTER_REDUX_ACTION]: (state, action) => apps[resolveApp(action.payload.location.pathname)]?.extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).template || ''
     }, currentValueFromUrl.template);
 
     const openPathsReducer = handleActions({
@@ -244,7 +251,7 @@ export const jContentRedux = registry => {
             }
         }
 
-        if (state.router.location.pathname.startsWith('/category-manager') && state.jcontent?.mode && state.jcontent?.path) {
+        if (state.router.location.pathname.startsWith(CATEGORIES_ROUTE) && state.jcontent?.mode && state.jcontent?.path) {
             localStorage.setItem('category-manager-previous-location', state.jcontent.path);
         }
     };

@@ -301,6 +301,13 @@
           "many": "{{size}} Element sind im Clipboard"
         }
       },
+      "undo": {
+        "action": "Rückgängig",
+        "move": "Letztes Verschieben rückgängig machen: „{{name}}“ nach „{{dest}}“",
+        "move_plural": "Letztes Verschieben rückgängig machen: {{count}} Kategorien nach „{{dest}}“",
+        "failed": "Rückgängig machen fehlgeschlagen, bitte erneut versuchen",
+        "dismiss": "Ausblenden"
+      },
       "move": {
         "success": "{{count}} Element wurde nach {{dest}} verschoben",
         "success_plural": "{{count}} Elemente wurden nach {{dest}} verschoben.",

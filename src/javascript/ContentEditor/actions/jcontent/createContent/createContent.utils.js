@@ -80,10 +80,25 @@ function getNodeTypeIcon(nodeType) {
     return nodeType.iconURL && !nodeType.iconURL.endsWith('/nt_base.png') && toIconComponent(nodeType.iconURL);
 }
 
-export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, parentName) {
-    const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
+/**
+ * How many node types are offered as direct "New content" buttons before they collapse into a menu.
+ *
+ * Read defensively: this comes from an optional module configuration, and config.jcontent is absent
+ * whenever the configs/jcontent.js script has not delivered - which took the whole main panel down
+ * with a TypeError rather than simply falling back. Mirrors getButtonLimitValue in the header
+ * actions, and the 5 is the value the module ships in its own .cfg.
+ */
+export const getCreateChildrenButtonLimit = () => {
+    const configValue = contextJsParameters.config.jcontent?.['createChildrenDirectButtons.limit'];
+    const parsedValue = parseInt(configValue, 10);
 
-    if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
+    return isNaN(parsedValue) ? 5 : parsedValue;
+};
+
+export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, parentName) {
+    const nodeTypesButtonLimit = getCreateChildrenButtonLimit();
+
+    if (hasBypassChildrenLimit || nodeTypes.length <= nodeTypesButtonLimit) {
         return nodeTypes
             .filter(f => f.name !== 'jnt:resource')
             .map(nodeType => ({
@@ -104,11 +119,11 @@ export function transformNodeTypesToActions(nodeTypes, hasBypassChildrenLimit, p
 }
 
 export function transformNodeTypesToActionsPB(nodeTypes, hasBypassChildrenLimit, parentName, defaultIcon) {
-    const nodeTypesButtonLimit = contextJsParameters.config.jcontent['createChildrenDirectButtons.limit'];
+    const nodeTypesButtonLimit = getCreateChildrenButtonLimit();
 
     let actions;
 
-    if (hasBypassChildrenLimit || nodeTypes.length <= Number(nodeTypesButtonLimit)) {
+    if (hasBypassChildrenLimit || nodeTypes.length <= nodeTypesButtonLimit) {
         actions = nodeTypes
             .filter(f => f.name !== 'jnt:resource')
             .map(nodeType => ({

@@ -145,7 +145,7 @@ export const getNewCounter = nodes => {
 };
 
 export const allowDoubleClickNavigation = (nodeType, subNodes, fcn, node = null) => {
-    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].includes(nodeType) ||
+    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder', 'jnt:category'].includes(nodeType) ||
         (subNodes && subNodes > 0) ||
         (node && isCMISFolder(node))) {
         return fcn;

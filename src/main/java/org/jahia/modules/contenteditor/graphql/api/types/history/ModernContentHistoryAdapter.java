@@ -54,27 +54,43 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
     private static final Method countMethod;
 
     static {
+        // Resolve reflectively without failing class initialization: on Jahia 8.2.1.0-8.2.3.x these
+        // methods do not exist and ContentHistoryAdapter picks LegacyContentHistoryAdapter instead.
+        // Throwing here would propagate as an ExceptionInInitializerError to whoever merely loads
+        // this class, which takes down registration of the whole content editor GraphQL provider.
+        Method paginated = null;
+        Method count = null;
         try {
-            paginatedMethod = ContentHistoryService.class.getMethod(
+            paginated = ContentHistoryService.class.getMethod(
                 "getNodeHistory",
                 JCRNodeWrapper.class,
                 boolean.class,
                 int.class,
                 int.class
             );
-            countMethod = ContentHistoryService.class.getMethod(
+            count = ContentHistoryService.class.getMethod(
                 "getNodeHistoryCount",
                 JCRNodeWrapper.class,
                 boolean.class
             );
         } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Modern methods not available - should use LegacyContentHistoryAdapter", e);
+            // Left null on purpose, see requireModernMethods()
+        }
+
+        paginatedMethod = paginated;
+        countMethod = count;
+    }
+
+    private static void requireModernMethods() {
+        if (paginatedMethod == null || countMethod == null) {
+            throw new IllegalStateException("Modern methods not available - should use LegacyContentHistoryAdapter");
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<HistoryEntry> getHistory(JCRNodeWrapper node, boolean withLanguageNodes, String action, int offset, int limit) {
+        requireModernMethods();
         try {
             List<HistoryEntry> entries;
 
@@ -123,6 +139,7 @@ class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
     @Override
     public int getHistoryCount(JCRNodeWrapper node, boolean withLanguageNodes, String action) {
+        requireModernMethods();
         try {
             // If action filter is provided, get all entries and filter
             // TODO: replace with a service implementation

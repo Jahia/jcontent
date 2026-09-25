@@ -3,5 +3,18 @@
 
 - include: 'provisioning.yml'
 
+# The category manager lives at /taxonomy/categories, and that route is provided by jahia-ui-root,
+# not by jcontent. The Jahia image ships the released jahia-ui-root, which has no Taxonomy area, so
+# the categoryManager specs - and the category steps inside the contentEditor specs - render nothing
+# and time out without this.
+#
+# Pinned rather than left unversioned for the same reason the snapshot manifest pins its own
+# coordinates: an unversioned coordinate resolves to the HIGHEST snapshot in the repository, which
+# is not necessarily the line this depends on. Keep in step with jahia-ui-root's pom version.
+- installBundle:
+    - 'mvn:org.jahia.modules/jahia-ui-root/1.12.0-SNAPSHOT'
+  autoStart: true
+  uninstallPreviousVersion: true
+
 - import: "jar:mvn:org.jahia.modules/digitall/3.0.0/zip/import!/users.zip"
 - importSite: "jar:mvn:org.jahia.modules/digitall/3.0.0/zip/import!/Digitall.zip"

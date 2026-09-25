@@ -23,6 +23,10 @@ import {
 } from '~/JContent/actions/deleteActions/Delete/InfoTable/queryHandlers/DeletionInfoQueryHandler';
 import {CategoriesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/CategoriesQueryHandler';
 import CategoriesRoute from '~/JContent/CategoriesRoute/CategoriesRoute';
+import CategoriesTaxonomyApp from '~/JContent/CategoriesRoute/CategoriesTaxonomyApp';
+import {batchActions} from 'redux-batched-actions';
+import {cmGoto, cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
+import {extractPaths} from '~/JContent/JContent.utils';
 import SortSelector from '~/JContent/ContentRoute/ToolBar/SortSelector';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
@@ -222,7 +226,6 @@ export const jContentAccordionItems = registry => {
     });
 
     registry.add('accordionItem', 'category', renderDefaultContentTrees, {
-        targets: ['category-manager:1'],
         icon: <Tag/>,
         label: 'Categories',
         rootPath: '/sites/systemsite/categories',
@@ -268,13 +271,43 @@ export const jContentAccordionItems = registry => {
         tableConfig: {
             queryHandler: CategoriesQueryHandler,
             typeFilter: ['jnt:category'],
+            // Categories are managed from the main panel tree, so a left click is enough to make
+            // a category the current one
+            selectOnSingleClick: true,
             viewSelector: undefined,
             uploadType: JContentConstants.mode.IMPORT,
             dnd: {
-                canDrag: true, canDrop: true, canDropFile: true
+                canDrag: true, canDrop: true, canDropFile: true,
+                // Expand the target instead of confirming the move with a notification
+                expandTargetOnDrop: true,
+                // ... and offer a way back from it, in the header toolbar
+                recordUndo: true
             },
             defaultSort: {orderBy: 'displayName', order: 'ASC'},
             columns: ['name']
+        }
+    });
+
+    // Categories is a level 2 entry of the Taxonomy app owned by jahia-ui-root
+    registry.add('taxonomyAccordionItem', 'categories', {
+        targets: ['taxonomy:20'],
+        requiredPermission: 'categoryManager',
+        requiredPermissionPath: '/sites/systemsite/categories',
+        icon: <Tag/>,
+        label: 'jcontent:label.categoryManager.pageTitle',
+        // Categories are managed entirely from the main panel (expandable tree + columns), the
+        // level 2 navigation only carries the entry point itself.
+        routeRender: () => <CategoriesTaxonomyApp/>,
+        onSelect: () => {
+            const store = window.jahia.reduxStore;
+            const path = localStorage.getItem('category-manager-previous-location') || '';
+            // Expand the branch leading to the category that was last visited, so it is visible
+            // in the main panel tree on arrival
+            const paths = extractPaths('systemsite', path, 'category').slice(0, -1);
+            store.dispatch(batchActions([
+                cmOpenTablePaths(paths),
+                cmGoto({app: 'category-manager', language: store.getState().language, mode: 'category', path, params: {}})
+            ]));
         }
     });
 };

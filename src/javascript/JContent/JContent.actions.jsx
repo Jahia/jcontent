@@ -101,6 +101,9 @@ export const jContentActions = registry => {
     registry.add('action', 'rename', {
         buttonIcon: <Rename/>,
         buttonLabel: 'jcontent:label.contentManager.rename',
+        // The structural roots must keep their names and their existence: renaming or deleting
+        // one breaks every path hanging off it.
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
         component: RenameActionComponent
     });
     registry.add('action', 'createFolder', {
@@ -308,11 +311,17 @@ export const jContentActions = registry => {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',
         hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:isAreaList'],
+        // The structural roots must keep their names and their existence: renaming or deleting
+        // one breaks every path hanging off it.
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
         component: DeleteActionComponent
     });
     registry.add('action', 'deletePermanently', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.deletePermanently',
+        // The structural roots must keep their names and their existence: renaming or deleting
+        // one breaks every path hanging off it.
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
         component: DeletePermanentlyActionComponent
     });
     registry.add('action', 'undelete', {

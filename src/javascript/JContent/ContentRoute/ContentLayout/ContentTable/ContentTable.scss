@@ -44,11 +44,10 @@
 /*
  * The row that was just created. A large tree gives the eye nothing to land on, so the row is
  * tinted rather than merely selected - the ordinary selection highlight is too quiet to find by
- * scanning. Derived from the theme's success colour so it follows light and dark, with a plain
- * fallback for browsers without color-mix. Marked important because it has to win against the
+ * scanning. Uses the theme's plain success ground, as PublicationStatus does, so it follows light
+ * and dark without mixing a colour by hand. Marked important because it has to win against the
  * row background Moonstone sets itself.
  */
 .revealedRow {
-    background-color: rgba(76, 175, 80, 0.18) !important;
-    background-color: color-mix(in srgb, var(--color-success) 18%, transparent) !important;
+    background-color: var(--color-success_plain20) !important;
 }

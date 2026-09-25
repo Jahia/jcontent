@@ -1,13 +1,19 @@
 import React, {act} from 'react';
+import PropTypes from 'prop-types';
 import {createRoot} from 'react-dom/client';
 import {useDelayedVeil, VEIL_DELAY_MS} from './useDelayedVeil';
 
-// react-test-renderer in this tree is still on React 16, so drive a real root instead
+// Drives a real root: react-test-renderer in this tree is still on React 16, so its act throws
 const render = (loading, hasRows) => {
     const seen = {value: undefined};
-    const Probe = ({loading, hasRows}) => {
-        seen.value = useDelayedVeil(loading, hasRows);
+    const Probe = ({isLoading, hasRows}) => {
+        seen.value = useDelayedVeil(isLoading, hasRows);
         return null;
+    };
+
+    Probe.propTypes = {
+        isLoading: PropTypes.bool,
+        hasRows: PropTypes.bool
     };
 
     const container = document.createElement('div');
@@ -15,13 +21,13 @@ const render = (loading, hasRows) => {
     const root = createRoot(container);
 
     act(() => {
-        root.render(<Probe loading={loading} hasRows={hasRows}/>);
+        root.render(<Probe isLoading={loading} hasRows={hasRows}/>);
     });
 
     return {
         seen,
         update: (nextLoading, nextHasRows) => act(() => {
-            root.render(<Probe loading={nextLoading} hasRows={nextHasRows}/>);
+            root.render(<Probe isLoading={nextLoading} hasRows={nextHasRows}/>);
         }),
         unmount: () => {
             act(() => root.unmount());

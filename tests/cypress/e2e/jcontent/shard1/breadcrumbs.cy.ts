@@ -25,6 +25,16 @@ describe('Breadcrumb navigation test', () => {
                 {name: 'j:templateName', type: 'STRING', value: 'simple'}
             ]
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/home/search-results/subpageA`,
+            name: 'area-main',
+            primaryNodeType: 'jnt:contentList',
+            children: [{
+                name: 'test-content1',
+                primaryNodeType: 'jnt:bigText',
+                properties: [{name: 'text', language: 'en', value: 'test 1'}]
+            }]
+        });
         // Create several nested folders
         const folders = ['A', 'B', 'C', 'D'];
         let parentPath = `/sites/${siteKey}/contents`;
@@ -129,6 +139,17 @@ describe('Breadcrumb navigation test', () => {
         cy.get('h1').contains('Search Results');
         Breadcrumb.findByContent('Home').click();
         cy.get('h1').contains('Home');
+        cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
+    });
+
+    it('Checks the page stays reachable from a node the content tree does not show', () => {
+        // area-main is not in the content tree and sits directly under subpageA: the breadcrumb used to
+        // collapse to subpageA alone, which the last-entry rule then greyed out, leaving no way back to it.
+        JContent.visit(siteKey, 'en', 'pages/home/search-results/subpageA/area-main');
+        Breadcrumb.findByContent('area-main').should('be.disabled');
+        Breadcrumb.findByContent('subpageA').should('not.be.disabled');
+        Breadcrumb.findByContent('subpageA').click();
+        cy.get('h1').contains('subpageA');
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
     });
 });

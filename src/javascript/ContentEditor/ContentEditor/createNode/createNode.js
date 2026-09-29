@@ -25,7 +25,8 @@ export const createNode = ({
     const wipInfo = values[Constants.wip.fieldName];
     let variables = adaptCreateRequest({
         uuid: nodeData.uuid,
-        name: nodeData.newName,
+        // The form value carries a forced name (named child) even when the system name field is not in the form
+        name: values[Constants.systemName.name] || nodeData.newName,
         primaryNodeType,
         mixins: mixinsToAdd,
         properties: propsToSave,

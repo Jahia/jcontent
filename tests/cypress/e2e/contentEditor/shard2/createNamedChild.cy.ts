@@ -1,7 +1,9 @@
 import {
     addNode,
+    createRole,
     createSite,
     createUser,
+    deleteRole,
     deleteSite,
     deleteUser,
     enableModule,
@@ -14,6 +16,8 @@ describe('Create a named child node', () => {
     const siteKey = 'createNamedChildSite';
     const areaPath = `/sites/${siteKey}/home/named-child-page/my-area`;
     const editor = {username: 'namedChildEditor', password: 'password'};
+    // The permissions of the editor role without viewOptionsTab, so the form of this user has no system name field
+    const roleName = 'editor-without-options';
 
     const createFromContextMenu = (parentName: string, action: string) => {
         JContent.visit(siteKey, 'en', 'pages/home/named-child-page')
@@ -34,7 +38,44 @@ describe('Create a named child node', () => {
         cy.loginAndStoreSession();
         deleteSite(siteKey);
         deleteUser(editor.username);
-        cy.executeGroovy('contentEditor/createNamedChild/createEditorWithoutOptionsRole.groovy');
+        deleteRole(roleName, {errorPolicy: 'all'});
+        createRole({
+            name: roleName,
+            roleGroup: 'edit-role',
+            privilegedAccess: true,
+            permissions: [
+                'api-access',
+                'jcr:read_default',
+                'jcr:write_default',
+                'jcr:readAccessControl_default',
+                'jcr:lockManagement_default',
+                'jcr:versionManagement_default',
+                'jcr:nodeTypeManagement_default',
+                'jcr:retentionManagement_default',
+                'jcr:lifecycleManagement_default',
+                'move',
+                'publication-start',
+                'siteAdminUrlmapping',
+                'publication-finish-correction'
+            ],
+            sitePermissions: [
+                'components',
+                'pageComposerAccess',
+                'jContentAccess',
+                'jContentActions',
+                'managers',
+                'templates',
+                'view-basic-wysiwyg-editor',
+                'viewCategoriesTab',
+                'viewContentTab',
+                'viewLayoutTab',
+                'viewMetadataTab',
+                'viewSeoTab',
+                'viewVisibilityTab',
+                'jContentAccordions',
+                'viewVanityUrlModal'
+            ]
+        });
 
         createSite(siteKey, {
             languages: 'en',
@@ -44,7 +85,7 @@ describe('Create a named child node', () => {
         });
         enableModule('jcontent-test-module', siteKey);
         createUser(editor.username, editor.password);
-        grantRoles(`/sites/${siteKey}`, ['editor-without-options'], editor.username, 'USER');
+        grantRoles(`/sites/${siteKey}`, [roleName], editor.username, 'USER');
 
         addNode({
             parentPathOrId: `/sites/${siteKey}/home`,
@@ -73,7 +114,7 @@ describe('Create a named child node', () => {
         cy.loginAndStoreSession();
         deleteSite(siteKey);
         deleteUser(editor.username);
-        cy.executeGroovy('contentEditor/createNamedChild/deleteEditorWithoutOptionsRole.groovy');
+        deleteRole(roleName);
     });
 
     it('saves a named child under its declared name when the system name field is not in the form', () => {

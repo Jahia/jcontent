@@ -1,12 +1,14 @@
 import {JContent} from '../../page-object';
 import {Picker} from '../../page-object/picker';
-import {createSite, deleteSite, uploadFile} from '@jahia/cypress';
+import {createSite, deleteSite, enableModule, uploadFile} from '@jahia/cypress';
 
 describe('Picker - Media - upload from inside the picker', () => {
     const siteKey = 'pickerUploadSite';
 
     before(() => {
         createSite(siteKey);
+        // The type carrying the image picker, cent:epSifeRestaurant, comes from the test module.
+        enableModule('jcontent-test-module', siteKey);
         // Seeds the files root: the picker has to open on a table, which is what an upload drops onto.
         uploadFile('/assets/uploadMedia/myfile.png', `/sites/${siteKey}/files`, 'seed.png', 'image/png');
     });

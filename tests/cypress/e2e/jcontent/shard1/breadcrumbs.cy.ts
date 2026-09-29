@@ -147,9 +147,16 @@ describe('Breadcrumb navigation test', () => {
         // the site root: the breadcrumb used to collapse to subpageA alone, which the last-entry rule
         // then greyed out, leaving no way back to the page.
         JContent.visit(siteKey, 'en', 'pages/home/search-results/subpageA/area-main');
-        Breadcrumb.findByContent('area-main').should('be.disabled');
-        Breadcrumb.findByContent('subpageA').should('not.be.disabled');
-        Breadcrumb.findByContent('subpageA').click();
+
+        // Assert on the buttons themselves: Breadcrumb.findByContent yields the label span inside one,
+        // and a span carries no disabled state, so it would hold whatever the entry does.
+        const entries = () => cy.get('nav[aria-label="breadcrumb"]').find('button[data-sel-role="breadcrumb-item"]');
+
+        entries().should('have.length', 2);
+        entries().eq(0).should('contain', 'subpageA').and('not.be.disabled');
+        entries().eq(1).should('contain', 'area-main').and('be.disabled');
+
+        entries().eq(0).click();
         cy.get('h1').contains('subpageA');
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
     });

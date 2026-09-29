@@ -143,8 +143,9 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Checks the page stays reachable from a node the content tree does not show', () => {
-        // area-main is not in the content tree and sits directly under subpageA: the breadcrumb used to
-        // collapse to subpageA alone, which the last-entry rule then greyed out, leaving no way back to it.
+        // The area is not in the content tree and sits directly under subpageA, itself two levels below
+        // the site root: the breadcrumb used to collapse to subpageA alone, which the last-entry rule
+        // then greyed out, leaving no way back to the page.
         JContent.visit(siteKey, 'en', 'pages/home/search-results/subpageA/area-main');
         Breadcrumb.findByContent('area-main').should('be.disabled');
         Breadcrumb.findByContent('subpageA').should('not.be.disabled');

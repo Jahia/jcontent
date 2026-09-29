@@ -28,6 +28,9 @@ describe('Picker - Media - upload from inside the picker', () => {
         const picker = contentEditor.getPickerField('cemix:epSifeIllustrated_image').open();
         // The image picker opens on thumbnails; the upload drops onto the table the list view renders.
         picker.getViewMode().select('List');
+        // Pins where the upload is about to land. If the picker ever opens somewhere other than the
+        // files root, this fails here and says so, rather than the upload going somewhere unwatched.
+        picker.getTable().getRowByLabel('seed.png').should('be.visible');
         return picker;
     };
 

@@ -12,14 +12,17 @@ export function getChildrenOrder(formValues, nodeData, sections) {
         return doNotModifyReturn;
     }
 
-    const isChangedOrder = formValues['Children::Order'].find((child, i) => nodeData.children.nodes[i].name !== child.name);
+    const childrenOrder = formValues['Children::Order'].map(child => child.name);
+    // The ordering field of a page lists only its sub-pages, so compare with those children alone
+    const initialOrder = nodeData.children.nodes.map(child => child.name).filter(name => childrenOrder.includes(name));
+    const isChangedOrder = childrenOrder.some((name, i) => initialOrder[i] !== name);
 
     if (!isChangedOrder) {
         return doNotModifyReturn;
     }
 
     return {
-        childrenOrder: formValues['Children::Order'].map(child => child.name),
+        childrenOrder,
         shouldModifyChildren: true
     };
 }

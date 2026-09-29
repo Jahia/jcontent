@@ -2,7 +2,7 @@ import {JContent} from '../../../page-object';
 import {RichTextField, SmallTextField} from '../../../page-object/fields';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../../page-object';
-import {addNode, createSite, createUser, deleteSite, deleteNode, deleteUser, getNodeByPath, grantRoles} from '@jahia/cypress';
+import {addNode, breakAclInheritance, createSite, createUser, deleteSite, deleteNode, deleteUser, getNodeByPath, grantRoles} from '@jahia/cypress';
 
 describe('permissions', () => {
     let jcontent: JContent;
@@ -46,8 +46,6 @@ describe('page editor without write access on a sub-page', () => {
     const homePath = `/sites/${siteKey}/home`;
     const subPages = ['A', 'B', 'hidden', 'readOnly', 'D'];
 
-    const breakInheritance = (path: string) => cy.executeGroovy('contentEditor/permissions/breakAclInheritance.groovy', {NODE_PATH: path});
-
     before(() => {
         createSite(siteKey, {
             languages: 'en',
@@ -68,8 +66,8 @@ describe('page editor without write access on a sub-page', () => {
             ]
         }));
         grantRoles(homePath, ['editor'], editorLogin.username, 'USER');
-        breakInheritance(`${homePath}/hidden`);
-        breakInheritance(`${homePath}/readOnly`);
+        breakAclInheritance(`${homePath}/hidden`);
+        breakAclInheritance(`${homePath}/readOnly`);
         grantRoles(`${homePath}/readOnly`, ['reviewer'], editorLogin.username, 'USER');
     });
 

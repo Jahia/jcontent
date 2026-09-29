@@ -107,14 +107,20 @@ describe('Open in Live tests', () => {
                 .should('have.class', 'moonstone-selected');
         });
 
-        it('does not show current domain section for localhost-serverName site', () => {
-            // Localhost sites are intentionally local-only — Jahia resolves sites by hostname,
-            // so opening a localhost site at a different hostname renders in the wrong site context.
-            // "Current domain" must never appear regardless of what hostname the user is browsing from.
+        it('shows current domain section for localhost-serverName site unless browsing from localhost', () => {
+            // The site path in the live URL selects the site, so a hostname claimed by no site
+            // renders the localhost site in its own context.
+            // Browsing from localhost itself, the default domain already covers it.
             visitWithStub();
             getComponentByRole(Button, 'openInLiveChevron').click();
             cy.get('.moonstone-menu:not(.moonstone-hidden)').should('be.visible');
-            cy.contains('Current domain').should('not.exist');
+            if (currentHostname === serverName) {
+                cy.contains('Current domain').should('not.exist');
+            } else {
+                cy.contains('Current domain').should('be.visible');
+                cy.get('.moonstone-menu:not(.moonstone-hidden)').contains('.moonstone-menuItem', currentHostname).click();
+                cy.get('@winOpen').should('be.calledWith', Cypress.sinon.match(f => f.includes(`//${currentHostname}`)));
+            }
         });
 
         it('selecting an alias opens URL with that alias', () => {
@@ -165,7 +171,6 @@ describe('Open in Live tests', () => {
     describe('current domain — cross-site hostname guard', () => {
         // Guard 2: "Current domain" must not appear when the current hostname is already the
         // server name of a different Jahia site (opening it would render that other site instead).
-        // Requires a site with a non-localhost serverName to bypass guard 1.
         const extSiteKey = 'openInLiveSiteExt';
         const extServerName = 'external.example.com';
 
@@ -195,7 +200,7 @@ describe('Open in Live tests', () => {
 
         it('shows current domain section when current hostname is not claimed by any site', () => {
             // No site in the test environment has serverName=currentHostname → guard 2 does not fire.
-            // Guard 1 also does not fire (extServerName is not localhost, not currentHostname).
+            // Guard 1 also does not fire (extServerName is not currentHostname).
             // "Current domain: currentHostname" must appear.
             visitExtWithStub();
             getComponentByRole(Button, 'openInLiveChevron').click();

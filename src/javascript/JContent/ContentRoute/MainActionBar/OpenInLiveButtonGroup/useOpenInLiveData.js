@@ -62,11 +62,8 @@ export const useOpenInLiveData = path => {
     const currentSitePath = node?.site?.path;
     const allSites = data?.jcr?.allSites?.siteNodes ?? [];
 
-    // Guard 1: hostname already in this site's names (no duplicate), or site uses localhost.
-    // Jahia resolves site context from the request hostname — using localhost across different
-    // hostnames renders in the wrong site context.
-    const isHostnameInCurrentSite = [serverName, ...serverNameAliases].includes(currentHostname) ||
-        [serverName, ...serverNameAliases].includes('localhost');
+    // Guard 1: hostname already in this site's names (no duplicate).
+    const isHostnameInCurrentSite = [serverName, ...serverNameAliases].includes(currentHostname);
 
     // Guard 2: hostname is already claimed by a different site — Jahia would resolve that other
     // site's context instead, opening the wrong site.

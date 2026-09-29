@@ -125,4 +125,36 @@ describe('ContentPath', () => {
         const wrapper = shallow(<ContentPath/>).find('SimplePathEntry').first();
         expect(wrapper.prop('item')).toEqual(ancestors[1]);
     });
+
+    it('keeps the closest ancestor visible in Content tree navigable when it is the direct parent', () => {
+        // A node sitting directly under the page it belongs to - an area, say - used to collapse the
+        // whole breadcrumb to that page alone, which the last-item rule then rendered disabled: the
+        // page was on screen and there was no way back to it.
+        const ancestors = [{
+            uuid: 'x',
+            path: '/x',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'y',
+            path: '/x/y',
+            isVisibleInContentTree: true
+        }];
+
+        const node = {
+            uuid: 'z',
+            path: '/x/y/z',
+            isVisibleInContentTree: false,
+            ancestors
+        };
+
+        useQuery.mockImplementation(() => ({data: {jcr: {node}}}));
+
+        const entries = shallow(<ContentPath/>).find('SimplePathEntry');
+
+        expect(entries).toHaveLength(2);
+        expect(entries.at(0).prop('item')).toEqual(ancestors[1]);
+        expect(entries.at(0).prop('isDisabled')).toBe(false);
+        expect(entries.at(1).prop('item')).toEqual(node);
+        expect(entries.at(1).prop('isDisabled')).toBe(true);
+    });
 });

@@ -1,9 +1,12 @@
 import {useEffect, useRef} from 'react';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {batchActions} from 'redux-batched-actions';
+import {useDispatch, useSelector} from 'react-redux';
 import {uploadStatuses} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.constants';
 import {cePickerAddSelection, cePickerSetSelection} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {flattenTree} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+
+// Stable fallback, so that a store without the jContent upload state does not hand the effect a
+// new array on every render.
+const NO_UPLOADS = [];
 
 /**
  * Selects a file the user has just uploaded from inside the picker, once it appears among the
@@ -19,34 +22,52 @@ import {flattenTree} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
  * its own. A file that is not among the rows yet is left pending: uploading triggers a refetch,
  * and it gets picked up on the render where it arrives.
  *
+ * The upload panel is global and shared with jContent: it only empties itself once a whole batch
+ * has succeeded, and not at all when part of it failed, so it can still hold uploads made
+ * elsewhere by the time a picker opens. Whatever it holds at that point is taken as none of this
+ * picker's business, leaving only the uploads that arrive while it is open.
+ *
  * @param rows the nodes currently loaded in the picker, a tree in the structured views
  * @param isMultiple whether the field being edited takes more than one value
  */
 export const useSelectUploadedNodes = (rows, isMultiple) => {
     const dispatch = useDispatch();
 
-    const uploadedUuids = useSelector(state => (state.jcontent?.fileUpload?.uploads || [])
-        .filter(upload => upload.status === uploadStatuses.UPLOADED && upload.uuid)
-        .map(upload => upload.uuid), shallowEqual);
+    const uploads = useSelector(state => state.jcontent?.fileUpload?.uploads || NO_UPLOADS);
+
+    // Uploads that were already in the panel when this picker opened, by id - they were started
+    // somewhere else. Null until the first pass has had a chance to look.
+    const predating = useRef(null);
 
     // Uploads already answered for, so that a later render does not select them again - the user
     // is free to deselect what an upload selected.
     const answered = useRef(new Set());
 
     useEffect(() => {
-        if (uploadedUuids.length === 0) {
-            // The panel has been cleared, so the same file can be uploaded again from scratch.
+        if (uploads.length === 0) {
+            // The panel has been cleared, so nothing predates the picker any more and the same
+            // file can be uploaded again from scratch.
+            predating.current = new Set();
             answered.current = new Set();
             return;
         }
 
-        const pending = uploadedUuids.filter(uuid => !answered.current.has(uuid));
+        if (predating.current === null) {
+            predating.current = new Set(uploads.map(upload => upload.id));
+        }
+
+        const pending = uploads
+            .filter(upload => !predating.current.has(upload.id))
+            .filter(upload => upload.status === uploadStatuses.UPLOADED && upload.uuid)
+            .map(upload => upload.uuid)
+            .filter(uuid => !answered.current.has(uuid));
+
         if (pending.length === 0) {
             return;
         }
 
         const loaded = flattenTree(rows || []);
-        const actions = [];
+        const selectable = [];
 
         pending.forEach(uuid => {
             const node = loaded.find(row => row.uuid === uuid);
@@ -57,12 +78,18 @@ export const useSelectUploadedNodes = (rows, isMultiple) => {
             answered.current.add(uuid);
 
             if (node.isSelectable) {
-                actions.push(isMultiple ? cePickerAddSelection(uuid) : cePickerSetSelection([uuid]));
+                selectable.push(uuid);
             }
         });
 
-        if (actions.length > 0) {
-            dispatch(actions.length === 1 ? actions[0] : batchActions(actions));
+        if (selectable.length === 0) {
+            return;
         }
-    }, [dispatch, isMultiple, rows, uploadedUuids]);
+
+        // One action either way: adding takes a list, and setting replaces the selection, so
+        // several of them would leave only the last one standing anyway.
+        dispatch(isMultiple ?
+            cePickerAddSelection(selectable) :
+            cePickerSetSelection([selectable[selectable.length - 1]]));
+    }, [dispatch, isMultiple, rows, uploads]);
 };

@@ -3,4 +3,4 @@
 "@jahia/jcontent": patch
 ---
 
-Show every field a dynamic mixin carries, including one it inherits from a supertype shared with a sibling mixin. Where several mixins extend the same type and inherit the same property, only one of them was showing it and the others silently lost it (#2746)
+Fixed mixin fields so that every mixin shows all fields it carries, including inherited fields. When multiple mixins inherit the same field, the field remains editable in a single place without one value overwriting another. GraphQL now always returns the list of values available for an editor form field, using an empty list when there are no values instead of null. (#2746)

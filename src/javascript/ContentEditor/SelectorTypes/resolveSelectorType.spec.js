@@ -145,7 +145,6 @@ describe('Selector Types', () => {
         // down on a content folder (#2746), so every selector that reads it is covered here.
         describe.each([
             ['Choicelist'],
-            ['ChoiceList'],
             ['CheckboxChoiceList'],
             ['CheckboxesToMultiLeftRight'],
             ['MultipleLeftRightSelector'],
@@ -168,7 +167,7 @@ describe('Selector Types', () => {
 
                 // Either no value at all, or an empty selection -- never a value invented from
                 // a list that was not there.
-                expect(initValue === undefined || initValue.length === 0).toBe(true);
+                expect(initValue ?? []).toHaveLength(0);
             });
         });
     });

@@ -76,6 +76,11 @@ export const registerSelectorTypesOnChange = registry => {
         onChange: (previousValue, currentValue, field, onChangeContext) => {
             const sections = onChangeContext.sections;
             const fields = getFields(sections);
+            // A sibling copy of an inherited field (see adaptSections.ts) shares its propertyName with
+            // copies in other fieldsets, some of them inactive. These are the copies actually in play --
+            // not dynamic, or dynamic and activated -- so a value read here comes from what the reader is
+            // editing rather than from an inactive sibling still holding its default.
+            const activeFields = getFields(sections, undefined, fieldset => !fieldset.dynamic || fieldset.activated);
             const dependentPropertiesFields = fields
                 .filter(f => f.selectorOptions
                     .find(s => s.name === 'dependentProperties' && s.value.includes(field.propertyName))
@@ -90,7 +95,8 @@ export const registerSelectorTypesOnChange = registry => {
 
                     // Build Context
                     dependentProperties.filter(dependentProperty => dependentProperty !== field.propertyName).forEach(dependentProperty => {
-                        const dependentField = fields.find(field => field.propertyName === dependentProperty);
+                        const dependentField = activeFields.find(field => field.propertyName === dependentProperty) ||
+                            fields.find(field => field.propertyName === dependentProperty);
                         if (dependentField) {
                             context.push({
                                 key: dependentProperty,

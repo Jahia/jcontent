@@ -166,6 +166,12 @@ public class EditorFormServiceImpl implements EditorFormService {
                 .flatMap(s -> s.getFieldSets().stream())
                 .collect(Collectors.<FieldSet, String, Collection<FieldSet>>toMap(FieldSet::getName, Collections::singleton, CollectionUtils::union));
 
+            // PASS 1: everything that does not need a field's value constraints -- labels,
+            // visibility flags, dynamic/activated/hasEnableSwitch/readOnly, sort order. Constraint
+            // resolution can hit JCR (sqlquery/nodes/resourceBundle/subnodes choicelist
+            // initializers), so it is deferred to pass 2, after removeFieldsEditedElsewhere has
+            // thrown away the sibling copies that would otherwise pay for that resolution and have
+            // the result discarded.
             for (Section section : form.getSections()) {
                 // Set section label and description if not set
                 section.initializeLabel(uiLocale, site);
@@ -219,7 +225,28 @@ public class EditorFormServiceImpl implements EditorFormService {
                         if (field.getSelectorOptionsMap() != null && !field.getSelectorOptionsMap().isEmpty()) {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
+                    }
+                }
+            }
 
+            // Sibling extend-mixins each keep their own copy of a property inherited from a shared
+            // supertype, so that whichever one is switched on shows it (see Form#findAndRemoveField).
+            // Two of them switched on at once would put two inputs over a single property, and on
+            // save the second silently overwrites the first -- so among the ACTIVE fieldsets the
+            // property is edited in one place. The inactive ones keep their copy for when they are
+            // switched on. Runs here, between the two passes, because it needs the activated flag
+            // pass 1 set, and because it must run before pass 2 resolves constraints: a field
+            // dropped here as a duplicate never pays for a choicelist lookup that pass 2 would
+            // otherwise throw away. Pass 2 has not yet dropped what the reader cannot see, so this
+            // skips a hidden field or fieldset itself rather than relying on that later filter.
+            removeFieldsEditedElsewhere(form);
+
+            // PASS 2: value constraints for the fields that survived the de-dup (the JCR-hitting
+            // part), then the visibility filters that depend on those fields being final --
+            // Field::isVisible, the fieldSet-level and section-level keep-filters below.
+            for (Section section : form.getSections()) {
+                for (FieldSet fieldSet : section.getFieldSets()) {
+                    for (Field field : fieldSet.getFields()) {
                         field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, uiLocale, new HashMap<>()));
                     }
                     fieldSet.setFields(fieldSet.getFields().stream()
@@ -245,14 +272,6 @@ public class EditorFormServiceImpl implements EditorFormService {
 
                 section.setVisible(section.isVisible() && section.getFieldSets().stream().anyMatch(FieldSet::isVisible));
             }
-
-            // Sibling extend-mixins each keep their own copy of a property inherited from a shared
-            // supertype, so that whichever one is switched on shows it (see Form#findAndRemoveField).
-            // Two of them switched on at once would put two inputs over a single property, and on
-            // save the second silently overwrites the first -- so among the ACTIVE fieldsets the
-            // property is edited in one place. The inactive ones keep their copy for when they are
-            // switched on. Runs here because it needs the activated flag set above.
-            removeFieldsEditedElsewhere(form);
 
             // Remove empty sections
             form.setSections(form.getSections().stream()
@@ -362,7 +381,7 @@ public class EditorFormServiceImpl implements EditorFormService {
      */
     private static List<FieldValueConstraint> constraintsOrEmpty(Field editorFormField) {
         List<FieldValueConstraint> constraints = editorFormField.getValueConstraints();
-        return constraints != null ? constraints : Collections.emptyList();
+        return constraints != null ? constraints : new ArrayList<>();
     }
 
     private static List<FieldValueConstraint> toValueConstraints(List<ChoiceListValue> choiceListValues) {
@@ -373,7 +392,7 @@ public class EditorFormServiceImpl implements EditorFormService {
             cst.setValue(FieldValue.convert(choiceListValue.getValue()));
             cst.setPropertyList(choiceListValue.getProperties() != null ?
                     choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
-                    Collections.emptyList()
+                    new ArrayList<>()
             );
             valueConstraints.add(cst);
         }
@@ -414,13 +433,20 @@ public class EditorFormServiceImpl implements EditorFormService {
      * <p>Identity is {@link Field#getKey()}, declaring type plus name, so this only ever collapses
      * what is genuinely one property -- two inherited copies of the same supertype definition, not
      * two properties that merely share a name.
+     *
+     * <p>Runs between the two post-processing passes over the form, so a field's {@code visible}
+     * flag is set (pass 1) but its value constraints are not resolved yet (pass 2) -- fields and
+     * fieldsets pass 2 will later drop are all still present here. Both are therefore tested
+     * explicitly: only a visible field in a visible fieldset can claim a property or be dropped as
+     * a duplicate of one. A field or fieldset the reader will never see is not a place the property
+     * is edited, and letting one claim a property here would strip it from the copy that IS shown.
      */
     private static void removeFieldsEditedElsewhere(Form form) {
         Set<String> alreadyEditable = new HashSet<>();
         for (Section section : form.getSections()) {
             for (FieldSet fieldSet : section.getFieldSets()) {
-                if (Boolean.TRUE.equals(fieldSet.isActivated())) {
-                    fieldSet.getFields().removeIf(field -> !alreadyEditable.add(field.getKey()));
+                if (Boolean.TRUE.equals(fieldSet.isActivated()) && Boolean.TRUE.equals(fieldSet.isVisible())) {
+                    fieldSet.getFields().removeIf(field -> field.isVisible() && !alreadyEditable.add(field.getKey()));
                 }
             }
         }

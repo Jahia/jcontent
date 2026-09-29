@@ -259,13 +259,16 @@ public class Form implements DefinitionRegistryItem {
      *
      * @param target the fieldset the field is being merged into. Never protected from itself, so
      *               merging a static definition into a dynamic fieldset still updates the field in
-     *               place instead of duplicating it.
+     *               place instead of duplicating it. {@code null} means there is no target to
+     *               protect anything for, so nothing is protected -- see the deprecated one-arg
+     *               overload.
      */
     public Optional<Field> findAndRemoveField(Field otherField, FieldSet target) {
         boolean incomingIsGenerated = otherField.getExtendedPropertyDefinition() != null;
+        boolean targetKeepsItsOwnFields = incomingIsGenerated && keepsItsOwnFields(target);
         return sections.stream().flatMap(section ->
             section.getFieldSets().stream()
-                .filter(fieldSet -> fieldSet == target || !(incomingIsGenerated && keepsItsOwnFields(fieldSet) && keepsItsOwnFields(target)))
+                .filter(fieldSet -> fieldSet == target || !(targetKeepsItsOwnFields && keepsItsOwnFields(fieldSet)))
                 .flatMap(fieldSet -> {
                 Optional<Field> foundField = fieldSet.getFields().stream().filter(field -> otherField.getExtendedPropertyDefinition() != null ? field.getKey().equals(otherField.getKey()) : field.getName().equals(otherField.getName())).findFirst();
                 if (foundField.isPresent()) {
@@ -277,11 +280,39 @@ public class Form implements DefinitionRegistryItem {
     }
 
     /**
+     * @deprecated use {@link #findAndRemoveField(Field, FieldSet)}. This overload has no target
+     * fieldset to protect, so it behaves as the merge always did before #2746: it removes the
+     * field from wherever in the form it is found, sibling extend-mixin or not.
+     */
+    @Deprecated
+    public Optional<Field> findAndRemoveField(Field otherField) {
+        return findAndRemoveField(otherField, null);
+    }
+
+    /**
      * Whether a fieldset holds on to the fields it was generated with, rather than lending them to
-     * whoever merges next. True of a fieldset generated from a mixin that extends another type --
-     * the same test EditorFormServiceImpl uses to decide a fieldset is dynamic.
+     * whoever merges next. True of a fieldset generated from any mixin that declares {@code extends}.
+     *
+     * <p>This is deliberately wider than the {@code isExtend} test EditorFormServiceImpl uses to
+     * decide a fieldset is DYNAMIC, which also demands that the mixin not already be a supertype of
+     * the edited type. That extra clause is not wanted here. A mixin can declare {@code extends} and
+     * still sit in the edited type's own supertype set, which makes its fieldset permanently applied
+     * -- no toggle, always on -- while its properties exist on the node unconditionally. A genuinely
+     * dynamic mixin inheriting one of those properties merges after it, because
+     * DefinitionRegistryItemComparator puts a subtype after its supertype, and would take the field
+     * away for itself. The property would then disappear from the form whenever that dynamic mixin
+     * is switched off, although it is still on the node. Protecting the permanently-applied fieldset
+     * keeps the field where it always applies; when the dynamic mixin is switched on as well, both
+     * fieldsets are activated and EditorFormServiceImpl#removeFieldsEditedElsewhere collapses the
+     * pair back to one editable copy.
+     *
+     * <p>{@code null} protects nothing -- there is no target fieldset to protect anything for. That
+     * is how the deprecated one-arg {@link #findAndRemoveField(Field)} keeps its old behaviour.
      */
     private static boolean keepsItsOwnFields(FieldSet fieldSet) {
+        if (fieldSet == null) {
+            return false;
+        }
         ExtendedNodeType fieldSetNodeType = fieldSet.getNodeType();
         return fieldSetNodeType != null && !fieldSetNodeType.getMixinExtends().isEmpty();
     }

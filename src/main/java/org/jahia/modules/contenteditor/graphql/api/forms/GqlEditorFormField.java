@@ -98,9 +98,7 @@ public class GqlEditorFormField {
             return field.getValueConstraints().stream().map(GqlEditorFormValueConstraint::new).collect(Collectors.toList());
         }
 
-        // Empty rather than null: a field with nothing to choose from still has a list, it is just
-        // empty. Clients iterate this without a null check, and null is indistinguishable from an
-        // empty list to every one of them anyway.
+        // Empty rather than null: a field with nothing to choose from still has a list, it is just empty.
         return Collections.emptyList();
     }
 

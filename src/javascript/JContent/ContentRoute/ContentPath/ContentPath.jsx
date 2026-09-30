@@ -33,10 +33,6 @@ function getItems(node = {}) {
     const indexOfLastAncestorInContentTree = findLastIndex(ancestors, a => a.isVisibleInContentTree);
     if (indexOfLastAncestorInContentTree > 0) {
         const lastAncestorInContentTree = ancestors[indexOfLastAncestorInContentTree];
-        if (indexOfLastAncestorInContentTree + 1 === ancestors.length) {
-            return [lastAncestorInContentTree];
-        }
-
         const remainingAncestors = ancestors.slice(indexOfLastAncestorInContentTree + 1);
         return [lastAncestorInContentTree].concat(remainingAncestors).concat(node);
     }

@@ -50,8 +50,8 @@ export const AdditionalAppsRoute = ({match, target}) => {
                 <RouteWithTitle key={r.key} routeTitle={getTitle(t, r)} path={`${match.path}/${r.key}`} render={props => r.render(props)}/>
             )}
             {(loading || firstApp) && (
-                <Route exact
-                       key="firstAppRoute"
+                <Route key="firstAppRoute"
+                       exact
                        path={match.path}
                        render={() => firstApp && <RedirectToFirstApp appKey={firstApp.key}/>}
                 />

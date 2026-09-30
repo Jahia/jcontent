@@ -1,8 +1,21 @@
-import {Button, createSite, deleteSite, getComponentByRole, publishAndWaitJobEnding} from '@jahia/cypress';
+import {Button, createSite, deleteSite, getComponentByRole, getNodeByPath, publishAndWaitJobEnding} from '@jahia/cypress';
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';
 
 const currentHostname = new URL(Cypress.config('baseUrl')).hostname;
+
+// The live page carries the uuid of the site that rendered it, so the check fails when
+// Jahia resolves the URL to another site.
+const expectOpenedUrlRendersSite = (siteKey: string) => {
+    getNodeByPath(`/sites/${siteKey}`).then(res => {
+        const siteUuid = res.data.jcr.nodeByPath.uuid;
+        cy.get('@winOpen').its('lastCall.args.0').then((url: string) => {
+            cy.request(url).its('body').then((body: string) => {
+                expect(/"siteUuid":"([^"]+)"/.exec(body)?.[1], `site rendered at ${url}`).to.equal(siteUuid);
+            });
+        });
+    });
+};
 
 describe('Open in Live tests', () => {
     const siteKey = 'openInLiveSite';
@@ -120,6 +133,7 @@ describe('Open in Live tests', () => {
                 cy.contains('Current domain').should('be.visible');
                 cy.get('.moonstone-menu:not(.moonstone-hidden)').contains('.moonstone-menuItem', currentHostname).click();
                 cy.get('@winOpen').should('be.calledWith', Cypress.sinon.match(f => f.includes(`//${currentHostname}`)));
+                expectOpenedUrlRendersSite(siteKey);
             }
         });
 
@@ -208,7 +222,8 @@ describe('Open in Live tests', () => {
             cy.contains('Current domain').should('be.visible');
             cy.get('.moonstone-menu:not(.moonstone-hidden)')
                 .contains('.moonstone-menuItem', currentHostname)
-                .should('be.visible');
+                .click();
+            expectOpenedUrlRendersSite(extSiteKey);
         });
 
         it('does not show current domain section when current hostname is claimed by another site', () => {

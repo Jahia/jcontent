@@ -4,6 +4,7 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {TagNameInput} from './TagNameInput';
+import {getContentName} from './TagManager.utils';
 import styles from './TagManager.scss';
 
 export const EditNodeTagDialog = ({siteKey, tag = null, node = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
@@ -13,7 +14,7 @@ export const EditNodeTagDialog = ({siteKey, tag = null, node = null, isOpen = fa
 
     return (
         <Dialog open={isOpen} classes={{paper: styles.dialogRoot}} PaperProps={{'data-cm-role': 'tag-manager-edit-node-dialog'}} onClose={onClose}>
-            <DialogTitle className={styles.dialogTitle}>{t('jcontent:label.contentManager.tagManager.editNodeTag.title', {tag, contentName: node?.displayName || node?.path})}</DialogTitle>
+            <DialogTitle className={styles.dialogTitle}>{t('jcontent:label.contentManager.tagManager.editNodeTag.title', {tag, contentName: getContentName(node)})}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={styles.dialogText}>
                     {t('jcontent:label.contentManager.tagManager.editNodeTag.description')}

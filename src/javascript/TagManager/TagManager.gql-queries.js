@@ -29,6 +29,7 @@ export const GET_TAGGED_CONTENT = gql`
                     taggedContent(tag: $tag, limit: $limit, offset: $offset) {
                         nodes {
                             uuid
+                            workspace
                             path
                             displayName(language: $language)
                             primaryNodeType {

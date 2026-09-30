@@ -190,7 +190,7 @@ export const TagManagerDrawer = ({
                                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.editTagOnContent')}>
                                     <Button
                                         variant="ghost"
-                                        size="small"
+                                        size="big"
                                         data-cm-role="tag-manager-edit-node-tag"
                                         icon={<Edit/>}
                                         onClick={() => setEditNodeTarget(node)}
@@ -199,7 +199,7 @@ export const TagManagerDrawer = ({
                                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.removeFromContent')}>
                                     <Button
                                         variant="ghost"
-                                        size="small"
+                                        size="big"
                                         color="danger"
                                         data-cm-role="tag-manager-delete-node-tag"
                                         disabled={deletingNodeId === node.uuid}

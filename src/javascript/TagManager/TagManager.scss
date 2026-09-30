@@ -91,15 +91,7 @@
 .rowActions {
     display: flex;
     gap: 4px;
-    justify-content: flex-end;
-}
-
-.selectedRow {
-    background-color: var(--color-accent);
-}
-
-.selectedRow :global(.moonstone-typography) {
-    color: var(--color-white);
+    justify-content: flex-start;
 }
 
 .dialogRoot {
@@ -254,10 +246,6 @@
 .drawerItemActions {
     display: flex;
     gap: 4px;
-}
-
-.selectedRow :global(.moonstone-button:not(:hover):not(:focus-visible)) {
-    color: var(--color-white);
 }
 
 @media (max-width: 1024px) {

@@ -29,13 +29,10 @@ import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLNonNull;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory;
+import org.jahia.modules.contenteditor.utils.ChildrenOrderingUtils;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
-import org.jahia.services.content.JCRCallback;
 import org.jahia.services.content.JCRContentUtils;
-import org.jahia.services.content.JCRNodeWrapper;
-import org.jahia.services.content.JCRSessionWrapper;
-import org.jahia.services.content.JCRTemplate;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.utils.LanguageCodeConverters;
@@ -97,36 +94,19 @@ public class JCRNodeContentEditorExtensions {
     @GraphQLName("hiddenChildrenCount")
     @GraphQLDescription("Returns the number of children of the given types that the current user cannot read. Returns 0 when the current user cannot write the node.")
     public int getHiddenChildrenCount(@GraphQLName("types") @GraphQLNonNull @GraphQLDescription("Node types of the children to count") List<String> types) {
-        JCRNodeWrapper userNode = node.getNode();
         try {
-            if (!userNode.hasPermission(WRITE_PERMISSION)) {
-                return 0;
-            }
-            JCRSessionWrapper userSession = userNode.getSession();
-            return JCRTemplate.getInstance().doExecuteWithSystemSessionAsUser(null, userSession.getWorkspace().getName(), userSession.getLocale(),
-                (JCRCallback<Integer>) systemSession -> {
-                    int count = 0;
-                    for (JCRNodeWrapper child : systemSession.getNodeByIdentifier(userNode.getIdentifier()).getNodes()) {
-                        if (isOfType(child, types) && !userSession.itemExists(child.getPath())) {
-                            count++;
-                        }
-                    }
-                    return count;
-                });
+            return ChildrenOrderingUtils.countHiddenChildren(node.getNode(), types);
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);
         }
     }
 
-    private static boolean isOfType(JCRNodeWrapper child, List<String> types) throws RepositoryException {
-        for (String type : types) {
-            if (child.isNodeType(type)) {
-                return true;
-            }
-        }
-        return false;
+    @GraphQLField
+    @GraphQLName("canBeReordered")
+    @GraphQLDescription("Returns true when the current user can move this node among its siblings")
+    public boolean canBeReordered() {
+        return ChildrenOrderingUtils.canBeReordered(node.getNode());
     }
 
     private static final String HISTORY_PERMISSION = "viewHistoryTab";
-    private static final String WRITE_PERMISSION = "jcr:write";
 }

@@ -63,7 +63,7 @@ const NodeDataFragment = {
                         ...NodeCacheRequiredFields
                         name
                         displayName(language: $language)
-                        canMove: hasPermission(permissionName: "jcr:removeNode")
+                        canMove: canBeReordered
                         primaryNodeType {
                             name
                             displayName(language: $uilang)

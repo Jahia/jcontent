@@ -2,7 +2,19 @@ import {JContent} from '../../../page-object';
 import {RichTextField, SmallTextField} from '../../../page-object/fields';
 import gql from 'graphql-tag';
 import {ContentEditor} from '../../../page-object';
-import {addNode, breakAclInheritance, createSite, createUser, deleteSite, deleteNode, deleteUser, getNodeByPath, grantRoles} from '@jahia/cypress';
+import {
+    addNode,
+    breakAclInheritance,
+    createRole,
+    createSite,
+    createUser,
+    deleteNode,
+    deleteRole,
+    deleteSite,
+    deleteUser,
+    getNodeByPath,
+    grantRoles
+} from '@jahia/cypress';
 
 describe('permissions', () => {
     let jcontent: JContent;
@@ -129,6 +141,69 @@ describe('page editor without write access on a sub-page', () => {
         // The template set adds its own pages under the home page
         .map((node: {name: string}) => node.name)
         .filter((name: string) => subPages.includes(name)));
+});
+
+describe('sub-page privileges that a reorder needs', () => {
+    const siteKey = 'reorderPrivilegesSite';
+    const editorLogin = {username: 'reorderEditor', password: 'password'};
+    const homePath = `/sites/${siteKey}/home`;
+    const subPages = ['A', 'removeNodeOnly', 'childNodesOnly', 'D'];
+    // Jackrabbit moves a child only with jcr:addChildNodes and jcr:removeChildNodes on that child
+    const roles = {
+        removeNodeOnly: {name: 'reorderRemoveNodeOnly', permissions: ['jcr:read_default', 'jcr:removeNode_default']},
+        childNodesOnly: {name: 'reorderChildNodesOnly', permissions: ['jcr:read_default', 'jcr:addChildNodes_default', 'jcr:removeChildNodes_default']}
+    };
+
+    before(() => {
+        createSite(siteKey, {
+            languages: 'en',
+            templateSet: 'dx-base-demo-templates',
+            serverName: 'localhost',
+            locale: 'en'
+        });
+        createUser(editorLogin.username, editorLogin.password);
+        subPages.forEach(name => addNode({
+            parentPathOrId: homePath,
+            name,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: name, language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ]
+        }));
+        grantRoles(homePath, ['editor'], editorLogin.username, 'USER');
+        Object.entries(roles).forEach(([page, role]) => {
+            createRole({name: role.name, roleGroup: 'edit-role', permissions: role.permissions, privilegedAccess: true});
+            breakAclInheritance(`${homePath}/${page}`);
+            grantRoles(`${homePath}/${page}`, [role.name], editorLogin.username, 'USER');
+        });
+    });
+
+    after(() => {
+        cy.logout();
+        deleteSite(siteKey);
+        deleteUser(editorLogin.username);
+        Object.values(roles).forEach(role => deleteRole(role.name));
+    });
+
+    it('should lock only the sub-page that Jackrabbit refuses to move', () => {
+        cy.login(editorLogin.username, editorLogin.password);
+        const ce = JContent.visit(siteKey, 'en', 'pages/home').editPage();
+        const listOrdering = () => ce.getSection('listOrdering').get();
+
+        listOrdering().scrollIntoView();
+        listOrdering().find('[data-sel-role="locked-child"]').should('have.length', 1);
+        listOrdering().contains('[draggable]', 'childNodesOnly').find('[data-sel-action^="moveToFirst"]').click({force: true});
+        ce.save();
+
+        getNodeByPath(homePath, [], 'en', ['jnt:page']).then(result => {
+            // The template set adds its own pages under the home page
+            const names = result.data.jcr.nodeByPath.children.nodes
+                .map((node: {name: string}) => node.name)
+                .filter((name: string) => subPages.includes(name));
+            expect(names).to.deep.eq(['childNodesOnly', 'removeNodeOnly', 'A', 'D']);
+        });
+    });
 });
 
 describe('translator permissions', () => {

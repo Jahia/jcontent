@@ -282,6 +282,7 @@
                 <!-- The parent brings a TestNG version that surefire refuses, and the tests of this module use JUnit -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.6.0</version>
                 <configuration>
                     <testNGArtifactName>none:none</testNGArtifactName>
                 </configuration>

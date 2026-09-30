@@ -76,10 +76,8 @@ export const registerSelectorTypesOnChange = registry => {
         onChange: (previousValue, currentValue, field, onChangeContext) => {
             const sections = onChangeContext.sections;
             const fields = getFields(sections);
-            // A sibling copy of an inherited field (see adaptSections.ts) shares its propertyName with
-            // copies in other fieldsets, some of them inactive. These are the copies actually in play --
-            // not dynamic, or dynamic and activated -- so a value read here comes from what the reader is
-            // editing rather than from an inactive sibling still holding its default.
+            // Not dynamic, or dynamic and activated: a value read from these comes from what the reader
+            // is editing rather than from an inactive sibling still holding its default.
             const activeFields = getFields(sections, undefined, fieldset => !fieldset.dynamic || fieldset.activated);
             const dependentPropertiesFields = fields
                 .filter(f => f.selectorOptions
@@ -89,25 +87,12 @@ export const registerSelectorTypesOnChange = registry => {
             Promise.all(dependentPropertiesFields.map(dependentPropertiesField => {
                 const dependentProperties = dependentPropertiesField.selectorOptions.find(f => f.name === 'dependentProperties').value.split(',');
                 if (dependentProperties.length > 0) {
-                    const context = [{
-                        key: 'dependentProperties', value: dependentProperties.join(',')
-                    }];
-
-                    // Build Context
-                    dependentProperties.filter(dependentProperty => dependentProperty !== field.propertyName).forEach(dependentProperty => {
-                        const dependentField = activeFields.find(field => field.propertyName === dependentProperty) ||
-                            fields.find(field => field.propertyName === dependentProperty);
-                        if (dependentField) {
-                            context.push({
-                                key: dependentProperty,
-                                value: onChangeContext.formik.values[dependentField.name]
-                            });
-                        }
-                    });
-                    // Set value to empty array in case of null to be consistent with old implementation.
-                    context.push({
-                        key: field.propertyName,
-                        value: currentValue === null ? [] : currentValue
+                    const context = buildContext(dependentProperties, {
+                        field,
+                        currentValue,
+                        fields,
+                        activeFields,
+                        formik: onChangeContext.formik
                     });
 
                     const ticket = takeTicket(sections, dependentPropertiesField.name);
@@ -140,4 +125,37 @@ export const registerSelectorTypesOnChange = registry => {
             });
         }
     });
+};
+
+const buildContext = (dependentProperties, {field, currentValue, fields, activeFields, formik}) => {
+    const context = [{
+        key: 'dependentProperties', value: dependentProperties.join(',')
+    }];
+
+    // A sibling copy of an inherited field (see adaptSections.ts) shares its propertyName with copies in
+    // other fieldsets, some of them inactive. The active copies are the ones in play, so they are read
+    // first and the full set is only a fallback.
+    const resolveDependentField = propertyName =>
+        activeFields.find(f => f.propertyName === propertyName) ||
+        fields.find(f => f.propertyName === propertyName);
+
+    dependentProperties
+        .filter(dependentProperty => dependentProperty !== field.propertyName)
+        .forEach(dependentProperty => {
+            const dependentField = resolveDependentField(dependentProperty);
+            if (dependentField) {
+                context.push({
+                    key: dependentProperty,
+                    value: formik.values[dependentField.name]
+                });
+            }
+        });
+
+    // Set value to empty array in case of null to be consistent with old implementation.
+    context.push({
+        key: field.propertyName,
+        value: currentValue === null ? [] : currentValue
+    });
+
+    return context;
 };

@@ -10,6 +10,9 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         createSite(siteKey);
         enableModule('jcontent-test-module', siteKey);
+    });
+
+    beforeEach(function () {
         cy.login();
         jcontent = JContent
             .visit(siteKey, 'en', 'content-folders/contents')

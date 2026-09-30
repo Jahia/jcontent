@@ -1,11 +1,32 @@
 import {JContent} from '../../../page-object/jcontent';
-import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, context, createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {TagField} from '../../../page-object/fields/tagField';
+import {TagManager} from '../../../page-object';
 import gql from 'graphql-tag';
 
 describe('Tags tests in content editor', () => {
     let jcontent: JContent;
     const siteKey = 'tagsSite';
+
+    const addTextForTags = (name: string, tags?: string[]) => {
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name,
+            primaryNodeType: 'jnt:text',
+            properties: [
+                {name: 'text', language: 'en', value: name},
+                ...(tags ? [{name: 'j:tagList', values: tags}] : [])
+            ],
+            ...(tags ? {mixins: ['jmix:tagged']} : {})
+        });
+    };
+
+    const openTagField = (name: string) => {
+        const contentEditor = JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(name);
+        contentEditor.switchToAdvancedMode();
+        contentEditor.openSection('Classification and Metadata');
+        return {contentEditor, tagField: contentEditor.getField(TagField, 'jmix:tagged_j:tagList')};
+    };
 
     before(function () {
         createSite(siteKey);
@@ -26,6 +47,10 @@ describe('Tags tests in content editor', () => {
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', language: 'en', value: 'my text for tags'}]
         });
+        addTextForTags('textForSavedTag');
+        addTextForTags('textForRemovedTag', ['keeptag', 'removetag']);
+        addTextForTags('textForTagManagerDelete', ['tm-kept-tag', 'tm-deleted-tag']);
+        addTextForTags('textForContentEditorRemove', ['ce-kept-tag', 'ce-removed-tag']);
         cy.apollo({
             mutation: gql`mutation AddTags {
             jcr {
@@ -51,7 +76,8 @@ describe('Tags tests in content editor', () => {
     });
 
     it('should add a tag', () => {
-        const contentEditor = jcontent.editComponentByRowName('myTextForTags');
+        context.tag('tags', 'content-editor', 'save-add');
+        const contentEditor = jcontent.editComponentByRowName('textForSavedTag');
         contentEditor.switchToAdvancedMode();
 
         contentEditor.openSection('Classification and Metadata');
@@ -62,7 +88,50 @@ describe('Tags tests in content editor', () => {
 
         tagField.getTags().should('have.length', 1);
         tagField.assertTagText('simpletag', 0);
-        contentEditor.cancelAndDiscard();
+        contentEditor.save();
+        contentEditor.cancel();
+
+        const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForSavedTag');
+        savedTagField.getTags().should('have.length', 1);
+        savedTagField.assertTagText('simpletag', 0);
+        reopenedEditor.cancel();
+    });
+
+    it('should remove a tag', () => {
+        context.tag('tags', 'content-editor', 'save-remove');
+        const {contentEditor, tagField} = openTagField('textForRemovedTag');
+        tagField.removeTag('removetag');
+
+        tagField.getTags().should('have.length', 1);
+        contentEditor.save();
+        contentEditor.cancel();
+
+        const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForRemovedTag');
+        savedTagField.getTags().should('have.length', 1);
+        savedTagField.assertTagText('keeptag', 0);
+        reopenedEditor.cancel();
+    });
+
+    it('should remove a tag from content editor when it is deleted in tag manager', () => {
+        const tagManager = TagManager.visit(siteKey, 'en');
+        tagManager.search('tm-deleted-tag').openDelete('tm-deleted-tag').confirmDelete();
+        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-deleted-tag').should('not.exist');
+
+        const {contentEditor, tagField} = openTagField('textForTagManagerDelete');
+        tagField.getTags().should('have.length', 1);
+        tagField.assertTagText('tm-kept-tag', 0);
+        contentEditor.cancel();
+    });
+
+    it('should remove a tag from tag manager when it is removed in content editor', () => {
+        const {contentEditor, tagField} = openTagField('textForContentEditorRemove');
+        tagField.removeTag('ce-removed-tag');
+        contentEditor.save();
+        contentEditor.cancel();
+
+        const tagManager = TagManager.visit(siteKey, 'en');
+        tagManager.getRow('ce-kept-tag').should('contain', '1');
+        cy.contains('[data-cm-role="tag-manager-row"]', 'ce-removed-tag').should('not.exist');
     });
 
     it('should add multiple tags', () => {

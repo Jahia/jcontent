@@ -13,8 +13,9 @@ export function getChildrenOrder(formValues, nodeData, sections) {
     }
 
     const childrenOrder = formValues['Children::Order'].map(child => child.name);
+    const orderedNames = new Set(childrenOrder);
     // The ordering field of a page lists only its sub-pages, so compare with those children alone
-    const initialOrder = nodeData.children.nodes.map(child => child.name).filter(name => childrenOrder.includes(name));
+    const initialOrder = nodeData.children.nodes.map(child => child.name).filter(name => orderedNames.has(name));
     const isChangedOrder = childrenOrder.some((name, i) => initialOrder[i] !== name);
 
     if (!isChangedOrder) {

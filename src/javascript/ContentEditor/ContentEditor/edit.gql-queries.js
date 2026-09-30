@@ -56,11 +56,14 @@ const NodeDataFragment = {
                     displayName(language: $language)
                     path
                 }
+                hiddenChildrenCount(types: $childrenFilterTypes)
+                hiddenSubPagesCount: hiddenChildrenCount(types: ["jnt:page", "jmix:navMenuItem"])
                 children(typesFilter:{types: $childrenFilterTypes}) {
                     nodes {
                         ...NodeCacheRequiredFields
                         name
                         displayName(language: $language)
+                        canMove: hasPermission(permissionName: "jcr:removeNode")
                         primaryNodeType {
                             name
                             displayName(language: $uilang)

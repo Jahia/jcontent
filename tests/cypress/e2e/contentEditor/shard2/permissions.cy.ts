@@ -71,6 +71,9 @@ describe('page editor without write access on a sub-page', () => {
         grantRoles(`${homePath}/readOnly`, ['reviewer'], editorLogin.username, 'USER');
     });
 
+    // The cy.apollo command authenticates as root in the browser session, so a stored editor session would come back as root
+    const loginAsEditor = () => cy.login(editorLogin.username, editorLogin.password);
+
     after(() => {
         cy.logout();
         deleteSite(siteKey);
@@ -78,39 +81,66 @@ describe('page editor without write access on a sub-page', () => {
     });
 
     it('should save the home page title and keep the sub-page order', () => {
-        cy.loginAndStoreSession(editorLogin.username, editorLogin.password);
+        loginAsEditor();
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
         jcontent.getAccordionItem('pages').getTreeItem('home').contextMenu().select('Edit');
         const ce = new ContentEditor();
 
         ce.getField(SmallTextField, 'jnt:page_jcr:title').addNewValue('Home edited');
         ce.save();
-        cy.logout();
 
         getNodeByPath(homePath, ['jcr:title'], 'en').then(result => {
             const titleProp = result.data.jcr.nodeByPath.properties.find((prop: {name: string}) => prop.name === 'jcr:title');
             expect(titleProp.value).to.eq('Home edited');
         });
-        cy.apollo({query: gql`
-            query subPages {
-                jcr {
-                    nodeByPath(path: "${homePath}") {
-                        children(typesFilter: {types: ["jnt:page"]}) {
-                            nodes {
-                                name
-                            }
+        subPageOrder().should('deep.eq', subPages);
+    });
+
+    it('should show the read-only sub-page locked and count the hidden sub-page', () => {
+        loginAsEditor();
+        const ce = JContent.visit(siteKey, 'en', 'pages/home').editPage();
+        const listOrdering = () => ce.getSection('listOrdering').get();
+
+        listOrdering().scrollIntoView();
+        listOrdering().find('[data-sel-role="locked-child"]').should('have.length', 1);
+        listOrdering().find('[data-sel-role="hidden-children-message"]')
+            .should('contain', '1 item is not visible to you, so you cannot reorder the list.');
+        listOrdering().find('[data-sel-action^="moveToLast"]').should('not.exist');
+    });
+
+    it('should keep the read-only sub-pages in place when the editor moves another sub-page', () => {
+        // With read access, the hidden sub-page becomes a second read-only sub-page
+        grantRoles(`${homePath}/hidden`, ['reviewer'], editorLogin.username, 'USER');
+        loginAsEditor();
+        const ce = JContent.visit(siteKey, 'en', 'pages/home').editPage();
+        const listOrdering = () => ce.getSection('listOrdering').get();
+
+        listOrdering().scrollIntoView();
+        listOrdering().find('[data-sel-role="locked-child"]').should('have.length', 2);
+        // The move buttons show on hover only
+        listOrdering().contains('[draggable]', 'A').find('[data-sel-action^="moveToLast"]').click({force: true});
+        ce.save();
+
+        subPageOrder().should('deep.eq', ['B', 'D', 'hidden', 'readOnly', 'A']);
+    });
+
+    // Returns the order of the sub-pages of this test, read as root
+    const subPageOrder = () => cy.apollo({query: gql`
+        query subPages {
+            jcr {
+                nodeByPath(path: "${homePath}") {
+                    children(typesFilter: {types: ["jnt:page"]}) {
+                        nodes {
+                            name
                         }
                     }
                 }
             }
-        `}).then(result => {
-            // The template set adds its own pages under the home page
-            const names = result.data.jcr.nodeByPath.children.nodes
-                .map((node: {name: string}) => node.name)
-                .filter((name: string) => subPages.includes(name));
-            expect(names).to.deep.eq(subPages);
-        });
-    });
+        }
+    `}).then(result => result.data.jcr.nodeByPath.children.nodes
+        // The template set adds its own pages under the home page
+        .map((node: {name: string}) => node.name)
+        .filter((name: string) => subPages.includes(name)));
 });
 
 describe('translator permissions', () => {

@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
-import {Tooltip, File, Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
+import {Tooltip, File, Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown, Lock} from '@jahia/moonstone';
 import {useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
 import {getIconFromNode, getWebpUrl} from '~/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
@@ -18,10 +18,11 @@ export const DraggableReference = ({
     onValueMove,
     fieldName,
     fieldLength,
-    isReadOnly
+    isReadOnly,
+    isLocked
 }) => {
     const {t} = useTranslation('jcontent');
-    const isDraggable = fieldLength > 1 && !isReadOnly;
+    const isDraggable = fieldLength > 1 && !isReadOnly && !isLocked;
 
     const ref = useRef(null);
     const [{handlerId}, drop] = useReorderDrop(
@@ -53,7 +54,13 @@ export const DraggableReference = ({
                 emptyLabel={t('jcontent:label.contentEditor.edit.fields.imagePicker.addImage')}
                 emptyIcon={<File/>}
                 isReadOnly={child.readOnly}
-                cardAction={fieldLength > 1 && !isReadOnly &&
+                cardAction={isLocked ? (
+                    <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.lockedChild')}>
+                        <span data-sel-role="locked-child" aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.lockedChild')}>
+                            <Lock/>
+                        </span>
+                    </Tooltip>
+                ) : fieldLength > 1 && !isReadOnly &&
                     <div className={styles.referenceCardActions}>
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}>
@@ -120,6 +127,7 @@ DraggableReference.propTypes = {
     onValueMove: PropTypes.func.isRequired,
     fieldLength: PropTypes.number,
     isReadOnly: PropTypes.bool,
+    isLocked: PropTypes.bool,
     onReorderDropped: PropTypes.func.isRequired,
     onReorderAborted: PropTypes.func.isRequired
 };

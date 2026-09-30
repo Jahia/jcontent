@@ -1,6 +1,6 @@
 import {truncate} from '~/utils/truncate';
 
-const MAX_CONTENT_NAME_LENGTH = 250;
+const MAX_CONTENT_NAME_LENGTH = 100;
 
 export const getImpactedItemsCount = result => {
     const counts = result?.workspaceResults?.map(workspaceResult => workspaceResult.processedCount) || [];

@@ -125,19 +125,7 @@ describe('page editor without write access on a sub-page', () => {
     });
 
     // Returns the order of the sub-pages of this test, read as root
-    const subPageOrder = () => cy.apollo({query: gql`
-        query subPages {
-            jcr {
-                nodeByPath(path: "${homePath}") {
-                    children(typesFilter: {types: ["jnt:page"]}) {
-                        nodes {
-                            name
-                        }
-                    }
-                }
-            }
-        }
-    `}).then(result => result.data.jcr.nodeByPath.children.nodes
+    const subPageOrder = () => getNodeByPath(homePath, [], 'en', ['jnt:page']).then(result => result.data.jcr.nodeByPath.children.nodes
         // The template set adds its own pages under the home page
         .map((node: {name: string}) => node.name)
         .filter((name: string) => subPages.includes(name)));

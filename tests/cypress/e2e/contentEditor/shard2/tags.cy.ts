@@ -113,6 +113,7 @@ describe('Tags tests in content editor', () => {
     });
 
     it('should remove a tag from content editor when it is deleted in tag manager', () => {
+        context.tag('tags', 'tag-manager', 'content-editor', 'delete-in-tag-manager');
         const tagManager = TagManager.visit(siteKey, 'en');
         tagManager.search('tm-deleted-tag').openDelete('tm-deleted-tag').confirmDelete();
         cy.contains('[data-cm-role="tag-manager-row"]', 'tm-deleted-tag').should('not.exist');
@@ -124,6 +125,7 @@ describe('Tags tests in content editor', () => {
     });
 
     it('should remove a tag from tag manager when it is removed in content editor', () => {
+        context.tag('tags', 'tag-manager', 'content-editor', 'remove-in-content-editor');
         const {contentEditor, tagField} = openTagField('textForContentEditorRemove');
         tagField.removeTag('ce-removed-tag');
         contentEditor.save();

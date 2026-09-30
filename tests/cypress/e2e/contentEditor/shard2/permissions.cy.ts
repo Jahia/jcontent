@@ -120,6 +120,24 @@ describe('page editor without write access on a sub-page', () => {
         listOrdering().find('[data-sel-action^="moveToLast"]').should('not.exist');
     });
 
+    it('should refuse a direct reorder while a sub-page is hidden', () => {
+        cy.apolloClient({username: editorLogin.username, password: editorLogin.password});
+        cy.apollo({mutation: gql`
+            mutation reorderAsEditor {
+                jcr {
+                    mutateNode(pathOrId: "${homePath}") {
+                        reorderMovableChildren(names: ["D", "B", "readOnly", "A"])
+                    }
+                }
+            }
+        `}).then((result: {message?: string}) => {
+            expect(result.message).to.contain('hidden from the current user');
+        });
+        cy.apolloClient();
+
+        subPageOrder().should('deep.eq', subPages);
+    });
+
     it('should keep the read-only sub-pages in place when the editor moves another sub-page', () => {
         // With read access, the hidden sub-page becomes a second read-only sub-page
         grantRoles(`${homePath}/hidden`, ['reviewer'], editorLogin.username, 'USER');

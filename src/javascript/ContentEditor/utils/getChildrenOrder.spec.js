@@ -83,8 +83,7 @@ describe('getChildrenOrder', () => {
             'Children::Order': [{name: 'B'}, {name: 'A'}]
         };
         const nodeData = {
-            isPage: true,
-            hiddenSubPagesCount: 1,
+            hiddenChildrenCount: 1,
             children: {
                 nodes: [{name: 'A'}, {name: 'B'}]
             }
@@ -94,12 +93,8 @@ describe('getChildrenOrder', () => {
 });
 
 describe('getHiddenChildrenCount', () => {
-    it('should count only the hidden sub-pages of a page', () => {
-        expect(getHiddenChildrenCount({isPage: true, hiddenSubPagesCount: 2, hiddenChildrenCount: 5})).toBe(2);
-    });
-
-    it('should count all the hidden children of another node', () => {
-        expect(getHiddenChildrenCount({isPage: false, hiddenSubPagesCount: 2, hiddenChildrenCount: 5})).toBe(5);
+    it('should return the count of hidden children', () => {
+        expect(getHiddenChildrenCount({hiddenChildrenCount: 2})).toBe(2);
     });
 
     it('should count 0 when the node gives no count', () => {

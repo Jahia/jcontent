@@ -26,7 +26,6 @@ package org.jahia.modules.contenteditor.graphql.extensions;
 import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
-import graphql.annotations.annotationTypes.GraphQLNonNull;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory;
 import org.jahia.modules.contenteditor.utils.ChildrenOrderingUtils;
@@ -39,7 +38,6 @@ import org.jahia.utils.LanguageCodeConverters;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
-import java.util.List;
 
 /**
  * Content Editor JCR Node extension
@@ -92,10 +90,10 @@ public class JCRNodeContentEditorExtensions {
 
     @GraphQLField
     @GraphQLName("hiddenChildrenCount")
-    @GraphQLDescription("Returns the number of children of the given types that the current user cannot read. Returns 0 when the current user cannot write the node.")
-    public int getHiddenChildrenCount(@GraphQLName("types") @GraphQLNonNull @GraphQLDescription("Node types of the children to count") List<String> types) {
+    @GraphQLDescription("Returns the number of children that the current user cannot read. Returns 0 when the current user cannot write the node.")
+    public int getHiddenChildrenCount() {
         try {
-            return ChildrenOrderingUtils.countHiddenChildren(node.getNode(), types);
+            return ChildrenOrderingUtils.countHiddenChildren(node.getNode());
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);
         }

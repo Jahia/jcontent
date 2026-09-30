@@ -2,9 +2,8 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const isLockedChild = child => child.canMove === false;
 
-// The ordering field of a page lists only its sub-pages, so a page counts only its hidden sub-pages
-export const getHiddenChildrenCount = nodeData =>
-    (nodeData?.isPage ? nodeData.hiddenSubPagesCount : nodeData?.hiddenChildrenCount) ?? 0;
+// The server refuses a reorder when any child is hidden, whatever its type
+export const getHiddenChildrenCount = nodeData => nodeData?.hiddenChildrenCount ?? 0;
 
 /**
  * Keeps each locked child at its position in the previous order, and fills the other positions with the

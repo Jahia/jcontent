@@ -5,6 +5,7 @@ import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionWrapper;
 import org.jahia.services.content.JCRTemplate;
 
+import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,8 +46,12 @@ public final class ChildrenOrderingUtils {
      * @param parent the parent node, read with the session of the current user
      * @param names  names of the children, in the requested order
      * @throws IllegalArgumentException when a name is unknown or repeated
+     * @throws AccessDeniedException    when the current user cannot read one of the children, whose position a move cannot keep
      */
     public static void reorderMovableChildren(JCRNodeWrapper parent, List<String> names) throws RepositoryException {
+        if (countUnreadableChildren(parent) > 0) {
+            throw new AccessDeniedException("Some children of " + parent.getPath() + " are hidden from the current user, so a reorder cannot keep their positions");
+        }
         List<String> current = new ArrayList<>();
         Set<String> locked = new HashSet<>();
         for (JCRNodeWrapper child : parent.getNodes()) {
@@ -62,35 +67,26 @@ public final class ChildrenOrderingUtils {
     }
 
     /**
-     * Counts the children of the given types that the current user cannot read.
+     * Counts the children that the current user cannot read.
      *
      * @param parent the parent node, read with the session of the current user
-     * @param types  node types of the children to count
      * @return the number of such children, or 0 when the current user cannot write the parent
      */
-    public static int countHiddenChildren(JCRNodeWrapper parent, List<String> types) throws RepositoryException {
-        if (!parent.hasPermission(WRITE_PERMISSION)) {
-            return 0;
-        }
+    public static int countHiddenChildren(JCRNodeWrapper parent) throws RepositoryException {
+        return parent.hasPermission(WRITE_PERMISSION) ? countUnreadableChildren(parent) : 0;
+    }
+
+    private static int countUnreadableChildren(JCRNodeWrapper parent) throws RepositoryException {
         JCRSessionWrapper userSession = parent.getSession();
         return JCRTemplate.getInstance().doExecuteWithSystemSessionAsUser(null, userSession.getWorkspace().getName(), userSession.getLocale(),
             (JCRCallback<Integer>) systemSession -> {
                 int count = 0;
                 for (JCRNodeWrapper child : systemSession.getNodeByIdentifier(parent.getIdentifier()).getNodes()) {
-                    if (isOfType(child, types) && !userSession.itemExists(child.getPath())) {
+                    if (!userSession.itemExists(child.getPath())) {
                         count++;
                     }
                 }
                 return count;
             });
-    }
-
-    private static boolean isOfType(JCRNodeWrapper child, List<String> types) throws RepositoryException {
-        for (String type : types) {
-            if (child.isNodeType(type)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

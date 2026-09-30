@@ -56,8 +56,7 @@ const NodeDataFragment = {
                     displayName(language: $language)
                     path
                 }
-                hiddenChildrenCount(types: $childrenFilterTypes)
-                hiddenSubPagesCount: hiddenChildrenCount(types: ["jnt:page", "jmix:navMenuItem"])
+                hiddenChildrenCount
                 children(typesFilter:{types: $childrenFilterTypes}) {
                     nodes {
                         ...NodeCacheRequiredFields

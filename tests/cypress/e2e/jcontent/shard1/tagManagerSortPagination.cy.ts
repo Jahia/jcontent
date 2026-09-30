@@ -4,10 +4,9 @@ import {TagManager} from '../../../page-object';
 describe('Tag Manager sort and pagination', () => {
     const siteKeyPrefix = 'tagManagerSortPagination';
     const siteKey = `${siteKeyPrefix}${jfaker.string.alphanumeric({length: 8, casing: 'lower', safe: true})}`;
-    // Alphabetical order ignoring case and accents: a case-sensitive sort would put TEST first,
-    // and an accent-sensitive one would put ça last
-    const sortedTags = ['aaa', 'ça', 'edd', 'eee', 'fff', 'rrr', 'sss', 'TEST', 'uuu', 'vvv', 'xxx', 'yYYY', 'zzz'];
-    const shuffledTags = ['zzz', 'TEST', 'ça', 'uuu', 'aaa', 'yYYY', 'rrr', 'eee', 'xxx', 'fff', 'sss', 'vvv', 'edd'];
+    // Tags are stored in lowercase, so only accents are ignored: an accent-sensitive sort would put ça last
+    const sortedTags = ['aaa', 'ça', 'edd', 'eee', 'fff', 'rrr', 'sss', 'test', 'uuu', 'vvv', 'xxx', 'yyyy', 'zzz'];
+    const shuffledTags = ['zzz', 'test', 'ça', 'uuu', 'aaa', 'yyyy', 'rrr', 'eee', 'xxx', 'fff', 'sss', 'vvv', 'edd'];
 
     const deleteStaleSites = () => {
         getNodeByPath('/sites', [], 'en', ['jnt:virtualsite']).then(({data}) => {
@@ -48,7 +47,7 @@ describe('Tag Manager sort and pagination', () => {
         cy.loginAndStoreSession();
     });
 
-    it('lists the tags in alphabetical order, ignoring case and accents', () => {
+    it('lists the tags in alphabetical order, ignoring accents', () => {
         context.tag('tags', 'tag-manager', 'sort');
         const tagManager = TagManager.openFromAdditionalApps(siteKey, 'en');
 

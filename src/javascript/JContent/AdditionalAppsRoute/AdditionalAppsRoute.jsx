@@ -55,7 +55,7 @@ export const AdditionalAppsRoute = ({match, target, mode}) => {
         .filter(route => route.isSelectable && route.render)
         .filter(route =>
             route.requireModuleInstalledOnSite === undefined ||
-            node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1
+            node.site.installedModulesWithAllDependencies.includes(route.requireModuleInstalledOnSite)
         );
 
     const firstApp = filteredAdminRoutes[0];

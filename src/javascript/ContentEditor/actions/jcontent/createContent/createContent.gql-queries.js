@@ -85,3 +85,17 @@ export const getNodeTypeInfo = gql`
         }
     }
 `;
+
+export const getNodeEditRendering = gql`
+    query getNodeEditRendering($path:String!, $language:String!) {
+        jcr {
+            nodeByPath(path: $path) {
+                ...NodeCacheRequiredFields
+                renderedContent(contextConfiguration: "module", isEditMode: true, language: $language) {
+                    output
+                }
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;

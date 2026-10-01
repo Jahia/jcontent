@@ -28,6 +28,7 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory;
+import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRContentUtils;
@@ -55,6 +56,17 @@ public class JCRNodeContentEditorExtensions {
     public boolean isLockedAndCannotBeEdited() {
         try {
             return JCRContentUtils.isLockedAndCannotBeEdited(node.getNode());
+        } catch (RepositoryException e) {
+            throw new DataFetchingException(e);
+        }
+    }
+
+    @GraphQLField
+    @GraphQLName("hasComponentPermission")
+    @GraphQLDescription("Returns true if the user has the component permission of the node's type, the same permission required to create content of this type")
+    public boolean hasComponentPermission() {
+        try {
+            return ContentEditorUtils.hasComponentPermission(node.getNode());
         } catch (RepositoryException e) {
             throw new DataFetchingException(e);
         }

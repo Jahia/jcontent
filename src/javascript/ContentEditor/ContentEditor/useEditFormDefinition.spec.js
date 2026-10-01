@@ -234,6 +234,20 @@ describe('adaptEditFormData', () => {
         expect(adaptedSections[0].fieldSets[0].fields[0].nodeType).toEqual('jcr:contentType');
     });
 
+    it('should keep write permission when the user has the component permission', () => {
+        graphqlResponse.jcr.result.hasWritePermission = true;
+        graphqlResponse.jcr.result.hasComponentPermission = true;
+
+        expect(adaptEditFormData(graphqlResponse, 'fr', t).nodeData.hasWritePermission).toBe(true);
+    });
+
+    it('should remove write permission when the user lacks the component permission', () => {
+        graphqlResponse.jcr.result.hasWritePermission = true;
+        graphqlResponse.jcr.result.hasComponentPermission = false;
+
+        expect(adaptEditFormData(graphqlResponse, 'fr', t).nodeData.hasWritePermission).toBe(false);
+    });
+
     it('should return the nodeData name when editing', () => {
         expect(adaptEditFormData(graphqlResponse, 'fr', t).title).toEqual('nameOfNode');
     });

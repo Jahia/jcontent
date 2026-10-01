@@ -152,7 +152,7 @@ public class EditorFormServiceImpl implements EditorFormService {
 
             // Post process on sections / fieldSets / fields
             JCRSessionWrapper session = existingNode != null ? existingNode.getSession() : parentNode.getSession();
-            boolean canBeEdited = existingNode != null && !JCRContentUtils.isLockedAndCannotBeEdited(existingNode) && hasComponentPermission(existingNode);
+            boolean canBeEdited = canBeEdited(existingNode);
             boolean fieldSetEditable = existingNode == null || (canBeEdited && existingNode.hasPermission("jcr:nodeTypeManagement"));
             boolean sharedFieldsEditable = existingNode == null || (canBeEdited && existingNode.hasPermission("jcr:modifyProperties"));
             boolean i18nFieldsEditable = existingNode == null || (canBeEdited && existingNode.hasPermission("jcr:modifyProperties_" + session.getWorkspace().getName() + "_" + locale.toString()));
@@ -257,6 +257,10 @@ public class EditorFormServiceImpl implements EditorFormService {
         } catch (RepositoryException e) {
             throw new EditorFormException("Error while building edit form definition for node: " + currentNode.getPath() + " and nodeType: " + primaryNodeType.getName(), e);
         }
+    }
+
+    private static boolean canBeEdited(JCRNodeWrapper existingNode) throws RepositoryException {
+        return existingNode != null && !JCRContentUtils.isLockedAndCannotBeEdited(existingNode) && hasComponentPermission(existingNode);
     }
 
     private static Map<String, Object> replaceBySubstitutor(Map<String, Object> selectorOptionsMap) {

@@ -10,50 +10,66 @@ import styles from './AdditionAppsRoute.scss';
 import {getTitle} from '../JContent.utils';
 import {cmGoto} from '../redux/JContent.redux';
 
-const RedirectToFirstApp = ({appKey}) => {
+const RedirectToFirstApp = ({mode, appKey}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(cmGoto({path: '/' + appKey}));
-    }, [dispatch, appKey]);
+        // Replace, not push: Back from the app must leave the section, not land on /apps and redirect forward again
+        dispatch(cmGoto({mode, path: '/' + appKey}, {replace: true}));
+    }, [dispatch, mode, appKey]);
 
-    return false;
+    return null;
 };
 
 RedirectToFirstApp.propTypes = {
+    mode: PropTypes.string.isRequired,
     appKey: PropTypes.string.isRequired
 };
 
-export const AdditionalAppsRoute = ({match, target}) => {
+export const AdditionalAppsRoute = ({match, target, mode}) => {
     const site = useSelector(state => state.site);
     const {t} = useTranslation('jcontent');
 
     const {routes: adminRoutes, allPermissions} = useAdminRouteTreeStructure(target);
-    const {node, loading} = useNodeInfo({path: '/sites/' + site}, {
+    const {node, loading, error} = useNodeInfo({path: '/sites/' + site}, {
         getPermissions: allPermissions,
         getSiteInstalledModules: true
     });
 
-    const filteredAdminRoutes = adminRoutes && adminRoutes
-        .filter(route => route.requiredPermission === undefined || (node && (node[route.requiredPermission] !== false)))
+    // Until the site permissions are known, every permission-gated app would be filtered out and the
+    // requested app would fall through to "App not found", including on a URL that already names it
+    if (loading) {
+        return null;
+    }
+
+    if (error) {
+        return (
+            <Typography variant="heading" weight="bold" className={styles.heading}>
+                {t('label.contentManager.error.queryingContent', {details: error.message})}
+            </Typography>
+        );
+    }
+
+    const filteredAdminRoutes = adminRoutes
+        .filter(route => route.requiredPermission === undefined || node[route.requiredPermission] !== false)
         .filter(route => route.isSelectable && route.render)
         .filter(route =>
             route.requireModuleInstalledOnSite === undefined ||
-            (node && node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1)
+            node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1
         );
 
-    const firstApp = !loading && filteredAdminRoutes?.[0];
+    const firstApp = filteredAdminRoutes[0];
 
     return (
         <Switch>
-            {filteredAdminRoutes && filteredAdminRoutes.map(r =>
+            {filteredAdminRoutes.map(r =>
                 <RouteWithTitle key={r.key} routeTitle={getTitle(t, r)} path={`${match.path}/${r.key}`} render={props => r.render(props)}/>
             )}
-            {(loading || firstApp) && (
+            {firstApp && (
                 <Route key="firstAppRoute"
                        exact
                        path={match.path}
-                       render={() => firstApp && <RedirectToFirstApp appKey={firstApp.key}/>}
+                       render={() => <RedirectToFirstApp mode={mode} appKey={firstApp.key}/>}
                 />
             )}
             <RouteWithTitle key="nothingToDisplayRoute"
@@ -67,5 +83,6 @@ export const AdditionalAppsRoute = ({match, target}) => {
 
 AdditionalAppsRoute.propTypes = {
     target: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
     match: PropTypes.object.isRequired
 };

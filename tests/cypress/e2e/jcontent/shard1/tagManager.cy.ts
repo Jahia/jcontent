@@ -79,6 +79,7 @@ describe('Tag Manager', () => {
         tagManager.search('ù^$ùç_').openUsages(specialTag);
 
         tagManager.getDrawer().should('be.visible').and('contain', 'Tag Gamma');
+        tagManager.getRow(specialTag).should('have.class', 'moonstone-TableRow-highlighted');
 
         tagManager.closeDrawer();
         tagManager.getDrawer().should('not.exist');

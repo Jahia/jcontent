@@ -5,6 +5,7 @@ import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
 import {jContentRoutes} from './JContent/JContent.routes';
 import {jContentActions} from './JContent/JContent.actions';
+import {registerDeleteUndoHandlers} from './JContent/actions/deleteActions/Delete/delete.undo';
 import {jContentAccordionItems} from './JContent/JContent.accordion-items';
 import {jContentAppRoot} from './JContent/JContent.app-root';
 import {cmGoto, cmOpenPaths, jContentRedux, setTableViewMode} from './JContent/redux/JContent.redux';
@@ -169,6 +170,7 @@ export default function () {
 
     jContentRoutes(registry);
     jContentActions(registry);
+    registerDeleteUndoHandlers();
 
     fileuploadRedux(registry);
     previewRedux(registry);

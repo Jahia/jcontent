@@ -176,7 +176,7 @@ export const TagManagerDrawer = ({
                                 <div className={styles.drawerItemMain}>
                                     <NodeIcon node={node}/>
                                     <div className={styles.drawerItemText}>
-                                        <Typography weight="bold">{getContentName(node)}</Typography>
+                                        <Typography weight="bold" title={node.displayName || node.path}>{getContentName(node)}</Typography>
                                         <Typography variant="caption">{node.path}</Typography>
                                     </div>
                                 </div>

@@ -3,4 +3,6 @@
 "@jahia/jcontent": patch
 ---
 
-Show every field a mixin carries when several mixins that extend the same type also extend one another and each is its own choicelist target. Only the most derived one kept a fieldset, so choosing any of the others showed no fields at all and the mixin was dropped on save (#2746)
+Fixed the content editor so every mixin in a chain of mixins that extend one another shows its fields when chosen.
+
+Where several such mixins are each offered as a separate choice, only the most derived one showed any fields: picking any of the others showed nothing to fill in, and the choice was lost on save.

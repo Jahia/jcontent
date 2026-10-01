@@ -30,6 +30,7 @@ import org.jahia.modules.graphql.provider.dxm.node.GqlJcrPropertyType;
 
 import javax.jcr.PropertyType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,7 +98,8 @@ public class GqlEditorFormField {
             return field.getValueConstraints().stream().map(GqlEditorFormValueConstraint::new).collect(Collectors.toList());
         }
 
-        return null;
+        // Empty rather than null: a field with nothing to choose from still has a list, it is just empty.
+        return Collections.emptyList();
     }
 
     @GraphQLField

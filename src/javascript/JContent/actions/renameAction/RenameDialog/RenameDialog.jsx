@@ -9,6 +9,7 @@ import styles from './RenameDialog.scss';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
+import {useCloseOnNavigation} from '~/utils';
 
 export const RenameDialog = ({path, contentType, onExit}) => {
     const [open, setOpen] = useState(true);
@@ -46,6 +47,8 @@ export const RenameDialog = ({path, contentType, onExit}) => {
         // Close dialog
         setOpen(false);
     };
+
+    useCloseOnNavigation(handleCancel);
 
     const handleRename = () => {
         // Do mutation to create folder.

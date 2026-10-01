@@ -97,6 +97,27 @@ describe('Content editor form', () => {
         cy.contains('My constraint message 1234');
     });
 
+    // Regression test for jcontent#2748: the constraint message is written in a resource bundle,
+    // sanitized on the server and then rendered as a plain text node -- so the html-encoding the
+    // sanitizer applied to the text it kept reached the reader as written, and an apostrophe in
+    // the message showed up as "don&#39;t". The message deliberately carries every character that
+    // was affected; see jcontent-test-module's cent_testOverride.jcr_title.constraint.error.message.
+    it('should show a constraint message with its punctuation, not as html entities', function () {
+        const constraintMessage = 'My constraint message 1234: don\'t use "quotes" & slashes /';
+
+        const contentEditor = jcontent.createContent('cent:testOverride');
+        const field = contentEditor.getField(SmallTextField, 'cent:testOverride_jcr:title', false);
+
+        field.addNewValue('123456789012', true);
+        getComponentByRole(Button, 'createButton').click();
+        getComponentByRole(Button, 'content-type-dialog-cancel').click();
+
+        field.getErrorMessage('invalidPattern')
+            .should('contain.text', constraintMessage)
+            .and('not.contain.text', '&#')
+            .and('not.contain.text', '&amp;');
+    });
+
     it('should display overridden title label for boolean buttons', function () {
         const contentEditor = jcontent.createContent('cent:mesiHeaderBanner');
         const field = contentEditor.getField(Field, 'cemix:mesiBannerStory_buttonTransverse', false);

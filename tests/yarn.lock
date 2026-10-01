@@ -182,13 +182,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/cypress@npm:8.2.1":
-  version: 8.2.1
-  resolution: "@jahia/cypress@npm:8.2.1"
+"@jahia/cypress@npm:8.6.0":
+  version: 8.6.0
+  resolution: "@jahia/cypress@npm:8.6.0"
   dependencies:
     "@apollo/client": "npm:^3.4.9"
     "@faker-js/faker": "npm:^10.3.0"
     compare-versions: "npm:^6.1.1"
+    cypress-mailpit: "npm:^1.4.0"
     cypress-real-events: "npm:^1.11.0"
     graphql: "npm:^15.5.0"
     graphql-tag: "npm:^2.11.0"
@@ -197,7 +198,7 @@ __metadata:
     ci.startup: ./ci.startup.sh
     env.debug: ./env.debug.sh
     env.run: ./env.run.sh
-  checksum: 10c0/d20f6133e5643801cd19938361ec4725cee96b54950555e18a3d99bb9829ac6e26f008d5b2dd4243731aee6429a0d54e32b15aacf04063e60f663e979ab767ad
+  checksum: 10c0/8422f48157489cdb5d95a49fc60a45d7b5e328c204581ec10414973c4b7f08ddd1c12a313552c360fd16c7adeeb43f94c0161d65f8c4f9a489924335fc643a81
   languageName: node
   linkType: hard
 
@@ -243,7 +244,7 @@ __metadata:
   resolution: "@jahia/jcontent-cypress@workspace:."
   dependencies:
     "@4tw/cypress-drag-drop": "npm:^2.3.0"
-    "@jahia/cypress": "npm:8.2.1"
+    "@jahia/cypress": "npm:8.6.0"
     "@jahia/jahia-reporter": "npm:^1.5.0"
     "@types/node": "npm:^22.14.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.29.1"
@@ -1392,6 +1393,13 @@ __metadata:
   peerDependencies:
     "@types/cypress": ^1.1.0
   checksum: 10c0/90b4d5bc8583806254418d90bbbfd6c3c70c7be21894f11dc47073d646e5b6e4f944eff45578fe7817d999a93171737d4903d161fe06576db0aad0ce2d7a47cb
+  languageName: node
+  linkType: hard
+
+"cypress-mailpit@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "cypress-mailpit@npm:1.4.0"
+  checksum: 10c0/4cd3788b228c9869331bedd1abd03f2d4e33ce6fb6e287fd5da569e8283fb5bba62f5866095ebe67c31633fbcb031b547df345a33bfb57953c0c45d0039ecd23
   languageName: node
   linkType: hard
 

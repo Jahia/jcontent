@@ -17,12 +17,9 @@ describe('Search tests', () => {
     });
 
     describe('from jcontent', {testIsolation: false}, () => {
-        before(() => {
+        beforeEach(() => {
             cy.loginAndStoreSession();
             jcontent = JContent.visit('jcontentSite', 'en', 'content-folders/contents');
-        });
-
-        beforeEach(() => {
             basicSearch = jcontent.getBasicSearch().openSearch().reset();
         });
 

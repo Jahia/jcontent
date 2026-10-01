@@ -34,7 +34,7 @@
     </parent>
     <artifactId>jcontent</artifactId>
     <name>jContent</name>
-    <version>3.7.1-SNAPSHOT</version>
+    <version>3.7.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (jContent) for running on a Jahia server.</description>
 
@@ -47,9 +47,9 @@
     <properties>
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
-        <jahia-module-signature>MCwCFAPiYaRNVej/Yh+KuMaWMuZdxVbjAhQxz7QQN/akAjRljxGgFl3D8Mro7w==</jahia-module-signature>
+        <jahia-module-signature>MCwCFENtT/2PHagTu7hkWy1+nggEGiqaAhRm39Tw2gRZAUWkbrH/lVOM8bFPtA==</jahia-module-signature>
         <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
-        <jahia-depends>jahia-ui-root=1.10.0,app-shell=2.7,graphql-dxm-provider=3.5.0</jahia-depends>
+        <jahia-depends>jahia-ui-root=1.10.0,app-shell=2.7,graphql-dxm-provider=3.5</jahia-depends>
         <import-package>
             com.fasterxml.jackson.annotation;version="[2.10,3)",
             com.fasterxml.jackson.databind;version="[2.10,3)",
@@ -125,7 +125,6 @@
             org.jahia.modules.contenteditor.api.forms,
             org.jahia.modules.contenteditor.api.forms.model,
         </export-package>
-        <sonar.sources>src/javascript</sonar.sources>
     </properties>
 
     <repositories>

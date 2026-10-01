@@ -25,6 +25,16 @@ describe('Breadcrumb navigation test', () => {
                 {name: 'j:templateName', type: 'STRING', value: 'simple'}
             ]
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/home/search-results/subpageA`,
+            name: 'area-main',
+            primaryNodeType: 'jnt:contentList',
+            children: [{
+                name: 'test-content1',
+                primaryNodeType: 'jnt:bigText',
+                properties: [{name: 'text', language: 'en', value: 'test 1'}]
+            }]
+        });
         // Create several nested folders
         const folders = ['A', 'B', 'C', 'D'];
         let parentPath = `/sites/${siteKey}/contents`;
@@ -129,6 +139,25 @@ describe('Breadcrumb navigation test', () => {
         cy.get('h1').contains('Search Results');
         Breadcrumb.findByContent('Home').click();
         cy.get('h1').contains('Home');
+        cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
+    });
+
+    it('Checks the page stays reachable from a node the content tree does not show', () => {
+        // The area is not in the content tree and sits directly under subpageA, itself two levels below
+        // the site root: the breadcrumb used to collapse to subpageA alone, which the last-entry rule
+        // then greyed out, leaving no way back to the page.
+        JContent.visit(siteKey, 'en', 'pages/home/search-results/subpageA/area-main');
+
+        // Assert on the buttons themselves: Breadcrumb.findByContent yields the label span inside one,
+        // and a span carries no disabled state, so it would hold whatever the entry does.
+        const entries = () => cy.get('nav[aria-label="breadcrumb"]').find('button[data-sel-role="breadcrumb-item"]');
+
+        entries().should('have.length', 2);
+        entries().eq(0).should('contain', 'subpageA').and('not.be.disabled');
+        entries().eq(1).should('contain', 'area-main').and('be.disabled');
+
+        entries().eq(0).click();
+        cy.get('h1').contains('subpageA');
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
     });
 });

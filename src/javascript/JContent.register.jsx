@@ -29,6 +29,7 @@ import {batchActions} from 'redux-batched-actions';
 import SvgJContent from '~/icons/JContent';
 import {compareStagingAndLiveRedux} from './JContent/redux/compareStagingAndLive.redux';
 import {contentStatusRedux} from '~/JContent/redux/contentStatus.redux';
+import {register as registerTagManager} from './TagManager/register';
 
 export default function () {
     const JContentNavItem = props => {
@@ -181,6 +182,7 @@ export default function () {
     jContentAccordionItems(registry);
     jContentRedux(registry);
     jContentAppRoot(registry);
+    registerTagManager(registry);
 
     return import('./shared').then(m => {
         window.jahia.jcontent = m;

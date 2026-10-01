@@ -5,6 +5,9 @@ import {JContent} from '../../../page-object';
 // handler places the j:linknode page picker into the form. Switching the editing language reloads
 // the form from persisted state, so this client-side placement (and dependent valueConstraints in
 // general) must be restored while the change is still unsaved (#2447 regression).
+//
+// This guards PLACEMENT, not the value: j:linknode is internationalized, so each language holds
+// its own, and a language switch clears it rather than carrying the previous one over (#2734).
 describe('Language switch keeps dependent fields driven by unsaved changes', () => {
     const siteKey = 'langSwitchDependentFields';
     const linkTypeField = 'jnt:imageReferenceLink_j:linkType';
@@ -57,15 +60,15 @@ describe('Language switch keeps dependent fields driven by unsaved changes', () 
         picker.select();
         pickerField.assertValue('Home');
 
-        // Switch to French without saving: the unsaved link type must keep the picker in the form.
-        // The card label is the target's displayName resolved in the editing language; the home
-        // page has no French title, so it falls back to the node name 'home'.
+        // Switch to French without saving: the unsaved link type is shared (j:linkType is not
+        // internationalized), so it must keep the picker in the form. The picker itself is empty:
+        // j:linknode IS internationalized, and French holds no value for it yet.
         contentEditor.getLanguageSwitcher().selectLangByValue('fr');
         cy.wait('@createForm');
         linknodeIsVisible();
-        contentEditor.getPickerField(linknodeField).assertValue('home');
+        contentEditor.getPickerField(linknodeField).assertHasNoValue();
 
-        // And survive the round trip back to English
+        // And the English pick survives the round trip back
         contentEditor.getLanguageSwitcher().selectLangByValue('en');
         cy.wait('@createForm');
         linknodeIsVisible();

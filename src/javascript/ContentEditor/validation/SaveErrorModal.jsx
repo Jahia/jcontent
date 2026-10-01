@@ -4,10 +4,14 @@ import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} fr
 import {Button, Typography, Warning} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {getCapitalized} from '~/ContentEditor/utils';
+import {useCloseOnNavigation} from '~/utils';
 import styles from './SaveErrorModal.scss';
 
 export const SaveErrorModal = ({i18nErrors, fields, isOpen, siteInfo, onClose}) => {
     const {t} = useTranslation('jcontent');
+
+    useCloseOnNavigation(onClose);
+
     const langs = Object.keys(i18nErrors).sort();
 
     const nbOfErrors = Object.keys(i18nErrors).reduce((c, lang) => c + Object.keys(i18nErrors[lang]).length, 0);

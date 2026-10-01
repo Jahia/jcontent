@@ -155,7 +155,11 @@ export const ContentEditorModal = ({editorConfig, updateEditorConfig, onExited})
             }
         }
 
-        JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, stateLanguage, template);
+        // Only the route that produced the capture can refresh it. An unrenderable route - a content
+        // folder has no view - would replace it with an empty parse.
+        if (JahiaRenderedModulesUtil.hasRenderingFor(path)) {
+            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, stateLanguage, template);
+        }
     };
 
     mergedConfig.onClosedCallback = () => {

@@ -38,6 +38,13 @@ export class Field extends BaseComponent {
         return this.get().scrollIntoView().parent().find('[data-sel-role="translate-field"]');
     }
 
+    // The edit form validates on mount and on blur, never on change, so a value has to lose focus
+    // before its error is raised or cleared.
+    blurTextField() {
+        this.get().find('input[type="text"]').blur();
+        return this;
+    }
+
     getErrorMessage(errorCode?: string): Cypress.Chainable {
         return this.get().scrollIntoView().find(errorCode ? `[data-sel-error="${errorCode}"]` : '[data-sel-error]');
     }

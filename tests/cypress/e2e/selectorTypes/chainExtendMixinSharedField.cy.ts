@@ -41,7 +41,37 @@ describe('Chained extend mixins each addMixin targets', () => {
             name: 'switchAlongChain',
             primaryNodeType: 'cent:actionTest'
         });
+        // Nodes that already carry a chain member, as content saved before this fix does: on main
+        // only the most derived member could be saved, so existing data carries cemix:chainPopin.
+        ['storedPopin', 'storedPopinSwitch', 'storedPopinNoop'].forEach(name => addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name,
+            primaryNodeType: 'cent:actionTest',
+            mixins: ['cemix:chainPopin'],
+            properties: [
+                {name: 'actionType', value: 'cemix:chainPopin'},
+                {name: 'pageSuccess', value: 'stored page', language: 'en'},
+                {name: 'toastSuccess', value: 'stored toast', language: 'en'},
+                {name: 'titrePopin', value: 'stored title', language: 'en'}
+            ]
+        }));
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'storedSuccess',
+            primaryNodeType: 'cent:actionTest',
+            mixins: ['cemix:chainSuccess'],
+            properties: [
+                {name: 'actionType', value: 'cemix:chainSuccess'},
+                {name: 'pageSuccess', value: 'stored page', language: 'en'},
+                {name: 'toastSuccess', value: 'stored toast', language: 'en'}
+            ]
+        });
     });
+
+    const appliedMixins = (name: string) => cy.apollo({
+        queryFile: 'jcontent/getMixinTypes.graphql',
+        variables: {path: `/sites/${siteKey}/contents/${name}`}
+    }).then(resp => resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name).filter((n: string) => n.startsWith('cemix:chain')).sort().join(', '));
 
     after(() => {
         deleteSite(siteKey);
@@ -101,5 +131,53 @@ describe('Chained extend mixins each addMixin targets', () => {
         contentEditor.getField(SmallTextField, 'cemix:chainPopin_pageSuccess').checkValue('redirect target');
 
         contentEditor.cancelAndDiscard();
+    });
+
+    // Activation is inherited: a node carrying cemix:chainPopin is also of type cemix:chainSuccess
+    // and cemix:chainRedirect. Moving UP the chain from a stored member must still show the fields
+    // of the member the reader picked, with the values the node stores.
+    [
+        {mixin: 'cemix:chainRedirect', fields: {pageSuccess: 'stored page'}},
+        {mixin: 'cemix:chainSuccess', fields: {pageSuccess: 'stored page', toastSuccess: 'stored toast'}}
+    ].forEach(({mixin, fields}) => {
+        it(`shows the stored fields when moving up the chain from cemix:chainPopin to ${mixin}`, () => {
+            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+            const contentEditor = jcontent.editComponentByRowName('storedPopin');
+
+            contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue(mixin);
+
+            Object.entries(fields).forEach(([field, value]) => {
+                contentEditor.getField(SmallTextField, `${mixin}_${field}`).checkValue(value);
+            });
+
+            contentEditor.cancelAndDiscard();
+        });
+    });
+
+    it('applies exactly the selected member on save when moving up the chain', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('storedPopinSwitch');
+        contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainRedirect');
+        contentEditor.save();
+
+        appliedMixins('storedPopinSwitch').should('equal', 'cemix:chainRedirect');
+    });
+
+    it('applies exactly the selected member on save when moving down the chain', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('storedSuccess');
+        contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainPopin');
+        contentEditor.save();
+
+        appliedMixins('storedSuccess').should('equal', 'cemix:chainPopin');
+    });
+
+    it('leaves the applied mixins alone on a save that keeps the selected member', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('storedPopinNoop');
+        contentEditor.getField(SmallTextField, 'cemix:chainPopin_titrePopin').addNewValue(' edited');
+        contentEditor.save();
+
+        appliedMixins('storedPopinNoop').should('equal', 'cemix:chainPopin');
     });
 });

@@ -1,29 +1,32 @@
 import {FastField} from 'formik';
 import React, {Fragment} from 'react';
 import {DraggableReference} from './DragDrop';
-import {onDirectionalReorder, useReorderList} from '~/ContentEditor/utils';
+import {onDirectionalReorder, useMovedItemFocus, useReorderList} from '~/ContentEditor/utils';
 import PropTypes from 'prop-types';
 import {useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouched}, isReadOnly}) => {
     const {handleReorder, reorderedItems, reset} = useReorderList(field.value ?? []);
+    const {requestFocus, focusIdFor} = useMovedItemFocus();
 
     if (field.value === undefined) {
         // Field has no children
         return null;
     }
 
-    const onValueMove = (droppedId, direction) => {
+    const onValueMove = (droppedId, direction, movedName) => {
         // Move using buttons up/down
         setFieldValue(field.name, onDirectionalReorder(field.value, droppedId, direction, field.name));
         setFieldTouched(field.name, true, false);
+        requestFocus(movedName);
     };
 
-    const handleFinalReorder = () => {
+    const handleFinalReorder = movedName => {
         // Move once the element was dropped correctly
         setFieldValue(field.name, reorderedItems.map(({item}) => item));
         setFieldTouched(field.name, true, false);
+        requestFocus(movedName);
     };
 
     return (
@@ -38,6 +41,7 @@ export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouche
                             id={id}
                             fieldLength={field.value.length}
                             isReadOnly={isReadOnly}
+                            focusId={focusIdFor(item.name)}
                             onReorder={handleReorder}
                             onValueMove={onValueMove}
                             onReorderDropped={handleFinalReorder}

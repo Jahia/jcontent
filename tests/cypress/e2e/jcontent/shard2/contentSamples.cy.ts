@@ -83,13 +83,16 @@ describe('Content samples', () => {
                     }
                 }`,
                 variables: {path: samplesPath}
-            }).should(({data}) => {
-                expect(data.jcr.node.primaryNodeType.name).to.equal('jnt:samplesFolder');
+            }).should(result => {
+                // Optional chaining throughout: should() retries, and the result is undefined on
+                // the first pass - destructuring it throws instead of letting the retry happen.
+                const node = result?.data?.jcr?.node;
+                expect(node?.primaryNodeType?.name).to.equal('jnt:samplesFolder');
                 // Carried through the supertype list, so mixinTypes stays empty and the mixin is
                 // never handed to a copy - see the publication assertion further down.
-                expect(data.jcr.node.nolive, 'samples root should be nolive').to.equal(true);
+                expect(node?.nolive, 'samples root should be nolive').to.equal(true);
 
-                const categories = data.jcr.node.children.nodes;
+                const categories = node?.children?.nodes ?? [];
                 expect(categories.map(n => n.name)).to.include.members(['pages', 'components']);
                 categories
                     .filter(n => ['pages', 'components'].includes(n.name))
@@ -122,8 +125,9 @@ describe('Content samples', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             jcontent.selectContextMenuByRowName('sample-source', 'copyToSamples');
 
-            childNamesOf(`${samplesPath}/components`).should(({data}) => {
-                expect(data.jcr.node.children.nodes.map(n => n.name)).to.include('sample-source');
+            childNamesOf(`${samplesPath}/components`).should(result => {
+                const names = (result?.data?.jcr?.node?.children?.nodes ?? []).map(n => n.name);
+                expect(names).to.include('sample-source');
             });
         });
 
@@ -133,8 +137,8 @@ describe('Content samples', () => {
                     jcr { node: nodeByPath(path: $path) { path } }
                 }`,
                 variables: {path: `${sitePath}/contents/sample-source`}
-            }).should(({data}) => {
-                expect(data.jcr.node.path).to.equal(`${sitePath}/contents/sample-source`);
+            }).should(result => {
+                expect(result?.data?.jcr?.node?.path).to.equal(`${sitePath}/contents/sample-source`);
             });
         });
 
@@ -184,8 +188,8 @@ describe('Content samples', () => {
 
             // The copy is pasted with namingConflictResolution RENAME, so it lands beside the
             // original name rather than overwriting anything.
-            childNamesOf(`${sitePath}/contents`).should(({data}) => {
-                const names = data.jcr.node.children.nodes.map(n => n.name);
+            childNamesOf(`${sitePath}/contents`).should(result => {
+                const names = (result?.data?.jcr?.node?.children?.nodes ?? []).map(n => n.name);
                 expect(names.some(name => name.startsWith('sample-source-') && name !== 'sample-source-two'))
                     .to.equal(true);
             });
@@ -195,8 +199,8 @@ describe('Content samples', () => {
             // The regression this guards: jmix:nolive on a sample would travel with the copy, since
             // node copy re-adds every mixin absent from forbiddenMixinToCopy, and the inserted
             // content would be silently unpublishable forever.
-            childNamesOf(`${sitePath}/contents`).then(({data}) => {
-                const inserted = data.jcr.node.children.nodes
+            childNamesOf(`${sitePath}/contents`).then(result => {
+                const inserted = (result?.data?.jcr?.node?.children?.nodes ?? [])
                     .map(n => n.name)
                     .find(name => name.startsWith('sample-source-') && name !== 'sample-source-two');
 
@@ -208,10 +212,10 @@ describe('Content samples', () => {
                         } }
                     }`,
                     variables: {path: `${sitePath}/contents/${inserted}`}
-                }).should(({data: check}) => {
-                    expect(check.jcr.node.nolive, 'content made from a sample must not be nolive')
-                        .to.equal(false);
-                    expect(check.jcr.node.operationsSupport.publication).to.equal(true);
+                }).should(check => {
+                    const node = check?.data?.jcr?.node;
+                    expect(node?.nolive, 'content made from a sample must not be nolive').to.equal(false);
+                    expect(node?.operationsSupport?.publication).to.equal(true);
                 });
             });
         });

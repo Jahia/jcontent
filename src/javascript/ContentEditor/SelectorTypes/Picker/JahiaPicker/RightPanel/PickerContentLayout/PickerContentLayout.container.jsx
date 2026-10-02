@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import styles from './PickerContentLayout.scss';
 import {cePickerOpenPaths} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import PickerFilesGrid from './PickerFilesGrid';
+import {useSelectUploadedNodes} from './useSelectUploadedNodes';
 import PropTypes from 'prop-types';
 
 const setRefetcher = (name, refetcherData) => {
@@ -34,6 +35,45 @@ function expand(r, level) {
     return (r && level) ? r.filter(c => c.hasSubRows).flatMap(c => [c.path, ...expand(c.subRows, level - 1)]) : [];
 }
 
+const MAX_AUTO_EXPAND_LEVELS = 5;
+
+/**
+ * The fragments the query needs and how far the tree opens on its own, both read off the accordion
+ * the picker is showing - the one behind the search while searching, the current one otherwise.
+ *
+ * A plain computation over the registry, so it sits outside the component: that keeps the
+ * container's own branching to what it needs in order to render.
+ */
+const getAccordionQueryConfig = (mode, preSearchModeMemo, accordionItemProps) => {
+    const additionalFragments = [];
+
+    if (mode === Constants.mode.SEARCH && preSearchModeMemo) {
+        const tableConfig = jcontentUtils.getAccordionItem(registry.get('accordionItem', preSearchModeMemo), accordionItemProps)?.tableConfig;
+        if (tableConfig?.fragments) {
+            additionalFragments.push(...tableConfig.fragments);
+        }
+
+        const fragments = tableConfig?.queryHandler?.getFragments();
+        if (fragments) {
+            additionalFragments.push(...fragments);
+        }
+
+        // Searching shows a flat list, so there is nothing to expand.
+        return {additionalFragments, autoExpandLevels: 1};
+    }
+
+    const tableConfig = jcontentUtils.getAccordionItem(registry.get('accordionItem', mode), accordionItemProps)?.tableConfig;
+    if (tableConfig?.fragments) {
+        additionalFragments.push(...tableConfig.fragments);
+    }
+
+    const autoExpandLevels = Number.isInteger(tableConfig.autoExpandLevels) ?
+        Math.min(tableConfig.autoExpandLevels, MAX_AUTO_EXPAND_LEVELS) :
+        1;
+
+    return {additionalFragments, autoExpandLevels};
+};
+
 export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordionItemProps, dblClickSelect}) => {
     const {t} = useTranslation();
     const currentResult = useRef();
@@ -45,32 +85,10 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
         preSearchModeMemo: state.contenteditor.picker.preSearchModeMemo,
         viewType: state.contenteditor.picker.tableView.viewType
     }), shallowEqual);
-    const MAX_AUTO_EXPAND_LEVELS = 5;
 
     const dispatch = useDispatch();
 
-    const additionalFragments = [];
-    let autoExpandLevels = 1;
-    if (mode === Constants.mode.SEARCH && preSearchModeMemo) {
-        const tableConfig = jcontentUtils.getAccordionItem(registry.get('accordionItem', preSearchModeMemo), accordionItemProps)?.tableConfig;
-        if (tableConfig?.fragments) {
-            additionalFragments.push(...tableConfig?.fragments);
-        }
-
-        const fragments = tableConfig?.queryHandler?.getFragments();
-        if (fragments) {
-            additionalFragments.push(...fragments);
-        }
-    } else {
-        const tableConfig = jcontentUtils.getAccordionItem(registry.get('accordionItem', mode), accordionItemProps)?.tableConfig;
-        if (tableConfig?.fragments) {
-            additionalFragments.push(...tableConfig?.fragments);
-        }
-
-        if (Number.isInteger(tableConfig.autoExpandLevels)) {
-            autoExpandLevels = Math.min(tableConfig.autoExpandLevels, MAX_AUTO_EXPAND_LEVELS);
-        }
-    }
+    const {additionalFragments, autoExpandLevels} = getAccordionQueryConfig(mode, preSearchModeMemo, accordionItemProps);
 
     const options = useSelector(state => ({
         mode: state.contenteditor.picker.mode,
@@ -111,6 +129,10 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
             dispatch(cePickerOpenPaths(expand(result.nodes, autoExpand.current.level)));
         }
     }, [dispatch, result, isStructured, path, viewType, loading, autoExpand, autoExpandLevels]);
+
+    // Rows on screen right now: while a new query runs, the previous ones are still displayed.
+    // Read without touching currentResult, which the render below owns.
+    useSelectUploadedNodes((loading ? currentResult.current : result)?.nodes, isMultiple);
 
     if (!loading && !result) {
         if (error) {

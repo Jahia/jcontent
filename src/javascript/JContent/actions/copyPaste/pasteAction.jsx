@@ -3,7 +3,7 @@ import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {copypasteClear} from './copyPaste.redux';
 import {withNotifications} from '@jahia/react-material';
 import {isDescendantOrSelf, JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
-import copyPasteConstants from './copyPaste.constants';
+import copyPasteConstants, {PAGE_ONLY_SKIPPED_TYPES} from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
@@ -71,7 +71,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
         const {nodes, type} = copyPaste;
 
-        const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? ['jnt:page', 'jmix:navMenuItem'] : [];
+        const nodeTypesToSkip = type === copyPasteConstants.COPY_PAGE ? PAGE_ONLY_SKIPPED_TYPES : [];
 
         const templateLimit = JahiaRenderedModulesUtil.getArea(path)?.limit;
         let isVisible = res.checksResult && res.node?.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node, templateLimit);

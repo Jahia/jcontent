@@ -1,0 +1,1 @@
+export {CopyToSamplesActionComponent} from './copyToSamplesAction';

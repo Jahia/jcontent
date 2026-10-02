@@ -1,0 +1,25 @@
+.preview {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    min-width: 0;
+    min-height: 0;
+}
+
+.toolbar {
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--spacing-small);
+}
+
+.placeholder {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-large);
+
+    color: var(--color-gray_dark);
+    text-align: center;
+}

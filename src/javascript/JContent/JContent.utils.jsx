@@ -564,3 +564,6 @@ export const isCMISFolder = node => {
 export const isCMISFile = node => {
     return hasMixin(node, 'cmismix:document');
 };
+
+// Lives with the rest of the samples helpers; re-exported here for existing callers.
+export {isSamplePath} from './samples/samples.utils';

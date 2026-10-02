@@ -32,11 +32,8 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
     };
     const prevValueRef = useRef();
 
-    const {readOnly, label, iconName, dropdownData} = React.useMemo(() => ({
-        readOnly: field.readOnly || field.valueConstraints.length === 0,
-        label: getLabel(field, value, t),
-        iconName: getIconOfField(field, value) || '',
-        dropdownData: field.valueConstraints.length > 0 ? field.valueConstraints.map(item => {
+    const {readOnly, label, iconName, dropdownData, optionCount} = React.useMemo(() => {
+        const toOption = item => {
             const image = item.properties?.find(property => property.name === 'image')?.value;
             const description = item.properties?.find(property => property.name === 'description')?.value;
             const iconStart = item.properties?.find(property => property.name === 'iconStart')?.value;
@@ -52,8 +49,42 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
                     'data-value': item.value.string
                 }
             };
-        }) : [{label: '', value: ''}]
-    }), [t, field, value]);
+        };
+
+        // A constraint may name the group it belongs to. As soon as one does, the dropdown is built
+        // as groups rather than a flat list, each group keeping the order it first appeared in.
+        const groupOf = item => item.properties?.find(property => property.name === 'group')?.value;
+        const isGrouped = field.valueConstraints.some(item => groupOf(item));
+
+        let data;
+        if (field.valueConstraints.length === 0) {
+            data = [{label: '', value: ''}];
+        } else if (isGrouped) {
+            const groups = [];
+            const byLabel = new Map();
+            field.valueConstraints.forEach(item => {
+                const groupLabel = groupOf(item) || '';
+                if (!byLabel.has(groupLabel)) {
+                    const group = {groupLabel, options: []};
+                    byLabel.set(groupLabel, group);
+                    groups.push(group);
+                }
+
+                byLabel.get(groupLabel).options.push(toOption(item));
+            });
+            data = groups;
+        } else {
+            data = field.valueConstraints.map(toOption);
+        }
+
+        return {
+            readOnly: field.readOnly || field.valueConstraints.length === 0,
+            label: getLabel(field, value, t),
+            iconName: getIconOfField(field, value) || '',
+            dropdownData: data,
+            optionCount: field.valueConstraints.length
+        };
+    }, [t, field, value]);
 
     React.useEffect(() => {
         // Reset value if constraints doesnt contains the actual value.
@@ -81,7 +112,7 @@ export const SingleSelect = ({field, value, id, inputContext, onChange, onBlur})
                 placeholder={label}
                 value={value}
                 icon={iconName && toIconComponent(iconName)}
-                hasSearch={dropdownData && dropdownData.length >= 5}
+                hasSearch={optionCount >= 5}
                 searchEmptyText={t('jcontent:label.contentEditor.global.noResult')}
                 onChange={(evt, item) => {
                     if (item.value !== value) {

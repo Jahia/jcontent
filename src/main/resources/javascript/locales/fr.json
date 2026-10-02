@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Edition rapide"
         },
-        "show": "Afficher l'aperçu"
+        "show": "Afficher l'aperçu",
+        "viewport": "{{width}} px ({{percent}} %)"
       },
       "rename": "Renommer",
       "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
@@ -678,10 +679,9 @@
       "samples": {
         "selectType": "Sélectionnez un type de contenu pour en voir un exemple.",
         "noSample": "Aucun exemple n'est encore disponible pour ce type de contenu sur ce site.",
-        "cannotRender": "Cet exemple ne peut pas être prévisualisé : il n'est pas stocké dans une page d'exemples.",
+        "cannotRender": "Cet exemple ne peut pas être prévisualisé : ce site n'a aucune page permettant de l'afficher.",
         "useSample": "Utiliser l'exemple",
-        "createEmpty": "Créer un contenu vide",
-        "viewport": "{{width}} px ({{percent}} %)"
+        "createEmpty": "Créer un contenu vide"
       },
       "create": {
         "title": "Créer {{type}}",

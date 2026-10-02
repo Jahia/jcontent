@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Quick Edit"
         },
-        "show": "Show Preview"
+        "show": "Show Preview",
+        "viewport": "{{width}} px ({{percent}}%)"
       },
       "rename": "Rename",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
@@ -684,10 +685,9 @@
       "samples": {
         "selectType": "Select a content type to see an example of it.",
         "noSample": "No example is available for this content type on this site yet.",
-        "cannotRender": "This example cannot be previewed: it is not stored inside a sample page.",
+        "cannotRender": "This example cannot be previewed: this site has no page to render it with.",
         "useSample": "Use example",
-        "createEmpty": "Create empty",
-        "viewport": "{{width}} px ({{percent}}%)"
+        "createEmpty": "Create empty"
       },
       "create": {
         "title": "Create {{type}}",

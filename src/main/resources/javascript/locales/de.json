@@ -13,7 +13,8 @@
           "metadata": "Metadaten",
           "quickEdit": "Schnellbearbeitung"
         },
-        "show": "Vorschau öffnen"
+        "show": "Vorschau öffnen",
+        "viewport": "{{width}} px ({{percent}} %)"
       },
       "rename": "Umbenennen",
       "workInProgress": "In Arbeit: {{wipLang}} (ausgenommen gemeinsame Eigenschaften)",
@@ -677,10 +678,9 @@
       "samples": {
         "selectType": "Wählen Sie einen Inhaltstyp, um ein Beispiel dafür zu sehen.",
         "noSample": "Für diesen Inhaltstyp ist auf dieser Website noch kein Beispiel verfügbar.",
-        "cannotRender": "Dieses Beispiel kann nicht in der Vorschau angezeigt werden: Es liegt nicht in einer Beispielseite.",
+        "cannotRender": "Dieses Beispiel kann nicht in der Vorschau angezeigt werden: Diese Website hat keine Seite, mit der es dargestellt werden kann.",
         "useSample": "Beispiel verwenden",
-        "createEmpty": "Leer erstellen",
-        "viewport": "{{width}} px ({{percent}} %)"
+        "createEmpty": "Leer erstellen"
       },
       "create": {
         "title": "Erstellen {{type}}",

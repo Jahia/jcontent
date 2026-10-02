@@ -19,7 +19,7 @@ export const ViewportSelector = ({viewportWidth, scaleFor, onChange}) => {
             size="small"
             value={viewportWidth}
             data={VIEWPORT_WIDTHS.map(width => ({
-                label: t('jcontent:label.contentEditor.samples.viewport', {
+                label: t('jcontent:label.contentManager.preview.viewport', {
                     width,
                     percent: Math.round(scaleFor(width) * 100)
                 }),

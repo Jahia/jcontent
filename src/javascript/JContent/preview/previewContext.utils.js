@@ -1,4 +1,5 @@
 import JContentConstants from '~/JContent/JContent.constants';
+import {getSamplesPreviewPagePath, isSampleContent} from '~/JContent/samples/samples.utils';
 
 /**
  * Shared helper for in-context module render with page CSS injection.
@@ -153,6 +154,18 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
  * folders, media, categories - have no page ancestor to find.
  */
 export const buildPreviewContextsFromNode = (node, language) => {
+    // A sample previews exactly as it does in the content type picker - a module render dressed in
+    // a page's CSS. The generic path below would send view:null for any type with no content
+    // template, because such a node has no displayableNode, and that is what left the Samples
+    // preview blank while the picker showed the very same component. Null when the site has no page
+    // to borrow from, in which case we fall through rather than lose the preview entirely.
+    const sampleContext = isSampleContent(node) ?
+        buildSamplePreviewContext(node, language, getSamplesPreviewPagePath(node.site?.homePage?.path)) :
+        null;
+    if (sampleContext) {
+        return {primary: sampleContext, fallback: null};
+    }
+
     const pageAncestor = node.pageAncestors?.at(-1);
     const closestPage = pageAncestor && !node.isPage ? {path: pageAncestor.path} : null;
     return buildPreviewContexts(node, language, {closestPage});

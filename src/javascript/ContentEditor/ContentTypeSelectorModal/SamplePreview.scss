@@ -13,35 +13,6 @@
     gap: var(--spacing-small);
 }
 
-// PreviewViewers renders with flex: 1 1 0%, and the iframe inside it is sized in percentages, so
-// this has to be a flex container with a definite height for that chain to resolve. Left as a plain
-// block the iframe falls back to its intrinsic default and the preview is cut off a couple of
-// hundred pixels down.
-.frame {
-    position: relative;
-
-    display: flex;
-    flex: 1;
-    min-height: 0;
-
-    border: 1px solid var(--color-gray_light40);
-    background-color: var(--color-light);
-    overflow: hidden;
-}
-
-// Rendered at a real viewport width, then scaled down to fit. flex-shrink stays off or the flex row
-// would squeeze it back to the pane width and undo the point of rendering wide.
-//
-// display: flex matters as much here as it does on .frame above: this sits between .frame and
-// PreviewViewers, so it has to carry the flex chain through or the iframe collapses to its intrinsic
-// height again. Its own height is set inline, from the measured frame height divided by the scale.
-.viewport {
-    display: flex;
-    flex: 0 0 auto;
-
-    transform-origin: top left;
-}
-
 .placeholder {
     display: flex;
     flex: 1;

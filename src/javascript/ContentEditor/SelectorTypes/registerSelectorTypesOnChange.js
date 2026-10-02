@@ -23,7 +23,13 @@ const isArray = array => {
     return Array.isArray(array);
 };
 
-function recreate(sections) {
+/**
+ * Replace every fieldSet and field with a shallow copy, so that components memoizing on a field
+ * reference see the change. A field mutated in place is invisible to them on its own.
+ *
+ * @param {Array} sections - the form sections, modified in place
+ */
+export function recreateSections(sections) {
     sections.forEach(section => {
         section.fieldSets = section.fieldSets.map(fieldSet => ({
             ...fieldSet,
@@ -62,7 +68,7 @@ const applyFieldConstraints = (results, sections) => {
                 // Update field in place (for those who keep a constant ref on sectionsContext)
                 fieldToUpdate.valueConstraints = data.forms.fieldConstraints;
                 // And recreate the full sections object to make change detection work
-                recreate(sections);
+                recreateSections(sections);
                 updated = true;
             }
         }

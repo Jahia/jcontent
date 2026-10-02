@@ -687,7 +687,10 @@
         "noSample": "No example is available for this content type on this site yet.",
         "cannotRender": "This example cannot be previewed: this site has no page to render it with.",
         "useSample": "Use example",
-        "createEmpty": "Create empty"
+        "createEmpty": "Create empty",
+        "pageTemplatesGroup": "Templates",
+
+        "pageSamplesGroup": "Page samples"
       },
       "create": {
         "title": "Create {{type}}",

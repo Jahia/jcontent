@@ -175,6 +175,7 @@ export const ContentEditorApi = () => {
                 <ContentTypeSelectorModal
                     isOpen
                     nodeTypesTree={contentTypeSelectorConfig.nodeTypesTree}
+                    parentUuid={contentTypeSelectorConfig.editorConfig?.uuid}
                     onClose={() => {
                         setContentTypeSelectorConfig(false);
                     }}

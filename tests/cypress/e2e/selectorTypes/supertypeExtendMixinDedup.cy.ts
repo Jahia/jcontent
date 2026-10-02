@@ -12,6 +12,16 @@ describe('Supertype extend mixin deduplication', () => {
     before(() => {
         createSite(siteKey);
         enableModule('jcontent-test-module', siteKey);
+        // The save test gets a page of its own, so the tests that read home never see what it saved.
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/home`,
+            name: 'persistAfterSave',
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Persist after save', language: 'en'},
+                {name: 'j:templateName', type: 'STRING', value: 'home'}
+            ]
+        });
         // A page that carries BOTH mixins explicitly, in the order a reader reaches by switching
         // on cemix:supertypeExtendMixin first and cemix:subtypeExtendMixin later. Applied mixins get
         // their own pass over the form, so this is a path the extend-mixin dedup alone does not cover.
@@ -72,7 +82,7 @@ describe('Supertype extend mixin deduplication', () => {
     });
 
     it('Fields from supertype extend mixin persist after save', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'pages');
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/persistAfterSave');
         let contentEditor = jcontent.editPage();
 
         cy.log('Activate the subtype mixin and save');
@@ -80,7 +90,7 @@ describe('Supertype extend mixin deduplication', () => {
         contentEditor.save();
 
         cy.log('Only the subtype is applied: the supertype comes with it and must not be added on its own');
-        appliedMixins(`/sites/${siteKey}/home`).should('equal', 'cemix:subtypeExtendMixin');
+        appliedMixins(`/sites/${siteKey}/home/persistAfterSave`).should('equal', 'cemix:subtypeExtendMixin');
 
         cy.log('Re-open the page editor and verify the inherited fields are still visible');
         contentEditor = jcontent.editPage();

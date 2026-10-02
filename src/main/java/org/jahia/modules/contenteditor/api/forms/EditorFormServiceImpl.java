@@ -199,11 +199,20 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            boolean isActivated = nodeTypeResolver != null && nodeTypeResolver.isNodeType(fieldSet.getName());
+                            boolean isTemplateMixin = nodeType.isNodeType(TEMPLATE_MIXIN);
+                            // A template mixin is one choicelist value among others, so only the one
+                            // applied directly is selected. A node carrying one member of a chain of
+                            // template mixins is also of the type of every member it extends, and
+                            // those members must stay switched off. A node carrying two members
+                            // directly, which only an API write can produce, switches both on, and
+                            // a shared property is then edited in the first one (see
+                            // removeFieldsEditedElsewhere).
+                            boolean isActivated = nodeTypeResolver != null && (isTemplateMixin ?
+                                nodeTypeResolver.hasMixin(fieldSet.getName()) : nodeTypeResolver.isNodeType(fieldSet.getName()));
                             boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
                             boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
                             fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);
-                            fieldSet.setHasEnableSwitch(!nodeType.isNodeType(TEMPLATE_MIXIN));
+                            fieldSet.setHasEnableSwitch(!isTemplateMixin);
 
                             // Update readonly if user does not have permission to add/remove mixin
                             fieldSet.setReadOnly(fieldSet.isReadOnly() || !fieldSetEditable);
@@ -310,19 +319,16 @@ public class EditorFormServiceImpl implements EditorFormService {
             formDefinitionsToMerge.addAll(staticDefinitionsRegistry.getFieldSetsForType(nodeType, site, nodeTypes));
 
             processedNodeTypes.add(nodeType.getName());
-            if (!singleFieldSet) {
-                // A form generated over several fieldsets names each one after the declaring type of
-                // the properties in it, so a supertype's own form would regenerate fieldsets this
-                // one already holds. Marking the supertypes spares that work.
-                //
-                // A single-fieldset form is the opposite: the one fieldset is named after the mixin
-                // itself, so a supertype's form is a DIFFERENT fieldset, not a duplicate. Marking
-                // the supertypes there suppresses a fieldset the reader still needs -- and since
-                // getExtendMixins iterates a HashMap, which member of a chain gets suppressed is
-                // decided by hash order. Supertypes of the edited type are already marked by the
-                // primary-type pass above, which is what keeps a permanently applied mixin out.
-                processedNodeTypes.addAll(nodeType.getSupertypeSet().stream().map(ExtendedNodeType::getName).collect(Collectors.toList()));
-            }
+            // A single-fieldset form names its one fieldset after the mixin itself, so a supertype
+            // that is a template mixin too is another choicelist value with a fieldset of its own,
+            // not a duplicate: marking it would leave that value nothing to show. Since
+            // getExtendMixins iterates a HashMap, which member of a chain got marked first would be
+            // decided by hash order. Any other supertype stays marked, so a node carrying both a
+            // mixin and its supertype gets no second, empty fieldset for the supertype (#2467).
+            processedNodeTypes.addAll(nodeType.getSupertypeSet().stream()
+                .filter(supertype -> !singleFieldSet || !supertype.isNodeType(TEMPLATE_MIXIN))
+                .map(ExtendedNodeType::getName)
+                .collect(Collectors.toList()));
         }
     }
 
@@ -434,10 +440,9 @@ public class EditorFormServiceImpl implements EditorFormService {
         // the form over a fieldset the reader has no reason to turn on by itself.
         //
         // That only holds for a fieldset the reader can switch. A jmix:templateMixin has no enable
-        // switch (see isExtend above) and is reached only by an addMixin choicelist naming it, so
-        // dropping it hides no switch and instead makes it unreachable: where a chain of template
-        // mixins are each their own addMixin target, every member but the most derived one loses
-        // its fieldset, and selecting one of the others finds nothing to show.
+        // switch (see isExtend above), so dropping it hides no switch and instead leaves it no
+        // fieldset: where a chain of template mixins are each a value of an addMixin choicelist,
+        // every member but the most derived one would show nothing when selected.
         res.removeIf(mixin -> !mixin.isNodeType(TEMPLATE_MIXIN) && res.stream()
             .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
 
@@ -446,9 +451,8 @@ public class EditorFormServiceImpl implements EditorFormService {
 
     /**
      * Leaves one editable copy of each property among the fieldsets that are actually active,
-     * keeping the one that claims it first (see {@link #claimOrder}) and dropping the rest.
-     * Fieldsets that are not active are left alone: their copy is what makes the property appear
-     * when the reader switches them on.
+     * keeping the first and dropping the rest. Fieldsets that are not active are left alone: their
+     * copy is what makes the property appear when the reader switches them on.
      *
      * <p>Identity is {@link Field#getKey()}, declaring type plus name, so this only ever collapses
      * what is genuinely one property -- two inherited copies of the same supertype definition, not
@@ -463,45 +467,13 @@ public class EditorFormServiceImpl implements EditorFormService {
      */
     private static void removeFieldsEditedElsewhere(Form form) {
         Set<String> alreadyEditable = new HashSet<>();
-        for (FieldSet fieldSet : claimOrder(form)) {
-            fieldSet.getFields().removeIf(field -> field.isVisible() && !alreadyEditable.add(field.getKey()));
+        for (Section section : form.getSections()) {
+            for (FieldSet fieldSet : section.getFieldSets()) {
+                if (Boolean.TRUE.equals(fieldSet.isActivated()) && Boolean.TRUE.equals(fieldSet.isVisible())) {
+                    fieldSet.getFields().removeIf(field -> field.isVisible() && !alreadyEditable.add(field.getKey()));
+                }
+            }
         }
-    }
-
-    /**
-     * The fieldsets that may claim a property, in the order they get to: form order, except that a
-     * fieldset whose mixin extends another candidate's mixin claims first.
-     *
-     * <p>Form order alone is enough while the candidates are unrelated -- sibling mixins inheriting
-     * one property from a shared supertype, where either copy is as good as the other. It is not
-     * enough along a chain of mixins that extend one another, because activation is inherited: a
-     * node carrying the deepest one activates every fieldset above it too. Leaving the property
-     * with whichever ranks first would strand it on a mixin the reader did not choose, and the
-     * editor moves a field between fieldsets by the fieldset's own name, so it would not travel
-     * with the selection. The most derived candidate is the one the reader picked.
-     */
-    private static List<FieldSet> claimOrder(Form form) {
-        List<FieldSet> candidates = form.getSections().stream()
-            .flatMap(section -> section.getFieldSets().stream())
-            .filter(fieldSet -> Boolean.TRUE.equals(fieldSet.isActivated()) && Boolean.TRUE.equals(fieldSet.isVisible()))
-            .collect(Collectors.toList());
-
-        // How many other candidates this one extends. Unrelated candidates all score 0 and a stable
-        // sort then leaves them in form order, so this reorders a chain and nothing else.
-        Map<FieldSet, Long> derivedness = new IdentityHashMap<>();
-        for (FieldSet fieldSet : candidates) {
-            derivedness.put(fieldSet, candidates.stream().filter(other -> extendsMixinOf(fieldSet, other)).count());
-        }
-        candidates.sort(Comparator.comparingLong(derivedness::get).reversed());
-        return candidates;
-    }
-
-    private static boolean extendsMixinOf(FieldSet fieldSet, FieldSet other) {
-        ExtendedNodeType type = fieldSet.getNodeType();
-        ExtendedNodeType otherType = other.getNodeType();
-        return type != null && otherType != null
-            && !type.getName().equals(otherType.getName())
-            && type.isNodeType(otherType.getName());
     }
 
     boolean isApplicable(DefinitionRegistryItem form, JCRSiteNode site) {

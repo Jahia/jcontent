@@ -370,11 +370,11 @@
 // The chain variant: not siblings but a CHAIN, popin > success > redirect, where every member
 // declares `extends = cent:actionTest` and every member is its own addMixin target. Each one must
 // show its own property plus every property it inherits from further up the chain.
-// getExtendMixins drops a mixin that another entry in the list extends (#2467), so only the most
-// derived member of a chain survives and the other two never get a fieldset at all -- which is a
-// different failure from #2746's, where all three fieldsets existed and one field moved between
-// them. pageSuccess is a string rather than the customer's weakreference for the same reason as
-// above: the defect is in which fieldsets get generated, not in the selector.
+// The de-duplication of extend mixins (#2467) used to drop any mixin that another entry in the
+// list extends, so only the most derived member of a chain got a fieldset -- a different failure
+// from #2746's, where all three fieldsets existed and one field moved between them. pageSuccess is
+// a string rather than the ticket's weakreference for the same reason as above: the defect is in
+// which fieldsets get generated, not in the selector.
 [cent:actionTest] > jnt:content, jmix:basicContent, jmix:editorialContent
  - actionType (string, choicelist) indexed=no < 'cemix:chainRedirect', 'cemix:chainSuccess', 'cemix:chainPopin'
 

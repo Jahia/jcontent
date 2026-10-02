@@ -6,20 +6,19 @@ import {ChoiceListField, SmallTextField} from '../../page-object/fields';
 // reported at https://github.com/Jahia/jcontent/issues/2746#issuecomment-5905620339
 //
 // cemix:chainPopin > cemix:chainSuccess > cemix:chainRedirect, every member declaring
-// `extends = cent:actionTest` and every member its own addMixin target on actionType.
+// `extends = cent:actionTest` and every member a value of the addMixin choicelist actionType.
 //
 // This is NOT the sibling case #2764 fixed. There, all three fieldsets existed and one inherited
-// field was moved between them by the merge. Here getExtendMixins (#2467) drops any entry that
-// another entry extends, so cemix:chainRedirect and cemix:chainSuccess never get a fieldset at
-// all -- only the most derived member of the chain survives. Selecting either of the other two in
-// the choicelist then finds no fields to move (contentEditorHelper matches on fieldSet name) and
-// the editor shows nothing.
+// field was moved between them by the merge. Here the de-duplication of extend mixins (#2467) used
+// to drop any entry that another entry extends, so only the most derived member of the chain got a
+// fieldset, and selecting either of the other two showed nothing (contentEditorHelper matches on
+// fieldSet name). Every member of the chain must show its own fields, on a fresh node and on one
+// that already carries a member, and the save must apply exactly the member that was selected.
 //
-// Expected to FAIL on cemix:chainRedirect and cemix:chainSuccess and PASS on cemix:chainPopin
-// until the chain is fixed -- that split is the point: it shows the fieldset that survived the
-// de-duplication from the two that did not.
+// Every test seeds its own node, so none depends on what another one saved.
 describe('Chained extend mixins each addMixin targets', () => {
     const siteKey = 'chainExtendMixinSite';
+    const contents = `/sites/${siteKey}/contents`;
 
     // Each member shows its own property plus everything it inherits from further up the chain.
     const CHAIN = [
@@ -28,50 +27,55 @@ describe('Chained extend mixins each addMixin targets', () => {
         {mixin: 'cemix:chainPopin', fields: ['pageSuccess', 'toastSuccess', 'titrePopin']}
     ];
 
+    const STORED_POPIN = {
+        mixins: ['cemix:chainPopin'],
+        properties: [
+            {name: 'actionType', value: 'cemix:chainPopin'},
+            {name: 'pageSuccess', value: 'stored page', language: 'en'},
+            {name: 'toastSuccess', value: 'stored toast', language: 'en'},
+            {name: 'titrePopin', value: 'stored title', language: 'en'}
+        ]
+    };
+
+    const STORED_SUCCESS = {
+        mixins: ['cemix:chainSuccess'],
+        properties: [
+            {name: 'actionType', value: 'cemix:chainSuccess'},
+            {name: 'pageSuccess', value: 'stored page', language: 'en'},
+            {name: 'toastSuccess', value: 'stored toast', language: 'en'}
+        ]
+    };
+
     before(() => {
         createSite(siteKey);
         enableModule('jcontent-test-module', siteKey);
-        CHAIN.forEach(({mixin}) => addNode({
-            parentPathOrId: `/sites/${siteKey}/contents`,
-            name: mixin.replace('cemix:', ''),
+        [...CHAIN.map(({mixin}) => mixin.replace('cemix:', '')), 'freshSave'].forEach(name => addNode({
+            parentPathOrId: contents,
+            name,
             primaryNodeType: 'cent:actionTest'
         }));
-        addNode({
-            parentPathOrId: `/sites/${siteKey}/contents`,
-            name: 'switchAlongChain',
-            primaryNodeType: 'cent:actionTest'
-        });
-        // Nodes that already carry a chain member, as content saved before this fix does: on main
-        // only the most derived member could be saved, so existing data carries cemix:chainPopin.
-        ['storedPopin', 'storedPopinSwitch', 'storedPopinNoop'].forEach(name => addNode({
-            parentPathOrId: `/sites/${siteKey}/contents`,
+        // Nodes that already carry a chain member. Before this fix only the most derived member
+        // could be saved, so content that already exists carries cemix:chainPopin.
+        ['storedPopin', 'storedPopinUp', 'storedPopinNoop'].forEach(name => addNode({
+            parentPathOrId: contents,
             name,
             primaryNodeType: 'cent:actionTest',
-            mixins: ['cemix:chainPopin'],
-            properties: [
-                {name: 'actionType', value: 'cemix:chainPopin'},
-                {name: 'pageSuccess', value: 'stored page', language: 'en'},
-                {name: 'toastSuccess', value: 'stored toast', language: 'en'},
-                {name: 'titrePopin', value: 'stored title', language: 'en'}
-            ]
+            ...STORED_POPIN
         }));
-        addNode({
-            parentPathOrId: `/sites/${siteKey}/contents`,
-            name: 'storedSuccess',
+        ['storedSuccessDown'].forEach(name => addNode({
+            parentPathOrId: contents,
+            name,
             primaryNodeType: 'cent:actionTest',
-            mixins: ['cemix:chainSuccess'],
-            properties: [
-                {name: 'actionType', value: 'cemix:chainSuccess'},
-                {name: 'pageSuccess', value: 'stored page', language: 'en'},
-                {name: 'toastSuccess', value: 'stored toast', language: 'en'}
-            ]
-        });
+            ...STORED_SUCCESS
+        }));
     });
 
     const appliedMixins = (name: string) => cy.apollo({
         queryFile: 'jcontent/getMixinTypes.graphql',
-        variables: {path: `/sites/${siteKey}/contents/${name}`}
+        variables: {path: `${contents}/${name}`}
     }).then(resp => resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name).filter((n: string) => n.startsWith('cemix:chain')).sort().join(', '));
+
+    const edit = (name: string) => JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(name);
 
     after(() => {
         deleteSite(siteKey);
@@ -84,8 +88,7 @@ describe('Chained extend mixins each addMixin targets', () => {
 
     CHAIN.forEach(({mixin, fields}) => {
         it(`shows every inherited field when ${mixin} is selected`, () => {
-            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-            const contentEditor = jcontent.editComponentByRowName(mixin.replace('cemix:', ''));
+            const contentEditor = edit(mixin.replace('cemix:', ''));
 
             contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue(mixin);
 
@@ -98,51 +101,28 @@ describe('Chained extend mixins each addMixin targets', () => {
         });
     });
 
-    // The mixin the reader picked must actually land on the node. A chain member with no fieldset
-    // of its own is not in getDynamicFieldSets(), so getMixinsToMutate() never sees it and the
-    // save silently drops it -- the failure is in the stored data, not only on screen.
-    it('applies the selected chain member as a mixin on save', () => {
-        const nodePath = `/sites/${siteKey}/contents/switchAlongChain`;
-
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const contentEditor = jcontent.editComponentByRowName('switchAlongChain');
+    // The mixin the reader picked must actually land on the node, and nothing else of the chain. A
+    // chain member with no fieldset of its own is not in getDynamicFieldSets(), so getMixinsToMutate()
+    // never sees it and the save drops it: the failure is in the stored data, not only on screen.
+    it('applies exactly the selected chain member on save', () => {
+        const contentEditor = edit('freshSave');
         contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainSuccess');
         contentEditor.getField(SmallTextField, 'cemix:chainSuccess_pageSuccess').addNewValue('redirect target');
         contentEditor.save();
 
-        cy.apollo({
-            queryFile: 'jcontent/getMixinTypes.graphql',
-            variables: {path: nodePath}
-        }).should(resp => {
-            const mixinNames = resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name);
-            expect(mixinNames).to.include('cemix:chainSuccess');
-        });
+        appliedMixins('freshSave').should('equal', 'cemix:chainSuccess');
     });
 
-    // A property declared further up the chain is one property. Moving along the chain must carry
-    // its stored value, exactly as #2764 made it carry between siblings.
-    it('keeps a value stored under one chain member when a deeper one is selected', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const contentEditor = jcontent.editComponentByRowName('switchAlongChain');
-
-        contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainPopin');
-
-        cy.log('pageSuccess was stored under cemix:chainSuccess; cemix:chainPopin inherits it through the chain');
-        contentEditor.getField(SmallTextField, 'cemix:chainPopin_pageSuccess').checkValue('redirect target');
-
-        contentEditor.cancelAndDiscard();
-    });
-
-    // Activation is inherited: a node carrying cemix:chainPopin is also of type cemix:chainSuccess
-    // and cemix:chainRedirect. Moving UP the chain from a stored member must still show the fields
-    // of the member the reader picked, with the values the node stores.
+    // Activation follows the mixins applied directly: a node carrying cemix:chainPopin is also of
+    // type cemix:chainSuccess and cemix:chainRedirect, but neither of those is selected. Moving UP
+    // the chain from a stored member must still show the fields of the member the reader picked,
+    // with the values the node stores.
     [
         {mixin: 'cemix:chainRedirect', fields: {pageSuccess: 'stored page'}},
         {mixin: 'cemix:chainSuccess', fields: {pageSuccess: 'stored page', toastSuccess: 'stored toast'}}
     ].forEach(({mixin, fields}) => {
         it(`shows the stored fields when moving up the chain from cemix:chainPopin to ${mixin}`, () => {
-            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-            const contentEditor = jcontent.editComponentByRowName('storedPopin');
+            const contentEditor = edit('storedPopin');
 
             contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue(mixin);
 
@@ -154,27 +134,65 @@ describe('Chained extend mixins each addMixin targets', () => {
         });
     });
 
-    it('applies exactly the selected member on save when moving up the chain', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const contentEditor = jcontent.editComponentByRowName('storedPopinSwitch');
+    it('applies exactly the selected member and keeps the stored value when moving up the chain', () => {
+        const contentEditor = edit('storedPopinUp');
         contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainRedirect');
         contentEditor.save();
 
-        appliedMixins('storedPopinSwitch').should('equal', 'cemix:chainRedirect');
+        appliedMixins('storedPopinUp').should('equal', 'cemix:chainRedirect');
+
+        cy.log('pageSuccess belongs to cemix:chainRedirect, which the node still carries, so reopening shows it');
+        const reopened = edit('storedPopinUp');
+        reopened.getField(SmallTextField, 'cemix:chainRedirect_pageSuccess').checkValue('stored page');
+        reopened.cancel();
     });
 
-    it('applies exactly the selected member on save when moving down the chain', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const contentEditor = jcontent.editComponentByRowName('storedSuccess');
-        contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainPopin');
+    // Same move to a member that declares a property itself: cemix:chainSuccess declares
+    // toastSuccess, so the editor reads its copy as unchanged and must still write it back after the
+    // removal of cemix:chainPopin has dropped it.
+    it('keeps the stored values when moving up the chain to a member that declares one of them', () => {
+        addNode({
+            parentPathOrId: contents,
+            name: 'storedPopinUpSuccess',
+            primaryNodeType: 'cent:actionTest',
+            ...STORED_POPIN
+        });
+        const contentEditor = edit('storedPopinUpSuccess');
+        contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainSuccess');
         contentEditor.save();
 
-        appliedMixins('storedSuccess').should('equal', 'cemix:chainPopin');
+        appliedMixins('storedPopinUpSuccess').should('equal', 'cemix:chainSuccess');
+
+        const reopened = edit('storedPopinUpSuccess');
+        reopened.getField(SmallTextField, 'cemix:chainSuccess_pageSuccess').checkValue('stored page');
+        reopened.getField(SmallTextField, 'cemix:chainSuccess_toastSuccess').checkValue('stored toast');
+        reopened.cancel();
+    });
+
+    // A property declared further up the chain is one property. Moving down the chain must carry
+    // its stored value, exactly as #2764 made it carry between siblings, and keep it through a save.
+    it('applies exactly the selected member and keeps the stored values when moving down the chain', () => {
+        const contentEditor = edit('storedSuccessDown');
+        contentEditor.getField(ChoiceListField, 'cent:actionTest_actionType').selectValue('cemix:chainPopin');
+
+        cy.log('pageSuccess and toastSuccess were stored under cemix:chainSuccess; cemix:chainPopin inherits them');
+        contentEditor.getField(SmallTextField, 'cemix:chainPopin_pageSuccess').checkValue('stored page');
+        contentEditor.getField(SmallTextField, 'cemix:chainPopin_toastSuccess').checkValue('stored toast');
+        contentEditor.getField(SmallTextField, 'cemix:chainPopin_titrePopin').addNewValue('new title');
+        contentEditor.save();
+
+        appliedMixins('storedSuccessDown').should('equal', 'cemix:chainPopin');
+
+        cy.log('and they must still be stored after the save');
+        const reopened = edit('storedSuccessDown');
+        reopened.getField(SmallTextField, 'cemix:chainPopin_pageSuccess').checkValue('stored page');
+        reopened.getField(SmallTextField, 'cemix:chainPopin_toastSuccess').checkValue('stored toast');
+        reopened.getField(SmallTextField, 'cemix:chainPopin_titrePopin').checkValue('new title');
+        reopened.cancel();
     });
 
     it('leaves the applied mixins alone on a save that keeps the selected member', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        const contentEditor = jcontent.editComponentByRowName('storedPopinNoop');
+        const contentEditor = edit('storedPopinNoop');
         contentEditor.getField(SmallTextField, 'cemix:chainPopin_titrePopin').addNewValue(' edited');
         contentEditor.save();
 

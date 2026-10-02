@@ -45,7 +45,7 @@ export const SamplePreview = ({samples, selectedSample, previewPagePath, isLoadi
     const previewContext = buildSamplePreviewContext(selectedSample, language, previewPagePath);
 
     return (
-        <div className={styles.preview}>
+        <div className={styles.preview} data-sel-role="sample-preview">
             <div className={styles.toolbar}>
                 {samples.length > 1 && (
                     <Dropdown

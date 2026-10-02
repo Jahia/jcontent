@@ -3,11 +3,10 @@ import {registry} from '@jahia/ui-extender';
 /**
  * Connect targets with actions
  *
- * @param targetActions object structure: {<targetName>: [<actionName>, ...], ...}
- * @param registry
+ * @param targetActions object structure: `{<targetName>: [<actionName>, ...], ...}`
  */
-const assignTargetsForActions = (targetActions, registry) => {
-    const actionTargets = {};
+const assignTargetsForActions = (targetActions: Record<string, string[]>) => {
+    const actionTargets: Record<string, Array<{id: string, priority: number | string}>> = {};
 
     // Construct target arrays for each action
     Object.entries(targetActions).forEach(([targetName, actions]) => {
@@ -39,8 +38,8 @@ const assignTargetsForActions = (targetActions, registry) => {
     });
 };
 
-export const addContextMenuTargetToActions = (targetName, actions) => {
-    assignTargetsForActions({[targetName]: actions}, registry);
+export const addContextMenuTargetToActions = (targetName: string, actions: string[]) => {
+    assignTargetsForActions({[targetName]: actions});
 };
 
 const actionTargetAssignments = {
@@ -369,9 +368,12 @@ const actionTargetAssignments = {
     'translate/header/3dots': [
         'goToWorkInProgress',
         'copyLanguageAction'
+    ],
+    'content-editor/field/leading-actions': [
+        'translateField'
     ]
 };
 
 export const assignActionAndMenuTargets = () => {
-    assignTargetsForActions(actionTargetAssignments, registry);
+    assignTargetsForActions(actionTargetAssignments);
 };

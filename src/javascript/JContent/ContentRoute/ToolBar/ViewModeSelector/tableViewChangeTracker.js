@@ -1,9 +1,9 @@
 export const TableViewModeChangeTracker = {
     modeChanged: false,
-    registerChange: function () {
+    registerChange() {
         this.modeChanged = true;
     },
-    resetChanged: function () {
+    resetChanged() {
         this.modeChanged = false;
     }
 };

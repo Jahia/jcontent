@@ -44,7 +44,7 @@ export const addContextMenuTargetToActions = (targetName, actions) => {
 };
 
 const actionTargetAssignments = {
-    '--contentActions': ['createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'createContent', 'replaceFile', 'locate', 'preview', 'createContentFolder', 'rename', 'edit', 'editPage', 'zip', 'editAdvanced', 'editSource', 'editPageAdvanced', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'createFolder', 'downloadFile', 'copy', 'copyPageMenu', 'cut', 'paste', 'pasteReference', 'fileUpload', 'publishDeletion', 'delete', 'deletePermanently', 'undelete', 'exportPage', 'export', 'downloadAsZip', 'import', 'lock', 'unlock', 'clearAllLocks', 'publishMenu', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2', 'subContents'],
+    '--contentActions': ['createPage', 'createNavMenuItemMenu', 'contentActionsSeparator1', 'createContent', 'replaceFile', 'locate', 'preview', 'createContentFolder', 'rename', 'edit', 'editPage', 'zip', 'editAdvanced', 'editSource', 'editPageAdvanced', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'setFocalPoint', 'createFolder', 'downloadFile', 'copy', 'copyPageMenu', 'cut', 'paste', 'pasteReference', 'fileUpload', 'publishDeletion', 'delete', 'deletePermanently', 'undelete', 'exportPage', 'export', 'downloadAsZip', 'import', 'lock', 'unlock', 'clearAllLocks', 'publishMenu', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2', 'subContents'],
     createMenuActions: [
         'createPage',
         'createNavMenuItemMenu',
@@ -94,6 +94,7 @@ const actionTargetAssignments = {
         'unzip',
         'openInPageBuilder',
         'editImage',
+        'setFocalPoint',
         'export',
         'exportPage',
         'downloadFile',
@@ -165,6 +166,7 @@ const actionTargetAssignments = {
         'sbsTranslate',
         'editSource',
         'editImage',
+        'setFocalPoint',
         'replaceFile',
         'locate',
         'preview',
@@ -205,6 +207,7 @@ const actionTargetAssignments = {
         'editPageAdvanced',
         'editSource',
         'editImage',
+        'setFocalPoint',
         'sbsTranslate',
         'replaceFile',
         'locate',
@@ -243,6 +246,7 @@ const actionTargetAssignments = {
         'editPage',
         'editSource',
         'editImage',
+        'setFocalPoint',
         'replaceFile',
         'locate',
         'unzip',
@@ -295,7 +299,7 @@ const actionTargetAssignments = {
         // Hardcoded so 'Open in page composer' can be always added at the end of this list
         'contentActionsSeparator3:50'
     ],
-    '--accordionContentActions': ['replaceFile', 'locate', 'zip', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'downloadFile', 'fileUpload', 'exportPage', 'export', 'downloadAsZip', 'import', 'unlock', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2'],
+    '--accordionContentActions': ['replaceFile', 'locate', 'zip', 'unzip', 'openInPageBuilder', 'openInRepositoryExplorer', 'editImage', 'setFocalPoint', 'downloadFile', 'fileUpload', 'exportPage', 'export', 'downloadAsZip', 'import', 'unlock', 'clearAllLocks', 'flushPageCache', 'flushSiteCache', 'contentActionsSeparator2'],
     publishMenu: [
         'publish',
         'publishInAllLanguages',

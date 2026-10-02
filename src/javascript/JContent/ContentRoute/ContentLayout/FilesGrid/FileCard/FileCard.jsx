@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Chip, Typography} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
-import {isBrowserImage, isPDF} from '../../ContentLayout.utils';
+import {isImage, isPDF} from '../../ContentLayout.utils';
 import {NodeIcon, truncateMiddle} from '~/utils';
 import {allowDoubleClickNavigation, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
@@ -43,7 +43,9 @@ function useDragDrop(node, tableConfig) {
 }
 
 function getElement(node, encodedPath) {
-    if (isBrowserImage(node)) {
+    // Any image has renditions, including the formats the browser cannot decode itself - those
+    // renditions are PNG, so the card shows them just the same.
+    if (isImage(node)) {
         return (
             <div
                 className={clsx(styles.cardPreviewAndIcon, {[styles.smallImage]: node.width && node.width.value < 200})}

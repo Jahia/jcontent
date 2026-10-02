@@ -1,0 +1,15 @@
+{
+  "nodeType": "jmix:iptc",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "metadata",
+      "fieldSets": [
+        {
+          "name": "jmix:iptc",
+          "labelKey": "label.contentEditor.section.fieldSet.iptc.displayName"
+        }
+      ]
+    }
+  ]
+}

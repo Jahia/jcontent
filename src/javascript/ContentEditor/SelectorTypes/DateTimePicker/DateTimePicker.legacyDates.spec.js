@@ -4,6 +4,10 @@ import {dayjs} from 'date-formatter';
 
 import {DateTimePicker} from './DateTimePicker';
 
+jest.mock('formik', () => ({
+    useFormikContext: () => ({errors: {}})
+}));
+
 jest.mock('react', () => {
     return {
         ...jest.requireActual('react'),
@@ -89,7 +93,7 @@ describe('DateTimePicker component - legacy NOT_ZONED_DATE / UTC interop', () =>
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
         cmp.simulate('change', displayedDate);
 
-        expect(props.onChange).toHaveBeenCalledWith(originalUtcValue);
+        expect(props.onChange).toHaveBeenCalledWith(originalUtcValue, true);
     });
 
     it('resolves a DatePicker (date-only) value to the same calendar day regardless of the legacy server-offset baked into it', () => {

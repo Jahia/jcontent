@@ -739,6 +739,35 @@ describe('EditPanel utils', () => {
             expect(propsToSave).toEqual([]);
             expect(propsToDelete).toEqual([]);
         });
+
+        it('should save an unchanged property of a mixin added by the save', () => {
+            const field = {
+                nodeType: 'cemix:chainRedirect',
+                name: 'cemix:chainRedirect_pageSuccess',
+                propertyName: 'pageSuccess',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const chainSections = [{
+                fieldSets: [
+                    {name: 'cemix:chainRedirect', dynamic: true, activated: false, fields: [field]},
+                    {name: 'cemix:chainPopin', dynamic: true, activated: true, fields: []}
+                ]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [{name: 'cemix:chainPopin'}],
+                properties: [{name: 'pageSuccess', value: 'stored page', definition: {declaringNodeType: {name: 'cemix:chainRedirect'}}}]
+            };
+            const formValues = {
+                'cemix:chainRedirect': true,
+                'cemix:chainPopin': false,
+                [field.name]: 'stored page'
+            };
+            const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: chainSections, lang, i18nContext: {}});
+            expect(mixinsToAdd).toEqual(['cemix:chainRedirect']);
+            expect(mixinsToDelete).toEqual(['cemix:chainPopin']);
+            expect(propsToSave).toEqual([{name: 'pageSuccess', type: 'STRING', value: 'stored page', language: lang}]);
+        });
     });
 
     describe('getValuePropName', () => {

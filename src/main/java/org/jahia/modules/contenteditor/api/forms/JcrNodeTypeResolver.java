@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * {@link NodeTypeResolver} backed by a live JCR node. Both {@link #getAppliedMixins()} and
- * {@link #isNodeType(String)} delegate directly to the underlying {@link JCRNodeWrapper},
+ * {@link NodeTypeResolver} backed by a live JCR node. {@link #getAppliedMixins()},
+ * {@link #isNodeType(String)} and {@link #hasMixin(String)} delegate directly to the underlying {@link JCRNodeWrapper},
  * so the form reflects the current state of a given node in the repository.
  */
 public class JcrNodeTypeResolver implements NodeTypeResolver {
@@ -30,5 +30,10 @@ public class JcrNodeTypeResolver implements NodeTypeResolver {
     @Override
     public boolean isNodeType(String typeName) throws RepositoryException {
         return node.isNodeType(typeName);
+    }
+
+    @Override
+    public boolean hasMixin(String mixinName) throws RepositoryException {
+        return Arrays.stream(node.getMixinNodeTypes()).anyMatch(mixin -> mixin.getName().equals(mixinName));
     }
 }

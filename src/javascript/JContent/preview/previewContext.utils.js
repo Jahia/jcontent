@@ -121,3 +121,31 @@ export const buildPreviewContextsFromNode = (node, language, mode) => {
         null;
     return buildPreviewContexts(node, language, {closestPage});
 };
+
+/**
+ * Preview context for a content sample shown in the content-type picker.
+ *
+ * A sample is rendered as a module, which returns the component on its own - exactly what the picker
+ * wants to show - but collects no stylesheet. The CSS therefore comes from a page rendered alongside
+ * it, named here rather than derived from where the sample is stored: samples are kept flat, with no
+ * page around them, because a module render needs no displayable ancestor.
+ *
+ * That page is also passed as the main resource, so components that read the current page (links,
+ * breadcrumbs, page properties) have one to read.
+ *
+ * @param {object} node - a sample carrying NodePreviewFields (jView)
+ * @param {string} language
+ * @param {string} previewPagePath - the page whose CSS the sample is dressed in
+ * @returns {object|null} - a preview context, or null when there is no page to borrow from
+ */
+export const buildSamplePreviewContext = (node, language, previewPagePath) => {
+    if (!node || !previewPagePath) {
+        return null;
+    }
+
+    return buildInContextModuleContext(node, {path: previewPagePath}, node.jView, {
+        workspace: 'edit',
+        templateType: 'html',
+        language
+    });
+};

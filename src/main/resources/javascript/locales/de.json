@@ -180,6 +180,7 @@
         "title": "Navigationsbaum"
       },
       "browsePages": "Seiten durchsuchen",
+      "browseSamples": "Beispiele durchsuchen",
       "refresh": "Aktualisieren",
       "listColumns": {
         "createdBy": "Erstellt von",
@@ -201,11 +202,26 @@
         "asXml": "Exportieren als XML Datei",
         "exportDetails": "Standardmäßig als ZIP Datei exportieren"
       },
+      "copyToSamples": {
+        "action": "Als Beispiel speichern",
+        "savedAsPage": "Seite unter Beispiele / Seiten gespeichert.",
+        "savedAsComponent": "Inhalt unter Beispiele / Komponenten gespeichert.",
+        "failed": "Das Beispiel konnte nicht gespeichert werden.",
+        "existsTitle": "Dieses Beispiel existiert bereits",
+        "existsText": "Ein Beispiel mit dem Namen „{{name}}\" ist hier bereits gespeichert. Soll es durch den aktuellen Inhalt ersetzt werden?",
+        "replace": "Ersetzen",
+        "scopeTitle": "Als Beispiel speichern",
+        "scopeText": "Dieser Inhalt hat untergeordnete Elemente. Was soll das Beispiel enthalten?",
+        "scopeWithChildren": "Diesen Inhalt und seine untergeordneten Elemente",
+        "scopeItemOnly": "Nur diesen Inhalt",
+        "save": "Speichern"
+      },
       "navigation": {
         "savedSearches": "Gespeicherte Suchen",
         "workflow": "Workflow",
         "media": "Medien",
         "pages": "Seiten",
+        "samples": "Beispiele",
         "contentFolders": "Inhalts-Ordner",
         "forms": "Formulare",
         "apps": {
@@ -658,6 +674,14 @@
       "pageTitle": "Kategorien"
     },
     "contentEditor": {
+      "samples": {
+        "selectType": "Wählen Sie einen Inhaltstyp, um ein Beispiel dafür zu sehen.",
+        "noSample": "Für diesen Inhaltstyp ist auf dieser Website noch kein Beispiel verfügbar.",
+        "cannotRender": "Dieses Beispiel kann nicht in der Vorschau angezeigt werden: Es liegt nicht in einer Beispielseite.",
+        "useSample": "Beispiel verwenden",
+        "createEmpty": "Leer erstellen",
+        "viewport": "{{width}} px ({{percent}} %)"
+      },
       "create": {
         "title": "Erstellen {{type}}",
         "createButton": {

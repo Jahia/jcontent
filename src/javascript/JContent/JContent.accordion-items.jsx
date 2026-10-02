@@ -1,5 +1,5 @@
 import React from 'react';
-import {AccordionItem, Collections, FolderSpecial, Grain, Page, Tag} from '@jahia/moonstone';
+import {AccordionItem, Collections, FolderSpecial, Grain, Page, Palette, Tag} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
@@ -9,6 +9,8 @@ import {ContentTypeSelector} from '~/JContent/ContentRoute/ContentLayout/Content
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
 import {PagesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/PagesQueryHandler';
+import {SamplesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SamplesQueryHandler';
+import {SAMPLES_CATEGORY_TYPE} from '~/JContent/samples';
 import {
     ContentFoldersQueryHandler
 } from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentFoldersQueryHandler';
@@ -16,7 +18,7 @@ import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHand
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from '~/JContent/ContentTree/ContentTree.constants';
-import {booleanValue} from '~/JContent/JContent.utils';
+import {booleanValue, isSamplePath} from '~/JContent/JContent.utils';
 import {mediaColumnData} from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable/columns';
 import {
     DeletionInfoQueryHandler
@@ -123,10 +125,12 @@ export const jContentAccordionItems = registry => {
         canDisplayItem: ({selectionNode, folderNode}) =>
             selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) &&
                 !filesRegex.test(selectionNode.path) &&
-                !contentsRegex.test(selectionNode.path) :
+                !contentsRegex.test(selectionNode.path) &&
+                !isSamplePath(selectionNode.path) :
                 everythingUnderSitesRegex.test(folderNode.path) &&
                 !folderRegex.test(folderNode.path) &&
-                !contentFolderRegex.test(folderNode.path),
+                !contentFolderRegex.test(folderNode.path) &&
+                !isSamplePath(folderNode.path),
         getViewTypeForItem: node => node.primaryNodeType.name === 'jnt:page' ? 'pages' : 'content',
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         treeConfig: {
@@ -202,6 +206,50 @@ export const jContentAccordionItems = registry => {
             uploadType: JContentConstants.mode.UPLOAD,
             dnd: {
                 canDrag: true, canDrop: true, canDropFile: true
+            }
+        }
+    });
+
+    // Content samples: site content kept as filled, previewable examples of a content type.
+    // They sit flat under the two categories the samples root declares - pages and components -
+    // because a component renders on its own as a module and borrows its CSS from a page named at
+    // render time, so nothing has to be wrapped in a page to be previewable. Browsing them looks
+    // like the Pages accordion, but they stay a separate surface: their own permission, and no
+    // publication at all, since the /sites/<site>/samples root is a jnt:samplesFolder and so
+    // jmix:nolive.
+    registry.add('accordionItem', 'samples', renderDefaultContentTrees, {
+        targets: ['jcontent:75'],
+        icon: <Palette/>,
+        label: 'jcontent:label.contentManager.navigation.samples',
+        isEnabled: siteKey => siteKey !== 'systemsite',
+        rootPath: '/sites/{site}/samples',
+        canDisplayItem: ({selectionNode, folderNode}) => isSamplePath(selectionNode ? selectionNode.path : folderNode.path),
+        getPathForItem: node => {
+            // Samples are stored flat, so a component sample normally has no page ancestor at all -
+            // the category holding it is what should open. Content saved along with a page sample
+            // does have one, and ancestors run root-first, so the nearest container wins either way.
+            const containers = node.ancestors.filter(n =>
+                n.primaryNodeType.name === 'jnt:page' || n.primaryNodeType.name === SAMPLES_CATEGORY_TYPE);
+            return containers[containers.length - 1]?.path || `${node.site.path}/samples`;
+        },
+        getViewTypeForItem: node => node.primaryNodeType.name === 'jnt:page' ? 'pages' : 'content',
+        requiredSitePermission: JContentConstants.accordionPermissions.samplesAccordionAccess,
+        treeConfig: {
+            selectableTypes: ['jnt:samplesFolder', 'jnt:samplesCategory', 'jnt:page'],
+            openableTypes: ['jnt:samplesFolder', 'jnt:samplesCategory', 'jnt:page'],
+            rootLabel: 'jcontent:label.contentManager.browseSamples',
+            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
+            // Samples are reused by copying, never by moving: dragging one out of the branch would
+            // take the original away from every other author.
+            dnd: {
+                canDrag: false, canDrop: false, canReorder: false
+            }
+        },
+        tableConfig: {
+            queryHandler: SamplesQueryHandler,
+            typeFilter: ['jnt:samplesCategory', 'jnt:content', 'jnt:page'],
+            dnd: {
+                canDrag: false, canDrop: false, canDropFile: false
             }
         }
     });

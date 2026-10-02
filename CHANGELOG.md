@@ -1,5 +1,53 @@
 # @jahia/jcontent Changelog
 
+## 3.8.0
+
+### New Features
+
+* Add auto-scroll indicators when dragging content in page builder (#2658)
+
+* Fixed Visibility condition start/end datetime property so they no longer change when viewing saved values (#2653). All date/time fields are now saved in UTC and also now display datetime based on browser timezone. Clearing a visibility date property also now removes it instead of silently keeping the old value.
+
+* Added a Tag Manager to jContent (Manage > Tags) to list, rename and delete the tags used across a site, and to see and edit the content each tag is applied to. It requires graphql-dxm-provider 3.8 or later; on earlier versions the Tags entry is not shown. When the new Tag Manager is available, the "Tags" entry provided by the legacy tags module is hidden from the jContent menu so only one Tag Manager appears; the tags module itself, its components and its actions are unchanged. (#2265, #2545)
+
+* Fix insertion points inserting content at the end of the list instead of at their own position
+
+* Fixed content folders so named child items defined by a content type can be created there, as they already could in Page Builder.
+
+* Changed the visibility conditions upgrade: jContent now owns the date, time and day-of-week conditions, and removes the modules that provided them on every cluster node. If your environment has the `visibility` or `advanced-visibility` module installed, upgrading jContent uninstalls it, and no separate migration module is needed. Your existing visibility conditions keep working and need no edit. After the upgrade, check that neither module is listed in Administration, Modules. Do not reinstall either one: it would take ownership of the condition types back from jContent. If one of your own modules declares a dependency on `visibility`, remove that dependency before upgrading, or the module will stop loading. (#2724, #2726)
+
+### Bug Fixes
+
+* Dialogs no longer stay on screen after the page behind them has changed: navigating away while one is open closes it, the browser's own back and forward buttons included.
+
+* Fixed the *Live* button menu so it offers the current domain when the site server name is localhost (#2792)
+
+* Fixed the Additional section of jContent so it opens the first available app directly, instead of showing "App not found" when you first open it.
+
+* The breadcrumbs let you back onto the page again after browsing into something the content tree does not show, such as an area: the page used to be the only entry left and was greyed out, leaving no way back to it.
+
+* Fixed the creation of a named child content for editors who cannot see the system name field.
+
+* Fix the French label on the reference card preview action
+
+* Keep the page builder on the same content when it reloads after a save, instead of coming back somewhere else and losing sight of the content being edited (#2664)
+
+* Fix checkbox choice list selection not registering when clicked (#2643)
+
+* Changed file upload so files are no longer versioned at upload time. Files are still versioned when they are published, so only the extra version taken during the upload is affected. Upload-time versioning was already removed in the GraphQL provider 3.9.0, so nothing changes for installations running that version or later.
+
+* Fixed switching languages while creating content so it no longer copies unsaved text into the new language. (#2738)
+
+* Fixed mixin fields so that every mixin shows all fields it carries, including inherited fields. When multiple mixins inherit the same field, the field remains editable in a single place without one value overwriting another. GraphQL now always returns the list of values available for an editor form field, using an empty list when there are no values instead of null. (#2746)
+
+* Fixed file upload so a refused upload shows its validation messages again instead of a generic error.
+
+* Fixed field constraint error messages being displayed with HTML-encoded punctuation instead of their original text. Also fixed encoding issues in constraint violation and broken-link messages (#2748).
+
+* Sort the content type selector by display name instead of system name (#2747)
+
+* Open the publication manager from the publication dropdown again: the action read the node primary node type without asking the node checks for it, so the click threw instead of opening the dashboard. It also read the mixins from the wrong place, so the manager was always handed an empty mixin list (#2715)
+
 ## 3.7.0
 
 ### New Features

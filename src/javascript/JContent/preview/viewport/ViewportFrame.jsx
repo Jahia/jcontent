@@ -9,7 +9,7 @@ import styles from './ViewportFrame.scss';
  * @returns {JSX.Element} - the scaled frame
  */
 export const ViewportFrame = ({frameRef, frameSize, scale, viewportWidth, children}) => (
-    <div ref={frameRef} className={styles.frame}>
+    <div ref={frameRef} className={styles.frame} data-sel-role="preview-viewport-frame">
         <div
             className={styles.viewport}
             style={{

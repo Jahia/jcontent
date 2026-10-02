@@ -81,3 +81,15 @@ export const isSamplePath = path => {
  * @returns {boolean} - true for a component sample
  */
 export const isSampleContent = node => Boolean(node?.path) && isSamplePath(node.path) && !node.isPage;
+
+/**
+ * Whether a node is previewable because it is a sample.
+ *
+ * jContent does not preview pages, folders or content folders in the side panel - a page is read in
+ * Page Builder instead. A sample page is the exception: it is kept precisely to be looked at, and
+ * there is nothing else in the Samples accordion to look at it with.
+ *
+ * @param {object} node - node with { path }
+ * @returns {boolean} - true for anything inside the samples branch
+ */
+export const isSampleNode = node => Boolean(node?.path) && isSamplePath(node.path);

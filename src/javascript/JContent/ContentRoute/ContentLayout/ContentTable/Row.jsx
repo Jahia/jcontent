@@ -9,6 +9,7 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import JContentConstants from '~/JContent/JContent.constants';
+import {isSampleNode} from '~/JContent/samples';
 
 export const Row = ({
     row,
@@ -72,7 +73,10 @@ export const Row = ({
                   className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isPreviewSelected}
                   onClick={() => {
-                      if (isPreviewOpened && !node.notSelectableForPreview) {
+                      // A sample page is previewable even though an ordinary page is not: it is kept
+                      // to be looked at, and the Samples accordion offers nothing else to look at
+                      // it with.
+                      if (isPreviewOpened && (!node.notSelectableForPreview || isSampleNode(node))) {
                           setSelectedItemIndex(index);
                           onPreviewSelect(node.path);
                       }

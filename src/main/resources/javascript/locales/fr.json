@@ -681,7 +681,10 @@
         "noSample": "Aucun exemple n'est encore disponible pour ce type de contenu sur ce site.",
         "cannotRender": "Cet exemple ne peut pas être prévisualisé : ce site n'a aucune page permettant de l'afficher.",
         "useSample": "Utiliser l'exemple",
-        "createEmpty": "Créer un contenu vide"
+        "createEmpty": "Créer un contenu vide",
+        "pageTemplatesGroup": "Modèles",
+
+        "pageSamplesGroup": "Exemples de pages"
       },
       "create": {
         "title": "Créer {{type}}",

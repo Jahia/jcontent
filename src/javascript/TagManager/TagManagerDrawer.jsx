@@ -18,7 +18,7 @@ import {useTranslation} from 'react-i18next';
 import {GET_TAGGED_CONTENT, DELETE_TAG_ON_NODE, RENAME_TAG_ON_NODE} from './TagManager.gql-queries';
 import {DeleteNodeTagDialog} from './DeleteNodeTagDialog';
 import {EditNodeTagDialog} from './EditNodeTagDialog';
-import {getFailedCount, getImpactedItemsCount} from './TagManager.utils';
+import {getContentName, getFailedCount, getImpactedItemsCount} from './TagManager.utils';
 import {NodeIcon} from '~/utils/NodeIcon';
 import styles from './TagManager.scss';
 
@@ -133,7 +133,7 @@ export const TagManagerDrawer = ({
                     count: getImpactedItemsCount(result),
                     tag,
                     newTag,
-                    contentName: editNodeTarget.displayName || editNodeTarget.path
+                    contentName: getContentName(editNodeTarget)
                 }),
                 ['closeButton', 'closeAfter5s']
             );
@@ -176,7 +176,7 @@ export const TagManagerDrawer = ({
                                 <div className={styles.drawerItemMain}>
                                     <NodeIcon node={node}/>
                                     <div className={styles.drawerItemText}>
-                                        <Typography weight="bold">{node.displayName}</Typography>
+                                        <Typography weight="bold" title={node.displayName || node.path}>{getContentName(node)}</Typography>
                                         <Typography variant="caption">{node.path}</Typography>
                                     </div>
                                 </div>
@@ -190,7 +190,7 @@ export const TagManagerDrawer = ({
                                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.editTagOnContent')}>
                                     <Button
                                         variant="ghost"
-                                        size="small"
+                                        size="big"
                                         data-cm-role="tag-manager-edit-node-tag"
                                         icon={<Edit/>}
                                         onClick={() => setEditNodeTarget(node)}
@@ -199,8 +199,8 @@ export const TagManagerDrawer = ({
                                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.removeFromContent')}>
                                     <Button
                                         variant="ghost"
+                                        size="big"
                                         color="danger"
-                                        size="small"
                                         data-cm-role="tag-manager-delete-node-tag"
                                         disabled={deletingNodeId === node.uuid}
                                         icon={<DeletePermanently/>}

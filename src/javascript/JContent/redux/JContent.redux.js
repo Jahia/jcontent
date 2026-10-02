@@ -4,7 +4,7 @@ import {createActions, handleActions} from 'redux-actions';
 import {registry} from '@jahia/ui-extender';
 import rison from 'rison';
 import queryString from 'query-string';
-import {push} from 'connected-react-router';
+import {push, replace} from 'connected-react-router';
 import {combineReducers} from 'redux';
 import JContentConstants from '~/JContent/JContent.constants';
 
@@ -124,11 +124,11 @@ export const {
 } =
     createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS', 'CM_OPEN_TABLE_PATHS', 'CM_CLOSE_TABLE_PATHS', 'SET_TABLE_VIEW_MODE', 'SET_TABLE_VIEW_TYPE');
 
-export const cmGoto = data => (
+export const cmGoto = (data, {replace: replaceHistory = false} = {}) => (
     (dispatch, getStore) => {
         const {site, language, jcontent: {app, mode, path, template, params}} = getStore();
         console.debug('cmGoto', {app, site, language, mode, path, template, params, data});
-        dispatch(push(buildUrl({
+        dispatch((replaceHistory ? replace : push)(buildUrl({
             app: data.app || app || 'jcontent',
             site: data.site || site,
             language: data.language || language,

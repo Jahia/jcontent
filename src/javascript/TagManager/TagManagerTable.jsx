@@ -64,7 +64,7 @@ const ActionsCell = ({row, cell, column}) => {
                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.view')}>
                     <Button
                         variant="ghost"
-                        size="small"
+                        size="big"
                         data-cm-role="tag-manager-view"
                         icon={<Visibility/>}
                         onClick={() => column.onView(row.original)}
@@ -73,7 +73,7 @@ const ActionsCell = ({row, cell, column}) => {
                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.edit')}>
                     <Button
                         variant="ghost"
-                        size="small"
+                        size="big"
                         data-cm-role="tag-manager-rename"
                         icon={<Edit/>}
                         onClick={() => column.setRenameTarget(row.original)}
@@ -82,8 +82,8 @@ const ActionsCell = ({row, cell, column}) => {
                 <Tooltip label={t('jcontent:label.contentManager.tagManager.table.actions.remove')}>
                     <Button
                         variant="ghost"
+                        size="big"
                         color="danger"
-                        size="small"
                         data-cm-role="tag-manager-delete"
                         icon={<DeletePermanently/>}
                         onClick={() => column.setDeleteTarget(row.original)}
@@ -293,7 +293,7 @@ export const TagManagerTable = ({
                                         {...row.getRowProps()}
                                         data-cm-role="tag-manager-row"
                                         data-tag-name={row.original.name}
-                                        className={isSelected ? styles.selectedRow : undefined}
+                                        isHighlighted={isSelected}
                                     >
                                         {row.cells.map(cell => (
                                             <React.Fragment key={cell.column.id}>

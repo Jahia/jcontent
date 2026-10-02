@@ -20,6 +20,8 @@ import {renderLabel} from './renderLabel';
 import {useNotifications} from '@jahia/react-material';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 import {useCloseOnNavigation} from '~/utils';
+import {notifyWithUndo, recordUndo} from '~/JContent/undo';
+import {buildMarkForDeletionSnapshot} from './delete.undo';
 
 const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType, onAction, paths, setInfoOpen}) => {
     const {t} = useTranslation('jcontent');
@@ -164,6 +166,20 @@ const Delete = ({dialogType, path, paths, onExit, onDeleted}) => {
             triggerRefetchAll();
             if (JahiaRenderedModulesUtil.hasRenderingFor(pagePath)) {
                 JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(pagePath, language, template);
+            }
+
+            // Only the mark is offered back. Permanent deletion has nothing left to restore from,
+            // and undeleting is itself the undo of marking, so offering to undo it would put the
+            // reader in a loop rather than back where they were.
+            if (dialogType === 'mark') {
+                const displayName = data?.jcr?.nodesByPath?.[0]?.displayName;
+                recordUndo(buildMarkForDeletionSnapshot({paths: queryPaths, displayName}));
+                notifyWithUndo(
+                    notificationContext,
+                    queryPaths.length === 1 && displayName ?
+                        t('jcontent:label.contentManager.undo.markedForDeletion.single', {name: displayName}) :
+                        t('jcontent:label.contentManager.undo.markedForDeletion.some', {count: queryPaths.length})
+                );
             }
 
             if (onDeleted) {

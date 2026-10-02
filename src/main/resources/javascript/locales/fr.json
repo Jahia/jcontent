@@ -6,6 +6,15 @@
       "of": "de"
     },
     "contentManager": {
+      "undo": {
+        "action": "Annuler",
+        "partial": "{{count}} élément n’a pas pu être restauré",
+        "partial_plural": "{{count}} éléments n’ont pas pu être restaurés",
+        "markedForDeletion": {
+          "single": "« {{name}} » marqué pour suppression",
+          "some": "{{count}} éléments marqués pour suppression"
+        }
+      },
       "preview": {
         "hide": "Masquer l'aperçu",
         "tabs": {

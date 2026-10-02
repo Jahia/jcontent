@@ -49,6 +49,7 @@ import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.jahia.modules.contenteditor.utils.ContentEditorUtils.hasComponentPermission;
 import static org.jahia.modules.contenteditor.utils.ContentEditorUtils.resolveNodeFromPathorUUID;
 
 /**
@@ -151,10 +152,10 @@ public class EditorFormServiceImpl implements EditorFormService {
 
             // Post process on sections / fieldSets / fields
             JCRSessionWrapper session = existingNode != null ? existingNode.getSession() : parentNode.getSession();
-            boolean isLockedAndCannotBeEdited = JCRContentUtils.isLockedAndCannotBeEdited(existingNode);
-            boolean fieldSetEditable = existingNode == null || (!isLockedAndCannotBeEdited && existingNode.hasPermission("jcr:nodeTypeManagement"));
-            boolean sharedFieldsEditable = existingNode == null || (!isLockedAndCannotBeEdited && existingNode.hasPermission("jcr:modifyProperties"));
-            boolean i18nFieldsEditable = existingNode == null || (!isLockedAndCannotBeEdited && existingNode.hasPermission("jcr:modifyProperties_" + session.getWorkspace().getName() + "_" + locale.toString()));
+            boolean canBeEdited = canBeEdited(existingNode);
+            boolean fieldSetEditable = existingNode == null || (canBeEdited && existingNode.hasPermission("jcr:nodeTypeManagement"));
+            boolean sharedFieldsEditable = existingNode == null || (canBeEdited && existingNode.hasPermission("jcr:modifyProperties"));
+            boolean i18nFieldsEditable = existingNode == null || (canBeEdited && existingNode.hasPermission("jcr:modifyProperties_" + session.getWorkspace().getName() + "_" + locale.toString()));
 
             form.setLabel(form.getLabel() == null && form.getLabelKey() != null ? resolveResourceKey(form.getLabelKey(), uiLocale, site) : form.getLabel());
             form.setDescription(form.getDescription() == null && form.getDescriptionKey() != null ? resolveResourceKey(form.getDescriptionKey(), uiLocale, site) : form.getDescription());
@@ -283,6 +284,10 @@ public class EditorFormServiceImpl implements EditorFormService {
         } catch (RepositoryException e) {
             throw new EditorFormException("Error while building edit form definition for node: " + currentNode.getPath() + " and nodeType: " + primaryNodeType.getName(), e);
         }
+    }
+
+    private static boolean canBeEdited(JCRNodeWrapper existingNode) throws RepositoryException {
+        return existingNode != null && !JCRContentUtils.isLockedAndCannotBeEdited(existingNode) && hasComponentPermission(existingNode);
     }
 
     private static Map<String, Object> replaceBySubstitutor(Map<String, Object> selectorOptionsMap) {

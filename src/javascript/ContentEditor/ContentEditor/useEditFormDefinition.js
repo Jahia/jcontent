@@ -166,7 +166,12 @@ const getTechnicalInfo = (nodeData, t) => {
 };
 
 export const adaptEditFormData = (data, lang, t) => {
-    const nodeData = data.jcr.result;
+    const result = data.jcr.result;
+    // A node whose type needs a component permission the user lacks is read-only, the same as without write permission
+    const nodeData = {
+        ...result,
+        hasWritePermission: Boolean(result.hasWritePermission && result.hasComponentPermission)
+    };
     const sections = adaptSections(data.forms.editForm);
 
     const formData = {

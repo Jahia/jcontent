@@ -9,15 +9,21 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {
     name,
     selection,
+    usages,
     visibleActions
 } from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+import {CellUsagesLazy, UsagesCountProvider} from '~/JContent/CategoriesRoute/UsagesCount';
+
+// Usages are counted per visible row after render, never as part of the tree query
+const usagesLazy = {...usages, Cell: CellUsagesLazy, accessor: undefined, sortable: false};
 
 export const CategoriesLayout = ({
     rows,
     isContentNotFound,
     totalCount,
     isLoading,
-    isStructured
+    isStructured,
+    revealPath
 }) => {
     const contextualMenu = useRef();
     const selector = state => ({
@@ -27,31 +33,34 @@ export const CategoriesLayout = ({
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
         selection: state.jcontent.selection,
-        tableView: {viewMode: JContentConstants.tableView.viewMode.FLAT},
+        tableView: {viewMode: JContentConstants.tableView.viewMode.STRUCTURED},
         searchTerms: state.jcontent.params.searchTerms,
         tableOpenPaths: state.jcontent.tableOpenPaths,
         sort: state.jcontent.sort
     });
     return (
-        <div className={styles.root}>
-            <div
+        <UsagesCountProvider>
+            <div className={styles.root}>
+                <div
                     className={classNames(styles.content)}
                     onContextMenu={event => contextualMenu.current(event)}
-            >
-                <Paper className={styles.contentPaper}>
-                    <ErrorBoundary>
-                        <ContentTable totalCount={totalCount}
-                                      rows={rows}
-                                      isContentNotFound={isContentNotFound}
-                                      isStructured={isStructured}
-                                      isLoading={isLoading}
-                                      selector={selector}
-                                      columns={[selection, {...name, sortable: false}, visibleActions]}
+                >
+                    <Paper className={styles.contentPaper}>
+                        <ErrorBoundary>
+                            <ContentTable totalCount={totalCount}
+                                          rows={rows}
+                                          isContentNotFound={isContentNotFound}
+                                          isStructured={isStructured}
+                                          isLoading={isLoading}
+                                          selector={selector}
+                                          columns={[selection, {...name, sortable: false}, usagesLazy, visibleActions]}
+                                          revealPath={revealPath}
                             />
-                    </ErrorBoundary>
-                </Paper>
+                        </ErrorBoundary>
+                    </Paper>
+                </div>
             </div>
-        </div>
+        </UsagesCountProvider>
     );
 };
 
@@ -60,7 +69,8 @@ CategoriesLayout.propTypes = {
     isContentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    isStructured: PropTypes.bool
+    isStructured: PropTypes.bool,
+    revealPath: PropTypes.string
 };
 
 export default CategoriesLayout;

@@ -2,11 +2,37 @@ import {
     childrenLimitReachedOrExceeded,
     flattenNodeTypes,
     getCreatableNodetypesTree,
+    getCreateChildrenButtonLimit,
     transformNodeTypesToActions
 } from './createContent.utils';
 
 jest.mock('@jahia/moonstone');
 global.contextJsParameters = {config: {jcontent: {'createChildrenDirectButtons.limit': 3}}};
+describe('getCreateChildrenButtonLimit', () => {
+    const original = global.contextJsParameters;
+
+    afterEach(() => {
+        global.contextJsParameters = original;
+    });
+
+    it('should read the configured limit', () => {
+        global.contextJsParameters = {config: {jcontent: {'createChildrenDirectButtons.limit': '7'}}};
+        expect(getCreateChildrenButtonLimit()).toBe(7);
+    });
+
+    it('should fall back to the shipped default when the module configuration is absent', () => {
+        // Config.jcontent is undefined whenever configs/jcontent.js has not delivered; reading
+        // through it used to throw and take the whole main panel down.
+        global.contextJsParameters = {config: {}};
+        expect(getCreateChildrenButtonLimit()).toBe(5);
+    });
+
+    it('should fall back when the configured value is not a number', () => {
+        global.contextJsParameters = {config: {jcontent: {'createChildrenDirectButtons.limit': 'nonsense'}}};
+        expect(getCreateChildrenButtonLimit()).toBe(5);
+    });
+});
+
 describe('CreateNewContent utils', () => {
     describe('getActions', () => {
         let client;

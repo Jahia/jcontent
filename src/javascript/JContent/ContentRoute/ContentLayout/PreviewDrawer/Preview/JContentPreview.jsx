@@ -6,7 +6,7 @@ import MultipleSelection from './MultipleSelection/MultipleSelection';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Preview} from '~/JContent/preview';
 import {buildPreviewContextsFromNode} from '~/JContent/preview/previewContext.utils';
-import {isSampleContent} from '~/JContent/samples';
+import {isSampleNode} from '~/JContent/samples';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {Card, CardContent} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
@@ -58,8 +58,9 @@ export const JContentPreview = () => {
         <Preview
             footer={<PreviewCard node={previewSelection}/>}
             // Samples are previewed to judge a layout, so they get the same viewport widths the
-            // content type picker offers. Ordinary content keeps the plain full-width preview.
-            hasViewportSelector={isSampleContent(previewSelection)}
+            // content type picker offers - pages included, which is the whole point of keeping a
+            // page as a sample. Ordinary content keeps the plain full-width preview.
+            hasViewportSelector={isSampleNode(previewSelection)}
             isFullScreen={isFullScreen}
             nodeData={previewSelection}
             previewContext={previewContext}

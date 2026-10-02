@@ -6,6 +6,7 @@ export {
     getSamplesPreviewPagePath,
     getSitePath,
     isSampleContent,
+    isSampleNode,
     isSamplePath,
     SAMPLES_CATEGORY_TYPE,
     SAMPLES_COMPONENTS_NAME,

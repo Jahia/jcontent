@@ -1,6 +1,7 @@
 import {
     getSampleCategoryName,
     isSampleContent,
+    isSampleNode,
     getSampleCategoryPath,
     getSamplesPath,
     getSamplesPreviewPagePath,
@@ -88,5 +89,26 @@ describe('isSampleContent', () => {
     it('should be false rather than throwing for a node with no path', () => {
         expect(isSampleContent({})).toBe(false);
         expect(isSampleContent(null)).toBe(false);
+    });
+});
+
+describe('isSampleNode', () => {
+    it('should accept a sample page, which an ordinary page is not', () => {
+        // JContent refuses to preview pages in the side panel; a sample page is the exception,
+        // because looking at it is the only reason it exists.
+        expect(isSampleNode({path: '/sites/luxe/samples/pages/landing', isPage: true})).toBe(true);
+    });
+
+    it('should accept a component sample too', () => {
+        expect(isSampleNode({path: '/sites/luxe/samples/components/agency', isPage: false})).toBe(true);
+    });
+
+    it('should reject an ordinary page outside the samples branch', () => {
+        expect(isSampleNode({path: '/sites/luxe/home/buy', isPage: true})).toBe(false);
+    });
+
+    it('should be false rather than throwing for a node with no path', () => {
+        expect(isSampleNode({})).toBe(false);
+        expect(isSampleNode(null)).toBe(false);
     });
 });

@@ -56,11 +56,13 @@ const NodeDataFragment = {
                     displayName(language: $language)
                     path
                 }
+                hiddenChildrenCount
                 children(typesFilter:{types: $childrenFilterTypes}) {
                     nodes {
                         ...NodeCacheRequiredFields
                         name
                         displayName(language: $language)
+                        canMove: canBeReordered
                         primaryNodeType {
                             name
                             displayName(language: $uilang)

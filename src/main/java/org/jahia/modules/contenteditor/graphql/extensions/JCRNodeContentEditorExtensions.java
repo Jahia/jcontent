@@ -28,6 +28,7 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory;
+import org.jahia.modules.contenteditor.utils.ChildrenOrderingUtils;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRContentUtils;
@@ -85,6 +86,24 @@ public class JCRNodeContentEditorExtensions {
             throw new DataFetchingException(e);
         }
         return new GqlContentHistory(node);
+    }
+
+    @GraphQLField
+    @GraphQLName("hiddenChildrenCount")
+    @GraphQLDescription("Returns the number of children that the current user cannot read. Returns 0 when the current user cannot write the node.")
+    public int getHiddenChildrenCount() {
+        try {
+            return ChildrenOrderingUtils.countHiddenChildren(node.getNode());
+        } catch (RepositoryException e) {
+            throw new DataFetchingException(e);
+        }
+    }
+
+    @GraphQLField
+    @GraphQLName("canBeReordered")
+    @GraphQLDescription("Returns true when the current user can move this node among its siblings")
+    public boolean canBeReordered() {
+        return ChildrenOrderingUtils.canBeReordered(node.getNode());
     }
 
     private static final String HISTORY_PERMISSION = "viewHistoryTab";

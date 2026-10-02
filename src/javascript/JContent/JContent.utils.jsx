@@ -565,17 +565,5 @@ export const isCMISFile = node => {
     return hasMixin(node, 'cmismix:document');
 };
 
-/**
- * Check whether a path sits in a site's content samples branch (/sites/<site>/samples).
- *
- * Samples are never published - the branch root is a jnt:samplesFolder and therefore jmix:nolive,
- * which drops the whole subtree out of publication. The sample pages *under* it are ordinary
- * jnt:page nodes though, so anything that keys off the nolive mixin alone still sees them as
- * publishable; that is what this path check covers.
- *
- * @param {string} path - JCR path to test
- * @returns {boolean} - True if the path is the samples root or anything below it
- */
-export const isSamplePath = path => {
-    return /^\/sites\/[^/]+\/samples((\/.*)|$)/.test(path);
-};
+// Lives with the rest of the samples helpers; re-exported here for existing callers.
+export {isSamplePath} from './samples/samples.utils';

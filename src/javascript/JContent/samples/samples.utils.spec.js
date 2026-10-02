@@ -1,5 +1,6 @@
 import {
     getSampleCategoryName,
+    isSampleContent,
     getSampleCategoryPath,
     getSamplesPath,
     getSamplesPreviewPagePath,
@@ -68,5 +69,24 @@ describe('getSamplesPreviewPagePath', () => {
     it('should be undefined when neither is available, so the preview reports it cannot render', () => {
         global.contextJsParameters = {config: {}};
         expect(getSamplesPreviewPagePath(undefined)).toBeUndefined();
+    });
+});
+
+describe('isSampleContent', () => {
+    it('should accept a component sample', () => {
+        expect(isSampleContent({path: '/sites/luxe/samples/components/agency', isPage: false})).toBe(true);
+    });
+
+    it('should reject a sample page, which renders as a page and carries its own CSS', () => {
+        expect(isSampleContent({path: '/sites/luxe/samples/pages/landing', isPage: true})).toBe(false);
+    });
+
+    it('should reject content outside the samples branch', () => {
+        expect(isSampleContent({path: '/sites/luxe/contents/agency', isPage: false})).toBe(false);
+    });
+
+    it('should be false rather than throwing for a node with no path', () => {
+        expect(isSampleContent({})).toBe(false);
+        expect(isSampleContent(null)).toBe(false);
     });
 });

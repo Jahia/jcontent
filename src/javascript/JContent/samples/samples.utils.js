@@ -57,3 +57,27 @@ export const getSamplesPreviewPagePath = homePagePath => {
     const configured = contextJsParameters.config.jcontent?.['samples.previewPagePath'];
     return configured?.trim() ? configured.trim() : homePagePath;
 };
+
+/**
+ * Check whether a path sits in a site's content samples branch (/sites/<site>/samples).
+ *
+ * Samples are never published - the branch root is a jnt:samplesFolder and therefore jmix:nolive,
+ * which drops the whole subtree out of publication. The sample pages *under* it are ordinary
+ * jnt:page nodes though, so anything that keys off the nolive mixin alone still sees them as
+ * publishable; that is what this path check covers.
+ *
+ * @param {string} path - JCR path to test
+ * @returns {boolean} - True if the path is the samples root or anything below it
+ */
+export const isSamplePath = path => {
+    return /^\/sites\/[^/]+\/samples((\/.*)|$)/.test(path);
+};
+
+/**
+ * Whether a node is a sample that previews as a component, i.e. everything under the samples branch
+ * except the sample pages, which render as ordinary pages and carry their own CSS.
+ *
+ * @param {object} node - node with { path, isPage }
+ * @returns {boolean} - true for a component sample
+ */
+export const isSampleContent = node => Boolean(node?.path) && isSamplePath(node.path) && !node.isPage;

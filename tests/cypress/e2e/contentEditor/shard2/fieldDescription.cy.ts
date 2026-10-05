@@ -47,4 +47,15 @@ describe('Field description', () => {
         getDescription('longDescription').find('p').invoke('outerHeight').should('equal', lineHeight);
         getDescription('longDescription').find('[data-sel-role="field-description-toggle"]').should('have.attr', 'aria-expanded', 'false');
     });
+
+    it('should place the expand button right after the end of the first line', () => {
+        getDescription('lineBreakDescription').scrollIntoView();
+        getDescription('lineBreakDescription').find('[data-sel-role="field-description-toggle"]').should('be.visible');
+        getDescription('lineBreakDescription').then(description => {
+            const containerBox = description[0].getBoundingClientRect();
+            const toggleBox = description.find('[data-sel-role="field-description-toggle"]')[0].getBoundingClientRect();
+            // "A short first line." is far shorter than the form: the button follows it, not the right edge
+            expect(toggleBox.left - containerBox.left).to.be.lessThan(containerBox.width / 2);
+        });
+    });
 });

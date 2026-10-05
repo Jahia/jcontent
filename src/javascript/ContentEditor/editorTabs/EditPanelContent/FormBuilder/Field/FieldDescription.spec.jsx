@@ -135,4 +135,27 @@ describe('FieldDescription', () => {
         cmp.unmount();
         expect(second.disconnect).toHaveBeenCalled();
     });
+
+    it('should place the expand button at the end of the first visual line', () => {
+        fullHeight = 48;
+        const original = Range.prototype.getClientRects;
+        // Two lines: the first ends at 120px, the second (lower) at 300px
+        Range.prototype.getClientRects = () => [
+            {top: 0, height: 16, right: 80},
+            {top: 0, height: 16, right: 120},
+            {top: 16, height: 16, right: 300}
+        ];
+        try {
+            const cmp = mount(<FieldDescription description="First line<br/>Second, longer line"/>);
+            expect(toggle(cmp).prop('style')).toEqual({left: 120, right: 'auto'});
+        } finally {
+            Range.prototype.getClientRects = original;
+        }
+    });
+
+    it('should keep the expand button at the end of the line when the text cannot be measured', () => {
+        fullHeight = 48;
+        const cmp = mount(<FieldDescription description="A long description"/>);
+        expect(toggle(cmp).hasClass('expand')).toBe(true);
+    });
 });

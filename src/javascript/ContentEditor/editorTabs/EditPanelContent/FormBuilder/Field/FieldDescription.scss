@@ -1,19 +1,16 @@
 // The caption line height, owned here so that one folded line is exactly this tall.
 $line-height: 16px;
 
+// The room a folded line keeps at its end for the expand button and its margin
+$toggle-room: 40px;
+
 .fieldDescription {
-    display: flex;
-    align-items: flex-end;
+    position: relative;
 
     margin-bottom: var(--spacing-small);
-
-    opacity: 0.8;
 }
 
 .text.text {
-    flex: 1 1 auto;
-    min-width: 0;
-
     line-height: $line-height;
 
     // Add html formatting back for field descriptions which was disabled from moonstone css reset
@@ -28,6 +25,10 @@ $line-height: 16px;
     small {
         font-size: smaller;
     }
+
+    > span {
+        opacity: 0.8;
+    }
 }
 
 .collapsed.collapsed {
@@ -35,28 +36,36 @@ $line-height: 16px;
     overflow: hidden;
 }
 
+.truncated.truncated {
+    padding-right: $toggle-room;
+}
+
+// The button only carries the chip, which draws it like the field badges
 .toggle {
-    flex: none;
+    margin-left: var(--spacing-small);
+    padding: 0;
 
-    margin-left: var(--spacing-nano);
-    padding: 0 var(--spacing-nano);
-
-    font-size: 12px;
-
-    color: var(--color-accent);
     line-height: $line-height;
+    vertical-align: top;
 
     border: 0;
-    border-radius: 2px;
+    border-radius: 40px;
 
     background: none;
     cursor: pointer;
 
-    &:hover {
-        text-decoration: underline;
+    &:hover .chip.chip {
+        background-color: var(--color-gray_light);
     }
 
     &:focus-visible {
         outline: 2px solid var(--color-accent);
     }
+}
+
+// Placed at the measured end of the first line, or at the end of the line without one
+.expand {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

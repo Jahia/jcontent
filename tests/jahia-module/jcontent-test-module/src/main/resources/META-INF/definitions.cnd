@@ -369,3 +369,4 @@
 [cent:fieldDescriptionTest] > jnt:content, jmix:basicContent, jmix:editorialContent
  - shortDescription (string)
  - longDescription (string)
+ - lineBreakDescription (string)

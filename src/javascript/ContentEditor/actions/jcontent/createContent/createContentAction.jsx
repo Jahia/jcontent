@@ -34,9 +34,11 @@ export const CreateContent = ({
     const {t} = useTranslation('jcontent');
     const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}), shallowEqual);
 
+    // The type tree query applies showOnNodeTypes too, but a named placeholder keeps the action alive
+    // when that tree is empty, so the checks apply it as well. An empty list restricts nothing there.
     const res = useNodeChecks(
         {path: contextNodePath || path, language: language},
-        {...otherProps, getLockInfo: true}
+        {...otherProps, showOnNodeTypes: showOnNodeTypes?.length > 0 ? showOnNodeTypes : undefined, getLockInfo: true}
     );
 
     const nodeInfo = useNodeInfo(

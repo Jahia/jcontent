@@ -795,6 +795,10 @@
           }
         },
         "sharedLanguages": "Shared by all languages",
+        "fieldDescription": {
+            "expand": "Show the full description",
+            "collapse": "Show less"
+        },
         "fields": {
           "actions": {
             "replace": "Change",

@@ -365,3 +365,7 @@
 
 [cemix:switchTubeGenericPlayer] > jmix:templateMixin, cemix:switchTubePlayerId, cemix:sharedPlayerOptions mixin
  extends = cent:videoPlayerTest
+
+[cent:fieldDescriptionTest] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - shortDescription (string)
+ - longDescription (string)

@@ -789,6 +789,10 @@
           }
         },
         "sharedLanguages": "Von allen Sprachen geteilt",
+        "fieldDescription": {
+            "expand": "Vollständige Beschreibung anzeigen",
+            "collapse": "Weniger anzeigen"
+        },
         "fields": {
           "actions": {
             "replace": "Änderung",

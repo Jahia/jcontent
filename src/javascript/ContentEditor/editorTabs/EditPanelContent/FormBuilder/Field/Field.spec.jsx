@@ -292,7 +292,7 @@ describe('Field component', () => {
             {},
             dsGenericTheme
         );
-        expect(cmp.find('Typography.inputDescription span').prop('dangerouslySetInnerHTML').__html).toEqual('This is a description for this text field.');
+        expect(cmp.find('FieldDescription').prop('description')).toEqual('This is a description for this text field.');
     });
 
     it('should not display the description label when field has not a description', () => {

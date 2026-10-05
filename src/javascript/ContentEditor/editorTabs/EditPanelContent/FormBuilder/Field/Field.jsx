@@ -7,6 +7,7 @@ import * as PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {MultipleField} from './MultipleField';
 import {SingleField} from './SingleField';
+import {FieldDescription} from './FieldDescription';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {errorTranslationOptions} from './field.utils';
 import {DisplayAction, registry} from '@jahia/ui-extender';
@@ -90,12 +91,7 @@ const renderField = (
                     render={ButtonRenderer}
                 />
             </div>}
-            {field.description && (
-            <Typography className={styles.inputDescription} variant="caption">
-                {/* eslint-disable-next-line react/no-danger */}
-                <span dangerouslySetInnerHTML={{__html: field.description}}/>
-            </Typography>
-        )}
+            {field.description && <FieldDescription description={field.description}/>}
             <div className="flexRow_nowrap alignCenter">
                 <div className="flexFluid">
                     {isMultipleField ?

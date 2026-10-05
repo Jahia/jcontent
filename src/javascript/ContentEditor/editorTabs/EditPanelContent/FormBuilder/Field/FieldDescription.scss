@@ -1,0 +1,62 @@
+// The caption line height, owned here so that one folded line is exactly this tall.
+$line-height: 16px;
+
+.fieldDescription {
+    display: flex;
+    align-items: flex-end;
+
+    margin-bottom: var(--spacing-small);
+
+    opacity: 0.8;
+}
+
+.text.text {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    line-height: $line-height;
+
+    // Add html formatting back for field descriptions which was disabled from moonstone css reset
+    i {
+        font-style: italic;
+    }
+
+    b {
+        font-weight: bold;
+    }
+
+    small {
+        font-size: smaller;
+    }
+}
+
+.collapsed.collapsed {
+    max-height: $line-height;
+    overflow: hidden;
+}
+
+.toggle {
+    flex: none;
+
+    margin-left: var(--spacing-nano);
+    padding: 0 var(--spacing-nano);
+
+    font-size: 12px;
+
+    color: var(--color-accent);
+    line-height: $line-height;
+
+    border: 0;
+    border-radius: 2px;
+
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+    }
+}

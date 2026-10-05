@@ -790,6 +790,10 @@
           }
         },
         "sharedLanguages": "Partagé par toutes les langues",
+        "fieldDescription": {
+            "expand": "Afficher la description complète",
+            "collapse": "Réduire"
+        },
         "fields": {
           "actions": {
             "replace": "Modifier",

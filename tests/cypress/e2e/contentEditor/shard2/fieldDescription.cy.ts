@@ -35,7 +35,7 @@ describe('Field description', () => {
 
         getDescription('longDescription').find('[data-sel-role="field-description-toggle"]')
             .should('have.attr', 'aria-expanded', 'false')
-            .and('have.text', '…')
+            .and('have.text', '···')
             .click();
         getDescription('longDescription').find('p').invoke('outerHeight').should('be.greaterThan', lineHeight);
         getDescription('longDescription').find('a').should('be.visible');

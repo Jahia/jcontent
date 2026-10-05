@@ -2,7 +2,10 @@
 $line-height: 16px;
 
 // The room a folded line keeps at its end for the expand button and its margin
-$toggle-room: 40px;
+$toggle-room: 28px;
+
+// The chip of the button, smaller than a field badge so it fits inside a line
+$chip-height: 12px;
 
 .fieldDescription {
     position: relative;
@@ -41,12 +44,18 @@ $toggle-room: 40px;
 }
 
 // The button only carries the chip, which draws it like the field badges
+.chip.chip {
+    height: $chip-height;
+    padding: 0 var(--spacing-nano);
+}
+
 .toggle {
-    margin-left: var(--spacing-small);
+    display: inline-flex;
+    height: $chip-height;
+    margin-left: var(--spacing-nano);
     padding: 0;
 
-    line-height: $line-height;
-    vertical-align: top;
+    vertical-align: middle;
 
     border: 0;
     border-radius: 40px;
@@ -63,9 +72,10 @@ $toggle-room: 40px;
     }
 }
 
-// Placed at the measured end of the first line, or at the end of the line without one
+// Placed at the measured end of the first line, or at the end of the line without one,
+// and centered on that line
 .expand {
     position: absolute;
-    top: 0;
+    top: ($line-height - $chip-height) / 2;
     right: 0;
 }

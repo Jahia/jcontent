@@ -62,7 +62,7 @@ describe('FieldDescription', () => {
         const cmp = mount(<FieldDescription description="A long description"/>);
 
         const button = toggle(cmp);
-        expect(button.text()).toEqual('…');
+        expect(button.text()).toEqual('···');
         expect(button.prop('aria-expanded')).toBe(false);
         expect(button.prop('aria-label')).toEqual('translated_jcontent:label.contentEditor.edit.fieldDescription.expand');
         expect(button.prop('aria-controls')).toEqual(cmp.find('p').prop('id'));

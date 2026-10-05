@@ -100,7 +100,7 @@ export const FieldDescription = ({description}) => {
                         aria-label={t('jcontent:label.contentEditor.edit.fieldDescription.expand')}
                         title={t('jcontent:label.contentEditor.edit.fieldDescription.expand')}
                 >
-                    <Chip className={styles.chip} color="default" label="…"/>
+                    <Chip className={styles.chip} color="default" label="···"/>
                 </button>
             )}
         </div>

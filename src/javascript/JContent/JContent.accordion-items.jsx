@@ -80,7 +80,7 @@ export const jContentAccordionItems = registry => {
                 <AdditionalAppsTree target={item.appsTarget} item={item}/>
             </AccordionItem>
         ),
-        routeRender: (v, item) => <AdditionalAppsRoute target={item.appsTarget} match={v.match}/>,
+        routeRender: (v, item) => <AdditionalAppsRoute target={item.appsTarget} mode={item.key} match={v.match}/>,
         getRootPath(site) {
             return this.rootPath.replace('{site}', site);
         },

@@ -322,3 +322,49 @@
  - captionAlignment (string, choicelist[resourceBundle]) = 'text-start' autocreated indexed=no < 'text-start', 'text-center', 'text-end'
  - mainChoice (string, choicelist[resourceBundle]) = 'a' indexed=no < 'a', 'b'
  - dependentChoice (string, choicelist[resourceBundle, dependentProperties='mainChoice']) indexed=no < 'x', 'y'
+
+// https://github.com/Jahia/jcontent/issues/2746
+// Three sibling mixins, each extending the same type and each inheriting the same two properties
+// from a shared supertype mixin. Field identity is declaringNodeType + name (Field#getKey), so all
+// three inherited copies carry one identical key: the form merge used to treat them as a single
+// field and re-home the one copy, leaving two of the three fieldsets without it.
+// The ticket declares the shared property as a weakreference picker. It is a plain string and a
+// choicelist here: the defect lives in the fieldset merge and is independent of the selector, and
+// these two can be filled and read back without driving a picker dialog. sharedMode carries a
+// default value on purpose -- an inactive dynamic fieldset has its fields seeded from defaults, so
+// that is the copy which tells us whether a stored value survives a switch between siblings.
+[cent:videoPlayerTest] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - videoType (string, choicelist) indexed=no < 'cemix:youtubeGenericPlayer', 'cemix:vimeoGenericPlayer', 'cemix:switchTubeGenericPlayer'
+
+// sharedZone/sharedQuality cover the cascading-choicelist case the PR body flags as untested:
+// sharedQuality depends on BOTH sharedMode and sharedZone, so changing sharedMode (the property
+// under test elsewhere in this file) must repaint sharedQuality using the OTHER driving property
+// (sharedZone) read from the fieldset actually being edited -- not from one of the two inactive
+// sibling copies of sharedZone that sit in the same form holding their own default. dependentProperties
+// takes a single quoted value here, comma included: the CND lexer quotes on '\'', same as
+// StreamTokenizer, so the comma is just part of the string, and registerSelectorTypesOnChange.js
+// splits it back into the two property names.
+[cemix:sharedPlayerOptions] mixin
+ - sharedNote (string) internationalized
+ - sharedMode (string, choicelist) = 'auto' indexed=no < 'auto', 'manual'
+ - sharedZone (string, choicelist) = 'na' indexed=no < 'na', 'eu'
+ - sharedQuality (string, choicelist[dependentProperties='sharedMode,sharedZone']) indexed=no < 'sd', 'hd'
+
+[cemix:youtubePlayerId] mixin
+ - youtubeId (string) internationalized
+
+[cemix:vimeoPlayerId] mixin
+ - vimeoId (string) internationalized
+ - vimeoAccessKey (string)
+
+[cemix:switchTubePlayerId] mixin
+ - switchTubeId (string) internationalized
+
+[cemix:youtubeGenericPlayer] > jmix:templateMixin, cemix:youtubePlayerId, cemix:sharedPlayerOptions mixin
+ extends = cent:videoPlayerTest
+
+[cemix:vimeoGenericPlayer] > jmix:templateMixin, cemix:vimeoPlayerId, cemix:sharedPlayerOptions mixin
+ extends = cent:videoPlayerTest
+
+[cemix:switchTubeGenericPlayer] > jmix:templateMixin, cemix:switchTubePlayerId, cemix:sharedPlayerOptions mixin
+ extends = cent:videoPlayerTest

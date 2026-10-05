@@ -17,8 +17,15 @@ export const getInitialValues = (nodeData, sections) => {
     const nodeValues = getFields(sections)
         .reduce((result, field) => ({...result, ...getFieldValues(field, nodeData)}), {});
 
-    // Get default values for not enabled mixins
+    // Get default values for not enabled mixins, but only for a field whose property the node does
+    // not itself store. A sibling copy of an inherited field (same propertyName + declaringNodeType
+    // across several fieldsets, see adaptSections.ts) is hydrated with the node's real stored value
+    // in nodeValues above even while its own fieldset is inactive; overlaying the default here would
+    // silently discard that stored value the moment the reader activates a sibling mixin instead.
+    // When the node carries no property at all, this is unchanged: the default (or the selector's
+    // own initValue, via getFieldValuesFromDefaultValues) still applies.
     const extendsMixinFieldsDefaultValues = getFields(sections, undefined, fieldset => fieldset.dynamic && !fieldset.activated)
+        .filter(field => !getStoredProperty(field, nodeData))
         .reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {});
 
     const childrenOrderingFields = getChildrenOrderingFields(nodeData, dynamicFieldSets);
@@ -61,8 +68,14 @@ const getChildrenOrderingFields = (nodeData, dynamicFieldSets) => {
     return orderingInitialValues;
 };
 
+// A stored property is matched by propertyName + declaringNodeType, not by field name: sibling
+// copies of an inherited field (see adaptSections.ts) share both, so they resolve to the same
+// stored property even though their form field names differ.
+const getStoredProperty = (field, nodeData) =>
+    nodeData.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.declaringNodeType);
+
 export const getFieldValues = (field, nodeData) => {
-    const property = nodeData.properties && nodeData.properties.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.declaringNodeType);
+    const property = getStoredProperty(field, nodeData);
     const selectorType = resolveSelectorType(field);
     const formFields = {};
 

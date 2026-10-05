@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose} from '~/utils';
+import {CloseOnNavigation, compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormHelperText} from '@material-ui/core';
 import {Button, Checkbox, Dropdown, Typography} from '@jahia/moonstone';
@@ -41,6 +41,7 @@ export class Export extends React.Component {
         const live = (this.state.workspace === 'live');
         return (
             <Dialog fullWidth open={isOpen} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
+                <CloseOnNavigation onClose={onClose}/>
                 <DialogTitle>
                     {t('jcontent:label.contentManager.export.dialogTitle')}
                 </DialogTitle>

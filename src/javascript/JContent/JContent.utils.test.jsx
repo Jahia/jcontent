@@ -352,19 +352,29 @@ describe('JahiaRenderedModulesUtil', () => {
     });
 
     describe('resolveNodeTypes', () => {
-        const capture = html => {
+        const capture = (html, options) => {
             JahiaRenderedModulesUtil.setModules(parse(html), nodePath);
-            return JahiaRenderedModulesUtil.resolveNodeTypes(nodePath);
+            return JahiaRenderedModulesUtil.resolveNodeTypes(nodePath, options);
         };
 
-        it('should fall back to the module\'s own node types when the view renders its children itself', () => {
+        it('should fall back to the module\'s own node types when a list view renders its children itself', () => {
             // Such a view emits no wildcard placeholder, so the module element is the only thing
             // left that names what the definition accepts as an unnamed child.
             expect(capture(`
                 <div jahiatype="module" type="list" path="${nodePath}" nodetypes="cent:childObject1">
                     <div jahiatype="module" type="existingNode" path="${nodePath}/child1"></div>
                 </div>
-            `)).toEqual(['cent:childObject1']);
+            `, {isList: true})).toEqual(['cent:childObject1']);
+        });
+
+        it('should return nothing creatable when a view that is no list withholds its wildcard placeholder', () => {
+            // A view at the number of children it allows stops emitting the placeholder.
+            expect(capture(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}" nodetypes="cent:childObject1">
+                    <div jahiatype="module" type="existingNode" path="${nodePath}/child1"></div>
+                    <div jahiatype="module" type="existingNode" path="${nodePath}/child2"></div>
+                </div>
+            `)).toEqual([]);
         });
 
         it('should take the wildcard placeholder node types alone when it carries them', () => {

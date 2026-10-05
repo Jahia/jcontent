@@ -53,7 +53,7 @@ const hasVisibleContent = e => {
  * 4. There is a placeholder child with path="*" AND nodetype info defined then we use this nodetype info (see comment above).
  * 5. There is also potential for the case when there is placehoder with nodetype info and one without, in which case we want to get data for nodetypes from both locations.
  */
-const getPlaceholderNodeTypes = (e, parentPath) => {
+const getPlaceholderNodeTypes = (e, parentPath, node) => {
     // The element is placeholder with nodetypes defined, it gives us all the info we need.
     const ownNt = e.getAttribute('nodetypes');
     if (ownNt) {
@@ -61,7 +61,7 @@ const getPlaceholderNodeTypes = (e, parentPath) => {
     }
 
     // Fallback: resolve the types out of the captured rendering of the parent module
-    return JahiaRenderedModulesUtil.resolveNodeTypes(parentPath);
+    return JahiaRenderedModulesUtil.resolveNodeTypes(parentPath, {isList: Boolean(node?.isList)});
 };
 
 const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
@@ -74,7 +74,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
             return {
                 element: e,
                 node: nodes?.[parentPath],
-                attributes: {nodeTypes: getPlaceholderNodeTypes(e, parentPath)}
+                attributes: {nodeTypes: getPlaceholderNodeTypes(e, parentPath, nodes?.[parentPath])}
             };
         })
         .filter(({node}) => node !== null && node !== undefined);
@@ -89,7 +89,7 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
             return {
                 element: e,
                 node: nodes?.[parentPath],
-                attributes: {nodeTypes: JahiaRenderedModulesUtil.resolveNodeTypes(parentPath)}
+                attributes: {nodeTypes: JahiaRenderedModulesUtil.resolveNodeTypes(parentPath, {isList: Boolean(nodes?.[parentPath]?.isList)})}
             };
         })
         .filter(({node, attributes}) => node !== null && node !== undefined && attributes?.nodeTypes?.length > 0);

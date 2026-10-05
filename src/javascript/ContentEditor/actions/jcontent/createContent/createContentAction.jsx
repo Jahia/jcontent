@@ -44,14 +44,14 @@ export const CreateContent = ({
         {
             getPrimaryNodeType: true,
             getSubNodesCount: ['nt:base'],
-            getIsNodeTypes: ['jmix:listSizeLimit'],
+            getIsNodeTypes: ['jmix:listSizeLimit', 'jmix:list'],
             getProperties: ['limit']
         }
     );
     const {loading: loadingPlaceholders, placeholders} = useNamedChildPlaceholders({path, language, skip: res.loading || !res.checksResult});
 
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
-    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.resolveNodeTypes(path);
+    let areaNodeTypes = (nodeTypes?.length > 0) ? nodeTypes : JahiaRenderedModulesUtil.resolveNodeTypes(path, {isList: Boolean(nodeInfo.node?.['jmix:list'])});
     const {loadingTypes, error, nodetypes: nodeTypesTree} = useCreatableNodetypesTree({
         nodeTypes: areaNodeTypes,
         childNodeName: name,

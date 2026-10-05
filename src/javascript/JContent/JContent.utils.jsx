@@ -420,15 +420,19 @@ export const JahiaRenderedModulesUtil = {
     // The types creatable as an unnamed child of a module, out of the captured rendering.
     //
     // Wildcard placeholders that all carry nodetypes answer on their own: they hold the contribute
-    // types, which the module element does not. Every other shape falls back to the module's own
-    // nodetypes, written from the definition's unnamed-child constraints - so a view that renders
-    // its children itself, and therefore emits no wildcard placeholder at all, still names what it
-    // accepts. Returns undefined for a module that was never rendered, which is not the same answer
-    // as an empty list.
+    // types, which the module element does not. A wildcard placeholder without nodetypes adds the
+    // module's own nodetypes, written from the definition's unnamed-child constraints.
+    //
+    // A module with no wildcard placeholder at all is two different shapes that render alike. A view
+    // that withholds its placeholder, for instance once it holds as many children as it allows, means
+    // nothing is creatable, and gets an empty list. A list (jmix:list) whose view renders its children
+    // itself never emits one, and gets its own nodetypes, so the caller names that case with isList.
+    // Returns undefined for a module that was never rendered, which is not the same answer as an
+    // empty list.
     //
     // Contribute types are out of reach here: Jahia writes them onto the placeholder only, so a view
     // that emits none leaves this answer wider than a placeholder's would have been.
-    resolveNodeTypes: function (path) {
+    resolveNodeTypes: function (path, {isList = false} = {}) {
         const moduleInfo = this.getModule(path);
 
         if (!moduleInfo) {
@@ -440,6 +444,10 @@ export const JahiaRenderedModulesUtil = {
 
         if (wildcardPlaceholders.length > 0 && wildcardPlaceholders.every(item => item.nodeTypes?.length > 0)) {
             return [...new Set(placeholderNodeTypes)];
+        }
+
+        if (wildcardPlaceholders.length === 0 && !isList) {
+            return [];
         }
 
         const ownNodeTypes = moduleInfo

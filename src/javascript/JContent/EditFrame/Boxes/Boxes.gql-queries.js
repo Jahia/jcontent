@@ -32,6 +32,7 @@ export const BoxesQuery = gql`
                 primaryNodeType {
                     icon
                 }
+                isList: isNodeType(type: {types: ["jmix:list"]})
                 subNodes: children {
                     pageInfo {
                         totalCount

@@ -246,6 +246,16 @@ describe('Create content constraints', () => {
         deleteNode(`${inFolderPath}/childObject1`);
     });
 
+    it('shows each create action once in the header of a node in a content folder', () => {
+        // The header holds createPage next to createContent. createPage is for pages only, so the
+        // named placeholders of a content node must not make it visible - see #2310.
+        JContent.visit(siteKey, 'en', 'content-folders/contents/test-named-in-folder');
+
+        ['cent:childObject3', 'named:childObject1', 'named:childObject2'].forEach(role => {
+            cy.get(`.moonstone-header button[data-sel-role="${role}"]`).should('have.length', 1);
+        });
+    });
+
     it('resolves named create actions on a page after leaving a content folder', () => {
         // The per-node rendering must not displace the capture taken for a page route.
         JContent.visit(siteKey, 'en', 'content-folders/contents');

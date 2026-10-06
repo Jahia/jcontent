@@ -1,4 +1,4 @@
-import {addNode, createSite, createUser, deleteSite, deleteUser, grantRoles, publishAndWaitJobEnding, revokeRoles} from '@jahia/cypress';
+import {addNode, createSite, createUser, deleteNode, deleteSite, deleteUser, grantRoles, publishAndWaitJobEnding, revokeRoles} from '@jahia/cypress';
 
 /**
  * End-to-end tests for the Tag Manager GraphQL API.
@@ -9,7 +9,7 @@ import {addNode, createSite, createUser, deleteSite, deleteUser, grantRoles, pub
  *  - Dual-workspace propagation (EDIT + LIVE)
  *  - Authorization failures (user without tagManager permission, wrong site key), refused by the
  *    Tag Manager's own site-level check
- *  - Site-level access: a user holding tagManager through a site role only, no server role
+ *  - Site-level access: an editor holding tagManager on the site, with no server role
  *  - Per-node write rights: a caller holding tagManager still only writes the nodes it may write
  *  - Candidate selection: a tag carrying a quote is matched by the same rule as on the read side
  */
@@ -19,6 +19,9 @@ describe('Tag Manager GraphQL API', () => {
     const siteKey = 'tagManagerTestSite';
     const unauthorizedUser = 'tagManagerUnauthorized';
     const password = 'password';
+    // An editor with only "Access to tag manager" added on the site: the setup of an editor role
+    // extended with the Tag Manager permission, without touching Jahia's own roles
+    const tagManagerRole = 'tagManagerTestEditor';
 
     // UUIDs captured during setup to reuse across tests
     let nodeAUuid: string;
@@ -62,6 +65,8 @@ describe('Tag Manager GraphQL API', () => {
     after('Remove test data', () => {
         deleteSite(siteKey);
         deleteUser(unauthorizedUser);
+        // Only once the site is gone: the role cannot be deleted while ACEs on the site still grant it
+        deleteNode(`/roles/editor/${tagManagerRole}`);
     });
 
     // ────────────────────────────────────────────────────────────────────────────
@@ -471,10 +476,27 @@ describe('Tag Manager GraphQL API', () => {
         let restrictedNodeUuid: string;
 
         before('Create a tag-manager user, a reachable node and an out-of-reach node', () => {
+            // Nested under editor, so it inherits the editor's rights on the site content; its own
+            // current-site permissions add tagManager and nothing else
+            addNode({
+                parentPathOrId: '/roles/editor',
+                name: tagManagerRole,
+                primaryNodeType: 'jnt:role',
+                properties: [
+                    {name: 'j:roleGroup', value: 'edit-role'},
+                    {name: 'j:privilegedAccess', value: 'true', type: 'BOOLEAN'}
+                ],
+                children: [{
+                    name: 'currentSite-access',
+                    primaryNodeType: 'jnt:externalPermissions',
+                    properties: [
+                        {name: 'j:path', value: 'currentSite'},
+                        {name: 'j:permissionNames', values: ['tagManager']}
+                    ]
+                }]
+            });
             createUser(tagManagerUser, password);
-            // A site role only, no server role: site-administrator carries tagManager plus
-            // jcr:all_default on the site, which a per-node DENY takes back
-            grantRoles(`/sites/${siteKey}`, ['site-administrator'], tagManagerUser, 'USER');
+            grantRoles(`/sites/${siteKey}`, [tagManagerRole], tagManagerUser, 'USER');
 
             addNode({
                 parentPathOrId: `/sites/${siteKey}/contents`,
@@ -500,7 +522,7 @@ describe('Tag Manager GraphQL API', () => {
                 publishAndWaitJobEnding(restrictedNodePath);
                 // ...then DENY the role on this node only, putting it out of the user's reach
                 // while tagManager on the site itself is untouched
-                revokeRoles(restrictedNodePath, ['site-administrator'], tagManagerUser, 'USER');
+                revokeRoles(restrictedNodePath, [tagManagerRole], tagManagerUser, 'USER');
             });
         });
 
@@ -508,7 +530,7 @@ describe('Tag Manager GraphQL API', () => {
             deleteUser(tagManagerUser);
         });
 
-        it('lets a user holding tagManager through a site role only read the tags', () => {
+        it('lets an editor holding tagManager on the site, with no server role, read the tags', () => {
             cy.apolloClient({username: tagManagerUser, password})
                 .apollo({
                     queryFile: 'api/tagManager/getTags.graphql',

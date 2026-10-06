@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {ReferenceCard} from '~/ContentEditor/DesignSystem/ReferenceCard';
 import {Tooltip, File, Button, ChevronLastList, ChevronFirstList, ChevronUp, ChevronDown} from '@jahia/moonstone';
-import {useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
+import {useFocusOnMove, useReorderDrag, useReorderDrop} from '~/ContentEditor/utils';
 import {getIconFromNode, getWebpUrl} from '~/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import clsx from 'clsx';
@@ -18,12 +18,18 @@ export const DraggableReference = ({
     onValueMove,
     fieldName,
     fieldLength,
-    isReadOnly
+    isReadOnly,
+    focusId
 }) => {
     const {t} = useTranslation('jcontent');
     const isDraggable = fieldLength > 1 && !isReadOnly;
 
     const ref = useRef(null);
+    const staticRef = useRef(null);
+    // The card is what gets the focus after a move, so the element has to be reachable whether or
+    // not it is draggable - only the draggable one is wired to react-dnd.
+    const cardRef = isDraggable ? ref : staticRef;
+    useFocusOnMove(cardRef, focusId);
     const [{handlerId}, drop] = useReorderDrop(
         {ref, index, onReorder},
         {
@@ -31,7 +37,7 @@ export const DraggableReference = ({
         });
 
     const [{isDragging}, drag] = useReorderDrag(
-        {item: {index, id}, onDrop: onReorderDropped, onAbort: onReorderAborted},
+        {item: {index, id}, onDrop: () => onReorderDropped(child.name), onAbort: onReorderAborted},
         {
             type: 'REFERENCE_CARD',
             canDrag: () => isDraggable
@@ -41,7 +47,9 @@ export const DraggableReference = ({
 
     return (
         <div
-            ref={isDraggable ? ref : null}
+            ref={cardRef}
+            // Focusable programmatically after a move, without joining the tab order.
+            tabIndex={-1}
             className={clsx(
                 styles.draggableCard,
                 isDragging && styles.draggingCard
@@ -63,7 +71,7 @@ export const DraggableReference = ({
                                     icon={<ChevronFirstList/>}
                                     data-sel-action={`moveToFirst_${index}`}
                                     aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}
-                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'first')}
+                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'first', child.name)}
                                 />
                             </Tooltip>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}>
@@ -73,7 +81,7 @@ export const DraggableReference = ({
                                     icon={<ChevronLastList/>}
                                     data-sel-action={`moveToLast_${index}`}
                                     aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}
-                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'last')}
+                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'last', child.name)}
                                 />
                             </Tooltip>
                         </div>
@@ -85,7 +93,7 @@ export const DraggableReference = ({
                                     icon={<ChevronUp/>}
                                     data-sel-action={`moveUp_${index}`}
                                     aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveUp')}
-                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'up')}
+                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'up', child.name)}
                                 />
                             </Tooltip>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}>
@@ -95,7 +103,7 @@ export const DraggableReference = ({
                                     icon={<ChevronDown/>}
                                     data-sel-action={`moveDown_${index}`}
                                     aria-label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}
-                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'down')}
+                                    onClick={() => onValueMove(`${fieldName}[${index}]`, 'down', child.name)}
                                 />
                             </Tooltip>
                         </div>
@@ -120,6 +128,7 @@ DraggableReference.propTypes = {
     onValueMove: PropTypes.func.isRequired,
     fieldLength: PropTypes.number,
     isReadOnly: PropTypes.bool,
+    focusId: PropTypes.number,
     onReorderDropped: PropTypes.func.isRequired,
     onReorderAborted: PropTypes.func.isRequired
 };

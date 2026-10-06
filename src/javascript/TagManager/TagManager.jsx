@@ -28,7 +28,7 @@ export const TagManager = () => {
         fetchPolicy: 'cache-and-network'
     });
 
-    const tags = useMemo(() => data?.admin?.jahia?.tagManager?.tags?.nodes || [], [data]);
+    const tags = useMemo(() => data?.jcontent?.tagManager?.tags?.nodes || [], [data]);
 
     const {searchTerm, setSearchTerm, normalizedSearch, sort, setSort, filteredTags, sortedTags} = useTagFilter(tags);
 

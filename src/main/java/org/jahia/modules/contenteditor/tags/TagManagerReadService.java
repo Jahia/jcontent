@@ -46,7 +46,6 @@ import pl.touk.throwing.ThrowingFunction;
 
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import java.util.Comparator;

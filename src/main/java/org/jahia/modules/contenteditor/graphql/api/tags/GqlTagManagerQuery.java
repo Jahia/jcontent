@@ -47,9 +47,13 @@ import javax.jcr.RepositoryException;
 public class GqlTagManagerQuery {
     private final String siteKey;
 
+    private TagManagerReadService tagManagerReadService;
+
     @Inject
     @GraphQLOsgiService
-    private TagManagerReadService tagManagerReadService;
+    public void setTagManagerReadService(TagManagerReadService tagManagerReadService) {
+        this.tagManagerReadService = tagManagerReadService;
+    }
 
     public GqlTagManagerQuery(String siteKey) {
         this.siteKey = siteKey;

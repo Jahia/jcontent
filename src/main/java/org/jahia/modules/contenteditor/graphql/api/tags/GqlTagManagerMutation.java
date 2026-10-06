@@ -41,9 +41,13 @@ import javax.jcr.RepositoryException;
 public class GqlTagManagerMutation {
     private final String siteKey;
 
+    private TagManagerMutationService tagManagerMutationService;
+
     @Inject
     @GraphQLOsgiService
-    private TagManagerMutationService tagManagerMutationService;
+    public void setTagManagerMutationService(TagManagerMutationService tagManagerMutationService) {
+        this.tagManagerMutationService = tagManagerMutationService;
+    }
 
     public GqlTagManagerMutation(String siteKey) {
         this.siteKey = siteKey;

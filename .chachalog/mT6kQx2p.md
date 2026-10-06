@@ -1,6 +1,6 @@
 ---
 # Allowed version bumps: patch, minor, major
-"@jahia/jcontent": patch
+"@jahia/jcontent": minor
 ---
 
 Fixed the content editor so every mixin in a chain of mixins that extend one another shows its fields when chosen.

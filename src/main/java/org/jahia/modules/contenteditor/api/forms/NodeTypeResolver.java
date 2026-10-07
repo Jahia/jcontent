@@ -34,4 +34,19 @@ public interface NodeTypeResolver {
      * @param typeName the name of a node type.
      */
     boolean isNodeType(String typeName) throws RepositoryException;
+
+    /**
+     * Returns {@code true} if {@code mixinName} is one of the mixins applied directly, not a
+     * supertype of one. Mirrors a lookup in {@code JCRNodeWrapper.getMixinNodeTypes()}.
+     *
+     * <p>The form switches on the fieldset of a {@code jmix:templateMixin} only when this returns
+     * {@code true}, whatever {@link #isNodeType(String)} answers for that mixin. The default reads
+     * {@link #getAppliedMixins()}, so an implementation that lists supertypes there sees them as
+     * applied directly.
+     *
+     * @param mixinName the name of a mixin type.
+     */
+    default boolean hasMixin(String mixinName) throws RepositoryException {
+        return getAppliedMixins().stream().anyMatch(mixin -> mixin.getName().equals(mixinName));
+    }
 }

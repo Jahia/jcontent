@@ -73,11 +73,8 @@ export const useOpenInLiveData = (path, siteKey) => {
     // browsed from another domain as it is usually the case for shared sites
     const serverNamesArray = [serverName, ...serverNameAliases];
     const isCurrentSiteLocalhostOnly = serverNamesArray.length === 1 && serverNamesArray.includes('localhost') && currentHostname !== 'localhost';
-    // Guard 1: hostname already in this site's names (no duplicate), or site uses localhost.
-    // Jahia resolves site context from the request hostname — using localhost across different
-    // hostnames renders in the wrong site context.
-    const isHostnameInCurrentSite = !isCurrentSiteLocalhostOnly && (serverNamesArray.includes(currentHostname) ||
-        serverNamesArray.includes('localhost'));
+    // Guard 1: hostname already in this site's names (no duplicate).
+    const isHostnameInCurrentSite = !isCurrentSiteLocalhostOnly && serverNamesArray.includes(currentHostname);
 
     // Guard 2: hostname is already claimed by a different site — Jahia would resolve that other
     // site's context instead, opening the wrong site.

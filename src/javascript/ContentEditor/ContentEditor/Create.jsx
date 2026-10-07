@@ -11,6 +11,7 @@ import {useApolloClient} from '@apollo/client';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {childrenLimitReachedOrExceeded} from '~/ContentEditor/actions/jcontent/createContent/createContent.utils';
 import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
+import {createPageFromSample, getTemplateValue, isPageSampleValue, useInjectPageSampleChoices} from '~/JContent/samples/pageSamples';
 import '../contentEditor.scss';
 
 export const Create = () => {
@@ -21,6 +22,14 @@ export const Create = () => {
     const {onClosedCallback, contentType, lang, createCallback, orderBefore} = contentEditorConfigContext;
     const {nodeData, initialValues, title, i18nContext, createAnother} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
+
+    // A page may be created from one of the site's page samples, offered in the template dropdown
+    // after a separator. Nothing is added when the site holds no page samples.
+    useInjectPageSampleChoices({
+        parentUuid: nodeData?.uuid,
+        isPageCreation: contentType === 'jnt:page',
+        t
+    });
 
     // Enforce the parent's item-count limit (j:numberOfItems / jmix:listSizeLimit) while
     // "Create another" is used: the item currently in the form is child number childCount + 1,
@@ -46,11 +55,34 @@ export const Create = () => {
     }, [onClosedCallback]);
 
     const handleSubmit = (values, actions) => {
-        return createNode({
+        const commonArgs = {
             client,
             t,
             notificationContext,
             actions,
+            createCallback: info => {
+                if (createAnother) {
+                    document.querySelector('div[role="dialog"] form')?.scrollTo(0, 0);
+                }
+
+                createCallback(info, contentEditorConfigContext);
+                triggerRefetchAll();
+            }
+        };
+
+        // Choosing a sample rather than a template means the page is a copy of that sample, named
+        // as the author named it, instead of a new empty page carrying a template property.
+        const templateValue = getTemplateValue(sections, values);
+        if (isPageSampleValue(templateValue)) {
+            return createPageFromSample({
+                ...commonArgs,
+                sampleValue: templateValue,
+                data: {nodeData, sections, values, language: lang, i18nContext}
+            });
+        }
+
+        return createNode({
+            ...commonArgs,
             orderBefore,
             data: {
                 primaryNodeType: contentType,
@@ -59,14 +91,6 @@ export const Create = () => {
                 values,
                 language: lang,
                 i18nContext
-            },
-            createCallback: info => {
-                if (createAnother) {
-                    document.querySelector('div[role="dialog"] form')?.scrollTo(0, 0);
-                }
-
-                createCallback(info, contentEditorConfigContext);
-                triggerRefetchAll();
             }
         });
     };

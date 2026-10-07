@@ -23,3 +23,35 @@
 // publication status of an individual condition can be computed and displayed in the visibility editor.
 [jmix:conditionPublicationInfo] > mix:lastModified, jmix:lastPublished mixin
  extends = jnt:condition
+
+// Root of a site's content samples (/sites/<site>/samples). Samples are copies of real site
+// content, kept so authors can preview a content type - and reuse a filled example of it - from
+// the content-type picker. It holds exactly two categories, so saving a sample never asks the
+// author where to put it: the node type decides. Declaring them by name and autocreated puts that
+// structure in the definition, so a samples folder cannot exist in a half-built shape.
+//
+// The trailing "+ * (jnt:page)" is deliberate and must stay. Jahia's DefinitionsBundleChecker
+// rejects a module whose CND *modifies* an existing child node definition - it is a MAJOR change -
+// so this wildcard, which earlier versions of this type used to hold page samples directly, can
+// only ever be added to, never changed or removed. Named definitions above it are additions and
+// deploy cleanly.
+//
+// jmix:nolive sits on this container ONLY, never on a category or a sample. Here it makes the whole
+// branch invisible to publication, because JCRPublicationService stops its traversal on a nolive
+// node. On a sample it would be actively harmful: node copy re-adds every mixin absent from
+// Constants.forbiddenMixinToCopy, which does not list jmix:nolive, so each sample pasted into a real
+// page would carry it and that content would be silently unpublishable forever.
+[jnt:samplesFolder] > nt:base, jmix:nodenameInfo, jmix:unversionedBasemetadata, jmix:nolive, mix:title, jmix:list
+ + pages (jnt:samplesCategory) = jnt:samplesCategory autocreated
+ + components (jnt:samplesCategory) = jnt:samplesCategory autocreated
+ + * (jnt:page)
+
+// One of the two categories under the samples root. It accepts both kinds so that a single type
+// serves "pages" and "components"; which one a sample lands in is decided by the save action.
+//
+// A component sample needs no page around it: contextConfiguration "module" renders a node with no
+// displayable ancestor perfectly well, and the preview borrows its CSS from a page named at render
+// time. Samples are therefore stored flat, and nothing here has to be a page.
+[jnt:samplesCategory] > nt:base, jmix:nodenameInfo, jmix:unversionedBasemetadata, mix:title, jmix:list
+ + * (jnt:page)
+ + * (jmix:droppableContent)

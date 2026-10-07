@@ -115,4 +115,10 @@ describe('keepLockedChildrenInPlace', () => {
     it('should put a locked child back in its position when it was moved', () => {
         expect(keepLockedChildrenInPlace([a, b, locked, d], [locked, a, b, d])).toEqual([a, b, locked, d]);
     });
+
+    it('should tell a locked element with the given predicate', () => {
+        const items = [a, b, locked, d].map(item => ({item}));
+        const [ia, ib, il, id] = items;
+        expect(keepLockedChildrenInPlace(items, [id, ia, ib, il], ({item}) => item.canMove === false)).toEqual([id, ia, il, ib]);
+    });
 });

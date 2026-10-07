@@ -2,7 +2,7 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const isLockedChild = child => child.canMove === false;
 
-// The server refuses a reorder when any child is hidden, whatever its type
+// The server refuses a reorder when a child that the list shows is hidden
 export const getHiddenChildrenCount = nodeData => nodeData?.hiddenChildrenCount ?? 0;
 
 /**
@@ -10,12 +10,13 @@ export const getHiddenChildrenCount = nodeData => nodeData?.hiddenChildrenCount 
  * movable children in their reordered sequence.
  * @param {array} previous children before the move
  * @param {array} reordered the same children after the move
+ * @param {function} isLocked tells whether an element of the lists is locked
  * @returns {array} children in their new order
  */
-export const keepLockedChildrenInPlace = (previous, reordered) => {
-    const movables = reordered.filter(child => !isLockedChild(child));
+export const keepLockedChildrenInPlace = (previous, reordered, isLocked = isLockedChild) => {
+    const movables = reordered.filter(child => !isLocked(child));
     let next = 0;
-    return previous.map(child => (isLockedChild(child) ? child : movables[next++]));
+    return previous.map(child => (isLocked(child) ? child : movables[next++]));
 };
 
 export function getChildrenOrder(formValues, nodeData, sections) {

@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import {ContentEditor} from '../../../page-object';
 import {
     addNode,
+    addPage,
     breakAclInheritance,
     createRole,
     createSite,
@@ -77,9 +78,19 @@ describe('page editor without write access on a sub-page', () => {
                 {name: 'j:templateName', value: 'simple'}
             ]
         }));
+        // A page to rename, with two sub-pages to reorder in the same save
+        addPage({parentPathOrId: homePath, name: 'toRename', template: 'simple', title: 'To rename', language: 'en', children: [
+            {name: 'x', primaryNodeType: 'jnt:page', properties: [{name: 'jcr:title', value: 'x', language: 'en'}, {name: 'j:templateName', value: 'simple'}]},
+            {name: 'y', primaryNodeType: 'jnt:page', properties: [{name: 'jcr:title', value: 'y', language: 'en'}, {name: 'j:templateName', value: 'simple'}]}
+        ]});
+        // A page whose only sub-page is hidden from the editor
+        addPage({parentPathOrId: homePath, name: 'allHidden', template: 'simple', title: 'All hidden', language: 'en', children: [
+            {name: 'secret', primaryNodeType: 'jnt:page', properties: [{name: 'jcr:title', value: 'secret', language: 'en'}, {name: 'j:templateName', value: 'simple'}]}
+        ]});
         grantRoles(homePath, ['editor'], editorLogin.username, 'USER');
         breakAclInheritance(`${homePath}/hidden`);
         breakAclInheritance(`${homePath}/readOnly`);
+        breakAclInheritance(`${homePath}/allHidden/secret`);
         grantRoles(`${homePath}/readOnly`, ['reviewer'], editorLogin.username, 'USER');
     });
 
@@ -152,6 +163,57 @@ describe('page editor without write access on a sub-page', () => {
         ce.save();
 
         subPageOrder().should('deep.eq', ['B', 'D', 'hidden', 'readOnly', 'A']);
+    });
+
+    it('should disable the moves that would cross a locked sub-page at an end of the list', () => {
+        // As root, put a locked sub-page at each end of the list
+        cy.apollo({mutation: gql`
+            mutation lockBothEnds {
+                jcr {
+                    mutateNode(pathOrId: "${homePath}") {
+                        reorderChildren(names: ["readOnly", "B", "D", "A", "toRename", "allHidden", "hidden"], position: LAST)
+                    }
+                }
+            }
+        `});
+        loginAsEditor();
+        const ce = JContent.visit(siteKey, 'en', 'pages/home').editPage();
+        const listOrdering = () => ce.getSection('listOrdering').get();
+
+        listOrdering().scrollIntoView();
+        listOrdering().contains('[draggable]', 'B').find('[data-sel-action^="moveUp"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'B').find('[data-sel-action^="moveToFirst"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'All hidden').find('[data-sel-action^="moveDown"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'All hidden').find('[data-sel-action^="moveToLast"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'D').find('[data-sel-action^="moveUp"]').click({force: true});
+        ce.save();
+
+        subPageOrder().should('deep.eq', ['readOnly', 'D', 'B', 'A', 'hidden']);
+    });
+
+    it('should tell the editor that the only sub-page is hidden', () => {
+        loginAsEditor();
+        const ce = JContent.visit(siteKey, 'en', 'pages/home/allHidden').editPage();
+        const listOrdering = () => ce.getSection('listOrdering').get();
+
+        listOrdering().scrollIntoView();
+        listOrdering().find('[draggable]').should('not.exist');
+        listOrdering().find('[data-sel-role="hidden-children-message"]')
+            .should('contain', '1 item is not visible to you, so you cannot reorder the list.');
+    });
+
+    it('should rename a page and reorder its sub-pages in the same save', () => {
+        cy.login();
+        const ce = JContent.visit(siteKey, 'en', 'pages/home/toRename').editPage();
+        ce.getSmallTextField('nt:base_ce:systemName', false).addNewValue('renamed');
+        const listOrdering = () => ce.getSection('listOrdering').get();
+        listOrdering().scrollIntoView();
+        listOrdering().contains('[draggable]', 'y').find('[data-sel-action^="moveToFirst"]').click({force: true});
+        ce.save();
+
+        getNodeByPath(`${homePath}/renamed`, [], 'en', ['jnt:page']).then(result => {
+            expect(result.data.jcr.nodeByPath.children.nodes.map((node: {name: string}) => node.name)).to.deep.eq(['y', 'x']);
+        });
     });
 
     // Returns the order of the sub-pages of this test, read as root

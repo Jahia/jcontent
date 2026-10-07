@@ -19,7 +19,9 @@ export const DraggableReference = ({
     fieldName,
     fieldLength,
     isReadOnly,
-    isLocked
+    isLocked,
+    isFirstMovable,
+    isLastMovable
 }) => {
     const {t} = useTranslation('jcontent');
     const isDraggable = fieldLength > 1 && !isReadOnly && !isLocked;
@@ -65,7 +67,7 @@ export const DraggableReference = ({
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveFirst')}>
                                 <Button
-                                    isDisabled={index === 0}
+                                    isDisabled={isFirstMovable}
                                     variant="ghost"
                                     icon={<ChevronFirstList/>}
                                     data-sel-action={`moveToFirst_${index}`}
@@ -75,7 +77,7 @@ export const DraggableReference = ({
                             </Tooltip>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveLast')}>
                                 <Button
-                                    isDisabled={index === fieldLength - 1}
+                                    isDisabled={isLastMovable}
                                     variant="ghost"
                                     icon={<ChevronLastList/>}
                                     data-sel-action={`moveToLast_${index}`}
@@ -87,7 +89,7 @@ export const DraggableReference = ({
                         <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveUp')}>
                                 <Button
-                                    isDisabled={index === 0}
+                                    isDisabled={isFirstMovable}
                                     variant="ghost"
                                     icon={<ChevronUp/>}
                                     data-sel-action={`moveUp_${index}`}
@@ -97,7 +99,7 @@ export const DraggableReference = ({
                             </Tooltip>
                             <Tooltip label={t('jcontent:label.contentEditor.section.listAndOrdering.btnMoveDown')}>
                                 <Button
-                                    isDisabled={index === fieldLength - 1}
+                                    isDisabled={isLastMovable}
                                     variant="ghost"
                                     icon={<ChevronDown/>}
                                     data-sel-action={`moveDown_${index}`}
@@ -128,6 +130,8 @@ DraggableReference.propTypes = {
     fieldLength: PropTypes.number,
     isReadOnly: PropTypes.bool,
     isLocked: PropTypes.bool,
+    isFirstMovable: PropTypes.bool,
+    isLastMovable: PropTypes.bool,
     onReorderDropped: PropTypes.func.isRequired,
     onReorderAborted: PropTypes.func.isRequired
 };

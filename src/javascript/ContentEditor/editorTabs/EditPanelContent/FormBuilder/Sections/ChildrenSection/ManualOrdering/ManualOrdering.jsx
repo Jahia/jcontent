@@ -16,7 +16,9 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouched}, isReadOnly, hiddenChildrenCount}) => {
     const {t} = useTranslation('jcontent');
-    const {handleReorder, reorderedItems, reset} = useReorderList(field.value ?? []);
+    // The drag preview keeps the locked children in place too, so it shows the order that the drop saves
+    const {handleReorder, reorderedItems, reset} = useReorderList(field.value ?? [], (previous, reordered) =>
+        keepLockedChildrenInPlace(previous, reordered, ({item}) => isLockedChild(item)));
 
     if (field.value === undefined) {
         // Field has no children
@@ -28,9 +30,19 @@ export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouche
         const movables = field.value.filter(child => !isLockedChild(child));
         const movableIndex = movables.indexOf(field.value.find((child, index) => droppedId === `${field.name}[${index}]`));
         const reordered = onDirectionalReorder(movables, `${field.name}[${movableIndex}]`, direction, field.name);
+        if (!reordered) {
+            // The child is already first or last among the children that can move
+            return;
+        }
+
         setFieldValue(field.name, keepLockedChildrenInPlace(field.value, reordered));
         setFieldTouched(field.name, true, false);
     };
+
+    // Compared by name, because Formik does not keep the same objects between two renders
+    const movables = field.value.filter(child => !isLockedChild(child));
+    const firstMovableName = movables[0]?.name;
+    const lastMovableName = movables[movables.length - 1]?.name;
 
     const handleFinalReorder = () => {
         // Move once the element was dropped correctly
@@ -51,6 +63,8 @@ export const ManualOrderingField = ({field, form: {setFieldValue, setFieldTouche
                             fieldLength={field.value.length}
                             isReadOnly={isReadOnly}
                             isLocked={isLockedChild(item)}
+                            isFirstMovable={item.name === firstMovableName}
+                            isLastMovable={item.name === lastMovableName}
                             onReorder={handleReorder}
                             onValueMove={onValueMove}
                             onReorderDropped={handleFinalReorder}

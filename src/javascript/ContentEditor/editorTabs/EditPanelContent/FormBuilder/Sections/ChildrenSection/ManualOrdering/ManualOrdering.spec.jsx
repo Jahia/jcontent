@@ -63,6 +63,22 @@ describe('Manual ordering component', () => {
         expect(props.form.setFieldValue).toHaveBeenCalledWith('Children::Order', [third, locked, first]);
     });
 
+    it('should disable the moves that would cross a locked child at an end of the list', () => {
+        props.field.value.push({name: 'subNode3', primaryNodeType: {displayName: 'subNode3', icon: '/icon'}});
+        props.field.value[0].canMove = false;
+        const cmp = buildFieldCmp();
+        expect(cmp.find('DraggableReference').map(ref => ref.props().isFirstMovable)).toEqual([false, true, false]);
+        expect(cmp.find('DraggableReference').map(ref => ref.props().isLastMovable)).toEqual([false, false, true]);
+    });
+
+    it('should not change the value when the move has no effect', () => {
+        props.field.name = 'Children::Order';
+        props.field.value[0].canMove = false;
+        const cmp = buildFieldCmp();
+        cmp.find('DraggableReference').at(1).props().onValueMove('Children::Order[1]', 'up');
+        expect(props.form.setFieldValue).not.toHaveBeenCalled();
+    });
+
     let buildFieldCmp = () => {
         const cmp = shallowWithTheme(
             <ManualOrderingField {...props}/>,

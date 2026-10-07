@@ -56,6 +56,18 @@ describe('saveNode', () => {
         expect(params.client.mutate.mock.calls[0][0].mutation).toBe('SavePropertiesMutation');
     });
 
+    it('should send a changed order with reorderMovableChildren, not reorderChildren', async () => {
+        params.data.values = {'Children::Order': [{name: 'B'}, {name: 'A'}]};
+        params.data.nodeData.children = {nodes: [{name: 'A'}, {name: 'B'}]};
+        await updateNode(params);
+
+        const variables = params.client.mutate.mock.calls[0][0].variables;
+        expect(variables.shouldReorderMovableChildren).toBe(true);
+        expect(variables.movableChildrenOrder).toEqual(['B', 'A']);
+        // The page builder uses the same mutation with reorderChildren, so the edit form leaves it off
+        expect(variables.shouldModifyChildren).toBe(false);
+    });
+
     it('should call editCallback function', async () => {
         await updateNode(params);
 

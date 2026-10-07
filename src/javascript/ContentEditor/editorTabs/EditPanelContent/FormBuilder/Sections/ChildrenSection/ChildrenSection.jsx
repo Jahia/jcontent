@@ -13,9 +13,12 @@ import fieldSetStyles from '../../FieldSet/FieldSet.scss';
 import styles from './ChildrenSection.scss';
 import clsx from 'clsx';
 import {filterFieldSets} from '../filterFieldSets';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
+import {getHiddenChildrenCount} from '~/ContentEditor/utils';
 
 export const ChildrenSection = ({section, isExpanded, onClick}) => {
     const {values, handleChange} = useFormikContext();
+    const {nodeData} = useContentEditorContext();
     const {t} = useTranslation('jcontent');
 
     const fieldSets = filterFieldSets(section.fieldSets);
@@ -28,7 +31,8 @@ export const ChildrenSection = ({section, isExpanded, onClick}) => {
     const automaticallyOrderField = orderingFieldSet?.fields?.find(f => f.name === 'jmix:orderedList_firstField');
     const manuallyOrderField = orderingFieldSet?.fields?.find(f => f.name === 'jmix:orderedList_ce:manualOrdering');
     const isAutomaticOrder = automaticallyOrderField && values[Constants.ordering.automaticOrdering.mixin];
-    const hasChildrenToReorder = values['Children::Order'] && values['Children::Order'].length > 0;
+    // A list whose children are all hidden from the user still shows how many there are
+    const hasChildrenToReorder = values['Children::Order']?.length > 0 || getHiddenChildrenCount(nodeData) > 0;
     const childrenFieldSets = fieldSets.filter(fieldSet => fieldSet.name !== 'jmix:orderedList');
 
     if ((!manuallyOrderField || !hasChildrenToReorder) && !automaticallyOrderField && childrenFieldSets.length === 0) {

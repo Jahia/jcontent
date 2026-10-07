@@ -10,6 +10,8 @@ export const SavePropertiesMutation = gql`
         $mixinsToDelete: [String]!,
         $shouldModifyChildren: Boolean!,
         $childrenOrder: [String]!,
+        $shouldReorderMovableChildren: Boolean = false,
+        $movableChildrenOrder: [String]! = [],
         $shouldRename: Boolean!,
         $newName: String!,
         $wipInfo: InputwipInfo!,
@@ -28,6 +30,7 @@ export const SavePropertiesMutation = gql`
                 }
                 deletePropertiesBatch(properties: $propertiesToDelete)
                 reorderChildren(names: $childrenOrder) @include(if: $shouldModifyChildren)
+                reorderMovableChildren(names: $movableChildrenOrder) @include(if: $shouldReorderMovableChildren)
                 node {
                     ...NodeCacheRequiredFields
                     path

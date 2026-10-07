@@ -768,6 +768,53 @@ describe('EditPanel utils', () => {
             expect(mixinsToDelete).toEqual(['cemix:chainPopin']);
             expect(propsToSave).toEqual([{name: 'pageSuccess', type: 'STRING', value: 'stored page', language: lang}]);
         });
+
+        it('should not save an unchanged property of a mixin added by a save that removes none', () => {
+            const field = {
+                nodeType: 'cemix:subtypeExtendMixin',
+                name: 'cemix:subtypeExtendMixin_title',
+                propertyName: 'title',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const extendSections = [{
+                fieldSets: [{name: 'cemix:subtypeExtendMixin', dynamic: true, activated: false, fields: [field]}]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [],
+                properties: [{name: 'title', value: 'stored title', definition: {declaringNodeType: {name: 'cemix:subtypeExtendMixin'}}}]
+            };
+            const formValues = {
+                'cemix:subtypeExtendMixin': true,
+                [field.name]: 'stored title'
+            };
+            const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: extendSections, lang, i18nContext: {}});
+            expect(mixinsToAdd).toEqual(['cemix:subtypeExtendMixin']);
+            expect(mixinsToDelete).toEqual([]);
+            expect(propsToSave).toEqual([]);
+        });
+
+        it('should save a changed property of a mixin added by a save that removes none', () => {
+            const field = {
+                nodeType: 'cemix:subtypeExtendMixin',
+                name: 'cemix:subtypeExtendMixin_title',
+                propertyName: 'title',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const extendSections = [{
+                fieldSets: [{name: 'cemix:subtypeExtendMixin', dynamic: true, activated: false, fields: [field]}]
+            }];
+            const nodeDataForEdit = {mixinTypes: [], properties: []};
+            const formValues = {
+                'cemix:subtypeExtendMixin': true,
+                [field.name]: 'new title'
+            };
+            const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: extendSections, lang, i18nContext: {}});
+            expect(mixinsToAdd).toEqual(['cemix:subtypeExtendMixin']);
+            expect(mixinsToDelete).toEqual([]);
+            expect(propsToSave).toEqual([{name: 'title', type: 'STRING', value: 'new title', language: lang}]);
+        });
     });
 
     describe('getValuePropName', () => {

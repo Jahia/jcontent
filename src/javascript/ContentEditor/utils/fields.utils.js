@@ -64,13 +64,15 @@ const _adaptDecimalValues = (fieldType, value) => {
 
 function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
     const fieldSetName = getDynamicFieldSetNameOfField(sections, field);
+    const mixinAdded = Boolean(fieldSetName) && mixinsToMutate.mixinsToAdd.includes(fieldSetName);
     // The mutation removes mixins before it adds them, and removing a mixin deletes the
     // properties no remaining type defines. A property the added mixin shares with the removed
-    // one (a chain of template mixins) is then gone even though its value looks unchanged.
-    const addedNow = Boolean(fieldSetName) && mixinsToMutate.mixinsToAdd.includes(fieldSetName);
+    // one (a chain of template mixins) is then gone even though its value looks unchanged. A save
+    // that removes no mixin deletes nothing, so it writes only what changed.
+    const rewriteUnchanged = mixinAdded && mixinsToMutate.mixinsToDelete.length > 0;
     // Is not dynamic OR is dynamic and the node keeps or gains the mixin
     const mixinKept = !fieldSetName ||
-        (!mixinsToMutate.mixinsToDelete.includes(fieldSetName) && (hasNodeMixin(nodeData, fieldSetName) || addedNow));
+        (!mixinsToMutate.mixinsToDelete.includes(fieldSetName) && (hasNodeMixin(nodeData, fieldSetName) || mixinAdded));
 
     if (value !== undefined && value !== null && value !== '') {
         const fieldType = field.requiredType;
@@ -86,7 +88,7 @@ function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, pr
         }
 
         // Check if property has changed
-        if (mixinKept && (propertyHasChanged(valueToSave, field, nodeData) || forceUpdate || addedNow)) {
+        if (mixinKept && (propertyHasChanged(valueToSave, field, nodeData) || forceUpdate || rewriteUnchanged)) {
             const {name, option} = getValuePropName(field);
             propsToSave.push({
                 name: field.propertyName,

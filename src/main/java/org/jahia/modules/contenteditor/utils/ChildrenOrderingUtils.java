@@ -6,8 +6,10 @@ import org.jahia.services.content.JCRSessionWrapper;
 import org.jahia.services.content.JCRTemplate;
 
 import javax.jcr.AccessDeniedException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,11 @@ public final class ChildrenOrderingUtils {
     // Jackrabbit checks MODIFY_CHILD_NODE_COLLECTION on the moved child, and Jahia maps it to these two privileges
     private static final String[] REORDER_PRIVILEGES = {"jcr:addChildNodes", "jcr:removeChildNodes"};
     private static final String WRITE_PERMISSION = "jcr:write";
+    private static final String PAGE_TYPE = "jnt:page";
+    // The types that the ordering list of the edit form shows, as Constants.childrenFilterTypes and
+    // useEditFormDefinition.js list them: a page lists its sub-pages and menu items only
+    private static final List<String> LISTED_TYPES = Arrays.asList("jnt:content", "jmix:manuallyOrderable", PAGE_TYPE, "jmix:navMenuItem");
+    private static final List<String> LISTED_PAGE_TYPES = Arrays.asList(PAGE_TYPE, "jmix:navMenuItem");
 
     private ChildrenOrderingUtils() {
     }
@@ -46,9 +53,13 @@ public final class ChildrenOrderingUtils {
      * @param parent the parent node, read with the session of the current user
      * @param names  names of the children, in the requested order
      * @throws IllegalArgumentException when a name is unknown or repeated
-     * @throws AccessDeniedException    when the current user cannot read one of the children, whose position a move cannot keep
+     * @throws AccessDeniedException    when the current user cannot write the parent, or cannot read one of the
+     *                                  children that the ordering list shows, whose position a move cannot keep
      */
     public static void reorderMovableChildren(JCRNodeWrapper parent, List<String> names) throws RepositoryException {
+        if (!parent.hasPermission(WRITE_PERMISSION)) {
+            throw new AccessDeniedException("The current user cannot write " + parent.getPath());
+        }
         if (countUnreadableChildren(parent) > 0) {
             throw new AccessDeniedException("Some children of " + parent.getPath() + " are hidden from the current user, so a reorder cannot keep their positions");
         }
@@ -67,26 +78,51 @@ public final class ChildrenOrderingUtils {
     }
 
     /**
-     * Counts the children that the current user cannot read.
+     * Counts the children that the ordering list would show, and that the current user cannot read.
      *
      * @param parent the parent node, read with the session of the current user
-     * @return the number of such children, or 0 when the current user cannot write the parent
+     * @return the number of such children, or 0 when the children of the parent have no order or when the current
+     * user cannot write the parent
      */
     public static int countHiddenChildren(JCRNodeWrapper parent) throws RepositoryException {
-        return parent.hasPermission(WRITE_PERMISSION) ? countUnreadableChildren(parent) : 0;
+        if (!parent.getPrimaryNodeType().hasOrderableChildNodes() || !parent.hasPermission(WRITE_PERMISSION)) {
+            return 0;
+        }
+        return countUnreadableChildren(parent);
     }
 
     private static int countUnreadableChildren(JCRNodeWrapper parent) throws RepositoryException {
         JCRSessionWrapper userSession = parent.getSession();
+        List<String> listedTypes = parent.isNodeType(PAGE_TYPE) ? LISTED_PAGE_TYPES : LISTED_TYPES;
         return JCRTemplate.getInstance().doExecuteWithSystemSessionAsUser(null, userSession.getWorkspace().getName(), userSession.getLocale(),
             (JCRCallback<Integer>) systemSession -> {
                 int count = 0;
                 for (JCRNodeWrapper child : systemSession.getNodeByIdentifier(parent.getIdentifier()).getNodes()) {
-                    if (!userSession.itemExists(child.getPath())) {
+                    // A pending rename of the parent changes the paths of its children in the user session, so
+                    // the identifier is what both sessions share
+                    if (isListed(child, listedTypes) && !canRead(userSession, child.getIdentifier())) {
                         count++;
                     }
                 }
                 return count;
             });
+    }
+
+    private static boolean isListed(JCRNodeWrapper child, List<String> listedTypes) throws RepositoryException {
+        for (String type : listedTypes) {
+            if (child.isNodeType(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean canRead(JCRSessionWrapper userSession, String identifier) throws RepositoryException {
+        try {
+            userSession.getNodeByIdentifier(identifier);
+            return true;
+        } catch (ItemNotFoundException | AccessDeniedException e) {
+            return false;
+        }
     }
 }

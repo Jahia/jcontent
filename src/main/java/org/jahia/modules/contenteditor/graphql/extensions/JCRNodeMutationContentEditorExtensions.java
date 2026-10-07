@@ -27,7 +27,7 @@ public class JCRNodeMutationContentEditorExtensions {
 
     @GraphQLField
     @GraphQLName("reorderMovableChildren")
-    @GraphQLDescription("Reorders the children in the requested order. A child that the current user cannot move keeps its position, and the other children fill the remaining positions. Fails when the current user cannot read one of the children.")
+    @GraphQLDescription("Reorders the children in the requested order. A child that the current user cannot move keeps its position, and the other children fill the remaining positions. Fails when the current user cannot write the node, or cannot read one of the children that the ordering list of the edit form shows.")
     public boolean reorderMovableChildren(@GraphQLName("names") @GraphQLNonNull @GraphQLDescription("Names of the children, in the requested order") List<String> names) {
         try {
             ChildrenOrderingUtils.reorderMovableChildren(mutation.jcrNode, names);

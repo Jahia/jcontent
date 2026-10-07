@@ -90,7 +90,7 @@ public class JCRNodeContentEditorExtensions {
 
     @GraphQLField
     @GraphQLName("hiddenChildrenCount")
-    @GraphQLDescription("Returns the number of children that the current user cannot read. Returns 0 when the current user cannot write the node.")
+    @GraphQLDescription("Returns the number of children that the ordering list of the edit form shows and that the current user cannot read. Returns 0 when the children of the node have no order, or when the current user cannot write the node.")
     public int getHiddenChildrenCount() {
         try {
             return ChildrenOrderingUtils.countHiddenChildren(node.getNode());

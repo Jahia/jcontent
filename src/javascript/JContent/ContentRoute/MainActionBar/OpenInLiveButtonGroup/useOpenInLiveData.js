@@ -31,7 +31,7 @@ export const useOpenInLiveData = (path, siteKey) => {
     const {effectiveSite} = resolveEffectiveSite(node, allSites, siteKey, currentHostname);
     const effectiveServerName = effectiveSite?.serverName;
     const effectiveServerNameAliases = effectiveSite?.additionalServerNames?.values ?? [];
-    const effectiveNames = [effectiveServerName, ...effectiveServerNameAliases].filter(Boolean);
+    const effectiveNames = new Set([effectiveServerName, ...effectiveServerNameAliases].filter(Boolean));
 
     const [selectedServerName, setSelectedServerName] = useState(
         () => localStorage.getItem(STORAGE_KEY) || null
@@ -43,7 +43,7 @@ export const useOpenInLiveData = (path, siteKey) => {
         }
 
         const stored = localStorage.getItem(STORAGE_KEY);
-        const effective = stored && effectiveNames.includes(stored) ? stored : effectiveServerName;
+        const effective = stored && effectiveNames.has(stored) ? stored : effectiveServerName;
 
         if (effective !== selectedServerName) {
             setSelectedServerName(effective);
@@ -69,7 +69,7 @@ export const useOpenInLiveData = (path, siteKey) => {
     // Guards run against the EFFECTIVE site's names and path (not the node's), so the shared
     // context is re-checked rather than bypassed.
     // Guard 1: hostname already in this site's names (no duplicate "Current domain").
-    const isHostnameInCurrentSite = effectiveNames.includes(currentHostname);
+    const isHostnameInCurrentSite = effectiveNames.has(currentHostname);
 
     // Guard 2: hostname is already claimed by a different site — Jahia would resolve that other
     // site's context instead, opening the wrong site.

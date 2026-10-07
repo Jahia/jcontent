@@ -58,6 +58,11 @@ describe('page editor without write access on a sub-page', () => {
     const editorLogin = {username: 'homeEditor', password: 'password'};
     const homePath = `/sites/${siteKey}/home`;
     const subPages = ['A', 'B', 'hidden', 'readOnly', 'D'];
+    const subPage = (name: string) => ({
+        name,
+        primaryNodeType: 'jnt:page',
+        properties: [{name: 'jcr:title', value: name, language: 'en'}, {name: 'j:templateName', value: 'simple'}]
+    });
 
     before(() => {
         createSite(siteKey, {
@@ -80,18 +85,25 @@ describe('page editor without write access on a sub-page', () => {
         }));
         // A page to rename, with two sub-pages to reorder in the same save
         addPage({parentPathOrId: homePath, name: 'toRename', template: 'simple', title: 'To rename', language: 'en', children: [
-            {name: 'x', primaryNodeType: 'jnt:page', properties: [{name: 'jcr:title', value: 'x', language: 'en'}, {name: 'j:templateName', value: 'simple'}]},
-            {name: 'y', primaryNodeType: 'jnt:page', properties: [{name: 'jcr:title', value: 'y', language: 'en'}, {name: 'j:templateName', value: 'simple'}]}
+            subPage('x'), subPage('y')
         ]});
         // A page whose only sub-page is hidden from the editor
         addPage({parentPathOrId: homePath, name: 'allHidden', template: 'simple', title: 'All hidden', language: 'en', children: [
-            {name: 'secret', primaryNodeType: 'jnt:page', properties: [{name: 'jcr:title', value: 'secret', language: 'en'}, {name: 'j:templateName', value: 'simple'}]}
+            subPage('secret')
+        ]});
+        // A page whose first and last sub-pages are read-only for the editor
+        addPage({parentPathOrId: homePath, name: 'lockEnds', template: 'simple', title: 'Lock ends', language: 'en', children: [
+            subPage('lockFirst'), subPage('m1'), subPage('m2'), subPage('m3'), subPage('lockLast')
         ]});
         grantRoles(homePath, ['editor'], editorLogin.username, 'USER');
         breakAclInheritance(`${homePath}/hidden`);
         breakAclInheritance(`${homePath}/readOnly`);
         breakAclInheritance(`${homePath}/allHidden/secret`);
         grantRoles(`${homePath}/readOnly`, ['reviewer'], editorLogin.username, 'USER');
+        ['lockFirst', 'lockLast'].forEach(name => {
+            breakAclInheritance(`${homePath}/lockEnds/${name}`);
+            grantRoles(`${homePath}/lockEnds/${name}`, ['reviewer'], editorLogin.username, 'USER');
+        });
     });
 
     // The cy.apollo command authenticates as root in the browser session, so a stored editor session would come back as root
@@ -166,29 +178,22 @@ describe('page editor without write access on a sub-page', () => {
     });
 
     it('should disable the moves that would cross a locked sub-page at an end of the list', () => {
-        // As root, put a locked sub-page at each end of the list
-        cy.apollo({mutation: gql`
-            mutation lockBothEnds {
-                jcr {
-                    mutateNode(pathOrId: "${homePath}") {
-                        reorderChildren(names: ["readOnly", "B", "D", "A", "toRename", "allHidden", "hidden"], position: LAST)
-                    }
-                }
-            }
-        `});
         loginAsEditor();
-        const ce = JContent.visit(siteKey, 'en', 'pages/home').editPage();
+        const ce = JContent.visit(siteKey, 'en', 'pages/home/lockEnds').editPage();
         const listOrdering = () => ce.getSection('listOrdering').get();
 
         listOrdering().scrollIntoView();
-        listOrdering().contains('[draggable]', 'B').find('[data-sel-action^="moveUp"]').should('have.attr', 'disabled');
-        listOrdering().contains('[draggable]', 'B').find('[data-sel-action^="moveToFirst"]').should('have.attr', 'disabled');
-        listOrdering().contains('[draggable]', 'All hidden').find('[data-sel-action^="moveDown"]').should('have.attr', 'disabled');
-        listOrdering().contains('[draggable]', 'All hidden').find('[data-sel-action^="moveToLast"]').should('have.attr', 'disabled');
-        listOrdering().contains('[draggable]', 'D').find('[data-sel-action^="moveUp"]').click({force: true});
+        listOrdering().find('[data-sel-role="locked-child"]').should('have.length', 2);
+        listOrdering().contains('[draggable]', 'm1').find('[data-sel-action^="moveUp"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'm1').find('[data-sel-action^="moveToFirst"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'm3').find('[data-sel-action^="moveDown"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'm3').find('[data-sel-action^="moveToLast"]').should('have.attr', 'disabled');
+        listOrdering().contains('[draggable]', 'm2').find('[data-sel-action^="moveUp"]').click({force: true});
         ce.save();
 
-        subPageOrder().should('deep.eq', ['readOnly', 'D', 'B', 'A', 'hidden']);
+        getNodeByPath(`${homePath}/lockEnds`, [], 'en', ['jnt:page']).then(result => {
+            expect(result.data.jcr.nodeByPath.children.nodes.map((node: {name: string}) => node.name)).to.deep.eq(['lockFirst', 'm2', 'm1', 'm3', 'lockLast']);
+        });
     });
 
     it('should tell the editor that the only sub-page is hidden', () => {

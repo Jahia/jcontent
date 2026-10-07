@@ -46,6 +46,11 @@ export const getDetailedPathArray = fullPath => {
         [];
 };
 
+// The ancestors to open so that the tree shows the node: with openable types, only those the tree shows as rows
+export const getAncestorPathsToOpen = (node, hasOpenableTypes) => (hasOpenableTypes ?
+    node.ancestors.filter(ancestor => ancestor.isOpenable).map(ancestor => ancestor.path) :
+    getDetailedPathArray(getPathWithoutFile(node.path)));
+
 export const getBaseSearchContextData = ({t, currentSite, accordion, node, currentPath}) => (
     [
         {

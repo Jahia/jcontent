@@ -14,7 +14,7 @@ import {
     cePickerSite
 } from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {registry} from '@jahia/ui-extender';
-import {getDetailedPathArray, getPathWithoutFile} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+import {getAncestorPathsToOpen} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import PropTypes from 'prop-types';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
@@ -55,6 +55,8 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
 
     accordion = jcontentUtils.getAccordionItem(accordion, accordionItemProps);
 
+    const openableTypes = accordion?.tableConfig?.queryHandler?.openableTypes;
+    const hasOpenableTypes = Boolean(openableTypes);
     const fragments = [...(accordion?.tableConfig?.queryHandler?.getFragments() || []), ...(accordion?.tableConfig?.fragments || [])];
     const selectionQuery = replaceFragmentsInDocument(GET_PICKER_NODE, fragments);
     const nodesInfo = useQuery(selectionQuery, {
@@ -62,7 +64,8 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             paths: paths,
             language: lang,
             uilang: uilang,
-            selectableTypesTable: pickerConfig.selectableTypesTable
+            selectableTypesTable: pickerConfig.selectableTypesTable,
+            openableTypes: openableTypes || []
         },
         initialFetchPolicy: 'network-only',
         nextFetchPolicy: 'cache-and-network'
@@ -126,7 +129,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             newState.modes = accordionItems.map(item => item.key);
 
             if (selectedNode && !previousState.current.isOpen) {
-                newState.openPaths = [...new Set([...newState.openPaths, ...getDetailedPathArray(getPathWithoutFile(selectedNode.path), newState.site)])];
+                // The query flagged the openable ancestors with the types of this accordion only
+                const isFlagged = hasOpenableTypes && firstMatchingAccordion.key === accordion.key;
+                newState.openPaths = [...new Set([...newState.openPaths, ...getAncestorPathsToOpen(selectedNode, isFlagged)])];
             }
 
             if (previousState.current.mode !== newState.mode && firstMatchingAccordion.tableConfig.defaultSort) {
@@ -172,7 +177,7 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
         }
 
         previousState.current = newState;
-    }, [dispatch, site, pickerConfig, state, nodesInfo, currentFolderInfo, accordion.key, accordionItemProps]);
+    }, [dispatch, site, pickerConfig, state, nodesInfo, currentFolderInfo, accordion.key, accordionItemProps, hasOpenableTypes]);
 
     if (currentFolderInfo.loading || nodesInfo.loading) {
         return <LoaderOverlay/>;

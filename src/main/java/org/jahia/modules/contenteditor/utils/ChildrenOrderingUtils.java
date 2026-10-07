@@ -1,5 +1,6 @@
 package org.jahia.modules.contenteditor.utils;
 
+import org.jahia.api.Constants;
 import org.jahia.services.content.JCRCallback;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionWrapper;
@@ -22,11 +23,11 @@ public final class ChildrenOrderingUtils {
     // Jackrabbit checks MODIFY_CHILD_NODE_COLLECTION on the moved child, and Jahia maps it to these two privileges
     private static final String[] REORDER_PRIVILEGES = {"jcr:addChildNodes", "jcr:removeChildNodes"};
     private static final String WRITE_PERMISSION = "jcr:write";
-    private static final String PAGE_TYPE = "jnt:page";
-    // The types that the ordering list of the edit form shows, as Constants.childrenFilterTypes and
-    // useEditFormDefinition.js list them: a page lists its sub-pages and menu items only
-    private static final List<String> LISTED_TYPES = Arrays.asList("jnt:content", "jmix:manuallyOrderable", PAGE_TYPE, "jmix:navMenuItem");
-    private static final List<String> LISTED_PAGE_TYPES = Arrays.asList(PAGE_TYPE, "jmix:navMenuItem");
+    private static final String MANUALLY_ORDERABLE_MIXIN = "jmix:manuallyOrderable";
+    // The types that the ordering list of the edit form shows, as childrenFilterTypes in ContentEditor.constants.js
+    // and useEditFormDefinition.js list them: a page lists its sub-pages and menu items only
+    private static final List<String> LISTED_TYPES = Arrays.asList(Constants.JAHIANT_CONTENT, MANUALLY_ORDERABLE_MIXIN, Constants.JAHIANT_PAGE, Constants.JAHIAMIX_NAVMENUITEM);
+    private static final List<String> LISTED_PAGE_TYPES = Arrays.asList(Constants.JAHIANT_PAGE, Constants.JAHIAMIX_NAVMENUITEM);
 
     private ChildrenOrderingUtils() {
     }
@@ -93,7 +94,7 @@ public final class ChildrenOrderingUtils {
 
     private static int countUnreadableChildren(JCRNodeWrapper parent) throws RepositoryException {
         JCRSessionWrapper userSession = parent.getSession();
-        List<String> listedTypes = parent.isNodeType(PAGE_TYPE) ? LISTED_PAGE_TYPES : LISTED_TYPES;
+        List<String> listedTypes = parent.isNodeType(Constants.JAHIANT_PAGE) ? LISTED_PAGE_TYPES : LISTED_TYPES;
         return JCRTemplate.getInstance().doExecuteWithSystemSessionAsUser(null, userSession.getWorkspace().getName(), userSession.getLocale(),
             (JCRCallback<Integer>) systemSession -> {
                 int count = 0;

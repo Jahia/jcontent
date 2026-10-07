@@ -740,7 +740,7 @@ describe('EditPanel utils', () => {
             expect(propsToDelete).toEqual([]);
         });
 
-        it('should save an unchanged property of a mixin added by the save', () => {
+        it('should not save an unchanged property of a mixin added by a save that also removes one', () => {
             const field = {
                 nodeType: 'cemix:chainRedirect',
                 name: 'cemix:chainRedirect_pageSuccess',
@@ -766,7 +766,7 @@ describe('EditPanel utils', () => {
             const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: chainSections, lang, i18nContext: {}});
             expect(mixinsToAdd).toEqual(['cemix:chainRedirect']);
             expect(mixinsToDelete).toEqual(['cemix:chainPopin']);
-            expect(propsToSave).toEqual([{name: 'pageSuccess', type: 'STRING', value: 'stored page', language: lang}]);
+            expect(propsToSave).toEqual([]);
         });
 
         it('should not save an unchanged property of a mixin added by a save that removes none', () => {

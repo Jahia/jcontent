@@ -254,4 +254,78 @@ describe('Open in Live tests', () => {
             setAliases([alias1, alias2]);
         });
     });
+
+    describe('shared localhost-only content', () => {
+        // Shared content (e.g. from the system site) resolves to a localhost-only site while the selected
+        // site (state.site) has a real server name. Open in Live must use the selected site's hostname.
+        const sharedSiteKey = 'openInLiveSiteShared';
+        const selectedSiteKey = 'openInLiveSiteSelected';
+        const selectedServerName = 'selected.example.com';
+
+        before(() => {
+            createSite(sharedSiteKey, {templateSet: 'dx-base-demo-templates', serverName, locale: 'en'});
+            createSite(selectedSiteKey, {templateSet: 'dx-base-demo-templates', serverName: selectedServerName, locale: 'en'});
+            publishAndWaitJobEnding(`/sites/${sharedSiteKey}/home`, ['en']);
+            publishAndWaitJobEnding(`/sites/${selectedSiteKey}/home`, ['en']);
+            cy.loginAndStoreSession();
+        });
+
+        after(() => {
+            cy.logout();
+            deleteSite(sharedSiteKey);
+            deleteSite(selectedSiteKey);
+        });
+
+        beforeEach(() => {
+            cy.clearLocalStorage();
+            cy.loginAndStoreSession();
+        });
+
+        it('opens shared localhost-only content on the selected site hostname', function () {
+            if (currentHostname === serverName) {
+                // The localhost-only case only applies when browsing from a real hostname.
+                this.skip();
+            }
+
+            // Browse the selected site, but make the Open in Live query resolve a node of the shared
+            // (localhost-only) site, as shared content would.
+            cy.intercept('POST', '**/modules/graphql', req => {
+                const ops = Array.isArray(req.body) ? req.body : [req.body];
+                ops.forEach(op => {
+                    if (op.operationName === 'openInActionQuery' && op.variables?.workspace === 'LIVE') {
+                        op.variables.path = `/sites/${sharedSiteKey}/home`;
+                    }
+                });
+            });
+
+            JContent.visit(selectedSiteKey, 'en', 'pages/home', {
+                onBeforeLoad(win: Window) {
+                    // @ts-expect-error window definition does not have "open" for some reason
+                    cy.stub(win, 'open').as('winOpen');
+                }
+            });
+            getComponentByRole(Button, 'openInLive').click();
+
+            cy.get('@winOpen').should(
+                'be.calledWith',
+                Cypress.sinon.match(f => f.includes(`//${selectedServerName}`) && !f.includes(`//${currentHostname}`))
+            );
+
+            // The selected hostname is not resolvable from the test runner: request the same URL path
+            // on the runner's host. The site path in the URL selects the rendered site.
+            cy.get('@winOpen').its('lastCall.args.0').then((url: string) => {
+                const reachable = new URL(url);
+                reachable.hostname = currentHostname;
+                cy.wrap(reachable.toString()).as('reachableUrl');
+            });
+            getNodeByPath(`/sites/${sharedSiteKey}`).then(res => {
+                const siteUuid = res.data.jcr.nodeByPath.uuid;
+                cy.get('@reachableUrl').then((url: unknown) => {
+                    cy.request(url as string).its('body').then((body: string) => {
+                        expect(/"siteUuid":"([^"]+)"/.exec(body)?.[1], `site rendered at ${url}`).to.equal(siteUuid);
+                    });
+                });
+            });
+        });
+    });
 });

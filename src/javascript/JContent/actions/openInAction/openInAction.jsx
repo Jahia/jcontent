@@ -7,7 +7,6 @@ import {resolveUrlForLiveOrPreview} from '../../JContent.utils';
 
 export const OpenInPreviewActionComponent = ({render: Render, path, ...others}) => {
     const language = useSelector(state => state.language);
-    const siteKey = useSelector(state => state.site);
     const res = useQuery(OpenInActionQuery, {
         variables: {path, language, workspace: 'EDIT'},
         skip: !path
@@ -23,22 +22,11 @@ export const OpenInPreviewActionComponent = ({render: Render, path, ...others}) 
         <Render
             {...others}
             onClick={() => {
-                const serverName = node.site.serverName;
-                const serverNameAliases = node.site.additionalServerNames?.values ?? [];
-                const allNames = [serverName, ...serverNameAliases];
-                const currentHostname = globalThis.location.hostname;
-
-                // Shared content site: the node resolves to a site that only uses localhost while
-                // jContent is browsed from another domain. In that case the server (current) domain
-                // renders the wrong site context, so use the currently selected site's serverName
-                // instead — mirrors the Open in Live behavior.
-                const isCurrentSiteLocalhostOnly = allNames.length === 1 && allNames.includes('localhost') && currentHostname !== 'localhost';
-                const allSites = res.data?.jcr?.allSites?.siteNodes ?? [];
-                const targetServerName = isCurrentSiteLocalhostOnly ?
-                    allSites.find(site => site?.site.sitekey === siteKey)?.site.serverName :
-                    serverName;
-
-                const url = resolveUrlForLiveOrPreview(node.renderUrl, isCurrentSiteLocalhostOnly, targetServerName);
+                // Preview host switch is intentionally deferred to issue #2828: Preview serves the
+                // default workspace from the authoring server only, so switching to the selected
+                // site's serverName needs port preservation + session-host validation (see PR #2829
+                // review). Keep the current (browsing) domain for now.
+                const url = resolveUrlForLiveOrPreview(node.renderUrl, false, node.site.serverName);
                 window.open(url, '_blank');
             }}
         />

@@ -3,6 +3,7 @@ import {useQuery} from '@apollo/client';
 import {useSelector} from 'react-redux';
 import {OpenInActionQuery} from '~/JContent/actions/openInAction/openInAction.gql-queries';
 import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
+import {resolveEffectiveSite} from '~/JContent/JContent.utils';
 import JContentConstants from '~/JContent/JContent.constants';
 
 const STORAGE_KEY = JContentConstants.localStorageKeys.liveServerName;
@@ -21,28 +22,28 @@ export const useOpenInLiveData = (path, siteKey) => {
     }, [refetch]);
 
     const node = data?.jcr?.result;
-    const serverName = node?.site?.serverName;
-    const serverNameAliases = node?.site?.additionalServerNames?.values ?? [];
+    const currentHostname = globalThis.location.hostname;
+    const allSites = data?.jcr?.allSites?.siteNodes ?? [];
+
+    // Resolve the site that should drive the link once (the selected site in a shared-content
+    // context, otherwise the node's own site), then use its names for both the menu and the
+    // guards below.
+    const {effectiveSite} = resolveEffectiveSite(node, allSites, siteKey, currentHostname);
+    const effectiveServerName = effectiveSite?.serverName;
+    const effectiveServerNameAliases = effectiveSite?.additionalServerNames?.values ?? [];
+    const effectiveNames = [effectiveServerName, ...effectiveServerNameAliases].filter(Boolean);
 
     const [selectedServerName, setSelectedServerName] = useState(
         () => localStorage.getItem(STORAGE_KEY) || null
     );
 
     useEffect(() => {
-        if (!serverName) {
+        if (!effectiveServerName) {
             return;
         }
 
-        const allNames = [serverName, ...serverNameAliases];
         const stored = localStorage.getItem(STORAGE_KEY);
-        const effective = stored && allNames.includes(stored) ? stored : serverName;
-        const isCurrentSiteLocalhostOnly = allNames.length === 1 && allNames.includes('localhost') && currentHostname !== 'localhost';
-        if (effective === 'localhost') {
-            if (isCurrentSiteLocalhostOnly) {
-                setSelectedServerName(data?.jcr?.allSites?.siteNodes.find(site => site?.site.sitekey === siteKey)?.site.serverName);
-                return;
-            }
-        }
+        const effective = stored && effectiveNames.includes(stored) ? stored : effectiveServerName;
 
         if (effective !== selectedServerName) {
             setSelectedServerName(effective);
@@ -52,7 +53,7 @@ export const useOpenInLiveData = (path, siteKey) => {
             localStorage.setItem(STORAGE_KEY, effective);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [serverName, serverNameAliases.join(','), data?.jcr?.allSites?.siteNodes]);
+    }, [effectiveServerName, effectiveServerNameAliases.join(','), siteKey]);
 
     const selectServerName = name => {
         localStorage.setItem(STORAGE_KEY, name);
@@ -65,22 +66,16 @@ export const useOpenInLiveData = (path, siteKey) => {
         node.publicationInfo.status !== 'NOT_PUBLISHED' &&
         node.publicationInfo.status !== 'UNPUBLISHED';
 
-    const currentHostname = globalThis.location.hostname;
-    const currentSitePath = node?.site?.path;
-    const allSites = data?.jcr?.allSites?.siteNodes ?? [];
-
-    // Before guarding we need to check if the site is only in localhost and
-    // browsed from another domain as it is usually the case for shared sites
-    const serverNamesArray = [serverName, ...serverNameAliases];
-    const isCurrentSiteLocalhostOnly = serverNamesArray.length === 1 && serverNamesArray.includes('localhost') && currentHostname !== 'localhost';
-    // Guard 1: hostname already in this site's names (no duplicate).
-    const isHostnameInCurrentSite = !isCurrentSiteLocalhostOnly && serverNamesArray.includes(currentHostname);
+    // Guards run against the EFFECTIVE site's names and path (not the node's), so the shared
+    // context is re-checked rather than bypassed.
+    // Guard 1: hostname already in this site's names (no duplicate "Current domain").
+    const isHostnameInCurrentSite = effectiveNames.includes(currentHostname);
 
     // Guard 2: hostname is already claimed by a different site — Jahia would resolve that other
     // site's context instead, opening the wrong site.
-    const isHostnameClaimedByAnotherSite = !isCurrentSiteLocalhostOnly && (allSites.some(site =>
-        site.site?.path !== currentSitePath &&
-        [site.site?.serverName, ...(site.site?.additionalServerNames?.values ?? [])].includes(currentHostname))
+    const isHostnameClaimedByAnotherSite = allSites.some(site =>
+        site.site?.path !== effectiveSite?.path &&
+        [site.site?.serverName, ...(site.site?.additionalServerNames?.values ?? [])].includes(currentHostname)
     );
 
     return {
@@ -88,8 +83,8 @@ export const useOpenInLiveData = (path, siteKey) => {
         selectServerName,
         liveData: isVisible ? {
             urlPath: node.renderUrl,
-            serverName: isCurrentSiteLocalhostOnly ? allSites.find(site => site?.site.sitekey === siteKey)?.site.serverName : serverName,
-            serverNameAliases: isCurrentSiteLocalhostOnly ? allSites.find(site => site?.site.sitekey === siteKey)?.site.additionalServerNames?.values ?? [] : serverNameAliases,
+            serverName: effectiveServerName,
+            serverNameAliases: effectiveServerNameAliases,
             currentHostname: (isHostnameInCurrentSite || isHostnameClaimedByAnotherSite) ? null : currentHostname
         } : null
     };

@@ -1030,6 +1030,7 @@
         },
         "rightPanel": {
           "actionsCaption": "Nicht auswählbare Elemente werden in dieser Ansicht nicht gelistet",
+          "tooManyItems": "Einige Elemente werden nicht gelistet, weil es zu viele sind. Verwenden Sie die Suche, um sie zu finden.",
           "searchContextOptions": {
             "search": "Search in",
             "allUsers": "Alle Nutzer",

@@ -1031,6 +1031,7 @@
         },
         "rightPanel": {
           "actionsCaption": "Les éléments non-sélectionnables ne sont pas affichés dans cette vue",
+          "tooManyItems": "Certains éléments ne sont pas listés car ils sont trop nombreux. Utilisez la recherche pour les trouver.",
           "searchContextOptions": {
             "search": "Chercher dans",
             "allUsers": "Tous les utilisateurs",

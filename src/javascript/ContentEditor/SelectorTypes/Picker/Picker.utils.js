@@ -51,6 +51,9 @@ export const getAncestorPathsToOpen = (node, hasOpenableTypes) => (hasOpenableTy
     node.ancestors.filter(ancestor => ancestor.isOpenable).map(ancestor => ancestor.path) :
     getDetailedPathArray(getPathWithoutFile(node.path)));
 
+// The server refuses the part of a query that reads more nodes than its limit allows
+export const isOverNodeLimit = error => Boolean(error?.graphQLErrors?.some(e => e.extensions?.classification === 'ExecutionAborted' || e.errorType === 'ExecutionAborted'));
+
 export const getBaseSearchContextData = ({t, currentSite, accordion, node, currentPath}) => (
     [
         {

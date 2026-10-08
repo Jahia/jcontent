@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
 import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
+import {componentPermissionFragment} from '../utils/componentPermission';
 
 const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
@@ -17,7 +18,7 @@ const checkAction = node => {
     const isMarkForDeletionAllowed = node.operationsSupport.markForDeletion &&
         isMarkedForDeletion(node) && !node.aggregatedPublicationInfo.existsInLive;
     const isAutoPublish = node['jmix:autoPublish'];
-    return Boolean(isCategory || isMarkForDeletionAllowed || isAutoPublish);
+    return Boolean((isCategory || isMarkForDeletionAllowed || isAutoPublish) && node.hasComponentPermission);
 };
 
 export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedNode, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
@@ -43,7 +44,8 @@ export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedN
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes,
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
+            applyFragment: componentPermissionFragment
         },
         {
             fetchPolicy: 'network-only'

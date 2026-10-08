@@ -1,7 +1,7 @@
 import {JContent} from '../../../page-object';
-import {addNode, createSite, createUser, deleteNode, deleteSite, deleteUser, grantRoles} from '@jahia/cypress';
+import {addNode, createSite, createUser, deleteNode, deleteSite, deleteUser, grantRoles, markForDeletion} from '@jahia/cypress';
 
-describe('Component permission in content editor', () => {
+describe('Component permission', () => {
     const siteKey = 'componentPermissionSite';
     const restrictedRole = 'editor-without-basic-content';
     const editor = {username: 'componentsEditor', password: 'password'};
@@ -40,6 +40,13 @@ describe('Component permission in content editor', () => {
             primaryNodeType: 'jnt:contentFolder',
             properties: [{name: 'jcr:title', value: 'Allowed folder', language: 'en'}]
         });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'deleted-text',
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'Deleted text', language: 'en'}]
+        });
+        markForDeletion(`/sites/${siteKey}/contents/deleted-text`);
     });
 
     after(() => {
@@ -60,6 +67,16 @@ describe('Component permission in content editor', () => {
         contentEditor.getSmallTextField(fieldName).get().find('input').should('not.have.attr', 'readonly');
         cy.get('div[data-sel-role="read-only-badge"]').should('not.exist');
         contentEditor.cancel();
+    };
+
+    const checkMenuItems = (rowName: string, roles: string[], visible: boolean) => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents').switchToListMode();
+        const menu = jcontent.getTable().getRowByName(rowName).contextMenu();
+        // Edit is always there, so the menu has loaded once it shows
+        menu.shouldHaveRoleItem('edit');
+        menu.get().find('[data-sel-role="menu-item-skeleton"]').should('not.exist');
+        roles.forEach(role => (visible ? menu.shouldHaveRoleItem(role) : menu.shouldNotHaveRoleItem(role)));
+        menu.close();
     };
 
     it('can edit content when the user has the component permission of its type', () => {
@@ -85,5 +102,23 @@ describe('Component permission in content editor', () => {
     it('can edit content whose type needs no component permission', () => {
         cy.loginAndStoreSession(restrictedEditor.username, restrictedEditor.password);
         checkEditable('allowed-folder', 'jnt:contentFolder_jcr:title');
+    });
+
+    it('shows delete, copy and cut when the user has the component permission of the type', () => {
+        cy.loginAndStoreSession(editor.username, editor.password);
+        checkMenuItems('restricted-text', ['delete', 'copy', 'cut'], true);
+        checkMenuItems('deleted-text', ['undelete', 'deletePermanently'], true);
+    });
+
+    it('hides delete, copy and cut when the user lacks the component permission of the type', () => {
+        cy.loginAndStoreSession(restrictedEditor.username, restrictedEditor.password);
+        checkMenuItems('restricted-text', ['delete', 'copy', 'cut'], false);
+        checkMenuItems('deleted-text', ['undelete', 'deletePermanently'], false);
+    });
+
+    it('shows delete, copy and cut on the types the user keeps or that need no component permission', () => {
+        cy.loginAndStoreSession(restrictedEditor.username, restrictedEditor.password);
+        checkMenuItems('allowed-list', ['delete', 'copy', 'cut'], true);
+        checkMenuItems('allowed-folder', ['delete', 'copy', 'cut'], true);
     });
 });

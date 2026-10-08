@@ -7,9 +7,10 @@ import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '.
 import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
+import {componentPermissionFragment} from '../utils/componentPermission';
 
 function checkAction(node) {
-    return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node) && !node.lockOwner;
+    return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node) && !node.lockOwner && node.hasComponentPermission;
 }
 
 export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
@@ -35,6 +36,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, onDeleted, node
             requiredPermission: ['jcr:removeNode'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
             getLockInfo: true,
+            applyFragment: componentPermissionFragment,
             ...others
         },
         {

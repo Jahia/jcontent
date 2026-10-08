@@ -6,9 +6,10 @@ import React, {useContext} from 'react';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import Delete from './Delete';
+import {componentPermissionFragment} from '../utils/componentPermission';
 
 function checkAction(node) {
-    return node.operationsSupport.markForDeletion && isMarkedForDeletion(node);
+    return node.operationsSupport.markForDeletion && isMarkedForDeletion(node) && node.hasComponentPermission;
 }
 
 export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
@@ -26,7 +27,8 @@ export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, butt
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
+            applyFragment: componentPermissionFragment
         },
         {
             fetchPolicy: 'network-only'

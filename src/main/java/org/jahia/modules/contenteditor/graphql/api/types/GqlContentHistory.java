@@ -27,13 +27,14 @@ import graphql.annotations.annotationTypes.GraphQLDescription;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import org.jahia.modules.contenteditor.graphql.api.types.history.ContentHistoryAdapter;
+import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
-import org.jahia.modules.graphql.provider.dxm.security.GraphQLRequiresPermission;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,19 +50,20 @@ public class GqlContentHistory {
 
     private final JCRNodeWrapper node;
     private static final int MAX_ENTRIES  = 100;
+    private static final String HISTORY_PERMISSION = "viewHistoryTab";
 
     public GqlContentHistory(GqlJcrNode node) {
         this.node = node.getNode();
     }
 
     @GraphQLField
-    @GraphQLRequiresPermission("viewHistoryTab")
     @GraphQLDescription("Get paginated content history entries for the node, the maximum number of returned entries is 100")
     public List<GqlContentHistoryEntry> getEntries(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the result (default: false)") Boolean withLanguageNodes,
             @GraphQLName("action") @GraphQLDescription("Filter entries by action (e.g., 'published', 'created', 'updated', 'deleted')") String action,
             @GraphQLName("offset") @GraphQLDescription("Number of entries to skip (default: 0)") Integer offset,
             @GraphQLName("limit") @GraphQLDescription("Maximum number of entries to return (default: 20)") Integer limit) {
+        checkHistoryPermission();
 
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         int offsetValue = offset != null ? offset : 0;
@@ -85,14 +87,25 @@ public class GqlContentHistory {
     }
 
     @GraphQLField
-    @GraphQLRequiresPermission("viewHistoryTab")
     @GraphQLDescription("Get total count of history entries for the node")
     public int getCount(
             @GraphQLName("withLanguageNodes") @GraphQLDescription("Include language-specific nodes in the count (default: false)") Boolean withLanguageNodes,
             @GraphQLName("action") @GraphQLDescription("Filter count by action (e.g., 'published', 'created', 'updated', 'deleted')") String action) {
+        checkHistoryPermission();
 
         boolean withLang = withLanguageNodes != null ? withLanguageNodes : false;
         return ContentHistoryAdapter.getHistoryCount(node, withLang, action);
+    }
+
+    // @GraphQLRequiresPermission checks the root node, so a role granted on a site would not reach it.
+    private void checkHistoryPermission() {
+        try {
+            if (!node.hasPermission(HISTORY_PERMISSION)) {
+                throw new AccessDeniedException("User does not have permission '" + HISTORY_PERMISSION + "' to view history for node " + node.getPath());
+            }
+        } catch (RepositoryException e) {
+            throw new DataFetchingException(e);
+        }
     }
 
     // Resolve the actual node targeted by an entry. With PathBasedContentHistoryAdapter,

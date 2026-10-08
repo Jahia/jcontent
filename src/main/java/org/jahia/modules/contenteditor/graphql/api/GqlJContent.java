@@ -32,7 +32,6 @@ import org.jahia.api.Constants;
 import org.jahia.modules.contenteditor.graphql.api.channels.GqlChannel;
 import org.jahia.modules.contenteditor.graphql.api.tags.GqlTagManagerQuery;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlPrincipal;
-import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.predicate.FieldEvaluator;
 import org.jahia.modules.graphql.provider.dxm.predicate.FieldSorterInput;
 import org.jahia.modules.graphql.provider.dxm.predicate.SorterHelper;
@@ -43,6 +42,7 @@ import org.jahia.services.channels.ChannelService;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.content.JCRSessionWrapper;
+import org.jahia.services.sites.JahiaSitesService;
 
 import javax.jcr.RepositoryException;
 import java.util.Collection;
@@ -57,6 +57,9 @@ import java.util.stream.Stream;
  */
 @GraphQLDescription("jContent API")
 public class GqlJContent {
+
+    private static final String JCONTENT_ACCESS = "jContentAccess";
+    private static final String SYSTEM_SITE_PATH = "/sites/" + JahiaSitesService.SYSTEM_SITE_KEY;
 
 
     @GraphQLField
@@ -83,13 +86,13 @@ public class GqlJContent {
     @GraphQLConnection(connectionFetcher = DXPaginatedDataConnectionFetcher.class)
     @GraphQLDescription("Search users through Jahia user manager services. Provider-aware (incl. LDAP) and bounded by the configured jahiaJCRUserCountLimit, unlike a raw 'SELECT * FROM [jnt:user]' query.")
     public DXPaginatedData<GqlPrincipal> getUserSearch(
-        @GraphQLName("siteKey") @GraphQLDescription("Site key used to resolve site-scoped users") String siteKey,
+        @GraphQLName("siteKey") @GraphQLDescription("Key of the site the search runs for. The caller needs jContent access to that site. Without a key, the search runs for the system site") String siteKey,
         @GraphQLName("scopePath") @GraphQLDescription("Search scope: '/' (site + global), '/users' (global only) or '/sites/{site}/users' (site only)") String scopePath,
         @GraphQLName("searchTerm") @GraphQLDescription("Search term matched against all user properties; blank lists everything (up to the count limit)") String searchTerm,
         @GraphQLName("providers") @GraphQLDescription("Optional provider keys to restrict the search; null targets all providers") Collection<String> providers,
         @GraphQLName("fieldSorter") @GraphQLDescription("Sort by GraphQL field values") FieldSorterInput fieldSorter,
         DataFetchingEnvironment environment) {
-        if (!canAccessSite(scopeSiteKey(scopePath, siteKey))) {
+        if (!canSearch(scopeSiteKey(scopePath, siteKey))) {
             return toPaginatedPrincipals(Collections.emptySet(), fieldSorter, environment);
         }
         String[] providerKeys = toProviderKeys(providers);
@@ -103,13 +106,13 @@ public class GqlJContent {
     @GraphQLConnection(connectionFetcher = DXPaginatedDataConnectionFetcher.class)
     @GraphQLDescription("Search groups through Jahia group manager services. Provider-aware, unlike a raw 'SELECT * FROM [jnt:group]' query.")
     public DXPaginatedData<GqlPrincipal> getGroupSearch(
-        @GraphQLName("siteKey") @GraphQLDescription("Site key used to resolve site-scoped groups") String siteKey,
+        @GraphQLName("siteKey") @GraphQLDescription("Key of the site the search runs for. The caller needs jContent access to that site. Without a key, the search runs for the system site") String siteKey,
         @GraphQLName("scopePath") @GraphQLDescription("Search scope: '/' (site + global), '/groups' (global only) or '/sites/{site}/groups' (site only)") String scopePath,
         @GraphQLName("searchTerm") @GraphQLDescription("Search term matched against all group properties; blank lists everything") String searchTerm,
         @GraphQLName("providers") @GraphQLDescription("Optional provider keys to restrict the search; null targets all providers") Collection<String> providers,
         @GraphQLName("fieldSorter") @GraphQLDescription("Sort by GraphQL field values") FieldSorterInput fieldSorter,
         DataFetchingEnvironment environment) {
-        if (!canAccessSite(scopeSiteKey(scopePath, siteKey))) {
+        if (!canSearch(scopeSiteKey(scopePath, siteKey))) {
             return toPaginatedPrincipals(Collections.emptySet(), fieldSorter, environment);
         }
         String[] providerKeys = toProviderKeys(providers);
@@ -166,22 +169,33 @@ public class GqlJContent {
     }
 
     /**
-     * A search runs for one site, and answers the users who have jContent access to that site.
+     * The search is available to a caller who has jContent access to the site it runs for. Without a site, as in
+     * the category manager, it is available to a caller who has jContent access to the system site or manages
+     * its categories.
      */
-    private static boolean canAccessSite(String siteKey) {
-        if (siteKey == null || siteKey.isEmpty() || siteKey.contains("/")) {
-            return false;
+    private static boolean canSearch(String siteKey) {
+        if (siteKey == null || siteKey.isEmpty()) {
+            return hasPermission(SYSTEM_SITE_PATH, JCONTENT_ACCESS) || hasPermission(SYSTEM_SITE_PATH + "/categories", "categoryManager");
         }
+        return !siteKey.contains("/") && isSite("/sites/" + siteKey) && hasPermission("/sites/" + siteKey, JCONTENT_ACCESS);
+    }
+
+    private static boolean isSite(String path) {
         try {
             JCRSessionWrapper session = JCRSessionFactory.getInstance().getCurrentUserSession(Constants.EDIT_WORKSPACE);
-            String sitePath = "/sites/" + siteKey;
-            if (!session.nodeExists(sitePath)) {
-                return false;
-            }
-            JCRNodeWrapper site = session.getNode(sitePath);
-            return site.isNodeType("jnt:virtualsite") && site.hasPermission("jContentAccess");
+            return session.nodeExists(path) && session.getNode(path).isNodeType("jnt:virtualsite");
         } catch (RepositoryException e) {
-            throw new DataFetchingException(e);
+            // A key that is not a valid path segment names no site
+            return false;
+        }
+    }
+
+    private static boolean hasPermission(String path, String permission) {
+        try {
+            JCRSessionWrapper session = JCRSessionFactory.getInstance().getCurrentUserSession(Constants.EDIT_WORKSPACE);
+            return session.nodeExists(path) && session.getNode(path).hasPermission(permission);
+        } catch (RepositoryException e) {
+            return false;
         }
     }
 
@@ -190,13 +204,7 @@ public class GqlJContent {
     }
 
     private static DXPaginatedData<GqlPrincipal> toPaginatedPrincipals(Set<? extends JCRNodeWrapper> principals, FieldSorterInput fieldSorter, DataFetchingEnvironment environment) {
-        Stream<GqlPrincipal> stream = principals.stream().map(node -> {
-            try {
-                return GqlPrincipal.from(node);
-            } catch (RepositoryException e) {
-                throw new DataFetchingException(e);
-            }
-        });
+        Stream<GqlPrincipal> stream = principals.stream().map(GqlPrincipal::new);
         if (fieldSorter != null) {
             stream = stream.sorted(SorterHelper.getFieldComparator(fieldSorter, FieldEvaluator.forConnection(environment)));
         }

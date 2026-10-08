@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const UserPickerSearchQuery = gql`
-    query userPickerSearchQuery($siteKey:String!, $scopePath:String!, $searchTerm:String, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
+    query userPickerSearchQuery($siteKey:String!, $scopePath:String!, $searchTerm:String, $language:String, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
         jcontent {
             userSearch(siteKey: $siteKey, scopePath: $scopePath, searchTerm: $searchTerm, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
                 pageInfo {
@@ -11,7 +11,7 @@ export const UserPickerSearchQuery = gql`
                     uuid
                     path
                     name
-                    displayName
+                    displayName(language: $language)
                     nodeTypeName
                     firstName
                     lastName

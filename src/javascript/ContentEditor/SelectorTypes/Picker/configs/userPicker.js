@@ -12,11 +12,12 @@ const PickerUserQueryHandler = {
     ...BaseQueryHandler,
     getQuery: () => UserPickerSearchQuery,
     getQueryVariables: p => {
-        const {offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
+        const {language, offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
         return {
             siteKey: p.siteKey,
             scopePath: p.searchPath || '/',
             searchTerm: p.searchTerms || '',
+            language,
             offset,
             limit,
             fieldSorter

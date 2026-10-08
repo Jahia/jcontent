@@ -10,10 +10,25 @@ interface TreeQueryOp {
     };
 }
 
-// Apollo batches operations, and the tree query is renamed after the fragments it carries
-const treeQueryOpenPaths = (body: unknown): string[] => (Array.isArray(body) ? body : [body])
-    .filter((op: TreeQueryOp) => op?.operationName?.startsWith('PickerQuery'))
-    .flatMap((op: TreeQueryOp) => op.variables?.openPaths || []);
+// Records the open paths of each tree query from now on. Apollo batches operations, and the tree query is renamed after the fragments it carries
+const watchTreeQueries = (): string[][] => {
+    const treeQueries: string[][] = [];
+    cy.intercept('POST', '**/modules/graphql', req => {
+        treeQueries.push(...(Array.isArray(req.body) ? req.body : [req.body])
+            .filter((op: TreeQueryOp) => op?.operationName?.startsWith('PickerQuery'))
+            .map((op: TreeQueryOp) => op.variables?.openPaths || []));
+    });
+    return treeQueries;
+};
+
+// The last tree query carries the paths that the picker left open once it showed the selection
+const assertLastTreeQueryOpens = (treeQueries: string[][], openedPath: string, closedPaths: string[]) => {
+    cy.wrap(treeQueries).should(queries => {
+        const openPaths = queries[queries.length - 1];
+        expect(openPaths).to.include(openedPath);
+        closedPaths.forEach(path => expect(openPaths).not.to.include(path));
+    });
+};
 
 describe('Picker - Editorial link', {testIsolation: false}, () => {
     const siteKey = 'digitall';
@@ -138,23 +153,39 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
 
-        const openedPaths: string[] = [];
-        cy.intercept('POST', '**/modules/graphql', req => {
-            openedPaths.push(...treeQueryOpenPaths(req.body));
-        });
+        const newsEntry = '/sites/digitall/home/newsroom/news-entry';
+        const newsArea = `${newsEntry}/article`;
+        const verifySelectionIsExpanded = () => {
+            picker.getTab('pages').should('have.class', 'moonstone-tabItem_selected');
+            picker.getTable().getRowByName('all-organic-foods-network-gains').get().scrollIntoView();
+            picker.getTable().getRowByName('all-organic-foods-network-gains')
+                .should('be.visible') // Expanded
+                .and('have.class', 'moonstone-TableRow-highlighted'); // Selected
+        };
 
         cy.log('verify tab is restored and selection is expanded');
+        const reopenQueries = watchTreeQueries();
         pickerField.open();
-        picker.getTab('pages').should('have.class', 'moonstone-tabItem_selected');
-        picker.getTable().getRowByName('all-organic-foods-network-gains').get().scrollIntoView();
-        picker.getTable().getRowByName('all-organic-foods-network-gains')
-            .should('be.visible') // Expanded
-            .and('have.class', 'moonstone-TableRow-highlighted'); // Selected
+        verifySelectionIsExpanded();
 
         cy.log('verify the area that holds the news is not opened, as the page already lists its content');
-        cy.wrap(openedPaths)
-            .should('include', '/sites/digitall/home/newsroom/news-entry')
-            .and('not.include', '/sites/digitall/home/newsroom/news-entry/article');
+        assertLastTreeQueryOpens(reopenQueries, newsEntry, [newsArea]);
+        picker.cancel();
+
+        cy.log('pick an image, which leaves the picker on the media accordion');
+        const imageField = contentEditor.getPickerField(contentTypes.imagepicker.fieldNodeType, contentTypes.imagepicker.multiple);
+        const mediaPicker = imageField.open();
+        const mediaAccordion = mediaPicker.getAccordionItem('picker-media');
+        mediaPicker.navigateTo(mediaAccordion, 'files/images/backgrounds');
+        mediaPicker.getGrid().getCardByName('fans-stadium.jpg').click();
+        mediaPicker.select();
+        imageField.assertValue('fans-stadium.jpg');
+
+        cy.log('verify the link still opens only the ancestors of its selection, and none of the image folders');
+        const afterImageQueries = watchTreeQueries();
+        pickerField.open();
+        verifySelectionIsExpanded();
+        assertLastTreeQueryOpens(afterImageQueries, newsEntry, [newsArea, '/sites/digitall/files/images']);
         picker.cancel();
         contentEditor.cancelAndDiscard();
     });

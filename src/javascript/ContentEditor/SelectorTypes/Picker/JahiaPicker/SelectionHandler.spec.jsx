@@ -79,6 +79,14 @@ const pickerConfig = {key: 'editoriallink', selectableTypesTable: ['jnt:page', '
 describe('SelectionHandler', () => {
     let dispatch;
 
+    // The open paths once the picker applied what the handler dispatched on opening
+    const openPathsAfterOpening = () => dispatch.mock.calls
+        .map(([action]) => action)
+        .filter(action => action.meta?.batch)
+        .flatMap(action => action.payload)
+        .reduce(pickerReducer, pickerState)
+        .openPaths;
+
     const openPicker = () => mount(
         <SelectionHandler site="digitall" pickerConfig={pickerConfig} initialSelectedItem={[{path: selectedNode.path}]} lang="en">
             <div/>
@@ -104,5 +112,29 @@ describe('SelectionHandler', () => {
                 contentOpenableTypes: PickerEditorialLinkQueryHandler.getOpenableTypes('content')
             })
         }));
+    });
+
+    it('should open only the root and the ancestors that the tree shows as rows', () => {
+        openPicker();
+
+        expect(openPathsAfterOpening()).toEqual([
+            '/sites/digitall',
+            '/sites/digitall/home',
+            '/sites/digitall/home/news'
+        ]);
+    });
+
+    it('should open every ancestor of the selection in a picker that declares no openable types', () => {
+        registry.find.mockReturnValue([{...editorialLinkAccordion, tableConfig: {queryHandler: {getFragments: () => []}}}]);
+
+        openPicker();
+
+        expect(openPathsAfterOpening()).toEqual([
+            '/sites/digitall',
+            '/sites/digitall/home',
+            '/sites/digitall/home/news',
+            '/sites/digitall/home/news/area-main',
+            '/sites/digitall/home/news/area-main/news-list'
+        ]);
     });
 });

@@ -4,9 +4,9 @@ import {TagManager} from '../../../page-object';
 describe('Tag Manager sort and pagination', () => {
     const siteKeyPrefix = 'tagManagerSortPagination';
     const siteKey = `${siteKeyPrefix}${jfaker.string.alphanumeric({length: 8, casing: 'lower', safe: true})}`;
-    // Tags are stored in lowercase, so only accents are ignored: an accent-sensitive sort would put ça last
-    const sortedTags = ['aaa', 'ça', 'edd', 'eee', 'fff', 'rrr', 'sss', 'test', 'uuu', 'vvv', 'xxx', 'yyyy', 'zzz'];
-    const shuffledTags = ['zzz', 'test', 'ça', 'uuu', 'aaa', 'yyyy', 'rrr', 'eee', 'xxx', 'fff', 'sss', 'vvv', 'edd'];
+    // Tags are stored in lowercase, so only accents are ignored
+    const sortedTags = ['aaa', 'ça', 'école', 'edd', 'eee', 'été', 'fff', 'île', 'rrr', 'sss', 'test', 'uuu', 'vvv', 'xxx', 'yyyy', 'zzz'];
+    const shuffledTags = ['zzz', 'été', 'test', 'ça', 'uuu', 'aaa', 'île', 'yyyy', 'rrr', 'eee', 'école', 'xxx', 'fff', 'sss', 'vvv', 'edd'];
 
     const deleteStaleSites = () => {
         getNodeByPath('/sites', [], 'en', ['jnt:virtualsite']).then(({data}) => {

@@ -1,0 +1,12 @@
+query GetTaggedContent($siteKey: String!, $tag: String!) {
+    jcontent {
+        tagManager(siteKey: $siteKey) {
+            taggedContent(tag: $tag) {
+                nodes {
+                    uuid
+                    path
+                }
+            }
+        }
+    }
+}

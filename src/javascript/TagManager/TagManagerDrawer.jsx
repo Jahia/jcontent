@@ -54,7 +54,7 @@ export const TagManagerDrawer = ({
         fetchPolicy: 'cache-and-network'
     });
 
-    const connection = data?.admin?.jahia?.tagManager?.taggedContent;
+    const connection = data?.jcontent?.tagManager?.taggedContent;
     const nodes = connection?.nodes || [];
     const totalCount = connection?.pageInfo?.totalCount || 0;
 
@@ -78,7 +78,7 @@ export const TagManagerDrawer = ({
                     nodeId
                 }
             });
-            const result = mutationData?.admin?.jahia?.tagManager?.deleteTagOnNode;
+            const result = mutationData?.jcontent?.tagManager?.deleteTagOnNode;
             await onMutationComplete();
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.removeFromContentSuccess', {
@@ -126,7 +126,7 @@ export const TagManagerDrawer = ({
                     nodeId: editNodeTarget.uuid
                 }
             });
-            const result = mutationData?.admin?.jahia?.tagManager?.renameTagOnNode;
+            const result = mutationData?.jcontent?.tagManager?.renameTagOnNode;
             await onMutationComplete();
             notify(
                 t('jcontent:label.contentManager.tagManager.notifications.updateOnContentSuccess', {

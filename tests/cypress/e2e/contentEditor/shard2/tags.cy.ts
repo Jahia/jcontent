@@ -1,5 +1,5 @@
 import {JContent} from '../../../page-object/jcontent';
-import {addNode, context, createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, context, createSite, deleteSite, enableModule, uploadFile} from '@jahia/cypress';
 import {TagField} from '../../../page-object/fields/tagField';
 import {TagManager} from '../../../page-object';
 import gql from 'graphql-tag';
@@ -7,6 +7,7 @@ import gql from 'graphql-tag';
 describe('Tags tests in content editor', () => {
     let jcontent: JContent;
     const siteKey = 'tagsSite';
+    const fileName = 'tagged-file.docx';
 
     const addTextForTags = (name: string, tags?: string[]) => {
         addNode({
@@ -26,6 +27,13 @@ describe('Tags tests in content editor', () => {
         contentEditor.switchToAdvancedMode();
         contentEditor.openSection('Classification and Metadata');
         return {contentEditor, tagField: contentEditor.getField(TagField, 'jmix:tagged_j:tagList')};
+    };
+
+    const openFileClassification = () => {
+        const contentEditor = JContent.visit(siteKey, 'en', 'media/files').switchToListMode().editComponentByRowName(fileName);
+        contentEditor.switchToAdvancedMode();
+        contentEditor.openSection('Classification and Metadata');
+        return contentEditor;
     };
 
     before(function () {
@@ -51,6 +59,10 @@ describe('Tags tests in content editor', () => {
         addTextForTags('textForRemovedTag', ['keeptag', 'removetag']);
         addTextForTags('textForTagManagerDelete', ['tm-kept-tag', 'tm-deleted-tag']);
         addTextForTags('textForContentEditorRemove', ['ce-kept-tag', 'ce-removed-tag']);
+        addTextForTags('textForCancelledRemove', ['cancel-kept-tag', 'cancel-removed-tag']);
+        addTextForTags('textSharingTagEdited', ['own-tag', 'shared-tag']);
+        addTextForTags('textSharingTagUntouched', ['shared-tag']);
+        uploadFile('/assets/uploadMedia/myfile.docx', `/sites/${siteKey}/files`, fileName, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         cy.apollo({
             mutation: gql`mutation AddTags {
             jcr {
@@ -110,6 +122,54 @@ describe('Tags tests in content editor', () => {
         savedTagField.getTags().should('have.length', 1);
         savedTagField.assertTagText('keeptag', 0);
         reopenedEditor.cancel();
+    });
+
+    it('should not save a tag added to a file when the edit is cancelled', () => {
+        context.tag('tags', 'content-editor', 'cancel-add', 'media');
+        const contentEditor = openFileClassification();
+        contentEditor.toggleOption('jmix:tagged', 'Tags');
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
+        tagField.addNewValue('unsavedtag');
+        contentEditor.cancelAndDiscard();
+
+        const reopenedEditor = openFileClassification();
+        reopenedEditor.getDynamicFieldset('jmix:tagged').find('input').should('not.be.checked');
+        reopenedEditor.toggleOption('jmix:tagged', 'Tags');
+        reopenedEditor.getField(TagField, 'jmix:tagged_j:tagList').getTags().should('have.length', 0);
+        reopenedEditor.cancelAndDiscard();
+    });
+
+    it('should keep a removed tag when the edit is cancelled', () => {
+        context.tag('tags', 'content-editor', 'cancel-remove');
+        const {contentEditor, tagField} = openTagField('textForCancelledRemove');
+        tagField.removeTag('cancel-removed-tag');
+        tagField.getTags().should('have.length', 1);
+        contentEditor.cancelAndDiscard();
+
+        const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForCancelledRemove');
+        savedTagField.getTags().should('have.length', 2);
+        savedTagField.assertTagText('cancel-kept-tag', 0);
+        savedTagField.assertTagText('cancel-removed-tag', 1);
+        reopenedEditor.cancel();
+    });
+
+    it('should keep a tag on other content when it is removed from one content', () => {
+        context.tag('tags', 'content-editor', 'remove-other-content');
+        const {contentEditor, tagField} = openTagField('textSharingTagEdited');
+        tagField.removeTag('shared-tag');
+        contentEditor.save();
+        contentEditor.cancel();
+
+        // Check the removal was saved before checking the other content still has the tag
+        const {contentEditor: editedEditor, tagField: editedTagField} = openTagField('textSharingTagEdited');
+        editedTagField.getTags().should('have.length', 1);
+        editedTagField.assertTagText('own-tag', 0);
+        editedEditor.cancel();
+
+        const {contentEditor: untouchedEditor, tagField: untouchedTagField} = openTagField('textSharingTagUntouched');
+        untouchedTagField.getTags().should('have.length', 1);
+        untouchedTagField.assertTagText('shared-tag', 0);
+        untouchedEditor.cancel();
     });
 
     it('should remove a tag from content editor when it is deleted in tag manager', () => {

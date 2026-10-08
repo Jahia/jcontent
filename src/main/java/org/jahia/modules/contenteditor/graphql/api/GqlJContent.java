@@ -59,7 +59,8 @@ import java.util.stream.Stream;
 public class GqlJContent {
 
     private static final String JCONTENT_ACCESS = "jContentAccess";
-    private static final String SYSTEM_SITE_PATH = "/sites/" + JahiaSitesService.SYSTEM_SITE_KEY;
+    private static final String SITES_PATH = "/sites/";
+    private static final String SYSTEM_SITE_PATH = SITES_PATH + JahiaSitesService.SYSTEM_SITE_KEY;
 
 
     @GraphQLField
@@ -154,7 +155,7 @@ public class GqlJContent {
     }
 
     private static String resolveSiteKey(String scopePath, String fallbackSiteKey) {
-        if (scopePath != null && scopePath.startsWith("/sites/")) {
+        if (scopePath != null && scopePath.startsWith(SITES_PATH)) {
             String[] segments = scopePath.split("/");
             if (segments.length >= 3) {
                 return segments[2];
@@ -165,7 +166,7 @@ public class GqlJContent {
     }
 
     private static String scopeSiteKey(String scopePath, String siteKey) {
-        return (scopePath != null && scopePath.startsWith("/sites/")) ? resolveSiteKey(scopePath, null) : siteKey;
+        return (scopePath != null && scopePath.startsWith(SITES_PATH)) ? resolveSiteKey(scopePath, null) : siteKey;
     }
 
     /**
@@ -177,7 +178,7 @@ public class GqlJContent {
         if (siteKey == null || siteKey.isEmpty()) {
             return hasPermission(SYSTEM_SITE_PATH, JCONTENT_ACCESS) || hasPermission(SYSTEM_SITE_PATH + "/categories", "categoryManager");
         }
-        return !siteKey.contains("/") && isSite("/sites/" + siteKey) && hasPermission("/sites/" + siteKey, JCONTENT_ACCESS);
+        return !siteKey.contains("/") && isSite(SITES_PATH + siteKey) && hasPermission(SITES_PATH + siteKey, JCONTENT_ACCESS);
     }
 
     private static boolean isSite(String path) {
@@ -200,7 +201,7 @@ public class GqlJContent {
     }
 
     private static boolean includeGlobal(String scopePath) {
-        return scopePath == null || !scopePath.startsWith("/sites/");
+        return scopePath == null || !scopePath.startsWith(SITES_PATH);
     }
 
     private static DXPaginatedData<GqlPrincipal> toPaginatedPrincipals(Set<? extends JCRNodeWrapper> principals, FieldSorterInput fieldSorter, DataFetchingEnvironment environment) {

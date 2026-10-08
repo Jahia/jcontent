@@ -55,8 +55,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
 
     accordion = jcontentUtils.getAccordionItem(accordion, accordionItemProps);
 
-    const openableTypes = accordion?.tableConfig?.queryHandler?.openableTypes;
-    const hasOpenableTypes = Boolean(openableTypes);
+    // The view follows from the selection, so the query flags the ancestors that open in either view of this picker
+    const queryHandlers = jcontentUtils.getAccordionItems(pickerConfig.key, accordionItemProps).map(item => item.tableConfig?.queryHandler);
+    const getOpenableTypes = viewType => [...new Set(queryHandlers.flatMap(queryHandler => queryHandler?.getOpenableTypes?.(viewType) || []))];
     const fragments = [...(accordion?.tableConfig?.queryHandler?.getFragments() || []), ...(accordion?.tableConfig?.fragments || [])];
     const selectionQuery = replaceFragmentsInDocument(GET_PICKER_NODE, fragments);
     const nodesInfo = useQuery(selectionQuery, {
@@ -65,7 +66,8 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             language: lang,
             uilang: uilang,
             selectableTypesTable: pickerConfig.selectableTypesTable,
-            openableTypes: openableTypes || []
+            pagesOpenableTypes: getOpenableTypes(Constants.tableView.type.PAGES),
+            contentOpenableTypes: getOpenableTypes(Constants.tableView.type.CONTENT)
         },
         initialFetchPolicy: 'network-only',
         nextFetchPolicy: 'cache-and-network'
@@ -129,9 +131,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             newState.modes = accordionItems.map(item => item.key);
 
             if (selectedNode && !previousState.current.isOpen) {
-                // The query flagged the openable ancestors with the types of this accordion only
-                const isFlagged = hasOpenableTypes && firstMatchingAccordion.key === accordion.key;
-                newState.openPaths = [...new Set([...newState.openPaths, ...getAncestorPathsToOpen(selectedNode, isFlagged)])];
+                // The query flagged the ancestors that open in the view of the selection
+                const flaggedViewType = firstMatchingAccordion.tableConfig.queryHandler?.getOpenableTypes && newState.viewType;
+                newState.openPaths = [...new Set([...newState.openPaths, ...getAncestorPathsToOpen(selectedNode, flaggedViewType)])];
             }
 
             if (previousState.current.mode !== newState.mode && firstMatchingAccordion.tableConfig.defaultSort) {
@@ -177,7 +179,7 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
         }
 
         previousState.current = newState;
-    }, [dispatch, site, pickerConfig, state, nodesInfo, currentFolderInfo, accordion.key, accordionItemProps, hasOpenableTypes]);
+    }, [dispatch, site, pickerConfig, state, nodesInfo, currentFolderInfo, accordion.key, accordionItemProps]);
 
     if (currentFolderInfo.loading || nodesInfo.loading) {
         return <LoaderOverlay/>;

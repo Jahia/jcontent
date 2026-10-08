@@ -1,28 +1,31 @@
 import {getAncestorPathsToOpen, isOverNodeLimit} from './Picker.utils';
 
+const ancestor = (path, isOpenableInPages = false, isOpenableInContent = false) => ({path, isOpenableInPages, isOpenableInContent});
+
 const node = {
     path: '/sites/digitall/home/news/area-main/news-list/news-1',
     ancestors: [
-        {path: '/', isOpenable: false},
-        {path: '/sites', isOpenable: false},
-        {path: '/sites/digitall', isOpenable: false},
-        {path: '/sites/digitall/home', isOpenable: true},
-        {path: '/sites/digitall/home/news', isOpenable: true},
-        {path: '/sites/digitall/home/news/area-main', isOpenable: false},
-        {path: '/sites/digitall/home/news/area-main/news-list', isOpenable: false}
+        ancestor('/'),
+        ancestor('/sites'),
+        ancestor('/sites/digitall'),
+        ancestor('/sites/digitall/home', true),
+        ancestor('/sites/digitall/home/news', true),
+        ancestor('/sites/digitall/home/news/area-main'),
+        ancestor('/sites/digitall/home/news/area-main/news-list')
     ]
 };
 
 describe('getAncestorPathsToOpen', () => {
-    it('should open only the openable ancestors', () => {
-        expect(getAncestorPathsToOpen(node, true)).toEqual([
+    it('should open only the ancestors that open in the view', () => {
+        expect(getAncestorPathsToOpen(node, 'pages')).toEqual([
             '/sites/digitall/home',
             '/sites/digitall/home/news'
         ]);
+        expect(getAncestorPathsToOpen(node, 'content')).toEqual([]);
     });
 
-    it('should open every ancestor under the site without openable types', () => {
-        expect(getAncestorPathsToOpen(node, false)).toEqual([
+    it('should open every ancestor under the site when the query flagged no view', () => {
+        expect(getAncestorPathsToOpen(node, undefined)).toEqual([
             '/sites/digitall/home',
             '/sites/digitall/home/news',
             '/sites/digitall/home/news/area-main',

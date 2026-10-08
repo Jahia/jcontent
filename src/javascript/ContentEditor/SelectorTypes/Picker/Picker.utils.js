@@ -1,6 +1,7 @@
 import React from 'react';
 import {SiteWeb} from '@jahia/moonstone';
 import {NodeIcon} from '~/utils/NodeIcon';
+import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 export {mergeDeep} from '~/JContent/JContent.utils';
 
 export const getPathWithoutFile = fullPath => {
@@ -46,10 +47,19 @@ export const getDetailedPathArray = fullPath => {
         [];
 };
 
-// The ancestors to open so that the tree shows the node: with openable types, only those the tree shows as rows
-export const getAncestorPathsToOpen = (node, hasOpenableTypes) => (hasOpenableTypes ?
-    node.ancestors.filter(ancestor => ancestor.isOpenable).map(ancestor => ancestor.path) :
-    getDetailedPathArray(getPathWithoutFile(node.path)));
+// The flag that the selection query sets on the ancestors that open in each view
+const openableFlags = {
+    [Constants.tableView.type.PAGES]: 'isOpenableInPages',
+    [Constants.tableView.type.CONTENT]: 'isOpenableInContent'
+};
+
+// The ancestors to open so that the tree shows the node: in a view the query flagged, only those the tree shows as rows
+export const getAncestorPathsToOpen = (node, flaggedViewType) => {
+    const flag = openableFlags[flaggedViewType];
+    return flag ?
+        node.ancestors.filter(ancestor => ancestor[flag]).map(ancestor => ancestor.path) :
+        getDetailedPathArray(getPathWithoutFile(node.path));
+};
 
 // The server refuses the part of a query that reads more nodes than its limit allows
 export const isOverNodeLimit = error => Boolean(error?.graphQLErrors?.some(e => e.extensions?.classification === 'ExecutionAborted' || e.errorType === 'ExecutionAborted'));

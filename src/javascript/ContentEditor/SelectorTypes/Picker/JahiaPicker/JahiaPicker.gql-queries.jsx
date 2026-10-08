@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
 export const GET_PICKER_NODE = gql`
-    query getSelectedNodesInformation($paths: [String!]!, $language:String!,$uilang:String!, $openableTypes:[String]!) {
+    query getSelectedNodesInformation($paths: [String!]!, $language:String!,$uilang:String!, $pagesOpenableTypes:[String]!, $contentOpenableTypes:[String]!) {
         jcr {
             nodesByPath(paths:$paths) {
                 name
@@ -27,7 +27,8 @@ export const GET_PICKER_NODE = gql`
                     primaryNodeType {
                         name
                     }
-                    isOpenable: isNodeType(type: {multi: ANY, types: $openableTypes})
+                    isOpenableInPages: isNodeType(type: {multi: ANY, types: $pagesOpenableTypes})
+                    isOpenableInContent: isNodeType(type: {multi: ANY, types: $contentOpenableTypes})
                 }
                 site {
                     uuid

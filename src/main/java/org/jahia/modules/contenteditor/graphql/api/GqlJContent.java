@@ -59,7 +59,7 @@ import java.util.stream.Stream;
 public class GqlJContent {
 
     private static final String JCONTENT_ACCESS = "jContentAccess";
-    private static final String SITES_PATH = "/sites/";
+    private static final String SITES_PATH = JahiaSitesService.SITES_JCR_PATH + "/";
     private static final String SYSTEM_SITE_PATH = SITES_PATH + JahiaSitesService.SYSTEM_SITE_KEY;
 
 

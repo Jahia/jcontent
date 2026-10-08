@@ -6,13 +6,15 @@ import {useOpenInLiveData} from './useOpenInLiveData';
 import {ServerNameMenu} from './ServerNameMenu';
 import {resolveUrlForLiveOrPreview} from '~/JContent/JContent.utils';
 import styles from '../MainActionBar.scss';
+import {useSelector} from 'react-redux';
 
 export const OpenInLiveButtonGroup = ({path, isDisabled}) => {
     const {t} = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const siteKey = useSelector(state => state.site);
 
-    const {liveData, selectedServerName, selectServerName} = useOpenInLiveData(path);
+    const {liveData, selectedServerName, selectServerName} = useOpenInLiveData(path, siteKey);
 
     if (!liveData) {
         return null;

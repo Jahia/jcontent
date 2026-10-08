@@ -254,4 +254,65 @@ describe('Open in Live tests', () => {
             setAliases([alias1, alias2]);
         });
     });
+
+    describe('shared localhost-only content', () => {
+        // Shared content (e.g. from the system site) resolves to a localhost-only site while the selected
+        // site (state.site) has a real server name. Open in Live must use the selected site's hostname.
+        const sharedSiteKey = 'openInLiveSiteShared';
+        const selectedSiteKey = 'openInLiveSiteSelected';
+        const selectedServerName = 'selected.example.com';
+
+        before(() => {
+            createSite(sharedSiteKey, {templateSet: 'dx-base-demo-templates', serverName, locale: 'en'});
+            createSite(selectedSiteKey, {templateSet: 'dx-base-demo-templates', serverName: selectedServerName, locale: 'en'});
+            publishAndWaitJobEnding(`/sites/${sharedSiteKey}/home`, ['en']);
+            publishAndWaitJobEnding(`/sites/${selectedSiteKey}/home`, ['en']);
+            cy.loginAndStoreSession();
+        });
+
+        after(() => {
+            cy.logout();
+            deleteSite(sharedSiteKey);
+            deleteSite(selectedSiteKey);
+        });
+
+        beforeEach(() => {
+            cy.clearLocalStorage();
+            cy.loginAndStoreSession();
+        });
+
+        it('opens shared localhost-only content on the selected site hostname', function () {
+            if (currentHostname === serverName) {
+                // The localhost-only case only applies when browsing from a real hostname.
+                this.skip();
+            }
+
+            // Browse the selected site, but make the Open in Live query resolve a node of the shared
+            // (localhost-only) site, as shared content would.
+            cy.intercept('POST', '**/modules/graphql', req => {
+                const ops = Array.isArray(req.body) ? req.body : [req.body];
+                ops.forEach(op => {
+                    if (op.operationName === 'openInActionQuery' && op.variables?.workspace === 'LIVE') {
+                        op.variables.path = `/sites/${sharedSiteKey}/home`;
+                    }
+                });
+            });
+
+            JContent.visit(selectedSiteKey, 'en', 'pages/home', {
+                onBeforeLoad(win: Window) {
+                    // @ts-expect-error window definition does not have "open" for some reason
+                    cy.stub(win, 'open').as('winOpen');
+                }
+            });
+            getComponentByRole(Button, 'openInLive').click();
+
+            // Assert on the opened URL: it must target the selected site's hostname and not the
+            // browsing host. We deliberately do not cy.request() it — selected.example.com does not
+            // resolve from the test runner — so we verify which host was opened, not its render.
+            cy.get('@winOpen').should(
+                'be.calledWith',
+                Cypress.sinon.match(f => f.includes(`//${selectedServerName}`) && !f.includes(`//${currentHostname}`))
+            );
+        });
+    });
 });

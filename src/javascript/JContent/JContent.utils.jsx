@@ -548,6 +548,34 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
 };
 
 /**
+ * Resolve the site whose server name(s) should drive an "Open in Live/Preview" link.
+ *
+ * A "shared content" context is when the node's resolved site is a localhost-only site
+ * (its only server name is `localhost`) that differs from the site currently being edited
+ * (`siteKey`), while jContent is browsed from a real hostname. In that case the node's own
+ * site cannot provide a usable host, so the currently selected site is used instead.
+ *
+ * @param {object} node - resolved node; `node.site` carries `{sitekey, serverName, path, additionalServerNames:{values}}`
+ * @param {Array}  allSites - site nodes (`[{site:{sitekey, serverName, path, additionalServerNames:{values}}}]`)
+ * @param {string} siteKey - the site currently being edited (`state.site`)
+ * @param {string} hostname - the browsing hostname (`location.hostname`)
+ * @returns {{effectiveSite: object|null, isSharedContext: boolean, switchHost: boolean}}
+ *   `effectiveSite` is the selected site in a shared context (falling back to the node's site
+ *   when it cannot be found), otherwise the node's own site. `switchHost` is true only when the
+ *   effective site has a real (non-localhost) server name worth substituting for the current host.
+ */
+export const resolveEffectiveSite = (node, allSites, siteKey, hostname) => {
+    const nodeSite = node?.site;
+    const names = [nodeSite?.serverName, ...(nodeSite?.additionalServerNames?.values ?? [])].filter(Boolean);
+    const isNodeSiteLocalhostOnly = names.length === 1 && names[0] === 'localhost';
+    const isSharedContext = Boolean(nodeSite) && nodeSite.sitekey !== siteKey && isNodeSiteLocalhostOnly && hostname !== 'localhost';
+    const selectedSite = isSharedContext ? (allSites?.find(s => s?.site?.sitekey === siteKey)?.site ?? null) : null;
+    const effectiveSite = selectedSite ?? nodeSite ?? null;
+    const switchHost = isSharedContext && Boolean(selectedSite?.serverName) && selectedSite.serverName !== 'localhost';
+    return {effectiveSite, isSharedContext, switchHost};
+};
+
+/**
  * Check if a node is a CMIS folder based on its mixin types
  * @param {Object} node - The node object with mixinTypes array
  * @returns {boolean} - True if the node has the cmismix:folder mixin

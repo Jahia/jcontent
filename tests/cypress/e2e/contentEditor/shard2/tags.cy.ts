@@ -1,5 +1,5 @@
 import {JContent} from '../../../page-object/jcontent';
-import {addNode, context, createSite, deleteSite, enableModule, uploadFile} from '@jahia/cypress';
+import {addNode, context, createSite, createUser, deleteSite, deleteUser, enableModule, grantRoles, uploadFile} from '@jahia/cypress';
 import {TagField} from '../../../page-object/fields/tagField';
 import {TagManager} from '../../../page-object';
 import gql from 'graphql-tag';
@@ -8,6 +8,9 @@ describe('Tags tests in content editor', () => {
     let jcontent: JContent;
     const siteKey = 'tagsSite';
     const fileName = 'tagged-file.docx';
+    // The cancel and shared-tag scenarios run as an editor, as TagsTabTest did in Selenium
+    const editor = 'tagsEditor';
+    const password = 'password';
 
     const addTextForTags = (name: string, tags?: string[]) => {
         addNode({
@@ -37,7 +40,10 @@ describe('Tags tests in content editor', () => {
     };
 
     before(function () {
+        deleteUser(editor);
         createSite(siteKey);
+        createUser(editor, password);
+        grantRoles(`/sites/${siteKey}`, ['editor'], editor, 'USER');
         enableModule('qa-module', siteKey);
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -80,6 +86,7 @@ describe('Tags tests in content editor', () => {
     after(function () {
         cy.logout();
         deleteSite(siteKey);
+        deleteUser(editor);
     });
 
     beforeEach(() => {
@@ -126,6 +133,7 @@ describe('Tags tests in content editor', () => {
 
     it('should not save a tag added to a file when the edit is cancelled', () => {
         context.tag('tags', 'content-editor', 'cancel-add', 'media');
+        cy.loginAndStoreSession(editor, password);
         const contentEditor = openFileClassification();
         contentEditor.toggleOption('jmix:tagged', 'Tags');
         const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
@@ -141,6 +149,7 @@ describe('Tags tests in content editor', () => {
 
     it('should keep a removed tag when the edit is cancelled', () => {
         context.tag('tags', 'content-editor', 'cancel-remove');
+        cy.loginAndStoreSession(editor, password);
         const {contentEditor, tagField} = openTagField('textForCancelledRemove');
         tagField.removeTag('cancel-removed-tag');
         tagField.getTags().should('have.length', 1);
@@ -155,6 +164,7 @@ describe('Tags tests in content editor', () => {
 
     it('should keep a tag on other content when it is removed from one content', () => {
         context.tag('tags', 'content-editor', 'remove-other-content');
+        cy.loginAndStoreSession(editor, password);
         const {contentEditor, tagField} = openTagField('textSharingTagEdited');
         tagField.removeTag('shared-tag');
         contentEditor.save();

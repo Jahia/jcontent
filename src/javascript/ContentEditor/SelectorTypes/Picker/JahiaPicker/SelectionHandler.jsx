@@ -141,7 +141,7 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
                 newState.sort = firstMatchingAccordion.tableConfig.defaultSort;
             }
 
-            const hasOpenPathsChanged = newState.openPaths.length !== state.openPaths.length || newState.openPaths.some(value => state.openPaths.indexOf(value) === -1);
+            const hasOpenPathsChanged = newState.openPaths.length !== state.openPaths.length || newState.openPaths.some(value => !state.openPaths.includes(value));
             const actions = ([
                 (newState.site !== state.site) && cePickerSite(newState.site),
                 (newState.mode !== state.mode) && cePickerMode(newState.mode),

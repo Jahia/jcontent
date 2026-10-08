@@ -3,31 +3,29 @@ import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {FolderUser} from '@jahia/moonstone';
-import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {toPrincipalRows} from '~/ContentEditor/SelectorTypes/Picker/configs/principalSearchResults';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import {UserPickerFragment, UserPickerSearchQuery} from './userPicker.gql-queries';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
-const PickerUserQueryHandler = transformQueryHandler({
+const PickerUserQueryHandler = {
     ...BaseQueryHandler,
     getQuery: () => UserPickerSearchQuery,
     getQueryVariables: p => {
-        const {language, displayLanguage, offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
+        const {offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
         return {
             siteKey: p.siteKey,
             scopePath: p.searchPath || '/',
             searchTerm: p.searchTerms || '',
-            language,
-            displayLanguage,
             offset,
             limit,
             fieldSorter
         };
     },
-    getResults: data => data?.jcontent?.userSearch,
-    getFragments: () => [UserPickerFragment],
+    getResults: data => toPrincipalRows(data?.jcontent?.userSearch),
+    getFragments: () => [],
     handlesSearch: true
-});
+};
 
 const nameColumn = {
     id: 'name',
@@ -53,7 +51,7 @@ const siteColumn = {
 
 const providerColumn = {
     id: 'provider',
-    accessor: row => row.userFolderAncestors?.map(f => f.path.match(/^.*\/providers\/([^/]+)$/)).filter(f => f).map(f => f[1]).join('') || 'default',
+    accessor: 'provider',
     label: 'jcontent:label.contentEditor.edit.fields.contentPicker.userPicker.provider',
     Cell: reactTable.Cell,
     Header: reactTable.Header,

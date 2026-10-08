@@ -22,6 +22,10 @@ export const OpenInPreviewActionComponent = ({render: Render, path, ...others}) 
         <Render
             {...others}
             onClick={() => {
+                // Preview host switch is intentionally deferred to issue #2828: Preview serves the
+                // default workspace from the authoring server only, so switching to the selected
+                // site's serverName needs port preservation + session-host validation (see PR #2829
+                // review). Keep the current (browsing) domain for now.
                 const url = resolveUrlForLiveOrPreview(node.renderUrl, false, node.site.serverName);
                 window.open(url, '_blank');
             }}

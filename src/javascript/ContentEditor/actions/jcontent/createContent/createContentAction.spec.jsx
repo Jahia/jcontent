@@ -182,6 +182,33 @@ describe('CreateNewContent', () => {
         shallow(<CreateNewContent {...defaultProps}/>);
         expect(useNamedChildPlaceholders).toHaveBeenCalledWith(expect.objectContaining({skip: false}));
     });
+    it('should hide an action restricted to other node types, even when named placeholders exist', () => {
+        // The header shows createPage next to createContent; on a content node its type tree is
+        // empty, and the named placeholders must not make it visible.
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        defaultProps.showOnNodeTypes = ['jnt:page'];
+        loading = false;
+        nodeTypes = [];
+        placeholders = [{name: 'childObject1', nodeTypes: ['cent:childObject1']}];
+        useNodeChecks.mockImplementation((variables, options) => ({
+            node: {uuid: 'xxx'},
+            checksResult: !options.showOnNodeTypes?.includes('jnt:page'),
+            loading: false
+        }));
+        useNamedChildPlaceholders.mockImplementation(({skip}) => ({loading: false, placeholders: skip ? [] : placeholders}));
+        const cmp = shallow(<CreateNewContent {...defaultProps}/>);
+        expect(useNamedChildPlaceholders).toHaveBeenLastCalledWith(expect.objectContaining({skip: true}));
+        expect(cmp.length).toBe(1);
+        expect(cmp.props().isVisible).toBe(false);
+    });
+    it('should not restrict the action checks with an empty showOnNodeTypes', () => {
+        defaultProps.path = '/sites/digitall/contents/someObject';
+        defaultProps.showOnNodeTypes = [];
+        loading = false;
+        nodeTypes = ['nodetype1'];
+        shallow(<CreateNewContent {...defaultProps}/>);
+        expect(useNodeChecks.mock.calls.at(-1)[1].showOnNodeTypes).toBeUndefined();
+    });
     it('should render nothing when neither a type nor a named placeholder is creatable', () => {
         defaultProps.path = '/sites/digitall/contents/someObject';
         loading = false;

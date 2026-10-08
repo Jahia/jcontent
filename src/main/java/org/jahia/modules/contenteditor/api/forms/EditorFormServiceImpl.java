@@ -62,6 +62,7 @@ public class EditorFormServiceImpl implements EditorFormService {
 
     private static final String EDIT = "edit";
     private static final String CREATE = "create";
+    private static final String TEMPLATE_MIXIN = "jmix:templateMixin";
 
     private NodeTypeRegistry nodeTypeRegistry;
     private ChoiceListInitializerService choiceListInitializerService;
@@ -167,6 +168,12 @@ public class EditorFormServiceImpl implements EditorFormService {
                 .flatMap(s -> s.getFieldSets().stream())
                 .collect(Collectors.<FieldSet, String, Collection<FieldSet>>toMap(FieldSet::getName, Collections::singleton, CollectionUtils::union));
 
+            // PASS 1: everything that does not need a field's value constraints -- labels,
+            // visibility flags, dynamic/activated/hasEnableSwitch/readOnly, sort order. Constraint
+            // resolution can hit JCR (sqlquery/nodes/resourceBundle/subnodes choicelist
+            // initializers), so it is deferred to pass 2, after removeFieldsEditedElsewhere has
+            // thrown away the sibling copies that would otherwise pay for that resolution and have
+            // the result discarded.
             for (Section section : form.getSections()) {
                 // Set section label and description if not set
                 section.initializeLabel(uiLocale, site);
@@ -193,11 +200,20 @@ public class EditorFormServiceImpl implements EditorFormService {
                         boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
                         if (isExtend) {
                             fieldSet.setDynamic(true);
-                            boolean isActivated = nodeTypeResolver != null && nodeTypeResolver.isNodeType(fieldSet.getName());
+                            boolean isTemplateMixin = nodeType.isNodeType(TEMPLATE_MIXIN);
+                            // A template mixin is one choicelist value among others, so only the one
+                            // applied directly is selected. A node carrying one member of a chain of
+                            // template mixins is also of the type of every member it extends, and
+                            // those members must stay switched off. A node carrying two members
+                            // directly, which only an API write can produce, switches both on, and
+                            // a shared property is then edited in the first one (see
+                            // removeFieldsEditedElsewhere).
+                            boolean isActivated = nodeTypeResolver != null && (isTemplateMixin ?
+                                nodeTypeResolver.hasMixin(fieldSet.getName()) : nodeTypeResolver.isNodeType(fieldSet.getName()));
                             boolean isAlwaysActivated = fieldSet.isAlwaysActivated() != null && fieldSet.isAlwaysActivated();
                             boolean isActivatedOnCreate = fieldSet.isActivatedOnCreate() != null && fieldSet.isActivatedOnCreate();
                             fieldSet.setActivated(isActivated || isAlwaysActivated || existingNode == null && isActivatedOnCreate);
-                            fieldSet.setHasEnableSwitch(!nodeType.isNodeType("jmix:templateMixin"));
+                            fieldSet.setHasEnableSwitch(!isTemplateMixin);
 
                             // Update readonly if user does not have permission to add/remove mixin
                             fieldSet.setReadOnly(fieldSet.isReadOnly() || !fieldSetEditable);
@@ -220,7 +236,28 @@ public class EditorFormServiceImpl implements EditorFormService {
                         if (field.getSelectorOptionsMap() != null && !field.getSelectorOptionsMap().isEmpty()) {
                             field.setSelectorOptionsMap(replaceBySubstitutor(field.getSelectorOptionsMap()));
                         }
+                    }
+                }
+            }
 
+            // Sibling extend-mixins each keep their own copy of a property inherited from a shared
+            // supertype, so that whichever one is switched on shows it (see Form#findAndRemoveField).
+            // Two of them switched on at once would put two inputs over a single property, and on
+            // save the second silently overwrites the first -- so among the ACTIVE fieldsets the
+            // property is edited in one place. The inactive ones keep their copy for when they are
+            // switched on. Runs here, between the two passes, because it needs the activated flag
+            // pass 1 set, and because it must run before pass 2 resolves constraints: a field
+            // dropped here as a duplicate never pays for a choicelist lookup that pass 2 would
+            // otherwise throw away. Pass 2 has not yet dropped what the reader cannot see, so this
+            // skips a hidden field or fieldset itself rather than relying on that later filter.
+            removeFieldsEditedElsewhere(form);
+
+            // PASS 2: value constraints for the fields that survived the de-dup (the JCR-hitting
+            // part), then the visibility filters that depend on those fields being final --
+            // Field::isVisible, the fieldSet-level and section-level keep-filters below.
+            for (Section section : form.getSections()) {
+                for (FieldSet fieldSet : section.getFieldSets()) {
+                    for (Field field : fieldSet.getFields()) {
                         field.setValueConstraints(getValueConstraints(primaryNodeType, field, existingNode, parentNode, uiLocale, new HashMap<>()));
                     }
                     fieldSet.setFields(fieldSet.getFields().stream()
@@ -287,7 +324,16 @@ public class EditorFormServiceImpl implements EditorFormService {
             formDefinitionsToMerge.addAll(staticDefinitionsRegistry.getFieldSetsForType(nodeType, site, nodeTypes));
 
             processedNodeTypes.add(nodeType.getName());
-            processedNodeTypes.addAll(nodeType.getSupertypeSet().stream().map(ExtendedNodeType::getName).collect(Collectors.toList()));
+            // A single-fieldset form names its one fieldset after the mixin itself, so a supertype
+            // that is a template mixin too is another choicelist value with a fieldset of its own,
+            // not a duplicate: marking it would leave that value nothing to show. Since
+            // getExtendMixins iterates a HashMap, which member of a chain got marked first would be
+            // decided by hash order. Any other supertype stays marked, so a node carrying both a
+            // mixin and its supertype gets no second, empty fieldset for the supertype (#2467).
+            processedNodeTypes.addAll(nodeType.getSupertypeSet().stream()
+                .filter(supertype -> !singleFieldSet || !supertype.isNodeType(TEMPLATE_MIXIN))
+                .map(ExtendedNodeType::getName)
+                .collect(Collectors.toList()));
         }
     }
 
@@ -329,7 +375,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                 editorFormField.getSelectorOptionsMap() :
                 Collections.emptyMap();
         if (propertyDefinition == null || (propertyDefinition.getSelector() != SelectorType.CHOICELIST && !selectorOptions.containsKey("choicelist"))) {
-            return editorFormField.getValueConstraints();
+            return constraintsOrEmpty(editorFormField);
         }
 
         Map<String, ChoiceListInitializer> initializers = choiceListInitializerService.getInitializers();
@@ -347,7 +393,19 @@ public class EditorFormServiceImpl implements EditorFormService {
         }
 
         // If we cannot get choicelist initializer with selector options return default constraints
-        return selectorOptions.isEmpty() ? editorFormField.getValueConstraints() : toValueConstraints(initialChoiceListValues);
+        return selectorOptions.isEmpty() ? constraintsOrEmpty(editorFormField) : toValueConstraints(initialChoiceListValues);
+    }
+
+    /**
+     * A field's own constraints, never null. A field carries none when it has no JCR property
+     * definition behind it or no choicelist to resolve -- a plain text property, or the bare copy a
+     * fieldset gets when it may not take a field from a sibling. The clients read this list without
+     * checking it, so handing them null turns a form that merely has nothing to choose from into a
+     * failed render.
+     */
+    private static List<FieldValueConstraint> constraintsOrEmpty(Field editorFormField) {
+        List<FieldValueConstraint> constraints = editorFormField.getValueConstraints();
+        return constraints != null ? constraints : new ArrayList<>();
     }
 
     private static List<FieldValueConstraint> toValueConstraints(List<ChoiceListValue> choiceListValues) {
@@ -358,7 +416,7 @@ public class EditorFormServiceImpl implements EditorFormService {
             cst.setValue(FieldValue.convert(choiceListValue.getValue()));
             cst.setPropertyList(choiceListValue.getProperties() != null ?
                     choiceListValue.getProperties().entrySet().stream().map(e -> new Property(e.getKey(), e.getValue().toString())).collect(Collectors.toList()) :
-                    Collections.emptyList()
+                    new ArrayList<>()
             );
             valueConstraints.add(cst);
         }
@@ -382,13 +440,45 @@ public class EditorFormServiceImpl implements EditorFormService {
             }
         }
 
-        // If mixin A extends mixin B and both are in the list, remove B.
-        // A already carries B's properties via the supertype chain, so keeping both
-        // causes non-deterministic field assignment during fieldset merge.
-        res.removeIf(mixin -> res.stream()
+        // If mixin A extends mixin B and both are in the list, remove B: A already carries B's
+        // properties via the supertype chain, so B's fieldset would put a second enable switch on
+        // the form over a fieldset the reader has no reason to turn on by itself.
+        //
+        // That only holds for a fieldset the reader can switch. A jmix:templateMixin has no enable
+        // switch (see isExtend above), so dropping it hides no switch and instead leaves it no
+        // fieldset: where a chain of template mixins are each a value of an addMixin choicelist,
+        // every member but the most derived one would show nothing when selected.
+        res.removeIf(mixin -> !mixin.isNodeType(TEMPLATE_MIXIN) && res.stream()
             .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
 
         return res;
+    }
+
+    /**
+     * Leaves one editable copy of each property among the fieldsets that are actually active,
+     * keeping the first and dropping the rest. Fieldsets that are not active are left alone: their
+     * copy is what makes the property appear when the reader switches them on.
+     *
+     * <p>Identity is {@link Field#getKey()}, declaring type plus name, so this only ever collapses
+     * what is genuinely one property -- two inherited copies of the same supertype definition, not
+     * two properties that merely share a name.
+     *
+     * <p>Runs between the two post-processing passes over the form, so a field's {@code visible}
+     * flag is set (pass 1) but its value constraints are not resolved yet (pass 2) -- fields and
+     * fieldsets pass 2 will later drop are all still present here. Both are therefore tested
+     * explicitly: only a visible field in a visible fieldset can claim a property or be dropped as
+     * a duplicate of one. A field or fieldset the reader will never see is not a place the property
+     * is edited, and letting one claim a property here would strip it from the copy that IS shown.
+     */
+    private static void removeFieldsEditedElsewhere(Form form) {
+        Set<String> alreadyEditable = new HashSet<>();
+        for (Section section : form.getSections()) {
+            for (FieldSet fieldSet : section.getFieldSets()) {
+                if (Boolean.TRUE.equals(fieldSet.isActivated()) && Boolean.TRUE.equals(fieldSet.isVisible())) {
+                    fieldSet.getFields().removeIf(field -> field.isVisible() && !alreadyEditable.add(field.getKey()));
+                }
+            }
+        }
     }
 
     boolean isApplicable(DefinitionRegistryItem form, JCRSiteNode site) {

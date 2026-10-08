@@ -985,6 +985,9 @@
           "btnMoveLast": "Move last",
           "btnMoveUp": "Move up",
           "btnMoveDown": "Move down",
+          "lockedChild": "You cannot move this item.",
+          "hiddenChildren": "{{count}} item is not visible to you, so you cannot reorder the list.",
+          "hiddenChildren_plural": "{{count}} items are not visible to you, so you cannot reorder the list.",
           "automatic": "Automatic ordering",
           "orderBy": "Order by",
           "description": "Activate automatic list ordering to order your sub-content items using a maximum of three criteria, or reorder your sub-contents items manually, using drag and drop."

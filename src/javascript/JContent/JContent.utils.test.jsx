@@ -6,7 +6,8 @@ import {
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
     removeFileExtension,
-    resolveUrlForLiveOrPreview
+    resolveUrlForLiveOrPreview,
+    resolveEffectiveSite
 } from './JContent.utils';
 
 jest.mock('@jahia/ui-extender', () => ({
@@ -87,6 +88,13 @@ describe('resolveUrlForLiveOrPreview', () => {
         it('omits port when on standard port', () => {
             setLocation('servera', '');
             expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+    });
+
+    describe('port preservation', () => {
+        it('drops port for external serverName (live front-server assumption)', () => {
+            setLocation('servera', '8080');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'externalhost')).toBe('https://externalhost/cms/render/live/en/sites/luxe/home.html');
         });
     });
 
@@ -364,5 +372,67 @@ describe('JahiaRenderedModulesUtil', () => {
         it('should return nothing when there are no entries', () => {
             expect(toNamedPlaceholders(undefined)).toEqual([]);
         });
+    });
+});
+
+describe('resolveEffectiveSite', () => {
+    const mkSite = (sitekey, serverName, aliases = []) => ({
+        sitekey,
+        serverName,
+        path: `/sites/${sitekey}`,
+        additionalServerNames: {values: aliases}
+    });
+
+    const digitall = mkSite('digitall', 'localhost');
+    const mySite = mkSite('mysite', 'www.mysite.com');
+    const allSites = [{site: digitall}, {site: mySite}];
+
+    it('returns the node site when it is the selected site', () => {
+        const node = {site: mySite};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'localhost');
+        expect(result.isSharedContext).toBe(false);
+        expect(result.switchHost).toBe(false);
+        expect(result.effectiveSite).toBe(node.site);
+    });
+
+    it('switches to the selected site when a localhost-only node site is shared', () => {
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'myserver');
+        expect(result.isSharedContext).toBe(true);
+        expect(result.switchHost).toBe(true);
+        expect(result.effectiveSite).toBe(mySite);
+    });
+
+    it('is not a shared context when the node site has localhost plus an alias', () => {
+        const node = {site: mkSite('digitall', 'localhost', ['alias.example.com'])};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'myserver');
+        expect(result.isSharedContext).toBe(false);
+        expect(result.switchHost).toBe(false);
+        expect(result.effectiveSite).toBe(node.site);
+    });
+
+    it('falls back to the node site when the selected site is missing from allSites', () => {
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, [{site: digitall}], 'mysite', 'myserver');
+        expect(result.isSharedContext).toBe(true);
+        expect(result.effectiveSite).toBe(node.site);
+        expect(result.switchHost).toBe(false);
+    });
+
+    it('does not switch host when the selected site is itself localhost-only', () => {
+        const other = mkSite('other', 'localhost');
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, [{site: digitall}, {site: other}], 'other', 'myserver');
+        expect(result.isSharedContext).toBe(true);
+        expect(result.effectiveSite).toBe(other);
+        expect(result.switchHost).toBe(false);
+    });
+
+    it('is never a shared context when browsing on localhost', () => {
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'localhost');
+        expect(result.isSharedContext).toBe(false);
+        expect(result.switchHost).toBe(false);
+        expect(result.effectiveSite).toBe(node.site);
     });
 });

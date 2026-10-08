@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import {Trans, useTranslation} from 'react-i18next';
+import {getContentName} from './TagManager.utils';
 import styles from './TagManager.scss';
 
 export const DeleteNodeTagDialog = ({tag = null, node = null, isOpen = false, isLoading = false, onClose, onConfirm}) => {
@@ -17,7 +18,7 @@ export const DeleteNodeTagDialog = ({tag = null, node = null, isOpen = false, is
                         i18nKey="jcontent:label.contentManager.tagManager.deleteNodeTag.description"
                         values={{
                             tag,
-                            contentName: node?.displayName || node?.path
+                            contentName: getContentName(node)
                         }}
                         components={[
                             <span key="delete-node-danger-text" className={styles.dangerText}/>

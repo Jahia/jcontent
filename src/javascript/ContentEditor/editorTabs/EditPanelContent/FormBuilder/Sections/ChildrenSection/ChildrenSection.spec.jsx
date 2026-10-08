@@ -8,6 +8,9 @@ import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('formik');
 jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
+jest.mock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context', () => ({
+    useContentEditorContext: jest.fn(() => ({nodeData: {}}))
+}));
 
 describe('Children section component', () => {
     let props;
@@ -64,6 +67,35 @@ describe('Children section component', () => {
         expect(cmp.find('WithStyles(ToggleCmp)').length).toBe(0);
         expect(cmp.find('ManualOrdering').length).toBe(1);
         expect(cmp.find('AutomaticOrdering').length).toBe(0);
+    });
+
+    // A page has the manual ordering field only, and its section shows nothing when the list is empty
+    const manualOrderingOnly = () => {
+        const fieldSet = listOrderingFieldSet(false, false);
+        fieldSet.fields = fieldSet.fields.filter(f => f.name === 'jmix:orderedList_ce:manualOrdering');
+        return {displayName: 'children', fieldSets: [fieldSet]};
+    };
+
+    it('should keep the ordering list when every child is hidden from the user', () => {
+        const {useContentEditorContext} = jest.requireMock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+        useContentEditorContext.mockReturnValue({nodeData: {hiddenChildrenCount: 2}});
+        props.section = manualOrderingOnly();
+        formik.values['Children::Order'] = [];
+
+        const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);
+
+        expect(cmp.find('ManualOrdering').length).toBe(1);
+    });
+
+    it('should hide the ordering list when there is no child and none is hidden', () => {
+        const {useContentEditorContext} = jest.requireMock('~/ContentEditor/contexts/ContentEditor/ContentEditor.context');
+        useContentEditorContext.mockReturnValue({nodeData: {hiddenChildrenCount: 0}});
+        props.section = manualOrderingOnly();
+        formik.values['Children::Order'] = [];
+
+        const cmp = shallowWithTheme(<ChildrenSection {...props}/>, {}, dsGenericTheme);
+
+        expect(cmp.find('ManualOrdering').length).toBe(0);
     });
 
     it('should display manual ordering', () => {

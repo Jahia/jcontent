@@ -975,6 +975,9 @@
           "btnMoveLast": "An die letzte Position",
           "btnMoveUp": "Nach oben",
           "btnMoveDown": "Nach unten",
+          "lockedChild": "Sie können dieses Element nicht verschieben.",
+          "hiddenChildren": "{{count}} Element ist für Sie nicht sichtbar, daher können Sie die Liste nicht neu ordnen.",
+          "hiddenChildren_plural": "{{count}} Elemente sind für Sie nicht sichtbar, daher können Sie die Liste nicht neu ordnen.",
           "automatic": "Automatische Listenreihenfolge",
           "orderBy": "Sortierfeld",
           "description": "Aktivieren Sie die automatische Listenreihenfolge, um Ihre Unterinhalte anhand von maximal drei Kriterien zu ordnen, oder ordnen Sie Ihre Unterinhalte manuell per Drag & Drop neu."

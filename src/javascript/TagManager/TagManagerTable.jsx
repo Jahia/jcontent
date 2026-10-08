@@ -149,7 +149,7 @@ export const TagManagerTable = ({
                     newName
                 }
             });
-            const result = mutationData?.admin?.jahia?.tagManager?.renameTag;
+            const result = mutationData?.jcontent?.tagManager?.renameTag;
             onTagRenamed(renameTarget.name, newName);
             await onMutationComplete();
             notify(
@@ -188,7 +188,7 @@ export const TagManagerTable = ({
                     tag: deleteTarget.name
                 }
             });
-            const result = mutationData?.admin?.jahia?.tagManager?.deleteTag;
+            const result = mutationData?.jcontent?.tagManager?.deleteTag;
             await onMutationComplete();
             onTagDeleted(deleteTarget.name);
             notify(

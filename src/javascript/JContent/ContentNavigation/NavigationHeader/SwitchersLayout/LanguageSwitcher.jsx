@@ -43,7 +43,7 @@ const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
         .map(l => ({
             label: l.localizedDisplayName,
             value: l.language,
-            iconEnd: <Pill label={l.language}/>
+            iconEnd: <Pill>{l.language}</Pill>
         }));
 
     if (!data) {
@@ -54,7 +54,7 @@ const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
 
     const LabelPill = (
         <Tooltip title={selectedLang.label} placement="bottom-start">
-            <Pill isReversed label={selectedLang.value}/>
+            <Pill isReversed>{selectedLang.value}</Pill>
         </Tooltip>
     );
 

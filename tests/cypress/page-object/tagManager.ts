@@ -1,8 +1,8 @@
-import {BaseComponent, Button, getComponentBySelector} from '@jahia/cypress';
+import {BaseComponent, Button, getComponentBySelector, Pagination} from '@jahia/cypress';
 import {JContent} from './jcontent';
 
 const ROOT_SELECTOR = '[data-cm-role="tag-manager-root"]';
-const TAG_MANAGER_APP_KEY = 'jctagsmanager';
+export const TAG_MANAGER_APP_KEY = 'jctagsmanager';
 
 export class TagManager extends JContent {
     constructor(base?: JContent) {
@@ -47,6 +47,26 @@ export class TagManager extends JContent {
 
     getRow(tagName: string) {
         return cy.contains('[data-cm-role="tag-manager-row"]', tagName).should('be.visible');
+    }
+
+    getRows() {
+        return cy.get('[data-cm-role="tag-manager-row"]');
+    }
+
+    getPagination(): Pagination {
+        return getComponentBySelector(Pagination, `${ROOT_SELECTOR} .moonstone-tablePagination`);
+    }
+
+    setRowsPerPage(rowsPerPage: number): TagManager {
+        this.getPagination().get().find('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
+        cy.get('menu.moonstone-menu[role="list"]').should('be.visible');
+        cy.contains('menu.moonstone-menu [role="option"]', new RegExp(`^${rowsPerPage}$`)).click();
+        return this;
+    }
+
+    goToNextPage(): TagManager {
+        this.getPagination().clickNextPage();
+        return this;
     }
 
     clickRowAction(tagName: string, actionRole: string): TagManager {

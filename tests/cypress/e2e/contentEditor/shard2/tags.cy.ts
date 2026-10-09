@@ -1,14 +1,49 @@
 import {JContent} from '../../../page-object/jcontent';
-import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
+import {addNode, context, createSite, createUser, deleteSite, deleteUser, enableModule, grantRoles, uploadFile} from '@jahia/cypress';
 import {TagField} from '../../../page-object/fields/tagField';
+import {TagManager} from '../../../page-object';
 import gql from 'graphql-tag';
 
 describe('Tags tests in content editor', () => {
     let jcontent: JContent;
     const siteKey = 'tagsSite';
+    const fileName = 'tagged-file.docx';
+    // The cancel and shared-tag scenarios run as an editor, as TagsTabTest did in Selenium
+    const editor = 'tagsEditor';
+    const password = 'password';
+
+    const addTextForTags = (name: string, tags?: string[]) => {
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name,
+            primaryNodeType: 'jnt:text',
+            properties: [
+                {name: 'text', language: 'en', value: name},
+                ...(tags ? [{name: 'j:tagList', values: tags}] : [])
+            ],
+            ...(tags ? {mixins: ['jmix:tagged']} : {})
+        });
+    };
+
+    const openTagField = (name: string) => {
+        const contentEditor = JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(name);
+        contentEditor.switchToAdvancedMode();
+        contentEditor.openSection('Classification and Metadata');
+        return {contentEditor, tagField: contentEditor.getField(TagField, 'jmix:tagged_j:tagList')};
+    };
+
+    const openFileClassification = () => {
+        const contentEditor = JContent.visit(siteKey, 'en', 'media/files').switchToListMode().editComponentByRowName(fileName);
+        contentEditor.switchToAdvancedMode();
+        contentEditor.openSection('Classification and Metadata');
+        return contentEditor;
+    };
 
     before(function () {
+        deleteUser(editor);
         createSite(siteKey);
+        createUser(editor, password);
+        grantRoles(`/sites/${siteKey}`, ['editor'], editor, 'USER');
         enableModule('qa-module', siteKey);
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -26,6 +61,14 @@ describe('Tags tests in content editor', () => {
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', language: 'en', value: 'my text for tags'}]
         });
+        addTextForTags('textForSavedTag');
+        addTextForTags('textForRemovedTag', ['keeptag', 'removetag']);
+        addTextForTags('textForTagManagerDelete', ['tm-kept-tag', 'tm-deleted-tag']);
+        addTextForTags('textForContentEditorRemove', ['ce-kept-tag', 'ce-removed-tag']);
+        addTextForTags('textForCancelledRemove', ['cancel-kept-tag', 'cancel-removed-tag']);
+        addTextForTags('textSharingTagEdited', ['own-tag', 'shared-tag']);
+        addTextForTags('textSharingTagUntouched', ['shared-tag']);
+        uploadFile('/assets/uploadMedia/myfile.docx', `/sites/${siteKey}/files`, fileName, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         cy.apollo({
             mutation: gql`mutation AddTags {
             jcr {
@@ -43,6 +86,7 @@ describe('Tags tests in content editor', () => {
     after(function () {
         cy.logout();
         deleteSite(siteKey);
+        deleteUser(editor);
     });
 
     beforeEach(() => {
@@ -51,7 +95,8 @@ describe('Tags tests in content editor', () => {
     });
 
     it('should add a tag', () => {
-        const contentEditor = jcontent.editComponentByRowName('myTextForTags');
+        context.tag('tags', 'content-editor', 'save-add');
+        const contentEditor = jcontent.editComponentByRowName('textForSavedTag');
         contentEditor.switchToAdvancedMode();
 
         contentEditor.openSection('Classification and Metadata');
@@ -62,7 +107,103 @@ describe('Tags tests in content editor', () => {
 
         tagField.getTags().should('have.length', 1);
         tagField.assertTagText('simpletag', 0);
+        contentEditor.save();
+        contentEditor.cancel();
+
+        const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForSavedTag');
+        savedTagField.getTags().should('have.length', 1);
+        savedTagField.assertTagText('simpletag', 0);
+        reopenedEditor.cancel();
+    });
+
+    it('should remove a tag', () => {
+        context.tag('tags', 'content-editor', 'save-remove');
+        const {contentEditor, tagField} = openTagField('textForRemovedTag');
+        tagField.removeTag('removetag');
+
+        tagField.getTags().should('have.length', 1);
+        contentEditor.save();
+        contentEditor.cancel();
+
+        const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForRemovedTag');
+        savedTagField.getTags().should('have.length', 1);
+        savedTagField.assertTagText('keeptag', 0);
+        reopenedEditor.cancel();
+    });
+
+    it('should not save a tag added to a file when the edit is cancelled', () => {
+        context.tag('tags', 'content-editor', 'cancel-add', 'media');
+        cy.loginAndStoreSession(editor, password);
+        const contentEditor = openFileClassification();
+        contentEditor.toggleOption('jmix:tagged', 'Tags');
+        const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
+        tagField.addNewValue('unsavedtag');
         contentEditor.cancelAndDiscard();
+
+        const reopenedEditor = openFileClassification();
+        reopenedEditor.getDynamicFieldset('jmix:tagged').find('input').should('not.be.checked');
+        reopenedEditor.toggleOption('jmix:tagged', 'Tags');
+        reopenedEditor.getField(TagField, 'jmix:tagged_j:tagList').getTags().should('have.length', 0);
+        reopenedEditor.cancelAndDiscard();
+    });
+
+    it('should keep a removed tag when the edit is cancelled', () => {
+        context.tag('tags', 'content-editor', 'cancel-remove');
+        cy.loginAndStoreSession(editor, password);
+        const {contentEditor, tagField} = openTagField('textForCancelledRemove');
+        tagField.removeTag('cancel-removed-tag');
+        tagField.getTags().should('have.length', 1);
+        contentEditor.cancelAndDiscard();
+
+        const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForCancelledRemove');
+        savedTagField.getTags().should('have.length', 2);
+        savedTagField.assertTagText('cancel-kept-tag', 0);
+        savedTagField.assertTagText('cancel-removed-tag', 1);
+        reopenedEditor.cancel();
+    });
+
+    it('should keep a tag on other content when it is removed from one content', () => {
+        context.tag('tags', 'content-editor', 'remove-other-content');
+        cy.loginAndStoreSession(editor, password);
+        const {contentEditor, tagField} = openTagField('textSharingTagEdited');
+        tagField.removeTag('shared-tag');
+        contentEditor.save();
+        contentEditor.cancel();
+
+        // Check the removal was saved before checking the other content still has the tag
+        const {contentEditor: editedEditor, tagField: editedTagField} = openTagField('textSharingTagEdited');
+        editedTagField.getTags().should('have.length', 1);
+        editedTagField.assertTagText('own-tag', 0);
+        editedEditor.cancel();
+
+        const {contentEditor: untouchedEditor, tagField: untouchedTagField} = openTagField('textSharingTagUntouched');
+        untouchedTagField.getTags().should('have.length', 1);
+        untouchedTagField.assertTagText('shared-tag', 0);
+        untouchedEditor.cancel();
+    });
+
+    it('should remove a tag from content editor when it is deleted in tag manager', () => {
+        context.tag('tags', 'tag-manager', 'content-editor', 'delete-in-tag-manager');
+        const tagManager = TagManager.visit(siteKey, 'en');
+        tagManager.search('tm-deleted-tag').openDelete('tm-deleted-tag').confirmDelete();
+        cy.contains('[data-cm-role="tag-manager-row"]', 'tm-deleted-tag').should('not.exist');
+
+        const {contentEditor, tagField} = openTagField('textForTagManagerDelete');
+        tagField.getTags().should('have.length', 1);
+        tagField.assertTagText('tm-kept-tag', 0);
+        contentEditor.cancel();
+    });
+
+    it('should remove a tag from tag manager when it is removed in content editor', () => {
+        context.tag('tags', 'tag-manager', 'content-editor', 'remove-in-content-editor');
+        const {contentEditor, tagField} = openTagField('textForContentEditorRemove');
+        tagField.removeTag('ce-removed-tag');
+        contentEditor.save();
+        contentEditor.cancel();
+
+        const tagManager = TagManager.visit(siteKey, 'en');
+        tagManager.getRow('ce-kept-tag').should('contain', '1');
+        cy.contains('[data-cm-role="tag-manager-row"]', 'ce-removed-tag').should('not.exist');
     });
 
     it('should add multiple tags', () => {

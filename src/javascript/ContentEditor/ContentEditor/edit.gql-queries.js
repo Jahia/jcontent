@@ -99,6 +99,7 @@ const NodeDataFragment = {
                     }
                 }
                 hasWritePermission: hasPermission(permissionName: $writePermission)
+                hasComponentPermission
                 hasPublishPermission: hasPermission(permissionName: "publish")
                 hasTranslatePermission: hasPermission(permissionName: "translateAction")
                 hasStartPublicationWorkflowPermission: hasPermission(permissionName: "publication-start")

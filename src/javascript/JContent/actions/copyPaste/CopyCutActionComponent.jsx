@@ -12,6 +12,12 @@ import {withNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 import {getClickedElementHook} from '~/JContent/EditFrame';
 import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
+import {componentPermissionFragment, hasComponentPermission} from '../utils/componentPermission';
+
+const isMarkedForDeletionRoot = res => (res.node ?
+    hasMixin(res.node, 'jmix:markedForDeletionRoot') :
+    res.nodes?.some(node => hasMixin(node, 'jmix:markedForDeletionRoot'))
+);
 
 export const CopyCutActionComponent = withNotifications()(({
     path,
@@ -53,6 +59,7 @@ export const CopyCutActionComponent = withNotifications()(({
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
             requiredSitePermission: type === copyPasteConstants.CUT ? [ACTION_PERMISSIONS.cutAction] : [ACTION_PERMISSIONS.copyAction],
             getProperties: ['jcr:mixinTypes'],
+            applyFragment: componentPermissionFragment,
             ...subPagesCondition,
             ...others
         }
@@ -66,11 +73,7 @@ export const CopyCutActionComponent = withNotifications()(({
         return false;
     }
 
-    const isVisible = res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(path || paths) &&
-        (res.node ?
-            !hasMixin(res.node, 'jmix:markedForDeletionRoot') :
-            res.nodes?.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true)
-        );
+    const isVisible = res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(path || paths) && hasComponentPermission(res) && !isMarkedForDeletionRoot(res);
     const isEnabled = !others.hideIfHasNoSubPages || (res.node?.['subNodesCount_jnt:page'] + res.node?.['subNodesCount_jmix:navMenuItem']) !== 0;
 
     return (

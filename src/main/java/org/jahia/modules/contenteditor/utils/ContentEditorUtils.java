@@ -35,6 +35,7 @@ import org.jahia.services.content.nodetypes.ConstraintsHelper;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.utils.LanguageCodeConverters;
+import org.jahia.utils.NodeTypesUtils;
 import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,5 +202,15 @@ public class ContentEditorUtils {
         return key;
     }
 
-
+    /**
+     * Check that the current user may use the node's type, with the same component permission
+     * on the site that is required to create content of this type.
+     *
+     * @param node the node to check
+     * @return true if the user has the component permission of the node's type, or if the type requires none
+     */
+    public static boolean hasComponentPermission(JCRNodeWrapper node) throws RepositoryException {
+        JCRSiteNode site = node.getResolveSite();
+        return site == null || NodeTypesUtils.checkPermissionForType(node.getPrimaryNodeTypeName(), site);
+    }
 }

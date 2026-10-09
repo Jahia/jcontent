@@ -4,6 +4,7 @@ import {replaceFragmentsInDocument, useNodeInfo} from '@jahia/data-helper';
 import {useQuery} from '@apollo/client';
 import {GET_PICKER_NODE} from './JahiaPicker.gql-queries';
 import {
+    cePickerClearOpenPaths,
     cePickerMode,
     cePickerModes,
     cePickerOpenPaths,
@@ -14,7 +15,7 @@ import {
     cePickerSite
 } from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
 import {registry} from '@jahia/ui-extender';
-import {getDetailedPathArray, getPathWithoutFile} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
+import {getAncestorPathsToOpen} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {batchActions} from 'redux-batched-actions';
 import PropTypes from 'prop-types';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
@@ -55,6 +56,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
 
     accordion = jcontentUtils.getAccordionItem(accordion, accordionItemProps);
 
+    // The view follows from the selection, so the query flags the ancestors that open in either view of this picker
+    const queryHandlers = jcontentUtils.getAccordionItems(pickerConfig.key, accordionItemProps).map(item => item.tableConfig?.queryHandler);
+    const getOpenableTypes = viewType => [...new Set(queryHandlers.flatMap(queryHandler => queryHandler?.getOpenableTypes?.(viewType) || []))];
     const fragments = [...(accordion?.tableConfig?.queryHandler?.getFragments() || []), ...(accordion?.tableConfig?.fragments || [])];
     const selectionQuery = replaceFragmentsInDocument(GET_PICKER_NODE, fragments);
     const nodesInfo = useQuery(selectionQuery, {
@@ -62,7 +66,9 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             paths: paths,
             language: lang,
             uilang: uilang,
-            selectableTypesTable: pickerConfig.selectableTypesTable
+            selectableTypesTable: pickerConfig.selectableTypesTable,
+            pagesOpenableTypes: getOpenableTypes(Constants.tableView.type.PAGES),
+            contentOpenableTypes: getOpenableTypes(Constants.tableView.type.CONTENT)
         },
         initialFetchPolicy: 'network-only',
         nextFetchPolicy: 'cache-and-network'
@@ -126,13 +132,16 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
             newState.modes = accordionItems.map(item => item.key);
 
             if (selectedNode && !previousState.current.isOpen) {
-                newState.openPaths = [...new Set([...newState.openPaths, ...getDetailedPathArray(getPathWithoutFile(selectedNode.path), newState.site)])];
+                // Drop the paths an earlier opening left open, and open the root and the ancestors of the selection
+                const flaggedViewType = firstMatchingAccordion.tableConfig.queryHandler?.getOpenableTypes && newState.viewType;
+                newState.openPaths = [...new Set([newState.path, ...getAncestorPathsToOpen(selectedNode, flaggedViewType)])];
             }
 
             if (previousState.current.mode !== newState.mode && firstMatchingAccordion.tableConfig.defaultSort) {
                 newState.sort = firstMatchingAccordion.tableConfig.defaultSort;
             }
 
+            const hasOpenPathsChanged = newState.openPaths.length !== state.openPaths.length || newState.openPaths.some(value => !state.openPaths.includes(value));
             const actions = ([
                 (newState.site !== state.site) && cePickerSite(newState.site),
                 (newState.mode !== state.mode) && cePickerMode(newState.mode),
@@ -140,7 +149,8 @@ export const SelectionHandler = ({initialSelectedItem, site, pickerConfig, accor
                 (newState.modes.length !== state.modes?.length || newState.modes.some(mode => !state.modes.includes(mode))) && cePickerModes(newState.modes),
                 (newState.path !== state.path) && cePickerPath(newState.path),
                 (newState.viewType !== state.viewType) && cePickerSetTableViewType(newState.viewType),
-                (newState.openPaths.length !== state.openPaths.length || newState.openPaths.some(value => state.openPaths.indexOf(value) === -1)) && cePickerOpenPaths(newState.openPaths)
+                hasOpenPathsChanged && cePickerClearOpenPaths(),
+                hasOpenPathsChanged && cePickerOpenPaths(newState.openPaths)
             ]).filter(f => f);
             return actions;
         };

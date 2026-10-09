@@ -1043,6 +1043,7 @@
         },
         "rightPanel": {
           "actionsCaption": "Non-selectable items are not listed in this view",
+          "tooManyItems": "Some items are not listed because there are too many. Use the search to find them.",
           "searchContextOptions": {
             "search": "Search in",
             "allUsers": "All users",

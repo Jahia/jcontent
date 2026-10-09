@@ -1,3 +1,4 @@
 [tools]
+java = "temurin-11"
 node = "24"
 yarn = "4"

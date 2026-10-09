@@ -33,6 +33,32 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
     />
 );
 
+const GENERIC_LIST_TYPE = 'jnt:contentList';
+
+/**
+ * Label of the chip a box carries. A box whose type says more than the generic content list
+ * shows that type instead: for a list, the type is what the author recognizes the box by - a
+ * Section reads as "Section", not as "List". The generic labels are left to the types that
+ * have nothing more precise to offer.
+ */
+const getAreaLabel = (node, area, t) => {
+    const typeName = node.primaryNodeType?.name;
+
+    if ((area.isArea || area.isList) && typeName && typeName !== GENERIC_LIST_TYPE) {
+        return node.primaryNodeType.displayName;
+    }
+
+    if (area.isArea) {
+        return t('jcontent:label.contentManager.contentType.area');
+    }
+
+    if (area.isAbsolute) {
+        return t('jcontent:label.contentManager.contentType.absoluteArea');
+    }
+
+    return t('jcontent:label.contentManager.contentType.list');
+};
+
 const getAreaIcon = (node, area) => {
     const contextPath = window.contextJsParameters.contextPath;
 
@@ -59,11 +85,7 @@ export const LabelBar = ({node, area, dragProps}) => {
     const boundComponentTitleAddOn = node?.boundComponent?.refNode?.displayName ? ` - ${t('jcontent:label.contentManager.pageBuilder.box.linkedTo')} ${node?.boundComponent?.refNode?.displayName}` : '';
 
     if (area) {
-        let label = area.isArea ? 'Area' : area.isAbsolute ? 'Absolute Area' : 'List';
-
-        if (area.isArea && node.primaryNodeType?.name !== 'jnt:contentList') {
-            label = `${node.primaryNodeType?.displayName}`;
-        }
+        const label = getAreaLabel(node, area, t);
 
         return (
             <>

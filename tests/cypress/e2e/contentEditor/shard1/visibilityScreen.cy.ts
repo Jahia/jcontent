@@ -790,9 +790,8 @@ describe('Visibility Screen', () => {
             startField.addNewValue(startValue);
             endField.addNewValue(endValue);
 
-            // The "shown in your local time zone" hint must be visible next to the fields —
-            // the display convention is meaningless if the editor can't see whose time it is.
-            startField.get().find('[data-sel-role="date-field-timezone-hint"]').should('be.visible');
+            // The timezone selector replaces the old read-only "local time zone" caption
+            startField.get().find('[data-sel-role="date-field-timezone-selector"]').should('be.visible');
 
             getVisibilityButton('Save').click();
 

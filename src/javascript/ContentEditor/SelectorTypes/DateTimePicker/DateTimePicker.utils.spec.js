@@ -1,4 +1,4 @@
-import {dateOnlyFromIsoString, fillDisabledDaysFromJCRConstraints, toDateOnlyIsoString} from './DateTimePicker.utils';
+import {pickerBoundsFromJCRConstraints, dateOnlyFromIsoString, toDateOnlyIsoString} from './DateTimePicker.utils';
 
 describe('DateTime picker utils', () => {
     describe('toDateOnlyIsoString / dateOnlyFromIsoString', () => {
@@ -36,13 +36,9 @@ describe('DateTime picker utils', () => {
         });
     });
 
-    describe('fillDisabledDaysFromJCRConstraints', () => {
+    describe('pickerBoundsFromJCRConstraints', () => {
         const before = '2019-06-01T00:00:00';
-        const beforeTime = '2019-06-01T00:01:00';
-        const beforeDay = '2019-06-02T00:00:00';
         const after = '2019-07-01T00:00:00';
-        const afterTime = '2019-06-30T23:59:00';
-        const afterDay = '2019-06-30T00:00:00';
         const field = ({incBefore, before, after, incAfter}) => {
             return {
                 valueConstraints: [
@@ -51,19 +47,14 @@ describe('DateTime picker utils', () => {
             };
         };
 
+        // Exclusive bounds move by a day on the date variant and by a minute on the datetime one
         const tests = [{
             input: {
                 incBefore: '[', before, after, incAfter: ']'
             },
             result: {
-                datetime: [
-                    {before: new Date(before)},
-                    {after: new Date(after)}
-                ],
-                date: [
-                    {before: new Date(before)},
-                    {after: new Date(after)}
-                ]
+                date: {minDate: '2019-06-01', maxDate: '2019-07-01'},
+                datetime: {minDate: '2019-06-01', maxDate: '2019-07-01'}
             }
         },
         {
@@ -71,14 +62,8 @@ describe('DateTime picker utils', () => {
                 incBefore: '(', before, after, incAfter: ']'
             },
             result: {
-                date: [
-                    {before: new Date(beforeDay)},
-                    {after: new Date(after)}
-                ],
-                datetime: [
-                    {before: new Date(beforeTime)},
-                    {after: new Date(after)}
-                ]
+                date: {minDate: '2019-06-02', maxDate: '2019-07-01'},
+                datetime: {minDate: '2019-06-01', maxDate: '2019-07-01'}
             }
         },
         {
@@ -86,24 +71,34 @@ describe('DateTime picker utils', () => {
                 incBefore: '(', before, after, incAfter: ')'
             },
             result: {
-                date: [
-                    {before: new Date(beforeDay)},
-                    {after: new Date(afterDay)}
-                ],
-                datetime: [
-                    {before: new Date(beforeTime)},
-                    {after: new Date(afterTime)}
-                ]
+                date: {minDate: '2019-06-02', maxDate: '2019-06-30'},
+                datetime: {minDate: '2019-06-01', maxDate: '2019-06-30'}
             }
         }];
         tests.forEach(test => {
             let testField = field(test.input);
-            it('should return the disabledDays on date variant regarding the provided JCR Constraints for ' + testField.valueConstraints[0].value.string, () => {
-                expect(fillDisabledDaysFromJCRConstraints(testField, false)).toEqual(test.result.date);
+            it('should return the day bounds on date variant for ' + testField.valueConstraints[0].value.string, () => {
+                expect(pickerBoundsFromJCRConstraints(testField, false)).toEqual(test.result.date);
             });
-            it('should return the disabledDays on datetime variant regarding the provided JCR Constraints for ' + testField.valueConstraints[0].value.string, () => {
-                expect(fillDisabledDaysFromJCRConstraints(testField, true)).toEqual(test.result.datetime);
+            it('should return the day bounds on datetime variant for ' + testField.valueConstraints[0].value.string, () => {
+                expect(pickerBoundsFromJCRConstraints(testField, true)).toEqual(test.result.datetime);
             });
+        });
+
+        it('reads a date-only boundary literally, ignoring any offset baked into the constraint', () => {
+            const testField = {valueConstraints: [{value: {string: '[2019-06-04T00:00:00.000Z,)'}}]};
+
+            expect(pickerBoundsFromJCRConstraints(testField, false)).toEqual({minDate: '2019-06-04', maxDate: undefined});
+        });
+
+        it('keeps the day of a datetime boundary with a time of day', () => {
+            const testField = {valueConstraints: [{value: {string: '(2019-06-04T10:00:00.000,2019-06-05T10:00:00.000)'}}]};
+
+            expect(pickerBoundsFromJCRConstraints(testField, true)).toEqual({minDate: '2019-06-04', maxDate: '2019-06-05'});
+        });
+
+        it('returns no bounds for a field without constraints', () => {
+            expect(pickerBoundsFromJCRConstraints({valueConstraints: []}, true)).toEqual({});
         });
     });
 });

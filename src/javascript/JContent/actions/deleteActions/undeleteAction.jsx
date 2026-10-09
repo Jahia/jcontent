@@ -6,10 +6,10 @@ import React, {useContext} from 'react';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import Delete from './Delete';
-import {componentPermissionFragment} from '../utils/componentPermission';
+import {componentPermissionFragment, hasComponentPermission} from '../utils/componentPermission';
 
 function checkAction(node) {
-    return node.operationsSupport.markForDeletion && isMarkedForDeletion(node) && node.hasComponentPermission;
+    return node.operationsSupport.markForDeletion && isMarkedForDeletion(node);
 }
 
 export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, buttonProps, onDeleted, render: Render, loading: Loading, ...others}) => {
@@ -47,7 +47,7 @@ export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, butt
         return false;
     }
 
-    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes?.reduce((acc, node) => acc && checkAction(node), true));
+    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes?.reduce((acc, node) => acc && checkAction(node), true)) && hasComponentPermission(res);
 
     return (
         <Render

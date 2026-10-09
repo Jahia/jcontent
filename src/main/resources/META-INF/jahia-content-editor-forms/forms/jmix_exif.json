@@ -1,0 +1,15 @@
+{
+  "nodeType": "jmix:exif",
+  "priority": 2.0,
+  "sections": [
+    {
+      "name": "metadata",
+      "fieldSets": [
+        {
+          "name": "jmix:exif",
+          "labelKey": "label.contentEditor.section.fieldSet.exif.displayName"
+        }
+      ]
+    }
+  ]
+}

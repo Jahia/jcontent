@@ -378,9 +378,14 @@
 [cent:actionTest] > jnt:content, jmix:basicContent, jmix:editorialContent
  - actionType (string, choicelist) indexed=no < 'cemix:chainRedirect', 'cemix:chainSuccess', 'cemix:chainPopin'
 
+// pageTarget and pageTracking are hidden, so the editor never writes them back on a switch
+// (https://github.com/Jahia/jcontent/issues/2831): pageTarget is shared and autocreated, so adding
+// the next chain member puts its default back over the value the switch must keep.
 [cemix:chainRedirect] > jmix:templateMixin mixin
  extends = cent:actionTest
  - pageSuccess (string) internationalized
+ - pageTarget (string) = '_self' autocreated hidden indexed=no
+ - pageTracking (string) internationalized hidden
 
 [cemix:chainSuccess] > jmix:templateMixin, cemix:chainRedirect mixin
  extends = cent:actionTest

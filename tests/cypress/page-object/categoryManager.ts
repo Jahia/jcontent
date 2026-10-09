@@ -1,19 +1,27 @@
 import {ContentEditor} from './contentEditor';
 import {SmallTextField} from './fields';
 import {JContent} from './jcontent';
-import {AccordionItem, TreeItem} from './accordionItem';
+import {ContentTableRow} from './contentTable';
 import {Button, getComponentByRole} from '@jahia/cypress';
+import Chainable = Cypress.Chainable;
 
+// Name cell of a row, and the wrapper that carries the expand chevron when the row has children
+const NAME_CELL = '[data-cm-role^="table-content-list-cell-name"]';
+const EXPANDER = `${NAME_CELL} .moonstone-TableCell > svg`;
+const LABEL = `${NAME_CELL} span[class*="moonstone-tableCellContent"]`;
+
+/**
+ * Categories are managed from a single place: the whole tree is rendered as an expandable
+ * table in the main panel, the secondary navigation only holds the "Categories" entry point.
+ */
 export class CategoryManager extends JContent {
-    categoryAccordion: AccordionItem;
-
     constructor(base: JContent) {
         super();
         Object.assign(this, base);
     }
 
     static visitCategoryManager(language: string, path = ''): CategoryManager {
-        cy.visit(`/jahia/category-manager/${language}/category/${path}`);
+        cy.visit(`/jahia/taxonomy/categories/${language}/category/${path}`);
         return new CategoryManager(new JContent());
     }
 
@@ -22,21 +30,44 @@ export class CategoryManager extends JContent {
         return new ContentEditor();
     }
 
-    getAccordionItem(): AccordionItem {
-        if (!this.categoryAccordion) {
-            this.categoryAccordion = super.getAccordionItem('category');
+    getCategory(name: string): ContentTableRow {
+        return this.getTable().getRowByName(name);
+    }
+
+    /**
+     * All rows carrying that node name, to tell apart categories duplicated across branches
+     */
+    getCategories(name: string): Chainable {
+        return cy.get(`[data-cm-role="table-content-list-row"][data-node-name="${name}"]`);
+    }
+
+    /**
+     * Makes a category the current one, so the header actions apply to it
+     */
+    selectCategory(name: string): CategoryManager {
+        this.getCategory(name).get().find(LABEL).dblclick();
+        cy.get('.moonstone-loader', {timeout: 10000}).should('not.exist');
+        return this;
+    }
+
+    expandCategory(name: string): CategoryManager {
+        this.getCategory(name).get().find(EXPANDER).first().click();
+        return this;
+    }
+
+    isExpandable(name: string): CategoryManager {
+        this.getCategory(name).get().find(EXPANDER).should('be.visible');
+        return this;
+    }
+
+    /**
+     * @param parentName category to create under, null to create at the root of the tree
+     */
+    createCategoryNav(parentName: string | null, fields: {title: string, name?: string}) {
+        if (parentName) {
+            this.selectCategory(parentName);
         }
 
-        return this.categoryAccordion;
-    }
-
-    getTreeItem(role: string): TreeItem {
-        return this.getAccordionItem().getTreeItem(role);
-    }
-
-    createCategoryNav(parentName: string, fields: {title: string, name?: string}) {
-        const accordionItem = this.getAccordionItem();
-        accordionItem.getTreeItem(parentName).click();
         cy.get('.moonstone-loader', {timeout: 10000}).should('not.exist');
         getComponentByRole(Button, 'jnt:category').click(); // New Category header menu
         this.editFields(fields).create();
@@ -44,8 +75,7 @@ export class CategoryManager extends JContent {
     }
 
     editCategoryNav(name: string, fields: {title?: string, name?: string}, lang?: string) {
-        const accordionItem = this.getAccordionItem();
-        accordionItem.getTreeItem(name).contextMenu().select('Edit');
+        this.getCategory(name).contextMenu().select('Edit');
         this.editFields(fields, lang).save();
     }
 

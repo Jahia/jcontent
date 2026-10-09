@@ -1,26 +1,16 @@
-import {addNode, context, createSite, deleteSite, getNodeByPath, jfaker} from '@jahia/cypress';
+import {addNode, context, createSite, deleteSite} from '@jahia/cypress';
 import {TagManager} from '../../../page-object';
 
 describe('Tag Manager sort and pagination', () => {
-    const siteKeyPrefix = 'tagManagerSortPagination';
-    const siteKey = `${siteKeyPrefix}${jfaker.string.alphanumeric({length: 8, casing: 'lower', safe: true})}`;
+    const siteKey = 'tagManagerSortPagination';
     // Tags are stored in lowercase, so only accents are ignored
     const sortedTags = ['aaa', 'ça', 'école', 'edd', 'eee', 'été', 'fff', 'île', 'rrr', 'sss', 'test', 'uuu', 'vvv', 'xxx', 'yyyy', 'zzz'];
     const shuffledTags = ['zzz', 'été', 'test', 'ça', 'uuu', 'aaa', 'île', 'yyyy', 'rrr', 'eee', 'école', 'xxx', 'fff', 'sss', 'vvv', 'edd'];
 
-    const deleteStaleSites = () => {
-        getNodeByPath('/sites', [], 'en', ['jnt:virtualsite']).then(({data}) => {
-            data.jcr.nodeByPath.children.nodes
-                .map(({name}) => name)
-                .filter(name => name.startsWith(siteKeyPrefix))
-                .forEach(name => deleteSite(name));
-        });
-    };
-
     const getRowNames = $rows => [...$rows].map(row => row.dataset.tagName);
 
     before(() => {
-        deleteStaleSites();
+        deleteSite(siteKey);
         createSite(siteKey, {
             templateSet: 'jcontent-test-template',
             serverName: 'localhost',

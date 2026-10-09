@@ -2,7 +2,7 @@ import {BaseComponent, Button, getComponentBySelector, Pagination} from '@jahia/
 import {JContent} from './jcontent';
 
 const ROOT_SELECTOR = '[data-cm-role="tag-manager-root"]';
-const TAG_MANAGER_APP_KEY = 'jctagsmanager';
+export const TAG_MANAGER_APP_KEY = 'jctagsmanager';
 
 export class TagManager extends JContent {
     constructor(base?: JContent) {

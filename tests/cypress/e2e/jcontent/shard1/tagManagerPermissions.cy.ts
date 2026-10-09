@@ -1,7 +1,5 @@
 import {addNode, context, createSite, createUser, deleteSite, deleteUser, grantRoles} from '@jahia/cypress';
-import {JContent, TagManager} from '../../../page-object';
-
-const TAG_MANAGER_APP_KEY = 'jctagsmanager';
+import {JContent, TAG_MANAGER_APP_KEY, TagManager} from '../../../page-object';
 
 describe('Tag Manager permissions', () => {
     const siteKey = 'tagManagerPermissions';

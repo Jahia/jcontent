@@ -24,6 +24,10 @@ import java.util.Locale;
 public class GqlPrincipal {
 
     private static final String PUBLIC_PROPERTIES = "j:publicProperties";
+    private static final String USERS_FOLDER = "users";
+    private static final String GROUPS_FOLDER = "groups";
+    private static final String PROVIDERS_FOLDER = "providers";
+    private static final String DEFAULT_PROVIDER = "default";
 
     // Read with the rights of the search; never handed to the schema.
     private final JCRNodeWrapper node;
@@ -90,15 +94,15 @@ public class GqlPrincipal {
     }
 
     @GraphQLField
-    @GraphQLDescription("Key of the provider that stores the principal")
+    @GraphQLDescription("Name of the provider that stores the principal: the folder it is mounted on under 'providers', or 'default'")
     public String getProvider() {
-        if (node instanceof JCRUserNode) {
-            return ((JCRUserNode) node).getProviderName();
+        String[] segments = StringUtils.split(node.getPath(), '/');
+        for (int i = 1; i < segments.length - 2; i++) {
+            if (PROVIDERS_FOLDER.equals(segments[i]) && (USERS_FOLDER.equals(segments[i - 1]) || GROUPS_FOLDER.equals(segments[i - 1]))) {
+                return segments[i + 1];
+            }
         }
-        if (node instanceof JCRGroupNode) {
-            return ((JCRGroupNode) node).getProviderName();
-        }
-        return node.getProvider().getKey();
+        return DEFAULT_PROVIDER;
     }
 
     @GraphQLField

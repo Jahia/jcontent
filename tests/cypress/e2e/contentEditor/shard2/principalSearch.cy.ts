@@ -188,6 +188,16 @@ describe('jContent principal search GraphQL endpoint', () => {
         });
     });
 
+    it('matches every word of the term against the names a user shows', () => {
+        cy.apollo({
+            query: USER_SEARCH,
+            variables: {siteKey, scopePath: '/users', searchTerm: 'anderson alice', offset: 0, limit: 25}
+        }).then(result => {
+            expect(result.data.jcontent.userSearch.pageInfo.totalCount).to.eq(1);
+            expect(names(result)).to.deep.eq([`${prefix}user1`]);
+        });
+    });
+
     it('returns the values a picker displays for each user', () => {
         cy.apollo({
             query: PRINCIPAL_FIELDS,
@@ -227,6 +237,22 @@ describe('jContent principal search GraphQL endpoint', () => {
             }).then(result => {
                 expect(groupNames(result)).to.include(globalGroup);
                 expect(groupNames(result)).to.include(siteGroup);
+            });
+        });
+
+        it('matches a term against the first and last names the editor may read', () => {
+            cy.apollo({
+                query: USER_SEARCH,
+                variables: {siteKey, scopePath: '/users', searchTerm: 'Alice', offset: 0, limit: 25}
+            }).then(result => {
+                expect(result.data.jcontent.userSearch.pageInfo.totalCount).to.eq(0);
+            });
+
+            cy.apollo({
+                query: USER_SEARCH,
+                variables: {siteKey, scopePath: '/users', searchTerm: `${prefix}user1`, offset: 0, limit: 25}
+            }).then(result => {
+                expect(names(result)).to.deep.eq([`${prefix}user1`]);
             });
         });
 

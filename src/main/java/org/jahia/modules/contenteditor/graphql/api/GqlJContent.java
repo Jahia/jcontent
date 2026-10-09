@@ -26,6 +26,7 @@ package org.jahia.modules.contenteditor.graphql.api;
 import graphql.annotations.annotationTypes.*;
 import graphql.annotations.connection.GraphQLConnection;
 import graphql.schema.DataFetchingEnvironment;
+import org.apache.commons.lang.StringUtils;
 import org.jahia.ajax.gwt.helper.DiffHelper;
 import org.jahia.data.viewhelper.principal.PrincipalViewHelper;
 import org.jahia.api.Constants;
@@ -43,11 +44,13 @@ import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.content.JCRSessionWrapper;
 import org.jahia.services.sites.JahiaSitesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,6 +61,7 @@ import java.util.stream.Stream;
 @GraphQLDescription("jContent API")
 public class GqlJContent {
 
+    private static final Logger logger = LoggerFactory.getLogger(GqlJContent.class);
     private static final String JCONTENT_ACCESS = "jContentAccess";
 
 
@@ -87,17 +91,21 @@ public class GqlJContent {
     public DXPaginatedData<GqlPrincipal> getUserSearch(
         @GraphQLName("siteKey") @GraphQLDescription("Key of the site the search runs for. The caller needs jContent access to that site. Without a key, the search runs for the system site") String siteKey,
         @GraphQLName("scopePath") @GraphQLDescription("Search scope: '/' (site + global), '/users' (global only) or '/sites/{site}/users' (site only)") String scopePath,
-        @GraphQLName("searchTerm") @GraphQLDescription("Search term matched against all user properties; blank lists everything (up to the count limit)") String searchTerm,
+        @GraphQLName("searchTerm") @GraphQLDescription("Search term; each of its words appears in the user name, display name, or a first or last name the caller may read. Blank lists everything (up to the count limit)") String searchTerm,
         @GraphQLName("providers") @GraphQLDescription("Optional provider keys to restrict the search; null targets all providers") Collection<String> providers,
         @GraphQLName("fieldSorter") @GraphQLDescription("Sort by GraphQL field values") FieldSorterInput fieldSorter,
         DataFetchingEnvironment environment) {
         if (!canSearch(scopeSiteKey(scopePath, siteKey))) {
-            return toPaginatedPrincipals(Collections.emptySet(), fieldSorter, environment);
+            return toPaginatedPrincipals(Stream.empty(), fieldSorter, environment);
         }
         String[] providerKeys = toProviderKeys(providers);
         Set<? extends JCRNodeWrapper> users = PrincipalViewHelper.getSearchResult(searchIn(searchTerm),
             resolveSiteKey(scopePath, siteKey), wrapWildcards(searchTerm), null, storedOn(providerKeys), providerKeys, includeGlobal(scopePath));
-        return toPaginatedPrincipals(users, fieldSorter, environment);
+        Stream<GqlPrincipal> principals = users.stream().map(GqlPrincipal::new);
+        if (StringUtils.isNotBlank(searchTerm)) {
+            principals = principals.filter(principal -> showsSearchTerm(principal, searchTerm));
+        }
+        return toPaginatedPrincipals(principals, fieldSorter, environment);
     }
 
     @GraphQLField
@@ -112,12 +120,12 @@ public class GqlJContent {
         @GraphQLName("fieldSorter") @GraphQLDescription("Sort by GraphQL field values") FieldSorterInput fieldSorter,
         DataFetchingEnvironment environment) {
         if (!canSearch(scopeSiteKey(scopePath, siteKey))) {
-            return toPaginatedPrincipals(Collections.emptySet(), fieldSorter, environment);
+            return toPaginatedPrincipals(Stream.empty(), fieldSorter, environment);
         }
         String[] providerKeys = toProviderKeys(providers);
         Set<? extends JCRNodeWrapper> groups = PrincipalViewHelper.getGroupSearchResult(searchIn(searchTerm),
             resolveSiteKey(scopePath, siteKey), wrapWildcards(searchTerm), null, storedOn(providerKeys), providerKeys, includeGlobal(scopePath));
-        return toPaginatedPrincipals(groups, fieldSorter, environment);
+        return toPaginatedPrincipals(groups.stream().map(GqlPrincipal::new), fieldSorter, environment);
     }
 
     private static String[] toProviderKeys(Collection<String> providers) {
@@ -173,11 +181,17 @@ public class GqlJContent {
      * its categories.
      */
     private static boolean canSearch(String siteKey) {
+        boolean allowed;
         if (siteKey == null || siteKey.isEmpty()) {
             String systemSitePath = sitePath(JahiaSitesService.SYSTEM_SITE_KEY);
-            return hasPermission(systemSitePath, JCONTENT_ACCESS) || hasPermission(systemSitePath + "/categories", "categoryManager");
+            allowed = hasPermission(systemSitePath, JCONTENT_ACCESS) || hasPermission(systemSitePath + "/categories", "categoryManager");
+        } else {
+            allowed = !siteKey.contains("/") && isSite(sitePath(siteKey)) && hasPermission(sitePath(siteKey), JCONTENT_ACCESS);
         }
-        return !siteKey.contains("/") && isSite(sitePath(siteKey)) && hasPermission(sitePath(siteKey), JCONTENT_ACCESS);
+        if (!allowed) {
+            logger.debug("User and group search for site '{}' returns no result: the current user has no jContent access to it", siteKey);
+        }
+        return allowed;
     }
 
     private static String sitePath(String siteKey) {
@@ -211,8 +225,20 @@ public class GqlJContent {
         return !isSitePath(scopePath);
     }
 
-    private static DXPaginatedData<GqlPrincipal> toPaginatedPrincipals(Set<? extends JCRNodeWrapper> principals, FieldSorterInput fieldSorter, DataFetchingEnvironment environment) {
-        Stream<GqlPrincipal> stream = principals.stream().map(GqlPrincipal::new);
+    /**
+     * Every word of the search term appears in a value the result shows: its name, display name, or a first or
+     * last name the caller may read.
+     */
+    private static boolean showsSearchTerm(GqlPrincipal principal, String searchTerm) {
+        String shown = Stream.of(principal.getName(), principal.getDisplayName(null), principal.getFirstName(), principal.getLastName())
+            .filter(StringUtils::isNotEmpty)
+            .collect(Collectors.joining(" "))
+            .toLowerCase(Locale.ROOT);
+        return Stream.of(StringUtils.split(StringUtils.remove(searchTerm, '*').toLowerCase(Locale.ROOT)))
+            .allMatch(shown::contains);
+    }
+
+    private static DXPaginatedData<GqlPrincipal> toPaginatedPrincipals(Stream<GqlPrincipal> stream, FieldSorterInput fieldSorter, DataFetchingEnvironment environment) {
         if (fieldSorter != null) {
             stream = stream.sorted(SorterHelper.getFieldComparator(fieldSorter, FieldEvaluator.forConnection(environment)));
         }

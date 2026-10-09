@@ -23,6 +23,18 @@ export {BaseChildrenQuery, BaseDescendantsQuery, BaseQueryHandler, BaseTreeQuery
 export {DragLayer, useConnector, useFileDrop, useNodeDrag, useNodeDrop} from '../JContent/dnd';
 export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 
+// The content side panel, so a module supplying its own accordion route can offer the same panel
+// jContent's own content list does. ContentLayout is what renders these today, and a module that
+// replaces it with a routeComponent of its own loses the panel with it - these three are what let
+// it put it back rather than reimplement preview, details, history and usages.
+//
+// The redux actions come with them because the panel's own close button dispatches cmCloseSidePanel:
+// a caller that kept the selection in state of its own would find the button did nothing. Reading
+// state.jcontent.sidePanelSelection and dispatching these keeps one source of truth.
+export {SidePanel, SidePanelContextProvider, useSidePanelContext} from '../JContent/SidePanel';
+export {JContentSidePanelContextProvider} from '../JContent/ContentRoute/ContentLayout/JContentSidePanelContextProvider';
+export {cmCloseSidePanel, cmSetPreviewFullScreen, cmSetSidePanelSelection} from '../JContent/redux/preview.redux';
+
 // Content-editor shared/index.js
 export {ContentEditorContext, ContentEditorContextProvider, useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 export {ContentEditorConfigContext, ContentEditorConfigContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts/ContentEditorConfig';

@@ -41,6 +41,7 @@ describe('Tags tests in content editor', () => {
 
     before(function () {
         deleteUser(editor);
+        deleteSite(siteKey);
         createSite(siteKey);
         createUser(editor, password);
         grantRoles(`/sites/${siteKey}`, ['editor'], editor, 'USER');

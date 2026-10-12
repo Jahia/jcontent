@@ -1,0 +1,12 @@
+query GetTags($siteKey: String!, $fieldSorter: InputFieldSorterInput) {
+    jcontent {
+        tagManager(siteKey: $siteKey) {
+            tags(fieldSorter: $fieldSorter) {
+                nodes {
+                    name
+                    occurrences
+                }
+            }
+        }
+    }
+}

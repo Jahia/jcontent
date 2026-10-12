@@ -1,7 +1,7 @@
 import org.jahia.services.content.JCRTemplate
 import javax.jcr.Node
 
-// Ensure the editor-in-chief role grants the viewHistoryTab permission
+// Ensure the editor role grants the viewHistoryTab permission
 // so that non-root test users can access the content history side panel tab.
 JCRTemplate.getInstance().doExecuteWithSystemSession { session ->
     Node role = session.getNode('/roles/editor')

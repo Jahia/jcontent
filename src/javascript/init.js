@@ -1,6 +1,7 @@
 import {registry} from '@jahia/ui-extender';
 import register from './JContent.register';
 import {register as ceRegister} from './ContentEditor/register';
+import {registerLegacyTagsManagerRemoval} from './TagManager/register';
 import {MoreVert} from '@jahia/moonstone';
 import {Constants} from './ContentEditor/SelectorTypes/Picker/Picker.constants';
 import React from 'react';
@@ -15,6 +16,8 @@ export default function () {
             assignActionAndMenuTargets();
         }
     });
+
+    registerLegacyTagsManagerRemoval(registry);
 
     registry.add('callback', 'updateAccordionTargetsFromPickerConfigurations', {
         targets: ['jahiaApp-init:999'],

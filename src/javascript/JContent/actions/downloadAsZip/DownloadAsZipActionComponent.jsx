@@ -3,7 +3,6 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {hasMixin} from '~/JContent/JContent.utils';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {compareVersions} from 'compare-versions';
 import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
 
 export const DownloadAsZipActionComponent = ({path, paths, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
@@ -13,11 +12,10 @@ export const DownloadAsZipActionComponent = ({path, paths, node: prefetchedNode,
     }), shallowEqual);
 
     const showOnNodeTypes = ['jnt:file', 'jnt:folder'];
-    const skip = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') < 0 ||
-        (!paths && isDefinitelyHidden(prefetchedNode, {
-            showOnNodeTypes,
-            hideMixins: ['jmix:markedForDeletionRoot']
-        }));
+    const skip = !paths && isDefinitelyHidden(prefetchedNode, {
+        showOnNodeTypes,
+        hideMixins: ['jmix:markedForDeletionRoot']
+    });
 
     const res = useNodeChecks(
         {path, paths, language, displayLanguage},
@@ -39,11 +37,8 @@ export const DownloadAsZipActionComponent = ({path, paths, node: prefetchedNode,
         return false;
     }
 
-    // This action is only available for Jahia 8.1.3.0 or higher.
-    // Currently parent version is 8.0.2.0, please remove that check once the requirement higher than 8.1.3.0
     const isNodeMarkedForDeletionFn = node => hasMixin(node, 'jmix:markedForDeletionRoot');
-    const isVisible = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') >= 0 &&
-        res.checksResult &&
+    const isVisible = res.checksResult &&
         (res.node ? !isNodeMarkedForDeletionFn(res.node) : !res.nodes?.some(isNodeMarkedForDeletionFn));
     return (
         <Render

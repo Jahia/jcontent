@@ -16,7 +16,7 @@ import {GraphqlUtils} from '../../../utils/graphqlUtils';
  * E2E tests for the Content History side panel tab.
  *
  * Requires the `jcontent-test-template` module deployed and the `viewHistoryTab`
- * permission added to the `editor-in-chief` role via the
+ * permission added to the `editor` role via the
  * `addHistoryPermission.groovy` fixture.
  *
  * Assertions are intentionally *additive* (presence-based) rather than exact:
@@ -135,13 +135,17 @@ describe('Content editor side panel - History tab', () => {
         waitAllJobsFinished('Publication timeout for node: ' + path, 60000);
     };
 
+    // Read the history as the publisher, whose roles are granted on the site only,
+    // so a permission check that misses the node fails here and not only in the UI.
     const fetchHistory = (path: string) => {
+        cy.apolloClient({username: publisher.username, password: publisher.password});
         return cy.apollo({
             queryFile: 'api/contentHistory/getNodeHistoryDetailed.graphql',
             variables: {path, withLanguageNodes: true, offset: 0, limit: 200}
         }).then(result => {
             const entries = result?.data?.jcr?.nodeByPath?.history?.entries || [];
-            return entries as HistoryEntry[];
+            cy.apolloClient();
+            return cy.wrap(entries as HistoryEntry[]);
         });
     };
 

@@ -32,6 +32,9 @@ describe('Page builder - content status', () => {
             variables: {homePath: `/sites/${siteKey}/home`}
         });
         createUser(user.name, user.password);
+    });
+
+    beforeEach(() => {
         cy.loginAndStoreSession();
     });
 
@@ -100,7 +103,7 @@ describe('Page builder - content status', () => {
 
     describe('Publication status', {testIsolation: false}, () => {
         const page = 'publicationPage';
-        before(() => {
+        beforeEach(() => {
             jContentPageBuilder = JContent
                 .visit(siteKey, 'en', `pages/home/${page}`)
                 .switchToPageBuilder();

@@ -2687,9 +2687,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/data-helper@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@jahia/data-helper@npm:1.2.0"
+"@jahia/data-helper@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@jahia/data-helper@npm:1.2.1"
   dependencies:
     "@apollo/client": "npm:^3.7.14"
     fast-deep-equal: "npm:^3.1.1"
@@ -2697,7 +2697,7 @@ __metadata:
     graphql: "npm:^15.4.0"
     react: "npm:^16.12.0"
     rfdc: "npm:^1.3.0"
-  checksum: 10c0/12d064017b376baa8255af22064977f8130ca5d3911fe03784e89c7146ad941a6c12143ea41465002c5c1f87a03865091300f512d1162a23e82e33532f4a27a9
+  checksum: 10c0/534bfef670597a2c285acb92c0ea869a48b8d99d4289e58de25d106fa396aa19fad64397f46005e5ee1bc819e60e4b1ca7964c713297b71e107b2a1537513085
   languageName: node
   linkType: hard
 
@@ -2768,7 +2768,7 @@ __metadata:
     "@babel/preset-typescript": "npm:^7.22.5"
     "@chachalog/types": "npm:^0.5.0"
     "@cyclonedx/webpack-plugin": "npm:^4.0.1"
-    "@jahia/data-helper": "npm:^1.2.0"
+    "@jahia/data-helper": "npm:^1.2.1"
     "@jahia/design-system-kit": "npm:^1.2.1"
     "@jahia/eslint-config": "npm:^2.1.0"
     "@jahia/icons": "npm:^1.1.2"
@@ -2801,7 +2801,6 @@ __metadata:
     ckeditor4-react: "npm:1.2.0"
     clean-webpack-plugin: "npm:^3.0.0"
     clsx: "npm:^2.1.1"
-    compare-versions: "npm:^6.1.1"
     connected-react-router: "npm:^6.9.3"
     copy-webpack-plugin: "npm:^9.0.1"
     css-loader: "npm:^4.3.0"
@@ -9379,13 +9378,6 @@ __metadata:
   version: 1.0.1
   resolution: "commondir@npm:1.0.1"
   checksum: 10c0/33a124960e471c25ee19280c9ce31ccc19574b566dc514fe4f4ca4c34fa8b0b57cf437671f5de380e11353ea9426213fca17687dd2ef03134fea2dbc53809fd6
-  languageName: node
-  linkType: hard
-
-"compare-versions@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "compare-versions@npm:6.1.1"
-  checksum: 10c0/415205c7627f9e4f358f571266422980c9fe2d99086be0c9a48008ef7c771f32b0fbe8e97a441ffedc3910872f917a0675fe0fe3c3b6d331cda6d8690be06338
   languageName: node
   linkType: hard
 

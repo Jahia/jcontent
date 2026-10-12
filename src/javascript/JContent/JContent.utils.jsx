@@ -372,11 +372,34 @@ export const getTitle = (t, item, prefix = 'jContent') => {
     return item.label ? `${prefix} - ${t(item.label)}` : `${prefix} - ${item.key}`;
 };
 
+/**
+ * The named children among a parent's module entries, as [{name, nodeTypes}].
+ *
+ * An entry without node types is dropped: the rendering omits the attribute when neither the view
+ * nor the definition constrains the placeholder, and the editor has nothing to create from.
+ *
+ * @param {Array} entries the module entries collected for one parent
+ * @returns {{name: string, nodeTypes: string[]}[]} the creatable named children
+ */
+export const toNamedPlaceholders = entries => (entries || [])
+    .filter(entry => entry.placeholder && entry.path !== '*' && !entry.path?.startsWith('/'))
+    .filter(entry => entry.nodeTypes?.length > 0)
+    .map(entry => ({name: entry.path, nodeTypes: entry.nodeTypes}));
+
 export const JahiaRenderedModulesUtil = {
     jahiaAreas: {},
     jahiaModules: {},
-    setModules(modules) {
+    capturedPath: undefined,
+    setModules(modules, capturedPath) {
         this.jahiaModules = modules;
+        this.capturedPath = capturedPath;
+    },
+    // Whether the node sits inside the page whose rendering produced the current capture. Outside
+    // that subtree an absent entry means "never rendered", not "the view exposes nothing" - a
+    // content folder is never rendered, so its nodes are rendered one at a time instead.
+    hasRenderingFor: function (path) {
+        return Boolean(path && this.capturedPath) &&
+            (path === this.capturedPath || path.startsWith(this.capturedPath + '/'));
     },
     addModule: function (path, data) {
         this.jahiaModules[path] = data;
@@ -424,59 +447,79 @@ export const JahiaRenderedModulesUtil = {
 
         return placeholderNodeTypes;
     },
+    // The named children still creatable under a node, as [{name, nodeTypes}]. A placeholder is
+    // what the view emits for a child that does not exist yet, so an occupied name is absent by
+    // construction.
+    getNamedPlaceholders: function (path) {
+        return toNamedPlaceholders(this.getModule(path));
+    },
+    /**
+     * Collect the module information out of one rendering.
+     *
+     * @param {Document} dom the parsed rendering
+     * @param {string} rootPath the node that was rendered
+     * @param {boolean} standalone whether that node was rendered on its own, which is how a node
+     * outside a page is read. It then carries no module wrapper, so a placeholder with no module
+     * ancestor is its own. A page render instead nests every placeholder under the module element
+     * of its parent, and its root element is a mainmodule, which this selector never matches - so
+     * a parentless placeholder there belongs to no node this capture models, and the page route has
+     * always dropped it. Adopting it would hand the page its own named create actions.
+     * @returns {object} placeholders and wildcard node types, keyed by parent path
+     */
+    parseModuleInfo: function (dom, rootPath, standalone = false) {
+        const placeholdersByParent = {};
+
+        dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
+            const modulePath = element.getAttribute('path');
+            const elemType = element.getAttribute('type');
+            const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
+            const limit = element.getAttribute('listlimit') ?? undefined;
+
+            if (modulePath !== '*' && modulePath !== rootPath && (elemType === 'area' || elemType === 'absoluteArea')) {
+                this.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
+            }
+
+            if (elemType === 'placeholder') {
+                const ancestor = element.parentElement?.closest('[jahiatype="module"]');
+                const ancestorPath = ancestor?.getAttribute('path') ?? (standalone ? rootPath : undefined);
+                if (ancestorPath) {
+                    if (!placeholdersByParent[ancestorPath]) {
+                        placeholdersByParent[ancestorPath] = [];
+                    }
+
+                    placeholdersByParent[ancestorPath].push({
+                        path: element.getAttribute('path'),
+                        nodeTypes: element.getAttribute('nodetypes')?.split(' '),
+                        placeholder: true
+                    });
+                }
+            } else if (!placeholdersByParent[modulePath]) {
+                placeholdersByParent[modulePath] = [];
+                if (nodeTypes) {
+                    placeholdersByParent[modulePath].push({
+                        path: '*',
+                        nodeTypes,
+                        placeholder: false
+                    });
+                }
+            }
+        });
+
+        return placeholdersByParent;
+    },
     extractModuleInfoFromRenderedPage: function (pagePath, language, template) {
         const renderMode = 'editframe';
         const encodedPath = pagePath.replaceAll(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
         const url = `${globalThis.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${encodedPath}.html?redirect=false`;
         console.debug(`Fetching html for ${url} to extract module information.`);
 
-        fetch(url, {
+        return fetch(url, {
             method: 'get'
         }).then(resp => {
             return resp.text();
         }).then(resp => {
             const dom = new DOMParser().parseFromString(resp, 'text/html');
-
-            // Placeholder per module information extraction
-            const placeholdersByParent = {};
-
-            dom.querySelectorAll('[jahiatype="module"]').forEach(element => {
-                const modulePath = element.getAttribute('path');
-                const elemType = element.getAttribute('type');
-                const nodeTypes = element.getAttribute('nodetypes')?.split(' ');
-                const limit = element.getAttribute('listlimit') ?? undefined;
-
-                if (modulePath !== '*' && modulePath !== pagePath && (elemType === 'area' || elemType === 'absoluteArea')) {
-                    this.addArea(modulePath, {elemType, nodeTypes, limit: Number(limit)});
-                }
-
-                if (elemType === 'placeholder') {
-                    const ancestor = element.parentElement?.closest('[jahiatype="module"]');
-                    const ancestorPath = ancestor?.getAttribute('path');
-                    if (ancestorPath) {
-                        if (!placeholdersByParent[ancestorPath]) {
-                            placeholdersByParent[ancestorPath] = [];
-                        }
-
-                        placeholdersByParent[ancestorPath].push({
-                            path: element.getAttribute('path'),
-                            nodeTypes: element.getAttribute('nodetypes')?.split(' '),
-                            placeholder: true
-                        });
-                    }
-                } else if (!placeholdersByParent[modulePath]) {
-                    placeholdersByParent[modulePath] = [];
-                    if (nodeTypes) {
-                        placeholdersByParent[modulePath].push({
-                            path: '*',
-                            nodeTypes,
-                            placeholder: false
-                        });
-                    }
-                }
-            });
-
-            this.setModules(placeholdersByParent);
+            this.setModules(this.parseModuleInfo(dom, pagePath), pagePath);
         }).catch(e => {
             console.error('Failed to capture areas for page', e);
         });
@@ -502,6 +545,34 @@ export const resolveUrlForLiveOrPreview = (url, isLive, serverName) => {
     }
 
     return resolvedUrl;
+};
+
+/**
+ * Resolve the site whose server name(s) should drive an "Open in Live/Preview" link.
+ *
+ * A "shared content" context is when the node's resolved site is a localhost-only site
+ * (its only server name is `localhost`) that differs from the site currently being edited
+ * (`siteKey`), while jContent is browsed from a real hostname. In that case the node's own
+ * site cannot provide a usable host, so the currently selected site is used instead.
+ *
+ * @param {object} node - resolved node; `node.site` carries `{sitekey, serverName, path, additionalServerNames:{values}}`
+ * @param {Array}  allSites - site nodes (`[{site:{sitekey, serverName, path, additionalServerNames:{values}}}]`)
+ * @param {string} siteKey - the site currently being edited (`state.site`)
+ * @param {string} hostname - the browsing hostname (`location.hostname`)
+ * @returns {{effectiveSite: object|null, isSharedContext: boolean, switchHost: boolean}}
+ *   `effectiveSite` is the selected site in a shared context (falling back to the node's site
+ *   when it cannot be found), otherwise the node's own site. `switchHost` is true only when the
+ *   effective site has a real (non-localhost) server name worth substituting for the current host.
+ */
+export const resolveEffectiveSite = (node, allSites, siteKey, hostname) => {
+    const nodeSite = node?.site;
+    const names = [nodeSite?.serverName, ...(nodeSite?.additionalServerNames?.values ?? [])].filter(Boolean);
+    const isNodeSiteLocalhostOnly = names.length === 1 && names[0] === 'localhost';
+    const isSharedContext = Boolean(nodeSite) && nodeSite.sitekey !== siteKey && isNodeSiteLocalhostOnly && hostname !== 'localhost';
+    const selectedSite = isSharedContext ? (allSites?.find(s => s?.site?.sitekey === siteKey)?.site ?? null) : null;
+    const effectiveSite = selectedSite ?? nodeSite ?? null;
+    const switchHost = isSharedContext && Boolean(selectedSite?.serverName) && selectedSite.serverName !== 'localhost';
+    return {effectiveSite, isSharedContext, switchHost};
 };
 
 /**

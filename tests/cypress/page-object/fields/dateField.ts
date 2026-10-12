@@ -3,12 +3,18 @@ import {Field} from './field';
 
 export class DateField extends Field {
     addNewValue(newValue: string, force?: boolean): this
-    addNewValue(date: Date): this
+    addNewValue(date: Date, force?: boolean): this
 
     addNewValue(newValueOrDate: string | Date, force?: boolean) {
         const newValue =
             newValueOrDate instanceof Date ? DateField.toPickerDisplayValue(newValueOrDate) : newValueOrDate;
-        this.get().find('input[type="text"]').clear().type(newValue, {force: force}).should('have.value', newValue);
+        // `force` reaches clear() as well as type(): on a form long enough to make the section
+        // header sticky, this input ends up position: fixed underneath it, and no scroll can
+        // uncover it — so both actions need it, not just the typing.
+        this.get().find('input[type="text"]')
+            .clear({force: force})
+            .type(newValue, {force: force})
+            .should('have.value', newValue);
         return this;
     }
 
@@ -45,6 +51,8 @@ export class DateField extends Field {
 
     public open() {
         this.get().parent().find('button').click();
+        cy.get('.DayPicker').should('be.visible');
+        return this;
     }
 
     public close() {

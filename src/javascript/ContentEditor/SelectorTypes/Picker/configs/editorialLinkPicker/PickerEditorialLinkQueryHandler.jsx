@@ -4,14 +4,18 @@ import {PickerTreeQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/confi
 export const PickerEditorialLinkQueryHandler = {
     ...PickerTreeQueryHandler,
 
-    getTreeParams: options => {
+    // The types of the rows that open in a view, for the tree and for the ancestors of the selection
+    getOpenableTypes: viewType => (viewType === Constants.tableView.type.PAGES ?
+        ['jmix:mainResource', 'jnt:page', 'jnt:navMenuText'] :
+        ['jmix:mainResource', 'jnt:contentFolder']),
+
+    getTreeParams(options) {
         const treeParams = PickerTreeQueryHandler.getTreeParams(options);
+        treeParams.openableTypes = this.getOpenableTypes(options.tableView.viewType);
 
         if (options.tableView.viewType === Constants.tableView.type.PAGES) {
-            treeParams.openableTypes = ['jmix:mainResource', 'jnt:page', 'jnt:navMenuText'];
             treeParams.selectableTypes = ['jnt:page', 'jmix:mainResource'];
         } else { // Content
-            treeParams.openableTypes = ['jmix:mainResource', 'jnt:contentFolder'];
             treeParams.selectableTypes = ['jmix:mainResource'];
         }
 

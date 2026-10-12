@@ -27,15 +27,18 @@ function updateDragItems(items, reorderedItems) {
  * Custom hook to manage the reordering of a list of items.
  * It initializes the list with drag items and provides functions to handle reordering and resetting the list.
  * @param {array} items    array of items to be reordered
+ * @param {function} [settle]    given the drag items before and after a hover reorder, returns the drag items to show
  * @returns {object}    object containing the reordered items, handleReorder function, and reset function
  */
-export function useReorderList(items) {
+export function useReorderList(items, settle) {
     // Note the use of serialization to detect changes in the items array
     // this is necessary to avoid unnecessary re-renders when the items array is the same, because formik values are not stable
     const itemsRef = useRef({items, serialized: JSON.stringify(items)});
     const currentItemsSerialized = JSON.stringify(items);
 
     const [reorderedItems, setReorderedItems] = useState(makeDragItems(items));
+    const settleRef = useRef(settle);
+    settleRef.current = settle;
 
     const reset = useCallback(() => {
         setReorderedItems(makeDragItems(items));
@@ -43,9 +46,10 @@ export function useReorderList(items) {
     }, [currentItemsSerialized]);
 
     const handleReorder = useCallback((dragIndex, hoverIndex) => {
-        setReorderedItems(prevItems =>
-            onListIndexReorder(prevItems, dragIndex, hoverIndex).map((item, index) => ({...item, index}))
-        );
+        setReorderedItems(prevItems => {
+            const reordered = onListIndexReorder(prevItems, dragIndex, hoverIndex);
+            return (settleRef.current ? settleRef.current(prevItems, reordered) : reordered).map((item, index) => ({...item, index}));
+        });
     }, []);
 
     if (currentItemsSerialized !== itemsRef.current.serialized) {

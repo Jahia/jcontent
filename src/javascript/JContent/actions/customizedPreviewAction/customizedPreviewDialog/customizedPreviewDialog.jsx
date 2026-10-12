@@ -10,6 +10,7 @@ import {CustomizedPreviewContextProvider, useCustomizedPreviewContext} from '../
 import {DateSelector} from './dateSelector';
 import {ChannelSelector} from './channelSelector';
 import {UserSelector} from './userSelector';
+import {useCloseOnNavigation} from '~/utils';
 
 /**
  * @return an onclick() function handler to handle window redirection to the customized preview with the given params
@@ -57,6 +58,9 @@ const CustomizedPreviewDialogContainer = props => (
 
 const CustomizedPreviewDialog = ({isOpen, onClose, onExited}) => {
     const {t} = useTranslation('jcontent');
+
+    useCloseOnNavigation(onClose);
+
     const {user, date, channel, variant, clearAll} = useCustomizedPreviewContext();
     const {loadCustomizedPreview} = useDialogHandler();
 

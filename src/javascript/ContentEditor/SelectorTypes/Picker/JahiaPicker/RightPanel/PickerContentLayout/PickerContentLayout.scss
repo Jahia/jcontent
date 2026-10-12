@@ -7,3 +7,20 @@
 
     background-color: var(--color-light40);
 }
+
+.warningBox {
+    flex: 0 0 auto;
+    margin: var(--spacing-small);
+    padding: var(--spacing-medium);
+
+    color: var(--color-gray_dark);
+
+    border: 1px solid var(--color-warning);
+    border-radius: 2px;
+    background-color: var(--color-warning40);
+}
+
+.warningIcon {
+    flex: 0 0 auto;
+    margin-right: var(--spacing-medium);
+}

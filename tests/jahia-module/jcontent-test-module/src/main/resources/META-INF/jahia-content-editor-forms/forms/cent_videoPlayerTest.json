@@ -1,0 +1,36 @@
+{
+  "nodeType": "cent:videoPlayerTest",
+  "priority": 1.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "cent:videoPlayerTest",
+          "fields": [
+            {
+              "name": "videoType",
+              "valueConstraints": [
+                {
+                  "displayValue": "YouTube",
+                  "value": {"type": "String", "value": "cemix:youtubeGenericPlayer"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:youtubeGenericPlayer"}]
+                },
+                {
+                  "displayValue": "Vimeo",
+                  "value": {"type": "String", "value": "cemix:vimeoGenericPlayer"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:vimeoGenericPlayer"}]
+                },
+                {
+                  "displayValue": "SwitchTube",
+                  "value": {"type": "String", "value": "cemix:switchTubeGenericPlayer"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:switchTubeGenericPlayer"}]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

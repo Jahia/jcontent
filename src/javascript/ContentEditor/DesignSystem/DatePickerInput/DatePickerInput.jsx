@@ -25,6 +25,8 @@ const formatDateTime = (datetime, lang, variant, displayDateFormat) => {
         .format(displayDateFormat || datetimeFormat[variant]);
 };
 
+const sanitizeDate = date => (date instanceof Date && Number.isNaN(date.getTime()) ? null : date);
+
 export const getMaskOptions = (displayDateMask, isDateTime) => {
     const defaultDateMask = isDateTime ? '__/__/____ __:__' : '__/__/____';
     const mask = displayDateMask ? displayDateMask : defaultDateMask;
@@ -47,12 +49,17 @@ export const DatePickerInput = ({
     ...props
 }) => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [datetime, setDatetime] = useState(initialValue);
+    const [datetime, setDatetime] = useState(sanitizeDate(initialValue));
     const [datetimeString, setDatetimeString] = useState(
-        formatDateTime(initialValue, lang, variant, displayDateFormat)
+        formatDateTime(sanitizeDate(initialValue), lang, variant, displayDateFormat)
     );
 
     useEffect(() => {
+        // Leave current display as-is if invalid instead of clearing it.
+        if (initialValue && !dayjs(initialValue).isValid()) {
+            return;
+        }
+
         setDatetime(initialValue);
         setDatetimeString(formatDateTime(initialValue, lang, variant, displayDateFormat));
     }, [setDatetime, setDatetimeString, initialValue, lang, variant, displayDateFormat]);
@@ -75,7 +82,7 @@ export const DatePickerInput = ({
                 setDatetime(null);
                 onChange(null);
             } else if (!e.target.value.includes('_')) {
-                const newDate = dayjs(e.target.value, displayDateFormat || datetimeFormat[variant], lang);
+                const newDate = dayjs(e.target.value, displayDateFormat || datetimeFormat[variant], lang, true);
                 if (newDate.isValid()) {
                     setDatetimeString(newDate.locale(lang).format(displayDateFormat || datetimeFormat[variant]));
                     setDatetime(newDate.toDate());

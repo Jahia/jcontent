@@ -29,6 +29,7 @@ import graphql.schema.DataFetchingEnvironment;
 import org.jahia.ajax.gwt.helper.DiffHelper;
 import org.jahia.data.viewhelper.principal.PrincipalViewHelper;
 import org.jahia.modules.contenteditor.graphql.api.channels.GqlChannel;
+import org.jahia.modules.contenteditor.graphql.api.tags.GqlTagManagerQuery;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.modules.graphql.provider.dxm.node.SpecializedTypesHandler;
@@ -170,4 +171,10 @@ public class GqlJContent {
         return PaginationHelper.paginate(stream, node -> PaginationHelper.encodeCursor(node.getUuid()), arguments);
     }
 
+    @GraphQLField
+    @GraphQLName("tagManager")
+    @GraphQLDescription("Tag manager queries for a site, requires the tagManager permission on the site")
+    public GqlTagManagerQuery getTagManager(@GraphQLNonNull @GraphQLName("siteKey") @GraphQLDescription("The site key") String siteKey) {
+        return new GqlTagManagerQuery(siteKey);
+    }
 }

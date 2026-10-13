@@ -1,6 +1,6 @@
 import {useCallback} from 'react';
 import {validate} from '~/ContentEditor/validation';
-import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils/index';
+import {getDynamicFieldSets, getFields, isSameValue} from '~/ContentEditor/utils/index';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
@@ -25,17 +25,23 @@ function fillValues({newValues, previousValues, fieldsObj, i18nValues, nonI18nVa
 // adaptSections.ts). An edit sits in the copy of the mixin active at the time, so the bucket of the
 // language left stores every copy, with the value of the copy the reader sees: a mixin switched on
 // later then shows the edit in that language, and the save writes it. Only a group with a copy in the
-// bucket changed. Without an active copy, after a switch to a mixin that has none, the copies hold
-// the value a switch carried, and any of them serves.
-export function fillSiblingCopies({fields, dynamicFieldSets, values, i18nValues}) {
-    const groups = fields
+// bucket changed, and a group the reader sees with its stored value leaves the bucket, as fillValues
+// keeps only changed values. Without an active copy, after a switch to a mixin that has none, the
+// copies hold the value a switch carried, and any of them serves.
+export function fillSiblingCopies({fields, dynamicFieldSets, values, initialValues, i18nValues}) {
+    const groups = new Map();
+    fields
         .filter(field => field.i18n && field.declaringNodeType && Object.hasOwn(dynamicFieldSets, field.nodeType))
-        .reduce((result, field) => {
+        .forEach(field => {
             const key = `${field.declaringNodeType}|${field.propertyName}`;
-            return {...result, [key]: [...(result[key] || []), field]};
-        }, {});
+            if (groups.has(key)) {
+                groups.get(key).push(field);
+            } else {
+                groups.set(key, [field]);
+            }
+        });
 
-    Object.values(groups)
+    [...groups.values()]
         .filter(group => group.length > 1)
         .forEach(group => {
             const inBucket = group.find(field => Object.hasOwn(i18nValues.values, field.name));
@@ -49,8 +55,13 @@ export function fillSiblingCopies({fields, dynamicFieldSets, values, i18nValues}
                 return;
             }
 
+            const unchanged = isSameValue(value, initialValues[(seen || inBucket).name]);
             group.forEach(field => {
-                i18nValues.values[field.name] = Array.isArray(value) ? [...value] : value;
+                if (unchanged) {
+                    delete i18nValues.values[field.name];
+                } else {
+                    i18nValues.values[field.name] = Array.isArray(value) ? [...value] : value;
+                }
             });
         });
 }
@@ -96,7 +107,7 @@ export const useSwitchLanguage = () => {
             };
 
             fillValues({newValues: formik.values, previousValues, fieldsObj, i18nValues, nonI18nValues, dynamicFieldSets});
-            fillSiblingCopies({fields, dynamicFieldSets, values: formik.values, i18nValues});
+            fillSiblingCopies({fields, dynamicFieldSets, values: formik.values, initialValues: formik.initialValues, i18nValues});
 
             if (Object.keys(i18nValues.values).length > 0 && Object.keys(nonI18nValues.values).length === 0) {
                 const systemName = Object.keys(formik.values).find(fieldname => fieldname.endsWith('systemName'));

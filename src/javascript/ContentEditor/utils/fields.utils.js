@@ -207,6 +207,18 @@ export function checkIfValuesAreDifferent(firstValue, secondValue, requiredType)
 }
 
 /**
+ * Check if two form values are equal, comparing a multiple value item by item
+ * @param {*} value a form value
+ * @param {*} otherValue another form value
+ * @returns {boolean} true if the values are equal
+ */
+export function isSameValue(value, otherValue) {
+    return Array.isArray(value) && Array.isArray(otherValue) ?
+        value.length === otherValue.length && value.every((item, index) => item === otherValue[index]) :
+        value === otherValue;
+}
+
+/**
  * The stored property a field edits, matched by name and declaring type. Sibling copies of an inherited
  * field (see adaptSections.ts) differ by form field name and fieldset, and resolve to the same property.
  * @param {object} field the property field

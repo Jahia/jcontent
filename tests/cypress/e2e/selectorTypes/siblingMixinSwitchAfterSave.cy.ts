@@ -3,6 +3,18 @@ import {addNode, createSite, deleteNode, deleteSite, enableModule} from '@jahia/
 import {ChoiceListField, SmallTextField} from '../../page-object/fields';
 import gql from 'graphql-tag';
 
+interface FieldConstraintsOp {
+    operationName?: string;
+    variables?: {
+        nodeType?: string;
+        fieldName?: string;
+        context?: Array<{key: string; value: string}>;
+    };
+}
+
+const fieldConstraintsOps = (body: unknown): FieldConstraintsOp[] =>
+    (Array.isArray(body) ? body : [body]).filter((op: FieldConstraintsOp) => op?.operationName === 'fieldConstraints');
+
 // Follow-up of https://github.com/Jahia/jcontent/issues/2746
 //
 // Sibling template mixins that inherit the same property from a shared supertype each get their
@@ -249,6 +261,39 @@ describe('Sibling mixin switch after a save in the same editor session', () => {
                 .to.equal(posterUuids.posterB);
         });
 
+        deleteNode(`${contents}/${name}`);
+    });
+
+    // A value set in code reaches the handlers of the copy switched on through its field, which
+    // notifies them of every change of its value: sharedQuality depends on sharedZone.
+    it('refreshes a dependent choicelist from the value carried to the sibling switched on', () => {
+        const name = 'carriedDependency';
+        addNode({
+            parentPathOrId: contents,
+            name,
+            primaryNodeType: 'cent:videoPlayerTest',
+            mixins: ['cemix:vimeoGenericPlayer'],
+            properties: [{name: 'videoType', value: 'cemix:vimeoGenericPlayer'}]
+        });
+
+        const contentEditor = visitEditor(name);
+        contentEditor.getField(ChoiceListField, 'cemix:vimeoGenericPlayer_sharedZone').selectValue('eu');
+
+        const ops: FieldConstraintsOp[] = [];
+        cy.intercept('POST', '**/modules/graphql', req => {
+            ops.push(...fieldConstraintsOps(req.body));
+        });
+
+        contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:switchTubeGenericPlayer');
+        contentEditor.getField(ChoiceListField, 'cemix:switchTubeGenericPlayer_sharedZone').assertSelected('eu');
+        cy.wrap(ops).should(list => {
+            const zones = list
+                .filter(op => op.variables?.nodeType === 'cemix:switchTubeGenericPlayer' && op.variables?.fieldName === 'sharedQuality')
+                .map(op => op.variables?.context?.find(entry => entry.key === 'sharedZone')?.value);
+            expect(zones, 'sharedZone in the refetches of switchTube\'s sharedQuality').to.include('eu');
+        });
+
+        contentEditor.cancelAndDiscard();
         deleteNode(`${contents}/${name}`);
     });
 

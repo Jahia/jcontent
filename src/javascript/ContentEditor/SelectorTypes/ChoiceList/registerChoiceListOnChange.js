@@ -1,4 +1,4 @@
-import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils/fields.utils';
+import {getDynamicFieldSets, getFields, isSameValue} from '~/ContentEditor/utils/fields.utils';
 
 function getMixinList(field, fieldValue) {
     let mixins = [];
@@ -26,10 +26,6 @@ function getMixinList(field, fieldValue) {
 
 const isSameProperty = (field, otherField) => Boolean(field.declaringNodeType) &&
     field.propertyName === otherField.propertyName && field.declaringNodeType === otherField.declaringNodeType;
-
-const isSameValue = (value, otherValue) => (Array.isArray(value) && Array.isArray(otherValue) ?
-    value.length === otherValue.length && value.every((item, index) => item === otherValue[index]) :
-    value === otherValue);
 
 // Sibling mixins each hold their own copy of a property they inherit from a shared supertype (see
 // adaptSections.ts), but the node stores it once, and a copy takes its value only when the form loads.

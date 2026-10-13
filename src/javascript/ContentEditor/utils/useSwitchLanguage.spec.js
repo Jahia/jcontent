@@ -20,9 +20,12 @@ const sharedMode = player => ({...sharedNote(player), name: `${player}_sharedMod
 const fields = players.flatMap(player => [sharedNote(player), sharedMode(player)]);
 const dynamicFieldSets = Object.fromEntries([...players, nativePlayer].map(mixin => [mixin, false]));
 
+// Every copy loaded with the stored value
+const initialValues = Object.fromEntries(fields.map(field => [field.name, 'stored']));
+
 const fill = (values, bucket) => {
     const i18nValues = {values: {...bucket}, validation: {}};
-    fillSiblingCopies({fields, dynamicFieldSets, values, i18nValues});
+    fillSiblingCopies({fields, dynamicFieldSets, values, initialValues, i18nValues});
     return i18nValues.values;
 };
 
@@ -40,7 +43,7 @@ describe('fillSiblingCopies', () => {
         });
     });
 
-    it('stores the value of the copy the reader sees, even when that copy is unchanged', () => {
+    it('leaves out a property the reader sees with its stored value, so the save writes nothing', () => {
         // Edited in youtube, carried to every copy by a switch to vimeo, then edited back in vimeo
         const values = {
             'cemix:vimeoGenericPlayer': true,
@@ -53,7 +56,7 @@ describe('fillSiblingCopies', () => {
             'cemix:switchTubeGenericPlayer_sharedNote': 'edit undone'
         };
 
-        expect(Object.values(fill(values, bucket))).toEqual(['stored', 'stored', 'stored']);
+        expect(fill(values, bucket)).toEqual({});
     });
 
     it('stores the value a copy holds when no mixin with a copy is active', () => {

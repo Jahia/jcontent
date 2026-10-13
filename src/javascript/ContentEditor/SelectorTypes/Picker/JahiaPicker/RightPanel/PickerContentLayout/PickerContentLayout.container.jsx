@@ -91,7 +91,8 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
         openPaths: state.contenteditor.picker.openPaths
     }), shallowEqual);
 
-    const {result, error, loading, isStructured, refetch} = useLayoutQuery(options, additionalFragments, undefined, accordionItemProps);
+    // Apollo caches the rows of a tree that the server cut short, but not the error that says so
+    const {result, error, loading, isStructured, refetch} = useLayoutQuery({...options, treeFetchPolicy: 'network-only'}, additionalFragments, undefined, accordionItemProps);
 
     useEffect(() => {
         setRefetcher('pickerData', {

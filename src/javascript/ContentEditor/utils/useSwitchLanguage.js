@@ -21,6 +21,40 @@ function fillValues({newValues, previousValues, fieldsObj, i18nValues, nonI18nVa
         });
 }
 
+// Sibling mixins each hold their own copy of a property they inherit from a shared supertype (see
+// adaptSections.ts). An edit sits in the copy of the mixin active at the time, so the bucket of the
+// language left stores every copy, with the value of the copy the reader sees: a mixin switched on
+// later then shows the edit in that language, and the save writes it. Only a group with a copy in the
+// bucket changed. Without an active copy, after a switch to a mixin that has none, the copies hold
+// the value a switch carried, and any of them serves.
+export function fillSiblingCopies({fields, dynamicFieldSets, values, i18nValues}) {
+    const groups = fields
+        .filter(field => field.i18n && field.declaringNodeType && Object.hasOwn(dynamicFieldSets, field.nodeType))
+        .reduce((result, field) => {
+            const key = `${field.declaringNodeType}|${field.propertyName}`;
+            return {...result, [key]: [...(result[key] || []), field]};
+        }, {});
+
+    Object.values(groups)
+        .filter(group => group.length > 1)
+        .forEach(group => {
+            const inBucket = group.find(field => Object.hasOwn(i18nValues.values, field.name));
+            if (!inBucket) {
+                return;
+            }
+
+            const seen = group.find(field => values[field.nodeType] === true);
+            const value = seen ? values[seen.name] : i18nValues.values[inBucket.name];
+            if (value === undefined) {
+                return;
+            }
+
+            group.forEach(field => {
+                i18nValues.values[field.name] = Array.isArray(value) ? [...value] : value;
+            });
+        });
+}
+
 function fillErrors(validation, fieldsObj, i18nValues) {
     Object.keys(validation).forEach(key => {
         if (fieldsObj[key]) {
@@ -62,6 +96,7 @@ export const useSwitchLanguage = () => {
             };
 
             fillValues({newValues: formik.values, previousValues, fieldsObj, i18nValues, nonI18nValues, dynamicFieldSets});
+            fillSiblingCopies({fields, dynamicFieldSets, values: formik.values, i18nValues});
 
             if (Object.keys(i18nValues.values).length > 0 && Object.keys(nonI18nValues.values).length === 0) {
                 const systemName = Object.keys(formik.values).find(fieldname => fieldname.endsWith('systemName'));

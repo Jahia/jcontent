@@ -44,10 +44,17 @@ function carrySharedValues(oldMixins, newMixins, sections, formik) {
     const dynamicFieldSets = getDynamicFieldSets(sections);
     const copies = getFields(sections).filter(field => Object.hasOwn(dynamicFieldSets, field.nodeType));
 
+    // Two mixins switched off can share a property, and its group is carried once
+    const carried = new Set();
     copies
         .filter(field => isSwitchedOff(field.nodeType))
         .forEach(switchedOff => {
+            if (carried.has(switchedOff)) {
+                return;
+            }
+
             const group = copies.filter(field => isSameProperty(field, switchedOff));
+            group.forEach(field => carried.add(field));
             const source = group.find(field => isKept(field.nodeType) && hasValue(field)) ||
                 group.find(field => isSwitchedOff(field.nodeType) && hasValue(field));
             if (!source) {

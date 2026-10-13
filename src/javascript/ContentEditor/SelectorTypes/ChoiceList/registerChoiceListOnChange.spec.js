@@ -159,6 +159,29 @@ describe('registerChoiceListOnChange', () => {
         expect(formik.values['cemix:vimeoGenericPlayer_sharedNote']).toBe('seen by the reader');
     });
 
+    it('carries a property once when two mixins switched off share it', () => {
+        // Formik keeps the values of the render while a handler runs
+        const formik = {
+            values: {
+                'cemix:youtubeGenericPlayer_sharedNote': 'switched off',
+                'cemix:vimeoGenericPlayer_sharedNote': 'switched off',
+                'cemix:switchTubeGenericPlayer_sharedNote': 'loaded with the form'
+            },
+            setFieldValue: jest.fn(),
+            setFieldTouched: jest.fn()
+        };
+
+        switchMixins({
+            field: choicelist(players, true),
+            fieldSets: playerFieldSets,
+            from: ['cemix:youtubeGenericPlayer', 'cemix:vimeoGenericPlayer'],
+            to: ['cemix:switchTubeGenericPlayer'],
+            formik
+        });
+
+        expect(formik.setFieldValue.mock.calls.filter(([name]) => name === 'cemix:switchTubeGenericPlayer_sharedNote')).toHaveLength(1);
+    });
+
     it('carries a copy of a multiple value, and sets no copy that already holds it', () => {
         const formik = buildFormik({
             'cemix:switchTubeGenericPlayer_sharedTags': ['a', 'b'],

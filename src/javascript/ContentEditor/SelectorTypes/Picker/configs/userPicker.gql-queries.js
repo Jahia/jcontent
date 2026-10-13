@@ -1,21 +1,29 @@
 import gql from 'graphql-tag';
-import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
 
 export const UserPickerSearchQuery = gql`
-    query userPickerSearchQuery($siteKey:String!, $scopePath:String!, $searchTerm:String, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
+    query userPickerSearchQuery($siteKey:String!, $scopePath:String!, $searchTerm:String, $language:String, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
         jcontent {
             userSearch(siteKey: $siteKey, scopePath: $scopePath, searchTerm: $searchTerm, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
                 pageInfo {
                     totalCount
                 }
                 nodes {
-                    ...NodeFields
-                    ...node
+                    uuid
+                    path
+                    name
+                    displayName(language: $language)
+                    nodeTypeName
+                    firstName
+                    lastName
+                    provider
+                    siteInfo: site {
+                        siteKey
+                        displayName
+                    }
                 }
             }
         }
     }
-    ${QueryHandlersFragments.nodeFields.gql}
 `;
 
 export const UserPickerFragment = {

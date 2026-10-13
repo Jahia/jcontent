@@ -268,15 +268,12 @@ describe('Sibling mixin switch after a save in the same editor session', () => {
     // notifies them of every change of its value: sharedQuality depends on sharedZone.
     it('refreshes a dependent choicelist from the value carried to the sibling switched on', () => {
         const name = 'carriedDependency';
-        addNode({
-            parentPathOrId: contents,
-            name,
-            primaryNodeType: 'cent:videoPlayerTest',
-            mixins: ['cemix:vimeoGenericPlayer'],
-            properties: [{name: 'videoType', value: 'cemix:vimeoGenericPlayer'}]
-        });
+        addNode({parentPathOrId: contents, name, primaryNodeType: 'cent:videoPlayerTest'});
 
+        // Selected here rather than stored: on a node that carries the mixin, the choicelist moves its
+        // fields next to it once the form has rendered, and a click on one of them can land mid-move
         const contentEditor = visitEditor(name);
+        contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:vimeoGenericPlayer');
         contentEditor.getField(ChoiceListField, 'cemix:vimeoGenericPlayer_sharedZone').selectValue('eu');
 
         const ops: FieldConstraintsOp[] = [];

@@ -3,28 +3,9 @@ import gql from 'graphql-tag';
 import {JContent} from '../../page-object/jcontent';
 import {SecondaryNav} from '@jahia/cypress';
 
-interface TreeQueryOp {
-    operationName?: string;
-    variables?: {
-        openPaths?: string[];
-    };
-}
-
-// Records the open paths of each tree query from now on. Apollo batches operations, and the tree query is renamed after the fragments it carries
-const watchTreeQueries = (): string[][] => {
-    const treeQueries: string[][] = [];
-    cy.intercept('POST', '**/modules/graphql', req => {
-        treeQueries.push(...(Array.isArray(req.body) ? req.body : [req.body])
-            .filter((op: TreeQueryOp) => op?.operationName?.startsWith('PickerQuery'))
-            .map((op: TreeQueryOp) => op.variables?.openPaths || []));
-    });
-    return treeQueries;
-};
-
-// The last tree query carries the paths that the picker left open once it showed the selection
-const assertLastTreeQueryOpens = (treeQueries: string[][], openedPath: string, closedPaths: string[]) => {
-    cy.wrap(treeQueries).should(queries => {
-        const openPaths = queries[queries.length - 1];
+// The tree query opens the paths kept in the picker state. Apollo can answer that query from its cache without a request, so the state is read instead
+const assertPickerOpens = (openedPath: string, closedPaths: string[]) => {
+    cy.window().its('jahia.reduxStore').invoke('getState').its('contenteditor.picker.openPaths').should((openPaths: string[]) => {
         expect(openPaths).to.include(openedPath);
         closedPaths.forEach(path => expect(openPaths).not.to.include(path));
     });
@@ -164,12 +145,11 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
         };
 
         cy.log('verify tab is restored and selection is expanded');
-        const reopenQueries = watchTreeQueries();
         pickerField.open();
         verifySelectionIsExpanded();
 
         cy.log('verify the area that holds the news is not opened, as the page already lists its content');
-        assertLastTreeQueryOpens(reopenQueries, newsEntry, [newsArea]);
+        assertPickerOpens(newsEntry, [newsArea]);
         picker.cancel();
 
         cy.log('pick an image, which leaves the picker on the media accordion');
@@ -182,10 +162,9 @@ describe('Picker - Editorial link', {testIsolation: false}, () => {
         imageField.assertValue('fans-stadium.jpg');
 
         cy.log('verify the link still opens only the ancestors of its selection, and none of the image folders');
-        const afterImageQueries = watchTreeQueries();
         pickerField.open();
         verifySelectionIsExpanded();
-        assertLastTreeQueryOpens(afterImageQueries, newsEntry, [newsArea, '/sites/digitall/files/images']);
+        assertPickerOpens(newsEntry, [newsArea, '/sites/digitall/files/images']);
         picker.cancel();
         contentEditor.cancelAndDiscard();
     });

@@ -769,6 +769,30 @@ describe('EditPanel utils', () => {
             expect(propsToSave).toEqual([]);
         });
 
+        it('should not save an unchanged property a mixin inherits from a shared supertype', () => {
+            const field = {
+                nodeType: 'cemix:vimeoGenericPlayer',
+                declaringNodeType: 'cemix:sharedPlayerOptions',
+                name: 'cemix:vimeoGenericPlayer_sharedNote',
+                propertyName: 'sharedNote',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const siblingSections = [{
+                fieldSets: [{name: 'cemix:vimeoGenericPlayer', dynamic: true, activated: true, fields: [field]}]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [{name: 'cemix:vimeoGenericPlayer'}],
+                properties: [{name: 'sharedNote', value: 'stored note', definition: {declaringNodeType: {name: 'cemix:sharedPlayerOptions'}}}]
+            };
+            const formValues = {
+                'cemix:vimeoGenericPlayer': true,
+                [field.name]: 'stored note'
+            };
+            const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: siblingSections, lang, i18nContext: {}});
+            expect(propsToSave).toEqual([]);
+        });
+
         it('should not save an unchanged property of a mixin added by a save that removes none', () => {
             const field = {
                 nodeType: 'cemix:subtypeExtendMixin',

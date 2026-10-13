@@ -1,3 +1,5 @@
+import {getFields} from '~/ContentEditor/utils/fields.utils';
+
 function getMixinList(field, fieldValue) {
     let mixins = [];
 
@@ -22,6 +24,25 @@ function getMixinList(field, fieldValue) {
     return mixins;
 }
 
+const isSameProperty = (field, otherField) =>
+    field.propertyName === otherField.propertyName && field.declaringNodeType === otherField.declaringNodeType;
+
+// Sibling mixins each hold their own copy of a property they inherit from a shared supertype (see
+// adaptSections.ts), but the node stores it once. The copy of the mixin being switched on still holds
+// the value from when the form loaded, so it takes the value of the copy being switched off.
+function carrySharedValues(oldMixins, newMixins, sections, formik) {
+    const fields = getFields(sections);
+    const oldFields = fields.filter(f => oldMixins.includes(f.nodeType));
+    fields
+        .filter(f => newMixins.includes(f.nodeType) && !oldMixins.includes(f.nodeType))
+        .forEach(newField => {
+            const oldField = oldFields.find(f => isSameProperty(f, newField));
+            if (oldField && formik.values[oldField.name] !== formik.values[newField.name]) {
+                formik.setFieldValue(newField.name, formik.values[oldField.name]);
+            }
+        });
+}
+
 export const registerChoiceListOnChange = registry => {
     registry.add('selectorType.onChange', 'addMixinChoicelist', {
         targets: ['Choicelist', 'MultipleLeftRightSelector'],
@@ -44,6 +65,8 @@ export const registerChoiceListOnChange = registry => {
             newMixins.forEach(mixin => {
                 helper.moveMixinToTargetFieldset(mixin, field.nodeType, editorSection, field, onChangeContext.formik);
             });
+
+            carrySharedValues(oldMixins, newMixins, editorSection, onChangeContext.formik);
 
             if (onChangeContext.onSectionsUpdate) {
                 onChangeContext.onSectionsUpdate();

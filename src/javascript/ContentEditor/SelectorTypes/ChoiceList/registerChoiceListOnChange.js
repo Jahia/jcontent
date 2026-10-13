@@ -1,4 +1,4 @@
-import {getFields} from '~/ContentEditor/utils/fields.utils';
+import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils/fields.utils';
 
 function getMixinList(field, fieldValue) {
     let mixins = [];
@@ -24,22 +24,40 @@ function getMixinList(field, fieldValue) {
     return mixins;
 }
 
-const isSameProperty = (field, otherField) =>
+const isSameProperty = (field, otherField) => Boolean(field.declaringNodeType) &&
     field.propertyName === otherField.propertyName && field.declaringNodeType === otherField.declaringNodeType;
 
+const isSameValue = (value, otherValue) => (Array.isArray(value) && Array.isArray(otherValue) ?
+    value.length === otherValue.length && value.every((item, index) => item === otherValue[index]) :
+    value === otherValue);
+
 // Sibling mixins each hold their own copy of a property they inherit from a shared supertype (see
-// adaptSections.ts), but the node stores it once. The copy of the mixin being switched on still holds
-// the value from when the form loaded, so it takes the value of the copy being switched off.
+// adaptSections.ts), but the node stores it once, and a copy takes its value only when the form loads.
+// A switch therefore gives every other copy the value of the copy the reader sees: one in a mixin that
+// stays active, or else one in a mixin switched off. A copy that holds no value carries nothing, as
+// Formik deletes a key set to undefined and the copy switched on would lose its default.
 function carrySharedValues(oldMixins, newMixins, sections, formik) {
-    const fields = getFields(sections);
-    const oldFields = fields.filter(f => oldMixins.includes(f.nodeType));
-    fields
-        .filter(f => newMixins.includes(f.nodeType) && !oldMixins.includes(f.nodeType))
-        .forEach(newField => {
-            const oldField = oldFields.find(f => isSameProperty(f, newField));
-            if (oldField && formik.values[oldField.name] !== formik.values[newField.name]) {
-                formik.setFieldValue(newField.name, formik.values[oldField.name]);
+    const isKept = mixin => (oldMixins.includes(mixin) ? newMixins.includes(mixin) : !newMixins.includes(mixin) && formik.values[mixin] === true);
+    const isSwitchedOff = mixin => oldMixins.includes(mixin) && !newMixins.includes(mixin);
+    const hasValue = field => Object.hasOwn(formik.values, field.name) && formik.values[field.name] !== undefined;
+    // A field switched on has moved next to the choicelist, so its fieldset is no longer its mixin's
+    const dynamicFieldSets = getDynamicFieldSets(sections);
+    const copies = getFields(sections).filter(field => Object.hasOwn(dynamicFieldSets, field.nodeType));
+
+    copies
+        .filter(field => isSwitchedOff(field.nodeType))
+        .forEach(switchedOff => {
+            const group = copies.filter(field => isSameProperty(field, switchedOff));
+            const source = group.find(field => isKept(field.nodeType) && hasValue(field)) ||
+                group.find(field => isSwitchedOff(field.nodeType) && hasValue(field));
+            if (!source) {
+                return;
             }
+
+            const value = formik.values[source.name];
+            group
+                .filter(field => field !== source && !isKept(field.nodeType) && !isSameValue(formik.values[field.name], value))
+                .forEach(field => formik.setFieldValue(field.name, Array.isArray(value) ? [...value] : value));
         });
 }
 

@@ -30,6 +30,7 @@ describe('Sibling mixin switch after a save in the same editor session', () => {
                     youtubeId: property(name: "youtubeId", language: "en") { value }
                     vimeoId: property(name: "vimeoId", language: "en") { value }
                     switchTubeId: property(name: "switchTubeId", language: "en") { value }
+                    sharedPoster: property(name: "sharedPoster") { value }
                 }
             }
         }`,
@@ -44,13 +45,27 @@ describe('Sibling mixin switch after a save in the same editor session', () => {
             videoType: node.videoType?.value ?? null,
             youtubeId: node.youtubeId?.value ?? null,
             vimeoId: node.vimeoId?.value ?? null,
-            switchTubeId: node.switchTubeId?.value ?? null
+            switchTubeId: node.switchTubeId?.value ?? null,
+            sharedPoster: node.sharedPoster?.value ?? null
         };
     });
+
+    const posterUuids: Record<string, string> = {};
 
     before(() => {
         createSite(siteKey);
         enableModule('jcontent-test-module', siteKey);
+        addNode({parentPathOrId: contents, name: 'posters', primaryNodeType: 'jnt:contentFolder'});
+        ['posterA', 'posterB'].forEach(poster => {
+            addNode({
+                parentPathOrId: `${contents}/posters`,
+                name: poster,
+                primaryNodeType: 'jnt:text',
+                properties: [{name: 'text', value: poster, language: 'en'}]
+            }).then(resp => {
+                posterUuids[poster] = resp.data.jcr.addNode.uuid;
+            });
+        });
     });
 
     after(() => {
@@ -145,27 +160,93 @@ describe('Sibling mixin switch after a save in the same editor session', () => {
         deleteNode(`${contents}/${name}`);
     });
 
-    // Same flow as the first case without looking at the displayed value: does the save of the
-    // switch keep or drop the value stored by the first save?
-    it('keeps the value of the first save when switching to a sibling that was empty at load', () => {
-        const name = 'savedThenSwitchedFromEmpty';
-        addNode({parentPathOrId: contents, name, primaryNodeType: 'cent:videoPlayerTest'});
+    // A sibling that inherits none of the shared properties has no copy to carry, so the value saved
+    // before it must still reach the sibling switched on after it.
+    it('keeps the value saved in this session through a sibling that has no copy of it', () => {
+        const name = 'savedThenSwitchedThroughNative';
+        addNode({
+            parentPathOrId: contents,
+            name,
+            primaryNodeType: 'cent:videoPlayerTest',
+            mixins: ['cemix:youtubeGenericPlayer'],
+            properties: [
+                {name: 'videoType', value: 'cemix:youtubeGenericPlayer'},
+                {name: 'sharedNote', value: 'value-A', language: 'en'},
+                {name: 'youtubeId', value: 'yt-1', language: 'en'}
+            ]
+        });
 
         const contentEditor = visitEditor(name);
-        contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:youtubeGenericPlayer');
-        contentEditor.getField(SmallTextField, 'cemix:youtubeGenericPlayer_sharedNote').addNewValue('first-value');
-        contentEditor.getField(SmallTextField, 'cemix:youtubeGenericPlayer_youtubeId').addNewValue('yt-1');
+        contentEditor.getField(SmallTextField, 'cemix:youtubeGenericPlayer_sharedNote').addNewValue('value-B');
         contentEditor.save();
         cy.get(ContentEditor.defaultSelector).should('be.visible');
 
+        contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:vimeoNativePlayer');
+        cy.get('[data-sel-content-editor-field$="_sharedNote"]').should('not.exist');
         contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:vimeoGenericPlayer');
+        contentEditor.getField(SmallTextField, 'cemix:vimeoGenericPlayer_sharedNote').assertVisible()
+            .checkValue('value-B');
         contentEditor.getField(SmallTextField, 'cemix:vimeoGenericPlayer_vimeoId').addNewValue('vm-1');
         contentEditor.save();
         contentEditor.cancel();
 
         readNode(name).then(node => {
-            expect(node.mixins, 'mixin after the switch').to.equal('cemix:vimeoGenericPlayer');
-            expect(node.sharedNote, 'sharedNote after the switch').to.equal('first-value');
+            expect(node.mixins, 'mixin after the switches').to.equal('cemix:vimeoGenericPlayer');
+            expect(node.sharedNote, 'sharedNote after the switches (value-A means the load-time value was written back)')
+                .to.equal('value-B');
+        });
+
+        deleteNode(`${contents}/${name}`);
+    });
+
+    // The flow of the QA report, with the picker it used: change the reference, save, then switch.
+    it('keeps a reference picked in this session through a sibling that has no copy of it', () => {
+        const name = 'pickedThenSwitched';
+        addNode({
+            parentPathOrId: contents,
+            name,
+            primaryNodeType: 'cent:videoPlayerTest',
+            mixins: ['cemix:switchTubeGenericPlayer'],
+            properties: [
+                {name: 'videoType', value: 'cemix:switchTubeGenericPlayer'},
+                {name: 'switchTubeId', value: 'st-1', language: 'en'}
+            ]
+        });
+        cy.then(() => cy.apollo({
+            mutation: gql`mutation poster($path: String!, $uuid: String!) {
+                jcr { mutateNode(pathOrId: $path) { mutateProperty(name: "sharedPoster") { setValue(value: $uuid) } } }
+            }`,
+            variables: {path: `${contents}/${name}`, uuid: posterUuids.posterA}
+        }));
+
+        const contentEditor = visitEditor(name);
+        const switchTubePoster = contentEditor.getPickerField('cemix:switchTubeGenericPlayer_sharedPoster');
+        switchTubePoster.assertValue('posterA');
+        const picker = switchTubePoster.open();
+        const contentFolders = picker.getAccordionItem('picker-content-folders');
+        contentFolders.click();
+        picker.wait();
+        picker.navigateTo(contentFolders, 'contents/posters');
+        picker.getTable().getRows().get().contains('posterB').click();
+        picker.select();
+        switchTubePoster.assertValue('posterB');
+        contentEditor.save();
+        cy.get(ContentEditor.defaultSelector).should('be.visible');
+        readNode(name).then(node => {
+            expect(node.sharedPoster, 'sharedPoster after the first save').to.equal(posterUuids.posterB);
+        });
+
+        contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:vimeoNativePlayer');
+        contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:vimeoGenericPlayer');
+        contentEditor.getPickerField('cemix:vimeoGenericPlayer_sharedPoster').assertValue('posterB');
+        contentEditor.getField(SmallTextField, 'cemix:vimeoGenericPlayer_vimeoId').addNewValue('vm-1');
+        contentEditor.save();
+        contentEditor.cancel();
+
+        readNode(name).then(node => {
+            expect(node.mixins, 'mixin after the switches').to.equal('cemix:vimeoGenericPlayer');
+            expect(node.sharedPoster, 'sharedPoster after the switches (posterA means the load-time value was written back)')
+                .to.equal(posterUuids.posterB);
         });
 
         deleteNode(`${contents}/${name}`);

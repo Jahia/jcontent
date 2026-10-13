@@ -207,6 +207,19 @@ export function checkIfValuesAreDifferent(firstValue, secondValue, requiredType)
 }
 
 /**
+ * The stored property a field edits, matched by name and declaring type. Sibling copies of an inherited
+ * field (see adaptSections.ts) differ by form field name and fieldset, and resolve to the same property.
+ * @param {object} field the property field
+ * @param {object} nodeData the node data
+ * @returns {object} the stored property, or undefined when the node does not store it
+ */
+export function getStoredProperty(field, nodeData) {
+    // `nodeType` is the fieldset, so it names the declaring type only for a field that states none
+    const declaringNodeType = field.declaringNodeType || field.nodeType;
+    return nodeData?.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === declaringNodeType);
+}
+
+/**
  * Check if the value of a given field have changed, comparing the currentValue with the original value stored in the nodeData object
  * @param {*} currentValue the current field value
  * @param {object} field the field
@@ -217,9 +230,7 @@ export function propertyHasChanged(currentValue, field, nodeData) {
     // Retrieve previous value
     // eslint-disable-next-line no-warning-comments
     // TODO https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
-    // `nodeType` is the fieldset, which is not the declaring type of an inherited property
-    const declaringNodeType = field.declaringNodeType || field.nodeType;
-    const propertyData = nodeData && nodeData.properties && nodeData.properties.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === declaringNodeType);
+    const propertyData = getStoredProperty(field, nodeData);
     const previousValue = propertyData && propertyData[_getPropertyNameToCompare(field)];
 
     // Specific case for j:invalidLanguages

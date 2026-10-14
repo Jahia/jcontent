@@ -769,6 +769,53 @@ describe('EditPanel utils', () => {
             expect(propsToSave).toEqual([]);
         });
 
+        // The fieldset of these fields is not the type that declares their property
+        [
+            {name: 'an overridden property', fieldSet: 'jnt:overriddenDeclarer', declaringNodeType: 'cent:overridingType', propertyName: 'overridden'},
+            {name: 'a field a JSON form moves to another fieldset', fieldSet: '<main>', declaringNodeType: 'mix:title', propertyName: 'jcr:title'}
+        ].forEach(({name, fieldSet, declaringNodeType, propertyName}) => {
+            const field = {nodeType: fieldSet, declaringNodeType, name: `${fieldSet}_${propertyName}`, propertyName, requiredType: 'STRING', multiple: false};
+            const movedSections = [{fieldSets: [{name: fieldSet, dynamic: false, activated: true, fields: [field]}]}];
+            const nodeDataForEdit = {
+                mixinTypes: [],
+                properties: [{name: propertyName, value: 'stored', definition: {declaringNodeType: {name: declaringNodeType}}}]
+            };
+
+            it(`should not save ${name} when unchanged`, () => {
+                const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues: {[field.name]: 'stored'}, sections: movedSections, lang, i18nContext: {}});
+                expect(propsToSave).toEqual([]);
+            });
+
+            it(`should save ${name} when changed`, () => {
+                const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues: {[field.name]: 'changed'}, sections: movedSections, lang, i18nContext: {}});
+                expect(propsToSave).toEqual([{name: propertyName, type: 'STRING', value: 'changed', language: lang}]);
+            });
+        });
+
+        it('should not save an unchanged property a mixin inherits from a shared supertype', () => {
+            const field = {
+                nodeType: 'cemix:vimeoGenericPlayer',
+                declaringNodeType: 'cemix:sharedPlayerOptions',
+                name: 'cemix:vimeoGenericPlayer_sharedNote',
+                propertyName: 'sharedNote',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const siblingSections = [{
+                fieldSets: [{name: 'cemix:vimeoGenericPlayer', dynamic: true, activated: true, fields: [field]}]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [{name: 'cemix:vimeoGenericPlayer'}],
+                properties: [{name: 'sharedNote', value: 'stored note', definition: {declaringNodeType: {name: 'cemix:sharedPlayerOptions'}}}]
+            };
+            const formValues = {
+                'cemix:vimeoGenericPlayer': true,
+                [field.name]: 'stored note'
+            };
+            const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: siblingSections, lang, i18nContext: {}});
+            expect(propsToSave).toEqual([]);
+        });
+
         it('should not save an unchanged property of a mixin added by a save that removes none', () => {
             const field = {
                 nodeType: 'cemix:subtypeExtendMixin',

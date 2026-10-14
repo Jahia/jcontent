@@ -330,8 +330,11 @@
 // these two can be filled and read back without driving a picker dialog. sharedMode carries a
 // default value on purpose -- an inactive dynamic fieldset has its fields seeded from defaults, so
 // that is the copy which tells us whether a stored value survives a switch between siblings.
+// sharedPoster is the ticket's picker: a switch carries the value between the copies of a property,
+// and a picker holds a reference rather than text. cemix:vimeoNativePlayer inherits none of
+// cemix:sharedPlayerOptions, so a switch through it leaves no copy of the shared properties active.
 [cent:videoPlayerTest] > jnt:content, jmix:basicContent, jmix:editorialContent
- - videoType (string, choicelist) indexed=no < 'cemix:youtubeGenericPlayer', 'cemix:vimeoGenericPlayer', 'cemix:switchTubeGenericPlayer'
+ - videoType (string, choicelist) indexed=no < 'cemix:youtubeGenericPlayer', 'cemix:vimeoGenericPlayer', 'cemix:switchTubeGenericPlayer', 'cemix:vimeoNativePlayer'
 
 // sharedZone/sharedQuality cover the cascading-choicelist case the PR body flags as untested:
 // sharedQuality depends on BOTH sharedMode and sharedZone, so changing sharedMode (the property
@@ -346,6 +349,7 @@
  - sharedMode (string, choicelist) = 'auto' indexed=no < 'auto', 'manual'
  - sharedZone (string, choicelist) = 'na' indexed=no < 'na', 'eu'
  - sharedQuality (string, choicelist[dependentProperties='sharedMode,sharedZone']) indexed=no < 'sd', 'hd'
+ - sharedPoster (weakreference, picker[type='editorial'])
 
 [cemix:youtubePlayerId] mixin
  - youtubeId (string) internationalized
@@ -364,6 +368,9 @@
  extends = cent:videoPlayerTest
 
 [cemix:switchTubeGenericPlayer] > jmix:templateMixin, cemix:switchTubePlayerId, cemix:sharedPlayerOptions mixin
+ extends = cent:videoPlayerTest
+
+[cemix:vimeoNativePlayer] > jmix:templateMixin, cemix:vimeoPlayerId mixin
  extends = cent:videoPlayerTest
 
 // https://github.com/Jahia/jcontent/issues/2746#issuecomment-5905620339

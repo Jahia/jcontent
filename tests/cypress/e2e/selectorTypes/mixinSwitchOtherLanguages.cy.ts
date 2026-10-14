@@ -1,6 +1,6 @@
 import {JContent} from '../../page-object';
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
-import {ChoiceListField} from '../../page-object/fields';
+import {ChoiceListField, SmallTextField} from '../../page-object/fields';
 import gql from 'graphql-tag';
 
 // Regression test for https://github.com/Jahia/jcontent/issues/2831
@@ -136,6 +136,71 @@ describe('Mixin switch keeps the other languages', () => {
                         expect(after[lang][name], `${name} in ${lang} after the switch`).to.equal(value);
                     });
                 });
+            });
+        });
+    });
+
+    // An edit made in one language sits in the copy of the mixin active then. A switch of the mixin made
+    // in another language must still bring it to the copy switched on.
+    describe('an edit made before a switch in another language', () => {
+        const VIDEO_TYPE = 'cent:videoPlayerTest_videoType';
+        const editedInEn = (name: string) => {
+            addNode({
+                parentPathOrId: contents,
+                name,
+                primaryNodeType: 'cent:videoPlayerTest',
+                mixins: ['cemix:vimeoGenericPlayer'],
+                properties: [
+                    {name: 'videoType', value: 'cemix:vimeoGenericPlayer'},
+                    ...LANGUAGES.map(language => ({name: 'sharedNote', value: `sharedNote ${language}`, language}))
+                ]
+            });
+
+            const contentEditor = JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(name);
+            contentEditor.getField(SmallTextField, 'cemix:vimeoGenericPlayer_sharedNote').addNewValue('edited in en');
+            contentEditor.getLanguageSwitcher().selectLangByValue('fr');
+            contentEditor.getField(ChoiceListField, VIDEO_TYPE).selectValue('cemix:switchTubeGenericPlayer');
+            return contentEditor;
+        };
+
+        const readNote = (name: string) => cy.apollo({
+            query: gql`query read($path: String!) {
+                jcr {
+                    nodeByPath(path: $path) {
+                        mixinTypes { name }
+                        en: property(name: "sharedNote", language: "en") { value }
+                        fr: property(name: "sharedNote", language: "fr") { value }
+                    }
+                }
+            }`,
+            variables: {path: `${contents}/${name}`},
+            fetchPolicy: 'no-cache'
+        }).then(resp => {
+            const node = resp?.data?.jcr.nodeByPath;
+            return {
+                mixins: node.mixinTypes.map((m: {name: string}) => m.name).filter((n: string) => n.startsWith('cemix:')).sort().join(', '),
+                en: node.en?.value ?? null,
+                fr: node.fr?.value ?? null
+            };
+        });
+
+        it('saves it from the other language', () => {
+            const contentEditor = editedInEn('editedThenSwitchedInFr');
+            contentEditor.save();
+
+            readNote('editedThenSwitchedInFr').then(node => {
+                expect(node).to.deep.equal({mixins: 'cemix:switchTubeGenericPlayer', en: 'edited in en', fr: 'sharedNote fr'});
+            });
+        });
+
+        it('shows it in the copy switched on, back in its language', () => {
+            const contentEditor = editedInEn('editedThenSwitchedBackToEn');
+            contentEditor.getLanguageSwitcher().selectLangByValue('en');
+            contentEditor.getField(SmallTextField, 'cemix:switchTubeGenericPlayer_sharedNote').checkValue('edited in en');
+            contentEditor.save();
+
+            readNote('editedThenSwitchedBackToEn').then(node => {
+                expect(node).to.deep.equal({mixins: 'cemix:switchTubeGenericPlayer', en: 'edited in en', fr: 'sharedNote fr'});
             });
         });
     });

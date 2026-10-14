@@ -46,6 +46,11 @@
         "unknown": "Statut de publication indisponible"
       },
       "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",
+      "contentType": {
+        "area": "Zone",
+        "absoluteArea": "Zone absolue",
+        "list": "Liste"
+      },
       "downloadAsZip": "Télécharger comme Zip",
       "fileUpload": {
         "nothingToDisplay": "Rien à afficher",

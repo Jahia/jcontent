@@ -98,6 +98,15 @@ describe('PickerContentLayoutContainer', () => {
         expect(cmp.find('[data-sel-role="too-many-items"]').exists()).toBe(true);
     });
 
+    it('should read the tree from the server, so that a refused tree keeps its message when the picker shows it again', () => {
+        useQuery.mockClear();
+        useQuery.mockReturnValue({data: treeData(null), error: tooManyNodes, loading: false, refetch: jest.fn()});
+
+        shallow(<PickerContentLayoutContainer {...props}/>);
+
+        expect(useQuery).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({errorPolicy: 'all', fetchPolicy: 'network-only'}));
+    });
+
     it('should not ask to search when the tree is complete', () => {
         useQuery.mockReturnValue({data: treeData({nodes: [page('/sites/digitall/home/news', 0)]}), loading: false, refetch: jest.fn()});
 

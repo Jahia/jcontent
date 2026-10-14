@@ -30,6 +30,9 @@ export {ContentEditorApiContext, ContentEditorApiContextProvider, useContentEdit
 export {ContentEditorSectionContext, ContentEditorSectionContextProvider, useContentEditorSectionContext} from '~/ContentEditor/contexts/ContentEditorSection';
 export {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel, checkIfValuesAreDifferent, decodeSystemName, encodeJCRPath, encodeSystemName, extractRangeConstraints, getButtonRenderer, getCapitalized, getChildrenOrder, getDataToMutate, getDynamicFieldSetNameOfField, getDynamicFieldSets, getFields, getNodeTypeIcon, getValuePropName, isDirty, onDirectionalReorder, onListIndexReorder, propertyHasChanged, useKeydownListener, useReorderDrag, useReorderDrop, useReorderList, useSwitchLanguage} from '~/ContentEditor/utils';
 export {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuilder';
+export {FieldContainer} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Field/Field.container';
+export {filterFieldSets} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Sections/filterFieldSets';
+export {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 export {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
 export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';

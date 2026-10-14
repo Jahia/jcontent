@@ -1,14 +1,28 @@
-.container.container {
+// Invisible box reserving the preview area, with the image centred inside it. The image is
+// constrained rather than stretched: `max-width`/`max-height` with auto dimensions means an asset
+// smaller than the box renders at its natural size instead of being upscaled into a blur, while a
+// larger one is scaled down to fit, aspect ratio preserved.
+.container {
+    display: flex;
     flex: 1 1 0;
+    justify-content: center;
+    align-items: center;
+
     width: 100%;
     max-width: 550px;
+    min-height: 0;
     margin: 0 auto;
     padding-top: var(--spacing-medium);
     padding-bottom: var(--spacing-medium);
 
-    background-size: contain;
-
     &.fullScreen {
         max-width: 90%;
     }
+}
+
+.image {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
 }

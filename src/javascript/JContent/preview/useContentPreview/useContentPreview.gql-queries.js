@@ -20,6 +20,11 @@ export const CONTENT_PREVIEW_QUERY = gql`
                 lastModified: property(name: "jcr:lastModified", language: $language) {
                     value
                 }
+                # Existence probes only - the URLs are rebuilt with a lastModified cache buster,
+                # the same way the media grid cards do it
+                hasThumbnail3: thumbnailUrl(name: "thumbnail3", checkIfExists: true)
+                hasThumbnail2: thumbnailUrl(name: "thumbnail2", checkIfExists: true)
+                hasThumbnail: thumbnailUrl(name: "thumbnail", checkIfExists: true)
                 renderedContent(
                     templateType: $templateType, 
                     view: $view, 

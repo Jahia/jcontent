@@ -35,7 +35,8 @@ const buildInContextModuleContext = (node, closestPage, jView, base) => ({
  * @param {string} language
  * @param {object} options
  * @param {object} [options.closestPage]        - { path, view? } — the hosting page context.
- *   JContent: pageAncestors.at(-1). CE: pageComposerCurrentPage or displayableNode ancestor.
+ *   JContent: pageAncestors.at(-1), whatever accordion is open. CE: pageComposerCurrentPage or
+ *   displayableNode ancestor.
  * @param {boolean} [options.isCEPreview]  - Attach ce_preview requestAttribute to signal CE preview mode
  *   to other modules. true for CE, false for JContent.
  * @param {Array}   [options.requestParameters] - CE page composer query string params.
@@ -125,12 +126,19 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
 
 /**
  * JContent: builds { primary, fallback } from a content table node.
- * Derives closestPage from pageAncestors when in pages mode.
+ *
+ * Derives closestPage from the node's own page ancestors. Whether a node renders in the context of
+ * a page is a fact about the NODE - it is nested in one, or it is not - so it is read from the node
+ * rather than from the accordion the reader happens to be browsing in.
+ *
+ * This used to additionally require the 'pages' accordion. That excluded every accordion a module
+ * contributes: a record nested in a page, listed from somewhere other than the page tree, was
+ * rendered standalone, which for content that cannot stand alone means markup with no page around
+ * it and none of its CSS. It made no difference to jcontent's own accordions, whose nodes - content
+ * folders, media, categories - have no page ancestor to find.
  */
-export const buildPreviewContextsFromNode = (node, language, mode) => {
+export const buildPreviewContextsFromNode = (node, language) => {
     const pageAncestor = node.pageAncestors?.at(-1);
-    const closestPage = mode === 'pages' && pageAncestor && !node.isPage ?
-        {path: pageAncestor.path} :
-        null;
+    const closestPage = pageAncestor && !node.isPage ? {path: pageAncestor.path} : null;
     return buildPreviewContexts(node, language, {closestPage});
 };

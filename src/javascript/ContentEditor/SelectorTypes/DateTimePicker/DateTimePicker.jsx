@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
-import {Typography} from '@jahia/moonstone';
-
 import {DatePickerInput} from '~/ContentEditor/DesignSystem/DatePickerInput';
 import {toDate, toUtcIsoString} from 'date-formatter';
-import {dateOnlyFromIsoString, fillDisabledDaysFromJCRConstraints, toDateOnlyIsoString} from './DateTimePicker.utils';
+import {pickerBoundsFromJCRConstraints, dateOnlyFromIsoString, toDateOnlyIsoString} from './DateTimePicker.utils';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {specificDateFormat} from './DateTimePicker.formats';
 import {useSelector} from 'react-redux';
@@ -13,6 +10,16 @@ import {useSelector} from 'react-redux';
 const variantMapper = {
     DatePicker: 'date',
     DateTimePicker: 'datetime'
+};
+
+// The only fields that show a timezone selector: the start/end of a visibility condition, where
+// the author reasons about an instant in a given zone. Every other DateTimePicker field is a
+// plain date + time in the browser's zone, as before.
+const ZONED_NODE_TYPES = ['jnt:startEndDateCondition'];
+
+const getVariant = field => {
+    const variant = variantMapper[field.selectorType];
+    return variant === 'datetime' && ZONED_NODE_TYPES.includes(field.declaringNodeType) ? 'zonedDatetime' : variant;
 };
 
 function getDateFormat(editorContext) {
@@ -31,24 +38,16 @@ function getDateFormat(editorContext) {
     return userNavigatorLocale in specificDateFormat ? specificDateFormat[userNavigatorLocale] : 'DD/MM/YYYY';
 }
 
-// The browser's own IANA zone name (e.g. "America/New_York") -- shown alongside every date/time
-// field so the displayed value is never ambiguous about whose timezone it's in.
-const browserTimeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlur}) => {
-    const {t} = useTranslation('jcontent');
-    const variant = variantMapper[field.selectorType];
-    const isDateTime = variant === 'datetime';
-    const disabledDays = fillDisabledDaysFromJCRConstraints(field, isDateTime);
+    const variant = getVariant(field);
+    const isDateTime = variant !== 'date';
+    // Calendar-day bounds from the JCR range constraint
+    const bounds = pickerBoundsFromJCRConstraints(field, isDateTime);
     const uilang = useSelector(state => state.uilang);
 
     const dateFormat = getDateFormat(editorContext);
 
     const displayDateFormat = isDateTime ? (dateFormat + ' HH:mm') : dateFormat;
-
-    const maskLocale = String(dateFormat).replace(/[^\W]+?/g, '_');
-
-    const displayDateMask = isDateTime ? maskLocale + ' __:__' : maskLocale;
 
     let initialValue = null;
     if (value) {
@@ -58,36 +57,28 @@ export const DateTimePicker = ({id, field, value, editorContext, onChange, onBlu
     return (
         <div>
             <DatePickerInput
-                dayPickerProps={{disabledDays}}
+                {...bounds}
                 lang={uilang}
                 initialValue={initialValue}
                 displayDateFormat={displayDateFormat}
-                displayDateMask={displayDateMask}
                 readOnly={field.readOnly}
                 variant={variant}
                 id={id}
                 aria-labelledby={`${field.name}-label`}
                 onChange={date => {
+                    // Force touch: a calendar pick lands after the input's blur, so validate on the change itself.
                     // If not valid dates, pass raw data to onChange for validation
                     if (!date || !(date instanceof Date)) {
-                        onChange(date);
+                        onChange(date, true);
                         return;
                     }
 
-                    // DateTimePicker has a genuine time-of-day, so the value stored server-side is
-                    // a real UTC instant; the picker itself always works in the browser's own
-                    // local time (typed digits in, displayed digits out). DatePicker has no
-                    // time-of-day at all, so there is no instant to convert -- its calendar day
-                    // must stay exactly what was picked, for every viewer, regardless of timezone.
-                    onChange(isDateTime ? toUtcIsoString(date) : toDateOnlyIsoString(date));
+                    // DateTimePicker stores a UTC instant; DatePicker has no time-of-day, its
+                    // calendar day is stored literally.
+                    onChange(isDateTime ? toUtcIsoString(date) : toDateOnlyIsoString(date), true);
                 }}
                 onBlur={onBlur}
             />
-            {isDateTime && (
-                <Typography variant="caption" data-sel-role="date-field-timezone-hint">
-                    {t('jcontent:label.contentEditor.selectorTypes.localTimeHint', {zone: browserTimeZone})}
-                </Typography>
-            )}
         </div>
     );
 };

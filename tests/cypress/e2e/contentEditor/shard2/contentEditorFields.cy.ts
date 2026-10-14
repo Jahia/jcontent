@@ -193,27 +193,35 @@ describe('Content editor fields tests', () => {
         const contentEditor = jcontent.editComponentByRowName('allFieldsMultiple');
         contentEditor.switchToAdvancedMode();
 
-        cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_date"]')
-            .find('[data-sel-action="addField"]')
-            .click();
-        cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[0]"]')
-            .find('input[type="text"]')
-            .type('02/09/2024 10:30');
+        // Moonstone splits a datetime across a date input and a time input (inputmode="numeric"); both commit on blur
+        const getRow = (index: number) => cy.get(`[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[${index}]"]`);
+        const typeDateTime = (index: number, date: string, time: string) => {
+            getRow(index).find('input:not([inputmode="numeric"])').type(date);
+            getRow(index).find('input[inputmode="numeric"]').type(time);
+        };
+
+        const checkDateTime = (index: number, date: string, time: string) => {
+            getRow(index).find('input:not([inputmode="numeric"])').should('have.value', date);
+            getRow(index).find('input[inputmode="numeric"]').should('have.value', time);
+        };
 
         cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_date"]')
             .find('[data-sel-action="addField"]')
             .click();
-        cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[1]"]')
-            .find('input[type="text"]')
-            .type('05/06/2025 20:30');
+        typeDateTime(0, '02/09/2024', '10:30');
 
-        cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '02/09/2024 10:30');
-        cy.get('input[id="qant:allFieldsMultiple_date[1]"]').should('have.value', '05/06/2025 20:30');
+        cy.get('[data-sel-content-editor-field="qant:allFieldsMultiple_date"]')
+            .find('[data-sel-action="addField"]')
+            .click();
+        typeDateTime(1, '05/06/2025', '20:30');
+
+        checkDateTime(0, '02/09/2024', '10:30');
+        checkDateTime(1, '05/06/2025', '20:30');
 
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_date[0]"]')
             .find('[data-sel-action="removeField_0"]')
             .click();
-        cy.get('input[id="qant:allFieldsMultiple_date[0]"]').should('have.value', '05/06/2025 20:30');
+        checkDateTime(0, '05/06/2025', '20:30');
     });
 
     it('should save valid values in number fields', () => {

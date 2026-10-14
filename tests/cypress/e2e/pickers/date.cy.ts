@@ -68,10 +68,10 @@ describe('Date picker tests', () => {
     it('stores UTC value and browser displays localized datetime', () => {
         const nodePath = `/sites/${siteKey}/contents/contentEditorPickers`;
 
+        // Genuinely UTC -- not the old NOT_ZONED_DATE convention, which would carry the
+        // SERVER's own offset (e.g. "+01:00") instead of "Z".
         const assertStoredAsUtc = (wallClock: WallClock) => {
             GraphqlUtils.getPropertyValue(nodePath, 'datetimepicker').then(rawValue => {
-                // Genuinely UTC -- not the old NOT_ZONED_DATE convention, which would carry the
-                // SERVER's own offset (e.g. "+01:00") instead of "Z".
                 expect(rawValue).to.match(/Z$/);
                 expect(new Date(rawValue as string).toISOString()).to.equal(localWallClockToUtcIso(wallClock));
             });
@@ -136,29 +136,14 @@ describe('Date picker tests', () => {
         ce.getDateField('qant:pickers_datepicker').checkValue('01/15/2027');
     });
 
-    it('Test Date time Picker shows a validation error for an out-of-range typed value', () => {
-        cy.login();
-        const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
-        const dateField = ce.getDateField('qant:pickers_datetimepicker');
-        dateField.get().find('input[type="text"]').clear().type('99/99/9999 99:99', {force: true});
-        // Validation only runs on blur/save in this form; click to trigger
-        dateField.get().click('right');
-        dateField.getErrorMessage('invalidDate').should('be.visible');
-    });
-
-    // Race condition test: typing an out-of-range value then opening the
-    // calendar crashes to the app's error page. The typed invalid string round-trips through
-    // Formik and comes back down as an "Invalid Date" object (instanceof Date, but NaN inside),
-    // which briefly lands in this component's `datetime` state before a second, self-correcting
-    // onChange(null) settles it back to null. Opening the calendar during that narrow window hands
-    // react-day-picker the Invalid Date, and its month arithmetic (Helpers.getWeekArray) throws.
-    // `{delay: 0}` + an immediate forced click is what reliably lands inside that window -- a
-    // slower/real interaction can miss it, which is why this was hard to reproduce by hand.
+    // Regression guard: an out-of-range typed value used to reach the calendar as an "Invalid Date" and
+    // crash it; Moonstone never commits an unparseable draft, so opening the calendar must stay safe.
     it('does not crash date picker after an out-of-range-typed value', () => {
         cy.login();
         const ce = ContentEditor.visit(`/sites/${siteKey}/contents/contentEditorPickers`, siteKey, 'en', 'content-folders/contents');
         const dateField = ce.getDateField('qant:pickers_datetimepicker');
-        dateField.get().find('input[type="text"]').clear().type('99/99/9999 99:99', {force: true, delay: 0});
+        dateField.getDateInput().clear({force: true}).type('99/99/9999', {force: true, delay: 0});
         dateField.open();
+        dateField.close();
     });
 });

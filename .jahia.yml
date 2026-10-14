@@ -1,0 +1,10 @@
+repository:
+  tests:
+    testrail-project: jContent Module
+branch:
+  lint:
+    max-warnings: 8
+  tests:
+    exclude-profiles: [performance]
+    timeout-job: 140
+    timeout-step: 90

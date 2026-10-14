@@ -25,9 +25,10 @@ function fillValues({newValues, previousValues, fieldsObj, i18nValues, nonI18nVa
 // adaptSections.ts). An edit sits in the copy of the mixin active at the time, so the bucket of the
 // language left stores every copy, with the value of the copy the reader sees: a mixin switched on
 // later then shows the edit in that language, and the save writes it. Only a group with a copy in the
-// bucket changed, and a group the reader sees with its stored value leaves the bucket, as fillValues
-// keeps only changed values. Without an active copy, after a switch to a mixin that has none, the
-// copies hold the value a switch carried, and any of them serves.
+// bucket changed. A group the reader sees with its stored value leaves the bucket, as fillValues
+// keeps only changed values, and so does a group whose visible copy was cleared: Formik deletes a key
+// set to undefined, and fillValues never sees it. Without an active copy, after a switch to a mixin
+// that has none, the copies hold the value a switch carried, and any of them serves.
 export function fillSiblingCopies({fields, dynamicFieldSets, values, initialValues, i18nValues}) {
     const groups = new Map();
     fields
@@ -51,13 +52,9 @@ export function fillSiblingCopies({fields, dynamicFieldSets, values, initialValu
 
             const seen = group.find(field => values[field.nodeType] === true);
             const value = seen ? values[seen.name] : i18nValues.values[inBucket.name];
-            if (value === undefined) {
-                return;
-            }
-
-            const unchanged = isSameValue(value, initialValues[(seen || inBucket).name]);
+            const leaves = value === undefined || isSameValue(value, initialValues[(seen || inBucket).name]);
             group.forEach(field => {
-                if (unchanged) {
+                if (leaves) {
                     delete i18nValues.values[field.name];
                 } else {
                     i18nValues.values[field.name] = Array.isArray(value) ? [...value] : value;
@@ -129,10 +126,16 @@ export const useSwitchLanguage = () => {
                 };
             }
 
-            return {
+            const result = {
                 ...prev,
                 ...newValues
             };
+            // The bucket of the language left can end empty after fillSiblingCopies, and the earlier bucket must not outlive it
+            if (!newValues[previousLanguage]) {
+                delete result[previousLanguage];
+            }
+
+            return result;
         });
 
         if (sideBySideContext.enabled) {

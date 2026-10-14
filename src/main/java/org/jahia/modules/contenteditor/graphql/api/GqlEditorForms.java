@@ -33,6 +33,7 @@ import org.jahia.modules.contenteditor.api.forms.model.Form;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeInfo;
 import org.jahia.modules.contenteditor.graphql.api.definitions.GqlNodeTypeTreeEntry;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorForm;
+import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorFormFieldLanguageValue;
 import org.jahia.modules.contenteditor.graphql.api.forms.GqlEditorFormValueConstraint;
 import org.jahia.modules.contenteditor.graphql.api.types.ContextEntryInput;
 import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
@@ -98,6 +99,20 @@ public class GqlEditorForms {
         throws EditorFormException {
         Form form = editorFormService.getEditForm(uuidOrPath, LanguageCodeConverters.getLocaleFromCode(uiLocale), LanguageCodeConverters.getLocaleFromCode(locale));
         return new GqlEditorForm(form);
+    }
+
+    @GraphQLField
+    @GraphQLName("fieldValuesByLanguage")
+    @GraphQLDescription("Get a field's value(s) in every requested language, in a single call - so that a field can be edited across all site languages without switching the whole editor's locale.")
+    public List<GqlEditorFormFieldLanguageValue> getFieldValuesByLanguage(
+        @GraphQLName("uuidOrPath") @GraphQLNonNull @GraphQLDescription("UUID or path of the node to read the field from") String uuidOrPath,
+        @GraphQLName("fieldName") @GraphQLNonNull @GraphQLDescription("Name of the field (property) to retrieve") String fieldName,
+        @GraphQLName("multiple") @GraphQLNonNull @GraphQLDescription("Whether the field accepts multiple values") boolean multiple,
+        @GraphQLName("languages") @GraphQLNonNull @GraphQLDescription("List of language codes to retrieve the value for, in IETF BCP 47 language tag format") List<String> languages)
+        throws EditorFormException {
+        List<Locale> locales = languages.stream().map(LanguageCodeConverters::getLocaleFromCode).collect(Collectors.toList());
+        return editorFormService.getFieldValuesByLanguage(uuidOrPath, fieldName, multiple, locales).stream()
+            .map(GqlEditorFormFieldLanguageValue::new).collect(Collectors.toList());
     }
 
     @GraphQLField

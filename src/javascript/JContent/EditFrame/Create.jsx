@@ -32,6 +32,9 @@ function getBoundingBox(element) {
     };
 }
 
+// An element in `display: none`, or under an ancestor in `display: none`, has no layout box.
+const isRendered = element => element.getClientRects().length > 0;
+
 function reposition(element, currentOffset, setCurrentOffset) {
     const box = getBoundingBox(element);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
@@ -142,6 +145,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
+    const [rendered, setRendered] = useState(() => isRendered(element));
     const {nodeName, nodePath, nodeTypes} = getElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: false,
@@ -177,7 +181,10 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     }));
 
     useEffect(
-        () => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)),
+        () => addIntervalCallback(() => {
+            reposition(element, currentOffset, setCurrentOffset);
+            setRendered(isRendered(element));
+        }),
         [addIntervalCallback, currentOffset, element, setCurrentOffset]);
 
     // We want this to execute only once in the beginning
@@ -249,7 +256,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         />
     ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes, suppliedNodeTypes]);
 
-    return !anyDragging && (
+    return !anyDragging && rendered && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}

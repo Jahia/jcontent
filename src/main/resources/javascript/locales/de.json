@@ -6,6 +6,15 @@
       "of": "von"
     },
     "contentManager": {
+      "undo": {
+        "action": "Rückgängig",
+        "partial": "{{count}} Element konnte nicht wiederhergestellt werden",
+        "partial_plural": "{{count}} Elemente konnten nicht wiederhergestellt werden",
+        "markedForDeletion": {
+          "single": "„{{name}}“ zum Löschen markiert",
+          "some": "{{count}} Elemente zum Löschen markiert"
+        }
+      },
       "preview": {
         "hide": "Vorschau verbergen",
         "tabs": {

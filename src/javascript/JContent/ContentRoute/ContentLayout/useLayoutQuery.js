@@ -44,7 +44,7 @@ export function useLayoutQuery(options, fragments, queryVariables, accordionItem
             queryVariables,
             openableTypes: treeParams.openableTypes || queryVariables.typeFilter,
             selectableTypes: treeParams.selectableTypes || queryVariables.selectableTypesTable || []
-        }, {errorPolicy: 'all'});
+        }, {errorPolicy: 'all', ...(options.treeFetchPolicy && {fetchPolicy: options.treeFetchPolicy})});
 
         const result = queryHandler.structureTreeEntries(treeEntries, treeParams);
         return {isStructured, result, error, loading, refetch};

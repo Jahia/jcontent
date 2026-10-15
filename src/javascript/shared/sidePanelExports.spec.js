@@ -1,5 +1,4 @@
-import {SidePanel, SidePanelContextProvider, useSidePanelContext} from '~/JContent/SidePanel';
-import {JContentSidePanelContextProvider} from '~/JContent/ContentRoute/ContentLayout/JContentSidePanelContextProvider';
+import {ContentSidePanel} from '~/JContent/ContentRoute/ContentLayout/ContentSidePanel';
 import {cmCloseSidePanel, cmSetPreviewFullScreen, cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 
 /**
@@ -21,20 +20,24 @@ import {cmCloseSidePanel, cmSetPreviewFullScreen, cmSetSidePanelSelection} from 
  * in the barrel already fails the webpack build.
  */
 describe('the side panel exports', () => {
-    it('exposes the panel and its context', () => {
-        expect(typeof SidePanel).toBe('function');
-        expect(typeof useSidePanelContext).toBe('function');
-
-        // Not a function: this one is `SidePanelContext.Provider` rather than a component of its
-        // own, so React hands back an exotic object. Asserted as defined rather than by its
-        // `$$typeof`, which is React's own internal and not something to pin a test to.
-        expect(SidePanelContextProvider).toBeDefined();
+    it('exposes the panel as one component', () => {
+        // One component rather than the panel and its context separately: the two cannot work
+        // apart, so composing them here leaves a consumer nothing to assemble wrongly.
+        expect(typeof ContentSidePanel).toBe('function');
     });
 
-    it('exposes the provider that feeds the panel its node', () => {
-        // What resolves the form definition, the technical info and whether there is a preview at
-        // all - the tabs read everything from it, so exporting the panel without it offers nothing.
-        expect(typeof JContentSidePanelContextProvider).toBe('function');
+    it('declares the node it is called with, rather than taking any object', () => {
+        /*
+         * Only that the contract is DECLARED. PropTypes.shape returns a validator, not a spec, so
+         * the individual fields cannot be read back out - asserting them one by one here would be
+         * six assertions that pass whatever the shape says. What the fields are is stated in the
+         * propTypes and in the barrel's comment, where a consumer actually reads them; what this
+         * catches is the declaration being dropped altogether, which would turn a documented
+         * contract back into "pass any object and hope".
+         */
+        expect(ContentSidePanel.propTypes.sidePanelSelection).toBeDefined();
+        expect(ContentSidePanel.propTypes.language).toBeDefined();
+        expect(ContentSidePanel.propTypes.jcontentMode).toBeDefined();
     });
 
     it('exposes the actions the panel dispatches against', () => {

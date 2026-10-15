@@ -23,16 +23,25 @@ export {BaseChildrenQuery, BaseDescendantsQuery, BaseQueryHandler, BaseTreeQuery
 export {DragLayer, useConnector, useFileDrop, useNodeDrag, useNodeDrop} from '../JContent/dnd';
 export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 
-// The content side panel, so a module supplying its own accordion route can offer the same panel
-// jContent's own content list does. ContentLayout is what renders these today, and a module that
-// replaces it with a routeComponent of its own loses the panel with it - these three are what let
-// it put it back rather than reimplement preview, details, history and usages.
+// The content side panel - preview, details, history, usages - for a module that supplies its own
+// jContent route. Overriding `routeComponent` replaces ContentLayout, and the panel goes with it;
+// this is what lets a module put it back rather than reimplement four tabs.
 //
-// The redux actions come with them because the panel's own close button dispatches cmCloseSidePanel:
-// a caller that kept the selection in state of its own would find the button did nothing. Reading
+// One component, not its parts. ContentSidePanel composes the panel with the context provider it
+// cannot work without, so there is nothing to assemble and no way to assemble it wrongly.
+//
+// **It takes the NODE, not a path.** The provider reads `uuid` and `primaryNodeType.name` to
+// resolve the edit form; the preview tab reads `isPage`, `displayableNode`, `jView` and
+// `pageAncestors` to decide whether the node renders inside its page and where its CSS comes from.
+// A caller fetching its own rows should select the same fields jContent does - see the
+// NodePreviewFields fragment in BaseQueryHandler.gql-queries - or the preview falls back to
+// rendering the node standalone, which for content that cannot stand alone is markup with no page
+// around it and none of its styling.
+//
+// The redux actions come with it because the panel's own close button dispatches cmCloseSidePanel:
+// a caller that kept the selection in state of its own would find that button did nothing. Reading
 // state.jcontent.sidePanelSelection and dispatching these keeps one source of truth.
-export {SidePanel, SidePanelContextProvider, useSidePanelContext} from '../JContent/SidePanel';
-export {JContentSidePanelContextProvider} from '../JContent/ContentRoute/ContentLayout/JContentSidePanelContextProvider';
+export {ContentSidePanel} from '../JContent/ContentRoute/ContentLayout/ContentSidePanel';
 export {cmCloseSidePanel, cmSetPreviewFullScreen, cmSetSidePanelSelection} from '../JContent/redux/preview.redux';
 
 // Content-editor shared/index.js

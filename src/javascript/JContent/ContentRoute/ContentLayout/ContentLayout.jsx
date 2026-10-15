@@ -2,8 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import {ContentTable} from './ContentTable';
-import {SidePanel} from '~/JContent/SidePanel';
-import {JContentSidePanelContextProvider} from './JContentSidePanelContextProvider';
+import {ContentSidePanel} from './ContentSidePanel';
 import classNames from 'clsx';
 import FilesGrid from './FilesGrid';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -50,15 +49,13 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
 
             {showSidePanel && (
                 <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
-                    <JContentSidePanelContextProvider
+                    <ContentSidePanel
                         sidePanelSelection={resolvedSidePanelSelection}
                         selection={selection}
                         language={language}
                         jcontentMode={jcontentMode}
                         isFullScreen={isFullScreen}
-                    >
-                        <SidePanel/>
-                    </JContentSidePanelContextProvider>
+                    />
                 </div>
             )}
         </div>

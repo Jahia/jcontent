@@ -16,6 +16,7 @@ export class TagManager extends JContent {
     static visit(site: string, language = 'en'): TagManager {
         JContent.visit(site, language, `apps/${TAG_MANAGER_APP_KEY}`);
         cy.get(ROOT_SELECTOR).should('be.visible');
+        cy.get('[data-cm-role="tag-manager-loader"]', {timeout: 30000}).should('not.exist');
         return new TagManager(new JContent());
     }
 

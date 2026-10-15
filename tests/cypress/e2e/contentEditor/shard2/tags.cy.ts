@@ -96,28 +96,6 @@ describe('Tags tests in content editor', () => {
             jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         });
 
-        it('should add a tag', () => {
-            context.tag('tags', 'content-editor', 'save-add');
-            const contentEditor = jcontent.editComponentByRowName('textForSavedTag');
-            contentEditor.switchToAdvancedMode();
-
-            contentEditor.openSection('Classification and Metadata');
-            contentEditor.toggleOption('jmix:tagged', 'Tags');
-
-            const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
-            tagField.addNewValue('simpletag');
-
-            tagField.getTags().should('have.length', 1);
-            tagField.assertTagText('simpletag', 0);
-            contentEditor.save();
-            contentEditor.cancel();
-
-            const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForSavedTag');
-            savedTagField.getTags().should('have.length', 1);
-            savedTagField.assertTagText('simpletag', 0);
-            reopenedEditor.cancel();
-        });
-
         it('should remove a tag', () => {
             context.tag('tags', 'content-editor', 'save-remove');
             const {contentEditor, tagField} = openTagField('textForRemovedTag');
@@ -291,6 +269,26 @@ describe('Tags tests in content editor', () => {
     describe('as an editor', () => {
         beforeEach(() => {
             cy.loginAndStoreSession(editor, password);
+        });
+
+        it('should save several tags in lowercase', () => {
+            context.tag('tags', 'content-editor', 'save-add');
+            const contentEditor = JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName('textForSavedTag');
+            contentEditor.switchToAdvancedMode();
+            contentEditor.openSection('Classification and Metadata');
+            contentEditor.toggleOption('jmix:tagged', 'Tags');
+
+            const tagField = contentEditor.getField(TagField, 'jmix:tagged_j:tagList');
+            tagField.addNewValues(['SavedOne', 'savedTwo']);
+            tagField.getTags().should('have.length', 2);
+            contentEditor.save();
+            contentEditor.cancel();
+
+            const {contentEditor: reopenedEditor, tagField: savedTagField} = openTagField('textForSavedTag');
+            savedTagField.getTags().should('have.length', 2);
+            savedTagField.assertTagText('savedone', 0);
+            savedTagField.assertTagText('savedtwo', 1);
+            reopenedEditor.cancel();
         });
 
         it('should not save a tag added to a file when the edit is cancelled', () => {

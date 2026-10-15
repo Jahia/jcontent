@@ -1,5 +1,6 @@
 import {ContentSidePanel} from '~/JContent/ContentRoute/ContentLayout/ContentSidePanel';
-import {cmCloseSidePanel, cmSetPreviewFullScreen, cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
+import {ContentSidePanelNodeFragment} from '~/JContent/ContentRoute/ContentLayout/ContentSidePanel.gql-fragments';
+import {cmSetSidePanelSelection} from '~/JContent/redux/preview.redux';
 
 /**
  * The symbols `shared/index.js` re-exports for the side panel.
@@ -30,21 +31,27 @@ describe('the side panel exports', () => {
         /*
          * Only that the contract is DECLARED. PropTypes.shape returns a validator, not a spec, so
          * the individual fields cannot be read back out - asserting them one by one here would be
-         * six assertions that pass whatever the shape says. What the fields are is stated in the
-         * propTypes and in the barrel's comment, where a consumer actually reads them; what this
-         * catches is the declaration being dropped altogether, which would turn a documented
-         * contract back into "pass any object and hope".
+         * assertions that pass whatever the shape says. What the fields are is stated in the
+         * propTypes and in the fragment, where a consumer actually reads them.
          */
-        expect(ContentSidePanel.propTypes.sidePanelSelection).toBeDefined();
-        expect(ContentSidePanel.propTypes.language).toBeDefined();
-        expect(ContentSidePanel.propTypes.jcontentMode).toBeDefined();
+        expect(ContentSidePanel.propTypes.node).toBeDefined();
     });
 
-    it('exposes the actions the panel dispatches against', () => {
-        // The panel's own close button dispatches cmCloseSidePanel, so a consumer holding the
-        // selection in state of its own would find that button did nothing.
+    it('publishes the fragment that covers everything the panel reads', () => {
+        // The reason this is exported at all: the contract is not guessable, and a node missing
+        // one of its fields degrades a tab silently rather than failing.
+        const printed = ContentSidePanelNodeFragment.loc.source.body;
+
+        expect(printed).toContain('fragment ContentSidePanelNode on JCRNode');
+        ['name', 'primaryNodeType', 'NodePreviewFields', 'NodeCacheRequiredFields']
+            .forEach(field => expect(printed).toContain(field));
+        // Needs $language, and the card falls back to name - so it stays with the consumer.
+        expect(printed).not.toContain('displayName');
+    });
+
+    it('exposes the one action that opens and closes it', () => {
+        // Opening is cmSetSidePanelSelection(path) and closing is the same action with null - which
+        // is what the panel's own close button dispatches, so there is one way to do it.
         expect(typeof cmSetSidePanelSelection).toBe('function');
-        expect(typeof cmCloseSidePanel).toBe('function');
-        expect(typeof cmSetPreviewFullScreen).toBe('function');
     });
 });

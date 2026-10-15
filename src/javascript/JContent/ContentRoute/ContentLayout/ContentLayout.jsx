@@ -13,15 +13,10 @@ import {shallowEqual, useSelector} from 'react-redux';
 
 export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const contextualMenu = useRef();
-    const {isFullScreen, language, jcontentMode, selection} = useSelector(state => ({
-        isFullScreen: state.jcontent.previewIsFullScreen,
-        language: state.language,
-        jcontentMode: state.jcontent.mode,
-        selection: state.jcontent.selection
-    }), shallowEqual);
+    // The panel reads the rest of what it needs from the store itself - see ContentSidePanel.
+    const isFullScreen = useSelector(state => state.jcontent.previewIsFullScreen);
 
     const resolvedSidePanelSelection = flattenTree(rows).find(n => n.path === sidePanelSelection);
-    const showSidePanel = Boolean(sidePanelSelection) || isFullScreen;
 
     return (
         <div className={styles.root}>
@@ -47,17 +42,7 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
                 </div>
             )}
 
-            {showSidePanel && (
-                <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
-                    <ContentSidePanel
-                        sidePanelSelection={resolvedSidePanelSelection}
-                        selection={selection}
-                        language={language}
-                        jcontentMode={jcontentMode}
-                        isFullScreen={isFullScreen}
-                    />
-                </div>
-            )}
+            <ContentSidePanel node={resolvedSidePanelSelection}/>
         </div>
     );
 };

@@ -1,57 +1,78 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'clsx';
+import {shallowEqual, useSelector} from 'react-redux';
 import {SidePanel} from '~/JContent/SidePanel';
 import {JContentSidePanelContextProvider} from './JContentSidePanelContextProvider';
+import styles from './ContentSidePanel.scss';
 
 /**
  * The content side panel: preview, details, history and usages for one node.
  *
- * The panel and the context it reads are one unit - the panel is meaningless without a provider
- * built from JContent's own state - so they are composed here rather than at each call site. That
- * is also what keeps the exported surface to a single component: a consumer says what to show, not
- * how the pieces fit together.
+ * **Rendered unconditionally.** Whether there is anything to show is read from the store here, so
+ * a caller does not repeat that condition - it returns nothing when nothing is selected. It also
+ * owns its own container and width, which is the implementation detail a consumer would otherwise
+ * have to reproduce: the panel is 600px wide, and saying so belongs with the panel.
  *
- * The tabs are whatever is registered on the `sidePanelTabsActions` target, so a caller gets the
+ * **It must be laid out in a flex ROW.** The container sets `flex: 0 0 600px`, which is a width
+ * only in that context; in a column parent it becomes a height and the panel collapses.
+ *
+ * Everything else it needs - the content language, the accordion in view, the ticked rows, whether
+ * the panel is full screen - is JContent's own state, so it is read rather than passed. The one
+ * thing a caller must supply is the NODE, because only the caller's own rows have it.
+ *
+ * The tabs are whatever is registered on the `sidePanelTabsActions` target, so a consumer gets the
  * same panel the content list has, and follows it when that changes.
- *
- * @param sidePanelSelection the NODE to show, not a path - see propTypes for the fields it must carry
- * @param selection the rows currently ticked, which the panel reports on instead when non-empty
- * @param language the content language the panel reads in
- * @param jcontentMode the accordion the caller is rendering, passed through to the tabs
- * @param isFullScreen whether the panel is asking for the whole pane
  */
-export const ContentSidePanel = ({sidePanelSelection, selection, language, jcontentMode, isFullScreen}) => (
-    <JContentSidePanelContextProvider
-        sidePanelSelection={sidePanelSelection}
-        selection={selection}
-        language={language}
-        jcontentMode={jcontentMode}
-        isFullScreen={isFullScreen}
-    >
-        <SidePanel/>
-    </JContentSidePanelContextProvider>
-);
+export const ContentSidePanel = ({node}) => {
+    const {isFullScreen, language, jcontentMode, selection, sidePanelSelection} = useSelector(state => ({
+        isFullScreen: state.jcontent.previewIsFullScreen,
+        language: state.language,
+        jcontentMode: state.jcontent.mode,
+        selection: state.jcontent.selection,
+        sidePanelSelection: state.jcontent.sidePanelSelection
+    }), shallowEqual);
+
+    // The selection in the store is a path, and it is what says the panel is open - not the node,
+    // which a caller resolves from its own rows and may not have found.
+    if (!sidePanelSelection && !isFullScreen) {
+        return false;
+    }
+
+    return (
+        <div className={classNames(styles.sidePanel, {[styles.sidePanelFullScreen]: isFullScreen})}>
+            <JContentSidePanelContextProvider
+                sidePanelSelection={node}
+                selection={selection}
+                language={language}
+                jcontentMode={jcontentMode}
+                isFullScreen={isFullScreen}
+            >
+                <SidePanel/>
+            </JContentSidePanelContextProvider>
+        </div>
+    );
+};
 
 ContentSidePanel.propTypes = {
     /**
-     * The node to show. A path is not enough: the provider reads `uuid` and `primaryNodeType.name`
-     * to resolve the edit form, and the preview tab reads `isPage`, `displayableNode`, `jView` and
-     * `pageAncestors` to decide whether the node renders inside its page and where its CSS comes
-     * from. A caller fetching its own rows should select jContent's own `NodePreviewFields` set, or
-     * the preview falls back to rendering the node standalone - markup with no page around it.
+     * The node to show, resolved by the caller from its own rows.
+     *
+     * A path is not enough, and the fields are not obvious: the provider resolves the edit form
+     * from `uuid` and `primaryNodeType.name`, the card shows `name`, and the preview tab reads
+     * `isPage`, `displayableNode`, `jView` and `pageAncestors` to decide whether the node renders
+     * inside its page and where its CSS comes from. Select `ContentSidePanelNodeFragment` and the
+     * whole contract is covered; miss one of them and the matching tab degrades silently.
      */
-    sidePanelSelection: PropTypes.shape({
+    node: PropTypes.shape({
         uuid: PropTypes.string,
-        path: PropTypes.string.isRequired,
+        path: PropTypes.string,
+        name: PropTypes.string,
         primaryNodeType: PropTypes.shape({name: PropTypes.string}),
         isPage: PropTypes.bool,
         displayableNode: PropTypes.shape({path: PropTypes.string}),
         pageAncestors: PropTypes.array
-    }),
-    selection: PropTypes.array.isRequired,
-    language: PropTypes.string.isRequired,
-    jcontentMode: PropTypes.string.isRequired,
-    isFullScreen: PropTypes.bool.isRequired
+    })
 };
 
 export default ContentSidePanel;

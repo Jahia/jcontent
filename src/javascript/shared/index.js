@@ -27,22 +27,20 @@ export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 // jContent route. Overriding `routeComponent` replaces ContentLayout, and the panel goes with it;
 // this is what lets a module put it back rather than reimplement four tabs.
 //
-// One component, not its parts. ContentSidePanel composes the panel with the context provider it
-// cannot work without, so there is nothing to assemble and no way to assemble it wrongly.
+// Three things, and no assembly. ContentSidePanel owns the panel, the context it cannot work
+// without, and its own container and width - so a consumer renders it unconditionally and it shows
+// nothing when nothing is selected. It must sit in a flex ROW; the container is `flex: 0 0 600px`.
 //
-// **It takes the NODE, not a path.** The provider reads `uuid` and `primaryNodeType.name` to
-// resolve the edit form; the preview tab reads `isPage`, `displayableNode`, `jView` and
-// `pageAncestors` to decide whether the node renders inside its page and where its CSS comes from.
-// A caller fetching its own rows should select the same fields jContent does - see the
-// NodePreviewFields fragment in BaseQueryHandler.gql-queries - or the preview falls back to
-// rendering the node standalone, which for content that cannot stand alone is markup with no page
-// around it and none of its styling.
+// `cmSetSidePanelSelection(path)` opens it and `cmSetSidePanelSelection(null)` closes it, which is
+// also what the panel's own close button dispatches. One way in, one way out, one source of truth
+// in `state.jcontent.sidePanelSelection`.
 //
-// The redux actions come with it because the panel's own close button dispatches cmCloseSidePanel:
-// a caller that kept the selection in state of its own would find that button did nothing. Reading
-// state.jcontent.sidePanelSelection and dispatching these keeps one source of truth.
+// ContentSidePanelNodeFragment is the contract for the node a consumer passes back. It is not
+// guessable and failing it does not fail: a node missing `displayableNode` previews without the
+// page's CSS, one missing `primaryNodeType` loses Details, and nothing says so.
 export {ContentSidePanel} from '../JContent/ContentRoute/ContentLayout/ContentSidePanel';
-export {cmCloseSidePanel, cmSetPreviewFullScreen, cmSetSidePanelSelection} from '../JContent/redux/preview.redux';
+export {ContentSidePanelNodeFragment} from '../JContent/ContentRoute/ContentLayout/ContentSidePanel.gql-fragments';
+export {cmSetSidePanelSelection} from '../JContent/redux/preview.redux';
 
 // Content-editor shared/index.js
 export {ContentEditorContext, ContentEditorContextProvider, useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';

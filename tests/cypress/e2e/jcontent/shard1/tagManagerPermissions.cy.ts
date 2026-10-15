@@ -76,12 +76,11 @@ describe('Tag Manager permissions', () => {
         cy.loginAndStoreSession(siteAdmin, password);
 
         const tagManager = TagManager.openFromAdditionalApps(siteKey, 'en');
-        tagManager.getRow(tag).should('contain', '1');
+        tagManager.getOccurrences(tag).should('have.text', '1');
 
         tagManager.openRename(tag).fillRenameDialog(renamedTag).confirmRename();
 
-        tagManager.getRow(renamedTag).should('contain', '1');
-        // The renamed tag contains the old name, so match the row by its exact tag name
-        cy.get(`[data-cm-role="tag-manager-row"][data-tag-name="${tag}"]`).should('not.exist');
+        tagManager.getOccurrences(renamedTag).should('have.text', '1');
+        tagManager.shouldNotHaveRow(tag);
     });
 });

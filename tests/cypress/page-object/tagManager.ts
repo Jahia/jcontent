@@ -46,11 +46,25 @@ export class TagManager extends JContent {
     }
 
     getRow(tagName: string) {
-        return cy.contains('[data-cm-role="tag-manager-row"]', tagName).should('be.visible');
+        return this.getRowsByName(tagName).should('be.visible');
+    }
+
+    shouldNotHaveRow(tagName: string): TagManager {
+        this.getRowsByName(tagName).should('not.exist');
+        return this;
+    }
+
+    getOccurrences(tagName: string) {
+        return this.getRow(tagName).find('[data-cm-role="tag-manager-occurrences"]');
     }
 
     getRows() {
         return cy.get('[data-cm-role="tag-manager-row"]');
+    }
+
+    // Filter on the attribute rather than build a selector from the name, which can contain quotes
+    private getRowsByName(tagName: string) {
+        return this.getRows().filter((_, el) => el.dataset.tagName === tagName);
     }
 
     getPagination(): Pagination {

@@ -9,7 +9,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {flattenTree} from './ContentLayout.utils';
 import styles from './ContentLayout.scss';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const contextualMenu = useRef();

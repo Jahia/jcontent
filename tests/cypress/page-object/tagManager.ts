@@ -2,6 +2,7 @@ import {BaseComponent, Button, getComponentBySelector, Pagination} from '@jahia/
 import {JContent} from './jcontent';
 
 const ROOT_SELECTOR = '[data-cm-role="tag-manager-root"]';
+const ROW_SELECTOR = '[data-cm-role="tag-manager-row"]';
 export const TAG_MANAGER_APP_KEY = 'jctagsmanager';
 
 export class TagManager extends JContent {
@@ -50,7 +51,11 @@ export class TagManager extends JContent {
     }
 
     shouldNotHaveRow(tagName: string): TagManager {
-        this.getRowsByName(tagName).should('not.exist');
+        // Check from the root, because the table can have no row at all, and cy.filter() then fails
+        cy.get(ROOT_SELECTOR).should($root => {
+            const rows = $root.find(ROW_SELECTOR).filter((_, el) => el.dataset.tagName === tagName);
+            expect(rows, `row of the tag ${tagName}`).to.have.length(0);
+        });
         return this;
     }
 
@@ -59,7 +64,7 @@ export class TagManager extends JContent {
     }
 
     getRows() {
-        return cy.get('[data-cm-role="tag-manager-row"]');
+        return cy.get(ROW_SELECTOR);
     }
 
     // Filter on the attribute rather than build a selector from the name, which can contain quotes

@@ -419,21 +419,11 @@ public class EditorFormServiceImpl implements EditorFormService {
     }
 
     private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRSiteNode site) throws NoSuchNodeTypeException {
-        ArrayList<ExtendedNodeType> res = new ArrayList<>();
-
+        // Only filter by installed modules when we're in a site context (path starts with /sites/)
+        // For system-level calls, all modules are considered available
         Set<String> installedModules = site != null && site.getPath().startsWith("/sites/") ? site.getInstalledModulesWithAllDependencies() : null;
 
-        Map<ExtendedNodeType, Set<ExtendedNodeType>> m = NodeTypeRegistry.getInstance().getMixinExtensions();
-
-        for (ExtendedNodeType nodeType : m.keySet()) {
-            if (type.isNodeType(nodeType.getName())) {
-                for (ExtendedNodeType extension : m.get(nodeType)) {
-                    if (installedModules == null || extension.getTemplatePackage() == null || extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system") || installedModules.contains(extension.getTemplatePackage().getId())) {
-                        res.add(extension);
-                    }
-                }
-            }
-        }
+        List<ExtendedNodeType> res = collectExtendMixins(type, installedModules);
 
         // If mixin A extends mixin B and both are in the list, remove B: A already carries B's
         // properties via the supertype chain, so B's fieldset would put a second enable switch on
@@ -447,6 +437,59 @@ public class EditorFormServiceImpl implements EditorFormService {
             .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
 
         return res;
+    }
+
+    /**
+     * Collects the mixins that extend {@code type}, then the mixins that extend each of those, and so on:
+     * the transitive closure of the extensions. A mixin that extends an extension of the type
+     * (e.g. mymix:internalLink extends mymix:commonLink, which extends mynt:nodetypeVanilla) is found
+     * when its own base is processed. A visited set keeps a diamond or a cycle from adding a mixin twice.
+     */
+    private List<ExtendedNodeType> collectExtendMixins(ExtendedNodeType type, Set<String> installedModules) {
+        Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions = NodeTypeRegistry.getInstance().getMixinExtensions();
+        List<ExtendedNodeType> res = new ArrayList<>();
+        Queue<ExtendedNodeType> toProcess = new LinkedList<>();
+        toProcess.add(type);
+        Set<String> visited = new HashSet<>();
+        visited.add(type.getName());
+
+        while (!toProcess.isEmpty()) {
+            ExtendedNodeType current = toProcess.poll();
+            for (ExtendedNodeType extension : getDirectExtensions(current, mixinExtensions)) {
+                if (visited.add(extension.getName()) && isExtensionAvailable(extension, installedModules)) {
+                    res.add(extension);
+                    toProcess.add(extension);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * The mixins registered as extending {@code type} or one of its supertypes.
+     */
+    private static List<ExtendedNodeType> getDirectExtensions(ExtendedNodeType type, Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions) {
+        List<ExtendedNodeType> res = new ArrayList<>();
+        for (Map.Entry<ExtendedNodeType, Set<ExtendedNodeType>> entry : mixinExtensions.entrySet()) {
+            if (type.isNodeType(entry.getKey().getName())) {
+                res.addAll(entry.getValue());
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Determines whether a mixin extension is available in the current context.
+     * When {@code installedModules} is {@code null} (system-level call) all extensions are available.
+     * Otherwise, only extensions from system modules or from modules installed on the site are available.
+     */
+    private boolean isExtensionAvailable(ExtendedNodeType extension, Set<String> installedModules) {
+        if (installedModules == null || extension.getTemplatePackage() == null) {
+            return true;
+        }
+
+        return extension.getTemplatePackage().getModuleType().equalsIgnoreCase("system")
+            || installedModules.contains(extension.getTemplatePackage().getId());
     }
 
     /**

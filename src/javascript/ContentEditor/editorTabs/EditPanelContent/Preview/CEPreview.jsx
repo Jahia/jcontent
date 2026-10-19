@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Badge} from '@jahia/design-system-kit';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -8,6 +8,10 @@ import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Pre
 import {useSelector} from 'react-redux';
 import {buildPreviewContexts} from '~/JContent/preview/previewContext.utils';
 import {useEmptyListComponent} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/EmptyListComponent/EmptyListComponent';
+import {useFormikContext} from 'formik';
+import {useContentEditorSectionContext} from '~/ContentEditor/contexts/ContentEditorSection';
+import {getDataToMutate} from '~/ContentEditor/utils';
+import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 const parseQueryString = queryString => {
     if (!queryString) {
@@ -44,10 +48,51 @@ const usePreviewContexts = (nodeData, language, mode) => {
     return buildPreviewContexts(nodeData, language, {closestPage, isCEPreview: true, requestParameters});
 };
 
+/**
+ * The form's unsaved values, in the shape the preview mutation wants — or null when there is
+ * nothing unsaved, which leaves the preview on the ordinary stored-content query.
+ *
+ * Three things are deliberately left out of the payload:
+ *   - create mode, where the node does not exist yet and there is nothing to mutate;
+ *   - the system name, since renaming would move the node out from under the render mid-keystroke;
+ *   - work-in-progress, which is editor state rather than a rendered property.
+ */
+const useDirtyPayload = ({nodeData, lang, i18nContext, editorMode}) => {
+    const formik = useFormikContext();
+    const {sections} = useContentEditorSectionContext();
+
+    const isDirty = Boolean(formik?.dirty);
+    const values = formik?.values;
+
+    return useMemo(() => {
+        if (!isDirty || !values || !sections || !nodeData?.uuid ||
+            editorMode === Constants.routes.baseCreateRoute) {
+            return null;
+        }
+
+        const {propsToSave, propsToDelete, mixinsToAdd, mixinsToDelete} = getDataToMutate({
+            nodeData,
+            formValues: values,
+            i18nContext: i18nContext || {},
+            sections,
+            lang
+        });
+
+        return {
+            uuid: nodeData.uuid,
+            propertiesToSave: propsToSave.filter(p => p.name !== Constants.systemName.propertyName),
+            propertiesToDelete: propsToDelete,
+            mixinsToAdd,
+            mixinsToDelete
+        };
+    }, [isDirty, values, sections, nodeData, lang, i18nContext, editorMode]);
+};
+
 export const CEPreview = () => {
     const {t} = useTranslation('jcontent');
-    const {nodeData, lang} = useSidePanelContext();
+    const {nodeData, lang, i18nContext, mode: editorMode} = useSidePanelContext();
     const mode = useSelector(state => state.jcontent?.mode);
+    const dirtyPayload = useDirtyPayload({nodeData, lang, i18nContext, editorMode});
 
     const {primary: previewContext, fallback: fallbackPreviewContext} = usePreviewContexts(nodeData || {}, lang, mode);
     const {loading: emptyListLoading, component: emptyListComponent} = useEmptyListComponent(nodeData, mode);
@@ -88,6 +133,7 @@ export const CEPreview = () => {
 
     return (
         <Preview
+            dirtyPayload={dirtyPayload}
             header={header}
             nodeData={nodeData}
             previewContext={previewContext}

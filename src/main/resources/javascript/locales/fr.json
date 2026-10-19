@@ -876,7 +876,8 @@
           "details": "Détails",
           "off": "Désactivé"
         },
-        "updateOnSave": "L'aperçu sera mis à jour lors de l'enregistrement"
+        "updateOnSave": "L'aperçu sera mis à jour lors de l'enregistrement",
+        "unsavedChanges": "L'aperçu affiche des modifications non enregistrées"
       },
       "sidePanel": {
         "details": "Détails",

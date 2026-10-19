@@ -885,7 +885,8 @@
           "details": "Details",
           "off": "Off"
         },
-        "updateOnSave": "Preview will update on save"
+        "updateOnSave": "Preview will update on save",
+        "unsavedChanges": "Preview shows unsaved changes"
       },
       "sidePanel": {
         "details": "Details",

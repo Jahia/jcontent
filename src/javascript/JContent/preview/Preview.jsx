@@ -4,6 +4,7 @@ import {Paper} from '@material-ui/core';
 import {Button, Maximize, Minimize} from '@jahia/moonstone';
 import styles from './Preview.scss';
 import {PreviewFetcher} from './PreviewFetcher';
+import {DirtyPreviewFetcher} from './DirtyPreviewFetcher';
 
 /**
  * Shared Preview shell.
@@ -14,6 +15,7 @@ import {PreviewFetcher} from './PreviewFetcher';
  *
  * Props:
  *   previewContext       — includes workspace; passed through unchanged to PreviewFetcher
+ *   dirtyPayload         — unsaved values to render instead of the stored ones; null = stored
  *   nodeData             — { isPage, path, displayableNode } for IframeViewer zoom
  *   isFullScreen         — controlled externally (Decision #6)
  *   onFullScreenToggle   — optional; renders fullscreen button when provided
@@ -25,6 +27,7 @@ import {PreviewFetcher} from './PreviewFetcher';
 export const Preview = ({
     previewContext,
     fallbackPreviewContext = null,
+    dirtyPayload = null,
     nodeData = null,
     isFullScreen = false,
     onFullScreenToggle = null,
@@ -69,7 +72,16 @@ export const Preview = ({
                     )}
                 </div>
             )}
-            {shouldDisplay && (
+            {shouldDisplay && (dirtyPayload ? (
+                <DirtyPreviewFetcher
+                    key={useFallback ? 'dirty-fallback' : 'dirty-primary'}
+                    dirtyPayload={dirtyPayload}
+                    isFullScreen={isFullScreen}
+                    nodeData={nodeData}
+                    previewContext={activeContext}
+                    onContentNotFound={handleContentNotFound}
+                />
+            ) : (
                 <PreviewFetcher
                     key={useFallback ? 'fallback' : 'primary'}
                     isFullScreen={isFullScreen}
@@ -79,7 +91,7 @@ export const Preview = ({
                     onRefetchInvalidated={onRefetchInvalidated}
                     onRefetchReady={onRefetchReady}
                 />
-            )}
+            ))}
             {footer}
         </Paper>
     );
@@ -90,6 +102,7 @@ Preview.propTypes = {
         workspace: PropTypes.string
     }).isRequired,
     fallbackPreviewContext: PropTypes.object,
+    dirtyPayload: PropTypes.object,
     nodeData: PropTypes.object,
     isFullScreen: PropTypes.bool,
     onFullScreenToggle: PropTypes.func,

@@ -11,6 +11,14 @@ jest.mock('./PreviewFetcher', () => ({
     }
 }));
 
+let capturedDirtyFetcherProps = {};
+jest.mock('./DirtyPreviewFetcher', () => ({
+    DirtyPreviewFetcher: props => {
+        capturedDirtyFetcherProps = props;
+        return <div data-testid="dirty-fetcher"/>;
+    }
+}));
+
 const baseContext = {
     path: '/site/digitall',
     workspace: 'edit',
@@ -27,6 +35,11 @@ const renderPreview = (props = {}) => shallow(
 );
 
 describe('Preview', () => {
+    beforeEach(() => {
+        capturedFetcherProps = {};
+        capturedDirtyFetcherProps = {};
+    });
+
     it('renders without workspace toggle buttons', () => {
         const cmp = renderPreview();
         expect(cmp.find('[data-sel-role="edit-preview-button"]').exists()).toBe(false);
@@ -48,5 +61,22 @@ describe('Preview', () => {
             mount(<Preview previewContext={baseContext}/>);
         });
         expect(capturedFetcherProps.previewContext.workspace).toBe('edit');
+    });
+
+    it('renders stored content through PreviewFetcher when there is no dirty payload', () => {
+        act(() => {
+            mount(<Preview previewContext={baseContext}/>);
+        });
+        expect(capturedFetcherProps.previewContext).toBeDefined();
+        expect(capturedDirtyFetcherProps.dirtyPayload).toBeUndefined();
+    });
+
+    it('renders unsaved values through DirtyPreviewFetcher when a dirty payload is given', () => {
+        const dirtyPayload = {uuid: 'test-uuid', propertiesToSave: [], propertiesToDelete: [], mixinsToAdd: [], mixinsToDelete: []};
+        act(() => {
+            mount(<Preview dirtyPayload={dirtyPayload} previewContext={baseContext}/>);
+        });
+        expect(capturedDirtyFetcherProps.dirtyPayload).toBe(dirtyPayload);
+        expect(capturedDirtyFetcherProps.previewContext.workspace).toBe('edit');
     });
 });

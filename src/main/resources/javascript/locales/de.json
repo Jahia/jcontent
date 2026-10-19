@@ -875,7 +875,8 @@
           "details": "Details",
           "off": "Aus"
         },
-        "updateOnSave": "Vorschau wird mit dem Speichern aktualisiert"
+        "updateOnSave": "Vorschau wird mit dem Speichern aktualisiert",
+        "unsavedChanges": "Vorschau zeigt nicht gespeicherte Änderungen"
       },
       "sidePanel": {
         "details": "Details",

@@ -94,7 +94,19 @@ export const CEPreview = () => {
     const mode = useSelector(state => state.jcontent?.mode);
     const dirtyPayload = useDirtyPayload({nodeData, lang, i18nContext, editorMode});
 
-    const {primary: previewContext, fallback: fallbackPreviewContext} = usePreviewContexts(nodeData || {}, lang, mode);
+    // The view a node renders with is itself an editable property, so an unsaved j:view has to
+    // reach the preview context — otherwise changing the view is the one edit the live preview
+    // cannot show, and it is a change the editor is most likely to want to see.
+    const previewNodeData = useMemo(() => {
+        const dirtyView = dirtyPayload?.propertiesToSave?.find(p => p.name === Constants.jView.propertyName);
+        if (!dirtyView) {
+            return nodeData || {};
+        }
+
+        return {...nodeData, jView: {value: dirtyView.value}};
+    }, [nodeData, dirtyPayload]);
+
+    const {primary: previewContext, fallback: fallbackPreviewContext} = usePreviewContexts(previewNodeData, lang, mode);
     const {loading: emptyListLoading, component: emptyListComponent} = useEmptyListComponent(nodeData, mode);
 
     const onRefetchReady = useCallback(refetch => {
@@ -133,6 +145,7 @@ export const CEPreview = () => {
 
     return (
         <Preview
+            isLive
             dirtyPayload={dirtyPayload}
             header={header}
             nodeData={nodeData}

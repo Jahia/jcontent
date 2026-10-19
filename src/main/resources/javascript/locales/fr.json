@@ -877,7 +877,8 @@
           "off": "Désactivé"
         },
         "updateOnSave": "L'aperçu sera mis à jour lors de l'enregistrement",
-        "unsavedChanges": "L'aperçu affiche des modifications non enregistrées"
+        "unsavedChanges": "L'aperçu affiche des modifications non enregistrées",
+        "couldNotUpdate": "L'aperçu n'a pas pu être mis à jour — vérifiez les valeurs du formulaire"
       },
       "sidePanel": {
         "details": "Détails",

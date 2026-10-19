@@ -39,7 +39,7 @@ const buildVariables = (previewContext, dirtyPayload) => ({
  * @param {object} dirtyPayload - {uuid, propertiesToSave, propertiesToDelete, mixinsToAdd, mixinsToDelete}
  * @param {number} [debounceMs]
  */
-export const useDirtyContentPreview = ({previewContext, dirtyPayload, debounceMs = DEFAULT_DEBOUNCE_MS}) => {
+export const useDirtyContentPreview = ({previewContext, dirtyPayload, debounceMs = DEFAULT_DEBOUNCE_MS, skip = false}) => {
     const [mutate] = useMutation(DIRTY_CONTENT_PREVIEW_MUTATION, {
         fetchPolicy: 'no-cache',
         errorPolicy: 'all'
@@ -53,16 +53,25 @@ export const useDirtyContentPreview = ({previewContext, dirtyPayload, debounceMs
 
     // Variables are rebuilt on every render from fresh objects, so they are identified by their
     // serialized form: equal values mean no new render, whatever the object identity.
-    const variablesKey = JSON.stringify(buildVariables(previewContext, dirtyPayload));
+    const variablesKey = JSON.stringify(buildVariables(previewContext, dirtyPayload || {}));
     const variables = useMemo(() => JSON.parse(variablesKey), [variablesKey]);
 
     useEffect(() => {
+        if (skip) {
+            return;
+        }
+
         const id = requestId.current + 1;
         requestId.current = id;
         setResult(previous => ({...previous, isRefreshing: true}));
 
+        // A superseded response is not merely ignored: its request is aborted, so the server
+        // stops rendering a page nobody will look at. Under sustained typing that is the
+        // difference between one abandoned render and a queue of them.
+        const controller = new AbortController();
+
         const timer = setTimeout(() => {
-            mutate({variables})
+            mutate({variables, context: {fetchOptions: {signal: controller.signal}}})
                 .then(({data, errors}) => {
                     if (id !== requestId.current) {
                         return;
@@ -86,18 +95,25 @@ export const useDirtyContentPreview = ({previewContext, dirtyPayload, debounceMs
                     });
                 })
                 .catch(error => {
-                    if (id === requestId.current) {
+                    // An abort is this hook's own doing, not a failed render.
+                    if (id === requestId.current && error?.name !== 'AbortError') {
                         setResult(previous => ({...previous, error, isRefreshing: false}));
                     }
                 });
         }, debounceMs);
 
-        return () => clearTimeout(timer);
-    }, [variables, mutate, debounceMs]);
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
+    }, [variables, mutate, debounceMs, skip]);
 
     return {
         data: result.data,
         error: result.error,
+        // An error on top of an earlier render means the frame is showing something older than
+        // what the form says. The editor has to be told, or they read a stale preview as live.
+        isStale: Boolean(result.error && result.data),
         loading: result.data === null && result.error === null,
         isRefreshing: result.isRefreshing
     };

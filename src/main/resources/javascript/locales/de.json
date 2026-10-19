@@ -876,7 +876,8 @@
           "off": "Aus"
         },
         "updateOnSave": "Vorschau wird mit dem Speichern aktualisiert",
-        "unsavedChanges": "Vorschau zeigt nicht gespeicherte Änderungen"
+        "unsavedChanges": "Vorschau zeigt nicht gespeicherte Änderungen",
+        "couldNotUpdate": "Vorschau konnte nicht aktualisiert werden — prüfen Sie die Formularwerte"
       },
       "sidePanel": {
         "details": "Details",

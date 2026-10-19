@@ -15,6 +15,8 @@ import {DirtyPreviewFetcher} from './DirtyPreviewFetcher';
  *
  * Props:
  *   previewContext       — includes workspace; passed through unchanged to PreviewFetcher
+ *   isLive               — the host can edit what is previewed, so mount the fetcher that keeps
+ *                          one document across the clean/dirty transition rather than swapping
  *   dirtyPayload         — unsaved values to render instead of the stored ones; null = stored
  *   nodeData             — { isPage, path, displayableNode } for IframeViewer zoom
  *   isFullScreen         — controlled externally (Decision #6)
@@ -27,6 +29,7 @@ import {DirtyPreviewFetcher} from './DirtyPreviewFetcher';
 export const Preview = ({
     previewContext,
     fallbackPreviewContext = null,
+    isLive = false,
     dirtyPayload = null,
     nodeData = null,
     isFullScreen = false,
@@ -56,6 +59,12 @@ export const Preview = ({
 
     const activeContext = (useFallback && fallbackPreviewContext) ? fallbackPreviewContext : previewContext;
 
+    // A live render runs per keystroke, so it renders the NODE wherever a module context exists
+    // rather than its hosting page: the frame already shows the page, and the viewer patches the
+    // new fragment into it, so re-rendering the whole page each time buys nothing but load.
+    // Where there is no module context — a page is its own render — this is the page context.
+    const dirtyContext = fallbackPreviewContext || activeContext;
+
     return (
         <Paper className={styles.previewShell}>
             {(header || onFullScreenToggle) && (
@@ -72,10 +81,10 @@ export const Preview = ({
                     )}
                 </div>
             )}
-            {shouldDisplay && (dirtyPayload ? (
+            {shouldDisplay && (isLive ? (
                 <DirtyPreviewFetcher
-                    key={useFallback ? 'dirty-fallback' : 'dirty-primary'}
                     dirtyPayload={dirtyPayload}
+                    dirtyPreviewContext={dirtyContext}
                     isFullScreen={isFullScreen}
                     nodeData={nodeData}
                     previewContext={activeContext}
@@ -102,6 +111,7 @@ Preview.propTypes = {
         workspace: PropTypes.string
     }).isRequired,
     fallbackPreviewContext: PropTypes.object,
+    isLive: PropTypes.bool,
     dirtyPayload: PropTypes.object,
     nodeData: PropTypes.object,
     isFullScreen: PropTypes.bool,

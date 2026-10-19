@@ -63,20 +63,39 @@ describe('Preview', () => {
         expect(capturedFetcherProps.previewContext.workspace).toBe('edit');
     });
 
-    it('renders stored content through PreviewFetcher when there is no dirty payload', () => {
+    it('renders stored content through PreviewFetcher when the host is not live', () => {
         act(() => {
             mount(<Preview previewContext={baseContext}/>);
         });
         expect(capturedFetcherProps.previewContext).toBeDefined();
-        expect(capturedDirtyFetcherProps.dirtyPayload).toBeUndefined();
+        expect(capturedDirtyFetcherProps.previewContext).toBeUndefined();
     });
 
-    it('renders unsaved values through DirtyPreviewFetcher when a dirty payload is given', () => {
+    // The live fetcher is mounted by isLive alone, before anything is dirty: swapping components
+    // on the first keystroke would reload the frame, which is what the in-place patching avoids.
+    it('mounts the live fetcher as soon as the host is live, with no dirty payload yet', () => {
+        act(() => {
+            mount(<Preview isLive previewContext={baseContext}/>);
+        });
+        expect(capturedDirtyFetcherProps.previewContext.workspace).toBe('edit');
+        expect(capturedDirtyFetcherProps.dirtyPayload).toBeNull();
+        expect(capturedFetcherProps.previewContext).toBeUndefined();
+    });
+
+    it('passes the dirty payload to the live fetcher', () => {
         const dirtyPayload = {uuid: 'test-uuid', propertiesToSave: [], propertiesToDelete: [], mixinsToAdd: [], mixinsToDelete: []};
         act(() => {
-            mount(<Preview dirtyPayload={dirtyPayload} previewContext={baseContext}/>);
+            mount(<Preview isLive dirtyPayload={dirtyPayload} previewContext={baseContext}/>);
         });
         expect(capturedDirtyFetcherProps.dirtyPayload).toBe(dirtyPayload);
-        expect(capturedDirtyFetcherProps.previewContext.workspace).toBe('edit');
+    });
+
+    it('renders the node rather than its hosting page while live, when a module context exists', () => {
+        const fallback = {...baseContext, path: '/site/digitall/home/news', contextConfiguration: 'module'};
+        act(() => {
+            mount(<Preview isLive fallbackPreviewContext={fallback} previewContext={baseContext}/>);
+        });
+        expect(capturedDirtyFetcherProps.dirtyPreviewContext).toBe(fallback);
+        expect(capturedDirtyFetcherProps.previewContext).toBe(baseContext);
     });
 });

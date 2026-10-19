@@ -1,5 +1,83 @@
 # @jahia/jcontent Changelog
 
+## 3.9.0
+
+### New Features
+
+* Fixed page edits so they no longer fail, or reorder sub-pages, when the editor lacks write access to one of the sub-pages. The ordering list now locks a sub-page that the editor cannot move, and counts the sub-pages that the editor cannot see. (#2795)
+
+* The content side panel is now exported, so a module with its own accordion route can show the same preview, details, history and usages tabs jContent's content list shows. (#2842)
+
+* Fixed the content editor deleting a shared field's value in the other languages, and in hidden or read-only fields, when switching between two template mixins that share it.
+
+* Changed the user and group search of the pickers so it is available to users with jContent access to the site being edited.
+
+  Custom code that calls the `userSearch` or `groupSearch` fields of the jContent GraphQL API is affected. Pass the key of the site in `siteKey`; without one, the search runs for the system site. Each result is a user or group summary with its name, display name, first and last name, site and provider. A user matches when every word of the search term appears in its name, display name, or a first or last name the caller can read. To read anything else about a user or group, query its node by path or identifier.
+
+* Add auto-scroll indicators when dragging content in page builder (#2658)
+
+* Fixed Visibility condition start/end datetime property so they no longer change when viewing saved values (#2653). All date/time fields are now saved in UTC and also now display datetime based on browser timezone. Clearing a visibility date property also now removes it instead of silently keeping the old value.
+
+* Added a Tag Manager to jContent (Manage > Tags) to list, rename and delete the tags used across a site, and to see and edit the content each tag is applied to. It is available to users holding the "Access to tag manager" permission on the site. The "Tags" entry provided by the legacy tags module is hidden from the jContent menu so only one Tag Manager appears; the tags module itself, its components and its actions are unchanged. (#2265, #2545)
+
+* Fix insertion points inserting content at the end of the list instead of at their own position
+
+* Fixed the content editor so every mixin in a chain of mixins that extend one another shows its fields when chosen.
+
+  Where several such mixins are each offered as a separate choice, only the most derived one showed any fields: picking any of the others showed nothing to fill in, and the choice was lost on save.
+
+* Fixed the History tab of the content editor so it loads for users whose roles are granted on a site.
+
+* Fixed content folders so named child items defined by a content type can be created there, as they already could in Page Builder.
+
+* Changed the visibility conditions upgrade: jContent now owns the date, time and day-of-week conditions, and removes the modules that provided them on every cluster node. If your environment has the `visibility` or `advanced-visibility` module installed, upgrading jContent uninstalls it, and no separate migration module is needed. Your existing visibility conditions keep working and need no edit. After the upgrade, check that neither module is listed in Administration, Modules. Do not reinstall either one: it would take ownership of the condition types back from jContent. If one of your own modules declares a dependency on `visibility`, remove that dependency before upgrading, or the module will stop loading. (#2724, #2726)
+
+### Bug Fixes
+
+* Preview now renders a record inside its hosting page from any accordion, not only the page tree, so nested content keeps the page's CSS and scripts.
+
+* Fixed the editorial link picker crashing when the selected link target sits in a large content list. The picker now reads fewer items, and points to the search when the list is still too large to show.
+
+* Dialogs no longer stay on screen after the page behind them has changed: navigating away while one is open closes it, the browser's own back and forward buttons included.
+
+* Fixed the *Live* button menu so it offers the current domain when the site server name is localhost (#2792)
+
+* Fixed the Additional section of jContent so it opens the first available app directly, instead of showing "App not found" when you first open it.
+
+* The breadcrumbs let you back onto the page again after browsing into something the content tree does not show, such as an area: the page used to be the only entry left and was greyed out, leaving no way back to it.
+
+* Fixed the creation of a named child content for editors who cannot see the system name field.
+
+* Fixed content permissions so users without the permission to use a content type can no longer edit, delete, copy or move content of that type (#2809)
+
+* Fix the French label on the reference card preview action
+
+* Keep the page builder on the same content when it reloads after a save, instead of coming back somewhere else and losing sight of the content being edited (#2664)
+
+* Fix checkbox choice list selection not registering when clicked (#2643)
+
+* Changed file upload so files are no longer versioned at upload time. Files are still versioned when they are published, so only the extra version taken during the upload is affected. Upload-time versioning was already removed in the GraphQL provider 3.9.0, so nothing changes for installations running that version or later.
+
+* Fixed switching languages while creating content so it no longer copies unsaved text into the new language. (#2738)
+
+* Added maven.jahia.com to the Maven repositories jcontent uses to download its dependencies.
+
+* Fixed mixin fields so that every mixin shows all fields it carries, including inherited fields. When multiple mixins inherit the same field, the field remains editable in a single place without one value overwriting another. GraphQL now always returns the list of values available for an editor form field, using an empty list when there are no values instead of null. (#2746)
+
+* Fixed file upload so a refused upload shows its validation messages again instead of a generic error.
+
+* Fixed field constraint error messages being displayed with HTML-encoded punctuation instead of their original text. Also fixed encoding issues in constraint violation and broken-link messages (#2748).
+
+* Fixed Open in Live for shared content: a node from a localhost-only site now opens on the currently selected site's hostname instead of the browsing/server domain. (#2828)
+
+* Preview content that has a content template - a node carrying jmix:mainResource, typically stored in the Content branch - through that template instead of rendering only its view, so the preview pane shows the content the way a visitor would see it. A j:view on such a node is no longer forwarded as the template name, which used to leave the preview empty (#2753)
+
+* Sort the content type selector by display name instead of system name (#2747)
+
+* Open the publication manager from the publication dropdown again: the action read the node primary node type without asking the node checks for it, so the click threw instead of opening the dashboard. It also read the mixins from the wrong place, so the manager was always handed an empty mixin list (#2715)
+
+* Fix a template mixin switch showing and saving an outdated value of a property the mixins share (#2746)
+
 ## 3.7.0
 
 ### New Features

@@ -7,6 +7,10 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, reopened, synchronize]
+    # A chachalog release PR changes only the changelog: it holds no code to build or test.
+    paths-ignore:
+      - '.chachalog/**'
+      - 'CHANGELOG.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -20,6 +20,7 @@ export * from './openInJcontentAction';
 export * from './renameAction';
 export * from './downloadAsZip';
 export * from './editImage';
+export * from './setFocalPoint';
 export * from './compareHtmlAction';
 export * from './flushCacheAction';
 export * from './showPublicationManagerAction';

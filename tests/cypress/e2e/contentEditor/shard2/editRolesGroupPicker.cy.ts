@@ -22,7 +22,7 @@ describe('Edit roles - group picker', () => {
         deleteSite(otherSiteKey);
     });
 
-    it('FT-016: does not offer the group of another site', () => {
+    it('does not offer the group of another site', () => {
         context.tag('manage-groups', 'cross-site-role-picker');
         cy.login();
         const contentEditor = JContent.visit(siteKey, 'en', 'pages/home').editPage();

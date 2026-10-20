@@ -51,7 +51,7 @@ export const JContentPreview = () => {
         return EmptyListComponent;
     }
 
-    const {primary: previewContext, fallback: fallbackPreviewContext} = buildPreviewContextsFromNode(previewSelection, lang, mode);
+    const {primary: previewContext, fallback: fallbackPreviewContext} = buildPreviewContextsFromNode(previewSelection, lang);
 
     return (
         <Preview

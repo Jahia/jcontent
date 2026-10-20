@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
 import Delete from './Delete';
 import {ComponentRendererContext} from '@jahia/ui-extender';
+import {componentPermissionFragment, hasComponentPermission} from '../utils/componentPermission';
 
 const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
@@ -43,7 +44,8 @@ export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedN
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes,
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
+            applyFragment: componentPermissionFragment
         },
         {
             fetchPolicy: 'network-only'
@@ -62,7 +64,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, node: prefetchedN
         return false;
     }
 
-    let isVisible = res.checksResult && (res.node ? checkAction(res.node) : checkActionOnNodes(res));
+    let isVisible = res.checksResult && (res.node ? checkAction(res.node) : checkActionOnNodes(res)) && hasComponentPermission(res);
 
     return (
         <Render

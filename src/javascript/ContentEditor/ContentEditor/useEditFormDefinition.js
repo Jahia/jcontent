@@ -1,5 +1,5 @@
 import {formatDatetime} from 'date-formatter';
-import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils';
+import {getDynamicFieldSets, getFields, getStoredProperty} from '~/ContentEditor/utils';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {adaptSystemNameField} from './adaptSystemNameField';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
@@ -67,12 +67,6 @@ const getChildrenOrderingFields = (nodeData, dynamicFieldSets) => {
 
     return orderingInitialValues;
 };
-
-// A stored property is matched by propertyName + declaringNodeType, not by field name: sibling
-// copies of an inherited field (see adaptSections.ts) share both, so they resolve to the same
-// stored property even though their form field names differ.
-const getStoredProperty = (field, nodeData) =>
-    nodeData.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.declaringNodeType);
 
 export const getFieldValues = (field, nodeData) => {
     const property = getStoredProperty(field, nodeData);
@@ -166,7 +160,12 @@ const getTechnicalInfo = (nodeData, t) => {
 };
 
 export const adaptEditFormData = (data, lang, t) => {
-    const nodeData = data.jcr.result;
+    const result = data.jcr.result;
+    // A node whose type needs a component permission the user lacks is read-only, the same as without write permission
+    const nodeData = {
+        ...result,
+        hasWritePermission: Boolean(result.hasWritePermission && result.hasComponentPermission)
+    };
     const sections = adaptSections(data.forms.editForm);
 
     const formData = {

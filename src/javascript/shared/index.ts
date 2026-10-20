@@ -23,6 +23,25 @@ export {BaseChildrenQuery, BaseDescendantsQuery, BaseQueryHandler, BaseTreeQuery
 export {DragLayer, useConnector, useFileDrop, useNodeDrag, useNodeDrop} from '../JContent/dnd';
 export {headerButtonWrapper} from '../JContent/EditFrame/DefaultBar';
 
+// The content side panel - preview, details, history, usages - for a module that supplies its own
+// jContent route. Overriding `routeComponent` replaces ContentLayout, and the panel goes with it;
+// this is what lets a module put it back rather than reimplement four tabs.
+//
+// Three things, and no assembly. ContentSidePanel owns the panel, the context it cannot work
+// without, and its own container and width - so a consumer renders it unconditionally and it shows
+// nothing when nothing is selected. It must sit in a flex ROW; the container is `flex: 0 0 600px`.
+//
+// `cmSetSidePanelSelection(path)` opens it and `cmSetSidePanelSelection(null)` closes it, which is
+// also what the panel's own close button dispatches. One way in, one way out, one source of truth
+// in `state.jcontent.sidePanelSelection`.
+//
+// ContentSidePanelNodeFragment is the contract for the node a consumer passes back. It is not
+// guessable and failing it does not fail: a node missing `displayableNode` previews without the
+// page's CSS, one missing `primaryNodeType` loses Details, and nothing says so.
+export {ContentSidePanel} from '../JContent/ContentRoute/ContentLayout/ContentSidePanel';
+export {ContentSidePanelNodeFragment} from '../JContent/ContentRoute/ContentLayout/ContentSidePanel.gql-fragments';
+export {cmSetSidePanelSelection} from '../JContent/redux/preview.redux';
+
 // Content-editor shared/index.js
 export {ContentEditorContext, ContentEditorContextProvider, useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 export {ContentEditorConfigContext, ContentEditorConfigContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts/ContentEditorConfig';

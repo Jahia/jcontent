@@ -209,6 +209,31 @@ export function checkIfValuesAreDifferent(firstValue, secondValue, requiredType)
 }
 
 /**
+ * Check if two form values are equal, comparing a multiple value item by item
+ * @param value a form value
+ * @param otherValue another form value
+ * @returns true if the values are equal
+ */
+export function isSameValue(value: unknown, otherValue: unknown): boolean {
+    return Array.isArray(value) && Array.isArray(otherValue) ?
+        value.length === otherValue.length && value.every((item, index) => item === otherValue[index]) :
+        value === otherValue;
+}
+
+/**
+ * The stored property a field edits, matched by name and declaring type. Sibling copies of an inherited
+ * field (see adaptSections.ts) differ by form field name and fieldset, and resolve to the same property.
+ * @param field the property field
+ * @param nodeData the node data
+ * @returns the stored property, or undefined when the node does not store it
+ */
+export function getStoredProperty(field: EditorField, nodeData: any) {
+    // `nodeType` is the fieldset, so it names the declaring type only for a field that states none
+    const declaringNodeType = field.declaringNodeType || field.nodeType;
+    return nodeData?.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === declaringNodeType);
+}
+
+/**
  * Check if the values of a multiple field have changed
  * @param currentValue the current field values
  * @param previousValue the original field values
@@ -246,7 +271,7 @@ function _multipleValuesHaveChanged(currentValue: any[], previousValue: any[], r
 export function propertyHasChanged(currentValue: any, field: EditorField, nodeData: any) {
     // Retrieve previous value
     // Perf: https://jira.jahia.org/browse/TECH-299 we could store initialValues in CE Context so we could compare them with currentValue instead of reading nodeData here
-    const propertyData = nodeData?.properties?.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.nodeType);
+    const propertyData = getStoredProperty(field, nodeData);
     const previousValue = propertyData?.[_getPropertyNameToCompare(field)];
 
     // Specific case for j:invalidLanguages

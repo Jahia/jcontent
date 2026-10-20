@@ -9,10 +9,14 @@ import {ceToggleSections} from '~/ContentEditor/registerReducer';
 import styles from './FormBuilder.scss';
 import {Validation} from './Validation';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {LeadingActionContext} from './LeadingAction.context';
 
 const ADVANCED_OPTIONS_SELECTIONS = ['visibility'];
 
-export const FormBuilder = ({mode}) => {
+/**
+ * @type {React.FC<{mode: string, leadingAction?: string}>}
+ */
+export const FormBuilder = ({mode, leadingAction = null}) => {
     const {nodeData, errors, expandedSections} = useContentEditorContext();
     const {formKey} = useContentEditorConfigContext();
     const {sections} = useContentEditorSectionContext();
@@ -92,14 +96,14 @@ export const FormBuilder = ({mode}) => {
     }
 
     return (
-        <>
+        <LeadingActionContext.Provider value={leadingAction}>
             <Validation/>
             <Form className={styles.form}>
                 <section data-sel-mode={mode}>
                     {children}
                 </section>
             </Form>
-        </>
+        </LeadingActionContext.Provider>
     );
 };
 
@@ -111,5 +115,7 @@ FormBuilder.contextTypes = {
 };
 
 FormBuilder.propTypes = {
-    mode: PropTypes.string.isRequired
+    mode: PropTypes.string.isRequired,
+    // Key of the action shown before each field, e.g. to copy a source value in the translate panel
+    leadingAction: PropTypes.string
 };

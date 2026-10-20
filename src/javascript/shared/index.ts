@@ -47,14 +47,14 @@ export {ContentEditorContext, ContentEditorContextProvider, useContentEditorCont
 export {ContentEditorConfigContext, ContentEditorConfigContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts/ContentEditorConfig';
 export {ContentEditorApiContext, ContentEditorApiContextProvider, useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi';
 export {ContentEditorSectionContext, ContentEditorSectionContextProvider, useContentEditorSectionContext} from '~/ContentEditor/contexts/ContentEditorSection';
-export {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel, checkIfValuesAreDifferent, decodeSystemName, encodeJCRPath, encodeSystemName, extractRangeConstraints, getButtonRenderer, getCapitalized, getChildrenOrder, getDataToMutate, getDynamicFieldSetNameOfField, getDynamicFieldSets, getFields, getNodeTypeIcon, getValuePropName, isDirty, onDirectionalReorder, onListIndexReorder, propertyHasChanged, useKeydownListener, useReorderDrag, useReorderDrop, useReorderList, useSwitchLanguage} from '~/ContentEditor/utils';
+export {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel, checkIfValuesAreDifferent, decodeSystemName, encodeJCRPath, encodeSystemName, extractRangeConstraints, fieldValueHasChanged, getButtonRenderer, getCapitalized, getChildrenOrder, getDataToMutate, getDynamicFieldSetNameOfField, getDynamicFieldSets, getFields, getNodeTypeIcon, getValuePropName, isDirty, onDirectionalReorder, onListIndexReorder, propertyHasChanged, useKeydownListener, useReorderDrag, useReorderDrop, useReorderList, useSwitchLanguage} from '~/ContentEditor/utils';
 export {FormBuilder} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FormBuilder';
 export {EditPanelLanguageSwitcher} from '~/ContentEditor/ContentEditor/EditPanel/EditPanelLanguageSwitcher';
-export {useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
+export {adaptPropertyValue, useEditFormDefinition} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
 export {useCreateFormDefinition} from '~/ContentEditor/ContentEditor/useCreateFormDefinition';
 export {EditPanelContent} from '~/ContentEditor/editorTabs/EditPanelContent/EditPanelContent';
 export {ContentEditorFragment} from '~/ContentEditor/ContentEditor/fragments';
-export {adaptSections, getExpandedSections, type EditorField, type EditorFieldSet, type EditorSection} from '~/ContentEditor/ContentEditor/adaptSections';
+export {adaptSections, type EditorField, type EditorFieldSet, type EditorSection} from '~/ContentEditor/ContentEditor/adaptSections';
 
 // New date-formatter package to improve consistency
 export * as dateFormatter from 'date-formatter';

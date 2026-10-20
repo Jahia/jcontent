@@ -241,7 +241,7 @@ export function getStoredProperty(field: EditorField, nodeData: any) {
  * @returns true if the values have changed.
  * @private
  */
-function _multipleValuesHaveChanged(currentValue: any[], previousValue: any[], requiredType: string) {
+function _multipleValuesHaveChanged(currentValue: any[], previousValue: any[], requiredType?: string | null) {
     // Check if both array are null or undefined
     if (!currentValue && !previousValue) {
         return false;
@@ -262,6 +262,21 @@ function _multipleValuesHaveChanged(currentValue: any[], previousValue: any[], r
 }
 
 /**
+ * Check if two values of a given field differ, comparing a multiple value item by item
+ * @param field the field the values belong to
+ * @param value a value of the field
+ * @param otherValue another value of the field
+ * @returns true if the values differ.
+ */
+export function fieldValueHasChanged(field: Pick<EditorField, 'multiple' | 'requiredType'>, value: any, otherValue: any): boolean {
+    if (field.multiple) {
+        return _multipleValuesHaveChanged(value, otherValue, field.requiredType);
+    }
+
+    return checkIfValuesAreDifferent(value, otherValue, field.requiredType);
+}
+
+/**
  * Check if the value of a given field have changed, comparing the currentValue with the original value stored in the nodeData object
  * @param currentValue the current field value
  * @param field the field
@@ -279,12 +294,7 @@ export function propertyHasChanged(currentValue: any, field: EditorField, nodeDa
         return false;
     }
 
-    // Compare previous value
-    if (field.multiple) {
-        return _multipleValuesHaveChanged(currentValue, previousValue, field.requiredType);
-    }
-
-    return checkIfValuesAreDifferent(currentValue, previousValue, field.requiredType);
+    return fieldValueHasChanged(field, currentValue, previousValue);
 }
 
 /**

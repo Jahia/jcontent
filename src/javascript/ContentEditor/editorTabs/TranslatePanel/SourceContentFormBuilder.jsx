@@ -60,7 +60,7 @@ const SourceContentFormBuilderInner = ({data}) => {
                     <span>{t('label.contentEditor.edit.action.translate.sourceLanguage')}</span>
                     <EditPanelLanguageSwitcher/>
                 </div>
-                <FormBuilder mode="edit"/>
+                <FormBuilder mode="edit" leadingAction="translateField"/>
             </>
         </Formik>
     );

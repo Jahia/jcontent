@@ -68,6 +68,21 @@ const getChildrenOrderingFields = (nodeData, dynamicFieldSets) => {
     return orderingInitialValues;
 };
 
+/**
+ * Convert a stored property to the form value of a field, the way the edit form does
+ * @param {object} field the property field
+ * @param {object} property the stored property, with its value or values
+ * @param {object} [selectorType] the selector type of the field, resolved from the field when omitted
+ * @returns {*} the form value
+ */
+export const adaptPropertyValue = (field, property, selectorType = resolveSelectorType(field)) => {
+    if (selectorType?.adaptValue) {
+        return selectorType.adaptValue(field, property);
+    }
+
+    return field.multiple ? property.values : property.value;
+};
+
 export const getFieldValues = (field, nodeData) => {
     const property = getStoredProperty(field, nodeData);
     const selectorType = resolveSelectorType(field);
@@ -79,14 +94,7 @@ export const getFieldValues = (field, nodeData) => {
             formFields[field.name] = selectorType.initValue(field);
         }
     } else if (selectorType) {
-        let adaptedPropertyValue;
-        if (selectorType.adaptValue) {
-            adaptedPropertyValue = selectorType.adaptValue(field, property);
-        } else {
-            adaptedPropertyValue = field.multiple ? property.values : property.value;
-        }
-
-        formFields[field.name] = adaptedPropertyValue;
+        formFields[field.name] = adaptPropertyValue(field, property, selectorType);
     }
 
     return formFields;

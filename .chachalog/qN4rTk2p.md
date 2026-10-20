@@ -3,4 +3,4 @@
 "@jahia/jcontent": minor
 ---
 
-For developers: new `content-editor/field/leading-actions` registry target for UI extensions to provide inline actions alongside a field.
+Added a `leadingAction` prop to `FormBuilder`, so a module rendering its own Content Editor form can show an action before each field, and exposed `adaptSections`, `adaptPropertyValue` and `fieldValueHasChanged` for such forms.

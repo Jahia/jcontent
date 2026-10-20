@@ -56,6 +56,6 @@ export type EditorFieldSet = EditorSection['fieldSets'][number];
 
 /**
  * A single Content Editor form field — what jContent passes as the `field` prop to actions on the
- * `content-editor/field/leading-actions` target and to FormBuilder selector components.
+ * FormBuilder `leadingAction` and to FormBuilder selector components.
  */
 export type EditorField = EditorFieldSet['fields'][number];

@@ -2,8 +2,7 @@ import {context, createGroup, createSite, deleteSite, jfaker} from '@jahia/cypre
 import {JContent} from '../../../page-object';
 
 // The group picker of the Edit roles tab offers the groups of the site being edited and the global
-// groups, never the groups of another site. Migrated from the legacy Selenium class ManageGroupsTest
-// (FT-016 of Jahia/selenium#1636).
+// groups, never the groups of another site.
 describe('Edit roles - group picker', () => {
     const uniq = jfaker.string.alphanumeric({length: 8, casing: 'lower', safe: true});
     const siteKey = 'rolespicker' + uniq;
@@ -24,7 +23,7 @@ describe('Edit roles - group picker', () => {
     });
 
     it('FT-016: does not offer the group of another site', () => {
-        context.tag('testrail-case-2467338', 'manage-groups', 'cross-site-role-picker');
+        context.tag('manage-groups', 'cross-site-role-picker');
         cy.login();
         const contentEditor = JContent.visit(siteKey, 'en', 'pages/home').editPage();
         contentEditor.switchToAdvancedMode();

@@ -11,13 +11,29 @@
 
 ### Responsibilities
 
-- Manages iframe loading; keeping track of current document between the two iframes
-  - iframeSwap is a reference backup of iframe for tracking scroll position and copies it over to current iframe on load
-- Keeps track of repositioning/aligning boxes with its associated element through `intervalCallback` by calling these on a set interval 
-  - can this be handled with events instead of polling?
+- Manages the single iframe and the document it holds
+  - a navigation (another page, language, template or URL parameters) loads the frame
+  - a refresh after a change morphs the new rendering into the current document (`core/morphFrame.js`), so the
+    view stays still and nothing flashes. It falls back to a reload, with the view restored by `EditFrame.anchor.js`,
+    when the new rendering needs a script or a stylesheet the page has not loaded
+  - the overlays are mounted again after each refresh, as for a new document
+- Owns the page builder store (`core/pageBuilderStore.js`): the hovered path and the clicked element
+- Owns the layout scheduler (`core/layoutScheduler.js`), which re-measures the overlays when the page can have moved
+- Connects the frame's window to react-dnd (`core/frameDndBridge.js`)
 - Handles content modification events
   - Apollo client cache flush by ID from CE modification events
   - Apollo client cache flush for all content from refresh all event (when calling `triggerRefetchAll()` or with CONTENT_DATA from `JContent.refetches`)
+
+## Core
+
+| Module | Role |
+|---|---|
+| `pageBuilderStore.js` | Hover and click state outside React state; a box subscribes to the one value it derives (`usePageBuilderState`) |
+| `useFrameEvents.js` | The one set of listeners on the frame document. Each event is resolved once to the module it concerns (`resolveTarget`), including through a header, a footer or create buttons |
+| `layoutScheduler.js` | Runs the overlay measurements in one animation frame after a resize, a DOM change, a load, a transition end, a scroll or a slow fallback sweep. `useTrackedRect` gives a component its element's rectangle |
+| `frameCoords.js` | Converts frame positions to host positions, for menus and popovers |
+| `frameDndBridge.js` | Forwards the frame's drag events to the react-dnd HTML5 backend |
+| `morphFrame.js` | Refreshes the frame in place; carries the module ids over so that the morph keeps the same elements |
 
 ## Boxes
 
@@ -25,7 +41,7 @@ Renders main components
 
 - List of Box elements
 - Create buttons (when there is no clicked element) for all elements
-- Clears any clicks outside of Boxes components through LinkInterceptor
+- Handles the frame's events through `useFrameEvents`: hover, click and selection, double click, context menu, Escape
 - Insertion points (when there is a clicked element) creates multiple create buttons (using Create react component) for a given clicked element
 - Context menu handler
 
@@ -33,14 +49,6 @@ Renders main components
 
 - Maps current iframe elements in iframe with node information
 - Can refetch node information with PAGE_BUILDER_BOXES from JContent.refetches
-- Track currentElement with mouse events (mouseover, mouseout)
-
-```
-currentElement = {
-    moduleElement - iframe component being hovered on, or the parent element if hovering on [type=”placeholder”] create buttons
-    Path - path of moduleElement
-}
-```
 
 ### Iframe Elements 
 
@@ -58,7 +66,7 @@ currentElement = {
 
 ## Box
 
-- Reposition the `Box` component corresponding to the underlying iframe element (triggered by `intervalCallback` from EditFrame)
+- Positions the `Box` over the underlying iframe element (`useTrackedRect`)
 - Init and Handle DnD behaviour through useNodeDrop and attach drop handler to the underlying iframe element represented by this box
 - Injection and handling of custom box configs using registry.find({type: 'pageBuilderBoxConfig'}) for a given target nodeType
 - Rendering of header, footer and breadcrumbs

@@ -1,28 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {deletedStyles as styles} from 'editframe-styles';
 import {getCoords} from '~/JContent/EditFrame/EditFrame.utils';
 import Status from '~/JContent/ContentRoute/ContentStatuses/Status';
+import {useTrackedRect} from '~/JContent/EditFrame/core/layoutScheduler';
 
-function getBoundingBox(element) {
-    return getCoords(element);
-}
-
-const reposition = function (element, currentOffset, setCurrentOffset) {
-    const box = getBoundingBox(element);
-    if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
-        setCurrentOffset(box);
-    }
-};
-
-export const Deleted = ({element, addIntervalCallback}) => {
-    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
+export const Deleted = ({element}) => {
+    const currentOffset = useTrackedRect(element, getCoords);
 
     const ref = useRef();
-
-    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, element, currentOffset, setCurrentOffset]);
-    reposition(element, currentOffset, setCurrentOffset);
 
     if (currentOffset.width === 0 || currentOffset.height === 0) {
         return false;
@@ -41,7 +28,5 @@ export const Deleted = ({element, addIntervalCallback}) => {
 };
 
 Deleted.propTypes = {
-    element: PropTypes.any,
-
-    addIntervalCallback: PropTypes.func
+    element: PropTypes.any
 };

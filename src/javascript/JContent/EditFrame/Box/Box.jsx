@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {boxStyles as styles, editFrameStyles as editStyles} from 'editframe-styles';
@@ -11,13 +11,8 @@ import {Breadcrumbs} from '../Breadcrumbs';
 import {findAvailableBoxConfig, hasMixin, isDescendant} from '../../JContent.utils';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useSelector} from 'react-redux';
-
-const reposition = function (element, currentOffset, setCurrentOffset, isHeaderDisplayed) {
-    const box = getBoundingBox(element, isHeaderDisplayed);
-    if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
-        setCurrentOffset(box);
-    }
-};
+import {usePageBuilderState} from '~/JContent/EditFrame/core/pageBuilderStore';
+import {useTrackedRect} from '~/JContent/EditFrame/core/layoutScheduler';
 
 const processCustomBoxConfigIfExists = (node, type, isSomethingSelected) => {
     const pageBuilderBoxConfig = findAvailableBoxConfig(node);
@@ -98,60 +93,31 @@ export const Box = React.memo(({
     entries,
     language,
     displayLanguage,
-    addIntervalCallback,
-    onMouseOver,
-    onMouseOut,
-    onClick,
     onSelect,
-    clickedElement,
     setClickedElement,
     onSaved,
     currentFrameRef,
     isHeaderHighlighted,
-    onDoubleClick,
     setDraggedOverlayPosition,
     calculateDropTarget,
-    registerHoverManager,
     nodeDragData,
     nodeDropData
 }) => {
-    const [isHovered, setIsHovered] = useState(false);
+    const isHovered = usePageBuilderState(useCallback(state => state.hoveredPath === node.path, [node.path]));
+    const isClicked = usePageBuilderState(useCallback(state => state.clickedElement?.path === node.path, [node.path]));
     const ref = useRef(element);
     const {selection, path} = useSelector(state => ({selection: state.jcontent.selection, path: state.jcontent.path}), shallowEqual);
-    let isHeaderDisplayed = useMemo(() => (clickedElement && node.path === clickedElement.path) || selection.includes(node.path) || (isHovered && selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement))), [clickedElement, isHovered, node.path, selection]);
+    let isHeaderDisplayed = useMemo(() => isClicked || selection.includes(node.path) || (isHovered && selection.length > 0 && !selection.some(selectionElement => isDescendant(node.path, selectionElement))), [isClicked, isHovered, node.path, selection]);
     const breadcrumbs = useMemo(() => (isHeaderDisplayed ? getBreadcrumbsForPath({node, nodes, path}) : []), [isHeaderDisplayed, node, nodes, path]);
-    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element, isHeaderDisplayed));
     const [{dragging, isAnythingDragging, isDraggable, isCanDrag}, drag] = useNodeDrag({dragSource: node, nodeDragData, isUseDragData: true});
     const {t} = useTranslation('jcontent');
     const isMarkedForDeletionRoot = hasMixin(node, 'jmix:markedForDeletionRoot');
 
-    const isClicked = clickedElement && node.path === clickedElement.path;
     const {isSelected, isSomethingSelected} = useMemo(() => {
         const isSelected = selection.includes(node.path);
         const isSomethingSelected = selection.length > 0;
         return {isSelected, isSomethingSelected};
     }, [node.path, selection]);
-
-    useEffect(() => {
-        return registerHoverManager(node.path, setIsHovered);
-    }, [registerHoverManager, node.path]);
-
-    useEffect(() => {
-        // Disable mouse events to prevent showing boxes when dragging
-        if (!isAnythingDragging) {
-            element.addEventListener('mouseenter', onMouseOver);
-            element.addEventListener('mouseleave', onMouseOut);
-            element.addEventListener('click', onClick);
-            element.addEventListener('dblclick', onDoubleClick);
-        }
-
-        return () => {
-            element.removeEventListener('mouseenter', onMouseOver);
-            element.removeEventListener('mouseleave', onMouseOut);
-            element.removeEventListener('click', onClick);
-            element.removeEventListener('dblclick', onDoubleClick);
-        };
-    }, [element, node, onMouseOut, onMouseOver, onClick, onDoubleClick, isAnythingDragging]);
 
     element.dataset.hovered = isHovered && !isAnythingDragging;
 
@@ -181,18 +147,6 @@ export const Box = React.memo(({
     drop(ref);
 
     useEffect(() => {
-        if (dragging) {
-            setDraggedOverlayPosition(currentOffset);
-            element.ownerDocument.body.classList.add(editStyles.disablePointerEvents);
-        }
-
-        return () => {
-            setDraggedOverlayPosition(null);
-            element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
-        };
-    }, [dragging, element, currentOffset, setDraggedOverlayPosition]);
-
-    useEffect(() => {
         element.classList.add(editStyles.enablePointerEvents);
 
         return () => {
@@ -214,15 +168,6 @@ export const Box = React.memo(({
             calculateDropTarget();
         };
     }, [isCanDrop, insertPosition, destParent, node, element, calculateDropTarget, isOver]);
-
-    useEffect(() => addIntervalCallback(() =>
-        reposition(
-            element,
-            currentOffset,
-            setCurrentOffset,
-            isHeaderDisplayed
-        )
-    ), [addIntervalCallback, currentOffset, element, setCurrentOffset, isHeaderDisplayed]);
 
     const type = element.getAttribute('type');
 
@@ -249,6 +194,20 @@ export const Box = React.memo(({
     });
 
     isHeaderDisplayed = !isSomethingSelected && (isBarAlwaysDisplayed || isHeaderDisplayed);
+    const measure = useCallback(el => getBoundingBox(el, isHeaderDisplayed), [isHeaderDisplayed]);
+    const currentOffset = useTrackedRect(element, measure);
+
+    useEffect(() => {
+        if (dragging) {
+            setDraggedOverlayPosition(currentOffset);
+            element.ownerDocument.body.classList.add(editStyles.disablePointerEvents);
+        }
+
+        return () => {
+            setDraggedOverlayPosition(null);
+            element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
+        };
+    }, [dragging, element, currentOffset, setDraggedOverlayPosition]);
 
     const isBindableEmpty = element.getAttribute('bindable') === 'true' &&
         (!element.hasChildNodes() || !element.textContent?.trim());
@@ -264,8 +223,6 @@ export const Box = React.memo(({
     if (isBarAlwaysDisplayed) {
         adaptContentPositionAndSize(element);
     }
-
-    reposition(element, currentOffset, setCurrentOffset, isHeaderDisplayed);
 
     const dragWithChecks = n => {
         const draggableTypes = ['existingNode', 'list'];
@@ -298,10 +255,6 @@ export const Box = React.memo(({
                     '--jcontent-backgroundColorHovered': backgroundColorHovered,
                     '--jcontent-backgroundColorSelected': backgroundColorSelected
                 }}
-                onMouseOver={onMouseOver}
-                onMouseOut={onMouseOut}
-                onClick={onClick}
-                onDoubleClick={onDoubleClick}
         >
             {node && !dragging &&
                 <Bar
@@ -362,7 +315,6 @@ export const Box = React.memo(({
                             style={{
                                 '--jcontent-backgroundColorSelected': backgroundColorSelected
                             }}
-                            onClick={onClick}
                     >
                         <Breadcrumbs currentNode={node} nodes={breadcrumbs} setClickedElement={setClickedElement} onSelect={onSelect}/>
                     </footer>}
@@ -384,35 +336,22 @@ Box.propTypes = {
 
     displayLanguage: PropTypes.string,
 
-    addIntervalCallback: PropTypes.func,
-
     onSaved: PropTypes.func,
-
-    onMouseOver: PropTypes.func,
-
-    onMouseOut: PropTypes.func,
 
     setClickedElement: PropTypes.func,
 
     onSelect: PropTypes.func,
 
-    onClick: PropTypes.func,
-
     currentFrameRef: PropTypes.any,
 
     isHeaderHighlighted: PropTypes.bool,
-
-    onDoubleClick: PropTypes.func,
 
     calculateDropTarget: PropTypes.func,
 
     setDraggedOverlayPosition: PropTypes.func,
 
-    registerHoverManager: PropTypes.func,
-
     nodeDragData: PropTypes.object,
 
-    nodeDropData: PropTypes.object,
+    nodeDropData: PropTypes.object
 
-    clickedElement: PropTypes.any
 };

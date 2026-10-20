@@ -5,7 +5,7 @@ import {Deleted} from './Deleted';
 import PropTypes from 'prop-types';
 import {hasMixin} from '~/JContent/JContent.utils';
 
-export const Infos = ({currentDocument, addIntervalCallback}) => {
+export const Infos = ({currentDocument}) => {
     const language = useSelector(state => state.language);
 
     const [paths, setPaths] = useState([]);
@@ -36,14 +36,11 @@ export const Infos = ({currentDocument, addIntervalCallback}) => {
         .map(e => (
             <Deleted key={e.getAttribute('id')}
                      element={e}
-                     addIntervalCallback={addIntervalCallback}
                      language={language}
             />
         ));
 };
 
 Infos.propTypes = {
-    currentDocument: PropTypes.any,
-
-    addIntervalCallback: PropTypes.func
+    currentDocument: PropTypes.any
 };

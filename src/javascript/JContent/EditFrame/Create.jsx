@@ -12,6 +12,7 @@ import {useApolloClient} from '@apollo/client';
 import {SavePropertiesMutation} from '~/ContentEditor/ContentEditor/updateNode/updateNode.gql-mutation';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useTrackedRect} from '~/JContent/EditFrame/core/layoutScheduler';
 
 const ButtonRenderer = getButtonRenderer({
     showTooltip: false,
@@ -30,13 +31,6 @@ function getBoundingBox(element) {
         maxWidth: rect.width,
         minHeight: 28
     };
-}
-
-function reposition(element, currentOffset, setCurrentOffset) {
-    const box = getBoundingBox(element);
-    if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
-        setCurrentOffset(box);
-    }
 }
 
 /**
@@ -137,11 +131,11 @@ const useReorderNodes = ({parentPath}) => {
     return {reorderNodes};
 };
 
-export const Create = React.memo(({element, node, nodes, addIntervalCallback, clickedElement, onClick, onMouseOver, onMouseOut, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData, suppliedNodeTypes}) => {
+export const Create = React.memo(({element, node, nodes, clickedElement, onSaved, isInsertionPoint, isVertical, nodeDropData, nodeData, pasteData, suppliedNodeTypes}) => {
     const copyPasteNodes = useSelector(state => state.jcontent.copyPaste?.nodes, shallowEqual);
     const parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     const parentPath = parent.getAttribute('path');
-    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
+    const currentOffset = useTrackedRect(element, getBoundingBox);
     const {nodeName, nodePath, nodeTypes} = getElemAttributes({element, parent, isInsertionPoint});
     const [actionVisibility, setActionVisibility] = useState({
         createContent: false,
@@ -165,7 +159,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         } else if (isEmpty) {
             element.style['min-height'] = '96px';
             [...parent.childNodes].find(node => node.nodeType === Node.TEXT_NODE)?.remove();
-            setCurrentOffset(getBoundingBox(element));
         } else {
             element.style['min-height'] = '28px';
         }
@@ -175,14 +168,6 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
     }));
-
-    useEffect(
-        () => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)),
-        [addIntervalCallback, currentOffset, element, setCurrentOffset]);
-
-    // We want this to execute only once in the beginning
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => reposition(element, currentOffset, setCurrentOffset), []);
 
     useEffect(() => {
         if (isCanDrop) {
@@ -262,9 +247,7 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
              )}
              style={{...currentOffset, ...insertionStyle}}
              data-jahia-parent={parent.getAttribute('id')}
-             onMouseOver={onMouseOver}
-             onMouseOut={onMouseOut}
-             onClick={onClick}
+             data-insertion-point={isInsertionPoint || undefined}
         >
             {copyPasteNodes.length === 0 && createAction}
             <DisplayAction isUseActionData
@@ -295,11 +278,7 @@ Create.propTypes = {
     clickedElement: PropTypes.any,
     node: PropTypes.any,
     nodes: PropTypes.object,
-    addIntervalCallback: PropTypes.func,
-    onMouseOver: PropTypes.func,
-    onMouseOut: PropTypes.func,
     onSaved: PropTypes.func,
-    onClick: PropTypes.func,
     isInsertionPoint: PropTypes.bool,
     isVertical: PropTypes.bool,
     nodeDropData: PropTypes.object,

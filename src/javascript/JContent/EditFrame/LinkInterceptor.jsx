@@ -31,8 +31,10 @@ function intercept(doc, site, setModal) {
         }
     };
 
-    doc.addEventListener('click', handler);
-    return handler;
+    // On the window, so that a click the page builder handled and stopped never opens the dialog
+    const win = doc.defaultView;
+    win.addEventListener('click', handler);
+    return () => win.removeEventListener('click', handler);
 }
 
 export const LinkInterceptor = ({document}) => {
@@ -41,8 +43,7 @@ export const LinkInterceptor = ({document}) => {
     const [modal, setModal] = useState({isOpen: false});
 
     useEffect(() => {
-        let handler = document && intercept(document, site, setModal);
-        return () => document?.removeEventListener('click', handler);
+        return document ? intercept(document, site, setModal) : undefined;
     }, [document, site, setModal]);
 
     const handleClose = useCallback(() => {

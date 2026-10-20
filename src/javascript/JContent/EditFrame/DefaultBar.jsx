@@ -8,6 +8,7 @@ import React from 'react';
 import {ContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
+import {toHostRect} from '~/JContent/EditFrame/core/frameCoords';
 
 const AreaShape = PropTypes.shape({
     isAbsolute: PropTypes.bool,
@@ -22,11 +23,7 @@ export const headerButtonWrapper = (Renderer, currentFrameRef) => ({onClick, ...
             ...event,
             currentTarget: {
                 ...event.currentTarget,
-                getBoundingClientRect: () => {
-                    const boundingClientRect = event.currentTarget.getBoundingClientRect();
-                    const frameRect = currentFrameRef.current.getBoundingClientRect();
-                    return new DOMRect(boundingClientRect.x + frameRect.x, boundingClientRect.y + frameRect.y, boundingClientRect.width, boundingClientRect.height);
-                }
+                getBoundingClientRect: () => toHostRect(event.currentTarget.getBoundingClientRect(), currentFrameRef.current)
             }}
         )}
         {...props}

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import {editFrameStyles as styles} from 'editframe-styles';
@@ -20,64 +20,14 @@ import {DndOverlays} from '~/JContent/EditFrame/DndOverlays';
 import {PageHeaderContainer} from '~/JContent/EditFrame/PageHeader/PageHeaderContainer';
 import {captureAnchor, restoreAnchor} from './EditFrame.anchor';
 import scopedStyles from 'editframe-styles/scoped.css?url';
+import {createPageBuilderStore, PageBuilderStoreContext, setActiveStore} from './core/pageBuilderStore';
+import {createLayoutScheduler, LayoutSchedulerContext} from './core/layoutScheduler';
+import {bindFrameDnd} from './core/frameDndBridge';
+import {fetchFrameDocument, markServerContent, morphFrameDocument} from './core/morphFrame';
 
-function addEventListeners(target, manager, iframeRef) {
-    // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
-    if (!target.addEventListener) {
-        return;
-    }
+export {getClickedElementHook} from './core/pageBuilderStore';
 
-    const {backend, monitor} = manager;
-
-    target.addEventListener('dragover', () => {
-        const clientRect = iframeRef.current.getBoundingClientRect();
-        if (manager.additionalOffset.x !== clientRect.x || manager.additionalOffset.y !== clientRect.y) {
-            manager.setAdditionalOffset(clientRect);
-        }
-    });
-
-    target.addEventListener('dragstart', backend.handleTopDragStart);
-    target.addEventListener('dragstart', backend.handleTopDragStartCapture, true);
-    target.addEventListener('dragend', backend.handleTopDragEndCapture, true);
-    target.addEventListener('dragenter', backend.handleTopDragEnter);
-    target.addEventListener('dragenter', backend.handleTopDragEnterCapture, true);
-    target.addEventListener('dragleave', backend.handleTopDragLeaveCapture, true);
-    target.addEventListener('dragover', backend.handleTopDragOver);
-    target.addEventListener('dragover', backend.handleTopDragOverCapture, true);
-    target.addEventListener('drop', backend.handleTopDrop);
-    target.addEventListener('drop', backend.handleTopDropCapture, true);
-    target.addEventListener('mouseup', event => {
-        if (monitor.isDragging()) {
-            console.debug('Mouse up event happened while monitor is still dragging, cancelling previous DND operation', event);
-            backend.handleTopDragEndCapture(event);
-            if (monitor.isDragging()) {
-                manager.getActions()?.endDrag();
-            }
-        }
-    });
-
-    target.addEventListener('mousemove', event => {
-        const isMouseUp = event.buttons === 0;
-        if (monitor.isDragging() && isMouseUp) {
-            console.debug('Mouse move event happened while monitor is still dragging, cancelling previous DND operation', event);
-            backend.handleTopDragEndCapture(event);
-            if (monitor.isDragging()) {
-                manager.getActions()?.endDrag();
-            }
-        }
-    });
-}
-
-// This hook is used to clear clicked element outside on EditFrame context, specifically in copy/paste actions
-let clickedElementHook = () => undefined;
-
-const setClickedElementHook = fcn => {
-    clickedElementHook = fcn;
-};
-
-export const getClickedElementHook = () => {
-    return clickedElementHook;
-};
+const noop = () => {};
 
 export const EditFrame = () => {
     const manager = useDragDropManager();
@@ -92,92 +42,129 @@ export const EditFrame = () => {
     const client = useApolloClient();
     const dispatch = useDispatch();
 
+    const store = useMemo(createPageBuilderStore, []);
     const [currentDocument, setCurrentDocument] = useState(null);
+    // Counts the completed refreshes, in place or by reload. The overlays are mounted again on each, as
+    // they are for a new document, and the frame exposes it to the tests as data-sel-revision.
+    const [revision, setRevision] = useState(0);
     const [currentUrlParams, setCurrentUrlParams] = useState('');
     const [previousUrlParams, setPreviousUrlParams] = useState('');
-    const [clickedElement, setClickedElement] = useState();
-    setClickedElementHook(setClickedElement);
     const [loading, setLoading] = useState(false);
+    const [reloading, setReloading] = useState(false);
 
     const iframe = useRef();
-    const iframeSwap = useRef();
-    const cancelRestore = useRef(() => {});
+    const cancelRestore = useRef(noop);
     const pendingAnchor = useRef(null);
-
+    const refreshRun = useRef(null);
     const currentDndInfo = useRef({});
 
-    const iFrameOnLoad = event => {
-        const loadedIframe = event.currentTarget;
+    useEffect(() => {
+        setActiveStore(store);
+        return () => {
+            setActiveStore(null);
+            cancelRestore.current();
+            refreshRun.current?.abort();
+        };
+    }, [store]);
 
-        if (loadedIframe.contentWindow.location.href !== 'about:blank') {
-            // Enable react-dnd
-            addEventListeners(loadedIframe.contentWindow, manager, iframe);
-            if (iframe.current !== loadedIframe) {
-                iframeSwap.current = iframe.current;
-                iframe.current = loadedIframe;
-                // What the editor was looking at, noted when the reload was asked for if it was a
-                // refresh — by the time the document is here, the outgoing one has already been
-                // pulled about by the refetch.
-                // Boxed, because refresh() legitimately captures nothing when no module is in view, and
-                // a bare null could not be told apart from "this was not a refresh" — which would send
-                // us scanning the whole outgoing document again for the same answer.
-                const pending = pendingAnchor.current;
-                const anchor = pending ? pending.anchor : captureAnchor(iframeSwap.current.contentWindow);
-                const {scrollX, scrollY} = iframeSwap.current.contentWindow;
-                pendingAnchor.current = null;
-
-                setTimeout(() => {
-                    // A unitless length is invalid CSS, so this has to carry its unit or the outgoing
-                    // frame stays right where it is, covering the one we just swapped in.
-                    iframeSwap.current.style.top = '-10000px';
-                    iframe.current.style.top = '0';
-                    iframe.current.setAttribute('data-sel-role', 'page-builder-frame-active');
-                    iframeSwap.current.setAttribute('data-sel-role', 'page-builder-frame-inactive');
-
-                    cancelRestore.current();
-                    if (anchor) {
-                        cancelRestore.current = restoreAnchor(iframe.current.contentWindow, anchor, {fallback: {scrollX, scrollY}});
-                    } else {
-                        // Nothing was in view to anchor to — an empty page. The offset is all we have.
-                        iframe.current.contentWindow.scrollTo(scrollX, scrollY);
-                    }
-                });
-            }
+    const [scheduler, setScheduler] = useState(null);
+    useEffect(() => {
+        if (!currentDocument) {
+            return undefined;
         }
 
-        if (iframe.current === loadedIframe) {
-            const _currentDocument = iframe.current.contentDocument;
-            const framePath = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            const frameLanguage = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('locale');
-            const frameTemplate = _currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('template');
-            if (framePath && (framePath !== path || frameLanguage !== language)) {
-                console.debug('Updating path to', framePath, 'and language to', frameLanguage, 'in redux', 'template', frameTemplate, 'older path', path, 'older language', language, 'older template', template);
-                dispatch(batchActions([
-                    cmGoto({path: framePath, language: frameLanguage, template: frameTemplate}),
-                    cmOpenPaths(extractPaths(site, framePath.substring(0, framePath.lastIndexOf('/'))))
-                ]));
-            }
+        const _scheduler = createLayoutScheduler(currentDocument);
+        setScheduler(_scheduler);
+        return () => _scheduler.destroy();
+    }, [currentDocument]);
 
-            setCurrentDocument(_currentDocument);
+    useEffect(() => (currentDocument ? bindFrameDnd(currentDocument.defaultView, manager, iframe.current) : undefined), [currentDocument, manager]);
+
+    const restoreView = (win, anchor, scroll) => {
+        cancelRestore.current();
+        if (anchor) {
+            cancelRestore.current = restoreAnchor(win, anchor, {fallback: scroll});
+        } else {
+            // Nothing was in view to anchor to: an empty page. The offset is all we have.
+            win.scrollTo(scroll.scrollX, scroll.scrollY);
+            cancelRestore.current = noop;
         }
     };
 
-    function refresh() {
-        // Note what the editor is looking at now, before anything reacts to the refresh: the
-        // refetchers fire synchronously from here and the document on screen is sized in part by
-        // the data they replace, so a moment later this is no longer a faithful reading.
-        // Anchor on the content being worked on. An ordinary Content Editor save reaches us through
-        // triggerRefetchAll, which says nothing about what changed, so the clicked element is what
-        // identifies it — and holding that is both what the report asks for and far steadier than
-        // picking whatever module happens to be nearest the top edge at this instant.
-        pendingAnchor.current = {anchor: captureAnchor(iframe.current.contentWindow, clickedElement?.path)};
-
-        if (iframeSwap.current.contentWindow.location.href === iframe.current.contentWindow.location.href) {
-            iframeSwap.current.contentWindow.location.reload();
-        } else {
-            iframeSwap.current.contentWindow.location.href = iframe.current.contentWindow.location.href;
+    const iFrameOnLoad = () => {
+        const win = iframe.current.contentWindow;
+        if (win.location.href === 'about:blank') {
+            return;
         }
-    }
+
+        setReloading(false);
+        const _currentDocument = iframe.current.contentDocument;
+        markServerContent(_currentDocument);
+
+        const pending = pendingAnchor.current;
+        pendingAnchor.current = null;
+        if (pending) {
+            restoreView(win, pending.anchor, pending.scroll);
+            setRevision(r => r + 1);
+        }
+
+        const mainModule = _currentDocument.querySelector('[jahiatype=mainmodule]');
+        const framePath = mainModule?.getAttribute('path');
+        const frameLanguage = mainModule?.getAttribute('locale');
+        const frameTemplate = mainModule?.getAttribute('template');
+        if (framePath && (framePath !== path || frameLanguage !== language)) {
+            console.debug('Updating path to', framePath, 'and language to', frameLanguage, 'in redux', 'template', frameTemplate, 'older path', path, 'older language', language, 'older template', template);
+            dispatch(batchActions([
+                cmGoto({path: framePath, language: frameLanguage, template: frameTemplate}),
+                cmOpenPaths(extractPaths(site, framePath.substring(0, framePath.lastIndexOf('/'))))
+            ]));
+        }
+
+        setCurrentDocument(_currentDocument);
+    };
+
+    /**
+     * Brings the frame up to date after a change. The new rendering is morphed into the document on
+     * screen, so the view stays still and nothing flashes. When that is not possible (the new
+     * rendering needs a script or a stylesheet the page has not loaded) the frame reloads.
+     */
+    const refresh = async () => {
+        refreshRun.current?.abort();
+        const run = new AbortController();
+        refreshRun.current = run;
+
+        const win = iframe.current.contentWindow;
+        const doc = win.document;
+        // Note what the editor is looking at now, before anything reacts to the refresh: the
+        // refetchers fire synchronously from here, and the content they replace sizes the page.
+        const anchor = captureAnchor(win, store.getState().clickedElement?.path);
+        const scroll = {scrollX: win.scrollX, scrollY: win.scrollY};
+
+        let morphed = false;
+        try {
+            const newDoc = await fetchFrameDocument(win.location.href, run.signal);
+            if (run.signal.aborted || iframe.current?.contentDocument !== doc) {
+                return;
+            }
+
+            morphed = Boolean(newDoc) && morphFrameDocument(doc, newDoc);
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                return;
+            }
+
+            console.warn('Could not refresh the page builder in place, reloading it', e);
+        }
+
+        if (morphed) {
+            restoreView(win, anchor, scroll);
+            setRevision(r => r + 1);
+        } else {
+            pendingAnchor.current = {anchor, scroll};
+            setReloading(true);
+            win.location.reload();
+        }
+    };
 
     const onGwtContentModification = async (nodeUuid, nodePath, nodeName, operation) => {
         if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
@@ -194,8 +181,6 @@ export const EditFrame = () => {
             Object.keys(client.cache.idByPath)
                 .filter(p => isDescendantOrSelf(p, nodePath))
                 .forEach(p => client.cache.flushNodeEntryByPath(p));
-        } else if (operation === 'rename') {
-            //
         } else if (operation === 'update') {
             client.cache.flushNodeEntryById(nodeUuid);
         }
@@ -224,26 +209,6 @@ export const EditFrame = () => {
             unregisterContentModificationEventHandler(onGwtContentModification);
         };
     });
-
-    const intervalCallbacks = useRef([]);
-    const addIntervalCallback = useCallback(cb => {
-        intervalCallbacks.current.push(cb);
-        return () => {
-            intervalCallbacks.current.splice(intervalCallbacks.current.indexOf(cb), 1);
-        };
-    }, []);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            intervalCallbacks.current.forEach(cb => cb());
-        }, 50);
-
-        return () => {
-            setClickedElementHook(() => undefined);
-            clearInterval(interval);
-            cancelRestore.current();
-        };
-    }, []);
 
     useEffect(() => {
         const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
@@ -280,47 +245,39 @@ export const EditFrame = () => {
     }
 
     return (
-        <>
+        <PageBuilderStoreContext.Provider value={store}>
             <PageHeaderContainer setCurrentUrlParams={setCurrentUrlParams} setLoading={setLoading}/>
             <div style={{position: 'relative', flex: 1, margin: 0}}>
-                {(!currentDocument || loading) && <TransparentLoaderOverlay/>}
+                {(!currentDocument || loading || reloading) && <TransparentLoaderOverlay/>}
                 <iframe ref={iframe}
                         width="100%"
                         height="100%"
                         style={{position: 'absolute', border: '0'}}
                         id="page-builder-frame-1"
                         data-sel-role="page-builder-frame-active"
-                        onLoad={iFrameOnLoad}
-                />
-                <iframe ref={iframeSwap}
-                        width="100%"
-                        height="100%"
-                        style={{position: 'absolute', top: -10000, border: '0'}}
-                        id="page-builder-frame-2"
-                        data-sel-role="page-builder-frame-inactive"
+                        data-sel-revision={revision}
                         onLoad={iFrameOnLoad}
                 />
             </div>
             {currentDocument && <LinkInterceptor document={currentDocument}/>}
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
-                    <div id="jahia-portal-root" className={styles.root}>
-                        <Boxes currentDocument={currentDocument}
-                               currentFrameRef={iframe}
-                               currentDndInfo={currentDndInfo}
-                               addIntervalCallback={addIntervalCallback}
-                               clickedElement={clickedElement}
-                               setClickedElement={setClickedElement}
-                               onSaved={() => {
-                                   refresh();
-                               }}
-                        />
-                        <Infos currentDocument={currentDocument} addIntervalCallback={addIntervalCallback}/>
-                        <DndOverlays currentDndInfo={currentDndInfo}/>
-                    </div>
+                    <LayoutSchedulerContext.Provider value={scheduler}>
+                        <div id="jahia-portal-root" className={styles.root}>
+                            <React.Fragment key={revision}>
+                                <Boxes currentDocument={currentDocument}
+                                       currentFrameRef={iframe}
+                                       currentDndInfo={currentDndInfo}
+                                       onSaved={refresh}
+                                />
+                                <Infos currentDocument={currentDocument}/>
+                            </React.Fragment>
+                            <DndOverlays currentDndInfo={currentDndInfo}/>
+                        </div>
+                    </LayoutSchedulerContext.Provider>
                 </Portal>
             )}
-        </>
+        </PageBuilderStoreContext.Provider>
     );
 };
 

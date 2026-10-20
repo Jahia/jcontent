@@ -1,7 +1,7 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
-import PropTypes from 'prop-types';
-import {useHoverContext} from '~/JContent/EditFrame/Boxes/HoverContext';
+import {usePageBuilderState} from '~/JContent/EditFrame/core/pageBuilderStore';
+import {toHostMouseEvent} from '~/JContent/EditFrame/core/frameCoords';
 
 // Right-clicks on a breadcrumb/dropdown item are handled specially (and never open the content menu).
 // Returns true when the event was a breadcrumb click and has been handled.
@@ -55,61 +55,41 @@ const buildMenuProps = (targetPath, selection, nodes) => {
     return {path: targetPath, paths: undefined, actionKey, currentPath: targetPath, node};
 };
 
-const BoxesContextMenu = ({currentFrameRef, currentDocument, selection, nodes}) => {
+const selectHoveredPath = state => state.hoveredPath;
+
+/**
+ * The content menu of the page builder. Returns the menu to render, and the handler the frame's
+ * event controller calls on a right click.
+ */
+export const useBoxesContextMenu = ({currentFrameRef, currentDocument, selection, nodes}) => {
     const contextualMenu = useRef();
-    const {hoveredPath: currentPath} = useHoverContext();
+    const currentPath = usePageBuilderState(selectHoveredPath);
 
-    // The contextmenu listener below is registered once and is long-lived, so it would otherwise
-    // capture stale values. Mirror the latest selection/nodes into refs so the handler reads fresh data.
-    const selectionRef = useRef(selection);
-    selectionRef.current = selection;
-    const nodesRef = useRef(nodes);
-    nodesRef.current = nodes;
+    const onContextMenu = event => {
+        if (handleBreadcrumbFooter(event)) {
+            return;
+        }
 
-    useEffect(() => {
-        currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
-            if (handleBreadcrumbFooter(event)) {
-                return;
-            }
+        const targetPath = resolveTargetPath(currentDocument, event);
 
-            const targetPath = resolveTargetPath(currentDocument, event);
-
-            // Nothing selectable under the cursor (e.g. empty area / page background): do not open a menu
-            // for a stale target or fall back to the page.
-            if (!targetPath) {
-                event.preventDefault();
-                return;
-            }
-
-            const menuProps = buildMenuProps(targetPath, selectionRef.current, nodesRef.current);
-
-            // Show context menu for the resolved target
-            const rect = currentFrameRef.current.getBoundingClientRect();
-            const dup = new MouseEvent(event.type, {
-                ...event,
-                clientX: event.clientX + rect.x,
-                clientY: event.clientY + rect.y
-            });
-            contextualMenu.current(dup, menuProps);
+        // Nothing selectable under the cursor (e.g. empty area / page background): do not open a menu
+        // for a stale target or fall back to the page.
+        if (!targetPath) {
             event.preventDefault();
-        });
-    }, [currentDocument, currentFrameRef]);
+            return;
+        }
 
-    return (
+        contextualMenu.current(toHostMouseEvent(event, currentFrameRef.current), buildMenuProps(targetPath, selection, nodes));
+        event.preventDefault();
+    };
+
+    const menu = (
         <ContextualMenu
             setOpenRef={contextualMenu}
             documentElement={currentDocument.documentElement}
             {...buildMenuProps(currentPath, selection, nodes)}
         />
     );
-};
 
-BoxesContextMenu.propTypes = {
-    currentDocument: PropTypes.any,
-    currentFrameRef: PropTypes.any,
-    currentPath: PropTypes.string,
-    nodes: PropTypes.object,
-    selection: PropTypes.arrayOf(PropTypes.string)
+    return {menu, onContextMenu};
 };
-
-export default BoxesContextMenu;

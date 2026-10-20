@@ -7,11 +7,10 @@ import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
  * left it.
  *
  * What these tests assert is where the *content* is, not what the scroll offset is. Those are not
- * the same thing: the frame does not reload in place (a hidden iframe loads the new document and the
- * two are swapped), and by the time the new one is on screen its layout has changed — the edited
- * content is a different size, its images have loaded, and the page-builder decorations have arrived
- * with the boxes. Holding the offset through all that does not hold the view still, so a test that
- * checks the offset can pass while the editor watches their content leave the screen.
+ * the same thing: after a save the new rendering replaces the content around the view, so its layout
+ * changes — the edited content is a different size, its images load, and the page-builder decorations
+ * arrive with the boxes. Holding the offset through all that does not hold the view still, so a test
+ * that checks the offset can pass while the editor watches their content leave the screen.
  */
 describe('Page builder - frame keeps its position', () => {
     const siteKey = 'frameScrollSite';
@@ -24,6 +23,12 @@ describe('Page builder - frame keeps its position', () => {
     const editedTextPath = `${editedListPath}/text-${listCount}`;
 
     const activeFrame = () => cy.get('[data-sel-role="page-builder-frame-active"]');
+
+    /** Runs `refreshFrame`, then waits until the frame says the refresh is done. */
+    const afterRefresh = (refreshFrame: () => void) => activeFrame().invoke('attr', 'data-sel-revision').then(revisionBefore => {
+        refreshFrame();
+        activeFrame().invoke('attr', 'data-sel-revision').should('not.eq', revisionBefore);
+    });
 
     /** Where a module sits relative to the top of the viewport — what the editor actually sees. */
     const viewportTopOf = (path: string) => activeFrame().then($frame => {
@@ -57,7 +62,7 @@ describe('Page builder - frame keeps its position', () => {
      *
      * The reading has to happen inside the should() callback. A `.then()` that returns the number is
      * evaluated exactly once, and should() will not re-run it — so the assertion lands on whatever
-     * instant the queue happened to reach, which during a frame swap is mid-transition. That is a test
+     * instant the queue happened to reach, which during a refresh is mid-transition. That is a test
      * that reports a drift the application does not have.
      */
     const shouldSettleAt = (path: string, expected: number, tolerance = 0) => activeFrame().should($frame => {
@@ -131,16 +136,12 @@ describe('Page builder - frame keeps its position', () => {
         // which decorates it and legitimately shifts it down a little. What must not happen is the
         // page going somewhere else and taking it off screen — the reported defect.
         anchorGeometry().then(anchor => {
-            activeFrame().invoke('attr', 'id').then(frameIdBeforeSave => {
-                contentEditor.save();
+            // Asserting before the refresh would only re-read the content as it was, which trivially
+            // is still in place.
+            afterRefresh(() => contentEditor.save());
 
-                // Asserting before the swap would only re-read the outgoing frame, which trivially
-                // still has its content in place.
-                activeFrame().invoke('attr', 'id').should('not.eq', frameIdBeforeSave);
-
-                shouldSettleAt(anchor.path, anchor.top, 1);
-                shouldBeInView(editedTextPath);
-            });
+            shouldSettleAt(anchor.path, anchor.top, 1);
+            shouldBeInView(editedTextPath);
         });
     });
 
@@ -154,13 +155,10 @@ describe('Page builder - frame keeps its position', () => {
         });
 
         viewportTopOf(editedListPath).then(topBeforeRefresh => {
-            activeFrame().invoke('attr', 'id').then(frameIdBeforeRefresh => {
-                jcontent.refresh();
-                activeFrame().invoke('attr', 'id').should('not.eq', frameIdBeforeRefresh);
+            afterRefresh(() => jcontent.refresh());
 
-                // Nothing was edited here, so the content must come back where it was
-                shouldSettleAt(editedListPath, topBeforeRefresh, 1);
-            });
+            // Nothing was edited here, so the content must come back where it was
+            shouldSettleAt(editedListPath, topBeforeRefresh, 1);
         });
     });
 
@@ -186,27 +184,22 @@ describe('Page builder - frame keeps its position', () => {
             // Content well above the fold grows substantially
             setNodeProperty(`${areaPath}/list-2/text-2`, 'text', '<p>Content number 2</p>'.repeat(30), 'en');
 
-            activeFrame().invoke('attr', 'id').then(frameIdBefore => {
-                jcontent.refresh();
-                activeFrame().invoke('attr', 'id').should('not.eq', frameIdBefore);
+            afterRefresh(() => jcontent.refresh());
 
-                shouldSettleAt(watchedPath, topBefore, 1);
-            });
+            shouldSettleAt(watchedPath, topBefore, 1);
         });
     });
 
-    it('Hides the frame it swapped out', () => {
+    it('Refreshes the frame in place', () => {
         jcontent.getModule(editedListPath).getBox().get().should('exist');
 
-        activeFrame().invoke('attr', 'id').then(frameIdBeforeRefresh => {
-            jcontent.refresh();
-            activeFrame().invoke('attr', 'id').should('not.eq', frameIdBeforeRefresh);
-
-            // Both frames are absolutely positioned in the same container, so the outgoing one has to
-            // be moved out of the way — left where it is, it keeps covering the incoming one.
-            cy.get('[data-sel-role="page-builder-frame-inactive"]').should($frame => {
-                expect(Number.parseFloat(getComputedStyle($frame[0]).top)).to.be.lessThan(-1000);
-            });
+        // A reload would replace the window's globals, a refresh in place keeps them
+        activeFrame().its('0.contentWindow').then(win => {
+            win.pageBuilderRefreshMarker = true;
         });
+        afterRefresh(() => jcontent.refresh());
+        jcontent.getModule(editedListPath).getBox().get().should('exist');
+        cy.get('[data-sel-role="page-builder-frame-inactive"]').should('not.exist');
+        activeFrame().its('0.contentWindow').should('have.property', 'pageBuilderRefreshMarker', true);
     });
 });

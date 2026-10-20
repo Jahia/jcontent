@@ -2823,6 +2823,7 @@ __metadata:
     graphql-tag: "npm:^2.12.6"
     history: "npm:^5.3.0"
     i18next: "npm:^20.6.1"
+    idiomorph: "npm:0.7.4"
     image-extensions: "npm:^1.1.0"
     jest: "npm:^29.5.0"
     jest-environment-jsdom: "npm:^29.5.0"
@@ -13633,6 +13634,13 @@ __metadata:
   dependencies:
     harmony-reflect: "npm:^1.4.6"
   checksum: 10c0/a3fc4de0042d7b45bf8652d5596c80b42139d8625c9cd6a8834e29e1b6dce8fccabd1228e08744b78677a19ceed7201a32fed8ca3dc3e4852e8fee24360a6cfc
+  languageName: node
+  linkType: hard
+
+"idiomorph@npm:0.7.4":
+  version: 0.7.4
+  resolution: "idiomorph@npm:0.7.4"
+  checksum: 10c0/1eec0b868c5e00cb69b7b32fd3a85e9116570d2447dbad4fab80d6a54783df59e7214f675e8cd40ca453df9bf948b9393d67b0d93fac93c91468172a6255d908
   languageName: node
   linkType: hard
 

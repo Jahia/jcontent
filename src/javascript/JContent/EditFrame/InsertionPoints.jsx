@@ -64,7 +64,7 @@ const getPlaceholderNodeTypes = (e, parentPath) => {
     return JahiaRenderedModulesUtil.resolveNodeTypes(parentPath);
 };
 
-const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCallback, onSaved}) => {
+const InsertionPoints = ({currentDocument, clickedElement, nodes, onSaved}) => {
     const {language, uilang} = useSelector(state => ({language: state.language, uilang: state.uilang}), shallowEqual);
     const clickedPath = clickedElement.element.getAttribute('path');
 
@@ -113,9 +113,6 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                         nodeData={childData?.nodes?.[node.path]}
                         pasteData={pasteData}
                         element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
                         onSaved={onSaved}
                 />
             )),
@@ -128,9 +125,6 @@ const InsertionPoints = ({currentDocument, clickedElement, nodes, addIntervalCal
                         nodeData={originalData?.nodes?.[node.path]}
                         pasteData={pasteData}
                         element={element}
-                        addIntervalCallback={addIntervalCallback}
-                        onMouseOver={() => {}}
-                        onMouseOut={() => {}}
                         onSaved={onSaved}
                 />
             ))
@@ -142,7 +136,6 @@ InsertionPoints.propTypes = {
     currentDocument: PropTypes.any,
     clickedElement: PropTypes.object,
     nodes: PropTypes.object,
-    addIntervalCallback: PropTypes.func,
     onSaved: PropTypes.func
 };
 

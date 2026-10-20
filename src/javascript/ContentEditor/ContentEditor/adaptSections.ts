@@ -55,7 +55,7 @@ export type EditorSection = ReturnType<typeof adaptSections>[number];
 export type EditorFieldSet = EditorSection['fieldSets'][number];
 
 /**
- * A single Content Editor form field — what jContent passes as the `field` prop to actions on the
- * FormBuilder `leadingAction` and to FormBuilder selector components.
+ * A single Content Editor form field — what jContent passes as the `field` prop to the action set
+ * with FormBuilder's `leadingAction` and to FormBuilder selector components.
  */
 export type EditorField = EditorFieldSet['fields'][number];

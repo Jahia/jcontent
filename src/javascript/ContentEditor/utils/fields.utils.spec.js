@@ -1,5 +1,6 @@
 import {
     checkIfValuesAreDifferent,
+    fieldValueHasChanged,
     getDataToMutate,
     getDynamicFieldSets,
     getFields,
@@ -923,6 +924,31 @@ describe('EditPanel utils', () => {
             expect(checkIfValuesAreDifferent('first', 'second', 'STRING')).toEqual(true);
 
             expect(checkIfValuesAreDifferent('same', 'same', 'STRING')).toEqual(false);
+        });
+    });
+
+    describe('fieldValueHasChanged', () => {
+        it('should compare single values by type', () => {
+            const field = {multiple: false, requiredType: 'BOOLEAN'};
+
+            expect(fieldValueHasChanged(field, 'true', true)).toEqual(false);
+            expect(fieldValueHasChanged(field, 'false', true)).toEqual(true);
+        });
+
+        it('should compare multiple values item by item', () => {
+            const field = {multiple: true, requiredType: 'STRING'};
+
+            expect(fieldValueHasChanged(field, ['a', 'b'], ['a', 'b'])).toEqual(false);
+            expect(fieldValueHasChanged(field, ['a', 'b'], ['b', 'a'])).toEqual(true);
+            expect(fieldValueHasChanged(field, ['a'], ['a', 'b'])).toEqual(true);
+        });
+
+        it('should handle missing multiple values', () => {
+            const field = {multiple: true, requiredType: 'STRING'};
+
+            expect(fieldValueHasChanged(field, undefined, null)).toEqual(false);
+            expect(fieldValueHasChanged(field, ['a'], undefined)).toEqual(true);
+            expect(fieldValueHasChanged(field, null, ['a'])).toEqual(true);
         });
     });
 });

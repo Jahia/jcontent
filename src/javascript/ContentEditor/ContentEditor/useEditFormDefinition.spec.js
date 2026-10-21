@@ -1,4 +1,4 @@
-import {adaptEditFormData} from './useEditFormDefinition';
+import {adaptEditFormData, adaptPropertyValue} from './useEditFormDefinition';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
 jest.mock('~/ContentEditor/SelectorTypes/resolveSelectorType', () => {
@@ -352,5 +352,17 @@ describe('adaptEditFormData', () => {
         });
 
         expect(adaptEditFormData(graphqlResponse, 'fr', t).initialValues.notEnabledFS_field2).toEqual('2019-05-07T11:33:31.056');
+    });
+});
+
+describe('adaptPropertyValue', () => {
+    it('should convert the value through the selector type', () => {
+        expect(adaptPropertyValue({selectorType: 'Checkbox', multiple: false}, {value: 'true'})).toBe(true);
+        expect(adaptPropertyValue({selectorType: 'Checkbox', multiple: true}, {values: ['true', 'false']})).toEqual([true, false]);
+    });
+
+    it('should keep the raw value when the selector type does not adapt it', () => {
+        expect(adaptPropertyValue({selectorType: 'Text', multiple: false}, {value: 'a'})).toBe('a');
+        expect(adaptPropertyValue({selectorType: 'Text', multiple: true}, {values: ['a', 'b']})).toEqual(['a', 'b']);
     });
 });

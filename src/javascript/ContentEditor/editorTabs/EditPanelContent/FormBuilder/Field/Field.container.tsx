@@ -7,6 +7,7 @@ import styles from './styles.scss';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererNoLabel} from '~/ContentEditor/utils';
 import {useFormikContext} from 'formik';
+import {useLeadingAction} from '../LeadingAction.context';
 
 export const FieldContainer = React.memo(({field, inputContext}) => {
     const selectorType = resolveSelectorType(field);
@@ -19,15 +20,20 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
         ...inputContext
     }), [inputContext, selectorType]);
     const {values} = useFormikContext();
+    const leadingAction = useLeadingAction();
 
     return (
         <div className={styles.fieldContainer}>
-            {context.displayActions && <DisplayAction
-                actionKey="translateField"
-                render={ButtonRendererNoLabel}
-                field={field}
-                value={values[field.name]}
-            />}
+            {context.displayActions && leadingAction && (
+                <div className={styles.leadingActions}>
+                    <DisplayAction
+                        actionKey={leadingAction}
+                        render={ButtonRendererNoLabel}
+                        field={field}
+                        value={values[field.name]}
+                    />
+                </div>
+            )}
             <Field
                 idInput={field.name}
                 inputContext={context}

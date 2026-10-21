@@ -14,13 +14,7 @@
 
   Custom code that calls the `userSearch` or `groupSearch` fields of the jContent GraphQL API is affected. Pass the key of the site in `siteKey`; without one, the search runs for the system site. Each result is a user or group summary with its name, display name, first and last name, site and provider. A user matches when every word of the search term appears in its name, display name, or a first or last name the caller can read. To read anything else about a user or group, query its node by path or identifier.
 
-* Add auto-scroll indicators when dragging content in page builder (#2658)
-
-* Fixed Visibility condition start/end datetime property so they no longer change when viewing saved values (#2653). All date/time fields are now saved in UTC and also now display datetime based on browser timezone. Clearing a visibility date property also now removes it instead of silently keeping the old value.
-
 * Added a Tag Manager to jContent (Manage > Tags) to list, rename and delete the tags used across a site, and to see and edit the content each tag is applied to. It is available to users holding the "Access to tag manager" permission on the site. The "Tags" entry provided by the legacy tags module is hidden from the jContent menu so only one Tag Manager appears; the tags module itself, its components and its actions are unchanged. (#2265, #2545)
-
-* Fix insertion points inserting content at the end of the list instead of at their own position
 
 * Fixed the content editor so every mixin in a chain of mixins that extend one another shows its fields when chosen.
 
@@ -29,8 +23,6 @@
 * Fixed the History tab of the content editor so it loads for users whose roles are granted on a site.
 
 * Fixed content folders so named child items defined by a content type can be created there, as they already could in Page Builder.
-
-* Changed the visibility conditions upgrade: jContent now owns the date, time and day-of-week conditions, and removes the modules that provided them on every cluster node. If your environment has the `visibility` or `advanced-visibility` module installed, upgrading jContent uninstalls it, and no separate migration module is needed. Your existing visibility conditions keep working and need no edit. After the upgrade, check that neither module is listed in Administration, Modules. Do not reinstall either one: it would take ownership of the condition types back from jContent. If one of your own modules declares a dependency on `visibility`, remove that dependency before upgrading, or the module will stop loading. (#2724, #2726)
 
 ### Bug Fixes
 
@@ -52,6 +44,32 @@
 
 * Fix the French label on the reference card preview action
 
+* Added maven.jahia.com to the Maven repositories jcontent uses to download its dependencies.
+
+* Fixed mixin fields so that every mixin shows all fields it carries, including inherited fields. When multiple mixins inherit the same field, the field remains editable in a single place without one value overwriting another. GraphQL now always returns the list of values available for an editor form field, using an empty list when there are no values instead of null. (#2746)
+
+* Fixed field constraint error messages being displayed with HTML-encoded punctuation instead of their original text. Also fixed encoding issues in constraint violation and broken-link messages (#2748).
+
+* Fixed Open in Live for shared content: a node from a localhost-only site now opens on the currently selected site's hostname instead of the browsing/server domain. (#2828)
+
+* Preview content that has a content template - a node carrying jmix:mainResource, typically stored in the Content branch - through that template instead of rendering only its view, so the preview pane shows the content the way a visitor would see it. A j:view on such a node is no longer forwarded as the template name, which used to leave the preview empty (#2753)
+
+* Fix a template mixin switch showing and saving an outdated value of a property the mixins share (#2746)
+
+## 3.7.1
+
+### New Features
+
+* Add auto-scroll indicators when dragging content in page builder (#2658)
+
+* Fixed Visibility condition start/end datetime property so they no longer change when viewing saved values (#2653). All date/time fields are now saved in UTC and also now display datetime based on browser timezone. Clearing a visibility date property also now removes it instead of silently keeping the old value.
+
+* Fix insertion points inserting content at the end of the list instead of at their own position
+
+* Changed the visibility conditions upgrade: jContent now owns the date, time and day-of-week conditions, and removes the modules that provided them on every cluster node. If your environment has the `visibility` or `advanced-visibility` module installed, upgrading jContent uninstalls it, and no separate migration module is needed. Your existing visibility conditions keep working and need no edit. After the upgrade, check that neither module is listed in Administration, Modules. Do not reinstall either one: it would take ownership of the condition types back from jContent. If one of your own modules declares a dependency on `visibility`, remove that dependency before upgrading, or the module will stop loading. (#2724, #2726)
+
+### Bug Fixes
+
 * Keep the page builder on the same content when it reloads after a save, instead of coming back somewhere else and losing sight of the content being edited (#2664)
 
 * Fix checkbox choice list selection not registering when clicked (#2643)
@@ -60,23 +78,11 @@
 
 * Fixed switching languages while creating content so it no longer copies unsaved text into the new language. (#2738)
 
-* Added maven.jahia.com to the Maven repositories jcontent uses to download its dependencies.
-
-* Fixed mixin fields so that every mixin shows all fields it carries, including inherited fields. When multiple mixins inherit the same field, the field remains editable in a single place without one value overwriting another. GraphQL now always returns the list of values available for an editor form field, using an empty list when there are no values instead of null. (#2746)
-
 * Fixed file upload so a refused upload shows its validation messages again instead of a generic error.
-
-* Fixed field constraint error messages being displayed with HTML-encoded punctuation instead of their original text. Also fixed encoding issues in constraint violation and broken-link messages (#2748).
-
-* Fixed Open in Live for shared content: a node from a localhost-only site now opens on the currently selected site's hostname instead of the browsing/server domain. (#2828)
-
-* Preview content that has a content template - a node carrying jmix:mainResource, typically stored in the Content branch - through that template instead of rendering only its view, so the preview pane shows the content the way a visitor would see it. A j:view on such a node is no longer forwarded as the template name, which used to leave the preview empty (#2753)
 
 * Sort the content type selector by display name instead of system name (#2747)
 
 * Open the publication manager from the publication dropdown again: the action read the node primary node type without asking the node checks for it, so the click threw instead of opening the dashboard. It also read the mixins from the wrong place, so the manager was always handed an empty mixin list (#2715)
-
-* Fix a template mixin switch showing and saving an outdated value of a property the mixins share (#2746)
 
 ## 3.7.0
 

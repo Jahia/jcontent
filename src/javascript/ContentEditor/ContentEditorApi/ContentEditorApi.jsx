@@ -1,13 +1,29 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useEdit} from './useEdit';
 import {useCreate} from './useCreate';
-import {ContentEditorModal} from './ContentEditorModal';
+import {ContentEditorModal, triggerEvents} from './ContentEditorModal';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {ContentTypeSelectorModal} from '~/ContentEditor/ContentTypeSelectorModal';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {useHistory, useLocation} from 'react-router-dom';
 import rison from 'rison-node';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {useApolloClient} from '@apollo/client';
+import gql from 'graphql-tag';
+import {shallowEqual, useSelector} from 'react-redux';
+import {registry} from '@jahia/ui-extender';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
+
+const ReorderChildrenMutation = gql`
+    mutation reorderAfterPaneCreate($pathOrId: String!, $names: [String]!) {
+        jcr {
+            mutateNode(pathOrId: $pathOrId) {
+                reorderChildren(names: $names)
+            }
+        }
+    }
+`;
 
 function decode(hash) {
     let values = {};
@@ -42,6 +58,42 @@ const getEncodedLocations = function (location, editorConfigs) {
 export const ContentEditorApi = () => {
     const [editorConfigs, setEditorConfigs] = useState([]);
     const [contentTypeSelectorConfig, setContentTypeSelectorConfig] = useState(false);
+    const client = useApolloClient();
+    const {path, template, stateLanguage} = useSelector(state => ({
+        stateLanguage: state.language,
+        path: state.jcontent.path,
+        template: state.jcontent.template
+    }), shallowEqual);
+
+    // A pane of the content type selector created the node itself: run, in the same order, what
+    // ContentEditorModal and Create run after a create and a close.
+    const onPaneCreated = async newNode => {
+        const {editorConfig} = contentTypeSelectorConfig;
+        const config = {...registry.get('content-editor-config', editorConfig.configName), ...editorConfig};
+        setContentTypeSelectorConfig(false);
+        if (config.orderBefore) {
+            await client.mutate({mutation: ReorderChildrenMutation, variables: {pathOrId: config.uuid, names: [newNode.name, config.orderBefore]}});
+        }
+
+        client.cache.flushNodeEntryById(config.uuid);
+        if (config.createCallback) {
+            config.createCallback(newNode, config);
+        }
+
+        triggerEvents(newNode.uuid, Constants.operators.create);
+        triggerRefetchAll();
+        await Promise.all((window.contentModificationEventHandlers || [])
+            .map(handler => handler(newNode.uuid, newNode.path, newNode.name, 'create')));
+        if (JahiaRenderedModulesUtil.hasRenderingFor(path)) {
+            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, stateLanguage, template);
+        }
+
+        if (config.onClosedCallback) {
+            config.onClosedCallback(config, true);
+        }
+
+        registry.find({type: 'jcontent-editor-onclose-hook'}).forEach(h => h.hook());
+    };
     const history = useHistory();
     const location = useLocation();
     const loaded = useRef();
@@ -175,6 +227,8 @@ export const ContentEditorApi = () => {
                 <ContentTypeSelectorModal
                     isOpen
                     nodeTypesTree={contentTypeSelectorConfig.nodeTypesTree}
+                    name={contentTypeSelectorConfig.name}
+                    editorConfig={contentTypeSelectorConfig.editorConfig}
                     onClose={() => {
                         setContentTypeSelectorConfig(false);
                     }}
@@ -190,6 +244,7 @@ export const ContentEditorApi = () => {
                             ...contentTypeSelectorConfig.editorConfig
                         });
                     }}
+                    onCreated={onPaneCreated}
                 />
             )}
 

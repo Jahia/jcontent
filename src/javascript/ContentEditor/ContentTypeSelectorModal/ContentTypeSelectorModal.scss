@@ -14,6 +14,33 @@
     height: calc(100% - 96px);
 }
 
+// A registered contentEditor.contentTypeSelectorPane sits to the right of the tree.
+.modalRootWithPane.modalRootWithPane {
+    width: min(1280px, calc(100% - 96px));
+    max-width: none;
+}
+
+.body {
+    display: flex;
+    flex: 1;
+    gap: var(--spacing-medium);
+    min-height: 0;
+    margin: 0 var(--spacing-large);
+}
+
+.treeContainerWithPane.treeContainerWithPane {
+    flex: 0 0 360px;
+    margin: 0;
+}
+
+.pane {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    overflow: auto;
+}
+
 .dialogTitle.dialogTitle {
     padding: var(--spacing-medium);
 }

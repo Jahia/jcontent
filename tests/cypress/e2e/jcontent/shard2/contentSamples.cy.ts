@@ -10,6 +10,7 @@ import {JContent, SidePanel} from '../../../page-object';
  *  - contents/sample-source      : jnt:text, the content saved as a sample by the save tests
  *  - contents/sample-source-two  : jnt:text, a second one, so the picker has more than one sample
  *  - contents/not-a-sample       : jnt:text, never saved - used for the negative preview assertions
+ *  - contents/cache-source       : jnt:bigText, saved mid-test by the picker-refresh assertion
  *
  * Epic #2815.
  */
@@ -57,6 +58,14 @@ describe('Content samples', () => {
             name: 'not-a-sample',
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', value: 'ordinary content', language: 'en'}]
+        });
+        // A type no other test saves a sample for, so the picker genuinely has none when the
+        // refresh assertion primes the query.
+        addNode({
+            parentPathOrId: `${sitePath}/contents`,
+            name: 'cache-source',
+            primaryNodeType: 'jnt:bigText',
+            properties: [{name: 'text', value: '<p>a rich example</p>', language: 'en'}]
         });
     });
 
@@ -260,6 +269,32 @@ describe('Content samples', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'samples/components');
             jcontent.getTable().getRowByName('sample-source').contextMenu()
                 .shouldNotHaveItem('Publish');
+        });
+    });
+
+    describe('Refreshing the picker after a sample is saved', () => {
+        it('should show a newly saved sample without reloading the page', () => {
+            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+
+            // Prime the query for a type that has no sample yet. The modal is mounted only while
+            // the picker is open, so nothing invalidates this result once cached: served
+            // cache-first, the empty list came back for the rest of the session.
+            const beforeSaving = jcontent.getCreateContent().open().getContentTypeSelector();
+            beforeSaving.searchForContentType('Rich').selectContentType('jnt:bigText');
+            cy.get('[data-sel-role="sample-preview-empty"]').should('be.visible');
+            beforeSaving.cancel();
+
+            // Saved from the same page - no visit, no reload, which is the whole point here.
+            jcontent.selectContextMenuByRowName('cache-source', 'copyToSamples');
+            childNamesOf(`${samplesPath}/components`).should(result => {
+                const names = (result?.data?.jcr?.node?.children?.nodes ?? []).map(n => n.name);
+                expect(names).to.include('cache-source');
+            });
+
+            const afterSaving = jcontent.getCreateContent().open().getContentTypeSelector();
+            afterSaving.searchForContentType('Rich').selectContentType('jnt:bigText');
+            afterSaving.getSamplePreview().shouldRenderContaining('a rich example');
+            afterSaving.cancel();
         });
     });
 });

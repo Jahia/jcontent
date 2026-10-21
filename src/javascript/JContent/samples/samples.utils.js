@@ -62,9 +62,9 @@ export const getSamplesPreviewPagePath = homePagePath => {
  * Check whether a path sits in a site's content samples branch (/sites/<site>/samples).
  *
  * Samples are never published - the branch root is a jnt:samplesFolder and therefore jmix:nolive,
- * which drops the whole subtree out of publication. The sample pages *under* it are ordinary
- * jnt:page nodes though, so anything that keys off the nolive mixin alone still sees them as
- * publishable; that is what this path check covers.
+ * and the save action marks each sample nolive too, so publication skips them whichever node it is
+ * handed. This path check remains what the UI keys off: it decides what jContent offers on a sample
+ * without having to read mixins, and it still covers samples saved before the mixin was applied.
  *
  * @param {string} path - JCR path to test
  * @returns {boolean} - True if the path is the samples root or anything below it

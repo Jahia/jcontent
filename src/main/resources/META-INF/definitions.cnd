@@ -36,11 +36,13 @@
 // only ever be added to, never changed or removed. Named definitions above it are additions and
 // deploy cleanly.
 //
-// jmix:nolive sits on this container ONLY, never on a category or a sample. Here it makes the whole
-// branch invisible to publication, because JCRPublicationService stops its traversal on a nolive
-// node. On a sample it would be actively harmful: node copy re-adds every mixin absent from
-// Constants.forbiddenMixinToCopy, which does not list jmix:nolive, so each sample pasted into a real
-// page would carry it and that content would be silently unpublishable forever.
+// jmix:nolive here makes the whole branch invisible to publication, because JCRPublicationService
+// stops its traversal on a nolive node. It is not sufficient on its own: that service tests the
+// mixin on each node it is handed, so a publish aimed straight at a sample - a GraphQL mutation, a
+// script, a scheduled publication - never looks at this ancestor. The save action therefore marks
+// each sample nolive as well. That is safe only because core excludes jmix:nolive from
+// Constants.forbiddenMixinToCopy; without that exclusion a node pasted from a sample would inherit
+// the mixin and become silently unpublishable forever.
 [jnt:samplesFolder] > nt:base, jmix:nodenameInfo, jmix:unversionedBasemetadata, jmix:nolive, mix:title, jmix:list
  + pages (jnt:samplesCategory) = jnt:samplesCategory autocreated
  + components (jnt:samplesCategory) = jnt:samplesCategory autocreated

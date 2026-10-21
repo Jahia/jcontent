@@ -41,6 +41,27 @@ export const CreateSampleCategoryMutation = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
+/**
+ * Marks a saved sample as never going live.
+ *
+ * The samples root carries jmix:nolive too, but that only protects a publication that walks into
+ * the branch: JCRPublicationService tests the mixin on each node it is handed, so a publish aimed
+ * straight at a sample - a GraphQL mutation, a script, a scheduled publication - never looks at the
+ * ancestor. The mixin on the sample itself is what closes that.
+ *
+ * Safe to put here only because core excludes jmix:nolive from forbiddenMixinToCopy; without that,
+ * every node pasted from a sample would inherit it and become silently unpublishable.
+ */
+export const MarkSampleNoLiveMutation = gql`
+    mutation markSampleNoLive($pathOrId: String!) {
+        jcr {
+            mutateNode(pathOrId: $pathOrId) {
+                addMixins(mixins: ["jmix:nolive"])
+            }
+        }
+    }
+`;
+
 /** Removes the sample being replaced, so the fresh copy can take its name back. */
 export const DeleteSampleMutation = gql`
     mutation deleteSample($pathOrId: String!) {

@@ -23,7 +23,8 @@ import {SampleDestinationQuery} from './copyToSamples.gql-queries';
 import {
     CreateSampleCategoryMutation,
     CreateSamplesFolderMutation,
-    DeleteSampleMutation
+    DeleteSampleMutation,
+    MarkSampleNoLiveMutation
 } from './copyToSamples.gql-mutations';
 import {SaveSampleDialog} from './SaveSampleDialog';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -122,7 +123,7 @@ export const CopyToSamplesActionComponent = ({path, node: prefetchedNode, render
         }
 
         const categoryPath = await resolveCategoryPath(client, site, isPage);
-        await client.mutate({
+        const pasted = await client.mutate({
             mutation: copyPasteQueries.pasteNode,
             variables: {
                 pathOrId: path,
@@ -131,6 +132,11 @@ export const CopyToSamplesActionComponent = ({path, node: prefetchedNode, render
                 // existing "copy page only" action applies. For content, the author chooses.
                 nodeTypesToSkip: getTypesToSkip(isPage, withChildren)
             }
+        });
+
+        await client.mutate({
+            mutation: MarkSampleNoLiveMutation,
+            variables: {pathOrId: pasted.data.jcr.pasteNode.node.uuid}
         });
 
         triggerRefetchAll();

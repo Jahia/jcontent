@@ -1,4 +1,4 @@
-import {addNode, createSite, createUser, deleteSite, deleteUser, enableModule, grantRoles} from '@jahia/cypress';
+import {addNode, createSite, createUser, deleteSite, deleteUser, enableModule, grantRoles, publishAndWaitJobEnding} from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {JContent, SidePanel} from '../../../page-object';
 
@@ -97,8 +97,9 @@ describe('Content samples', () => {
                 // the first pass - destructuring it throws instead of letting the retry happen.
                 const node = result?.data?.jcr?.node;
                 expect(node?.primaryNodeType?.name).to.equal('jnt:samplesFolder');
-                // Carried through the supertype list, so mixinTypes stays empty and the mixin is
-                // never handed to a copy - see the publication assertion further down.
+                // The root carries it through its supertype list, and each sample carries it too,
+                // added on save. The root alone never stopped a publish aimed straight at a sample:
+                // JCRPublicationService tests the mixin on the node it is handed, not its ancestors.
                 expect(node?.nolive, 'samples root should be nolive').to.equal(true);
 
                 const categories = node?.children?.nodes ?? [];
@@ -205,9 +206,10 @@ describe('Content samples', () => {
         });
 
         it('should produce content that can still be published', () => {
-            // The regression this guards: jmix:nolive on a sample would travel with the copy, since
-            // node copy re-adds every mixin absent from forbiddenMixinToCopy, and the inserted
-            // content would be silently unpublishable forever.
+            // This is the release-order guard between repositories, and it fails loudly if jcontent
+            // ships ahead of core: it passes only where forbiddenMixinToCopy excludes jmix:nolive.
+            // Without that exclusion the mixin now carried by every sample travels with the copy, and
+            // content inserted from a sample is silently unpublishable forever.
             childNamesOf(`${sitePath}/contents`).then(result => {
                 const inserted = (result?.data?.jcr?.node?.children?.nodes ?? [])
                     .map(n => n.name)
@@ -269,6 +271,44 @@ describe('Content samples', () => {
             const jcontent = JContent.visit(siteKey, 'en', 'samples/components');
             jcontent.getTable().getRowByName('sample-source').contextMenu()
                 .shouldNotHaveItem('Publish');
+        });
+
+        it('should mark a saved sample as never going live', () => {
+            cy.apollo({
+                query: gql`query sampleMixins($path: String!) {
+                    jcr { node: nodeByPath(path: $path) {
+                        nolive: isNodeType(type: {types: ["jmix:nolive"]})
+                    } }
+                }`,
+                variables: {path: `${samplesPath}/components/sample-source`}
+            }).should(result => {
+                expect(result?.data?.jcr?.node?.nolive, 'a saved sample should carry jmix:nolive')
+                    .to.equal(true);
+            });
+        });
+
+        it('should leave a sample unpublished when a publish is aimed straight at it', () => {
+            // Hiding the action by path covers one UI and nothing else - a GraphQL mutation, a
+            // script or a scheduled publication all reach the node directly. Publishing the sample
+            // and waiting for the job to end is what makes the negative assertion below meaningful:
+            // without the wait it would pass simply by running before publication could happen.
+            publishAndWaitJobEnding(`${samplesPath}/components/sample-source`, ['en']);
+
+            cy.apollo({
+                query: gql`query liveSamples($statement: String!) {
+                    jcr(workspace: LIVE) {
+                        nodesByQuery(query: $statement) { nodes { path } }
+                    }
+                }`,
+                // Asserted against the live workspace rather than publicationStatus: core reports a
+                // nolive node as PUBLISHED so it never shows up as pending work, so that status
+                // would pass whether or not the node actually reached live.
+                variables: {statement: `SELECT * FROM [nt:base] WHERE ISDESCENDANTNODE('${samplesPath}')`}
+            }).should(result => {
+                const live = result?.data?.jcr?.nodesByQuery?.nodes ?? [];
+                expect(live.map(n => n.path), 'nothing from the samples branch should reach live')
+                    .to.have.length(0);
+            });
         });
     });
 

@@ -66,10 +66,10 @@ describe('Page builder - named content', () => {
     });
 
     afterEach(() => {
-        // A failed assertion leaves the editor open, so close it without saving when it is still there
+        // Close the editor a test leaves open. No test edits a field, so Back closes it without a discard dialog
         cy.get('body').then($body => {
             if ($body.find(ContentEditor.defaultSelector).length > 0) {
-                new ContentEditor().cancelAndDiscard();
+                new ContentEditor().cancel();
             }
         });
     });

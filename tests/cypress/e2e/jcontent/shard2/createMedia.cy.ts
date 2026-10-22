@@ -1,5 +1,5 @@
 import {ContentEditor, JContent} from '../../../page-object';
-import {addNode, createUser, deleteNode, deleteUser, grantRoles} from '@jahia/cypress';
+import {addNode, context, createUser, deleteNode, deleteUser, grantRoles} from '@jahia/cypress';
 import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
 
 describe('Create media tests', () => {
@@ -131,6 +131,7 @@ describe('Create media tests', () => {
     });
 
     it('Can create an image reference (jnt:imageReferenceLink) in content-folders', function () {
+        context.tag('jcontent', 'media', 'image-reference');
         const imageName = 'myfile.png';
 
         cy.loginAndStoreSession();
@@ -164,6 +165,7 @@ describe('Create media tests', () => {
     });
 
     it('Can replace a file using the "Replace with" action', function () {
+        context.tag('jcontent', 'media', 'file', 'replace');
         const fileName = 'myfile.png';
 
         cy.loginAndStoreSession();

@@ -1,5 +1,6 @@
 import {
     addNode,
+    context,
     createSite,
     deleteSite,
     Dropdown,
@@ -142,10 +143,12 @@ describe('Page builder - ordering list', () => {
     });
 
     it('renders the list in creation order when no ordering is configured', () => {
+        context.tag('page-builder', 'list-ordering', 'default-order');
         verifyOrder(creationOrder);
     });
 
     it('reorders the list manually', () => {
+        context.tag('page-builder', 'list-ordering', 'manual-ordering');
         const contentEditor = openListOrderingSection();
 
         moveItem(contentEditor, dcNotCool, 'moveToFirst');
@@ -158,6 +161,7 @@ describe('Page builder - ordering list', () => {
     });
 
     it('orders the list automatically by creation date, descending', () => {
+        context.tag('page-builder', 'list-ordering', 'automatic-ordering', 'date');
         const contentEditor = openListOrderingSection();
 
         enableAutomaticOrdering();
@@ -169,6 +173,7 @@ describe('Page builder - ordering list', () => {
     });
 
     it('orders the list automatically by text, ascending', () => {
+        context.tag('page-builder', 'list-ordering', 'automatic-ordering', 'text');
         const contentEditor = openListOrderingSection();
 
         enableAutomaticOrdering();
@@ -180,6 +185,7 @@ describe('Page builder - ordering list', () => {
     });
 
     it('orders the list automatically by text, descending', () => {
+        context.tag('page-builder', 'list-ordering', 'automatic-ordering', 'text');
         const contentEditor = openListOrderingSection();
 
         enableAutomaticOrdering();

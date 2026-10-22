@@ -5,6 +5,7 @@ import {
     addNode,
     addPage,
     breakAclInheritance,
+    context,
     createRole,
     createSite,
     createUser,
@@ -353,6 +354,7 @@ describe('translator permissions', () => {
     });
 
     it('should not allow a translator with no publication rights to publish content', () => {
+        context.tag('content-editor', 'permissions', 'translator', 'publication');
         // Copy the translator role and grant the copied English sub-role to the test user here
         // (not in before) so the copy cannot affect the real translator-fr role used above.
         cy.executeGroovy('contentEditor/permissions/copyTranslatorRoleWithoutPublication.groovy');

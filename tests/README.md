@@ -12,7 +12,7 @@ Contains cypress page objects and utils for implementing jContent-related tests 
 
 ### Tags
 
-A test migrated from a legacy Selenium test carries the tags of its functional test, from the tracking issue in [Jahia/selenium](https://github.com/Jahia/selenium/issues), with `context.tag(...)` from `@jahia/cypress` inside the `it()`. A test written for Cypress first carries no tags, so the suite is partly tagged on purpose.
+A test migrated from a legacy Selenium test carries tags, with `context.tag(...)` from `@jahia/cypress` inside the `it()`. When the migration has a tracking issue in [Jahia/selenium](https://github.com/Jahia/selenium/issues), the tags are those of its functional test. Otherwise they name the feature and the behaviour the test covers, in lowercase words joined by hyphens. A test written for Cypress first carries no tags, so the suite is partly tagged on purpose.
 
 ### Publishing test module
 

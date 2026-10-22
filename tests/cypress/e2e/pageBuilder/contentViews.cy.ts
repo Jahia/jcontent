@@ -1,5 +1,6 @@
 import {
     addNode,
+    context,
     createSite,
     deleteSite,
     Dropdown,
@@ -121,6 +122,7 @@ describe('Page builder - content views', () => {
     });
 
     it('renders richtextA as a link when its jmix:renderable view is set to "link"', () => {
+        context.tag('page-builder', 'content-views', 'renderable');
         let pageBuilder = visitPageBuilder();
 
         cy.log('Open content editor for richtextA');
@@ -139,6 +141,7 @@ describe('Page builder - content views', () => {
     });
 
     it('renders the area sub contents as links when its sub content view is set to "link"', () => {
+        context.tag('page-builder', 'content-views', 'sub-content-view');
         let pageBuilder = visitPageBuilder();
 
         cy.log('Open content editor for the area');
@@ -161,6 +164,7 @@ describe('Page builder - content views', () => {
     });
 
     it('renders contents as links in preview and in live', () => {
+        context.tag('page-builder', 'content-views', 'preview', 'live');
         cy.log('Verify the links in preview');
         cy.visit(`/cms/render/default/en${pagePath}.html`);
         assertRenderedLinks(renderedLinkTargets);

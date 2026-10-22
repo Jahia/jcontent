@@ -3,6 +3,7 @@ import {
     addNode,
     BaseComponent,
     Button,
+    context,
     createSite,
     createUser,
     deleteNode,
@@ -1394,6 +1395,7 @@ describe('Visibility Screen', () => {
         });
 
         it('Content restricted for a language disappears from the live-rendered page (i18n site)', () => {
+            context.tag('content-editor', 'visibility', 'language', 'live');
             const homeLivePath = `/sites/${sitekeyI18n}/home.html`;
             const contentPath = `/sites/${sitekeyI18n}/home/area-main/test-content1`;
 

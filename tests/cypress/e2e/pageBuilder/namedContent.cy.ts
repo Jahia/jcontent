@@ -1,4 +1,4 @@
-import {addNode, createSite, deleteSite, enableModule, jfaker} from '@jahia/cypress';
+import {addNode, context, createSite, deleteSite, enableModule, jfaker} from '@jahia/cypress';
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 
 describe('Page builder - named content', () => {
@@ -80,6 +80,7 @@ describe('Page builder - named content', () => {
         {placeholder: 'namedChildren', nodeType: 'qant:namedChildren'}
     ].forEach(({placeholder, nodeType}) => {
         it(`creates the named child ${placeholder} with its name as a read-only system name`, () => {
+            context.tag('page-builder', 'content-editor', 'named-content', 'system-name');
             const contentEditor = openCreateFromPlaceholder(placeholder, nodeType);
             assertSystemName(contentEditor, placeholder, true);
             contentEditor.cancel();
@@ -87,6 +88,7 @@ describe('Page builder - named content', () => {
     });
 
     it('creates an unnamed child with an editable system name', () => {
+        context.tag('page-builder', 'content-editor', 'named-content', 'system-name');
         const contentEditor = openCreateFromPlaceholder('*', 'jnt:text');
         assertSystemName(contentEditor, 'simple-text', false);
         contentEditor.cancel();

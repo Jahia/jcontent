@@ -82,7 +82,7 @@ export const ContentEditorApi = () => {
 
         triggerEvents(newNode.uuid, Constants.operators.create);
         triggerRefetchAll();
-        await Promise.all((window.contentModificationEventHandlers || [])
+        await Promise.all((globalThis.contentModificationEventHandlers || [])
             .map(handler => handler(newNode.uuid, newNode.path, newNode.name, 'create')));
         if (JahiaRenderedModulesUtil.hasRenderingFor(path)) {
             JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, stateLanguage, template);
@@ -94,6 +94,7 @@ export const ContentEditorApi = () => {
 
         registry.find({type: 'jcontent-editor-onclose-hook'}).forEach(h => h.hook());
     };
+
     const history = useHistory();
     const location = useLocation();
     const loaded = useRef();

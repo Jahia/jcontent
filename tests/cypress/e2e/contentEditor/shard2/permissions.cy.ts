@@ -8,7 +8,6 @@ import {
     createRole,
     createSite,
     createUser,
-    deleteNode,
     deleteRole,
     deleteSite,
     deleteUser,

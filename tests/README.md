@@ -10,6 +10,10 @@
 
 Contains cypress page objects and utils for implementing jContent-related tests in cypress.
 
+### Tags
+
+A test migrated from a legacy Selenium test carries the tags of its functional test, from the tracking issue in [Jahia/selenium](https://github.com/Jahia/selenium/issues), with `context.tag(...)` from `@jahia/cypress` inside the `it()`. A test written for Cypress first carries no tags, so the suite is partly tagged on purpose.
+
 ### Publishing test module
 
 Trigger `Publish tests module to NPM registry` workflow [here](https://github.com/Jahia/jcontent/actions/workflows/release-tests-module.ymlhttps:/). This will:

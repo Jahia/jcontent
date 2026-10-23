@@ -23,6 +23,11 @@ export const Constants = /** @type {const} */ ({
         create: 'create'
     },
     notSupportedEngineTabs: ['content', 'categories'],
+    // The view a node renders with; editable like any other property, and read by the preview
+    // to decide which view to render.
+    jView: {
+        propertyName: 'j:view'
+    },
     systemName: {
         name: 'nt:base_ce:systemName',
         propertyName: 'ce:systemName',

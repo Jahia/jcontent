@@ -9,10 +9,12 @@ export const UpdateOnSaveBadge = () => {
     const dirty = formik.dirty;
     const {t} = useTranslation('jcontent');
 
+    // While the form is dirty the preview renders the unsaved values, so the badge says the
+    // preview is showing changes that are not in the repository — not that it is out of date.
     return dirty && (
         <div>
             <Badge className={styles.badge}
-                   badgeContent={t('jcontent:label.contentEditor.preview.updateOnSave')}
+                   badgeContent={t('jcontent:label.contentEditor.preview.unsavedChanges')}
                    variant="normal"
                    color="info"
             />

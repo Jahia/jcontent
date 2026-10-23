@@ -1,0 +1,9 @@
+/* Floats over the preview frame, top-right, clear of the header row. */
+.statusBadge {
+    position: absolute;
+    top: calc(var(--spacing-medium) + 2rem);
+    right: var(--spacing-medium);
+    z-index: 2;
+
+    pointer-events: none;
+}

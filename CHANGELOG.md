@@ -1,5 +1,15 @@
 # @jahia/jcontent Changelog
 
+## 3.9.0
+
+### New Features
+
+* Added a `leadingAction` prop to `FormBuilder`, so a module rendering its own Content Editor form can show an action before each field, and exposed `adaptSections`, `adaptPropertyValue` and `fieldValueHasChanged` for such forms.
+
+### Bug Fixes
+
+* Fixed the position of the publication status in the content list on pages that render in standards mode, such as the dashboard of app-shell 4.0.0.
+
 ## 3.8.0
 
 ### New Features

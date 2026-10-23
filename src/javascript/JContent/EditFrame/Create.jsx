@@ -32,6 +32,9 @@ function getBoundingBox(element) {
     };
 }
 
+// An element in `display: none`, or under an ancestor in `display: none`, has no layout box.
+const isRendered = element => element.getClientRects().length > 0;
+
 function reposition(element, currentOffset, setCurrentOffset) {
     const box = getBoundingBox(element);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
@@ -249,7 +252,8 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
         />
     ), [parentPath, nodePath, isDisabled, nodeData, btnRenderer, onCreateVisibilityChanged, onAction, reorderNodes, nodeName, nodeTypes, suppliedNodeTypes]);
 
-    return !anyDragging && (
+    // A hidden placeholder gets a zero box, so reposition re-renders this component when it hides or shows.
+    return !anyDragging && isRendered(element) && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}

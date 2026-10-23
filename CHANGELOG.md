@@ -1,5 +1,11 @@
 # @jahia/jcontent Changelog
 
+## 3.8.1
+
+### Bug Fixes
+
+* Fixed the position of the publication status in the content list on pages that render in standards mode, such as the dashboard of app-shell 4.0.0.
+
 ## 3.8.0
 
 ### New Features

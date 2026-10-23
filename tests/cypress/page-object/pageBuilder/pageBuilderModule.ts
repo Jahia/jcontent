@@ -150,8 +150,10 @@ export class PageBuilderModule extends BaseComponent {
         }));
     }
 
-    getCreateButtons() {
-        return new PageBuilderModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
+    // Without a placeholder path, the buttons of the first placeholder of the module
+    getCreateButtons(placeholderPath?: string) {
+        const pathSelector = placeholderPath ? `[path="${placeholderPath}"]` : '';
+        return new PageBuilderModuleCreateButton(this.get().find(`[jahiatype="module"][type="placeholder"]${pathSelector}`).invoke('attr', 'id').then(id => {
             return this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
         }));
     }

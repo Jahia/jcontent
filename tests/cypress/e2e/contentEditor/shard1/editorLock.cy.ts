@@ -122,20 +122,24 @@ describe('Content Editor lock', () => {
     };
 
     // The server releases the lock of a closed subscription only when its heartbeat times out, so the
-    // holder unlocks first, as Content Editor does when it closes
+    // holder unlocks first, as Content Editor does when it closes.
+    // holdEditorLock fills lockHolders when its commands run, so read it when this command runs, not when it is queued
     const releaseEditorLocks = () => {
-        lockHolders.forEach(({socket, holder}) => {
-            cy.apolloClient({username: holder.username, password: holder.password});
-            cy.apollo({mutation: unlockEditorMutation, variables: {editorID}}).then(() => {
-                if (socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify({id: 'editorLock', type: 'stop'}));
-                }
+        cy.then(() => {
+            const holders = lockHolders;
+            lockHolders = [];
+            holders.forEach(({socket, holder}) => {
+                cy.apolloClient({username: holder.username, password: holder.password});
+                cy.apollo({mutation: unlockEditorMutation, variables: {editorID}}).then(() => {
+                    if (socket.readyState === WebSocket.OPEN) {
+                        socket.send(JSON.stringify({id: 'editorLock', type: 'stop'}));
+                    }
 
-                socket.close();
+                    socket.close();
+                });
+                cy.apolloClient();
             });
-            cy.apolloClient();
         });
-        lockHolders = [];
     };
 
     const openEditorAs = (user: User): ContentEditor => {

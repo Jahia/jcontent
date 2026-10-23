@@ -1,5 +1,6 @@
 import {JContent} from '../../../page-object';
 import {RichTextField, SmallTextField} from '../../../page-object/fields';
+import gql from 'graphql-tag';
 import {ContentEditor} from '../../../page-object';
 import {
     addNode,

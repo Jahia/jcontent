@@ -43,8 +43,17 @@ describe('Content Editor lock', () => {
         }
     `;
 
+    const unlockEditorMutation = gql`
+        mutation unlockEditor($editorID: String!) {
+            forms {
+                unlockEditor(editorID: $editorID)
+            }
+        }
+    `;
+
     // Sockets standing for the open editor of another user, see holdEditorLock
-    let lockHolders: WebSocket[] = [];
+    const editorID = `cypress${uniq}`;
+    let lockHolders: {socket: WebSocket; holder: User}[] = [];
 
     const lockStateAs = (user: User): Cypress.Chainable<LockState> => {
         cy.apolloClient({username: user.username, password: user.password});
@@ -98,7 +107,7 @@ describe('Content Editor lock', () => {
                         type: 'start',
                         payload: {
                             query: 'subscription($nodeId:String!, $editorID:String!) { subscribeToEditorLock(nodeId: $nodeId, editorID: $editorID) }',
-                            variables: {nodeId: result.data.jcr.nodeByPath.uuid, editorID: `cypress${uniq}`}
+                            variables: {nodeId: result.data.jcr.nodeByPath.uuid, editorID}
                         }
                     }));
                     resolve(socket);
@@ -107,18 +116,24 @@ describe('Content Editor lock', () => {
                 }
             };
         })).then(socket => {
-            lockHolders.push(socket);
+            lockHolders.push({socket, holder});
         });
         waitForEditorLockHeldBy(holder, otherUser);
     };
 
+    // The server releases the lock of a closed subscription only when its heartbeat times out, so the
+    // holder unlocks first, as Content Editor does when it closes
     const releaseEditorLocks = () => {
-        lockHolders.forEach(socket => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({id: 'editorLock', type: 'stop'}));
-            }
+        lockHolders.forEach(({socket, holder}) => {
+            cy.apolloClient({username: holder.username, password: holder.password});
+            cy.apollo({mutation: unlockEditorMutation, variables: {editorID}}).then(() => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({id: 'editorLock', type: 'stop'}));
+                }
 
-            socket.close();
+                socket.close();
+            });
+            cy.apolloClient();
         });
         lockHolders = [];
     };

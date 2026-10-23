@@ -16,6 +16,8 @@ import {registry} from '@jahia/ui-extender';
 import {ResizeContext} from '~/JContent/MainLayout/ResizeObserver';
 import {NarrowHeaderActions} from './NarrowHeaderActions';
 import {getCapitalized} from '~/ContentEditor/utils';
+import {CategoriesUndoAction} from '~/JContent/CategoriesRoute/Undo';
+import {CategoriesLanguageSwitcher} from './CategoriesLanguageSwitcher';
 
 const NARROW_HEADER_WIDTH = 750;
 
@@ -102,7 +104,13 @@ const CategoriesHeader = () => {
             mainActions={<MainActionBar/>}
             breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={getCapitalized(nodeType.displayName || nodeType.name)} icon={<Tag/>}/>}
-            toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
+            toolbarLeft={
+                <>
+                    <CategoriesLanguageSwitcher/>
+                    <NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>
+                    <CategoriesUndoAction/>
+                </>
+            }
         />
     ) : (
         <Header
@@ -112,7 +120,13 @@ const CategoriesHeader = () => {
             contentType={nodeType && <Chip color="accent" label={getCapitalized(nodeType.displayName || nodeType.name)} icon={<Tag/>}/>}
             toolbarLeft={
                 <>
+                    {/* First on the line: which language the titles are read in frames everything
+                        else in the toolbar. */}
+                    <CategoriesLanguageSwitcher/>
                     {selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
+                    {/* Drawn whichever bar is showing: clearing a selection must not throw away
+                        the only way back from the move that was just made. */}
+                    <CategoriesUndoAction/>
                     <BrowseControlBar isShowingActions={selection.length === 0}
                                       actionsToExcludeFromMenu={excludedActions}
                                       selector={state => ({

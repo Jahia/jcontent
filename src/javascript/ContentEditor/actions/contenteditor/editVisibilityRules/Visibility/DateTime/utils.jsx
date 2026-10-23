@@ -11,6 +11,26 @@ export const jmixConditionalVisibility = 'jmix:conditionalVisibility';
 // dates rather than opaque strings.
 const DATE_PROPERTY_NAMES = new Set(['start', 'end']);
 
+const TIME_PROPERTY_NAMES = new Set(['startHour', 'startMinute', 'endHour', 'endMinute']);
+const TIME_PAIRS = [['startHour', 'startMinute'], ['endHour', 'endMinute']];
+
+// An hour and its minute form one value: keep or clear them as a pair, never half of it
+const normalizeTimePairs = rule => {
+    const normalized = {...rule};
+    TIME_PAIRS.forEach(([hourKey, minuteKey]) => {
+        if (normalized[hourKey]) {
+            normalized[minuteKey] = normalized[minuteKey] || '00';
+        } else {
+            [hourKey, minuteKey].filter(key => key in normalized).forEach(key => {
+                normalized[key] = null;
+            });
+        }
+    });
+    return normalized;
+};
+
+const isClearableProperty = key => DATE_PROPERTY_NAMES.has(key) || TIME_PROPERTY_NAMES.has(key);
+
 // Transform a rule (a flat map of property name -> value, plus a `type` and optionally a `uuid`)
 // into the InputVisibilityConditionInput shape expected by the saveVisibilityCondition mutation.
 const buildConditionProperties = rule => {
@@ -19,9 +39,9 @@ const buildConditionProperties = rule => {
             const isDateProperty = DATE_PROPERTY_NAMES.has(key);
 
             // A cleared date arrives as '' (typed then erased) or null (DatePickerInput's own
-            // clear path) -- neither is a value to set at all. The caller routes it to
-            // deletedProperties instead.
-            if (isDateProperty && !rule[key]) {
+            // clear path); a cleared time as null (TimeOfDayRule). Neither is a value to set at
+            // all. The caller routes it to deletedProperties instead.
+            if (isClearableProperty(key) && !rule[key]) {
                 return properties;
             }
 
@@ -43,15 +63,15 @@ const buildConditionProperties = rule => {
     }, []);
 };
 
-// A cleared date property has no value left to set -- it must be explicitly deleted server-side,
-// or the previously-saved value is silently left in place (the mutation only ever sets the
-// properties it's given, it never removes one that's simply absent from the list).
-const buildDeletedProperties = rule => Object.keys(rule).filter(key => DATE_PROPERTY_NAMES.has(key) && !rule[key]);
+// A cleared date/time property has no value left to set -- it must be explicitly deleted
+// server-side, or the previously-saved value is silently left in place (the mutation only ever
+// sets the properties it's given, it never removes one that's simply absent from the list).
+const buildDeletedProperties = rule => Object.keys(rule).filter(key => isClearableProperty(key) && !rule[key]);
 
-// A jnt:startEndDateCondition with neither start nor end set, or a jnt:dayOfWeekCondition with
-// no day selected, is a no-op condition -- saving it can only confuse the editor who will see a
-// rule that visibly does nothing. For dates, having just one of the two is a legitimate,
-// intentional "open-ended" condition and stays allowed.
+// A jnt:startEndDateCondition with neither start nor end set, a jnt:dayOfWeekCondition with no day
+// selected, or a jnt:timeOfDayCondition with neither time set, is a no-op condition -- saving it can
+// only confuse the editor who will see a rule that visibly does nothing. For dates and times, having
+// just one of the two boundaries is a legitimate, intentional "open-ended" condition and stays allowed.
 export const isSaveDisabled = (type, values) => {
     if (type === 'jnt:startEndDateCondition') {
         return !values.start && !values.end;
@@ -61,30 +81,29 @@ export const isSaveDisabled = (type, values) => {
         return !values.dayOfWeek || values.dayOfWeek.length === 0;
     }
 
+    if (type === 'jnt:timeOfDayCondition') {
+        return !values.startHour && !values.endHour;
+    }
+
     return false;
 };
 
-export const buildNewCondition = rule => ({
-    type: rule.type,
-    properties: buildConditionProperties(rule)
-});
+export const buildNewCondition = rule => {
+    const normalized = normalizeTimePairs(rule);
+    return {
+        type: normalized.type,
+        properties: buildConditionProperties(normalized)
+    };
+};
 
-export const buildUpdatedCondition = rule => ({
-    type: rule.type,
-    uuid: rule.uuid,
-    properties: buildConditionProperties(rule),
-    deletedProperties: buildDeletedProperties(rule)
-});
-
-export const generateUUID = () => {
-    if (window.crypto.randomUUID) {
-        return window.crypto.randomUUID();
-    }
-
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, c => {
-        const r = window.crypto.getRandomValues(new Uint8Array(1))[0] & 0xf;
-        return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16);
-    });
+export const buildUpdatedCondition = rule => {
+    const normalized = normalizeTimePairs(rule);
+    return {
+        type: normalized.type,
+        uuid: normalized.uuid,
+        properties: buildConditionProperties(normalized),
+        deletedProperties: buildDeletedProperties(normalized)
+    };
 };
 
 export const filterRegularFieldSets = fieldSets => {
@@ -194,19 +213,5 @@ export const getConditionLabel = (name, properties, t, uilang = window.contextJs
 
         default:
             return t('jcontent:label.contentEditor.visibilityTab.conditions.' + name.substring(name.lastIndexOf(':') + 1));
-    }
-};
-
-export const getStatusText = (rowData, t) => {
-    const {username, timestamp, status} = rowData;
-    switch (status) {
-        case 'published':
-            return t('jcontent:label.contentManager.publicationStatus.published', {userName: username, timestamp});
-        case 'modified':
-            return t('jcontent:label.contentManager.publicationStatus.modified', {userName: username, timestamp});
-        case 'deleted':
-            return t('jcontent:label.contentEditor.visibilityTab.conditions.markedForDeletionBy', {userName: username, timestamp});
-        default:
-            return t('jcontent:label.contentManager.publicationStatus.new', {userName: username, timestamp});
     }
 };

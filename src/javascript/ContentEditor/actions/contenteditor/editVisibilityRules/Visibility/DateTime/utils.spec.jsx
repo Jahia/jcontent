@@ -124,12 +124,68 @@ describe('buildNewCondition / buildUpdatedCondition', () => {
         });
     });
 
-    it('does not ask to delete a non-date property left falsy — only start/end get the delete treatment', () => {
-        const rule = {type: 'jnt:timeOfDayCondition', uuid: 'abc-123', startHour: ''};
+    it('deletes a cleared time-of-day boundary (nulled by TimeOfDayRule) instead of silently keeping the old one', () => {
+        const rule = {type: 'jnt:timeOfDayCondition', uuid: 'abc-123', startHour: '08', startMinute: '30', endHour: null, endMinute: null};
         expect(buildUpdatedCondition(rule)).toEqual({
             type: 'jnt:timeOfDayCondition',
             uuid: 'abc-123',
-            properties: [{name: 'startHour', value: ''}],
+            properties: [
+                {name: 'startHour', value: '08'},
+                {name: 'startMinute', value: '30'}
+            ],
+            deletedProperties: ['endHour', 'endMinute']
+        });
+    });
+
+    it('never sends a cleared time property on a NEW rule either', () => {
+        const rule = {type: 'jnt:timeOfDayCondition', startHour: '08', startMinute: '30', endHour: null, endMinute: null};
+        expect(buildNewCondition(rule)).toEqual({
+            type: 'jnt:timeOfDayCondition',
+            properties: [
+                {name: 'startHour', value: '08'},
+                {name: 'startMinute', value: '30'}
+            ]
+        });
+    });
+
+    it('repairs a legacy empty minute next to a kept hour instead of deleting half the pair', () => {
+        // Legacy rules saved '' minutes verbatim; save what the TimeInput displayed (08:00), do not drop the minute
+        const rule = {type: 'jnt:timeOfDayCondition', uuid: 'abc-123', startHour: '08', startMinute: '', endHour: '18', endMinute: '15'};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:timeOfDayCondition',
+            uuid: 'abc-123',
+            properties: [
+                {name: 'startHour', value: '08'},
+                {name: 'startMinute', value: '00'},
+                {name: 'endHour', value: '18'},
+                {name: 'endMinute', value: '15'}
+            ],
+            deletedProperties: []
+        });
+    });
+
+    it('deletes the whole pair when the hour is cleared, even if a legacy minute value lingers', () => {
+        const rule = {type: 'jnt:timeOfDayCondition', uuid: 'abc-123', startHour: null, startMinute: '30', endHour: '18', endMinute: '15'};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:timeOfDayCondition',
+            uuid: 'abc-123',
+            properties: [
+                {name: 'endHour', value: '18'},
+                {name: 'endMinute', value: '15'}
+            ],
+            deletedProperties: ['startHour', 'startMinute']
+        });
+    });
+
+    it('keeps a midnight boundary: "00" hour/minute strings are values, not cleared state', () => {
+        const rule = {type: 'jnt:timeOfDayCondition', uuid: 'abc-123', startHour: '00', startMinute: '00'};
+        expect(buildUpdatedCondition(rule)).toEqual({
+            type: 'jnt:timeOfDayCondition',
+            uuid: 'abc-123',
+            properties: [
+                {name: 'startHour', value: '00'},
+                {name: 'startMinute', value: '00'}
+            ],
             deletedProperties: []
         });
     });
@@ -161,7 +217,19 @@ describe('isSaveDisabled', () => {
         expect(isSaveDisabled('jnt:dayOfWeekCondition', {dayOfWeek: ['monday', 'tuesday']})).toBe(false);
     });
 
+    it('disables saving a Time of Day condition when neither start nor end time is set', () => {
+        expect(isSaveDisabled('jnt:timeOfDayCondition', {})).toBe(true);
+        // The values TimeOfDayRule leaves behind when the user sets then clears both times
+        expect(isSaveDisabled('jnt:timeOfDayCondition', {startHour: null, startMinute: null, endHour: null, endMinute: null})).toBe(true);
+    });
+
+    it('allows saving a Time of Day condition with a single boundary, midnight included', () => {
+        expect(isSaveDisabled('jnt:timeOfDayCondition', {startHour: '08', startMinute: '30'})).toBe(false);
+        expect(isSaveDisabled('jnt:timeOfDayCondition', {startHour: '00', startMinute: '00'})).toBe(false);
+        expect(isSaveDisabled('jnt:timeOfDayCondition', {startHour: null, startMinute: null, endHour: '18', endMinute: '00'})).toBe(false);
+    });
+
     it('never disables saving other condition types, regardless of their values', () => {
-        expect(isSaveDisabled('jnt:timeOfDayCondition', {})).toBe(false);
+        expect(isSaveDisabled('jnt:userCondition', {})).toBe(false);
     });
 });

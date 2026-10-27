@@ -50,8 +50,8 @@ describe('Custom site role', () => {
         });
     };
 
-    // Leaves jContent by navigating to the logout URL. With cy.logout() under the open app, the session of
-    // the next login often ended on its first visit, with the "session ended" dialog.
+    // Leaves jContent by navigating to the logout URL. cy.logout() is a request and keeps the app open: its
+    // late requests can set a guest session cookie over the one of the next login.
     const leaveJContent = () => cy.visit('/cms/logout', {failOnStatusCode: false});
 
     const verifyNavigationOf = (login: () => void, navItem: string, shouldExist: boolean) => {

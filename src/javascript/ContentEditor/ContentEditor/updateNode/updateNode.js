@@ -32,8 +32,11 @@ export const updateNode = ({
         mixinsToAdd: dataToMutate.mixinsToAdd,
         mixinsToDelete: dataToMutate.mixinsToDelete,
         language,
-        shouldModifyChildren,
-        childrenOrder,
+        // The edit form keeps the locked children in place, other callers of this mutation keep reorderChildren
+        shouldModifyChildren: false,
+        childrenOrder: [],
+        shouldReorderMovableChildren: shouldModifyChildren,
+        movableChildrenOrder: childrenOrder,
         wipInfo
     });
 

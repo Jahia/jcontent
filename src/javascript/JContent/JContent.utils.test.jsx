@@ -3,8 +3,11 @@ import {
     canEditInPageBuilder,
     getNewCounter,
     isDescendant,
+    JahiaRenderedModulesUtil,
+    toNamedPlaceholders,
     removeFileExtension,
-    resolveUrlForLiveOrPreview
+    resolveUrlForLiveOrPreview,
+    resolveEffectiveSite
 } from './JContent.utils';
 
 jest.mock('@jahia/ui-extender', () => ({
@@ -85,6 +88,13 @@ describe('resolveUrlForLiveOrPreview', () => {
         it('omits port when on standard port', () => {
             setLocation('servera', '');
             expect(resolveUrlForLiveOrPreview(absoluteServera, false, 'servera')).toBe('https://servera/cms/render/live/en/sites/luxe/home.html');
+        });
+    });
+
+    describe('port preservation', () => {
+        it('drops port for external serverName (live front-server assumption)', () => {
+            setLocation('servera', '8080');
+            expect(resolveUrlForLiveOrPreview(absoluteServera, true, 'externalhost')).toBe('https://externalhost/cms/render/live/en/sites/luxe/home.html');
         });
     });
 
@@ -252,5 +262,177 @@ describe('canEditInPageBuilder', () => {
     it('should not allow editing a reference even if it lives under a registered editable root', () => {
         registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
         expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
+    });
+});
+
+describe('JahiaRenderedModulesUtil', () => {
+    const nodePath = '/sites/mySite/contents/someObject';
+    const parse = (html, standalone = true) => JahiaRenderedModulesUtil.parseModuleInfo(
+        new DOMParser().parseFromString(html, 'text/html'),
+        nodePath,
+        standalone
+    );
+
+    // The util is a module-level singleton, so a capture outlives the test that took it.
+    beforeEach(() => JahiaRenderedModulesUtil.setModules({}, undefined));
+
+    describe('parseModuleInfo', () => {
+        it('should attribute a placeholder to the module element wrapping it', () => {
+            const modules = parse(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}">
+                    <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+                </div>
+            `);
+            expect(modules[nodePath]).toContainEqual({
+                path: 'childObject2',
+                nodeTypes: ['cent:childObject2'],
+                placeholder: true
+            });
+        });
+
+        it('should attribute a placeholder with no module ancestor to the rendered node', () => {
+            // A node rendered on its own carries no module wrapper, which is how a content folder's
+            // content comes back. Without the fallback these placeholders are dropped.
+            const modules = parse(`
+                <div jahiatype="module" type="placeholder" path="childObject1" nodetypes="cent:childObject1"></div>
+                <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+                <div jahiatype="module" type="placeholder" path="*"></div>
+            `);
+            expect(modules[nodePath].map(entry => entry.path)).toEqual(['childObject1', 'childObject2', '*']);
+        });
+
+        it('should drop a placeholder with no module ancestor out of a page render', () => {
+            // The page route renders a whole page, whose root is a mainmodule this selector never
+            // matches. A parentless placeholder there is not the page's own, and adopting it would
+            // give the page's create action named children that belong to something else.
+            const modules = parse(`
+                <div jahiatype="module" type="placeholder" path="childObject1" nodetypes="cent:childObject1"></div>
+            `, false);
+            expect(modules[nodePath]).toBeUndefined();
+        });
+
+        it('should not attribute a placeholder to a preceding sibling module', () => {
+            const modules = parse(`
+                <div jahiatype="module" type="existingNode" path="${nodePath}/childObject1"></div>
+                <div jahiatype="module" type="placeholder" path="childObject2" nodetypes="cent:childObject2"></div>
+            `);
+            expect(modules[`${nodePath}/childObject1`]).toEqual([]);
+            expect(modules[nodePath].map(entry => entry.path)).toEqual(['childObject2']);
+        });
+    });
+
+    describe('hasRenderingFor', () => {
+        it('should cover the captured page and its descendants', () => {
+            JahiaRenderedModulesUtil.setModules({}, '/sites/mySite/home');
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home')).toBe(true);
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home/area/node')).toBe(true);
+        });
+
+        it('should not cover a node outside the captured page', () => {
+            JahiaRenderedModulesUtil.setModules({}, '/sites/mySite/home');
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/contents/someObject')).toBe(false);
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home2')).toBe(false);
+        });
+
+        it('should cover nothing when no page has been captured', () => {
+            expect(JahiaRenderedModulesUtil.hasRenderingFor('/sites/mySite/home')).toBe(false);
+        });
+    });
+
+    describe('getNamedPlaceholders', () => {
+        it('should keep only the named placeholders', () => {
+            JahiaRenderedModulesUtil.setModules({
+                [nodePath]: [
+                    {path: '*', nodeTypes: ['cent:childObject3'], placeholder: false},
+                    {path: '*', nodeTypes: ['cent:childObject3'], placeholder: true},
+                    {path: '/sites/mySite/absolute', nodeTypes: ['cent:x'], placeholder: true},
+                    {path: 'childObject2', nodeTypes: ['cent:childObject2'], placeholder: true}
+                ]
+            }, '/sites/mySite/contents');
+            expect(JahiaRenderedModulesUtil.getNamedPlaceholders(nodePath)).toEqual([
+                {name: 'childObject2', nodeTypes: ['cent:childObject2']}
+            ]);
+        });
+
+        it('should return nothing for a node that was never captured', () => {
+            expect(JahiaRenderedModulesUtil.getNamedPlaceholders(nodePath)).toEqual([]);
+        });
+    });
+
+    describe('toNamedPlaceholders', () => {
+        it('should drop a placeholder the rendering left without node types', () => {
+            // ModuleTag omits the nodetypes attribute when neither the view nor the definition
+            // constrains the placeholder, and the editor has nothing to create from.
+            expect(toNamedPlaceholders([
+                {path: 'unconstrained', nodeTypes: undefined, placeholder: true},
+                {path: 'childObject2', nodeTypes: ['cent:childObject2'], placeholder: true}
+            ])).toEqual([{name: 'childObject2', nodeTypes: ['cent:childObject2']}]);
+        });
+
+        it('should return nothing when there are no entries', () => {
+            expect(toNamedPlaceholders(undefined)).toEqual([]);
+        });
+    });
+});
+
+describe('resolveEffectiveSite', () => {
+    const mkSite = (sitekey, serverName, aliases = []) => ({
+        sitekey,
+        serverName,
+        path: `/sites/${sitekey}`,
+        additionalServerNames: {values: aliases}
+    });
+
+    const digitall = mkSite('digitall', 'localhost');
+    const mySite = mkSite('mysite', 'www.mysite.com');
+    const allSites = [{site: digitall}, {site: mySite}];
+
+    it('returns the node site when it is the selected site', () => {
+        const node = {site: mySite};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'localhost');
+        expect(result.isSharedContext).toBe(false);
+        expect(result.switchHost).toBe(false);
+        expect(result.effectiveSite).toBe(node.site);
+    });
+
+    it('switches to the selected site when a localhost-only node site is shared', () => {
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'myserver');
+        expect(result.isSharedContext).toBe(true);
+        expect(result.switchHost).toBe(true);
+        expect(result.effectiveSite).toBe(mySite);
+    });
+
+    it('is not a shared context when the node site has localhost plus an alias', () => {
+        const node = {site: mkSite('digitall', 'localhost', ['alias.example.com'])};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'myserver');
+        expect(result.isSharedContext).toBe(false);
+        expect(result.switchHost).toBe(false);
+        expect(result.effectiveSite).toBe(node.site);
+    });
+
+    it('falls back to the node site when the selected site is missing from allSites', () => {
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, [{site: digitall}], 'mysite', 'myserver');
+        expect(result.isSharedContext).toBe(true);
+        expect(result.effectiveSite).toBe(node.site);
+        expect(result.switchHost).toBe(false);
+    });
+
+    it('does not switch host when the selected site is itself localhost-only', () => {
+        const other = mkSite('other', 'localhost');
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, [{site: digitall}, {site: other}], 'other', 'myserver');
+        expect(result.isSharedContext).toBe(true);
+        expect(result.effectiveSite).toBe(other);
+        expect(result.switchHost).toBe(false);
+    });
+
+    it('is never a shared context when browsing on localhost', () => {
+        const node = {site: digitall};
+        const result = resolveEffectiveSite(node, allSites, 'mysite', 'localhost');
+        expect(result.isSharedContext).toBe(false);
+        expect(result.switchHost).toBe(false);
+        expect(result.effectiveSite).toBe(node.site);
     });
 });

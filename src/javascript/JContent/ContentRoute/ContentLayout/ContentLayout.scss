@@ -28,17 +28,6 @@
     min-width: 0;
 }
 
-.sidePanel {
-    display: flex;
-    flex: 0 0 600px;
-    min-width: 0;
-    overflow: hidden;
-}
-
-.sidePanelFullScreen {
-    flex: 1 1 100%;
-}
-
 .loader {
     position: absolute;
     z-index: 19999;

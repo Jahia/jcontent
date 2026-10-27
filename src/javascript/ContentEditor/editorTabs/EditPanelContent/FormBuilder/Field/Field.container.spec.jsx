@@ -5,6 +5,7 @@ import {FieldContainer} from './Field.container';
 import {registerSelectorTypes} from '~/ContentEditor/SelectorTypes';
 import {registry} from '@jahia/ui-extender';
 import {useFormikContext} from 'formik';
+import * as leadingActionContext from '../LeadingAction.context';
 
 jest.mock('formik');
 jest.mock('~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable', () => ({}));
@@ -63,5 +64,24 @@ describe('Field container component', () => {
 
         const cmp = shallow(<FieldContainer {...defaultProps}/>).find('Field');
         expect(cmp.props().selectorType.pickerConfig.key).toBe('image');
+    });
+
+    it('should not display a leading action by default', () => {
+        const cmp = shallow(<FieldContainer {...defaultProps}/>).find('DisplayAction');
+        expect(cmp.exists()).toBe(false);
+    });
+
+    it('should display the leading action set on the FormBuilder with the field and its value', () => {
+        jest.spyOn(leadingActionContext, 'useLeadingAction').mockReturnValue('translateField');
+        const cmp = shallow(<FieldContainer {...defaultProps}/>).find('DisplayAction');
+        expect(cmp.props().actionKey).toBe('translateField');
+        expect(cmp.props().field).toBe(defaultProps.field);
+        expect(cmp.props().value).toBe('testValue');
+    });
+
+    it('should not display the leading action when actions are hidden', () => {
+        jest.spyOn(leadingActionContext, 'useLeadingAction').mockReturnValue('translateField');
+        const cmp = shallow(<FieldContainer {...defaultProps} inputContext={{displayActions: false}}/>).find('DisplayAction');
+        expect(cmp.exists()).toBe(false);
     });
 });

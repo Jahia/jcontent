@@ -1,0 +1,36 @@
+{
+  "nodeType": "cent:actionTest",
+  "priority": 1.0,
+  "sections": [
+    {
+      "name": "content",
+      "fieldSets": [
+        {
+          "name": "cent:actionTest",
+          "fields": [
+            {
+              "name": "actionType",
+              "valueConstraints": [
+                {
+                  "displayValue": "Redirect",
+                  "value": {"type": "String", "value": "cemix:chainRedirect"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:chainRedirect"}]
+                },
+                {
+                  "displayValue": "Success toast",
+                  "value": {"type": "String", "value": "cemix:chainSuccess"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:chainSuccess"}]
+                },
+                {
+                  "displayValue": "Popin",
+                  "value": {"type": "String", "value": "cemix:chainPopin"},
+                  "propertyList": [{"name": "addMixin", "value": "cemix:chainPopin"}]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

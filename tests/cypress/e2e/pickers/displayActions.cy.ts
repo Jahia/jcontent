@@ -16,6 +16,9 @@ describe('Picker tests - Display actions', () => {
             mutationFile: 'contentEditor/pickers/createCustomContent.graphql',
             variables: {contentFolderPath: `/sites/${siteKey}/contents`}
         });
+    });
+
+    beforeEach(() => {
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
     });

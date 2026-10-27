@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {TreeView} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '../redux/JContent.redux';
@@ -15,31 +15,14 @@ export const AdditionalAppsTree = ({item, target}) => {
 
     const selected = path.substr(1);
 
-    const {tree, routes, defaultOpenedItems, allPermissions} = useAdminRouteTreeStructure(target, selected);
+    const {tree, defaultOpenedItems, allPermissions} = useAdminRouteTreeStructure(target, selected);
 
     const {node, loading, error} = useNodeInfo({path: '/sites/' + site}, {
         getPermissions: allPermissions,
         getSiteInstalledModules: true
     });
 
-    let switchSelection;
-    if (!loading && !error && selected === '') {
-        const firstItem = routes.find(route => route.isSelectable &&
-            (route.requiredPermission === undefined || node[route.requiredPermission] !== false) &&
-            (route.requireModuleInstalledOnSite === undefined || node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) > -1)
-        );
-        if (firstItem) {
-            switchSelection = firstItem.key;
-        }
-    }
-
-    useEffect(() => {
-        if (switchSelection) {
-            dispatch(cmGoto({path: '/' + switchSelection}));
-        }
-    }, [dispatch, switchSelection]);
-
-    if (loading || error || switchSelection) {
+    if (loading || error) {
         return false;
     }
 

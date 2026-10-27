@@ -3,6 +3,9 @@ import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 import {WorkInProgressDialog} from './WorkInProgressDialog';
 
+// The dialog closes itself on navigation, which reads the location from the store.
+jest.mock('react-redux', () => ({useSelector: jest.fn(() => ({})), shallowEqual: jest.fn()}));
+
 jest.mock('@apollo/client', () => {
     let queryresponsemock = {
         client: {

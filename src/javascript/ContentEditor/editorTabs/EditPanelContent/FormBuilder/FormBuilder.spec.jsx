@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {shallowWithTheme} from '@jahia/test-framework';
 import {dsGenericTheme} from '@jahia/design-system-kit';
 
@@ -6,7 +6,13 @@ import {FormBuilder} from './FormBuilder';
 import {useFormikContext} from 'formik';
 import {useContentEditorContext, useContentEditorConfigContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {ceToggleSections} from '~/ContentEditor/registerReducer';
 
+jest.mock('react', () => {
+    const actual = jest.requireActual('react');
+    return {...actual, useEffect: jest.fn(actual.useEffect)};
+});
 jest.mock('connected-react-router', () => ({}));
 jest.mock('formik');
 jest.mock('~/ContentEditor/contexts/ContentEditorSection/ContentEditorSection.context');
@@ -162,6 +168,31 @@ describe('FormBuilder component', () => {
         });
         const cmp = shallowWithTheme(<FormBuilder mode="edit" formKey="dummy-uuid-edit-3"/>, {}, dsGenericTheme).find('section');
         expect(cmp.childAt(1).find('ChildrenSection').exists()).toBeTruthy();
+    });
+
+    it('should expand the sections holding a field in error, and keep the other toggles', () => {
+        // Shallow rendering does not run effects: run them synchronously for this test
+        useEffect.mockImplementation(effect => effect());
+        const dispatch = jest.fn();
+        useDispatch.mockReturnValue(dispatch);
+        useSelector.mockReturnValueOnce({content: false, layout: false, metadata: false});
+        useContentEditorConfigContext.mockReturnValue({formKey: 'dummy-uuid-errors'});
+        sectionContext.sections[1].fieldSets = [{fields: [{name: 'layoutField'}]}];
+        sectionContext.sections.push({name: 'metadata', visible: true, fieldSets: [{fields: [{name: 'metadataField'}]}]});
+        // A falsy error does not expand its section
+        context.errors = {layoutField: 'required', field1: '', unknownField: 'required'};
+
+        try {
+            shallowWithTheme(<FormBuilder mode="edit"/>, {}, dsGenericTheme);
+        } finally {
+            useEffect.mockImplementation(jest.requireActual('react').useEffect);
+            useDispatch.mockReset();
+        }
+
+        expect(dispatch).toHaveBeenCalledWith(ceToggleSections({
+            key: 'dummy-uuid-errors',
+            sections: {content: false, layout: true, metadata: false}
+        }));
     });
 
     it('should expand content and listOrdering by default', () => {

@@ -1,0 +1,17 @@
+/*
+ * The panel's own width, which is why it travels with the component rather than staying in
+ * ContentLayout: a consumer that had to reproduce these would be copying the one implementation
+ * detail the export exists to hide.
+ *
+ * Assumes a parent laid out as a flex ROW - `flex: 0 0 600px` is a width only in that context.
+ */
+.sidePanel {
+    display: flex;
+    flex: 0 0 600px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.sidePanelFullScreen {
+    flex: 1 1 100%;
+}

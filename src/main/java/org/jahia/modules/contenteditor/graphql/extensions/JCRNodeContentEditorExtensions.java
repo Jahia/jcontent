@@ -28,6 +28,8 @@ import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.annotations.annotationTypes.GraphQLTypeExtension;
 import org.jahia.modules.contenteditor.graphql.api.types.GqlContentHistory;
+import org.jahia.modules.contenteditor.utils.ChildrenOrderingUtils;
+import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRContentUtils;
@@ -61,6 +63,17 @@ public class JCRNodeContentEditorExtensions {
     }
 
     @GraphQLField
+    @GraphQLName("hasComponentPermission")
+    @GraphQLDescription("Returns true if the user has the component permission of the node's type, the same permission required to create content of this type")
+    public boolean hasComponentPermission() {
+        try {
+            return ContentEditorUtils.hasComponentPermission(node.getNode());
+        } catch (RepositoryException e) {
+            throw new DataFetchingException(e);
+        }
+    }
+
+    @GraphQLField
     @GraphQLName("findAvailableNodeName")
     @GraphQLDescription("Returns the next available name for a node, appending if needed numbers.")
     public String findAvailableNodeName(@GraphQLName("nodeType") @GraphQLDescription("Node type used to generate the base name") String nodeTypeName, @GraphQLName("language") @GraphQLDescription("Language used to resolve the node type label") String language) {
@@ -85,6 +98,24 @@ public class JCRNodeContentEditorExtensions {
             throw new DataFetchingException(e);
         }
         return new GqlContentHistory(node);
+    }
+
+    @GraphQLField
+    @GraphQLName("hiddenChildrenCount")
+    @GraphQLDescription("Returns the number of children that the ordering list of the edit form shows and that the current user cannot read. Returns 0 when the children of the node have no order, or when the current user cannot write the node.")
+    public int getHiddenChildrenCount() {
+        try {
+            return ChildrenOrderingUtils.countHiddenChildren(node.getNode());
+        } catch (RepositoryException e) {
+            throw new DataFetchingException(e);
+        }
+    }
+
+    @GraphQLField
+    @GraphQLName("canBeReordered")
+    @GraphQLDescription("Returns true when the current user can move this node among its siblings")
+    public boolean canBeReordered() {
+        return ChildrenOrderingUtils.canBeReordered(node.getNode());
     }
 
     private static final String HISTORY_PERMISSION = "viewHistoryTab";

@@ -5,6 +5,7 @@ import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './WorkInProgressDialog.scss';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
+import {useCloseOnNavigation} from '~/utils';
 
 export const WorkInProgressDialog = ({
     currentLanguage,
@@ -15,6 +16,8 @@ export const WorkInProgressDialog = ({
     languages
 }) => {
     const {t} = useTranslation('jcontent');
+
+    useCloseOnNavigation(onCloseDialog);
 
     const [wipStatus, setWipStatus] = useState(wipInfo.status !== Constants.wip.status.DISABLED);
 

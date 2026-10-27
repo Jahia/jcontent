@@ -1,5 +1,5 @@
 import {formatDatetime} from 'date-formatter';
-import {getDynamicFieldSets, getFields} from '~/ContentEditor/utils';
+import {getDynamicFieldSets, getFields, getStoredProperty} from '~/ContentEditor/utils';
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 import {adaptSystemNameField} from './adaptSystemNameField';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
@@ -17,8 +17,15 @@ export const getInitialValues = (nodeData, sections) => {
     const nodeValues = getFields(sections)
         .reduce((result, field) => ({...result, ...getFieldValues(field, nodeData)}), {});
 
-    // Get default values for not enabled mixins
+    // Get default values for not enabled mixins, but only for a field whose property the node does
+    // not itself store. A sibling copy of an inherited field (same propertyName + declaringNodeType
+    // across several fieldsets, see adaptSections.ts) is hydrated with the node's real stored value
+    // in nodeValues above even while its own fieldset is inactive; overlaying the default here would
+    // silently discard that stored value the moment the reader activates a sibling mixin instead.
+    // When the node carries no property at all, this is unchanged: the default (or the selector's
+    // own initValue, via getFieldValuesFromDefaultValues) still applies.
     const extendsMixinFieldsDefaultValues = getFields(sections, undefined, fieldset => fieldset.dynamic && !fieldset.activated)
+        .filter(field => !getStoredProperty(field, nodeData))
         .reduce((result, field) => ({...result, ...getFieldValuesFromDefaultValues(field)}), {});
 
     const childrenOrderingFields = getChildrenOrderingFields(nodeData, dynamicFieldSets);
@@ -61,8 +68,23 @@ const getChildrenOrderingFields = (nodeData, dynamicFieldSets) => {
     return orderingInitialValues;
 };
 
+/**
+ * Convert a stored property to the form value of a field, the way the edit form does
+ * @param {object} field the property field
+ * @param {object} property the stored property, with its value or values
+ * @param {object} [selectorType] the selector type of the field, resolved from the field when omitted
+ * @returns {*} the form value
+ */
+export const adaptPropertyValue = (field, property, selectorType = resolveSelectorType(field)) => {
+    if (selectorType?.adaptValue) {
+        return selectorType.adaptValue(field, property);
+    }
+
+    return field.multiple ? property.values : property.value;
+};
+
 export const getFieldValues = (field, nodeData) => {
-    const property = nodeData.properties && nodeData.properties.find(prop => prop.name === field.propertyName && prop.definition.declaringNodeType.name === field.declaringNodeType);
+    const property = getStoredProperty(field, nodeData);
     const selectorType = resolveSelectorType(field);
     const formFields = {};
 
@@ -72,14 +94,7 @@ export const getFieldValues = (field, nodeData) => {
             formFields[field.name] = selectorType.initValue(field);
         }
     } else if (selectorType) {
-        let adaptedPropertyValue;
-        if (selectorType.adaptValue) {
-            adaptedPropertyValue = selectorType.adaptValue(field, property);
-        } else {
-            adaptedPropertyValue = field.multiple ? property.values : property.value;
-        }
-
-        formFields[field.name] = adaptedPropertyValue;
+        formFields[field.name] = adaptPropertyValue(field, property, selectorType);
     }
 
     return formFields;
@@ -153,7 +168,12 @@ const getTechnicalInfo = (nodeData, t) => {
 };
 
 export const adaptEditFormData = (data, lang, t) => {
-    const nodeData = data.jcr.result;
+    const result = data.jcr.result;
+    // A node whose type needs a component permission the user lacks is read-only, the same as without write permission
+    const nodeData = {
+        ...result,
+        hasWritePermission: Boolean(result.hasWritePermission && result.hasComponentPermission)
+    };
     const sections = adaptSections(data.forms.editForm);
 
     const formData = {

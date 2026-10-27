@@ -229,9 +229,47 @@ public class Form implements DefinitionRegistryItem {
         }
     }
 
-    public Optional<Field> findAndRemoveField(Field otherField) {
+    /**
+     * Finds a field already placed somewhere in this form and takes it out, so the caller can
+     * re-home it in the fieldset being merged. A property redefined further down a hierarchy is
+     * the same field as the one already placed and has to move, rather than appear twice.
+     *
+     * <p>One case has to be left alone: two fieldsets that are both contributed by mixins
+     * extending the edited type. Those are the dynamic fieldsets a reader switches on and off, and
+     * sibling mixins routinely inherit the same property from a shared supertype -- same declaring
+     * type, same name, so {@link Field#getKey()} is identical for each of them. Taking that field
+     * out of one sibling to hand it to the next leaves every sibling but one missing a field it
+     * genuinely carries, which is #2746. Siblings keep their own copy instead.
+     *
+     * <p>The exception is deliberately no wider than that. A static form definition still claims a
+     * field from a dynamic fieldset, which is how the SEO fieldset gathers the jmix:seoHtmlHead
+     * properties instead of them showing up twice.
+     *
+     * <p>Only a generated field can be a sibling's own inherited copy, and a generated field is one
+     * that carries a JCR property definition. A field arriving from a static form definition
+     * carries none: it is an override looking for the generated field to settle on, and it names
+     * the section it wants that field to end up in. Refusing it the field it is overriding does not
+     * leave the form unchanged -- the caller falls back to a blank {@code new Field()}, so the form
+     * ends up with the real field in its generated section AND a twin in the section the definition
+     * asked for, carrying nothing but the override. That twin has no property definition, no
+     * required type and no value constraints, which is what took the editor down on a content
+     * folder: jcontent's own jmix:contributeMode definition re-homes j:contributeTypes into the
+     * listOrdering section, and the twin left behind had no constraint list for the selector to
+     * read. So the protection applies only to a generated field claiming another generated field.
+     *
+     * @param target the fieldset the field is being merged into. Never protected from itself, so
+     *               merging a static definition into a dynamic fieldset still updates the field in
+     *               place instead of duplicating it. {@code null} means there is no target to
+     *               protect anything for, so nothing is protected -- see the deprecated one-arg
+     *               overload.
+     */
+    public Optional<Field> findAndRemoveField(Field otherField, FieldSet target) {
+        boolean incomingIsGenerated = otherField.getExtendedPropertyDefinition() != null;
+        boolean targetKeepsItsOwnFields = incomingIsGenerated && keepsItsOwnFields(target);
         return sections.stream().flatMap(section ->
-            section.getFieldSets().stream().flatMap(fieldSet -> {
+            section.getFieldSets().stream()
+                .filter(fieldSet -> fieldSet == target || !(targetKeepsItsOwnFields && keepsItsOwnFields(fieldSet)))
+                .flatMap(fieldSet -> {
                 Optional<Field> foundField = fieldSet.getFields().stream().filter(field -> otherField.getExtendedPropertyDefinition() != null ? field.getKey().equals(otherField.getKey()) : field.getName().equals(otherField.getName())).findFirst();
                 if (foundField.isPresent()) {
                     fieldSet.getFields().remove(foundField.get());
@@ -239,5 +277,43 @@ public class Form implements DefinitionRegistryItem {
                 }
                 return Stream.of();
         })).findFirst();
+    }
+
+    /**
+     * @deprecated use {@link #findAndRemoveField(Field, FieldSet)}. This overload has no target
+     * fieldset to protect, so it behaves as the merge always did before #2746: it removes the
+     * field from wherever in the form it is found, sibling extend-mixin or not.
+     */
+    @Deprecated
+    public Optional<Field> findAndRemoveField(Field otherField) {
+        return findAndRemoveField(otherField, null);
+    }
+
+    /**
+     * Whether a fieldset holds on to the fields it was generated with, rather than lending them to
+     * whoever merges next. True of a fieldset generated from any mixin that declares {@code extends}.
+     *
+     * <p>This is deliberately wider than the {@code isExtend} test EditorFormServiceImpl uses to
+     * decide a fieldset is DYNAMIC, which also demands that the mixin not already be a supertype of
+     * the edited type. That extra clause is not wanted here. A mixin can declare {@code extends} and
+     * still sit in the edited type's own supertype set, which makes its fieldset permanently applied
+     * -- no toggle, always on -- while its properties exist on the node unconditionally. A genuinely
+     * dynamic mixin inheriting one of those properties merges after it, because
+     * DefinitionRegistryItemComparator puts a subtype after its supertype, and would take the field
+     * away for itself. The property would then disappear from the form whenever that dynamic mixin
+     * is switched off, although it is still on the node. Protecting the permanently-applied fieldset
+     * keeps the field where it always applies; when the dynamic mixin is switched on as well, both
+     * fieldsets are activated and EditorFormServiceImpl#removeFieldsEditedElsewhere collapses the
+     * pair back to one editable copy.
+     *
+     * <p>{@code null} protects nothing -- there is no target fieldset to protect anything for. That
+     * is how the deprecated one-arg {@link #findAndRemoveField(Field)} keeps its old behaviour.
+     */
+    private static boolean keepsItsOwnFields(FieldSet fieldSet) {
+        if (fieldSet == null) {
+            return false;
+        }
+        ExtendedNodeType fieldSetNodeType = fieldSet.getNodeType();
+        return fieldSetNodeType != null && !fieldSetNodeType.getMixinExtends().isEmpty();
     }
 }

@@ -10,6 +10,9 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         createSite(siteKey);
         enableModule('jcontent-test-module', siteKey);
+    });
+
+    beforeEach(function () {
         cy.login();
         jcontent = JContent
             .visit(siteKey, 'en', 'content-folders/contents')
@@ -69,9 +72,14 @@ describe('Test the text field initializer', {testIsolation: false}, () => {
         const ce = jcontent.createContent('cent:noDefaultValidator');
         ce.getField(SmallTextField, 'nt:base_ce:systemName', false).addNewValue('test-validator-nodefault');
         ce.createUnchecked();
+        // The message is interpolated into the constraintViolation translation, which used to
+        // escape it -- so its apostrophe and ampersand reached the reader as entities
+        // (jcontent#2748). Asserting the punctuation, not just the plain words.
         ce.getField(SmallTextField, 'cent:noDefaultValidator_noDefaultString', false)
             .getErrorMessage()
-            .should('contain', 'noDefaultString must not be empty');
+            .should('contain', 'noDefaultString must not be empty & mustn\'t use "quotes" or /')
+            .and('not.contain', '&#')
+            .and('not.contain', '&amp;');
         ce.getField(SmallTextField, 'cent:noDefaultValidator_noDefaultString', false).addNewValue('a value');
         ce.create();
     });

@@ -12,6 +12,9 @@ describe('Picker tests', () => {
         });
         enableModule('jcontent-test-module', 'externalPickerTest');
         enableModule('qa-module', 'externalPickerTest');
+    });
+
+    beforeEach(function () {
         cy.loginAndStoreSession(); // Edit in chief
         jcontent = JContent.visit('externalPickerTest', 'en', 'content-folders/contents');
     });

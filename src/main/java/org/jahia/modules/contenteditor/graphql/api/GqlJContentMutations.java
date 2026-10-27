@@ -24,6 +24,7 @@
 package org.jahia.modules.contenteditor.graphql.api;
 
 import graphql.annotations.annotationTypes.*;
+import org.jahia.modules.contenteditor.graphql.api.tags.GqlTagManagerMutation;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.services.cache.CacheHelper;
 import org.jahia.services.content.JCRContentUtils;
@@ -83,5 +84,12 @@ public class GqlJContentMutations {
         }
 
         return false;
+    }
+
+    @GraphQLField
+    @GraphQLName("tagManager")
+    @GraphQLDescription("Tag manager mutations for a site, requires the tagManager permission on the site")
+    public GqlTagManagerMutation getTagManager(@GraphQLNonNull @GraphQLName("siteKey") @GraphQLDescription("The site key") String siteKey) {
+        return new GqlTagManagerMutation(siteKey);
     }
 }

@@ -1,5 +1,6 @@
 import {
     checkIfValuesAreDifferent,
+    fieldValueHasChanged,
     getDataToMutate,
     getDynamicFieldSets,
     getFields,
@@ -739,6 +740,129 @@ describe('EditPanel utils', () => {
             expect(propsToSave).toEqual([]);
             expect(propsToDelete).toEqual([]);
         });
+
+        it('should not save an unchanged property of a mixin added by a save that also removes one', () => {
+            const field = {
+                nodeType: 'cemix:chainRedirect',
+                name: 'cemix:chainRedirect_pageSuccess',
+                propertyName: 'pageSuccess',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const chainSections = [{
+                fieldSets: [
+                    {name: 'cemix:chainRedirect', dynamic: true, activated: false, fields: [field]},
+                    {name: 'cemix:chainPopin', dynamic: true, activated: true, fields: []}
+                ]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [{name: 'cemix:chainPopin'}],
+                properties: [{name: 'pageSuccess', value: 'stored page', definition: {declaringNodeType: {name: 'cemix:chainRedirect'}}}]
+            };
+            const formValues = {
+                'cemix:chainRedirect': true,
+                'cemix:chainPopin': false,
+                [field.name]: 'stored page'
+            };
+            const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: chainSections, lang, i18nContext: {}});
+            expect(mixinsToAdd).toEqual(['cemix:chainRedirect']);
+            expect(mixinsToDelete).toEqual(['cemix:chainPopin']);
+            expect(propsToSave).toEqual([]);
+        });
+
+        // The fieldset of these fields is not the type that declares their property
+        [
+            {name: 'an overridden property', fieldSet: 'jnt:overriddenDeclarer', declaringNodeType: 'cent:overridingType', propertyName: 'overridden'},
+            {name: 'a field a JSON form moves to another fieldset', fieldSet: '<main>', declaringNodeType: 'mix:title', propertyName: 'jcr:title'}
+        ].forEach(({name, fieldSet, declaringNodeType, propertyName}) => {
+            const field = {nodeType: fieldSet, declaringNodeType, name: `${fieldSet}_${propertyName}`, propertyName, requiredType: 'STRING', multiple: false};
+            const movedSections = [{fieldSets: [{name: fieldSet, dynamic: false, activated: true, fields: [field]}]}];
+            const nodeDataForEdit = {
+                mixinTypes: [],
+                properties: [{name: propertyName, value: 'stored', definition: {declaringNodeType: {name: declaringNodeType}}}]
+            };
+
+            it(`should not save ${name} when unchanged`, () => {
+                const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues: {[field.name]: 'stored'}, sections: movedSections, lang, i18nContext: {}});
+                expect(propsToSave).toEqual([]);
+            });
+
+            it(`should save ${name} when changed`, () => {
+                const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues: {[field.name]: 'changed'}, sections: movedSections, lang, i18nContext: {}});
+                expect(propsToSave).toEqual([{name: propertyName, type: 'STRING', value: 'changed', language: lang}]);
+            });
+        });
+
+        it('should not save an unchanged property a mixin inherits from a shared supertype', () => {
+            const field = {
+                nodeType: 'cemix:vimeoGenericPlayer',
+                declaringNodeType: 'cemix:sharedPlayerOptions',
+                name: 'cemix:vimeoGenericPlayer_sharedNote',
+                propertyName: 'sharedNote',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const siblingSections = [{
+                fieldSets: [{name: 'cemix:vimeoGenericPlayer', dynamic: true, activated: true, fields: [field]}]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [{name: 'cemix:vimeoGenericPlayer'}],
+                properties: [{name: 'sharedNote', value: 'stored note', definition: {declaringNodeType: {name: 'cemix:sharedPlayerOptions'}}}]
+            };
+            const formValues = {
+                'cemix:vimeoGenericPlayer': true,
+                [field.name]: 'stored note'
+            };
+            const {propsToSave} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: siblingSections, lang, i18nContext: {}});
+            expect(propsToSave).toEqual([]);
+        });
+
+        it('should not save an unchanged property of a mixin added by a save that removes none', () => {
+            const field = {
+                nodeType: 'cemix:subtypeExtendMixin',
+                name: 'cemix:subtypeExtendMixin_title',
+                propertyName: 'title',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const extendSections = [{
+                fieldSets: [{name: 'cemix:subtypeExtendMixin', dynamic: true, activated: false, fields: [field]}]
+            }];
+            const nodeDataForEdit = {
+                mixinTypes: [],
+                properties: [{name: 'title', value: 'stored title', definition: {declaringNodeType: {name: 'cemix:subtypeExtendMixin'}}}]
+            };
+            const formValues = {
+                'cemix:subtypeExtendMixin': true,
+                [field.name]: 'stored title'
+            };
+            const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: extendSections, lang, i18nContext: {}});
+            expect(mixinsToAdd).toEqual(['cemix:subtypeExtendMixin']);
+            expect(mixinsToDelete).toEqual([]);
+            expect(propsToSave).toEqual([]);
+        });
+
+        it('should save a changed property of a mixin added by a save that removes none', () => {
+            const field = {
+                nodeType: 'cemix:subtypeExtendMixin',
+                name: 'cemix:subtypeExtendMixin_title',
+                propertyName: 'title',
+                requiredType: 'STRING',
+                multiple: false
+            };
+            const extendSections = [{
+                fieldSets: [{name: 'cemix:subtypeExtendMixin', dynamic: true, activated: false, fields: [field]}]
+            }];
+            const nodeDataForEdit = {mixinTypes: [], properties: []};
+            const formValues = {
+                'cemix:subtypeExtendMixin': true,
+                [field.name]: 'new title'
+            };
+            const {propsToSave, mixinsToAdd, mixinsToDelete} = getDataToMutate({nodeData: nodeDataForEdit, formValues, sections: extendSections, lang, i18nContext: {}});
+            expect(mixinsToAdd).toEqual(['cemix:subtypeExtendMixin']);
+            expect(mixinsToDelete).toEqual([]);
+            expect(propsToSave).toEqual([{name: 'title', type: 'STRING', value: 'new title', language: lang}]);
+        });
     });
 
     describe('getValuePropName', () => {
@@ -800,6 +924,31 @@ describe('EditPanel utils', () => {
             expect(checkIfValuesAreDifferent('first', 'second', 'STRING')).toEqual(true);
 
             expect(checkIfValuesAreDifferent('same', 'same', 'STRING')).toEqual(false);
+        });
+    });
+
+    describe('fieldValueHasChanged', () => {
+        it('should compare single values by type', () => {
+            const field = {multiple: false, requiredType: 'BOOLEAN'};
+
+            expect(fieldValueHasChanged(field, 'true', true)).toEqual(false);
+            expect(fieldValueHasChanged(field, 'false', true)).toEqual(true);
+        });
+
+        it('should compare multiple values item by item', () => {
+            const field = {multiple: true, requiredType: 'STRING'};
+
+            expect(fieldValueHasChanged(field, ['a', 'b'], ['a', 'b'])).toEqual(false);
+            expect(fieldValueHasChanged(field, ['a', 'b'], ['b', 'a'])).toEqual(true);
+            expect(fieldValueHasChanged(field, ['a'], ['a', 'b'])).toEqual(true);
+        });
+
+        it('should handle missing multiple values', () => {
+            const field = {multiple: true, requiredType: 'STRING'};
+
+            expect(fieldValueHasChanged(field, undefined, null)).toEqual(false);
+            expect(fieldValueHasChanged(field, ['a'], undefined)).toEqual(true);
+            expect(fieldValueHasChanged(field, null, ['a'])).toEqual(true);
         });
     });
 });

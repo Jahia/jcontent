@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.jahia.test</groupId>
     <artifactId>jcontent-test-module-root</artifactId>
-    <version>3.7.1-SNAPSHOT</version>
+    <version>3.9.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>org.jahia.modules.javascript</groupId>
@@ -33,6 +33,17 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>jahia-maven-central</id>
+      <name>Jahia Maven Central Repository</name>
+      <url>https://maven.jahia.com/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -46,6 +57,17 @@
       </releases>
       <snapshots>
         <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+      <id>jahia-maven-central</id>
+      <name>Jahia Maven Central Repository</name>
+      <url>https://maven.jahia.com/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
   </pluginRepositories>

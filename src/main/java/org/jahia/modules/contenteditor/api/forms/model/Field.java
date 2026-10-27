@@ -257,7 +257,12 @@ public class Field implements Ranked {
         String key = definition.getResourceBundleKey(nodeType);
         label = StringUtils.isEmpty(label) ? StringEscapeUtils.unescapeHtml(resolveResourceKey(prefix + key, uiLocale, site)) : label;
         description = StringUtils.isEmpty(description) ? Sanitizer.DESCRIPTION_FORMATTING.sanitize(resolveResourceKey(prefix + key + ".ui.tooltip", uiLocale, site)) : description;
-        errorMessage = StringUtils.isEmpty(errorMessage)? Sanitizer.COMMON_FORMATTING.sanitize(resolveResourceKey(prefix + key + ".constraint.error.message", uiLocale, site)) : errorMessage;
+        // Unescaped after sanitizing, the way label is above. The sanitizer's job here is to drop
+        // markup nobody asked for, but it also html-encodes the text it keeps -- and the client
+        // renders this message as a plain text node, so an apostrophe in a constraint.error.message
+        // reached the screen as "L&#39;entrée est invalide" (#2748). Stripping stays; the encoding
+        // goes. Nothing is made injectable by this: the value is never rendered as markup.
+        errorMessage = StringUtils.isEmpty(errorMessage) ? StringEscapeUtils.unescapeHtml(Sanitizer.COMMON_FORMATTING.sanitize(resolveResourceKey(prefix + key + ".constraint.error.message", uiLocale, site))) : errorMessage;
     }
 
     public void mergeWith(Field otherField) {

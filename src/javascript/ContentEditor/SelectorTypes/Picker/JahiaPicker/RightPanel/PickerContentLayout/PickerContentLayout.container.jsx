@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {Loader} from '@jahia/moonstone';
+import {Loader, Typography, Warning} from '@jahia/moonstone';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {configPropType} from '~/ContentEditor/SelectorTypes/Picker/configs/configPropType';
 import {PickerContentTable} from './PickerContentTable';
@@ -11,6 +11,7 @@ import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQue
 import clsx from 'clsx';
 import styles from './PickerContentLayout.scss';
 import {cePickerOpenPaths} from '~/ContentEditor/SelectorTypes/Picker/Picker.redux';
+import {isOverNodeLimit} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import PickerFilesGrid from './PickerFilesGrid';
 import PropTypes from 'prop-types';
 
@@ -90,7 +91,8 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
         openPaths: state.contenteditor.picker.openPaths
     }), shallowEqual);
 
-    const {result, error, loading, isStructured, refetch} = useLayoutQuery(options, additionalFragments, undefined, accordionItemProps);
+    // Apollo caches the rows of a tree that the server cut short, but not the error that says so
+    const {result, error, loading, isStructured, refetch} = useLayoutQuery({...options, treeFetchPolicy: 'network-only'}, additionalFragments, undefined, accordionItemProps);
 
     useEffect(() => {
         setRefetcher('pickerData', {
@@ -150,6 +152,12 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
             {loading && (
                 <div className={clsx('flexCol_center', 'alignCenter', styles.loader)}>
                     <Loader size="big"/>
+                </div>
+            )}
+            {!loading && isOverNodeLimit(error) && (
+                <div data-sel-role="too-many-items" className={clsx(styles.warningBox, 'flexRow_nowrap', 'alignCenter')}>
+                    <Warning size="big" color="yellow" className={styles.warningIcon}/>
+                    <Typography>{t('jcontent:label.contentEditor.picker.rightPanel.tooManyItems')}</Typography>
                 </div>
             )}
             {(mode === Constants.mode.MEDIA || preSearchModeMemo === Constants.mode.MEDIA) && filesMode === Constants.fileView.mode.THUMBNAILS ? (

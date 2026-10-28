@@ -204,8 +204,8 @@ describe('Page builder - content views', () => {
         ];
         const [satellite] = events;
         const news = [
-            {name: 'news1', title: 'News one title', desc: 'News one description'},
-            {name: 'news2', title: 'News two title', desc: 'News two description'}
+            {name: 'news1', title: 'News one title', desc: 'News one description', vanityUrl: '/news/news-one-title'},
+            {name: 'news2', title: 'News two title', desc: 'News two description', vanityUrl: '/news/news-two-title'}
         ];
 
         type EventView = 'default' | 'condensed' | 'detail' | 'link';
@@ -440,7 +440,9 @@ describe('Page builder - content views', () => {
             context.tag('page-builder', 'content-views', 'list-view', 'live');
             const assertLinkList = ($root: JQuery) => {
                 news.forEach(item => {
-                    expect($root.find(`li a[href*="/${item.name}.html"]`).text(), `link to ${item.name}`).to.contain(item.title);
+                    // In live, the link may take the vanity URL of the news, as in the test of the link views above
+                    const href = $root.find(`li a:contains("${item.title}")`).attr('href') ?? '';
+                    expect([`/${item.name}.html`, item.vanityUrl].some(target => href.includes(target)), `link to ${item.name}, found ${href}`).to.be.true;
                     expect($root.text(), `description of ${item.name}`).not.to.contain(item.desc);
                 });
             };
@@ -456,7 +458,7 @@ describe('Page builder - content views', () => {
 
             publishPage(listPagePath);
             cy.visit(`/cms/render/live/en${listPagePath}.html`);
-            cy.get(`a[href*="/${news[0].name}.html"]`).first().closest('.col-md-12').should(assertLinkList);
+            cy.contains('li a', news[0].title).closest('.col-md-12').should(assertLinkList);
 
             contentEditor = editArea(listPageName, listAreaPath);
             contentEditor.toggleOption('jmix:renderable');

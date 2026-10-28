@@ -1,47 +1,66 @@
 import React from 'react';
-import {useContentEditorSectionContext} from '~/ContentEditor/contexts';
-import {Validation} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/Validation';
+import PropTypes from 'prop-types';
+import {Formik, useFormikContext} from 'formik';
+import {Button} from '@jahia/moonstone';
+import {useTranslation} from 'react-i18next';
 import {FieldSet} from '~/ContentEditor/editorTabs/EditPanelContent/FormBuilder/FieldSet';
 import styles from './Channels.scss';
 
-const filterRegularFieldSets = fieldSets => {
-    const showFieldSet = fieldSet => {
-        if (fieldSet?.name !== 'jmix:channelSelection') {
-            return false;
-        }
+export const CHANNELS_FIELDSET = 'jmix:channelSelection';
 
-        if (fieldSet.dynamic && !fieldSet.hasEnableSwitch && !fieldSet.activated) {
-            return false;
-        }
-
-        // We must hide fieldSet in the section when the fieldSet is not dynamic and
-        // the fieldSet doesn't contain any fields (empty).
-        return fieldSet.dynamic || fieldSet.fields.length > 0;
-    };
-
-    return fieldSets.filter(fs => showFieldSet(fs));
-};
-
-export const Channels = () => {
-    const {sections} = useContentEditorSectionContext();
-
+export const getChannelsFieldSet = sections => {
     const section = sections.find(s => s.name === 'visibility');
-    if (!section) {
+    const fieldSet = section?.fieldSets.find(fs => fs.name === CHANNELS_FIELDSET);
+    if (!fieldSet) {
         return null;
     }
 
-    const fieldSets = filterRegularFieldSets(section.fieldSets);
+    if (fieldSet.dynamic && !fieldSet.hasEnableSwitch && !fieldSet.activated) {
+        return null;
+    }
 
-    if (fieldSets.length === 0) {
+    // We must hide fieldSet in the section when the fieldSet is not dynamic and
+    // the fieldSet doesn't contain any fields (empty).
+    return (fieldSet.dynamic || fieldSet.fields.length > 0) ? fieldSet : null;
+};
+
+// Save button dedicated to the Channels section. It is enabled only when the section has
+// pending changes (Formik dirty state) and performs a real backend save on click.
+const ChannelsSaveButton = () => {
+    const {t} = useTranslation('jcontent');
+    const {dirty, isSubmitting, submitForm} = useFormikContext();
+    return (
+        <Button
+            color="accent"
+            size="big"
+            data-sel-role="channels-save-button"
+            isDisabled={!dirty || isSubmitting}
+            label={t('jcontent:label.contentEditor.edit.action.goBack.btnSave')}
+            onClick={() => submitForm()}
+        />
+    );
+};
+
+export const Channels = ({sections, initialValues, onSubmit}) => {
+    const fieldSet = getChannelsFieldSet(sections);
+    if (!fieldSet) {
         return null;
     }
 
     return (
-        <div className={styles.container}>
-            <Validation/>
-            <section>
-                { fieldSets?.map(fs => <FieldSet key={fs.name} fieldset={fs}/>) }
-            </section>
-        </div>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
+            <div className={styles.container} data-sel-role="visibility-channels">
+                <FieldSet fieldset={fieldSet}/>
+                <div className={styles.rowEnd}>
+                    <ChannelsSaveButton/>
+                </div>
+            </div>
+        </Formik>
     );
+};
+
+Channels.propTypes = {
+    sections: PropTypes.array.isRequired,
+    initialValues: PropTypes.object.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };

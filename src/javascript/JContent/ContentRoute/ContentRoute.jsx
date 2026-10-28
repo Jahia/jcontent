@@ -15,22 +15,30 @@ import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
 import {JahiaRenderedModulesUtil} from '../JContent.utils';
 
 // A visually editable node that is not its own displayable node has no page, hence no template to render the frame
-// with: it goes through the content-template wrapper instead. Pages and main resources keep an empty template.
+// with: it goes through the content-template wrapper instead. Pages and main resources keep an empty template; the
+// wrapper left in the URL for one of them, as jContent restores the last template when it opens again, is stale.
 const getFrameTemplateState = (node, canShowEditFrame, template) => {
     const isWrapperTemplateNeeded = canShowEditFrame && node.displayableNode?.path !== node.path;
-    return {isWrapperTemplateNeeded, isFrameTemplateReady: !isWrapperTemplateNeeded || template !== ''};
+    const isWrapperTemplateStale = canShowEditFrame && !isWrapperTemplateNeeded && template === JContentConstants.contentTemplate;
+    return {
+        isWrapperTemplateNeeded,
+        isWrapperTemplateStale,
+        isFrameTemplateReady: isWrapperTemplateNeeded ? template !== '' : !isWrapperTemplateStale
+    };
 };
 
 // The template lives in the URL (state.jcontent.template) so that a reload keeps it; cmGoto resets it on every
 // navigation, so it is set again each time the Page Builder opens on such a node. It replaces the history entry:
-// Back would otherwise return to the bare URL and be sent forward again.
-const useWrapperTemplate = (isPageBuilderView, isWrapperTemplateNeeded, template) => {
+// Back would otherwise return to the bare URL and be sent forward again. A stale wrapper is cleared the same way.
+const useWrapperTemplate = (isPageBuilderView, isWrapperTemplateNeeded, isWrapperTemplateStale, template) => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (isPageBuilderView && isWrapperTemplateNeeded && template === '') {
             dispatch(cmGoto({template: JContentConstants.contentTemplate}, {replace: true}));
+        } else if (isWrapperTemplateStale) {
+            dispatch(cmGoto({template: ''}, {replace: true}));
         }
-    }, [dispatch, isPageBuilderView, isWrapperTemplateNeeded, template]);
+    }, [dispatch, isPageBuilderView, isWrapperTemplateNeeded, isWrapperTemplateStale, template]);
 };
 
 // The frame waits for its template: loading the bare node URL first would show the error page for a moment
@@ -59,8 +67,8 @@ export const ContentRoute = () => {
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
     const canShowEditFrame = Boolean(res?.node) && pageBuilderNodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
-    const {isWrapperTemplateNeeded, isFrameTemplateReady} = getFrameTemplateState(res.node, canShowEditFrame, template);
-    useWrapperTemplate(isPageBuilderView, isWrapperTemplateNeeded, template);
+    const {isWrapperTemplateNeeded, isWrapperTemplateStale, isFrameTemplateReady} = getFrameTemplateState(res.node, canShowEditFrame, template);
+    useWrapperTemplate(isPageBuilderView, isWrapperTemplateNeeded, isWrapperTemplateStale, template);
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {

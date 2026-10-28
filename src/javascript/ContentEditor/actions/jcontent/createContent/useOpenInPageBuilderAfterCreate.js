@@ -28,6 +28,12 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, parentNode, onCreate
 
     const handleClosed = useCallback((...args) => {
         onClosed?.(...args);
+        // The Content Editor calls this on each of its renders; only the call made once it is closed counts
+        const [editorConfig] = args;
+        if (!editorConfig?.closed) {
+            return;
+        }
+
         const newNode = createdNode.current;
         createdNode.current = null;
         if (!isEnabled || !newNode || parentNode?.primaryNodeType?.name !== 'jnt:contentFolder') {

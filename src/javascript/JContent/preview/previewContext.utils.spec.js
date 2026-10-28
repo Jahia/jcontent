@@ -37,7 +37,7 @@ describe('buildPreviewContexts', () => {
     });
 
     it('renders a content with no page of its own through the content-template wrapper for its CSS', () => {
-        const content = {path: '/sites/site/contents/form', uuid: 'f', isPage: false, displayableNode: null};
+        const content = {path: '/sites/site/contents/form', uuid: 'f', isPage: false, isContent: true, displayableNode: null};
         const {primary} = buildPreviewContexts(content, language);
         expect(primary.contextConfiguration).toBe('module');
         expect(primary.view).toBeNull();
@@ -46,10 +46,19 @@ describe('buildPreviewContexts', () => {
     });
 
     it('does the same when the displayable node is a folder', () => {
-        const content = {path: '/sites/site/contents/form', uuid: 'f', isPage: false, displayableNode: {path: '/sites/site/contents', isFolder: true}};
+        const content = {path: '/sites/site/contents/form', uuid: 'f', isPage: false, isContent: true, displayableNode: {path: '/sites/site/contents', isFolder: true}};
         const {primary} = buildPreviewContexts(content, language);
         expect(primary.cssSourcePath).toBe('/sites/site/contents/form');
         expect(primary.cssSourceView).toBe('content-template');
+    });
+
+    // The content-template wrapper applies to jnt:content only: a render of anything else fails
+    it('takes no CSS source for a file, a folder or a category, which the wrapper cannot render', () => {
+        const file = {path: '/sites/site/files/logo.png', uuid: 'l', isPage: false, isContent: false, displayableNode: null};
+        const {primary} = buildPreviewContexts(file, language);
+        expect(primary.contextConfiguration).toBe('module');
+        expect(primary.cssSourcePath).toBeUndefined();
+        expect(primary.cssSourceView).toBeUndefined();
     });
 
     it('leaves the in-context strategies untouched', () => {

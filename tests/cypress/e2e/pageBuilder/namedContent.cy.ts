@@ -7,9 +7,12 @@ describe('Page builder - named content', () => {
     // Qa-module defines qant:namedChildNode with the named children namedBigText (jnt:bigText),
     // namedText (jnt:text) and namedChildren (qant:namedChildren), and any number of unnamed jnt:text
     const namedChildNodePath = `/sites/${siteKey}/home/${pageName}/area-main/namedchildnode`;
+    // The default system name is unique among its siblings, so this page keeps its area empty
+    const emptyPageName = 'emptyAreaPage';
+    const emptyAreaPath = `/sites/${siteKey}/home/${emptyPageName}/area-main`;
 
-    const visitPageBuilder = (): JContentPageBuilder => JContent
-        .visit(siteKey, 'en', `pages/home/${pageName}`)
+    const visitPageBuilder = (page = pageName): JContentPageBuilder => JContent
+        .visit(siteKey, 'en', `pages/home/${page}`)
         .switchToPageBuilder();
 
     const openCreateFromPlaceholder = (placeholderPath: string, nodeType: string): ContentEditor => {
@@ -54,6 +57,16 @@ describe('Page builder - named content', () => {
                 children: [{name: 'namedchildnode', primaryNodeType: 'qant:namedChildNode'}]
             }]
         });
+        addNode({
+            name: emptyPageName,
+            parentPathOrId: `/sites/${siteKey}/home`,
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Empty area test page', language: 'en'},
+                {name: 'j:templateName', value: 'simple'}
+            ],
+            children: [{name: 'area-main', primaryNodeType: 'jnt:contentList', mixins: ['jmix:isAreaList']}]
+        });
     });
 
     after(() => {
@@ -72,6 +85,22 @@ describe('Page builder - named content', () => {
                 new ContentEditor().cancel();
             }
         });
+    });
+
+    it('creates a qant:namedChildNode with its default system name', () => {
+        context.tag('page-builder', 'content-editor', 'named-content', 'system-name');
+        const pageBuilder = visitPageBuilder(emptyPageName);
+        const area = pageBuilder.getModule(emptyAreaPath, false);
+        area.get().scrollIntoView();
+        area.get().click('bottomLeft', {force: true});
+        area.getAllCreateButtons().get().find('button[data-sel-role="createContent"]').click({force: true});
+        const contentEditor = pageBuilder.getCreateContent()
+            .getContentTypeSelector()
+            .searchForContentType('qant:namedChildNode')
+            .selectContentType('qant:namedChildNode')
+            .create();
+
+        contentEditor.getSmallTextField('nt:base_ce:systemName').checkValue('namedchildnode');
     });
 
     [

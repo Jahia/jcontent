@@ -6,16 +6,19 @@ import {
     createUser,
     deleteSite,
     deleteUser,
-    getNodeByPath,
     grantRoles,
     jfaker
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
+import {
+    editorLockFailure,
+    EditorLockHolder,
+    EditorLockUser as User,
+    holdEditorLock as openLockHolder,
+    releaseEditorLock
+} from '../../../utils/editorLock';
 
-type User = {username: string; password: string};
 type LockState = {lockedAndCannotBeEdited: boolean; engineLockOwners: string[]};
-// A failure is recorded once the promise of holdEditorLock has resolved, stopped once the test releases the lock
-type LockHolder = {socket: WebSocket; holder: User; failure?: string; stopped?: boolean};
 
 // Covers the lock that an open Content Editor holds (type "engine"), not the lock taken explicitly with
 // lockNode() (type "user"), which lock.cy.ts covers. Both render the same "Locked by" badge.
@@ -45,17 +48,9 @@ describe('Content Editor lock', () => {
         }
     `;
 
-    const unlockEditorMutation = gql`
-        mutation unlockEditor($editorID: String!) {
-            forms {
-                unlockEditor(editorID: $editorID)
-            }
-        }
-    `;
-
-    // Sockets standing for the open editor of another user, see holdEditorLock
+    // Sockets standing for the open editor of another user, see utils/editorLock.ts
     const editorID = `cypress${uniq}`;
-    let lockHolders: LockHolder[] = [];
+    let lockHolders: EditorLockHolder[] = [];
 
     const lockStateAs = (user: User): Cypress.Chainable<LockState> => {
         cy.apolloClient({username: user.username, password: user.password});
@@ -71,9 +66,7 @@ describe('Content Editor lock', () => {
         });
     };
 
-    const holderFailures = () => lockHolders
-        .filter(({failure}) => failure)
-        .map(({holder, failure}) => `the lock holder of ${holder.username} failed: ${failure}`);
+    const holderFailures = () => lockHolders.map(editorLockFailure).filter(Boolean);
 
     const waitForLockState = (user: User, predicate: (state: LockState) => boolean, message: string, timeout = 10000) => {
         cy.waitUntil(() => lockStateAs(user).then(predicate), {
@@ -100,78 +93,20 @@ describe('Content Editor lock', () => {
         );
     };
 
-    // Cypress drives a single browser, so the open editor of another user is the subscription that the
-    // editor opens when it mounts, opened as that user from the spec window, which outlives page visits.
-    // The switch of session that follows logs nobody out, so the subscription keeps its user.
-    // The socket speaks the subscriptions-transport-ws protocol (subprotocol graphql-ws, messages
-    // connection_init, start and stop), not graphql-transport-ws.
-    // subscribeToEditorLock sends no data, so the promise resolves on connection_ack, and a failure that
-    // comes later is recorded on the lock holder, for the error of the next lock poll.
+    // The switch of session that follows holdEditorLock logs nobody out, so the lock holder keeps its user
     const holdEditorLock = (holder: User, otherUser: User) => {
-        cy.loginAndStoreSession(holder.username, holder.password);
-        getNodeByPath(contentPath).then(result => new Cypress.Promise<LockHolder>((resolve, reject) => {
-            const socket = new WebSocket(`${Cypress.config('baseUrl').replace(/^http/, 'ws')}/modules/graphqlws`, 'graphql-ws');
-            const lockHolder: LockHolder = {socket, holder};
-            let acknowledged = false;
-            const fail = (failure: string) => {
-                if (acknowledged) {
-                    lockHolder.failure = lockHolder.failure ?? failure;
-                } else {
-                    reject(new Error(failure));
-                }
-            };
-
-            socket.onerror = () => fail('the GraphQL websocket failed');
-            socket.onclose = event => {
-                if (!lockHolder.stopped) {
-                    fail(`the GraphQL websocket closed early, with code ${event.code}`);
-                }
-            };
-
-            socket.onopen = () => socket.send(JSON.stringify({type: 'connection_init', payload: {}}));
-            socket.onmessage = event => {
-                const message = JSON.parse(event.data);
-                if (message.type === 'connection_ack') {
-                    socket.send(JSON.stringify({
-                        id: 'editorLock',
-                        type: 'start',
-                        payload: {
-                            query: 'subscription($nodeId:String!, $editorID:String!) { subscribeToEditorLock(nodeId: $nodeId, editorID: $editorID) }',
-                            variables: {nodeId: result.data.jcr.nodeByPath.uuid, editorID}
-                        }
-                    }));
-                    acknowledged = true;
-                    resolve(lockHolder);
-                } else if (message.type === 'connection_error' || message.type === 'error') {
-                    fail(`the editor lock subscription failed: ${event.data}`);
-                }
-            };
-        })).then(lockHolder => {
+        openLockHolder(holder, contentPath, editorID).then(lockHolder => {
             lockHolders.push(lockHolder);
         });
         waitForEditorLockHeldBy(holder, otherUser);
     };
 
-    // The server releases the lock of a closed subscription only when its heartbeat times out, so the
-    // holder unlocks first, as Content Editor does when it closes.
-    // holdEditorLock fills lockHolders when its commands run, so read it when this command runs, not when it is queued
+    // HoldEditorLock fills lockHolders when its commands run, so read it when this command runs, not when it is queued
     const releaseEditorLocks = () => {
         cy.then(() => {
             const holders = lockHolders;
             lockHolders = [];
-            holders.forEach(lockHolder => {
-                const {socket, holder} = lockHolder;
-                cy.apolloClient({username: holder.username, password: holder.password});
-                cy.apollo({mutation: unlockEditorMutation, variables: {editorID}}).then(() => {
-                    lockHolder.stopped = true;
-                    if (socket.readyState === WebSocket.OPEN) {
-                        socket.send(JSON.stringify({id: 'editorLock', type: 'stop'}));
-                    }
-
-                    socket.close();
-                });
-                cy.apolloClient();
-            });
+            holders.forEach(releaseEditorLock);
         });
     };
 

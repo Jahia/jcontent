@@ -7,6 +7,8 @@ describe('Create media tests', () => {
 
     const siteKey = 'jcontentSite';
     const user = {name: 'editoruser', password: 'password'};
+    // The nodes a test creates, deleted after it even when it fails
+    let nodesToDelete: {path: string; workspace?: 'EDIT' | 'LIVE'}[] = [];
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
@@ -27,6 +29,8 @@ describe('Create media tests', () => {
     });
 
     afterEach(() => {
+        nodesToDelete.forEach(({path, workspace}) => deleteNode(path, workspace));
+        nodesToDelete = [];
         cy.logout();
     });
 
@@ -133,6 +137,7 @@ describe('Create media tests', () => {
     it('Can create an image reference (jnt:imageReferenceLink) in content-folders', function () {
         context.tag('jcontent', 'media', 'image-reference');
         const imageName = 'myfile.png';
+        nodesToDelete = [{path: `/sites/${siteKey}/contents/image-ref-link-test`}, {path: `/sites/${siteKey}/files/${imageName}`}];
 
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
@@ -158,15 +163,13 @@ describe('Create media tests', () => {
         // Verify the created content now appears in the content-folders listing
         jcontent.switchToListMode();
         jcontent.getTable().getRowByName('image-ref-link-test');
-
-        // Clean up
-        deleteNode(`/sites/${siteKey}/contents/image-ref-link-test`);
-        deleteNode(`/sites/${siteKey}/files/${imageName}`);
     });
 
     it('Can replace a file using the "Replace with" action', function () {
         context.tag('jcontent', 'media', 'file', 'replace');
         const fileName = 'myfile.png';
+        const folderPath = `/sites/${siteKey}/files/replaceWithTest`;
+        nodesToDelete = [{path: folderPath}, {path: folderPath, workspace: 'LIVE'}];
 
         cy.loginAndStoreSession();
         jcontent = JContent.visit(siteKey, 'en', 'media/files');
@@ -179,7 +182,7 @@ describe('Create media tests', () => {
         const file = media.uploadFileViaDialog(fileName, 'assets/uploadMedia');
 
         // Publish it, so that the replace shows as an unpublished modification
-        publishAndWaitJobEnding(`/sites/${siteKey}/files/replaceWithTest`);
+        publishAndWaitJobEnding(folderPath);
         cy.reload();
         jcontent.getGrid().getCardByName(fileName).get().find('[data-status-type="published"]').should('exist');
 
@@ -191,9 +194,5 @@ describe('Create media tests', () => {
         cy.get('[data-cm-role="grid-content-list-card"][data-sel-role-card="myfile2.png"]').should('not.exist');
         cy.get('[data-cm-role="grid-content-list-card"]').should('have.length', 1);
         jcontent.getGrid().getCardByName(fileName).get().find('[data-status-type="modified"]').should('exist');
-
-        // Clean up
-        deleteNode(`/sites/${siteKey}/files/replaceWithTest`);
-        deleteNode(`/sites/${siteKey}/files/replaceWithTest`, 'LIVE');
     });
 });

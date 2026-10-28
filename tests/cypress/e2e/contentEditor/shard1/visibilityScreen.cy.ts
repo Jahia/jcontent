@@ -1539,18 +1539,18 @@ describe('Visibility Screen', () => {
 
         it('does not find a content in live search in a language it is not allowed in', () => {
             context.tag('content-editor', 'visibility', 'language', 'search');
-            // Live indexing follows the publication, so wait until the content of every language is found
-            ['en', 'fr'].forEach(language => {
-                cy.waitUntil(() => liveSearchHits(language, 'Ubiquitous').then(hits => hits > 0), {
-                    errorMsg: `The live index never returned the content shown in every language, in ${language}`,
+            // Live indexing follows the publication, so wait until each restricted content is found in its own
+            // language: a zero-hit check only means something once that content is indexed
+            [{language: 'en', term: 'Zephyrine'}, {language: 'fr', term: 'Quartzite'}].forEach(({language, term}) => {
+                cy.waitUntil(() => liveSearchHits(language, term).then(hits => hits > 0), {
+                    errorMsg: `The live index never returned ${term} in ${language}`,
                     timeout: 60000,
                     interval: 2000
                 });
+                liveSearchHits(language, term).should('eq', 1);
             });
 
-            liveSearchHits('en', 'Zephyrine').should('eq', 1);
             liveSearchHits('en', 'Quartzite').should('eq', 0);
-            liveSearchHits('fr', 'Quartzite').should('eq', 1);
             liveSearchHits('fr', 'Zephyrine').should('eq', 0);
         });
 

@@ -1,13 +1,4 @@
-import {
-    addNode,
-    context,
-    createSite,
-    deleteSite,
-    Dropdown,
-    getComponent,
-    getComponentBySelector,
-    Menu
-} from '@jahia/cypress';
+import {addNode, context, createSite, deleteNode, deleteSite} from '@jahia/cypress';
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 import {ChoiceListField} from '../../page-object/fields';
 
@@ -47,7 +38,7 @@ describe('Page builder - ordering list', () => {
     const verifyOrder = (expected: string[]) => {
         const list = visitPageBuilder().getModule(listPath, false);
         list.get().scrollIntoView();
-        list.get().find(`[jahiatype="module"][path^="${listPath}/"]:not([type="placeholder"])`).then($modules => {
+        list.get().find(`[jahiatype="module"][path^="${listPath}/"]:not([type="placeholder"])`).should($modules => {
             const names = [...$modules]
                 .map(module => module.getAttribute('path').substring(listPath.length + 1))
                 .filter(name => !name.includes('/'));
@@ -56,11 +47,7 @@ describe('Page builder - ordering list', () => {
     };
 
     const openListOrderingSection = (): ContentEditor => {
-        const list = visitPageBuilder().getModule(listPath, false);
-        list.get().scrollIntoView();
-        list.get().click('bottomLeft', {force: true});
-        list.getBox().getHeader().get().should('be.visible').rightclick({force: true});
-        getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)').selectByRole('edit');
+        visitPageBuilder().getModule(listPath, false).boxHeaderContextMenu().selectByRole('edit');
 
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
@@ -71,23 +58,16 @@ describe('Page builder - ordering list', () => {
     const selectChoice = (contentEditor: ContentEditor, fieldName: string, value: string) => {
         const field = contentEditor.getField(ChoiceListField, fieldName);
         field.get().scrollIntoView();
-        field.get().should('be.visible');
-
-        const dropdown = getComponent(Dropdown, field);
-        dropdown.get().click('right');
-        dropdown.get().find('.moonstone-menu').should('exist');
-        dropdown.get().find(`.moonstone-menuItem[data-value="${value}"]`).should('exist').trigger('click', {force: true});
+        field.selectValue(value);
         field.assertSelected(optionLabels[value]);
     };
 
+    // Each test starts from a list without jmix:orderedList, see beforeEach
     const enableAutomaticOrdering = () => {
         cy.get('[data-sel-role-automatic-ordering="jmix:orderedList"]')
             .find('input[type="checkbox"]')
-            .then($checkbox => {
-                if (!$checkbox.is(':checked')) {
-                    cy.wrap($checkbox).click({force: true});
-                }
-            });
+            .should('not.be.checked')
+            .click({force: true});
     };
 
     const moveItem = (contentEditor: ContentEditor, name: string, action: string) => {
@@ -116,20 +96,9 @@ describe('Page builder - ordering list', () => {
                 name: 'area-main',
                 primaryNodeType: 'jnt:contentList',
                 mixins: ['jmix:isAreaList'],
-                children: [{
-                    name: 'contributelist',
-                    primaryNodeType: 'jnt:contentList'
-                }]
+                // Rebuilt with its children before each test
+                children: [{name: 'contributelist', primaryNodeType: 'jnt:contentList'}]
             }]
-        });
-
-        items.forEach(item => {
-            addNode({
-                name: item.name,
-                parentPathOrId: listPath,
-                primaryNodeType: 'jnt:bigText',
-                properties: [{name: 'text', value: item.text, language: 'en'}]
-            });
         });
     });
 
@@ -138,7 +107,19 @@ describe('Page builder - ordering list', () => {
         deleteSite(siteKey);
     });
 
+    // Rebuild the list before each test, so that it has no ordering and its children are in creation order.
+    // One addNode per child, so that each child gets its own creation date.
     beforeEach(() => {
+        deleteNode(listPath);
+        addNode({name: 'contributelist', parentPathOrId: areaPath, primaryNodeType: 'jnt:contentList'});
+        items.forEach(item => {
+            addNode({
+                name: item.name,
+                parentPathOrId: listPath,
+                primaryNodeType: 'jnt:bigText',
+                properties: [{name: 'text', value: item.text, language: 'en'}]
+            });
+        });
         cy.loginAndStoreSession();
     });
 
@@ -158,6 +139,24 @@ describe('Page builder - ordering list', () => {
         contentEditor.save();
 
         verifyOrder([dcNotCool, bleus, bond, noExist, punctuation, abcdefgh, dcCool]);
+    });
+
+    it('orders the list automatically by creation date, ascending', () => {
+        context.tag('page-builder', 'list-ordering', 'automatic-ordering', 'date');
+        // Without a manual order first, the creation order would pass without any ordering
+        cy.apollo({
+            mutationFile: 'jcontent/reorderChildren.graphql',
+            variables: {pathOrId: listPath, names: [...creationOrder].reverse()}
+        });
+        verifyOrder([...creationOrder].reverse());
+        const contentEditor = openListOrderingSection();
+
+        enableAutomaticOrdering();
+        selectChoice(contentEditor, 'jmix:orderedList_firstField', 'jcr:created');
+        selectChoice(contentEditor, 'jmix:orderedList_firstDirection', 'asc');
+        contentEditor.save();
+
+        verifyOrder(creationOrder);
     });
 
     it('orders the list automatically by creation date, descending', () => {

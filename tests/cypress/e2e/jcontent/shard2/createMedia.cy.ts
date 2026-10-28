@@ -1,5 +1,5 @@
 import {ContentEditor, JContent} from '../../../page-object';
-import {addNode, context, createUser, deleteNode, deleteUser, grantRoles} from '@jahia/cypress';
+import {addNode, context, createUser, deleteNode, deleteUser, grantRoles, publishAndWaitJobEnding} from '@jahia/cypress';
 import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
 
 describe('Create media tests', () => {
@@ -178,19 +178,22 @@ describe('Create media tests', () => {
         // Upload the initial image
         const file = media.uploadFileViaDialog(fileName, 'assets/uploadMedia');
 
+        // Publish it, so that the replace shows as an unpublished modification
+        publishAndWaitJobEnding(`/sites/${siteKey}/files/replaceWithTest`);
+        cy.reload();
+        jcontent.getGrid().getCardByName(fileName).get().find('[data-status-type="published"]').should('exist');
+
         // Replace its content with a different file via the "Replace with" action
-        file.replaceWith('cypress/fixtures/assets/uploadMedia/myfile2.png');
+        file.replaceWith('myfile2.png', 'assets/uploadMedia');
 
-        // The replace should complete successfully
-        cy.get('[data-cm-role="upload-status-success"]').should('be.visible');
-        cy.get('[data-cm-role="upload-close-button"]').click();
-
-        // The node keeps its original name and no new node is created
+        // The node keeps its original name, no new node is created, and the file is now modified
         jcontent.getGrid().getCardByName(fileName).get().should('be.visible');
         cy.get('[data-cm-role="grid-content-list-card"][data-sel-role-card="myfile2.png"]').should('not.exist');
         cy.get('[data-cm-role="grid-content-list-card"]').should('have.length', 1);
+        jcontent.getGrid().getCardByName(fileName).get().find('[data-status-type="modified"]').should('exist');
 
         // Clean up
         deleteNode(`/sites/${siteKey}/files/replaceWithTest`);
+        deleteNode(`/sites/${siteKey}/files/replaceWithTest`, 'LIVE');
     });
 });

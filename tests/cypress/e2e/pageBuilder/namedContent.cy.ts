@@ -66,7 +66,7 @@ describe('Page builder - named content', () => {
     });
 
     afterEach(() => {
-        // Close the editor a test leaves open. No test edits a field, so Back closes it without a discard dialog
+        // Close the editor each test leaves open, even after a failure. No test edits a field, so Back closes it without a discard dialog
         cy.get('body').then($body => {
             if ($body.find(ContentEditor.defaultSelector).length > 0) {
                 new ContentEditor().cancel();
@@ -81,16 +81,12 @@ describe('Page builder - named content', () => {
     ].forEach(({placeholder, nodeType}) => {
         it(`creates the named child ${placeholder} with its name as a read-only system name`, () => {
             context.tag('page-builder', 'content-editor', 'named-content', 'system-name');
-            const contentEditor = openCreateFromPlaceholder(placeholder, nodeType);
-            assertSystemName(contentEditor, placeholder, true);
-            contentEditor.cancel();
+            assertSystemName(openCreateFromPlaceholder(placeholder, nodeType), placeholder, true);
         });
     });
 
     it('creates an unnamed child with an editable system name', () => {
         context.tag('page-builder', 'content-editor', 'named-content', 'system-name');
-        const contentEditor = openCreateFromPlaceholder('*', 'jnt:text');
-        assertSystemName(contentEditor, 'simple-text', false);
-        contentEditor.cancel();
+        assertSystemName(openCreateFromPlaceholder('*', 'jnt:text'), 'simple-text', false);
     });
 });

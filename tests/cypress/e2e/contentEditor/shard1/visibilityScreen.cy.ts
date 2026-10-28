@@ -1391,7 +1391,7 @@ describe('Visibility Screen', () => {
             // The badge is not enough: verify the content is actually gone from the
             // rendered live (en) page while the other contents are still there.
             cy.visit(`/sites/${sitekeyI18n}/home.html`);
-            cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
+            cy.get('body').should('not.contain', 'test 1').and('contain', 'test 2').and('contain', 'test 3');
         });
 
         it('Content restricted for a language disappears from the live-rendered page (i18n site)', () => {
@@ -1401,7 +1401,7 @@ describe('Visibility Screen', () => {
 
             // Check the content is rendered in live before any restriction
             cy.visit(homeLivePath);
-            cy.get('body').should('contain.text', 'test 1test 2test 3');
+            cy.get('body').should('contain', 'test 1').and('contain', 'test 2').and('contain', 'test 3');
 
             // Remove English on test-content1
             jcontent = JContent.visit(sitekeyI18n, 'en', 'pages/home');
@@ -1410,9 +1410,7 @@ describe('Visibility Screen', () => {
             getComponentByRole(BaseComponent, 'edit-visibility-rules-dialog').should('be.visible');
 
             cy.get('[data-cm-role="visibilityScreen"]').within(() => {
-                cy.get(
-                    '[data-sel-content-editor-field*="invalidLanguages"], [data-sel-content-editor-field*="j:invalidLanguages"]'
-                )
+                cy.get('[data-sel-content-editor-field*="invalidLanguages"]')
                     .contains('English')
                     .should('be.visible')
                     .click();
@@ -1427,7 +1425,7 @@ describe('Visibility Screen', () => {
             // Publish, then confirm the content is no longer rendered in live in English
             publishAndWait(`/sites/${sitekeyI18n}/home`, ['en']);
             cy.visit(homeLivePath);
-            cy.get('body').should('not.contain', 'test 1test 2test 3').and('contain.text', 'test 2test 3');
+            cy.get('body').should('not.contain', 'test 1').and('contain', 'test 2').and('contain', 'test 3');
 
             // Remove the restriction and republish — the content is rendered again in live
             cy.apollo({
@@ -1436,7 +1434,7 @@ describe('Visibility Screen', () => {
             });
             publishAndWait(`/sites/${sitekeyI18n}/home`, ['en']);
             cy.visit(homeLivePath);
-            cy.get('body').should('contain.text', 'test 1test 2test 3');
+            cy.get('body').should('contain', 'test 1').and('contain', 'test 2').and('contain', 'test 3');
         });
     }); // End describe('Visibility Live Mode Tests')
 

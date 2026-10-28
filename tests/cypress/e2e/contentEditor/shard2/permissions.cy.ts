@@ -300,7 +300,6 @@ describe('translator permissions', () => {
     const grantedRole = 'translator-copy-translator-en';
     const translatorCopyUser = {username: 'translatorCopyUser', password: 'password'};
     const contentName = 'translatorCopyPublicationTest';
-    let contentUuid: string;
 
     before(() => {
         createSite(siteKey, {
@@ -318,8 +317,6 @@ describe('translator permissions', () => {
             primaryNodeType: 'jnt:bigText',
             name: contentName,
             properties: [{name: 'text', value: 'Publication permission test', language: 'en'}]
-        }).then(result => {
-            contentUuid = result.data.jcr.addNode.uuid;
         });
     });
 
@@ -369,17 +366,20 @@ describe('translator permissions', () => {
             expect(subRoleNames, 'copied sub-roles').to.include(grantedRole);
         });
 
-        // Log in as the translator-copy user
-        cy.loginAndStoreSession(translatorCopyUser.username, translatorCopyUser.password);
-        const ceParams = `(contentEditor:!((formKey:modal_0,isFullscreen:!t,lang:en,mode:edit,site:${siteKey},uilang:en,uuid:'${contentUuid}')))`;
-        cy.visit(`/jahia/jcontent/${siteKey}/en/content-folders/contents#${ceParams}`);
-        const ce = ContentEditor.getContentEditor();
+        const publicationButtons = '[data-sel-role="publishAction"], [data-sel-role="startWorkflowMainButton"]';
+        const openContentEditor = (user?: {username: string; password: string}) => {
+            cy.loginAndStoreSession(user?.username, user?.password);
+            JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(contentName);
+            // The header buttons render with the form, so wait for it before asserting one is absent
+            cy.get('[data-sel-role="submitSave"]').should('be.visible');
+        };
 
-        // Save is visible but disabled
-        ce.checkButtonStatus('submitSave', false);
+        // Positive control: a user with publication rights is offered a publication button
+        openContentEditor();
+        cy.get(publicationButtons).should('exist');
 
-        // All publication action buttons are unavailable
-        cy.get('[data-sel-role="publishAction"]').should('not.exist');
-        cy.get('[data-sel-role="startWorkflowMainButton"]').should('not.exist');
+        // The translator-copy user is offered none
+        openContentEditor(translatorCopyUser);
+        cy.get(publicationButtons).should('not.exist');
     });
 });

@@ -85,9 +85,10 @@ export class File extends BasePage {
         return this;
     }
 
-    replaceWith(fixturePath: string): File {
+    replaceWith(fileName: string, fixtureSubFolder = '.'): File {
         this.getGridCard().contextMenu().selectByRole('replaceFile');
-        cy.get('input#file-upload-input[type="file"]').selectFile(fixturePath, {force: true});
+        cy.get('input#file-upload-input[type="file"]').selectFile(`cypress/fixtures/${fixtureSubFolder}/${fileName}`, {force: true});
+        this.media.waitForUploadToComplete();
         return this;
     }
 

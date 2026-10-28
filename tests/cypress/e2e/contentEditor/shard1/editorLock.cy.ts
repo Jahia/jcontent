@@ -14,6 +14,8 @@ import gql from 'graphql-tag';
 
 type User = {username: string; password: string};
 type LockState = {lockedAndCannotBeEdited: boolean; engineLockOwners: string[]};
+// A failure is recorded once the promise of holdEditorLock has resolved, stopped once the test releases the lock
+type LockHolder = {socket: WebSocket; holder: User; failure?: string; stopped?: boolean};
 
 // Covers the lock that an open Content Editor holds (type "engine"), not the lock taken explicitly with
 // lockNode() (type "user"), which lock.cy.ts covers. Both render the same "Locked by" badge.
@@ -53,7 +55,7 @@ describe('Content Editor lock', () => {
 
     // Sockets standing for the open editor of another user, see holdEditorLock
     const editorID = `cypress${uniq}`;
-    let lockHolders: {socket: WebSocket; holder: User}[] = [];
+    let lockHolders: LockHolder[] = [];
 
     const lockStateAs = (user: User): Cypress.Chainable<LockState> => {
         cy.apolloClient({username: user.username, password: user.password});
@@ -69,8 +71,16 @@ describe('Content Editor lock', () => {
         });
     };
 
+    const holderFailures = () => lockHolders
+        .filter(({failure}) => failure)
+        .map(({holder, failure}) => `the lock holder of ${holder.username} failed: ${failure}`);
+
     const waitForLockState = (user: User, predicate: (state: LockState) => boolean, message: string, timeout = 10000) => {
-        cy.waitUntil(() => lockStateAs(user).then(predicate), {errorMsg: message, timeout, interval: 500});
+        cy.waitUntil(() => lockStateAs(user).then(predicate), {
+            errorMsg: () => [message, ...holderFailures()].join('; '),
+            timeout,
+            interval: 500
+        });
     };
 
     const waitForEditorLockHeldBy = (owner: User, otherUser: User) => {
@@ -93,11 +103,31 @@ describe('Content Editor lock', () => {
     // Cypress drives a single browser, so the open editor of another user is the subscription that the
     // editor opens when it mounts, opened as that user from the spec window, which outlives page visits.
     // The switch of session that follows logs nobody out, so the subscription keeps its user.
+    // The socket speaks the subscriptions-transport-ws protocol (subprotocol graphql-ws, messages
+    // connection_init, start and stop), not graphql-transport-ws.
+    // subscribeToEditorLock sends no data, so the promise resolves on connection_ack, and a failure that
+    // comes later is recorded on the lock holder, for the error of the next lock poll.
     const holdEditorLock = (holder: User, otherUser: User) => {
         cy.loginAndStoreSession(holder.username, holder.password);
-        getNodeByPath(contentPath).then(result => new Cypress.Promise<WebSocket>((resolve, reject) => {
+        getNodeByPath(contentPath).then(result => new Cypress.Promise<LockHolder>((resolve, reject) => {
             const socket = new WebSocket(`${Cypress.config('baseUrl').replace(/^http/, 'ws')}/modules/graphqlws`, 'graphql-ws');
-            socket.onerror = () => reject(new Error('The GraphQL websocket failed'));
+            const lockHolder: LockHolder = {socket, holder};
+            let acknowledged = false;
+            const fail = (failure: string) => {
+                if (acknowledged) {
+                    lockHolder.failure = lockHolder.failure ?? failure;
+                } else {
+                    reject(new Error(failure));
+                }
+            };
+
+            socket.onerror = () => fail('the GraphQL websocket failed');
+            socket.onclose = event => {
+                if (!lockHolder.stopped) {
+                    fail(`the GraphQL websocket closed early, with code ${event.code}`);
+                }
+            };
+
             socket.onopen = () => socket.send(JSON.stringify({type: 'connection_init', payload: {}}));
             socket.onmessage = event => {
                 const message = JSON.parse(event.data);
@@ -110,13 +140,14 @@ describe('Content Editor lock', () => {
                             variables: {nodeId: result.data.jcr.nodeByPath.uuid, editorID}
                         }
                     }));
-                    resolve(socket);
+                    acknowledged = true;
+                    resolve(lockHolder);
                 } else if (message.type === 'connection_error' || message.type === 'error') {
-                    reject(new Error(`The editor lock subscription failed: ${event.data}`));
+                    fail(`the editor lock subscription failed: ${event.data}`);
                 }
             };
-        })).then(socket => {
-            lockHolders.push({socket, holder});
+        })).then(lockHolder => {
+            lockHolders.push(lockHolder);
         });
         waitForEditorLockHeldBy(holder, otherUser);
     };
@@ -128,9 +159,11 @@ describe('Content Editor lock', () => {
         cy.then(() => {
             const holders = lockHolders;
             lockHolders = [];
-            holders.forEach(({socket, holder}) => {
+            holders.forEach(lockHolder => {
+                const {socket, holder} = lockHolder;
                 cy.apolloClient({username: holder.username, password: holder.password});
                 cy.apollo({mutation: unlockEditorMutation, variables: {editorID}}).then(() => {
+                    lockHolder.stopped = true;
                     if (socket.readyState === WebSocket.OPEN) {
                         socket.send(JSON.stringify({id: 'editorLock', type: 'stop'}));
                     }
@@ -142,9 +175,8 @@ describe('Content Editor lock', () => {
         });
     };
 
-    const openEditorAs = (user: User): ContentEditor => {
-        cy.loginAndStoreSession(user.username, user.password);
-        JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(contentName);
+    const reopenEditor = (): ContentEditor => {
+        new JContent().editComponentByRowName(contentName);
         const contentEditor = new ContentEditor();
         contentEditor.switchToAdvancedMode();
         // The badges render with the form, so wait for it before asserting one is absent
@@ -152,12 +184,10 @@ describe('Content Editor lock', () => {
         return contentEditor;
     };
 
-    const reopenEditor = (): ContentEditor => {
-        new JContent().editComponentByRowName(contentName);
-        const contentEditor = new ContentEditor();
-        contentEditor.switchToAdvancedMode();
-        contentEditor.getSmallTextField('jnt:text_text').get().should('be.visible');
-        return contentEditor;
+    const openEditorAs = (user: User): ContentEditor => {
+        cy.loginAndStoreSession(user.username, user.password);
+        JContent.visit(siteKey, 'en', 'content-folders/contents');
+        return reopenEditor();
     };
 
     // Every name carries a suffix of its own run, so no earlier run leaves data to remove first

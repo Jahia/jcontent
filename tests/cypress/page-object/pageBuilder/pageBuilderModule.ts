@@ -185,6 +185,14 @@ export class PageBuilderModule extends BaseComponent {
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 
+    /* Use for an area or a list: its box is always displayed and never hovered, so contextMenu(true) waits for a hover that never comes */
+    boxHeaderContextMenu(): Menu {
+        this.get().scrollIntoView();
+        this.get().click('bottomLeft', {force: true});
+        this.getBox().getHeader().get().should('be.visible').rightclick({force: true});
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+    }
+
     /* Use specifically for areas with empty content as empty create button takes over content and cannot right-click the regular way */
     emptyAreaContextMenu() {
         this.getHeader().get().rightclick();

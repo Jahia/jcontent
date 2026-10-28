@@ -1,14 +1,12 @@
 import {
+    addMixins,
     addNode,
     context,
     createSite,
     deleteSite,
-    Dropdown,
     enableModule,
-    getComponent,
-    getComponentBySelector,
-    Menu,
-    publishAndWaitJobEnding
+    publishAndWaitJobEnding,
+    setNodeProperty
 } from '@jahia/cypress';
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 import {ChoiceListField} from '../../page-object/fields';
@@ -42,12 +40,7 @@ describe('Page builder - content views', () => {
     const selectView = (contentEditor: ContentEditor, fieldName: string, view: string) => {
         const field = contentEditor.getField(ChoiceListField, fieldName);
         field.get().scrollIntoView();
-        field.get().should('be.visible');
-
-        const dropdown = getComponent(Dropdown, field);
-        dropdown.get().click('right');
-        dropdown.get().find('.moonstone-menu').should('exist');
-        dropdown.get().find(`.moonstone-menuItem[data-value="${view}"]`).should('exist').trigger('click', {force: true});
+        field.selectValue(view);
         field.assertSelected(view);
     };
 
@@ -145,11 +138,7 @@ describe('Page builder - content views', () => {
         let pageBuilder = visitPageBuilder();
 
         cy.log('Open content editor for the area');
-        const area = pageBuilder.getModule(areaPath, false);
-        area.get().scrollIntoView();
-        area.get().click('bottomLeft', {force: true});
-        area.getBox().getHeader().get().should('be.visible').rightclick({force: true});
-        getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)').selectByRole('edit');
+        pageBuilder.getModule(areaPath, false).boxHeaderContextMenu().selectByRole('edit');
 
         cy.log('Select the link view as sub content view (j:subNodesView) in the layout section');
         const contentEditor = new ContentEditor();
@@ -165,6 +154,11 @@ describe('Page builder - content views', () => {
 
     it('renders contents as links in preview and in live', () => {
         context.tag('page-builder', 'content-views', 'preview', 'live');
+        cy.log('Set the views the two tests above select in Content Editor, so this test runs on its own');
+        addMixins(`${landingPath}/${richTextA}`, ['jmix:renderable']);
+        setNodeProperty(`${landingPath}/${richTextA}`, 'j:view', 'link', 'en');
+        setNodeProperty(areaPath, 'j:subNodesView', 'link', 'en');
+
         cy.log('Verify the links in preview');
         cy.visit(`/cms/render/default/en${pagePath}.html`);
         assertRenderedLinks(renderedLinkTargets);

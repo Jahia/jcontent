@@ -17,6 +17,9 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     const contentFolder = {primaryNodeType: {name: 'jnt:contentFolder'}};
     const contentList = {primaryNodeType: {name: 'jnt:contentList'}};
     const newNode = {uuid: 'form-uuid', path: '/sites/site/contents/form'};
+    const form = {isVisuallyEditable: true, isPageOrMainResource: false};
+    const news = {isVisuallyEditable: true, isPageOrMainResource: true};
+    const richText = {isVisuallyEditable: false, isPageOrMainResource: false};
     let dispatch;
     let query;
     let hook;
@@ -26,8 +29,8 @@ describe('useOpenInPageBuilderAfterCreate', () => {
         return null;
     };
 
-    const render = (props, isVisuallyEditable) => {
-        query = jest.fn(() => Promise.resolve({data: {jcr: {nodeById: {isVisuallyEditable}}}}));
+    const render = (props, nodeById) => {
+        query = jest.fn(() => Promise.resolve({data: {jcr: {nodeById}}}));
         useApolloClient.mockReturnValue({query});
         shallow(<Probe {...props}/>);
     };
@@ -38,12 +41,12 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('opens a visually editable content created in a content folder in the Page Builder once the editor closes', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, true);
+        render({isEnabled: true, parentNode: contentFolder}, form);
         hook.handleCreate(newNode, {});
         expect(dispatch).not.toHaveBeenCalled();
         hook.handleClosed();
         await flushPromises();
-        expect(query).toHaveBeenCalledWith(expect.objectContaining({variables: {uuid: 'form-uuid', visuallyEditableNodeType: 'jmix:visuallyEditable'}}));
+        expect(query).toHaveBeenCalledWith(expect.objectContaining({variables: {uuid: 'form-uuid'}}));
         expect(dispatch).toHaveBeenCalledTimes(1);
         expect(dispatch.mock.calls[0][0].payload).toEqual([
             {type: 'CM_GOTO', path: '/sites/site/contents/form'},
@@ -52,7 +55,16 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('leaves a content that is not visually editable on the list', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, false);
+        render({isEnabled: true, parentNode: contentFolder}, richText);
+        hook.handleCreate(newNode, {});
+        hook.handleClosed();
+        await flushPromises();
+        expect(query).toHaveBeenCalledTimes(1);
+        expect(dispatch).not.toHaveBeenCalled();
+    });
+
+    it('leaves a main resource on the list, although it opens in the Page Builder', async () => {
+        render({isEnabled: true, parentNode: contentFolder}, news);
         hook.handleCreate(newNode, {});
         hook.handleClosed();
         await flushPromises();
@@ -61,7 +73,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('does nothing when the content was created inside another content', async () => {
-        render({isEnabled: true, parentNode: contentList}, true);
+        render({isEnabled: true, parentNode: contentList}, form);
         hook.handleCreate(newNode, {});
         hook.handleClosed();
         await flushPromises();
@@ -70,12 +82,12 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('does nothing when the editor closes without a creation, or when disabled', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, true);
+        render({isEnabled: true, parentNode: contentFolder}, form);
         hook.handleClosed();
         await flushPromises();
         expect(query).not.toHaveBeenCalled();
 
-        render({isEnabled: false, parentNode: contentFolder}, true);
+        render({isEnabled: false, parentNode: contentFolder}, form);
         hook.handleCreate(newNode, {});
         hook.handleClosed();
         await flushPromises();
@@ -86,7 +98,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     it('keeps calling the callbacks it wraps', () => {
         const onCreate = jest.fn();
         const onClosed = jest.fn();
-        render({isEnabled: true, parentNode: contentList, onCreate, onClosed}, true);
+        render({isEnabled: true, parentNode: contentList, onCreate, onClosed}, form);
         hook.handleCreate(newNode, {some: 'config'});
         hook.handleClosed('config', true);
         expect(onCreate).toHaveBeenCalledWith(newNode, {some: 'config'});

@@ -7,9 +7,10 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {getIsVisuallyEditable} from './createContent.gql-queries';
 
 /**
- * A content created in a content folder that can open in the Page Builder is what the editor works on next: once
- * the Content Editor closes, land on it in the Page Builder, as New Page does for a page. Content created inside
- * another content (an area, a form) stays where it is, the editor is working on that parent. The navigation waits
+ * A content created in a content folder that opens in the Page Builder without being a page or a main resource (a
+ * form) is what the editor works on next: once the Content Editor closes, land on it in the Page Builder, as New
+ * Page does for a page. A main resource stays on the list. Content created inside another content (an area, a
+ * form) stays where it is, the editor is working on that parent. The navigation waits
  * for the editor to close so that "create another" and the fullscreen redirect to edit mode keep their flow; with
  * several contents created in a row, the last one is the one opened.
  *
@@ -35,9 +36,10 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, parentNode, onCreate
 
         client.query({
             query: getIsVisuallyEditable,
-            variables: {uuid: newNode.uuid, visuallyEditableNodeType: JContentConstants.visuallyEditableNodeType}
+            variables: {uuid: newNode.uuid}
         }).then(({data}) => {
-            if (data?.jcr?.nodeById?.isVisuallyEditable) {
+            const node = data?.jcr?.nodeById;
+            if (node?.isVisuallyEditable && !node.isPageOrMainResource) {
                 dispatch(batchActions([
                     cmGoto({path: newNode.path}),
                     setTableViewMode(JContentConstants.tableView.viewMode.PAGE_BUILDER)

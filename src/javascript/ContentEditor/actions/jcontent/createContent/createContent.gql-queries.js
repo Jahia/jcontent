@@ -75,11 +75,12 @@ export const getNodeByPath = gql`
 `;
 
 export const getIsVisuallyEditable = gql`
-    query getIsVisuallyEditable($uuid: String!, $visuallyEditableNodeType: String!) {
+    query getIsVisuallyEditable($uuid: String!) {
         jcr {
             nodeById(uuid: $uuid) {
                 ...NodeCacheRequiredFields
-                isVisuallyEditable: isNodeType(type: {types: [$visuallyEditableNodeType]})
+                isVisuallyEditable: isNodeType(type: {types: ["jmix:visuallyEditable"]})
+                isPageOrMainResource: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
             }
         }
     }

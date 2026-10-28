@@ -22,12 +22,13 @@ const getFrameTemplateState = (node, canShowEditFrame, template) => {
 };
 
 // The template lives in the URL (state.jcontent.template) so that a reload keeps it; cmGoto resets it on every
-// navigation, so it is set again each time the Page Builder opens on such a node.
+// navigation, so it is set again each time the Page Builder opens on such a node. It replaces the history entry:
+// Back would otherwise return to the bare URL and be sent forward again.
 const useWrapperTemplate = (isPageBuilderView, isWrapperTemplateNeeded, template) => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (isPageBuilderView && isWrapperTemplateNeeded && template === '') {
-            dispatch(cmGoto({template: JContentConstants.contentTemplate}));
+            dispatch(cmGoto({template: JContentConstants.contentTemplate}, {replace: true}));
         }
     }, [dispatch, isPageBuilderView, isWrapperTemplateNeeded, template]);
 };
@@ -51,13 +52,13 @@ export const ContentRoute = () => {
         params: state.jcontent.params
     }), shallowEqual);
     const dispatch = useDispatch();
-    const {visuallyEditableNodeType} = JContentConstants;
-    const res = useNodeInfo({path}, {getIsNodeTypes: [visuallyEditableNodeType], getDisplayableNodePath: true});
+    const {pageBuilderNodeTypes} = JContentConstants;
+    const res = useNodeInfo({path}, {getIsNodeTypes: pageBuilderNodeTypes, getDisplayableNodePath: true});
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
-    const canShowEditFrame = Boolean(res?.node) && Boolean(res.node[visuallyEditableNodeType]) && !isOpenDialog;
+    const canShowEditFrame = Boolean(res?.node) && pageBuilderNodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
     const {isWrapperTemplateNeeded, isFrameTemplateReady} = getFrameTemplateState(res.node, canShowEditFrame, template);
     useWrapperTemplate(isPageBuilderView, isWrapperTemplateNeeded, template);
 

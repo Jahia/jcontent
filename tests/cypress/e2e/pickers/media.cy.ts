@@ -37,8 +37,10 @@ describe('Picker - Media - upload from inside the picker', () => {
     // Goes through the toolbar rather than a drag and drop: dropping onto an image picker is filtered
     // by mime type before the upload starts, while the toolbar accepts any file - which is how the
     // reported case arose in the first place.
-    const uploadFromToolbar = (fixture: string) => {
-        cy.get('[data-sel-role="upload"]').should('be.visible').click();
+    const uploadFromToolbar = (picker: Picker, fixture: string) => {
+        // The picker header renders jContent's own fileUpload action, so the button carries that
+        // action key. Scoped to the dialog, since the jContent toolbar underneath can carry it too.
+        picker.get().find('button[data-sel-role="fileUpload"]').should('be.visible').click();
         cy.get('#file-upload-input').selectFile(`cypress/fixtures/assets/uploadMedia/${fixture}`, {force: true});
         cy.get('[data-cm-role="upload-status-success"]', {timeout: 60000}).should('be.visible');
     };
@@ -48,7 +50,7 @@ describe('Picker - Media - upload from inside the picker', () => {
         // with the select button enabled, even though clicking that same row does nothing.
         const picker = openImagePicker();
 
-        uploadFromToolbar('myfile.pdf');
+        uploadFromToolbar(picker, 'myfile.pdf');
         picker.wait();
 
         // The picker does not offer it, and it did not select itself on the way in either.
@@ -61,7 +63,7 @@ describe('Picker - Media - upload from inside the picker', () => {
         // The convenience the gate has to leave intact.
         const picker = openImagePicker();
 
-        uploadFromToolbar('myfile2.png');
+        uploadFromToolbar(picker, 'myfile2.png');
         picker.wait();
 
         picker.getSelectionCaption().should('contain', 'myfile2.png');

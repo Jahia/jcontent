@@ -11,7 +11,8 @@ import {
     deleteUser,
     Dropdown,
     getComponentByRole,
-    grantRoles
+    grantRoles,
+    setNodeProperty
 } from '@jahia/cypress';
 import {DateField, ListBoxField} from '../../../page-object/fields';
 import {daysFrom} from '../../../utils/timeUtils';
@@ -1437,6 +1438,133 @@ describe('Visibility Screen', () => {
             cy.get('body').should('contain', 'test 1').and('contain', 'test 2').and('contain', 'test 3');
         });
     }); // End describe('Visibility Live Mode Tests')
+
+    // ---------------------------------------------------------------------------
+    // Language restrictions (j:invalidLanguages) in rendering: live in each
+    // language, preview, live search and the page of a restricted page.
+    // Set through the API: the tests above cover the Languages section itself.
+    // ---------------------------------------------------------------------------
+    describe('Language restrictions in rendering', () => {
+        const pageName = 'languageRenderingPage';
+        const pagePath = `/sites/${sitekeyI18n}/home/${pageName}`;
+        const restrictedPageName = 'englishOnlyPage';
+        const restrictedPagePath = `/sites/${sitekeyI18n}/home/${restrictedPageName}`;
+        // Each text carries a word of its own, so a live search finds only that content
+        const englishOnly = {en: 'Zephyrine english only', fr: 'Zephyrine anglais seulement'};
+        const frenchOnly = {en: 'Quartzite french only', fr: 'Quartzite français seulement'};
+        const everywhere = {en: 'Ubiquitous in every language', fr: 'Ubiquitous dans toutes les langues'};
+        const restrictedPageTitle = {en: 'Restricted page', fr: 'Page restreinte'};
+
+        const bigText = (name: string, text: {en: string; fr: string}, invalidLanguages: string[] = []) => ({
+            name,
+            primaryNodeType: 'jnt:bigText',
+            properties: [
+                {name: 'text', value: text.en, language: 'en'},
+                {name: 'text', value: text.fr, language: 'fr'},
+                ...(invalidLanguages.length > 0 ? [{name: 'j:invalidLanguages', values: invalidLanguages}] : [])
+            ]
+        });
+
+        const livePage = (language: string) => `/cms/render/live/${language}${pagePath}.html`;
+
+        // The number of results that the search-results page of the template set lists, in any UI language
+        const liveSearchHits = (language: string, term: string): Cypress.Chainable<number> => cy.request(
+            `/cms/render/live/${language}/sites/${sitekeyI18n}/home/search-results.html?jcrMethodToCall=get` +
+            `&src_originSiteKey=${sitekeyI18n}&src_terms%5B0%5D.term=${term}&src_terms%5B0%5D.applyFilter=true` +
+            `&src_terms%5B0%5D.match=all_words&src_terms%5B0%5D.fields.siteContent=true&src_sites.values=${sitekeyI18n}` +
+            `&src_languages.values=${language}`
+        ).then(response => (response.body.match(/class="inner-results"/g) ?? []).length);
+
+        before(() => {
+            addNode({
+                name: pageName,
+                parentPathOrId: `/sites/${sitekeyI18n}/home`,
+                primaryNodeType: 'jnt:page',
+                properties: [
+                    {name: 'jcr:title', value: 'Language rendering', language: 'en'},
+                    {name: 'jcr:title', value: 'Rendu des langues', language: 'fr'},
+                    {name: 'j:templateName', value: 'simple'}
+                ],
+                children: [{
+                    name: 'area-main',
+                    primaryNodeType: 'jnt:contentList',
+                    mixins: ['jmix:isAreaList'],
+                    children: [
+                        bigText('english-only', englishOnly, ['fr', 'de']),
+                        bigText('french-only', frenchOnly, ['en', 'de']),
+                        bigText('everywhere', everywhere)
+                    ]
+                }]
+            });
+            addNode({
+                name: restrictedPageName,
+                parentPathOrId: `/sites/${sitekeyI18n}/home`,
+                primaryNodeType: 'jnt:page',
+                properties: [
+                    {name: 'jcr:title', value: restrictedPageTitle.en, language: 'en'},
+                    {name: 'jcr:title', value: restrictedPageTitle.fr, language: 'fr'},
+                    {name: 'j:templateName', value: 'simple'},
+                    {name: 'j:invalidLanguages', values: ['fr', 'de']}
+                ]
+            });
+            // A page renders in live only in the languages it has a translation for, so give French to the home
+            // page and to the search-results page of the template set
+            setNodeProperty(`/sites/${sitekeyI18n}/home`, 'jcr:title', 'Accueil', 'fr');
+            setNodeProperty(`/sites/${sitekeyI18n}/home/search-results`, 'jcr:title', 'Résultats de recherche', 'fr');
+            publishAndWait(`/sites/${sitekeyI18n}/home`, ['en', 'fr']);
+        });
+
+        after(() => {
+            [pagePath, restrictedPagePath].forEach(path => {
+                deleteNode(path);
+                deleteNode(path, 'LIVE');
+            });
+        });
+
+        it('shows a content in live only in the languages it is allowed in', () => {
+            context.tag('content-editor', 'visibility', 'language', 'live');
+            cy.visit(livePage('en'));
+            cy.get('body').should('contain', everywhere.en).and('contain', englishOnly.en).and('not.contain', frenchOnly.en);
+
+            cy.visit(livePage('fr'));
+            cy.get('body').should('contain', everywhere.fr).and('contain', frenchOnly.fr).and('not.contain', englishOnly.fr);
+        });
+
+        it('hides a content in preview in a language it is not allowed in', () => {
+            context.tag('content-editor', 'visibility', 'language', 'preview');
+            cy.loginAndStoreSession();
+            cy.visit(`/cms/render/default/en${pagePath}.html`);
+            cy.get('body').should('contain', everywhere.en).and('contain', englishOnly.en).and('not.contain', frenchOnly.en);
+        });
+
+        it('does not find a content in live search in a language it is not allowed in', () => {
+            context.tag('content-editor', 'visibility', 'language', 'search');
+            // Live indexing follows the publication, so wait until the content of every language is found
+            ['en', 'fr'].forEach(language => {
+                cy.waitUntil(() => liveSearchHits(language, 'Ubiquitous').then(hits => hits > 0), {
+                    errorMsg: `The live index never returned the content shown in every language, in ${language}`,
+                    timeout: 60000,
+                    interval: 2000
+                });
+            });
+
+            liveSearchHits('en', 'Zephyrine').should('eq', 1);
+            liveSearchHits('en', 'Quartzite').should('eq', 0);
+            liveSearchHits('fr', 'Quartzite').should('eq', 1);
+            liveSearchHits('fr', 'Zephyrine').should('eq', 0);
+        });
+
+        it('answers 404 for a page in a language it is not allowed in, and leaves it out of the navigation', () => {
+            context.tag('content-editor', 'visibility', 'language', 'page', 'live');
+            cy.request({url: `/cms/render/live/en${restrictedPagePath}.html`}).its('status').should('eq', 200);
+            cy.request({url: `/cms/render/live/fr${restrictedPagePath}.html`, failOnStatusCode: false}).its('status').should('eq', 404);
+
+            cy.visit(`/cms/render/live/en/sites/${sitekeyI18n}/home.html`);
+            cy.get('body').should('contain', restrictedPageTitle.en);
+            cy.visit(`/cms/render/live/fr/sites/${sitekeyI18n}/home.html`);
+            cy.get('body').should('contain', 'Rendu des langues').and('not.contain', restrictedPageTitle.fr);
+        });
+    }); // End describe('Language restrictions in rendering')
 
     // ---------------------------------------------------------------------------
     // Visibility conditions on copied / referenced content, validated in Live mode

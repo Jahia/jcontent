@@ -369,7 +369,9 @@ describe('translator permissions', () => {
         const publicationButtons = '[data-sel-role="publishAction"], [data-sel-role="startWorkflowMainButton"]';
         const openContentEditor = (user?: {username: string; password: string}) => {
             cy.loginAndStoreSession(user?.username, user?.password);
-            JContent.visit(siteKey, 'en', 'content-folders/contents').editComponentByRowName(contentName);
+            // The page object opens Content Editor full screen, where the publication buttons show; the modal has
+            // none for any user. This user has no Edit entry in the menu of jContent, so a menu cannot open it.
+            ContentEditor.visit(`/sites/${siteKey}/contents/${contentName}`, siteKey, 'en', 'content-folders/contents');
             // The header buttons render with the form, so wait for it before asserting one is absent
             cy.get('[data-sel-role="submitSave"]').should('be.visible');
         };

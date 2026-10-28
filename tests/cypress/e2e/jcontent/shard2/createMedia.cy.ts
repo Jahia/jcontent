@@ -1,5 +1,6 @@
 import {ContentEditor, JContent} from '../../../page-object';
-import {addNode, context, createUser, deleteNode, deleteUser, grantRoles, publishAndWaitJobEnding} from '@jahia/cypress';
+import {addNode, context, createUser, deleteNode, deleteUser, getNodeByPath, grantRoles, publishAndWaitJobEnding} from '@jahia/cypress';
+import {Media} from '../../../page-object/media';
 import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
 
 describe('Create media tests', () => {
@@ -134,16 +135,12 @@ describe('Create media tests', () => {
         deleteNode(`/sites/${siteKey}/files/replaceTest`);
     });
 
-    it('Can create an image reference (jnt:imageReferenceLink) in content-folders', function () {
-        context.tag('jcontent', 'media', 'image-reference');
+    it('Can create an image reference (jnt:imageReferenceLink) with an image uploaded from the picker', function () {
+        context.tag('jcontent', 'media', 'image-reference', 'picker', 'upload');
         const imageName = 'myfile.png';
         nodesToDelete = [{path: `/sites/${siteKey}/contents/image-ref-link-test`}, {path: `/sites/${siteKey}/files/${imageName}`}];
 
         cy.loginAndStoreSession();
-        jcontent = JContent.visit(siteKey, 'en', 'media/files');
-        jcontent.getMedia().open().uploadFileViaDialog(imageName, 'assets/uploadMedia');
-
-        // Create an image reference link
         jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         const contentEditor = jcontent.createContent(contentTypes.imageReference.typeName);
         contentEditor.getSmallTextField('jnt:imageReferenceLink_jcr:title').addNewValue('imageRefLinkTest');
@@ -153,6 +150,9 @@ describe('Create media tests', () => {
             .getPickerField(contentTypes.imageReference.fieldNodeType, contentTypes.imageReference.multiple)
             .open();
         picker.getAccordionItem('picker-media').getTreeItem('files').click();
+        picker.get().find('button[data-sel-role="fileUpload"]').should('be.visible').click();
+        cy.get('input#file-upload-input[type="file"]').selectFile(`cypress/fixtures/assets/uploadMedia/${imageName}`, {force: true});
+        new Media(jcontent).waitForUploadToComplete();
         picker.getGrid().get().find(`div[data-sel-role-card="${imageName}"]`).dblclick({force: true});
 
         contentEditor
@@ -163,6 +163,10 @@ describe('Create media tests', () => {
         // Verify the created content now appears in the content-folders listing
         jcontent.switchToListMode();
         jcontent.getTable().getRowByName('image-ref-link-test');
+        getNodeByPath(`/sites/${siteKey}/contents/image-ref-link-test`, ['j:node']).then(result => {
+            const reference = result.data.jcr.nodeByPath.properties.find((property: {name: string}) => property.name === 'j:node');
+            expect(reference, 'reference to the uploaded image').to.exist;
+        });
     });
 
     it('Can replace a file using the "Replace with" action', function () {

@@ -1,4 +1,4 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650), FT-020 to FT-026.
+// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
 //
 // Each FT edits its own copy of the image: a confirmed save rewrites the file in place, so a shared
 // image would carry the size one FT saved into the next one.

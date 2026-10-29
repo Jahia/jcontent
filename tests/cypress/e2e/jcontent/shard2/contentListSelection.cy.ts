@@ -1,4 +1,4 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650), FT-012 to FT-017.
+// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
 
 import {addNode, context, createSite, createUser, deleteUser, grantRoles, uploadFile} from '@jahia/cypress';
 import {JContent} from '../../../page-object';

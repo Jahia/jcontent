@@ -1,6 +1,11 @@
 const JContentConstants = /** @type {const} */ ({
     namingInvalidCharactersRegexp: /[\\/:*?"'<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
+    // The types that open in the Page Builder. From Jahia 8.2.4.0 the marker mixin jmix:visuallyEditable is a
+    // supertype of jnt:page and jmix:mainResource; listing those two keeps the Page Builder on an older core
+    pageBuilderNodeTypes: ['jmix:visuallyEditable', 'jnt:page', 'jmix:mainResource'],
+    // The wrapper template the default module ships: renders any content as the one box of an otherwise empty page
+    contentTemplate: 'content-template',
     availablePublicationStatuses: {
         PUBLISHED: 'PUBLISHED',
         MODIFIED: 'MODIFIED',

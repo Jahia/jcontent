@@ -15,13 +15,16 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
     const isSearch = (mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH);
     const isPageBuilderMode = (viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER);
 
-    const showOnNodeTypes = ['jmix:mainResource'];
-    // The jmix:mainResource is a supertype-inherited mixin, so it never appears in the
-    // prefetched node's mixinTypes — the fast-path can't decide it, defer to useNodeChecks.
+    const showOnNodeTypes = JContentConstants.pageBuilderNodeTypes;
+    // A page opens in the Page Builder from the pages accordion, not through this action
+    const hideOnNodeTypes = ['jnt:page'];
+    // The mixins are supertype-inherited (pages, main resources), so they never appear in the
+    // prefetched node's mixinTypes — the fast-path can't decide them, defer to useNodeChecks.
 
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
         skip: isPageBuilderMode,
-        showOnNodeTypes
+        showOnNodeTypes,
+        hideOnNodeTypes
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;

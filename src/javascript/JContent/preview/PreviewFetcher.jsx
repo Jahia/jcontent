@@ -16,6 +16,8 @@ import {useContentPreview} from './useContentPreview';
  * fetch is made for the CSS source page (contextConfiguration='page') to extract
  * full template CSS (Bootstrap, fonts, theme). The page HTML output is passed to
  * IframeViewer as pageCssHtml so it can extract and inject <link> elements.
+ * previewContext.cssSourceView names the page template of that render (default: 'default');
+ * a content with no page of its own is rendered through the content-template wrapper.
  *
  * Props:
  *   previewContext     — built by buildCEPreviewContexts or buildPreviewContextsFromNode
@@ -43,7 +45,7 @@ export const PreviewFetcher = React.memo(({
         workspace: previewContext.workspace,
         language: previewContext.language,
         templateType: previewContext.templateType,
-        view: 'default',
+        view: previewContext.cssSourceView || 'default',
         contextConfiguration: 'page',
         fetchPolicy: 'cache-first',
         skip: !hasCssSource
@@ -89,6 +91,7 @@ PreviewFetcher.propTypes = {
         templateType: PropTypes.string,
         view: PropTypes.string,
         contextConfiguration: PropTypes.string,
+        cssSourceView: PropTypes.string,
         requestAttributes: PropTypes.array,
         requestParameters: PropTypes.array,
         mainResourcePath: PropTypes.string,

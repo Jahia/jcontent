@@ -12,6 +12,7 @@ import {useTranslation} from 'react-i18next';
 import {useContentEditorApiContext} from '~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context';
 import {JahiaRenderedModulesUtil} from '~/JContent/JContent.utils';
 import {useNamedChildPlaceholders} from './useNamedChildPlaceholders';
+import {useOpenInPageBuilderAfterCreate} from './useOpenInPageBuilderAfterCreate';
 
 export const CreateContent = ({
     contextNodePath,
@@ -24,6 +25,7 @@ export const CreateContent = ({
     hasBypassChildrenLimit,
     onCreate,
     onClosed,
+    isOpenInPageBuilderAfterCreate,
     isDisabled,
     onVisibilityChanged,
     render: Render,
@@ -50,6 +52,7 @@ export const CreateContent = ({
             getProperties: ['limit']
         }
     );
+    const {handleCreate, handleClosed} = useOpenInPageBuilderAfterCreate({isEnabled: isOpenInPageBuilderAfterCreate, parentNode: nodeInfo.node, onCreate, onClosed});
     const {loading: loadingPlaceholders, placeholders} = useNamedChildPlaceholders({path, language, skip: res.loading || !res.checksResult});
 
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];
@@ -134,9 +137,9 @@ export const CreateContent = ({
     const onClick = ({nodeTypesTree, createdNodeName}) => {
         // Presence of createdNodeName indicates that we create a named child for a specific nodetype
         if (createdNodeName) {
-            api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypes: nodeTypesTree, name: createdNodeName, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
+            api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypes: nodeTypesTree, name: createdNodeName, isFullscreen, createCallback: handleCreate, onClosedCallback: handleClosed});
         } else {
-            api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: onCreate, onClosedCallback: onClosed});
+            api.create({uuid: nodeInfo.node.uuid, lang: language, nodeTypesTree, name, isFullscreen, createCallback: handleCreate, onClosedCallback: handleClosed});
         }
     };
 
@@ -194,6 +197,7 @@ CreateContent.propTypes = {
     hasBypassChildrenLimit: PropTypes.bool,
     templateLimit: PropTypes.number,
     onCreate: PropTypes.func,
+    isOpenInPageBuilderAfterCreate: PropTypes.bool,
     onClosed: PropTypes.func,
     isDisabled: PropTypes.bool,
     render: PropTypes.func.isRequired,

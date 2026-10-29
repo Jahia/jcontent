@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useMutation, useQuery} from '@apollo/client';
 import {useSelector} from 'react-redux';
@@ -39,6 +39,8 @@ export const TagManagerDrawer = ({
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [editNodeTarget, setEditNodeTarget] = useState(null);
 
+    const headerRef = useRef(null);
+
     const [deleteTagOnNode] = useMutation(DELETE_TAG_ON_NODE);
     const [renameTagOnNode, updateNodeState] = useMutation(RENAME_TAG_ON_NODE);
 
@@ -61,6 +63,14 @@ export const TagManagerDrawer = ({
     useEffect(() => {
         setPage(0);
     }, [tag]);
+
+    // The close button takes focus when it mounts. A reopen during the exit animation finds it still mounted, so it is
+    // focused here, through the header: the moonstone Button forwards no ref before 2.21.1
+    useEffect(() => {
+        if (isOpen) {
+            headerRef.current?.querySelector('button')?.focus();
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         if (isOpen && !loading && totalCount === 0) {
@@ -240,7 +250,7 @@ export const TagManagerDrawer = ({
         <>
             <Drawer className={styles.drawerPaper} data-cm-role="tag-manager-drawer" isOpen={isOpen}>
                 <div className={styles.drawerRoot}>
-                    <div className={styles.drawerHeader}>
+                    <div ref={headerRef} className={styles.drawerHeader}>
                         <div className={styles.drawerHeaderInfo}>
                             <Typography variant="heading" weight="bold">
                                 {t('jcontent:label.contentManager.tagManager.drawer.title', {tag})}
@@ -249,7 +259,7 @@ export const TagManagerDrawer = ({
                                 {t('jcontent:label.contentManager.tagManager.drawer.subtitle', {count: totalCount})}
                             </Typography>
                         </div>
-                        <Button data-cm-role="tag-manager-close-drawer" variant="ghost" icon={<Close/>} onClick={onClose}/>
+                        <Button autoFocus data-cm-role="tag-manager-close-drawer" variant="ghost" icon={<Close/>} onClick={onClose}/>
                     </div>
 
                     {drawerContent}

@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {useQuery} from '@apollo/client';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeInfo} from '@jahia/data-helper';
@@ -22,6 +22,17 @@ export const TagManager = () => {
     );
 
     const [selectedTag, setSelectedTag] = useState(null);
+    const drawerOpenerRef = useRef(null);
+
+    const openDrawer = useCallback(tag => {
+        drawerOpenerRef.current = document.activeElement;
+        setSelectedTag(tag.name);
+    }, []);
+
+    const closeDrawer = useCallback(() => {
+        setSelectedTag(null);
+        drawerOpenerRef.current?.focus();
+    }, []);
 
     const {data, loading, error, refetch} = useQuery(GET_MANAGED_TAGS, {
         variables: {siteKey},
@@ -54,7 +65,7 @@ export const TagManager = () => {
                         sort={sort}
                         onSearchChange={setSearchTerm}
                         onSort={setSort}
-                        onView={tag => setSelectedTag(tag.name)}
+                        onView={openDrawer}
                         onTagRenamed={(oldName, newName) => {
                             if (selectedTag === oldName) {
                                 setSelectedTag(newName);
@@ -72,7 +83,7 @@ export const TagManager = () => {
                         siteKey={siteKey}
                         tag={selectedTag}
                         isOpen={Boolean(selectedTag)}
-                        onClose={() => setSelectedTag(null)}
+                        onClose={closeDrawer}
                         onMutationComplete={refetch}
                     />
                 </div>

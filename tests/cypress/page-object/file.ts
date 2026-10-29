@@ -85,6 +85,13 @@ export class File extends BasePage {
         return this;
     }
 
+    replaceWith(fileName: string, fixtureSubFolder = '.'): File {
+        this.getGridCard().contextMenu().selectByRole('replaceFile');
+        cy.get('input#file-upload-input[type="file"]').selectFile(`cypress/fixtures/${fixtureSubFolder}/${fileName}`, {force: true});
+        this.media.waitForUploadToComplete();
+        return this;
+    }
+
     markForDeletion(): File {
         this.getGridCard().contextMenu().selectByRole('delete');
         cy.get('[data-sel-role="delete-mark-button"]').click();

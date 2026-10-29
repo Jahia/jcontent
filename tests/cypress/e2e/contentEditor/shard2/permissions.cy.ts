@@ -6,10 +6,10 @@ import {
     addNode,
     addPage,
     breakAclInheritance,
+    context,
     createRole,
     createSite,
     createUser,
-    deleteNode,
     deleteRole,
     deleteSite,
     deleteUser,
@@ -18,35 +18,36 @@ import {
 } from '@jahia/cypress';
 
 describe('permissions', () => {
+    const siteKey = 'editorPermsSite';
+    const editorLogin = {username: 'editorUser', password: 'password'};
     let jcontent: JContent;
     let contentEditor;
 
     before(() => {
-        cy.apollo({mutation: gql`
-                mutation createContent {
-                    jcr {
-                        mutateNode(pathOrId: "/sites/digitall/contents") {
-                            addChild(name: "test", primaryNodeType: "jnt:bigText") {
-                                grantRoles(principalName: "bill", principalType:USER, roleNames: "editor")
-                                mutateChildren(names: "j:acl") {
-                                    mutateProperty(name: "j:inherit") {
-                                        setValue(value: "false")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            `});
+        createSite(siteKey, {
+            languages: 'en',
+            templateSet: 'dx-base-demo-templates',
+            serverName: 'localhost',
+            locale: 'en'
+        });
+        createUser(editorLogin.username, editorLogin.password);
+        grantRoles(`/sites/${siteKey}`, ['editor'], editorLogin.username, 'USER');
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            primaryNodeType: 'jnt:bigText',
+            name: 'test'
+        });
     });
 
     after(() => {
-        deleteNode('/sites/digitall/contents/test');
+        cy.logout();
+        deleteSite(siteKey);
+        deleteUser(editorLogin.username);
     });
 
     it('can edit rich text with editor', function () {
-        cy.loginAndStoreSession('bill', 'password');
-        jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
+        cy.loginAndStoreSession(editorLogin.username, editorLogin.password);
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         contentEditor = jcontent.editComponentByText('test');
         const richText = contentEditor.getField(RichTextField, 'jnt:bigText_text');
         richText.type('test');
@@ -295,6 +296,11 @@ describe('translator permissions', () => {
     const siteKey = 'translatorPermsSite';
     const translatorLogin = {username: 'frTranslator', password: 'password'};
 
+    // Copy translator role (with the "publication-start" permission removed) and its user
+    const grantedRole = 'translator-copy-translator-en';
+    const translatorCopyUser = {username: 'translatorCopyUser', password: 'password'};
+    const contentName = 'translatorCopyPublicationTest';
+
     before(() => {
         createSite(siteKey, {
             languages: 'en,fr',
@@ -304,10 +310,20 @@ describe('translator permissions', () => {
         });
         createUser(translatorLogin.username, translatorLogin.password);
         grantRoles(`/sites/${siteKey}`, ['translator-fr'], translatorLogin.username, 'USER');
+        createUser(translatorCopyUser.username, translatorCopyUser.password);
+
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            primaryNodeType: 'jnt:bigText',
+            name: contentName,
+            properties: [{name: 'text', value: 'Publication permission test', language: 'en'}]
+        });
     });
 
     after(() => {
         cy.logout();
+        cy.executeGroovy('contentEditor/permissions/deleteTranslatorCopyRole.groovy');
+        deleteUser(translatorCopyUser.username);
         deleteSite(siteKey);
         deleteUser(translatorLogin.username);
     });
@@ -334,5 +350,38 @@ describe('translator permissions', () => {
             expect(titleProp.value).to.eq('Accueil traduit');
         });
     });
-});
 
+    it('should not allow a translator with no publication rights to publish content', () => {
+        context.tag('content-editor', 'permissions', 'translator', 'publication');
+        // Copy the translator role and grant the copied English sub-role to the test user here
+        // (not in before) so the copy cannot affect the real translator-fr role used above.
+        cy.executeGroovy('contentEditor/permissions/copyTranslatorRoleWithoutPublication.groovy');
+        grantRoles(`/sites/${siteKey}`, [grantedRole], translatorCopyUser.username, 'USER');
+
+        // The copied role and its grantable English sub-role should have been created
+        getNodeByPath('/roles/translator-copy', [], undefined, ['jnt:role']).then(result => {
+            const role = result.data.jcr.nodeByPath;
+            expect(role, 'translator-copy role').to.not.be.null;
+            const subRoleNames = role.children.nodes.map((node: {name: string}) => node.name);
+            expect(subRoleNames, 'copied sub-roles').to.include(grantedRole);
+        });
+
+        const publicationButtons = '[data-sel-role="publishAction"], [data-sel-role="startWorkflowMainButton"]';
+        const openContentEditor = (user?: {username: string; password: string}) => {
+            cy.loginAndStoreSession(user?.username, user?.password);
+            // The page object opens Content Editor full screen, where the publication buttons show; the modal has
+            // none for any user. This user has no Edit entry in the menu of jContent, so a menu cannot open it.
+            ContentEditor.visit(`/sites/${siteKey}/contents/${contentName}`, siteKey, 'en', 'content-folders/contents');
+            // The header buttons render with the form, so wait for it before asserting one is absent
+            cy.get('[data-sel-role="submitSave"]').should('be.visible');
+        };
+
+        // Positive control: a user with publication rights is offered a publication button
+        openContentEditor();
+        cy.get(publicationButtons).should('exist');
+
+        // The translator-copy user is offered none
+        openContentEditor(translatorCopyUser);
+        cy.get(publicationButtons).should('not.exist');
+    });
+});

@@ -1,11 +1,15 @@
 import {ContentEditor, JContent} from '../../../page-object';
-import {addNode, createUser, deleteNode, deleteUser, grantRoles} from '@jahia/cypress';
+import {addNode, context, createUser, deleteNode, deleteUser, getNodeByPath, grantRoles, publishAndWaitJobEnding} from '@jahia/cypress';
+import {Media} from '../../../page-object/media';
+import {contentTypes} from '../../../fixtures/contentEditor/pickers/contentTypes';
 
 describe('Create media tests', () => {
     let jcontent: JContent;
 
     const siteKey = 'jcontentSite';
     const user = {name: 'editoruser', password: 'password'};
+    // The nodes a test creates, deleted after it even when it fails
+    let nodesToDelete: {path: string; workspace?: 'EDIT' | 'LIVE'}[] = [];
 
     before(function () {
         cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: siteKey});
@@ -26,6 +30,8 @@ describe('Create media tests', () => {
     });
 
     afterEach(() => {
+        nodesToDelete.forEach(({path, workspace}) => deleteNode(path, workspace));
+        nodesToDelete = [];
         cy.logout();
     });
 
@@ -127,5 +133,70 @@ describe('Create media tests', () => {
 
         // Clean up
         deleteNode(`/sites/${siteKey}/files/replaceTest`);
+    });
+
+    it('Can create an image reference (jnt:imageReferenceLink) with an image uploaded from the picker', function () {
+        context.tag('jcontent', 'media', 'image-reference', 'picker', 'upload');
+        const imageName = 'myfile.png';
+        nodesToDelete = [{path: `/sites/${siteKey}/contents/image-ref-link-test`}, {path: `/sites/${siteKey}/files/${imageName}`}];
+
+        cy.loginAndStoreSession();
+        jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const contentEditor = jcontent.createContent(contentTypes.imageReference.typeName);
+        contentEditor.getSmallTextField('jnt:imageReferenceLink_jcr:title').addNewValue('imageRefLinkTest');
+        contentEditor.getSmallTextField('nt:base_ce:systemName').addNewValue('image-ref-link-test');
+
+        const picker = contentEditor
+            .getPickerField(contentTypes.imageReference.fieldNodeType, contentTypes.imageReference.multiple)
+            .open();
+        picker.getAccordionItem('picker-media').getTreeItem('files').click();
+        picker.get().find('button[data-sel-role="fileUpload"]').should('be.visible').click();
+        cy.get('input#file-upload-input[type="file"]').selectFile(`cypress/fixtures/assets/uploadMedia/${imageName}`, {force: true});
+        new Media(jcontent).waitForUploadToComplete();
+        picker.getGrid().get().find(`div[data-sel-role-card="${imageName}"]`).dblclick({force: true});
+
+        contentEditor
+            .getPickerField(contentTypes.imageReference.fieldNodeType, contentTypes.imageReference.multiple)
+            .assertValue('myfile.png');
+        contentEditor.create();
+
+        // Verify the created content now appears in the content-folders listing
+        jcontent.switchToListMode();
+        jcontent.getTable().getRowByName('image-ref-link-test');
+        getNodeByPath(`/sites/${siteKey}/contents/image-ref-link-test`, ['j:node']).then(result => {
+            const reference = result.data.jcr.nodeByPath.properties.find((property: {name: string}) => property.name === 'j:node');
+            expect(reference, 'reference to the uploaded image').to.exist;
+        });
+    });
+
+    it('Can replace a file using the "Replace with" action', function () {
+        context.tag('jcontent', 'media', 'file', 'replace');
+        const fileName = 'myfile.png';
+        const folderPath = `/sites/${siteKey}/files/replaceWithTest`;
+        nodesToDelete = [{path: folderPath}, {path: folderPath, workspace: 'LIVE'}];
+
+        cy.loginAndStoreSession();
+        jcontent = JContent.visit(siteKey, 'en', 'media/files');
+        const media = jcontent.getMedia().open();
+
+        // Create a dedicated folder and navigate into it
+        media.createFolder('media/files', 'replaceWithTest').visitFolder();
+
+        // Upload the initial image
+        const file = media.uploadFileViaDialog(fileName, 'assets/uploadMedia');
+
+        // Publish it, so that the replace shows as an unpublished modification
+        publishAndWaitJobEnding(folderPath);
+        cy.reload();
+        jcontent.getGrid().getCardByName(fileName).get().find('[data-status-type="published"]').should('exist');
+
+        // Replace its content with a different file via the "Replace with" action
+        file.replaceWith('myfile2.png', 'assets/uploadMedia');
+
+        // The node keeps its original name, no new node is created, and the file is now modified
+        jcontent.getGrid().getCardByName(fileName).get().should('be.visible');
+        cy.get('[data-cm-role="grid-content-list-card"][data-sel-role-card="myfile2.png"]').should('not.exist');
+        cy.get('[data-cm-role="grid-content-list-card"]').should('have.length', 1);
+        jcontent.getGrid().getCardByName(fileName).get().find('[data-status-type="modified"]').should('exist');
     });
 });

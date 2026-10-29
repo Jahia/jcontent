@@ -37,7 +37,7 @@ describe('Export as XML and import of an unsupported file', () => {
         cy.logout();
     });
 
-    it('FT-018: Export of a content as XML', () => {
+    it('Export of a content as XML', () => {
         context.tag('jcontent', 'import-export', 'export-xml');
         cy.login(editor.username, editor.password);
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
@@ -52,7 +52,7 @@ describe('Export as XML and import of an unsupported file', () => {
             .and('contain', contentText);
     });
 
-    it('FT-019: Import of an unsupported file is refused', () => {
+    it('Import of an unsupported file is refused', () => {
         context.tag('jcontent', 'import-export', 'import-invalid');
         cy.login(editor.username, editor.password);
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');

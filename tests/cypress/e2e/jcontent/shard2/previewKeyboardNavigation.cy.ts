@@ -37,7 +37,7 @@ describe('Keyboard navigation of the preview', () => {
         cy.loginAndStoreSession();
     });
 
-    it('FT-029: Arrow keys move the preview in grid view', () => {
+    it('Arrow keys move the preview in grid view', () => {
         context.tag('jcontent', 'keyboard-navigation', 'arrows-grid');
         const jcontent = JContent.visit(siteKey, 'en', `media/files/${folder}`);
         jcontent.switchToThumbnails();
@@ -62,7 +62,7 @@ describe('Keyboard navigation of the preview', () => {
         });
     });
 
-    it.skip('FT-030: Arrow keys move the preview in list view', () => {
+    it.skip('Arrow keys move the preview in list view', () => {
         // TODO(qa-migration): ContentTable.jsx does not pass `index` to Row, so a row click stores an undefined selected index and every arrow key computes NaN.
         context.tag('jcontent', 'keyboard-navigation', 'arrows-list');
         const jcontent = JContent.visit(siteKey, 'en', `media/files/${folder}`);

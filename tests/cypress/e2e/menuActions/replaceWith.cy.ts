@@ -48,14 +48,14 @@ describe('Replace a file with another one', () => {
         cy.logout();
     });
 
-    it('FT-027: The context menu of a file offers Replace with', () => {
+    it('The context menu of a file offers Replace with', () => {
         context.tag('jcontent', 'upload', 'replace-with-menu');
         const jcontent = visitFolder();
 
         jcontent.getGrid().getCardByName(fileName).contextMenu().shouldHaveRoleItem('replaceFile');
     });
 
-    it('FT-028: Replacing a file uploads a new version in place', () => {
+    it('Replacing a file uploads a new version in place', () => {
         context.tag('jcontent', 'upload', 'replace-new-version');
         const jcontent = visitFolder();
         const grid = jcontent.getGrid();

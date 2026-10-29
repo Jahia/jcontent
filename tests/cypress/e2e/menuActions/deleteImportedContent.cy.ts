@@ -44,7 +44,7 @@ describe('Delete content that came in through an import', {testIsolation: false}
         cy.logout();
     });
 
-    it('FT-031: Imported content in a new folder offers Delete', () => {
+    it('Imported content in a new folder offers Delete', () => {
         context.tag('jcontent', 'import-delete', 'delete-menu');
         jcontent.getTable().getRowByName(importedFolder).dblclick();
         const contentRow = jcontent.getTable().getRowByName(importedContent);
@@ -60,7 +60,7 @@ describe('Delete content that came in through an import', {testIsolation: false}
     });
 
     describe('once the imported folder is offered for deletion', () => {
-        it('FT-032: An imported folder can be deleted permanently', () => {
+        it('An imported folder can be deleted permanently', () => {
             context.tag('jcontent', 'import-delete', 'delete-permanently');
             jcontent.getTable().getRowByName(importedFolder).markForDeletion().deletePermanently();
 

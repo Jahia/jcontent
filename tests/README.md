@@ -24,4 +24,4 @@ Trigger `Publish tests module to NPM registry` workflow [here](https://github.co
 
 ### Tags on migrated specs
 
-A spec migrated from a legacy Selenium class tags each test with `context.tag(...)` from `@jahia/cypress`, using the tags of its functional test in the tracking issue on `Jahia/selenium`. The test's title starts with that functional test's id, such as `FT-012`. A spec written directly in Cypress carries no tags, so the suite is deliberately part tagged.
+A spec migrated from a legacy Selenium class tags each test with `context.tag(...)` from `@jahia/cypress`, using the tags of its functional test in the tracking issue on `Jahia/selenium`. A spec written directly in Cypress carries no tags, so the suite is deliberately part tagged.

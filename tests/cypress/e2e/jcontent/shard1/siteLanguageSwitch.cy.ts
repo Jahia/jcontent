@@ -66,7 +66,7 @@ describe('Site and language switchers with the content editor', () => {
         cy.loginAndStoreSession();
     });
 
-    it('FT-001: Content editor lists the site languages', () => {
+    it('Content editor lists the site languages', () => {
         context.tag('jcontent', 'content-editor', 'language-list');
 
         openHomeInContentEditor();
@@ -74,7 +74,7 @@ describe('Site and language switchers with the content editor', () => {
         checkEditorLanguages();
     });
 
-    it('FT-002: Switching to System Site opens its content folders', () => {
+    it('Switching to System Site opens its content folders', () => {
         context.tag('jcontent', 'site-switcher', 'system-site');
         const jcontent = JContent.visit(siteKey, 'en', 'pages/home');
 
@@ -84,7 +84,7 @@ describe('Site and language switchers with the content editor', () => {
         cy.get('.moonstone-header h1').should('contain', 'contents');
     });
 
-    it('FT-003: A language missing on the target site falls back on site switch', () => {
+    it('A language missing on the target site falls back on site switch', () => {
         context.tag('jcontent', 'site-switcher', 'language-fallback');
         const jcontent = JContent.visit('systemsite', 'es', 'content-folders/contents');
         jcontent.getLanguageSwitcher().get().find('.moonstone-pill').should('have.text', 'es');
@@ -97,7 +97,7 @@ describe('Site and language switchers with the content editor', () => {
         checkContentViewLoaded();
     });
 
-    it('FT-004: The content editor edits the node of the switched-to site', () => {
+    it('The content editor edits the node of the switched-to site', () => {
         context.tag('jcontent', 'content-editor', 'site-switch-path');
         const jcontent = JContent.visit('systemsite', 'en', 'content-folders/contents');
         switchToTestSiteAndOpenHome(jcontent);
@@ -110,7 +110,7 @@ describe('Site and language switchers with the content editor', () => {
         checkEditorLanguages();
     });
 
-    it('FT-005: A language chosen on another site carries over on site switch', () => {
+    it('A language chosen on another site carries over on site switch', () => {
         context.tag('jcontent', 'site-switcher', 'language-carry-over');
         const jcontent = JContent.visit('systemsite', 'de', 'content-folders/contents');
         jcontent.getLanguageSwitcher().get().find('.moonstone-pill').should('have.text', 'de');

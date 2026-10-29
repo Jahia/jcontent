@@ -78,7 +78,7 @@ describe('Image editor', () => {
         removeFixtures();
     });
 
-    it('FT-020: The image editor opens on the selected image', () => {
+    it('The image editor opens on the selected image', () => {
         context.tag('jcontent', 'image-editor', 'open-editor');
 
         openImageEditor(images.open);
@@ -89,7 +89,7 @@ describe('Image editor', () => {
             .and('contain', filePath(images.open));
     });
 
-    it('FT-021: Rotation changes the preview and undo restores it', () => {
+    it('Rotation changes the preview and undo restores it', () => {
         context.tag('jcontent', 'image-editor', 'rotate-undo');
         openImageEditor(images.rotate);
         waitForImageSize(original.width, original.height);
@@ -105,7 +105,7 @@ describe('Image editor', () => {
         cy.get('img[data-cm-role="preview-image"]').should('have.css', 'transform', identity);
     });
 
-    it('FT-022: Resize keeps the ratio by default', () => {
+    it('Resize keeps the ratio by default', () => {
         context.tag('jcontent', 'image-editor', 'resize-ratio');
         openImageEditor(images.resizeRatio);
         waitForImageSize(original.width, original.height);
@@ -125,7 +125,7 @@ describe('Image editor', () => {
         waitForImageSize(width, height);
     });
 
-    it('FT-023: Resize with the ratio unlocked keeps the height', () => {
+    it('Resize with the ratio unlocked keeps the height', () => {
         context.tag('jcontent', 'image-editor', 'resize-free');
         openImageEditor(images.resizeFree);
         waitForImageSize(original.width, original.height);
@@ -144,7 +144,7 @@ describe('Image editor', () => {
         waitForImageSize(width, original.height);
     });
 
-    it('FT-024: The crop panel shows the original dimensions', () => {
+    it('The crop panel shows the original dimensions', () => {
         context.tag('jcontent', 'image-editor', 'crop-dimensions');
         openImageEditor(images.cropDimensions);
 
@@ -158,7 +158,7 @@ describe('Image editor', () => {
         waitForImageSize(original.width, original.height);
     });
 
-    it('FT-025: Changing the crop width draws a crop selection', () => {
+    it('Changing the crop width draws a crop selection', () => {
         context.tag('jcontent', 'image-editor', 'crop-selection');
         openImageEditor(images.cropSelection);
         waitForImageSize(original.width, original.height);
@@ -177,7 +177,7 @@ describe('Image editor', () => {
         cy.get('.ReactCrop__crop-selection').should('be.visible');
     });
 
-    it('FT-026: Save as creates a cropped copy', () => {
+    it('Save as creates a cropped copy', () => {
         context.tag('jcontent', 'image-editor', 'crop-save-as');
         const jcontent = openImageEditor(images.cropSaveAs);
         waitForImageSize(original.width, original.height);

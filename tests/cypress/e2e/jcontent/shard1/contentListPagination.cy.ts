@@ -64,7 +64,7 @@ describe('Content list pagination', () => {
         cy.loginAndStoreSession(editor.username, editor.password);
     });
 
-    it('FT-033: Pagination at 10 rows splits the list', () => {
+    it('Pagination at 10 rows splits the list', () => {
         context.tag('jcontent', 'pagination', 'page-split');
         openHomeList();
         cy.get(rowSelector).should('have.length', contentCount);
@@ -78,7 +78,7 @@ describe('Content list pagination', () => {
         cy.get(rowSelector).should('have.length', contentCount - 20);
     });
 
-    it('FT-034: A larger page size shows the whole list', () => {
+    it('A larger page size shows the whole list', () => {
         context.tag('jcontent', 'pagination', 'page-size');
         openHomeList();
         setRowsPerPage(10);

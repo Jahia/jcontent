@@ -77,7 +77,7 @@ describe('Content list selection', () => {
         cy.loginAndStoreSession(editor.username, editor.password);
     });
 
-    it('FT-012: Selecting rows shows the selection count', () => {
+    it('Selecting rows shows the selection count', () => {
         context.tag('jcontent', 'multiple-selection', 'selection-count');
         const table = openHomeList().getTable();
 
@@ -89,7 +89,7 @@ describe('Content list selection', () => {
         getSelectionInfo().should('contain', '2 items selected');
     });
 
-    it('FT-013: Row actions are hidden while several rows are selected', () => {
+    it('Row actions are hidden while several rows are selected', () => {
         context.tag('jcontent', 'multiple-selection', 'hover-actions');
         const table = openHomeList().getTable();
         // Without a selection, the row carries its actions
@@ -106,7 +106,7 @@ describe('Content list selection', () => {
             .should('not.exist');
     });
 
-    it('FT-014: Select all toggles the whole list', () => {
+    it('Select all toggles the whole list', () => {
         context.tag('jcontent', 'multiple-selection', 'select-all');
         openHomeList();
         getSelectionInfo().should('not.exist');
@@ -121,7 +121,7 @@ describe('Content list selection', () => {
         getSelectionInfo().should('not.exist');
     });
 
-    it('FT-015: Changing page clears the selection', () => {
+    it('Changing page clears the selection', () => {
         context.tag('jcontent', 'multiple-selection', 'pagination-clears');
         const jcontent = openHomeList();
         cy.get('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
@@ -135,7 +135,7 @@ describe('Content list selection', () => {
         getSelectionInfo().should('not.exist');
     });
 
-    it('FT-016: The multi-selection context menu hides single-item actions', () => {
+    it('The multi-selection context menu hides single-item actions', () => {
         context.tag('jcontent', 'multiple-selection', 'context-menu-multi');
         const jcontent = openImagesList();
         jcontent.getTable().selectRowByName(images[0]);
@@ -147,7 +147,7 @@ describe('Content list selection', () => {
         menu.get().find('[data-sel-role="edit"]').should('not.exist');
     });
 
-    it('FT-017: The single-item context menu offers Edit again', () => {
+    it('The single-item context menu offers Edit again', () => {
         context.tag('jcontent', 'multiple-selection', 'context-menu-single');
         const jcontent = openImagesList();
         jcontent.getTable().selectRowByName(images[0]);

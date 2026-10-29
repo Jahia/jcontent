@@ -21,7 +21,8 @@ export const Row = ({
     tableConfig,
     index,
     virtualizer,
-    virtualRow
+    virtualRow,
+    revealPath
 }) => {
     const rowProps = row.getRowProps();
     const node = row.original;
@@ -30,7 +31,11 @@ export const Row = ({
     const contextualMenu = useRef();
 
     const ref = useRef(null);
-    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: node});
+    const [{isCanDrop}, drop] = useNodeDrop({
+        dropTarget: node,
+        expandTargetOnDrop: booleanValue(tableConfig.dnd?.expandTargetOnDrop),
+        recordUndo: booleanValue(tableConfig.dnd?.recordUndo)
+    });
     const [{isCanDrop: isCanDropFile}, dropFile] = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path});
     const [{dragging}, drag] = useNodeDrag({dragSource: node});
 
@@ -52,6 +57,15 @@ export const Row = ({
         contextualMenu.current(event);
     };
 
+    // Navigating makes the row the current node (header, breadcrumb, "create under" actions).
+    // Accordions that are managed entirely from the main panel opt into doing it on a single
+    // click, the expander and the selection checkbox stop propagation so they are unaffected.
+    const navigateToRow = allowDoubleClickNavigation(
+        node.primaryNodeType.name,
+        node.subNodes ? node.subNodes.pageInfo.totalCount : null,
+        () => doubleClickNavigation(node)
+    );
+
     let contextualMenuActionKey = tableConfig.contextualMenu ?? 'contentItemContextActionsMenu';
     if (selection.length > 0) {
         contextualMenuActionKey = selection.includes(node.path) ? 'selectedContentMenu' : 'notSelectedContentMenu';
@@ -69,9 +83,13 @@ export const Row = ({
                   }}
                   data-cm-role="table-content-list-row"
                   data-node-name={node.name}
-                  className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
+                  className={clsx(css.tableRow, revealPath === node.path && css.revealedRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isPreviewSelected}
                   onClick={() => {
+                      if (booleanValue(tableConfig.selectOnSingleClick)) {
+                          navigateToRow();
+                      }
+
                       if (isPreviewOpened && !node.notSelectableForPreview) {
                           setSelectedItemIndex(index);
                           onPreviewSelect(node.path);
@@ -81,11 +99,7 @@ export const Row = ({
                       event.stopPropagation();
                       openContextualMenu(event);
                   }}
-                  onDoubleClick={allowDoubleClickNavigation(
-                      node.primaryNodeType.name,
-                      node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                      () => doubleClickNavigation(node)
-                  )}
+                  onDoubleClick={navigateToRow}
         >
             <ContextualMenu
                 setOpenRef={contextualMenu}
@@ -110,12 +124,17 @@ Row.propTypes = {
     doubleClickNavigation: PropTypes.func,
     tableConfig: PropTypes.shape({
         contextualMenu: PropTypes.string,
+        selectOnSingleClick: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
         dnd: PropTypes.shape({
             canDrag: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
             canDrop: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-            canDropFile: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
+            canDropFile: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+            expandTargetOnDrop: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+            recordUndo: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
         })
     }).isRequired,
+    revealPath: PropTypes.string,
+
     index: PropTypes.number,
     virtualizer: PropTypes.object.isRequired,
     virtualRow: PropTypes.object.isRequired

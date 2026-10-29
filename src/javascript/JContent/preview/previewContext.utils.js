@@ -1,3 +1,20 @@
+import {isMarkedForDeletion} from '~/JContent/JContent.utils';
+
+/**
+ * Asks the render chain to render content that is marked for deletion rather than replace it.
+ *
+ * Marking content for deletion does not delete it - it stays, and stays readable, until the
+ * deletion is published or undone - but Jahia's MarkedForDeletionFilter answers every such node in
+ * preview mode, and for anything smaller than a page it answers with NOTHING. In this panel that
+ * is a blank pane where the content should be, which reads as the preview being broken rather than
+ * as a decision having been taken.
+ *
+ * The filter takes this attribute as "render it anyway", which is opt-in: it grants no access of
+ * its own, the node having already been read and its permissions checked before the chain runs.
+ * It is the name the filter publishes, as a string because that is what the render API carries.
+ */
+const PREVIEW_MARKED_FOR_DELETION = 'previewMarkedForDeletion';
+
 /**
  * Shared helper for in-context module render with page CSS injection.
  * Used for both the main-resource in-context strategy and as the sub-component fallback.
@@ -50,6 +67,16 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     const base = {workspace: 'edit', templateType: 'html', language};
     const extraParams = requestParameters.length > 0 ? {requestParameters} : {};
     const cePreviewAttr = isCEPreview ? [{name: 'ce_preview', value: node.uuid}] : undefined;
+    // Carried by every strategy below, because which one is chosen says nothing about whether the
+    // node is marked for deletion. See PREVIEW_MARKED_FOR_DELETION.
+    const commonAttributes = [
+        ...(cePreviewAttr || []),
+        ...(isMarkedForDeletion(node) ? [{name: PREVIEW_MARKED_FOR_DELETION, value: 'true'}] : [])
+    ];
+    const commonAttributesEntry = commonAttributes.length > 0 ? {requestAttributes: commonAttributes} : {};
+    // Folded into the base the in-context strategies are built from, so the FALLBACK carries them
+    // too: a fallback that comes back blank is the same empty pane by another route.
+    const inContextBase = {...base, ...commonAttributesEntry};
 
     // ClosestPage signals in-context rendering: the node is rendered within a known hosting page.
     // Absent closestPage → out-of-context: the node renders standalone, without a page surround.
@@ -58,8 +85,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
             // Main-resource in page context: module render with page CSS.
             return {
                 primary: {
-                    ...buildInContextModuleContext(node, closestPage, jView, base),
-                    ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
+                    ...buildInContextModuleContext(node, closestPage, jView, inContextBase),
                     ...extraParams
                 },
                 fallback: null
@@ -75,12 +101,12 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
                 view: closestPage.view || 'default',
                 contextConfiguration: 'page',
                 requestAttributes: [
-                    ...(cePreviewAttr || []),
+                    ...commonAttributes,
                     {name: 'preview_wrapper', value: node.path}
                 ],
                 ...extraParams
             },
-            fallback: buildInContextModuleContext(node, closestPage, jView, base)
+            fallback: buildInContextModuleContext(node, closestPage, jView, inContextBase)
         };
     }
 
@@ -99,7 +125,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
                 // fail resolution, so pass "default" and let core honour j:templateName instead.
                 view: 'default',
                 contextConfiguration: 'page',
-                ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
+                ...commonAttributesEntry,
                 ...extraParams
             },
             fallback: null
@@ -117,7 +143,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
             view: null,
             contextConfiguration: 'module',
             ...(cssSourcePath && {cssSourcePath}),
-            ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
+            ...commonAttributesEntry,
             ...extraParams
         },
         fallback: null

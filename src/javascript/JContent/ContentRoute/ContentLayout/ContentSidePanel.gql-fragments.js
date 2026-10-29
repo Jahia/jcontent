@@ -19,6 +19,11 @@ export const ContentSidePanelNodeFragment = gql`
         primaryNodeType {
             name
         }
+        # Read by the preview, which asks the render chain for content marked for deletion rather
+        # than letting it come back blank. See buildPreviewContexts.
+        mixinTypes {
+            name
+        }
         ...NodePreviewFields
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}

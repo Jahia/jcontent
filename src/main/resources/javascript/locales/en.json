@@ -885,7 +885,9 @@
           "details": "Details",
           "off": "Off"
         },
-        "updateOnSave": "Preview will update on save"
+        "updateOnSave": "Preview will update on save",
+        "unsavedChanges": "Preview shows unsaved changes",
+        "couldNotUpdate": "Preview could not update — check the form for invalid values"
       },
       "sidePanel": {
         "details": "Details",

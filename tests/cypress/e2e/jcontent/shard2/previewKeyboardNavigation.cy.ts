@@ -61,7 +61,7 @@ describe('Keyboard navigation of the preview', () => {
     });
 
     it.skip('Arrow keys move the preview in list view', () => {
-        // TODO(https://github.com/Jahia/jcontent/issues/2924): ContentTable.jsx does not pass `index` to Row, so a row click stores an undefined selected index and every arrow key computes NaN.
+        // TODO: reactivate when https://github.com/Jahia/jcontent/issues/2924 is fixed
         context.tag('jcontent', 'keyboard-navigation', 'arrows-list');
         const jcontent = JContent.visit(siteKey, 'en', `media/files/${folder}`);
         jcontent.switchToListMode();

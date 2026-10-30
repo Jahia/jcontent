@@ -1,5 +1,21 @@
 # @jahia/jcontent Changelog
 
+## 3.10.0
+
+### New Features
+
+* Added a `leadingAction` prop to `FormBuilder`, so a module rendering its own Content Editor form can show an action before each field, and exposed `adaptSections`, `adaptPropertyValue` and `fieldValueHasChanged` for such forms.
+
+### Bug Fixes
+
+* The image picker now only offers images a browser can actually display. Formats such as TIFF or PSD, which the repository counts as images but no browser renders, are no longer listed or searchable there, so an image field cannot be pointed at one and end up as a broken image on the page.
+
+* A file uploaded from inside a picker is only selected if the picker accepts it: uploading a PDF from an image picker no longer leaves it selected with the select button enabled. Uploading an image still selects it, as before. Only uploads made while the picker is open count, so one the upload panel was still showing from earlier work in jContent is no longer picked up as if it had been chosen there.
+
+* Fixed the position of the publication status in the content list on pages that render in standards mode, such as the dashboard of app-shell 4.0.0.
+
+* Fixed the publication of the jContent TypeScript types to npm, so each release is now available under its own version.
+
 ## 3.8.0
 
 ### New Features

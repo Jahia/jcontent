@@ -24,7 +24,7 @@ jobs:
             echo "Tag $GITHUB_REF_NAME is not a release tag, nothing to publish"
             exit 0
           fi
-          yarn install
+          yarn install --immutable --mode=skip-build
           tag=$(yarn node -p 'process.env.npm_package_version.endsWith("SNAPSHOT")?"snapshot":"latest"')
           # The GitHub release first pushes its tag on the snapshot commit, before the Maven release moves it
           if [ "$tag" = "snapshot" ] && [ "$GITHUB_REF_TYPE" = "tag" ]; then

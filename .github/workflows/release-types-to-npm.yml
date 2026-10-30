@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-    # The release action pushes the tag once the Maven release has set package.json to the release version
-    tags:
-      - '[0-9]+_[0-9]+_[0-9]+'
+  # The release tag lands on a [skip ci] commit, and [skip ci] only blocks push and pull_request
+  create:
   workflow_dispatch: null
 
 permissions:
@@ -15,12 +14,19 @@ permissions:
 
 jobs:
   publish-release:
+    # create also fires on a new branch, and takes no tag filter
+    if: github.event_name != 'create' || github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: jdx/mise-action@v3
       - name: Build and publish
         run: |
+          # Leaves out the v*-tests.* tags of the test module
+          if [ "$GITHUB_REF_TYPE" = "tag" ] && ! [[ "$GITHUB_REF_NAME" =~ ^[0-9]+_[0-9]+_[0-9]+$ ]]; then
+            echo "Tag $GITHUB_REF_NAME is not a release tag, nothing to publish"
+            exit 0
+          fi
           yarn install
           tag=$(yarn node -p 'process.env.npm_package_version.endsWith("SNAPSHOT")?"snapshot":"latest"')
           # The GitHub release first pushes its tag on the snapshot commit, before the Maven release moves it

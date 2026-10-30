@@ -1,6 +1,10 @@
 name: Release Types to npm
 
 on:
+  # A push to main publishes a snapshot
+  push:
+    branches:
+      - main
   # The release tag lands on a [skip ci] commit, and [skip ci] only blocks push and pull_request
   create:
   workflow_dispatch: null
@@ -10,7 +14,7 @@ permissions:
   id-token: write
 
 jobs:
-  publish-release:
+  publish-types:
     # create also fires on a new branch, and takes no tag filter
     if: github.event_name != 'create' || github.ref_type == 'tag'
     runs-on: ubuntu-latest

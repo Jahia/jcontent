@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import {editFrameStyles as styles} from 'editframe-styles';
@@ -79,7 +80,7 @@ export const getClickedElementHook = () => {
     return clickedElementHook;
 };
 
-export const EditFrame = () => {
+export const EditFrame = ({defaultTemplate = ''}) => {
     const manager = useDragDropManager();
 
     const {path, site, language, template} = useSelector(state => ({
@@ -88,6 +89,7 @@ export const EditFrame = () => {
         path: state.jcontent.path,
         template: state.jcontent.template
     }), shallowEqual);
+    const frameTemplate = template || defaultTemplate;
 
     const client = useApolloClient();
     const dispatch = useDispatch();
@@ -246,12 +248,12 @@ export const EditFrame = () => {
     }, []);
 
     useEffect(() => {
-        const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (template === '' ? '' : `.${template}`);
+        const encodedPath = path.replace(/[^/]/g, encodeURIComponent) + (frameTemplate === '' ? '' : `.${frameTemplate}`);
         const url = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${encodedPath}.html?redirect=false${currentUrlParams}`;
 
         if (currentDocument) {
             const mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
-            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, template);
+            console.debug('Loading', url, 'in iframe', mainModule?.getAttribute('path'), path, language, frameTemplate);
             const framePath = mainModule?.getAttribute('path');
             const locale = mainModule?.getAttribute('locale');
             if (path === framePath && locale === language && currentUrlParams === previousUrlParams) {
@@ -273,7 +275,7 @@ export const EditFrame = () => {
             iframe.current.contentWindow.location.href = url;
             setPreviousUrlParams(currentUrlParams);
         }
-    }, [currentDocument, path, language, template, currentUrlParams, previousUrlParams]);
+    }, [currentDocument, path, language, frameTemplate, currentUrlParams, previousUrlParams]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
@@ -325,4 +327,5 @@ export const EditFrame = () => {
 };
 
 EditFrame.propTypes = {
+    defaultTemplate: PropTypes.string
 };

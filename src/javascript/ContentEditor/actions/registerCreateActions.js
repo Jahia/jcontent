@@ -7,6 +7,7 @@ import {batchActions} from 'redux-batched-actions';
 import {booleanValue} from '~/ContentEditor/SelectorTypes/Picker/Picker.utils';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {createContentActionPB} from '~/ContentEditor/actions/jcontent/createContent/createContentActionPB';
+import {FORMIDABLE_FORM_TYPE} from '~/JContent/JContent.utils';
 
 export const registerCreateActions = registry => {
     registry.addOrReplace('action', 'createContent', createContentActionWrapper, {
@@ -16,7 +17,15 @@ export const registerCreateActions = registry => {
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
         hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
         requiredPermission: ['jcr:addChildNodes'],
-        hasBypassChildrenLimit: false
+        hasBypassChildrenLimit: false,
+        // A new form is opened, which shows it in the Page Builder
+        onCreate: ({path}, {contentType}) => {
+            if (contentType === FORMIDABLE_FORM_TYPE) {
+                window.jahia.reduxStore.dispatch(batchActions([{
+                    type: 'CM_OPEN_PATHS', payload: [path.substring(0, path.lastIndexOf('/'))]
+                }, cmGoto({path})]));
+            }
+        }
     });
 
     // Page builder specific action which avoids over querying

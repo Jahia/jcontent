@@ -1,8 +1,10 @@
 import {registry} from '@jahia/ui-extender';
 import {
     canEditInPageBuilder,
+    getDefaultFrameTemplate,
     getNewCounter,
     isDescendant,
+    isFormidableForm,
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
     removeFileExtension,
@@ -262,6 +264,30 @@ describe('canEditInPageBuilder', () => {
     it('should not allow editing a reference even if it lives under a registered editable root', () => {
         registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
         expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
+    });
+});
+
+describe('isFormidableForm', () => {
+    it('should recognize a Formidable form by its primary node type', () => {
+        expect(isFormidableForm({primaryNodeType: {name: 'fmdb:form'}})).toBe(true);
+    });
+
+    it('should not recognize any other node as a form', () => {
+        expect(isFormidableForm({primaryNodeType: {name: 'fmdb:fieldList'}})).toBe(false);
+        expect(isFormidableForm({primaryNodeType: {name: 'jnt:page'}})).toBe(false);
+        expect(isFormidableForm({})).toBe(false);
+        expect(isFormidableForm(undefined)).toBe(false);
+    });
+});
+
+describe('getDefaultFrameTemplate', () => {
+    it('should render a Formidable form through the content template of the default module', () => {
+        expect(getDefaultFrameTemplate({primaryNodeType: {name: 'fmdb:form'}})).toBe('content-template');
+    });
+
+    it('should leave the template of any other node to the server', () => {
+        expect(getDefaultFrameTemplate({primaryNodeType: {name: 'jnt:page'}})).toBe('');
+        expect(getDefaultFrameTemplate(undefined)).toBe('');
     });
 });
 

@@ -61,6 +61,15 @@ export const canEditInPageBuilder = (path, nodes, site) => {
             Boolean(entry.rootPath) && isDescendant(path, entry.rootPath)));
 };
 
+// A Formidable form opens in the Page Builder on its own, although it carries no jmix:mainResource.
+// The type is compared by name: an instance without Formidable has no fmdb namespace to check against.
+export const FORMIDABLE_FORM_TYPE = 'fmdb:form';
+
+export const isFormidableForm = node => node?.primaryNodeType?.name === FORMIDABLE_FORM_TYPE;
+
+// No template applies to a form by default: the frame names the content template of the default module, which applies on jnt:content
+export const getDefaultFrameTemplate = node => (isFormidableForm(node) ? 'content-template' : '');
+
 // This determines if the node is included as part of content reference in which case we don't want to have a box for it.
 const isFromReference = (path, nodes) => {
     if (path.includes('@/')) {

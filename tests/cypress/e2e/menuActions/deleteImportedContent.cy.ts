@@ -57,6 +57,7 @@ describe('Delete content that came in through an import', {testIsolation: false}
     describe('once the imported folder is offered for deletion', () => {
         it('An imported folder can be deleted permanently', () => {
             context.tag('jcontent', 'import-delete', 'delete-permanently');
+            jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${folderName}`);
             jcontent.getTable().getRowByName(importedFolder).markForDeletion().deletePermanently();
 
             cy.get(`[data-cm-role="table-content-list-row"][data-node-name="${importedFolder}"]`).should('not.exist');

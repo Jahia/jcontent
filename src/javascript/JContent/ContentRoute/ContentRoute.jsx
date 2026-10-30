@@ -11,7 +11,8 @@ import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
-import {JahiaRenderedModulesUtil} from '../JContent.utils';
+import {getDefaultFrameTemplate, isFormidableForm, JahiaRenderedModulesUtil} from '../JContent.utils';
+import {useOpenFormInPageBuilder} from './useOpenFormInPageBuilder';
 
 export const ContentRoute = () => {
     const {t} = useTranslation('jcontent');
@@ -26,18 +27,20 @@ export const ContentRoute = () => {
     }), shallowEqual);
     const dispatch = useDispatch();
     const nodeTypes = ['jnt:page', 'jmix:mainResource'];
-    const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes});
+    const res = useNodeInfo({path}, {getIsNodeTypes: nodeTypes, getPrimaryNodeType: true});
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
-    const canShowEditFrame = Boolean(res?.node) && nodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
+    const canShowEditFrame = Boolean(res?.node) && (nodeTypes.some(nt => res.node[nt]) || isFormidableForm(res.node)) && !isOpenDialog;
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
             dispatch(setTableViewMode(accordionItem.tableConfig.defaultViewMode || FLAT));
         }
     }, [dispatch, mode, viewMode, FLAT, accordionItem, isOpenDialog]);
+
+    useOpenFormInPageBuilder({node: res.node, path, mode, isOpenDialog});
 
     // Captured area information is used to block delete/move/copy/cut actions on areas
     useEffect(() => {
@@ -74,7 +77,7 @@ export const ContentRoute = () => {
         <MainLayout header={<ContentHeader/>}>
             <LoaderSuspense>
                 <ErrorBoundary>
-                    {(isPageBuilderView && canShowEditFrame) ? <EditFrame/> : <ContentLayout/>}
+                    {(isPageBuilderView && canShowEditFrame) ? <EditFrame defaultTemplate={getDefaultFrameTemplate(res.node)}/> : <ContentLayout/>}
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

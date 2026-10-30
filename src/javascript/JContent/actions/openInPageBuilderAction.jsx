@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {cmGoto, cmOpenPaths, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {batchActions} from 'redux-batched-actions';
-import {expandTree} from '~/JContent/JContent.utils';
+import {expandTree, isFormidableForm} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
 
 export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
@@ -21,7 +21,8 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
 
     const res = useNodeChecks(isPageBuilderMode ? {} : {path}, {
         skip: isPageBuilderMode,
-        showOnNodeTypes
+        showOnNodeTypes,
+        getPrimaryNodeType: true
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;
@@ -31,10 +32,12 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
         return (<Render {...others} isVisible={false}/>);
     }
 
+    const isOpenable = res.checksResult || isFormidableForm(res.node);
+
     return (
         <Render {...others}
-                isVisible={res.checksResult}
-                enabled={res.checksResult}
+                isVisible={isOpenable}
+                enabled={isOpenable}
                 onClick={() => {
                     if (isSearch) {
                         expandTree({path}, client).then(({mode, ancestorPaths, site}) => {

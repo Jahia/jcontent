@@ -1,9 +1,6 @@
 name: Release Types to npm
 
 on:
-  push:
-    branches:
-      - main
   # The release tag lands on a [skip ci] commit, and [skip ci] only blocks push and pull_request
   create:
   workflow_dispatch: null

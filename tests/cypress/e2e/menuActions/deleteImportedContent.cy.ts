@@ -1,6 +1,3 @@
-// Regression QA-12527: content that came in through an import offered no Delete. contents_QA-12527.zip
-// holds a `contents` content folder with one rich text, in en.
-
 import {context, createSite, jfaker} from '@jahia/cypress';
 import {JContent} from '../../page-object';
 import gql from 'graphql-tag';

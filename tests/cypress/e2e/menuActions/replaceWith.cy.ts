@@ -1,5 +1,3 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
-
 import {
     addNode,
     context,

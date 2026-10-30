@@ -1,7 +1,5 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
-//
 // Regression QA-12527: content that came in through an import offered no Delete. contents_QA-12527.zip
-// is the archive of the legacy test: a `contents` content folder holding one rich text, in en.
+// holds a `contents` content folder with one rich text, in en.
 
 import {context, createSite, jfaker} from '@jahia/cypress';
 import {JContent} from '../../page-object';

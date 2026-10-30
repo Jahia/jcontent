@@ -1,7 +1,5 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
-//
-// Each FT edits its own copy of the image: a confirmed save rewrites the file in place, so a shared
-// image would carry the size one FT saved into the next one.
+// Each test edits its own copy of the image: a confirmed save rewrites the file in place, so a shared
+// image would carry the size one test saved into the next one.
 
 import {addNode, context, createSite, createUser, deleteUser, grantRoles, uploadFile} from '@jahia/cypress';
 import {JContent} from '../../../page-object';

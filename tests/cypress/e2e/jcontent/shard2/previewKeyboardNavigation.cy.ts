@@ -1,5 +1,3 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
-
 import {addNode, context, createSite, uploadFile} from '@jahia/cypress';
 import {JContent} from '../../../page-object';
 
@@ -52,7 +50,7 @@ describe('Keyboard navigation of the preview', () => {
 
             press('rightarrow');
             previewName().should('contain.text', names[1]);
-            // Down and up move to the next and previous item, as the legacy test asserted
+            // Down and up move to the next and previous item
             press('downarrow');
             previewName().should('contain.text', names[2]);
             press('uparrow');
@@ -63,7 +61,7 @@ describe('Keyboard navigation of the preview', () => {
     });
 
     it.skip('Arrow keys move the preview in list view', () => {
-        // TODO(qa-migration): ContentTable.jsx does not pass `index` to Row, so a row click stores an undefined selected index and every arrow key computes NaN.
+        // TODO: ContentTable.jsx does not pass `index` to Row, so a row click stores an undefined selected index and every arrow key computes NaN.
         context.tag('jcontent', 'keyboard-navigation', 'arrows-list');
         const jcontent = JContent.visit(siteKey, 'en', `media/files/${folder}`);
         jcontent.switchToListMode();
@@ -77,7 +75,7 @@ describe('Keyboard navigation of the preview', () => {
 
             press('rightarrow');
             previewName().should('contain.text', names[1]);
-            // Down and up move to the next and previous item, as the legacy test asserted
+            // Down and up move to the next and previous item
             press('downarrow');
             previewName().should('contain.text', names[2]);
             press('uparrow');

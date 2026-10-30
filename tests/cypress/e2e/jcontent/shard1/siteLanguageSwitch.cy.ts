@@ -1,5 +1,3 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
-
 import {context, createSite, setNodeProperty} from '@jahia/cypress';
 import {ContentEditor, JContent, SidePanel} from '../../../page-object';
 
@@ -40,7 +38,7 @@ const switchToTestSiteAndOpenHome = (jcontent: JContent) => {
     jcontent.getAccordionItem('pages').getTreeItem('home').click();
 };
 
-// Page Builder is the default view of a page, where the legacy UI showed its list view.
+// Page Builder is the default view of a page.
 const checkContentViewLoaded = () => {
     cy.get('[data-sel-role="page-builder-frame-active"]').should('be.visible');
 };

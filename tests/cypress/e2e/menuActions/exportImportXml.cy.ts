@@ -1,5 +1,3 @@
-// Migrated from the legacy Selenium class ContentManagerTest (Jahia/selenium#1650).
-
 import {addNode, context, createSite, createUser, deleteUser, getComponent, grantRoles, jfaker} from '@jahia/cypress';
 import {JContent} from '../../page-object';
 import {ExportDialog} from '../../page-object/exportDialog';

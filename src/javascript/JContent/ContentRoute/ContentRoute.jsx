@@ -12,33 +12,26 @@ import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
 import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
-import {JahiaRenderedModulesUtil} from '../JContent.utils';
-
-// A visually editable node that is not its own displayable node has no page, hence no template to render the frame
-// with: it goes through the content-template wrapper instead. Pages and main resources keep an empty template; the
-// wrapper left in the URL for one of them, as jContent restores the last template when it opens again, is stale.
-const getFrameTemplateState = (node, canShowEditFrame, template) => {
-    const isWrapperTemplateNeeded = canShowEditFrame && node.displayableNode?.path !== node.path;
-    const isWrapperTemplateStale = canShowEditFrame && !isWrapperTemplateNeeded && template === JContentConstants.contentTemplate;
-    return {
-        isWrapperTemplateNeeded,
-        isWrapperTemplateStale,
-        isFrameTemplateReady: isWrapperTemplateNeeded ? template !== '' : !isWrapperTemplateStale
-    };
-};
+import {getFrameTemplate, isPageBuilderEnabled, isPageBuilderNode, JahiaRenderedModulesUtil, pageBuilderNodeInfoOptions} from '../JContent.utils';
 
 // The template lives in the URL (state.jcontent.template) so that a reload keeps it; cmGoto resets it on every
 // navigation, so it is set again each time the Page Builder opens on such a node. It replaces the history entry:
-// Back would otherwise return to the bare URL and be sent forward again. A stale wrapper is cleared the same way.
-const useWrapperTemplate = (isPageBuilderView, isWrapperTemplateNeeded, isWrapperTemplateStale, template) => {
+// Back would otherwise return to the bare URL and be sent forward again.
+const useFrameTemplate = ({node, template, isOpenDialog, isPageBuilderView}) => {
     const dispatch = useDispatch();
+    const isRenderedAsPage = isPageBuilderNode(node) && !isOpenDialog;
+    const canShowEditFrame = isRenderedAsPage && isPageBuilderEnabled();
+    const frameTemplate = isRenderedAsPage ? getFrameTemplate(node, template) : template;
+    const isFrameTemplateReady = frameTemplate === template;
+    const isTemplateToSet = isPageBuilderView && canShowEditFrame && !isFrameTemplateReady;
+
     useEffect(() => {
-        if (isPageBuilderView && isWrapperTemplateNeeded && template === '') {
-            dispatch(cmGoto({template: JContentConstants.contentTemplate}, {replace: true}));
-        } else if (isWrapperTemplateStale) {
-            dispatch(cmGoto({template: ''}, {replace: true}));
+        if (isTemplateToSet) {
+            dispatch(cmGoto({template: frameTemplate}, {replace: true}));
         }
-    }, [dispatch, isPageBuilderView, isWrapperTemplateNeeded, isWrapperTemplateStale, template]);
+    }, [dispatch, isTemplateToSet, frameTemplate]);
+
+    return {isRenderedAsPage, canShowEditFrame, frameTemplate, isFrameTemplateReady};
 };
 
 // The frame waits for its template: loading the bare node URL first would show the error page for a moment
@@ -60,15 +53,12 @@ export const ContentRoute = () => {
         params: state.jcontent.params
     }), shallowEqual);
     const dispatch = useDispatch();
-    const {pageBuilderNodeTypes} = JContentConstants;
-    const res = useNodeInfo({path}, {getIsNodeTypes: pageBuilderNodeTypes, getDisplayableNodePath: true});
+    const res = useNodeInfo({path}, pageBuilderNodeInfoOptions);
     const {FLAT, STRUCTURED, PAGE_BUILDER} = JContentConstants.tableView.viewMode;
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
-    const canShowEditFrame = Boolean(res?.node) && pageBuilderNodeTypes.some(nt => res.node[nt]) && !isOpenDialog;
-    const {isWrapperTemplateNeeded, isWrapperTemplateStale, isFrameTemplateReady} = getFrameTemplateState(res.node, canShowEditFrame, template);
-    useWrapperTemplate(isPageBuilderView, isWrapperTemplateNeeded, isWrapperTemplateStale, template);
+    const {isRenderedAsPage, canShowEditFrame, frameTemplate, isFrameTemplateReady} = useFrameTemplate({node: res?.node, template, isOpenDialog, isPageBuilderView});
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {
@@ -76,12 +66,12 @@ export const ContentRoute = () => {
         }
     }, [dispatch, mode, viewMode, FLAT, accordionItem, isOpenDialog]);
 
-    // Captured area information is used to block delete/move/copy/cut actions on areas
+    // Captured area information is used to block delete/move/copy/cut actions on areas, in every view mode
     useEffect(() => {
-        if (path && language && canShowEditFrame && isFrameTemplateReady) {
-            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, language, template);
+        if (path && language && isRenderedAsPage) {
+            JahiaRenderedModulesUtil.extractModuleInfoFromRenderedPage(path, language, frameTemplate);
         }
-    }, [path, language, template, canShowEditFrame, isFrameTemplateReady]);
+    }, [path, language, frameTemplate, isRenderedAsPage]);
 
     if (isOpenDialog) {
         return null;

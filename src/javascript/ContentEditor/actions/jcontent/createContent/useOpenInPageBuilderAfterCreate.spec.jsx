@@ -14,12 +14,12 @@ jest.mock('~/JContent/redux/JContent.redux', () => ({
 const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
 
 describe('useOpenInPageBuilderAfterCreate', () => {
-    const contentFolder = {primaryNodeType: {name: 'jnt:contentFolder'}};
-    const contentList = {primaryNodeType: {name: 'jnt:contentList'}};
     const newNode = {uuid: 'form-uuid', path: '/sites/site/contents/form'};
-    const form = {isVisuallyEditable: true, isPageOrMainResource: false};
-    const news = {isVisuallyEditable: true, isPageOrMainResource: true};
-    const richText = {isVisuallyEditable: false, isPageOrMainResource: false};
+    const form = {isVisuallyEditable: true, isContent: true, isPageOrMainResource: false};
+    const news = {isVisuallyEditable: true, isContent: true, isPageOrMainResource: true};
+    const richText = {isVisuallyEditable: false, isContent: true, isPageOrMainResource: false};
+    // The content-template wrapper cannot render a node that is not jnt:content
+    const widget = {isVisuallyEditable: true, isContent: false, isPageOrMainResource: false};
     let dispatch;
     let query;
     let hook;
@@ -46,7 +46,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     const closedEditor = {mode: 'create', closed: true};
 
     it('opens a visually editable content created in a content folder in the Page Builder once the editor closes', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, form);
+        render({isEnabled: true, isInContentFolder: true}, form);
         hook.handleCreate(newNode, {});
         await flushPromises();
         expect(dispatch).not.toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
 
     it('waits while the editor is still open, and opens the last content of a "create another" series', async () => {
         const secondNode = {uuid: 'form-2-uuid', path: '/sites/site/contents/form-2'};
-        render({isEnabled: true, parentNode: contentFolder}, form);
+        render({isEnabled: true, isInContentFolder: true}, form);
         hook.handleCreate(newNode, {});
         hook.handleClosed(openEditor);
         hook.handleCreate(secondNode, {});
@@ -78,7 +78,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('waits for the editor of the fullscreen redirect to close', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, form);
+        render({isEnabled: true, isInContentFolder: true}, form);
         hook.handleCreate(newNode, {});
         // The create editor is replaced by an edit editor on the created content, without being closed
         hook.handleClosed(openEditor);
@@ -90,8 +90,17 @@ describe('useOpenInPageBuilderAfterCreate', () => {
         expect(dispatch).toHaveBeenCalledTimes(1);
     });
 
+    it('leaves a visually editable node that is not jnt:content on the list', async () => {
+        render({isEnabled: true, isInContentFolder: true}, widget);
+        hook.handleCreate(newNode, {});
+        hook.handleClosed(closedEditor);
+        await flushPromises();
+        expect(query).toHaveBeenCalledTimes(1);
+        expect(dispatch).not.toHaveBeenCalled();
+    });
+
     it('leaves a content that is not visually editable on the list', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, richText);
+        render({isEnabled: true, isInContentFolder: true}, richText);
         hook.handleCreate(newNode, {});
         hook.handleClosed(closedEditor);
         await flushPromises();
@@ -100,7 +109,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('leaves a main resource on the list, although it opens in the Page Builder', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, news);
+        render({isEnabled: true, isInContentFolder: true}, news);
         hook.handleCreate(newNode, {});
         hook.handleClosed(closedEditor);
         await flushPromises();
@@ -109,7 +118,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('does nothing when the content was created inside another content', async () => {
-        render({isEnabled: true, parentNode: contentList}, form);
+        render({isEnabled: true, isInContentFolder: false}, form);
         hook.handleCreate(newNode, {});
         hook.handleClosed(closedEditor);
         await flushPromises();
@@ -118,12 +127,12 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     });
 
     it('does nothing when the editor closes without a creation, or when disabled', async () => {
-        render({isEnabled: true, parentNode: contentFolder}, form);
+        render({isEnabled: true, isInContentFolder: true}, form);
         hook.handleClosed(closedEditor);
         await flushPromises();
         expect(query).not.toHaveBeenCalled();
 
-        render({isEnabled: false, parentNode: contentFolder}, form);
+        render({isEnabled: false, isInContentFolder: true}, form);
         hook.handleCreate(newNode, {});
         hook.handleClosed(closedEditor);
         await flushPromises();
@@ -134,7 +143,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     it('keeps calling the callbacks it wraps', () => {
         const onCreate = jest.fn();
         const onClosed = jest.fn();
-        render({isEnabled: true, parentNode: contentList, onCreate, onClosed}, form);
+        render({isEnabled: true, isInContentFolder: false, onCreate, onClosed}, form);
         hook.handleCreate(newNode, {some: 'config'});
         hook.handleClosed(openEditor, true);
         expect(onCreate).toHaveBeenCalledWith(newNode, {some: 'config'});

@@ -1,0 +1,136 @@
+import {addNode, createSite, deleteSite, enableModule, getComponent} from '@jahia/cypress';
+import gql from 'graphql-tag';
+import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
+import {DeleteDialog} from '../../page-object/deleteDialog';
+
+const setShowPageBuilder = (value: boolean) => cy.apollo({
+    mutation: gql`mutation {
+        admin {
+            jahia {
+                configuration(pid: "org.jahia.modules.jcontent") {
+                    value(name: "showPageBuilder", value: "${value}")
+                }
+            }
+        }
+    }`
+});
+
+/**
+ * [cent:visuallyEditable] > jnt:content, jmix:visuallyEditable, jmix:editorialContent, jmix:visibleInContentTree, mix:title
+ *  + * (cent:childObject1)
+ *
+ * A node of that type in a content folder has no page: the Page Builder renders it through the content-template
+ * wrapper of the default module. A plain jnt:text beside it does not open in the Page Builder.
+ */
+describe('Page builder - visually editable content in a content folder', () => {
+    const siteKey = 'visuallyEditableSite';
+    const contentsPath = `/sites/${siteKey}/contents`;
+    const nodeName = 'visually-editable';
+    const nodePath = `${contentsPath}/${nodeName}`;
+    const childPath = `${nodePath}/child-a`;
+    const plainName = 'plain-text';
+
+    const visitNode = (): JContentPageBuilder => JContent
+        .visit(siteKey, 'en', `content-folders/contents/${nodeName}`)
+        .switchToPageBuilder();
+
+    const frameShouldHaveExistingNodes = (count: number) => {
+        cy.get('iframe[data-sel-role="page-builder-frame-active"]').should($frame => {
+            expect($frame.contents().find(`[jahiatype="module"][type="existingNode"][path^="${nodePath}/"]`)).to.have.length(count);
+        });
+    };
+
+    before(() => {
+        setShowPageBuilder(true);
+        createSite(siteKey);
+        enableModule('jcontent-test-module', siteKey);
+        addNode({
+            parentPathOrId: contentsPath,
+            name: nodeName,
+            primaryNodeType: 'cent:visuallyEditable',
+            properties: [{name: 'jcr:title', value: 'Visually editable', language: 'en'}],
+            children: [{name: 'child-a', primaryNodeType: 'cent:childObject1'}]
+        });
+        addNode({
+            parentPathOrId: contentsPath,
+            name: plainName,
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'Plain text', language: 'en'}]
+        });
+    });
+
+    after(() => {
+        setShowPageBuilder(true);
+        deleteSite(siteKey);
+    });
+
+    beforeEach(() => {
+        cy.loginAndStoreSession();
+    });
+
+    it('Case 1: offers the Page Builder to the visually editable content only', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.switchToListMode();
+        const nodeMenu = jcontent.getTable().getRowByName(nodeName).contextMenu();
+        nodeMenu.shouldHaveItem('Open in Page Builder');
+        nodeMenu.close();
+        const plainMenu = jcontent.getTable().getRowByName(plainName).contextMenu();
+        plainMenu.shouldNotHaveItem('Open in Page Builder');
+        plainMenu.close();
+
+        jcontent.getAccordionItem('content-folders').getTreeItem(nodeName).click();
+        jcontent.switchToPageBuilder();
+        jcontent.shouldBeInMode('Page Builder');
+    });
+
+    it('Case 2: renders the content alone in the frame through the content-template wrapper', () => {
+        const pageBuilder = visitNode();
+        pageBuilder.getMainModule(nodePath);
+        cy.url().should('contain', 'template=content-template');
+        cy.get('iframe[data-sel-role="page-builder-frame-active"]')
+            .its('0.contentWindow.location.pathname')
+            .should('match', /\.content-template\.html$/);
+        // One box for the content itself, with the insertion point of its children
+        pageBuilder.getModule(nodePath, false).getCreateButtons().get().should('exist');
+        frameShouldHaveExistingNodes(1);
+    });
+
+    it('Case 3: creates and deletes a child through the frame', () => {
+        const pageBuilder = visitNode();
+        pageBuilder.iframe(true).get().find('[jahiatype="createbuttons"] button[data-sel-role="cent:childObject1"]').first().click({force: true});
+        new ContentEditor().create();
+        frameShouldHaveExistingNodes(2);
+
+        pageBuilder.getModule(childPath, false).contextMenu(true, false).select('Delete');
+        getComponent(DeleteDialog).markForDeletion();
+        pageBuilder.getModule(childPath).getForDeletionStatus().should('be.visible');
+        cy.url().should('contain', 'template=content-template');
+    });
+
+    it('Case 4: offers no preview or live page of its own', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.switchToListMode();
+        const menu = jcontent.getTable().getRowByName(nodeName).contextMenu();
+        menu.shouldHaveItem('Open in Page Builder');
+        menu.shouldNotHaveRoleItem('openInPreviewMenu');
+        menu.close();
+    });
+
+    it('Case 5: keeps a page on its own template', () => {
+        JContent.visit(siteKey, 'en', 'pages/home').switchToPageBuilder().getMainModule(`/sites/${siteKey}/home`);
+        cy.url().should('not.contain', 'template=content-template');
+        cy.get('iframe[data-sel-role="page-builder-frame-active"]')
+            .its('0.contentWindow.location.pathname')
+            .should('not.contain', 'content-template');
+    });
+
+    it('Case 6: offers no Page Builder when showPageBuilder is false', () => {
+        setShowPageBuilder(false);
+        const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${nodeName}`);
+        jcontent.shouldBeInMode('List');
+        cy.get('[data-sel-role="sel-view-mode-pageBuilder"]').should('not.exist');
+
+        JContent.visit(siteKey, 'en', 'content-folders/contents').getTable().getRowByName(nodeName)
+            .contextMenu().shouldNotHaveItem('Open in Page Builder');
+    });
+});

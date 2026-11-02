@@ -6,7 +6,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import classes from './ViewModeSelector.scss';
-import {booleanValue} from '~/JContent/JContent.utils';
+import {isPageBuilderEnabled, isPageBuilderNode, pageBuilderNodeInfoOptions} from '~/JContent/JContent.utils';
 import {TableViewModeChangeTracker} from './tableViewChangeTracker';
 import {registry} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
@@ -40,19 +40,19 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, viewMode, path} = useSelector(selector, shallowEqual);
-    const info = useNodeInfo({path}, {getIsNodeTypes: JContentConstants.pageBuilderNodeTypes});
+    const info = useNodeInfo({path}, pageBuilderNodeInfoOptions);
 
     const accordion = registry.get('accordionItem', mode);
     let availableModes = accordion?.tableConfig?.availableModes || defaultAvailableModes;
 
-    if (!booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)) {
+    if (!isPageBuilderEnabled()) {
         availableModes = availableModes.filter(n => n !== PAGE_BUILDER);
     }
 
     const hiddenViewModes = accordion?.tableConfig?.hiddenViewModes || [];
     availableModes = availableModes.filter(v => !hiddenViewModes.includes(v));
 
-    const disabledPageBuilder = info.node && !JContentConstants.pageBuilderNodeTypes.some(nt => info.node[nt]);
+    const disabledPageBuilder = info.node && !isPageBuilderNode(info.node);
     const disabled = disabledPageBuilder ? [PAGE_BUILDER] : [];
 
     const onChange = vm => dispatch(setTableViewModeAction(vm));

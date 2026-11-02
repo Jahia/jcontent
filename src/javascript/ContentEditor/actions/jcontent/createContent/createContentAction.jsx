@@ -48,11 +48,11 @@ export const CreateContent = ({
         {
             getPrimaryNodeType: true,
             getSubNodesCount: ['nt:base'],
-            getIsNodeTypes: ['jmix:listSizeLimit'],
+            getIsNodeTypes: ['jmix:listSizeLimit', 'jnt:contentFolder'],
             getProperties: ['limit']
         }
     );
-    const {handleCreate, handleClosed} = useOpenInPageBuilderAfterCreate({isEnabled: isOpenInPageBuilderAfterCreate, parentNode: nodeInfo.node, onCreate, onClosed});
+    const {handleCreate, handleClosed} = useOpenInPageBuilderAfterCreate({isEnabled: isOpenInPageBuilderAfterCreate, isInContentFolder: Boolean(nodeInfo.node?.['jnt:contentFolder']), onCreate, onClosed});
     const {loading: loadingPlaceholders, placeholders} = useNamedChildPlaceholders({path, language, skip: res.loading || !res.checksResult});
 
     const excludedNodeTypes = ['jmix:studioOnly', 'jmix:hiddenType'];

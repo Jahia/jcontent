@@ -11,7 +11,7 @@ const visibleInContentTree = gql`
 `;
 
 export const GetContentPath = gql`
-    query getContentPath($path:String!, $language: String!, $types: [String]!) {
+    query getContentPath($path:String!, $language: String!, $types: [String]!, $pageBuilderNodeTypes: [String]!) {
         jcr {
             node: nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
@@ -19,7 +19,7 @@ export const GetContentPath = gql`
                 primaryNodeType {
                     name
                 }
-                isNodeType(type: {multi: ANY, types: ["jmix:visuallyEditable", "jnt:page", "jmix:mainResource"]})
+                isNodeType(type: {multi: ANY, types: $pageBuilderNodeTypes})
                 ...ContentVisibleInContentTree
                 ancestors(fieldFilter: {
                     filters: [
@@ -32,7 +32,7 @@ export const GetContentPath = gql`
                     primaryNodeType {
                         name
                     }
-                    isNodeType(type: {multi: ANY, types: ["jmix:visuallyEditable", "jnt:page", "jmix:mainResource"]})
+                    isNodeType(type: {multi: ANY, types: $pageBuilderNodeTypes})
                     ...ContentVisibleInContentTree
                     ...NodeCacheRequiredFields
                 }

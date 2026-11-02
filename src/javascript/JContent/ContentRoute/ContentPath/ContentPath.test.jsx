@@ -6,6 +6,7 @@ import {shallow} from '@jahia/test-framework';
 import {GetContentPath} from './ContentPath.gql-queries';
 import {ContentPath} from './ContentPath';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import JContentConstants from '~/JContent/JContent.constants';
 
 jest.mock('~/JContent/redux/JContent.redux', () => ({
     cmGoto: jest.fn()
@@ -45,7 +46,8 @@ describe('ContentPath', () => {
         expect(useQuery).toHaveBeenCalledWith(GetContentPath, {
             variables: {
                 path: '/x/y/z',
-                language: 'fr'
+                language: 'fr',
+                pageBuilderNodeTypes: JContentConstants.pageBuilderNodeTypes
             }
         });
     });

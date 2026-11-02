@@ -1,8 +1,10 @@
 import {registry} from '@jahia/ui-extender';
 import {
     canEditInPageBuilder,
+    getFrameTemplate,
     getNewCounter,
     isDescendant,
+    isPageBuilderNode,
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
     removeFileExtension,
@@ -262,6 +264,45 @@ describe('canEditInPageBuilder', () => {
     it('should not allow editing a reference even if it lives under a registered editable root', () => {
         registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
         expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
+    });
+});
+
+describe('isPageBuilderNode', () => {
+    const contents = '/sites/site/contents';
+    const form = {path: `${contents}/form`, 'jmix:visuallyEditable': true, 'jnt:content': true, displayableNode: null};
+
+    it('should open a page, and a main resource with a template of its own', () => {
+        expect(isPageBuilderNode({path: '/sites/site/home', 'jnt:page': true, displayableNode: {path: '/sites/site/home'}})).toBe(true);
+        expect(isPageBuilderNode({path: `${contents}/news`, 'jmix:mainResource': true, displayableNode: {path: `${contents}/news`}})).toBe(true);
+    });
+
+    it('should open a visually editable content with no page through the wrapper', () => {
+        expect(isPageBuilderNode(form)).toBe(true);
+    });
+
+    it('should not open a visually editable node that has no template and is not jnt:content, which the wrapper cannot render', () => {
+        expect(isPageBuilderNode({path: `${contents}/widget`, 'jmix:visuallyEditable': true, displayableNode: null})).toBe(false);
+    });
+
+    it('should not open any other node', () => {
+        expect(isPageBuilderNode({path: `${contents}/text`, primaryNodeType: {name: 'jnt:text'}, 'jnt:content': true, displayableNode: null})).toBe(false);
+        expect(isPageBuilderNode(undefined)).toBe(false);
+    });
+});
+
+describe('getFrameTemplate', () => {
+    const page = {path: '/sites/site/home', displayableNode: {path: '/sites/site/home'}};
+    const form = {path: '/sites/site/contents/form', displayableNode: null};
+
+    it('should render a node with no page through the content-template wrapper, whatever the URL holds', () => {
+        expect(getFrameTemplate(form, '')).toBe('content-template');
+        expect(getFrameTemplate(form, 'other')).toBe('content-template');
+    });
+
+    it('should keep the template of a page, and drop a stale wrapper', () => {
+        expect(getFrameTemplate(page, '')).toBe('');
+        expect(getFrameTemplate(page, 'home-alt')).toBe('home-alt');
+        expect(getFrameTemplate(page, 'content-template')).toBe('');
     });
 });
 

@@ -401,3 +401,8 @@
 [cemix:chainPopin] > cemix:chainSuccess mixin
  extends = cent:actionTest
  - titrePopin (string) internationalized
+
+// Opens in the Page Builder from a content folder, through the content-template wrapper of the default module.
+// jmix:visuallyEditable ships with Jahia 8.2.4.0.
+[cent:visuallyEditable] > jnt:content, jmix:visuallyEditable, jmix:editorialContent, jmix:visibleInContentTree, mix:title
+ + * (cent:childObject1)

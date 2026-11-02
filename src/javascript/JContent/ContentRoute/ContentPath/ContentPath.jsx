@@ -13,6 +13,8 @@ import SimplePathEntry from './SimplePathEntry';
 import CompositePathEntry from './CompositePathEntry';
 import {useNodeDialog} from '~/JContent/NavigationDialogs';
 
+const isPageBuilderItem = item => Boolean(item?.isNodeType);
+
 function findLastIndex(array, callback) {
     let lastIndex = -1;
     array.forEach((e, i) => {
@@ -61,11 +63,11 @@ export const ContentPath = ({selector}) => {
     const accordion = registry.get('accordionItem', mode);
 
     const {data, error} = useQuery(GetContentPath, {
-        variables: {path, language, types: accordion?.treeConfig?.openableTypes}
+        variables: {path, language, types: accordion?.treeConfig?.openableTypes, pageBuilderNodeTypes: JContentConstants.pageBuilderNodeTypes}
     });
 
     const handleNavigation = item => {
-        if (!item.isNodeType && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
+        if (!isPageBuilderItem(item) && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
             openDialog(item);
         } else {
             dispatch(cmGoto({path: item.path, params: {sub: false}}));
@@ -86,7 +88,7 @@ export const ContentPath = ({selector}) => {
             )}
             <NonDisplayableNodeDialog
                 {...dialogProps}
-                parentPage={items[0]?.isNodeType ? items[0] : null}
+                parentPage={isPageBuilderItem(items[0]) ? items[0] : null}
                 setPathAction={(_path, params) => cmGoto({path: _path, params})}
             />
         </>

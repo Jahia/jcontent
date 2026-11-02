@@ -16,7 +16,7 @@ import {getIsVisuallyEditable} from './createContent.gql-queries';
  *
  * @returns the create and closed callbacks to hand to the Content Editor, wrapping the ones given
  */
-export const useOpenInPageBuilderAfterCreate = ({isEnabled, parentNode, onCreate, onClosed}) => {
+export const useOpenInPageBuilderAfterCreate = ({isEnabled, isInContentFolder, onCreate, onClosed}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const createdNode = useRef(null);
@@ -36,7 +36,7 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, parentNode, onCreate
 
         const newNode = createdNode.current;
         createdNode.current = null;
-        if (!isEnabled || !newNode || parentNode?.primaryNodeType?.name !== 'jnt:contentFolder') {
+        if (!isEnabled || !newNode || !isInContentFolder) {
             return;
         }
 
@@ -45,7 +45,8 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, parentNode, onCreate
             variables: {uuid: newNode.uuid}
         }).then(({data}) => {
             const node = data?.jcr?.nodeById;
-            if (node?.isVisuallyEditable && !node.isPageOrMainResource) {
+            // The content-template wrapper that renders it in the Page Builder applies to jnt:content only
+            if (node?.isVisuallyEditable && node.isContent && !node.isPageOrMainResource) {
                 dispatch(batchActions([
                     cmGoto({path: newNode.path}),
                     setTableViewMode(JContentConstants.tableView.viewMode.PAGE_BUILDER)
@@ -54,7 +55,7 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, parentNode, onCreate
         }).catch(e => {
             console.error('Could not tell whether the created content opens in the Page Builder', e);
         });
-    }, [isEnabled, parentNode, onClosed, client, dispatch]);
+    }, [isEnabled, isInContentFolder, onClosed, client, dispatch]);
 
     return {handleCreate, handleClosed};
 };

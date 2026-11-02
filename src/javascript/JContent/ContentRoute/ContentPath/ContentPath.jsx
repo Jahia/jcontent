@@ -12,10 +12,7 @@ import {Breadcrumb} from '@jahia/moonstone';
 import SimplePathEntry from './SimplePathEntry';
 import CompositePathEntry from './CompositePathEntry';
 import {useNodeDialog} from '~/JContent/NavigationDialogs';
-import {isFormidableForm} from '~/JContent/JContent.utils';
-
-// The query gives the Page Builder flag of an item; a form is told by its type name, as JContent.utils states
-const isPageBuilderItem = item => Boolean(item?.isNodeType) || isFormidableForm(item);
+import {isPageBuilderNode} from '~/JContent/JContent.utils';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;
@@ -65,11 +62,11 @@ export const ContentPath = ({selector}) => {
     const accordion = registry.get('accordionItem', mode);
 
     const {data, error} = useQuery(GetContentPath, {
-        variables: {path, language, types: accordion?.treeConfig?.openableTypes, pageBuilderNodeTypes: JContentConstants.pageBuilderNodeTypes}
+        variables: {path, language, types: accordion?.treeConfig?.openableTypes}
     });
 
     const handleNavigation = item => {
-        if (!isPageBuilderItem(item) && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
+        if (!isPageBuilderNode(item) && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
             openDialog(item);
         } else {
             dispatch(cmGoto({path: item.path, params: {sub: false}}));
@@ -90,7 +87,7 @@ export const ContentPath = ({selector}) => {
             )}
             <NonDisplayableNodeDialog
                 {...dialogProps}
-                parentPage={isPageBuilderItem(items[0]) ? items[0] : null}
+                parentPage={isPageBuilderNode(items[0]) ? items[0] : null}
                 setPathAction={(_path, params) => cmGoto({path: _path, params})}
             />
         </>

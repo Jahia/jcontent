@@ -6,7 +6,6 @@ import {shallow} from '@jahia/test-framework';
 import {GetContentPath} from './ContentPath.gql-queries';
 import {ContentPath} from './ContentPath';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
-import JContentConstants from '~/JContent/JContent.constants';
 
 jest.mock('~/JContent/redux/JContent.redux', () => ({
     cmGoto: jest.fn()
@@ -46,8 +45,7 @@ describe('ContentPath', () => {
         expect(useQuery).toHaveBeenCalledWith(GetContentPath, {
             variables: {
                 path: '/x/y/z',
-                language: 'fr',
-                pageBuilderNodeTypes: JContentConstants.pageBuilderNodeTypes
+                language: 'fr'
             }
         });
     });
@@ -158,5 +156,19 @@ describe('ContentPath', () => {
         expect(entries.at(0).prop('isDisabled')).toBe(false);
         expect(entries.at(1).prop('item')).toEqual(node);
         expect(entries.at(1).prop('isDisabled')).toBe(true);
+    });
+
+    it('offers as parent page only a first item that the Page Builder can open', () => {
+        useSelector.mockImplementation(callback => callback({jcontent: {path: '/sites/site/home/child', tableView: {viewMode: 'pageBuilder'}}}));
+        const page = {uuid: 'h', path: '/sites/site/home', isVisibleInContentTree: true, isPageBuilderType: true, isPage: true, isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}};
+        // Visually editable, but neither jnt:content nor with a template of its own: the wrapper cannot render it
+        const widget = {uuid: 'w', path: '/sites/site/widget', isVisibleInContentTree: true, isPageBuilderType: true, isContent: false, displayableNode: null};
+        const child = {uuid: 'c', path: '/sites/site/home/child', isVisibleInContentTree: true};
+
+        useQuery.mockImplementation(() => ({data: {jcr: {node: {...child, ancestors: [page]}}}}));
+        expect(shallow(<ContentPath/>).find('NonDisplayableNodeDialog').prop('parentPage')).toEqual(page);
+
+        useQuery.mockImplementation(() => ({data: {jcr: {node: {...child, ancestors: [widget]}}}}));
+        expect(shallow(<ContentPath/>).find('NonDisplayableNodeDialog').prop('parentPage')).toBeNull();
     });
 });

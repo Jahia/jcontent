@@ -3,8 +3,8 @@ import {useApolloClient} from '@apollo/client';
 import {useDispatch} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
-import {getPageBuilderContentViewMode, isFormidableForm} from '~/JContent/JContent.utils';
-import {getIsVisuallyEditable} from './createContent.gql-queries';
+import {getPageBuilderContentViewMode, isPageBuilderNode} from '~/JContent/JContent.utils';
+import {getPageBuilderNode} from './createContent.gql-queries';
 
 /**
  * A content created in a content folder that opens in the Page Builder without being a page or a main resource (a
@@ -41,12 +41,12 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, isInContentFolder, o
         }
 
         client.query({
-            query: getIsVisuallyEditable,
+            query: getPageBuilderNode,
             variables: {uuid: newNode.uuid}
         }).then(({data}) => {
             const node = data?.jcr?.nodeById;
-            // The content-template wrapper that renders it in the Page Builder applies to jnt:content only
-            if ((node?.isVisuallyEditable || isFormidableForm(node)) && node.isContent && !node.isPageOrMainResource) {
+            // The gate of the Page Builder, which a page or a main resource passes too: those stay on the list
+            if (isPageBuilderNode(node) && !node.isPageOrMainResource) {
                 dispatch(batchActions([
                     cmGoto({path: newNode.path}),
                     setTableViewMode(getPageBuilderContentViewMode())

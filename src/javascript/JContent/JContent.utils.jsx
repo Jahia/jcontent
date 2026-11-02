@@ -5,7 +5,7 @@ import JContentConstants from './JContent.constants';
 import {getIcon} from '@jahia/icons';
 import {Layers, Tag} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
-import {GetAncestorsQueryById, GetAncestorsQueryByPath} from '~/JContent/JContentUtils.gql-queries';
+import {GetAncestorsQueryById, GetAncestorsQueryByPath, PageBuilderNodeFragment} from '~/JContent/JContentUtils.gql-queries';
 import rison from 'rison';
 
 export const getNewNodePath = (oldPath, oldAncestorPath, newAncestorPath) => {
@@ -73,34 +73,29 @@ const isFromReference = (path, nodes) => {
     return false;
 };
 
-// A Formidable form opens in the Page Builder on a core without jmix:visuallyEditable, before Jahia 8.2.4.0. The type
-// is compared by name: a Jahia without Formidable has no fmdb namespace for isNodeType to resolve.
-export const FORMIDABLE_FORM_TYPE = 'fmdb:form';
-
-export const isFormidableForm = node => node?.primaryNodeType?.name === FORMIDABLE_FORM_TYPE;
-
 // The useNodeInfo options whose result isPageBuilderNode reads
 export const pageBuilderNodeInfoOptions = {
-    getIsNodeTypes: [...JContentConstants.pageBuilderNodeTypes, 'jnt:content'],
-    getPrimaryNodeType: true,
-    getDisplayableNodePath: true
+    applyFragment: PageBuilderNodeFragment
 };
+
+// The server tells the types of pageBuilderNodeTypes; the temporary pageBuilderPrimaryTypes are compared by name
+const isPageBuilderType = node => Boolean(node.isPageBuilderType) ||
+    JContentConstants.pageBuilderPrimaryTypes.includes(node.primaryNodeType?.name);
 
 // A main resource that has only a non-default content template resolves its displayable node to its page, yet renders
 // through its own template
-export const hasOwnTemplate = node => Boolean(node['jnt:page'] || node['jmix:mainResource']) ||
-    node.displayableNode?.path === node.path;
+export const hasOwnTemplate = node => Boolean(node.isPageOrMainResource) || node.displayableNode?.path === node.path;
 
 // The frame renders a node through its own template, or through the content-template wrapper when it has none. The
 // wrapper applies to jnt:content only, so any other node without a template of its own stays out of the Page Builder.
-export const isPageBuilderNode = node => Boolean(node) &&
-    (JContentConstants.pageBuilderNodeTypes.some(nt => node[nt]) || isFormidableForm(node)) &&
-    (hasOwnTemplate(node) || Boolean(node['jnt:content']));
+// Every gate of the Page Builder reads this, on the fields of PageBuilderNodeFragment.
+export const isPageBuilderNode = node => Boolean(node) && isPageBuilderType(node) &&
+    (hasOwnTemplate(node) || Boolean(node.isContent));
 
 // An item that opens in the Page Builder without being a page, such as a form or a main resource. It opens in the
 // Page Builder by default, or in the view the editor last chose on such an item. A page keeps the view of its
 // accordion, and a view chosen on an item that cannot open in the Page Builder is not remembered.
-export const isPageBuilderContent = node => isPageBuilderNode(node) && !node['jnt:page'];
+export const isPageBuilderContent = node => isPageBuilderNode(node) && !node.isPage;
 
 const contentViewModes = new Set([
     JContentConstants.tableView.viewMode.PAGE_BUILDER,

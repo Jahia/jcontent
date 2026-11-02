@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import {PageBuilderNodeFragment} from '~/JContent/JContentUtils.gql-queries';
 
 const TreeOfContentDataFragment = gql`fragment TreeOfContentData on NodeTypeTreeEntry {
     id
@@ -74,21 +75,17 @@ export const getNodeByPath = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-export const getIsVisuallyEditable = gql`
-    query getIsVisuallyEditable($uuid: String!) {
+export const getPageBuilderNode = gql`
+    query getPageBuilderNode($uuid: String!) {
         jcr {
             nodeById(uuid: $uuid) {
                 ...NodeCacheRequiredFields
-                primaryNodeType {
-                    name
-                }
-                isVisuallyEditable: isNodeType(type: {types: ["jmix:visuallyEditable"]})
-                isContent: isNodeType(type: {types: ["jnt:content"]})
-                isPageOrMainResource: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
+                ...PageBuilderNode
             }
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
+    ${PageBuilderNodeFragment.gql}
 `;
 
 export const getNodeTypeInfo = gql`

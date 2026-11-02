@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import {PageBuilderNodeFragment} from '~/JContent/JContentUtils.gql-queries';
 
 const visibleInContentTree = gql`
     fragment ContentVisibleInContentTree on JCRNode {
@@ -11,7 +12,7 @@ const visibleInContentTree = gql`
 `;
 
 export const GetContentPath = gql`
-    query getContentPath($path:String!, $language: String!, $types: [String]!, $pageBuilderNodeTypes: [String]!) {
+    query getContentPath($path:String!, $language: String!, $types: [String]!) {
         jcr {
             node: nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
@@ -19,7 +20,7 @@ export const GetContentPath = gql`
                 primaryNodeType {
                     name
                 }
-                isNodeType(type: {multi: ANY, types: $pageBuilderNodeTypes})
+                ...PageBuilderNode
                 ...ContentVisibleInContentTree
                 ancestors(fieldFilter: {
                     filters: [
@@ -32,7 +33,7 @@ export const GetContentPath = gql`
                     primaryNodeType {
                         name
                     }
-                    isNodeType(type: {multi: ANY, types: $pageBuilderNodeTypes})
+                    ...PageBuilderNode
                     ...ContentVisibleInContentTree
                     ...NodeCacheRequiredFields
                 }
@@ -41,4 +42,5 @@ export const GetContentPath = gql`
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
     ${visibleInContentTree}
+    ${PageBuilderNodeFragment.gql}
 `;

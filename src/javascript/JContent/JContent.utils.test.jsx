@@ -5,7 +5,6 @@ import {
     getNewCounter,
     getPageBuilderContentViewMode,
     isDescendant,
-    isFormidableForm,
     isPageBuilderContent,
     isPageBuilderNode,
     JahiaRenderedModulesUtil,
@@ -273,43 +272,36 @@ describe('canEditInPageBuilder', () => {
 
 describe('isPageBuilderNode', () => {
     const contents = '/sites/site/contents';
-    const form = {path: `${contents}/form`, 'jmix:visuallyEditable': true, 'jnt:content': true, displayableNode: null};
+    const form = {path: `${contents}/form`, isPageBuilderType: true, isContent: true, displayableNode: null};
 
     it('should open a page, and a main resource with a template of its own', () => {
-        expect(isPageBuilderNode({path: '/sites/site/home', 'jnt:page': true, displayableNode: {path: '/sites/site/home'}})).toBe(true);
-        expect(isPageBuilderNode({path: `${contents}/news`, 'jmix:mainResource': true, displayableNode: {path: `${contents}/news`}})).toBe(true);
+        expect(isPageBuilderNode({path: '/sites/site/home', isPageBuilderType: true, isPage: true, isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}})).toBe(true);
+        expect(isPageBuilderNode({path: `${contents}/news`, isPageBuilderType: true, isPageOrMainResource: true, displayableNode: {path: `${contents}/news`}})).toBe(true);
     });
 
     it('should open a visually editable content with no page through the wrapper', () => {
         expect(isPageBuilderNode(form)).toBe(true);
     });
 
-    it('should open a Formidable form on a core without jmix:visuallyEditable', () => {
-        expect(isPageBuilderNode({path: `${contents}/form`, primaryNodeType: {name: 'fmdb:form'}, 'jnt:content': true, displayableNode: null})).toBe(true);
+    it('should open a temporary Page Builder primary type, a Formidable form on a core without jmix:visuallyEditable', () => {
+        expect(isPageBuilderNode({path: `${contents}/form`, primaryNodeType: {name: 'fmdb:form'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(true);
+        expect(isPageBuilderNode({path: `${contents}/form/fields`, primaryNodeType: {name: 'fmdb:fieldList'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(false);
     });
 
     it('should not open a visually editable node that has no template and is not jnt:content, which the wrapper cannot render', () => {
-        expect(isPageBuilderNode({path: `${contents}/widget`, 'jmix:visuallyEditable': true, displayableNode: null})).toBe(false);
+        expect(isPageBuilderNode({path: `${contents}/widget`, isPageBuilderType: true, isContent: false, displayableNode: null})).toBe(false);
     });
 
     it('should not open any other node', () => {
-        expect(isPageBuilderNode({path: `${contents}/text`, primaryNodeType: {name: 'jnt:text'}, 'jnt:content': true, displayableNode: null})).toBe(false);
+        expect(isPageBuilderNode({path: `${contents}/text`, primaryNodeType: {name: 'jnt:text'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(false);
+        expect(isPageBuilderNode({path: contents, primaryNodeType: {name: 'jnt:contentFolder'}, isPageBuilderType: false, displayableNode: null})).toBe(false);
         expect(isPageBuilderNode(undefined)).toBe(false);
     });
 });
 
-describe('isFormidableForm', () => {
-    it('should recognize a Formidable form by its primary node type only', () => {
-        expect(isFormidableForm({primaryNodeType: {name: 'fmdb:form'}})).toBe(true);
-        expect(isFormidableForm({primaryNodeType: {name: 'fmdb:fieldList'}})).toBe(false);
-        expect(isFormidableForm({})).toBe(false);
-        expect(isFormidableForm(undefined)).toBe(false);
-    });
-});
-
 describe('the view of an item that opens in the Page Builder', () => {
-    const form = {path: '/sites/site/contents/form', 'jmix:visuallyEditable': true, 'jnt:content': true, displayableNode: null};
-    const page = {path: '/sites/site/home', 'jnt:page': true, displayableNode: {path: '/sites/site/home'}};
+    const form = {path: '/sites/site/contents/form', isPageBuilderType: true, isContent: true, displayableNode: null};
+    const page = {path: '/sites/site/home', isPageBuilderType: true, isPage: true, isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}};
 
     beforeEach(() => globalThis.localStorage.clear());
 
@@ -349,7 +341,7 @@ describe('getFrameTemplate', () => {
     });
 
     it('should keep the non-default template of a main resource whose displayable node is its page', () => {
-        const pressRelease = {path: '/sites/site/home/area/release', 'jmix:mainResource': true, displayableNode: {path: '/sites/site/home'}};
+        const pressRelease = {path: '/sites/site/home/area/release', isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}};
         expect(getFrameTemplate(pressRelease, 'fullpage')).toBe('fullpage');
     });
 });

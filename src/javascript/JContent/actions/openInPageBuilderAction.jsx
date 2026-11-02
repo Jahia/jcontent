@@ -1,5 +1,4 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import {useNodeChecks} from '@jahia/data-helper';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -16,15 +15,6 @@ import {
     setPageBuilderContentViewMode
 } from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
-
-const displayableNodeFolderFragment = {
-    applyFor: 'node',
-    gql: gql`fragment DisplayableNodeFolder on JCRNode {
-        displayableNode {
-            isFolder: isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
-        }
-    }`
-};
 
 // A content laid out in a page is edited in that page; only a content with no page opens on its own, through the
 // content-template wrapper
@@ -46,8 +36,7 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
         skip: isPageBuilderMode,
         ...pageBuilderNodeInfoOptions,
         // A page opens in the Page Builder from the pages accordion, not through this action
-        hideOnNodeTypes: ['jnt:page'],
-        applyFragment: displayableNodeFolderFragment
+        hideOnNodeTypes: ['jnt:page']
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;

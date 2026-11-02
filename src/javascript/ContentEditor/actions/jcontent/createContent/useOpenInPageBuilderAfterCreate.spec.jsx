@@ -15,13 +15,13 @@ const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
 
 describe('useOpenInPageBuilderAfterCreate', () => {
     const newNode = {uuid: 'form-uuid', path: '/sites/site/contents/form'};
-    const form = {isVisuallyEditable: true, isContent: true, isPageOrMainResource: false};
-    const news = {isVisuallyEditable: true, isContent: true, isPageOrMainResource: true};
-    const richText = {isVisuallyEditable: false, isContent: true, isPageOrMainResource: false};
+    const form = {path: newNode.path, isPageBuilderType: true, isContent: true, isPageOrMainResource: false, displayableNode: null};
+    const news = {path: newNode.path, isPageBuilderType: true, isContent: true, isPageOrMainResource: true, displayableNode: {path: newNode.path}};
+    const richText = {path: newNode.path, isPageBuilderType: false, isContent: true, isPageOrMainResource: false, displayableNode: null};
     // A core before 8.2.4.0 has no jmix:visuallyEditable: a Formidable form is told by its type name
-    const formOnOlderCore = {primaryNodeType: {name: 'fmdb:form'}, isVisuallyEditable: false, isContent: true, isPageOrMainResource: false};
+    const formOnOlderCore = {...form, primaryNodeType: {name: 'fmdb:form'}, isPageBuilderType: false};
     // The content-template wrapper cannot render a node that is not jnt:content
-    const widget = {isVisuallyEditable: true, isContent: false, isPageOrMainResource: false};
+    const widget = {path: newNode.path, isPageBuilderType: true, isContent: false, isPageOrMainResource: false, displayableNode: null};
     let dispatch;
     let query;
     let hook;

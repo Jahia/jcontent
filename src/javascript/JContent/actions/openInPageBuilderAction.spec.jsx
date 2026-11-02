@@ -12,7 +12,7 @@ describe('getPageBuilderPath', () => {
     });
 
     it('opens a main resource with a template of its own on itself', () => {
-        const release = {path: '/sites/site/home/area/release', 'jmix:mainResource': true, displayableNode: {path: '/sites/site/home', isFolder: false}};
+        const release = {path: '/sites/site/home/area/release', isPageOrMainResource: true, displayableNode: {path: '/sites/site/home', isFolder: false}};
         expect(getPageBuilderPath(release)).toBe('/sites/site/home/area/release');
         const news = {path: '/sites/site/contents/news', displayableNode: {path: '/sites/site/contents/news', isFolder: false}};
         expect(getPageBuilderPath(news)).toBe('/sites/site/contents/news');

@@ -86,7 +86,10 @@ export const pageBuilderNodeInfoOptions = {
     getDisplayableNodePath: true
 };
 
-export const hasOwnTemplate = node => node.displayableNode?.path === node.path;
+// A main resource that has only a non-default content template resolves its displayable node to its page, yet renders
+// through its own template
+export const hasOwnTemplate = node => Boolean(node['jnt:page'] || node['jmix:mainResource']) ||
+    node.displayableNode?.path === node.path;
 
 // The frame renders a node through its own template, or through the content-template wrapper when it has none. The
 // wrapper applies to jnt:content only, so any other node without a template of its own stays out of the Page Builder.

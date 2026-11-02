@@ -347,6 +347,11 @@ describe('getFrameTemplate', () => {
         expect(getFrameTemplate(page, 'home-alt')).toBe('home-alt');
         expect(getFrameTemplate(page, 'content-template')).toBe('');
     });
+
+    it('should keep the non-default template of a main resource whose displayable node is its page', () => {
+        const pressRelease = {path: '/sites/site/home/area/release', 'jmix:mainResource': true, displayableNode: {path: '/sites/site/home'}};
+        expect(getFrameTemplate(pressRelease, 'fullpage')).toBe('fullpage');
+    });
 });
 
 describe('JahiaRenderedModulesUtil', () => {

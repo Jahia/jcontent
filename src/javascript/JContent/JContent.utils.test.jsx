@@ -4,6 +4,7 @@ import {
     getFrameTemplate,
     getNewCounter,
     isDescendant,
+    isFormidableForm,
     isPageBuilderNode,
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
@@ -280,6 +281,10 @@ describe('isPageBuilderNode', () => {
         expect(isPageBuilderNode(form)).toBe(true);
     });
 
+    it('should open a Formidable form on a core without jmix:visuallyEditable', () => {
+        expect(isPageBuilderNode({path: `${contents}/form`, primaryNodeType: {name: 'fmdb:form'}, 'jnt:content': true, displayableNode: null})).toBe(true);
+    });
+
     it('should not open a visually editable node that has no template and is not jnt:content, which the wrapper cannot render', () => {
         expect(isPageBuilderNode({path: `${contents}/widget`, 'jmix:visuallyEditable': true, displayableNode: null})).toBe(false);
     });
@@ -287,6 +292,15 @@ describe('isPageBuilderNode', () => {
     it('should not open any other node', () => {
         expect(isPageBuilderNode({path: `${contents}/text`, primaryNodeType: {name: 'jnt:text'}, 'jnt:content': true, displayableNode: null})).toBe(false);
         expect(isPageBuilderNode(undefined)).toBe(false);
+    });
+});
+
+describe('isFormidableForm', () => {
+    it('should recognize a Formidable form by its primary node type only', () => {
+        expect(isFormidableForm({primaryNodeType: {name: 'fmdb:form'}})).toBe(true);
+        expect(isFormidableForm({primaryNodeType: {name: 'fmdb:fieldList'}})).toBe(false);
+        expect(isFormidableForm({})).toBe(false);
+        expect(isFormidableForm(undefined)).toBe(false);
     });
 });
 

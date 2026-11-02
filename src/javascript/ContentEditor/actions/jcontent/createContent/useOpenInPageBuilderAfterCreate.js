@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
+import {isFormidableForm} from '~/JContent/JContent.utils';
 import {getIsVisuallyEditable} from './createContent.gql-queries';
 
 /**
@@ -46,7 +47,7 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, isInContentFolder, o
         }).then(({data}) => {
             const node = data?.jcr?.nodeById;
             // The content-template wrapper that renders it in the Page Builder applies to jnt:content only
-            if (node?.isVisuallyEditable && node.isContent && !node.isPageOrMainResource) {
+            if ((node?.isVisuallyEditable || isFormidableForm(node)) && node.isContent && !node.isPageOrMainResource) {
                 dispatch(batchActions([
                     cmGoto({path: newNode.path}),
                     setTableViewMode(JContentConstants.tableView.viewMode.PAGE_BUILDER)

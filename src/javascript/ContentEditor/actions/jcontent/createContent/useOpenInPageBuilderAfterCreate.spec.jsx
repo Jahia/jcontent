@@ -18,6 +18,8 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     const form = {isVisuallyEditable: true, isContent: true, isPageOrMainResource: false};
     const news = {isVisuallyEditable: true, isContent: true, isPageOrMainResource: true};
     const richText = {isVisuallyEditable: false, isContent: true, isPageOrMainResource: false};
+    // A core before 8.2.4.0 has no jmix:visuallyEditable: a Formidable form is told by its type name
+    const formOnOlderCore = {primaryNodeType: {name: 'fmdb:form'}, isVisuallyEditable: false, isContent: true, isPageOrMainResource: false};
     // The content-template wrapper cannot render a node that is not jnt:content
     const widget = {isVisuallyEditable: true, isContent: false, isPageOrMainResource: false};
     let dispatch;
@@ -86,6 +88,14 @@ describe('useOpenInPageBuilderAfterCreate', () => {
         expect(dispatch).not.toHaveBeenCalled();
 
         hook.handleClosed({mode: 'edit', closed: true});
+        await flushPromises();
+        expect(dispatch).toHaveBeenCalledTimes(1);
+    });
+
+    it('opens a Formidable form on a core without jmix:visuallyEditable', async () => {
+        render({isEnabled: true, isInContentFolder: true}, formOnOlderCore);
+        hook.handleCreate(newNode, {});
+        hook.handleClosed(closedEditor);
         await flushPromises();
         expect(dispatch).toHaveBeenCalledTimes(1);
     });

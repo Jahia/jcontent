@@ -79,6 +79,9 @@ export const getIsVisuallyEditable = gql`
         jcr {
             nodeById(uuid: $uuid) {
                 ...NodeCacheRequiredFields
+                primaryNodeType {
+                    name
+                }
                 isVisuallyEditable: isNodeType(type: {types: ["jmix:visuallyEditable"]})
                 isContent: isNodeType(type: {types: ["jnt:content"]})
                 isPageOrMainResource: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})

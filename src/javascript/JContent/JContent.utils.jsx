@@ -73,9 +73,16 @@ const isFromReference = (path, nodes) => {
     return false;
 };
 
+// A Formidable form opens in the Page Builder on a core without jmix:visuallyEditable, before Jahia 8.2.4.0. The type
+// is compared by name: a Jahia without Formidable has no fmdb namespace for isNodeType to resolve.
+export const FORMIDABLE_FORM_TYPE = 'fmdb:form';
+
+export const isFormidableForm = node => node?.primaryNodeType?.name === FORMIDABLE_FORM_TYPE;
+
 // The useNodeInfo options whose result isPageBuilderNode reads
 export const pageBuilderNodeInfoOptions = {
     getIsNodeTypes: [...JContentConstants.pageBuilderNodeTypes, 'jnt:content'],
+    getPrimaryNodeType: true,
     getDisplayableNodePath: true
 };
 
@@ -84,7 +91,7 @@ export const hasOwnTemplate = node => node.displayableNode?.path === node.path;
 // The frame renders a node through its own template, or through the content-template wrapper when it has none. The
 // wrapper applies to jnt:content only, so any other node without a template of its own stays out of the Page Builder.
 export const isPageBuilderNode = node => Boolean(node) &&
-    JContentConstants.pageBuilderNodeTypes.some(nt => node[nt]) &&
+    (JContentConstants.pageBuilderNodeTypes.some(nt => node[nt]) || isFormidableForm(node)) &&
     (hasOwnTemplate(node) || Boolean(node['jnt:content']));
 
 // The template the frame of a Page Builder node needs. A node that is not its own displayable node has no page, hence

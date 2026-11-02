@@ -12,8 +12,10 @@ import {Breadcrumb} from '@jahia/moonstone';
 import SimplePathEntry from './SimplePathEntry';
 import CompositePathEntry from './CompositePathEntry';
 import {useNodeDialog} from '~/JContent/NavigationDialogs';
+import {isFormidableForm} from '~/JContent/JContent.utils';
 
-const isPageBuilderItem = item => Boolean(item?.isNodeType);
+// The query gives the Page Builder flag of an item; a form is told by its type name, as JContent.utils states
+const isPageBuilderItem = item => Boolean(item?.isNodeType) || isFormidableForm(item);
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;

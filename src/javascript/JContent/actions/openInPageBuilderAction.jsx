@@ -6,7 +6,15 @@ import PropTypes from 'prop-types';
 import {cmGoto, cmOpenPaths, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {batchActions} from 'redux-batched-actions';
-import {expandTree, hasOwnTemplate, isPageBuilderEnabled, isPageBuilderNode, pageBuilderNodeInfoOptions} from '~/JContent/JContent.utils';
+import {
+    expandTree,
+    hasOwnTemplate,
+    isPageBuilderContent,
+    isPageBuilderEnabled,
+    isPageBuilderNode,
+    pageBuilderNodeInfoOptions,
+    setPageBuilderContentViewMode
+} from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
 
 const displayableNodeFolderFragment = {
@@ -57,6 +65,11 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
                 isVisible={isOpenable}
                 enabled={isOpenable}
                 onClick={() => {
+                    // Asking for the Page Builder on such an item is a choice of view for the next ones
+                    if (targetPath === path && isPageBuilderContent(res.node)) {
+                        setPageBuilderContentViewMode(JContentConstants.tableView.viewMode.PAGE_BUILDER);
+                    }
+
                     if (isSearch) {
                         expandTree({path: targetPath}, client).then(({mode, ancestorPaths, site}) => {
                             dispatch(batchActions([

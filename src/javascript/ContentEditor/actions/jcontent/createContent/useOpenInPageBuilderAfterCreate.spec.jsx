@@ -38,6 +38,7 @@ describe('useOpenInPageBuilderAfterCreate', () => {
     };
 
     beforeEach(() => {
+        window.localStorage.clear();
         dispatch = jest.fn();
         useDispatch.mockReturnValue(dispatch);
     });
@@ -59,6 +60,18 @@ describe('useOpenInPageBuilderAfterCreate', () => {
         expect(dispatch.mock.calls[0][0].payload).toEqual([
             {type: 'CM_GOTO', path: '/sites/site/contents/form'},
             {type: 'SET_TABLE_VIEW_MODE', payload: 'pageBuilder'}
+        ]);
+    });
+
+    it('lands in the view the editor last chose for such an item', async () => {
+        window.localStorage.setItem('jcontent-pageBuilderContent-viewMode', 'flatList');
+        render({isEnabled: true, isInContentFolder: true}, form);
+        hook.handleCreate(newNode, {});
+        hook.handleClosed(closedEditor);
+        await flushPromises();
+        expect(dispatch.mock.calls[0][0].payload).toEqual([
+            {type: 'CM_GOTO', path: '/sites/site/contents/form'},
+            {type: 'SET_TABLE_VIEW_MODE', payload: 'flatList'}
         ]);
     });
 

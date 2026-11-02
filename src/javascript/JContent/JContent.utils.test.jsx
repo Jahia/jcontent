@@ -3,14 +3,17 @@ import {
     canEditInPageBuilder,
     getFrameTemplate,
     getNewCounter,
+    getPageBuilderContentViewMode,
     isDescendant,
     isFormidableForm,
+    isPageBuilderContent,
     isPageBuilderNode,
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
     removeFileExtension,
     resolveUrlForLiveOrPreview,
-    resolveEffectiveSite
+    resolveEffectiveSite,
+    setPageBuilderContentViewMode
 } from './JContent.utils';
 
 jest.mock('@jahia/ui-extender', () => ({
@@ -301,6 +304,32 @@ describe('isFormidableForm', () => {
         expect(isFormidableForm({primaryNodeType: {name: 'fmdb:fieldList'}})).toBe(false);
         expect(isFormidableForm({})).toBe(false);
         expect(isFormidableForm(undefined)).toBe(false);
+    });
+});
+
+describe('the view of an item that opens in the Page Builder', () => {
+    const form = {path: '/sites/site/contents/form', 'jmix:visuallyEditable': true, 'jnt:content': true, displayableNode: null};
+    const page = {path: '/sites/site/home', 'jnt:page': true, displayableNode: {path: '/sites/site/home'}};
+
+    beforeEach(() => window.localStorage.clear());
+
+    it('should concern an item that opens in the Page Builder and is not a page', () => {
+        expect(isPageBuilderContent(form)).toBe(true);
+        expect(isPageBuilderContent(page)).toBe(false);
+        expect(isPageBuilderContent({path: '/sites/site/contents', primaryNodeType: {name: 'jnt:contentFolder'}})).toBe(false);
+    });
+
+    it('should open such an item in the Page Builder until the editor chooses another view', () => {
+        expect(getPageBuilderContentViewMode()).toBe('pageBuilder');
+        setPageBuilderContentViewMode('flatList');
+        expect(getPageBuilderContentViewMode()).toBe('flatList');
+        setPageBuilderContentViewMode('structuredView');
+        expect(getPageBuilderContentViewMode()).toBe('structuredView');
+    });
+
+    it('should ignore a stored value that is not a view of such an item', () => {
+        window.localStorage.setItem('jcontent-pageBuilderContent-viewMode', 'thumbnails');
+        expect(getPageBuilderContentViewMode()).toBe('pageBuilder');
     });
 });
 

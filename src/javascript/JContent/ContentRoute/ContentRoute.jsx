@@ -12,7 +12,28 @@ import {EditFrame} from '../EditFrame';
 import {registry} from '@jahia/ui-extender';
 import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
 import {isInSearchMode} from './ContentLayout/ContentLayout.utils';
-import {getFrameTemplate, isPageBuilderEnabled, isPageBuilderNode, JahiaRenderedModulesUtil, pageBuilderNodeInfoOptions} from '../JContent.utils';
+import {
+    getFrameTemplate,
+    getPageBuilderContentViewMode,
+    isPageBuilderContent,
+    isPageBuilderEnabled,
+    isPageBuilderNode,
+    JahiaRenderedModulesUtil,
+    pageBuilderNodeInfoOptions
+} from '../JContent.utils';
+
+// An item that opens in the Page Builder without being a page takes its view when it is reached, once per item, so
+// the editor can still switch views on it
+const useContentViewMode = ({node, path, mode, canShowEditFrame}) => {
+    const dispatch = useDispatch();
+    const reachedPath = (canShowEditFrame && node.path === path && !isInSearchMode(mode) && isPageBuilderContent(node)) ? path : null;
+
+    useEffect(() => {
+        if (reachedPath) {
+            dispatch(setTableViewMode(getPageBuilderContentViewMode()));
+        }
+    }, [dispatch, reachedPath]);
+};
 
 // The template lives in the URL (state.jcontent.template) so that a reload keeps it; cmGoto resets it on every
 // navigation, so it is set again each time the Page Builder opens on such a node. It replaces the history entry:
@@ -59,6 +80,7 @@ export const ContentRoute = () => {
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
     const {isRenderedAsPage, canShowEditFrame, frameTemplate, isFrameTemplateReady} = useFrameTemplate({node: res?.node, template, isOpenDialog, isPageBuilderView});
+    useContentViewMode({node: res?.node, path, mode, canShowEditFrame});
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {

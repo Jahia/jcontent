@@ -94,6 +94,34 @@ export const isPageBuilderNode = node => Boolean(node) &&
     (JContentConstants.pageBuilderNodeTypes.some(nt => node[nt]) || isFormidableForm(node)) &&
     (hasOwnTemplate(node) || Boolean(node['jnt:content']));
 
+// An item that opens in the Page Builder without being a page, such as a form or a main resource. It opens in the
+// Page Builder by default, or in the view the editor last chose on such an item. A page keeps the view of its
+// accordion, and a view chosen on an item that cannot open in the Page Builder is not remembered.
+export const isPageBuilderContent = node => isPageBuilderNode(node) && !node['jnt:page'];
+
+const contentViewModes = [
+    JContentConstants.tableView.viewMode.PAGE_BUILDER,
+    JContentConstants.tableView.viewMode.FLAT,
+    JContentConstants.tableView.viewMode.STRUCTURED
+];
+
+export const getPageBuilderContentViewMode = () => {
+    try {
+        const viewMode = window.localStorage.getItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode);
+        return contentViewModes.includes(viewMode) ? viewMode : JContentConstants.tableView.viewMode.PAGE_BUILDER;
+    } catch {
+        return JContentConstants.tableView.viewMode.PAGE_BUILDER;
+    }
+};
+
+export const setPageBuilderContentViewMode = viewMode => {
+    try {
+        window.localStorage.setItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode, viewMode);
+    } catch {
+        // The view is not remembered when the browser refuses the storage
+    }
+};
+
 // The template the frame of a Page Builder node needs. A node that is not its own displayable node has no page, hence
 // no template: it goes through the content-template wrapper. Pages and main resources keep their own template; the
 // wrapper left in the URL for one of them, as jContent restores the last template when it opens again, is stale.

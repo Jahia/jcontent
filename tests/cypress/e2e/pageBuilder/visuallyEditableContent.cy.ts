@@ -30,6 +30,12 @@ describe('Page builder - visually editable content in a content folder', () => {
     const childPath = `${nodePath}/child-a`;
     const plainName = 'plain-text';
 
+    // The view an editor last chose on such an item, which jContent keeps in the browser
+    const viewModeKey = 'jcontent-pageBuilderContent-viewMode';
+    const visitWithNoChosenView = (path: string): JContent => JContent.visit(siteKey, 'en', path, {
+        onBeforeLoad: (win: Window) => win.localStorage.removeItem(viewModeKey)
+    });
+
     const visitNode = (): JContentPageBuilder => JContent
         .visit(siteKey, 'en', `content-folders/contents/${nodeName}`)
         .switchToPageBuilder();
@@ -69,7 +75,7 @@ describe('Page builder - visually editable content in a content folder', () => {
     });
 
     it('Case 1: offers the Page Builder to the visually editable content only', () => {
-        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        const jcontent = visitWithNoChosenView('content-folders/contents');
         jcontent.switchToListMode();
         const nodeMenu = jcontent.getTable().getRowByName(nodeName).contextMenu();
         nodeMenu.shouldHaveItem('Open in Page Builder');
@@ -78,8 +84,27 @@ describe('Page builder - visually editable content in a content folder', () => {
         plainMenu.shouldNotHaveItem('Open in Page Builder');
         plainMenu.close();
 
+        // Selecting it opens it in the Page Builder by default
         jcontent.getAccordionItem('content-folders').getTreeItem(nodeName).click();
-        jcontent.switchToPageBuilder();
+        jcontent.shouldBeInMode('Page Builder');
+        new JContentPageBuilder(jcontent).getMainModule(nodePath);
+    });
+
+    it('keeps the view the editor chose on such an item', () => {
+        const jcontent = visitWithNoChosenView(`content-folders/contents/${nodeName}`);
+        jcontent.shouldBeInMode('Page Builder');
+        jcontent.switchToListMode();
+        jcontent.getAccordionItem('content-folders').getTreeItem('contents').click();
+        jcontent.getTable().getRowByName(nodeName).should('be.visible');
+        jcontent.getAccordionItem('content-folders').getTreeItem(nodeName).click();
+        jcontent.shouldBeInMode('List');
+        jcontent.getTable().getRowByName('child-a').should('be.visible');
+    });
+
+    it('does not keep a view chosen on a folder', () => {
+        const jcontent = visitWithNoChosenView('content-folders/contents');
+        jcontent.switchToStructuredView();
+        jcontent.getAccordionItem('content-folders').getTreeItem(nodeName).click();
         jcontent.shouldBeInMode('Page Builder');
     });
 

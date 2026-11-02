@@ -3,14 +3,13 @@ import {useApolloClient} from '@apollo/client';
 import {useDispatch} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 import {cmGoto, setTableViewMode} from '~/JContent/redux/JContent.redux';
-import JContentConstants from '~/JContent/JContent.constants';
-import {isFormidableForm} from '~/JContent/JContent.utils';
+import {getPageBuilderContentViewMode, isFormidableForm} from '~/JContent/JContent.utils';
 import {getIsVisuallyEditable} from './createContent.gql-queries';
 
 /**
  * A content created in a content folder that opens in the Page Builder without being a page or a main resource (a
  * form) is what the editor works on next: once the Content Editor closes, land on it in the Page Builder, as New
- * Page does for a page. A main resource stays on the list. Content created inside another content (an area, a
+ * Page does for a page, or in the view the editor last chose for such an item. A main resource stays on the list. Content created inside another content (an area, a
  * form) stays where it is, the editor is working on that parent. The navigation waits
  * for the editor to close so that "create another" and the fullscreen redirect to edit mode keep their flow; with
  * several contents created in a row, the last one is the one opened.
@@ -50,7 +49,7 @@ export const useOpenInPageBuilderAfterCreate = ({isEnabled, isInContentFolder, o
             if ((node?.isVisuallyEditable || isFormidableForm(node)) && node.isContent && !node.isPageOrMainResource) {
                 dispatch(batchActions([
                     cmGoto({path: newNode.path}),
-                    setTableViewMode(JContentConstants.tableView.viewMode.PAGE_BUILDER)
+                    setTableViewMode(getPageBuilderContentViewMode())
                 ]));
             }
         }).catch(e => {

@@ -6,7 +6,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '~/JContent/redux/JContent.redux';
 import classes from './ViewModeSelector.scss';
-import {isPageBuilderEnabled, isPageBuilderNode, pageBuilderNodeInfoOptions} from '~/JContent/JContent.utils';
+import {isPageBuilderContent, isPageBuilderEnabled, isPageBuilderNode, pageBuilderNodeInfoOptions, setPageBuilderContentViewMode} from '~/JContent/JContent.utils';
 import {TableViewModeChangeTracker} from './tableViewChangeTracker';
 import {registry} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
@@ -59,6 +59,10 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
 
     const handleChange = selectedViewMode => {
         TableViewModeChangeTracker.registerChange();
+        if (isPageBuilderContent(info.node)) {
+            setPageBuilderContentViewMode(selectedViewMode);
+        }
+
         onChange(selectedViewMode);
     };
 

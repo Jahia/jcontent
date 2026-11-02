@@ -42,7 +42,8 @@ const JContentConstants = /** @type {const} */ ({
         viewType: 'jcontent_view_type',
         viewMode: 'jcontent_view_mode',
         filesSelectorMode: 'jcontent_files_selector_mode',
-        liveServerName: 'jcontent-live-servername'
+        liveServerName: 'jcontent-live-servername',
+        pageBuilderContentViewMode: 'jcontent-pageBuilderContent-viewMode'
     },
     accordionPermissions: {
         pagesAccordionAccess: 'pagesAccordionAccess',

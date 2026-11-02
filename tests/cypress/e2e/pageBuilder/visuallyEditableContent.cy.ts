@@ -16,7 +16,7 @@ const setShowPageBuilder = (value: boolean) => cy.apollo({
 });
 
 /**
- * [cent:visuallyEditable] > jnt:content, jmix:visuallyEditable, jmix:editorialContent, jmix:visibleInContentTree, mix:title
+ * [cent:visuallyEditable] > jnt:content, jmix:visuallyEditable, jmix:basicContent, jmix:editorialContent, jmix:visibleInContentTree, mix:title
  *  + * (cent:childObject1)
  *
  * A node of that type in a content folder has no page: the Page Builder renders it through the content-template
@@ -111,7 +111,7 @@ describe('Page builder - visually editable content in a content folder', () => {
     it('Case 2: renders the content alone in the frame through the content-template wrapper', () => {
         const pageBuilder = visitNode();
         pageBuilder.getMainModule(nodePath);
-        cy.url().should('contain', 'template=content-template');
+        cy.url().should('contain', 'template:content-template');
         cy.get('iframe[data-sel-role="page-builder-frame-active"]')
             .its('0.contentWindow.location.pathname')
             .should('match', /\.content-template\.html$/);
@@ -129,7 +129,7 @@ describe('Page builder - visually editable content in a content folder', () => {
         pageBuilder.getModule(childPath, false).contextMenu(true, false).select('Delete');
         getComponent(DeleteDialog).markForDeletion();
         pageBuilder.getModule(childPath).getForDeletionStatus().should('be.visible');
-        cy.url().should('contain', 'template=content-template');
+        cy.url().should('contain', 'template:content-template');
     });
 
     it('Case 4: offers no preview or live page of its own', () => {
@@ -143,7 +143,7 @@ describe('Page builder - visually editable content in a content folder', () => {
 
     it('Case 5: keeps a page on its own template', () => {
         JContent.visit(siteKey, 'en', 'pages/home').switchToPageBuilder().getMainModule(`/sites/${siteKey}/home`);
-        cy.url().should('not.contain', 'template=content-template');
+        cy.url().should('not.contain', 'template:content-template');
         cy.get('iframe[data-sel-role="page-builder-frame-active"]')
             .its('0.contentWindow.location.pathname')
             .should('not.contain', 'content-template');

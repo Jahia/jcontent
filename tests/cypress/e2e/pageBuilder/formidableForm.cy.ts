@@ -67,7 +67,7 @@ describe('Formidable form in the Page Builder', () => {
 
         jcontent.getAccordionItem('content-folders').getTreeItem(formName).click();
         const pageBuilder = jcontent.switchToPageBuilder();
-        cy.url().should('contain', 'template=content-template');
+        cy.url().should('contain', 'template:content-template');
         pageBuilder.getMainModule(formPath);
         pageBuilder.getModule(fieldPath).should('contain', 'First name');
     });

@@ -1,4 +1,4 @@
-import {addNode, createSite, deleteSite, enableModule, getComponent} from '@jahia/cypress';
+import {addNode, createSite, deleteSite, enableModule, getComponent, getComponentBySelector, Menu} from '@jahia/cypress';
 import gql from 'graphql-tag';
 import {ContentEditor, JContent, JContentPageBuilder} from '../../page-object';
 import {DeleteDialog} from '../../page-object/deleteDialog';
@@ -40,6 +40,14 @@ describe('Page builder - visually editable content in a content folder', () => {
         .visit(siteKey, 'en', `content-folders/contents/${nodeName}`)
         .switchToPageBuilder();
 
+    // Open in Page Builder sits in the header menu, which the narrow header shows at a width of 750px or less
+    const openHeaderMenu = (): Menu => {
+        cy.get('button[data-sel-role="narrowHeaderMenu"]').should('be.visible').click();
+        const menu = getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+        menu.shouldHaveItem('Delete');
+        return menu;
+    };
+
     const frameShouldHaveExistingNodes = (count: number) => {
         cy.get('iframe[data-sel-role="page-builder-frame-active"]').should($frame => {
             expect($frame.contents().find(`[jahiatype="module"][type="existingNode"][path^="${nodePath}/"]`)).to.have.length(count);
@@ -75,19 +83,18 @@ describe('Page builder - visually editable content in a content folder', () => {
     });
 
     it('Case 1: offers the Page Builder to the visually editable content only', () => {
-        const jcontent = visitWithNoChosenView('content-folders/contents');
-        jcontent.switchToListMode();
-        const nodeMenu = jcontent.getTable().getRowByName(nodeName).contextMenu();
-        nodeMenu.shouldHaveItem('Open in Page Builder');
-        nodeMenu.close();
-        const plainMenu = jcontent.getTable().getRowByName(plainName).contextMenu();
+        cy.viewport(1080, 768);
+        const jcontent = visitWithNoChosenView(`content-folders/contents/${plainName}`);
+        const plainMenu = openHeaderMenu();
         plainMenu.shouldNotHaveItem('Open in Page Builder');
         plainMenu.close();
 
-        // Selecting it opens it in the Page Builder by default
+        // Selecting it opens it in the Page Builder by default, and its list view offers the way back
         jcontent.getAccordionItem('content-folders').getTreeItem(nodeName).click();
         jcontent.shouldBeInMode('Page Builder');
         new JContentPageBuilder(jcontent).getMainModule(nodePath);
+        jcontent.switchToListMode();
+        openHeaderMenu().shouldHaveItem('Open in Page Builder');
     });
 
     it('keeps the view the editor chose on such an item', () => {
@@ -136,7 +143,7 @@ describe('Page builder - visually editable content in a content folder', () => {
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
         jcontent.switchToListMode();
         const menu = jcontent.getTable().getRowByName(nodeName).contextMenu();
-        menu.shouldHaveItem('Open in Page Builder');
+        menu.shouldHaveItem('Edit');
         menu.shouldNotHaveRoleItem('openInPreviewMenu');
         menu.close();
     });

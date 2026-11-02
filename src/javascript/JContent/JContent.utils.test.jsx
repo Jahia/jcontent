@@ -311,7 +311,7 @@ describe('the view of an item that opens in the Page Builder', () => {
     const form = {path: '/sites/site/contents/form', 'jmix:visuallyEditable': true, 'jnt:content': true, displayableNode: null};
     const page = {path: '/sites/site/home', 'jnt:page': true, displayableNode: {path: '/sites/site/home'}};
 
-    beforeEach(() => window.localStorage.clear());
+    beforeEach(() => globalThis.localStorage.clear());
 
     it('should concern an item that opens in the Page Builder and is not a page', () => {
         expect(isPageBuilderContent(form)).toBe(true);
@@ -328,7 +328,7 @@ describe('the view of an item that opens in the Page Builder', () => {
     });
 
     it('should ignore a stored value that is not a view of such an item', () => {
-        window.localStorage.setItem('jcontent-pageBuilderContent-viewMode', 'thumbnails');
+        globalThis.localStorage.setItem('jcontent-pageBuilderContent-viewMode', 'thumbnails');
         expect(getPageBuilderContentViewMode()).toBe('pageBuilder');
     });
 });

@@ -102,16 +102,16 @@ export const isPageBuilderNode = node => Boolean(node) &&
 // accordion, and a view chosen on an item that cannot open in the Page Builder is not remembered.
 export const isPageBuilderContent = node => isPageBuilderNode(node) && !node['jnt:page'];
 
-const contentViewModes = [
+const contentViewModes = new Set([
     JContentConstants.tableView.viewMode.PAGE_BUILDER,
     JContentConstants.tableView.viewMode.FLAT,
     JContentConstants.tableView.viewMode.STRUCTURED
-];
+]);
 
 export const getPageBuilderContentViewMode = () => {
     try {
-        const viewMode = window.localStorage.getItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode);
-        return contentViewModes.includes(viewMode) ? viewMode : JContentConstants.tableView.viewMode.PAGE_BUILDER;
+        const viewMode = globalThis.localStorage.getItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode);
+        return contentViewModes.has(viewMode) ? viewMode : JContentConstants.tableView.viewMode.PAGE_BUILDER;
     } catch {
         return JContentConstants.tableView.viewMode.PAGE_BUILDER;
     }
@@ -119,7 +119,7 @@ export const getPageBuilderContentViewMode = () => {
 
 export const setPageBuilderContentViewMode = viewMode => {
     try {
-        window.localStorage.setItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode, viewMode);
+        globalThis.localStorage.setItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode, viewMode);
     } catch {
         // The view is not remembered when the browser refuses the storage
     }
@@ -299,7 +299,7 @@ export const booleanValue = v => {
     return Boolean(v);
 };
 
-export const isPageBuilderEnabled = () => booleanValue(window.contextJsParameters?.config?.jcontent?.showPageBuilder);
+export const isPageBuilderEnabled = () => booleanValue(globalThis.contextJsParameters?.config?.jcontent?.showPageBuilder);
 
 export const getCanDisplayItemParams = node => {
     const folders = ['jnt:contentFolder', 'jnt:folder'];

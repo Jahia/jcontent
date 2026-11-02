@@ -21,6 +21,9 @@ const setShowPageBuilder = (value: boolean) => cy.apollo({
  *
  * A node of that type in a content folder has no page: the Page Builder renders it through the content-template
  * wrapper of the default module. A plain jnt:text beside it does not open in the Page Builder.
+ *
+ * Needs Jahia 8.2.4.0 or later, the first core that ships jmix:visuallyEditable. On an older core the CND of
+ * jcontent-test-module does not install, which fails every spec that deploys the module.
  */
 describe('Page builder - visually editable content in a content folder', () => {
     const siteKey = 'visuallyEditableSite';

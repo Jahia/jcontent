@@ -10,7 +10,7 @@ import {
     FileInfoQueryLive
 } from '~/JContent/actions/downloadFileAction/DownloadFileDialog/DownloadFileDialog.gql-queries';
 import clsx from 'clsx';
-import {NodeIcon, useCloseOnNavigation} from '~/utils';
+import {copyToClipboard, NodeIcon, useCloseOnNavigation} from '~/utils';
 import {FileSize} from '~/shared';
 import {useNotifications} from '@jahia/react-material';
 
@@ -97,8 +97,9 @@ export const DownloadFileDialog = ({path, onExit}) => {
                                 label={t('jcontent:label.contentManager.downloadFile.copyUrl')}
                                 data-sel-role="download-copyUrl"
                                 onClick={() => {
-                                    navigator.clipboard.writeText(href);
-                                    notify(t('jcontent:label.contentManager.downloadFile.copied'), ['closeButton']);
+                                    copyToClipboard(href)
+                                        .then(() => notify(t('jcontent:label.contentManager.downloadFile.copied'), ['closeButton']))
+                                        .catch(error => console.error('Unable to copy to clipboard', error));
                                 }}
                             />
                         </div>

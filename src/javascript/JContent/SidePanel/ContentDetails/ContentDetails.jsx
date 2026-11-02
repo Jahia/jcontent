@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
+import {copyToClipboard} from '~/utils';
 import styles from './ContentDetails.scss';
 
 const GET_CONTENT_LINKS = gql`
@@ -45,14 +46,11 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
 
     const handleCopy = useCallback(() => {
         if (value) {
-            try {
-                const copyPromise = navigator.clipboard?.writeText(value);
-                copyPromise?.then(() => {
+            copyToClipboard(value)
+                .then(() => {
                     notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
-                });
-            } catch (error) {
-                console.error('Unable to copy to clipboard', error);
-            }
+                })
+                .catch(error => console.error('Unable to copy to clipboard', error));
         }
     }, [value, notificationContext, t]);
 
@@ -93,10 +91,11 @@ const LinkRow = ({label, displayValue, copyValue}) => {
 
     const handleCopy = useCallback(() => {
         if (copyValue) {
-            const copyPromise = navigator.clipboard?.writeText(copyValue);
-            copyPromise?.then(() => {
-                notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.linksCopied'), ['closeButton']);
-            });
+            copyToClipboard(copyValue)
+                .then(() => {
+                    notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.linksCopied'), ['closeButton']);
+                })
+                .catch(error => console.error('Unable to copy to clipboard', error));
         }
     }, [copyValue, notificationContext, t]);
 

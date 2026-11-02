@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
-import {Loader, Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
+import {Loader, Table, TableBody, TablePagination, TableRow, Typography} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 import {useTable} from 'react-table';
-import {ContentListHeader, ContentNotFound, EmptyTable} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
+import {ContentListHeader, EmptyTable} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
-import {allColumnData} from '~/ContentEditor/SelectorTypes/Picker/reactTable/columns';
 import {UserSearch} from './userSearch';
 import PropTypes from 'prop-types';
 import styles from '../selectors.scss';
@@ -84,9 +83,13 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
             <>
                 <UserSearch tableConfig={tableConfig} {...userQueryOptions}/>
                 <div className={clsx(styles.userTable, 'flexFluid flexCol_center alignCenter')}>
+                    {/* A site with no users of its own is an ordinary state, not content that
+                        has gone missing, so it does not get the not-found wording. */}
                     {searchTerms ?
                         <EmptyTable text={searchTerms}/> :
-                        <ContentNotFound columnSpan={allColumnData.length} t={t}/>}
+                        <Typography component="div" variant="body">
+                            {t('label.contentManager.actions.customizedPreview.dialog.noUsers')}
+                        </Typography>}
                 </div>
             </>
         );

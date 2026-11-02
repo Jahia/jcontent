@@ -12,8 +12,10 @@ import {
     removeFileExtension,
     resolveUrlForLiveOrPreview,
     resolveEffectiveSite,
-    setPageBuilderContentViewMode
+    setPageBuilderContentViewMode,
+    toPageBuilderNode
 } from './JContent.utils';
+import {PageBuilderNodeFragment} from './JContentUtils.gql-queries';
 
 jest.mock('@jahia/ui-extender', () => ({
     registry: {
@@ -296,6 +298,37 @@ describe('isPageBuilderNode', () => {
         expect(isPageBuilderNode({path: `${contents}/text`, primaryNodeType: {name: 'jnt:text'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(false);
         expect(isPageBuilderNode({path: contents, primaryNodeType: {name: 'jnt:contentFolder'}, isPageBuilderType: false, displayableNode: null})).toBe(false);
         expect(isPageBuilderNode(undefined)).toBe(false);
+    });
+});
+
+describe('toPageBuilderNode', () => {
+    const nodeInfo = types => ({path: '/sites/site/contents/news', primaryNodeType: {name: 'jnt:news'}, displayableNode: {path: '/sites/site/home'}, ...types});
+
+    it('should give a useNodeInfo result every field of PageBuilderNodeFragment', () => {
+        const fields = PageBuilderNodeFragment.definitions[0].selectionSet.selections.map(field => field.alias?.value || field.name.value);
+        const node = toPageBuilderNode(nodeInfo({}));
+        fields.forEach(field => expect(node).toHaveProperty(field));
+    });
+
+    it('should read the node types that useNodeInfo returns', () => {
+        expect(toPageBuilderNode(nodeInfo({'jmix:mainResource': true, 'jnt:content': true}))).toEqual(expect.objectContaining({
+            isPageBuilderType: true,
+            isPage: false,
+            isPageOrMainResource: true,
+            isContent: true
+        }));
+        expect(toPageBuilderNode(nodeInfo({'jnt:page': true}))).toEqual(expect.objectContaining({isPageBuilderType: true, isPage: true, isPageOrMainResource: true}));
+        expect(toPageBuilderNode(nodeInfo({'jnt:content': true})).isPageBuilderType).toBe(false);
+    });
+
+    it('should keep a main resource whose displayable node is its page on its own template', () => {
+        const pressRelease = toPageBuilderNode(nodeInfo({'jmix:mainResource': true, 'jnt:content': true}));
+        expect(isPageBuilderNode(pressRelease)).toBe(true);
+        expect(getFrameTemplate(pressRelease, 'fullpage')).toBe('fullpage');
+    });
+
+    it('should leave a missing node missing', () => {
+        expect(toPageBuilderNode(undefined)).toBeUndefined();
     });
 });
 

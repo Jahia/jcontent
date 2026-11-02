@@ -85,7 +85,7 @@ export const getPageBuilderNode = gql`
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
-    ${PageBuilderNodeFragment.gql}
+    ${PageBuilderNodeFragment}
 `;
 
 export const getNodeTypeInfo = gql`

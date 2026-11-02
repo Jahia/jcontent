@@ -42,5 +42,5 @@ export const GetContentPath = gql`
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
     ${visibleInContentTree}
-    ${PageBuilderNodeFragment.gql}
+    ${PageBuilderNodeFragment}
 `;

@@ -19,7 +19,8 @@ import {
     isPageBuilderEnabled,
     isPageBuilderNode,
     JahiaRenderedModulesUtil,
-    pageBuilderNodeInfoOptions
+    pageBuilderNodeInfoOptions,
+    toPageBuilderNode
 } from '../JContent.utils';
 
 // An item that opens in the Page Builder without being a page takes its view when it is reached, once per item, so
@@ -79,8 +80,9 @@ export const ContentRoute = () => {
     const accordionItem = registry.get('accordionItem', mode);
     const isPageBuilderView = viewMode === PAGE_BUILDER;
     const isOpenDialog = Boolean(params?.openDialog?.key);
-    const {isRenderedAsPage, canShowEditFrame, frameTemplate, isFrameTemplateReady} = useFrameTemplate({node: res?.node, template, isOpenDialog, isPageBuilderView});
-    useContentViewMode({node: res?.node, path, mode, canShowEditFrame});
+    const node = toPageBuilderNode(res?.node);
+    const {isRenderedAsPage, canShowEditFrame, frameTemplate, isFrameTemplateReady} = useFrameTemplate({node, template, isOpenDialog, isPageBuilderView});
+    useContentViewMode({node, path, mode, canShowEditFrame});
 
     useEffect(() => {
         if (!isOpenDialog && accordionItem.tableConfig?.availableModes?.indexOf?.(viewMode) === -1) {

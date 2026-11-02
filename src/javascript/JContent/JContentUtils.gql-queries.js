@@ -54,21 +54,17 @@ export const GetAncestorsQueryByPath = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-// The fields of a node that isPageBuilderNode reads: useNodeInfo takes it as its applyFragment, and a query of its own
-// spreads it
-export const PageBuilderNodeFragment = {
-    applyFor: 'node',
-    gql: gql`fragment PageBuilderNode on JCRNode {
-        primaryNodeType {
-            name
-        }
-        isPageBuilderType: isNodeType(type: {multi: ANY, types: ${JSON.stringify(JContentConstants.pageBuilderNodeTypes)}})
-        isPage: isNodeType(type: {types: ["jnt:page"]})
-        isPageOrMainResource: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
-        isContent: isNodeType(type: {types: ["jnt:content"]})
-        displayableNode {
-            ...NodeCacheRequiredFields
-            isFolder: isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
-        }
-    }`
-};
+// The fields of a node that isPageBuilderNode reads, for a query of its own. useNodeInfo takes
+// pageBuilderNodeInfoOptions instead, and toPageBuilderNode gives its result the same fields.
+export const PageBuilderNodeFragment = gql`fragment PageBuilderNode on JCRNode {
+    primaryNodeType {
+        name
+    }
+    isPageBuilderType: isNodeType(type: {multi: ANY, types: ${JSON.stringify(JContentConstants.pageBuilderNodeTypes)}})
+    isPage: isNodeType(type: {types: ["jnt:page"]})
+    isPageOrMainResource: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
+    isContent: isNodeType(type: {types: ["jnt:content"]})
+    displayableNode {
+        ...NodeCacheRequiredFields
+    }
+}`;

@@ -1,4 +1,5 @@
 import React from 'react';
+import gql from 'graphql-tag';
 import {useNodeChecks} from '@jahia/data-helper';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -12,9 +13,19 @@ import {
     isPageBuilderEnabled,
     isPageBuilderNode,
     pageBuilderNodeInfoOptions,
-    setPageBuilderContentViewMode
+    setPageBuilderContentViewMode,
+    toPageBuilderNode
 } from '~/JContent/JContent.utils';
 import {useApolloClient} from '@apollo/client';
+
+const displayableNodeFolderFragment = {
+    applyFor: 'node',
+    gql: gql`fragment DisplayableNodeFolder on JCRNode {
+        displayableNode {
+            isFolder: isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
+        }
+    }`
+};
 
 // A content laid out in a page is edited in that page; only a content with no page opens on its own, through the
 // content-template wrapper
@@ -36,7 +47,8 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
         skip: isPageBuilderMode,
         ...pageBuilderNodeInfoOptions,
         // A page opens in the Page Builder from the pages accordion, not through this action
-        hideOnNodeTypes: ['jnt:page']
+        hideOnNodeTypes: ['jnt:page'],
+        applyFragment: displayableNodeFolderFragment
     });
     if (res.loading && Loading) {
         return <Loading {...others}/>;
@@ -46,8 +58,9 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
         return (<Render {...others} isVisible={false}/>);
     }
 
-    const isOpenable = isPageBuilderEnabled() && res.checksResult && isPageBuilderNode(res.node);
-    const targetPath = isOpenable ? getPageBuilderPath(res.node) : path;
+    const node = toPageBuilderNode(res.node);
+    const isOpenable = isPageBuilderEnabled() && res.checksResult && isPageBuilderNode(node);
+    const targetPath = isOpenable ? getPageBuilderPath(node) : path;
 
     return (
         <Render {...others}
@@ -55,7 +68,7 @@ export const OpenInPageBuilderActionComponent = ({path, node: prefetchedNode, re
                 enabled={isOpenable}
                 onClick={() => {
                     // Asking for the Page Builder on such an item is a choice of view for the next ones
-                    if (targetPath === path && isPageBuilderContent(res.node)) {
+                    if (targetPath === path && isPageBuilderContent(node)) {
                         setPageBuilderContentViewMode(JContentConstants.tableView.viewMode.PAGE_BUILDER);
                     }
 

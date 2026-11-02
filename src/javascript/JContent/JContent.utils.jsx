@@ -5,7 +5,7 @@ import JContentConstants from './JContent.constants';
 import {getIcon} from '@jahia/icons';
 import {Layers, Tag} from '@jahia/moonstone';
 import {registry} from '@jahia/ui-extender';
-import {GetAncestorsQueryById, GetAncestorsQueryByPath, PageBuilderNodeFragment} from '~/JContent/JContentUtils.gql-queries';
+import {GetAncestorsQueryById, GetAncestorsQueryByPath} from '~/JContent/JContentUtils.gql-queries';
 import rison from 'rison';
 
 export const getNewNodePath = (oldPath, oldAncestorPath, newAncestorPath) => {
@@ -73,9 +73,22 @@ const isFromReference = (path, nodes) => {
     return false;
 };
 
-// The useNodeInfo options whose result isPageBuilderNode reads
+// The useNodeInfo options of a Page Builder gate, whose result toPageBuilderNode reads. They name node types and not
+// PageBuilderNodeFragment: useNodeInfo merges the requests of one render on one path into one query, and it merges two
+// lists of node types, but not two fragments.
 export const pageBuilderNodeInfoOptions = {
-    applyFragment: PageBuilderNodeFragment
+    getIsNodeTypes: [...new Set([...JContentConstants.pageBuilderNodeTypes, 'jnt:page', 'jmix:mainResource', 'jnt:content'])],
+    getPrimaryNodeType: true,
+    getDisplayableNodePath: true
+};
+
+// The fields of PageBuilderNodeFragment, from a useNodeInfo result of pageBuilderNodeInfoOptions
+export const toPageBuilderNode = node => node && {
+    ...node,
+    isPageBuilderType: JContentConstants.pageBuilderNodeTypes.some(type => node[type]),
+    isPage: Boolean(node['jnt:page']),
+    isPageOrMainResource: Boolean(node['jnt:page'] || node['jmix:mainResource']),
+    isContent: Boolean(node['jnt:content'])
 };
 
 // The server tells the types of pageBuilderNodeTypes; the temporary pageBuilderPrimaryTypes are compared by name
@@ -88,7 +101,7 @@ export const hasOwnTemplate = node => Boolean(node.isPageOrMainResource) || node
 
 // The frame renders a node through its own template, or through the content-template wrapper when it has none. The
 // wrapper applies to jnt:content only, so any other node without a template of its own stays out of the Page Builder.
-// Every gate of the Page Builder reads this, on the fields of PageBuilderNodeFragment.
+// Every gate of the Page Builder reads this, on the fields of PageBuilderNodeFragment or of toPageBuilderNode.
 export const isPageBuilderNode = node => Boolean(node) && isPageBuilderType(node) &&
     (hasOwnTemplate(node) || Boolean(node.isContent));
 

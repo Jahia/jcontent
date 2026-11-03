@@ -12,6 +12,7 @@ import {Breadcrumb} from '@jahia/moonstone';
 import SimplePathEntry from './SimplePathEntry';
 import CompositePathEntry from './CompositePathEntry';
 import {useNodeDialog} from '~/JContent/NavigationDialogs';
+import {isPageBuilderNode} from '~/JContent/JContent.utils';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;
@@ -65,7 +66,7 @@ export const ContentPath = ({selector}) => {
     });
 
     const handleNavigation = item => {
-        if (!item.isNodeType && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
+        if (!isPageBuilderNode(item) && viewMode === JContentConstants.tableView.viewMode.PAGE_BUILDER) {
             openDialog(item);
         } else {
             dispatch(cmGoto({path: item.path, params: {sub: false}}));
@@ -86,7 +87,7 @@ export const ContentPath = ({selector}) => {
             )}
             <NonDisplayableNodeDialog
                 {...dialogProps}
-                parentPage={items[0]?.isNodeType ? items[0] : null}
+                parentPage={isPageBuilderNode(items[0]) ? items[0] : null}
                 setPathAction={(_path, params) => cmGoto({path: _path, params})}
             />
         </>

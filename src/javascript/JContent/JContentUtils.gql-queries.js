@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import JContentConstants from './JContent.constants';
 
 export const GetAncestorsQueryById = gql`
     query getAncestorsQuery($uuid:String!) {
@@ -52,3 +53,18 @@ export const GetAncestorsQueryByPath = gql`
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
+
+// The fields of a node that isPageBuilderNode reads, for a query of its own. useNodeInfo takes
+// pageBuilderNodeInfoOptions instead, and toPageBuilderNode gives its result the same fields.
+export const PageBuilderNodeFragment = gql`fragment PageBuilderNode on JCRNode {
+    primaryNodeType {
+        name
+    }
+    isPageBuilderType: isNodeType(type: {multi: ANY, types: ${JSON.stringify(JContentConstants.pageBuilderNodeTypes)}})
+    isPage: isNodeType(type: {types: ["jnt:page"]})
+    isPageOrMainResource: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
+    isContent: isNodeType(type: {types: ["jnt:content"]})
+    displayableNode {
+        ...NodeCacheRequiredFields
+    }
+}`;

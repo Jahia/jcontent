@@ -1,6 +1,16 @@
 const JContentConstants = /** @type {const} */ ({
     namingInvalidCharactersRegexp: /[\\/:*?"'<>|%]/g,
     maxCreateContentOfTypeDirectItems: 5,
+    // The types that open in the Page Builder. From Jahia 8.2.4.0 the marker mixin jmix:visuallyEditable is a
+    // supertype of jnt:page and jmix:mainResource; listing those two keeps the Page Builder on an older core
+    pageBuilderNodeTypes: ['jmix:visuallyEditable', 'jnt:page', 'jmix:mainResource'],
+    // TEMPORARY: primary types that open in the Page Builder without carrying jmix:visuallyEditable, such as a
+    // Formidable form on a core before 8.2.4.0. They are compared by name on the client, because the isNodeType of the
+    // server fails on a type whose module is not installed. Remove an entry once its module requires a core that ships
+    // jmix:visuallyEditable.
+    pageBuilderPrimaryTypes: ['fmdb:form'],
+    // The wrapper template the default module ships: renders any content as the one box of an otherwise empty page
+    contentTemplate: 'content-template',
     availablePublicationStatuses: {
         PUBLISHED: 'PUBLISHED',
         MODIFIED: 'MODIFIED',
@@ -37,7 +47,8 @@ const JContentConstants = /** @type {const} */ ({
         viewType: 'jcontent_view_type',
         viewMode: 'jcontent_view_mode',
         filesSelectorMode: 'jcontent_files_selector_mode',
-        liveServerName: 'jcontent-live-servername'
+        liveServerName: 'jcontent-live-servername',
+        pageBuilderContentViewMode: 'jcontent-pageBuilderContent-viewMode'
     },
     accordionPermissions: {
         pagesAccordionAccess: 'pagesAccordionAccess',

@@ -1,4 +1,4 @@
-import {buildPreviewContextsFromNode} from './previewContext.utils';
+import {buildPreviewContexts, buildPreviewContextsFromNode} from './previewContext.utils';
 
 const PAGE = {path: '/sites/x/home'};
 
@@ -9,6 +9,65 @@ const node = (overrides = {}) => ({
     pageAncestors: [PAGE],
     displayableNode: {path: '/sites/x/home'},
     ...overrides
+});
+
+describe('buildPreviewContexts', () => {
+    const language = 'en';
+
+    it('previews a page as a full page render, without a CSS source', () => {
+        const page = {path: '/sites/site/home', uuid: 'p', isPage: true, displayableNode: {path: '/sites/site/home'}};
+        const {primary} = buildPreviewContexts(page, language);
+        expect(primary.contextConfiguration).toBe('page');
+        expect(primary.cssSourcePath).toBeUndefined();
+    });
+
+    it('previews a displayable content as a full page render through its own template, without a CSS source', () => {
+        const content = {path: '/sites/site/contents/news', uuid: 'n', isPage: false, displayableNode: {path: '/sites/site/contents/news', isFolder: false}};
+        const {primary} = buildPreviewContexts(content, language);
+        expect(primary.contextConfiguration).toBe('page');
+        expect(primary.cssSourcePath).toBeUndefined();
+        expect(primary.cssSourceView).toBeUndefined();
+    });
+
+    it('takes the CSS of a content living in a page from that page', () => {
+        const content = {path: '/sites/site/home/area/text', uuid: 't', isPage: false, displayableNode: {path: '/sites/site/home', isFolder: false}};
+        const {primary} = buildPreviewContexts(content, language);
+        expect(primary.cssSourcePath).toBe('/sites/site/home');
+        expect(primary.cssSourceView).toBeUndefined();
+    });
+
+    it('renders a content with no page of its own through the content-template wrapper for its CSS', () => {
+        const content = {path: '/sites/site/contents/form', uuid: 'f', isPage: false, isContent: true, displayableNode: null};
+        const {primary} = buildPreviewContexts(content, language);
+        expect(primary.contextConfiguration).toBe('module');
+        expect(primary.view).toBeNull();
+        expect(primary.cssSourcePath).toBe('/sites/site/contents/form');
+        expect(primary.cssSourceView).toBe('content-template');
+    });
+
+    it('does the same when the displayable node is a folder', () => {
+        const content = {path: '/sites/site/contents/form', uuid: 'f', isPage: false, isContent: true, displayableNode: {path: '/sites/site/contents', isFolder: true}};
+        const {primary} = buildPreviewContexts(content, language);
+        expect(primary.cssSourcePath).toBe('/sites/site/contents/form');
+        expect(primary.cssSourceView).toBe('content-template');
+    });
+
+    // The content-template wrapper applies to jnt:content only: a render of anything else fails
+    it('takes no CSS source for a file, a folder or a category, which the wrapper cannot render', () => {
+        const file = {path: '/sites/site/files/logo.png', uuid: 'l', isPage: false, isContent: false, displayableNode: null};
+        const {primary} = buildPreviewContexts(file, language);
+        expect(primary.contextConfiguration).toBe('module');
+        expect(primary.cssSourcePath).toBeUndefined();
+        expect(primary.cssSourceView).toBeUndefined();
+    });
+
+    it('leaves the in-context strategies untouched', () => {
+        const content = {path: '/sites/site/home/area/text', uuid: 't', isPage: false, displayableNode: {path: '/sites/site/home', isFolder: false}};
+        const {primary, fallback} = buildPreviewContexts(content, language, {closestPage: {path: '/sites/site/home'}});
+        expect(primary.contextConfiguration).toBe('page');
+        expect(fallback.cssSourcePath).toBe('/sites/site/home');
+        expect(fallback.cssSourceView).toBeUndefined();
+    });
 });
 
 describe('buildPreviewContextsFromNode', () => {

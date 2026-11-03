@@ -16,6 +16,9 @@ import {useContentPreview} from './useContentPreview';
  * fetch is made for the CSS source page (contextConfiguration='page') to extract
  * full template CSS (Bootstrap, fonts, theme). The page HTML output is passed to
  * IframeViewer as pageCssHtml so it can extract and inject <link> elements.
+ * previewContext.cssSourceView names the page template of that render (default: 'default');
+ * a content with no page of its own is rendered through the content-template wrapper, and the
+ * preview does not wait for that render.
  *
  * Props:
  *   previewContext     — built by buildCEPreviewContexts or buildPreviewContextsFromNode
@@ -43,7 +46,7 @@ export const PreviewFetcher = React.memo(({
         workspace: previewContext.workspace,
         language: previewContext.language,
         templateType: previewContext.templateType,
-        view: 'default',
+        view: previewContext.cssSourceView || 'default',
         contextConfiguration: 'page',
         fetchPolicy: 'cache-first',
         skip: !hasCssSource
@@ -56,7 +59,10 @@ export const PreviewFetcher = React.memo(({
         };
     }, [refetch, onRefetchReady, onRefetchInvalidated]);
 
-    if (loading || (hasCssSource && cssLoading)) {
+    // A content with no page renders itself through the content-template wrapper for its CSS. That render is as slow as
+    // the preview and no other item shares it, so the preview shows first and takes the stylesheets when they arrive.
+    const isCssSourceShared = !previewContext.cssSourceView;
+    if (loading || (hasCssSource && isCssSourceShared && cssLoading)) {
         return <LoaderOverlay/>;
     }
 
@@ -89,6 +95,7 @@ PreviewFetcher.propTypes = {
         templateType: PropTypes.string,
         view: PropTypes.string,
         contextConfiguration: PropTypes.string,
+        cssSourceView: PropTypes.string,
         requestAttributes: PropTypes.array,
         requestParameters: PropTypes.array,
         mainResourcePath: PropTypes.string,

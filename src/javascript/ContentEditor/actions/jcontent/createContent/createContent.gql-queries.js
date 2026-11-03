@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
+import {PageBuilderNodeFragment} from '~/JContent/JContentUtils.gql-queries';
 
 const TreeOfContentDataFragment = gql`fragment TreeOfContentData on NodeTypeTreeEntry {
     id
@@ -72,6 +73,19 @@ export const getNodeByPath = gql`
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
+
+export const getPageBuilderNode = gql`
+    query getPageBuilderNode($uuid: String!) {
+        jcr {
+            nodeById(uuid: $uuid) {
+                ...NodeCacheRequiredFields
+                ...PageBuilderNode
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+    ${PageBuilderNodeFragment}
 `;
 
 export const getNodeTypeInfo = gql`

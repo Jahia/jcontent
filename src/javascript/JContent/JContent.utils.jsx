@@ -73,6 +73,77 @@ const isFromReference = (path, nodes) => {
     return false;
 };
 
+// The useNodeInfo options of a Page Builder gate, whose result toPageBuilderNode reads. They name node types and not
+// PageBuilderNodeFragment: useNodeInfo merges the requests of one render on one path into one query, and it merges two
+// lists of node types, but not two fragments.
+export const pageBuilderNodeInfoOptions = {
+    getIsNodeTypes: [...new Set([...JContentConstants.pageBuilderNodeTypes, 'jnt:page', 'jmix:mainResource', 'jnt:content'])],
+    getPrimaryNodeType: true,
+    getDisplayableNodePath: true
+};
+
+// The fields of PageBuilderNodeFragment, from a useNodeInfo result of pageBuilderNodeInfoOptions
+export const toPageBuilderNode = node => node && {
+    ...node,
+    isPageBuilderType: JContentConstants.pageBuilderNodeTypes.some(type => node[type]),
+    isPage: Boolean(node['jnt:page']),
+    isPageOrMainResource: Boolean(node['jnt:page'] || node['jmix:mainResource']),
+    isContent: Boolean(node['jnt:content'])
+};
+
+// The server tells the types of pageBuilderNodeTypes; the temporary pageBuilderPrimaryTypes are compared by name
+const isPageBuilderType = node => Boolean(node.isPageBuilderType) ||
+    JContentConstants.pageBuilderPrimaryTypes.includes(node.primaryNodeType?.name);
+
+// A main resource that has only a non-default content template resolves its displayable node to its page, yet renders
+// through its own template
+export const hasOwnTemplate = node => Boolean(node.isPageOrMainResource) || node.displayableNode?.path === node.path;
+
+// The frame renders a node through its own template, or through the content-template wrapper when it has none. The
+// wrapper applies to jnt:content only, so any other node without a template of its own stays out of the Page Builder.
+// Every gate of the Page Builder reads this, on the fields of PageBuilderNodeFragment or of toPageBuilderNode.
+export const isPageBuilderNode = node => Boolean(node) && isPageBuilderType(node) &&
+    (hasOwnTemplate(node) || Boolean(node.isContent));
+
+// An item that opens in the Page Builder without being a page, such as a form or a main resource. It opens in the
+// Page Builder by default, or in the view the editor last chose on such an item. A page keeps the view of its
+// accordion, and a view chosen on an item that cannot open in the Page Builder is not remembered.
+export const isPageBuilderContent = node => isPageBuilderNode(node) && !node.isPage;
+
+const contentViewModes = new Set([
+    JContentConstants.tableView.viewMode.PAGE_BUILDER,
+    JContentConstants.tableView.viewMode.FLAT,
+    JContentConstants.tableView.viewMode.STRUCTURED
+]);
+
+export const getPageBuilderContentViewMode = () => {
+    try {
+        const viewMode = globalThis.localStorage.getItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode);
+        return contentViewModes.has(viewMode) ? viewMode : JContentConstants.tableView.viewMode.PAGE_BUILDER;
+    } catch {
+        return JContentConstants.tableView.viewMode.PAGE_BUILDER;
+    }
+};
+
+export const setPageBuilderContentViewMode = viewMode => {
+    try {
+        globalThis.localStorage.setItem(JContentConstants.localStorageKeys.pageBuilderContentViewMode, viewMode);
+    } catch {
+        // The view is not remembered when the browser refuses the storage
+    }
+};
+
+// The template the frame of a Page Builder node needs. A node that is not its own displayable node has no page, hence
+// no template: it goes through the content-template wrapper. Pages and main resources keep their own template; the
+// wrapper left in the URL for one of them, as jContent restores the last template when it opens again, is stale.
+export const getFrameTemplate = (node, template) => {
+    if (!hasOwnTemplate(node)) {
+        return JContentConstants.contentTemplate;
+    }
+
+    return template === JContentConstants.contentTemplate ? '' : template;
+};
+
 export const isDescendantOrSelf = (path, ancestorOrSelfPath) => {
     return (path === ancestorOrSelfPath || isDescendant(path, ancestorOrSelfPath));
 };
@@ -235,6 +306,8 @@ export const booleanValue = v => {
 
     return Boolean(v);
 };
+
+export const isPageBuilderEnabled = () => booleanValue(globalThis.contextJsParameters?.config?.jcontent?.showPageBuilder);
 
 export const getCanDisplayItemParams = node => {
     const folders = ['jnt:contentFolder', 'jnt:folder'];

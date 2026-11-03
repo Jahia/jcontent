@@ -285,7 +285,11 @@ describe('JContent preview tests', () => {
             sidePanel.getDetailsSection('preview-link').should('be.visible');
             sidePanel.getPreviewLink().should('have.attr', 'target', '_blank');
             sidePanel.getPreviewLink().should('have.attr', 'rel', 'noopener noreferrer');
-            sidePanel.getPreviewLink().invoke('attr', 'href').should('contain', 'previewMainResource');
+            // The last segment is the node name until the news module's rules create a vanity URL
+            // from the title, and 'preview-main-resource' after that. Assert only that the address
+            // is absolute and goes through the render servlet, which is what makes the link open
+            // the standard preview.
+            sidePanel.getPreviewLink().invoke('attr', 'href').should('match', /^https?:\/\/.+\/cms\/render\/default\//);
         });
 
         it('should offer no preview URL for content that does not render on its own', () => {

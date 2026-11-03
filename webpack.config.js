@@ -131,7 +131,11 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
-            new ModuleFederationPlugin(getModuleFederationConfig(packageJson, {
+            new ModuleFederationPlugin((config => {
+                // Test only: bundle the Moonstone of this branch, as the app-shell loads its own shared copy first
+                delete config.shared['@jahia/moonstone'];
+                return config;
+            })(getModuleFederationConfig(packageJson, {
                 exposes: {
                     '.': './src/javascript/shared',
                     './JContent/actions': './src/javascript/JContent/actions/index',
@@ -141,7 +145,7 @@ module.exports = (env, argv) => {
                     '@jahia/jahia-ui-root': 'appShell.remotes.jahiaUi',
                     '@jahia/app-shell': 'appShellRemote',
                 },
-            }, Object.keys(packageJson.dependencies))),
+            }, Object.keys(packageJson.dependencies)))),
             new CleanWebpackPlugin({
                 cleanOnceBeforeBuildPatterns: [`${path.resolve(__dirname, 'src/main/resources/javascript/apps/')}/**/*`],
                 verbose: false

@@ -2903,9 +2903,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@1613.tgz":
-  version: 2.21.0
-  resolution: "@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@1613.tgz"
+"@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@cc10fc3":
+  version: 2.22.0
+  resolution: "@jahia/moonstone@https://pkg.pr.new/@jahia/moonstone@cc10fc3"
   dependencies:
     "@daypicker/react": "npm:^10.0.1"
     "@floating-ui/react": "npm:^0.27.20"
@@ -2918,7 +2918,7 @@ __metadata:
     react: ^18.3.1
     react-dom: ^18.3.1
     react-table: ^7.8.0
-  checksum: 10c0/e1efbf2de75cfe6941a4d192df61bd2b63c42901c5d8937cba7a51f29339634b5aab9e07df5094311a5770ea6be5a3bdb47c142eabd7f0a61f98aa55a18a7e7b
+  checksum: 10c0/441a8805c6a55cbf31b2ce8b72a1e1f0c2b9d5d3f38c645b781a08afde933bdca9c52161a54a6bb83979d6a9dafc3243069fa47a7bc2635c96d2ac2d5b27c791
   languageName: node
   linkType: hard
 

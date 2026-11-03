@@ -77,14 +77,15 @@ describe('Content list selection', () => {
 
     it('Selecting rows shows the selection count', () => {
         context.tag('jcontent', 'multiple-selection', 'selection-count');
-        const table = openHomeList().getTable();
+        const jcontent = openHomeList();
+        const table = jcontent.getTable();
 
         table.selectRowByName(contentNames[0]);
         table.selectRowByName(contentNames[1]);
         table.selectRowByName(contentNames[2]);
         table.selectRowByName(contentNames[2], false);
 
-        getSelectionInfo().should('contain', '2 items selected');
+        jcontent.checkSelectionCount(2);
     });
 
     it('Row actions are hidden while several rows are selected', () => {
@@ -130,6 +131,8 @@ describe('Content list selection', () => {
 
         cy.get('[data-sel-role="table-pagination-button-next-page"]').click();
 
+        // Page 2 must be on screen first, or the absence below could pass before the page changed.
+        jcontent.getTable().getRowByName(contentNames[10]).get().should('be.visible');
         getSelectionInfo().should('not.exist');
     });
 

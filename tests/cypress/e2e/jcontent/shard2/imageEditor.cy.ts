@@ -154,6 +154,8 @@ describe('Image editor', () => {
             .and('have.attr', 'src')
             .and('contain', filePath(images.cropDimensions));
         waitForImageSize(original.width, original.height);
+        cy.get('#width-field').should('have.value', String(original.width));
+        cy.get('#height-field').should('have.value', String(original.height));
     });
 
     it('Changing the crop width draws a crop selection', () => {

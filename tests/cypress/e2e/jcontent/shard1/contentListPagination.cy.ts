@@ -17,8 +17,10 @@ const openHomeList = (): JContent => {
     return jcontent;
 };
 
+const rowsPerPageDropdown = '[data-sel-role="table-pagination-dropdown-rows-per-page"]';
+
 const setRowsPerPage = (rowsPerPage: number) => {
-    cy.get('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
+    cy.get(rowsPerPageDropdown).click();
     cy.contains('menu.moonstone-menu [role="option"]', new RegExp(`^${rowsPerPage}$`)).click();
 };
 
@@ -84,7 +86,9 @@ describe('Content list pagination', () => {
 
         setRowsPerPage(50);
         cy.get(rowSelector).should('have.length', contentCount);
+        // The list fits in 25 and in 50 rows, so only the dropdown proves the pick of 25.
         setRowsPerPage(25);
+        cy.get(rowsPerPageDropdown).should('contain.text', '25').and('not.contain.text', '50');
         cy.get(rowSelector).should('have.length', contentCount);
     });
 });

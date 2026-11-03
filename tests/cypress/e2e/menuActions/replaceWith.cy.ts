@@ -23,6 +23,17 @@ const removeFixtures = () => {
     deleteUser(editor.username);
 };
 
+// Jahia extracts the size of an uploaded image into j:width; myfile.png is 128 px wide, myfile2.png 200 px.
+const checkStoredWidth = (width: number) => {
+    cy.apollo({
+        queryFile: 'jcontent/imageEditor/getImageDimensions.graphql',
+        variables: {path: `${folderPath}/${fileName}`},
+        fetchPolicy: 'no-cache'
+    }).then(({data}) => {
+        expect(Number(data.jcr.nodeByPath.width.value)).to.equal(width);
+    });
+};
+
 const visitFolder = () => {
     cy.login(editor.username, editor.password);
     return JContent.visit(siteKey, 'en', `media/files/${folderName}`);
@@ -60,6 +71,7 @@ describe('Replace a file with another one', () => {
         const cards = '[data-cm-role="grid-content-list-card"]';
         grid.getCardByName(fileName).get().find('[data-sel-role="content-status"][data-status-type="published"]').should('exist');
         cy.get(cards).should('have.length', 2);
+        checkStoredWidth(128);
 
         grid.getCardByName(fileName).contextMenu().selectByRole('replaceFile');
         cy.get('#file-upload-input').selectFile('cypress/fixtures/assets/uploadMedia/myfile2.png', {force: true});
@@ -73,5 +85,7 @@ describe('Replace a file with another one', () => {
             // A card shows the status as an icon chip, so its name is in the tooltip.
             .and('have.attr', 'title')
             .and('contain', 'Modified');
+        // The status alone would also pass if the old bytes were written back
+        checkStoredWidth(200);
     });
 });

@@ -1,4 +1,5 @@
 export * from './compose';
+export * from './copyToClipboard';
 export * from './getIcon';
 export * from './useCloseOnNavigation';
 export {default as NodeIcon} from './NodeIcon';

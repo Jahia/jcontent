@@ -917,7 +917,7 @@
         "linksLive": "Live",
         "linksDefault": "Staging",
         "linksVanity": "Vanity URL",
-        "linksPreview": "Preview",
+        "linksPreview": "Preview in full page",
         "linksDefaultVanity": "Default vanity",
         "linksCopied": "Link copied",
         "noDetailsAvailable": "Select a content item to view its details"

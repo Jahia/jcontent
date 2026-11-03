@@ -907,7 +907,7 @@
         "linksLive": "Live",
         "linksDefault": "Staging",
         "linksVanity": "Vanity URL",
-        "linksPreview": "Vorschau",
+        "linksPreview": "Ganzseitige Vorschau",
         "linksDefaultVanity": "Haupt-URL",
         "linksCopied": "Link kopiert",
         "noDetailsAvailable": "Wählen Sie einen Content, um dessen Details anzuzeigen"

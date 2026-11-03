@@ -60,7 +60,7 @@ ContentSidePanel.propTypes = {
      *
      * A path is not enough, and the fields are not obvious: the provider resolves the edit form
      * from `uuid` and `primaryNodeType.name`, the card shows `name`, and the preview tab reads
-     * `isPage`, `displayableNode`, `jView` and `pageAncestors` to decide whether the node renders
+     * `isPage`, `isContent`, `displayableNode`, `jView` and `pageAncestors` to decide whether the node renders
      * inside its page and where its CSS comes from. Select `ContentSidePanelNodeFragment` and the
      * whole contract is covered; miss one of them and the matching tab degrades silently.
      */
@@ -70,6 +70,7 @@ ContentSidePanel.propTypes = {
         name: PropTypes.string,
         primaryNodeType: PropTypes.shape({name: PropTypes.string}),
         isPage: PropTypes.bool,
+        isContent: PropTypes.bool,
         displayableNode: PropTypes.shape({path: PropTypes.string}),
         pageAncestors: PropTypes.array
     })

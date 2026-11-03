@@ -24,6 +24,15 @@ jest.mock('@jahia/data-helper', () => {
     };
 });
 jest.mock('~/ContentEditor/ContentTypeSelectorModal', () => jest.fn());
+const mockHandleCreate = jest.fn();
+const mockHandleClosed = jest.fn();
+jest.mock('./useOpenInPageBuilderAfterCreate', () => ({
+    useOpenInPageBuilderAfterCreate: () => ({handleCreate: mockHandleCreate, handleClosed: mockHandleClosed})
+}));
+const mockApi = {create: jest.fn()};
+jest.mock('~/ContentEditor/contexts/ContentEditorApi/ContentEditorApi.context', () => ({
+    useContentEditorApiContext: () => mockApi
+}));
 jest.mock('./createContent.utils', () => {
     return {
         useCreatableNodetypesTree: jest.fn(),
@@ -115,6 +124,14 @@ describe('CreateNewContent', () => {
         // 2 is the number of types returned.
         expect(cmp.length).toEqual(nodeTypes.length);
         expect(cmp.at(0).props().isAllTypes).toBe(false);
+    });
+    it('should hand the Content Editor the callbacks of the post-create hook', () => {
+        defaultProps.path = '/sites/digitall/contents';
+        loading = false;
+        nodeTypes = ['nodetype1'];
+        const cmp = shallow(<CreateNewContent {...defaultProps}/>);
+        cmp.at(0).props().onClick({nodeTypesTree: nodeTypes});
+        expect(mockApi.create).toHaveBeenCalledWith(expect.objectContaining({createCallback: mockHandleCreate, onClosedCallback: mockHandleClosed}));
     });
     it('should contain "allTypes" only when no types found and loading done', () => {
         defaultProps.loading = jest.fn(() => {

@@ -50,10 +50,14 @@ import java.util.stream.Stream;
 @Deprecated(since = "jContent 3.x", forRemoval = true)
 class ModernContentHistoryAdapter implements ContentHistoryProvider {
 
-    private static final Method paginatedMethod;
-    private static final Method countMethod;
+    private final Method paginatedMethod;
+    private final Method countMethod;
 
-    static {
+    // Looked up here rather than in a static initializer: Jahia's bundle scanner loads every class
+    // of the module while registering its GraphQL extension, so a static initializer that throws on
+    // Jahia < 8.2.4.0 made that whole registration fail. ContentHistoryAdapter only constructs this
+    // class once it has checked the methods exist.
+    ModernContentHistoryAdapter() {
         try {
             paginatedMethod = ContentHistoryService.class.getMethod(
                 "getNodeHistory",

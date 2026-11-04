@@ -14,3 +14,11 @@
 .iframeLoading {
     display: none;
 }
+
+/* A render is in flight while the previous one stays on screen: dim it just enough to read as
+   "catching up", without the content moving or the frame reloading. */
+.iframeRefreshing {
+    opacity: 0.65;
+
+    transition: opacity 150ms ease-in;
+}

@@ -336,4 +336,9 @@ export class ContentEditor extends BasePage {
         cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
         cy.get('[data-sel-role="tab-editroles"]').should('be.visible').click();
     }
+
+    openLiveRolesFromModesDropdown() {
+        cy.get('[data-sel-role="sel-view-mode-dropdown"][data-sel-tab]').click();
+        cy.get('[data-sel-role="tab-liveroles"]').should('be.visible').click();
+    }
 }

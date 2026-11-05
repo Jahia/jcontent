@@ -67,7 +67,7 @@ export const Validation = () => {
                 <Typography weight="semiBold">{t('label.contentEditor.edit.validation.invalidForm')}</Typography>
                 {fieldsInError.length > 0 && (
                     <Typography>
-                        {t('label.contentEditor.edit.validation.fieldsInError', {count: fieldsInError.length})} : &nbsp;
+                        {t('label.contentEditor.edit.validation.listLabel', {label: t('label.contentEditor.edit.validation.fieldsInError', {count: fieldsInError.length})})}&nbsp;
                         {fieldsInError.map(field => (
                             <span key={field.name} className={styles.field}>
                                 <a href="#" className={styles.fieldLink} onClick={() => onClick(field.name)}>{field.displayName}</a>
@@ -77,7 +77,7 @@ export const Validation = () => {
                 )}
                 {i18nErrors.length > 0 && (
                     <Typography>
-                        {t('label.contentEditor.edit.validation.otherLanguages')} : &nbsp;
+                        {t('label.contentEditor.edit.validation.listLabel', {label: t('label.contentEditor.edit.validation.otherLanguages')})}&nbsp;
                         {i18nErrors.map(lang => (
                             <span key={lang} className={styles.field}>
                                 <a href="#" className={styles.fieldLink} onClick={() => switchLanguage(lang)}>{getCapitalized(siteInfo.languages.find(l => l.language === lang).displayName)}</a>

@@ -14,16 +14,10 @@ import {
     FileText,
     FileVideo,
     FileWord,
-    Folder,
-    Group,
-    Link,
-    Page,
-    Person,
-    Section,
-    Tag,
-    SiteWeb
+    Folder
 } from '@jahia/moonstone';
 import {isCMISFile, isCMISFolder} from '~/JContent/JContent.utils';
+import {getIconComponentForNodeType} from './nodeTypeIcons';
 
 const imgExtensions = ['avif', 'png', 'jpeg', 'jpg', 'gif', 'svg', 'img', 'webp'];
 const videoExtensions = ['avi', 'mp4', 'mkv', 'mpg', 'wmv', 'mpeg', 'mov', 'webm', 'video'];
@@ -206,32 +200,21 @@ export function getIconFromNode(node, props = {}) {
         return <Folder {...props}/>;
     }
 
-    switch (node.primaryNodeType.name) {
-        case 'jnt:folder':
-            return <Folder {...props}/>;
-        case 'jnt:page':
-            return <Page {...props}/>;
-        case 'jnt:virtualsite':
-            return <SiteWeb {...props}/>;
-        case 'jnt:user':
-            return <Person {...props}/>;
-        case 'jnt:group':
-            return <Group {...props}/>;
-        case 'jnt:category':
-            return <Tag {...props}/>;
-        case 'jnt:externalLink':
-            return <Link {...props}/>;
-        case 'jnt:nodeLink':
-            return <Link {...props}/>;
-        case 'jnt:navMenuText':
-            return <Section {...props}/>;
-        case 'jnt:file':
-            return getFileIcon(node, props);
-        default:
-            return (
-                <img src={addIconSuffix(node.primaryNodeType.icon)} {...props}/>
-            );
+    // Shared with the callers that only know a type name, so that a node and its type cannot end
+    // up pictured differently in two places on the same screen.
+    const Icon = getIconComponentForNodeType(node.primaryNodeType.name);
+    if (Icon) {
+        return <Icon {...props}/>;
     }
+
+    if (node.primaryNodeType.name === 'jnt:file') {
+        return getFileIcon(node, props);
+    }
+
+    // Anything else is drawn with the icon its own definition declares.
+    return (
+        <img src={addIconSuffix(node.primaryNodeType.icon)} {...props}/>
+    );
 }
 
 export const getWebpUrl = node => {

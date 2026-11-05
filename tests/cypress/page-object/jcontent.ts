@@ -342,6 +342,13 @@ export class JContentPageBuilder extends JContent {
         return module;
     }
 
+    // The header of jContent shows the page title even when the frame renders a blank or an error page
+    shouldDisplayPage(path: string): PageBuilderModule {
+        const module = this.getMainModule(path);
+        module.parentFrame.get().should('not.contain', 'An error occurred during the rendering of the content');
+        return module;
+    }
+
     refresh(): JContentPageBuilder {
         cy.get('[data-sel-role="page-builder-frame-active"]').invoke('attr', 'id').then(() => {
             cy.get('.moonstone-header button[data-sel-role="refresh"]').click();

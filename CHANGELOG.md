@@ -1,5 +1,31 @@
 # @jahia/jcontent Changelog
 
+## 3.10.0
+
+### New Features
+
+* Fixed the page builder so it no longer shows a create button for a part of the page that is hidden.
+
+* Added a `leadingAction` prop to `FormBuilder`, so a module rendering its own Content Editor form can show an action before each field, and exposed `adaptSections`, `adaptPropertyValue` and `fieldValueHasChanged` for such forms.
+
+* Added Page Builder editing for content without a page of its own, such as a Formidable form in a content folder, also on Jahia versions before 8.2.4.0. Such content opens in the Page Builder by default, a new form included once created, unless you last chose List or Structured for it. Content without a page also previews with the site's stylesheets (#2766)
+
+### Bug Fixes
+
+* The image picker now only offers images a browser can actually display. Formats such as TIFF or PSD, which the repository counts as images but no browser renders, are no longer listed or searchable there, so an image field cannot be pointed at one and end up as a broken image on the page.
+
+* A menu title now carries the same icon in breadcrumbs, content type chips and headers as it does in the navigation, at the right size instead of overflowing the chip. Pages, categories, users, groups and links are drawn consistently across those places too.
+
+* A file uploaded from inside a picker is only selected if the picker accepts it: uploading a PDF from an image picker no longer leaves it selected with the select button enabled. Uploading an image still selects it, as before. Only uploads made while the picker is open count, so one the upload panel was still showing from earlier work in jContent is no longer picked up as if it had been chosen there.
+
+* Fixed the position of the publication status in the content list on pages that render in standards mode, such as the dashboard of app-shell 4.0.0.
+
+* Fixed the publication of the jContent TypeScript types to npm, so each release is now available under its own version.
+
+* Added a full-page preview link in the Details panel, so content with its own page can be opened or shared for review.
+
+* Fix whitespace in the Content Editor validation messages, and make the label separator localizable so each language controls its own colon spacing (#2512)
+
 ## 3.8.0
 
 ### New Features

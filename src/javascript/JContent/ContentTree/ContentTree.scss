@@ -3,9 +3,9 @@
 }
 
 .searchMatchText {
-    color: #fff;
+    color: var(--color-dark);
 
-    background-color: #00c853;
+    background-color: var(--color-accent_light);
 }
 
 .ContentTree_Item.notPublishedReversed {

@@ -14,15 +14,15 @@
 
     margin-left: var(--spacing-small);
 
-    color: #00c853;
+    color: var(--color-gray_dark);
 }
 
 .input.input :global(input) {
-    color: #00c853;
+    color: var(--color-gray_dark);
 }
 
 .input.input :global(input)::placeholder {
-    color: var(--moon-color-gray_light);
+    color: var(--color-gray_light);
 }
 
 .iconButton {

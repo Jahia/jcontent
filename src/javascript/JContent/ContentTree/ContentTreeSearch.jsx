@@ -35,6 +35,31 @@ const getStatusMessage = (status, t) => {
     return t('jcontent:label.contentManager.tree.search.resultsFound', {count: status.count});
 };
 
+/**
+ * The matched nodes of every aliased criteria in the search result, in one flat list.
+ * @param {?object} jcr the `jcr` field of the query result, absent when the query returned nothing
+ * @returns {object[]} the matched nodes across pages, menu titles, internal and external links
+ */
+const collectMatches = jcr => [
+    ...(jcr?.pages?.nodes || []),
+    ...(jcr?.menuTitles?.nodes || []),
+    ...(jcr?.internalLinks?.nodes || []),
+    ...(jcr?.externalLinks?.nodes || [])
+];
+
+/**
+ * Every ancestor path of every match, de-duplicated, so the tree can open the branches leading to
+ * the results in a single dispatch.
+ * @param {object[]} matches the matched nodes
+ * @param {string} rootPath the tree's root path, walking stops once reached
+ * @returns {string[]} the ancestor paths to open
+ */
+const collectAncestorPaths = (matches, rootPath) => {
+    const ancestorPaths = new Set();
+    matches.forEach(node => getAncestorPaths(node.path, rootPath).forEach(path => ancestorPaths.add(path)));
+    return [...ancestorPaths];
+};
+
 export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
@@ -60,20 +85,11 @@ export const ContentTreeSearch = ({rootPath, language, onMatchedPaths}) => {
                 limit: SEARCH_RESULTS_LIMIT
             }
         }).then(result => {
-            const criteriaResults = result?.data?.jcr || {};
-            const matches = [
-                ...(criteriaResults.pages?.nodes || []),
-                ...(criteriaResults.menuTitles?.nodes || []),
-                ...(criteriaResults.internalLinks?.nodes || []),
-                ...(criteriaResults.externalLinks?.nodes || [])
-            ];
-            const ancestorPaths = new Set();
-            matches.forEach(node => {
-                getAncestorPaths(node.path, rootPath).forEach(ancestorPath => ancestorPaths.add(ancestorPath));
-            });
+            const matches = collectMatches(result?.data?.jcr);
+            const ancestorPaths = collectAncestorPaths(matches, rootPath);
 
-            if (ancestorPaths.size > 0) {
-                dispatch(cmOpenPaths([...ancestorPaths]));
+            if (ancestorPaths.length > 0) {
+                dispatch(cmOpenPaths(ancestorPaths));
             }
 
             onMatchedPaths(matches.map(node => node.path), term);

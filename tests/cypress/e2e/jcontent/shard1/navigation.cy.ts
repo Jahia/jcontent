@@ -1,4 +1,4 @@
-import {JContent} from '../../../page-object';
+import {JContent, JContentPageBuilder} from '../../../page-object';
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 
 describe('Content navigation', () => {
@@ -74,6 +74,7 @@ describe('Content navigation', () => {
         jcontent.getAccordionItem('pages').getTreeItem(specialCharsName).click();
         jcontent.shouldBeInMode('Page Builder');
         cy.get('h1').contains('special chars page');
+        new JContentPageBuilder(jcontent).shouldDisplayPage(`/sites/mySite1/home/${specialCharsName}`);
     });
 
     it('can open media folders with dots', () => {
@@ -102,12 +103,12 @@ describe('Content navigation', () => {
         jc.getAccordionItem('content-folders').getTreeItem('contents').get().invoke('attr', 'aria-current').should('eq', 'page');
         cy.get('.moonstone-chip').find('span').contains('Event').should('be.visible');
         cy.get('h1').contains('test-event');
+        new JContentPageBuilder(jc).shouldDisplayPage('/sites/mySite1/contents/test-event');
     });
 
     it('Display popup when navigating to list and render list view when selected', () => {
         const jc = JContent.visit('mySite1', 'en', 'content-folders/contents/test-event');
-        jc.switchToPageBuilder();
-        cy.frameLoaded('#page-builder-frame-1');
+        jc.switchToPageBuilder().shouldDisplayPage('/sites/mySite1/contents/test-event');
         jc.getAccordionItem('content-folders').getTreeItem('contents').click();
         cy.get('.moonstone-chip').find('span').contains('Content Folder').should('be.visible');
         cy.get('h1').contains('contents');

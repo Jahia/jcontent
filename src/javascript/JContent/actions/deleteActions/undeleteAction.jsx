@@ -6,6 +6,7 @@ import React, {useContext} from 'react';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import Delete from './Delete';
+import {componentPermissionFragment, hasComponentPermission} from '../utils/componentPermission';
 
 function checkAction(node) {
     return node.operationsSupport.markForDeletion && isMarkedForDeletion(node);
@@ -26,7 +27,8 @@ export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, butt
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite'],
-            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF]
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
+            applyFragment: componentPermissionFragment
         },
         {
             fetchPolicy: 'network-only'
@@ -45,7 +47,7 @@ export const UndeleteActionComponent = ({path, paths, node: prefetchedNode, butt
         return false;
     }
 
-    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes?.reduce((acc, node) => acc && checkAction(node), true));
+    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes?.reduce((acc, node) => acc && checkAction(node), true)) && hasComponentPermission(res);
 
     return (
         <Render

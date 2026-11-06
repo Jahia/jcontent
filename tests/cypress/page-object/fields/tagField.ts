@@ -28,6 +28,12 @@ export class TagField extends Field {
         return this.get().find('[role="button"]');
     }
 
+    removeTag(text: string): void {
+        const tagText = new RegExp(`^${Cypress._.escapeRegExp(text)}$`);
+        this.get().contains('[role="button"]', tagText).find('svg').click();
+        this.get().contains('[role="button"]', tagText).should('not.exist');
+    }
+
     assertTagText(text: string, index: number): void {
         this.getTags().eq(index).should('have.text', text);
     }

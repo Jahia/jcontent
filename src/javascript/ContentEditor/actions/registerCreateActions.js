@@ -16,7 +16,8 @@ export const registerCreateActions = registry => {
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content', 'jnt:category'],
         hideOnNodeTypes: ['jnt:navMenuText', 'jnt:page'],
         requiredPermission: ['jcr:addChildNodes'],
-        hasBypassChildrenLimit: false
+        hasBypassChildrenLimit: false,
+        isOpenInPageBuilderAfterCreate: booleanValue(contextJsParameters.config.jcontent?.showPageBuilder)
     });
 
     // Page builder specific action which avoids over querying

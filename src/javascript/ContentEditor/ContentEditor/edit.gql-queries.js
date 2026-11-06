@@ -24,6 +24,7 @@ const NodeDataFragment = {
                 isPage: isNodeType(type: {multi: ANY, types: ["jnt:page"]})
                 isFolder:isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
                 isFile: isNodeType(type: {types: ["jnt:file"]})
+                isContent: isNodeType(type: {types: ["jnt:content"]})
                 isSystemNameReadOnlyMixin: isNodeType(type: {multi: ANY, types: ["jmix:systemNameReadonly"]})
                 moveSystemNameToTop: isNodeType(type: {multi: ANY, types: [
                     "jnt:page",
@@ -99,6 +100,7 @@ const NodeDataFragment = {
                     }
                 }
                 hasWritePermission: hasPermission(permissionName: $writePermission)
+                hasComponentPermission
                 hasPublishPermission: hasPermission(permissionName: "publish")
                 hasTranslatePermission: hasPermission(permissionName: "translateAction")
                 hasStartPublicationWorkflowPermission: hasPermission(permissionName: "publication-start")

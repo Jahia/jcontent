@@ -1,5 +1,6 @@
 import {useNodeChecks} from '@jahia/data-helper';
 import {PATH_CATEGORIES_ITSELF, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
+import {componentPermissionFragment} from '~/JContent/actions/utils/componentPermission';
 
 export const useDndData = ({paths, language, uilang}) => {
     const nodeDragData = useNodeChecks(
@@ -10,7 +11,8 @@ export const useDndData = ({paths, language, uilang}) => {
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockUiMove'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
-            getLockInfo: true
+            getLockInfo: true,
+            applyFragment: componentPermissionFragment
         }
     );
 

@@ -1,33 +1,32 @@
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
-import {transformQueryHandler} from '~/ContentEditor/SelectorTypes/Picker/configs/queryHandlers';
+import {toPrincipalRows} from '~/ContentEditor/SelectorTypes/Picker/configs/principalSearchResults';
 import {Group} from '@jahia/moonstone';
 import {renderer} from '~/ContentEditor/SelectorTypes/Picker/configs/renderer';
 import React from 'react';
 import * as reactTable from '~/JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
-import {UserGroupPickerFragment, UserGroupPickerSearchQuery} from './usergroupPicker.gql-queries';
+import {UserGroupPickerSearchQuery} from './usergroupPicker.gql-queries';
 import {NoIconPickerCaption} from '~/ContentEditor/SelectorTypes/Picker/configs/NoIconPickerCaption';
 
-const PickerUserGroupQueryHandler = transformQueryHandler({
+const PickerUserGroupQueryHandler = {
     ...BaseQueryHandler,
     getQuery: () => UserGroupPickerSearchQuery,
     getQueryVariables: p => {
-        const {language, displayLanguage, offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
+        const {language, offset, limit, fieldSorter} = BaseQueryHandler.getQueryVariables(p);
         return {
             siteKey: p.siteKey,
             scopePath: p.searchPath || '/',
             searchTerm: p.searchTerms || '',
             language,
-            displayLanguage,
             offset,
             limit,
             fieldSorter
         };
     },
-    getResults: data => data?.jcontent?.groupSearch,
-    getFragments: () => [UserGroupPickerFragment],
+    getResults: data => toPrincipalRows(data?.jcontent?.groupSearch),
+    getFragments: () => [],
     handlesSearch: true
-});
+};
 
 const nameColumn = {
     id: 'name',
@@ -53,7 +52,7 @@ const siteColumn = {
 
 const providerColumn = {
     id: 'provider',
-    accessor: row => row.userGroupFolderAncestors?.map(f => f.path.match(/^.*\/providers\/([^/]+)$/)).filter(f => f).map(f => f[1]).join('') || 'default',
+    accessor: 'provider',
     label: 'jcontent:label.contentEditor.edit.fields.contentPicker.userPicker.provider',
     Cell: reactTable.Cell,
     Header: reactTable.Header,

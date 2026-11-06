@@ -4,10 +4,11 @@ import {PredefinedFragments} from '@jahia/data-helper';
 /**
  * Fragments needed for preview are included
  */
-const NodePreviewFieldsFragment = gql`
+export const NodePreviewFieldsFragment = gql`
     fragment NodePreviewFields on JCRNode {
         isFile: isNodeType(type: {types: ["jnt:file"]})
         isPage: isNodeType(type: {types: ["jnt:page"]})
+        isContent: isNodeType(type: {types: ["jnt:content"]})
         jView: property(name: "j:view") {
             value
         }

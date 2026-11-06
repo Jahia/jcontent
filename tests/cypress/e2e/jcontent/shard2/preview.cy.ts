@@ -38,6 +38,27 @@ describe('JContent preview tests', () => {
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'previewMainResource',
+            primaryNodeType: 'jnt:news',
+            properties: [{name: 'jcr:title', value: 'Preview Main Resource', language: 'en'}]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'previewMainResourceWithView',
+            primaryNodeType: 'jnt:news',
+            mixins: ['jmix:renderable'],
+            properties: [
+                {name: 'jcr:title', value: 'Preview View Override', language: 'en'},
+                // Jmix:renderable is what gives a node j:view. Digitall's person-portrait-1 carries
+                // exactly this shape (j:view=event) and it broke the content template render,
+                // because under contextConfiguration=page the view argument is the template name.
+                // No template node is named 'event', so resolution used to fail and the preview
+                // came back empty.
+                {name: 'j:view', value: 'event'}
+            ]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'previewInlineScript',
             primaryNodeType: 'cent:previewInlineScript'
         });
@@ -117,18 +138,42 @@ describe('JContent preview tests', () => {
             .and('not.contain.text', 'test 3');
     });
 
-    it('should inject page CSS into out-of-context module renders via cssSourcePath', () => {
-        // Out-of-context: node in content-folders renders as contextConfiguration=module.
-        // cssSourcePath triggers a secondary page fetch to extract <head> CSS,
-        // which IframeViewer injects into the iframe — the head should have link[rel=stylesheet].
+    it('should render content that has a content template through that template', () => {
+        // Jnt:news carries jmix:mainResource and the news module ships its own content template
+        // for it (j:applyOn=jnt:news, j:defaultTemplate=true), so core resolves a template and
+        // displayableNode is the node itself. That template is only applied under
+        // contextConfiguration=page - templateNodeFilter runs on wrappedcontent,page,gwt only -
+        // which puts the node inside the template set's base template (<div class="bodywrapper">)
+        // and makes the render a full document carrying its own CSS.
         const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
-        jcontent.openPreview('previewPerson');
+        jcontent.openPreview('previewMainResource');
 
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.html', 'class="bodywrapper"')
+            .and('contain.text', 'Preview Main Resource');
         cy.get('iframe[data-sel-role="edit-preview-frame"]').should($iframe => {
             const links = $iframe[0].contentDocument.head.querySelectorAll('link[rel="stylesheet"]');
-            expect(links.length, 'page CSS should be injected from cssSourcePath').to.be.greaterThan(0);
+            expect(links.length, 'the content template render brings its own CSS').to.be.greaterThan(0);
         });
+    });
+
+    it('should still apply the content template when the content carries a j:view', () => {
+        // Regression: the view argument means "template name" under contextConfiguration=page, so
+        // forwarding the node's j:view made template resolution fail (TemplateNotFoundException)
+        // and the pane fell back to "No preview available". A j:view must not change the template
+        // that is resolved - core selects that from j:templateName.
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.openPreview('previewMainResourceWithView');
+
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.html', 'class="bodywrapper"')
+            .and('not.contain.text', 'No preview available');
     });
 
     it('should show empty list message in side panel preview for an empty jnt:contentList', () => {
@@ -222,5 +267,37 @@ describe('JContent preview tests', () => {
             .its('0.contentDocument.body')
             .should('be.visible')
             .and('contain.text', 'preview me edited');
+    });
+
+    describe('Preview link in the details tab', () => {
+        const openDetails = (name: string) => {
+            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+            jcontent.openPreview(name);
+            sidePanel.getByRole('side-panel').should('be.visible');
+            sidePanel.switchToDetailsTab();
+        };
+
+        it('should offer the preview URL of a main resource, opening it in a new tab', () => {
+            // Jnt:news carries jmix:mainResource, so the node renders on its own and has a URL a
+            // reviewer can open outside jContent. See Jahia/jcontent#2934.
+            openDetails('previewMainResource');
+
+            sidePanel.getDetailsSection('preview-link').should('be.visible');
+            sidePanel.getPreviewLink().should('have.attr', 'target', '_blank');
+            sidePanel.getPreviewLink().should('have.attr', 'rel', 'noopener noreferrer');
+            // The last segment is the node name until the news module's rules create a vanity URL
+            // from the title, and 'preview-main-resource' after that. Assert only that the address
+            // is absolute and goes through the render servlet, which is what makes the link open
+            // the standard preview.
+            sidePanel.getPreviewLink().invoke('attr', 'href').should('match', /^https?:\/\/.+\/cms\/render\/default\//);
+        });
+
+        it('should offer no preview URL for content that does not render on its own', () => {
+            // Jnt:text has no content template, so there is no address to hand a reviewer.
+            openDetails('previewText');
+
+            sidePanel.getDetailsSection('technical').should('exist');
+            cy.get('[data-sel-role="details-section"][data-sel-content="preview-link"]').should('not.exist');
+        });
     });
 });

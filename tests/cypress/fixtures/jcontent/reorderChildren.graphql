@@ -1,0 +1,7 @@
+mutation($pathOrId: String!, $names: [String]!) {
+    jcr {
+        mutateNode(pathOrId: $pathOrId) {
+            reorderChildren(names: $names)
+        }
+    }
+}

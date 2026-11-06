@@ -7,6 +7,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
 import {JahiaRenderedModulesUtil} from '../JContent.utils';
 import {PATH_CATEGORIES_ITSELF} from '../actions/actions.constants';
+import {componentPermissionFragment, hasComponentPermission} from '../actions/utils/componentPermission';
 
 const prepareRes = ({selection, path, nodeDragData}) => {
     if (!nodeDragData?.nodes) {
@@ -45,6 +46,7 @@ export function useNodeDrag({dragSource, isUseDragData, nodeDragData}) {
             hideOnNodeTypes: ['jnt:virtualsite', 'jmix:hideDeleteAction', 'jmix:blockUiMove'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
             getLockInfo: true,
+            applyFragment: componentPermissionFragment,
             skip: isUseDragData
         }
     );
@@ -53,7 +55,7 @@ export function useNodeDrag({dragSource, isUseDragData, nodeDragData}) {
         res = prepareRes({selection, path: dragSource.path, nodeDragData});
     }
 
-    const isDraggable = Boolean(res.checksResult) && !JahiaRenderedModulesUtil.isJahiaArea(dragSource?.path);
+    const isDraggable = Boolean(res.checksResult) && hasComponentPermission(res) && !JahiaRenderedModulesUtil.isJahiaArea(dragSource?.path);
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({
         type: 'node',
         item: dragSource,
@@ -67,7 +69,7 @@ export function useNodeDrag({dragSource, isUseDragData, nodeDragData}) {
     }) : ({
         type: 'nodes',
         item: res.nodes,
-        canDrag: () => res.checksResult && !JahiaRenderedModulesUtil.isJahiaArea(dragSource?.path) && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
+        canDrag: () => res.checksResult && hasComponentPermission(res) && !JahiaRenderedModulesUtil.isJahiaArea(dragSource?.path) && !res.nodes?.some(n => n.lockOwner) && selection.indexOf(dragSource.path) > -1,
         collect: monitor => ({
             dragClasses: monitor.isDragging() ? [styles.drag] : []
         })

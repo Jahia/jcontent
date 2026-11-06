@@ -148,8 +148,8 @@ describe('Chained extend mixins each addMixin targets', () => {
     });
 
     // Same move to a member that declares a property itself: cemix:chainSuccess declares
-    // toastSuccess, so the editor reads its copy as unchanged and must still write it back after the
-    // removal of cemix:chainPopin has dropped it.
+    // toastSuccess, which the removal of cemix:chainPopin drops and switchMixins restores, though the
+    // editor reads its copy as unchanged and does not write it.
     it('keeps the stored values when moving up the chain to a member that declares one of them', () => {
         addNode({
             parentPathOrId: contents,

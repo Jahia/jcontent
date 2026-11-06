@@ -4,7 +4,8 @@ import {
     createUser,
     deleteGroup,
     deleteSite,
-    deleteUser
+    deleteUser,
+    grantRoles
 } from '@jahia/cypress';
 import gql from 'graphql-tag';
 
@@ -19,6 +20,8 @@ describe('jContent principal search GraphQL endpoint', () => {
         {name: `${prefix}user2`, firstName: 'Bob', lastName: 'Brown'},
         {name: `${prefix}user3`, firstName: 'Carol', lastName: 'Clark'}
     ];
+    const otherSiteKey = 'principalSearchOtherSite';
+    const editor = {name: 'principalsearcheditor', password: 'password'};
     const globalGroup = `${prefix}groupglobal`;
     const siteGroup = `${prefix}groupsite`;
 
@@ -54,24 +57,53 @@ describe('jContent principal search GraphQL endpoint', () => {
         }
     `;
 
+    const PRINCIPAL_FIELDS = gql`
+        query PrincipalFields($siteKey: String!, $searchTerm: String) {
+            jcontent {
+                userSearch(siteKey: $siteKey, scopePath: "/users", searchTerm: $searchTerm) {
+                    nodes {
+                        uuid
+                        path
+                        name
+                        displayName
+                        nodeTypeName
+                        firstName
+                        lastName
+                        provider
+                        site {
+                            siteKey
+                            displayName
+                        }
+                    }
+                }
+            }
+        }
+    `;
+
     const names = result => result.data.jcontent.userSearch.nodes.map(n => n.name);
     const groupNames = result => result.data.jcontent.groupSearch.nodes.map(n => n.name);
 
     before('provision site, users and groups', () => {
         createSite(siteKey);
+        createSite(otherSiteKey);
         users.forEach(u => createUser(u.name, 'password', [
             {name: 'j:firstName', value: u.firstName},
             {name: 'j:lastName', value: u.lastName}
         ]));
         createGroup(globalGroup);
         createGroup(siteGroup, false, siteKey);
+        createUser(editor.name, editor.password);
+        grantRoles(`/sites/${siteKey}`, ['editor'], editor.name, 'USER');
     });
 
     after('cleanup', () => {
+        cy.apolloClient();
         users.forEach(u => deleteUser(u.name));
+        deleteUser(editor.name);
         deleteGroup(globalGroup);
         deleteGroup(siteGroup, siteKey);
         deleteSite(siteKey);
+        deleteSite(otherSiteKey);
     });
 
     it('returns global users matching a term with the correct total count', () => {
@@ -153,6 +185,91 @@ describe('jContent principal search GraphQL endpoint', () => {
         }).then(result => {
             expect(groupNames(result)).to.include(globalGroup);
             expect(groupNames(result)).to.include(siteGroup);
+        });
+    });
+
+    it('matches every word of the term against the names a user shows', () => {
+        cy.apollo({
+            query: USER_SEARCH,
+            variables: {siteKey, scopePath: '/users', searchTerm: 'anderson alice', offset: 0, limit: 25}
+        }).then(result => {
+            expect(result.data.jcontent.userSearch.pageInfo.totalCount).to.eq(1);
+            expect(names(result)).to.deep.eq([`${prefix}user1`]);
+        });
+    });
+
+    it('returns the values a picker displays for each user', () => {
+        cy.apollo({
+            query: PRINCIPAL_FIELDS,
+            variables: {siteKey, searchTerm: `${prefix}user1`}
+        }).then(result => {
+            const [user] = result.data.jcontent.userSearch.nodes;
+            expect(user.name).to.eq(`${prefix}user1`);
+            expect(user.nodeTypeName).to.eq('jnt:user');
+            expect(user.firstName).to.eq('Alice');
+            expect(user.lastName).to.eq('Anderson');
+            expect(user.provider).to.eq('default');
+            expect(user.uuid).to.be.a('string').and.not.be.empty;
+            expect(user.site.siteKey).to.eq('systemsite');
+        });
+    });
+
+    describe('as an editor of one site', () => {
+        beforeEach(() => {
+            cy.apolloClient({username: editor.name, password: editor.password});
+        });
+
+        afterEach(() => {
+            cy.apolloClient();
+        });
+
+        it('lists users and groups for the site the editor works on', () => {
+            cy.apollo({
+                query: USER_SEARCH,
+                variables: {siteKey, scopePath: '/users', searchTerm: prefix, offset: 0, limit: 25}
+            }).then(result => {
+                users.forEach(u => expect(names(result)).to.include(u.name));
+            });
+
+            cy.apollo({
+                query: GROUP_SEARCH,
+                variables: {siteKey, scopePath: '/', searchTerm: prefix, offset: 0, limit: 25}
+            }).then(result => {
+                expect(groupNames(result)).to.include(globalGroup);
+                expect(groupNames(result)).to.include(siteGroup);
+            });
+        });
+
+        it('matches a term against the first and last names the editor may read', () => {
+            cy.apollo({
+                query: USER_SEARCH,
+                variables: {siteKey, scopePath: '/users', searchTerm: 'Alice', offset: 0, limit: 25}
+            }).then(result => {
+                expect(result.data.jcontent.userSearch.pageInfo.totalCount).to.eq(0);
+            });
+
+            cy.apollo({
+                query: USER_SEARCH,
+                variables: {siteKey, scopePath: '/users', searchTerm: `${prefix}user1`, offset: 0, limit: 25}
+            }).then(result => {
+                expect(names(result)).to.deep.eq([`${prefix}user1`]);
+            });
+        });
+
+        it('lists nothing for a site the editor does not work on', () => {
+            cy.apollo({
+                query: USER_SEARCH,
+                variables: {siteKey: otherSiteKey, scopePath: '/users', searchTerm: prefix, offset: 0, limit: 25}
+            }).then(result => {
+                expect(result.data.jcontent.userSearch.pageInfo.totalCount).to.eq(0);
+            });
+
+            cy.apollo({
+                query: GROUP_SEARCH,
+                variables: {siteKey, scopePath: `/sites/${otherSiteKey}/groups`, searchTerm: '', offset: 0, limit: 25}
+            }).then(result => {
+                expect(result.data.jcontent.groupSearch.pageInfo.totalCount).to.eq(0);
+            });
         });
     });
 });

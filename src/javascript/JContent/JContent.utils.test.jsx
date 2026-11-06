@@ -1,14 +1,21 @@
 import {registry} from '@jahia/ui-extender';
 import {
     canEditInPageBuilder,
+    getFrameTemplate,
     getNewCounter,
+    getPageBuilderContentViewMode,
     isDescendant,
+    isPageBuilderContent,
+    isPageBuilderNode,
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
     removeFileExtension,
     resolveUrlForLiveOrPreview,
-    resolveEffectiveSite
+    resolveEffectiveSite,
+    setPageBuilderContentViewMode,
+    toPageBuilderNode
 } from './JContent.utils';
+import {PageBuilderNodeFragment} from './JContentUtils.gql-queries';
 
 jest.mock('@jahia/ui-extender', () => ({
     registry: {
@@ -262,6 +269,113 @@ describe('canEditInPageBuilder', () => {
     it('should not allow editing a reference even if it lives under a registered editable root', () => {
         registry.find.mockReturnValue([{rootPath: '/sites/otherSite'}]);
         expect(canEditInPageBuilder('/sites/otherSite/ref@/node', nodes, site)).toBe(false);
+    });
+});
+
+describe('isPageBuilderNode', () => {
+    const contents = '/sites/site/contents';
+    const form = {path: `${contents}/form`, isPageBuilderType: true, isContent: true, displayableNode: null};
+
+    it('should open a page, and a main resource with a template of its own', () => {
+        expect(isPageBuilderNode({path: '/sites/site/home', isPageBuilderType: true, isPage: true, isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}})).toBe(true);
+        expect(isPageBuilderNode({path: `${contents}/news`, isPageBuilderType: true, isPageOrMainResource: true, displayableNode: {path: `${contents}/news`}})).toBe(true);
+    });
+
+    it('should open a visually editable content with no page through the wrapper', () => {
+        expect(isPageBuilderNode(form)).toBe(true);
+    });
+
+    it('should open a temporary Page Builder primary type, a Formidable form on a core without jmix:visuallyEditable', () => {
+        expect(isPageBuilderNode({path: `${contents}/form`, primaryNodeType: {name: 'fmdb:form'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(true);
+        expect(isPageBuilderNode({path: `${contents}/form/fields`, primaryNodeType: {name: 'fmdb:fieldList'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(false);
+    });
+
+    it('should not open a visually editable node that has no template and is not jnt:content, which the wrapper cannot render', () => {
+        expect(isPageBuilderNode({path: `${contents}/widget`, isPageBuilderType: true, isContent: false, displayableNode: null})).toBe(false);
+    });
+
+    it('should not open any other node', () => {
+        expect(isPageBuilderNode({path: `${contents}/text`, primaryNodeType: {name: 'jnt:text'}, isPageBuilderType: false, isContent: true, displayableNode: null})).toBe(false);
+        expect(isPageBuilderNode({path: contents, primaryNodeType: {name: 'jnt:contentFolder'}, isPageBuilderType: false, displayableNode: null})).toBe(false);
+        expect(isPageBuilderNode(undefined)).toBe(false);
+    });
+});
+
+describe('toPageBuilderNode', () => {
+    const nodeInfo = types => ({path: '/sites/site/contents/news', primaryNodeType: {name: 'jnt:news'}, displayableNode: {path: '/sites/site/home'}, ...types});
+
+    it('should give a useNodeInfo result every field of PageBuilderNodeFragment', () => {
+        const fields = PageBuilderNodeFragment.definitions[0].selectionSet.selections.map(field => field.alias?.value || field.name.value);
+        const node = toPageBuilderNode(nodeInfo({}));
+        fields.forEach(field => expect(node).toHaveProperty(field));
+    });
+
+    it('should read the node types that useNodeInfo returns', () => {
+        expect(toPageBuilderNode(nodeInfo({'jmix:mainResource': true, 'jnt:content': true}))).toEqual(expect.objectContaining({
+            isPageBuilderType: true,
+            isPage: false,
+            isPageOrMainResource: true,
+            isContent: true
+        }));
+        expect(toPageBuilderNode(nodeInfo({'jnt:page': true}))).toEqual(expect.objectContaining({isPageBuilderType: true, isPage: true, isPageOrMainResource: true}));
+        expect(toPageBuilderNode(nodeInfo({'jnt:content': true})).isPageBuilderType).toBe(false);
+    });
+
+    it('should keep a main resource whose displayable node is its page on its own template', () => {
+        const pressRelease = toPageBuilderNode(nodeInfo({'jmix:mainResource': true, 'jnt:content': true}));
+        expect(isPageBuilderNode(pressRelease)).toBe(true);
+        expect(getFrameTemplate(pressRelease, 'fullpage')).toBe('fullpage');
+    });
+
+    it('should leave a missing node missing', () => {
+        expect(toPageBuilderNode(undefined)).toBeUndefined();
+    });
+});
+
+describe('the view of an item that opens in the Page Builder', () => {
+    const form = {path: '/sites/site/contents/form', isPageBuilderType: true, isContent: true, displayableNode: null};
+    const page = {path: '/sites/site/home', isPageBuilderType: true, isPage: true, isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}};
+
+    beforeEach(() => globalThis.localStorage.clear());
+
+    it('should concern an item that opens in the Page Builder and is not a page', () => {
+        expect(isPageBuilderContent(form)).toBe(true);
+        expect(isPageBuilderContent(page)).toBe(false);
+        expect(isPageBuilderContent({path: '/sites/site/contents', primaryNodeType: {name: 'jnt:contentFolder'}})).toBe(false);
+    });
+
+    it('should open such an item in the Page Builder until the editor chooses another view', () => {
+        expect(getPageBuilderContentViewMode()).toBe('pageBuilder');
+        setPageBuilderContentViewMode('flatList');
+        expect(getPageBuilderContentViewMode()).toBe('flatList');
+        setPageBuilderContentViewMode('structuredView');
+        expect(getPageBuilderContentViewMode()).toBe('structuredView');
+    });
+
+    it('should ignore a stored value that is not a view of such an item', () => {
+        globalThis.localStorage.setItem('jcontent-pageBuilderContent-viewMode', 'thumbnails');
+        expect(getPageBuilderContentViewMode()).toBe('pageBuilder');
+    });
+});
+
+describe('getFrameTemplate', () => {
+    const page = {path: '/sites/site/home', displayableNode: {path: '/sites/site/home'}};
+    const form = {path: '/sites/site/contents/form', displayableNode: null};
+
+    it('should render a node with no page through the content-template wrapper, whatever the URL holds', () => {
+        expect(getFrameTemplate(form, '')).toBe('content-template');
+        expect(getFrameTemplate(form, 'other')).toBe('content-template');
+    });
+
+    it('should keep the template of a page, and drop a stale wrapper', () => {
+        expect(getFrameTemplate(page, '')).toBe('');
+        expect(getFrameTemplate(page, 'home-alt')).toBe('home-alt');
+        expect(getFrameTemplate(page, 'content-template')).toBe('');
+    });
+
+    it('should keep the non-default template of a main resource whose displayable node is its page', () => {
+        const pressRelease = {path: '/sites/site/home/area/release', isPageOrMainResource: true, displayableNode: {path: '/sites/site/home'}};
+        expect(getFrameTemplate(pressRelease, 'fullpage')).toBe('fullpage');
     });
 });
 

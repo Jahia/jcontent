@@ -678,7 +678,8 @@
           "invalidForm": "Fehler im Formular",
           "fieldsInError": "Ein Feld mit Fehler",
           "fieldsInError_plural": "{{count}} Felder mit Fehler",
-          "otherLanguages": "Weitere Sprachen mit Fehler"
+          "otherLanguages": "Weitere Sprachen mit Fehler",
+          "listLabel": "{{label}}:"
         },
         "action": {
           "copyLanguage": {
@@ -907,6 +908,7 @@
         "linksLive": "Live",
         "linksDefault": "Staging",
         "linksVanity": "Vanity URL",
+        "linksPreview": "Ganzseitige Vorschau",
         "linksDefaultVanity": "Haupt-URL",
         "linksCopied": "Link kopiert",
         "noDetailsAvailable": "Wählen Sie einen Content, um dessen Details anzuzeigen"
@@ -1033,6 +1035,7 @@
         },
         "rightPanel": {
           "actionsCaption": "Nicht auswählbare Elemente werden in dieser Ansicht nicht gelistet",
+          "tooManyItems": "Einige Elemente werden nicht gelistet, weil es zu viele sind. Verwenden Sie die Suche, um sie zu finden.",
           "searchContextOptions": {
             "search": "Search in",
             "allUsers": "Alle Nutzer",

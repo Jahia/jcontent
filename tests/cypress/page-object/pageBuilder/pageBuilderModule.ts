@@ -150,8 +150,10 @@ export class PageBuilderModule extends BaseComponent {
         }));
     }
 
-    getCreateButtons() {
-        return new PageBuilderModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
+    // Without a placeholder path, the buttons of the first placeholder of the module
+    getCreateButtons(placeholderPath?: string) {
+        const pathSelector = placeholderPath ? `[path="${placeholderPath}"]` : '';
+        return new PageBuilderModuleCreateButton(this.get().find(`[jahiatype="module"][type="placeholder"]${pathSelector}`).invoke('attr', 'id').then(id => {
             return this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
         }));
     }
@@ -180,6 +182,14 @@ export class PageBuilderModule extends BaseComponent {
             this.get().rightclick({force, waitForAnimations: true});
         }
 
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
+    }
+
+    /* Use for an area or a list: its box is always displayed and never hovered, so contextMenu(true) waits for a hover that never comes */
+    boxHeaderContextMenu(): Menu {
+        this.get().scrollIntoView();
+        this.get().click('bottomLeft', {force: true});
+        this.getBox().getHeader().get().should('be.visible').rightclick({force: true});
         return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 

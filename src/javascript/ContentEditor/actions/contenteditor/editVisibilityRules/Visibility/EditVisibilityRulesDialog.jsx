@@ -95,7 +95,7 @@ export const EditVisibilityRulesDialog = ({
     const isVisibleInLive = nodeByPath.liveVisibility !== null && nodeByPath.liveVisibility.isVisible;
     return (
         <ContentEditorConfigContextProvider config={contentEditorConfigContext}>
-            <ContentEditorContextProvider useFormDefinition={useEditFormDefinition} context={contentEditorContext}>
+            <ContentEditorContextProvider useFormDefinition={useEditFormDefinition}>
                 <Dialog
                     fullWidth
                     data-sel-role="edit-visibility-rules-dialog"

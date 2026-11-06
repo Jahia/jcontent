@@ -1,19 +1,22 @@
 import {BaseComponent} from '@jahia/cypress';
 
+// The first render of a page after Jahia starts can take longer than the default command timeout
+const FRAME_LOAD_TIMEOUT = 60000;
+
 export class CompareDialog extends BaseComponent {
     static defaultSelector = 'div[data-sel-role="compare-dialog"]';
 
     getStagingFrame() {
         return this.get()
             .get('iframe[data-sel-role="staging-frame"]')
-            .its('0.contentDocument.body').should('not.be.empty')
+            .its('0.contentDocument.body', {timeout: FRAME_LOAD_TIMEOUT}).should('not.be.empty')
             .then(cy.wrap);
     }
 
     getLiveFrame() {
         return this.get()
             .get('iframe[data-sel-role="live-frame"]')
-            .its('0.contentDocument.body').should('not.be.empty')
+            .its('0.contentDocument.body', {timeout: FRAME_LOAD_TIMEOUT}).should('not.be.empty')
             .then(cy.wrap);
     }
 

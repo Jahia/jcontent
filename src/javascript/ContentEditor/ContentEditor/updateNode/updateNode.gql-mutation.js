@@ -23,8 +23,7 @@ export const SavePropertiesMutation = gql`
             }
             mutateNode(pathOrId: $uuid) {
                 rename(name: $newName) @include(if: $shouldRename)
-                removeMixins(mixins: $mixinsToDelete)
-                addMixins(mixins: $mixinsToAdd)
+                switchMixins(remove: $mixinsToDelete, add: $mixinsToAdd)
                 setPropertiesBatch(properties: $propertiesToSave) {
                     path
                 }

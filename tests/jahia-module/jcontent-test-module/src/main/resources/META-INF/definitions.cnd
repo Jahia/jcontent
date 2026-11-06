@@ -330,8 +330,11 @@
 // these two can be filled and read back without driving a picker dialog. sharedMode carries a
 // default value on purpose -- an inactive dynamic fieldset has its fields seeded from defaults, so
 // that is the copy which tells us whether a stored value survives a switch between siblings.
+// sharedPoster is the ticket's picker: a switch carries the value between the copies of a property,
+// and a picker holds a reference rather than text. cemix:vimeoNativePlayer inherits none of
+// cemix:sharedPlayerOptions, so a switch through it leaves no copy of the shared properties active.
 [cent:videoPlayerTest] > jnt:content, jmix:basicContent, jmix:editorialContent
- - videoType (string, choicelist) indexed=no < 'cemix:youtubeGenericPlayer', 'cemix:vimeoGenericPlayer', 'cemix:switchTubeGenericPlayer'
+ - videoType (string, choicelist) indexed=no < 'cemix:youtubeGenericPlayer', 'cemix:vimeoGenericPlayer', 'cemix:switchTubeGenericPlayer', 'cemix:vimeoNativePlayer'
 
 // sharedZone/sharedQuality cover the cascading-choicelist case the PR body flags as untested:
 // sharedQuality depends on BOTH sharedMode and sharedZone, so changing sharedMode (the property
@@ -346,6 +349,7 @@
  - sharedMode (string, choicelist) = 'auto' indexed=no < 'auto', 'manual'
  - sharedZone (string, choicelist) = 'na' indexed=no < 'na', 'eu'
  - sharedQuality (string, choicelist[dependentProperties='sharedMode,sharedZone']) indexed=no < 'sd', 'hd'
+ - sharedPoster (weakreference, picker[type='editorial'])
 
 [cemix:youtubePlayerId] mixin
  - youtubeId (string) internationalized
@@ -366,6 +370,9 @@
 [cemix:switchTubeGenericPlayer] > jmix:templateMixin, cemix:switchTubePlayerId, cemix:sharedPlayerOptions mixin
  extends = cent:videoPlayerTest
 
+[cemix:vimeoNativePlayer] > jmix:templateMixin, cemix:vimeoPlayerId mixin
+ extends = cent:videoPlayerTest
+
 // https://github.com/Jahia/jcontent/issues/2746#issuecomment-5905620339
 // The chain variant: not siblings but a CHAIN, popin > success > redirect, where every member
 // declares `extends = cent:actionTest` and every member is its own addMixin target. Each one must
@@ -378,9 +385,14 @@
 [cent:actionTest] > jnt:content, jmix:basicContent, jmix:editorialContent
  - actionType (string, choicelist) indexed=no < 'cemix:chainRedirect', 'cemix:chainSuccess', 'cemix:chainPopin'
 
+// pageTarget and pageTracking are hidden, so the editor never writes them back on a switch
+// (https://github.com/Jahia/jcontent/issues/2831): pageTarget is shared and autocreated, so adding
+// the next chain member puts its default back over the value the switch must keep.
 [cemix:chainRedirect] > jmix:templateMixin mixin
  extends = cent:actionTest
  - pageSuccess (string) internationalized
+ - pageTarget (string) = '_self' autocreated hidden indexed=no
+ - pageTracking (string) internationalized hidden
 
 [cemix:chainSuccess] > jmix:templateMixin, cemix:chainRedirect mixin
  extends = cent:actionTest
@@ -389,3 +401,8 @@
 [cemix:chainPopin] > cemix:chainSuccess mixin
  extends = cent:actionTest
  - titrePopin (string) internationalized
+
+// Opens in the Page Builder from a content folder, through the content-template wrapper of the default module.
+// jmix:visuallyEditable ships with Jahia 8.2.4.0.
+[cent:visuallyEditable] > jnt:content, jmix:visuallyEditable, jmix:basicContent, jmix:editorialContent, jmix:visibleInContentTree, mix:title
+ + * (cent:childObject1)

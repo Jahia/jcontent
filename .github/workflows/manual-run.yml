@@ -36,6 +36,7 @@ jobs:
       provisioning_manifest: ${{ github.event.inputs.manifest }}
       artifact_prefix: jcontent-manual-${{ github.run_number }}
       should_skip_testrail: true
+      skip_notifications: true
       testrail_project: jContent Module
       timeout_job: 140
       timeout_step: 90

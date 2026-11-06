@@ -9,10 +9,15 @@ import {ceToggleSections} from '~/ContentEditor/registerReducer';
 import styles from './FormBuilder.scss';
 import {Validation} from './Validation';
 import {CeModalError} from '~/ContentEditor/ContentEditorApi/ContentEditorError';
+import {LeadingActionContext} from './LeadingAction.context';
+import {getFields} from '~/ContentEditor/utils/fields.utils';
 
 const ADVANCED_OPTIONS_SELECTIONS = ['visibility'];
 
-export const FormBuilder = ({mode}) => {
+/**
+ * @type {React.FC<{mode: string, leadingAction?: string}>}
+ */
+export const FormBuilder = ({mode, leadingAction = null}) => {
     const {nodeData, errors, expandedSections} = useContentEditorContext();
     const {formKey} = useContentEditorConfigContext();
     const {sections} = useContentEditorSectionContext();
@@ -23,15 +28,11 @@ export const FormBuilder = ({mode}) => {
     useEffect(() => {
         if (errors) {
             const newToggleState = {...toggleStates};
-            sections.forEach(section => {
-                section.fieldSets.forEach(fieldSet => {
-                    fieldSet.fields.forEach(field => {
-                        if (errors[field.name]) {
-                            newToggleState[section.name] = true;
-                        }
-                    });
+            sections
+                .filter(section => getFields([section]).some(field => errors[field.name]))
+                .forEach(section => {
+                    newToggleState[section.name] = true;
                 });
-            });
             dispatch(ceToggleSections({key: formKey, sections: newToggleState}));
         }
     }, [errors]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -92,14 +93,14 @@ export const FormBuilder = ({mode}) => {
     }
 
     return (
-        <>
+        <LeadingActionContext.Provider value={leadingAction}>
             <Validation/>
             <Form className={styles.form}>
                 <section data-sel-mode={mode}>
                     {children}
                 </section>
             </Form>
-        </>
+        </LeadingActionContext.Provider>
     );
 };
 
@@ -111,5 +112,7 @@ FormBuilder.contextTypes = {
 };
 
 FormBuilder.propTypes = {
-    mode: PropTypes.string.isRequired
+    mode: PropTypes.string.isRequired,
+    // Key of the action shown before each field, e.g. to copy a source value in the translate panel
+    leadingAction: PropTypes.string
 };

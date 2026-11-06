@@ -3,9 +3,9 @@ import {filterFieldSets} from '~/ContentEditor/editorTabs/EditPanelContent/FormB
 import {resolveSelectorType} from '~/ContentEditor/SelectorTypes/resolveSelectorType';
 
 /**
- * The symbols `shared/index.js` re-exports so a module can render a Content Editor field itself.
+ * The symbols `shared/index.ts` re-exports so a module can render a Content Editor field itself.
  *
- * These are a public API: `shared/index.js` is what `@jahia/jcontent` resolves to over module
+ * These are a public API: `shared/index.ts` is what `@jahia/jcontent` resolves to over module
  * federation. A module building a per-language editing screen mounts `FieldContainer` once per
  * language, so a rich text field stays rich text and a date stays a date picker instead of
  * degrading to a plain input.

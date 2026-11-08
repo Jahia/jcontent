@@ -5,7 +5,7 @@ import {dsGenericTheme} from '@jahia/design-system-kit';
 import {useLazyQuery} from '@apollo/client';
 import {useDispatch} from 'react-redux';
 import {ContentTreeSearch} from './ContentTreeSearch';
-import {buildTitleSearchConstraint} from './ContentTreeSearch.utils';
+import {buildSearchTerms} from './ContentTreeSearch.utils';
 import {cmOpenPaths} from '~/JContent/redux/JContent.redux';
 
 jest.mock('@apollo/client', () => ({
@@ -66,7 +66,7 @@ describe('ContentTreeSearch', () => {
         expect(search).toHaveBeenCalledWith({
             variables: {
                 rootPath: '/sites/testsite',
-                nodeConstraint: buildTitleSearchConstraint('about'),
+                ...buildSearchTerms('about'),
                 language: 'en',
                 limit: 50
             }
@@ -87,7 +87,7 @@ describe('ContentTreeSearch', () => {
         cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
 
         expect(search).toHaveBeenCalledWith({
-            variables: expect.objectContaining({nodeConstraint: buildTitleSearchConstraint('About')})
+            variables: expect.objectContaining(buildSearchTerms('About'))
         });
     });
 
@@ -164,6 +164,29 @@ describe('ContentTreeSearch', () => {
             '/sites/testsite/home/internal-link',
             '/sites/testsite/home/external-link'
         ], 'a');
+    });
+
+    it('should report the term with the same whitespace normalisation the query uses', async () => {
+        search = jest.fn().mockResolvedValue({
+            data: {
+                jcr: {
+                    pages: {nodes: [{uuid: '1', path: '/sites/testsite/home/about-us'}]},
+                    menuTitles: {nodes: []},
+                    internalLinks: {nodes: []},
+                    externalLinks: {nodes: []}
+                }
+            }
+        });
+        useLazyQuery.mockReturnValue([search, {loading: false}]);
+
+        const cmp = shallowWithTheme(<ContentTreeSearch {...defaultProps}/>, {}, dsGenericTheme);
+        typeValue(cmp, '  about   us  ');
+        await cmp.find('[data-sel-role="content-tree-search-button"]').props().onClick();
+
+        // The query collapses the run of spaces, so a title "About us" can be matched by the raw
+        // pattern - the term handed to the tree has to be collapsed the same way, or the row the
+        // component just reported as a match shows no highlight.
+        expect(onMatchedPaths).toHaveBeenCalledWith(['/sites/testsite/home/about-us'], 'about us');
     });
 
     it('should announce a "no results" message when the search returns no matches', async () => {

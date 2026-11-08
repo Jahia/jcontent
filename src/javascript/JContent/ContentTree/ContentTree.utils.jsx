@@ -6,7 +6,7 @@ import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
 import {DefaultEntry, Link, Section, Tag} from '@jahia/moonstone';
-import {stripAccents} from './ContentTreeSearch.utils';
+import {fold} from './ContentTreeSearch.utils';
 
 export function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {
@@ -63,11 +63,11 @@ function highlightSearchMatch(label, term) {
         return label;
     }
 
-    // Compare accent-stripped forms - an unaccented search term (e.g. "cafe") matches an accented
-    // label (e.g. "Café") on the backend, and stripping preserves character offsets 1-for-1 (each
+    // Compare accent-folded forms - an unaccented search term (e.g. "cafe") matches an accented
+    // label (e.g. "Café") on the backend, and folding preserves character offsets 1-for-1 (each
     // accented character decomposes to its base letter plus a combining mark that gets removed, so
-    // the base letter still lines up with the same position in the original, unstripped label).
-    const matchIndex = stripAccents(label.toLowerCase()).indexOf(stripAccents(term.toLowerCase()));
+    // the base letter still lines up with the same position in the original, unfolded label).
+    const matchIndex = fold(label.toLowerCase()).indexOf(fold(term.toLowerCase()));
     if (matchIndex === -1) {
         return label;
     }
@@ -130,6 +130,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
                 isItalic: notPublished
             },
             className: classNames(styles.ContentTree_Item, {
+                [styles.searchMatch]: isSearchMatch,
                 [styles.notPublished]: !isReversed && notPublished && selected !== treeEntry.path,
                 [styles.notPublishedReversed]: isReversed && notPublished && selected !== treeEntry.path
             }),
@@ -138,6 +139,11 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
             isLoading: loading && !treeEntry.open && treeEntry.openable && openPaths.includes(treeEntry.path),
             treeItemProps: {
                 'data-sel-role': treeEntry.node.name,
+                // Marks the row itself, and not only the matched substring of its label: a hit on
+                // the system name or on a stemmed title leaves the label without the typed term,
+                // and the tree is not filtered by the search, so such a row would otherwise look
+                // exactly like the siblings that are merely visible.
+                'data-sel-search-match': isSearchMatch ? 'true' : undefined,
                 node: treeEntry.node,
                 treeEntries,
                 virtualRow: treeEntry.virtualRow,

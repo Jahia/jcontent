@@ -5,6 +5,7 @@ import {
     createUser,
     deleteSite,
     deleteUser,
+    getNodeByPath,
     grantRoles,
     jfaker,
     publishAndWaitJobEnding,
@@ -30,6 +31,8 @@ type Fixture = {
     fileRef: string;
     fileName: string;
 };
+
+type Role = 'copy' | 'cut';
 
 const newFixture = (): Fixture => {
     const id = jfaker.string.alphanumeric({length: 8, casing: 'lower', safe: true});
@@ -71,26 +74,6 @@ const createEditorSite = (site: string, user: string) => {
     grantRoles(`/sites/${site}`, ['editor-in-chief'], user, 'USER');
 };
 
-const createFixture = (f: Fixture, sites: string[]) => {
-    createUser(f.user, PASSWORD);
-    sites.forEach(site => createEditorSite(site, f.user));
-    addNode({
-        parentPathOrId: homeArea(f.siteA),
-        name: f.news,
-        primaryNodeType: 'jnt:news',
-        properties: [
-            {name: 'jcr:title', value: f.newsTitle, language: 'en'},
-            {name: 'desc', value: `<p>Body of ${f.newsTitle}</p>`, language: 'en'}
-        ]
-    });
-};
-
-const deleteFixture = (f: Fixture, sites: string[]) => {
-    cy.logout();
-    sites.forEach(site => deleteSite(site));
-    deleteUser(f.user);
-};
-
 const addSubPage = (f: Fixture) => {
     addNode({
         parentPathOrId: homePath(f.siteA),
@@ -102,6 +85,32 @@ const addSubPage = (f: Fixture) => {
         ],
         children: [{name: AREA, primaryNodeType: 'jnt:contentList'}]
     });
+};
+
+// Every site is published once its content exists, so a cut news is live at its source before it moves.
+const createFixture = (f: Fixture, sites: string[], withSubPage: boolean) => {
+    createUser(f.user, PASSWORD);
+    sites.forEach(site => createEditorSite(site, f.user));
+    if (withSubPage) {
+        addSubPage(f);
+    }
+
+    addNode({
+        parentPathOrId: homeArea(f.siteA),
+        name: f.news,
+        primaryNodeType: 'jnt:news',
+        properties: [
+            {name: 'jcr:title', value: f.newsTitle, language: 'en'},
+            {name: 'desc', value: `<p>Body of ${f.newsTitle}</p>`, language: 'en'}
+        ]
+    });
+    sites.forEach(site => publishAndWaitJobEnding(`/sites/${site}`, ['en']));
+};
+
+const deleteFixture = (f: Fixture, sites: string[]) => {
+    cy.logout();
+    sites.forEach(site => deleteSite(site));
+    deleteUser(f.user);
 };
 
 // The legacy test publishes the site once the file reference is on the home page, before it copies or cuts it.
@@ -127,7 +136,9 @@ const switchSite = (jcontent: JContentPageBuilder, site: string): JContentPageBu
     return jcontent.switchToPageBuilder();
 };
 
-const putInClipboard = (jcontent: JContentPageBuilder, path: string, role: 'copy' | 'cut') => {
+// The UUID of the source is kept, so that the paste can tell a move from a duplicate.
+const putInClipboard = (jcontent: JContentPageBuilder, path: string, role: Role) => {
+    getNodeByPath(path).its('data.jcr.nodeByPath.uuid').as('sourceUuid');
     // Not forced, or the right-click may open the context menu of the page
     const contextMenu = jcontent.getModule(path, false).contextMenu(true, false);
     cy.waitUntil(() => contextMenu.selectByRole(role));
@@ -149,6 +160,13 @@ const pasteInto = (jcontent: JContentPageBuilder, areaPath: string) => {
     cy.get('#message-id').should('contain', 'successfully pasted');
 };
 
+// A cut moves the node and keeps its identity, so references to it survive. A copy is a new node.
+const shouldKeepIdentity = (path: string, role: Role) => {
+    cy.get<string>('@sourceUuid').then(sourceUuid => {
+        getNodeByPath(path).its('data.jcr.nodeByPath.uuid').should(role === 'cut' ? 'eq' : 'not.eq', sourceUuid);
+    });
+};
+
 // Each check opens the page anew: after a paste, the frame of Page Builder reloads under the alias of the old one.
 const shouldShowModule = (site: string, page: string, path: string, text?: string) => {
     const module = openPageBuilder(site, page).getModule(path);
@@ -166,31 +184,45 @@ const shouldNotShowModule = (site: string, areaPath: string, path: string) => {
 
 type Workspace = 'live' | 'default';
 
+// What a rendered page shows. An undefined item is not read.
+type Shown = {news?: boolean; fileRef?: boolean};
+
+const BOTH: Shown = {news: true, fileRef: true};
+const NONE: Shown = {news: false, fileRef: false};
+
 // The home link of the navigation proves that the page rendered, before an absence is read.
-const visitRendered = (workspace: Workspace, site: string) => {
-    cy.visit(`/cms/render/${workspace}/en/sites/${site}/home.html`);
+const visitRendered = (workspace: Workspace, site: string, page = 'home') => {
+    cy.visit(`/cms/render/${workspace}/en/sites/${site}/${page}.html`);
     cy.get(`a[href$="/sites/${site}/home.html"]`).should('exist');
 };
 
-const shouldRender = (f: Fixture, news: boolean, fileRef: boolean) => {
-    cy.get('body').should(news ? 'contain' : 'not.contain', f.newsTitle);
-    cy.get(`a[href*="${f.fileName}"]`).should(fileRef ? 'exist' : 'not.exist');
+const shouldRender = (f: Fixture, shown: Shown) => {
+    if (shown.news !== undefined) {
+        cy.get('body').should(shown.news ? 'contain' : 'not.contain', f.newsTitle);
+    }
+
+    if (shown.fileRef !== undefined) {
+        cy.get(`a[href*="${f.fileName}"]`).should(shown.fileRef ? 'exist' : 'not.exist');
+    }
 };
 
-// Live is the published site, preview the default workspace: the same checks run on both.
-const checkSameSite = (workspace: Workspace, f: Fixture, onHome: boolean) => {
+// Live is read as a visitor, since publication is what makes content public. Preview needs the editor.
+const asVisitor = () => cy.logout();
+
+// The sub-page is opened from the navigation of the home page, as the legacy test did.
+const checkSameSite = (workspace: Workspace, f: Fixture, home: Shown, subPage: Shown) => {
     visitRendered(workspace, f.siteA);
-    shouldRender(f, onHome, onHome);
+    shouldRender(f, home);
     cy.contains('a', f.subPageTitle).click({force: true});
     cy.url().should('contain', `/${f.subPage}.html`);
-    shouldRender(f, true, true);
+    shouldRender(f, subPage);
 };
 
-const checkCrossSite = (workspace: Workspace, f: Fixture, onSiteA: boolean) => {
+const checkCrossSite = (workspace: Workspace, f: Fixture, siteA: Shown, siteB: Shown) => {
     visitRendered(workspace, f.siteA);
-    shouldRender(f, onSiteA, onSiteA);
+    shouldRender(f, siteA);
     visitRendered(workspace, f.siteB);
-    shouldRender(f, true, true);
+    shouldRender(f, siteB);
 };
 
 describe('Page builder - copy, cut and paste content', () => {
@@ -202,10 +234,7 @@ describe('Page builder - copy, cut and paste content', () => {
         const f = newFixture();
         const sites = [f.siteA];
 
-        before(() => {
-            createFixture(f, sites);
-            addSubPage(f);
-        });
+        before(() => createFixture(f, sites, true));
 
         after(() => deleteFixture(f, sites));
 
@@ -215,8 +244,8 @@ describe('Page builder - copy, cut and paste content', () => {
             context.tag('copy-paste', 'same-site', 'news', 'edit-mode', 'testrail-case-2924367');
             const jcontent = openPageBuilder(f.siteA);
             putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'copy');
-            const subPage = openSubPage(jcontent, f);
-            pasteInto(subPage, subPageArea(f));
+            pasteInto(openSubPage(jcontent, f), subPageArea(f));
+            shouldKeepIdentity(`${subPageArea(f)}/${f.news}`, 'copy');
             shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.news}`, f.newsTitle);
             shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.news}`, f.newsTitle);
         });
@@ -228,10 +257,17 @@ describe('Page builder - copy, cut and paste content', () => {
                 context.tag('copy-paste', 'same-site', 'file-reference', 'edit-mode', 'testrail-case-2924367');
                 const jcontent = openPageBuilder(f.siteA);
                 putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'copy');
-                const subPage = openSubPage(jcontent, f);
-                pasteInto(subPage, subPageArea(f));
+                pasteInto(openSubPage(jcontent, f), subPageArea(f));
+                shouldKeepIdentity(`${subPageArea(f)}/${f.fileRef}`, 'copy');
                 shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.fileRef}`);
                 shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.fileRef}`);
+            });
+
+            it('FT-004: Copies on the same site are rendered in preview before publication', () => {
+                context.tag('copy-paste', 'same-site', 'preview-mode', 'testrail-case-2924367');
+                checkSameSite('default', f, BOTH, BOTH);
+                asVisitor();
+                checkSameSite('live', f, {fileRef: true}, {fileRef: false});
             });
 
             describe('once site A is published', () => {
@@ -239,12 +275,8 @@ describe('Page builder - copy, cut and paste content', () => {
 
                 it('FT-003: Copies on the same site are rendered in live after publication', () => {
                     context.tag('copy-paste', 'same-site', 'live-mode', 'testrail-case-2924367');
-                    checkSameSite('live', f, true);
-                });
-
-                it('FT-004: Copies on the same site are rendered in preview', () => {
-                    context.tag('copy-paste', 'same-site', 'preview-mode', 'testrail-case-2924367');
-                    checkSameSite('default', f, true);
+                    asVisitor();
+                    checkSameSite('live', f, BOTH, BOTH);
                 });
             });
         });
@@ -254,10 +286,7 @@ describe('Page builder - copy, cut and paste content', () => {
         const f = newFixture();
         const sites = [f.siteA];
 
-        before(() => {
-            createFixture(f, sites);
-            addSubPage(f);
-        });
+        before(() => createFixture(f, sites, true));
 
         after(() => deleteFixture(f, sites));
 
@@ -267,8 +296,8 @@ describe('Page builder - copy, cut and paste content', () => {
             context.tag('cut-paste', 'same-site', 'news', 'edit-mode', 'testrail-case-2924368');
             const jcontent = openPageBuilder(f.siteA);
             putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'cut');
-            const subPage = openSubPage(jcontent, f);
-            pasteInto(subPage, subPageArea(f));
+            pasteInto(openSubPage(jcontent, f), subPageArea(f));
+            shouldKeepIdentity(`${subPageArea(f)}/${f.news}`, 'cut');
             shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.news}`, f.newsTitle);
             shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.news}`);
         });
@@ -280,10 +309,17 @@ describe('Page builder - copy, cut and paste content', () => {
                 context.tag('cut-paste', 'same-site', 'file-reference', 'edit-mode', 'testrail-case-2924368');
                 const jcontent = openPageBuilder(f.siteA);
                 putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'cut');
-                const subPage = openSubPage(jcontent, f);
-                pasteInto(subPage, subPageArea(f));
+                pasteInto(openSubPage(jcontent, f), subPageArea(f));
+                shouldKeepIdentity(`${subPageArea(f)}/${f.fileRef}`, 'cut');
                 shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.fileRef}`);
                 shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.fileRef}`);
+            });
+
+            it('FT-008: Cut content on the same site is moved in preview before publication', () => {
+                context.tag('cut-paste', 'same-site', 'preview-mode', 'testrail-case-2924368');
+                checkSameSite('default', f, NONE, BOTH);
+                asVisitor();
+                checkSameSite('live', f, {fileRef: true}, {fileRef: false});
             });
 
             describe('once site A is published', () => {
@@ -291,12 +327,8 @@ describe('Page builder - copy, cut and paste content', () => {
 
                 it('FT-007: Cut content on the same site is moved in live after publication', () => {
                     context.tag('cut-paste', 'same-site', 'live-mode', 'testrail-case-2924368');
-                    checkSameSite('live', f, false);
-                });
-
-                it('FT-008: Cut content on the same site is moved in preview', () => {
-                    context.tag('cut-paste', 'same-site', 'preview-mode', 'testrail-case-2924368');
-                    checkSameSite('default', f, false);
+                    asVisitor();
+                    checkSameSite('live', f, NONE, BOTH);
                 });
             });
         });
@@ -306,7 +338,7 @@ describe('Page builder - copy, cut and paste content', () => {
         const f = newFixture();
         const sites = [f.siteA, f.siteB];
 
-        before(() => createFixture(f, sites));
+        before(() => createFixture(f, sites, false));
 
         after(() => deleteFixture(f, sites));
 
@@ -316,8 +348,8 @@ describe('Page builder - copy, cut and paste content', () => {
             context.tag('copy-paste', 'cross-site', 'news', 'edit-mode', 'testrail-case-2924369');
             const jcontent = openPageBuilder(f.siteA);
             putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'copy');
-            const siteB = switchSite(jcontent, f.siteB);
-            pasteInto(siteB, homeArea(f.siteB));
+            pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
+            shouldKeepIdentity(`${homeArea(f.siteB)}/${f.news}`, 'copy');
             shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.news}`, f.newsTitle);
             shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.news}`, f.newsTitle);
         });
@@ -329,10 +361,17 @@ describe('Page builder - copy, cut and paste content', () => {
                 context.tag('copy-paste', 'cross-site', 'file-reference', 'edit-mode', 'testrail-case-2924369');
                 const jcontent = openPageBuilder(f.siteA);
                 putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'copy');
-                const siteB = switchSite(jcontent, f.siteB);
-                pasteInto(siteB, homeArea(f.siteB));
+                pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
+                shouldKeepIdentity(`${homeArea(f.siteB)}/${f.fileRef}`, 'copy');
                 shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.fileRef}`);
                 shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.fileRef}`);
+            });
+
+            it('FT-012: Cross-site copies are rendered in preview before publication', () => {
+                context.tag('copy-paste', 'cross-site', 'preview-mode', 'testrail-case-2924369');
+                checkCrossSite('default', f, BOTH, BOTH);
+                asVisitor();
+                checkCrossSite('live', f, BOTH, NONE);
             });
 
             describe('once site B is published', () => {
@@ -340,12 +379,8 @@ describe('Page builder - copy, cut and paste content', () => {
 
                 it('FT-011: Cross-site copies are rendered in live after publication', () => {
                     context.tag('copy-paste', 'cross-site', 'live-mode', 'testrail-case-2924369');
-                    checkCrossSite('live', f, true);
-                });
-
-                it('FT-012: Cross-site copies are rendered in preview', () => {
-                    context.tag('copy-paste', 'cross-site', 'preview-mode', 'testrail-case-2924369');
-                    checkCrossSite('default', f, true);
+                    asVisitor();
+                    checkCrossSite('live', f, BOTH, BOTH);
                 });
             });
         });
@@ -355,7 +390,7 @@ describe('Page builder - copy, cut and paste content', () => {
         const f = newFixture();
         const sites = [f.siteA, f.siteB];
 
-        before(() => createFixture(f, sites));
+        before(() => createFixture(f, sites, false));
 
         after(() => deleteFixture(f, sites));
 
@@ -365,8 +400,8 @@ describe('Page builder - copy, cut and paste content', () => {
             context.tag('cut-paste', 'cross-site', 'news', 'edit-mode', 'testrail-case-2924370');
             const jcontent = openPageBuilder(f.siteA);
             putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'cut');
-            const siteB = switchSite(jcontent, f.siteB);
-            pasteInto(siteB, homeArea(f.siteB));
+            pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
+            shouldKeepIdentity(`${homeArea(f.siteB)}/${f.news}`, 'cut');
             shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.news}`, f.newsTitle);
             shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.news}`);
         });
@@ -378,10 +413,17 @@ describe('Page builder - copy, cut and paste content', () => {
                 context.tag('cut-paste', 'cross-site', 'file-reference', 'edit-mode', 'testrail-case-2924370');
                 const jcontent = openPageBuilder(f.siteA);
                 putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'cut');
-                const siteB = switchSite(jcontent, f.siteB);
-                pasteInto(siteB, homeArea(f.siteB));
+                pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
+                shouldKeepIdentity(`${homeArea(f.siteB)}/${f.fileRef}`, 'cut');
                 shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.fileRef}`);
                 shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.fileRef}`);
+            });
+
+            it('FT-016: Cross-site cut content is moved in preview before publication', () => {
+                context.tag('cut-paste', 'cross-site', 'preview-mode', 'testrail-case-2924370');
+                checkCrossSite('default', f, NONE, BOTH);
+                asVisitor();
+                checkCrossSite('live', f, {fileRef: true}, {fileRef: false});
             });
 
             describe('once site B, then site A, are published', () => {
@@ -392,12 +434,8 @@ describe('Page builder - copy, cut and paste content', () => {
 
                 it('FT-015: Cross-site cut content is moved in live after publication', () => {
                     context.tag('cut-paste', 'cross-site', 'live-mode', 'testrail-case-2924370');
-                    checkCrossSite('live', f, false);
-                });
-
-                it('FT-016: Cross-site cut content is moved in preview', () => {
-                    context.tag('cut-paste', 'cross-site', 'preview-mode', 'testrail-case-2924370');
-                    checkCrossSite('default', f, false);
+                    asVisitor();
+                    checkCrossSite('live', f, NONE, BOTH);
                 });
             });
         });

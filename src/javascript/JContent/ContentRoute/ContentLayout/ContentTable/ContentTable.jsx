@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
@@ -32,7 +32,7 @@ import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import styles from './ContentTable.scss';
 import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
 
-export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, columns: propColumns, selector}) => {
+export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured, columns: propColumns, selector, revealPath}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
@@ -121,6 +121,24 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     useUnselect({selection, isLoading, rows, isStructured, path, tableOpenPaths});
 
+    // Brings one row into view - used after creating content, which otherwise lands somewhere in a
+    // tree far too large to scan by eye. The row only exists once its branch has been expanded and
+    // the query has come back, so this waits for it to appear rather than running once. Scrolling
+    // happens once per path; the row keeps its tint afterwards so it stays findable.
+    const scrolledTo = useRef(null);
+    useEffect(() => {
+        if (!revealPath || scrolledTo.current === revealPath) {
+            return;
+        }
+
+        const index = tableRows.findIndex(r => r.original?.path === revealPath);
+        if (index >= 0) {
+            scrolledTo.current = revealPath;
+            rowVirtualizer.scrollToIndex(index, {align: 'center'});
+            setSelectedItemIndex(index);
+        }
+    }, [revealPath, rows, tableRows, rowVirtualizer]);
+
     const doubleClickNavigation = useCallback(node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
@@ -134,7 +152,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         dispatch(cmOpenPaths(extractPaths(siteKey, node.path, newMode)));
         dispatch(cmGoto({
             path: node.path,
-            params: {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'}
+            params: {sub: !['jnt:page', 'jnt:contentFolder', 'jnt:category'].includes(node.primaryNodeType.name)}
         }));
     }, [mode, dispatch, siteKey]);
 
@@ -202,6 +220,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                                      doubleClickNavigation={doubleClickNavigation}
                                      virtualizer={rowVirtualizer}
                                      virtualRow={virtualRow}
+                                     revealPath={revealPath}
                                      onPreviewSelect={onSidePanelSelect}
                                 />
                             );
@@ -233,7 +252,8 @@ ContentTable.propTypes = {
     rows: PropTypes.array.isRequired,
     totalCount: PropTypes.number.isRequired,
     selector: PropTypes.func,
-    columns: PropTypes.array
+    columns: PropTypes.array,
+    revealPath: PropTypes.string
 };
 
 ContentTable.defaultProps = {

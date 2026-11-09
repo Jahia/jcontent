@@ -9,7 +9,9 @@ import {ellipsizeText, getName, isDescendantOrSelf} from '~/JContent/JContent.ut
 import {useNodeTypeCheck} from '~/JContent';
 import {useConnector} from './useConnector';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
+import {buildMoveSnapshot, recordCategoryUndo} from '~/JContent/CategoriesRoute/Undo';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -44,7 +46,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData, isUseDropData}) {
+export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refetchQueries, nodeDropData, isUseDropData, expandTargetOnDrop, recordUndo}) {
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -57,6 +59,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
     const refreshTree = useRefreshTreeAfterMove();
+    const dispatch = useDispatch();
     const language = useSelector(state => state.language);
     let res = useNodeChecks(
         {path: destParent?.path, language: language},
@@ -171,10 +174,15 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                     position
                 }
             }).then(({data}) => {
-                const message = t('jcontent:label.contentManager.move.success', {
-                    count: pathsOrIds.length,
-                    dest: (destParent.displayName && ellipsizeText(destParent.displayName, 20)) || destParent.name
-                });
+                // Captured from the pre-move nodes, so the snapshot holds where each one came from
+                if (recordUndo && move) {
+                    recordCategoryUndo(buildMoveSnapshot({nodes, target: destParent}));
+                }
+
+                // Opening the target shows the moved content in place, which says more than a toast
+                if (expandTargetOnDrop) {
+                    dispatch(cmOpenTablePaths([destParent.path]));
+                }
 
                 if (onSaved) {
                     onSaved();
@@ -188,7 +196,12 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                     refreshTree(destParent.path, nodes, moveResults);
                 }
 
-                notificationContext.notify(message, ['closeButton', 'closeAfter5s']);
+                if (!expandTargetOnDrop) {
+                    notificationContext.notify(t('jcontent:label.contentManager.move.success', {
+                        count: pathsOrIds.length,
+                        dest: (destParent.displayName && ellipsizeText(destParent.displayName, 20)) || destParent.name
+                    }), ['closeButton', 'closeAfter5s']);
+                }
             }).catch(e => {
                 console.log(e);
                 notificationContext.notify(
@@ -197,7 +210,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, pos, refet
                 );
             });
         }
-    }), [dropTarget, destParent, names, insertPosition, entries, res, nodeTypeCheck]);
+    }), [dropTarget, destParent, names, insertPosition, entries, res, nodeTypeCheck, expandTargetOnDrop, recordUndo]);
 
     const enhancedDrop = elem => {
         setCurrent(elem);

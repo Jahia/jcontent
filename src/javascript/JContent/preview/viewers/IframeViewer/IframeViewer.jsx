@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import styles from './IframeViewer.scss';
@@ -13,10 +13,14 @@ import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
  * (`staticAssets(type: "css")`) and the frame body is made non-interactive on load
  * (`pointer-events: none`), so the framed document never needs to run scripts of its own.
  *
- * `allow-same-origin` IS required and must stay — `loadAssets` and `zoom` below reach into the
- * frame's `document` from this component, which is only possible while the frame keeps our origin.
+ * `allow-same-origin` IS required and must stay — `loadAssets`, `zoom` and the in-place patching
+ * below reach into the frame's `document` from this component, which is only possible while the
+ * frame keeps our origin.
  */
 const PREVIEW_SANDBOX = 'allow-same-origin';
+
+/** The element the server wraps the previewed node in; both zoom and patching key off it. */
+const ZOOM_ANCHOR_ID = 'ce_preview_content';
 
 function loadAsset(asset, iframeHeadEl) {
     return new Promise(resolve => {
@@ -93,26 +97,105 @@ function extractPageHead(pageHtml) {
     return match ? match[1] : '';
 }
 
-export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData = null, pageCssHtml = ''}) => {
+/**
+ * The part of a freshly rendered output that replaces what the frame already shows: the zoom
+ * anchor's own content when the render carries one, the body otherwise. Parsing happens in a
+ * detached document, so nothing in the markup runs.
+ */
+function extractFragment(html) {
+    const parsed = new DOMParser().parseFromString(html, 'text/html');
+    const anchor = parsed.getElementById(ZOOM_ANCHOR_ID);
+    if (anchor) {
+        return anchor.innerHTML;
+    }
+
+    return parsed.body ? parsed.body.innerHTML : html;
+}
+
+/**
+ * Replaces the previewed content inside the LIVE frame document instead of reloading it, which
+ * is what keeps scroll position, already-injected stylesheets and the result of zoom across an
+ * update. Returns false when the frame cannot be reached, so the caller falls back to a reload.
+ */
+function patchFrameContent(iframeEl, html) {
+    const iframeWindow = iframeEl?.contentWindow || iframeEl;
+    const doc = iframeWindow?.document;
+    if (!doc?.body) {
+        return false;
+    }
+
+    const target = doc.getElementById(ZOOM_ANCHOR_ID) || doc.body;
+    const scroller = doc.scrollingElement || doc.documentElement;
+    const {scrollTop, scrollLeft} = scroller;
+
+    target.innerHTML = extractFragment(html);
+
+    scroller.scrollTop = scrollTop;
+    scroller.scrollLeft = scrollLeft;
+    return true;
+}
+
+export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData = null, pageCssHtml = '', isRefreshing = false}) => {
     const [loading, setLoading] = useState(true);
     const {t} = useTranslation('jcontent');
     const iframeRef = useRef(null);
     const onLoadTimeoutRef = useRef(null);
+    // Stylesheets already injected into the live document — a patch must not add them twice.
+    const loadedAssetsRef = useRef(new Set());
 
     const rawOutput = data?.nodeByPath?.renderedContent?.output ?? '';
     const isHybrid = Boolean(pageCssHtml);
-    const {cleanHtml, assets: inlineAssets} = extractInlineResourceTags(rawOutput, !isHybrid);
+    const {cleanHtml, assets: inlineAssets} = useMemo(
+        () => extractInlineResourceTags(rawOutput, !isHybrid),
+        [rawOutput, isHybrid]
+    );
 
-    let displayValue;
-    if (!cleanHtml) {
-        displayValue = t('label.contentManager.contentPreview.noViewAvailable');
-    } else if (isHybrid) {
-        // In hybrid rendering, the page CSS is injected into the iframe via <link> elements.
-        const pageHead = extractPageHead(pageCssHtml);
-        displayValue = `<html>${pageHead}<body>${cleanHtml}</body></html>`;
-    } else {
-        displayValue = cleanHtml;
-    }
+    const displayValue = useMemo(() => {
+        if (!cleanHtml) {
+            return t('label.contentManager.contentPreview.noViewAvailable');
+        }
+
+        if (isHybrid) {
+            // In hybrid rendering, the page CSS is injected into the iframe via <link> elements.
+            return `<html>${extractPageHead(pageCssHtml)}<body>${cleanHtml}</body></html>`;
+        }
+
+        return cleanHtml;
+    }, [cleanHtml, isHybrid, pageCssHtml, t]);
+
+    // The frame RELOADS only when the shape of the preview changes — another node, language or
+    // workspace. New HTML for the same shape, which is what every keystroke of a live preview
+    // produces, is patched into the live document instead. Keying on the node rather than on
+    // previewContext.path matters: switching from a page render to a module render of the same
+    // node is an update, not a new document.
+    const docKey = `${nodeData?.path ?? previewContext.path}|${previewContext.language}|${previewContext.workspace}`;
+
+    const [bootHtml, setBootHtml] = useState(displayValue);
+    const bootKeyRef = useRef(docKey);
+    const appliedHtmlRef = useRef(displayValue);
+
+    const applyContentEffects = () => {
+        const element = iframeRef.current;
+        const iframeWindow = element?.contentWindow || element;
+        const iframeDocument = iframeWindow?.document;
+        if (!iframeDocument) {
+            return;
+        }
+
+        iframeDocument.body?.setAttribute('style', 'pointer-events: none');
+
+        if (!isHybrid && previewContext.contextConfiguration !== 'page') {
+            const staticAssets = data?.nodeByPath?.renderedContent?.staticAssets ?? [];
+            const pending = [...staticAssets, ...inlineAssets]
+                .filter(asset => !loadedAssetsRef.current.has(asset.key));
+            pending.forEach(asset => loadedAssetsRef.current.add(asset.key));
+            loadAssets(pending, iframeDocument);
+        }
+
+        if (previewContext.requestAttributes && nodeData) {
+            zoom(iframeDocument, onContentNotFound, nodeData);
+        }
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -126,26 +209,38 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
             setLoading(false);
         }, 5000);
         return () => clearTimeout(onLoadTimeoutRef.current);
-    }, [displayValue]);
+    }, [bootHtml]);
+
+    useEffect(() => {
+        if (bootKeyRef.current !== docKey) {
+            bootKeyRef.current = docKey;
+            appliedHtmlRef.current = displayValue;
+            loadedAssetsRef.current = new Set();
+            setBootHtml(displayValue);
+            return;
+        }
+
+        if (appliedHtmlRef.current === displayValue) {
+            return;
+        }
+
+        appliedHtmlRef.current = displayValue;
+        if (patchFrameContent(iframeRef.current, displayValue)) {
+            applyContentEffects();
+        } else {
+            // No reachable document yet — let the frame load this one the ordinary way.
+            setBootHtml(displayValue);
+        }
+        // ApplyContentEffects reads the current render's data; re-running this effect when only
+        // that identity changes would re-patch an unchanged document.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [docKey, displayValue]);
 
     const onLoad = () => {
         try {
             console.debug('Preview loaded, adding assets and removing loader');
-            const element = iframeRef.current;
-            const iframeWindow = element?.contentWindow || element;
-            iframeWindow?.document?.body?.setAttribute('style', 'pointer-events: none');
-
-            if (!isHybrid && previewContext.contextConfiguration !== 'page') {
-                const staticAssets = data?.nodeByPath?.renderedContent?.staticAssets ?? [];
-                const seen = new Set();
-                const mergedAssets = [...staticAssets, ...inlineAssets]
-                    .filter(a => !seen.has(a.key) && seen.add(a.key));
-                loadAssets(mergedAssets, iframeWindow.document);
-            }
-
-            if (previewContext.requestAttributes && nodeData) {
-                zoom(iframeWindow.document, onContentNotFound, nodeData);
-            }
+            loadedAssetsRef.current = new Set();
+            applyContentEffects();
         } catch (e) {
             console.error('Error while processing preview', e);
         }
@@ -161,8 +256,8 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
                     title="Content preview viewer"
                     aria-labelledby="preview-tab"
                     data-sel-role={previewContext.workspace + '-preview-frame'}
-                    className={`${styles.iframe} ${loading ? styles.iframeLoading : ''}`}
-                    srcDoc={displayValue}
+                    className={`${styles.iframe} ${loading ? styles.iframeLoading : ''} ${isRefreshing && !loading ? styles.iframeRefreshing : ''}`}
+                    srcDoc={bootHtml}
                     sandbox={PREVIEW_SANDBOX}
                     onLoad={onLoad}
             />
@@ -173,12 +268,15 @@ export const IframeViewer = ({previewContext, data, onContentNotFound, nodeData 
 IframeViewer.propTypes = {
     previewContext: PropTypes.shape({
         workspace: PropTypes.string.isRequired,
+        language: PropTypes.string,
+        path: PropTypes.string,
         requestAttributes: PropTypes.array,
         contextConfiguration: PropTypes.string
     }).isRequired,
     onContentNotFound: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     pageCssHtml: PropTypes.string,
+    isRefreshing: PropTypes.bool,
     nodeData: PropTypes.shape({
         isPage: PropTypes.bool,
         path: PropTypes.string,

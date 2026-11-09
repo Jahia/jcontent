@@ -1,4 +1,7 @@
 .previewShell {
+    /* anchors the live-preview status badge, which floats over the frame */
+    position: relative;
+
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;

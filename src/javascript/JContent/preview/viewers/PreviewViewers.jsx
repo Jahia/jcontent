@@ -10,7 +10,7 @@ import {PDFViewer} from './PDFViewer';
 import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.utils';
 import {NoView} from './NoView';
 
-export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScreen = false, onContentNotFound, pageCssHtml = ''}) => {
+export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScreen = false, onContentNotFound, pageCssHtml = '', isRefreshing = false}) => {
     const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath?.isFile;
     if (isFile) {
         const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replaceAll(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
@@ -57,6 +57,7 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
         >
             <IframeViewer
                 data={data}
+                isRefreshing={isRefreshing}
                 nodeData={nodeData}
                 pageCssHtml={pageCssHtml}
                 previewContext={previewContext}
@@ -73,6 +74,7 @@ PreviewViewers.propTypes = {
     }).isRequired,
     nodeData: PropTypes.object,
     isFullScreen: PropTypes.bool,
+    isRefreshing: PropTypes.bool,
     pageCssHtml: PropTypes.string,
     onContentNotFound: PropTypes.func.isRequired
 };

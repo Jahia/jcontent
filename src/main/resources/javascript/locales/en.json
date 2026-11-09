@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Quick Edit"
         },
-        "show": "Show Preview"
+        "show": "Show Preview",
+        "viewport": "{{width}} px ({{percent}}%)"
       },
       "rename": "Rename",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",

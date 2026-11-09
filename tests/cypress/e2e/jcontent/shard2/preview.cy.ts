@@ -121,6 +121,28 @@ describe('JContent preview tests', () => {
                 '<div>No default view</div>');
     });
 
+    it('should render the preview at a chosen viewport width', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.openPreview('previewText');
+
+        // Every rendered preview carries the selector, opened on the default 768px.
+        cy.get('[data-sel-role="preview-viewport"]').should('be.visible').and('contain.text', '768 px');
+        cy.get('[data-sel-role="preview-viewport-frame"]').children().first().should('have.css', 'width', '768px');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.text', 'preview me');
+
+        // Picking a width renders the same content at that width, scaled to fit the pane.
+        cy.get('[data-sel-role="preview-viewport"]').click();
+        cy.contains('.moonstone-menuItem', '375 px').click();
+        cy.get('[data-sel-role="preview-viewport"]').should('contain.text', '375 px');
+        cy.get('[data-sel-role="preview-viewport-frame"]').children().first().should('have.css', 'width', '375px');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('contain.text', 'preview me');
+    });
+
     it('should zoom to the specific sub-component and remove siblings when previewing in pages mode', () => {
         // Test-content1, test-content2, test-content3 are siblings in home/area-main.
         // In pages mode, the in-context render loads the full page and zooms to the target —

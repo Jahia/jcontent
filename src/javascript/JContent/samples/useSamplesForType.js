@@ -25,7 +25,7 @@ export const useSamplesForType = ({parentUuid, nodeType, skip = false}) => {
             nodeType,
             uilang: contextJsParameters.uilang
         },
-        // cache-and-network, not cache-first: a sample saved from jContent cannot invalidate this
+        // Cache-and-network, not cache-first: a sample saved from jContent cannot invalidate this
         // query, because the picker - and this hook with it - is only mounted while the modal is
         // open, so triggerRefetchAll() in writeSample has no refetcher to reach. cache-first would
         // keep serving the empty result this type returned before the sample existed.

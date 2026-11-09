@@ -24,7 +24,7 @@ export const usePageSamples = ({parentUuid, skip = false}) => {
             pagesName: SAMPLES_PAGES_NAME,
             uilang: contextJsParameters.uilang
         },
-        // cache-and-network for the same reason as useSamplesForType: nothing invalidates this
+        // Cache-and-network for the same reason as useSamplesForType: nothing invalidates this
         // query when a page sample is saved, and the hook is unmounted at that moment anyway.
         fetchPolicy: 'cache-and-network',
         errorPolicy: 'all',

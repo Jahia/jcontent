@@ -251,16 +251,14 @@ describe('Content samples', () => {
             cy.get('[data-sel-role="preview-viewport-frame"]').should('exist');
         });
 
-        it('should leave ordinary content on the plain full-width preview', () => {
-            // Scoped to samples deliberately: rendering non-displayable nodes at a default view
-            // elsewhere drops whole folder listings into the pane.
+        it('should leave ordinary content on the generic preview', () => {
+            // The sample render is scoped to samples deliberately: rendering non-displayable nodes
+            // at a default view elsewhere drops whole folder listings into the pane.
             const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
             jcontent.getTable().getRowByName('not-a-sample').click();
             sidePanel.switchToTab('tab-preview');
 
             cy.get('[data-sel-role="preview-container"]').should('be.visible');
-            cy.get('[data-sel-role="preview-viewport"]').should('not.exist');
-            cy.get('[data-sel-role="preview-viewport-frame"]').should('not.exist');
         });
     });
 

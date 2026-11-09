@@ -199,8 +199,16 @@ const shouldShowModule = ({site, page, path}: {site: string; page: string; path:
     openPageBuilder(site, page).getModule(path).get().should(module => shouldRenderItem(module, f, item));
 };
 
+// The area renders before the absence is read, so an empty frame cannot pass.
+const shouldNotShowModule = (site: string, areaPath: string, path: string) => {
+    const jcontent = openPageBuilder(site);
+    jcontent.getModule(areaPath);
+    jcontent.iframe().get().find(`[jahiatype="module"][path="${path}"]`).should('not.exist');
+};
+
 // The steps the edit-mode tests share: copy or cut an item of the home page of site A, paste it on the
-// sub-page or on site B, then check the pasted node in Page Builder and the source in the repository.
+// sub-page or on site B, then check the pasted node in Page Builder, and the source both in Page Builder
+// and in the repository.
 const transfer = (f: Fixture, role: Role, item: Item, {crossSite}: {crossSite: boolean}) => {
     const name = item === 'news' ? f.news : f.fileRef;
     const source = `${homeArea(f.siteA)}/${name}`;
@@ -216,6 +224,12 @@ const transfer = (f: Fixture, role: Role, item: Item, {crossSite}: {crossSite: b
         page: crossSite ? 'home' : `home/${f.subPage}`,
         path: target
     }, f, item);
+    if (role === 'copy') {
+        shouldShowModule({site: f.siteA, page: 'home', path: source}, f, item);
+    } else {
+        shouldNotShowModule(f.siteA, homeArea(f.siteA), source);
+    }
+
     GraphqlUtils.getNode(source).should(role === 'copy' ? 'exist' : 'not.exist');
 };
 

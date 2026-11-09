@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Edition rapide"
         },
-        "show": "Afficher l'aperçu"
+        "show": "Afficher l'aperçu",
+        "viewport": "{{width}} px ({{percent}} %)"
       },
       "rename": "Renommer",
       "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",

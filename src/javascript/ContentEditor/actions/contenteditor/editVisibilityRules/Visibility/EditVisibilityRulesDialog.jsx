@@ -19,6 +19,16 @@ import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useNotifications} from '@jahia/react-material';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {truncate} from '~/utils';
+import {getInitialValues} from '~/ContentEditor/ContentEditor/useEditFormDefinition';
+import {Channels, CHANNELS_FIELDSET, getChannelsFieldSet} from './Channels/Channels';
+
+const getFieldSetSection = (sections, fieldSetName) => {
+    const visibilitySection = sections.find(s => s.name === 'visibility');
+    return {
+        ...visibilitySection,
+        fieldSets: visibilitySection.fieldSets.filter(fs => fs.name === fieldSetName)
+    };
+};
 
 export const EditVisibilityRulesDialog = ({
     sections,
@@ -40,14 +50,10 @@ export const EditVisibilityRulesDialog = ({
     const client = useApolloClient();
     const notificationContext = useNotifications();
 
-    // Save the Languages section independently of the Date/Time conditions. Only the
-    // jmix:i18n fieldset (j:invalidLanguages) is persisted here.
-    const handleSaveLanguages = useCallback(async (values, actions) => {
-        const visibilitySection = sections.find(s => s.name === 'visibility');
-        const languagesSection = {
-            ...visibilitySection,
-            fieldSets: visibilitySection.fieldSets.filter(fs => fs.name === 'jmix:i18n')
-        };
+    // Save one fieldset of the visibility section independently of the other sections and of
+    // the Date/Time conditions: jmix:i18n (j:invalidLanguages) or jmix:channelSelection.
+    const saveFieldSet = useCallback(fieldSetName => async (values, actions) => {
+        const fieldSetSection = getFieldSetSection(sections, fieldSetName);
 
         const info = await updateNode({
             client,
@@ -56,7 +62,7 @@ export const EditVisibilityRulesDialog = ({
             actions,
             data: {
                 nodeData,
-                sections: [languagesSection],
+                sections: [fieldSetSection],
                 values,
                 language: lang,
                 i18nContext
@@ -89,6 +95,19 @@ export const EditVisibilityRulesDialog = ({
         'jmix:i18n_j:invalidLanguages': invalidLanguages
     };
     languagesInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
+
+    // Keep only the channel fields and the mixin switch for the Channels formik context (+ WIP)
+    const channelsFieldSet = getChannelsFieldSet(sections);
+    const channelsInitialValues = {};
+    if (channelsFieldSet) {
+        const channelsValues = getInitialValues(nodeData, [getFieldSetSection(sections, CHANNELS_FIELDSET)]);
+        [channelsFieldSet.name, ...channelsFieldSet.fields.map(f => f.name)]
+            .filter(key => key in channelsValues)
+            .forEach(key => {
+                channelsInitialValues[key] = channelsValues[key];
+            });
+        channelsInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
+    }
 
     const isMatchingAllConditions = nodeByPath.conditionalVisibility.nodes.length > 0 ? nodeByPath.conditionalVisibility.nodes[0].isMatchingAllConditions.booleanValue : false;
     const isVisible = nodeByPath.isVisible;
@@ -129,7 +148,10 @@ export const EditVisibilityRulesDialog = ({
                         <div className={classes.container} data-cm-role="visibilityScreen">
                             <Languages sections={sections}
                                        initialValues={languagesInitialValues}
-                                       onSubmit={handleSaveLanguages}/>
+                                       onSubmit={saveFieldSet('jmix:i18n')}/>
+                            <Channels sections={sections}
+                                      initialValues={channelsInitialValues}
+                                      onSubmit={saveFieldSet(CHANNELS_FIELDSET)}/>
                             <DateTime rules={nodeByPath.rules}
                                       refresh={refetch}
                                       node={nodeData}
